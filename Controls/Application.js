@@ -24,6 +24,8 @@ define('Controls/Application',
     * @extends Core/Control
     *
     * @mixes Controls/Application/BlockLayout/Styles
+    * @mixes Controls/Application/SEO
+    * @mixes UI/_base/HTML/RUM
     *
     * @control
     * @public
@@ -80,59 +82,8 @@ define('Controls/Application',
     */
 
    /**
-    * @name Controls/Application#scripts
-    * @cfg {Content} Описание скриптов, которые будут вставлены в head страницы
-    * <pre class="brush:xml">
-    *     <ws:scripts>
-    *        <ws:Array>
-    *           <ws:Object type="text/javascript" src="/cdn/Maintenance/1.0.1/js/checkSoftware.js" data-pack-name="skip" async=""/>
-    *        </ws:Array>
-    *     </ws:scripts>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/Application#meta
-    * @cfg {Content} Позволяет описывать meta информацию страницы.
-    * <pre class="brush:xml">
-    *     <ws:meta>
-    *        <ws:Array>
-    *           <ws:Object name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
-    *        </ws:Array>
-    *     </ws:meta>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/Application#links
-    * @cfg {Content} Позволяет описывать ссылки на дополнительные ресурсы, которые необходимы при загрузке страницы.
-    * <pre class="brush:xml">
-    *     <ws:links>
-    *        <ws:Array>
-    *           <ws:Object rel="shortcut icon" href="{{_options.wsRoot}}img/themes/wi_scheme/favicon.ico?v=2" type="image/x-icon"/>
-    *        </ws:Array>
-    *     </ws:links>
-    * </pre>
-    */
-
-   /**
     * @name Controls/Application#content
     * @cfg {Content} Разметка, которая будет встроена в содержимое тега body.
-    */
-
-   /*
-    * @name Controls/Application#content
-    * @cfg {Content} Content of BODY tag
-    */
-
-   /**
-    * @name Controls/Application#scripts
-    * @cfg {Content} Список JS-файлов, которые должны быть подключены на страницу. Скрипты встраиваются перед закрытием. Могут принимать более одного корневого узла.
-    */
-
-   /*
-    * @name Controls/Application#scripts
-    * @cfg {Content} Scripts, that will be pasted after content. Can accept more than one root node
     */
 
    /**
@@ -207,16 +158,6 @@ define('Controls/Application',
    /*
     * @name Controls/Application#bodyClass
     * @cfg {String} String with classes, that will be pasted in body's class attribute
-    */
-
-   /**
-    * @name Controls/Application#title
-    * @cfg {String} Значение опции встраивается в содержимое тега title, который определяет заголовок веб-страницы и подпись на вкладке веб-браузера.
-    */
-
-   /*
-    * @name Controls/Application#title
-    * @cfg {String} title of the tab
     */
 
    /**
