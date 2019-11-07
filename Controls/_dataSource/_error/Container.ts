@@ -26,7 +26,7 @@ let getTemplate = (template: string | Control): Promise<Control> => {
  * @class Controls/_dataSource/_error/Container
  * @extends Core/Control
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  *
  */
 export default class Container extends Control implements IContainer {

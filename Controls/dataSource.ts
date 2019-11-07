@@ -5,7 +5,7 @@
  * @includes error Controls/_dataSource/error
  * @includes requestDataUtil Controls/_dataSource/requestDataUtil
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  */
 import * as parking from 'Controls/_dataSource/parking';
 import * as error from 'Controls/_dataSource/error';

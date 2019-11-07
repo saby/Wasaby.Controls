@@ -76,7 +76,7 @@ let findTemplate = (
  * @class
  * @name Controls/_dataSource/_parking/Controller
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  * @example
  * <pre>
  *     let handler = (config) => {
