@@ -491,7 +491,7 @@ define('Controls/Application',
 
          _checkDeprecatedOptions: function(opts) {
             if (opts.compat) {
-               Env.IoC.resolve('ILogger').warning('Опция compat является устаревшей. Для вставки старых контролов внутри VDOM-ного окружения ' +
+               Env.IoC.resolve('ILogger').warn('Опция compat является устаревшей. Для вставки старых контролов внутри VDOM-ного окружения ' +
                 'используйте один из способов, описанных в этой статье: https://wi.sbis.ru/doc/platform/developmentapl/ws3/compound-wasaby/');
             }
          },
