@@ -627,6 +627,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._clearTimeoutForExpandOnDrag();
     }
 });
+TreeControl._theme = ['Controls/treeGrid'];
 
 TreeControl.getDefaultOptions = function() {
     return {
