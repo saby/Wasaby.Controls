@@ -18,6 +18,7 @@ export interface IOptions {
  * @class Controls/_operations/MultiSelector/Selection
  * @extends Core/core-simpleExtend
  * @author Авраменко А.С.
+ * @deprecated Модуль устарел и будет удалён в версию 20.ххх. Используйте Controls/operations:FlatSelectionStrategy
  * @private
  */
 
