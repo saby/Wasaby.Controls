@@ -6,7 +6,7 @@ define([
    describe('Controls/Utils/scrollToElement', function() {
       beforeEach(function() {
          if (typeof window !== 'undefined') {
-            //this.skip();
+            this.skip();
          }
       });
 
