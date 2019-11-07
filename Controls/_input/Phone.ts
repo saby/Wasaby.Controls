@@ -15,6 +15,7 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
        * @extends Controls/_input/Base
        *
        * @public
+       * @demo Controls-demo/Input/Phone/Index
        * @demo Controls-demo/Input/SizesAndHeights/Index
        * @demo Controls-demo/Input/FontStyles/Index
        * @demo Controls-demo/Input/TextAlignments/Index
