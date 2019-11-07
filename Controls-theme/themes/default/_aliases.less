@@ -47,7 +47,14 @@
 @icon-color:                 #000000;
 //Цвет иконок отображающих дополнительную информацию.
 @unaccented_icon-color:      #CCC;
-
+//Цвет фона контрола при ошибке валидации при установке фокуса
+@invalid_focus_background-color:         #FADADD;
+//Цвет обводки контрола при ошибке валидации
+@invalid_border-color:                 @danger_color;
+//отступ от контрола до обводки валидации сверху и снизу
+@invalid_padding-vertical:                  2px;
+//отступ от контрола до обводки валидации справа и слева
+@invalid_padding-vertical:                  4px;
 
 //Переменные, использующиеся для InfoboxButton.
 //Цвет иконки InfoboxButton.
@@ -186,8 +193,6 @@
 //Цвет фона полей ввода при ошибке валидации.
 //Примечание: равен цвету фона по-умолчанию.
 @invalid_background-color_inputText:                  @background-color;
-//Цвет фона полей ввода при ошибке валидации при установке фокуса.
-@invalid_focus_background-color_inputText:            @background-color_focus_invalid;
 //Цвет фона полей ввода в состоянии "только для чтения".
 //Примечание: равен цвету фона по-умолчанию.
 @readonly_background-color_inputText:                 transparent;
@@ -557,16 +562,4 @@
 @maximized-button_padding-top_stack:      7px;
 //отступ между кнопкой, переводящей стековую панель в расширенный режим и крестиком закрытия.
 @maximized-button_padding-right_stack:    8px;
-
-//Валидация
-//цвет фона контрола, провалившего валидацию
-@background-color_focus_invalid:         #FADADD;
-//цвет обводки контрола, провалившего валидацию
-@border-color_invalid:                 @danger_color;
-//цвет обводки контрола, обернутого в валидатор, но не провалившего валидацию
-@border-color_valid:                   transparent;
-//отступ от контрола до обводки валидации сверху и снизу
-@padding-vertical_invalid:                    2px;
-//отступ от контрола до обводки валидации справа и слева
-@padding-horizontal_invalid:                  4px;
 //last line
