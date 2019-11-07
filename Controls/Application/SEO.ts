@@ -30,4 +30,11 @@
  *        </ws:Array>
  *     </ws:links>
  * </pre>
+ * 
+ * @name Controls/Application#title
+ * @cfg {String} Значение опции встраивается в содержимое тега title, который определяет заголовок веб-страницы и подпись на вкладке веб-браузера.
+ *
+ * @name Controls/Application#title
+ * @cfg {String} title of the tab
+ * 
  */
