@@ -446,7 +446,8 @@ const BaseOpener = {
    },
    _getConfigFromTemplate(cfg) {
       // get options from template.getDefaultOptions
-      const templateClass = typeof cfg === 'string' ? loadTemplate(cfg) : cfg;
+      let templateClass = typeof cfg === 'string' ? loadTemplate(cfg) : cfg;
+      templateClass = templateClass.default || templateClass;
       return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
    },
    _prepareConfigFromNewToOld(cfg, template) {
