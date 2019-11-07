@@ -8,17 +8,25 @@ define('Controls/Utils/ArraySimpleValuesUtil', [], function() {
 
    'use strict';
 
+   const CONSTRUCTORS_FOR_TYPE_INVERTING = {
+      string: Number,
+      number: String
+   };
+
    return {
       hasInArray: function(array, elem) {
          return this.invertTypeIndexOf(array, elem) !== -1;
       },
 
       invertTypeIndexOf: function(array, elem) {
-         var index = array.indexOf(elem);
+         let index = array.indexOf(elem);
 
          if (index === -1) {
-            elem = (typeof elem === 'string') ? Number(elem) : String(elem);
-            index = array.indexOf(elem);
+            const elementType = typeof elem;
+
+            if (CONSTRUCTORS_FOR_TYPE_INVERTING[elementType]) {
+               index = array.indexOf(CONSTRUCTORS_FOR_TYPE_INVERTING[elementType](elem));
+            }
          }
 
          return index;
