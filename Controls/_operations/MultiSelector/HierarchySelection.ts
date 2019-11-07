@@ -109,12 +109,12 @@ export default class HierarchySelection extends Selection {
    }
 
    public getCount(): Promise {
-      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
+      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._listModel, 0, this._hierarchyRelation);
    }
 
    protected _getSelectionForModel(): void {
       return this._selectionStrategy.getSelectionForModel(
-         this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
+         this._selectedKeys, this._excludedKeys, this._listModel, 0, '', this._hierarchyRelation);
    }
 
    private _getRoot(): TKey {

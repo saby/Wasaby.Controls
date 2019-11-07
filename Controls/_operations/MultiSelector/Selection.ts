@@ -82,7 +82,7 @@ export default class Selection {
          this._increaseLimit(keys.slice());
       }
 
-      let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys);
+      let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys, this._listModel);
 
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
@@ -93,7 +93,7 @@ export default class Selection {
     * @param {Array} keys Keys to remove from selection.
     */
    public unselect(keys: TKeys): void {
-      let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys);
+      let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys, this._listModel);
 
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
@@ -134,7 +134,7 @@ export default class Selection {
     * Invert selection.
     */
    public toggleAll(): void {
-      if (this._selectionStrategy.isAllSelected(this._selectedKeys)) {
+      if (this._selectionStrategy.isAllSelected(ALL_SELECTION_VALUE, this._selectedKeys, this._excludedKeys)) {
          let excludedKeys: TKeys = this._excludedKeys.slice();
          this.unselectAll();
          this.select(excludedKeys);
@@ -187,7 +187,7 @@ export default class Selection {
 
    protected _getSelectionForModel(): Map<TKey, boolean> {
       return this._selectionStrategy.getSelectionForModel(
-         this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit);
+         this._selectedKeys, this._excludedKeys, this._listModel, this._limit, this._keyProperty);
    }
 
    /**
@@ -201,7 +201,7 @@ export default class Selection {
          selectedItemsCount: number = 0,
          limit: number = this._limit ? this._limit - this._excludedKeys.length : 0,
          selectionForModel: Map<TKey, boolean> = this._selectionStrategy.getSelectionForModel(
-            this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit);
+            this._selectedKeys, this._excludedKeys, this._listModel, this._limit, this._keyProperty);
 
       this._getItems().forEach((item) => {
          let key: TKey = item.get(this._keyProperty);

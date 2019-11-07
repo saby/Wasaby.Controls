@@ -7,9 +7,9 @@ import { ViewModel } from 'Controls/treeGrid';
 import { Record } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { ITreeSelectionStrategy } from 'Controls/interface';
+import { ISelectionStrategy } from 'Controls/interface';
 
-export default class TreeSelectionStrategy implements ITreeSelectionStrategy {
+export default class TreeSelectionStrategy implements ISelectionStrategy {
    public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
@@ -50,7 +50,7 @@ export default class TreeSelectionStrategy implements ITreeSelectionStrategy {
       };
    }
 
-   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): Promise {
+   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, hierarchyRelation: relation.Hierarchy): Promise {
       let countItemsSelected: number|null = 0;
       let rootId: TKey = this._getRoot(model);
       let selectedNodes: TKeys;
@@ -80,7 +80,7 @@ export default class TreeSelectionStrategy implements ITreeSelectionStrategy {
       });
    }
 
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean> {
+   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, keyProperty: string, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean> {
       let selectionResult: Map<TKey, boolean> = new Map();
 
       getItems(model).forEach((item) => {

@@ -5,7 +5,7 @@ import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_list/BaseControl/SelectionController');
 import {isEqual} from 'Types/object';
 import { load } from 'Core/library';
-import { IFlatSelectionStrategy, ITreeSelectionStrategy } from 'Controls/interface';
+import { ISelectionStrategy } from 'Controls/interface';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -102,7 +102,7 @@ var _private = {
     getMultiselection: function(options): Promise {
         return Promise.all([load('Controls/operations'), load(options.selectionStrategy)]).then((dependencies) => {
             let operations = dependencies[0];
-            let SelectionStrategy: IFlatSelectionStrategy|ITreeSelectionStrategy = dependencies[1];
+            let SelectionStrategy: ISelectionStrategy = dependencies[1];
 
             if (options.parentProperty) {
                 return new operations.HierarchySelection({

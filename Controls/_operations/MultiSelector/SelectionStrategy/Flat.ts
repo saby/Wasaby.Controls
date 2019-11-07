@@ -5,17 +5,16 @@ import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { IFlatSelectionStrategy } from 'Controls/interface';
-
+import { ISelectionStrategy } from 'Controls/interface';
 
 const ALL_SELECTION_VALUE = null;
 
-export default class FlatSelectionStrategy implements IFlatSelectionStrategy {
+export default class FlatSelectionStrategy implements ISelectionStrategy {
    public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
 
-      if (this.isAllSelected(selectedKeys)) {
+      if (this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys)) {
          ArraySimpleValuesUtil.removeSubArray(excludedKeys, keys);
       } else {
          ArraySimpleValuesUtil.addSubArray(selectedKeys, keys);
@@ -31,7 +30,7 @@ export default class FlatSelectionStrategy implements IFlatSelectionStrategy {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
 
-      if (this.isAllSelected(selectedKeys)) {
+      if (this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys)) {
          ArraySimpleValuesUtil.addSubArray(excludedKeys, keys);
       } else {
          ArraySimpleValuesUtil.removeSubArray(selectedKeys, keys);
@@ -48,7 +47,7 @@ export default class FlatSelectionStrategy implements IFlatSelectionStrategy {
       let items: RecordSet|List = getItems(model);
       let itemsCount: number = items.getCount();
 
-      if (this.isAllSelected(selectedKeys)) {
+      if (this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys)) {
          if (this._isAllItemsLoaded(items, limit) && (!limit || itemsCount <= limit)) {
             itemsSelectedCount = itemsCount - excludedKeys.length;
          } else if (limit) {
@@ -65,11 +64,11 @@ export default class FlatSelectionStrategy implements IFlatSelectionStrategy {
       });
    }
 
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, keyProperty: string, limit: number): Map<TKey, boolean> {
+   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number, keyProperty: string): Map<TKey, boolean> {
       let
          selectionResult: Map<TKey, boolean> = new Map(),
          selectedItemsCount: number = 0,
-         isAllSelected: boolean = this.isAllSelected(selectedKeys);
+         isAllSelected: boolean = this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys);
 
       if (limit > 0) {
          limit -= excludedKeys.length;
@@ -91,8 +90,8 @@ export default class FlatSelectionStrategy implements IFlatSelectionStrategy {
       return selectionResult;
    }
 
-   public isAllSelected(selectedKeys: TKeys): boolean {
-      return selectedKeys.includes(ALL_SELECTION_VALUE);
+   public isAllSelected(roodId: Tkey, selectedKeys: TKeys): boolean {
+      return selectedKeys.includes(roodId);
    }
 
    private _isAllItemsLoaded(items: RecordSet|List, limit: number): boolean {
