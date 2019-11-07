@@ -74,6 +74,7 @@ interface IRenderOptions extends IControlOptions, IHeightOptions,
  * @mixes Controls/interface/IBorderStyle
  *
  * @author Красильников А.С.
+ * @private
  */
 
 class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IValidationStatus, IBorderStyle {
