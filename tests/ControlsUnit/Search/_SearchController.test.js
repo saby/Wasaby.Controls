@@ -232,8 +232,9 @@ define(
 
             searchController.abort(true);
             reseted = false;
-            searchController.search('');
-            assert.isTrue(reseted);
+            searchController._search.search('').then(() => {
+               assert.isTrue(reseted);
+            });
          });
       });
    });
