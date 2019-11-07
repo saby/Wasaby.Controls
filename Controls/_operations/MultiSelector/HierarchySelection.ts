@@ -21,6 +21,7 @@ export interface IOptions extends ISelectionOptions {
  * @class Controls/_operations/MultiSelector/HierarchySelection
  * @extends Controls/_operations/MultiSelector/Selection
  * @author Авраменко А.С.
+ * @deprecated Модуль устарел и будет удалён в версию 20.ххх. Используйте Controls/operations:TreeSelectionStrategy или Controls/operations:DeepTreeSelectionStrategy
  * @private
  */
 
