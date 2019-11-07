@@ -1874,9 +1874,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             )
         ) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
+            const items = this._listViewModel.getItems();
+            this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
-                items: this._listViewModel.getItems()
+                items
             }));
+            if (this._virtualScroll) {
+                this._virtualScroll.ItemsCount = this._listViewModel.getCount();
+                this._virtualScroll.recalcByIndex(0);
+            }
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
         }
 
@@ -1911,7 +1917,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             //Нужно обновлять опции записи не только при наведении мыши,
             //так как запись может поменяться в то время, как курсор находится на ней
-            this._updateItemActions();
+            this._shouldUpdateItemActions = true;
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1936,7 +1942,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
-            this._updateItemActions();
+            this._shouldUpdateItemActions = true;
         }
 
         if (this._loadedItems) {
@@ -2118,6 +2124,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._resetScrollAfterReload) {
             this._notify('doScroll', ['top'], { bubbling: true });
             this._resetScrollAfterReload = false;
+        }
+        if (this._shouldUpdateItemActions){
+            this._shouldUpdateItemActions = false;
+            this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
@@ -2405,7 +2415,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     }
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._updateItemActions();
+        this._shouldUpdateItemActions = true;
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
