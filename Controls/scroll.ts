@@ -6,6 +6,8 @@
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes _scrollContext Controls/_scroll/Scroll/Context
  * @includes HotKeysContainer Controls/_scroll/HotKeysContainer
+ * @includes IntersectionObserverController Controls/_scroll/IntersectionObserver/Controller
+ * @includes IntersectionObserverContainer Controls/_scroll/IntersectionObserver/Container
  * @public
  * @author Крайнов Д.О.
  */
@@ -18,6 +20,8 @@
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes _scrollContext Controls/_scroll/Scroll/Context
  * @includes HotKeysContainer Controls/_scroll/HotKeysContainer
+ * @includes IntersectionObserverController Controls/_scroll/IntersectionObserver/Controller
+ * @includes IntersectionObserverContainer Controls/_scroll/IntersectionObserver/Container
  * @public
  * @author Крайнов Д.О.
  */
