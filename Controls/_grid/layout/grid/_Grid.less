@@ -135,7 +135,7 @@
 .controls-Grid__cell_fixed_theme-@{themeName} {
    z-index: 3;
    background-color: @background-color_Grid-row-sticky;
-
+   // stickyHeader считает что колонка не зафиксированна если повесить overflow-y: hidden;
    &:not(.controls-StickyHeader) {
       overflow-y: hidden;
    }
