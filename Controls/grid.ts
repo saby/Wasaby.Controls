@@ -2,7 +2,7 @@
  * Библиотека контролов, которые реализуют плоский список, отображающийся в виде таблицы.
  * Работа с шаблонами библиотеки описана в руководстве разработчика:
  * <ul>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/">ItemTemplate (шаблон отображения элемента)</a></li>
+ *    <li>ItemTemplate (шаблон отображения элемента)</a></li>
  *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">ResultsTemplate (шаблон итогов)</a></li>
  *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/">GroupTemplate (шаблон группировки)</a></li>
  *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">ColumnTemplate (шаблон отображения ячейки)</a></li>
@@ -23,6 +23,13 @@
  * @public
  * @author Крайнов Д.О.
  */
+
+/**
+ * Шаблон, который по умолчанию используется для отображения элементов в контроле {@link Controls/grid:View}.
+ * Подробнее о работе с шаблоном читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/">руководстве разработчика</a>.
+ * @class Controls/grid:ItemTemplate
+ * @author Авраменко А.С.
+ */ 
 
 import View = require('Controls/_grid/Grid');
 import ItemTemplate = require('wml!Controls/_grid/ItemTemplateResolver');
