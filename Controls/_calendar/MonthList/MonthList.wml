@@ -20,7 +20,7 @@
          >
          <ws:itemPadding left="null" right="null" bottom="null" top="null"/>
          <ws:navigation source="position" view="infinity">
-            <ws:sourceConfig limit="{{8}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
+            <ws:sourceConfig limit="{{_options._limit}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
          </ws:navigation>
 
          <ws:itemTemplate>

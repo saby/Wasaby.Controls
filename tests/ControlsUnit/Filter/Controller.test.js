@@ -181,6 +181,14 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          assert.deepEqual(filterLayout._filter, {testKey: 'testValueFast', testKey2: ''});
       });
 
+      it('_beforeUpdate new historyId', function () {
+         var filterLayout = new Filter();
+         filterLayout.saveOptions({historyId: 'HISTORY_ID'});
+         filterLayout._sourceController = 'history_loader';
+         filterLayout._beforeUpdate({ historyId: 'UPDATED_HISTORY_ID' });
+         assert.isNull(filterLayout._sourceController);
+      });
+
       it('_itemsChanged', function () {
          var filterLayout = new Filter();
          var items = [{
@@ -260,6 +268,19 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          var items = Filter._private.getItemsByOption(opt);
 
          assert.deepEqual(items, opt);
+      });
+
+      it('_private.processPrefetchOnItemsChanged', () => {
+         const sandbox = sinon.createSandbox();
+         const self = {};
+
+         self._filter = {
+            PrefetchSessionId: 'testId',
+            testFilterFilter: 'testValue'
+         };
+         sandbox.replace(Filter._private, 'getHistoryByItems', () => null);
+
+         assert.deepEqual(Filter._private.processPrefetchOnItemsChanged(self, {}), { testFilterFilter: 'testValue' });
       });
 
       it('_private.getItemsByOption::function', function () {

@@ -95,10 +95,10 @@ const
       isShadowVisible(shadowState, position) {
          return shadowState.indexOf(position) !== - 1;
       },
-      calculateShadowClasses(shadowState, position) {
+      calculateShadowClasses(shadowState, position, theme) {
          let
-            shadowClasses = 'controls-ColumnScroll__shadow';
-         shadowClasses += ' controls-ColumnScroll__shadow-' + position;
+            shadowClasses = 'controls-ColumnScroll__shadow_theme-' + theme;
+         shadowClasses += ' controls-ColumnScroll__shadow-' + position + '_theme-' + theme;
          if (!_private.isShadowVisible(shadowState, position)) {
             shadowClasses += ' controls-ColumnScroll__shadow_invisible';
          }
@@ -235,7 +235,7 @@ const
       },
 
       _calculateShadowClasses(position) {
-         return _private.calculateShadowClasses(this._shadowState, position);
+         return _private.calculateShadowClasses(this._shadowState, position, this._options.theme);
       },
 
       _calculateShadowStyles(position) {

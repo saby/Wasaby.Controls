@@ -28,6 +28,7 @@ import {TouchContextField} from 'Controls/context';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
+import {Memory} from 'Types/source';
 
 import {create as diCreate} from 'Types/di';
 
@@ -37,6 +38,14 @@ var
     defaultSelectedKeys = [],
     defaultExcludedKeys = [];
 
+const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
+                         {id: 2, title: '10', pageSize: 10},
+                         {id: 3, title: '25', pageSize: 25},
+                         {id: 4, title: '50', pageSize: 50},
+                         {id: 5, title: '100', pageSize: 100},
+                         {id: 6, title: '200', pageSize: 200},
+                         {id: 7, title: '500', pageSize: 500},
+                         {id: 8, title: '1000', pageSize: 1000}];
 const
     HOT_KEYS = {
         moveMarkerToNext: constants.key.down,
@@ -142,8 +151,8 @@ var _private = {
                 }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
-                    self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
-                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, cfg.navigation.sourceConfig.pageSize, self._currentPage);
+                    self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, self._currentPageSize);
+                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, self._currentPageSize, self._currentPage);
                 }
                 var
                     isActive,
@@ -292,7 +301,13 @@ var _private = {
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
-            self.getViewModel().setMarkedKey(key);
+            // TODO Update after MarkerManager is fully implemented
+            const model = self.getViewModel();
+            if (self._options.useNewModel) {
+                model.setMarkedItem(model.getItemBySourceId(key));
+            } else {
+                model.setMarkedKey(key);
+            }
             _private.scrollToItem(self, key);
         }
     },
@@ -333,7 +348,18 @@ var _private = {
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
-            _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
+
+            // TODO Update after MarkerManager is fully implemented
+            let nextKey;
+            if (self._options.useNewModel) {
+                const nextItem = model.getNext(model.getMarkedItem());
+                const contents = nextItem && nextItem.getContents();
+                nextKey = contents && contents.getId();
+            } else {
+                nextKey = model.getNextItemKey(model.getMarkedKey());
+            }
+
+            _private.moveMarker(self, nextKey);
         }
     },
     moveMarkerToPrevious: function (self, event) {
@@ -343,11 +369,24 @@ var _private = {
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
-            _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
+
+            // TODO Update after MarkerManager is fully implemented
+            let prevKey;
+            if (self._options.useNewModel) {
+                const prevItem = model.getPrevious(model.getMarkedItem());
+                const contents = prevItem && prevItem.getContents();
+                prevKey = contents && contents.getId();
+            } else {
+                prevKey = model.getPreviousItemKey(model.getMarkedKey());
+            }
+
+            _private.moveMarker(self, prevKey);
         }
     },
     setMarkerAfterScroll(self, event) {
-       self._setMarkerAfterScroll = true;
+       if (self._options.moveMarkerOnScrollPaging !== false) {
+           self._setMarkerAfterScroll = true;
+       }
     },
     keyDownHome: function(self, event) {
         _private.setMarkerAfterScroll(self, event);
@@ -1431,7 +1470,7 @@ var _private = {
         if (typeof totalItemsCount === 'number') {
             pagingLabelData = {
                 totalItemsCount: totalItemsCount,
-                pageSize: pageSize,
+                pageSize: pageSize.toString(),
                 firstItemNumber: (currentPage - 1) * pageSize + 1,
                 lastItemNumber: Math.min(currentPage * pageSize, totalItemsCount)
             };
@@ -1464,6 +1503,7 @@ var _private = {
     },
     resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
+        self._currentPageSize = navigation && navigation.sourceConfig && navigation.sourceConfig.pageSize || 1;
 
         //TODO: KINGO
         // нумерация страниц пейджинга начинается с 1, а не с 0 , поэтому текущая страница пейджига это страница навигации + 1
@@ -1502,14 +1542,19 @@ var _private = {
             self._virtualScrollTriggerVisibility = null;
             self._pagingVisible = false;
         }
-
-        if (!self._pagingNavigation) {
+        if (self._pagingNavigation) {
+            _private.resetPagingNavigation(self, cfg.navigation);
+            self._pageSizeSource = new Memory({
+                keyProperty: 'id',
+                data: PAGE_SIZE_ARRAY
+            })
+        } else {
             self._pagingNavigationVisible = false;
             _private.resetPagingNavigation(self, cfg.navigation);
         }
     },
     updateNavigation: function(self) {
-        self._pagingNavigationVisible = self._pagingNavigation && self._knownPagesCount > 1;
+        self._pagingNavigationVisible = self._pagingNavigation;
     },
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
@@ -1614,9 +1659,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     //Variables for paging navigation
     _knownPagesCount: INITIAL_PAGES_COUNT,
     _currentPage: INITIAL_PAGES_COUNT,
+    _currentPageSize: null,
     _pagingNavigation: false,
     _pagingNavigationVisible: false,
     _pagingLabelData: null,
+    _pageSizeSource: null,
 
     _blockItemActionsByScroll: false,
 
@@ -1708,8 +1755,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     self._needBottomPadding = _private.needBottomPadding(newOptions, self._items);
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
-                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
-                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, newOptions.navigation.sourceConfig.pageSize, self._currentPage);
+                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
+                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
@@ -2539,14 +2586,25 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     __pagingChangePage: function (event, page) {
         this._currentPage = page;
+        this._applyPagingNavigationState({page: this._currentPage});
+    },
+    _changePageSize: function(e, item) {
+        this._currentPageSize = item.get('pageSize');
+        this._applyPagingNavigationState({pageSize: this._currentPageSize});
+    },
+    _applyPagingNavigationState: function(params) {
         var newNavigation = cClone(this._options.navigation);
-        newNavigation.sourceConfig.page = page - 1;
+        if (params.pageSize) {
+            newNavigation.sourceConfig.pageSize = params.pageSize;
+        }
+        if (params.page) {
+            newNavigation.sourceConfig.page = params.page - 1;
+            newNavigation.sourceConfig.pageSize = this._currentPageSize;
+        }
         this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
-        var self = this;
-        _private.reload(self, self._options);
+        _private.reload(this, this._options);
         this._shouldRestoreScrollPosition = true;
     },
-
     _recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
 
         if (this._sourceController) {

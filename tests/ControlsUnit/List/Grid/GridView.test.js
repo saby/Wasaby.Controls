@@ -1,5 +1,6 @@
 define(['Controls/grid'], function(gridMod) {
    var
+      theme = 'default',
       gridColumns = [
          {
             displayProperty: 'title'
@@ -75,17 +76,17 @@ define(['Controls/grid'], function(gridMod) {
             'Incorrect result "prepareGridTemplateColumns without checkbox".');
       });
       it('Footer', function() {
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
-            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', itemPadding: { left: 'S' } }),
+         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default',
+            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', itemPadding: { left: 'S' } }, theme),
             'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: onhover, itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
-            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'visible', itemPadding: { left: 'S' } }),
+         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default',
+            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'visible', itemPadding: { left: 'S' } }, theme),
             'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: visible, itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_s',
-            gridMod.GridView._private.calcFooterPaddingClass({ itemPadding: { left: 'S' } }),
+         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_s_theme-default',
+            gridMod.GridView._private.calcFooterPaddingClass({ itemPadding: { left: 'S' } }, theme),
             'Incorrect result "calcFooterPaddingClass({itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_default',
-            gridMod.GridView._private.calcFooterPaddingClass({ }),
+         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_default_theme-default',
+            gridMod.GridView._private.calcFooterPaddingClass({ }, theme),
             'Incorrect result "calcFooterPaddingClass({ })".');
       });
       it('beforeMount', function() {
@@ -139,17 +140,17 @@ define(['Controls/grid'], function(gridMod) {
             let setHeightWasCalled = false
             gridView._isHeaderChanged = false;
             gridView._afterMount = () => {
-               if (gridView._options.header && gridView._listModel._isMultyHeader && gridView._listModel.isStickyHeader()) {
+               if (gridView._options.header && gridView._listModel._isMultiHeader && gridView._listModel.isStickyHeader()) {
                   gridView._listModel.setHeaderCellMinHeight(gridView._setHeaderWithHeight());
                }
                gridView._isHeaderChanged = true
             }
 
             gridView._listModel = {
-               _isMultyHeader: true,
+               _isMultiHeader: true,
                isStickyHeader: () => true,
                setHeaderCellMinHeight: (header) => header.length,
-               _isMultyHeader: true,
+               _isMultiHeader: true,
                isDrawHeaderWithEmptyList: () => true
             }
             gridView._setHeaderWithHeight = () => {

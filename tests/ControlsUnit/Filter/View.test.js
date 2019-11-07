@@ -203,6 +203,24 @@ define(
             });
          });
 
+         it('_private:reload', function(done) {
+            let view = getView(defaultConfig);
+            view._source = defaultConfig.source;
+            view._displayText = {};
+            view._configs = {
+               document: {
+                  items: Clone(defaultItems[1]),
+                  displayProperty: 'title',
+                  keyProperty: 'id'},
+               state: {}
+            };
+            filter.View._private.reload(view).addCallback(() => {
+               assert.equal(view._configs.document.items.getCount(), 2);
+               done();
+            });
+            assert.equal(view._configs.document.items.length, 7);
+         });
+
          it('openDetailPanel', function() {
             let view = getView(defaultConfig),
                popupOptions;
@@ -971,6 +989,14 @@ define(
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, []);
                assert.deepStrictEqual(view._displayText.document, {});
+
+               eventResult = {
+                  action: 'applyClick',
+                  selectedKeys: { document: {'-2': [4]} }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.deepStrictEqual(view._source[0].value, {'-1': [], '-2': [4]});
+               assert.deepStrictEqual(view._displayText.document, {text: 'Deleted', title: 'Deleted', hasMoreText: '' });
             });
          });
       });

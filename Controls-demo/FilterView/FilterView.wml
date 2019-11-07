@@ -62,6 +62,7 @@
                                alignment="left"
                                on:itemsChanged="_itemsChanged()"
                                panelTemplateName="Controls/filterPopup:SimplePanel"
+                               detailPanelTemplateName="Controls-demo/FilterView/resources/Panel"
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__hierarchyHistoryList">
          </Controls.filter:View>
       </div>

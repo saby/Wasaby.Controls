@@ -14,6 +14,19 @@ define(
             useAdditionToMaxPrecision: true
          }, null);
 
+         it('_getStartingPosition', function() {
+            var testModel = new ViewModel.default({
+               precision: 2,
+               useGrouping: true,
+               onlyPositive: false,
+               showEmptyDecimals: true,
+               useAdditionToMaxPrecision: true
+            }, '0.00');
+
+            assert.equal(testModel.selection.start, 1);
+            assert.equal(testModel.selection.end, 1);
+         });
+
          describe('Change the value.', function() {
             it('0', function() {
                model.value = '0';

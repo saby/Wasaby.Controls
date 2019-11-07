@@ -67,6 +67,15 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         }
     }
 
+    setActive(active: boolean, silent?: boolean): void {
+        // TODO This is copied from TileViewModel, but there must be a better
+        // place for it. For example, somewhere in ItemAcrions container
+        if (!active && this.isActive() && this.isHovered()) {
+            this._$owner.setHoveredItem(null);
+        }
+        super.setActive(active, silent);
+    }
+
     isFixed(): boolean {
         return !!this.getFixedPositionStyle();
     }

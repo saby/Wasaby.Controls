@@ -19,6 +19,7 @@
  * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
  * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
  * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @includes HierarchyLookup Controls/_filterPopup/Panel/HierarchyLookup
  * @public
  * @author Крайнов Д.О.
  */
@@ -43,6 +44,7 @@
  * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
  * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
  * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @includes HierarchyLookup Controls/_filterPopup/Panel/HierarchyLookup
  * @public
  * @author Крайнов Д.О.
  */
@@ -63,6 +65,7 @@ import _HierarchyList = require('Controls/_filterPopup/SimplePanel/_HierarchyLis
 
 import _FilterPanelWrapper = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper');
 
+export {default as HierarchyLookup} from 'Controls/_filterPopup/Panel/HierarchyLookup';
 export {default as _EditDialog} from 'Controls/_filterPopup/History/_EditDialog';
 
 export {

@@ -190,7 +190,7 @@ var _private = {
     },
 
     getKeysUnloadedItems: function(config, value) {
-        let selectedKeys = value instanceof Array ? value : [value];
+        let selectedKeys = value instanceof Object ? value : [value];
         let flattenKeys = factory(selectedKeys).flatten().value();
         let newKeys = [];
         factory(flattenKeys).each((key) => {
@@ -243,7 +243,7 @@ var _private = {
     loadItems: function(self, item) {
         var options = item.editorOptions;
 
-        self._configs[item.name] = CoreClone(options);
+        self._configs[item.name] = Merge(self._configs[item.name] || {}, CoreClone(options));
         self._configs[item.name].emptyText = item.emptyText;
         self._configs[item.name].emptyKey = item.hasOwnProperty('emptyKey') ? item.emptyKey : null;
 
@@ -271,11 +271,12 @@ var _private = {
 
     reload: function(self) {
         var pDef = new ParallelDeferred();
-        self._configs = {};
         factory(self._source).each(function(item) {
             if (_private.isFrequentItem(item)) {
                 var result = _private.loadItems(self, item);
                 pDef.push(result);
+            } else if (self._configs[item.name]) {
+                delete self._configs[item.name];
             }
         });
 
@@ -382,7 +383,7 @@ var _private = {
         let resultSelectedKeys = {};
         folderIds.forEach((parentKey, index) => {
             // selectedKeys - { folderId1: [selected keys for folder] , folderId2: [selected keys for folder], ... }
-            let nodeSelectedKeys = selectedKeys[parentKey];
+            let nodeSelectedKeys = selectedKeys[parentKey] || [];
             // if folder is selected, delete other keys
             if (nodeSelectedKeys.includes(parentKey)) {
                 resultSelectedKeys[parentKey] = [parentKey];
