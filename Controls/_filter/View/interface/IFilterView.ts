@@ -385,12 +385,16 @@
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#alignment
- * @cfg {String} Устанавливает выравнивание кнопки фильтров.
- * @variant right Кнопка прикреплена к правому краю. Всплывающая панель открывается влево. Строка выбранных фильтров отображается слева от кнопки.
- * @variant left Кнопка прикреплена к левому краю. Всплывающая панель открывается вправо. Строка выбранных фильтров отображается справа от кнопки.
- * @default right
+ * @cfg {String} Задаёт выравнивание элементов объединённого фильтра.
  * @remark
- * Строка, которая формируется значениями из items, а также меняет позицию.
+ * В значении "right" кнопка-иконка прикрепляется к правому краю.
+ * Панель фильтрации открывается влево.
+ * Быстрые фильтры и выбранные параметры фильтрации отображаются слева от кнопки-иконки.
+ * 
+ * В значении "left" кнопка-иконка прикрепляется к левому краю.
+ * Панель фильтрации открывается вправо.
+ * Быстрые фильтры и выбранные параметры фильтрации отображаются справа от кнопки-иконки.
+ * @default right
  * @example
  * Пример открытия панели фильтров справа:
  * <pre>
@@ -404,8 +408,9 @@
 /*
  * @name Controls/_filter/View/interface/IFilterView#alignment
  * @cfg {String} Sets the direction in which the popup panel will open.
- * @variant right The button is attached to the right edge, the pop-up panel opens to the left.
- * @variant left The button is attached to the left edge, the pop-up panel opens to the right.
+ * @remark
+ * * right - The button is attached to the right edge, the pop-up panel opens to the left.
+ * * left - The button is attached to the left edge, the pop-up panel opens to the right.
  * @default right
  * @remark
  * The string, that is formed by the values from items, also changes position.
