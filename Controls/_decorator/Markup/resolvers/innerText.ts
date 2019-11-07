@@ -5,7 +5,7 @@
 /**
  *
  * Модуль с функцией получения внутреннего текста из json.
- * Распознаватель тегов для jsonToHtml в {@link Controls/decorator/Converter}.
+ * Распознаватель тегов для jsonToHtml в {@link Controls/decorator:Converter}.
  *
  * @class Controls/_decorator/Markup/resolvers/innerText
  * @public
