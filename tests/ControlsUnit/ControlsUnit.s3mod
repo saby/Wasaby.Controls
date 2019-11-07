@@ -4,7 +4,6 @@
   <description/>
 
   <depends>
-      <module id="3735da8d-a287-4fc1-a22d-7d00a7732ce8" name="SBIS3.CONTROLS"/>
       <module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls"/>
       <module id="0641abed-e0fb-4f42-990c-4c24bdbd7bd0" name="Controls-demo"/>
   </depends>
