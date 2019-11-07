@@ -8,7 +8,7 @@ define('Controls/Utils/ArraySimpleValuesUtil', [], function() {
 
    'use strict';
 
-   const CONSTRUCTORS_FOR_TYPE_INVERTING = {
+   var CONSTRUCTORS_FOR_TYPE_INVERTING = {
       string: Number,
       number: String
    };
