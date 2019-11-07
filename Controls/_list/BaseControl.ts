@@ -1494,8 +1494,8 @@ var _private = {
         }
     },
 
-    needBottomPadding: function(options, items) {
-        return (!!items && !!items.getCount() && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+    needBottomPadding: function(options, items, listViewModel) {
+        return (!!items && (!!items.getCount() || !!listViewModel.getEditingItemData()) && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
     },
 
     isPagingNavigation: function(navigation) {
@@ -1752,7 +1752,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     } else {
                         self._items = self._listViewModel.getItems();
                     }
-                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items);
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
@@ -1860,7 +1860,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items);
+        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
             _private.initializeNavigation(this, newOptions);
         }
