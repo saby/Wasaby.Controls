@@ -127,14 +127,12 @@ class Button extends Control<IButtonOptions> implements
    private _iconSize: string;
    private _iconStyle: string;
 
-   private cssStyleGeneration = cssStyleGeneration;
-
    protected _beforeMount(options: IButtonOptions): void {
-      this.cssStyleGeneration(options);
+      cssStyleGeneration.call(this, options);
    }
 
    protected _beforeUpdate(newOptions: IButtonOptions): void {
-      this.cssStyleGeneration(newOptions);
+      cssStyleGeneration.call(this, newOptions);
    }
 
    private _keyUpHandler(e: SyntheticEvent): void {
