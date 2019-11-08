@@ -24,6 +24,10 @@ define('Controls/Utils/ArraySimpleValuesUtil', [], function() {
          if (index === -1) {
             var elementType = typeof elem;
 
+            // Данная утилита используется для операций с массивами,
+            // в которых могут лежать любые типы данных.
+            // Инвертировать тип необходимо только для строк и чисел.
+            // Для остальных типов данных это не имеет смысла и только вызывает тормоза
             if (CONSTRUCTORS_FOR_TYPE_INVERTING[elementType]) {
                index = array.indexOf(CONSTRUCTORS_FOR_TYPE_INVERTING[elementType](elem));
             }
