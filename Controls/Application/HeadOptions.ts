@@ -1,5 +1,5 @@
 /**
- * @interface Controls/Application/SEO
+ * @interface Controls/Application/HeadOptions
  *
  * @name Controls/Application#scripts
  * @cfg {Content} Описание скриптов, которые будут вставлены в head страницы

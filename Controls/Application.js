@@ -24,7 +24,7 @@ define('Controls/Application',
     * @extends Core/Control
     *
     * @mixes Controls/Application/BlockLayout/Styles
-    * @mixes Controls/Application/SEO
+    * @mixes Controls/Application/HeadOptions
     * @mixes UI/_base/HTML/RUM
     *
     * @control
