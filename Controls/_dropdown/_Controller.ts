@@ -474,6 +474,7 @@ var _Controller = Control.extend({
          this._sourceController.cancelLoading();
          this._sourceController = null;
       }
+      this._setItems(null);
    },
 
    _getEmptyText: function () {
