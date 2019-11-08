@@ -7,7 +7,7 @@ import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISe
 export default interface ISelectionStrategy {
    select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
    unSelect(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
-   getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit?: number, hierarchyRelation?: relation.Hierarchy): Promise;
+   getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit?: number, hierarchyRelation?: relation.Hierarchy): Promise<number|null>;
    getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit?: number, keyProperty?: string, hierarchyRelation?: relation.Hierarchy): Map<TKey, boolean|null>;
    isAllSelected(folderId: Tkey, selectedKeys: TKeys, excludedKeys?: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): boolean;
 }
