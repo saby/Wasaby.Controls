@@ -288,7 +288,6 @@
  * Для браузеров, которые не поддерживают технологию <a href="https://developer.mozilla.org/ru/docs/web/css/css_grid_layout">CSS Grid Layout</a>, не работает ширина колонки, указанная в долях, "auto" или "minmax". Для таких браузеров используйте свойство compatibleWidth.
  * @property {String} compatibleWidth Ширина колонки в браузерах, не поддерживающих "CSS Grid Layout".
  * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
- * Подробнее о кроссбраузерной настройке ширины колонок читайте в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/cross-browser/'>здесь</a>.
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в колонке.
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
  * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
