@@ -2,12 +2,11 @@ import {Control} from 'UI/Base';
 import * as template from 'wml!Controls/_filter/View/Container';
 
 /**
- * Контейнер для {@link Controls/_filter/View}.
- * Подписывается на событие "itemsChanged" и уведомляет о событии "filterChanged".
- * Получает параметры из контекста и передает в {@link Controls/_filter/View}.
- * NOTE: Должен быть расположен внутри Controls/_filter/Controller.
+ * Контрол используют в качестве контейнера для {@link Controls/filter:View}.
+ * Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
  *
- * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+ * Подробнее о организации поиска и фильтрации в реестре читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">здесь</a>.
  *
  * @class Controls/_filter/View/Container
  * @extends Core/Control
