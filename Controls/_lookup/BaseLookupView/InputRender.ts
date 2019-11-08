@@ -4,6 +4,11 @@ import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/Input
 
    var InputRenderLookup = input.Text.extend({
       _template: template,
+      _defaultInput: null,
+
+      _beforeUnmount: function() {
+         this._defaultInput = null;
+      },
 
       _getField: function() {
          if (this._options.isInputVisible) {
@@ -15,12 +20,20 @@ import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/Input
             // Для корректной работы создаём виртуальный input.
             // Если его скрывать через display: none, то начинаются проблемы с фокусом,
             // поэтому данный способ нам не подходит.
-            return document.createElement('input');
+            return this._getDefaultInput();
          }
       },
 
       _getReadOnlyField: function() {
          return this._getField();
+      },
+
+      _getDefaultInput: function() {
+         if (!this._defaultInput) {
+            this._defaultInput = document.createElement('input');
+         }
+
+         return this._defaultInput;
       },
 
       _keyDownInput: function(event) {
