@@ -25,7 +25,7 @@
     * @example
     * JS:
     * <pre>
-    *  define("MyControl", ["UI/Base",  "wml!Template", "Controls/decorator"], function(Base,) {
+    *  define("MyControl", ["UI/Base",  "wml!Template", "Controls/decorator"], function(Base, template, decorator) {
     *    var ModuleClass = Base.Control.extend({
     *        _template: template,
     *        json: [["p", "моя строка"]],
