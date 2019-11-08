@@ -68,11 +68,11 @@ const cancel = (config, action: string): void => {
 };
 
 class Previewer extends BaseOpener {
-    private _currentConfig;
+    private _currentConfig: Object = {};
 
     protected _beforeUnmount(): void {
-        clearClosingTimeout({});
-        clearOpeningTimeout({});
+        clearClosingTimeout(this._currentConfig);
+        clearOpeningTimeout(this._currentConfig);
     }
 
     open(cfg: object, type?: string): void {
