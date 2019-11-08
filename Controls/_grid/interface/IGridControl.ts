@@ -143,7 +143,7 @@
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
  * @property {String} template Шаблон заголовка ячейки. По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке столбца при рендере денежных данных.
+ * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке колонки при рендере денежных данных.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
  * В качестве значения принимает имя поля.
@@ -281,15 +281,14 @@
 
 /**
  * @typedef {Object} Column
- * @property {String} width Ширина столбца.
- * В качестве значения опции можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
- * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
- * В значении "minmax(,)" устанавливаются минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
- * Ширина, указанная в долях, "auto" и "minmax" не будет применятся в браузерах, не поддерживающих "CSS Grid Layout", в таком случае используйте опцию compatibleWidth.
- * @property {String} compatibleWidth Ширина столбца в браузерах, не поддерживающих "CSS Grid Layout".
- * В качестве значения опции можно указать только пиксели (px), проценты (%). Если не задана, применяется значение "auto".
- * Более подробно о кросбраузерной настройке ширины колонок вы можете почитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/cross-browser/'>статье</a>
- * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
+ * @property {String} width Ширина колонки.
+ * В качестве значения свойства можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
+ * В значении "auto" ширина колонки устанавливается автоматически исходя из типа и содержимого элемента.
+ * В значении "minmax(,)" ширина колонки устанавливается автоматически в рамках заданного интервала. Например, "minmax(600px, 1fr)" означает, что минимальная ширина колонки 600px, а максимальная — 1fr.
+ * Для браузеров, которые не поддерживают технологию <a href="https://developer.mozilla.org/ru/docs/web/css/css_grid_layout">CSS Grid Layout</a>, не работает ширина колонки, указанная в долях, "auto" или "minmax". Для таких браузеров используйте свойство compatibleWidth.
+ * @property {String} compatibleWidth Ширина колонки в браузерах, не поддерживающих "CSS Grid Layout".
+ * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
+ * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в колонке.
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
  * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
  *
@@ -325,7 +324,7 @@
  * @property {GridCellAlign} [align=left] Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
  * По умолчанию содержимое выравнивается по базовой линии (см. {@link align-items https://developer.mozilla.org/ru/docs/Web/CSS/align-items}).
- * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
+ * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
  * @property {TextOverflow} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  */
 
@@ -344,7 +343,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {Array.<Column>} Описывает столбцы таблицы.
+ * @cfg {Array.<Column>} Описывает колонки таблицы.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark Перед отрисовкой убедитесь, что {@link Types/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example
@@ -420,7 +419,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#columnScroll
- * @cfg {Boolean} Включает скроллирование столбцов.
+ * @cfg {Boolean} Включает скроллирование колонок.
  * @default false
  * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
  * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
@@ -436,7 +435,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
- * @cfg {String} Определяет начальное положение горизонтальной прокрутки столбцов, если она включена.
+ * @cfg {String} Определяет начальное положение горизонтальной прокрутки колонок, если она включена.
  * @variant start Устанавливает горизонтальную прокрутку в начальное (крайнее левое) положение.
  * @variant end Устанавливает горизонтальную прокрутку в конечное (крайнее правое) положение.
  * @default start
@@ -454,7 +453,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
- * @cfg {Number} Определяет число зафиксированных столбцов, которые не двигаются при горизонтальном скролле.
+ * @cfg {Number} Определяет число зафиксированных колонок, которые не двигаются при горизонтальном скролле.
  * @default 1
  * @see Controls/_grid/interface/IGridControl#columnScroll
  * @remark
