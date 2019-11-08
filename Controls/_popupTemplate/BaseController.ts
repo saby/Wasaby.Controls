@@ -52,6 +52,7 @@ export interface IPopupOptions {
  * @category Popup
  * @class Controls/_popupTemplate/BaseController
  * @author Красильников А.С.
+ * @private
  */
 abstract class BaseController {
 
