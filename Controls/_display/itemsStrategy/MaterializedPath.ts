@@ -24,6 +24,7 @@ interface ISorter {
  * @class Controls/_display/ItemsStrategy/MaterializedPath
  * @extends Controls/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
+ * @private
  */
 export default class MaterializedPath<S, T extends CollectionItem<S> = CollectionItem<S>>
     extends AbstractStrategy<S, T> {
