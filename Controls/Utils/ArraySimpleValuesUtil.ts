@@ -9,6 +9,11 @@ interface IDifferenceArrays {
    removed: Array
 }
 
+const CONSTRUCTORS_FOR_TYPE_INVERTING = {
+   string: Number,
+   number: String
+};
+
 export = {
    addSubArray: function(array: Array, items: Array): Array {
       items.forEach((item) => {
@@ -52,16 +57,23 @@ export = {
       return result;
    },
 
-   hasInArray: function(array: Array, elem: any): boolean {
+   hasInArray: function(array: Array, elem: unknown): boolean {
       return this.invertTypeIndexOf(array, elem) !== -1;
    },
 
-   invertTypeIndexOf: function(array: Array, elem: any): number {
+   invertTypeIndexOf: function(array: Array, elem: unknown): number {
       let index: number = array.indexOf(elem);
 
       if (index === -1) {
-         elem = (typeof elem === 'string') ? Number(elem) : String(elem);
-         index = array.indexOf(elem);
+         const elementType = typeof elem;
+
+         // Данная утилита используется для операций с массивами,
+         // в которых могут лежать любые типы данных.
+         // Инвертировать тип необходимо только для строк и чисел.
+         // Для остальных типов данных это не имеет смысла и только вызывает тормоза
+         if (CONSTRUCTORS_FOR_TYPE_INVERTING[elementType]) {
+            index = array.indexOf(CONSTRUCTORS_FOR_TYPE_INVERTING[elementType](elem));
+         }
       }
 
       return index;
