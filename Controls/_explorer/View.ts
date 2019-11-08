@@ -41,7 +41,7 @@ import 'Types/entity';
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
-               self._options.itemOpenHandler(root);
+               self._options.itemOpenHandler(root, self._items);
             }
             self._forceUpdate();
          },
@@ -339,7 +339,9 @@ import 'Types/entity';
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode, cfg);
-            this._children.treeControl.resetExpandedItems();
+            if (cfg.searchNavigationMode !== 'expand') {
+               this._children.treeControl.resetExpandedItems();
+            }
          }
          if (cfg.virtualScrolling !== this._options.virtualScrolling) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);
