@@ -235,7 +235,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             keyProperty: 'id'
          });
          let selection = {
-            selected: [0, 1, 2],
+            selected: [0, 1, 2, 'notInRecordSet'],
             excluded: [3]
          };
 
@@ -248,7 +248,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          );
 
          assert.deepEqual(preparedSelection, {
-            selected: [0, 1, 2],
+            selected: [0, 1, 2, 'notInRecordSet'],
             excluded: [3, 2]
          });
       });
