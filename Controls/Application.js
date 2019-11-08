@@ -40,9 +40,10 @@ define('Controls/Application',
     * @extends Core/Control
     *
     * @mixes Controls/Application/BlockLayout/Styles
-    * @mixes Controls/_interface/IApplication
-    * @mixes UI/_base/interface/IHTML
     * @mixes Controls/_interface/IRUM
+    * @mixes Controls/_interface/IApplication
+    * @mixes UI/_base/interface/IRootTemplate
+    * @mixes UI/_base/interface/IHTML
     * 
     * @control
     * @public
