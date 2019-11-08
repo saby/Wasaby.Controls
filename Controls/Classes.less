@@ -154,21 +154,26 @@
 }
 
 //validate
-.controls-valid_theme-@{themeName}{
-  border: @border-thickness solid transparent;
-  padding: @invalid_padding-vertical @invalid_padding-vertical;
+.controls-invalid-border{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
 }
-.controls-invalid_theme-@{themeName}{
+.controls-invalidAccent-border_theme-@{themeName}{
   border: @border-thickness solid @invalid_border-color;
-  padding: @invalid_padding-vertical @invalid_padding-vertical;
-}
-.controls-invalid_theme-@{themeName}:focus-within{
-  border: @border-thickness solid @invalid_border-color;
-  padding: @invalid_padding-vertical @invalid_padding-vertical;
+  left: -@invalid_padding-horizontal;
+  bottom: -@invalid_padding-vertical;
+  padding: @invalid_padding-vertical @invalid_padding-horizontal;
   background-color: @invalid_focus_background-color;
 }
-.controls-invalidAccent_theme-@{themeName}{
+.controls-invalid-border_theme-@{themeName}{
   border: @border-thickness solid @invalid_border-color;
-  padding: @invalid_padding-vertical @invalid_padding-vertical;
-  background-color: @invalid_focus_background-color;
+  left: -@invalid_padding-horizontal;
+  bottom: -@invalid_padding-vertical;
+  padding: @invalid_padding-vertical @invalid_padding-horizontal;
+}
+.controls-invalid-container{
+  position: relative;
 }

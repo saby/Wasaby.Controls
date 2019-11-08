@@ -64,8 +64,7 @@
                         <ws:Function value="{{_instruction }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.toggle:Checkbox attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"
-                                                  bind:value="_instruction" caption="Ознакомлен(-а) с инструкцией"/>
+                        <Controls.toggle:Checkbox bind:value="_instruction" caption="Ознакомлен(-а) с инструкцией"/>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
@@ -73,8 +72,7 @@
                         <ws:Function value="{{_switchState}}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.toggle:Switch bind:value="_switchState" captionPosition="right" caption="State"
-                                                attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                        <Controls.toggle:Switch bind:value="_switchState" captionPosition="right" caption="State"/>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:SelectionContainer name="ControllerValidate3" attr:class="validateDemo_element">
@@ -82,10 +80,8 @@
                         <ws:Function value="{{_sourceNumber }}">Controls-demo/Input/Validate/FormController:prototype.isSelected</ws:Function>
                      </ws:validators>
                      <ws:content>
-                           <Controls.toggle:RadioGroup
-                                   attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"
-                                   on:selectedKeyChanged="_selectedHandler()" keyProperty="id"
-                                   selectedKey="{{_sourceNumber}}" source="{{_sourceConfig}}"/>
+                           <Controls.toggle:RadioGroup on:selectedKeyChanged="_selectedHandler()" keyProperty="id"
+                                                       selectedKey="{{_sourceNumber}}" source="{{_sourceConfig}}"/>
                      </ws:content>
                   </Controls.validate:SelectionContainer>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">

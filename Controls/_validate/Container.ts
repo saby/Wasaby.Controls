@@ -317,13 +317,12 @@ class ValidateContainer extends Control {
         }
     }
 
-    private _getValidStatus(): ValidationStatus {
-        let validRes: ValidationStatus = this._isValidResult() ? 'invalid': 'valid';
+    private _getValidStatus(contentActive): ValidationStatus {
         //ie is not support focus-within
-        if (this._isValidResult() && this._contentActive && (detection.isIE || (detection.isWinXP && detection.yandex))) {
-            return 'invalidAccent';
+        if (this._isValidResult()) {
+            return contentActive ? 'invalidAccent' : 'invalid';
         }
-        return validRes;
+        return 'valid';
     }
 
 
