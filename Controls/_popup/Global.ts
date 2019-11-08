@@ -7,6 +7,7 @@ import { goUpByControlTree } from 'UI/Focus';
 
 /**
  * @class Controls/_popup/Global
+ * @private
  */
 
 let _private = {

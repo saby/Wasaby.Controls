@@ -5,7 +5,8 @@ import simpleExtend = require('Core/core-simpleExtend');
 
 /**
  * @extends Core/core-simpleExtend
-       * @class Controls/_scroll/Model
+ * @class Controls/_scroll/Model
+ * @private
  */
 
 /**
