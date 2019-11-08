@@ -830,12 +830,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridViewModel = new gridMod.GridViewModel(cfg),
                current = gridViewModel.getCurrent(),
                expected = {
-                  withMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit ' +
+                  withMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  ' +
                      'controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_firstRow ' +
                      'controls-Grid__row-cell_withRowSeparator_firstRow_theme-default controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default ' +
                      'controls-Grid__row-cell-checkbox_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
                      'controls-Grid__row-cell_selected__first-default_theme-default',
-                  withoutMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit ' +
+                  withoutMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  ' +
                      'controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_firstRow ' +
                      'controls-Grid__row-cell_withRowSeparator_firstRow_theme-default controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default ' +
                      'controls-Grid__row-cell-checkbox_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
@@ -947,7 +947,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridViewModel = new gridMod.GridViewModel(cfg),
                current = gridViewModel.getCurrent(),
                expectedResult = [
-                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
                   'controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow_theme-default ' +
                   'controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
                   'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default',
@@ -1059,7 +1059,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {needSearchHighlight: false},
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
                   'controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow_theme-default controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default ' +
                   'controls-Grid__row-cell-checkbox_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
                   'controls-Grid__row-cell_selected__first-default_theme-default'
@@ -1141,7 +1141,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {needSearchHighlight: false},
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
                   'controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow_theme-default controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default ' +
                   'controls-Grid__row-cell-checkbox_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
                   'controls-Grid__row-cell_selected__first-default_theme-default'
@@ -2087,6 +2087,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                isMultiHeader: true
             })
             assert.isFalse(secondRow);
+         });
+         it('getColumnScrollCellClasses', function() {
+            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
+            const transformCell = ' controls-Grid__cell_transform';
+            const params = {
+               multiSelectVisibility: 'hidden',
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 0,
+               isMultiHeader: false,
+            };
+            assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
+            assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
+
          });
          it('getColumnAlignGroupStyles', function () {
 

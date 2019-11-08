@@ -16,7 +16,7 @@ import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
  * @extends Core/Control
  * @control
  * @author Красильников А.С.
- *
+ * @private
  */
 
 var _private = {},

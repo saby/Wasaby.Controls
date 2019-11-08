@@ -135,7 +135,12 @@
 .controls-Grid__cell_fixed_theme-@{themeName} {
    z-index: 3;
    background-color: @background-color_Grid-row-sticky;
+   // stickyHeader считает что колонка не зафиксированна если повесить overflow-y: hidden;
+   &:not(.controls-StickyHeader) {
+      overflow-y: hidden;
+   }
 }
+
 
 // In IE z-index on positioned elements and transform by itself create new "stacking contexts" on elements.
 // Setting relative position for fixed column makes context-level higher then context-level of transformed column.
@@ -210,12 +215,12 @@
       }
    }
 
-   .controls-Grid_row-cell_hovered > .controls-itemActionsV {
+   .controls-Grid_row-cell_hovered_theme-@{themeName} > .controls-itemActionsV {
       display: inline-block;
    }
 
    // Class controls-Grid_row-cell_hovered adds on all cells of hovered item only in browsers with partial grid support.
-   .controls-Grid_row-cell_hovered .controls-ListView__checkbox-onhover {
+   .controls-Grid_row-cell_hovered_theme-@{themeName} .controls-ListView__checkbox-onhover {
       display: inline-block;
    }
 }
@@ -546,10 +551,12 @@
 
 .controls-Grid__header-cell_justify_content_left {
    justify-content: flex-start;
+   text-align: left;
 }
 
 .controls-Grid__header-cell_justify_content_right {
    justify-content: flex-end;
+   text-align: right;
 }
 
 .controls-Grid__header-cell_justify_content_center {

@@ -2,13 +2,14 @@
     <ws:for data="index, item in _items">
         <div attr:class="{{_prepareItemClass(item, index)}}"
              attr:style="{{_prepareItemOrder(index)}}"
-             attr:title="{{ item[_options.displayProperty] }}">
+             attr:title="{{ item[_options.displayProperty] }}"
+             on:click="_onItemClick(item.get(_options.keyProperty))">
             <ws:partial
                     attr:class="controls-Tabs__itemClickableArea controls-Tabs__itemClickableArea_theme_{{_options.theme}}"
-                    on:click="_onItemClick(item.get(_options.keyProperty))"
                     template="{{ _options.itemTemplateProperty ? item.get(_options.itemTemplateProperty) ?  item.get(_options.itemTemplateProperty) : (_options.itemTemplate || _defaultItemTemplate) : (_options.itemTemplate || _defaultItemTemplate)}}"
                     selected="{{item[_options.keyProperty] === _options.selectedKey ? true : false}}"
                     displayProperty="{{_options.displayProperty}}"
+                    keyProperty="{{_options.keyProperty}}"
                     item="{{item}}"/>
             <ws:if data="{{item.get('contentTab')}}">
                 <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}

@@ -4,14 +4,16 @@
                   itemData="{{itemData}}"
                   itemActionsTemplate="{{itemActionsTemplate}}"
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                  highlightOnHover="{{highlightOnHover}}"/>
+                  highlightOnHover="{{highlightOnHover}}"
+                  attr:key="{{itemData.getCurrentColumnKey()}}__actions"/>
    </ws:if>
    <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
       <ws:partial template="{{itemActionsTemplate}}"
                   itemActionsClass="{{itemActionsClass}}"
                   itemData="{{itemData}}"
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                  highlightOnHover="{{highlightOnHover}}"/>
+                  highlightOnHover="{{highlightOnHover}}"
+                  attr:key="{{itemData.getCurrentColumnKey()}}__actions"/>
    </ws:else>
 </ws:template>
 <ws:template name="columnContent">

@@ -29,6 +29,15 @@ define(['Controls/search'], function(search) {
          });
 
          assert.deepEqual(filterController._filter, { title: 'test2' });
+
+         filterController._filter = null;
+         // filter options is not changed
+         filterController._beforeUpdate({
+            filter: {
+               title: 'test'
+            }
+         });
+         assert.isNull(filterController._filter);
       });
    });
 });

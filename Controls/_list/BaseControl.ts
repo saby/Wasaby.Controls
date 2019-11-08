@@ -1485,8 +1485,8 @@ var _private = {
         }
     },
 
-    needBottomPadding: function(options, items) {
-        return (!!items && !!items.getCount() && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+    needBottomPadding: function(options, items, listViewModel) {
+        return (!!items && (!!items.getCount() || !!listViewModel.getEditingItemData()) && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
     },
 
     isPagingNavigation: function(navigation) {
@@ -1735,7 +1735,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     } else {
                         self._items = self._listViewModel.getItems();
                     }
-                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items);
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
@@ -1843,7 +1843,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items);
+        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
             _private.initializeNavigation(this, newOptions);
         }
@@ -1857,9 +1857,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             )
         ) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
+            const items = this._listViewModel.getItems();
+            this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
-                items: this._listViewModel.getItems()
+                items
             }));
+            if (this._virtualScroll) {
+                this._virtualScroll.ItemsCount = this._listViewModel.getCount();
+                this._virtualScroll.recalcByIndex(0);
+            }
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
         }
 
@@ -1894,7 +1900,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             //Нужно обновлять опции записи не только при наведении мыши,
             //так как запись может поменяться в то время, как курсор находится на ней
-            this._updateItemActions();
+            this._shouldUpdateItemActions = true;
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1919,7 +1925,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
-            this._updateItemActions();
+            this._shouldUpdateItemActions = true;
         }
 
         if (this._loadedItems) {
@@ -2101,6 +2107,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._resetScrollAfterReload) {
             this._notify('doScroll', ['top'], { bubbling: true });
             this._resetScrollAfterReload = false;
+        }
+        if (this._shouldUpdateItemActions){
+            this._shouldUpdateItemActions = false;
+            this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
@@ -2388,7 +2398,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     }
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._updateItemActions();
+        this._shouldUpdateItemActions = true;
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {

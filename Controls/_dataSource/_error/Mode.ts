@@ -6,7 +6,7 @@
  * @property {string} page во всю страницу
  * @property {string} include в области контрола
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  */
 enum Mode {
     dialog = 'dialog',
