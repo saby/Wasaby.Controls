@@ -74,7 +74,7 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
  * @cfg {String} title of the tab
 */
 
-export interface IApplication extends IHTML {
+export default interface IApplication extends IHTML {
     readonly '[Controls/_interface/IApplication]': boolean
 };
 
@@ -82,8 +82,11 @@ export interface IAttributes {
     [index: string]: string | undefined
 }
 
+export type HeadJson = [string, Record<string, string>][];
+
 export interface IApplicationOptions extends IHTMLOptions {
     scripts?: Array<IAttributes>,
     links?: Array<IAttributes>,
-    meta?: Array<IAttributes>
+    meta?: Array<IAttributes>,
+    headJson?: HeadJson
 }

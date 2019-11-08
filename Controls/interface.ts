@@ -26,6 +26,7 @@
  * @includes IBorderStyle Controls/_interface/IBorderStyle
  * @includes ISelectionType Controls/_interface/ISelectionType
  * @includes IDateConstructor Controls/_interface/IDateConstructor
+ * @includes IApplication Controls/_interface/IApplication
  * @public
  * @author Крайнов Д.О.
  */
@@ -56,4 +57,6 @@ export {default as IDateMask, IDateMaskOptions, dateMaskConstants} from './_inte
 export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropStorage';
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
 export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';
+export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
+export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelectionRecord, ISelectionObject} from './_interface/ISelectionType';

@@ -13,7 +13,7 @@
  */
 
  
-export interface IRUM {
+export default interface IRUM {
     readonly '[Controls/_interface/IRUM]': boolean
 };
 
