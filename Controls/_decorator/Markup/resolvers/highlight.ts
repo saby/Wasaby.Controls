@@ -17,12 +17,35 @@
    /**
     *
     * Модуль с функцией выделения искомой строки.
-    * Берет textToHighlight из {@link Controls/decorator:Markup#resolverParams}.
     * Распознаватель тегов для {@link Controls/decorator:Markup}.
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
     * @public
     * @author Кондаков Р.Н.
+    * @example
+    * JS:
+    * <pre>
+    *  define("MyControl", ["UI/Base",  "wml!Template", "Controls/decorator"], function(Base,) {
+    *    var ModuleClass = Base.Control.extend({
+    *        _template: template,
+    *        json: [["p", "моя строка"]],
+    *        tagResolver: decorator._highlightResolver,
+    *        resolverParams: { "textToHighlight": "моя" }
+    *    });
+    *    return ModuleClass;
+    *  });
+    * </pre>
+    * 
+    * WML:
+    * <pre>
+    *  <Controls.decorator:Markup
+    *    value="{{ json }}"
+    *    tagResolver="{{ tagResolver }}"
+    *    resolverParams="{{ resolverParams }}" />
+    * </pre>
+    * 
+    * В результате выполнения кода слово "моя" будет подсвечено. 
+    * 
     */
 
    /*
