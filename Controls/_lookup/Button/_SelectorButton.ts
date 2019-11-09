@@ -20,10 +20,10 @@ import 'css!theme?Controls/lookup';
          this._notify('removeItem', [item]);
       },
 
-      _itemClickHandler: function(item) {
-         if (this._options.multiSelect) {
-            this._notify('itemClick', [item]);
-         } else if (!this._options.readOnly) {
+      _itemClickHandler: function(event, item) {
+         this._notify('itemClick', [item]);
+
+         if (!this._options.readOnly && !this._options.multiSelect) {
             this._open();
          }
       },
