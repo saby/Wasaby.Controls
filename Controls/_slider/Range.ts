@@ -14,6 +14,7 @@ export interface ISliderRangeOptions extends IControlOptions {
    startValue: number;
    endValue: number;
    precision: number;
+   tooltipFormatter?: Function;
 }
 
 const maxPercentValue = 100;
@@ -222,6 +223,26 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base precision="{{0}}"/>
  * </pre>
  */
+
+/**
+ * @name Controls/_slider/Base#tooltipFormatter
+ * @cfg {Function} Функция форматирования подсказки.
+ * @remark
+ * Аргументы функции:
+ * <ul>
+ *    <li>value - текущее положение слайдера</li>
+ * </ul>
+ */
+
+/*
+ * @name Controls/_slider/Base#tooltipFormatter
+ * @cfg {Function} Tooltip formatter function.
+ * @remark
+ * Function Arguments:
+ * <ul>
+ *    <li>value - slider current position</li>
+ * </ul>
+ */
 class Range extends Control<ISliderRangeOptions> {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
@@ -230,7 +251,8 @@ class Range extends Control<ISliderRangeOptions> {
    private _scaleData: IScaleData[] = undefined;
    private _startValue: number = undefined;
    private _endValue: number = undefined;
-   private _tooltipValue: number | null = null;
+   private _tooltipPosition: number | null = null;
+   private _tooltipValue: string | null = null;
    private _isDrag: boolean = false;
 
    private _render(minValue: number, maxValue: number, startValue: number, endValue: number): void {
@@ -299,7 +321,7 @@ class Range extends Control<ISliderRangeOptions> {
       this._startValue = options.startValue === undefined ?
                                                 options.minValue : Math.max(options.minValue, options.startValue);
       this._render(options.minValue, options.maxValue, this._startValue, this._endValue);
-      this._renderTooltip(options.minValue, options.maxValue, this._tooltipValue);
+      this._renderTooltip(options.minValue, options.maxValue, this._tooltipPosition);
    }
 
    private _setStartValue(val: number): void {
@@ -339,13 +361,16 @@ class Range extends Control<ISliderRangeOptions> {
 
    private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
-         this._tooltipValue = this._getValue(event);
+         this._tooltipPosition = this._getValue(event);
+         this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
+            : this._tooltipPosition;
       }
    }
 
    private _onMouseLeave(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
          this._tooltipValue = null;
+         this._tooltipPosition = null;
       }
    }
 
