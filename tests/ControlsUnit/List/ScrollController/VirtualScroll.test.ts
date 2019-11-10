@@ -2,7 +2,7 @@ import VirtualScroll from 'Controls/_list/ScrollController/VirtualScroll';
 
 describe('Controls/_list/ScrollController/VirtualScroll', () => {
     const heights = [20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40];
-    const children = heights.map((offsetHeight) => ({offsetHeight: offsetHeight}));
+    const children = heights.map((offsetHeight) => ({offsetHeight: offsetHeight, className: ''}));
     describe('common virtual scroll', () => {
         let vsInstance: VirtualScroll;
         let affectingInstance: object = {};

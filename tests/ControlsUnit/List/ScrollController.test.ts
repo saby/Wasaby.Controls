@@ -113,13 +113,13 @@ describe('Controls/_list/ScrollController', () => {
                 }
             };
             instance.saveScrollPosition = true;
-            instance.savedScrollPosition = 'up';
+            instance.savedScrollDirection = 'up';
             instance.actualStartIndex = 0;
             instance.savedStartIndex = 2;
             instance.triggerVisibility = {};
             instance._afterRender();
             assert.isTrue(instance.eventParams.bubbling);
-            assert.equal(98, instance.eventArguments[0]);
+            assert.equal(102, instance.eventArguments[0]);
             assert.isFalse(instance.saveScrollPosition);
             assert.isNull(instance.savedScrollDirection);
         });
@@ -364,9 +364,9 @@ describe('Controls/_list/ScrollController', () => {
 
         it('offset recalc, viewport set', () => {
             ScrollController.prototype.updateViewport.call(instance, 2);
-            assert.equal(1, instance.virtualScroll.triggerOffset);
-            assert.equal(1, instance.topTriggerOffset);
-            assert.equal(1, instance.bottomTriggerOffset);
+            assert.equal (0.6, instance.virtualScroll.triggerOffset);
+            assert.equal(0.6, instance.topTriggerOffset);
+            assert.equal(0.6, instance.bottomTriggerOffset);
             assert.equal(2, instance.virtualScroll.viewportHeight);
         });
     });
@@ -375,6 +375,7 @@ describe('Controls/_list/ScrollController', () => {
             _options: {
                 virtualScrolling: true
             },
+            fakeScroll: true,
             virtualScroll: {},
             proxyEvent() {}
         };
