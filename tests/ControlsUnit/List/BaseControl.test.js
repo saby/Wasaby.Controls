@@ -148,8 +148,8 @@ define([
 
          // сорс грузит асинхронно
          setTimeout(function() {
-            assert.equal(ctrl._items, ctrl.getViewModel()
-               .getItems());
+            assert.equal(ctrl._items, ctrl.getViewModel().getItems());
+            const prevModel = ctrl._listViewModel;
             ctrl._beforeUpdate(cfg);
 
             // check saving loaded items after new viewModelConstructor
@@ -161,6 +161,7 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
+            assert.equal(prevModel._display, null);
             assert.isTrue(
                cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
                cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
@@ -1866,10 +1867,12 @@ define([
          it('itemsChanged', async function() {
             baseControl._itemsChanged = true;
             await baseControl._beforeUpdate(cfg);
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 2);
          });
          it('_onAfterEndEdit', function() {
             baseControl._onAfterEndEdit({}, {});
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 3);
          });
          it('update on recreating source', async function() {
@@ -1890,6 +1893,7 @@ define([
                viewModelConstructor: lists.ListViewModel
             };
             await baseControl._beforeUpdate(newCfg);
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
 
@@ -2204,27 +2208,38 @@ define([
                return count;
             }
          };
+         const model = {
+            getEditingItemData: function() {
+               return null;
+            }
+         };
+         const editingModel = {
+            getEditingItemData: function() {
+               return {};
+            }
+         };
 
-         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items), 'itemActionsPosinon is outside, padding is needed');
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, padding is needed");
          cfg = {
             itemActionsPosition: 'inside'
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items), 'itemActionsPosinon is inside, padding is not needed');
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is inside, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
             footerTemplate: 'footer'
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items), 'itemActionsPosinon is outside, footer exists, padding is not needed');
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, footer exists, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
             resultsPosition: 'bottom'
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items), 'itemActionsPosinon is outside, results row is in bottom padding is not needed');
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
          };
          count = 0;
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items), 'itemActionsPosinon is outside, empty items, padding is not needed');
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, empty items, padding is not needed");
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, editingModel), "itemActionsPosinon is outside, empty items, run editing in place padding is needed");
       });
       describe('EditInPlace', function() {
          it('beginEdit', function() {
@@ -4606,7 +4621,8 @@ define([
                expectedSourceConfig.pageSize = 100;
                expectedSourceConfig.hasMore = false;
                baseControl._changePageSize({}, {id: 1, title: 100, get: function() {return this.title;}});
-
+               expectedSourceConfig.page = 1;
+               baseControl.__pagingChangePage({}, 2);
             });
          });
          describe('navigation switch', function() {

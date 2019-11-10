@@ -20,19 +20,22 @@ let getTemplate = (template: string | Control): Promise<Control> => {
     }
     return Promise.resolve(template);
 };
-
+const isEqual = (o1: object, o2: object): boolean => o1 && o2 && Object.keys(o1).every((p) => o1[p] === o2[p]) || false;
 /**
  * Компонент для отображения шаблона ошибки по данным контрола {@link Controls/_dataSource/_error/Controller}
  * @class Controls/_dataSource/_error/Container
  * @extends Core/Control
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  *
  */
 export default class Container extends Control implements IContainer {
     private __viewConfig: Config;
     private __lastShowedId: number;
     protected _template = template;
+    _options: IContainerConfig;
+    _forceUpdate;
+    _notify;
     /**
      * Скрыть компонент, отображающий данные об ошибке
      * @method
@@ -100,6 +103,9 @@ export default class Container extends Control implements IContainer {
         this._notify('dialogClosed', []);
     }
     private __updateConfig(options: IContainerConfig) {
+        if (!options.viewConfig || isEqual(options.viewConfig, this._options.viewConfig)) {
+            return;
+        }
         this.__setConfig(options.viewConfig);
         if (this.__viewConfig) {
             this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;

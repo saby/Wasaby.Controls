@@ -1,16 +1,23 @@
 import {TemplateFunction} from 'UI/Base';
-import {ListViewModel, BaseViewModel, ItemsUtil} from 'Controls/list';
+import {BaseViewModel, ItemsUtil, ListViewModel} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import {Utils as stickyUtil} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
-import cClone = require('Core/core-clone');
 import {detection} from 'Env/Env';
 import {isEqual} from 'Types/object';
 import {
+    getBottomPaddingRowIndex,
     getFooterIndex,
-    getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow, getBottomPaddingRowIndex
+    getIndexByDisplayIndex,
+    getIndexById,
+    getIndexByItem,
+    getMaxEndRow,
+    getResultsIndex,
+    getRowsArray,
+    getTopOffset,
+    IBaseGridRowIndexOptions
 } from 'Controls/_grid/utils/GridRowIndexUtil';
+import cClone = require('Core/core-clone');
 import ControlsConstants = require('Controls/Constants');
 import collection = require('Types/collection');
 
@@ -158,6 +165,14 @@ var
 
             return preparedClasses;
         },
+
+        getPaddingForCheckBox: function({ theme, itemPadding }) {
+            let preparedClasses = '';
+            preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
+            preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
+            return preparedClasses;
+        },
+
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
@@ -253,15 +268,16 @@ var
         },
 
         getColumnScrollCellClasses: function(params, theme) {
-           return _private.isFixedCell(params) ? `controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
+           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
         },
 
         getItemColumnCellClasses: function(current, theme) {
-            var
-               cellClasses = `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} `;
+            const cellClasses = `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} `;
+            const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
+
             if (current.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses(current, theme);
-            } else {
+            } else if (!checkBoxCell) {
                 cellClasses += ' controls-Grid__cell_fit';
             }
             cellClasses += (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover') + `_theme-${theme}`;
@@ -271,8 +287,9 @@ var
             cellClasses += _private.prepareRowSeparatorClasses(current, theme);
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0) {
+            if (checkBoxCell) {
                 cellClasses += ' controls-Grid__row-cell-checkbox' + `_theme-${theme}`;
+                cellClasses += _private.getPaddingForCheckBox({ theme, itemPadding: current.itemPadding});
             } else {
                 cellClasses += _private.getPaddingCellClasses({
                     columns: current.columns,

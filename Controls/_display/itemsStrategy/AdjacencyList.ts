@@ -202,9 +202,10 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
  * Стратегия-декоратор получения элементов проекции по списку смежных вершин
  * @class Controls/_display/ItemsStrategy/AdjacencyList
  * @mixes Types/_entity/DestroyableMixin
- * @implements Controls/_display/IItemsStrategy
  * @mixes Types/_entity/SerializableMixin
+ * @implements Controls/_display/IItemsStrategy
  * @author Мальцев А.А.
+ * @private
  */
 export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
     DestroyableMixin,

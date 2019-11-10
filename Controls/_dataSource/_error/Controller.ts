@@ -61,7 +61,7 @@ let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): Han
  * Модуль для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
  * @class Controls/_dataSource/_error/Controller
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  * @example
  * <pre>
  *     let handler = ({ error, mode }) => {

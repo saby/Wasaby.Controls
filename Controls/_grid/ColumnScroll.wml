@@ -1,7 +1,7 @@
 <div name="content" class="controls-ColumnScroll_content_wrapper {{_transformSelector}}" on:wheel="_wheelHandler()">
    <style name="contentStyle" data-vdom-ignore="true"></style>
    <ws:if data="{{_isColumnScrollVisible()}}">
-      <div class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
+      <div name="startShadow" class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
       <div class="{{_calculateShadowClasses('end')}}"></div>
    </ws:if>
    <ws:partial

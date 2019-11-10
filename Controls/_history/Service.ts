@@ -240,13 +240,13 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
 
       let resultDef;
 
-      if (STORAGES_DATA_LOAD[historyId] && !Env.constants.isBuildOnServer) {
+      if (STORAGES_DATA_LOAD[historyId] && Env.constants.isBrowserPlatform) {
          resultDef = new Deferred();
          // create new deferred, so in the first callback function, the result of the query will be changed
          STORAGES_DATA_LOAD[historyId].addBoth(() => {
             resultDef.callback(self.getHistory(historyId));
          });
-      } else if (!STORAGES[historyId] || Env.constants.isBuildOnServer) {
+      } else if (!STORAGES[historyId] || Env.constants.isServerSide) {
          resultDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
             params: {
                historyIds: historyId ? [historyId] : this._historyIds,
@@ -267,7 +267,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
          // на сервере возможны проблемы (утечки) при посторении страниц, т.к. объект глобальный,
          // как минимум, стэк очистится от вызова сборщика мусора
          // https://online.sbis.ru/opendoc.html?guid=37eb3bdd-19b1-4b36-b889-92e798fc2cf7
-         if (!Env.constants.isBuildOnServer) {
+         if (Env.constants.isBrowserPlatform) {
             STORAGES_DATA_LOAD[historyId] = resultDef;
          }
 

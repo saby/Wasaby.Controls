@@ -97,7 +97,7 @@ define(
             }, 60);
          });
 
-         it('abort', function() {
+         it('abort', function(done) {
             var aborted = false;
             var searchController = new searchLib._SearchController({
                minSearchLength: 3,
@@ -105,9 +105,7 @@ define(
                searchDelay: 50,
                searchParam: 'name',
                filter: {},
-               abortCallback: function() {
-                  aborted = true;
-               },
+               abortCallback: () => { done(); },
             });
 
             searchController.search('test');
@@ -117,7 +115,6 @@ define(
             assert.isFalse(aborted);
 
             searchController.abort(true);
-            assert.isTrue(aborted);
          });
 
          it('search with sorting', function(done) {
@@ -163,12 +160,11 @@ define(
                   return originalSearch.apply(search, arguments);
                };
 
-               searchController.search('1', true);
-               assert.isTrue(searched);
-               assert.isTrue(forced);
-               done();
-               return search;
-            });
+               return searchController.search('1', true).then(() => {
+                  assert.isTrue(searched);
+                  assert.isTrue(forced);
+               });
+            }).then(done, done);
          });
 
          it('search, trim: true', function() {
@@ -229,14 +225,16 @@ define(
             assert.isFalse(forced);
             assert.isFalse(reseted);
 
-            searchController.search('t', true);
-            assert.isTrue(searched);
-            assert.isTrue(forced);
+            searchController.search('t', true).then(() => {
+               assert.isTrue(searched);
+               assert.isTrue(forced);
+            });
 
             searchController.abort(true);
             reseted = false;
-            searchController.search('');
-            assert.isTrue(reseted);
+            searchController._search.search('').then(() => {
+               assert.isTrue(reseted);
+            });
          });
       });
    });

@@ -295,6 +295,14 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return false;
         }
 
+        // If the data is drawn over the years, and the displayed period is not the first month of the year,
+        // then scroll to it unconditionally. In this case, the last month can be scrolled to the bottom
+        // of the scrolled area. But this configuration is used only in a large selection of the period,
+        // and there it is valid.
+        if ((this._options.viewMode === 'year' && date.getMonth() !== 0)) {
+            return true;
+        }
+
         //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
         const container = this._container.get ? this._container.get(0) : this._container;
 

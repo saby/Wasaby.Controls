@@ -4,7 +4,7 @@
             source="{{_viewSource}}"
             groupingKeyCallback="{{_groupingKeyCallback}}">
         <ws:groupTemplate>
-            <ws:partial template="Controls/list:GroupTemplate" itemData="{{itemData}}" textAlign="right"/>
+            <ws:partial template="Controls/list:GroupTemplate" itemData="{{itemData}}" textAlign="right" expanderAlign="right"/>
         </ws:groupTemplate>
     </Controls.list:View>
 </div>

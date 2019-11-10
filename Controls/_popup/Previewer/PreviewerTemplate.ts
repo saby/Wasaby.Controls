@@ -6,6 +6,7 @@ import 'Controls/Container/Async';
 
 /**
  * @class Controls/_popup/Previewer/PreviewerTemplate
+ * @private
  */
 
       var PreviewerTemplate = Control.extend({
