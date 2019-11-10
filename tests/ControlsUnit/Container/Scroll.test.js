@@ -349,6 +349,11 @@ define(
                const
                   addedHeight = 100,
                   oldScrollTop = scroll._children.content.scrollTop;
+               scroll._children.scrollWatcher = {
+                  setScrollTop(value) {
+                     scroll._children.content.scrollTop = value;
+                  }
+               };
                scroll._saveScrollPosition({stopPropagation: function(){}});
                scroll._children.content.scrollHeight += addedHeight;
                scroll._restoreScrollPosition({stopPropagation: function(){}}, 0);
