@@ -14,7 +14,6 @@
  * @includes IErrorController Controls/_interface/IErrorController
  * @includes ISingleSelectable Controls/_interface/ISingleSelectable
  * @includes IMultiSelectable Controls/_interface/IMultiSelectable
- * @includes ISource Controls/_interface/ISource
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes INumberFormat Controls/_interface/INumberFormat
  * @includes IExpandable Controls/_interface/IExpandable
