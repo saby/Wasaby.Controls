@@ -301,7 +301,7 @@ const _private = {
     popupDragEnd(id, offset) {
         const element = _private.find(id);
         if (element) {
-            element.controller.popupDragEnd(element, offset);
+            element.controller._popupDragEnd(element, offset);
             return true;
         }
         return false;

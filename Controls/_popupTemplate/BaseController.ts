@@ -90,7 +90,9 @@ abstract class BaseController {
             return this.elementCreated && this.elementCreated.apply(this, arguments);
         }
     }
-
+    _popupDragEnd(item: IPopupItem) {
+        return this.popupDragEnd && this.popupDragEnd.apply(this, arguments);
+    }
     _elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean {
         if (this._checkContainer(item, container, 'elementUpdated')) {
             if (item.popupState === this.POPUP_STATE_CREATED ||
