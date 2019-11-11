@@ -2,9 +2,7 @@
  * Библиотека контролов, позволяющих выводить подсказку при вводе текста.
  * @library Controls/suggest
  * @includes Input Controls/_suggest/Input
- * @includes InputStyles Controls/_suggest/Input/Styles
  * @includes SearchInput Controls/_suggest/Input/Search/Suggest
- * @includes ContentLayerStyles Controls/_suggest/Layer/ContentLayer/Styles
  * @includes Selector Controls/_suggest/Selector
  * @includes ISuggest Controls/_suggest/ISuggest
  *
@@ -16,9 +14,7 @@
  * suggest library
  * @library Controls/suggest
  * @includes Input Controls/_suggest/Input
- * @includes InputStyles Controls/_suggest/Input/Styles
  * @includes SearchInput Controls/_suggest/Input/Search/Suggest
- * @includes ContentLayerStyles Controls/_suggest/Layer/ContentLayer/Styles
  * @includes Selector Controls/_suggest/Selector
  * @includes ISuggest Controls/_suggest/ISuggest
  *
