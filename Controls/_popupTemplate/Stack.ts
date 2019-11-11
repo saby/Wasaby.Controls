@@ -191,6 +191,22 @@ const DialogTemplate = Control.extend({
      */
     close() {
         this._notify('close', [], {bubbling: true});
+    },
+    changeMaximizedState() {
+        /**
+         * @event maximized
+         * Occurs when you click the expand / collapse button of the panels.
+         */
+        const maximized = this._calculateMaximized(this._options);
+        this._notify('maximized', [!maximized], {bubbling: true});
+    },
+    _calculateMaximized(options) {
+        // TODO: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+        if (!options.stackMinimizedWidth && options.stackMinWidth && options.stackMaxWidth) {
+            const middle = (options.stackMinWidth + options.stackMaxWidth) / 2;
+            return options.stackWidth - middle > 0;
+        }
+        return options.maximized;
     }
 });
 
