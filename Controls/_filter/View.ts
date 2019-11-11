@@ -12,7 +12,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
-import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
+import {getItemsWithHistory, isHistorySource, getUniqItems} from 'Controls/_filter/HistoryUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
@@ -108,6 +108,7 @@ var _private = {
                 popupItem.id = item.name;
                 popupItem.selectedKeys = (item.value instanceof Object) ? item.value : [item.value];
                 popupItem.resetValue = (item.resetValue instanceof Object) ? item.resetValue : [item.resetValue];
+                popupItem.items = configs[item.name].popupItems || popupItem.items;
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
                         _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
@@ -201,6 +202,12 @@ var _private = {
         return newKeys;
     },
 
+    setItems: function(config, item, newItems) {
+        config.popupItems = getItemsWithHistory(config.popupItems || CoreClone(config.items), newItems,
+            config._sourceController, item.editorOptions.source, config.keyProperty);
+        config.items.prepend(newItems);
+    },
+
     loadSelectedItems: function(items, configs) {
         let pDef = new ParallelDeferred();
         factory(items).each(function(item) {
@@ -214,8 +221,7 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
-                        configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems,
-                            configs[item.name]._sourceController, item.editorOptions.source, configs[item.name].keyProperty);
+                        _private.setItems(config, item, newItems);
                     });
                     pDef.push(result);
                 }
@@ -246,6 +252,7 @@ var _private = {
         self._configs[item.name] = Merge(self._configs[item.name] || {}, CoreClone(options));
         self._configs[item.name].emptyText = item.emptyText;
         self._configs[item.name].emptyKey = item.hasOwnProperty('emptyKey') ? item.emptyKey : null;
+        self._configs[item.name].popupItems = null;
 
         if (options.source) {
             return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
@@ -427,7 +434,7 @@ var _private = {
             }
             _private.updateHistory(this, result.id, factory(result.data).toArray());
         }
-        curConfig.items.prepend(newItems);
+        _private.setItems(curConfig, curItem, newItems);
         let selectedKeys = _private.getSelectedKeys(result.data, curConfig);
         if (curConfig.nodeProperty) {
             selectedKeys = _private.prepareHierarchySelection(selectedKeys, curConfig, curItem.resetValue);
