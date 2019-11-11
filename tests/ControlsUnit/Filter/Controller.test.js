@@ -268,6 +268,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          var items = Filter._private.getItemsByOption(opt);
 
          assert.deepEqual(items, opt);
+         assert.isFalse(items === opt);
       });
 
       it('_private.processPrefetchOnItemsChanged', () => {
@@ -315,6 +316,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          }];
          var items = Filter._private.getItemsByOption(opt, history);
          assert.deepEqual(items, history);
+         assert.isFalse(items === opt);
       });
 
       it('_private.getItemsByOption::function with history', function () {
