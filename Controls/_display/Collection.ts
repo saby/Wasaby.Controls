@@ -34,6 +34,7 @@ import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
+import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -620,6 +621,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _virtualScrollManager: VirtualScrollManager;
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
+    protected _selectionManager: SelectionManager;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -674,6 +676,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._virtualScrollManager = new VirtualScrollManager(this);
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
+        this._selectionManager = new SelectionManager(this);
     }
 
     destroy(): void {
@@ -1931,6 +1934,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setSelectedItemsAll(selected: boolean): void {
         this._setSelectedItems(this._getItems(), selected);
+    }
+
+    setSelection(selection: ISelectionMap): void {
+        this._selectionManager.setSelection(selection);
     }
 
     /**
