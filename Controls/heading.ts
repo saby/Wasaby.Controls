@@ -7,7 +7,6 @@
  * @includes Back Controls/_heading/Back
  * @includes Separator Controls/_heading/Separator
  * @includes Counter Controls/_heading/Counter
- * @includes BackStyles Controls/_heading/Back/BackStyles
  * @public
  * @author Крайнов Д.О.
  */
@@ -19,7 +18,6 @@
  * @includes Back Controls/_heading/Back
  * @includes Separator Controls/_heading/Separator
  * @includes Counter Controls/_heading/Counter
- * @includes BackStyles Controls/_heading/Back/BackStyles
  * @public
  * @author Крайнов Д.О.
  */

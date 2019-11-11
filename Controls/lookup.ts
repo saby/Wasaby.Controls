@@ -5,10 +5,6 @@
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
  * @includes ItemTemplate Controls/_lookup/SelectedCollection/ItemTemplate
- * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
- * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
- * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @includes Link Controls/_lookup/Lookup/Link
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Collection Controls/_lookup/SelectedCollection
@@ -23,10 +19,6 @@
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
  * @includes ItemTemplate Controls/_lookup/SelectedCollection/ItemTemplate
- * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
- * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
- * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Link Controls/_lookup/Lookup/Link

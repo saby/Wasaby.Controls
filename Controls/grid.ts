@@ -16,8 +16,6 @@
  * @includes LadderWrapper wml!Controls/_grid/LadderWrapper
  * @includes ColumnTemplate wml!Controls/_grid/Column
  * @includes RowEditor wml!Controls/_grid/RowEditor
- * @includes GridStyles Controls/_grid/GridStyles
- * @includes SortButtonStyles Controls/_grid/SortButtonStyles
  * @includes IGridControl Controls/_grid/interface/IGridControl
  * @public
  * @author Крайнов Д.О.
