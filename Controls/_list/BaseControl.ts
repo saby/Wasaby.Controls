@@ -1495,7 +1495,12 @@ var _private = {
     },
 
     needBottomPadding: function(options, items, listViewModel) {
-        return (!!items && (!!items.getCount() || !!listViewModel.getEditingItemData()) && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+        return (!!items &&
+            (!!items.getCount() ||
+                (options.useNewModel ? listViewModel.isEditing() : !!listViewModel.getEditingItemData())) &&
+            options.itemActionsPosition === 'outside' &&
+            !options.footerTemplate &&
+            options.resultsPosition !== 'bottom');
     },
 
     isPagingNavigation: function(navigation) {
