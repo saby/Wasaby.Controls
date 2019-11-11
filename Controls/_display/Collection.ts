@@ -149,7 +149,17 @@ function onCollectionChange<T>(
         case IObservable.ACTION_RESET:
             const projectionOldItems = toArray(this);
             let projectionNewItems;
-            this._reBuild(true);
+            // TODO Здесь был вызов _reBuild(true), который полностью пересоздает все
+            // CollectionItem'ы, из-за чего мы теряли их состояние. ACTION_RESET происходит
+            // не только при полном пересоздании рекордсета, но и например при наборе
+            // "критической массы" изменений при выключенном режиме обработки событий.
+            // https://online.sbis.ru/opendoc.html?guid=573aed02-3c97-4432-9d39-19e53bda8bc0
+            // По идее, нам это не нужно, потому что в случае реального пересоздания рекордсета,
+            // нам передадут его новый инстанс, и мы пересоздадим всю коллекцию сами.
+            // Но на случай, если такой кейс все таки имеет право на жизнь, выписал
+            // задачу в этом разобраться.
+            // https://online.sbis.ru/opendoc.html?guid=bd17a1fb-5d00-4f90-82d3-cb733fe7ab27
+            this._reBuild(/* true */);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
