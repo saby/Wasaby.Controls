@@ -11,7 +11,6 @@
  * @includes MoneyStyles Controls/_decorator/Money/Styles
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
- * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
  * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
  * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
  * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
@@ -33,7 +32,6 @@
  * @includes MoneyStyles Controls/_decorator/Money/Styles
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
- * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
  * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
  * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
  * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
