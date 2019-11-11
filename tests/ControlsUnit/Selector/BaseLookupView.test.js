@@ -43,6 +43,7 @@ define([
          let activated = false;
          let lookup = new Lookup();
 
+         lookup._suggestState = false;
          lookup._needSetFocusInInput = true;
          lookup._options.items = getItems(0);
          lookup.activate = function(config) {
@@ -60,6 +61,12 @@ define([
          assert.isTrue(activated);
          assert.isFalse(lookup._needSetFocusInInput);
          assert.equal(configActivate, undefined);
+         assert.isFalse(lookup._suggestState);
+
+         lookup._needSetFocusInInput = true;
+         lookup._determineAutoDropDown = () => true;
+         lookup._afterUpdate();
+         assert.isTrue(lookup._suggestState);
       });
 
       it('_beforeUpdate', function() {
