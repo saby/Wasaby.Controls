@@ -213,16 +213,8 @@ var
                     footer.colspanStyles = GridLayoutUtil.getColumnStyles(colspanCfg);
                 }
             };
-
-            if (this._options.task1177672941) {
-                if (current.nodeFooter && current.nodeFooter.length > 0) {
-                    current.nodeFooter.forEach(setNodeFooterRowStyles);
-                }
-            } else {
-                // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
-                if (current.nodeFooter) {
-                    setNodeFooterRowStyles(current.nodeFooter, 0);
-                }
+            if (current.nodeFooters) {
+                current.nodeFooters.forEach(setNodeFooterRowStyles);
             }
             return current;
         },
