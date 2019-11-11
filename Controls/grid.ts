@@ -40,11 +40,11 @@
  *
  * В области видимости шаблона доступна переменная itemData (тип Object) со следующими свойствами:
  * 
- * * columnIndex (тип Number) — порядковый номер колонки. Отсчет от 0.
- * * index (тип Number) — порядковый номер строки. Отсчет от 0.
- * * isEditing (тип Boolean) — признак редактирования по месту.
- * * item (тип Object) — строка, данные которой отображаются в колонке.
- * * column (тип Object) — конфигурация колонки. См. {@link Controls/_grid/interface/IGridControl/Column.typedef}
+ * - columnIndex (тип Number) — порядковый номер колонки. Отсчет от 0.
+ * - index (тип Number) — порядковый номер строки. Отсчет от 0.
+ * - isEditing (тип Boolean) — признак редактирования по месту.
+ * - item (тип Object) — строка, данные которой отображаются в колонке.
+ * - column (тип Object) — конфигурация колонки. См. {@link Controls/_grid/interface/IGridControl/Column.typedef}
  */
 
 import View = require('Controls/_grid/Grid');
