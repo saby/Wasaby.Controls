@@ -331,11 +331,11 @@ var _private = {
    /**
     * @name Controls/_tabs/Buttons#itemTemplate
     * @cfg {Function} Шаблон для рендеринга.
-    * @default Base template 'wml!Controls/_tabs/Buttons/ItemTemplate'
+    * @default Base template 'Controls/tabs:buttonsItemTemplate'
     * @remark
-    * Чтобы определить шаблон, следует вызвать базовый шаблон 'wml!Controls/_tabs/Buttons/ItemTemplate'.
+    * Чтобы определить шаблон, следует вызвать базовый шаблон 'Controls/tabs:buttonsItemTemplate'.
     * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
-    * По умолчанию в шаблоне 'wml!Controls/_tabs/Buttons/ItemTemplate' будет отображаться только поле 'title'. Можно изменить формат отображения записей, задав следующие параметры:
+    * По умолчанию в шаблоне 'Controls/tabs:buttonsItemTemplate' будет отображаться только поле 'title'. Можно изменить формат отображения записей, задав следующие параметры:
     * <ul>
     *    <li>displayProperty - определяет поле отображения записи.</li>
     * <ul>
@@ -348,7 +348,7 @@ var _private = {
     *                   style="additional"
     *                   source="{{_source3}}">
     *       <ws:itemTemplate>
-    *          <ws:partial template="wml!Controls/_tabs/Buttons/ItemTemplate"
+    *          <ws:partial template="Controls/tabs:buttonsItemTemplate"
     *                      item="{{itemTemplate.item}}"
     *                      displayProperty="caption"/>
     *       </ws:itemTemplate>
@@ -359,11 +359,11 @@ var _private = {
    /*
     * @name Controls/_tabs/Buttons#itemTemplate
     * @cfg {Function} Template for item render.
-    * @default Base template 'wml!Controls/_tabs/Buttons/ItemTemplate'
+    * @default Base template 'Controls/tabs:buttonsItemTemplate'
     * @remark
-    * To determine the template, you should call the base template 'wml!Controls/_tabs/Buttons/ItemTemplate'.
+    * To determine the template, you should call the base template 'Controls/tabs:buttonsItemTemplate'.
     * The template is placed in the component using the ws:partial tag with the template attribute.
-    * By default, the base template 'wml!Controls/_tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
+    * By default, the base template 'Controls/tabs:buttonsItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
     * <ul>
@@ -376,7 +376,7 @@ var _private = {
     *                   style="additional"
     *                   source="{{_source3}}">
     *       <ws:itemTemplate>
-    *          <ws:partial template="wml!Controls/_tabs/Buttons/ItemTemplate"
+    *          <ws:partial template="Controls/tabs:buttonsItemTemplate"
     *                      item="{{itemTemplate.item}}"
     *                      displayProperty="caption"/>
     *       </ws:itemTemplate>
@@ -389,9 +389,9 @@ var _private = {
     * @cfg {String} Имя поля, которое содержит шаблон отображения элемента.
     * @default Если параметр не задан, вместо него используется itemTemplate.
     * @remark
-    * Чтобы определить шаблон, вы должны вызвать базовый шаблон 'wml!Controls/_tabs/Buttons/ItemTemplate'.
+    * Чтобы определить шаблон, вы должны вызвать базовый шаблон 'Controls/tabs:buttonsItemTemplate'.
     * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
-    * По умолчанию в шаблоне 'wml!Controls/_tabs/Buttons/ItemTemplate' будет отображаться только поле 'title'. Можно изменить формат отображения записей, задав следующие параметры:
+    * По умолчанию в шаблоне 'Controls/tabs:buttonsItemTemplate' будет отображаться только поле 'title'. Можно изменить формат отображения записей, задав следующие параметры:
     * <ul>
     *    <li>displayProperty - определяет поле отображения записи.</li>
     * <ul>
@@ -424,9 +424,9 @@ var _private = {
     * @cfg {String} Name of the item property that contains template for item render.
     * @default If not set, itemTemplate is used instead.
     * @remark
-    * To determine the template, you should call the base template 'wml!Controls/_tabs/Buttons/ItemTemplate'.
+    * To determine the template, you should call the base template 'Controls/tabs:buttonsItemTemplate'.
     * The template is placed in the component using the ws:partial tag with the template attribute.
-    * By default, the base template 'wml!Controls/_tabs/Buttons/ItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
+    * By default, the base template 'Controls/tabs:buttonsItemTemplate' will display only the 'title' field. You can change the display of records by setting their values for the following options:
     * <ul>
     *    <li>displayProperty - defines the display field of the record.</li>
     * <ul>
