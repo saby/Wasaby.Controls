@@ -3,7 +3,6 @@
  * @library Controls/treeGrid
  * @includes View Controls/_treeGrid/View
  * @includes ItemTemplate wml!Controls/_grid/ItemTemplateResolver
- * @includes TreeGridStyles Controls/_treeGrid/TreeGrid/Styles
  * @includes ITreeControl Controls/_treeGrid/interface/ITreeControl
  * @includes RowEditor wml!Controls/_treeGrid/TreeGrid/RowEditor
  * @public
