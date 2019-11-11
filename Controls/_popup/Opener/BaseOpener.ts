@@ -513,7 +513,7 @@ class BaseOpener extends Control<IControlOptions> {
 
         const templateOptions = {};
         CoreMerge(templateOptions, baseConfig.templateOptions || {});
-        CoreMerge(templateOptions, popupOptions.templateOptions || {});
+        CoreMerge(templateOptions, popupOptions.templateOptions || {}, {rec: (options.isRecMerge !== false)});
         const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
 
         // protect against wrong config. Opener must be specified only on popupOptions.
