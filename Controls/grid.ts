@@ -24,7 +24,7 @@
  */
 
 /**
- * Шаблон, который по умолчанию используется для отображения элементов в контроле {@link Controls/grid:View}. Подробнее о работе с шаблоном читайте в {@link wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
+ * Шаблон, который по умолчанию используется для отображения элементов в контроле {@link Controls/grid:View}. Подробнее о работе с шаблоном читайте {@link wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
  * @class Controls/grid:ItemTemplate
  * @author Авраменко А.С.
  * @see Controls/interface/IGridItemTemplate#itemTemplate
