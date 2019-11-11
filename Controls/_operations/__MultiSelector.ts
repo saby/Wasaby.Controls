@@ -1,8 +1,11 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_operations/__MultiSelector');
-import source = require('Types/source');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import * as template from 'wml!Controls/_operations/__MultiSelector';
+import {Memory} from 'Types/source';
+import {Model} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
-var _defaultItems = [{
+const DEFAULT_ITEMS = [
+   {
       id: 'selectAll',
       title: rk('Все')
    }, {
@@ -11,64 +14,78 @@ var _defaultItems = [{
    }, {
       id: 'toggleAll',
       title: rk('Инвертировать')
-   }];
+   }
+];
 
-   var MultiSelector = Control.extend({
-      _template: template,
-      _multiSelectStatus: undefined,
-      _menuCaption: undefined,
-      _menuSource: undefined,
+type TKeys = string[]|number[];
+type TCount = void|number;
+type TRoot = null|string|number;
 
-      _beforeMount: function(newOptions) {
-         this._menuSource = this._getMenuSource();
-         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount, newOptions.root);
-      },
+export interface IMultiSelectorOptions extends IControlOptions {
+   selectedKeys: TKeys;
+   excludedKeys: TKeys;
+   selectedKeysCount: TCount;
+   root: TRoot;
+}
 
-      _getMenuSource: function() {
-         return new source.Memory({
-            keyProperty: 'id',
-            data: _defaultItems
-         });
-      },
+export default class MultiSelector extends Control<IMultiSelectorOptions> {
+   protected _template: TemplateFunction = template;
+   protected _menuSource: Memory = null;
+   protected _sizeChanged: boolean = false;
+   protected _menuCaption: string = null;
 
-      _beforeUpdate: function(newOptions) {
-         if (this._options.selectedKeys !== newOptions.selectedKeys || this._options.excludedKeys !== newOptions.excludedKeys || this._options.selectedKeysCount !== newOptions.selectedKeysCount) {
-            this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount, newOptions.root);
-         }
-      },
+   protected _beforeMount(options: IMultiSelectorOptions): void {
+      this._menuSource = this._getMenuSource();
+      this._updateSelection(options.selectedKeys, options.excludedKeys, options.selectedKeysCount, options.root);
+   }
 
-      _afterUpdate: function() {
-         if (this._sizeChanged) {
-            this._sizeChanged = false;
-            this._notify('controlResize', [], { bubbling: true });
-         }
-      },
-
-      _updateSelection: function(selectedKeys, excludedKeys, count, root) {
-         if (count > 0 && selectedKeys.length) {
-            this._menuCaption = rk('Отмечено') + ': ' + count;
-         } else if (selectedKeys[0] === root && (!excludedKeys.length || excludedKeys[0] === root && excludedKeys.length === 1)) {
-            this._menuCaption = rk('Отмечено всё');
-         } else if (count === null) {
-            this._menuCaption = rk('Отмечено');
-         } else {
-            this._menuCaption = rk('Отметить');
-         }
-         this._sizeChanged = true;
-      },
-
-      _onMenuItemActivate: function(event, model) {
-         this._notify('selectedTypeChanged', [model.get('id')], {
-            bubbling: true
-         });
+   protected _beforeUpdate(options: IMultiSelectorOptions): void {
+      const currOpts = this._options;
+      if (currOpts.selectedKeys !== options.selectedKeys ||
+          currOpts.excludedKeys !== options.excludedKeys ||
+          currOpts.selectedKeysCount !== options.selectedKeysCount) {
+         this._updateSelection(options.selectedKeys, options.excludedKeys, options.selectedKeysCount, options.root);
       }
-   });
+   }
 
-   MultiSelector.getDefaultOptions = function() {
+   protected _afterUpdate(oldOptions?: IMultiSelectorOptions): void {
+      if (this._sizeChanged) {
+         this._sizeChanged = false;
+         this._notify('controlResize', [], { bubbling: true });
+      }
+   }
+
+   private _getMenuSource(): Memory {
+      return new Memory({
+         keyProperty: 'id',
+         data: DEFAULT_ITEMS
+      });
+   }
+
+   private _updateSelection(selectedKeys: TKeys, excludedKeys: TKeys, count: TCount, root: TRoot): void {
+      const selectedCount = count === undefined ? selectedKeys.length : count;
+
+      if (selectedCount > 0 && selectedKeys.length) {
+         this._menuCaption = rk('Отмечено') + ': ' + selectedCount;
+      } else if (selectedKeys[0] === root && (!excludedKeys.length || excludedKeys[0] === root && excludedKeys.length === 1)) {
+         this._menuCaption = rk('Отмечено всё');
+      } else if (selectedCount === null) {
+         this._menuCaption = rk('Отмечено');
+      } else {
+         this._menuCaption = rk('Отметить');
+      }
+      this._sizeChanged = true;
+   }
+
+   private _onMenuItemActivate(event: SyntheticEvent<'menuItemActivate'>, item: Model): void {
+      this._notify('selectedTypeChanged', [item.get('id')], {
+         bubbling: true
+      });
+   }
+
+   static getDefaultOptions(): object {
       return {
          root: null
-      }
-   };
-
-   export = MultiSelector;
-
+      };
+   }
+}
