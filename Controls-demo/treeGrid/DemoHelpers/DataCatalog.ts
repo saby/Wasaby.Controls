@@ -1244,3 +1244,31 @@ export const VirtualScrollHasMore = {
     ];
 
 };
+
+export const DeepInside = {
+    getColumns: () => ([{
+        displayProperty: 'title'
+    }]),
+    getData: () => ([
+        { id: 1, title: 'Узел 1', parent: null, nodeType: true },
+        { id: 11, title: 'Узел 1-1', parent: 1, nodeType: true },
+        { id: 111, title: 'Узел 1-1-1', parent: 11, nodeType: true },
+        { id: 1111, title: 'Лист 1-1-1-1', parent: 111, nodeType: null },
+        { id: 1112, title: 'Лист 1-1-1-2', parent: 111, nodeType: null },
+        { id: 1113, title: 'Лист 1-1-1-3', parent: 111, nodeType: null },
+        { id: 112, title: 'Узел 1-1-2', parent: 11, nodeType: true },
+        { id: 113, title: 'Узел 1-1-3', parent: 11, nodeType: true },
+
+        { id: 12, title: 'Узел 1-2', parent: 1, nodeType: true },
+        { id: 121, title: 'Узел 1-2-1', parent: 12, nodeType: true },
+        { id: 1211, title: 'Лист 1-2-1-1', parent: 121, nodeType: null },
+        { id: 12111, title: 'Лист 1-2-1-1-1', parent: 1211, nodeType: null },
+        { id: 121111, title: 'Лист 1-2-1-1-1-1', parent: 12111, nodeType: null },
+        { id: 1211111, title: 'Лист 1-2-1-1-1-1-1', parent: 121111, nodeType: null },
+        { id: 2, title: 'Узел 2', parent: null, nodeType: true },
+        { id: 3, title: 'Скрытый узел 3', parent: null, nodeType: false },
+        { id: 4, title: 'Скрытый узел 4', parent: null, nodeType: false },
+        { id: 5, title: 'Лист 5', parent: null, nodeType: null },
+        { id: 6, title: 'Лист 6', parent: null, nodeType: null }
+    ])
+};
