@@ -93,6 +93,7 @@
             on:triggerVisibilityChanged="triggerVisibilityChangedHandler()"
             on:triggerOffsetChanged="triggerOffsetChangedHandler()"
             on:activeElementChanged="_notifyHandler('activeElementChanged')"
+            on:viewResize="_viewResize()"
             viewModel="{{_listViewModel}}"
             scrollCalculation="{{_needScrollCalculation}}"
             scope="{{_options}}">

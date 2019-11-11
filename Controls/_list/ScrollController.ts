@@ -287,6 +287,7 @@ export default class ScrollController extends Control<IOptions> {
         if (this.__mounted && this.virtualScroll) {
             this.virtualScroll.recalcItemsHeights();
         }
+        this._notify('viewResize');
     }
 
     protected virtualScrollMoveHandler(params): void {
