@@ -2423,7 +2423,9 @@ BaseControl.getDefaultOptions = function() {
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
         stickyHeader: true,
-        selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
+        selectionStrategy: {
+           name: 'Controls/operations:FlatSelectionStrategy'
+        },
         virtualScrollMode: 'remove'
     };
 };

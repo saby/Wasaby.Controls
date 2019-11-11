@@ -1,7 +1,9 @@
 import {relation} from 'Types/entity';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { Collection, Tree as TreeCollection } from 'Controls/display';
+import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 
+import { SbisService, PrefetchProxy } from 'Types/source';
 import { Record, List } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { ListViewModel } from 'Controls/list';
@@ -15,6 +17,14 @@ const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 interface IEntryPath {
    id: String|number|null,
    parent: String|number|null
+}
+
+function _getOriginalSource(source: SbisService|PrefetchProxy): SbisService {
+   if (source.getOriginal) {
+      source = source.getOriginal();
+   }
+
+   return source;
 }
 
 export function isNode(item: Record, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy): boolean {
@@ -200,4 +210,24 @@ export function removeSelectionChildren(nodeId, selectedKeys, excludedKeys, mode
 
    ArraySimpleValuesUtil.removeSubArray(selectedKeys, childrenIds);
    ArraySimpleValuesUtil.removeSubArray(excludedKeys, childrenIds);
+};
+
+export function getCountBySource(source: SbisService|PrefetchProxy, selectionCountMethodName: string, selectedKeys: TKeys, excludedKeys: TKeys, filter: Object): Promise<number|null> {
+   let originalSource: SbisService = _getOriginalSource(source);
+
+   filter = {... filter};
+   filter.selection = selectionToRecord({
+      selected: selectedKeys,
+      excluded: excludedKeys
+   }, originalSource.getAdapter());
+
+   return new Promise((resolve) => {
+      originalSource.call(selectionCountMethodName, filter)
+         .addCallback((itemsSelectedCount) => {
+            resolve(itemsSelectedCount);
+         })
+         .addErrback(() => {
+            resolve(null);
+         });
+   });
 };

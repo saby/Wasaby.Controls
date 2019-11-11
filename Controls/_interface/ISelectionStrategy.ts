@@ -1,7 +1,14 @@
+import { SbisService } from 'Types/source';
 import { relation } from 'Types/entity';
 import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/_interface/ISelectionType';
+
+export interface ISelectionStrategyOptions {
+   source?: SbisService,
+   filter?: Object,
+   selectionCountMethodName?: string
+}
 
 // параметры hierarchyRelation и keyProperty нужен для поддержки старой модели, с полным переходом на новую они уйдут
 export default interface ISelectionStrategy {

@@ -1,15 +1,26 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { getItems } from 'Controls/_operations/MultiSelector/SelectionHelper';
+import { getItems, getCountBySource } from 'Controls/_operations/MultiSelector/SelectionHelper';
 
+import { SbisService } from 'Types/source';
 import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { ISelectionStrategy } from 'Controls/interface';
+import { ISelectionStrategy, ISelectionStrategyOptions } from 'Controls/interface';
 
 const ALL_SELECTION_VALUE = null;
 
 export default class FlatSelectionStrategy implements ISelectionStrategy {
+   protected _source: SbisService;
+   protected _filter: Object;
+   protected _selectionCountMethodName: string;
+
+   public constructor(options: ISelectionStrategyOptions) {
+      this._source = options.source;
+      this._filter = options.filter;
+      this._selectionCountMethodName = options.selectionCountMethodName;
+   }
+
    public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
@@ -43,24 +54,26 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number): Promise {
-      let itemsSelectedCount: number|null = null;
+      let countItemsSelected: number|null = null;
       let items: RecordSet|List = getItems(model);
       let itemsCount: number = items.getCount();
 
       if (this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys)) {
          if (this._isAllItemsLoaded(items, limit) && (!limit || itemsCount <= limit)) {
-            itemsSelectedCount = itemsCount - excludedKeys.length;
+            countItemsSelected = itemsCount - excludedKeys.length;
          } else if (limit) {
-            itemsSelectedCount = limit - excludedKeys.length;
-         } else {
-            // Зовем прикладной метод
+            countItemsSelected = limit - excludedKeys.length;
          }
       } else {
-         itemsSelectedCount = selectedKeys.length;
+         countItemsSelected = selectedKeys.length;
       }
 
       return new Promise((resolve) => {
-         resolve(itemsSelectedCount);
+         if (countItemsSelected === null && this._selectionCountMethodName) {
+            resolve(getCountBySource(this._source, this._selectionCountMethodName, selectedKeys, excludedKeys, this._filter));
+         } else {
+            resolve(countItemsSelected);
+         }
       });
    }
 

@@ -48,7 +48,11 @@ export default class DeepTreeSelectionStrategy extends TreeSelectionStrategy imp
       }
 
       return new Promise((resolve) => {
-         resolve(countItemsSelected);
+         if (countItemsSelected === null && this._selectionCountMethodName) {
+            resolve(SelectionHelper.getCountBySource(this._source, this._selectionCountMethodName, selectedKeys, excludedKeys, this._filter));
+         } else {
+            resolve(countItemsSelected);
+         }
       });
    }
 

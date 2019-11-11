@@ -651,7 +651,9 @@ TreeControl.getDefaultOptions = function() {
         expandByItemClick: false,
         root: null,
         columns: DEFAULT_COLUMNS_VALUE,
-        selectionStrategy: 'Controls/operations:DeepTreeSelectionStrategy'
+        selectionStrategy: {
+            name: 'Controls/operations:DeepTreeSelectionStrategy'
+        }
     };
 };
 

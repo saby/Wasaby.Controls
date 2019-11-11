@@ -1,5 +1,5 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { getItems, isNode, getSelectedChildrenCount, getParentId, getChildren } from 'Controls/_operations/MultiSelector/SelectionHelper';
+import { getItems, isNode, getSelectedChildrenCount, getParentId, getChildren, getCountBySource } from 'Controls/_operations/MultiSelector/SelectionHelper';
 
 import { relation } from 'Types/entity';
 import { Tree as TreeCollection } from 'Controls/display';
@@ -7,9 +7,19 @@ import { ViewModel } from 'Controls/treeGrid';
 import { Record } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { ISelectionStrategy } from 'Controls/interface';
+import { ISelectionStrategy, ISelectionStrategyOptions } from 'Controls/interface';
 
 export default class TreeSelectionStrategy implements ISelectionStrategy {
+   protected _source: SbisService;
+   protected _filter: Object;
+   protected _selectionCountMethodName: string;
+
+   public constructor(options: ISelectionStrategyOptions) {
+      this._source = options.source;
+      this._filter = options.filter;
+      this._selectionCountMethodName = options.selectionCountMethodName;
+   }
+
    public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
@@ -76,7 +86,11 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       return new Promise((resolve) => {
-         resolve(countItemsSelected);
+         if (countItemsSelected === null && this._selectionCountMethodName) {
+            resolve(getCountBySource(this._source, this._selectionCountMethodName, selectedKeys, excludedKeys, this._filter));
+         } else {
+            resolve(countItemsSelected);
+         }
       });
    }
 

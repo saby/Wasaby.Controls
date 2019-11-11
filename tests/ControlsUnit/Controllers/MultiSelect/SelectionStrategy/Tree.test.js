@@ -28,7 +28,7 @@ define([
             rawData: ListData.getItems()
          });
          model = new treeGrid.ViewModel({columns: [], items: recordSet});
-         treeStrategy = new operations.TreeSelectionStrategy();
+         treeStrategy = new operations.TreeSelectionStrategy({});
       });
 
       it('select', function() {

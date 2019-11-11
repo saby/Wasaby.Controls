@@ -22,7 +22,7 @@ define([
             items: items,
             keyProperty: 'id',
             listModel: new list.ListViewModel({items: config && config.items || items}),
-            selectionStrategy: new operations.FlatSelectionStrategy()
+            selectionStrategy: new operations.FlatSelectionStrategy({})
          }, config || {});
       }
 

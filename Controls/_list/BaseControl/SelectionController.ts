@@ -5,7 +5,8 @@ import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_list/BaseControl/SelectionController');
 import {isEqual} from 'Types/object';
 import { load } from 'Core/library';
-import { ISelectionStrategy } from 'Controls/interface';
+import merge = require('Core/core-merge');
+import { ISelectionStrategy, ISelectionStrategyOptions } from 'Controls/interface';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -97,9 +98,13 @@ var _private = {
     },
 
     getMultiselection: function(options): Promise {
-        return Promise.all([load('Controls/operations'), load(options.selectionStrategy)]).then((dependencies) => {
+        return Promise.all([load('Controls/operations'), load(options.selectionStrategy.name)]).then((dependencies) => {
             let operations = dependencies[0];
             let SelectionStrategy: ISelectionStrategy = dependencies[1];
+            let configStrategy: ISelectionStrategyOptions = merge({
+                source: options.source,
+                filter: options.filter
+            }, options.selectionStrategy.options || {});
 
             if (options.parentProperty) {
                 return new operations.HierarchySelection({
@@ -110,7 +115,7 @@ var _private = {
                     nodeProperty: options.nodeProperty,
                     hasChildrenProperty: options.hasChildrenProperty,
                     listModel: options.listModel,
-                    selectionStrategy: new SelectionStrategy()
+                    selectionStrategy: new SelectionStrategy(configStrategy)
                 });
             } else {
                return new operations.Selection({
@@ -118,7 +123,7 @@ var _private = {
                     excludedKeys: options.excludedKeys,
                     keyProperty: options.keyProperty,
                     listModel: options.listModel,
-                    selectionStrategy: new SelectionStrategy()
+                    selectionStrategy: new SelectionStrategy(configStrategy)
                 });
             }
         });
