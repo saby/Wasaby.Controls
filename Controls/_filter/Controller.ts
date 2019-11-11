@@ -77,12 +77,13 @@ const _private = {
             const isNeedSaveHistory = textValue !== undefined && textValue !== null;
             const visibility = !isNeedSaveHistory && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
             const minimizedItem = {};
+            const value = getPropValue(item, 'value');
 
             if (visibility !== undefined) {
                 minimizedItem.visibility = visibility;
             }
 
-            if (isNeedSaveHistory) {
+            if (isNeedSaveHistory && value !== undefined) {
                 minimizedItem.value = getPropValue(item, 'value');
             }
 
@@ -199,25 +200,34 @@ const _private = {
             // если валидны, то просто добавляем идентификатор сессии в фильтр,
             // если данные не валидны, то такую запись из истории надо удалить
             const history = _private.getHistoryByItems(options.historyId, self._filterButtonItems);
+            let filter = self._filter;
 
             if (history) {
                 const prefetchParams = Prefetch.getPrefetchFromHistory(history.data);
                 const needInvalidate = prefetchParams && Prefetch.needInvalidatePrefetch(history.data);
+                const deleteItemFromHistory = () => {
+                    historyUtils.getHistorySource({historyId: options.historyId})
+                                .destroy(history.item.getId(), {$_history: true});
+                };
 
                 if (!prefetchParams || needInvalidate) {
-                    self._filter = Prefetch.clearPrefetchSession(self._filter);
+                    filter = Prefetch.clearPrefetchSession(self._filter);
 
                     if (needInvalidate) {
-                        historyUtils.getHistorySource({historyId: options.historyId})
-                                    .destroy(history.item.getId(), { $_history: true });
+                        deleteItemFromHistory();
                     }
                 } else {
-                    self._filter = Prefetch.applyPrefetchFromHistory(self._filter, history.data);
+                    filter = Prefetch.applyPrefetchFromHistory(self._filter, history.data);
+
+                    if (!isEqual(filter, self._filter)) {
+                        deleteItemFromHistory();
+                    }
                 }
             } else {
-                self._filter = Prefetch.clearPrefetchSession(self._filter);
+                filter = Prefetch.clearPrefetchSession(self._filter);
             }
-            return self._filter;
+
+            return self._filter = filter;
         },
 
         processHistoryOnItemsChanged(self, items, options): void {
