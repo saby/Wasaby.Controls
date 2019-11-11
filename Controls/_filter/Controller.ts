@@ -31,10 +31,9 @@ const _private = {
                if (typeof option === 'function') {
                   result = option(history);
                } else if (history) {
-                   mergeSource(option, history);
-                   result = option;
+                   result = mergeSource(_private.cloneItems(option), history);
                } else {
-                  result = option;
+                  result = _private.cloneItems(option);
                }
             }
 
