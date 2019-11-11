@@ -563,6 +563,11 @@ var Filter = Control.extend({
         }
     },
 
+    _beforeUnmount() {
+        this._configs = null;
+        this._displayText = null;
+    },
+
     openDetailPanel: function() {
         if (this._options.detailPanelTemplateName) {
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);

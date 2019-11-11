@@ -8,6 +8,11 @@ define('Controls/Utils/ArraySimpleValuesUtil', [], function() {
 
    'use strict';
 
+   var CONSTRUCTORS_FOR_TYPE_INVERTING = {
+      string: Number,
+      number: String
+   };
+
    return {
       hasInArray: function(array, elem) {
          return this.invertTypeIndexOf(array, elem) !== -1;
@@ -17,8 +22,15 @@ define('Controls/Utils/ArraySimpleValuesUtil', [], function() {
          var index = array.indexOf(elem);
 
          if (index === -1) {
-            elem = (typeof elem === 'string') ? Number(elem) : String(elem);
-            index = array.indexOf(elem);
+            var elementType = typeof elem;
+
+            // Данная утилита используется для операций с массивами,
+            // в которых могут лежать любые типы данных.
+            // Инвертировать тип необходимо только для строк и чисел.
+            // Для остальных типов данных это не имеет смысла и только вызывает тормоза
+            if (CONSTRUCTORS_FOR_TYPE_INVERTING[elementType]) {
+               index = array.indexOf(CONSTRUCTORS_FOR_TYPE_INVERTING[elementType](elem));
+            }
          }
 
          return index;

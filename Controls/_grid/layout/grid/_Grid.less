@@ -439,9 +439,7 @@
 }
 
 .controls-GridView__checkbox_theme-@{themeName} {
-   position: absolute;
-   top: @spacing_Grid-row-between-checkbox-borderTop;
-   left: 0;
+   position: relative;
 }
 
 .controls-Grid__row-cell__contentWrapper {
@@ -551,10 +549,12 @@
 
 .controls-Grid__header-cell_justify_content_left {
    justify-content: flex-start;
+   text-align: left;
 }
 
 .controls-Grid__header-cell_justify_content_right {
    justify-content: flex-end;
+   text-align: right;
 }
 
 .controls-Grid__header-cell_justify_content_center {
@@ -579,8 +579,11 @@
 }
 
 .controls-Grid__editArrow-wrapper_theme-@{themeName} {
-   flex-shrink:0;
-   background: @background-color_Grid-row_hover;
+   position: relative;
+   flex-shrink: 9999999999;
+   min-width: 0;
+   display: flex;
+   justify-content: flex-end;
 }
 .controls-Grid__editArrow-cellContent {
    flex-shrink:0;
@@ -588,20 +591,36 @@
 }
 .controls-Grid__editArrow-blur_theme-@{themeName} {
    height: 100%;
-   top: 0;
-   right: @spacing_Grid-column-between-content-borderRight + @width_Grid-editArrow;
+   min-height: @height_Grid-editArrow;
    display: inline-block;
    width: @spacing_Grid-editArrow_left;
-   position: absolute;
-   background: linear-gradient(90deg, @background-color_Grid-row_hover-transparent, @background-color_Grid-row_hover);
+   flex-shrink: 0;
    z-index: 0;
 }
+
+.controls-Grid__editArrow-blur_style-default_background {
+   background: linear-gradient(90deg, @background-color_Grid-row_hover-transparent, @background-color_Grid-row_hover);
+}
+
+.controls-Grid__editArrow-blur_style-master_background {
+   background: linear-gradient(90deg, @background-color_Grid-row_hover-transparent, @background-color_List-masterList-item_hover);
+}
+
 
 .controls-Grid__editArrow_theme-@{themeName} {
    position: relative;
    background: @background-color_Grid-row_hover;
    z-index: 1;
 }
+
+.controls-Grid__editArrow_style-default_background {
+   background-color: @background-color_Grid-row_hover;
+}
+
+.controls-Grid__editArrow_style-master_background {
+   background-color: @background-color_List-masterList-item_hover;
+}
+
 .controls-Grid__editArrow-overflow-ellipsis_theme-@{themeName} {
    margin-right: -@width_Grid-editArrow;
 }

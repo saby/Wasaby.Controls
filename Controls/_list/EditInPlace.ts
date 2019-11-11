@@ -63,7 +63,7 @@ var
             return result;
         },
 
-        endItemEdit: function (self, commit) {
+        endItemEdit(self, commit: boolean) {
             // Чтобы при первом старте редактирования не летели лишние события
             if (!self._editingItem) {
                 return Deferred.success();
@@ -89,7 +89,7 @@ var
                         return Deferred.success({ cancelled: true });
                     }
 
-                    return Deferred.success(resultOfDeferred).addCallback(function(res) {
+                    return Deferred.success(resultOfDeferred).addBoth(function(res) {
                         self._endEditDeferred = null;
                         _private.afterEndEdit(self, commit);
                         return res;

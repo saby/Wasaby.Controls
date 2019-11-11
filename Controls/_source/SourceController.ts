@@ -1,11 +1,11 @@
 import cExtend = require('Core/core-simpleExtend');
 import cInstance = require('Core/core-instance');
 import Env = require('Env/Env');
-import Page from 'Controls/_source/QueryParamsController/Page';
-import Position from 'Controls/_source/QueryParamsController/Position';
 import sourceLib = require('Types/source');
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
+import Page from 'Controls/_source/QueryParamsController/Page';
+import Position from 'Controls/_source/QueryParamsController/Position';
 
 var _private = {
    prepareSource: function(sourceOpt) {
@@ -159,8 +159,8 @@ var SourceController = cExtend.extend({
    cancelLoading: function() {
       if (this._loader && !this._loader.isReady()) {
          this._loader.cancel();
-         this._loader = null;
       }
+      this._loader = null;
    },
 
    getLoadedDataCount: function() {
