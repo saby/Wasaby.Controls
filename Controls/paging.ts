@@ -3,7 +3,7 @@
  * @library Controls/paging
  * @includes Paging Controls/_paging/Paging
  * @includes PagingStyles Controls/_paging/PagingStyles
- * @includes PagingStyles Controls/_paging/DigitButtonsStyles
+ * @includes DigitButtonsStyles Controls/_paging/DigitButtonsStyles
  * @public
  * @author Крайнов Д.О.
  */
@@ -13,7 +13,7 @@
  * @library Controls/paging
  * @includes Paging Controls/_paging/Paging
  * @includes PagingStyles Controls/_paging/PagingStyles
- * @includes PagingStyles Controls/_paging/DigitButtonsStyles
+ * @includes DigitButtonsStyles Controls/_paging/DigitButtonsStyles
  * @public
  * @author Крайнов Д.О.
  */
