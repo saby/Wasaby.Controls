@@ -451,7 +451,7 @@ InfoBox.getDefaultOptions = function() {
  * @typedef {Object} PopupOptions
  * @description Конфигурация всплывающей подсказки.
  * @property {function|String} template Шаблон всплывающей подсказки
- * @property {Object} templateOptions Опции для котнрола, переданного в {@link template}
+ * @property {Object} templateOptions Опции для контрола, переданного в {@link Controls/_popup/InfoBox#template}.
  * @property {String} trigger Определяет, какое событие будет иницировать открытие и закрытие всплывающей подсказки.
  * @property {String} targetSide Сторона таргета, относительно которой будет позиционнироваться всплывающая подсказка.
  * @property {String} alignment Выравнивание всплывающей подсказки относительно вызывающего её элемента.
