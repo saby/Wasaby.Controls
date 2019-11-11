@@ -4,7 +4,7 @@
  * @includes Selector Controls/_lookup/Button
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
- * @includes ItemTemplate Controls/_lookup/SelectedCollection/ItemTemplate
+ * @includes ItemTemplate Controls/lookup:ItemTemplate
  * @includes Link Controls/_lookup/Lookup/Link
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Collection Controls/_lookup/SelectedCollection
@@ -18,7 +18,7 @@
  * @includes Selector Controls/_lookup/Button
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
- * @includes ItemTemplate Controls/lookup:itemTemplate
+ * @includes ItemTemplate Controls/lookup:ItemTemplate
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Link Controls/_lookup/Lookup/Link
@@ -52,8 +52,9 @@ export {
 };
 
 /**
- * @name Controls/lookup:itemTemplate
- * @cfg {Function|String} Шаблон отображения выбранных значений.
+ * Шаблон отображения выбранных значений.
+ * 
+ * @class Controls/lookup:ItemTemplate
  * @remark
  * Для контрола Controls/lookup:Input в качестве базового шаблона применяется "Controls.lookup:ItemTemplate", а для Controls/lookup:Selector — "Controls.lookup:ButtonItemTemplate".
  * Шаблон поддерживает следующие параметры:
