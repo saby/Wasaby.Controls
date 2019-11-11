@@ -252,6 +252,8 @@ var StickyHeader = Control.extend({
          offset = MOBILE_GAP_FIX_OFFSET;
       }
 
+      fixedPosition = this._model ? this._model.fixedPosition : undefined;
+
       if (this._options.position.indexOf('top') !== -1) {
          // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
          // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
@@ -266,7 +268,7 @@ var StickyHeader = Control.extend({
             top += this._context.stickyHeader.top;
          }
 
-         style += 'top: ' + (top - offset)  + 'px;';
+         style += 'top: ' + (top - (fixedPosition ? offset : 0))  + 'px;';
       }
 
       if (this._options.position.indexOf('bottom') !== -1) {
@@ -281,7 +283,6 @@ var StickyHeader = Control.extend({
          style += 'bottom: ' + (bottom - offset) + 'px;';
       }
 
-      fixedPosition = this._model ? this._model.fixedPosition : undefined;
       if (fixedPosition) {
          if (offset) {
             container = _private._getNormalizedContainer(this);
@@ -332,8 +333,22 @@ var StickyHeader = Control.extend({
       if (position === 'top' && this._options.offsetTop && this._options.shadowVisibility === 'visible') {
          coord += this._options.offsetTop;
       }
-      return position + ': -' + coord + 'px;';
 
+      // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
+      if (Env.detection.isMobilePlatform && Env.detection.IOSVersion >= 13 && position === 'bottom') {
+         return 'top: ' + (coord + this._container ? this._container.offsetHeight : 0) + 'px;';
+      }
+
+      return position + ': -' + coord + 'px;';
+   },
+
+   _getBottomShadowStyle: function(): string {
+      // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
+      if (this._container && Env.detection.isMobilePlatform && Env.detection.IOSVersion >= 13) {
+         return 'bottom: unset; right: unset; top:' + this._container.offsetHeight + 'px;' +
+             'width:' + this._container.offsetWidth + 'px;';
+      }
+      return '';
    },
 
    _updateStickyShadow: function(e, ids) {

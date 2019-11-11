@@ -4238,9 +4238,9 @@ define([
             }
          };
 
-         lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
-         assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 400);
-      });
+          lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
+          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 500);
+       });
 
       it('setIndicatorContainerHeight: list smaller then scrollContainer', function() {
          const fakeBaseControl = {

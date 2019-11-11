@@ -5,7 +5,8 @@ define(
       'Types/source',
       'Types/collection',
       'Controls/history',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Core/nativeExtensions'
    ],
    function(filter, Clone, sourceLib, collection, history, Deferred) {
       describe('Filter:View', function() {
@@ -111,8 +112,8 @@ define(
 
             assert.deepStrictEqual(view._displayText, expectedDisplayText);
             assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
-            assert.isOk(view._configs.document._sourceController);
-            assert.isOk(view._configs.state._sourceController);
+            assert.isOk(view._configs.document.sourceController);
+            assert.isOk(view._configs.state.sourceController);
             assert.isFalse(view._hasSelectorTemplate);
 
             receivedState.configs.document.selectorTemplate = 'New Template';
@@ -129,8 +130,8 @@ define(
             view._beforeMount(defaultConfig).addCallback(function() {
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
                assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
-               assert.isOk(view._configs.document._sourceController);
-               assert.isOk(view._configs.state._sourceController);
+               assert.isOk(view._configs.document.sourceController);
+               assert.isOk(view._configs.state.sourceController);
                done();
             });
          });
@@ -211,7 +212,8 @@ define(
                document: {
                   items: Clone(defaultItems[1]),
                   displayProperty: 'title',
-                  keyProperty: 'id'},
+                  keyProperty: 'id',
+                  sourceController: 'old sourceController'},
                state: {}
             };
             filter.View._private.reload(view).addCallback(() => {
@@ -590,7 +592,7 @@ define(
                   source: source[1].editorOptions.source,
                   emptyText: 'all state',
                   emptyKey: null,
-                  _sourceController: {hasMoreData: () => {return true;}},
+                  sourceController: {hasMoreData: () => {return true;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
@@ -676,7 +678,7 @@ define(
                },
                state: {
                   items: Clone(defaultItems[1]),
-                  _sourceController: {
+                  sourceController: {
                      load: () => {
                         isLoading = true; return Deferred.success();
                      },
@@ -708,7 +710,7 @@ define(
                      keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
-                  _sourceController: {hasMoreData: () => {return false;}},
+                  sourceController: {hasMoreData: () => {return false;}},
                   displayProperty: 'title',
                   keyProperty: 'id'},
                state: {
@@ -717,7 +719,7 @@ define(
                      keyProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
-                  _sourceController: {hasMoreData: () => {return false;}},
+                  sourceController: {hasMoreData: () => {return false;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}

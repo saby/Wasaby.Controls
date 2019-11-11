@@ -1224,7 +1224,12 @@ var _private = {
     },
 
     needBottomPadding: function(options, items, listViewModel) {
-        return (!!items && (!!items.getCount() || !!listViewModel.getEditingItemData()) && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+        return (!!items &&
+            (!!items.getCount() ||
+                (options.useNewModel ? listViewModel.isEditing() : !!listViewModel.getEditingItemData())) &&
+            options.itemActionsPosition === 'outside' &&
+            !options.footerTemplate &&
+            options.resultsPosition !== 'bottom');
     },
 
     isPagingNavigation: function(navigation) {
@@ -1274,13 +1279,13 @@ var _private = {
     hasItemActions: function(itemActions, itemActionsProperty) {
         return !!(itemActions || itemActionsProperty);
     },
-    setIndicatorContainerHeight(self, viewPortSize) {
-        const listBoundingRect = (self._container[0] || self._container).getBoundingClientRect();
+    setIndicatorContainerHeight(self, viewPortSize: number): void {
+        const listBoundingRect = ((self._container[0] || self._container) as HTMLElement).getBoundingClientRect();
 
         if (listBoundingRect.bottom < viewPortSize) {
             self._loadingIndicatorContainerHeight = listBoundingRect.height;
         } else {
-            self._loadingIndicatorContainerHeight = viewPortSize - listBoundingRect.top;
+            self._loadingIndicatorContainerHeight = viewPortSize;
         }
     },
 
@@ -1977,6 +1982,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
         }
+    },
+
+    _viewResize(): void {
+        _private.setIndicatorContainerHeight(this, this._viewPortSize);
     },
 
     beginEdit: function(options) {

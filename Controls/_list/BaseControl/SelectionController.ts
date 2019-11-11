@@ -50,9 +50,16 @@ var _private = {
          4) Прокидывать событие в Container/Scroll.
          Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
          */
-        self._notify('listSelectedKeysCountChanged', [self._multiselection.getCount()], {bubbling: true});
-
-        self._options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
+        // Стреляем listSelectedKeysCountChanged только если selection реально изменился
+        if (
+            selectedKeysDiff.added.length ||
+            selectedKeysDiff.removed.length ||
+            excludedKeysDiff.added.length ||
+            excludedKeysDiff.removed.length
+        ) {
+            self._notify('listSelectedKeysCountChanged', [self._multiselection.getCount()], {bubbling: true});
+            self._options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
+        }
     },
 
     getItemsKeys: function (items) {
