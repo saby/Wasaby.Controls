@@ -55,7 +55,7 @@
  *       <td>clickable</td>
  *       <td>Boolean</td>
  *       <td>true</td>
- *       <td>В значении true используется <a href="https://developer.mozilla.org/ru/docs/Web/CSS/cursor">курсор</a> pointer, а в значении false — default.</td>
+ *       <td>Когда параметр установлен в значение true, используется <a href="https://developer.mozilla.org/ru/docs/Web/CSS/cursor">курсор</a> pointer, а в значении false — default.</td>
  *    </tr>
  *    <tr>
  *       <td>colspan</td>
