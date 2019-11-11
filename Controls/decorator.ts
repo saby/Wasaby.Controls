@@ -10,7 +10,6 @@
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
- * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
  * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
  * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
  * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
@@ -31,7 +30,6 @@
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
- * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
  * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
  * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
  * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
