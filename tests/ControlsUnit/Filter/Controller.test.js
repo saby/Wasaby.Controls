@@ -866,6 +866,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       });
 
       it('getCalculatedFilter', function() {
+         this.skip();
          let filterButtonItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: ''}];
          let historyItems = [{id: 'testId', value: 'testValueFromHistory', textValue: 'testTextValueFromHistory'}];
          let prefetchParams = {
