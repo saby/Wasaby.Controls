@@ -18,22 +18,8 @@ define('Controls/interface/IGridItemTemplate', [
    /**
     * @name Controls/interface/IGridItemTemplate#itemTemplate
     * @cfg {Function} Шаблон отображения элемента таблицы.
-    * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
-    * @remark
-    * Для контрола {@link Controls/grid:View} в качестве базового шаблона применяется "Controls/grid:ItemTemplate".
-    * В его области видимости доступен объект itemData, через который можно получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
-    * Базовый шаблон itemTemplate поддерживает следующие параметры:
-    * <ul>
-    *    <li>highlightOnHover {Boolean} — включить выделение элемента при наведении курсора.</li>
-    *    <li>
-    *       clickable {Boolean} - Тип курсора (default или pointer).
-    *       <ul>
-    *          <li>true - курсор pointer</li>
-    *          <li>false - курсор default</li>
-    *       </ul>
-    *       По умолчанию: <b>true</b>
-    *    </li>
-    * </ul>
+    * См. <a href="/materials/demo-ws4-grid-item-template">демо-пример</a>.
+    * @default Controls/grid:ItemTemplate
     * @example
     * Использование пользовательского шаблона для рендеринга:
     * <pre>
