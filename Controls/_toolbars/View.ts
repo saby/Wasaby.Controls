@@ -601,7 +601,12 @@ var Toolbar = Control.extend({
     _onResult: function (result) {
         if (result.action === 'itemClick') {
             var item = result.data[0];
-            this._notify('itemClick', [item]);
+            /**
+             * По клику на кнопку из тулбара показывается выпадающее меню. Текущий стандарт не позволяет
+             * задавать футер. Для решения этой задачи прикладные программисты настраивают футер вручную. Для
+             * этого им требется некоторая информация из нативного события, например таргет.
+             */
+            this._notify('itemClick', [item, result.event]);
 
             // menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
             if (this._children.menuOpener && !item.get(this._nodeProperty)) {
