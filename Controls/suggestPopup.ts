@@ -2,7 +2,7 @@
  * Библиотека контролов, которые реализуют содержимое подсказки, отображающейся при вводе текста.
  * @library Controls/suggestPopup
  * @includes ListContainer Controls/_suggestPopup/List
- * @includes FooterTemplate wml!Controls/_suggestPopup/footer
+ * @includes FooterTemplate Controls/suggestPopup:FooterTemplate
  * @public
  * @author Крайнов Д.О.
  */
@@ -11,7 +11,7 @@
  * suggestPopup library
  * @library Controls/suggestPopup
  * @includes ListContainer Controls/_suggestPopup/List
- * @includes FooterTemplate wml!Controls/_suggestPopup/footer
+ * @includes FooterTemplate Controls/suggestPopup:FooterTemplate
  * @public
  * @author Крайнов Д.О.
  */ 
@@ -34,3 +34,16 @@ export {
    _ListWrapper,
    Dialog
 };
+
+/**
+ * Шаблон, используемый по умолчанию для построения подвала автодополнения.
+ * Шаблон имеет два параметра: 
+ * <ul>
+ *  <li>showSelectorButtonTemplate - шаблон кнопки "Показать всё"</li>
+ *  <li>showMoreButtonTemplate - шаблон кнопки "Ещё"</li>
+ * </ul> 
+ * 
+ * @class Controls/suggestPopup:FooterTemplate
+ * @author Герасимов А.М.
+ */
+
