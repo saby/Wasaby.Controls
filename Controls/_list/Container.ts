@@ -31,7 +31,9 @@ var List = Control.extend({
     _beforeMount: function (options, context) {
         this._dataOptions = context.dataOptions;
     },
-
+    _expandedItemsChanged(event, expandedItems) {
+        this._notify('listExpandedItemsChanged', [expandedItems], { bubbling: true });
+    },
     _beforeUpdate: function (options, context) {
         this._dataOptions = context.dataOptions;
     }
