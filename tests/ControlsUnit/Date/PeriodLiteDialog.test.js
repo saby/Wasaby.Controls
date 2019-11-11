@@ -4,6 +4,7 @@ define([
    'Controls/dateLitePopup',
    'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils',
+   'Types/entity',
    'Types/formatter',
    'wml!Controls/_dateLitePopup/ItemFull',
    'wml!Controls/_dateLitePopup/ItemMonths',
@@ -13,6 +14,7 @@ define([
    PeriodLiteDialog,
    DateUtils,
    calendarTestUtils,
+   typesEntity,
    formatDate,
    itemTmpl,
    itemTmplMonths,
@@ -134,6 +136,33 @@ define([
                   }
                }
             }
+         });
+      });
+
+      describe('_onHomeClick', function() {
+         [{
+            dateConstructor: typesEntity.Date,
+            dateModule: 'Types/entity:Date'
+         }, {
+            dateConstructor: typesEntity.DateTime,
+            dateModule: 'Types/entity:DateTime'
+         }].forEach(function(test) {
+            it('should generate sendResult event with correct date type', function() {
+               const sandbox = sinon.sandbox.create(),
+                  component = calendarTestUtils.createComponent(
+                     PeriodLiteDialog, { dateConstructor: test.dateConstructor });
+
+               sandbox.stub(component, '_notify').callsFake(function fakeFn(eventName, eventArgs) {
+                  if (eventName === 'sendResult') {
+                     assert.deepEqual(eventArgs[0]._moduleName, test.dateModule);
+                     assert.deepEqual(eventArgs[1]._moduleName, test.dateModule);
+                  }
+               });
+               component._onHomeClick();
+               sinon.assert.calledWith(component._notify, 'sendResult');
+
+               sandbox.restore();
+            });
          });
       });
 
