@@ -9,10 +9,10 @@
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
- * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
- * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
- * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
- * @includes NoOuterTagResolver Controls/_decorator/Markup/resolvers/noOuterTag
+ * @includes _highlightResolver Controls/_decorator/Markup/resolvers/highlight
+ * @includes linkDecorate Controls/_decorator/Markup/resolvers/linkDecorate
+ * @includes linkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
+ * @includes noOuterTag Controls/_decorator/Markup/resolvers/noOuterTag
  * @public
  * @author Крайнов Д.О.
  */
@@ -28,10 +28,10 @@
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
- * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
- * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
- * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
- * @includes NoOuterTagResolver Controls/_decorator/Markup/resolvers/noOuterTag
+ * @includes _highlightResolver Controls/_decorator/Markup/resolvers/highlight
+ * @includes linkDecorate Controls/_decorator/Markup/resolvers/linkDecorate
+ * @includes linkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
+ * @includes noOuterTag Controls/_decorator/Markup/resolvers/noOuterTag
  * @public
  * @author Крайнов Д.О.
  */
