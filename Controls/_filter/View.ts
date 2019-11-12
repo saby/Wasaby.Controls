@@ -455,8 +455,7 @@ var _private = {
             factory(oldItems).each((oldItem) => {
                 const newItem = _private.getItemByName(newItems, oldItem.name);
                 const isFrequent = _private.isFrequentItem(oldItem);
-                if (newItem &&
-                    isFrequent &&
+                if (newItem && (isFrequent || _private.isFrequentItem(newItem)) &&
                     (optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) || isFrequent !== _private.isFrequentItem(newItem))) {
                     result = true;
                 }
