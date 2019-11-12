@@ -71,6 +71,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _displayedDates: number[] = [];
     private _extData: ExtDataModel;
+    private _extDataLastVersion: number;
 
     private _scrollTop: number = 0;
 
@@ -103,11 +104,19 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
-        this._updateSource(options);
+        this._updateSource(options, this._options);
         this._updateVirtualPageSize(options, this._options);
         if (options.position !== this._displayedPosition) {
             this._displayedPosition = options.position;
             this._scrollToPosition(options.position);
+        }
+    }
+
+    protected _afterUpdate(oldOptions?: IModuleComponentOptions, oldContext?: any): void {
+        const newVersion = this._extData.getVersion();
+        if (this._extDataLastVersion !== newVersion) {
+            this._extDataLastVersion = newVersion;
+            this._notify('enrichItems');
         }
     }
 
@@ -141,8 +150,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    private _updateSource(options: IModuleComponentOptions): void {
-        if (options.viewMode !== this._options.viewMode) {
+    private _updateSource(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): void {
+        if (!oldOptions || options.viewMode !== oldOptions.viewMode) {
             this._viewSource = new MonthsSource({
                 header: Boolean(this._itemHeaderTemplate),
                 dateConstructor: options.dateConstructor,
@@ -150,12 +159,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 viewMode: options.viewMode
             });
         }
-        if (options.viewMode !== this._options.viewMode || options.source !== this._options.source) {
+        if (!oldOptions || options.viewMode !== oldOptions.viewMode || options.source !== oldOptions.source) {
             this._extData = new ExtDataModel({
                 viewMode: options.viewMode,
                 source: options.source,
                 dateConstructor: options.dateConstructor
             });
+            this._extDataLastVersion = this._extData.getVersion();
         }
     }
     private _updateVirtualPageSize(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): void {
