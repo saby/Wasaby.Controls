@@ -36,11 +36,9 @@ define(['Controls/history', 'Core/Deferred'], (history, Deferred) => {
 
          assert.equal(methodName, 'Delete');
          assert.deepEqual(methodMeta, {
-            params: {
-               history_id: 'testId',
-               object_id: 'test'
-            }
-         })
+            history_id: 'testId',
+            object_id: 'test'
+         });
       });
 
    });
