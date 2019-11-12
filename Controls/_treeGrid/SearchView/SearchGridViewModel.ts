@@ -23,5 +23,13 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         item = item[0] || item;
         return SearchGridViewModel.superclass._isFirstInGroup.call(this, item);
     },
+
+    isDrawResults() {
+        if (this._options.resultsVisibility === 'visible') {
+            return true;
+        }
+        const items = this.getItems();
+        return this.getHasMoreData() || items && items.getCount() > 1;
+    }
 });
 export = SearchGridViewModel;
