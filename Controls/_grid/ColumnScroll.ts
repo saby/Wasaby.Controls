@@ -221,7 +221,7 @@ const
 
       updateShadowStyle() {
           if (this._children.startShadow) {
-              this._children.startShadow.style = _private.calculateShadowStyles(this, 'start');
+              this._children.startShadow.setAttribute('style', _private.calculateShadowStyles(this, 'start'));
           }
       },
 
