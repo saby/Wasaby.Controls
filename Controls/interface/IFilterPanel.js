@@ -212,7 +212,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    }
     * </pre>
     * @see itemTemplateProperty
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>Руководство по настройке кнопки фильтров и быстрого фильтра.</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/fast-filter-settings/'>Руководство по настройке быстрого фильтра.</a>
     */
 
    /*
@@ -262,7 +262,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see itemTemplateProperty
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/fast-filter-settings/'>Guide for setup Fast Filter</a>
     */
 
    /**
@@ -330,7 +330,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see additionalTemplateProperty
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>Руководство по настройке кнопки фильтров и быстрого фильтра.</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/fast-filter-settings/'>Руководство по настройке быстрого фильтра.</a>
     */
 
    /*
@@ -398,7 +398,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see additionalTemplateProperty
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/fast-filter-settings/'>Guide for setup Fast Filter</a>
     */
 
    /**
@@ -470,7 +470,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see additionalTemplate
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>Руководство по настройке кнопки фильтров и быстрого фильтра.</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/fast-filter-settings/'>Руководство по настройке быстрого фильтра.</a>
     */
 
    /*
@@ -542,7 +542,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see additionalTemplate
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/fast-filter-settings/'>Guide for setup Fast Filter</a>
     */
 
    /**
@@ -590,7 +590,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    ];
     * </pre>
     * @see itemTemplate
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>Руководство по настройке кнопки фильтров и быстрого фильтра.</a>
+    * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/fast-filter-settings/'>Руководство по настройке быстрого фильтра.</a>
     */
 
    /*

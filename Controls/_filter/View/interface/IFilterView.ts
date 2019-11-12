@@ -187,7 +187,7 @@
  * @cfg {String} Шаблон всплывающей панели, которая открывается после клика по кнопке.
  * @remark
  * В качестве шаблона рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}
- * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>здесь</a>.
+ * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
  * Важно: для ленивой загрузки шаблона в опции укажите путь до контрола.
  * @example
  * Пример настройки параметров для двух фильтров.
@@ -215,7 +215,7 @@
  *       { name: 'deleted', value: true, resetValue: false, textValue: 'Deleted', viewMode: extended }
  *    ];
  * </pre>
- * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>Руководство по настройке Кнопки фильтров с быстрыми фильтрами</a>
+ * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>Руководство по настройке быстрого фильтра</a>
  * @see Controls.filterPopup:DetailPanel
  */
 
@@ -224,7 +224,7 @@
  * @cfg {String} Template for the pop-up panel, that opens after clicking on the button.
  * @remark
  * As a template, it is recommended to use the control {@link Controls/filterPopup:DetailPanel}
- * The description of setting up the filter panel you can read <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>here</a>.
+ * The description of setting up the filter panel you can read <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>here</a>.
  * Important: for lazy loading template in the option give the path to the control
  * @example
  * Example setting options for two filters.
