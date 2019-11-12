@@ -4,7 +4,7 @@ export interface INumberFormatOptions {
 }
 
 /**
- * Интерфейс для контролов, которые поддерживают ввод чисел.
+ * Интерфейс для контролов, которые поддерживают настройку числового формата.
  * @interface Controls/_interface/INumberFormat
  * @public
  * @author Журавлев М.С.
