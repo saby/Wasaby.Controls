@@ -221,7 +221,8 @@ const
 
       updateShadowStyle() {
           if (this._children.startShadow) {
-              this._children.startShadow.style = _private.calculateShadowStyles(this, 'start');
+              // устанавливаем style через setAttribute т.к объект el.style считается доступным только для чтения
+              this._children.startShadow.setAttribute('style', _private.calculateShadowStyles(this, 'start'));
           }
       },
 
