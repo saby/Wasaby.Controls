@@ -35,11 +35,9 @@ var _private = {
         return result;
     },
 
-    deleteSelectedFolders: function(self, keyProperty) {
-        factory(self._folders).each((folder, index) => {
-            if (self._selectedKeys[index].includes(folder.get(keyProperty))) {
-                self._selectedKeys[index] = [];
-            }
+    clearSelectedKeys: function(folders, selectedKeys) {
+        factory(folders).each((folder, index) => {
+            selectedKeys[index] = [];
         });
     },
 
@@ -121,7 +119,7 @@ var HierarchyList = Control.extend({
         };
 
         if (!!this._folders[keys[0]]) {
-            _private.deleteSelectedFolders(this, this._options.keyProperty);
+            _private.clearSelectedKeys(this._folders, this._selectedKeys);
             setKeys();
             this._notify('itemClick', [this._selectedKeys]);
         } else {
