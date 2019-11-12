@@ -877,7 +877,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             prefetchMethod: 'testMethod'
          };
 
-         return new Promise(function(resolve) {
+         return new Promise(function(resolve, reject) {
             sandbox.replace(Filter._private, 'getHistoryByItems', () => null);
             Filter.getCalculatedFilter({
                filterButtonSource: filterButtonItems,
@@ -892,6 +892,8 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
                assert.deepEqual(result.filter, resultFilter);
                sandbox.restore();
                resolve();
+            }).addErrback(function(error) {
+               reject(error);
             });
          });
       });
