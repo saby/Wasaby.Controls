@@ -19,7 +19,7 @@ import {
     IIconStyle,
     IIconStyleOptions,
     ITooltip,
-    ITooltipOptions
+    ITooltipOptions,
 } from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');

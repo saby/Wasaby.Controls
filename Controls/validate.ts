@@ -36,8 +36,8 @@ export {default as Controller} from 'Controls/_validate/Controller';
 export {default as Container} from 'Controls/_validate/Container';
 export {default as InputContainer} from 'Controls/_validate/InputContainer';
 export {default as DateRangeContainer} from 'Controls/_validate/DateRange';
+export {default as SelectionContainer} from 'Controls/_validate/SelectionContainer';
 export {default as Selection} from 'Controls/_validate/Selection';
-
 export {
     isEmail,
     isRequired,

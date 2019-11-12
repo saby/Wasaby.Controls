@@ -3,9 +3,9 @@ import checkBoxTemplate = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {
    ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions,
-   IIconSize, IIconSizeOptions, IIconStyle, IIconStyleOptions} from 'Controls/interface';
+   IIconSize, IIconSizeOptions, IIconStyle, IIconStyleOptions, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions,
-    IIconSizeOptions, IIconStyleOptions {
+    IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions {
    triState?: boolean;
    value?: boolean | null;
 }
@@ -22,6 +22,7 @@ import * as Env from 'Env/Env';
  * @implements Controls/_interface/ICaption
  * @implements Controls/_interface/IIcon
  * @implements Controls/_interface/ITooltip
+ * @implements Controls/_interface/IValidationStatus
  * @control
  * @public
  * @author Красильников А.С.
@@ -231,12 +232,13 @@ import * as Env from 'Env/Env';
 const mapTriState = {false: true, true: null, null: false};
 const mapBoolState = {true: false, false: true};
 
-class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITooltip, IIconSize, IIconStyle {
+class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITooltip, IIconSize, IIconStyle, IValidationStatus {
    '[Controls/_interface/ITooltip]' = true;
    '[Controls/_interface/ICaption]' = true;
    '[Controls/_interface/IIcon]' = true;
    '[Controls/_interface/IIconSize]' = true;
    '[Controls/_interface/IIconStyle]' = true;
+    '[Controls/_interface/IValidationStatus]': true;
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = checkBoxTemplate;

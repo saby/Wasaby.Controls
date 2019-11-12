@@ -174,8 +174,8 @@ define(
             assert.isTrue(isNotifyClose);
          });
 
-         it('reset and filter', function() {
-            var changedItems = [
+         it('_resetFilter', function() {
+            const changedItems = [
                {
                   id: 'list',
                   value: 5,
@@ -200,7 +200,7 @@ define(
                   value: 'reset'
                }
             ];
-            var resetedItems = [
+            const resetedItems = [
                {
                   id: 'list',
                   value: 1,
@@ -225,10 +225,17 @@ define(
                   value: 'reset'
                }
             ];
-            var panel2 = getFilterPanel({ items: changedItems });
+            let itemsChangedResult;
+            let panel2 = getFilterPanel({ items: changedItems });
+            panel2._notify = (event, data) => {
+               if (event === 'itemsChanged') {
+                  itemsChangedResult = data[0];
+               }
+            };
             panel2._resetFilter();
             assert.deepStrictEqual({'reseted': 'reset'}, filterPopup.DetailPanel._private.getFilter(panel2._items));
             assert.deepStrictEqual(panel2._items, resetedItems);
+            assert.deepStrictEqual(itemsChangedResult, resetedItems);
             assert.isFalse(panel2._isChanged);
          });
 
