@@ -1349,6 +1349,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          var
             gridViewModel = new gridMod.GridViewModel(cfg),
             imitateTemplate = function() {};
+         it('setTheme', function() {
+            gridViewModel.setTheme('themeName');
+            assert.equal(gridViewModel._options.theme, 'themeName');
+            gridViewModel.setTheme('default');
+            assert.equal(gridViewModel._options.theme, 'default');
+         });
          it('setColumnTemplate', function() {
             assert.equal(null, gridViewModel._columnTemplate, 'Incorrect value "_columnTemplate" before "setColumnTemplate(imitateTemplate)".');
             gridViewModel.setColumnTemplate(imitateTemplate);
