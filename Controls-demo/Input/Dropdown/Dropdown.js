@@ -66,6 +66,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeysGroupHierarchy: null,
       _selectedKeyOneItem: null,
       _selectedKeysOneEmpty: null,
+      _footerWithButtonVisible: null,
 
 
       _beforeMount: function() {
@@ -282,6 +283,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeysGroupHierarchy = [1];
          this._selectedKeyOneItem = [1];
          this._selectedKeysOneEmpty = [1];
+         this._footerWithButtonVisible = false;
       },
       _createMemory: function(items) {
          return new source.Memory({
