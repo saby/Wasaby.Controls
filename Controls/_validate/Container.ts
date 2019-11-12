@@ -75,7 +75,6 @@ const _private = {
     closeInfoBox(self) {
         self._closeId = setTimeout(function() {
             _private.forceCloseInfoBox(self);
-            self._isOpened = false;
         }, 300);
     },
 
@@ -94,17 +93,20 @@ const _private = {
                 GlobalPopup._closeInfoBoxHandler(event, delay);
             }
         }
+        self._isOpened = false;
     }
 
 };
 
+type ValidResult = boolean|null|Promise<boolean>|String;
 class ValidateContainer extends Control {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
     _currentValue: any;
-    _validationResult: boolean;
+    _validationResult: ValidResult;
     _isNewEnvironment: boolean;
     _closeId: number;
+    _isForm: boolean = false;
 
     _private: any = _private;
 
@@ -127,7 +129,7 @@ class ValidateContainer extends Control {
         }
     }
 
-    _callValidators(validators: Function[]) {
+    _callValidators(validators: Function[], isForm?: boolean) {
         let validationResult = null,
             errors = [],
             validatorResult, validator, resultDeferred, index;
@@ -167,7 +169,6 @@ class ValidateContainer extends Control {
         }
 
         resultDeferred = new Deferred();
-        this.setValidationResult(resultDeferred);
 
         // далее, смотрим что возвращают результаты-деферреды
         parallelDeferred.done().getResult().addCallback((results) => {
@@ -194,7 +195,7 @@ class ValidateContainer extends Control {
                 validationResult = errors;
             }
 
-            this.setValidationResult(validationResult);
+            this.setValidationResult(validationResult, isForm);
             resultDeferred.callback(validationResult);
         }).addErrback((e) => {
             Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
@@ -203,11 +204,11 @@ class ValidateContainer extends Control {
         return resultDeferred;
     }
 
-    validate(): Promise<boolean[]> {
+    validate(isForm?: boolean): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
             this.setValidationResult(undefined);
-            this._callValidators(validators).then(resolve);
+            this._callValidators(validators, isForm).then(resolve);
         });
 
     }
@@ -223,12 +224,12 @@ class ValidateContainer extends Control {
      * @description Set the validationResult from the outside
      * @param validationResult
      */
-    setValidationResult(validationResult: boolean|null|Promise<boolean>): void {
+    setValidationResult(validationResult: ValidResult, isForm?: boolean): void {
         this._validationResult = validationResult;
         if (!(validationResult instanceof Promise)) {
             this._forceUpdate();
         }
-        if (validationResult) {
+        if (validationResult && !isForm) {
             _private.openInfoBox(this);
         } else if (this._isOpened && validationResult === null) {
             _private.closeInfoBox(this);
@@ -246,7 +247,7 @@ class ValidateContainer extends Control {
      * @description Get the validationResult
      * @returns {undefined|Array}
      */
-    isValid(): boolean {
+    isValid(): ValidResult {
         return this._validationResult;
     }
 
