@@ -257,7 +257,9 @@ var
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
                 }
             }
-
+            if (this._options.theme !== newCfg.theme) {
+                this._listModel.setTheme(newCfg.theme);
+            }
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
