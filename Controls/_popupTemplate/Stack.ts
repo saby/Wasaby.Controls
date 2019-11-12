@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import {Controller as ManagerController} from 'Controls/popup';
-import Env = require('Env/Env');
 
 const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
 
