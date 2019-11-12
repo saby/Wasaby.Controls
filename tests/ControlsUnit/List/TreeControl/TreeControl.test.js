@@ -1564,6 +1564,8 @@ define([
 
       it('toggle node by click', async function() {
          let
+             isIndicatorHasBeenShown = false,
+             isIndicatorHasBeenHidden = false,
              savedMethod = treeGrid.TreeControl._private.createSourceController,
              data = [
                 {id: 0, 'Раздел@': true, "Раздел": null},
@@ -1597,6 +1599,12 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
+               },
+               showIndicator() {
+                  isIndicatorHasBeenShown = true;
+               },
+               hideIndicator() {
+                  isIndicatorHasBeenHidden = true;
                }
             }
          };
@@ -1622,41 +1630,53 @@ define([
          assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
 
          const fakeEvent = {
-             stopPropagation: () => {}
+            stopPropagation: () => {
+            }
+         };
+
+         const assertTestCaseResult = (expandedItems, useIndicator) => {
+            assert.deepEqual(treeGridViewModel.getExpandedItems(), expandedItems);
+            if (useIndicator !== false) {
+               assert.isTrue(isIndicatorHasBeenShown);
+               assert.isTrue(isIndicatorHasBeenHidden);
+            } else {
+               assert.isFalse(isIndicatorHasBeenShown);
+               assert.isFalse(isIndicatorHasBeenHidden);
+            }
+            isIndicatorHasBeenShown = false;
+            isIndicatorHasBeenHidden = false;
          };
 
          // Expanding. Child items has not loaded
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0]);
+         assertTestCaseResult([0]);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
+         assertTestCaseResult([0, 1]);
 
+         // Leaf
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
-
+         assertTestCaseResult([0, 1], false);
 
          // Closing. Child items loaded
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [1]);
+         assertTestCaseResult([1], false);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+         assertTestCaseResult([], false);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
-
+         assertTestCaseResult([], false);
 
          // Expanding. Child items loaded
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0]);
+         assertTestCaseResult([0], false);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
+         assertTestCaseResult([0, 1], false);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
-
+         assertTestCaseResult([0, 1], false);
 
          treeGrid.TreeControl._private.createSourceController = savedMethod;
       });
@@ -1697,7 +1717,11 @@ define([
                baseControl: {
                    getViewModel: function() {
                        return treeGridViewModel;
-                   }
+                   },
+                  showIndicator() {
+                  },
+                  hideIndicator() {
+                  }
                }
            };
 
