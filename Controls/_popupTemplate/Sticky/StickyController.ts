@@ -46,6 +46,22 @@ const _private = {
                 newCfg.verticalAlign.offset = config.offset.vertical;
             }
         }
+        if (typeof config.fittingMode === 'string') {
+            newCfg.fittingMode = {
+                vertical: config.fittingMode,
+                horizontal: config.fittingMode
+            };
+        }
+        else {
+            if (config.fittingMode) {
+                if (!config.fittingMode.vertical) {
+                    newCfg.fittingMode.vertical = 'adaptive';
+                }
+                if (!config.fittingMode.horizontal) {
+                    newCfg.fittingMode.horizontal = 'adaptive';
+                }
+            }
+            }
         return newCfg;
     },
     prepareConfig(self, cfg, sizes) {

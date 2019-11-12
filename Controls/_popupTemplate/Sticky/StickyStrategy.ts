@@ -138,11 +138,12 @@ interface IPosition {
          let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
          let isNegativePos = _private.isNegativePosition(popupCfg, position, targetCoords);
          if (positionOverflow > 0 || isNegativePos) {
-            if (popupCfg.fittingMode === 'fixed') {
-               resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-            } else if (popupCfg.fittingMode === 'overflow') {
-               resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-            } else {
+               if (popupCfg.fittingMode ? popupCfg.fittingMode[direction] === 'fixed' : false) {
+                  resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
+               } else if (popupCfg.fittingMode ? popupCfg.fittingMode[direction] === 'overflow' : false) {
+                  resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
+               }
+            else {
                _private.invertPosition(popupCfg, direction);
                let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
                let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
