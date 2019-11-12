@@ -9,6 +9,7 @@
    display: inline-flex;
    align-items: baseline;
    overflow: hidden;
+   flex-shrink: 1;
 }
 
 .controls-FilterView__wrapper_theme-@{themeName}:before {
@@ -50,10 +51,12 @@
    overflow: hidden;
    display: inline-flex;
    font-size: @font-size_FastFilter-text;
+   flex-shrink: 1;
 }
 
 .controls-FilterView__text_theme-@{themeName} {
    .text-overflow();
+   flex-shrink: 1;
 }
 
 .controls-FilterView__text_state_enabled_theme-@{themeName} {

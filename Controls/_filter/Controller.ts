@@ -140,7 +140,7 @@ const _private = {
                      recent = source.getRecent();
                      if (recent.getCount()) {
                         lastFilter = recent.at(ACTIVE_HISTORY_FILTER_INDEX);
-                        result.callback(source.getDataObject(lastFilter.get('ObjectData')));
+                        result.callback(source.getDataObject(lastFilter));
                      } else {
                         result.callback([]);
                      }
@@ -191,7 +191,7 @@ const _private = {
                  if (hItems && hItems.getCount()) {
                      hItems.each((item, index) => {
                          if (!result) {
-                             historyData = historySource.getDataObject(item.get('ObjectData'));
+                             historyData = historySource.getDataObject(item);
 
                              if (historyData) {
                                  minimizedItemFromOption = _private.minimizeFilterItems(items);

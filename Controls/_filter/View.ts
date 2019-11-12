@@ -193,7 +193,7 @@ var _private = {
                         self._displayText[item.name].hasMoreText = _private.getHasMoreText(flatSelectedKeys);
                     }
                     if (item.textValue !== undefined && !detailPanelHandler) {
-                        item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
+                        item.textValue = self._displayText[item.name].title;
                     }
                 }
             }

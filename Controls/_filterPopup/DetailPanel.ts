@@ -108,6 +108,7 @@ import {Logger} from 'UI/Utils';
             });
             pDef.push(self._historyStorage.getHistory(true));
             pDef.push(self._historyGlobalStorage.getHistory(true));
+
             return pDef.done().getResult().addCallback((items) => {
                self._favoriteList = items[0].clone();
                self._favoriteList.prepend(items[1]);
@@ -121,9 +122,9 @@ import {Logger} from 'UI/Utils';
          if (historyId) {
             const pDef = new ParallelDeferred();
             const config = {
-               historyId,
-               pinned: true,
-               recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
+                historyId,
+                recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY',
+                favorite: true
             };
             const historyLoad = HistoryUtils.loadHistoryItems(config)
                 .addCallback((items) => {

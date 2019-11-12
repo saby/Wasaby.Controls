@@ -35,15 +35,37 @@ var _private = {
          var pinned = rows.get('pinned');
          var recent = rows.get('recent');
          var frequent = rows.get('frequent');
+         var client = rows.get('client');
 
          self._history = {
             pinned: pinned,
-            frequent: frequent,
             recent: recent
          };
+         if (self.historySource._favorite) {
+            self._history.client = client;
+         } else {
+            self._history.frequent = frequent;
+         }
       } else {
          self._history = data;
       }
+   },
+
+   getItemsWithOldFavorite: function(self, history, favorite) {
+      let id;
+      chain.factory(favorite).each((favoriteItem) => {
+         id = favoriteItem.get('id');
+         if (!history.pinned.getRecordById(id) && !history.client.getRecordById(id)) {
+            let objectData = JSON.stringify(favoriteItem.get('data').getRawData(), _private.getSerialize().serialize);
+            let newFormatItem = _private.getRawHistoryItem(self, id, objectData);
+            if (objectData.globalParams) {
+               history.client.add(newFormatItem);
+            } else {
+               history.pinned.add(newFormatItem);
+            }
+         }
+      });
+      return _private.getItemsWithHistory(self, history);
    },
 
    getItemsWithHistory: function (self, history) {
@@ -55,7 +77,12 @@ var _private = {
       this.addProperty(this, items, 'ObjectId', 'string', '');
       this.addProperty(this, items, 'ObjectData', 'string', '');
       this.addProperty(this, items, 'pinned', 'boolean', false);
+      this.addProperty(this, items, 'client', 'boolean', false);
 
+      if (self.historySource._favorite) {
+         this.fillClient(self, history, items);
+         this.fillFavoritePinned(self, history, items);
+      }
       if (self.historySource._pinned !== false) {
          this.fillPinned(self, history, items);
       }
@@ -64,7 +91,7 @@ var _private = {
       return items;
    },
 
-   createHistoryItem: function(item, format?) {
+   getRawItem: function(item, format) {
       const rawData = {
          d: [
             item.getId(),
@@ -72,9 +99,9 @@ var _private = {
             item.get('HistoryId')
          ],
          s: [
-             { n: 'ObjectId', t: 'Строка' },
-             { n: 'ObjectData', t: 'Строка' },
-             { n: 'HistoryId', t: 'Строка' }
+            { n: 'ObjectId', t: 'Строка' },
+            { n: 'ObjectData', t: 'Строка' },
+            { n: 'HistoryId', t: 'Строка' }
          ]
       };
       return new entity.Model({
@@ -84,40 +111,61 @@ var _private = {
       });
    },
 
-   fillPinned: function (self, history, items) {
-      var config = {
-         adapter: new entity.adapter.Sbis()
-      };
+   fillItems: function(history, items, historyType, checkCallback) {
       let item;
-
-      chain.factory(history.pinned).filter(function (element) {
-         return element.get('ObjectData') !== DEFAULT_FILTER;
-      }).value(collection.factory.recordSet, config).forEach(function (element) {
-         item = _private.createHistoryItem(element, items.getFormat());
-
-         item.set('pinned', true);
+      let filteredItems = chain.factory(history).filter((element) => {
+         return !items.getRecordById(element.getId()) && checkCallback(element);
+      }).value();
+      filteredItems.forEach((element) => {
+         item = _private.getRawItem(element, items.getFormat());
+         if (historyType === 'pinned') {
+            item.set('pinned', true);
+         } else if (historyType === 'client') {
+            item.set('client', true);
+         }
          items.add(item);
       });
    },
 
-   fillRecent: function (self, history, items) {
-      var config = {
-         adapter: new entity.adapter.Sbis()
-      };
-      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
-      var maxLength = self.historySource._recent - pinnedCount - 1;
-      var currentCount = 0;
-      var item, isPinned;
+   fillFavoritePinned: function(self, history, items) {
+      let isClient;
+      _private.fillItems(history.pinned, items, 'pinned', (item) => {
+         isClient = history.client.getRecordById(item.getId());
 
-      chain.factory(history.recent).filter(function (element) {
-         isPinned = history.pinned.getRecordById(element.getId());
-         if (!isPinned && element.get('ObjectData') !== DEFAULT_FILTER) {
+         // TODO Delete item, that pinned before new favorite. Remove after https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+         let data = item.get('ObjectData');
+         let isOldPinned = false;
+         if (!JSON.parse(data, _private.getSerialize().desirialize).linkText) {
+            isOldPinned = true;
+         }
+         return !isClient && !isOldPinned && data !== DEFAULT_FILTER;
+      });
+   },
+
+   fillPinned: function(self, history, items) {
+      _private.fillItems(history.pinned, items, 'pinned', (item) => {
+         return item.get('ObjectData') !== DEFAULT_FILTER;
+      });
+   },
+
+   fillClient: function(self, history, items) {
+      _private.fillItems(history.client, items, 'client', (item) => {
+         return item.get('ObjectData') !== DEFAULT_FILTER;
+      });
+   },
+
+   fillRecent: function(self, history, items) {
+      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
+      let maxLength = self.historySource._recent - pinnedCount - 1;
+      let currentCount = 0;
+      let isPinned;
+
+      _private.fillItems(history.recent, items, 'recent', (item) => {
+         isPinned = history.pinned.getRecordById(item.getId());
+         if (!isPinned && item.get('ObjectData') !== DEFAULT_FILTER) {
             currentCount++;
          }
-         return !isPinned && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
-      }).value(collection.factory.recordSet, config).forEach(function (element) {
-         item = _private.createHistoryItem(element);
-         items.add(item);
+         return !isPinned && currentCount <= maxLength && item.get('ObjectData') !== DEFAULT_FILTER;
       });
    },
 
@@ -131,15 +179,23 @@ var _private = {
       }
    },
 
-   updatePinned: function (self, item) {
+   updatePinned: function (self, item, meta) {
       var pinned = self._history.pinned;
-      if (item.get('pinned')) {
-         item.set('pinned', false);
-         pinned.remove(pinned.getRecordById(item.getId()));
-      } else {
-         item.set('pinned', true);
+      item.set('pinned', !!meta['$_pinned']);
+      if (!!meta['$_pinned']) {
          pinned.add(this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId')));
+      } else {
+         pinned.remove(pinned.getRecordById(item.getId()));
       }
+      self.historySource.saveHistory(self._history);
+   },
+
+   deleteFavorite: function(self, item, meta) {
+      let history = self._history.pinned;
+      if (meta.historyType) {
+         history = self._history.client;
+      }
+      history.remove(history.getRecordById(item.getId()));
       self.historySource.saveHistory(self._history);
    },
 
@@ -158,7 +214,7 @@ var _private = {
       self.historySource.saveHistory(self._history);
    },
 
-   getRawHistoryItem: function (self, id, objectData, hId) {
+   getRawHistoryItem: function (self, id, objectData, hId?) {
       return new entity.Model({
          rawData: {
             d: [id, objectData, hId || self.historySource.getHistoryId()],
@@ -321,10 +377,26 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       var serData, item;
 
       if (meta.hasOwnProperty('$_pinned')) {
-         _private.updatePinned(this, data);
+         _private.updatePinned(this, data, meta);
       }
       if (meta.hasOwnProperty('$_history')) {
          _private.updateRecent(this, data);
+      }
+      if (meta.hasOwnProperty('$_favorite')) {
+         const source = _private.getSourceByMeta(this, meta);
+         let id = data.getId();
+         if (self._history.pinned.getRecordById(id) || self._history.client.getRecordById(id)) {
+            _private.deleteFavorite(this, data, meta);
+            source.deleteItem(data, meta);
+         } else {
+            source.update(data, meta);
+         }
+         const metaPin = {
+            '$_pinned': true,
+            historyType: meta.historyType
+         };
+         _private.updatePinned(this, data, metaPin);
+         return source.update(data, metaPin);
       }
       if (meta.hasOwnProperty('$_addFromData')) {
          item = _private.findHistoryItem(self, data);
@@ -334,7 +406,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             };
             _private.updateRecent(this, item);
             _private.getSourceByMeta(this, meta).update(item, meta);
-            return;
+            return Deferred.success(item.getId());
          }
 
          serData = JSON.stringify(data, _private.getSerialize(this).serialize);
@@ -344,9 +416,15 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
                self,
                _private.getRawHistoryItem(self, dataSet.getRawData(), serData, item ? item.get('HistoryId') : self.historySource.getHistoryId())
             );
+            return dataSet.getRawData();
          });
       }
       return _private.getSourceByMeta(this, meta).update(data, meta);
+   },
+
+   remove: function(data, meta) {
+      _private.deleteFavorite(this, data, meta);
+      _private.getSourceByMeta(this, meta).deleteItem(data, meta);
    },
 
    destroy(keys: number|string|Array<number|string>, meta?: object): Deferred<null> {
@@ -384,6 +462,11 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       return _private.getItemsWithHistory(this, this._history);
    },
 
+   // TODO: Delete with old favorite https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+   getItemsWithOldFavorite: function(oldFavoriteItems) {
+      return _private.getItemsWithOldFavorite(this, this._history, oldFavoriteItems);
+   },
+
    /**
     * Returns a set of recent items
     * @returns {RecordSet}
@@ -400,8 +483,8 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
     * Returns a deserialized history object
     * @returns {Object}
     */
-   getDataObject: function (data) {
-      return _private.deserialize(this, data);
+   getDataObject: function(data) {
+      return _private.deserialize(this, data.get('ObjectData'));
    }
 });
 

@@ -8,7 +8,7 @@ import DialogTemplate = require('wml!Controls/_filterPopup/History/_Favorite/Edi
 
 interface IEditDialog extends IControlOptions {
     items: object[];
-    globalParams: 0|1;
+    globalKey: 0|1;
     isFavorite: boolean;
     editedTextValue: string;
 }
@@ -31,11 +31,15 @@ class EditDialog extends Control<IEditDialog> {
     private _selectedFilters: string[];
     private _source: Memory;
 
+    private isDisplayItem(item: object): boolean {
+        return item.hasOwnProperty('value') && item.value && item.value.length !== 0 && item.textValue && item.visibility !== false;
+    }
+
     private getItemsSource(self: EditDialog, items: object[]): Memory {
         const data = factory(items).filter((item) => {
-            self._selectedFilters.push(item.id);
-            
-            if (item.hasOwnProperty('value') && item.value && item.value.length !== 0 && item.textValue && item.visibility !== false) {
+
+            if (self.isDisplayItem(item)) {
+                self._selectedFilters.push(item.id);
                 return item;
             }
         }).value();
@@ -49,7 +53,7 @@ class EditDialog extends Control<IEditDialog> {
     private prepareConfig(self: EditDialog, options: IEditDialog): void {
         self._placeholder = options.editedTextValue;
         self._textValue = options.isFavorite ? options.editedTextValue : '';
-        self._globalKey = options.globalParams;
+        self._globalKey = options.globalKey;
         self._selectedFilters = [];
         self._source = self.getItemsSource(self, options.items);
     }
@@ -59,7 +63,7 @@ class EditDialog extends Control<IEditDialog> {
     }
 
     protected _beforeUpdate(newOptions: IEditDialog): void {
-        if (newOptions.items !== this._options.items || newOptions.globalParams !== this._options.globalParams ||
+        if (newOptions.items !== this._options.items || newOptions.globalKey !== this._options.globalKey ||
             newOptions.isFavorite !== this._options.isFavorite || newOptions.editedTextValue !== this._options.editedTextValue) {
             this.prepareConfig(this, newOptions);
         }
@@ -77,9 +81,9 @@ class EditDialog extends Control<IEditDialog> {
                 action: 'save',
                 record: new Model({
                     rawData: {
-                        filterPanelItems: this.getItemsToSave(this._options.items, this._selectedFilters),
-                        linkText: this._textValue,
-                        globalParams: this._globalKey
+                        items: this.getItemsToSave(this._options.items, this._selectedFilters),
+                        linkText: this._textValue || this._placeholder,
+                        isClient: this._globalKey
                     }
                 })
             };
@@ -103,7 +107,7 @@ class EditDialog extends Control<IEditDialog> {
     private getItemsToSave(items: object[], selectedFilters: string[]): void {
         let resultItems = Clone(items);
         factory(resultItems).each((item) => {
-            if (!selectedFilters.includes(item.id)) {
+            if (!selectedFilters.includes(item.id) && this.isDisplayItem(item)) {
                 item.textValue = '';
                 delete item.value;
             }
