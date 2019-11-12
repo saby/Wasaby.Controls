@@ -264,12 +264,11 @@ var
         },
 
         setNodeFooterIfNeed(self, current) {
-
             const isRootChild = (item) => item.get(current.parentProperty) === null;
             const getChildCount = (dispItem) => self._display.getChildren(dispItem).getCount();
             const hasChildren = (dispItem) => !!getChildCount(dispItem);
             const hasEditingInCurrent = (itemData) => !!self._editingItemData && self._editingItemData.item.get(itemData.parentProperty) === itemData.key;
-            const isNotLeaf = (item) => item.get && item.get(current.nodeProperty) !== null;
+            const isNotLeaf = (item) => !!item && item.get && item.get(current.nodeProperty) !== null;
 
             const fillNodeFooter = (params: {
                 key: string | number | null,
