@@ -97,7 +97,7 @@
  * TMPL:
  * <pre>
  *    <Controls.filter:View
- *       source={{_source}}
+ *       source="{{_source}}"
  *       detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
  *       panelTemplateName="Controls/filterPopup:SimplePanel"/>
  * </pre>
@@ -145,7 +145,7 @@
  * TMPL:
  * <pre>
  *    <Controls.filter:View
- *       source={{_source}}
+ *       source="{{_source}}" 
  *       detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
  *       panelTemplateName="Controls/filterPopup:SimplePanel"/>
  * </pre>
