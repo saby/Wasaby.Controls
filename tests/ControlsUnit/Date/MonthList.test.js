@@ -48,6 +48,16 @@ define([
             assert.equal(ml._displayedPosition, position);
             assert.equal(ml._startPositionId, '2018-01-01');
          });
+
+         it('should initialize _extDataLastVersion if source option passed', function() {
+            let
+               sandbox = sinon.createSandbox(),
+               control = calendarTestUtils.createComponent(
+               calendar.MonthList, coreMerge({ source: {} }, config, { preferSource: true }));
+            sandbox.stub(control, '_enrichItemsDebounced');
+            assert.strictEqual(control._extDataLastVersion, control._extData.getVersion());
+            sandbox.restore();
+         });
       });
 
       describe('_afterMount', function() {
@@ -110,6 +120,36 @@ define([
             sandbox.restore();
          });
       });
+
+      describe('_afterUpdate', function() {
+         it('should notify \'enrichItems\' event if model has been changed', function() {
+            const
+               sandbox = sinon.createSandbox(),
+               component = calendarTestUtils.createComponent(
+                  calendar.MonthList, coreMerge({ source: {} }, config, { preferSource: true }));
+
+            sandbox.stub(component, '_notify');
+            sandbox.stub(component, '_enrichItemsDebounced');
+            component._extData._nextVersion();
+            component._afterUpdate();
+            sinon.assert.calledWith(component._notify, 'enrichItems');
+            sandbox.restore();
+         });
+
+         it('should\'t notify "enrichItems" event if model has\'t been changed', function() {
+            const
+               sandbox = sinon.createSandbox(),
+               component = calendarTestUtils.createComponent(
+                  calendar.MonthList, coreMerge({ source: {} }, config, { preferSource: true }));
+
+            sandbox.stub(component, '_notify');
+            sandbox.stub(component, '_enrichItemsDebounced');
+            component._afterUpdate();
+            sinon.assert.notCalled(component._notify);
+            sandbox.restore();
+         });
+      });
+
 
       describe('_afterRender, _drawItemsHandler', function() {
          [
@@ -236,13 +276,16 @@ define([
          }].forEach(function(test) {
             it(test.title, function() {
                const
+                  sandbox = sinon.createSandbox(),
                   component = calendarTestUtils.createComponent(
                      calendar.MonthList, coreMerge(test.options, config, { preferSource: true })
                   );
 
+               sandbox.stub(component, '_enrichItemsDebounced');
                component._displayedDates = test.displayedDates;
                component._intersectHandler(null, test.entries);
                assert.deepEqual(component._displayedDates, test.resultDisplayedDates);
+               sandbox.restore();
             });
          });
       });
