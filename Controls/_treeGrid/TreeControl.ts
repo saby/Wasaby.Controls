@@ -86,6 +86,7 @@ var _private = {
             !dispItem.isRoot() &&
             (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
         ) {
+            self._children.baseControl.showIndicator();
             filter[options.parentProperty] = nodeKey;
             _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
                 .load(filter, options.sorting)
@@ -100,6 +101,7 @@ var _private = {
                     if (options.nodeLoadCallback) {
                         options.nodeLoadCallback(list, nodeKey);
                     }
+                    self._children.baseControl.hideIndicator();
                 });
         } else {
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);

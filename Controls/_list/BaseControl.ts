@@ -2301,14 +2301,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _showIndicator: function(event, direction) {
+    showIndicator(direction: 'down' | 'up' | 'all' = 'all'): void {
         _private.showIndicator(this, direction);
-        event.stopPropagation();
     },
 
-    _hideIndicator: function(event) {
+    hideIndicator(): void {
         _private.hideIndicator(this);
-        event.stopPropagation();
     },
 
     reload: function() {
