@@ -76,7 +76,6 @@ define('Controls/interface/IInfoboxOptions', [
    /**
     * @name Controls/interface/IInfoboxOptions#eventHandlers
     * @cfg {EventHandlers[]} Функции обратного вызова на события всплывающего окна.
-    * @variant onClose Функция обратного вызова, которая вызывается при закрытии всплывающего окна.
     * @default {}
     * @remark
     * Необходимо учитывать контекст выполнения функций обратного вызова. 
