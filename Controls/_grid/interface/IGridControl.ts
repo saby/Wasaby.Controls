@@ -290,16 +290,7 @@
  * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в колонке.
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
- * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
- *
- * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
- *
- * В области видимости базового шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
- * - <code>columnIndex</code> (тип Number) — порядковый номер колонки. Отсчет от 0.
- * - <code>index</code> (тип Number) — порядковый номер строки. Отсчет от 0.
- * - <code>isEditing</code> (тип Boolean) — признак редактирования по месту.
- * - <code>item</code> (тип Object) — строка, данные которой отображаются в колонке.
- * - <code>column</code> (тип Object) — конфигурация колонки.
+ * О создании пользовательского шаблона читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">здесь</a>.
  * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
  * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
  * @property {GridCellAlign} [align=left] Выравнивание содержимого ячейки по горизонтали.
