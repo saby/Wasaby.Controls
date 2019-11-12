@@ -292,25 +292,6 @@
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
  * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
  *
- * На корневой элемент пользовательского шаблона следует задать CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
- * <pre>
- * <Controls.grid:View>
- *     <ws:columns>
- *         <ws:Array>
- *             <ws:Object displayProperty="Name" width="200px">
- *                 <ws:template>
- *                     <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L">
- *                         <ws:contentTemplate>
- *                           <!-- контент шаблона -->
- *                         </ws:contentTemplate>
- *                     </ws:partial>
- *                 </ws:template>
- *             </ws:Object>
- *         </ws:Array>
- *     </ws:columns>
- * </Controls.grid:View>
- * </pre>
- *
  * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
  *
  * В области видимости базового шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
