@@ -67,7 +67,7 @@ define(
                },
                viewMode: 'frequent'
             },
-            {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
+            {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic', editorOptions: {}},
             {name: 'sender', value: '', resetValue: '', viewMode: 'extended', visibility: false},
             {name: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false}
          ];
@@ -221,6 +221,23 @@ define(
                done();
             });
             assert.equal(view._configs.document.items.length, 7);
+         });
+
+
+         it('_private:isNeedReload', function() {
+            let oldItems = defaultConfig.source;
+            let newItems = Clone(defaultConfig.source);
+
+            let result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isFalse(result);
+
+            newItems[0].viewMode = 'basic';
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
+
+            newItems[2].viewMode = 'frequent';
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
          });
 
          it('openDetailPanel', function() {
