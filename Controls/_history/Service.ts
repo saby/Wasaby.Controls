@@ -290,10 +290,8 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       if (keys) {
          const key = keys instanceof Array ? keys[0] : keys;
          result = _private.getHistoryDataSource(this).call('Delete', {
-            params: {
                history_id: this._historyId,
                object_id: key
-            }
          });
       } else {
          result = Deferred.success(null);
