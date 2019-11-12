@@ -264,6 +264,12 @@ var
         },
 
         setNodeFooterIfNeed(self, current) {
+            current.nodeFooters = [];
+
+            // Flat TileView uses TreeViewModel, but may has no hierarchy.
+            if (!current.nodeProperty || !current.parentProperty) {
+                return;
+            }
             const isRootChild = (item) => item.get(current.parentProperty) === null;
             const getChildCount = (dispItem) => self._display.getChildren(dispItem).getCount();
             const hasChildren = (dispItem) => !!getChildCount(dispItem);
@@ -287,8 +293,6 @@ var
                     hasMoreStorage: !!params.hasMoreStorage
                 });
             };
-
-            current.nodeFooters = [];
 
             // Сначала проверим данный узел. В нем мы можем отрисовать только nodeFooter, при условии,
             // что в нем нет детей, потому что если есть, то все подвалы  будут рисоваться у его последнего ребенка.
