@@ -1425,6 +1425,10 @@ define([
            mockedControl._options.navigation.view = 'demand';
            lists.BaseControl._private.updateShadowMode(mockedControl);
            assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
+
+           mockedControl._options.navigation.view = 'pages';
+           lists.BaseControl._private.updateShadowMode(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
        });
 
        it ('call updateShadowMode in afterMount', function() {

@@ -568,12 +568,13 @@ var _private = {
 
     updateShadowMode(self): void {
         const demandNavigation = self._options.navigation && self._options.navigation.view === 'demand';
+        const pagesNavigation = self._options.navigation && self._options.navigation.view === 'pages';
         self._notify('updateShadowMode', [{
             top: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.top ||
-                !demandNavigation && self._listViewModel && self._listViewModel.getCount() &&
+                !demandNavigation && !pagesNavigation && self._listViewModel && self._listViewModel.getCount() &&
                 self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
             bottom: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.bottom ||
-                !demandNavigation && self._listViewModel && self._listViewModel.getCount() &&
+                !demandNavigation && !pagesNavigation && self._listViewModel && self._listViewModel.getCount() &&
                 self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
         }], { bubbling: true });
     },
