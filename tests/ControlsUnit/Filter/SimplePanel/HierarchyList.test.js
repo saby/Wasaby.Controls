@@ -153,6 +153,11 @@ define(
             list._checkBoxClickHandler({}, '0', ['0']);
             assert.deepStrictEqual(itemClickResult, {'0': ['0'], '-1': []});
 
+            // item from folder 2 was selected, click on folder 1
+            list._selectedKeys = {'0': [], '-1': ['5']};
+            list._checkBoxClickHandler({}, '0', ['0']);
+            assert.deepStrictEqual(itemClickResult, {'0': ['0'], '-1': []});
+
          });
 
          it('_emptyItemClickHandler', function() {
