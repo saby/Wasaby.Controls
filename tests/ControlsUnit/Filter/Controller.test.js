@@ -866,7 +866,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       });
 
       it('getCalculatedFilter', function() {
-         this.skip();
+         const sandbox = sinon.createSandbox();
          let filterButtonItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: ''}];
          let historyItems = [{id: 'testId', value: 'testValueFromHistory', textValue: 'testTextValueFromHistory'}];
          let prefetchParams = {
@@ -878,6 +878,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          };
 
          return new Promise(function(resolve) {
+            sandbox.replace(Filter._private, 'getHistoryByItems', () => null);
             Filter.getCalculatedFilter({
                filterButtonSource: filterButtonItems,
                historyItems: historyItems,
@@ -889,6 +890,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
                assert.equal(result.filterButtonItems[0].value, 'testValueFromHistory');
                assert.equal(result.filterButtonItems[0].textValue, 'testTextValueFromHistory');
                assert.deepEqual(result.filter, resultFilter);
+               sandbox.restore();
                resolve();
             });
          });
