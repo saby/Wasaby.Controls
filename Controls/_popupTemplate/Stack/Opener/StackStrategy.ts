@@ -29,6 +29,10 @@ const _private = {
             } else {
                 panelWidth = Math.min(maxWidth, maxPanelWidthWithOffset);
             }
+            // todo: https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
+            if (minWidth) {
+                panelWidth = Math.max(panelWidth, minWidth); // more then minWidth
+            }
             return panelWidth;
         }
         if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
