@@ -52,7 +52,7 @@ const _private = {
         cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
         const popupCfg = self._getPopupConfig(cfg, sizes);
 
-        cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
+        cfg.position = StickyStrategy.getPosition(popupCfg, self._getTargetCoords(cfg, sizes));
 
         cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
 
@@ -86,63 +86,6 @@ const _private = {
             return cfg.popupOptions.target._container;
         }
         return cfg.popupOptions.target || (document && document.body);
-    },
-
-    _getTargetCoords(cfg, sizes) {
-        if (cfg.popupOptions.nativeEvent) {
-            const top = cfg.popupOptions.nativeEvent.clientY;
-            const left = cfg.popupOptions.nativeEvent.clientX;
-            const size = 1;
-            const positionCfg = {
-                verticalAlign: {
-                    side: 'bottom'
-                },
-                horizontalAlign: {
-                    side: 'right'
-                }
-            };
-            cMerge(cfg.popupOptions, positionCfg);
-            sizes.margins = {top: 0, left: 0};
-            return {
-                width: size,
-                height: size,
-                top,
-                left,
-                bottom: top + size,
-                right: left + size,
-                topScroll: 0,
-                leftScroll: 0
-            };
-        }
-
-        if (!document) {
-            return {
-                width: 0,
-                height: 0,
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                topScroll: 0,
-                leftScroll: 0
-            };
-        }
-        return TargetCoords.get(_private.getTargetNode(cfg));
-    },
-
-    isTargetVisible(item) {
-        if (!item.popupOptions._elementFromPoint || !item.popupOptions.target) {
-            const targetCoords = _private._getTargetCoords(item, {});
-            return !!targetCoords.width;
-        }
-        // определяю видимость таргета. Он может быть в доме, но скрыт под скроллом
-        const target = item.popupOptions.target[0] || item.popupOptions.target;
-        const targetRect = target.getBoundingClientRect();
-        let elemFromPoint = document.elementFromPoint(targetRect.x + 1, targetRect.y + 1);
-        while (elemFromPoint && elemFromPoint !== target) {
-            elemFromPoint = elemFromPoint.parentElement;
-        }
-        return !!elemFromPoint;
     },
 
     prepareStickyPosition(cfg) {
@@ -227,7 +170,7 @@ class StickyController extends BaseController {
     _private = _private;
 
     elementCreated(item, container) {
-        if (_private.isTargetVisible(item)) {
+        if (this._isTargetVisible(item)) {
             _private.setStickyContent(item);
             item.position.position = undefined;
             this.prepareConfig(item, container);
@@ -239,9 +182,9 @@ class StickyController extends BaseController {
     elementUpdated(item, container) {
         _private.setStickyContent(item);
         item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
-        if (_private.isTargetVisible(item)) {
+        if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
-            item.position = StickyStrategy.getPosition(item.positionConfig, _private._getTargetCoords(item, item.positionConfig.sizes));
+            item.position = StickyStrategy.getPosition(item.positionConfig, this._getTargetCoords(item, item.positionConfig.sizes));
 
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
             // Open Windows are not placed in the workspace and chrome scrollit body.
@@ -346,6 +289,64 @@ class StickyController extends BaseController {
             sizes,
             fittingMode: cfg.popupOptions.fittingMode
         };
+    }
+
+    private _getTargetCoords(cfg, sizes) {
+        if (cfg.popupOptions.nativeEvent) {
+            const top = cfg.popupOptions.nativeEvent.clientY;
+            const left = cfg.popupOptions.nativeEvent.clientX;
+            const size = 1;
+            const positionCfg = {
+                verticalAlign: {
+                    side: 'bottom'
+                },
+                horizontalAlign: {
+                    side: 'right'
+                }
+            };
+            cMerge(cfg.popupOptions, positionCfg);
+            sizes = sizes || {};
+            sizes.margins = {top: 0, left: 0};
+            return {
+                width: size,
+                height: size,
+                top,
+                left,
+                bottom: top + size,
+                right: left + size,
+                topScroll: 0,
+                leftScroll: 0
+            };
+        }
+
+        if (!document) {
+            return {
+                width: 0,
+                height: 0,
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                topScroll: 0,
+                leftScroll: 0
+            };
+        }
+        return TargetCoords.get(_private.getTargetNode(cfg));
+    }
+
+    private _isTargetVisible(item): boolean {
+        if (!item.popupOptions._elementFromPoint || !item.popupOptions.target) {
+            const targetCoords = this._getTargetCoords(item, {});
+            return !!targetCoords.width;
+        }
+        // определяю видимость таргета. Он может быть в доме, но скрыт под скроллом
+        const target = item.popupOptions.target[0] || item.popupOptions.target;
+        const targetRect = target.getBoundingClientRect();
+        let elemFromPoint = document.elementFromPoint(targetRect.x + 1, targetRect.y + 1);
+        while (elemFromPoint && elemFromPoint !== target) {
+            elemFromPoint = elemFromPoint.parentElement;
+        }
+        return !!elemFromPoint;
     }
 }
 
