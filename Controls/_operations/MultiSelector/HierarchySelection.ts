@@ -308,7 +308,8 @@ var HierarchySelection = Selection.extend({
    getCount: function() {
       let
          countItems = null,
-         isAllSelection = this._isAllSelection(this._getParams(this._getRoot())),
+         rootId = this._getRoot(),
+         isAllSelection = this._isAllSelection(this._getParams(rootId)),
          isSelectedItemsLoaded = this._selectedItemsIsLoaded(this._selectedKeys);
 
       // We can calc amount of items when,
@@ -324,7 +325,10 @@ var HierarchySelection = Selection.extend({
 
          // All items from selectedKeys is in another root, if count is 0 and we have selectedKeys.
          // in this case multiSelector displays "Selected" without count.
-         if (countItems === 0 && this._selectedKeys.length) {
+         // Может быть сценарий когда выбрана текущая папка и все дети в исключениях
+         // Вся логика переписана, костыль живет только до 20.1000
+         let isSelectedAllCurrentFolder = this._excludedKeys.includes(rootId) && this._selectedKeys.includes(rootId);
+         if (countItems === 0 && (this._selectedKeys.length && !isSelectedAllCurrentFolder || this._selectedKeys.length > 1)) {
             countItems = null;
          }
       }

@@ -1486,7 +1486,12 @@ var _private = {
     },
 
     needBottomPadding: function(options, items, listViewModel) {
-        return (!!items && (!!items.getCount() || !!listViewModel.getEditingItemData()) && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+        return (!!items &&
+            (!!items.getCount() ||
+                (options.useNewModel ? listViewModel.isEditing() : !!listViewModel.getEditingItemData())) &&
+            options.itemActionsPosition === 'outside' &&
+            !options.footerTemplate &&
+            options.resultsPosition !== 'bottom');
     },
 
     isPagingNavigation: function(navigation) {
@@ -1558,13 +1563,13 @@ var _private = {
     hasItemActions: function(itemActions, itemActionsProperty) {
         return !!(itemActions || itemActionsProperty);
     },
-    setIndicatorContainerHeight(self, viewPortSize) {
-        const listBoundingRect = (self._container[0] || self._container).getBoundingClientRect();
+    setIndicatorContainerHeight(self, viewPortSize: number): void {
+        const listBoundingRect = ((self._container[0] || self._container) as HTMLElement).getBoundingClientRect();
 
         if (listBoundingRect.bottom < viewPortSize) {
             self._loadingIndicatorContainerHeight = listBoundingRect.height;
         } else {
-            self._loadingIndicatorContainerHeight = viewPortSize - listBoundingRect.top;
+            self._loadingIndicatorContainerHeight = viewPortSize;
         }
     },
 
@@ -2337,15 +2342,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _viewResize: function() {
+    _viewResize(): void {
         // todo Check, maybe remove "this._virtualScroll.ItemsContainer"?
         if (this._virtualScroll && this._virtualScroll.ItemsContainer) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
             _private.updateShadowMode(this);
         }
-        let viewSize = (this._container[0] || this._container).clientHeight;
-        this._viewSize = viewSize;
+        this._viewSize = (this._container[0] || this._container).clientHeight;
+        _private.setIndicatorContainerHeight(this, this._viewPortSize);
         if (this._needScrollCalculation) {
             this._updateLoadOffset(this._viewSize, this._viewPortSize);
         }

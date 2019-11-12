@@ -84,10 +84,6 @@
   width: auto;
 }
 
-.controls-Lookup__fieldWrapper_hidden {
-  display: none;
-}
-
 .controls-Lookup__fieldWrapper_for_comment {
   color: @color_Lookup-input-for-comment;
 
@@ -181,4 +177,9 @@
 
 .controls-Lookup__counter {
   height: @height_Lookup-counter;
+}
+
+// Метка внутри поля связи должна быть инлайновой, иначе она не троиточиться
+.ws-is-windows-xp .controls-Lookup .controls-Lookup__link {
+  display: inline;
 }

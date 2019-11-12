@@ -139,6 +139,11 @@ import 'Types/entity';
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
          },
+         setViewModeSync: function(self, viewMode, cfg): void {
+            self._viewMode = viewMode;
+            _private.setVirtualScrolling(self, self._viewMode, cfg);
+            _private.setViewConfig(self, self._viewMode);
+         },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
@@ -149,16 +154,13 @@ import 'Types/entity';
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               result = _private.loadTileViewMode();
+               result = _private.loadTileViewMode().then(() => {
+                  _private.setViewModeSync(self, viewMode, cfg);
+               });
             } else {
                result = Promise.resolve();
+               _private.setViewModeSync(self, viewMode, cfg);
             }
-
-            result.then(() => {
-               self._viewMode = viewMode;
-               _private.setVirtualScrolling(self, self._viewMode, cfg);
-               _private.setViewConfig(self, self._viewMode);
-            });
 
             return result;
          },

@@ -80,13 +80,13 @@ var _private = {
     },
 
     getSourceController: function(self, source, navigation) {
-        if (!self._sourceController) {
-            self._sourceController = new SourceController({
+        if (!self.sourceController) {
+            self.sourceController = new SourceController({
                 source: source,
                 navigation: navigation
             });
         }
-        return self._sourceController;
+        return self.sourceController;
     },
 
     getDateRangeItem: function(items) {
@@ -215,7 +215,7 @@ var _private = {
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
                         configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems,
-                            configs[item.name]._sourceController, item.editorOptions.source, configs[item.name].keyProperty);
+                            configs[item.name].sourceController, item.editorOptions.source, configs[item.name].keyProperty);
                     });
                     pDef.push(result);
                 }
@@ -246,6 +246,7 @@ var _private = {
         self._configs[item.name] = Merge(self._configs[item.name] || {}, CoreClone(options));
         self._configs[item.name].emptyText = item.emptyText;
         self._configs[item.name].emptyKey = item.hasOwnProperty('emptyKey') ? item.emptyKey : null;
+        self._configs[item.name].sourceController = null;
 
         if (options.source) {
             return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
@@ -423,7 +424,7 @@ var _private = {
             newItems = _private.getNewItems(this, result.data, curConfig);
         if (isHistorySource(curItem.editorOptions.source)) {
             if (newItems.length) {
-                curConfig._sourceController = null;
+                curConfig.sourceController = null;
             }
             _private.updateHistory(this, result.id, factory(result.data).toArray());
         }
@@ -499,7 +500,7 @@ var _private = {
             } else {
                 source.update(selectedItems, historyUtils.getMetaHistory());
             }
-            if (currentFilter._sourceController && source.getItems) {
+            if (currentFilter.sourceController && source.getItems) {
                 currentFilter.items = source.getItems();
             }
         }
@@ -508,7 +509,7 @@ var _private = {
     isNeedHistoryReload: function(configs) {
         let needReload = false;
         factory(configs).each((config) => {
-            if (!config._sourceController) {
+            if (!config.sourceController) {
                 needReload = true;
             }
         });

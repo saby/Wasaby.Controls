@@ -6,7 +6,7 @@ const _private = {
     getStickyConfig(config) {
         config = config || {};
         config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-        config._vdomOnOldPage = true; // Открывается всегда вдомным
+        config._vdomOnOldPage = config.hasOwnProperty('_vdomOnOldPage') ? config._vdomOnOldPage : true; // Открывается всегда вдомным
         return config;
     }
 };

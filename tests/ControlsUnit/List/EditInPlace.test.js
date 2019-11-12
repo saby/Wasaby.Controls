@@ -1651,7 +1651,7 @@ define([
                 });
 
             eip.saveOptions({
-               listModel: treeModel,
+               listModel: listModel,
                source: source
             });
 
@@ -1663,7 +1663,7 @@ define([
                assert.equal(options.multiSelectVisibility, 'visible');
             };
 
-            eip._beforeUpdate({multiSelectVisibility: 'visible', listModel: treeModel});
+            eip._beforeUpdate({multiSelectVisibility: 'visible', listModel: listModel});
             assert.isTrue(isItemDataRegenerated);
          });
       });

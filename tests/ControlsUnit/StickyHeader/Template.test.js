@@ -64,6 +64,7 @@ define(
                inst._getObserverStyle = ctrl._getObserverStyle;
                inst._options.shadowVisibility = 'visible';
                inst._reverseOffsetStyle = ctrl._reverseOffsetStyle;
+               inst._getBottomShadowStyle = ctrl._getBottomShadowStyle;
                template = TemplateUtil.clearTemplate(ctrl._template);
             });
 
