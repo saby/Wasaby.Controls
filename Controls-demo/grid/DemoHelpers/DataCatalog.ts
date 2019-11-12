@@ -648,6 +648,7 @@ function getPorts() {
         getData: () => [
             {
                 id: 1,
+                name: 'Новороссийский морской торговый порт',
                 invoice: 3500,
                 documentSign: 1,
                 documentNum: 10,
@@ -660,6 +661,7 @@ function getPorts() {
             },
             {
                 id: 2,
+                name: 'Морской порт Санкт-Петербург',
                 invoice: 3501,
                 documentSign: 1,
                 documentNum: 10,
@@ -672,6 +674,7 @@ function getPorts() {
             },
             {
                 id: 3,
+                name: 'Морской торговый порт Усть-Луга',
                 invoice: 3502,
                 documentSign: 2,
                 documentNum: 10,
