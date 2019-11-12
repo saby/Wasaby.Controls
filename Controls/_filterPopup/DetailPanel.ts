@@ -361,6 +361,7 @@ import 'Controls/form';
             }
          });
          this._isChanged = false;
+         this._notify('itemsChanged', [this._items]);
       }
    });
 
