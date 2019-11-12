@@ -6,12 +6,14 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
 
          it('getCurrent', function () {
             var items = new collection.RecordSet({
-               rawData: [{id: 1, title: 'test'}],
+               rawData: [{id: 1, title: 'test', node: null, parent: null}],
                keyProperty: 'id'
             });
             var model = new treeGrid.SearchGridViewModel({
                items: items,
                keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'node',
                searchValue: 'tes',
                columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
                multiSelectVisibility: 'hidden'
@@ -30,13 +32,15 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
 
          it('isFirstInGroup with breadCrumb', function() {
             var items = new collection.RecordSet({
-               rawData: [{id: 1, title: 'test'}],
+               rawData: [{id: 1, title: 'test', node: null, parent: null}],
                keyProperty: 'id'
             });
             var model = new treeGrid.SearchGridViewModel({
                items: items,
                searchValue: 'tes',
                keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'node',
                columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
                multiSelectVisibility: 'visible'
             });
@@ -47,11 +51,13 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
 
          it('should not add spacing to first column because multiSelectVisibility is "visible"', function() {
             var items = new collection.RecordSet({
-               rawData: [{id: 1, title: 'test'}],
+               rawData: [{id: 1, title: 'test', node: null, parent: null}],
                keyProperty: 'id'
             });
             var model = new treeGrid.SearchGridViewModel({
                items: items,
+               parentProperty: 'parent',
+               nodeProperty: 'node',
                searchValue: 'tes',
                keyProperty: 'id',
                columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
@@ -93,10 +99,13 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             });
          });
          it('current.rowIndex', function() {
-            assert.equal(searchModel.getCurrent().rowIndex, 1);
+            let current = searchModel.getCurrent();
+            assert.equal(current.rowIndex, 1);
             searchModel.goToNext();
-            assert.equal(searchModel.getCurrent().rowIndex, 2);
+            current = searchModel.getCurrent();
+            assert.equal(current.rowIndex, 2);
             searchModel.goToNext();
+            current = searchModel.getCurrent();
             assert.equal(searchModel.getCurrent().rowIndex, 3);
          });
          it('current.breadCrumbs', function() {

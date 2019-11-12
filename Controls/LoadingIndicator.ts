@@ -448,8 +448,10 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
                 this._toggleIndicatorVisible(this._stack.getCount() > 1 && this._isOverlayVisible, config);
                 this.delayTimeout = setTimeout(() => {
                     const lastIndex = this._stack.getCount() - 1;
-                    this._toggleIndicatorVisible(true, this._stack.at(lastIndex));
-                    this._forceUpdate();
+                    if (lastIndex > -1) {
+                        this._toggleIndicatorVisible(true, this._stack.at(lastIndex));
+                        this._forceUpdate();
+                    }
                 }, this._getDelay(config));
             }
         } else {

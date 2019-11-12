@@ -57,5 +57,17 @@ define([
             assert.deepEqual(component._viewModel.selection, { start: 1, end: 1 });
          });
       });
+      describe('handleInput', function() {
+         it('Remove 7', function() {
+            const component = createComponent(input.Phone, { value: '+79721161' });
+            component._viewModel.handleInput({
+               after: ' (972) 116-1',
+               before: '+',
+               delete: '7',
+               insert: '',
+            }, 'deleteBackward');
+            assert.equal(component._viewModel.displayValue, '+9721161');
+         });
+      });
    });
 });

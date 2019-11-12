@@ -46,6 +46,10 @@ export class ViewModel extends BaseViewModel {
         return super.handleInput(ViewModel._prepareData(result), inputType);
     }
 
+    protected _getStartingPosition(): number {
+        return 0;
+    }
+
     protected _convertToValue(displayValue: string) {
         return this._valueToTimeIntervalConverter(displayValue);
     }

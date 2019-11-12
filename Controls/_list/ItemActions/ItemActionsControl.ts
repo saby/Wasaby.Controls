@@ -7,7 +7,6 @@ import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
-import { Object as EventObject } from 'Env/Event';
 import 'css!theme?Controls/list';
 import { CollectionItem } from 'Controls/display';
 

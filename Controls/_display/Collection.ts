@@ -34,6 +34,7 @@ import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
+import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -149,7 +150,17 @@ function onCollectionChange<T>(
         case IObservable.ACTION_RESET:
             const projectionOldItems = toArray(this);
             let projectionNewItems;
-            this._reBuild(true);
+            // TODO Здесь был вызов _reBuild(true), который полностью пересоздает все
+            // CollectionItem'ы, из-за чего мы теряли их состояние. ACTION_RESET происходит
+            // не только при полном пересоздании рекордсета, но и например при наборе
+            // "критической массы" изменений при выключенном режиме обработки событий.
+            // https://online.sbis.ru/opendoc.html?guid=573aed02-3c97-4432-9d39-19e53bda8bc0
+            // По идее, нам это не нужно, потому что в случае реального пересоздания рекордсета,
+            // нам передадут его новый инстанс, и мы пересоздадим всю коллекцию сами.
+            // Но на случай, если такой кейс все таки имеет право на жизнь, выписал
+            // задачу в этом разобраться.
+            // https://online.sbis.ru/opendoc.html?guid=bd17a1fb-5d00-4f90-82d3-cb733fe7ab27
+            this._reBuild(/* true */);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -610,6 +621,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _virtualScrollManager: VirtualScrollManager;
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
+    protected _selectionManager: SelectionManager;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -664,6 +676,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._virtualScrollManager = new VirtualScrollManager(this);
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
+        this._selectionManager = new SelectionManager(this);
     }
 
     destroy(): void {
@@ -1921,6 +1934,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setSelectedItemsAll(selected: boolean): void {
         this._setSelectedItems(this._getItems(), selected);
+    }
+
+    setSelection(selection: ISelectionMap): void {
+        this._selectionManager.setSelection(selection);
     }
 
     /**

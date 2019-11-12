@@ -541,87 +541,26 @@ define([
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123'), false);
             assert.deepEqual(treeViewModel._collapsedItems, ['123']);
          });
-         it('Node footer params', function() {
-            var
-               treeViewModel = new treeGrid.TreeViewModel(cMerge({
-                  expandedItems: [null],
-                  nodeFooterTemplate: "footer"
-               }, cfg));
-            treeViewModel.setHasMoreStorage({
-               123: true,
-               234: true
-            });
-            let getExpanderPaddingClasses = treeGrid.TreeViewModel._private.getExpanderPaddingClasses;
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[0].');
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter, {
-               dispItem: treeViewModel._display.at(0),
-               hasMoreStorage: true,
-               item: treeViewModel._items.at(0),
-               key: treeViewModel._items.at(0).getId(),
-               template: "footer",
-               getExpanderPaddingClasses: getExpanderPaddingClasses,
-               level: 1,
-               multiSelectVisibility: cfg.multiSelectVisibility
-            }, 'Incorrect nodeFooter for displayItem[1].');
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[2].');
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooter, {
-               dispItem: treeViewModel._display.at(1),
-               hasMoreStorage: true,
-               item: treeViewModel._items.at(1),
-               template: "footer",
-               key: treeViewModel._items.at(1).getId(),
-               getExpanderPaddingClasses: getExpanderPaddingClasses,
-               level: 2,
-               multiSelectVisibility: cfg.multiSelectVisibility
-            }, 'Incorrect nodeFooter for displayItem[4].');
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter, {
-               dispItem: treeViewModel._display.at(5),
-               item: treeViewModel._items.at(5),
-               template: "footer",
-               key: treeViewModel._items.at(5).getId(),
-               getExpanderPaddingClasses: getExpanderPaddingClasses,
-               level: 1,
-               multiSelectVisibility: cfg.multiSelectVisibility
-            }, 'Incorrect nodeFooter for displayItem[5].');
-         });
 
          it('nodeFooterVisibilityCallback', function() {
             var
                treeViewModel = new treeGrid.TreeViewModel(cMerge({
-                  expandedItems: [null],
                   nodeFooterTemplate: 'footer',
                   nodeFooterVisibilityCallback: function(item) {
                      return item.getId() !== '345';
                   }
                }, cfg));
+            treeViewModel.setExpandedItems([null]);
             treeViewModel.setHasMoreStorage({
                123: true,
                234: true
             });
-            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter);
-            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter);
-            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter);
-            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(3)).nodeFooter);
-            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooter);
-            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter);
-            treeViewModel = new treeGrid.TreeViewModel(cMerge({
-               expandedItems: [null],
-               nodeFooterTemplate: 'footer',
-               task1177672941: true,
-               nodeFooterVisibilityCallback: function(item) {
-                  return item.getId() !== '345';
-               }
-            }, cfg));
-            treeViewModel.setHasMoreStorage({
-               123: true,
-               234: true
-            });
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter.length, 0);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter.length, 0);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter.length, 0);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(3)).nodeFooter.length, 0);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooter.length, 3);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter.length, 0);
+            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooters.length);
+            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooters.length);
+            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooters.length);
+            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(3)).nodeFooters.length);
+            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooters.length);
+            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooters.length);
          });
 
          it('getFirstItem and getLastItem', function() {

@@ -39,12 +39,12 @@ define('Controls/Application',
     * @class Controls/Application
     * @extends Core/Control
     *
-    * @mixes Controls/Application/BlockLayout/Styles
+    * @mixes Controls-demo/BlockLayouts/Index
     * @mixes Controls/_interface/IRUM
     * @mixes Controls/_interface/IApplication
     * @mixes UI/_base/interface/IRootTemplate
     * @mixes UI/_base/interface/IHTML
-    * 
+    *
     * @control
     * @public
     * @author Белотелов Н.В.

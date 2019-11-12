@@ -19,14 +19,9 @@
  * @includes Paging Controls/_paging/Paging
  * @includes VirtualScroll Controls/_list/Controllers/VirtualScroll
  * @includes DataContainer Controls/_list/Data
- * @includes AddButtonStyles Controls/_list/AddButton/Styles
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
  * @includes ISorting Controls/_interface/ISorting
- * @includes ListStyles Controls/_list/ListStyles
- * @includes ItemActionsStyles Controls/_list/ItemActions/ItemActionsStyles
- * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
- * @includes BaseControlStyles Controls/_list/BaseControlStyles
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScroll Controls/_list/interface/IVirtualScroll
@@ -48,13 +43,8 @@
  * @includes Paging Controls/_paging/Paging
  * @includes VirtualScroll Controls/_list/Controllers/VirtualScroll
  * @includes DataContainer Controls/_list/Data
- * @includes AddButtonStyles Controls/_list/AddButton/Styles
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
- * @includes ListStyles Controls/_list/ListStyles
- * @includes ItemActionsStyles Controls/_list/ItemActions/ItemActionsStyles
- * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
- * @includes BaseControlStyles Controls/_list/BaseControlStyles
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScroll Controls/_list/interface/IVirtualScroll

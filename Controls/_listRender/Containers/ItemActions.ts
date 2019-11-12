@@ -30,17 +30,26 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
         if (
             this._initializedActions &&
             (
+                options.listModel !== this._options.listModel ||
                 options.itemActions !== this._options.itemActions ||
                 options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback
             )
         ) {
-            this._assignItemActions(options.itemActions, options.itemActionVisibilityCallback);
+            this._assignItemActions(
+                options.listModel,
+                options.itemActions,
+                options.itemActionVisibilityCallback
+            );
         }
     }
 
     protected _onContainerMouseEnter(): void {
         if (!this._initializedActions) {
-            this._assignItemActions(this._options.itemActions, this._options.itemActionVisibilityCallback);
+            this._assignItemActions(
+                this._options.listModel,
+                this._options.itemActions,
+                this._options.itemActionVisibilityCallback
+            );
             this._initializedActions = true;
         }
     }
@@ -68,10 +77,11 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
     }
 
     protected _assignItemActions(
+        listModel: Collection<Model>,
         itemActions: any[],
         itemActionVisibilityCallback: TItemActionVisibilityCallback
     ): void {
-        this._options.listModel.getItemActionsManager().assignItemActions(
+        listModel.getItemActionsManager().assignItemActions(
             itemActions,
             itemActionVisibilityCallback
         );

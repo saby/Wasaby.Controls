@@ -249,8 +249,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var suggest = new suggestMod._InputController();
          var errorFired = false;
          var options = {
-           searchDelay: 300
+            searchDelay: 300,
+            suggestState: true
          };
+
+         suggest._loading = null;
          suggest.saveOptions(options);
          suggest._searchDelay = 0;
          suggest._children = {};
@@ -263,6 +266,17 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
          assert.equal(options.searchDelay, suggest._searchDelay);
          assert.isFalse(errorFired);
+         assert.equal(suggest._loading, null);
+
+         suggest._loading = true;
+         suggest._searchEnd();
+         assert.equal(suggest._loading, null);
+
+         suggest._loading = true;
+         suggest._searchEnd({
+            data: new collection.RecordSet({items: [1]})
+         });
+         assert.isFalse(suggest._loading);
       });
 
       it('Suggest::_private.searchErrback', function() {
