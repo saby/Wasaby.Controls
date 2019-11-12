@@ -701,6 +701,9 @@ var
             this._updateLastItemKey();
         },
 
+        setTheme(theme: string): void {
+            this._options.theme = theme;
+        }
         _updateLastItemKey(): void {
             if (this.getItems()) {
                 this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
