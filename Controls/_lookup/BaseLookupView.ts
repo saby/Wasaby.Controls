@@ -123,6 +123,10 @@ var BaseLookupView = Control.extend({
             /* focus can be moved in choose event */
             if (this._active) {
                 this.activate();
+
+                if (this._determineAutoDropDown()) {
+                    this._suggestState = true;
+                }
             }
         }
     },
