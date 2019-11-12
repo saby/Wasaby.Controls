@@ -163,8 +163,9 @@ export default class MonthsSource extends Memory {
     }
 
     private _getHiddenPeriod(date: Date): Date[] {
+        let range: Date[] = [];
         for (let i = 0; i < this._displayedRanges.length; i++) {
-            const range = this._displayedRanges[i];
+            range = this._displayedRanges[i];
             if (date < range[0]) {
                 return [
                     i === 0 ? null : this._shiftRange(this._displayedRanges[i - 1][1], 1),
@@ -172,7 +173,7 @@ export default class MonthsSource extends Memory {
                 ];
             }
         }
-        return [date, null];
+        return [range[1] ? this._shiftRange(range[1], 1) : date, null];
     }
 
     private _shiftRange(date: Date, delta: number): Date {
