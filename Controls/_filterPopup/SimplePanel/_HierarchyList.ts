@@ -79,11 +79,12 @@ var HierarchyList = Control.extend({
     _beforeMount: function(options) {
         this._folders = _private.getFolders(options.items, options.nodeProperty);
         this._selectedKeys = _private.getSelectedKeys(options.selectedKeys, this._folders, options.emptyKey);
+        this._flatSelectedKeys = _private.getViewModelSelectedKeys(this._selectedKeys, options.emptyKey);
         this._nodeItems = _private.getNodeItems(this._folders, options);
 
         this._listModel = new DropdownViewModel({
             items: options.items,
-            selectedKeys: _private.getViewModelSelectedKeys(this._selectedKeys, options.emptyKey),
+            selectedKeys: this._flatSelectedKeys,
             keyProperty: options.keyProperty,
             itemTemplateProperty: options.itemTemplateProperty,
             displayProperty: options.displayProperty,

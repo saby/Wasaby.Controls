@@ -959,7 +959,8 @@ define(
                      keyProperty: 'id',
                      nodeProperty: 'node',
                      parentProperty: 'parent',
-                     multiSelect: true
+                     multiSelect: true,
+                     _sourceController: {hasMoreData: () => {return true;}}
                   }
                };
                view._children = {
