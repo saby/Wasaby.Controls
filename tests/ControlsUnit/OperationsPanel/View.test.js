@@ -72,10 +72,6 @@ define([
             keyProperty: 'id'
          },
          cfgWithoutItems = {
-            source: new sourceLib.Memory({
-               keyProperty: 'id',
-               data: []
-            }),
             keyProperty: 'id'
          };
 
@@ -106,12 +102,10 @@ define([
             });
          });
 
-         it('without items', (done) => {
+         it('without items', () => {
             assert.isFalse(instance._initialized);
-            instance._beforeMount(cfgWithoutItems).addCallback(function() {
-               assert.isTrue(instance._initialized);
-               done();
-            });
+            instance._beforeMount(cfgWithoutItems);
+            assert.isTrue(instance._initialized);
          });
 
          it('without source', () => {
