@@ -616,6 +616,7 @@ define([
                ['p', linkNode, nbsp + nbsp + '   '],
                ['p', linkNode, '   ', decorator.Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
+               ['pre', 'https://ya.ru\ntext'],
                ['p', linkNode, ['br'], 'text'],
                ['p', linkNode, '   ', ['br'], 'text'],
                ['p', ['strong', linkNode], 'text'],
@@ -645,6 +646,7 @@ define([
                '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>',
                '<p>' + decoratedLinkHtml + '   ' + decoratedLinkHtml + '</p>',
                '<p>' + linkHtml + 'text </p>',
+               '<pre>' + decoratedLinkHtml + '\ntext</pre>',
                '<p>' + decoratedLinkHtml + '<br />text</p>',
                '<p>' + decoratedLinkHtml + '   <br />text</p>',
                '<p><strong>' + linkHtml + '</strong>text</p>',
@@ -856,6 +858,16 @@ define([
                },
                'HtTpS://ya.ru'
             ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('with \\n characters', function() {
+            var parentNode = ['p', 'https://ya.ru\nsome\ntext'];
+            var goodResultNode = [[],
+               linkNode,
+               '\nsome\ntext'
+            ];
             var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
             assert.deepEqual(goodResultNode, checkResultNode);
          });
