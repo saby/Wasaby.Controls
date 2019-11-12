@@ -160,7 +160,10 @@ function onCollectionChange<T>(
             // Но на случай, если такой кейс все таки имеет право на жизнь, выписал
             // задачу в этом разобраться.
             // https://online.sbis.ru/opendoc.html?guid=bd17a1fb-5d00-4f90-82d3-cb733fe7ab27
-            this._reBuild(/* true */);
+            // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
+            // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
+            // виртуального скролла.
+            this._reBuild(this._$compatibleReset);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -520,6 +523,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$virtualScrolling: boolean;
 
     protected _$hasMoreData: boolean;
+
+    protected _$compatibleReset: boolean;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -2124,6 +2129,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$hasMoreData = hasMoreData;
     }
 
+    setCompatibleReset(compatible: boolean): void {
+        this._$compatibleReset = compatible;
+    }
+
     // region SerializableMixin
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, T> {
@@ -3210,6 +3219,7 @@ Object.assign(Collection.prototype, {
     _$importantItemProperties: null,
     _$virtualScrolling: false,
     _$hasMoreData: false,
+    _$compatibleReset: false,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
