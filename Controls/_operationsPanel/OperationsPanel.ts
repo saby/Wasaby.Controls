@@ -185,7 +185,7 @@ var OperationsPanel = Control.extend({
 
    _beforeMount(options: object): Promise<RecordSet>|void {
       const loadDataCallback = (data?: RecordSet): RecordSet|void => {
-         if (!data || !data.getCount()) {
+         if (!data) {
             _private.initialized(this, options);
          }
          return data;
