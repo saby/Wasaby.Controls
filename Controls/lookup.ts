@@ -52,11 +52,10 @@ export {
 };
 
 /**
- * Шаблон отображения выбранных значений.
+ * Шаблон, который по умолчанию используется для отображения выбранных значений в контроле {@link Controls/lookup:Input}.
  * 
  * @class Controls/lookup:ItemTemplate
  * @remark
- * Для контрола Controls/lookup:Input в качестве базового шаблона применяется "Controls.lookup:ItemTemplate", а для Controls/lookup:Selector — "Controls.lookup:ButtonItemTemplate".
  * Шаблон поддерживает следующие параметры:
  * <ul>
  *    <li>contentTemplate {Function|String} — шаблон для отображения выбранной записи.</li>
@@ -102,4 +101,5 @@ export {
  *       </ws:itemTemplate>
  *    </Controls.lookup:Selector>
  * </pre>
+ * @author Капустин И.А.
  */
