@@ -379,7 +379,8 @@
 // Приводит к этому, насколько я смог разобраться, какая-то комбинация position'ов и z-index'ов
 // https://stackoverflow.com/a/10170170/2298183
 .ws-is-mobile-safari {
-   .controls-ListViewV__itemsContainer {
+   // Делаем только для списков с новым рендером, а то страшно
+   .controls-ListViewV__itemsContainer--newRender {
       .translate3d(0);
    }
 }
