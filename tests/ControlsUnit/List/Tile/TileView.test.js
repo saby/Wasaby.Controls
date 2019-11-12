@@ -378,6 +378,25 @@ define(['Controls/_tile/TileView/TileView',
          assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
 
+
+         cfg.tileScalingMode = 'overlap';
+         tileView.saveOptions(cfg);
+
+         tileView._setHoveredItem({
+            key: 'itemKey1'
+         }, {
+            left: 5,
+            right: 5,
+            top: 5,
+            bottom: 5
+         });
+
+         hoveredItem = tileView._listModel.getHoveredItem();
+         assert.equal(hoveredItem.zoomCoefficient, 1);
+         assert.isTrue(hoveredItem.canShowActions);
+         assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
+         assert.equal(hoveredItem.key, 'itemKey1');
+
          tileView._setHoveredItem({
             key: 'itemKey2'
          });
