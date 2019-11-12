@@ -105,16 +105,7 @@
                <ws:templateOptions multiSelect="{{true}}" items="{{_multiSelectItems}}"/>
             </ws:selectorTemplate>
             <ws:footerTemplate>
-               <ws:if data="{{_footerWithButtonVisible}}">
-                   <Controls.buttons:Button
-                           viewMode="link"
-                           style="secondary"
-                           size="m"
-                           caption="{{rk('Еще...')}}"/>
-               </ws:if>
-               <ws:else>
-                   <invisible-node />
-               </ws:else>
+               <invisible-node />
             </ws:footerTemplate>
          </Controls.dropdown:Input>
       </div>
