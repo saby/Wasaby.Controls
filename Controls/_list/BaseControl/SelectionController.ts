@@ -50,16 +50,9 @@ var _private = {
          4) Прокидывать событие в Container/Scroll.
          Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
          */
-        // Стреляем listSelectedKeysCountChanged только если selection реально изменился
-        if (
-            selectedKeysDiff.added.length ||
-            selectedKeysDiff.removed.length ||
-            excludedKeysDiff.added.length ||
-            excludedKeysDiff.removed.length
-        ) {
-            self._notify('listSelectedKeysCountChanged', [self._multiselection.getCount()], {bubbling: true});
-            self._options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
-        }
+
+        self._notify('listSelectedKeysCountChanged', [self._multiselection.getCount()], {bubbling: true});
+        self._options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
     },
 
     getItemsKeys: function (items) {
@@ -71,10 +64,14 @@ var _private = {
     },
 
     onCollectionChange: function (event, action, newItems, newItemsIndex, removedItems) {
-        if (action === collection.IObservable.ACTION_REMOVE) {
-            this._multiselection.remove(_private.getItemsKeys(removedItems));
+        // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
+        // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
+        if (this._options.listModel.getItems()) {
+            if (action === collection.IObservable.ACTION_REMOVE) {
+                this._multiselection.remove(_private.getItemsKeys(removedItems));
+            }
+            _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
         }
-        _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
     },
 
     selectedTypeChangedHandler(typeName: TChangeSelectionType, limit?: number|void): void {

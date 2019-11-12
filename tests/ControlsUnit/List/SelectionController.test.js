@@ -72,7 +72,9 @@ define([
                },
                getExpandedItems: function() {
                   return [1, 2, 3, 4, 5, 6, 7];
-               }
+               },
+
+               getItems: () => rs
             }
          };
          instance = new SelectionController();
@@ -276,6 +278,17 @@ define([
             }));
             assert.isFalse(instance._multiselection.unselect.called);
          });
+      });
+
+      it('onCollectionChange handler', async function() {
+         await instance._beforeMount(cfg);
+         instance._afterMount();
+         const stubNotify = sandbox.stub(instance, '_notify');
+
+         instance._options.listModel.updateSelection = sandbox.stub();
+         instance._onCollectionChangeHandler();
+         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).calledOnce);
+         assert.isTrue(instance._options.listModel.updateSelection.withArgs({}).calledOnce);
       });
    });
 });
