@@ -13,9 +13,9 @@ import entity = require('Types/entity');
        * Контрол, отображающий всплывающую подсказку относительно указанного элемента.
        * Всплывающую подсказку вызывает событие, указанное в опции trigger.
        * В один момент времени на странице может отображаться только одна всплывающая подсказка.
-       * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ Подробнее}.
-       *
-       * <a href="/materials/demo-ws4-infobox">Демо-пример</a>.
+       * @remark
+       * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ здесь}.
+       * См. <a href="/materials/demo-ws4-infobox">демо-пример</a>.
        * @class Controls/_popup/InfoBox
        *
        * @public

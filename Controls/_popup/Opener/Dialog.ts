@@ -1,9 +1,10 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import {IoC} from 'Env/Env';
 /**
- * Контрол, открывающий всплывающее окно, которое позиционнируется по центру экрана.
- * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup здесь}.
- * <a href="/materials/demo-ws4-stack-dialog">Демо-пример</a>.
+ * Контрол, открывающий всплывающее окно, которое позиционируется по центру экрана.
+ * @remark
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup здесь}.
+ * См. <a href="/materials/demo-ws4-stack-dialog">демо-пример</a>.
  * @class Controls/_popup/Opener/Dialog
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/interface/IOpener
