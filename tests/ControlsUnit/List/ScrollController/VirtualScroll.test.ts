@@ -108,6 +108,8 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             assert.equal(19, vsInstance.getActiveElement());
             vsInstance.scrollTop = 100;
             assert.equal(9, vsInstance.getActiveElement());
+            vsInstance.itemsHeights = [];
+            assert.isUndefined(vsInstance.getActiveElement());
         });
         it('recalcToDirection', () => {
             vsInstance.itemsCount = 20;

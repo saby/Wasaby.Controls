@@ -272,7 +272,9 @@ export default class VirtualScrollController {
     }
 
     getActiveElement(): number {
-        if (this.isScrolledToBottom()) {
+        if (!this.itemsHeights.length) {
+            return undefined;
+        } else if (this.isScrolledToBottom()) {
             return this.stopIndex - 1;
         } else if (this.isScrolledToTop()) {
             return this.startIndex;
