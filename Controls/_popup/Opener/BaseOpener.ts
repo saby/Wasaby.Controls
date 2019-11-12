@@ -265,7 +265,14 @@ class BaseOpener extends Control<IControlOptions> {
                             cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
                             cfg.theme = popupOpener._options.theme;
                         }
-                        BaseOpener._openPopup(popupId, cfg, controller, def);
+                        if (!BaseOpener.isVDOMTemplate(rootTpl)) {
+                            requirejs(['Controls/compatiblePopup'], function(compatiblePopup) {
+                                compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl);
+                                BaseOpener._openPopup(popupId, cfg, controller, def);
+                            });
+                        } else {
+                            BaseOpener._openPopup(popupId, cfg, controller, def);
+                        }
                     });
                 });
             } else if (BaseOpener.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
