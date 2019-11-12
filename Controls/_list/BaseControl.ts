@@ -2025,7 +2025,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._hasItemActions) {
             this._children.itemActions.updateActions();
         }
-    }
+    },
     _onAfterEndEdit: function(event, item, isAdd) {
         this._shouldUpdateItemActions = true;
         return this._notify('afterEndEdit', [item, isAdd]);
@@ -2287,6 +2287,7 @@ BaseControl.getDefaultOptions = function() {
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
         stickyHeader: true,
+        selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
         virtualScrollMode: 'remove'
     };
 };

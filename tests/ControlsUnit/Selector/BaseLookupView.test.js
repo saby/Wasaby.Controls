@@ -43,6 +43,7 @@ define([
          let activated = false;
          let lookup = new Lookup();
 
+         lookup._suggestState = false;
          lookup._needSetFocusInInput = true;
          lookup._options.items = getItems(0);
          lookup.activate = function(config) {
@@ -60,6 +61,12 @@ define([
          assert.isTrue(activated);
          assert.isFalse(lookup._needSetFocusInInput);
          assert.equal(configActivate, undefined);
+         assert.isFalse(lookup._suggestState);
+
+         lookup._needSetFocusInInput = true;
+         lookup._determineAutoDropDown = () => true;
+         lookup._afterUpdate();
+         assert.isTrue(lookup._suggestState);
       });
 
       it('_beforeUpdate', function() {
@@ -123,14 +130,19 @@ define([
       });
 
       it('_choose', function() {
-         var itemAdded = false;
-         var lookup = new Lookup();
-         var isActivated = false;
+         let itemAdded = false;
+         let lookup = new Lookup();
+         let isActivated = false;
+         let lastValueAtNotify;
+         let selectedItem = {id: 1};
 
          lookup.saveOptions({});
          lookup._isInputVisible = false;
-         lookup._notify = function() {
-            itemAdded = true;
+         lookup._notify = function(eventName, value) {
+            lastValueAtNotify = value[0];
+            if (eventName === 'addItem') {
+               itemAdded = true;
+            }
          };
          lookup.activate = function() {
             isActivated = true;
@@ -154,6 +166,12 @@ define([
          lookup._choose();
          assert.isFalse(lookup._needSetFocusInInput);
          assert.isTrue(isActivated);
+
+         itemAdded = false;
+         lookup._inputValue = 'not empty';
+         lookup._choose(null, selectedItem);
+         assert.equal(lookup._inputValue, '');
+         assert.equal(lastValueAtNotify, selectedItem);
       });
 
       it('_deactivated', function() {

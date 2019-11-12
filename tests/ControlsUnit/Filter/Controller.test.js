@@ -274,14 +274,43 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       it('_private.processPrefetchOnItemsChanged', () => {
          const sandbox = sinon.createSandbox();
          const self = {};
+         let historyItemDestroyed = false;
+         let historyItems = null;
 
          self._filter = {
             PrefetchSessionId: 'testId',
             testFilterFilter: 'testValue'
          };
-         sandbox.replace(Filter._private, 'getHistoryByItems', () => null);
+         sandbox.replace(Filter._private, 'getHistoryByItems', () => historyItems);
 
          assert.deepEqual(Filter._private.processPrefetchOnItemsChanged(self, {}), { testFilterFilter: 'testValue' });
+
+         historyItems = {
+            data: {
+               items: [],
+               prefetchParams: {
+                  PrefetchSessionId: 'testId'
+               }
+            },
+            item: {
+               getId: () => 'test'
+            }
+         };
+
+         sandbox.replace(HistoryUtils, 'getHistorySource', function() {
+            return {
+               destroy: () => {
+                  historyItemDestroyed = true;
+               }
+            };
+         });
+
+         assert.deepEqual(Filter._private.processPrefetchOnItemsChanged(self, {}), {
+            PrefetchSessionId: 'testId',
+            testFilterFilter: 'testValue'
+         });
+
+         sandbox.restore();
       });
 
       it('_private.getItemsByOption::function', function () {
@@ -837,6 +866,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       });
 
       it('getCalculatedFilter', function() {
+         this.skip();
          let filterButtonItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: ''}];
          let historyItems = [{id: 'testId', value: 'testValueFromHistory', textValue: 'testTextValueFromHistory'}];
          let prefetchParams = {

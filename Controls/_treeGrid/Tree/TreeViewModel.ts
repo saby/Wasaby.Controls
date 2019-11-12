@@ -2,7 +2,6 @@ import {ListViewModel, ItemsUtil, TreeItemsUtil} from 'Controls/list';
 import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
-import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import {isEqual} from 'Types/object';
 import {TemplateFunction} from 'UI/Base';
 
@@ -264,12 +263,11 @@ var
         },
 
         setNodeFooterIfNeed(self, current) {
-
             const isRootChild = (item) => item.get(current.parentProperty) === null;
             const getChildCount = (dispItem) => self._display.getChildren(dispItem).getCount();
             const hasChildren = (dispItem) => !!getChildCount(dispItem);
             const hasEditingInCurrent = (itemData) => !!self._editingItemData && self._editingItemData.item.get(itemData.parentProperty) === itemData.key;
-            const isNotLeaf = (item) => item.get && item.get(current.nodeProperty) !== null;
+            const isNotLeaf = (item) => !!item && item.get && item.get(current.nodeProperty) !== null;
 
             const fillNodeFooter = (params: {
                 key: string | number | null,
