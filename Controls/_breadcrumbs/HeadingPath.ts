@@ -183,6 +183,11 @@ var _private = {
  * true
  */
 
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#afterBackButtonTemplate
+ * @cfg {Function|string} Шаблон в кнопке назад, располагаемый между заголовком и кнопкой действия
+ */
+
 var BreadCrumbsPath = Control.extend({
     _template: template,
     _backButtonCaption: '',

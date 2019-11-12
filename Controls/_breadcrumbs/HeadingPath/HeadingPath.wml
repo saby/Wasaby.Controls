@@ -7,6 +7,7 @@
                                                showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible}}"
                                                backButtonStyle="{{ _options.backButtonStyle }}"
                                                showActionButton="{{_options.showActionButton}}"
+                                               afterBackButtonTemplate="{{_options.afterBackButtonTemplate}}"
                                                theme="{{_options.theme}}"
                                                on:backButtonClick="_onBackButtonClick()"
                                                on:arrowClick="_notifyHandler('arrowClick')"/>
