@@ -281,7 +281,9 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             PrefetchSessionId: 'testId',
             testFilterFilter: 'testValue'
          };
-         sandbox.replace(Filter._private, 'getHistoryByItems', () => historyItems);
+         sandbox.replace(Filter._private, 'getHistoryByItems', function() {
+            return historyItems;
+         });
 
          assert.deepEqual(Filter._private.processPrefetchOnItemsChanged(self, {}), { testFilterFilter: 'testValue' });
 
@@ -294,7 +296,8 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             },
             item: {
                getId: () => 'test'
-            }
+            },
+            index: 1
          };
 
          sandbox.replace(HistoryUtils, 'getHistorySource', function() {
@@ -309,6 +312,30 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             PrefetchSessionId: 'testId',
             testFilterFilter: 'testValue'
          });
+         assert.isTrue(historyItemDestroyed);
+
+
+         self._filter = {
+            PrefetchSessionId: 'testId',
+            testFilterFilter: 'testValue'
+         };
+         historyItemDestroyed = false;
+         assert.deepEqual(Filter._private.processPrefetchOnItemsChanged(self, {}), {
+            PrefetchSessionId: 'testId',
+            testFilterFilter: 'testValue'
+         });
+         assert.isFalse(historyItemDestroyed);
+
+         self._filter = {
+            PrefetchSessionId: 'testId',
+            testFilterFilter: 'testValue'
+         };
+         historyItems.index = 0;
+         assert.deepEqual(Filter._private.processPrefetchOnItemsChanged(self, {}), {
+            PrefetchSessionId: 'testId',
+            testFilterFilter: 'testValue'
+         });
+         assert.isTrue(historyItemDestroyed);
 
          sandbox.restore();
       });
@@ -900,6 +927,13 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             testField: 'testValue',
             PrefetchSessionId: 'test'
          };
+         const sandbox = sinon.createSandbox();
+
+         let isDeletedFromHistory = false;
+         let historyItems = null;
+
+         sandbox.replace(Filter._private, 'getHistoryByItems', () => historyItems);
+         sandbox.replace(Filter._private, 'deleteFromHistory', () => isDeletedFromHistory = true);
 
          controller._filter = filter;
          controller._notify = () => {};
@@ -907,6 +941,14 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          controller.resetPrefetch();
          assert.isTrue(controller._filter !== filter);
          assert.deepEqual(controller._filter, {testField: 'testValue'});
+         assert.isFalse(isDeletedFromHistory);
+
+         historyItems = ['testItem'];
+         controller.resetPrefetch();
+         assert.deepEqual(controller._filter, {testField: 'testValue'});
+         assert.isTrue(isDeletedFromHistory);
+
+         sandbox.restore();
       });
    });
 
