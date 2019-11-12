@@ -172,8 +172,10 @@ var _private = {
                         // instead of assigning items
                         // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
                         const modelCollection = listModel.getCollection();
+                        listModel.setCompatibleReset(true);
                         modelCollection.setMetaData(list.getMetaData());
                         modelCollection.assign(list);
+                        listModel.setCompatibleReset(false);
                         self._items = listModel.getCollection();
                     } else {
                         const curKey = listModel.getMarkedKey();
