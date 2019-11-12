@@ -233,7 +233,7 @@ var TileView = ListView.extend({
     _setHoveredItem: function (itemData, position, startPosition) {
         this._listModel.setHoveredItem({
             key: itemData.key,
-            canShowActions: !position,
+            canShowActions: !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
             zoomCoefficient: this._getZoomCoefficient(),
             position: _private.getPositionStyle(startPosition || position),
             endPosition: _private.getPositionStyle(position)
