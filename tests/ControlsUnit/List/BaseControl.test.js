@@ -2615,6 +2615,7 @@ define([
                },
                itemActions: {
                   updateItemActions: () => {
+                     assert.isTrue(called);
                      actionsUpdated = true;
                   }
                }
