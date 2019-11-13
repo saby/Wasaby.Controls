@@ -34,7 +34,7 @@ import {parse as load} from 'Core/library';
 
 /**
  * @name Controls/_popup/Opener/Notification#templateOptions
- * @cfg {String|Function} Опции для котнрола, переданного в {@link template}
+ * @cfg {String|Function} Опции для контрола, переданного в {@link template}
  */
 const POPUP_CONTROLLER = 'Controls/popupTemplate:NotificationController';
 
@@ -267,7 +267,7 @@ export = Notification;
  * @property {} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @property {} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
  * @property {} template Шаблон всплывающего окна
- * @property {} templateOptions Опции для котнрола, переданного в {@link template}
+ * @property {} templateOptions Опции для контрола, переданного в {@link template}
  */
 
 /**

@@ -26,7 +26,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  */
 
 /**
- * Контрол, открывающий всплывающее окно, которое позиционнируется относительно вызывающего элемента.
+ * Контрол, открывающий всплывающее окно, которое позиционируется относительно вызывающего элемента.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
  * @class Controls/_popup/Opener/Sticky
  * @extends Controls/_popup/Opener/BaseOpener
@@ -48,19 +48,27 @@ class Sticky extends BaseOpener {
      * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
      * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
      * @property {function|String} template Шаблон всплывающего окна
-     * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
+     * @property {function|String} templateOptions  Опции для контрола, переданного в {@link template}
      * @property {Object} targetPoint Точка позиционнирования всплывающего окна относительно вызывающего элемента.
-     * @property {Object} direction  Устанавливает выравнивание всплывающего окна относительно точки позиционнирования.
+     * @property {Object} direction Устанавливает выравнивание всплывающего окна относительно точки позиционнирования.
      * @property {Object} offset Устанавливает отступы от точки позиционнирования до всплывающего окна
-     * @property {Number} minWidth  Минимальная ширина всплывающего окна
+     * @property {Number} minWidth Минимальная ширина всплывающего окна
      * @property {Number} maxWidth Максимальная ширина всплывающего окна
      * @property {Number} minHeight Минимальная высота всплывающего окна
      * @property {Number} maxHeight Максимальная высота всплывающего окна
      * @property {Number} height Текущая высота всплывающего окна
      * @property {Number} width Текущая ширина всплывающего окна
-     * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционнируется всплывающее окно.
+     * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционируется всплывающее окно.
      * @property {Node} opener Логический инициатор открытия всплывающего окна
      * @property {String} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+     * @property {EventHandlers} eventHandlers Функции обратного вызова на события всплывающего окна.
+     */
+
+    /**
+     * @typedef {Object} EventHandlers
+     * @description Функции обратного вызова на события всплывающего окна.
+     * @property {Function} onClose Функция обратного вызова, которая вызывается при закрытии всплывающего окна.
+     * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне всплывающего окна.
      */
 
     /*
@@ -298,7 +306,7 @@ export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#target
- * @cfg {Node|Control} Элемент (DOM-элемент или контрол), относительно которого позиционнируется всплывающее окно.
+ * @cfg {Node|Control} Элемент (DOM-элемент или контрол), относительно которого позиционируется всплывающее окно.
  */
 
 /**
