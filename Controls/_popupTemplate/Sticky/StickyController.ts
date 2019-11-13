@@ -20,6 +20,10 @@ const DEFAULT_OPTIONS = {
     targetPoint: {
         vertical: 'top',
         horizontal: 'left'
+    },
+    fittingMode: {
+        horizontal: 'adaptive',
+        vertical: 'adaptive'
     }
 };
 
@@ -62,10 +66,7 @@ const _private = {
             }
         }
         if (!config.fittingMode) {
-            newCfg.fittingMode = {
-                horizontal: 'adaptive',
-                vertical: 'adaptive'
-            }
+            newCfg.fittingMode =  DEFAULT_OPTIONS.fittingMode;
         }
         return newCfg;
     },
