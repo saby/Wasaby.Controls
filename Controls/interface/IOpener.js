@@ -256,4 +256,11 @@ define('Controls/interface/IOpener', [], function() {
     *    });
     * </pre>
     */
+
+   /**
+    * @typedef {Object} EventHandlers
+    * @description Функции обратного вызова на события всплывающего окна.
+    * @property {Function} onClose Функция обратного вызова, которая вызывается при закрытии всплывающего окна.
+    * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне всплывающего окна.
+    */
 });

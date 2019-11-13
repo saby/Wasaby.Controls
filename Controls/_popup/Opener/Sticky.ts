@@ -61,14 +61,7 @@ class Sticky extends BaseOpener {
      * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционируется всплывающее окно.
      * @property {Node} opener Логический инициатор открытия всплывающего окна
      * @property {String} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
-     * @property {EventHandlers} eventHandlers Функции обратного вызова на события всплывающего окна.
-     */
-
-    /**
-     * @typedef {Object} EventHandlers
-     * @description Функции обратного вызова на события всплывающего окна.
-     * @property {Function} onClose Функция обратного вызова, которая вызывается при закрытии всплывающего окна.
-     * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне всплывающего окна.
+     * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события всплывающего окна.
      */
 
     /*
@@ -77,9 +70,6 @@ class Sticky extends BaseOpener {
      * @function Controls/_popup/Opener/Sticky#open
      * @param {PopupOptions} popupOptions Sticky popup options.
      * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
-     * @example
-     * wml
-     * <pre>
      */
 
     /**

@@ -206,13 +206,6 @@ Stack._private = _private;
 export = Stack;
 
 /**
- * @typedef {Object} EventHandlers
- * @description Функции обратного вызова на события стековой панели.
- * @property {Function} onClose Функция обратного вызова, которая вызывается при закрытии стековой панели.
- * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне стековой панели.
- */
-
-/**
  * @typedef {Object} PopupOptions
  * @description Конфигурация стековой панели.
  * @property {Boolean} [autofocus=true] Определяет, установится ли фокус на шаблон попапа после его открытия.
@@ -225,7 +218,7 @@ export = Stack;
  * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна. Значение указывается в px.
  * @property {Number} width Текущая ширина всплывающего окна. Значение указывается в px.
  * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
- * @property {EventHandlers} eventHandlers Функции обратного вызова на события стековой панели.
+ * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события стековой панели.
  */
 
 
@@ -242,7 +235,7 @@ export = Stack;
  * @property {Number} maxWidth The maximum width of popup.
  * @property {Number} width Width of popup.
  * @property {Node} opener Read more {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener there}.
- * @property {EventHandlers} eventHandlers Callback functions on popup events.
+ * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Callback functions on popup events.
  */
 
 /**

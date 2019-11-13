@@ -269,12 +269,5 @@ export default Dialog;
  * @property {Number} top Расстояние от диалогового окна до верхнего края экрана.
  * @property {Number} left Расстояние от диалогового окна до левого края экрана.
  * @property {Node} opener Логический инициатор открытия диалогового окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
- * @property {EventHandlers} eventHandlers Функции обратного вызова на события диалогового окна.
- */
-
-/**
- * @typedef {Object} EventHandlers
- * @description Функции обратного вызова на события диалогового окна.
- * @property {Function} onClose Функция обратного вызова, которая вызывается при закрытии диалогового окна.
- * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне диалогового окна.
+ * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события всплывающего окна.
  */
