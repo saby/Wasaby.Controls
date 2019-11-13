@@ -432,8 +432,11 @@ const _private = {
                calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
 
                if (cfg.prefetchParams && cfg.historyId) {
-                   tmpStorage._filter = calculatedFilter;
-                   calculatedFilter = _private.processPrefetchOnItemsChanged(tmpStorage, cfg);
+                   const history = _private.getHistoryByItems(cfg.historyId, tmpStorage._filterButtonItems);
+
+                   if (history) {
+                       calculatedFilter = Prefetch.applyPrefetchFromHistory(calculatedFilter, history.data);
+                   }
                    calculatedFilter = Prefetch.prepareFilter(calculatedFilter, cfg.prefetchParams);
                }
             } catch (err) {
