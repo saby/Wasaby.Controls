@@ -1,13 +1,13 @@
 /**
- * Шаблон, который по умолчанию используется для отображения элементов в контроле {@link Controls/grid:View}. Подробнее о работе с шаблоном читайте {@link wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
+ * Шаблон, который по умолчанию используется для отображения элементов в контроле {@link Controls/grid:View}.
  * @interface Controls/grid:ItemTemplate
  * @author Авраменко А.С.
- * @see Controls/interface/IGridItemTemplate#itemTemplate
- * @see Controls/interface/IGridItemTemplate#itemTemplateProperty
- * @remark
+ * @see Controls/grid:View#itemTemplate
+ * @see Controls/grid:View#itemTemplateProperty
+ * @remark 
+ * Параметры шаблона описаны в следующей таблице:
  * <div>
  *  <table class="tftable" border="1">
- *    <caption>Параметры шаблона Controls/grid:ItemTemplate.<caption>
  *    <tr>
  *       <th>Имя</th>
  *       <th>Тип</th>
@@ -18,13 +18,13 @@
  *       <td>marker</td>
  *       <td>Boolean</td>
  *       <td>true</td>
- *       <td>Когда параметр установлен в значение true, работает выделение активного элемента при помощи <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/">маркера</a>.</td>
+ *       <td>Когда параметр установлен в значение true, активный элемент таблицы будет выделяться <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/">маркером</a>.</td>
  *    </tr>
  *    <tr>
  *       <td>highlightOnHover</td>
  *       <td>Boolean</td>
  *       <td>true</td>
- *       <td>Когда параметр установлен в значение true, при наведении курсора элемент выделяется цветом.</td>
+ *       <td>Когда параметр установлен в значение true, элемент таблицы будет подсвечиваться при наведении курсора мыши.</td>
  *    </tr>
  *    <tr>
  *       <td>clickable</td>
@@ -40,22 +40,20 @@
  *    </tr>
  *    <tr>
  *       <td>colspanTemplate</td>
- *       <td>Function</td>
- *       <td></td>
+ *       <td>Function|String</td>
+ *       <td>не задано</td>
  *       <td>Шаблон отображения объединенных ячеек.</td>
  *    </tr>
  *    <tr>
  *       <td>contentTemplate</td>
- *       <td>Function</td>
- *       <td></td> 
+ *       <td>Function|String</td>
+ *       <td>не задано</td> 
  *       <td>Шаблон содержимого ячейки.</td>
  *    </tr>
  * </table>
  * </div>
- * @example
- * См. <a href="/materials/demo-ws4-grid-item-template">демо-пример</a>.
  * 
- * В следующем примере показано, как для шаблона менять параметр highlightOnHover.
+ * В следующем примере показано, как для шаблона изменить параметр highlightOnHover.
  * <pre>
  * <Controls.grid:View>
  *    <ws:itemTemplate>
@@ -63,4 +61,11 @@
  *    </ws:itemTemplate>
  * </Controls.grid:View>
  * </pre>
+ * 
+ * В области видимости шаблона доступен объект itemData. Из него можно получить доступ к свойству item — это объект, который содержит данные обрабатываемого элемента. Т.е. можно получить доступ к полям и их значениям.
+ * 
+ * Дополнительно о шаблоне:
+ * 
+ * * {@link https://wi.sbis.ru/materials/demo-ws4-grid-item-template Демо-пример}
+ * * {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ Руководство разработчика}
  */

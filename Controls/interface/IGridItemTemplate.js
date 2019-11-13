@@ -20,15 +20,10 @@ define('Controls/interface/IGridItemTemplate', [
     * @cfg {Function} Шаблон отображения элемента таблицы.
     * См. <a href="/materials/demo-ws4-grid-item-template">демо-пример</a>.
     * @default Controls/grid:ItemTemplate
-    * @example
-    * Использование пользовательского шаблона для рендеринга:
-    * <pre>
-    *    <Controls.grid:View>
-    *       <ws:itemTemplate>
-    *          <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}"/>
-    *       </ws:itemTemplate>
-    *    </Controls.grid:View>
-    * </pre>
+    * @remark
+    * Подробнее о параметрах шаблона читайте {@link Controls/grid:ItemTemplate здесь}.
+    * Подробнее работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
+    * @see itemTemplateProperty
     */
 
    /*
@@ -65,6 +60,7 @@ define('Controls/interface/IGridItemTemplate', [
     * @name Controls/interface/IGridItemTemplate#itemTemplateProperty
     * @cfg {String} Имя свойства элемента, содержащего шаблон для рендеринга. Если не задано, используется itemTemplate.
     * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
+    * @see itemTemplate
     */
 
    /*
