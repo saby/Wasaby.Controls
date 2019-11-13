@@ -88,9 +88,6 @@ define([
          }, {
             options: { selectionProcessing: false, monthClickable: true },
             event: 'monthClick'
-         }, {
-            options: { selectionProcessing: false, monthClickable: false },
-            event: 'itemClick'
          }]
       }, {
          method: '_onMonthClick',
@@ -106,6 +103,18 @@ define([
          }, {
             options: { selectionProcessing: false, monthClickable: false },
             event: 'itemClick'
+         }, {
+            options: { selectionProcessing: true, monthClickable: true },
+            event: 'selectionViewTypeChanged',
+            eventOptions: ['months']
+         }, {
+            options: { selectionProcessing: true, monthClickable: false },
+            event: 'selectionViewTypeChanged',
+            eventOptions: ['months']
+         }, {
+            options: { selectionProcessing: false, monthClickable: false },
+            event: 'selectionViewTypeChanged',
+            eventOptions: ['months']
          }]
       }, {
          method: '_onMonthTitleClick',
@@ -164,7 +173,7 @@ define([
 
                   if (test.event) {
                      sinon.assert.calledWith(
-                        component._notify, test.event, [start]);
+                        component._notify, test.event, test.eventOptions || [start]);
                   } else {
                      sinon.assert.notCalled(component._notify);
                   }
