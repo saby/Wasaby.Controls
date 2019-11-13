@@ -9,6 +9,7 @@ import {IoC, constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
+import 'css!theme?Controls/tile';
 import 'Types/entity';
 
 

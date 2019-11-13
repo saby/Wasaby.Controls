@@ -243,10 +243,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             index = this._displayedDates.indexOf(time),
             isDisplayed = index !== -1;
 
-        if (entry.nativeEntry.isIntersecting && !isDisplayed) {
+        if (entry.nativeEntry.isIntersecting && !isDisplayed && entry.data.type === ITEM_TYPES.body) {
             this._displayedDates.push(time);
             this._enrichItemsDebounced();
-        } else if (!entry.nativeEntry.isIntersecting && isDisplayed) {
+        } else if (!entry.nativeEntry.isIntersecting && isDisplayed && entry.data.type === ITEM_TYPES.body) {
             this._displayedDates.splice(index, 1);
         }
     }

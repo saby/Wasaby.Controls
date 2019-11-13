@@ -257,6 +257,23 @@ define([
             resultDisplayedDates: [(new Date(2019, 0)).getTime()],
             date: new Date(2019, 0)
          }, {
+            title: 'Should\'t add date to displayed dates if header item is has been shown.',
+            entries: [{
+               nativeEntry: {
+                  boundingClientRect: { top: 10, bottom: 30 },
+                  rootBounds: { top: 20 },
+                  isIntersecting: true
+               },
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.header
+               }
+            }],
+            displayedDates: [],
+            options: { source: {} },
+            resultDisplayedDates: [],
+            date: new Date(2019, 0)
+         }, {
             title: 'Should remove date from displayed dates.',
             entries: [{
                nativeEntry: {
@@ -272,6 +289,23 @@ define([
             displayedDates: [(new Date(2019, 0)).getTime(), 123],
             options: { source: {} },
             resultDisplayedDates: [123],
+            date: new Date(2019, 0)
+         }, {
+            title: 'Should\'t remove date from displayed dates if header item is has been hidden.',
+            entries: [{
+               nativeEntry: {
+                  boundingClientRect: { top: 10, bottom: 30 },
+                  rootBounds: { top: 20 },
+                  isIntersecting: false
+               },
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.header
+               }
+            }],
+            displayedDates: [(new Date(2019, 0)).getTime(), 123],
+            options: { source: {} },
+            resultDisplayedDates: [(new Date(2019, 0)).getTime(), 123],
             date: new Date(2019, 0)
          }].forEach(function(test) {
             it(test.title, function() {
