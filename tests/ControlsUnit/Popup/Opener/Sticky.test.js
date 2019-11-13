@@ -476,7 +476,7 @@ define(
             popupCfg.sizes.width = 100;
             popupCfg.sizes.height = 100;
 
-            var position = StickyStrategy.getPosition(StickyController._private.prepareOriginPoint(popupCfg), targetCoords);
+            var position = StickyStrategy.getPosition(popupCfg, targetCoords);
             assert.equal(position.bottom, 840);
             assert.equal(position.left, 250);
          });
@@ -524,7 +524,7 @@ define(
             popupCfg.targetPoint.horizontal = 'left';
             popupCfg.targetPoint.vertical = 'center';
 
-            position = StickyStrategy.getPosition(StickyController._private.prepareOriginPoint(popupCfg), targetCoords);
+            position = StickyStrategy.getPosition(popupCfg, targetCoords);
             assert.equal(position.bottom, 740);
          });
 
