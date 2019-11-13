@@ -157,3 +157,18 @@ export interface IMonthList {
  *
  * @see Controls/_calendar/interface/IMonthList#displayedRanges
  */
+
+/**
+ * @event Controls/_calendar/interface/IMonthList#enrichItems Происходит после того, как перисовались элементы с новыми загруженными данными.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @example
+ * В этом примере производим некоторые манипуляции с элементами, после того как загрузились новые данные, и элеменыт перерисовались.
+ * <pre>
+ * protected _enrichItemsHandler() {
+ *     this._doSomeStuffWithItems();
+ * }
+ * </pre>
+ * <pre>
+ * <Controls.calendar:MonthList on:enrichItems="_enrichItemsHandler()"/>
+ * </pre>
+ */

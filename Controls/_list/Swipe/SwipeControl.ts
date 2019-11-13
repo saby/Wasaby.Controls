@@ -86,11 +86,18 @@ export default class SwipeControl extends Control {
 
    private _updateModel(newOptions: ISwipeControlOptions): void {
       this.closeSwipe();
-      newOptions.listModel.subscribe('onListChange', this._onListChange.bind(this));
+      if (newOptions.useNewModel) {
+         newOptions.listModel.subscribe('onCollectionChange', (event, action, changedItems) => {
+            const changedProperty = changedItems && changedItems.properties;
+            this._onListChange(event, `newModelUpdated - ${changedProperty}`, action);
+         });
+      } else {
+         newOptions.listModel.subscribe('onListChange', this._onListChange.bind(this));
+      }
    }
 
    private _onListChange(event, changesType, action): void {
-      if (changesType !== 'itemActionsUpdated' && action !== 'ch') {
+      if (changesType !== 'itemActionsUpdated' && action !== 'ch' || changesType === 'newModelUpdated - editing') {
          this.closeSwipe();
       } else if (changesType === 'itemActionsUpdated') {
 

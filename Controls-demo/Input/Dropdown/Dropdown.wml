@@ -92,6 +92,23 @@
             </ws:navigation>
          </Controls.dropdown:Input>
       </div>
+      <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divMultiSelectMore">
+         <h3>MultiSelect and hidden "more" button in footer</h3>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect4"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  multiSelect="{{true}}"
+                                  emptyText="All categories"
+                                  attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__multiSelect"
+                                  source="{{_createMemory(_multiSelectItems)}}">
+            <ws:selectorTemplate templateName="Controls-demo/Dropdown/StackTemplate">
+               <ws:templateOptions multiSelect="{{true}}" items="{{_multiSelectItems}}"/>
+            </ws:selectorTemplate>
+            <ws:footerTemplate>
+               <invisible-node />
+            </ws:footerTemplate>
+         </Controls.dropdown:Input>
+      </div>
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divWithComment">
          <h3>With comment(and icon on the right)</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMyTemplate"

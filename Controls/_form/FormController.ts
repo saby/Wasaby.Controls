@@ -97,10 +97,10 @@ import dataSource = require('Controls/dataSource');
       checkRecordType: function(record) {
          return cInstance.instanceOfModule(record, 'Types/entity:Record');
       },
-      readRecordBeforeMount: function(instance, cfg) {
+      readRecordBeforeMount: (instance, cfg) => {
          // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-         return instance._source.read(cfg.key, cfg.readMetaData).then(function(record) {
+         return instance._source.read(cfg.key, cfg.readMetaData).then((record) => {
             instance._setRecord(record);
             instance._readInMounting = { isError: false, result: record };
 
@@ -111,8 +111,7 @@ import dataSource = require('Controls/dataSource');
             return {
                data: record
             };
-         }, function(e) {
-            Env.IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
+         }, (e: Error) => {
             instance._readInMounting = { isError: true, result: e };
             return instance._processError(e).then(getState);
          });

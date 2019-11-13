@@ -67,7 +67,7 @@ define(
                },
                viewMode: 'frequent'
             },
-            {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
+            {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic', editorOptions: {}},
             {name: 'sender', value: '', resetValue: '', viewMode: 'extended', visibility: false},
             {name: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false}
          ];
@@ -221,6 +221,23 @@ define(
                done();
             });
             assert.equal(view._configs.document.items.length, 7);
+         });
+
+
+         it('_private:isNeedReload', function() {
+            let oldItems = defaultConfig.source;
+            let newItems = Clone(defaultConfig.source);
+
+            let result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isFalse(result);
+
+            newItems[0].viewMode = 'basic';
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
+
+            newItems[2].viewMode = 'frequent';
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
          });
 
          it('openDetailPanel', function() {
@@ -537,6 +554,26 @@ define(
             let self = {};
             filter.View._private.prepareItems(self, date);
             assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
+         });
+
+         it('_private:getFolderIds', function() {
+            const items = new collection.RecordSet({
+               rawData: [
+                  {key: '1', title: 'In any state', node: true, parent: null},
+                  {key: '2', title: 'In progress', node: false, parent: 1},
+                  {key: '3', title: 'Completed', node: false, parent: 1},
+                  {key: '4', title: 'Completed positive', node: true, parent: 1},
+                  {key: '5', title: 'Completed positive', node: true}
+               ],
+               keyProperty: 'key'
+            });
+            const folders = filter.View._private.getFolderIds({
+               items: items,
+               nodeProperty: 'node',
+               parentProperty: 'parent',
+               keyProperty: 'key'
+            });
+            assert.deepStrictEqual(folders, ['1', '5']);
          });
 
          it('_private:updateHistory', function() {

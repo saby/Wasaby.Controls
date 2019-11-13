@@ -87,7 +87,7 @@ define(
          });
 
          it('Sticky updated classes', () => {
-            StickyController._private.isTargetVisible = () => true;
+            StickyController._isTargetVisible = () => true;
             let item = {
                position: {},
                popupOptions: {},
@@ -107,7 +107,7 @@ define(
          });
 
          it('Sticky check visible target on elementCreated', () => {
-            StickyController._private.isTargetVisible = () => false;
+            StickyController._isTargetVisible = () => false;
             let isRemoveCalled = false;
             let ManagerControllerRemove = ManagerController.remove;
             ManagerController.remove = () => {
@@ -117,7 +117,7 @@ define(
             assert.equal(isRemoveCalled, true);
 
             ManagerController.remove = ManagerControllerRemove;
-            StickyController._private.isTargetVisible = () => true;
+            StickyController._isTargetVisible = () => true;
          });
 
          it('fixBottomPositionForIos', () => {

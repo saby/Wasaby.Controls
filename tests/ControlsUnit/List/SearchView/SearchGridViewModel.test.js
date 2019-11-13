@@ -115,6 +115,24 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             searchModel.goToNext();
             assert.isFalse(searchModel.getCurrent().breadCrumbs);
          });
+         it('isDrawResults', function() {
+            var items = new collection.RecordSet({
+               rawData: [{id: 1, title: 'test', node: null, parent: null}, {id: 2, title: 'test2', node: null, parent: null}],
+               keyProperty: 'id'
+            });
+            var model = new treeGrid.SearchGridViewModel({
+               items: items,
+               searchValue: 'tes',
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'node',
+               columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
+               multiSelectVisibility: 'visible'
+            });
+            assert.isTrue(model.isDrawResults());
+            model.getItems().removeAt(1);
+            assert.isFalse(model.isDrawResults());
+         });
       });
    });
 });

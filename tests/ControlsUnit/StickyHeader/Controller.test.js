@@ -54,6 +54,11 @@ define([
          component._children.stickyHeaderShadow = {
             start: sinon.fake()
          };
+         component._container = {
+            scrollTop: 0,
+            scrollHeight: 100,
+            clientHeight: 100
+         };
       });
 
       describe('_stickyRegisterHandler', function() {
@@ -84,12 +89,49 @@ define([
                   },
                   data = getRegisterObject(test);
                component._stickyRegisterHandler(event, data, true);
-               assert.deepEqual(component._headers[data.id], data);
+               assert.deepOwnInclude(component._headers[data.id], data);
                if (test.position === 'topbottom') {
                   assert.include(component._headersStack['top'], data.id);
                   assert.include(component._headersStack['bottom'], data.id);
                } else {
                   assert.include(component._headersStack[test.position], data.id);
+               }
+            });
+         });
+
+         [{
+            position: 'top',
+            result: true,
+         }, {
+            position: 'bottom',
+            result: true,
+         }, {
+            position: 'topbottom',
+            result: true,
+         }, {
+            position: 'top',
+            scrollTop: 10,
+            result: false,
+         }, {
+            position: 'bottom',
+            clientHeight: 50,
+            result: false,
+         }].forEach(function(test) {
+            it(`should set correct fixedInitially. position: ${test.position}`, function() {
+               let
+                  event = {
+                     stopImmediatePropagation: sinon.fake()
+                  },
+                  data = getRegisterObject(test);
+
+               component._container.scrollTop = test.scrollTop || 0;
+               component._container.scrollHeight = test.scrollHeight || 100;
+               component._container.clientHeight = test.clientHeight || 100;
+               component._stickyRegisterHandler(event, data, true);
+               if (test.result) {
+                  assert.isTrue(component._headers[data.id].fixedInitially);
+               } else {
+                  assert.isFalse(component._headers[data.id].fixedInitially);
                }
             });
          });

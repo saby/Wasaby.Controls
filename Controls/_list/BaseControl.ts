@@ -1545,12 +1545,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     updateShadowModeHandler(_: SyntheticEvent<Event>, placeholderSizes: {top: number, bottom: number}): void {
         const demandNavigation = this._options.navigation && this._options.navigation.view === 'demand';
+        const pagesNavigation = this._options.navigation && this._options.navigation.view === 'pages';
+        const maxCountNavigation = this._options.navigation && this._options.navigation.view === 'maxCount';
+        const supportFixedShadow = !demandNavigation && !pagesNavigation && !maxCountNavigation;
         const hasItems = this._listViewModel && this._listViewModel.getCount();
         const hasMoreData = (direction) => this._sourceController && this._sourceController.hasMoreData(direction);
 
         this._notify('updateShadowMode', [{
-            top: (placeholderSizes.top || !demandNavigation && hasItems && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || !demandNavigation && hasItems && hasMoreData('down')) ? 'visible' : 'auto'
+            top: (placeholderSizes.top || supportFixedShadow && hasItems && hasMoreData('up')) ? 'visible' : 'auto',
+            bottom: (placeholderSizes.bottom || supportFixedShadow && hasItems && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -1826,15 +1829,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
-        if (this._resetScrollAfterReload) {
-            this._notify('doScroll', ['top'], { bubbling: true });
-            this._resetScrollAfterReload = false;
-        }
         if (this._shouldUpdateItemActions){
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
+            if (this._resetScrollAfterReload) {
+                this._notify('doScroll', ['top'], { bubbling: true });
+                this._resetScrollAfterReload = false;
+            }
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
@@ -2031,6 +2034,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
+        var result = this._notify('afterBeginEdit', [item, isAdd]);
 
         /*
         * TODO: KINGO
@@ -2040,7 +2044,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * _canUpdateItemsActions  приведет к показу неактуальных операций.
         */
         this._children.itemActions.updateItemActions(item);
-        return this._notify('afterBeginEdit', [item, isAdd]);
+        return result;
     },
 
    _showActionMenu(

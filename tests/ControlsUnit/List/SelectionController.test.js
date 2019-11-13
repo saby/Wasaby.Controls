@@ -242,5 +242,18 @@ define([
             assert.isFalse(instance._multiselection.unselect.called);
          });
       });
+
+      it('onCollectionChange handler', async function() {
+         await instance._beforeMount(cfg);
+         instance._afterMount();
+         const stubNotify = sandbox.stub(instance, '_notify');
+
+         instance._options.listModel.updateSelection = sandbox.stub();
+         instance._onCollectionChangeHandler();
+         assert.isTrue(instance._options.listModel.updateSelection.withArgs({}).calledOnce);
+         return instance._multiselection.getCount().then(() => {
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).called);
+         });
+      });
    });
 });

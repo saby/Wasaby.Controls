@@ -510,7 +510,7 @@ var
             // т.к. больше его некому растянуть.
             // Также, если в таблице есть колонка чекбоксов (ее ширина задается как max-content), то попавшая на место
             // первой ячейки строка редактирования, растянет всю колонку на ширину таблицы. Поэтому нужно ее заколспанить.
-            const columnSpan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
+            const columnSpan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden' && !detection.yandex) ? 1 : self._columns.length;
 
             editingRowStyles += GridLayoutUtil.getGridLayoutStyles() + ' ';
             editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
@@ -701,6 +701,9 @@ var
             this._updateLastItemKey();
         },
 
+        setTheme(theme: string): void {
+            this._options.theme = theme;
+        }
         _updateLastItemKey(): void {
             if (this.getItems()) {
                 this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);

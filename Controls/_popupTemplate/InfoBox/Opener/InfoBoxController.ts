@@ -2,7 +2,6 @@ import Deferred = require('Core/Deferred');
 import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
 import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/resources/themeConstantsGetter');
 import cMerge = require('Core/core-merge');
-import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/_popupTemplate/BaseController';
 import collection = require('Types/collection');
@@ -120,7 +119,7 @@ class InfoBoxController extends StickyController.constructor {
             // It is impossible to count both the size and the position at the same time, because the position is related to the size.
             cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
             const sizes: IPopupSizes = {width: constants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
-            const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
+            const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), this._getTargetCoords(item));
             this.prepareConfig(item, sizes);
             item.position.maxWidth = position.width;
         }

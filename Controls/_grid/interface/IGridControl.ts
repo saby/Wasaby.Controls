@@ -142,8 +142,7 @@
  * @property {String} caption Текст заголовка ячейки.
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
- * @property {String} template Шаблон заголовка ячейки. По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке колонки при рендере денежных данных.
+ * @property {String} [template=Controls/grid:HeaderContent] Шаблон заголовка ячейки.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
  * В качестве значения принимает имя поля.
@@ -174,10 +173,10 @@
  *    ];
  * }
  * </pre>
- * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
- * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
- * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
- * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
+ * @property {Number} startRow Порядковый номер строки, на которой начинается ячейка.
+ * @property {Number} endRow Порядковый номер строки, на которой заканчивается ячейка.
+ * @property {Number} startColumn Порядковый номер колонки, на которой начинается ячейка.
+ * @property {Number} endColumn Порядковый номер колонки, на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
  * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
@@ -290,16 +289,7 @@
  * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в колонке.
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
- * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
- *
- * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
- *
- * В области видимости базового шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
- * - <code>columnIndex</code> (тип Number) — порядковый номер колонки. Отсчет от 0.
- * - <code>index</code> (тип Number) — порядковый номер строки. Отсчет от 0.
- * - <code>isEditing</code> (тип Boolean) — признак редактирования по месту.
- * - <code>item</code> (тип Object) — строка, данные которой отображаются в колонке.
- * - <code>column</code> (тип Object) — конфигурация колонки.
+ * О создании пользовательского шаблона читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">здесь</a>.
  * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
  * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
  * @property {GridCellAlign} [align=left] Выравнивание содержимого ячейки по горизонтали.
@@ -467,11 +457,19 @@
  /**
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Шаблон строки итогов.
+ * @default Controls/grid:ResultsTemplate
+ * @remark
+ * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
+ * @see resultsPosition
+ * @see resultsVisibility
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Results row template.
+ * @default Controls/grid:ResultsTemplate
+ * @see resultsPosition
+ * @see resultsVisibility
  */
 
 /**
@@ -497,7 +495,7 @@
  */
 
 /**
- * @name Controls/_list/interface/IList#editArrowVisibilityCallback
+ * @name Controls/_grid/interface/IGridControl#editArrowVisibilityCallback
  * @cfg {Function} Функция обратного вызова для определения видимости кнопки открытия карточки в панели действий по свайпу для конкретной записи.
  * @remark Первый и единственный аргумент - текущая запись, на которой открывается свайп.
  */
