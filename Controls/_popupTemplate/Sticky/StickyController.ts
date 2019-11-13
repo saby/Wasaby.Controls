@@ -51,8 +51,7 @@ const _private = {
                 vertical: config.fittingMode,
                 horizontal: config.fittingMode
             };
-        }
-        else {
+        } else {
             if (config.fittingMode) {
                 if (!config.fittingMode.vertical) {
                     newCfg.fittingMode.vertical = 'adaptive';
@@ -61,7 +60,13 @@ const _private = {
                     newCfg.fittingMode.horizontal = 'adaptive';
                 }
             }
+        }
+        if (!config.fittingMode) {
+            newCfg.fittingMode = {
+                horizontal: 'adaptive',
+                vertical: 'adaptive'
             }
+        }
         return newCfg;
     },
     prepareConfig(self, cfg, sizes) {

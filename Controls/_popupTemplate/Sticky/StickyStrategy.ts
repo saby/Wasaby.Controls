@@ -132,36 +132,35 @@ interface IPosition {
        },
 
       calculatePosition: function(popupCfg: Object, targetCoords: Object, direction: String): IPosition {
-         let property = direction === 'horizontal' ? 'width' : 'height';
-         let position = _private.getPosition(popupCfg, targetCoords, direction);
-         let resultPosition = position;
-         let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
-         let isNegativePos = _private.isNegativePosition(popupCfg, position, targetCoords);
-         if (positionOverflow > 0 || isNegativePos) {
-               if (popupCfg.fittingMode ? popupCfg.fittingMode[direction] === 'fixed' : false) {
+          let property = direction === 'horizontal' ? 'width' : 'height';
+          let position = _private.getPosition(popupCfg, targetCoords, direction);
+          let resultPosition = position;
+          let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+          let isNegativePos = _private.isNegativePosition(popupCfg, position, targetCoords);
+          if (positionOverflow > 0 || isNegativePos) {
+              if (popupCfg.fittingMode[direction] === 'fixed') {
                   resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-               } else if (popupCfg.fittingMode ? popupCfg.fittingMode[direction] === 'overflow' : false) {
+              } else if (popupCfg.fittingMode[direction] === 'overflow') {
                   resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-               }
-            else {
-               _private.invertPosition(popupCfg, direction);
-               let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
-               let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
-               let isNegativeRevertPosition = _private.isNegativePosition(popupCfg, revertPosition, targetCoords);
-               if (revertPositionOverflow > 0 || isNegativeRevertPosition) {
-                  if ((positionOverflow < revertPositionOverflow) && !isNegativePos || isNegativeRevertPosition) {
-                     _private.invertPosition(popupCfg, direction);
-                     _private.restrictContainer(position, property, popupCfg, positionOverflow);
-                     resultPosition = position;
+              } else {
+                  _private.invertPosition(popupCfg, direction);
+                  let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
+                  let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+                  let isNegativeRevertPosition = _private.isNegativePosition(popupCfg, revertPosition, targetCoords);
+                  if (revertPositionOverflow > 0 || isNegativeRevertPosition) {
+                      if ((positionOverflow < revertPositionOverflow) && !isNegativePos || isNegativeRevertPosition) {
+                          _private.invertPosition(popupCfg, direction);
+                          _private.restrictContainer(position, property, popupCfg, positionOverflow);
+                          resultPosition = position;
+                      } else {
+                          _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
+                          resultPosition = revertPosition;
+                      }
                   } else {
-                     _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
-                     resultPosition = revertPosition;
+                      resultPosition = revertPosition;
                   }
-               } else {
-                  resultPosition = revertPosition;
-               }
-            }
-         }
+              }
+          }
          _private.fixPosition(resultPosition, targetCoords);
          return resultPosition;
       },
