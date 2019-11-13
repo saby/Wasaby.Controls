@@ -35,6 +35,10 @@ define(
                   vertical: 'top',
                   horizontal: 'left'
                },
+               fittingMode: {
+                  horizontal: 'adaptive',
+                  vertical: 'adaptive'
+               },
                align: {
                   vertical: {
                      side: 'top',
@@ -311,7 +315,7 @@ define(
             });
             let cfg = getPositionConfig();
             cfg.sizes.height = 400;
-            let position = StickyStrategy.getPosition(StickyController._private.prepareOriginPoint(cfg), targetCoords);
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.left, 200);
             assert.equal(position.top, 400);
             assert.equal(Object.keys(position).length, 4);
@@ -327,7 +331,7 @@ define(
 
             StickyStrategy._private.getTopScroll = () => targetCoords.topScroll;
 
-            position = StickyStrategy.getPosition(StickyController._private.prepareOriginPoint(cfg), targetCoords);
+            position = StickyStrategy.getPosition(cfg, targetCoords);
             targetCoords.topScroll = 0;
             targetCoords.leftScroll = 0;
             assert.equal(position.left, 410);
@@ -444,7 +448,7 @@ define(
                }
             };
 
-            let position = StickyStrategy._private.calculatePosition(StickyController._private.prepareOriginPoint(cfg), targetCoords, 'vertical');
+            let position = StickyStrategy._private.calculatePosition(cfg, targetCoords, 'vertical');
             assert.equal(position.bottom, -10);
 
             StickyStrategy._private.checkOverflow = baseCheckOverflow;
