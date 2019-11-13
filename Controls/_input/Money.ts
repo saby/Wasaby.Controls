@@ -83,6 +83,7 @@ class Money extends Base implements INumberLength {
     static getOptionTypes() {
         const optionTypes = Base.getOptionTypes();
 
+        optionTypes.value = descriptor(String, Number, null);
         optionTypes.onlyPositive = descriptor(Boolean);
         optionTypes.precision = descriptor(Number);
         optionTypes.integersLength = descriptor(Number);
