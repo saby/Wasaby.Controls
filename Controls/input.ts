@@ -88,6 +88,7 @@ export {default as ITag, ITagOptions, TagStyle} from 'Controls/_input/interface/
 export {default as INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
 export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from 'Controls/_input/interface/IValidationStatus';
 export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
+export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 
 const InputCallback = {
     lengthConstraint
