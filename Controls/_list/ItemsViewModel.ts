@@ -15,7 +15,9 @@ import collection = require('Types/collection');
  */
 
 var _private = {
-
+    isFullCacheResetAction: function(action) {
+        return action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_ADD;
+    },
     checkDeprecated: function(cfg) {
 
         if (cfg.leftSpacing && !this.leftSpacing) {
@@ -191,7 +193,7 @@ var ItemsViewModel = BaseViewModel.extend({
         }
         this._nextVersion();
 
-        if (notUpdatePrefixItemVersion) {
+        if (notUpdatePrefixItemVersion && !_private.isFullCacheResetAction(action)) {
             if (Array.isArray(newItems) && newItems.length > 0) {
                 changedItems = changedItems.concat(newItems);
             }
