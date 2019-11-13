@@ -259,7 +259,9 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @typedef {Object} EventHandlers
-    * @description Функции обратного вызова на события всплывающего окна.
+    * @description Функции обратного вызова позволяют подписаться на события всплывающего окна, открытого через статические методы.
+    * Когда {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/ открывающий контрол} добавлен в шаблон, можно задать декларативную подписку на события.
+    * @property {Function} onOpen Функция обратного вызова, которая вызывается при открытии всплывающего окна.
     * @property {Function} onClose Функция обратного вызова, которая вызывается при закрытии всплывающего окна.
     * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне всплывающего окна.
     */
