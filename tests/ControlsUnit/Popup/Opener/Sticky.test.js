@@ -353,14 +353,17 @@ define(
             assert.equal(Object.keys(position).length, 5);
 
             cfg = getPositionConfig();
-            cfg.fittingMode = 'fixed';
+            cfg.fittingMode = {
+               vertical: 'fixed',
+               horizontal: 'fixed'
+            }
             cfg.sizes.width = 400;
             cfg.targetPoint.horizontal = 'left';
             cfg.targetPoint.vertical = 'bottom';
             cfg.align.vertical.side = 'top';
             cfg.align.horizontal.side = 'left';
 
-            position = StickyStrategy.getPosition(StickyController._private.prepareOriginPoint(cfg), targetCoords);
+            position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.right, 800);
             assert.equal(position.bottom, 600);
             assert.equal(position.width, 200);
