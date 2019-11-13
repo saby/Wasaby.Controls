@@ -26,9 +26,37 @@ export default class Render extends Control<IRenderOptions> {
     protected _templateKeyPrefix: string;
     protected _itemTemplate: TemplateFunction;
 
+    protected _pendingResize: boolean = false;
+    protected _onCollectionChange = (_e: unknown, action: string) => {
+        if (action !== 'ch') {
+            // Notify resize when items are added, removed or replaced, or
+            // when the recordset is reset
+            this._pendingResize = true;
+        }
+    }
+
     protected _beforeMount(options: IRenderOptions): void {
         this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
+
+        this._subscribeToModelChanges(options.listModel);
+    }
+
+    protected _beforeUpdate(newOptions: IRenderOptions): void {
+        if (newOptions.listModel !== this._options.listModel) {
+            this._subscribeToModelChanges(newOptions.listModel);
+        }
+    }
+
+    protected _afterRender(): void {
+        if (this._pendingResize) {
+            this._notify('controlResize', [], { bubbling: true });
+            this._pendingResize = false;
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        this._unsubscribeFromModelChanges(this._options.listModel);
     }
 
     getItemsContainer(): HTMLDivElement {
@@ -104,5 +132,18 @@ export default class Render extends Control<IRenderOptions> {
     protected _canHaveMultiselect(options: IRenderOptions): boolean {
         const visibility = options.multiselectVisibility;
         return visibility === 'onhover' || visibility === 'visible';
+    }
+
+    protected _subscribeToModelChanges(model: Collection<unknown>): void {
+        this._unsubscribeFromModelChanges(this._options.listModel);
+        if (model && !model.destroyed) {
+            model.subscribe('onCollectionChange', this._onCollectionChange);
+        }
+    }
+
+    protected _unsubscribeFromModelChanges(model: Collection<unknown>): void {
+        if (model && !model.destroyed) {
+            this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChange);
+        }
     }
 }
