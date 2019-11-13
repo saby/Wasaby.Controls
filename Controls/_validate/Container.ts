@@ -106,6 +106,7 @@ class ValidateContainer extends Control {
     _validationResult: ValidResult;
     _isNewEnvironment: boolean;
     _closeId: number;
+    _validateConfig: object = {};
 
     _private: any = _private;
 
@@ -128,7 +129,7 @@ class ValidateContainer extends Control {
         }
     }
 
-    _callValidators(validators: Function[], hideInfoBox?: boolean) {
+    _callValidators(validators: Function[]) {
         let validationResult = null,
             errors = [],
             validatorResult, validator, resultDeferred, index;
@@ -194,7 +195,7 @@ class ValidateContainer extends Control {
                 validationResult = errors;
             }
 
-            this.setValidationResult(validationResult, hideInfoBox);
+            this.setValidationResult(validationResult);
             resultDeferred.callback(validationResult);
         }).addErrback((e) => {
             Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
@@ -203,11 +204,12 @@ class ValidateContainer extends Control {
         return resultDeferred;
     }
 
-    validate(hideInfoBox?: boolean): Promise<boolean[]> {
+    validate(config?:object): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
             this.setValidationResult(undefined);
-            this._callValidators(validators, hideInfoBox).then(resolve);
+            this._validateConfig = config ? config : {};
+            this._callValidators(validators).then(resolve);
         });
 
     }
@@ -223,12 +225,12 @@ class ValidateContainer extends Control {
      * @description Set the validationResult from the outside
      * @param validationResult
      */
-    setValidationResult(validationResult: ValidResult, hideInfoBox?: boolean): void {
+    setValidationResult(validationResult: ValidResult): void {
         this._validationResult = validationResult;
         if (!(validationResult instanceof Promise)) {
             this._forceUpdate();
         }
-        if (validationResult && !hideInfoBox) {
+        if (validationResult && !this._validateConfig.hideInfoBox) {
             _private.openInfoBox(this);
         } else if (this._isOpened && validationResult === null) {
             _private.closeInfoBox(this);
