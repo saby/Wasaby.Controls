@@ -461,7 +461,7 @@ define(
                leftScroll: 0,
                topScroll: 0
             };
-            let position = StickyStrategy.getPosition(StickyController._private.prepareOriginPoint(popupCfg), targetC);
+            let position = StickyStrategy.getPosition(popupCfg, targetC);
             assert.equal(position.left, 0);
          });
 
@@ -518,7 +518,7 @@ define(
             popupCfg.sizes.width = 100;
             popupCfg.sizes.height = 100;
 
-            let position = StickyStrategy.getPosition(StickyController._private.prepareOriginPoint(popupCfg), targetCoords);
+            let position = StickyStrategy.getPosition(popupCfg, targetCoords);
             assert.equal(position.left, 300);
 
             popupCfg.targetPoint.horizontal = 'left';
