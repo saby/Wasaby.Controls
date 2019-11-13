@@ -2407,6 +2407,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
+        var result = this._notify('afterBeginEdit', [item, isAdd]);
 
         /*
         * TODO: KINGO
@@ -2416,7 +2417,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * _canUpdateItemsActions  приведет к показу неактуальных операций.
         */
         this._children.itemActions.updateItemActions(item);
-        return this._notify('afterBeginEdit', [item, isAdd]);
+        return result;
     },
 
    _showActionMenu(
