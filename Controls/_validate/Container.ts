@@ -9,6 +9,10 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
 
+export interface IValidateConfig {
+    hideInfoBox?: boolean;
+}
+
 /**
  * Контрол, регулирующий валидацию своего контента.
  * Валидация запускается вызовом метода validate ({@link Controls/_validate/Container#validate})
@@ -106,7 +110,6 @@ class ValidateContainer extends Control {
     _validationResult: ValidResult;
     _isNewEnvironment: boolean;
     _closeId: number;
-    _validateConfig: object = {};
 
     _private: any = _private;
 
@@ -129,7 +132,7 @@ class ValidateContainer extends Control {
         }
     }
 
-    _callValidators(validators: Function[]) {
+    _callValidators(validators: Function[], validateConfig?: IValidateConfig) {
         let validationResult = null,
             errors = [],
             validatorResult, validator, resultDeferred, index;
@@ -195,7 +198,7 @@ class ValidateContainer extends Control {
                 validationResult = errors;
             }
 
-            this.setValidationResult(validationResult);
+            this.setValidationResult(validationResult, validateConfig);
             resultDeferred.callback(validationResult);
         }).addErrback((e) => {
             Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
@@ -204,11 +207,10 @@ class ValidateContainer extends Control {
         return resultDeferred;
     }
 
-    validate(config?:object): Promise<boolean[]> {
+    validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
-            this.setValidationResult(undefined);
-            this._validateConfig = config ? config : {};
+            this.setValidationResult(undefined, validateConfig);
             this._callValidators(validators).then(resolve);
         });
 
@@ -225,12 +227,12 @@ class ValidateContainer extends Control {
      * @description Set the validationResult from the outside
      * @param validationResult
      */
-    setValidationResult(validationResult: ValidResult): void {
+    setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
         this._validationResult = validationResult;
         if (!(validationResult instanceof Promise)) {
             this._forceUpdate();
         }
-        if (validationResult && !this._validateConfig.hideInfoBox) {
+        if (validationResult && !config.hideInfoBox) {
             _private.openInfoBox(this);
         } else if (this._isOpened && validationResult === null) {
             _private.closeInfoBox(this);
