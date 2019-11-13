@@ -8,7 +8,7 @@
             </div>
             <div class="controlsDemo-Input-DatePicker__row-item">
                <Controls.input:Date
-                       value="{{null}}"
+                       bind:value="_emptyDate"
                        mask="{{mask}}"/>
             </div>
             <div class="controlsDemo-Input-DatePicker__row-item">
