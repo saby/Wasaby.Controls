@@ -901,11 +901,21 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          };
          let resultFilter = {
             testId: 'testValueFromHistory',
-            prefetchMethod: 'testMethod'
+            prefetchMethod: 'testMethod',
+            PrefetchSessionId: 'testId'
          };
 
          return new Promise(function(resolve, reject) {
-            sandbox.replace(Filter._private, 'getHistoryByItems', () => null);
+            sandbox.replace(Filter._private, 'getHistoryByItems', () => {
+               return {
+                  data: {
+                     items: [],
+                     prefetchParams: {
+                        PrefetchSessionId: 'testId'
+                     }
+                  }
+               };
+            });
             Filter.getCalculatedFilter({
                filterButtonSource: filterButtonItems,
                historyItems: historyItems,
