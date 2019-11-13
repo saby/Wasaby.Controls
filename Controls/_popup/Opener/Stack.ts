@@ -2,11 +2,10 @@ import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import {IoC} from 'Env/Env';
 
 /**
- * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри.
- * Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
- *
- *  <a href="/materials/demo-ws4-stack-dialog">Демо-пример</a>.
+ * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри. Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
+ * @remark
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ здесь}.
+ * См. <a href="/materials/demo-ws4-stack-dialog">демо-пример</a>.
  * @class Controls/_popup/Opener/Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
