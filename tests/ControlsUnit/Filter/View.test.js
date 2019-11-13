@@ -556,6 +556,26 @@ define(
             assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
          });
 
+         it('_private:getFolderIds', function() {
+            const items = new collection.RecordSet({
+               rawData: [
+                  {key: '1', title: 'In any state', node: true, parent: null},
+                  {key: '2', title: 'In progress', node: false, parent: 1},
+                  {key: '3', title: 'Completed', node: false, parent: 1},
+                  {key: '4', title: 'Completed positive', node: true, parent: 1},
+                  {key: '5', title: 'Completed positive', node: true}
+               ],
+               keyProperty: 'key'
+            });
+            const folders = filter.View._private.getFolderIds({
+               items: items,
+               nodeProperty: 'node',
+               parentProperty: 'parent',
+               keyProperty: 'key'
+            });
+            assert.deepStrictEqual(folders, ['1', '5']);
+         });
+
          it('_private:updateHistory', function() {
             let view = getView(defaultConfig);
             view._source = Clone(defaultConfig.source);
