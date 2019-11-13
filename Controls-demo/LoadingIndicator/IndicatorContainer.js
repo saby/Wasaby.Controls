@@ -9,9 +9,6 @@ define('Controls-demo/LoadingIndicator/IndicatorContainer', [
       _template: tmpl,
       _open: function() {
          this._children.loadingIndicator.show({});
-         setTimeout(function() {
-            this._children.loadingIndicator.hide();
-         }.bind(this), 3000);
       }
    });
 
