@@ -4,7 +4,7 @@ import Env = require('Env/Env');
 import 'css!theme?Controls/popupTemplate';
 
 /**
- * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#template всплывающей подсказки}.
+ * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
  * @class Controls/_popupTemplate/Infobox
  * @extends Core/Control
  * @control
