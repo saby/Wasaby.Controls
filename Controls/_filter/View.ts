@@ -33,7 +33,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
- * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/'>Руководство по настройке Объединенного фильтра</a>
+ * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/
  */
 
 /*
@@ -48,6 +48,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @control
  * @public
  * @author Золотова Э.Е.
+ * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/
  */
 
 var _private = {
