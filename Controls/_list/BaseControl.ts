@@ -2131,15 +2131,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
         }
-        if (this._resetScrollAfterReload) {
-            this._notify('doScroll', ['top'], { bubbling: true });
-            this._resetScrollAfterReload = false;
-        }
         if (this._shouldUpdateItemActions){
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
+            if (this._resetScrollAfterReload) {
+                this._notify('doScroll', ['top'], { bubbling: true });
+                this._resetScrollAfterReload = false;
+            }
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
