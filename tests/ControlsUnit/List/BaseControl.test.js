@@ -2243,6 +2243,9 @@ define([
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isTrue(baseControl._resetScrollAfterReload);
             await baseControl._afterUpdate(cfg);
+            assert.isFalse(doScrollNotified);
+            baseControl._shouldNotifyOnDrawItems = true;
+            await baseControl._afterUpdate(cfg);
             assert.isTrue(doScrollNotified);
 
          });
