@@ -19,7 +19,6 @@
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
  * @includes ItemTemplate Controls/lookup:ItemTemplate
- * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Link Controls/_lookup/Lookup/Link
  * @includes Collection Controls/_lookup/SelectedCollection
