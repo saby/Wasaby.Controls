@@ -3,9 +3,6 @@ import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton')
 import Env = require('Env/Env');
    /**
     * Кнопка для закрытия всплывающих окон и диалогов.
-    *
-    * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
-    *
     * @class Controls/_popupTemplate/CloseButton
     * @extends Core/Control
     * @control
@@ -13,6 +10,8 @@ import Env = require('Env/Env');
     * @author Красильников А.С.
     * @demo Controls-demo/Buttons/Close/CloseDemo
     * @mixes Controls/_buttons/interface/IClick
+    * @remark
+    * См. <a href="/materials/demo-ws4-buttons">демо-пример</a>
     *
     */
    /*

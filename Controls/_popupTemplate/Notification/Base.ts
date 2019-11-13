@@ -9,7 +9,7 @@ export interface INotificationBaseOptions extends IControlOptions, INotification
 }
 
 /**
-* Базовый шаблон <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/#template'>окна уведомления</a>.
+* Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/#template окна уведомления}.
 *
 * @class Controls/_popupTemplate/Notification/Base
 * @extends Core/Control
