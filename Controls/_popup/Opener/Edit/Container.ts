@@ -6,7 +6,7 @@ import template = require('wml!Controls/_popup/Opener/Edit/Container');
 import {ContextOptions} from 'Controls/context';
 
 /**
- * Контрол используют в качестве контейнера для {@link Controls/popup:Edit}. Он обеспечивает синхронизацию отредактированной записи с набором данных, который хранится в {@link Controls/list:DataContainer}.
+ * Контрол используют в качестве контейнера для {@link Controls/popup:Edit}. Он получает данные и передаёт их в Controls/popup:Edit.
  * @class Controls/_popup/Opener/Edit/Container
  * @control
  * @category Popup
@@ -15,9 +15,9 @@ import {ContextOptions} from 'Controls/context';
  * @see Controls/list:DataContainer
  * @see Controls/popupTemplate:Stack
  * @see Controls/form:Controller
- * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/
  * @remark
- * Подробнее об использовании контейнера читайте [@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ здесь}.
+ * Подробнее об использовании контейнера читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">здесь</a>.
  */
 let Container = Control.extend({
     _template: template,
