@@ -26,6 +26,7 @@
  * @includes IValidationStatus Controls/_interface/IValidationStatus
  * @includes ISelectionType Controls/_interface/ISelectionType
  * @includes IDateConstructor Controls/_interface/IDateConstructor
+ * @includes IApplication Controls/_interface/IApplication
  * @public
  * @author Крайнов Д.О.
  */
@@ -59,3 +60,5 @@ export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus
 export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';
 export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelectionRecord, ISelectionObject, TKeySelection, TKeysSelection} from './_interface/ISelectionType';
 export {default as ISelectionStrategy} from './_interface/ISelectionStrategy';
+export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
+export {default as IRUM, IRUMOptions} from './_interface/IRUM';
