@@ -149,6 +149,7 @@ var _private = {
     },
 
     loadMore: function(self, dispItem) {
+        self._children.baseControl.showIndicator();
         var
             filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
@@ -164,6 +165,7 @@ var _private = {
             if (self._options.task1177940587 && self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);
             }
+            self._children.baseControl.hideIndicator();
         });
     },
     onNodeRemoved: function(self, nodeId) {
