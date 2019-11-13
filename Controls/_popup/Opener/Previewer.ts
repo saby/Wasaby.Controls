@@ -1,6 +1,7 @@
 import cClone = require('Core/core-clone');
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
+import randomId = require('Core/helpers/Number/randomId');
 
 const DISPLAY_DURATION: number = 1000;
 const POPUP_CONTROLLER = 'Controls/popupTemplate:PreviewerController';
@@ -29,17 +30,16 @@ const prepareConfig = (config) => {
 };
 
 const open = (callback: Function, config: object, type?: string): void => {
-    const newCfg = prepareConfig(config);
-    clearOpeningTimeout(newCfg);
-    clearClosingTimeout(newCfg);
+    clearOpeningTimeout(config);
+    clearClosingTimeout(config);
 
     if (type === 'hover') {
-        newCfg.openingTimerId = setTimeout(() => {
-            newCfg.openingTimerId = null;
-            callback(newCfg);
+        config.openingTimerId = setTimeout(() => {
+            config.openingTimerId = null;
+            callback();
         }, DISPLAY_DURATION);
     } else {
-        callback(newCfg);
+        callback();
     }
 };
 
@@ -59,6 +59,7 @@ const close = (callback: Function, config: object, type?: string): void => {
 const cancel = (config, action: string): void => {
     switch (action) {
         case 'opening':
+            config.isCancelOpening = true;
             clearOpeningTimeout(config);
             break;
         case 'closing':
@@ -77,10 +78,11 @@ class Previewer extends BaseOpener {
 
     open(cfg: object, type?: string): void {
         this.close();
-        open((newCfg) => {
+        const newCfg = prepareConfig(cfg);
+        open(() => {
             this._currentConfig = newCfg;
             super.open(newCfg, POPUP_CONTROLLER);
-        }, cfg, type);
+        }, newCfg, type);
     }
 
     close(type?: string): void {
@@ -101,14 +103,19 @@ class Previewer extends BaseOpener {
 
     static openPopup(config: object, type?: string): Promise<string> {
         return new Promise((resolve: Function) => {
-            open((newCfg) => {
+            const newCfg = prepareConfig(config);
+            if (!newCfg.id) {
+                newCfg.id = randomId('popup-');
+            }
+            open(() => {
+                newCfg.isCancelOpening = false;
                 BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-                    BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
-                        newCfg.id = popupId;
-                        resolve(newCfg);
-                    });
+                    if (!newCfg.isCancelOpening) {
+                        BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id);
+                    }
                 });
-            }, config, type);
+            }, newCfg, type);
+            resolve(newCfg);
         });
     }
 

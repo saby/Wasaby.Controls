@@ -85,6 +85,28 @@ define(
          });
       });
 
+      it('multi open', (done) => {
+         const opener = new popup.BaseOpener();
+         opener._openPopup = () => Promise.resolve(null);
+         opener._useVDOM = () => true;
+
+         let popupId1;
+         let popupId2;
+         let popupId3;
+
+         opener.open().then((id) => { popupId1 = id });
+         opener.open().then((id) => { popupId2 = id });
+         opener.open().then((id) => { popupId3 = id });
+
+         setTimeout(() => {
+            assert.equal(popupId1, popupId2);
+            assert.equal(popupId2, popupId3);
+            done();
+         }, 10);
+
+         opener.destroy();
+      });
+
       it('getIndicatorConfig', () => {
          const opener = new popup.BaseOpener();
          const standartCfg = {
