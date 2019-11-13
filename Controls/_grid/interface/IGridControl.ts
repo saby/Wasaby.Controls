@@ -142,8 +142,7 @@
  * @property {String} caption Текст заголовка ячейки.
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
- * @property {String} template Шаблон заголовка ячейки. По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке колонки при рендере денежных данных.
+ * @property {String} [template=Controls/grid:HeaderContent] Шаблон заголовка ячейки.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
  * В качестве значения принимает имя поля.
@@ -174,10 +173,10 @@
  *    ];
  * }
  * </pre>
- * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
- * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
- * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
- * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
+ * @property {Number} startRow Порядковый номер строки, на которой начинается ячейка.
+ * @property {Number} endRow Порядковый номер строки, на которой заканчивается ячейка.
+ * @property {Number} startColumn Порядковый номер колонки, на которой начинается ячейка.
+ * @property {Number} endColumn Порядковый номер колонки, на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
  * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
@@ -458,11 +457,19 @@
  /**
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Шаблон строки итогов.
+ * @default Controls/grid:ResultsTemplate
+ * @remark
+ * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
+ * @see resultsPosition
+ * @see resultsVisibility
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Results row template.
+ * @default Controls/grid:ResultsTemplate
+ * @see resultsPosition
+ * @see resultsVisibility
  */
 
 /**
