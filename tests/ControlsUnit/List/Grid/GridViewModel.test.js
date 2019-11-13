@@ -2269,6 +2269,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 'display: grid; grid-template-columns: 1fr 123px 321px; grid-column-start: 1; grid-column-end: 2; grid-row-start: 3; grid-row-end: 4;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
+
          });
          it('prepareItemDataForPartialSupport with multiSelection', function () {
             let
@@ -2293,6 +2294,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
+
+            const isYandex = Env.detection.yandex;
+            Env.detection.yandex = true;
+            model.editingRowGridStyles = null;
+
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, editingItemData);
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, groupItemData);
+
+            assert.equal(
+                editingItemData.getEditingRowStyles(),
+                'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
+            );
+            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
+
+            Env.detection.yandex = isYandex;
          });
 
          it('getEditingRowStyles in empty grid can use real template columns', function () {
