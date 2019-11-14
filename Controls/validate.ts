@@ -9,6 +9,7 @@
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
  * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes SelectionContainer Controls/_validate/SelectionContainer
  * @public
  * @author Красильников А.С.
  */
@@ -22,7 +23,8 @@
  * @includes isRequired Controls/_validate/Validators/IsRequired
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
- * includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes SelectionContainer Controls/_validate/SelectionContainer
  * @public
  * @author Красильников А.С.
  */

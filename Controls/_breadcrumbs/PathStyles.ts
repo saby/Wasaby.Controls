@@ -12,6 +12,6 @@
  * @css @background-color_Path-backButtonArrow Background color of the "View record" icon.
  * @css @color_Path-home Color of the "Home" icon.
  * @css @color_Path-home_hovered Color of the "Home" icon on hover.
- * @public
+ * @private
  * @author Авраменко А.С.
  */
