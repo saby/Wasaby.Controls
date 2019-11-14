@@ -167,8 +167,11 @@ define(
                ...targetCoords, left, right, top, bottom
             };
 
-            var position = StickyStrategy.getPosition(StickyController._private.prepareOriginPoint({
-               fittingMode: 'overflow',
+            var position = StickyStrategy.getPosition({
+               fittingMode: {
+                  vertical: 'overflow',
+                  horizontal: 'overflow'
+               },
                targetPoint: {
                   vertical: 'bottom',
                   horizontal: 'left'
@@ -192,7 +195,7 @@ define(
                      left: 10
                   }
                }
-            }), targetC);
+            }, targetC);
 
             assert.equal(position.top, 640);
             assert.equal(position.left, 1520);
@@ -392,13 +395,20 @@ define(
             assert.equal(Object.keys(position).length, 5);
          });
 
-         it('Sticky fittingMode with vertical and without horizontal', () => {
+         it('Sticky fittingMode', () => {
             let cfg = getPositionConfig();
             cfg.fittingMode = {
                vertical : 'fixed',
             };
             cfg.sizes.height = 400;
             assert.equal(StickyController._private.prepareOriginPoint(cfg).fittingMode.horizontal, 'adaptive');
+
+
+            cfg = getPositionConfig();
+            cfg.fittingMode = 'fixed';
+            cfg.sizes.height = 400;
+            assert.equal(StickyController._private.prepareOriginPoint(cfg).fittingMode.horizontal, 'fixed');
+            assert.equal(StickyController._private.prepareOriginPoint(cfg).fittingMode.horizontal, 'fixed');
          });
 
          it('Sticky check overflow', () => {
