@@ -93,6 +93,9 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         }
     }
     setCanShowActions(canShowActions: boolean, silent?: boolean): void {
+        if (this._$canShowActions === canShowActions) {
+            return;
+        }
         this._$canShowActions = canShowActions;
         this._nextVersion();
         if (!silent) {
