@@ -4,5 +4,5 @@
             on:itemsChanged="_itemsChanged()"
             loading="{{_loading || _options.loading}}"
             scope="{{_options}}"
-            items="{{_items}}"N
+            items="{{_items}}"
             filter="{{_filter}}"/>
