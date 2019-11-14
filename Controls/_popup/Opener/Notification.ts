@@ -4,11 +4,10 @@ import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import {parse as load} from 'Core/library';
 
 /**
- *  Контрол, открывающий окно, которое позиционируется в правом нижнем углу окна браузера.
- *  Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
- *
- * <a href="/materials/demo-ws4-notification">Демо-пример</a>.
+ * Контрол, открывающий окно, которое позиционируется в правом нижнем углу окна браузера. Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
+ * @remark
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ здесь}.
+ * См. <a href="/materials/demo-ws4-notification">демо-пример</a>.
  * @class Controls/_popup/Opener/Notification
  * @control
  * @public
