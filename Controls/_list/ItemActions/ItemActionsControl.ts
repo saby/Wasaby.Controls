@@ -37,7 +37,7 @@ var _private = {
     },
 
     updateItemActions: function(self, item, options) {
-        if (constants.isNodePlatform) {
+        if (constants.isNodePlatform && !ItemActionsControl._isUnitTesting) {
             return;
         }
         // TODO Remove this, compatibility between management controls
@@ -74,7 +74,7 @@ var _private = {
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
-        if (constants.isNodePlatform) {
+        if (constants.isNodePlatform && !ItemActionsControl._isUnitTesting) {
             return;
         }
         if (options.itemActionsProperty || options.itemActions) {
@@ -232,5 +232,6 @@ ItemActionsControl.getDefaultOptions = function() {
     };
 };
 ItemActionsControl._private = _private;
+ItemActionsControl._isUnitTesting = false;
 
 export = ItemActionsControl;

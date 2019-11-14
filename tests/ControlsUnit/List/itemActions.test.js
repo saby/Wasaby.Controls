@@ -12,6 +12,9 @@ define([
 ], function(lists, source, entity, collection, display, aUtil, tUtil) {
    describe('Controls.List.ItemActions', function() {
       var data, listViewModel, rs, actions, sandbox;
+      before(() => {
+         lists.ItemActionsControl._isUnitTesting = true;
+      });
       beforeEach(function() {
          data = [
             {
