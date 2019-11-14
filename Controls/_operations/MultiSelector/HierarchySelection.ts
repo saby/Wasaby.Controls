@@ -180,17 +180,21 @@ var
          });
       },
 
-      hasNotLoadedSelectedChildren: function(hierarchyRelation, itemId, items, entryPath) {
-         let
-            hasChildren = false,
-            loadedChildrenIds = _private.getChildrenIds(hierarchyRelation, itemId, items);
+      hasNotLoadedSelectedChildren(hierarchyRelation, itemId, items, entryPath): boolean {
+         let hasChildren = false;
 
-         if (loadedChildrenIds.length) {
-            loadedChildrenIds.forEach(function(currentItemId) {
-               hasChildren = hasChildren || _private.hasNotLoadedSelectedChildren(hierarchyRelation, currentItemId, items, entryPath);
-            });
-         } else {
-            hasChildren = entryPath.indexOf(itemId) !== -1;
+         if (entryPath.length) {
+            const loadedChildrenIds = _private.getChildrenIds(hierarchyRelation, itemId, items);
+
+            if (loadedChildrenIds.length) {
+               loadedChildrenIds.forEach((currentItemId) => {
+                  hasChildren =
+                      hasChildren ||
+                      _private.hasNotLoadedSelectedChildren(hierarchyRelation, currentItemId, items, entryPath);
+               });
+            } else {
+               hasChildren = entryPath.indexOf(itemId) !== -1;
+            }
          }
 
          return hasChildren;
@@ -404,6 +408,7 @@ var HierarchySelection = Selection.extend({
    }
 });
 
+HierarchySelection._private = _private;
 HierarchySelection.SELECTION_STATUS = SELECTION_STATUS;
 
 export default HierarchySelection;
