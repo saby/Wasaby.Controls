@@ -39,7 +39,7 @@
                 <Controls.popupTemplate:NotificationSimple name="myOpenerWarning1"
                                                            text="NotificationSimple- no icon"
                                                            style="warning"
-														   attr:class="controlsDemo-Notification__noIcone">
+														   attr:class="controlsDemo-Notification__noIcon">
                 </Controls.popupTemplate:NotificationSimple>
 
                 <Controls.popupTemplate:NotificationSimple name="myOpenerSuccess1"
