@@ -222,6 +222,20 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
 
+      it('_private::isItemsSelectionAllowed', () => {
+         let options = {};
+         assert.isFalse(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = undefined;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 0;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 1;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+      });
+
       it('_private::needLoadNextPageAfterLoad', function() {
          let list = new collection.RecordSet({
             rawData: [
