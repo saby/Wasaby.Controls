@@ -175,24 +175,24 @@ export default Dialog;
 
 /**
  * @name Controls/_popup/Opener/Dialog#height
- * @cfg {Number} Текущая высота всплывающего окна.
+ * @cfg {Number} Текущая высота диалогового окна.
  */
 
 /**
  * @name Controls/_popup/Opener/Dialog#maxHeight
- * @cfg {Number} Максимально допустимая высота всплывающего окна.
+ * @cfg {Number} Максимально допустимая высота диалогового окна.
  */
 /**
  * @name Controls/_popup/Opener/Dialog#minHeight
- * @cfg {Number} Минимально допустимая высота всплывающего окна.
+ * @cfg {Number} Минимально допустимая высота диалогового окна.
  */
 /**
  * @name Controls/_popup/Opener/Dialog#maxWidth
- * @cfg {Number} Максимально допустимая ширина всплывающего окна.
+ * @cfg {Number} Максимально допустимая ширина диалогового окна.
  */
 /**
  * @name Controls/_popup/Opener/Dialog#minWidth
- * @cfg {Number} Минимально допустимая ширина всплывающего окна.
+ * @cfg {Number} Минимально допустимая ширина диалогового окна.
  */
 /*
  * @name Controls/_popup/Opener/Dialog#top
@@ -200,7 +200,7 @@ export default Dialog;
  */
 /**
  * @name Controls/_popup/Opener/Dialog#top
- * @cfg {Number} Расстояние от всплывающего окна до верхнего края экрана.
+ * @cfg {Number} Расстояние от диалогового окна до верхнего края экрана.
  */
 /*
  * @name Controls/_popup/Opener/Dialog#left
@@ -208,7 +208,7 @@ export default Dialog;
  */
 /**
  * @name Controls/_popup/Opener/Dialog#left
- * @cfg {Number} Расстояние от всплывающего окна до левого края экрана.
+ * @cfg {Number} Расстояние от диалогового окна до левого края экрана.
  */
 
 /**
@@ -254,20 +254,21 @@ export default Dialog;
 
 /**
  * @typedef {Object} PopupOptions
- * @description Конфигурация всплывающего окна.
+ * @description Конфигурация диалогового окна.
  * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
- * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
- * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
- * @property {function|String} template Шаблон всплывающего окна.
- * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}.
- * @property {Number} width Текущая ширина всплывающего окна.
- * @property {Number} height Текущая высота всплывающего окна.
- * @property {Number} maxHeight Максимально допустимая высота всплывающего окна.
- * @property {Number} minHeight Минимально допустимая высота всплывающего окна.
- * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна.
- * @property {Number} minWidth Минимально допустимая ширина всплывающего окна.
- * @property {Number} top Расстояние от всплывающего окна до верхнего края экрана.
- * @property {Number} left Расстояние от всплывающего окна до левого края экрана.
- * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
+ * @property {String} className Имена классов, которые будут применены к корневой ноде диалогового окна.
+ * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия диалогового окна по клику вне.
+ * @property {function|String} template Шаблон диалогового окна.
+ * @property {function|String} templateOptions  Опции для контрола, переданного в {@link template}.
+ * @property {Number} width Текущая ширина диалогового окна.
+ * @property {Number} height Текущая высота диалогового окна.
+ * @property {Number} maxHeight Максимально допустимая высота диалогового окна.
+ * @property {Number} minHeight Минимально допустимая высота диалогового окна.
+ * @property {Number} maxWidth Максимально допустимая ширина диалогового окна.
+ * @property {Number} minWidth Минимально допустимая ширина диалогового окна.
+ * @property {Number} top Расстояние от диалогового окна до верхнего края экрана.
+ * @property {Number} left Расстояние от диалогового окна до левого края экрана.
+ * @property {Node} opener Логический инициатор открытия диалогового окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
+ * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события всплывающего окна.
  */
