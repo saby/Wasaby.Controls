@@ -5,6 +5,7 @@ import {constants} from 'Env/Env'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksPhoto'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksDescription'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksReceived'
+import * as Images 'Controls-demo/DragNDrop/Images';
 
 
 const resultCellTpl = numberResultTpl;
@@ -878,6 +879,62 @@ function forShowWidths() {
     }
 }
 
+const DragNDrop = () => ({
+    data: [{
+        id: 0,
+        title: 'America',
+        additional: 'USA',
+        image: Images[0],
+        'Раздел@': true,
+        'Раздел': null
+    }, {
+        id: 1,
+        title: 'France',
+        additional: 'Europe',
+        image: Images[1],
+        'Раздел@': true,
+        'Раздел': null
+    }, {
+        id: 2,
+        title: 'Solar',
+        additional: 'Star',
+        image: Images[2],
+        'Раздел@': true,
+        'Раздел': null
+    }, {
+        id: 3,
+        title: 'Luna',
+        additional: 'Sattelite',
+        image: Images[3],
+        'Раздел@': null,
+        'Раздел': null
+    }, {
+        id: 4,
+        title: 'Pizza',
+        additional: 'Food',
+        image: Images[4],
+        'Раздел@': null,
+        'Раздел': null
+    }, {
+        id: 5,
+        title: 'Monkey',
+        additional: 'Animals',
+        image: Images[5],
+        'Раздел@': null,
+        'Раздел': null
+    }],
+    columns: [{
+        displayProperty: 'id',
+        width: '30px'
+    }, {
+        displayProperty: 'title',
+        width: '200px',
+    }, {
+        displayProperty: 'additional',
+        width: '200px',
+    }],
+})
+
 
 const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
     ,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
@@ -901,5 +958,6 @@ export {
     getPorts,
     forShowWidths,
     getEditing,
-    countries
+    countries,
+    DragNDrop
 }
