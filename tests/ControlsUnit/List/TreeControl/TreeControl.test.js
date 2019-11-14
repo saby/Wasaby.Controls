@@ -1537,7 +1537,15 @@ define([
             keyProperty: 'id',
             parentProperty: 'Раздел',
             nodeProperty: 'Раздел@',
-            filter: {}
+            filter: {},
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 10,
+                  page: 0,
+                  hasMore: false
+               }
+            }
          };
 
          var treeGridViewModel = new treeGrid.ViewModel(cfg);
@@ -1559,7 +1567,8 @@ define([
          assert.deepEqual(oldItems.getRawData(), getHierarchyData());
 
          treeControl.reloadItem(0, {}, 'depth').addCallback(function() {
-            var newItems = treeControl._children.baseControl.getViewModel().getItems();
+            const viewModel = treeControl._children.baseControl.getViewModel();
+            const newItems = viewModel.getItems()
             assert.deepEqual(
                newItems.getRawData(),
                [
@@ -1568,6 +1577,12 @@ define([
                   {id: 4, 'Раздел@': null, "Раздел": null}
                ]
             );
+            assert.deepEqual(
+               viewModel._model.getHasMoreStorage(),
+               {
+                  0: false
+               }
+            )
             done();
          });
       });
