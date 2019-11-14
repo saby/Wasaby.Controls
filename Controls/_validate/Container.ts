@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Container');
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
@@ -201,7 +201,7 @@ class ValidateContainer extends Control {
             this.setValidationResult(validationResult, validateConfig);
             resultDeferred.callback(validationResult);
         }).addErrback((e) => {
-            Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
+            Logger.error('Validate: Validation error', this, e);
         });
 
         return resultDeferred;

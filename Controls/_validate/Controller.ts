@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Controller');
 import ValidateContainer = require('wml!Controls/_validate/Container');
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import {IValidateConfig} from 'Controls/_validate/Container';
 
 interface IValidateResult {
@@ -74,7 +74,7 @@ class Form extends Control<IControlOptions> {
             this._validates.reverse();
             return results;
         }).catch((e: Error) => {
-            IoC.resolve('ILogger').error('Form', 'Submit error', e);
+            Logger.error('Form: Submit error', this, e);
             return e;
         });
     }
