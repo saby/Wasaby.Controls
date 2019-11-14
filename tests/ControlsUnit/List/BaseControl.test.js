@@ -1121,14 +1121,20 @@ define([
                 })
              },
              baseControl = new lists.BaseControl(cfg);
+
+         const event = {
+            preventDefault: () => {}
+         };
+         const sandbox = sinon.createSandbox();
+
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          baseControl._children.selectionController = {
             onCheckBoxClick: (key, status) => {
                if (status) {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               } else {
                   baseControl._listViewModel._selectedKeys.pop(key);
+               } else {
+                  baseControl._listViewModel._selectedKeys.push(key);
                }
             }
          };
@@ -1137,6 +1143,12 @@ define([
          lists.BaseControl._private.enterHandler(baseControl);
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
 
+         baseControl._loadingIndicatorState = null;
+         sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
+
+         sandbox.restore();
       });
 
       it('loadToDirection up', async function() {
