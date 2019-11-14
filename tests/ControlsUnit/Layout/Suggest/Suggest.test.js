@@ -120,11 +120,18 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       });
 
       it('Suggest::_close', function() {
-         var suggestComponent = new suggestMod._InputController();
+         const suggestComponent = new suggestMod._InputController();
+         let propagationStopped = false;
+         const event = {
+            stopPropagation: () => {
+               propagationStopped = true;
+            }
+         };
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
 
-         suggestComponent._close();
+         suggestComponent._close(event);
+         assert.isTrue(propagationStopped);
          assert.equal(suggestComponent._loading, null);
          assert.equal(suggestComponent._showContent, false);
       });
@@ -391,6 +398,9 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var self = getComponentObject();
          var suggestComponent = new suggestMod._InputController();
          var suggestState = false;
+         const event = {
+            stopPropagation: () => {}
+         };
 
          if (!document) {
             suggestMod._InputController._private.getActiveElement = function() {
@@ -437,7 +447,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
                assert.isTrue(suggestState);
                assert.equal(suggestComponent._searchValue, '');
 
-               suggestComponent._close();
+               suggestComponent._close(event);
                suggestComponent._filter = {};
                suggestComponent._inputClicked();
 
@@ -445,7 +455,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
                   assert.isTrue(suggestState);
                   assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
 
-                  suggestComponent._close();
+                  suggestComponent._close(event);
                   self._options.readOnly = true;
                   suggestComponent._inputActivated();
                   suggestComponent._dependenciesDeferred.addCallback(function() {
