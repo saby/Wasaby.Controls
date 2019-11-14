@@ -1,4 +1,4 @@
-define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Controls/_filter/HistoryUtils', 'Env/Env'], function(Filter, Deferred, entity, HistoryUtils, Env) {
+define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Controls/_filter/HistoryUtils', 'Env/Env', 'Types/collection'], function(Filter, Deferred, entity, HistoryUtils, Env, collection) {
 
    describe('Controls.Filter.Controller', function () {
 
@@ -894,6 +894,26 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          }
          assert.isTrue(errorCathed);
 
+      });
+
+      it('getHistoryByItems', function() {
+         const sandbox = sinon.createSandbox();
+         const historyItems = new collection.List({
+            items: [
+               new entity.Model()
+            ]
+         });
+         const filterItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField2: 'anyValue2'}];
+         sandbox.replace(HistoryUtils, 'getHistorySource', () => {
+            return {
+               getItems: () => historyItems,
+               getDataObject: () => [{
+                  id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
+               }]
+            };
+         });
+         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 0);
+         sandbox.restore();
       });
 
       it('getCalculatedFilter', function() {
