@@ -2225,7 +2225,10 @@ define([
             baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
-
+         it('without listViewModel should not call update', function() {
+            baseControl._listViewModel = null;
+            assert.equal(actionsUpdateCount, 4);
+         });
       });
 
       describe('resetScrollAfterReload', function() {
