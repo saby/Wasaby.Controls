@@ -407,7 +407,7 @@ define(
             cfg = getPositionConfig();
             cfg.fittingMode = 'fixed';
             cfg.sizes.height = 400;
-            assert.equal(StickyController._private.prepareOriginPoint(cfg).fittingMode.horizontal, 'fixed');
+            assert.equal(StickyController._private.prepareOriginPoint(cfg).fittingMode.vertical, 'fixed');
             assert.equal(StickyController._private.prepareOriginPoint(cfg).fittingMode.horizontal, 'fixed');
          });
 
