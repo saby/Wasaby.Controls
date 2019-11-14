@@ -150,6 +150,14 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
             oldSelection = this._multiselection.getSelection(),
             selectionChanged = !isEqual(newOptions.selectedKeys, oldSelection.selected) || !isEqual(newOptions.excludedKeys, oldSelection.excluded);
 
+        if (this._options.listModel !== newOptions.listModel) {
+            newOptions.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
+
+            if (this._multiselection) {
+                this._multiselection.setListModel(newOptions.listModel);
+            }
+        }
+
         if (newOptions.items !== this._options.items) {
             this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
             newOptions.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
@@ -161,14 +169,6 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
             this._multiselection._selectedKeys = newOptions.selectedKeys;
             this._multiselection._excludedKeys = newOptions.excludedKeys;
             _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
-        }
-
-        if (this._options.listModel !== newOptions.listModel) {
-            newOptions.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
-
-            if (this._multiselection) {
-                this._multiselection.setListModel(newOptions.listModel);
-            }
         }
     },
 
