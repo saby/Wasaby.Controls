@@ -7,6 +7,7 @@ import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
+import { constants } from 'Env/Env';
 import 'css!theme?Controls/list';
 import { CollectionItem } from 'Controls/display';
 
@@ -36,6 +37,9 @@ var _private = {
     },
 
     updateItemActions: function(self, item, options) {
+        if (constants.isNodePlatform && !ItemActionsControl._isUnitTesting) {
+            return;
+        }
         // TODO Remove this, compatibility between management controls
         if (options.useNewModel && !item.getContents) {
             item = options.listModel.getItemBySourceId(item.get(options.listModel.getKeyProperty()));
@@ -70,6 +74,9 @@ var _private = {
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
+        if (constants.isNodePlatform && !ItemActionsControl._isUnitTesting) {
+            return;
+        }
         if (options.itemActionsProperty || options.itemActions) {
             if (options.useNewModel) {
                 options.listModel.setEventRaising(false, true);
@@ -225,5 +232,6 @@ ItemActionsControl.getDefaultOptions = function() {
     };
 };
 ItemActionsControl._private = _private;
+ItemActionsControl._isUnitTesting = false;
 
 export = ItemActionsControl;
