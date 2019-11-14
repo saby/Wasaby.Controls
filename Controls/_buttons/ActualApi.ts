@@ -1,4 +1,5 @@
 import { IoC } from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 const deprecatedClassesOfButton = {
    iconButtonBordered: {

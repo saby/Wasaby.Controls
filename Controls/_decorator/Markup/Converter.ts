@@ -4,7 +4,7 @@
 import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
-import { IoC } from 'Env/Env';
+import {Logger} from 'UI/Utils';
 /**
  * Преобразователь типов из JsonML в HTML и обратно с возможностью клонирования JsonML массива.
  *
@@ -81,8 +81,7 @@ import { IoC } from 'Env/Env';
     */
    var htmlToJson = function(html) {
       if (typeof document === 'undefined') {
-         IoC.resolve('ILogger')
-            .error('Controls/_decorator/Markup/Converter' ,'htmlToJson method doesn\'t work on server-side');
+         Logger.error('Controls/_decorator/Markup/Converter: htmlToJson method doesn\'t work on server-side');
          return [];
       }
       let div = document.createElement('div'),

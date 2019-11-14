@@ -1,9 +1,9 @@
 import BaseControl = require('Core/Control');
-import {IoC} from 'Env/Env';
 import CalendarControlsUtils from './Utils';
 import DateRangeModel from './DateRangeModel';
 import IDateLinkView from './interfaces/ILinkView';
 import componentTmpl = require('wml!Controls/_dateRange/LinkView/LinkView');
+import {Logger} from 'UI/Utils';
 import 'css!theme?Controls/dateRange';
 
 /**
@@ -121,17 +121,17 @@ var Component = BaseControl.extend({
 
       // TODO: remove style option https://online.sbis.ru/opendoc.html?guid=882c43d4-8f3c-4998-8660-bfa08fcef227
       if (options.style) {
-         IoC.resolve('ILogger').error('LinkView', rk('You should use viewMode and styleMode options instead of style option.'));
+          Logger.error('LinkView: ' + rk('You should use viewMode and styleMode options instead of style option.'), this);
       }
 
       if (options.showPrevArrow || options.showNextArrow) {
-         IoC.resolve('ILogger').error('LinkView', rk('You should use prevArrowVisibility and nextArrowVisibility instead of showPrevArrow and showNextArrow'));
+          Logger.error('LinkView: ' + rk('You should use prevArrowVisibility and nextArrowVisibility instead of showPrevArrow and showNextArrow'), this);
       }
 
       // clearButtonVisibility is option of clearButton visibility state
 
       if ((options.prevArrowVisibility && options.clearButtonVisibility) || (options.nextArrowVisibility && options.clearButtonVisibility)) {
-         IoC.resolve('ILogger').error('LinkView', rk('The Controls functional is not intended for showClearButton and showPrevArrow/showNextArrow options using in one time'));
+          Logger.error('LinkView: ' + rk('The Controls functional is not intended for showClearButton and showPrevArrow/showNextArrow options using in one time'), this);
       }
    },
    _beforeUpdate: function(options) {

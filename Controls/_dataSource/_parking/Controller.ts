@@ -5,6 +5,8 @@ import { constants, IoC } from 'Env/Env';
 // @ts-ignore
 import { load } from 'Core/library';
 
+import {Logger} from 'UI/Utils';
+
 export type Config = {
     handlers: Array<Handler>;
     configField: string;
@@ -18,9 +20,8 @@ let getDefaultConfig = (): Partial<Config> => {
 
 /// region helpers
 let log = (message) => {
-    IoC.resolve('ILogger').log(
-        "Controls/_dataSource/_parking/Controller",
-        message
+    Logger.info(
+        "Controls/_dataSource/_parking/Controller: " + message
     );
 };
 let getApplicationConfig = () => {

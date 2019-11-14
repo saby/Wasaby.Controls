@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import MenuItemsTpl = require('wml!Controls/_dropdownPopup/DropdownList');
 import DropdownViewModel = require('Controls/_dropdownPopup/DropdownViewModel');
 import groupTemplate = require('wml!Controls/_dropdownPopup/defaultGroupTemplate');
@@ -18,9 +18,9 @@ import {SyntheticEvent} from 'Vdom/Vdom'
       //Popup/Opener method "open" is called on every "mouseenter" event on item with hierarchy.
       var SUB_DROPDOWN_OPEN_DELAY = 100;
       var _private = {
-         checkDeprecated: function(cfg) {
+         checkDeprecated: function(cfg, self) {
             if (cfg.groupMethod) {
-               Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+               Logger.warn('IGrouped: Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".', self);
             }
          },
          setPopupOptions: function(self, horizontalAlign, theme) {
@@ -199,7 +199,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          _subDropdownItem: null,
 
          _beforeMount: function(newOptions) {
-            _private.checkDeprecated(newOptions);
+            _private.checkDeprecated(newOptions, this);
             if (newOptions.items) {
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
