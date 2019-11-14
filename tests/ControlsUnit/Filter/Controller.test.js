@@ -36,9 +36,13 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
                assert.isFalse(historyUpdated);
 
                filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, historyId: 'TEST_HISTORY_ID', historyItems: [], prefetchParams: {}}).addCallback((res) => {
-                  assert.isTrue(historyUpdated);
-                  sandbox.restore();
-                  resolve();
+                  assert.isFalse(historyUpdated);
+
+                  filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, historyId: 'TEST_HISTORY_ID', historyItems: ['testHistoryItem'], prefetchParams: {}}).addCallback(() => {
+                     assert.isTrue(historyUpdated);
+                     sandbox.restore();
+                     resolve();
+                  });
                   return res;
                });
                return items;
