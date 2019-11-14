@@ -416,16 +416,22 @@ var _private = {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
     },
-    toggleSelection: function(self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
-        let model, markedKey;
-        if (self._children.selectionController) {
-            model = self.getViewModel();
-            markedKey = model.getMarkedKey();
-            self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
-            _private.moveMarkerToNext(self, event);
+    toggleSelection(self, event): void {
+        const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
+                                     self._children.selectionController;
+
+        if (allowToggleSelection) {
+            const model = self.getViewModel();
+            let toggledItemId = model.getMarkedKey();
+
+            if (!model.getItemById(toggledItemId) && model.getCount()) {
+                toggledItemId = model.at(0).getId();
+            }
+
+            if (toggledItemId) {
+                self._children.selectionController.onCheckBoxClick(toggledItemId, model.getSelectionStatus(toggledItemId));
+                _private.moveMarkerToNext(self, event);
+            }
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
