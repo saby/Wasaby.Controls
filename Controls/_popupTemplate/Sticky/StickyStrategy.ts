@@ -81,7 +81,11 @@ interface IPosition {
                taskBarKeyboardIosHeight += 5;
             }
          }
-         return position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         let overflow = position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
+         if (!_private.isIOS13()) {
+            overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         }
+         return overflow;
       },
 
       invertPosition: function(popupCfg, direction) {
