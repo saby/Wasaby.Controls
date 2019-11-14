@@ -207,32 +207,34 @@ export = Stack;
 /**
  * @typedef {Object} PopupOptions
  * @description Конфигурация стековой панели.
- * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
- * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
+ * @property {Boolean} [autofocus=true] Определяет, установится ли фокус на шаблон попапа после его открытия.
+ * @property {Boolean} [modal=false] Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
  * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
- * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
- * @property {function|String} template Шаблон всплывающего окна
- * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
- * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
- * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
- * @property {Number} width Текущая ширина всплывающего окна
+ * @property {Boolean} [closeOnOutsideClick=false] Определяет возможность закрытия всплывающего окна по клику вне.
+ * @property {function|String} template Шаблон всплывающего окна.
+ * @property {function|String} templateOptions Опции для контрола, переданного в {@link template}.
+ * @property {Number} minWidth Минимально допустимая ширина всплывающего окна. Значение указывается в px.
+ * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна. Значение указывается в px.
+ * @property {Number} width Текущая ширина всплывающего окна. Значение указывается в px.
  * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
+ * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события стековой панели.
  */
 
 
 /*
  * @typedef {Object} PopupOptions
  * @description Stack popup options.
- * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
- * @property {Boolean} modal Determines whether the window is modal.
+ * @property {Boolean} [autofocus=true] Determines whether focus is set to the template when popup is opened.
+ * @property {Boolean} [modal=false] Determines whether the window is modal.
  * @property {String} className Class names of popup.
- * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
+ * @property {Boolean} [closeOnOutsideClick=false] Determines whether possibility of closing the popup when clicking past.
  * @property {function|String} template Template inside popup.
  * @property {function|String} templateOptions Template options inside popup.
  * @property {Number} minWidth The minimum width of popup.
  * @property {Number} maxWidth The maximum width of popup.
  * @property {Number} width Width of popup.
-
+ * @property {Node} opener Read more {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener there}.
+ * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Callback functions on popup events.
  */
 
 /**
