@@ -59,7 +59,7 @@
                 <Controls.popupTemplate:Notification name="myOpenerPrimary1"
                                                      bodyContentTemplate="Notification"
                                                      style="primary"
-													 attr:class="controlsDemo-Notification__primaryNoIcone">
+													 attr:class="controlsDemo-Notification__primaryNoIcon">
                 </Controls.popupTemplate:Notification>
         </div>
 </div>
