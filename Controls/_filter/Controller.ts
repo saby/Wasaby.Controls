@@ -723,7 +723,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                 return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((history) => {
                     _private.itemsReady(this, filter, history);
 
-                    if (options.historyItems && options.historyId && options.prefetchParams) {
+                    if (options.historyItems && options.historyItems.length && options.historyId && options.prefetchParams) {
                         _private.processHistoryOnItemsChanged(this, options.historyItems, options);
                     }
                     return history;
