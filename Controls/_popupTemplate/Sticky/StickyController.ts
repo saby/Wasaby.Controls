@@ -29,7 +29,7 @@ const _private = {
     prepareOriginPoint(config) {
         const newCfg = cClone(config);
         newCfg.direction = newCfg.direction || {};
-        newCfg.offset = newCfg.direction || {};
+        newCfg.offset = newCfg.offset || {};
 
         if (newCfg.horizontalAlign && typeof (config.horizontalAlign) === 'object') {
             if ('side' in newCfg.horizontalAlign) {
