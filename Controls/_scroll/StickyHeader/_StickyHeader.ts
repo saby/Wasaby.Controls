@@ -52,8 +52,14 @@ var _private = {
       if (!Env.detection.safari) {
          return false;
       }
-      const safariVersion = parseInt(Env.detection.userAgent.match(/Version\/([0-9\.]*)/)[1], 10);
-      return safariVersion >= 13;
+
+      const safariVersionMatching = Env.detection.userAgent.match(/Version\/([0-9\.]*)/);
+
+      if (safariVersionMatching) {
+         return parseInt(safariVersionMatching[1], 10) >= 13;
+      } else {
+          return false;
+      }
    }
 };
 
