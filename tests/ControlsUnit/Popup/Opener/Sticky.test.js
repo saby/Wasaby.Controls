@@ -377,7 +377,7 @@ define(
             assert.equal(Object.keys(position).length, 5);
          });
 
-         it('Sticky fittingMode vertical = fixed, horizontal = adaptive ', () => {
+         it('Sticky fittingMode: vertical = fixed, horizontal = adaptive ', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
