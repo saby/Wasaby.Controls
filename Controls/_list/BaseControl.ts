@@ -885,6 +885,8 @@ var _private = {
         }
         self._isScrollShown = true;
 
+        self._viewPortRect = params.viewPortRect;
+
         const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
         if (!self._scrollPagingCtr) {
             if (_private.needScrollPaging(self._options.navigation)) {
@@ -963,12 +965,13 @@ var _private = {
 
     showIndicator: function(self, direction = 'all') {
         if (!self._isMounted || !!self._loadingState) {
-            return
+            return;
         }
 
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
+            self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
         }
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
@@ -1602,22 +1605,38 @@ var _private = {
     hasItemActions: function(itemActions, itemActionsProperty) {
         return !!(itemActions || itemActionsProperty);
     },
-    setIndicatorContainerHeight(self, viewPortSize: number): void {
-        const listBoundingRect = ((self._container[0] || self._container) as HTMLElement).getBoundingClientRect();
-
-        if (listBoundingRect.bottom < viewPortSize) {
-            self._loadingIndicatorContainerHeight = listBoundingRect.height;
+    updateIndicatorContainerHeight(self, viewRect: DOMRect, viewPortRect: DOMRect): void {
+        let top;
+        let bottom;
+        if (self._isScrollShown || (self._needScrollCalculation && viewRect && viewPortRect)) {
+            top = Math.max(viewRect.y, viewPortRect.y);
+            bottom = Math.min(viewRect.y + viewRect.height, viewPortRect.y + viewPortRect.height);
         } else {
-            self._loadingIndicatorContainerHeight = viewPortSize;
+            top = viewRect.top;
+            bottom = viewRect.bottom;
+        }
+        let newHeight = bottom - top - _private.getListTopOffset(self);
+
+        if (self._loadingIndicatorContainerHeight !== newHeight) {
+            self._loadingIndicatorContainerHeight = newHeight;
         }
     },
-
-    setHasMoreData(model, hasMoreData: boolean) {
+    getListTopOffset(self): number {
+        const view = self._children && self._children.listView;
+        let height = 0;
+        if (view && view.getHeaderHeight) {
+            height += view.getHeaderHeight();
+        }
+        if (view && view.getResultsHeight) {
+            height += view.getResultsHeight();
+        }
+        return height;
+    },
+    setHasMoreData(model, hasMoreData: boolean): boolean {
         if (model) {
             model.setHasMoreData(hasMoreData);
         }
     }
-
 };
 
 /**
@@ -2218,10 +2237,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.bottomVirtualScrollTrigger.style.bottom = Math.floor(this._loadOffset.bottom) + 'px';
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
-    _onViewPortResize: function(self, viewPortSize) {
-        _private.setIndicatorContainerHeight(self, viewPortSize);
-
+    _onViewPortResize: function(self, viewPortSize, viewPortRect) {
+        _private.updateIndicatorContainerHeight(self, self._container.getBoundingClientRect(), viewPortRect);
         self._viewPortSize = viewPortSize;
+        self._viewPortRect = viewPortRect;
+
         if (self._needScrollCalculation) {
             self._updateLoadOffset(self._viewSize, self._viewPortSize);
         }
@@ -2261,7 +2281,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'canScroll': _private.onScrollShow(self, params); break;
             case 'cantScroll': _private.onScrollHide(self); break;
 
-            case 'viewPortResize': self._onViewPortResize(self, params[0]); break;
+            case 'viewPortResize': self._onViewPortResize(self, params[0], params[1]); break;
             case 'scrollResize': self._onScrollResize(self, params); break;
         }
     },
@@ -2381,8 +2401,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.applyPlaceholdersSizes(this);
             _private.updateShadowMode(this);
         }
-        this._viewSize = (this._container[0] || this._container).clientHeight;
-        _private.setIndicatorContainerHeight(this, this._viewPortSize);
+        const container = this._container[0] || this._container;
+        this._viewSize = container.clientHeight;
+        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
         if (this._needScrollCalculation) {
             this._updateLoadOffset(this._viewSize, this._viewPortSize);
         }
