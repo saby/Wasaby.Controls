@@ -834,11 +834,26 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          filterButtonItem = {
             name: 'testId4',
             value: 'testValue4',
+            resetValue: 'testValue4',
             visibility: true,
             viewMode: 'basic'
          };
          expectedMinItem = {
             name: 'testId4',
+            visibility: false,
+            viewMode: 'basic'
+         };
+         assert.deepStrictEqual(Filter._private.minimizeItem(filterButtonItem), expectedMinItem);
+
+         filterButtonItem = {
+            name: 'testId4',
+            value: 'testValue4',
+            visibility: true,
+            viewMode: 'basic'
+         };
+         expectedMinItem = {
+            name: 'testId4',
+            value: 'testValue4',
             visibility: false,
             viewMode: 'basic'
          };
