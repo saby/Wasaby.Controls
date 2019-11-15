@@ -49,7 +49,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
 			LocalDateTime start_time = LocalDateTime.now();
 			echo "Время начала сборки: ${start_time}"
 			try {
-				start.start(version, workspace, helper, userInput)
+				start.start(version, workspace)
 			} finally {
 				LocalDateTime end_time = LocalDateTime.now();
 				echo "Время конца сборки: ${end_time}"
