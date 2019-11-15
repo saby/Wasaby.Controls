@@ -10,6 +10,8 @@
  * @includes RowEditor Controls/grid:RowEditor
  * @includes IGridControl Controls/_grid/interface/IGridControl
  * @include IItemTemplateOptions Controls/grid:IItemTemplateOptions
+ * @include IColumnTemplateOptions Controls/grid:IColumnTemplateOptions
+ * @include IGroupTemplateOptions Controls/grid:IGroupTemplateOptions
  * @public
  * @author Крайнов Д.О.
  */
