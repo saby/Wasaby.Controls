@@ -6,18 +6,16 @@ define('Controls/Container/Async',
       'wml!Controls/Container/Async/Async',
       'Controls/Container/Async/ModuleLoader',
       'Core/library',
-      'Types/entity',
-      'UI/Utils'
+      'Types/entity'
    ],
 
    function(Base,
-      AppEnv,
-      Env,
-      template,
-      ModuleLoader,
-      library,
-      entity,
-      UIUtils) {
+            AppEnv,
+            Env,
+            template,
+            ModuleLoader,
+            library,
+            entity) {
       'use strict';
 
 
@@ -181,9 +179,9 @@ define('Controls/Container/Async',
                var headData = this._getHeadData();
                headData.pushDepComponent(dep, true);
             } catch (e) {
-               UIUtils.Logger.warn('You\'re trying to use Async without Controls/Application. Link to ' +
+               Env.IoC.resolve('ILogger').warn('You\'re trying to use Async without Controls/Application. Link to ' +
                   dep +
-                  ' won\'t be added to server-side generated markup. ', this, e);
+                  ' won\'t be added to server-side generated markup. ' + e);
             }
          },
 
