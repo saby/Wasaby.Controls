@@ -370,7 +370,7 @@ export = Sticky;
  * @cfg {offset} Sets the offset of the targetPoint.
  */
 
- /**
+/**
  * @typedef {Object} offset
  * @property {Number} vertical
  * @property {Number} horizontal
