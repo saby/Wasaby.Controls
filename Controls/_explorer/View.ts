@@ -391,6 +391,7 @@ import 'Types/entity';
                 _private.setRestoredKeyObject(this, item.getId());
                 _private.setRoot(this, item.getId());
                 this._isGoingFront = true;
+                this.cancelEdit();
             }
          }
          event.stopPropagation();
