@@ -26,12 +26,12 @@ if ( env.PRIVILEGE_USERS.split(",").contains(user) ) {
     }
 }
 node ('controls') {
-def version = "19.710"
+def version = "19.720"
 def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     dir (workspace){
         deleteDir()
         checkout([$class: 'GitSCM',
-            branches: [[name: "rc-19.720"]],
+            branches: [[name: "rc-${version}"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
