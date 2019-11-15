@@ -36,9 +36,11 @@ define('Controls/Application/ApplicationWrapper', [
             ]
          ];
 
+         /* eslint-disable */
          if (Env.constants.isBrowserPlatform) {
             this._version = _private.calculateVersion(window.location.search);
          }
+         /* eslint-enable */
       }
    });
    ModuleClass._theme = ['Controls/application'];

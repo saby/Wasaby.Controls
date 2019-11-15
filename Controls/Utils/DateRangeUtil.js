@@ -16,11 +16,13 @@ define('Controls/Utils/DateRangeUtil', [
        */
       shiftPeriod: function(start, end, direction) {
          var periodType = getPeriodType(start, end);
+         var result;
          if (periodType === periodTypes.day || periodType === periodTypes.days) {
-            return utils.shiftPeriodByDays(start, end, direction * utils.gePeriodLengthInDays(start, end));
+            result = utils.shiftPeriodByDays(start, end, direction * utils.gePeriodLengthInDays(start, end));
          } else if (periodType) {
-            return utils.shiftPeriodByMonth(start, end, direction * utils.getPeriodLengthInMonths(start, end));
+            result = utils.shiftPeriodByMonth(start, end, direction * utils.getPeriodLengthInMonths(start, end));
          }
+         return result;
       },
 
       /**

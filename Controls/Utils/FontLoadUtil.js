@@ -3,7 +3,7 @@ define('Controls/Utils/FontLoadUtil', [
    'css!Controls/Utils/FontLoadUtil'
 ], function(Deferred) {
    'use strict';
-
+   /* eslint-disable */
    var LOADED_FONTS_FOR_CLASS = {};
    var
       fallbackFontWidth,
@@ -59,4 +59,5 @@ define('Controls/Utils/FontLoadUtil', [
          return def;
       }
    };
+   /* eslint-enable */
 });
