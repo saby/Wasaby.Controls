@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IDropdownList', [], function() {
 
    /**
@@ -14,7 +15,7 @@ define('Controls/interface/IDropdownList', [], function() {
     * @interface Controls/interface/IDropdownList
     * @public
     * @author Золотова Э.Е.
-    */    
+    */
 
    /**
     * @typedef {String} TypeShadow
@@ -26,7 +27,7 @@ define('Controls/interface/IDropdownList', [], function() {
     * @typedef {String} TypeShadow
     * @variant default Default shadow
     * @variant suggestionsContainer Shadow on the right, left, bottom
-    */    
+    */
 
    /**
     * @typedef {String} MenuStyle
@@ -38,7 +39,7 @@ define('Controls/interface/IDropdownList', [], function() {
     * @typedef {String} MenuStyle
     * @variant defaultHead The head with icon and caption
     * @variant duplicateHead The icon set under first item
-    */    
+    */
 
    /**
     * @typedef {Object} HeadConfig
@@ -52,7 +53,7 @@ define('Controls/interface/IDropdownList', [], function() {
     * @property {MenuStyle} menuStyle
     * @variant defaultHead The head with icon and caption
     * @variant duplicateHead The icon set under first item
-    */    
+    */
 
    /**
     * @typedef {String|Boolean} EmptyText
@@ -64,7 +65,7 @@ define('Controls/interface/IDropdownList', [], function() {
     * @typedef {String|Boolean} EmptyText
     * @remark
     * true - Add empty item with text 'Не выбрано'
-    */    
+    */
 
    /**
     * @typedef {Object} TemplateOptions
@@ -104,6 +105,6 @@ define('Controls/interface/IDropdownList', [], function() {
     * @property {TypeShadow} typeShadow Specifies the type of shadow around the popup.
     * @property {EmptyText} emptyText Add an empty item to the list with the given text.
     * @property {Boolean} marker Determines whether the marker is displayed around the selected item.
-    */    
+    */
 
 });

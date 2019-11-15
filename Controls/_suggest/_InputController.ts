@@ -9,6 +9,7 @@ import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import LoadService from './LoadService';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/suggest';
 
 
@@ -405,7 +406,8 @@ var SuggestLayout = Control.extend({
    // </editor-fold>
    // <editor-fold desc="handlers">
 
-   _close: function() {
+   _close(event: SyntheticEvent<'close'>): void {
+      event.stopPropagation();
       _private.close(this);
    },
    _changeValueHandler: function(event, value) {

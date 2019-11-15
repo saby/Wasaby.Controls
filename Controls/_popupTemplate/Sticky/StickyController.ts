@@ -9,13 +9,13 @@ import 'css!theme?Controls/popupTemplate';
 import * as cInstance from 'Core/core-instance';
 
 const DEFAULT_OPTIONS = {
-    horizontalAlign: {
-        side: 'right',
-        offset: 0
+    direction: {
+        horizontal: 'right',
+        vertical: 'bottom'
     },
-    verticalAlign: {
-        side: 'bottom',
-        offset: 0
+    offset: {
+        horizontal: 0,
+        vertical: 0
     },
     targetPoint: {
         vertical: 'top',
@@ -28,24 +28,27 @@ let _fakeDiv;
 const _private = {
     prepareOriginPoint(config) {
         const newCfg = cClone(config);
-        newCfg.verticalAlign = newCfg.verticalAlign || {};
-        newCfg.horizontalAlign = newCfg.horizontalAlign || {};
-        if (config.direction && typeof (config.direction) === 'object') {
-            if ('horizontal' in config.direction) {
-                newCfg.horizontalAlign.side = config.direction.horizontal;
+        newCfg.direction = newCfg.direction || {};
+        newCfg.offset = newCfg.offset || {};
+
+        if (newCfg.horizontalAlign && typeof (config.horizontalAlign) === 'object') {
+            if ('side' in newCfg.horizontalAlign) {
+                newCfg.direction.horizontal = newCfg.horizontalAlign.side;
             }
-            if ('vertical' in config.direction) {
-                newCfg.verticalAlign.side = config.direction.vertical;
-            }
-        }
-        if (config.offset) {
-            if ('horizontal' in config.offset) {
-                newCfg.horizontalAlign.offset = config.offset.horizontal;
-            }
-            if ('vertical' in config.offset) {
-                newCfg.verticalAlign.offset = config.offset.vertical;
+            if ('offset' in newCfg.horizontalAlign) {
+                newCfg.offset.horizontal = newCfg.horizontalAlign.offset;
             }
         }
+
+        if (newCfg.verticalAlign && typeof (config.verticalAlign) === 'object') {
+            if ('side' in newCfg.verticalAlign) {
+                newCfg.direction.vertical = newCfg.verticalAlign.side;
+            }
+            if ('offset' in newCfg.verticalAlign) {
+                newCfg.offset.vertical = newCfg.verticalAlign.offset;
+            }
+        }
+
         return newCfg;
     },
     prepareConfig(self, cfg, sizes) {
@@ -69,8 +72,8 @@ const _private = {
     getOrientationClasses(cfg) {
         let className = 'controls-Popup-corner-vertical-' + cfg.targetPoint.vertical;
         className += ' controls-Popup-corner-horizontal-' + cfg.targetPoint.horizontal;
-        className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
-        className += ' controls-Popup-align-vertical-' + cfg.align.vertical.side;
+        className += ' controls-Popup-align-horizontal-' + cfg.direction.horizontal;
+        className += ' controls-Popup-align-vertical-' + cfg.direction.vertical;
         className += ' controls-Sticky__reset-margins';
         return className;
     },
@@ -90,9 +93,17 @@ const _private = {
 
     prepareStickyPosition(cfg) {
         return {
-            horizontalAlign: cfg.align.horizontal,
-            verticalAlign: cfg.align.vertical,
             targetPoint: cfg.targetPoint,
+            direction: cfg.direction,
+            offset: cfg.offset,
+            horizontalAlign: { // TODO: to remove
+                side: cfg.direction.horizontal,
+                offset: cfg.offset.horizontal
+            },
+            verticalAlign: { // TODO: to remove
+                side: cfg.direction.vertical,
+                offset: cfg.offset.vertical
+            },
             corner: cfg.corner // TODO: to remove
         };
     },
@@ -274,10 +285,8 @@ class StickyController extends BaseController {
     _getPopupConfig(cfg, sizes) {
         return {
             targetPoint: cMerge(cClone(DEFAULT_OPTIONS.targetPoint), cfg.popupOptions.targetPoint || {}),
-            align: {
-                horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
-                vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})
-            },
+            direction: cMerge(cClone(DEFAULT_OPTIONS.direction), cfg.popupOptions.direction || {}),
+            offset: cMerge(cClone(DEFAULT_OPTIONS.offset), cfg.popupOptions.offset || {}),
             config: {
                 width: cfg.popupOptions.width,
                 height: cfg.popupOptions.height,
@@ -297,11 +306,9 @@ class StickyController extends BaseController {
             const left = cfg.popupOptions.nativeEvent.clientX;
             const size = 1;
             const positionCfg = {
-                verticalAlign: {
-                    side: 'bottom'
-                },
-                horizontalAlign: {
-                    side: 'right'
+                direction: {
+                    horizontal: 'right',
+                    vertical: 'bottom'
                 }
             };
             cMerge(cfg.popupOptions, positionCfg);

@@ -43,6 +43,13 @@ export default class TileRender extends BaseRender {
         this._notify('register', ['scroll', this, this._resetHoverState], { bubbling: true });
     }
 
+    protected _beforeUpdate(newOptions: ITileRenderOptions): void {
+        super._beforeUpdate(newOptions);
+        if (newOptions.listModel !== this._options.listModel) {
+            this._animatedItem = null;
+        }
+    }
+
     protected _afterUpdate(): void {
         super._afterUpdate();
         if (this._animatedItem) {

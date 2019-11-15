@@ -52,7 +52,7 @@ define('Controls/Application',
 
    function(Base,
       template,
-      BodyClasses,
+      cBodyClasses,
       Env,
       UIBase,
       scroll,
@@ -72,16 +72,16 @@ define('Controls/Application',
           * @param cfg
           * @param routesConfig
           */
-         initState: function(self, cfg) {
-            self.templateConfig = cfg.templateConfig;
-            self.compat = cfg.compat || false;
+         initState: function(instance, cfg) {
+            instance.templateConfig = cfg.templateConfig;
+            instance.compat = cfg.compat || false;
          },
          calculateBodyClasses: function() {
             // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
             // а TouchDetector реагирует на изменение состояния.
             // Поэтому в Application оставим только класс от TouchDetector
 
-            var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
+            var bodyClasses = cBodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             return bodyClasses;
          },
@@ -142,11 +142,12 @@ define('Controls/Application',
 
       var Page = Base.extend({
          _template: template,
-
+         /* eslint-disable */
          /**
-          * @type {String} Property controls whether or not touch devices use momentum-based scrolling for inner scrollable areas.
+          * @type {String} Property controls whether or not touch devices use momentum-based scrolling for innerscrollable areas.
           * @private
           */
+         /* eslint-enable */
          _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
 
          _dragClass: 'ws-is-no-drag',
@@ -180,6 +181,7 @@ define('Controls/Application',
             this._children.touchendDetect.start(ev);
          },
          _mouseleavePage: function(ev) {
+            /* eslint-disable */
             /**
              * Перемещение элементов на странице происходит по событию mousemove. Браузер генерирует его исходя из
              * доступных ресурсов, и с дополнительными оптимизациями, чтобы не перегружать систему. Поэтому событие не происходит
@@ -189,6 +191,7 @@ define('Controls/Application',
              * В качестве решения, генерируем событие mousemove, на момент ухода мыши за граници экрана.
              * Демо: https://jsfiddle.net/q7rez3v5/
              */
+            /* eslint-enable */
             this._children.mousemoveDetect.start(ev);
          },
          _updateClasses: function() {
@@ -262,10 +265,12 @@ define('Controls/Application',
          },
 
          _checkDeprecatedOptions: function(opts) {
+            /* eslint-disable */
             if (opts.compat) {
                Env.IoC.resolve('ILogger').warn('Опция compat является устаревшей. Для вставки старых контролов внутри VDOM-ного окружения ' +
                 'используйте один из способов, описанных в этой статье: https://wi.sbis.ru/doc/platform/developmentapl/ws3/compound-wasaby/');
             }
+            /* eslint-enable */
          },
 
          _beforeMount: function(cfg) {
@@ -287,11 +292,13 @@ define('Controls/Application',
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
             if (typeof window !== 'undefined') {
+               /* eslint-disable */
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
                   this.headJson = undefined;
                   this.headValidHtml = undefined;
                }
+               /* eslint-enable */
             }
             this._updateClasses();
 
@@ -307,7 +314,9 @@ define('Controls/Application',
          },
 
          _afterUpdate: function(oldOptions) {
+            /* eslint-disable */
             var elements = document.getElementsByClassName('head-title-tag');
+            /* eslint-enable */
             if (elements.length === 1) {
                // Chrome на ios при вызове History.replaceState, устанавливает в title текущий http адрес.
                // Если после загрузки установить title, который уже был, то он не обновится, и в заголовке вкладки

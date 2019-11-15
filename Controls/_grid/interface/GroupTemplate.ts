@@ -1,7 +1,8 @@
 /**
- * Шаблон, который по умолчанию используется для отображения разделителя группы в контроле {@link Controls/grid:View}.
+ * Шаблон, который по умолчанию используется для отображения разделителя {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/grouping/ группы} в {@link Controls/grid:View Табличном представлении}.
  * @interface Controls/grid:GroupTemplate
  * @author Авраменко А.С.
+ * @demo Controls-demo/List/Grid/WI/Group
  * @see Controls/grid:View#groupTemplate
  * @remark
  * Параметры шаблона описаны в следующей таблице:
@@ -29,19 +30,19 @@
  *    <tr>
  *       <td>textAlign</td>
  *       <td>String</td>
- *       <td>по центру</td>
- *       <td>Горизонтальное выравнивание текста группы. Доступные значения опции: "left" и "right".</td>
+ *       <td>—</td>
+ *       <td>Горизонтальное выравнивание текста группы. По умолчанию выравнивается по центру. Доступные значения опции: "left" и "right".</td>
  *    </tr>
  *    <tr>
  *       <td>rightTemplate</td>
  *       <td>Function|String</td>
- *       <td></td>
+ *       <td>—</td>
  *       <td>Шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</td>
  *    </tr>
  *    <tr>
  *       <td>columnAlignGroup</td>
  *       <td>Number</td>
- *       <td></td>
+ *       <td>—</td>
  *       <td>Номер колонки, относительно которой происходит горизонтальное выравнивание текста группы.</td>
  *    </tr>
  * </table>
@@ -58,6 +59,5 @@
  * 
  * Подробнее о шаблоне:
  * 
- * * {@link https://wi.sbis.ru/materials/demo-ws4-grid-group Демо-пример}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/ Руководство разработчика}
  */

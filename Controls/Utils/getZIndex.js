@@ -2,9 +2,8 @@
  * Created by as.krasilnikov on 29.10.2018.
  */
 define('Controls/Utils/getZIndex', ['Core/helpers/isNewEnvironment'], function(isNewEnvironment) {
-
    'use strict';
-
+   /* eslint-disable */
    // z-index 110 обусловлен тем, что в контенте страницы могут лежать платформенные компоненты с
    // zindex: 100 (switchableArea в tabControl'e). Попытки ограничить контент z-index'a на OnlineBaseInnerMinCoreView
    // привели к другим ошибкам из-за неправильной верстки OnlineBaseInnerMinCoreView. Ошибка в том, что стековые панели
@@ -24,4 +23,5 @@ define('Controls/Utils/getZIndex', ['Core/helpers/isNewEnvironment'], function(i
       }
       return undefined;
    };
+   /* eslint-enable */
 });

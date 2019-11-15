@@ -228,6 +228,20 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
 
+      it('_private::isItemsSelectionAllowed', () => {
+         let options = {};
+         assert.isFalse(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = undefined;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 0;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 1;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+      });
+
       it('_private::needLoadNextPageAfterLoad', function() {
          let list = new collection.RecordSet({
             rawData: [
@@ -967,31 +981,37 @@ define([
       it('toggleSelection', async function() {
 
          var
-            cfg = {
-               viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'visible',
-               keyProperty: 'key',
-               multiSelectVisibility: 'visible',
-               source: new sourceLib.Memory({
-                  keyProperty: 'key',
-                  data: [{
-                     key: 1
-                  }, {
-                     key: 2
-                  }, {
-                     key: 3
-                  }]
-               })
-            },
-            baseControl = new lists.BaseControl(cfg);
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'visible',
+                keyProperty: 'key',
+                multiSelectVisibility: 'visible',
+                source: new sourceLib.Memory({
+                   keyProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                })
+             },
+             baseControl = new lists.BaseControl(cfg);
+
+         const event = {
+            preventDefault: () => {}
+         };
+         const sandbox = sinon.createSandbox();
+
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          baseControl._children.selectionController = {
             onCheckBoxClick: (key, status) => {
                if (status) {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               } else {
                   baseControl._listViewModel._selectedKeys.pop(key);
+               } else {
+                  baseControl._listViewModel._selectedKeys.push(key);
                }
             }
          };
@@ -1000,6 +1020,12 @@ define([
          lists.BaseControl._private.enterHandler(baseControl);
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
 
+         baseControl._loadingIndicatorState = null;
+         sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
+
+         sandbox.restore();
       });
 
       it('loadToDirection up', async function() {
@@ -1896,7 +1922,10 @@ define([
             baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
-
+         it('without listViewModel should not call update', function() {
+            baseControl._listViewModel = null;
+            assert.equal(actionsUpdateCount, 4);
+         });
       });
 
       describe('resetScrollAfterReload', function() {

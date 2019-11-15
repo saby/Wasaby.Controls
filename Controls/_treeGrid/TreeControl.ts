@@ -301,8 +301,9 @@ var _private = {
 
         filter[self._options.parentProperty] = nodes.concat(_private.getReloadableNodes(viewModel, key, keyProperty, nodeProperty));
 
-        return _private.createSourceController(self._options.source, self._options.navigation).load(filter).addCallback(function(result) {
+        return _private.createSourceControllerForNode(self, key, self._options.source, self._options.navigation).load(filter).addCallback(function(result) {
             _private.applyReloadedNodes(viewModel, key, keyProperty, nodeProperty, result);
+            viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
             return result;
         });
     },

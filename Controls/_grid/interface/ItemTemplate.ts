@@ -1,7 +1,8 @@
 /**
- * Шаблон, который по умолчанию используется для отображения элементов в контроле {@link Controls/grid:View}.
+ * Шаблон, который по умолчанию используется для отображения элементов {@link Controls/grid:View Табличном представлении}.
  * @interface Controls/grid:ItemTemplate
  * @author Авраменко А.С.
+ * @demo Controls-demo/List/Grid/WI/ItemTemplate
  * @see Controls/grid:View#itemTemplate
  * @see Controls/grid:View#itemTemplateProperty
  * @remark 
@@ -41,13 +42,13 @@
  *    <tr>
  *       <td>colspanTemplate</td>
  *       <td>Function|String</td>
- *       <td>не задано</td>
+ *       <td>—</td>
  *       <td>Шаблон отображения объединенных ячеек.</td>
  *    </tr>
  *    <tr>
  *       <td>contentTemplate</td>
  *       <td>Function|String</td>
- *       <td>не задано</td> 
+ *       <td>—</td> 
  *       <td>Шаблон содержимого ячейки.</td>
  *    </tr>
  * </table>
@@ -66,6 +67,5 @@
  * 
  * Дополнительно о шаблоне:
  * 
- * * {@link https://wi.sbis.ru/materials/demo-ws4-grid-item-template Демо-пример}
  * * {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ Руководство разработчика}
  */

@@ -182,7 +182,6 @@ export default class Selection {
 
    public setListModel(listModel: Collection|ListViewModel): void {
       this._listModel = listModel;
-      this.updateSelectionForRender();
    }
 
    protected _getSelectionForModel(): Map<TKey, boolean> {

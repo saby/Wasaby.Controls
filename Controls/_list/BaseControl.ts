@@ -252,6 +252,19 @@ var _private = {
         return resDeferred;
     },
 
+    /**
+     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+     *
+     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+     */
+    isItemsSelectionAllowed(options: object): boolean {
+        return options.hasOwnProperty('selectedKeysCount');
+    },
+
     resolveIndicatorStateAfterReload: function(self, list):void {
         if (!self._isMounted) {
             return;
@@ -375,16 +388,22 @@ var _private = {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
     },
-    toggleSelection: function(self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
-        let model, markedKey;
-        if (self._children.selectionController) {
-            model = self.getViewModel();
-            markedKey = model.getMarkedKey();
-            self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
-            _private.moveMarkerToNext(self, event);
+    toggleSelection(self, event): void {
+        const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
+                                     self._children.selectionController;
+
+        if (allowToggleSelection) {
+            const model = self.getViewModel();
+            let toggledItemId = model.getMarkedKey();
+
+            if (!model.getItemById(toggledItemId) && model.getCount()) {
+                toggledItemId = model.at(0).getId();
+            }
+
+            if (toggledItemId) {
+                self._children.selectionController.onCheckBoxClick(toggledItemId, model.getSelectionStatus(toggledItemId));
+                _private.moveMarkerToNext(self, event);
+            }
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
@@ -1895,16 +1914,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
 
-        /**
-         * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
-         * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
-         * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
-         * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
-         *
-         * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
-         * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
-         */
-        if (direction === 'right' && !isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
+        if (direction === 'right' && !isSwiped && _private.isItemsSelectionAllowed(this._options)) {
             const key = this._options.useNewModel ? itemData.getId() : itemData.key;
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
             /**
@@ -1939,7 +1949,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
         }
-        if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
+        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
             this._notify('itemSwipe', [actionsItem, childEvent]);
         }
     },
@@ -2025,7 +2035,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
     _updateItemActions: function() {
-        if (this._hasItemActions) {
+        if (this._listViewModel && this._hasItemActions) {
             this._children.itemActions.updateActions();
         }
     },
