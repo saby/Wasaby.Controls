@@ -174,14 +174,10 @@ class InfoBoxController extends StickyController.constructor {
         const topOrBottomSide: boolean = side === 't' || side === 'b';
 
         const config = {
-            verticalAlign: {
-                side: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide]
+            direction: {
+                horizontal: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side],
+                vertical: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide]
             },
-
-            horizontalAlign: {
-                side: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side]
-            },
-
             targetPoint: {
                 vertical: topOrBottomSide ? SIDES[side] : SIDES[alignSide],
                 horizontal: topOrBottomSide ? SIDES[alignSide] : SIDES[side]
@@ -192,11 +188,13 @@ class InfoBoxController extends StickyController.constructor {
         const horizontalOffset: number = this._getHorizontalOffset(target, topOrBottomSide, alignSide);
 
         if (verticalOffset) {
-            config.verticalAlign.offset = verticalOffset;
+            config.offset = config.offset || {};
+            config.offset.vertical = verticalOffset;
         }
 
         if (horizontalOffset) {
-            config.horizontalAlign.offset = horizontalOffset;
+            config.offset = config.offset || {};
+            config.offset.horizontal = horizontalOffset;
         }
 
         return config;
