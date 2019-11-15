@@ -6,7 +6,8 @@ define('Controls/Container/Async',
       'wml!Controls/Container/Async/Async',
       'Controls/Container/Async/ModuleLoader',
       'Core/library',
-      'Types/entity'
+      'Types/entity',
+      'UI/Utils'
    ],
 
    function(Base,
@@ -15,14 +16,15 @@ define('Controls/Container/Async',
       template,
       ModuleLoader,
       library,
-      entity) {
+      entity,
+      UIUtils) {
       'use strict';
 
 
       /**
        * Контейнер для асинхронной загрузки контролов.
        * Подробное описание и примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
-       * 
+       *
        * @class Controls/Container/Async
        * @extends Core/Control
        * @control
@@ -34,14 +36,14 @@ define('Controls/Container/Async',
       /*
        * Container for asynchronously loading components.
        * Подробное описание и примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
-       * 
+       *
        * @class Controls/Container/Async
        * @extends Core/Control
        * @control
        * @public
        * @author Белотелов Н.В.
        * @category Container
-       */       
+       */
 
       /**
        * @name Controls/Container/Async#content
@@ -51,7 +53,7 @@ define('Controls/Container/Async',
       /*
        * @name Controls/Container/Async#content
        * @cfg {Content} Container contents.
-       */       
+       */
 
       /**
        * @name Controls/Container/Async#templateName
@@ -61,7 +63,7 @@ define('Controls/Container/Async',
       /*
        * @name Controls/Container/Async#templateName
        * @cfg {String} Name of asynchronously loading component
-       */       
+       */
 
       /**
        * @name Controls/Container/Async#templateOptions
@@ -179,9 +181,9 @@ define('Controls/Container/Async',
                var headData = this._getHeadData();
                headData.pushDepComponent(dep, true);
             } catch (e) {
-               Env.IoC.resolve('ILogger').warn('You\'re trying to use Async without Controls/Application. Link to ' +
+               UIUtils.Logger.warn('You\'re trying to use Async without Controls/Application. Link to ' +
                   dep +
-                  ' won\'t be added to server-side generated markup. ' + e);
+                  ' won\'t be added to server-side generated markup. ', this, e);
             }
          },
 

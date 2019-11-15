@@ -2,10 +2,11 @@ define('Controls/Container/Input/Search',
    [
       'Core/Control',
       'wml!Controls/Container/Input/Search/Search',
-      'Env/Env'
+      'Env/Env',
+      'UI/Utils'
    ],
 
-   function(Control, template, Env) {
+   function(Control, template, Env, UIUtils) {
 
       'use strict';
 
@@ -15,7 +16,7 @@ define('Controls/Container/Input/Search',
          _value: '',
 
          constructor: function() {
-            Env.IoC.resolve('ILogger').error('Controls/Container/Input/Search', 'Component is deprecated and will be deleted in 3.18.600, use Controls/search:InputContainer instead.');
+            UIUtils.Logger.error('Controls/Container/Input/Search: Component is deprecated and will be deleted in 3.18.600, use Controls/search:InputContainer instead.', this);
             SearchContainer.superclass.constructor.apply(this, arguments);
          },
 
