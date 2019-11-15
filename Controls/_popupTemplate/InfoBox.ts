@@ -23,18 +23,18 @@ var InfoBoxTemplate = Control.extend({
     },
 
     _setPositionSide: function(stickyPosition) {
-        if (stickyPosition.horizontalAlign.side === 'left' && stickyPosition.targetPoint.horizontal === 'left') {
+        if (stickyPosition.direction.horizontal === 'left' && stickyPosition.targetPoint.horizontal === 'left') {
             this._arrowSide = 'right';
-            this._arrowPosition = this._getArrowPosition(stickyPosition.verticalAlign.side);
-        } else if (stickyPosition.horizontalAlign.side === 'right' && stickyPosition.targetPoint.horizontal === 'right') {
+            this._arrowPosition = this._getArrowPosition(stickyPosition.direction.vertical);
+        } else if (stickyPosition.direction.horizontal === 'right' && stickyPosition.targetPoint.horizontal === 'right') {
             this._arrowSide = 'left';
-            this._arrowPosition = this._getArrowPosition(stickyPosition.verticalAlign.side);
-        } else if (stickyPosition.verticalAlign.side === 'top' && stickyPosition.targetPoint.vertical === 'top') {
+            this._arrowPosition = this._getArrowPosition(stickyPosition.direction.vertical);
+        } else if (stickyPosition.direction.vertical === 'top' && stickyPosition.targetPoint.vertical === 'top') {
             this._arrowSide = 'bottom';
-            this._arrowPosition = this._getArrowPosition(stickyPosition.horizontalAlign.side);
-        } else if (stickyPosition.verticalAlign.side === 'bottom' && stickyPosition.targetPoint.vertical === 'bottom') {
+            this._arrowPosition = this._getArrowPosition(stickyPosition.direction.horizontal);
+        } else if (stickyPosition.direction.vertical === 'bottom' && stickyPosition.targetPoint.vertical === 'bottom') {
             this._arrowSide = 'top';
-            this._arrowPosition = this._getArrowPosition(stickyPosition.horizontalAlign.side);
+            this._arrowPosition = this._getArrowPosition(stickyPosition.direction.horizontal);
         }
     },
 

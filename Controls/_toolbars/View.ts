@@ -446,7 +446,7 @@ var _private = {
         self._popupOptions = {
             className: (newOptions.popupClassName || '') + ' controls-Toolbar__popup__list_theme-' + self._options.theme,
             targetPoint: {vertical: 'top', horizontal: 'right'},
-            horizontalAlign: {side: 'left'},
+            direction: {horizontal: 'left'},
             eventHandlers: {
                 onResult: self._onResult,
                 onClose: self._closeHandler
@@ -481,7 +481,7 @@ var _private = {
         return {
             opener: self,
             targetPoint: {vertical: 'top', horizontal: 'left'},
-            horizontalAlign: {side: 'right'},
+            direction: {horizontal: 'right'},
             className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme + ' ' + (item.get('popupClassName') || ''),
             templateOptions: {
                 items: self._items,

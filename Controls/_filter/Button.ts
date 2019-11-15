@@ -123,8 +123,8 @@ var _private = {
             vertical: 'top',
             horizontal: 'right'
          };
-         self._popupOptions.horizontalAlign = {
-            side: 'left'
+         self._popupOptions.direction = {
+            horizontal: 'left'
          };
       }
    },

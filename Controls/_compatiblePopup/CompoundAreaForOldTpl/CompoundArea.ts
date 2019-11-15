@@ -1113,11 +1113,10 @@ var CompoundArea = CompoundContainer.extend([
    setOffset: function(newOffset) {
       var popupConfig = this._getManagerConfig();
       if (popupConfig) {
-         popupConfig.popupOptions.horizontalAlign = popupConfig.popupOptions.horizontalAlign || {};
-         popupConfig.popupOptions.horizontalAlign.offset = newOffset.x || 0;
+         popupConfig.popupOptions.offset = popupConfig.popupOptions.offset || {};
 
-         popupConfig.popupOptions.verticalAlign = popupConfig.popupOptions.verticalAlign || {};
-         popupConfig.popupOptions.verticalAlign.offset = newOffset.y || 0;
+         popupConfig.popupOptions.offset.horizontal = newOffset.x || 0;
+         popupConfig.popupOptions.offset.vertical = newOffset.y || 0;
 
          Controller.update(this._getPopupId(), popupConfig.popupOptions);
       }
