@@ -19,6 +19,8 @@ interface ISwipeControlOptions extends IControlOptions {
     itemActionsPosition?: string;
     actionAlignment?: string;
     actionCaptionPosition?: string;
+
+    menuIsShown?: boolean;
 }
 
 export default class SwipeControl extends Control<ISwipeControlOptions> {
@@ -37,6 +39,12 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
     protected _beforeMount(): void {
         this._needTitle = (...args) => this._measurer.needTitle(...args);
         this._needIcon = (...args) => this._measurer.needIcon(...args);
+    }
+
+    protected _beforeUpdate(newOptions: ISwipeControlOptions): void {
+        if (!newOptions.menuIsShown && this._options.menuIsShown) {
+            this._resetSwipeState();
+        }
     }
 
     protected _onItemSwipe(
@@ -80,7 +88,7 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
     }
 
     private _closeSwipe(animated: boolean = false): void {
-        if (this._animationState === 'open') {
+        if (this._animationState === 'open' && !this._options.menuIsShown) {
             this._animationState = 'close';
             if (!animated) {
                 this._resetSwipeState();
@@ -89,6 +97,7 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
     }
 
     private _resetSwipeState(): void {
+        this._animationState = 'close';
         this._swipeConfig = null;
         // TODO Do we need this here?
         // this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
