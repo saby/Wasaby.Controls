@@ -69,6 +69,19 @@ define([
          assert.deepEqual(validCtrl._validationResult, 'Error');
          validCtrl.destroy();
       });
+      it('setValidResult', () => {
+         var validCtrl = new validateMod.Container();
+         var validConfig = {
+            hideInfoBox: true,
+         };
+         validCtrl._isOpened = false;
+         validCtrl.setValidationResult('Error 404');
+         assert.deepEqual(validCtrl._isOpened, true);
+         validCtrl._isOpened = false;
+         validCtrl.setValidationResult('Error 404', validConfig);
+         assert.deepEqual(validCtrl._isOpened, false);
+         validCtrl.destroy();
+      });
    });
    describe('Validate/FormController', () => {
       it('add/remove validator', () => {
