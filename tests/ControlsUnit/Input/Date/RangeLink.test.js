@@ -47,20 +47,28 @@ define([
 
       describe('_openDialog', function() {
          it('should open opener with default options', function() {
-            const component = calendarTestUtils.createComponent(dateRange.Selector, options);
-            component._children.opener = {
-               open: sinon.fake()
+            const component = calendarTestUtils.createComponent(dateRange.Selector, options),
+               TARGET = 'value';
+            component._options.nextArrowVisibility = true;
+            component._children = {
+               opener: {
+                  open: sinon.fake()
+               },
+               linkView: {
+                  getDialogTarget: sinon.stub().returns(TARGET)
+               }
             };
             component._openDialog();
             sinon.assert.called(component._children.opener.open);
+            sinon.assert.called(component._children.linkView.getDialogTarget);
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
                className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft',
+               target: TARGET,
                templateOptions: {
                   minRange: 'day'
                }
             }));
          });
-
          it('should open dialog with passed dialog options', function() {
             const
                extOptions = {
@@ -71,8 +79,13 @@ define([
                   readOnly: true
                },
                component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(extOptions), options));
-            component._children.opener = {
-               open: sinon.fake()
+            component._children = {
+               opener: {
+                  open: sinon.fake()
+               },
+               linkView: {
+                  getDialogTarget: sinon.fake()
+               }
             };
             component._openDialog();
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
@@ -111,8 +124,13 @@ define([
                it(`${JSON.stringify(test)}`, function () {
                   const
                      component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(test), options));
-                  component._children.opener = {
-                     open: sinon.fake()
+                  component._children = {
+                     opener: {
+                        open: sinon.fake()
+                     },
+                     linkView: {
+                        getDialogTarget: sinon.fake()
+                     }
                   };
                   component._openDialog();
                   sinon.assert.calledWith(component._children.opener.open, sinon.match({
@@ -136,8 +154,13 @@ define([
                it(`${JSON.stringify(test)}`, function () {
                   const
                      component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(test), options));
-                  component._children.opener = {
-                     open: sinon.fake()
+                  component._children = {
+                     opener: {
+                        open: sinon.fake()
+                     },
+                     linkView: {
+                        getDialogTarget: sinon.fake()
+                     }
                   };
                   component._openDialog();
                   sinon.assert.calledWith(component._children.opener.open, sinon.match({
