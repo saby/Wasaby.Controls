@@ -101,6 +101,7 @@ var ItemsViewModel = BaseViewModel.extend({
     _prefixItemVersion: null,
     _updateIndexesCallback: null,
     _hasMoreData: false,
+    _isDestroyed: false,
 
     constructor: function(cfg) {
         this._prefixItemVersion = 0;
@@ -507,6 +508,7 @@ var ItemsViewModel = BaseViewModel.extend({
         this._itemDataCache = null;
         this._curIndex = null;
         this._onCollectionChangeFnc = null;
+        this._isDestroyed = true;
     },
 
     setHasMoreData: function(value: boolean) {
