@@ -1,4 +1,4 @@
-import {Logger} from 'UI/Utils';
+import Env = require('Env/Env');
 import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Text/ViewModel');
@@ -27,9 +27,9 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
  */
 
 var _private = {
-    validateConstraint: function (constraint, self) {
+    validateConstraint: function (constraint) {
         if (constraint && !/^\[[\s\S]+?\]$/.test(constraint)) {
-            Logger.error('Controls/_input/Text: The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/_input/Text/options/constraint/', self);
+            Env.IoC.resolve('ILogger').error('Controls/_input/Text', 'The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/_input/Text/options/constraint/');
             return false;
         }
 
@@ -74,7 +74,7 @@ var Text = Base.extend({
         Text.superclass._beforeUpdate.apply(this, arguments);
 
         if (this._options.constraint !== newOptions.constraint) {
-            _private.validateConstraint(newOptions.constraint, this);
+            _private.validateConstraint(newOptions.constraint);
         }
     }
 });
