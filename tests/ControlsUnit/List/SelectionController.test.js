@@ -127,16 +127,13 @@ define([
             let initialListModel = instance._options.listModel;
 
             newCfg.items = newItems;
-            newCfg.listModel = {
-               updateSelection: sandbox.stub()
-            };
-            instance._multiselection.setListModel = sandbox.stub();
+            newCfg.listModel = new treeGrid.ViewModel({columns: [], items: rs});
+            newCfg.listModel.updateSelection = sandbox.stub();
             initialListModel.updateSelection = sandbox.stub();
             instance._beforeUpdate(newCfg);
 
             assert.isFalse(initialListModel.updateSelection.called);
             assert.isTrue(newCfg.listModel.updateSelection.withArgs({}).calledOnce);
-            assert.isTrue(instance._multiselection.setListModel.calledOnce);
          });
       });
 
