@@ -27,7 +27,7 @@
  */
 /**
  * @name Controls/grid:IColumnTemplateOptions#contentTemplate
- * @cfg {String} Вёрстка, описывающая содержимое ячейки
+ * @cfg {String} Вёрстка, описывающая содержимое ячейки.
  */
 export default interface IColumnTemplateOptions {
    contentTemplate?: string;
