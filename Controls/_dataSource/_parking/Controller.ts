@@ -1,7 +1,7 @@
 /// <amd-module name="Controls/_dataSource/_parking/Controller" />
 import { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
 // @ts-ignore
-import { constants, IoC } from 'Env/Env';
+import { constants } from 'Env/Env';
 // @ts-ignore
 import { load } from 'Core/library';
 

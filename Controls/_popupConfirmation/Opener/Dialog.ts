@@ -4,7 +4,7 @@ import { Converter as MarkupConverter } from 'Controls/decorator';
 // @ts-ignore
 import * as Control from 'Core/Control';
 // @ts-ignore
-import { constants, IoC } from 'Env/Env';
+import { constants } from 'Env/Env';
 // @ts-ignore
 import entity = require('Types/entity');
 // @ts-ignore

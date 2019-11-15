@@ -5,7 +5,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 import {isEqual} from 'Types/object';
-import {constants, IoC} from 'Env/Env';
+import {constants} from 'Env/Env';
 import {List} from 'Types/collection';
 import {Logger} from 'UI/Utils';
 
