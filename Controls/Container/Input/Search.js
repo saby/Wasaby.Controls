@@ -6,7 +6,6 @@ define('Controls/Container/Input/Search',
    ],
 
    function(Control, template, Env) {
-
       'use strict';
 
       var SearchContainer = Control.extend({
@@ -20,7 +19,7 @@ define('Controls/Container/Input/Search',
          },
 
          _notifySearch: function(value) {
-            this._notify('search', [value], {bubbling: true});
+            this._notify('search', [value], { bubbling: true });
          },
 
          _valueChanged: function(event, value) {

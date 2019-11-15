@@ -2,9 +2,9 @@
  * Created by as.krasilnikov on 10.09.2018.
  */
 define('Controls/Utils/isVDOMTemplate', [], function() {
-
    'use strict';
 
+   /* eslint-disable */
    /**
     * Модуль возвращает функцию, которая проверяет, является ли класс наследником 'UI/Base:Control'.
     *
@@ -37,7 +37,7 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
     * @public
     * @author Красильников А.С.
     */
-   
+
    /*
     * The module returns a function that checks whether the component class is compatible with the WaSaby.
     *
@@ -74,11 +74,14 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
     * @public
     * @author Красильников А.С.
     */
+   /* eslint-enable */
 
    return function isVDOMTemplate(templateClass) {
       // на VDOM классах есть св-во _template.
       // Если его нет, но есть stable или isDataArray, значит это функция от tmpl файла
-      var isVDOM = templateClass && (templateClass.prototype && templateClass.prototype._template || templateClass.stable || templateClass.isDataArray);
+      var isVDOM = templateClass && (
+         (templateClass.prototype && templateClass.prototype._template) ||
+                              templateClass.stable || templateClass.isDataArray);
       return !!isVDOM;
    };
 });

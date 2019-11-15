@@ -5,7 +5,6 @@ define('Controls/Utils/getItemsBySelection', [
    'Core/core-clone',
    'Core/Deferred'
 ], function(source, entity, chain, cClone, Deferred) {
-
    'use strict';
 
    var
@@ -46,18 +45,18 @@ define('Controls/Utils/getItemsBySelection', [
          }
       });
 
-      //Do not load the data if they are all in the current recordSet.
+      // Do not load the data if they are all in the current recordSet.
       if (selectedItems.length === selection.selected.length && !selection.excluded.length) {
          result = Deferred.success(selectedItems);
       } else {
          query = new source.Query();
 
-         filter = filter ? cClone(filter) : {};
-         filter.selection = selectionToRecord(selection, 'adapter.sbis');
+         var filterClone = filter ? cClone(filter) : {};
+         filterClone.selection = selectionToRecord(selection, 'adapter.sbis');
 
-         result = dataSource.query(query.where(filter)).addCallback(function(list) {
-            return chain.factory(list.getAll()).toArray().map(function(item) {
-               return item.getId();
+         result = dataSource.query(query.where(filterClone)).addCallback(function(list) {
+            return chain.factory(list.getAll()).toArray().map(function(curItem) {
+               return curItem.getId();
             });
          }).addErrback(function() {
             return [];

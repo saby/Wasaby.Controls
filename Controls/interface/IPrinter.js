@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IPrinter', [], function() {
 
    /**
@@ -20,7 +21,7 @@ define('Controls/interface/IPrinter', [], function() {
     *
     * @see Unload/Action/PDF
     * @see Unload/Action/Excel
-    */    
+    */
 
    /**
     * @typedef {Object} Column
@@ -32,10 +33,10 @@ define('Controls/interface/IPrinter', [], function() {
     * @typedef {Object} Column
     * @property {String} field Name of the field that contains data to be rendered in the column.
     * @property {String} title Header of the column.
-    */    
+    */
 
    /**
-    * 
+    *
     * @name Controls/interface/IPrinter#execute
     * @function
     * @description Выгружает реестр в соответствующий формат.
@@ -79,7 +80,7 @@ define('Controls/interface/IPrinter', [], function() {
     *    };
     *    this._children.printer.execute(params);
     * </pre>
-    */    
+    */
 
    /**
     * @name Controls/interface/IPrinter#sorting
@@ -115,5 +116,5 @@ define('Controls/interface/IPrinter', [], function() {
     * <pre>
     *    <Unload.Action.PDF sorting="{{ _sorting }}" />
     * </pre>
-    */    
+    */
 });
