@@ -8,7 +8,7 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
 import {ValidationStatus} from "Controls/interface";
-import {detection, IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 export interface IValidateConfig {
     hideInfoBox?: boolean;
@@ -203,7 +203,7 @@ class ValidateContainer extends Control {
             this.setValidationResult(validationResult, validateConfig);
             resultDeferred.callback(validationResult);
         }).addErrback((e) => {
-            IoC.resolve('ILogger').error('Validate', 'Validation error', e);
+            Logger.error('Validate: Validation error', this, e);
         });
 
         return resultDeferred;

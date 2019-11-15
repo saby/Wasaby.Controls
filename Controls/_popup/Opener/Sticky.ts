@@ -1,6 +1,6 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import coreMerge = require('Core/core-merge');
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 const _private = {
     getStickyConfig(config) {
@@ -171,7 +171,7 @@ Sticky.openPopup = (config: object): Promise<string> => {
     return new Promise((resolve) => {
         const newCfg = _private.getStickyConfig(config);
         if (!newCfg.hasOwnProperty('opener')) {
-            IoC.resolve('ILogger').error(Sticky.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+            Logger.error(Sticky.prototype._moduleName + ': Для открытия окна через статический метод, обязательно нужно указать опцию opener');
         }
         BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
             BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {

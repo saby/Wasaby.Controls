@@ -2,7 +2,6 @@ import {date as formatDate} from 'Types/formatter';
 import {Date as WSDate} from 'Types/entity';
 import {debounce} from 'Types/function';
 import {Base as BaseSource} from 'Types/source';
-import {IoC} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
@@ -21,6 +20,7 @@ import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 import stubTemplate = require('wml!Controls/_calendar/MonthList/Stub');
+import {Logger} from 'UI/Utils';
 
 
 
@@ -82,7 +82,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     protected _beforeMount(options: IModuleComponentOptions): void {
         const position = options.startPosition || options.position || new WSDate();
         if (options.startPosition) {
-            IoC.resolve('ILogger').warn('MonthList', 'Используется устаревшая опция startPosition, используйте опцию position');
+            Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
 
         this._enrichItemsDebounced = debounce(this._enrichItems, 150);

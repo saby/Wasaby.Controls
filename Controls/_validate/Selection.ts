@@ -1,6 +1,6 @@
-import SelectionContainer from 'Controls/_validate/SelectionContainer';
-import {IoC} from 'Env/Env';
+import SelectionContainer from './SelectionContainer';
+import {Logger} from 'UI/Utils';
 
-IoC.resolve('ILogger').warn('Validate', 'Use SelectionContainer instead Selection');
+Logger.warn('Validate: Use SelectionContainer instead Selection');
 
 export default SelectionContainer;

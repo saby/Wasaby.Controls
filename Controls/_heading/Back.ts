@@ -1,7 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import backTemplate = require('wml!Controls/_heading/Back/Back');
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {IoC, detection} from 'Env/Env';
+import {detection} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 type TBackStyle = 'primary' | 'secondary';
 
@@ -124,8 +125,7 @@ class Back extends Control<IBackOptions> {
     private _convertOldStyleToNew(options: IBackOptions): void {
         if (options.style === 'default') {
             this._style = 'primary';
-            IoC.resolve('ILogger').warn('Heading.Back',
-                'Используются устаревшие стили. Используйте style primary вместо style default');
+            Logger.warn('Heading.Back', 'Используются устаревшие стили. Используйте style primary вместо style default', this);
         } else {
             this._style = options.style;
         }

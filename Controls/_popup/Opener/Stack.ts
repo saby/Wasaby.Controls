@@ -1,5 +1,5 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 /**
  * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри. Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
@@ -148,7 +148,7 @@ Stack.openPopup = (config: object): Promise<string> => {
     return new Promise((resolve) => {
         const newCfg = _private.getStackConfig(config);
         if (!newCfg.hasOwnProperty('opener')) {
-            IoC.resolve('ILogger').error(Stack.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+            Logger.error(Stack.prototype._moduleName + ': Для открытия окна через статический метод, обязательно нужно указать опцию opener');
         }
         BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
             BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {

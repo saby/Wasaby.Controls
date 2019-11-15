@@ -1,6 +1,6 @@
 import {ListViewModel} from 'Controls/list';
 import cMerge = require('Core/core-merge');
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 var
     DEFAULT_ITEM_WIDTH = 250,
@@ -12,7 +12,7 @@ var TileViewModel = ListViewModel.extend({
         TileViewModel.superclass.constructor.apply(this, arguments);
         this._tileMode = this._options.tileMode;
         if (this._options.hasOwnProperty('itemsHeight')) {
-            IoC.resolve('ILogger').warn(this._moduleName, 'Используется устаревшая опция itemsHeight, используйте tileHeight');
+            Logger.warn(this._moduleName + ': Используется устаревшая опция itemsHeight, используйте tileHeight', this);
         }
         this._itemsHeight = this._options.tileHeight || this._options.itemsHeight || DEFAULT_ITEM_HEIGHT;
     },

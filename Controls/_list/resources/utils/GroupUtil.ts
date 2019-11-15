@@ -1,6 +1,6 @@
 import Config = require('Env/Config');
 import cDeferred = require('Core/Deferred');
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 
 var
     PREFIX_STORE_KEY_COLLAPSED_GROUP = 'LIST_COLLAPSED_GROUP_',
@@ -31,7 +31,7 @@ var
                 try {
                     result.callback(JSON.parse(storedGroups));
                 } catch (e) {
-                    Env.IoC.resolve('ILogger').error('GroupUtil', 'In the store by key "' + preparedStoreKey + '" value in invalid format.');
+                    Logger.error('GroupUtil: In the store by key "' + preparedStoreKey + '" value in invalid format.');
                     result.callback();
                 }
             });

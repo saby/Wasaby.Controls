@@ -1,5 +1,5 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 /**
  * Контрол, открывающий всплывающее окно, которое позиционируется по центру экрана.
  * @remark
@@ -128,7 +128,7 @@ Dialog.openPopup = (config: object): Promise<string> => {
     return new Promise((resolve) => {
         const newCfg = _private.getDialogConfig(config);
         if (!newCfg.hasOwnProperty('opener')) {
-            IoC.resolve('ILogger').error(Dialog.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+            Logger.error(Dialog.prototype._moduleName + ': Для открытия окна через статический метод, обязательно нужно указать опцию opener');
         }
         BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
             BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {

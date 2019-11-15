@@ -21,7 +21,7 @@ import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {constants, detection, IoC} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
@@ -29,7 +29,7 @@ import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import {Memory} from 'Types/source';
-
+import {Logger} from 'UI/Utils';
 import {create as diCreate} from 'Types/di';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
@@ -124,7 +124,7 @@ let getData = (crudResult: CrudResult): Promise<any> => {
 var _private = {
     checkDeprecated: function(cfg) {
         if (cfg.historyIdCollapsedGroups) {
-            IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
     },
 
@@ -250,7 +250,7 @@ var _private = {
                 cfg.afterReloadCallback(cfg);
             }
             resDeferred.callback();
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+            Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
         }
         return resDeferred;
     },
@@ -561,7 +561,7 @@ var _private = {
                 });
             });
         }
-        IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+        Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
     },
 
     // Применяем расчитанные и хранимые на virtualScroll стартовый и конечный индексы на модель.
@@ -696,8 +696,7 @@ var _private = {
 
         if (navigation && navigation.view === 'maxCount') {
             if (!navigation.viewConfig || typeof navigation.viewConfig.maxCountValue !== 'number') {
-                IoC.resolve('ILogger')
-                   .error('BaseControl', 'maxCountValue is required for "maxCount" navigation type.');
+                Logger.error('BaseControl: maxCountValue is required for "maxCount" navigation type.');
             } else {
                 result = navigation.viewConfig.maxCountValue > listViewModel.getCount();
             }
@@ -1263,8 +1262,7 @@ var _private = {
                    if (typeof self._options.contextMenuConfig === 'object') {
                       cMerge(defaultMenuConfig, self._options.contextMenuConfig);
                    } else {
-                      IoC.resolve('ILogger').error('CONTROLS.ListView',
-                         'Некорректное значение опции contextMenuConfig. Ожидается объект');
+                       Logger.error('Controls/list:View: Некорректное значение опции contextMenuConfig. Ожидается объект');
                    }
                 }
 
@@ -1507,7 +1505,7 @@ var _private = {
         return pagingLabelData;
     },
 
-    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
+    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty: string}): SourceController {
         return new SourceController({
             source: source,
             navigation: navigation,
@@ -1517,7 +1515,7 @@ var _private = {
 
     checkRequiredOptions: function(options) {
         if (options.keyProperty === undefined) {
-            IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
+            Logger.warn('BaseControl: Option "keyProperty" is required.');
         }
     },
 
@@ -2036,9 +2034,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (itemsCount === 1) {
                     loadCallback(items.at(0));
                 } else if (itemsCount > 1) {
-                    IoC.resolve('ILogger').error('BaseControl', 'reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
+                    Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
                 } else {
-                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::query returns empty recordSet.');
+                    Logger.info('BaseControl: reloadItem::query returns empty recordSet.');
                 }
                 return items;
             });
@@ -2047,7 +2045,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (item) {
                     loadCallback(item);
                 } else {
-                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::read do not returns record.');
+                    Logger.info('BaseControl: reloadItem::read do not returns record.');
                 }
                 return item;
             });
