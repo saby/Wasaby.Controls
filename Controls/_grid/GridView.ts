@@ -313,6 +313,25 @@ var
             GridView.superclass._onItemMouseEnter.apply(this, arguments);
         },
 
+        getHeaderHeight(): number {
+            // TODO: Удалить проверку после полного перехода на table-layout.
+            //  По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
+                return 0;
+            }
+            const hasHeader = !!this._options.header && !!this._options.header.length;
+            return hasHeader ? this._children.header.getBoundingClientRect().height : 0;
+        },
+
+        getResultsHeight(): number {
+            // TODO: Удалить проверку после полного перехода на table-layout.
+            //  По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
+                return 0;
+            }
+            return this._options.resultsPosition === 'top' ? this._children.results.getBoundingClientRect().height : 0;
+        },
+
         _onItemMouseLeave: function (event, itemData) {
             // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             // In partial grid supporting browsers hovered item calculates in code

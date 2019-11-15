@@ -1656,14 +1656,21 @@ define([
          bc._loadOffset = {top: 100, bottom: 100};
          bc._children = triggers;
          bc._container = {
-             getBoundingClientRect: () => ({}),
+             getBoundingClientRect: () => ({
+                y: 0,
+                height: 0
+             }),
              clientHeight: 480
          };
          lists.BaseControl._private.onScrollShow(bc, {
             scrollHeight: 400,
-            clientHeight: 1000
+            clientHeight: 1000,
+            viewPortRect: {
+               y: 0,
+               height: 0
+            }
          });
-         bc._onViewPortResize(bc, 600);
+         bc._onViewPortResize(bc, 600, {y: 0,height: 0});
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
          bc._viewResize();
@@ -1676,7 +1683,7 @@ define([
 
          bc.__error = false;
          bc._viewSize = 0;
-         bc._onViewPortResize(bc, 0);
+         bc._onViewPortResize(bc, 0, {y: 0,height: 0});
          assert.deepEqual(bc._loadOffset, {top: 0, bottom: 0});
       });
 
@@ -4330,6 +4337,20 @@ define([
          instance.destroy();
       });
 
+      it('getListTopOffset', function () {
+         const bc = {
+            _children: {
+               listView: {
+               }
+            }
+         };
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 0);
+         bc._children.listView.getHeaderHeight = () => 40;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 40);
+         bc._children.listView.getResultsHeight = () => 30;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 70);
+      });
+
       it('should fire "drawItems" event if collection has changed', async function() {
          var
             cfg = {
@@ -4502,33 +4523,42 @@ define([
        it('setIndicatorContainerHeight: list bigger then scrollContainer', function () {
 
           const fakeBaseControl = {
-              _loadingIndicatorContainerHeight: null,
-              _container: {
-                 getBoundingClientRect: () => ({
-                     top: 100,
-                     bottom: 1000
-                 })
-              }
+              _loadingIndicatorContainerHeight: 0,
+              _isScrollShown: true,
           };
 
-          lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
+          const viewRect = {
+             y: -10,
+             height: 1000
+          };
+
+          const viewPortRect = {
+             y: 100,
+             height: 500
+          };
+
+          lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 500);
        });
 
        it('setIndicatorContainerHeight: list smaller then scrollContainer', function () {
-           const fakeBaseControl = {
-               _loadingIndicatorContainerHeight: null,
-               _container: {
-                   getBoundingClientRect: () => ({
-                       top: 100,
-                       bottom: 300,
-                       height: 200
-                   })
-               }
-           };
+          const fakeBaseControl = {
+             _loadingIndicatorContainerHeight: 0,
+             _isScrollShown: true,
+          };
 
-           lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
-           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200)
+          const viewRect = {
+             y: 50,
+             height: 200
+          };
+
+          const viewPortRect = {
+             y: 0,
+             height: 500
+          };
+
+          lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
+          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
 
