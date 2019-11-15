@@ -26,7 +26,7 @@ if ( env.PRIVILEGE_USERS.split(",").contains(user) ) {
     }
 }
 node ('controls') {
-def version = "19.710"
+def version = "19.720"
 def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     dir (workspace){
         deleteDir()
@@ -49,7 +49,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
 			LocalDateTime start_time = LocalDateTime.now();
 			echo "Время начала сборки: ${start_time}"
 			try {
-				start.start(version, workspace, helper, userInput)
+				start.start(version, workspace)
 			} finally {
 				LocalDateTime end_time = LocalDateTime.now();
 				echo "Время конца сборки: ${end_time}"

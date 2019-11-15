@@ -41,7 +41,8 @@
          <ws:partial template="itemTemplate"
                      text="{{_filterText}}"
                      title="{{_filterText}}"
-                     on:click="openDetailPanel()"/>
+                     on:click="openDetailPanel()"
+                     attr:class="controls-FilterView__filterTextLine"/>
             <ws:partial template="cross" on:click="_resetFilterText()" />
       </ws:if>
    </div>
