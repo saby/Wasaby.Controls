@@ -115,6 +115,26 @@ define([
 
             assert.isTrue(newCfg.listModel.updateSelection.withArgs({'1': null, '2': null, '3': true, '4': true}).calledOnce);
          });
+
+         it('change items and model', async function () {
+            let newItems = new collection.RecordSet({
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
+            });
+            let newCfg = Object.assign({}, cfg);
+            await instance._beforeMount(cfg);
+            instance._afterMount();
+            let initialListModel = instance._options.listModel;
+
+            newCfg.items = newItems;
+            newCfg.listModel = new treeGrid.ViewModel({columns: [], items: rs});
+            newCfg.listModel.updateSelection = sandbox.stub();
+            initialListModel.updateSelection = sandbox.stub();
+            instance._beforeUpdate(newCfg);
+
+            assert.isFalse(initialListModel.updateSelection.called);
+            assert.isTrue(newCfg.listModel.updateSelection.withArgs({}).calledOnce);
+         });
       });
 
       describe('onCheckBoxClick', function() {
