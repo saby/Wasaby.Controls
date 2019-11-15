@@ -10,12 +10,12 @@ define('Controls/Container/Async',
    ],
 
    function(Base,
-            AppEnv,
-            Env,
-            template,
-            ModuleLoader,
-            library,
-            entity) {
+      AppEnv,
+      Env,
+      template,
+      ModuleLoader,
+      library,
+      entity) {
       'use strict';
 
 
