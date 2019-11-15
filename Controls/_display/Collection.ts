@@ -185,6 +185,7 @@ function onCollectionChange<T>(
             this._reFilter();
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
+            this._nextVersion();
             return;
     }
 
