@@ -7,11 +7,11 @@ import find = require('Core/helpers/Object/find');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
-import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
 import {factory, List} from 'Types/collection';
 import {HistoryUtils} from 'Controls/filter';
 import 'Controls/form';
+import {Logger} from 'UI/Utils';
 /**
     * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
     * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
@@ -79,7 +79,7 @@ import 'Controls/form';
             self._items = this.cloneItems(options.items);
          } else if (self._contextOptions) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
-            Env.IoC.resolve('ILogger').error('Controls/filterPopup:Panel:', 'You must pass the items option for the panel.');
+            Logger.error('Controls/filterPopup:Panel: You must pass the items option for the panel.', self);
          } else {
             throw new Error('Controls/filterPopup:Panel::items option is required');
          }
@@ -90,7 +90,7 @@ import 'Controls/form';
             self._historyId = options.historyId;
          } else if (context && context.historyId) {
             self._historyId = context.historyId;
-            Env.IoC.resolve('ILogger').error('Controls/filterPopup:Panel:', 'You must pass the historyId option for the panel.');
+            Logger.error('Controls/filterPopup:Panel:', 'You must pass the historyId option for the panel.', self);
          }
       },
 

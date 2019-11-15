@@ -1,4 +1,5 @@
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
+import {Control} from 'UI/Base';
 
 const classesOfButton = {
    iconButtonBordered: {
@@ -27,18 +28,13 @@ interface ICurrentButtonClass {
 }
 
 const Classes = {
-   /**
-    * Получить текущий стиль кнопки
-    * @param {String} style
-    * @returns {Object}
-    */
-   getCurrentButtonClass(style: string): ICurrentButtonClass {
+   getCurrentButtonClass(style: string, self: Control): ICurrentButtonClass {
       const currentButtonClass: ICurrentButtonClass = {};
       if (classesOfButton.hasOwnProperty(style)) {
          currentButtonClass.viewMode = classesOfButton[style].type;
          currentButtonClass.style = classesOfButton[style].style;
-         Env.IoC.resolve('ILogger')
-            .warn('Button','Используются устаревшие стили. Используйте опции: viewMode = ' + currentButtonClass.viewMode + ', style = ' + currentButtonClass.style);
+         Logger
+            .warn('Button: Используются устаревшие стили. Используйте опции: viewMode = ' + currentButtonClass.viewMode + ', style = ' + currentButtonClass.style, self);
       }
       return currentButtonClass;
    }
