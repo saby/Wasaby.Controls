@@ -11,6 +11,7 @@
               <span
                     class="controls-DateLinkView__value {{ _styleClass }}_theme-{{_options.theme}} {{ _valueEnabledClass }}"
                     title="{{_options.tooltip}}"
+                    name="openDialogTarget"
                     on:click="_onClick()">
                  {{ _caption }}
               </span>
