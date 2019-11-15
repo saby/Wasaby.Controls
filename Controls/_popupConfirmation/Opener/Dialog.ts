@@ -18,6 +18,7 @@ import detailsTemplate = require('wml!Controls/_popupConfirmation/Opener/Dialog/
 // @ts-ignore
 import template = require('wml!Controls/_popupConfirmation/Opener/Dialog/Dialog');
 
+import {Logger} from 'UI/Utils';
 
 /**
  * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
@@ -154,7 +155,7 @@ var Submit = Control.extend({
    },
    _getMessage: function () {
       if (this._hasMarkup()) {
-         IoC.resolve('ILogger').error('Confirmation', 'В тексте сообщения присутствует ссылка. Вывод html-тегов должен реализовываться через задание шаблона.');
+         Logger.error('Confirmation: В тексте сообщения присутствует ссылка. Вывод html-тегов должен реализовываться через задание шаблона.', this);
          return MarkupConverter.htmlToJson('<span>' + this._options.message + '</span>');
       }
       return this._options.message;
