@@ -7,7 +7,7 @@ import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resou
 import {isEqual} from 'Types/object';
 import {constants, IoC} from 'Env/Env';
 import {List} from 'Types/collection';
-
+import {Logger} from 'UI/Utils';
 
 const KEY_CODE_F2 = 113;
 
@@ -74,7 +74,7 @@ var BaseLookupView = Control.extend({
         }
 
         if (options.suggestFooterTemplate) {
-            IoC.resolve('ILogger').warn('In the "Controls.lookup:Input" control, use "footerTemplate" option instead of "suggestFooterTemplate"');
+            Logger.warn('In the "Controls.lookup:Input" control, use "footerTemplate" option instead of "suggestFooterTemplate"', this);
         }
     },
 
