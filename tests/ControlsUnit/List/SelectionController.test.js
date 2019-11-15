@@ -118,8 +118,8 @@ define([
 
          it('change items and model', async function () {
             let newItems = new collection.RecordSet({
-               keyProperty: 'id',
-               rawData: items.slice()
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
             });
             let newCfg = Object.assign({}, cfg);
             await instance._beforeMount(cfg);

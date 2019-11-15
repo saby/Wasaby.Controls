@@ -156,15 +156,16 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
 
     _beforeUpdate: function (newOptions) {
         let
-           itemsChanged = newOptions.items !== this._options.items,
+           itemsIsChanged = newOptions.items !== this._options.items,
+           modelIsChanged = this._options.listModel !== newOptions.listModel,
            selectionChanged = !isEqual(newOptions.selectedKeys, this._multiselection.selectedKeys) ||
-           !isEqual(newOptions.excludedKeys, this._multiselection.excludedKeys);
+              !isEqual(newOptions.excludedKeys, this._multiselection.excludedKeys);
 
-        if (this._options.listModel !== newOptions.listModel) {
+        if (modelIsChanged) {
             this._multiselection.setListModel(newOptions.listModel);
         }
 
-        if (itemsChanged) {
+        if (itemsIsChanged) {
             this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
             newOptions.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
         }
@@ -173,7 +174,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
             this._multiselection.selectedKeys = newOptions.selectedKeys;
             this._multiselection.excludedKeys = newOptions.excludedKeys;
             _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
-        } else if (itemsChanged) {
+        } else if (itemsIsChanged || modelIsChanged) {
            this._multiselection.updateSelectionForRender();
         }
     },
