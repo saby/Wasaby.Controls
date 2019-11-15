@@ -7,6 +7,7 @@ define('Controls/Utils/hasHorizontalScroll',
       'use strict';
 
       return function hasHorizontalScroll(target) {
+         /* eslint-disable */
          var targetStyles = getComputedStyle(target);
 
          /**
@@ -44,9 +45,11 @@ define('Controls/Utils/hasHorizontalScroll',
 
          /**
           * The value of the scrollWidth property is an integer. The width can be fractional.
-          * In this case, the element that does not have a horizontal scroll will have a scrollWidth equal to the width rounded up.
+          * In this case,
+          * the element that does not have a horizontal scroll will have a scrollWidth equal to the width rounded up.
           * Therefore, when comparing scrollWidth and width, you need to round up the width.
           */
          return target.scrollWidth > Math.ceil(width);
+         /* eslint-enable */
       };
    });
