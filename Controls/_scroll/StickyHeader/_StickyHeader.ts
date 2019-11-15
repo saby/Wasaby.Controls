@@ -45,6 +45,15 @@ var _private = {
    _getNormalizedContainer: function(self) {
       //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
       return self._container.get ? self._container.get(0) : self._container;
+   },
+
+   _isSafari13: function(): boolean {
+      // TODO remove after complete https://online.sbis.ru/opendoc.html?guid=14d98228-de34-4ad3-92a3-4d7fe8770097
+      if (!Env.detection.safari) {
+         return false;
+      }
+      const safariVersion = parseInt(Env.detection.userAgent.match(/Version\/([0-9\.]*)/)[1], 10);
+      return safariVersion >= 13;
    }
 };
 
@@ -74,6 +83,7 @@ var StickyHeader = Control.extend({
     */
    _isMobilePlatform: Env.detection.isMobilePlatform,
    _isMobileAndroid: Env.detection.isMobileAndroid,
+   _isSafari13: _private._isSafari13(),
 
    _shadowVisible: true,
    _stickyHeadersHeight: null,
@@ -335,8 +345,8 @@ var StickyHeader = Control.extend({
       }
 
       // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
-      if (Env.detection.isMobilePlatform && Env.detection.IOSVersion >= 13 && position === 'bottom') {
-         return 'top: ' + (coord + this._container ? this._container.offsetHeight : 0) + 'px;';
+      if (this._isSafari13 && position === 'bottom') {
+         return 'top: ' + (coord + (this._container ? this._container.offsetHeight : 0)) + 'px;';
       }
 
       return position + ': -' + coord + 'px;';
@@ -344,7 +354,7 @@ var StickyHeader = Control.extend({
 
    _getBottomShadowStyle: function(): string {
       // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
-      if (this._container && Env.detection.isMobilePlatform && Env.detection.IOSVersion >= 13) {
+      if (this._container && this._isSafari13) {
          return 'bottom: unset; right: unset; top:' + this._container.offsetHeight + 'px;' +
              'width:' + this._container.offsetWidth + 'px;';
       }
