@@ -387,7 +387,9 @@ var HierarchySelection = Selection.extend({
    },
 
    _getRoot: function() {
-      return this._options.listModel.getRoot().getContents();
+      let rootItem = this._options.listModel.getRoot();
+
+      return rootItem && rootItem.getContents();
    },
 
    _selectedItemsIsLoaded: function(keys) {

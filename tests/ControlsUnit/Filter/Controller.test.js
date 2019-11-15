@@ -1,4 +1,4 @@
-define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Controls/_filter/HistoryUtils'], function(Filter, Deferred, entity, HistoryUtils) {
+define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Controls/_filter/HistoryUtils', 'Types/collection'], function(Filter, Deferred, entity, HistoryUtils, collection) {
 
    describe('Controls.Filter.Controller', function () {
 
@@ -834,11 +834,26 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          filterButtonItem = {
             name: 'testId4',
             value: 'testValue4',
+            resetValue: 'testValue4',
             visibility: true,
             viewMode: 'basic'
          };
          expectedMinItem = {
             name: 'testId4',
+            visibility: false,
+            viewMode: 'basic'
+         };
+         assert.deepStrictEqual(Filter._private.minimizeItem(filterButtonItem), expectedMinItem);
+
+         filterButtonItem = {
+            name: 'testId4',
+            value: 'testValue4',
+            visibility: true,
+            viewMode: 'basic'
+         };
+         expectedMinItem = {
+            name: 'testId4',
+            value: 'testValue4',
             visibility: false,
             viewMode: 'basic'
          };
@@ -892,6 +907,26 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          }
          assert.isTrue(errorCathed);
 
+      });
+
+      it('getHistoryByItems', function() {
+         const sandbox = sinon.createSandbox();
+         const historyItems = new collection.List({
+            items: [
+               new entity.Model()
+            ]
+         });
+         const filterItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField2: 'anyValue2'}];
+         sandbox.replace(HistoryUtils, 'getHistorySource', () => {
+            return {
+               getItems: () => historyItems,
+               getDataObject: () => [{
+                  id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
+               }]
+            };
+         });
+         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 0);
+         sandbox.restore();
       });
 
       it('getCalculatedFilter', function() {
