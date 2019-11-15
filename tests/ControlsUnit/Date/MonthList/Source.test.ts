@@ -192,6 +192,16 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
             }]
         }, {
             options: {
+                displayedRanges: [[new Date(2018, 0), new Date(2018, 6)]],
+                viewMode: 'month'
+            },
+            query: (new Query()).where({'id~': monthListUtils.dateToId(new Date(2019, 6))}),
+            resp: [{
+                id: monthListUtils.dateToId(new Date(2018, 7)),
+                type: ITEM_TYPES.stub
+            }]
+        }, {
+            options: {
                 displayedRanges: [[null, new Date(2018, 11)]],
                 viewMode: 'month'
             },

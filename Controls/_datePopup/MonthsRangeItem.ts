@@ -164,19 +164,15 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _onMonthBodyClick: function (e, date) {
-        if (!this._options.selectionProcessing) {
-            if (this._options.monthClickable) {
-                this._notify('monthClick', [date]);
-            } else if (this._monthsSelectionEnabled) {
-                this._selectionViewType = SELECTION_VEIW_TYPES.months;
-                this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-                this._notify('itemClick', [date]);
-            }
+        if (!this._options.selectionProcessing && this._options.monthClickable) {
+            this._notify('monthClick', [date]);
         }
     },
 
     _onMonthClick: function (e, date) {
         if (this._options.selectionProcessing || !this._options.monthClickable) {
+            this._selectionViewType = SELECTION_VEIW_TYPES.months;
+            this._notify('selectionViewTypeChanged', [this._selectionViewType]);
             this._notify('itemClick', [date]);
         }
     },

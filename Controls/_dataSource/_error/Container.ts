@@ -6,6 +6,8 @@ import { constants } from 'Env/Env';
 import { ViewConfig } from 'Controls/_dataSource/_error/Handler';
 import Mode from 'Controls/_dataSource/_error/Mode';
 // @ts-ignore
+import { isEqual } from 'Types/object';
+// @ts-ignore
 import { load } from 'Core/library';
 import { default as IContainer, IContainerConfig } from "Controls/_dataSource/_error/IContainer";
 
@@ -20,7 +22,6 @@ let getTemplate = (template: string | Control): Promise<Control> => {
     }
     return Promise.resolve(template);
 };
-
 /**
  * Компонент для отображения шаблона ошибки по данным контрола {@link Controls/_dataSource/_error/Controller}
  * @class Controls/_dataSource/_error/Container
@@ -33,6 +34,9 @@ export default class Container extends Control implements IContainer {
     private __viewConfig: Config;
     private __lastShowedId: number;
     protected _template = template;
+    _options: IContainerConfig;
+    _forceUpdate;
+    _notify;
     /**
      * Скрыть компонент, отображающий данные об ошибке
      * @method
@@ -63,6 +67,9 @@ export default class Container extends Control implements IContainer {
         this.__updateConfig(options);
     }
     protected _beforeUpdate(options: IContainerConfig) {
+        if (!options.viewConfig || isEqual(options.viewConfig, this._options.viewConfig)) {
+            return;
+        }
         this.__updateConfig(options);
     }
     protected _afterMount() {

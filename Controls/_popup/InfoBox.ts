@@ -13,9 +13,9 @@ import entity = require('Types/entity');
        * Контрол, отображающий всплывающую подсказку относительно указанного элемента.
        * Всплывающую подсказку вызывает событие, указанное в опции trigger.
        * В один момент времени на странице может отображаться только одна всплывающая подсказка.
-       * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ Подробнее}.
-       *
-       * <a href="/materials/demo-ws4-infobox">Демо-пример</a>.
+       * @remark
+       * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ здесь}.
+       * См. <a href="/materials/demo-ws4-infobox">демо-пример</a>.
        * @class Controls/_popup/InfoBox
        *
        * @public
@@ -54,10 +54,10 @@ import entity = require('Types/entity');
 /**
  * @name Controls/_popup/InfoBox#targetSide
  * @cfg {String} Сторона таргета, относительно которой будет позиционнироваться всплывающая подсказка.
- * @variant top Подсказка позиционнируется сверху от таргета
- * @variant bottom Подсказка позиционнируется снизу от таргета
- * @variant left Подсказка позиционнируется слева от таргета
- * @variant right Подсказка позиционнируется справа от таргета
+ * @variant top Подсказка позиционируется сверху от таргета
+ * @variant bottom Подсказка позиционируется снизу от таргета
+ * @variant left Подсказка позиционируется слева от таргета
+ * @variant right Подсказка позиционируется справа от таргета
  * @default top
  */
 
@@ -139,7 +139,7 @@ import entity = require('Types/entity');
 
 /**
  * @name Controls/_popup/InfoBox#templateOptions
- * @cfg {Object} Опции для котнрола, переданного в {@link template}
+ * @cfg {Object} Опции для контрола, переданного в {@link template}
  */
 
       /*
@@ -451,7 +451,7 @@ InfoBox.getDefaultOptions = function() {
  * @typedef {Object} PopupOptions
  * @description Конфигурация всплывающей подсказки.
  * @property {function|String} template Шаблон всплывающей подсказки
- * @property {Object} templateOptions Опции для котнрола, переданного в {@link template}
+ * @property {Object} templateOptions Опции для контрола, переданного в {@link Controls/_popup/InfoBox#template template}.
  * @property {String} trigger Определяет, какое событие будет иницировать открытие и закрытие всплывающей подсказки.
  * @property {String} targetSide Сторона таргета, относительно которой будет позиционнироваться всплывающая подсказка.
  * @property {String} alignment Выравнивание всплывающей подсказки относительно вызывающего её элемента.

@@ -5,7 +5,8 @@ define(
       'Types/source',
       'Types/collection',
       'Controls/history',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Core/nativeExtensions'
    ],
    function(filter, Clone, sourceLib, collection, history, Deferred) {
       describe('Filter:View', function() {
@@ -66,7 +67,7 @@ define(
                },
                viewMode: 'frequent'
             },
-            {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
+            {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic', editorOptions: {}},
             {name: 'sender', value: '', resetValue: '', viewMode: 'extended', visibility: false},
             {name: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false}
          ];
@@ -111,8 +112,8 @@ define(
 
             assert.deepStrictEqual(view._displayText, expectedDisplayText);
             assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
-            assert.isOk(view._configs.document._sourceController);
-            assert.isOk(view._configs.state._sourceController);
+            assert.isOk(view._configs.document.sourceController);
+            assert.isOk(view._configs.state.sourceController);
             assert.isFalse(view._hasSelectorTemplate);
 
             receivedState.configs.document.selectorTemplate = 'New Template';
@@ -129,8 +130,8 @@ define(
             view._beforeMount(defaultConfig).addCallback(function() {
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
                assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
-               assert.isOk(view._configs.document._sourceController);
-               assert.isOk(view._configs.state._sourceController);
+               assert.isOk(view._configs.document.sourceController);
+               assert.isOk(view._configs.state.sourceController);
                done();
             });
          });
@@ -211,7 +212,8 @@ define(
                document: {
                   items: Clone(defaultItems[1]),
                   displayProperty: 'title',
-                  keyProperty: 'id'},
+                  keyProperty: 'id',
+                  sourceController: 'old sourceController'},
                state: {}
             };
             filter.View._private.reload(view).addCallback(() => {
@@ -219,6 +221,23 @@ define(
                done();
             });
             assert.equal(view._configs.document.items.length, 7);
+         });
+
+
+         it('_private:isNeedReload', function() {
+            let oldItems = defaultConfig.source;
+            let newItems = Clone(defaultConfig.source);
+
+            let result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isFalse(result);
+
+            newItems[0].viewMode = 'basic';
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
+
+            newItems[2].viewMode = 'frequent';
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
          });
 
          it('openDetailPanel', function() {
@@ -537,6 +556,26 @@ define(
             assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
          });
 
+         it('_private:getFolderIds', function() {
+            const items = new collection.RecordSet({
+               rawData: [
+                  {key: '1', title: 'In any state', node: true, parent: null},
+                  {key: '2', title: 'In progress', node: false, parent: 1},
+                  {key: '3', title: 'Completed', node: false, parent: 1},
+                  {key: '4', title: 'Completed positive', node: true, parent: 1},
+                  {key: '5', title: 'Completed positive', node: true}
+               ],
+               keyProperty: 'key'
+            });
+            const folders = filter.View._private.getFolderIds({
+               items: items,
+               nodeProperty: 'node',
+               parentProperty: 'parent',
+               keyProperty: 'key'
+            });
+            assert.deepStrictEqual(folders, ['1', '5']);
+         });
+
          it('_private:updateHistory', function() {
             let view = getView(defaultConfig);
             view._source = Clone(defaultConfig.source);
@@ -590,7 +629,7 @@ define(
                   source: source[1].editorOptions.source,
                   emptyText: 'all state',
                   emptyKey: null,
-                  _sourceController: {hasMoreData: () => {return true;}},
+                  sourceController: {hasMoreData: () => {return true;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
@@ -676,7 +715,7 @@ define(
                },
                state: {
                   items: Clone(defaultItems[1]),
-                  _sourceController: {
+                  sourceController: {
                      load: () => {
                         isLoading = true; return Deferred.success();
                      },
@@ -708,7 +747,7 @@ define(
                      keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
-                  _sourceController: {hasMoreData: () => {return false;}},
+                  sourceController: {hasMoreData: () => {return false;}},
                   displayProperty: 'title',
                   keyProperty: 'id'},
                state: {
@@ -717,7 +756,7 @@ define(
                      keyProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
-                  _sourceController: {hasMoreData: () => {return false;}},
+                  sourceController: {hasMoreData: () => {return false;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}

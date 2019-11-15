@@ -149,6 +149,7 @@ define([
          // сорс грузит асинхронно
          setTimeout(function() {
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
+            const prevModel = ctrl._listViewModel;
             ctrl._beforeUpdate(cfg);
 
             // check saving loaded items after new viewModelConstructor
@@ -159,6 +160,7 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
+            assert.equal(prevModel._display, null);
             assert.isTrue(
                cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
                cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
@@ -218,6 +220,20 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingDESC, 'test'), sortingASC);
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
+      });
+
+      it('_private::isItemsSelectionAllowed', () => {
+         let options = {};
+         assert.isFalse(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = undefined;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 0;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 1;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
       });
 
       it('_private::needLoadNextPageAfterLoad', function() {
@@ -1105,14 +1121,20 @@ define([
                 })
              },
              baseControl = new lists.BaseControl(cfg);
+
+         const event = {
+            preventDefault: () => {}
+         };
+         const sandbox = sinon.createSandbox();
+
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          baseControl._children.selectionController = {
             onCheckBoxClick: (key, status) => {
                if (status) {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               } else {
                   baseControl._listViewModel._selectedKeys.pop(key);
+               } else {
+                  baseControl._listViewModel._selectedKeys.push(key);
                }
             }
          };
@@ -1121,6 +1143,12 @@ define([
          lists.BaseControl._private.enterHandler(baseControl);
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
 
+         baseControl._loadingIndicatorState = null;
+         sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
+
+         sandbox.restore();
       });
 
       it('loadToDirection up', async function() {
@@ -1421,6 +1449,14 @@ define([
            assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
 
            mockedControl._options.navigation.view = 'demand';
+           lists.BaseControl._private.updateShadowMode(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
+
+           mockedControl._options.navigation.view = 'pages';
+           lists.BaseControl._private.updateShadowMode(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
+
+           mockedControl._options.navigation.view = 'maxCount';
            lists.BaseControl._private.updateShadowMode(mockedControl);
            assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
        });
@@ -2160,10 +2196,12 @@ define([
          it('itemsChanged', async function() {
             baseControl._itemsChanged = true;
             await baseControl._beforeUpdate(cfg);
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 2);
          });
          it('_onAfterEndEdit', function() {
             baseControl._onAfterEndEdit({}, {});
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 3);
          });
          it('update on recreating source', async function() {
@@ -2184,9 +2222,13 @@ define([
                viewModelConstructor: lists.ListViewModel
             };
             await baseControl._beforeUpdate(newCfg);
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
-
+         it('without listViewModel should not call update', function() {
+            baseControl._listViewModel = null;
+            assert.equal(actionsUpdateCount, 4);
+         });
       });
 
       describe('resetScrollAfterReload', function() {
@@ -2229,6 +2271,9 @@ define([
             baseControl._isScrollShown = true;
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isTrue(baseControl._resetScrollAfterReload);
+            await baseControl._afterUpdate(cfg);
+            assert.isFalse(doScrollNotified);
+            baseControl._shouldNotifyOnDrawItems = true;
             await baseControl._afterUpdate(cfg);
             assert.isTrue(doScrollNotified);
 
@@ -2599,6 +2644,7 @@ define([
                },
                itemActions: {
                   updateItemActions: () => {
+                     assert.isTrue(called);
                      actionsUpdated = true;
                   }
                }
@@ -4469,7 +4515,7 @@ define([
           };
 
           lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
-          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 400)
+          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 500);
        });
 
        it('setIndicatorContainerHeight: list smaller then scrollContainer', function () {

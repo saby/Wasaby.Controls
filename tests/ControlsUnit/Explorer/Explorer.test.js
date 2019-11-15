@@ -484,6 +484,7 @@ define([
             var
                explorer = new explorerMod.View({}),
                isEventResultReturns = false,
+               cancelEditCalled = false,
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
@@ -497,6 +498,9 @@ define([
                treeControl: {
                   _children: {
 
+                  },
+                  cancelEdit: function() {
+                     cancelEditCalled = true;
                   }
                }
             };
@@ -523,6 +527,7 @@ define([
                nativeEvent: 123
             });
             assert.isTrue(isEventResultReturns);
+            assert.isTrue(cancelEditCalled);
             assert.deepEqual({
                ...explorer._restoredMarkedKeys,
                itemId: {

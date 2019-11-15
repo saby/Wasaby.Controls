@@ -86,6 +86,7 @@ var _private = {
             !dispItem.isRoot() &&
             (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
         ) {
+            self._children.baseControl.showIndicator();
             filter[options.parentProperty] = nodeKey;
             _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
                 .load(filter, options.sorting)
@@ -100,6 +101,7 @@ var _private = {
                     if (options.nodeLoadCallback) {
                         options.nodeLoadCallback(list, nodeKey);
                     }
+                    self._children.baseControl.hideIndicator();
                 });
         } else {
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
@@ -147,6 +149,7 @@ var _private = {
     },
 
     loadMore: function(self, dispItem) {
+        self._children.baseControl.showIndicator();
         var
             filter = cClone(self._options.filter),
             listViewModel = self._children.baseControl.getViewModel(),
@@ -162,6 +165,7 @@ var _private = {
             if (self._options.task1177940587 && self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);
             }
+            self._children.baseControl.hideIndicator();
         });
     },
     onNodeRemoved: function(self, nodeId) {
@@ -185,7 +189,7 @@ var _private = {
         let expandedItemsKeys: Array[number | string | null] = [];
         let isExpandAll: boolean;
 
-        if (baseControl) {
+        if (baseControl && !self._updateExpandedItemsAfterReload) {
             const viewModel = baseControl.getViewModel();
             isExpandAll = viewModel.isExpandAll();
             if (!isExpandAll) {
@@ -229,6 +233,10 @@ var _private = {
             const modelRoot = viewModel.getRoot();
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
+            if (self._updateExpandedItemsAfterReload) {
+                viewModel.setExpandedItems(options.expandedItems);
+                self._updateExpandedItemsAfterReload = false;
+            }
             const modelExpandedItems = viewModel.getExpandedItems();
             const isDeepReload = _private.isDeepReload(options, self._deepReload);
 
@@ -293,8 +301,9 @@ var _private = {
 
         filter[self._options.parentProperty] = nodes.concat(_private.getReloadableNodes(viewModel, key, keyProperty, nodeProperty));
 
-        return _private.createSourceController(self._options.source, self._options.navigation).load(filter).addCallback(function(result) {
+        return _private.createSourceControllerForNode(self, key, self._options.source, self._options.navigation).load(filter).addCallback(function(result) {
             _private.applyReloadedNodes(viewModel, key, keyProperty, nodeProperty, result);
+            viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
             return result;
         });
     },
@@ -388,6 +397,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
     _expandOnDragData: null,
+    _updateExpandedItemsAfterReload: false,
     _notifyHandler: tmplNotify,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
@@ -417,7 +427,11 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
         //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
         if (newOptions.expandedItems) {
-            this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
+            if (isEqual(this._options.filter, newOptions.filter) && this._options.source === newOptions.source) {
+                this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
+            } else {
+                this._updateExpandedItemsAfterReload = true;
+            }
         }
         if (newOptions.collapsedItems) {
             this._children.baseControl.getViewModel().setCollapsedItems(newOptions.collapsedItems);
@@ -454,7 +468,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
                 this._children.baseControl.reload();
             }
         }
-        if ((oldOptions.groupMethod !== this._options.groupMethod) || (oldOptions.viewModelConstructor !== this._viewModelConstructor)) {
+        if (oldOptions.groupMethod !== this._options.groupMethod || oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         }
     },
@@ -627,6 +641,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._clearTimeoutForExpandOnDrag();
     }
 });
+TreeControl._theme = ['Controls/treeGrid'];
 
 TreeControl.getDefaultOptions = function() {
     return {
@@ -635,7 +650,8 @@ TreeControl.getDefaultOptions = function() {
         markItemByExpanderClick: true,
         expandByItemClick: false,
         root: null,
-        columns: DEFAULT_COLUMNS_VALUE
+        columns: DEFAULT_COLUMNS_VALUE,
+        selectionStrategy: 'Controls/operations:DeepTreeSelectionStrategy'
     };
 };
 

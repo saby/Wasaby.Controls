@@ -9,13 +9,13 @@ import 'css!theme?Controls/popupTemplate';
 import * as cInstance from 'Core/core-instance';
 
 const DEFAULT_OPTIONS = {
-    horizontalAlign: {
-        side: 'right',
-        offset: 0
+    direction: {
+        horizontal: 'right',
+        vertical: 'bottom'
     },
-    verticalAlign: {
-        side: 'bottom',
-        offset: 0
+    offset: {
+        horizontal: 0,
+        vertical: 0
     },
     targetPoint: {
         vertical: 'top',
@@ -32,22 +32,24 @@ let _fakeDiv;
 const _private = {
     prepareOriginPoint(config) {
         const newCfg = cClone(config);
-        newCfg.verticalAlign = newCfg.verticalAlign || {};
-        newCfg.horizontalAlign = newCfg.horizontalAlign || {};
-        if (config.direction && typeof (config.direction) === 'object') {
-            if ('horizontal' in config.direction) {
-                newCfg.horizontalAlign.side = config.direction.horizontal;
+        newCfg.direction = newCfg.direction || {};
+        newCfg.offset = newCfg.offset || {};
+
+        if (newCfg.horizontalAlign && typeof (config.horizontalAlign) === 'object') {
+            if ('side' in newCfg.horizontalAlign) {
+                newCfg.direction.horizontal = newCfg.horizontalAlign.side;
             }
-            if ('vertical' in config.direction) {
-                newCfg.verticalAlign.side = config.direction.vertical;
+            if ('offset' in newCfg.horizontalAlign) {
+                newCfg.offset.horizontal = newCfg.horizontalAlign.offset;
             }
         }
-        if (config.offset) {
-            if ('horizontal' in config.offset) {
-                newCfg.horizontalAlign.offset = config.offset.horizontal;
+
+        if (newCfg.verticalAlign && typeof (config.verticalAlign) === 'object') {
+            if ('side' in newCfg.verticalAlign) {
+                newCfg.direction.vertical = newCfg.verticalAlign.side;
             }
-            if ('vertical' in config.offset) {
-                newCfg.verticalAlign.offset = config.offset.vertical;
+            if ('offset' in newCfg.verticalAlign) {
+                newCfg.offset.vertical = newCfg.verticalAlign.offset;
             }
         }
         if (typeof config.fittingMode === 'string') {
@@ -74,7 +76,7 @@ const _private = {
         cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
         const popupCfg = self._getPopupConfig(cfg, sizes);
 
-        cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
+        cfg.position = StickyStrategy.getPosition(popupCfg, self._getTargetCoords(cfg, sizes));
 
         cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
 
@@ -91,8 +93,8 @@ const _private = {
     getOrientationClasses(cfg) {
         let className = 'controls-Popup-corner-vertical-' + cfg.targetPoint.vertical;
         className += ' controls-Popup-corner-horizontal-' + cfg.targetPoint.horizontal;
-        className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
-        className += ' controls-Popup-align-vertical-' + cfg.align.vertical.side;
+        className += ' controls-Popup-align-horizontal-' + cfg.direction.horizontal;
+        className += ' controls-Popup-align-vertical-' + cfg.direction.vertical;
         className += ' controls-Sticky__reset-margins';
         return className;
     },
@@ -110,68 +112,19 @@ const _private = {
         return cfg.popupOptions.target || (document && document.body);
     },
 
-    _getTargetCoords(cfg, sizes) {
-        if (cfg.popupOptions.nativeEvent) {
-            const top = cfg.popupOptions.nativeEvent.clientY;
-            const left = cfg.popupOptions.nativeEvent.clientX;
-            const size = 1;
-            const positionCfg = {
-                verticalAlign: {
-                    side: 'bottom'
-                },
-                horizontalAlign: {
-                    side: 'right'
-                }
-            };
-            cMerge(cfg.popupOptions, positionCfg);
-            sizes.margins = {top: 0, left: 0};
-            return {
-                width: size,
-                height: size,
-                top,
-                left,
-                bottom: top + size,
-                right: left + size,
-                topScroll: 0,
-                leftScroll: 0
-            };
-        }
-
-        if (!document) {
-            return {
-                width: 0,
-                height: 0,
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                topScroll: 0,
-                leftScroll: 0
-            };
-        }
-        return TargetCoords.get(_private.getTargetNode(cfg));
-    },
-
-    isTargetVisible(item) {
-        if (!item.popupOptions._elementFromPoint || !item.popupOptions.target) {
-            const targetCoords = _private._getTargetCoords(item, {});
-            return !!targetCoords.width;
-        }
-        // определяю видимость таргета. Он может быть в доме, но скрыт под скроллом
-        const target = item.popupOptions.target[0] || item.popupOptions.target;
-        const targetRect = target.getBoundingClientRect();
-        let elemFromPoint = document.elementFromPoint(targetRect.x + 1, targetRect.y + 1);
-        while (elemFromPoint && elemFromPoint !== target) {
-            elemFromPoint = elemFromPoint.parentElement;
-        }
-        return !!elemFromPoint;
-    },
-
     prepareStickyPosition(cfg) {
         return {
-            horizontalAlign: cfg.align.horizontal,
-            verticalAlign: cfg.align.vertical,
             targetPoint: cfg.targetPoint,
+            direction: cfg.direction,
+            offset: cfg.offset,
+            horizontalAlign: { // TODO: to remove
+                side: cfg.direction.horizontal,
+                offset: cfg.offset.horizontal
+            },
+            verticalAlign: { // TODO: to remove
+                side: cfg.direction.vertical,
+                offset: cfg.offset.vertical
+            },
             corner: cfg.corner // TODO: to remove
         };
     },
@@ -249,7 +202,7 @@ class StickyController extends BaseController {
     _private = _private;
 
     elementCreated(item, container) {
-        if (_private.isTargetVisible(item)) {
+        if (this._isTargetVisible(item)) {
             _private.setStickyContent(item);
             item.position.position = undefined;
             this.prepareConfig(item, container);
@@ -261,9 +214,9 @@ class StickyController extends BaseController {
     elementUpdated(item, container) {
         _private.setStickyContent(item);
         item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
-        if (_private.isTargetVisible(item)) {
+        if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
-            item.position = StickyStrategy.getPosition(item.positionConfig, _private._getTargetCoords(item, item.positionConfig.sizes));
+            item.position = StickyStrategy.getPosition(item.positionConfig, this._getTargetCoords(item, item.positionConfig.sizes));
 
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
             // Open Windows are not placed in the workspace and chrome scrollit body.
@@ -353,10 +306,8 @@ class StickyController extends BaseController {
     _getPopupConfig(cfg, sizes) {
         return {
             targetPoint: cMerge(cClone(DEFAULT_OPTIONS.targetPoint), cfg.popupOptions.targetPoint || {}),
-            align: {
-                horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
-                vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})
-            },
+            direction: cMerge(cClone(DEFAULT_OPTIONS.direction), cfg.popupOptions.direction || {}),
+            offset: cMerge(cClone(DEFAULT_OPTIONS.offset), cfg.popupOptions.offset || {}),
             config: {
                 width: cfg.popupOptions.width,
                 height: cfg.popupOptions.height,
@@ -368,6 +319,62 @@ class StickyController extends BaseController {
             sizes,
             fittingMode: cfg.popupOptions.fittingMode
         };
+    }
+
+    private _getTargetCoords(cfg, sizes) {
+        if (cfg.popupOptions.nativeEvent) {
+            const top = cfg.popupOptions.nativeEvent.clientY;
+            const left = cfg.popupOptions.nativeEvent.clientX;
+            const size = 1;
+            const positionCfg = {
+                direction: {
+                    horizontal: 'right',
+                    vertical: 'bottom'
+                }
+            };
+            cMerge(cfg.popupOptions, positionCfg);
+            sizes = sizes || {};
+            sizes.margins = {top: 0, left: 0};
+            return {
+                width: size,
+                height: size,
+                top,
+                left,
+                bottom: top + size,
+                right: left + size,
+                topScroll: 0,
+                leftScroll: 0
+            };
+        }
+
+        if (!document) {
+            return {
+                width: 0,
+                height: 0,
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                topScroll: 0,
+                leftScroll: 0
+            };
+        }
+        return TargetCoords.get(_private.getTargetNode(cfg));
+    }
+
+    private _isTargetVisible(item): boolean {
+        if (!item.popupOptions._elementFromPoint || !item.popupOptions.target) {
+            const targetCoords = this._getTargetCoords(item, {});
+            return !!targetCoords.width;
+        }
+        // определяю видимость таргета. Он может быть в доме, но скрыт под скроллом
+        const target = item.popupOptions.target[0] || item.popupOptions.target;
+        const targetRect = target.getBoundingClientRect();
+        let elemFromPoint = document.elementFromPoint(targetRect.x + 1, targetRect.y + 1);
+        while (elemFromPoint && elemFromPoint !== target) {
+            elemFromPoint = elemFromPoint.parentElement;
+        }
+        return !!elemFromPoint;
     }
 }
 

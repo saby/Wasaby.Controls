@@ -120,11 +120,18 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       });
 
       it('Suggest::_close', function() {
-         var suggestComponent = new suggestMod._InputController();
+         const suggestComponent = new suggestMod._InputController();
+         let propagationStopped = false;
+         const event = {
+            stopPropagation: () => {
+               propagationStopped = true;
+            }
+         };
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
 
-         suggestComponent._close();
+         suggestComponent._close(event);
+         assert.isTrue(propagationStopped);
          assert.equal(suggestComponent._loading, null);
          assert.equal(suggestComponent._showContent, false);
       });
@@ -249,8 +256,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var suggest = new suggestMod._InputController();
          var errorFired = false;
          var options = {
-           searchDelay: 300
+            searchDelay: 300,
+            suggestState: true
          };
+
+         suggest._loading = null;
          suggest.saveOptions(options);
          suggest._searchDelay = 0;
          suggest._children = {};
@@ -263,6 +273,17 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
          assert.equal(options.searchDelay, suggest._searchDelay);
          assert.isFalse(errorFired);
+         assert.equal(suggest._loading, null);
+
+         suggest._loading = true;
+         suggest._searchEnd();
+         assert.equal(suggest._loading, null);
+
+         suggest._loading = true;
+         suggest._searchEnd({
+            data: new collection.RecordSet({items: [1]})
+         });
+         assert.isFalse(suggest._loading);
       });
 
       it('Suggest::_private.searchErrback', function() {
@@ -377,6 +398,9 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var self = getComponentObject();
          var suggestComponent = new suggestMod._InputController();
          var suggestState = false;
+         const event = {
+            stopPropagation: () => {}
+         };
 
          if (!document) {
             suggestMod._InputController._private.getActiveElement = function() {
@@ -423,7 +447,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
                assert.isTrue(suggestState);
                assert.equal(suggestComponent._searchValue, '');
 
-               suggestComponent._close();
+               suggestComponent._close(event);
                suggestComponent._filter = {};
                suggestComponent._inputClicked();
 
@@ -431,7 +455,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
                   assert.isTrue(suggestState);
                   assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
 
-                  suggestComponent._close();
+                  suggestComponent._close(event);
                   self._options.readOnly = true;
                   suggestComponent._inputActivated();
                   suggestComponent._dependenciesDeferred.addCallback(function() {

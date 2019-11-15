@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ui_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls" package="Платформа" responsible="Крайнов Д.О." required="1" version="1.00">
 
-  <description>Новая библиотека контролов реализованных на технологии VDOM</description>
+  <description>Готовый набор визуальных компонентов, отвечающих корпоративным стандартам. Позволяют быстро спроектировать визуальную составляющую веб-приложения.</description>
 
     <depends>
       <module id="686f183d-0bcc-4732-b4e4-6016c2a67a0f" name="Types"/>

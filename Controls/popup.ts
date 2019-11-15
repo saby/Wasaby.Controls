@@ -10,6 +10,8 @@
  * @includes Sticky Controls/_popup/Opener/Sticky
  * @includes InfoboxTarget Controls/_popup/InfoBox
  * @includes PreviewerTarget Controls/_popup/Previewer
+ * @includes InfoboxButton Controls/_popup/InfoBox/InfoboxButton
+ * @includes EditContainer Controls/_popup/Opener/Edit/Container
  * @public
  * @author Крайнов Д.О.
  */
@@ -25,6 +27,8 @@
  * @includes Sticky Controls/_popup/Opener/Sticky
  * @includes InfoboxTarget Controls/_popup/InfoBox
  * @includes PreviewerTarget Controls/_popup/Previewer
+ * @includes InfoboxButton Controls/_popup/InfoBox/InfoboxButton
+ * @includes EditContainer Controls/_popup/Opener/Edit/Container
  * @public
  * @author Крайнов Д.О.
  */

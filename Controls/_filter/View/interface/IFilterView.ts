@@ -57,14 +57,6 @@
  */
 
 /**
- * @typedef {String} FilterType Тип значения в поле фильтра.
- * Если тип поля не указан, он будет автоматически определяться по значению фильтра.
- * Для кажого типа будет построент соответствующий редактор этого типа.
- * На данный момент поддерживается только 1 значение - dataRange.
- * @variant dateRange Период дат. При установке этого типа, будет построен контрол выбора периода в строке фильтра.
- */
-
-/**
  * @typedef {Object} FilterItem
  * @property {String} name Имя поля фильтра.
  * @property {*} value Текущее значение поля фильтра.
@@ -75,7 +67,12 @@
  * @property {EditorOptions} editorOptions Опции для редактора.
  * @property {FilterViewMode} viewMode Режим отображения фильтра.
  * @property {Boolean} visibility Отображение параметра фильтрации в блоке "Еще можно отобрать".
- * @property {FilterType} type Тип значения в поле фильтра.
+ * @property {String} type Тип значения в поле фильтра.
+ * Если тип поля не указан, он будет автоматически определяться по значению фильтра.
+ * Для каждого типа будет построен соответствующий редактор этого типа.
+ * 
+ * В настоящей версии фреймворка поддерживается только 1 значение — dataRange.
+ * При его установке будет построен контрол выбора периода в строке фильтра.
  */
 
 /*
@@ -100,7 +97,7 @@
  * TMPL:
  * <pre>
  *    <Controls.filter:View
- *       source={{_source}}
+ *       source="{{_source}}"
  *       detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
  *       panelTemplateName="Controls/filterPopup:SimplePanel"/>
  * </pre>
@@ -148,7 +145,7 @@
  * TMPL:
  * <pre>
  *    <Controls.filter:View
- *       source={{_source}}
+ *       source="{{_source}}" 
  *       detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
  *       panelTemplateName="Controls/filterPopup:SimplePanel"/>
  * </pre>
@@ -190,7 +187,7 @@
  * @cfg {String} Шаблон всплывающей панели, которая открывается после клика по кнопке.
  * @remark
  * В качестве шаблона рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}
- * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
+ * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
  * Важно: для ленивой загрузки шаблона в опции укажите путь до контрола.
  * @example
  * Пример настройки параметров для двух фильтров.
@@ -218,7 +215,7 @@
  *       { name: 'deleted', value: true, resetValue: false, textValue: 'Deleted', viewMode: extended }
  *    ];
  * </pre>
- * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
+ * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>Руководство по настройке быстрого фильтра</a>
  * @see Controls.filterPopup:DetailPanel
  */
 
@@ -227,7 +224,7 @@
  * @cfg {String} Template for the pop-up panel, that opens after clicking on the button.
  * @remark
  * As a template, it is recommended to use the control {@link Controls/filterPopup:DetailPanel}
- * The description of setting up the filter panel you can read <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>here</a>.
+ * The description of setting up the filter panel you can read <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>here</a>.
  * Important: for lazy loading template in the option give the path to the control
  * @example
  * Example setting options for two filters.
@@ -387,13 +384,9 @@
  * @name Controls/_filter/View/interface/IFilterView#alignment
  * @cfg {String} Задаёт выравнивание элементов объединённого фильтра.
  * @remark
- * В значении "right" кнопка-иконка прикрепляется к правому краю.
- * Панель фильтрации открывается влево.
- * Быстрые фильтры и выбранные параметры фильтрации отображаются слева от кнопки-иконки.
+ * В значении "right" кнопка-иконка прикрепляется к правому краю. При этом панель фильтрации, быстрые фильтры и выбранные параметры фильтрации будут открываться/отображаться слева от кнопки-иконки.
  * 
- * В значении "left" кнопка-иконка прикрепляется к левому краю.
- * Панель фильтрации открывается вправо.
- * Быстрые фильтры и выбранные параметры фильтрации отображаются справа от кнопки-иконки.
+ * В значении "left" кнопка-иконка прикрепляется к левому краю, а поэтому отображение остальных элементов контрола будет справа.
  * @default right
  * @example
  * Пример открытия панели фильтров справа:

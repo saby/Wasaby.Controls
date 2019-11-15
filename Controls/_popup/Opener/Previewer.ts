@@ -19,7 +19,7 @@ const clearOpeningTimeout = (config) => {
     }
 };
 
-const prepateConfig = (config) => {
+const prepareConfig = (config) => {
     const newConfig = cClone(config);
 
     newConfig.closeOnOutsideClick = true;
@@ -29,7 +29,7 @@ const prepateConfig = (config) => {
 };
 
 const open = (callback: Function, config: object, type?: string): void => {
-    const newCfg = prepateConfig(config);
+    const newCfg = prepareConfig(config);
     clearOpeningTimeout(newCfg);
     clearClosingTimeout(newCfg);
 
@@ -68,11 +68,11 @@ const cancel = (config, action: string): void => {
 };
 
 class Previewer extends BaseOpener {
-    private _currentConfig;
+    private _currentConfig: Object = {};
 
     protected _beforeUnmount(): void {
-        clearClosingTimeout();
-        clearOpeningTimeout();
+        clearClosingTimeout(this._currentConfig);
+        clearOpeningTimeout(this._currentConfig);
     }
 
     open(cfg: object, type?: string): void {

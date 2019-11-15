@@ -9,6 +9,7 @@ import {IoC, constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
+import 'css!theme?Controls/tile';
 import 'Types/entity';
 
 
@@ -41,7 +42,7 @@ import 'Types/entity';
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
-               self._options.itemOpenHandler(root);
+               self._options.itemOpenHandler(root, self._items);
             }
             self._forceUpdate();
          },
@@ -139,6 +140,11 @@ import 'Types/entity';
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
          },
+         setViewModeSync: function(self, viewMode, cfg): void {
+            self._viewMode = viewMode;
+            _private.setVirtualScrolling(self, self._viewMode, cfg);
+            _private.setViewConfig(self, self._viewMode);
+         },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
@@ -149,16 +155,13 @@ import 'Types/entity';
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               result = _private.loadTileViewMode();
+               result = _private.loadTileViewMode().then(() => {
+                  _private.setViewModeSync(self, viewMode, cfg);
+               });
             } else {
                result = Promise.resolve();
+               _private.setViewModeSync(self, viewMode, cfg);
             }
-
-            result.then(() => {
-               self._viewMode = viewMode;
-               _private.setVirtualScrolling(self, self._viewMode, cfg);
-               _private.setViewConfig(self, self._viewMode);
-            });
 
             return result;
          },
@@ -339,7 +342,9 @@ import 'Types/entity';
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode, cfg);
-            this._children.treeControl.resetExpandedItems();
+            if (cfg.searchNavigationMode !== 'expand') {
+               this._children.treeControl.resetExpandedItems();
+            }
          }
          if (cfg.virtualScrolling !== this._options.virtualScrolling) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);
@@ -386,6 +391,7 @@ import 'Types/entity';
                 _private.setRestoredKeyObject(this, item.getId());
                 _private.setRoot(this, item.getId());
                 this._isGoingFront = true;
+                this.cancelEdit();
             }
          }
          event.stopPropagation();

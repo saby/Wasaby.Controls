@@ -1076,71 +1076,81 @@ define([
          treeGrid.TreeControl._private.beforeLoadToDirectionCallback({ _root: 'myCurrentRoot' }, filter, { parentProperty: 'parent', selectedKeys: [1], source: new sourceLib.Memory() });
          assert.deepEqual(filter.entries.get('marked'), ['1']);
       });
-      it('TreeControl._private.loadMore', function() {
+      it('TreeControl._private.loadMore', function () {
          var
-            setHasMoreCalled = false,
-            mergeItemsCalled = false,
-            dataLoadCallbackCalled = false,
-            loadMoreSorting,
-            mockedTreeControlInstance = {
-               _options: {
-                  filter: {
-                     testParam: 11101989
-                  },
-                  dataLoadCallback: function() {
-                     dataLoadCallbackCalled = true;
-                  },
-                  task1177940587: true,
-                  sorting: [{'test': 'ASC'}],
-                  parentProperty: 'parent',
-                  uniqueKeys: true
-               },
-               _nodesSourceControllers: {
-                  1: {
-                     load: (filter, sorting) => {
-                        let result = new Deferred();
-                        loadMoreSorting = sorting;
-                        result.callback();
-                        return result;
-                     },
-                     hasMoreData: function() {
-                        return true;
-                     }
-                  }
-               },
-               _children: {
-                  baseControl: {
-                     getViewModel: function() {
-                        return {
-                           setHasMoreStorage: function() {
-                              setHasMoreCalled = true;
-                           },
-                           mergeItems: function() {
-                              mergeItemsCalled = true;
-                           }
-                        };
-                     }
-                  }
-               }
-            },
-            dispItem = {
-               getContents: function() {
-                  return {
-                     getId: function() {
-                        return 1;
-                     }
-                  };
-               }
-            };
+             setHasMoreCalled = false,
+             mergeItemsCalled = false,
+             isIndicatorHasBeenShown = false,
+             isIndicatorHasBeenHidden = false,
+             dataLoadCallbackCalled = false,
+             loadMoreSorting,
+             mockedTreeControlInstance = {
+                _options: {
+                   filter: {
+                      testParam: 11101989
+                   },
+                   dataLoadCallback: function () {
+                      dataLoadCallbackCalled = true;
+                   },
+                   task1177940587: true,
+                   sorting: [{'test': 'ASC'}],
+                   parentProperty: 'parent',
+                   uniqueKeys: true
+                },
+                _nodesSourceControllers: {
+                   1: {
+                      load: (filter, sorting) => {
+                         let result = new Deferred();
+                         loadMoreSorting = sorting;
+                         result.callback();
+                         return result;
+                      },
+                      hasMoreData: function () {
+                         return true;
+                      }
+                   }
+                },
+                _children: {
+                   baseControl: {
+                      getViewModel: function () {
+                         return {
+                            setHasMoreStorage: function () {
+                               setHasMoreCalled = true;
+                            },
+                            mergeItems: function () {
+                               mergeItemsCalled = true;
+                            }
+                         };
+                      },
+                      showIndicator() {
+                         isIndicatorHasBeenShown = true;
+                      },
+                      hideIndicator() {
+                         isIndicatorHasBeenHidden = true;
+                      }
+                   }
+                }
+             },
+             dispItem = {
+                getContents: function () {
+                   return {
+                      getId: function () {
+                         return 1;
+                      }
+                   };
+                }
+             };
          dataLoadCallbackCalled = false;
          treeGrid.TreeControl._private.loadMore(mockedTreeControlInstance, dispItem);
          assert.deepEqual({
-            testParam: 11101989
-         }, mockedTreeControlInstance._options.filter,
-         'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
+                testParam: 11101989
+             }, mockedTreeControlInstance._options.filter,
+             'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
          assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(dataLoadCallbackCalled, 'Invalid call "dataLoadCallbackCalled" by "TreeControl._private.loadMore(...)".');
+         assert.isTrue(isIndicatorHasBeenShown);
+         assert.isTrue(isIndicatorHasBeenHidden);
          assert.deepEqual(loadMoreSorting, [{'test': 'ASC'}]);
       });
       describe('EditInPlace', function() {
@@ -1326,7 +1336,7 @@ define([
                setTimeout(()=>{
                   treeControl1._beforeUpdate(_cfg);
                   setTimeout(()=>{
-                     assert.deepEqual([1], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
+                     assert.deepEqual([], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
                      done();
                   }, 10);
                }, 10);
@@ -1527,7 +1537,15 @@ define([
             keyProperty: 'id',
             parentProperty: 'Раздел',
             nodeProperty: 'Раздел@',
-            filter: {}
+            filter: {},
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 10,
+                  page: 0,
+                  hasMore: false
+               }
+            }
          };
 
          var treeGridViewModel = new treeGrid.ViewModel(cfg);
@@ -1549,7 +1567,8 @@ define([
          assert.deepEqual(oldItems.getRawData(), getHierarchyData());
 
          treeControl.reloadItem(0, {}, 'depth').addCallback(function() {
-            var newItems = treeControl._children.baseControl.getViewModel().getItems();
+            const viewModel = treeControl._children.baseControl.getViewModel();
+            const newItems = viewModel.getItems()
             assert.deepEqual(
                newItems.getRawData(),
                [
@@ -1558,12 +1577,20 @@ define([
                   {id: 4, 'Раздел@': null, "Раздел": null}
                ]
             );
+            assert.deepEqual(
+               viewModel._model.getHasMoreStorage(),
+               {
+                  0: false
+               }
+            )
             done();
          });
       });
 
       it('toggle node by click', async function() {
          let
+             isIndicatorHasBeenShown = false,
+             isIndicatorHasBeenHidden = false,
              savedMethod = treeGrid.TreeControl._private.createSourceController,
              data = [
                 {id: 0, 'Раздел@': true, "Раздел": null},
@@ -1597,6 +1624,12 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
+               },
+               showIndicator() {
+                  isIndicatorHasBeenShown = true;
+               },
+               hideIndicator() {
+                  isIndicatorHasBeenHidden = true;
                }
             }
          };
@@ -1622,41 +1655,53 @@ define([
          assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
 
          const fakeEvent = {
-             stopPropagation: () => {}
+            stopPropagation: () => {
+            }
+         };
+
+         const assertTestCaseResult = (expandedItems, useIndicator) => {
+            assert.deepEqual(treeGridViewModel.getExpandedItems(), expandedItems);
+            if (useIndicator !== false) {
+               assert.isTrue(isIndicatorHasBeenShown);
+               assert.isTrue(isIndicatorHasBeenHidden);
+            } else {
+               assert.isFalse(isIndicatorHasBeenShown);
+               assert.isFalse(isIndicatorHasBeenHidden);
+            }
+            isIndicatorHasBeenShown = false;
+            isIndicatorHasBeenHidden = false;
          };
 
          // Expanding. Child items has not loaded
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0]);
+         assertTestCaseResult([0]);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
+         assertTestCaseResult([0, 1]);
 
+         // Leaf
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
-
+         assertTestCaseResult([0, 1], false);
 
          // Closing. Child items loaded
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [1]);
+         assertTestCaseResult([1], false);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+         assertTestCaseResult([], false);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
-
+         assertTestCaseResult([], false);
 
          // Expanding. Child items loaded
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0]);
+         assertTestCaseResult([0], false);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
+         assertTestCaseResult([0, 1], false);
 
          treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
-
+         assertTestCaseResult([0, 1], false);
 
          treeGrid.TreeControl._private.createSourceController = savedMethod;
       });
@@ -1697,7 +1742,11 @@ define([
                baseControl: {
                    getViewModel: function() {
                        return treeGridViewModel;
-                   }
+                   },
+                  showIndicator() {
+                  },
+                  hideIndicator() {
+                  }
                }
            };
 

@@ -52,7 +52,7 @@ var EditingRow = Control.extend({
           TODO: Нужно убрать когда добавят возможность подписываться на разных фазах
           https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
         */
-        e.preventItemEvent = true;
+        e.stopped = true;
     }
 });
 

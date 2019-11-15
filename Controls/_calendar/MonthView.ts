@@ -76,8 +76,8 @@ var MonthView = BaseControl.extend({
       return {};
    },
 
-   _dayClickHandler: function(event, item) {
-      if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable && !this._options.readOnly) {
+   _dayClickHandler: function(event, item, mode, isCurrentMonth) {
+      if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable && !this._options.readOnly && (mode === 'extended' || isCurrentMonth)) {
          this._notify('itemClick', [item]);
       }
    },

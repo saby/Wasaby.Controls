@@ -10,7 +10,6 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @class Controls/_decorator/Money
  * @extends Core/Control
  *
- * @mixes Controls/_decorator/Money/Styles
  * @mixes Controls/_interface/INumberFormat
  *
  * @public
@@ -26,7 +25,6 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @class Controls/_decorator/Money
  * @extends Core/Control
  *
- * @mixes Controls/_decorator/Money/Styles
  * @mixes Controls/_interface/INumberFormat
  *
  * @public

@@ -270,7 +270,8 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
              nodeProperty?: string
          ): ISelectionObject {
             const isNode = (key): boolean => {
-               return items.getRecordById(key).get(nodeProperty);
+               const item = items.getRecordById(key);
+               return item && item.get(nodeProperty);
             };
 
             const hasExcludedChildren = (key): boolean => {

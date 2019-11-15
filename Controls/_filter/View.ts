@@ -33,6 +33,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
+ * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/
  */
 
 /*
@@ -47,6 +48,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @control
  * @public
  * @author Золотова Э.Е.
+ * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/
  */
 
 var _private = {
@@ -80,13 +82,13 @@ var _private = {
     },
 
     getSourceController: function(self, source, navigation) {
-        if (!self._sourceController) {
-            self._sourceController = new SourceController({
+        if (!self.sourceController) {
+            self.sourceController = new SourceController({
                 source: source,
                 navigation: navigation
             });
         }
-        return self._sourceController;
+        return self.sourceController;
     },
 
     getDateRangeItem: function(items) {
@@ -123,10 +125,10 @@ var _private = {
         return popupItems;
     },
 
-    getFolderIds: function(items, nodeProperty, keyProperty) {
+    getFolderIds: function({items, nodeProperty, parentProperty, keyProperty}) {
         let folders = [];
         factory(items).each((item) => {
-            if (item.get(nodeProperty)) {
+            if (item.get(nodeProperty) && !item.get(parentProperty)) {
                 folders.push(item.get(keyProperty));
             }
         });
@@ -215,7 +217,7 @@ var _private = {
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
                         configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems,
-                            configs[item.name]._sourceController, item.editorOptions.source, configs[item.name].keyProperty);
+                            configs[item.name].sourceController, item.editorOptions.source, configs[item.name].keyProperty);
                     });
                     pDef.push(result);
                 }
@@ -246,6 +248,7 @@ var _private = {
         self._configs[item.name] = Merge(self._configs[item.name] || {}, CoreClone(options));
         self._configs[item.name].emptyText = item.emptyText;
         self._configs[item.name].emptyKey = item.hasOwnProperty('emptyKey') ? item.emptyKey : null;
+        self._configs[item.name].sourceController = null;
 
         if (options.source) {
             return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
@@ -325,7 +328,7 @@ var _private = {
 
         let getHierarchySelectedKeys = () => {
             // selectedKeys - { folderId1: [selected keys for folder] , folderId2: [selected keys for folder], ... }
-            let folderIds = _private.getFolderIds(config.items, config.nodeProperty, config.keyProperty);
+            let folderIds = _private.getFolderIds(config);
             factory(folderIds).each((folderId, index) => {
                 selectedKeys[folderId] = [];
                 factory(items).each((item) => {
@@ -376,7 +379,7 @@ var _private = {
     },
 
     prepareHierarchySelection: function(selectedKeys, curConfig, resetValue) {
-        let folderIds = _private.getFolderIds(curConfig.items, curConfig.nodeProperty, curConfig.keyProperty);
+        let folderIds = _private.getFolderIds(curConfig);
         let isEmptySelection = true;
         let onlyFoldersSelected = true;
 
@@ -423,7 +426,7 @@ var _private = {
             newItems = _private.getNewItems(this, result.data, curConfig);
         if (isHistorySource(curItem.editorOptions.source)) {
             if (newItems.length) {
-                curConfig._sourceController = null;
+                curConfig.sourceController = null;
             }
             _private.updateHistory(this, result.id, factory(result.data).toArray());
         }
@@ -454,8 +457,7 @@ var _private = {
             factory(oldItems).each((oldItem) => {
                 const newItem = _private.getItemByName(newItems, oldItem.name);
                 const isFrequent = _private.isFrequentItem(oldItem);
-                if (newItem &&
-                    isFrequent &&
+                if (newItem && (isFrequent || _private.isFrequentItem(newItem)) &&
                     (optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) || isFrequent !== _private.isFrequentItem(newItem))) {
                     result = true;
                 }
@@ -465,7 +467,7 @@ var _private = {
     },
 
     updateHierarchyHistory: function(currentFilter, selectedItems, source) {
-        let folderIds = _private.getFolderIds(currentFilter.items, currentFilter.nodeProperty, currentFilter.keyProperty);
+        let folderIds = _private.getFolderIds(currentFilter);
 
         let getNodeItems = (parentKey) => {
             let nodeItems = [];
@@ -499,7 +501,7 @@ var _private = {
             } else {
                 source.update(selectedItems, historyUtils.getMetaHistory());
             }
-            if (currentFilter._sourceController && source.getItems) {
+            if (currentFilter.sourceController && source.getItems) {
                 currentFilter.items = source.getItems();
             }
         }
@@ -508,7 +510,7 @@ var _private = {
     isNeedHistoryReload: function(configs) {
         let needReload = false;
         factory(configs).each((config) => {
-            if (!config._sourceController) {
+            if (!config.sourceController) {
                 needReload = true;
             }
         });
@@ -561,6 +563,11 @@ var Filter = Control.extend({
             }
             return resultDef;
         }
+    },
+
+    _beforeUnmount() {
+        this._configs = null;
+        this._displayText = null;
     },
 
     openDetailPanel: function() {

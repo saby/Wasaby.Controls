@@ -165,6 +165,14 @@ var
 
             return preparedClasses;
         },
+
+        getPaddingForCheckBox: function({ theme, itemPadding }) {
+            let preparedClasses = '';
+            preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
+            preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
+            return preparedClasses;
+        },
+
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
@@ -281,6 +289,7 @@ var
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (checkBoxCell) {
                 cellClasses += ' controls-Grid__row-cell-checkbox' + `_theme-${theme}`;
+                cellClasses += _private.getPaddingForCheckBox({ theme, itemPadding: current.itemPadding});
             } else {
                 cellClasses += _private.getPaddingCellClasses({
                     columns: current.columns,
@@ -501,7 +510,7 @@ var
             // т.к. больше его некому растянуть.
             // Также, если в таблице есть колонка чекбоксов (ее ширина задается как max-content), то попавшая на место
             // первой ячейки строка редактирования, растянет всю колонку на ширину таблицы. Поэтому нужно ее заколспанить.
-            const columnSpan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
+            const columnSpan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden' && !detection.yandex) ? 1 : self._columns.length;
 
             editingRowStyles += GridLayoutUtil.getGridLayoutStyles() + ' ';
             editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
@@ -692,6 +701,9 @@ var
             this._updateLastItemKey();
         },
 
+        setTheme(theme: string): void {
+            this._options.theme = theme;
+        }
         _updateLastItemKey(): void {
             if (this.getItems()) {
                 this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);

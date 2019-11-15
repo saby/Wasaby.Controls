@@ -10,8 +10,6 @@
  * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
  * @includes IGrouped Controls/_dropdown/interface/IGrouped
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
- * @includes MenuStyles Controls/_dropdown/Button/MenuStyles
- * @includes Styles Controls/_dropdown/Input/Styles
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
  * @public
  * @author Крайнов Д.О.
@@ -29,8 +27,6 @@
  * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
  * @includes IGrouped Controls/_dropdown/interface/IGrouped
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
- * @includes MenuStyles Controls/_dropdown/Button/MenuStyles
- * @includes Styles Controls/_dropdown/Input/Styles
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
  * @public
  * @author Крайнов Д.О.

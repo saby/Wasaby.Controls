@@ -43,11 +43,19 @@ export default class TileRender extends BaseRender {
         this._notify('register', ['scroll', this, this._resetHoverState], { bubbling: true });
     }
 
+    protected _beforeUpdate(newOptions: ITileRenderOptions): void {
+        super._beforeUpdate(newOptions);
+        if (newOptions.listModel !== this._options.listModel) {
+            this._animatedItem = null;
+        }
+    }
+
     protected _afterUpdate(): void {
         super._afterUpdate();
         if (this._animatedItem) {
-            // TODO This should probably be moved to some kind of animation manager
-            if (this._animatedItem.isFixed() && !this._animatedItem.isAnimated()) {
+            if (this._animatedItem.destroyed) {
+                this._animatedItem = null;
+            } else if (this._animatedItem.isFixed() && !this._animatedItem.isAnimated()) {
                 this._animatedItem.setAnimated(true);
                 this._animatedItem.setFixedPositionStyle(this._animatedItemTargetPosition);
                 this._animatedItem = null;

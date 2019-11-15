@@ -4,18 +4,30 @@
 
 .controls-SortButton__content {
 	.baseline-fix();
-	display: inline-flex;
+	display: block;
 	align-items: baseline;
 }
 
+.controls-SortButton_icon_trendDown {
+	background-image: @background-image_SortButton-trendDown;
+}
+.controls-SortButton_icon_trendUp {
+	background-image: @background-image_SortButton-trendUp;
+}
+
 .controls-SortButton__icon_theme-@{themeName} {
-	.icon-size(@font-size_SortButton-icon);
 	color: @color_SortButton-icon;
 	align-self: center;
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-size: @size_SortButton-icon @size_SortButton-icon;
+	width: @size_SortButton-icon;
+	height: @size_SortButton-icon;
 }
 
 .controls-SortButton__caption {
 	cursor: pointer;
+	display: inline;
 }
 
 .controls-SortButton__caption_theme-@{themeName} {

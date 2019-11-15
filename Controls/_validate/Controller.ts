@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Controller');
 import ValidateContainer = require('wml!Controls/_validate/Container');
 import {IoC} from 'Env/Env';
+import {IValidateConfig} from 'Controls/_validate/Container';
 
 interface IValidateResult {
     [key: number]: boolean;
@@ -39,9 +40,13 @@ class Form extends Control<IControlOptions> {
 
         // The infobox should be displayed on the first not valid field.
         this._validates.reverse();
+        let config: IValidateConfig = {
+            hideInfoBox: true,
+        };
         this._validates.forEach((validate: ValidateContainer) => {
             if (!(validate._options && validate._options.readOnly)) {
-                validatePromises.push(validate.validate());
+                //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=2ebc5fff-6c4f-44ed-8764-baf39e4d4958
+                validatePromises.push(validate.validate(config));
             }
         });
 

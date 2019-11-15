@@ -118,7 +118,6 @@ var _private = {
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
- * @mixes Controls/_breadcrumbs/PathStyles
  * @mixes Controls/interface/IHighlighter
  * @control
  * @public
@@ -134,7 +133,6 @@ var _private = {
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
- * @mixes Controls/_breadcrumbs/PathStyles
  * @mixes Controls/interface/IHighlighter
  * @control
  * @public

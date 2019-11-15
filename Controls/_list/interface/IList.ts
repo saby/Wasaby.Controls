@@ -36,7 +36,7 @@
  * - items - для смены набора элементов.
  * - groupingKeyCallback, groupingTemplate для установки группировки.
  * - itemTemplate - шаблон элемента меню.
- * - footerTamplate - шаблон футера.
+ * - footerTemplate - шаблон футера.
  * - headerTemplate - шаблон шапки.
  */
 

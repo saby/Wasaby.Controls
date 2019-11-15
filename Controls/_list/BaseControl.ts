@@ -181,8 +181,10 @@ var _private = {
                         // instead of assigning items
                         // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
                         const modelCollection = listModel.getCollection();
+                        listModel.setCompatibleReset(true);
                         modelCollection.setMetaData(list.getMetaData());
                         modelCollection.assign(list);
+                        listModel.setCompatibleReset(false);
                         self._items = listModel.getCollection();
                     } else {
                         const curKey = listModel.getMarkedKey();
@@ -251,6 +253,19 @@ var _private = {
             IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
         }
         return resDeferred;
+    },
+
+    /**
+     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+     *
+     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+     */
+    isItemsSelectionAllowed(options: object): boolean {
+        return options.hasOwnProperty('selectedKeysCount');
     },
 
     resolveIndicatorStateAfterReload: function(self, list):void {
@@ -410,16 +425,22 @@ var _private = {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
     },
-    toggleSelection: function(self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
-        let model, markedKey;
-        if (self._children.selectionController) {
-            model = self.getViewModel();
-            markedKey = model.getMarkedKey();
-            self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
-            _private.moveMarkerToNext(self, event);
+    toggleSelection(self, event): void {
+        const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
+                                     self._children.selectionController;
+
+        if (allowToggleSelection) {
+            const model = self.getViewModel();
+            let toggledItemId = model.getMarkedKey();
+
+            if (!model.getItemById(toggledItemId) && model.getCount()) {
+                toggledItemId = model.at(0).getId();
+            }
+
+            if (toggledItemId) {
+                self._children.selectionController.onCheckBoxClick(toggledItemId, model.getSelectionStatus(toggledItemId));
+                _private.moveMarkerToNext(self, event);
+            }
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
@@ -566,12 +587,15 @@ var _private = {
 
     updateShadowMode(self): void {
         const demandNavigation = self._options.navigation && self._options.navigation.view === 'demand';
+        const pagesNavigation = self._options.navigation && self._options.navigation.view === 'pages';
+        const maxCountNavigation = self._options.navigation && self._options.navigation.view === 'maxCount';
+        const supportFixedShadow = !demandNavigation && !pagesNavigation && !maxCountNavigation;
         self._notify('updateShadowMode', [{
             top: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.top ||
-                !demandNavigation && self._listViewModel && self._listViewModel.getCount() &&
+                supportFixedShadow && self._listViewModel && self._listViewModel.getCount() &&
                 self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
             bottom: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.bottom ||
-                !demandNavigation && self._listViewModel && self._listViewModel.getCount() &&
+                supportFixedShadow && self._listViewModel && self._listViewModel.getCount() &&
                 self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
         }], { bubbling: true });
     },
@@ -1495,7 +1519,12 @@ var _private = {
     },
 
     needBottomPadding: function(options, items, listViewModel) {
-        return (!!items && (!!items.getCount() || !!listViewModel.getEditingItemData()) && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+        return (!!items &&
+            (!!items.getCount() ||
+                (options.useNewModel ? listViewModel.isEditing() : !!listViewModel.getEditingItemData())) &&
+            options.itemActionsPosition === 'outside' &&
+            !options.footerTemplate &&
+            options.resultsPosition !== 'bottom');
     },
 
     isPagingNavigation: function(navigation) {
@@ -1573,13 +1602,13 @@ var _private = {
     hasItemActions: function(itemActions, itemActionsProperty) {
         return !!(itemActions || itemActionsProperty);
     },
-    setIndicatorContainerHeight(self, viewPortSize) {
-        const listBoundingRect = (self._container[0] || self._container).getBoundingClientRect();
+    setIndicatorContainerHeight(self, viewPortSize: number): void {
+        const listBoundingRect = ((self._container[0] || self._container) as HTMLElement).getBoundingClientRect();
 
         if (listBoundingRect.bottom < viewPortSize) {
             self._loadingIndicatorContainerHeight = listBoundingRect.height;
         } else {
-            self._loadingIndicatorContainerHeight = viewPortSize - listBoundingRect.top;
+            self._loadingIndicatorContainerHeight = viewPortSize;
         }
     },
 
@@ -1874,9 +1903,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             )
         ) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
+            const items = this._listViewModel.getItems();
+            this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
-                items: this._listViewModel.getItems()
+                items
             }));
+            if (this._virtualScroll) {
+                this._virtualScroll.ItemsCount = this._listViewModel.getCount();
+                this._virtualScroll.recalcByIndex(0);
+            }
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
         }
 
@@ -1911,7 +1946,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             //Нужно обновлять опции записи не только при наведении мыши,
             //так как запись может поменяться в то время, как курсор находится на ней
-            this._updateItemActions();
+            this._shouldUpdateItemActions = true;
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1936,7 +1971,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
-            this._updateItemActions();
+            this._shouldUpdateItemActions = true;
         }
 
         if (this._loadedItems) {
@@ -2115,11 +2150,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
         }
-        if (this._resetScrollAfterReload) {
-            this._notify('doScroll', ['top'], { bubbling: true });
-            this._resetScrollAfterReload = false;
+        if (this._shouldUpdateItemActions){
+            this._shouldUpdateItemActions = false;
+            this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
+            if (this._resetScrollAfterReload) {
+                this._notify('doScroll', ['top'], { bubbling: true });
+                this._resetScrollAfterReload = false;
+            }
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
@@ -2248,16 +2287,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
 
-        /**
-         * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
-         * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
-         * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
-         * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
-         *
-         * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
-         * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
-         */
-        if (direction === 'right' && !isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
+        if (direction === 'right' && !isSwiped && _private.isItemsSelectionAllowed(this._options)) {
             const key = this._options.useNewModel ? itemData.getId() : itemData.key;
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
             /**
@@ -2292,7 +2322,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
         }
-        if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
+        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
             this._notify('itemSwipe', [actionsItem, childEvent]);
         }
     },
@@ -2303,14 +2333,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _showIndicator: function(event, direction) {
+    showIndicator(direction: 'down' | 'up' | 'all' = 'all'): void {
         _private.showIndicator(this, direction);
-        event.stopPropagation();
     },
 
-    _hideIndicator: function(event) {
+    hideIndicator(): void {
         _private.hideIndicator(this);
-        event.stopPropagation();
     },
 
     reload: function() {
@@ -2346,15 +2374,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _viewResize: function() {
+    _viewResize(): void {
         // todo Check, maybe remove "this._virtualScroll.ItemsContainer"?
         if (this._virtualScroll && this._virtualScroll.ItemsContainer) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
             _private.updateShadowMode(this);
         }
-        let viewSize = (this._container[0] || this._container).clientHeight;
-        this._viewSize = viewSize;
+        this._viewSize = (this._container[0] || this._container).clientHeight;
+        _private.setIndicatorContainerHeight(this, this._viewPortSize);
         if (this._needScrollCalculation) {
             this._updateLoadOffset(this._viewSize, this._viewPortSize);
         }
@@ -2400,15 +2428,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
     _updateItemActions: function() {
-        if (this._hasItemActions) {
+        if (this._listViewModel && this._hasItemActions) {
             this._children.itemActions.updateActions();
         }
-    }
+    },
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._updateItemActions();
+        this._shouldUpdateItemActions = true;
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
+        var result = this._notify('afterBeginEdit', [item, isAdd]);
 
         /*
         * TODO: KINGO
@@ -2418,7 +2447,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * _canUpdateItemsActions  приведет к показу неактуальных операций.
         */
         this._children.itemActions.updateItemActions(item);
-        return this._notify('afterBeginEdit', [item, isAdd]);
+        return result;
     },
 
    _showActionMenu(
@@ -2664,7 +2693,8 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
-        stickyHeader: true
+        stickyHeader: true,
+        selectionStrategy: 'Controls/operations:FlatSelectionStrategy'
     };
 };
 export = BaseControl;

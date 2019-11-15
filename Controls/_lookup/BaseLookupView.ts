@@ -123,6 +123,10 @@ var BaseLookupView = Control.extend({
             /* focus can be moved in choose event */
             if (this._active) {
                 this.activate();
+
+                if (this._determineAutoDropDown()) {
+                    this._suggestState = true;
+                }
             }
         }
     },
@@ -136,8 +140,10 @@ var BaseLookupView = Control.extend({
         // move focus to input after select, because focus will be lost after closing popup
         _private.activate(this);
 
-        this._notify('addItem', [item]);
+        // Сначало сбросим значение поля ввода, необходимо что бы событие selectedKeysChanged сработало после valueChanged
+        // дабы в propertyGrid панели фильтра выставилось значение из выбранных ключей а не из поля ввода
         _private.resetInputValue(this);
+        this._notify('addItem', [item]);
     },
 
     _crossClick: function (event, item) {
