@@ -10,7 +10,7 @@ import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
 import {factory, List} from 'Types/collection';
-import {HistoryUtils} from 'Controls/filter';
+import {HistoryUtils, FilterUtils} from 'Controls/filter';
 import 'Controls/form';
 /**
     * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
@@ -346,20 +346,7 @@ import 'Controls/form';
 
       _resetFilter: function(): void {
          this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
-         chain.factory(this._items).each((item) => {
-            const resetValue = getPropValue(item, 'resetValue');
-            const textValue = getPropValue(item, 'textValue');
-
-            if (getPropValue(item, 'visibility') !== undefined) {
-               setPropValue(item, 'visibility', false);
-            }
-            if (resetValue !== undefined) {
-               setPropValue(item, 'value', resetValue);
-            }
-            if (textValue !== undefined) {
-               setPropValue(item, 'textValue', textValue === null ? textValue : '');
-            }
-         });
+         FilterUtils.resetFilter(this._items);
          this._isChanged = false;
          this._notify('itemsChanged', [this._items]);
       }
