@@ -11,6 +11,9 @@ import {throttle} from 'Types/function';
 import {Record as entityRecord, descriptor} from 'Types/entity';
 import {IDirection, IVirtualPageSizeMode, IVirtualScrollMode} from './interface/IVirtualScroll';
 
+const SCROLLMOVE_DELAY = 150;
+export const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
+
 interface IOptions extends IControlOptions {
     virtualPageSize: number;
     virtualSegmentSize: number;
@@ -102,7 +105,6 @@ export default class ScrollController extends Control<IOptions> {
             this.virtualScroll = new VirtualScroll({
                 pageSize: options.virtualPageSize,
                 segmentSize: options.virtualSegmentSize,
-                virtualScrollMode: options.virtualScrollMode,
                 placeholderChangedCallback: this.placeholdersChangedCallback,
                 indexesChangedCallback: this.indexesChangedCallback,
                 loadMoreCallback: this.loadMoreCallback
@@ -149,10 +151,7 @@ export default class ScrollController extends Control<IOptions> {
             this.applyScrollTopCallback();
             this.applyScrollTopCallback = null;
 
-            this.checkCapabilityTimeout = setTimeout(() => {
-                this.checkCapability();
-                clearTimeout(this.checkCapabilityTimeout);
-            });
+            this.checkCapabilityWithTimeout();
         }
 
         if (this.afterRenderCallback) {
@@ -171,10 +170,7 @@ export default class ScrollController extends Control<IOptions> {
             this.savedStopIndex = this.actualStopIndex;
             this.saveScrollPosition = false;
             this.savedScrollDirection = null;
-            this.checkCapabilityTimeout = setTimeout(() => {
-                this.checkCapability();
-                clearTimeout(this.checkCapabilityTimeout);
-            });
+            this.checkCapabilityWithTimeout();
         }
     }
 
@@ -188,6 +184,13 @@ export default class ScrollController extends Control<IOptions> {
         }
 
         this.itemsContainer = itemsContainer;
+    }
+
+    private checkCapabilityWithTimeout(): void {
+        this.checkCapabilityTimeout = setTimeout(() => {
+            this.checkCapability();
+            clearTimeout(this.checkCapabilityTimeout);
+        });
     }
 
     /**
@@ -279,8 +282,6 @@ export default class ScrollController extends Control<IOptions> {
         if (changesType === 'collectionChanged' || changesType === 'indexesChanged' || newModelChanged) {
             this.itemsChanged = true;
         }
-
-        this._forceUpdate();
     }
 
     protected viewResizeHandler(): void {
@@ -306,7 +307,7 @@ export default class ScrollController extends Control<IOptions> {
     protected throttledUpdateIndexesByVirtualScrollMove = throttle((params) => {
         this.virtualScroll.scrollTop = params.scrollTop;
         this.virtualScroll.recalcFromScrollTop();
-    }, 150, true);
+    }, SCROLLMOVE_DELAY, true);
 
     protected emitListScrollHandler(event: SyntheticEvent<Event>, type: string, params: IScrollParams | unknown[]): void {
         switch (type) {
@@ -538,7 +539,7 @@ export default class ScrollController extends Control<IOptions> {
 
     static getDefaultOptions(): Partial<IOptions> {
         return {
-            virtualPageSize: 100
+            virtualPageSize: DEFAULT_VIRTUAL_PAGE_SIZE
         };
     }
 

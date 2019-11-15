@@ -1,4 +1,7 @@
 import {IDirection, IVirtualScrollMode} from '../interface/IVirtualScroll';
+import {DEFAULT_VIRTUAL_PAGE_SIZE} from '../ScrollController';
+
+const DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION = 1/4;
 
 
 type IVirtualItem = number;
@@ -6,7 +9,6 @@ type IVirtualItem = number;
 interface IVirtualScrollControllerOptions {
     pageSize: number;
     segmentSize: number;
-    virtualScrollMode: IVirtualScrollMode;
     indexesChangedCallback: Function;
     loadMoreCallback: Function;
     placeholderChangedCallback: Function;
@@ -23,7 +25,6 @@ export default class VirtualScrollController {
     private stopIndex: number = 0;
     private segmentSize: number = 0;
     private pageSize: number = 0;
-    private virtualScrollMode: 'hide' | 'remove';
     private itemsHeights: IVirtualItem[] = [];
     private itemsOffsets: number[] = [];
     private indexesChangedCallback: Function;
@@ -47,9 +48,8 @@ export default class VirtualScrollController {
     }
 
     constructor(options: IVirtualScrollControllerOptions) {
-        this.pageSize = options.pageSize || 100;
-        this.segmentSize = options.segmentSize || this.pageSize / 4;
-        this.virtualScrollMode = options.virtualScrollMode;
+        this.pageSize = options.pageSize || DEFAULT_VIRTUAL_PAGE_SIZE;
+        this.segmentSize = options.segmentSize || this.pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION;
         this.indexesChangedCallback = options.indexesChangedCallback;
         this.loadMoreCallback = options.loadMoreCallback;
         this.placeholderChangedCallback = options.placeholderChangedCallback;

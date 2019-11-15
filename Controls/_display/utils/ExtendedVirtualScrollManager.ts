@@ -22,7 +22,7 @@ export default class VirtualScrollManager extends BaseManager<IVirtualScrollMana
         return index >= this._collection.getStartIndex() && index <= this._collection.getStopIndex();
     }
 
-    applyRenderedItems(startIndex: number, stopIndex: number) {
+    applyRenderedItems(startIndex: number, stopIndex: number): void {
         for (let i = startIndex; i < stopIndex; i++) {
             this._collection.at(i).setRendered(true);
         }

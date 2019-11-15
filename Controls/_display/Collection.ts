@@ -34,7 +34,7 @@ import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
-import HideScrollManager from './utils/HideScrollManager';
+import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
 import {IVirtualScrollMode} from 'Controls/list';
 import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
@@ -626,7 +626,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _markerManager: MarkerManager;
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
-    protected _virtualScrollManager: VirtualScrollManager | HideScrollManager;
+    protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
     protected _virtualScrollMode: IVirtualScrollMode;
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
@@ -685,7 +685,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = options.virtualScrollMode === 'remove' ?
-            new VirtualScrollManager(this) : new HideScrollManager(this);
+            new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
         this._selectionManager = new SelectionManager(this);
@@ -2088,7 +2088,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (newStart !== this._startIndex || newStop !== this._stopIndex) {
             this._startIndex = newStart;
             this._stopIndex = newStop;
-            this._stopIndex = newStop;
 
             if (this._virtualScrollMode === 'hide') {
                 this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
@@ -2125,7 +2124,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     getViewIterator(): {
-        each: (callback: EnumeratorCallback<unknown>, context?: object) => void
+        each: (callback: EnumeratorCallback<unknown>, context?: object) => void;
+        isItemVisible: (index: number) => boolean;
     } {
         if (this._$virtualScrolling) {
             return this._virtualScrollManager;
@@ -2146,8 +2146,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$compatibleReset = compatible;
     }
 
-    isItemVisible(index: number): boolean {
-        return this._virtualScrollManager.isItemVisible(index);
+    isItemVisible = (index: number) => true;
+
+    isItemHidden(index: number): boolean {
+        return !this.getViewIterator().isItemVisible();
     }
 
     // region SerializableMixin
