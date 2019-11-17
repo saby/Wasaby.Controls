@@ -919,14 +919,18 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             ]
          });
          const filterItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField2: 'anyValue2'}];
+         let dataObject = null;
          sandbox.replace(HistoryUtils, 'getHistorySource', () => {
             return {
                getItems: () => historyItems,
-               getDataObject: () => [{
-                  id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
-               }]
+               getDataObject: () => dataObject
             };
          });
+         assert.isUndefined(Filter._private.getHistoryByItems('testId', filterItems));
+
+         dataObject = [{
+            id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
+         }];
          assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 0);
          sandbox.restore();
       });
