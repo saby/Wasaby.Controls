@@ -185,15 +185,18 @@ const _private = {
                  history.each((item, index) => {
                      if (!result) {
                          historyData = historySource.getDataObject(item.get('ObjectData'));
-                         minimizedItemFromOption = _private.minimizeFilterItems(items);
-                         minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
 
-                         if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
-                             result = {
-                                 item,
-                                 data: historyData,
-                                 index
-                             };
+                         if (historyData) {
+                             minimizedItemFromOption = _private.minimizeFilterItems(items);
+                             minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
+
+                             if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
+                                 result = {
+                                     item,
+                                     data: historyData,
+                                     index
+                                 };
+                             }
                          }
                      }
                  });
