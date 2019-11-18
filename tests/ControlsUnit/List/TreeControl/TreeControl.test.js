@@ -254,7 +254,7 @@ define([
                }
             },
             treeControl = correctCreateTreeControl(cfg);
-         return new Promise(function(resolve) {
+         return new Promise(function(resolve, reject) {
             var model = treeControl._children.baseControl.getViewModel();
             setTimeout(function() {
                treeGrid.TreeControl._private.expandMarkedItem(treeControl);
@@ -265,8 +265,12 @@ define([
                      model.setMarkedKey(3);
                      treeGrid.TreeControl._private.expandMarkedItem(treeControl);
                      setTimeout(function() {
-                        assert.deepEqual(nodeLoadStack, [1, 2]);
-                        resolve();
+                        try {
+                           assert.deepEqual(nodeLoadStack, [1, 2]);
+                           resolve();
+                        } catch(e) {
+                           reject(e);
+                        }
                      });
                   });
                });
