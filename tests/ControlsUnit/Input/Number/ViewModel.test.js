@@ -238,6 +238,34 @@ define(
                assert.equal(model.displayValue, '12.34');
                assert.deepEqual(model.selection, getSelection(5));
             });
+            it('Remove "." use backspace.', function() {
+               model.options = cMerge(model.options, {
+                  integersLength: 3
+               });
+               model.handleInput({
+                  after: '45',
+                  before: '123',
+                  delete: '.',
+                  insert: ''
+               }, 'deleteBackward');
+
+               assert.equal(model.displayValue, '12.45');
+               assert.deepEqual(model.selection, getSelection(2));
+            });
+            it('Remove "." use delete.', function() {
+               model.options = cMerge(model.options, {
+                  integersLength: 3
+               });
+               model.handleInput({
+                  after: '45',
+                  before: '123',
+                  delete: '.',
+                  insert: ''
+               }, 'deleteForward');
+
+               assert.equal(model.displayValue, '123.5');
+               assert.deepEqual(model.selection, getSelection(4));
+            });
 
             it('Test1', function() {
                model.value = '123';
