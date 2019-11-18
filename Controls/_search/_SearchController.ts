@@ -89,6 +89,7 @@ var SearchController = extend({
    constructor: function(options) {
       SearchController.superclass.constructor.call(this, options);
       this._options = options;
+      this.isLoading = false;
    },
 
    search: function(value, force) {
