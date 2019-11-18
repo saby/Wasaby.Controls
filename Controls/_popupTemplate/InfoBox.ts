@@ -5,7 +5,7 @@ import 'css!theme?Controls/popupTemplate';
 
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
- * @class Controls/_popupTemplate/Infobox
+ * @class Controls/_popupTemplate/InfoBox
  * @extends Core/Control
  * @control
  * @public
@@ -52,7 +52,42 @@ var InfoBoxTemplate = Control.extend({
        this._notify('close', [], { bubbling: true });
     }
 });
-
+/**
+ * @name Controls/_popupTemplate/InfoBox#closeButtonVisibility
+ * @cfg {Boolean} Устанавливает видимость кнопки, закрывающей окно.
+ * @default true
+ */
+/**
+ * @name Controls/_popupTemplate/InfoBox#style
+ * @cfg {String} Устанавливает стиль отображения окна уведомления.
+ * @default secondary
+ * @variant warning
+ * @variant secondary
+ * @variant success
+ * @variant danger
+ * @default secondary
+ */
+/**
+ * @name Controls/_popupTemplate/InfoBox#stickyPosition
+ * @cfg {StickyPosition} Конфигурация позиционирования окна.
+ */
+/**
+ * @typedef {Object} StickyPosition
+ * @property {Object} targetPoint
+ * @property {String} targetPoint.vertical
+ * * top
+ * * bottom
+ * @property {String} targetPoint.horizontal
+ * * right
+ * * left
+ * @property {String} verticalAlign.side
+ * * right
+ * * left
+ * @property {String} horizontalAlign.side
+ * * right
+ * * left
+ * 
+ */
 InfoBoxTemplate.getDefaultOptions = function() {
     return {
         closeButtonVisibility: true,
