@@ -435,7 +435,7 @@ var _private = {
             let toggledItemId = model.getMarkedKey();
 
             if (!model.getItemById(toggledItemId) && model.getCount()) {
-                toggledItemId = model.at(0).getId();
+                toggledItemId = model.at(0).getContents().getId();
             }
 
             if (toggledItemId) {
