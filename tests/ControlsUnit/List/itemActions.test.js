@@ -196,6 +196,28 @@ define([
          assert.deepEqual(data[1].test, listViewModel._actions[1].all);
       });
 
+      describe('getContainerPaddingClass', function() {
+         var bottomRight = 'controls-itemActionsV_position_bottomRight',
+            topRight = 'controls-itemActionsV_position_topRight';
+         var getPadding = lists.ItemActionsControl._private.getContainerPaddingClass;
+         it('bottomRight, itemPadding is null', function() {
+            assert.equal(getPadding(bottomRight, {bottom: 'null'}), ' controls-itemActionsV_padding-bottom_null ');
+         });
+         it('bottomRight, itemPadding is not null', function() {
+            assert.equal(getPadding(bottomRight, {bottom: 's'}), ' controls-itemActionsV_padding-bottom_default ');
+            assert.equal(getPadding(bottomRight), ' controls-itemActionsV_padding-bottom_default ');
+         });
+         it('toRight, itemPadding is null', function() {
+            assert.equal(getPadding(topRight, {top: 'null'}), ' controls-itemActionsV_padding-top_null ');
+         });
+         it('topRight, itemPadding is not null', function() {
+            assert.equal(getPadding(topRight, {top: 's'}), ' controls-itemActionsV_padding-top_default ');
+            assert.equal(getPadding(topRight), ' controls-itemActionsV_padding-top_default ');
+         });
+         it('something else, itemPadding is not important', function() {
+            assert.equal(getPadding('some_class'), ' ');
+         });
+      });
 
       it('getChildren', function() {
          const
