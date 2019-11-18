@@ -594,7 +594,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setItemActions: function(item, actions) {
-        if (!this._isDestroyed && item.get) {
+        if (item.get) {
             const id = item.get(this._options.keyProperty);
             if (this.hasItemById(id, this._options.keyProperty)) {
                this._actions[id] = actions;

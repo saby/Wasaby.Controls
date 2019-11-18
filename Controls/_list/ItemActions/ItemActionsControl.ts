@@ -66,11 +66,12 @@ var _private = {
                 _isMenu: true
             });
         }
-
-        options.listModel.setItemActions(item, {
-            all,
-            showed
-        });
+        if (!self._destroyed) {
+            options.listModel.setItemActions(item, {
+                all,
+                showed
+            });
+        }
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
