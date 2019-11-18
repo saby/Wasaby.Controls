@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_filter/Fast/FastStyles
- * @c
+ * @private
  *
  * @css @height_FastFilter Height of Filter/Fast control.
  *
