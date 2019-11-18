@@ -1,5 +1,6 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import {Logger} from 'UI/Utils';
+import coreMerge = require('Core/core-merge');
 /**
  * Контрол, открывающий всплывающее окно, которое позиционируется по центру экрана.
  * @remark
@@ -35,6 +36,7 @@ const _private = {
         config = config || {};
         // The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
         config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+        config._vdomOnOldPage = true; // Открывается всегда вдомным
         return config;
     }
 };
@@ -167,6 +169,11 @@ Dialog.openPopup = (config: object): Promise<string> => {
  */
 Dialog.closePopup = (popupId: string): void => {
     BaseOpener.closeDialog(popupId);
+};
+
+Dialog.getDefaultOptions = () => {
+    // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
+    return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
 };
 
 Dialog._private = _private;
