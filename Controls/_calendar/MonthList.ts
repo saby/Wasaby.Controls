@@ -204,28 +204,32 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _intersectHandler(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
         for (const entry of entries) {
-            this._updateDisplayedPosition(entry);
             this._updateDisplayedItems(entry);
         }
+        this._updateDisplayedPosition(entries);
     }
 
-    private _updateDisplayedPosition(entry: IntersectionObserverSyntheticEntry): void {
-        if (entry.data.type !== ITEM_TYPES.body) {
-            return;
-        }
-        const entryDate = entry.data.date;
+    private _updateDisplayedPosition(entries: IntersectionObserverSyntheticEntry[]): void {
         let date;
-        if (entry.nativeEntry.boundingClientRect.top - entry.nativeEntry.rootBounds.top <= 0) {
-            if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top >= 0) {
-                date = entryDate;
-            } else if (entry.nativeEntry.rootBounds.top - entry.nativeEntry.boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
-                if (this._options.viewMode === 'year') {
-                    date = new this._options.dateConstructor(entryDate.getFullYear() + 1, entryDate.getMonth());
-                } else {
-                    date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + 1);
+
+        for (const entry of entries) {
+            if (entry.data.type !== ITEM_TYPES.body) {
+                continue;
+            }
+            const entryDate = entry.data.date;
+            if (entry.nativeEntry.boundingClientRect.top - entry.nativeEntry.rootBounds.top <= 0) {
+                if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top >= 0) {
+                    date = entryDate;
+                } else if (entry.nativeEntry.rootBounds.top - entry.nativeEntry.boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
+                    if (this._options.viewMode === 'year') {
+                        date = new this._options.dateConstructor(entryDate.getFullYear() + 1, entryDate.getMonth());
+                    } else {
+                        date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + 1);
+                    }
                 }
             }
         }
+
         if (date && !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate)) {
             this._lastNotifiedPositionChangedDate = date;
             this._displayedPosition = date;
