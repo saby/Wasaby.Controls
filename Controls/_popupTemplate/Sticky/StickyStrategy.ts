@@ -142,9 +142,9 @@ interface IPosition {
          let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
          let isNegativePos = _private.isNegativePosition(popupCfg, position, targetCoords);
          if (positionOverflow > 0 || isNegativePos) {
-            if (popupCfg.fittingMode === 'fixed') {
+            if (popupCfg.fittingMode[direction] === 'fixed') {
                resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-            } else if (popupCfg.fittingMode === 'overflow') {
+            } else if (popupCfg.fittingMode[direction] === 'overflow') {
                resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else {
                _private.invertPosition(popupCfg, direction);
@@ -168,6 +168,7 @@ interface IPosition {
          _private.fixPosition(resultPosition, targetCoords);
          return resultPosition;
       },
+
 
       restrictContainer: function(position, property, popupCfg, overflow) {
          position[property] = popupCfg.sizes[property] - overflow;
