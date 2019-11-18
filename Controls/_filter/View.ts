@@ -645,12 +645,10 @@ var Filter = Control.extend({
             _private[result.action].call(this, result);
         }
         if (result.action !== 'moreButtonClick') {
-            _private.notifyChanges(this, this._source);
-
             if (result.history) {
                 this._notify('historyApply', [result.history]);
             }
-
+            _private.notifyChanges(this, this._source);
             this._children.StickyOpener.close();
         }
     },
