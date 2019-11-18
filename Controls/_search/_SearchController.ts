@@ -96,8 +96,12 @@ var SearchController = extend({
       const searchByValueChanged = this._options.minSearchLength !== null;
       let result;
 
-      if ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength)) {
-         result = _private.search(this, value, force);
+      if (!this.isLoading && ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength))) {
+         this.isLoading = true;
+         _private.search(this, value, force).then((result) => {
+            result = _private.search(this, value, force);
+            this.isLoading = false;
+         });
       } else if (searchByValueChanged || !valueLength) {
          result = _private.abort(this);
       }
