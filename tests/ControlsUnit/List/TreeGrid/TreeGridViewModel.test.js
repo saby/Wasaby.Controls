@@ -386,7 +386,11 @@ define(['Controls/treeGrid',
                 columns: [{}]
              });
 
-         treeGrid.ViewModel._private.getExpandedItems(model.getDisplay(), model._model.getExpandedItems(), model._options.nodeProperty);
+         // Return origin if has no display
+         assert.deepEqual(
+             model._model.getExpandedItems(),
+             treeGrid.ViewModel._private.getExpandedItems(null, model._model.getExpandedItems(), model._options.nodeProperty)
+         );
 
          assert.deepEqual(
              [0, 1],
