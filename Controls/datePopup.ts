@@ -311,6 +311,9 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._yearStateEnabled = periodDialogUtils.isYearStateEnabled(options);
 
         this._state = _private.getViewState(options, this._monthStateEnabled, this._yearStateEnabled);
+        if (this._state === STATES.year) {
+            this._displayedDate = dateUtils.getStartOfYear(this._displayedDate);
+        }
 
         this._yearRangeSelectionType = options.selectionType;
         this._yearRangeQuantum = {};
