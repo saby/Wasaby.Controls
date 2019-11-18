@@ -915,6 +915,11 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             items: [
                new entity.Model({
                   rawData: {
+                     ObjectData: null
+                  }
+               }),
+               new entity.Model({
+                  rawData: {
                      ObjectData: [{
                         id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
                      }]
@@ -952,7 +957,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
                getPinned: () => pinnedItems
             };
          });
-         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 0);
+         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 1);
 
          filterItems = [{id: 'testIdPinned', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: '', anyField2: 'anyValue2'}];
          assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 1);
