@@ -384,6 +384,10 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       return this._history.recent;
    },
 
+   getPinned() {
+      return this._history.pinned;
+   },
+
    /**
     * Returns a deserialized history object
     * @returns {Object}

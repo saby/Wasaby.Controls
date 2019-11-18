@@ -310,6 +310,13 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          assert.equal(value, 'test');
          assert.equal(searchController._inputSearchValue, 'test');
+
+         value = '';
+         searchController._options.source = null;
+         searchController._search(null, 'test2');
+         assert.equal(value, '');
+         assert.equal(searchController._inputSearchValue, 'test2');
+
       });
 
       describe('_beforeMount', function() {
