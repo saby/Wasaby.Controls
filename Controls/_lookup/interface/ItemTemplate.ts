@@ -42,7 +42,7 @@
  *          source="{{_source}}"
  *          keyProperty="id">
  *       <ws:itemTemplate>
- *          <ws:partial template="Controls.lookup:ButtonItemTemplate"
+ *          <ws:partial template="Controls.lookup:ItemTemplate"
  *                      style="primary"
  *                      size="xl"
  *                      displayProperty="title"
