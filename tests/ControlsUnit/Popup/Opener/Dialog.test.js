@@ -22,7 +22,7 @@ define(
          DialogController._getWindowSize = () => windowSize;
 
          it('Opener: getConfig', () => {
-            let getDialogConfig = DialogOpener.default._private.getDialogConfig;
+            let getDialogConfig = DialogOpener.default.prototype._getDialogConfig;
             let config = getDialogConfig();
             assert.equal(config.isDefaultOpener, true);
 
