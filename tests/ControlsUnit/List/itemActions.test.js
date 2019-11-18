@@ -474,7 +474,37 @@ define([
 
          assert.strictEqual(listViewModel._prefixItemVersion, prefixItemVersion);
       });
+      it('updateItemActions should not call listModel.setItemActions if control is destroyed', function() {
+         var setItemActionsCalled = false;
+         var lm = {
+            setItemActios: function () {
+               setItemActionsCalled = true;
+            },
+            nextModelVersion: function() {}
+         };
+         var
+            cfg = {
+               listModel: lm,
+               itemActions: [{
+                     id: 0,
+                     title: 'first',
+                     showType: tUtil.showType.MENU
+                  },
+                  {
+                     id: 1,
+                     title: 'second',
+                     showType: tUtil.showType.TOOLBAR
+                  }],
+               itemActionsPosition: 'outside'
+            },
+            ctrl = new lists.ItemActionsControl(cfg);
+         ctrl.saveOptions(cfg);
 
+         ctrl._destroyed = true;
+         ctrl.updateItemActions(listViewModel.getCurrent().item);
+
+         assert.isFalse(setItemActionsCalled);
+      });
       describe('beforeUpdate updates model', function() {
          var visibilityCallback = function() {
             return true;
