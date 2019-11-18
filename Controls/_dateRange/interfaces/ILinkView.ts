@@ -2,7 +2,7 @@ import {descriptor} from 'Types/entity';
 import dateControlsUtils from './../Utils';
 
 /**
- * mixin Controls/_dateRange/interfaces/ILinkView
+ * @mixin Controls/_dateRange/interfaces/ILinkView
  * @public
  */
 var EMPTY_CAPTIONS = {
