@@ -13,6 +13,23 @@
                  tooltip="Create"/>
       </div>
       <div class="ControlsDemo-ButtonsMenu__wrapper">
+         <h4 id="noItems">No items with footer</h4>
+         <Controls.dropdown:Button
+                 keyProperty="id"
+                 style="secondary"
+                 viewMode="link"
+                 caption="Add"
+                 source="{{_createMemory([])}}"
+                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo-ButtonsMenu__noItems">
+            <ws:footerTemplate>
+               <Controls.buttons:Button
+                       viewMode="link"
+                       caption="+ Add"
+                       attr:class="ControlsDemo-ButtonsMenu-footerTpl"/>
+            </ws:footerTemplate>
+         </Controls.dropdown:Button>
+      </div>
+      <div class="ControlsDemo-ButtonsMenu__wrapper">
          <h4>Simple</h4>
          <Controls.dropdown:Button
                  keyProperty="id"
@@ -66,7 +83,8 @@
             <ws:headConfig caption="Add" menuStyle="titleHead"/>
          </Controls.dropdown:Button>
       </div>
-
+   </div>
+   <div class="ControlsDemo-ButtonsMenu__horWrapper">
       <div class="ControlsDemo-ButtonsMenu__wrapper">
          <h4>Without icons</h4>
          <Controls.dropdown:Button
@@ -80,8 +98,6 @@
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__noIcons"
                  tooltip="Add topic"/>
       </div>
-   </div>
-   <div class="ControlsDemo-ButtonsMenu__horWrapper">
       <div class="ControlsDemo-ButtonsMenu__wrapper">
          <h4>Icon replaced by the text "Add"</h4>
          <Controls.dropdown:Button
