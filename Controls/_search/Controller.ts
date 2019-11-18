@@ -8,6 +8,7 @@ import _SearchController from './_SearchController';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
+import {Logger} from 'UI/Utils';
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -282,7 +283,11 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    },
 
    _search: function (event, value, force) {
-      _private.getSearchController(this).search(value, force);
+      if (this._options.source) {
+         _private.getSearchController(this).search(value, force);
+      } else {
+         Logger.error('search:Controller source is required for search', this);
+      }
       _private.setInputSearchValue(this, value);
    },
 
