@@ -915,23 +915,54 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          const sandbox = sinon.createSandbox();
          const historyItems = new collection.List({
             items: [
-               new entity.Model()
+               new entity.Model({
+                  rawData: {
+                     ObjectData: null
+                  }
+               }),
+               new entity.Model({
+                  rawData: {
+                     ObjectData: [{
+                        id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
+                     }]
+                  }
+               })
             ]
          });
-         const filterItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField2: 'anyValue2'}];
-         let dataObject = null;
+         let pinnedItems = new collection.List({
+            items: [
+               new entity.Model({
+                  rawData: {
+                     ObjectData: [
+                        {
+                           id: 'testId3', value: 'testValue3', resetValue: 'testResetValue2'
+                        }
+                     ]
+                  }
+               }),
+               new entity.Model({
+                  rawData: {
+                     ObjectData: [
+                        {
+                           id: 'testIdPinned', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: ''
+                        }
+                     ]
+                  }
+               })
+            ]
+         });
+         let filterItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField2: 'anyValue2'}];
          sandbox.replace(HistoryUtils, 'getHistorySource', () => {
             return {
                getItems: () => historyItems,
-               getDataObject: () => dataObject
+               getDataObject: (data) => data,
+               getPinned: () => pinnedItems
             };
          });
-         assert.isUndefined(Filter._private.getHistoryByItems('testId', filterItems));
+         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 1);
 
-         dataObject = [{
-            id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
-         }];
-         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 0);
+         filterItems = [{id: 'testIdPinned', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: '', anyField2: 'anyValue2'}];
+         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 1);
          sandbox.restore();
       });
 
