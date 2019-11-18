@@ -1,7 +1,7 @@
 /**
  *
  * @mixin Controls/_toggle/Switch/SwitchStyles
- * @public
+ * @private
  * @author Красильников А.С.
  *
  * @css @width_Switch Toggle width.

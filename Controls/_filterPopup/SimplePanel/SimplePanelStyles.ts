@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_filterPopup/SimplePanel/SimplePanelStyles
- * @public
+ * @private
  *
  * @css @max-width_SimplePanel Max width simple panel.
  * @css @spacing_SimplePanel-between-applyButton-topBorder Spacing between apply button and top border.

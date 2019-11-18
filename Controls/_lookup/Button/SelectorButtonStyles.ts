@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_lookup/Button/SelectorButtonStyles
- * @public
+ * @private
  * @author Капустин И.А.
  *
  * @css @spacing_SelectorButton-between-buttonMore-buttonReset Интервал между кнопкой еще и кнопкой сброса.
@@ -17,7 +17,7 @@
  */
 /*
  * @mixin Controls/_lookup/Button/SelectorButtonStyles
- * @public
+ * @private
  * @author Kapustin I.A.
  *
  * @css @spacing_SelectorButton-between-buttonMore-buttonReset Spacing between button more and reset button.
