@@ -129,6 +129,8 @@ import 'Controls/form';
                    let historyItems;
 
                    if (isReportPanel) {
+                       // Поправится, как будем хранить избранное на сервисе истории
+                       // https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
                       historySource.historySource._pinned = false;
                       historyItems = historySource.getItems();
                    } else {
