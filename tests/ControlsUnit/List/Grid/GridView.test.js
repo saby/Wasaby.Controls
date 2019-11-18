@@ -124,6 +124,15 @@ define(['Controls/grid'], function(gridMod) {
          gridView._beforeUpdate(cfg);
          gridMod.GridView.superclass._beforeUpdate = superclassBeforeUpdate;
          assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
+         gridView._listModel = {
+            _isMultiHeader: true,
+            setHeader: () => null
+         };
+
+         let resetWasCalled = false;
+         gridMod.GridView._private._resetScroll = () => {resetWasCalled = true}
+         gridView._beforeUpdate({...cfg, header: [{}, {}, {}, {}]});
+         assert.isTrue(resetWasCalled);
       });
       it('afterMount and beforePaint', function() {
          var

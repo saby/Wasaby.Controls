@@ -207,7 +207,11 @@ var
             self._isPartialGridSupport = GridLayoutUtil.isPartialGridSupport();
             self._isFullGridSupport = GridLayoutUtil.isFullGridSupport();
             self._shouldUseTableLayout = !self._isFullGridSupport;
-        }
+        },
+
+        _resetScroll(self): void {
+            self._notify('doScroll', ['top'], { bubbling: true });
+        },
     },
     GridView = ListView.extend({
         _gridTemplate: null,
@@ -265,6 +269,9 @@ var
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._isHeaderChanged = true;
+                if (this._listModel._isMultiHeader) {
+                    _private._resetScroll(this);
+                }
                 this._listModel.setHeader(newCfg.header);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
