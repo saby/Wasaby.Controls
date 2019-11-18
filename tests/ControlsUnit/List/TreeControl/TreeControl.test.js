@@ -224,6 +224,55 @@ define([
             resolve();
          });
       });
+      it('expandMarkedItem', function() {
+         var
+            nodeLoadStack = [],
+            cfg = {
+               columns: [],
+               source: new sourceLib.HierarchicalMemory({
+                  data: [{
+                     key: 1,
+                     parent: null,
+                     type: true
+                  }, {
+                     key: 2,
+                     parent: null,
+                     type: false
+                  }, {
+                     key: 3,
+                     parent: null,
+                     type: null
+                  }],
+                  keyProperty: 'key'
+               }),
+               keyProperty: 'key',
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               markedKey: 1,
+               nodeLoadCallback: function(list, key) {
+                  nodeLoadStack.push(key);
+               }
+            },
+            treeControl = correctCreateTreeControl(cfg);
+         return new Promise(function(resolve) {
+            var model = treeControl._children.baseControl.getViewModel();
+            setTimeout(function() {
+               treeGrid.TreeControl._private.expandMarkedItem(treeControl);
+               setTimeout(function() {
+                  model.setMarkedKey(2);
+                  treeGrid.TreeControl._private.expandMarkedItem(treeControl);
+                  setTimeout(function() {
+                     model.setMarkedKey(3);
+                     treeGrid.TreeControl._private.expandMarkedItem(treeControl);
+                     setTimeout(function() {
+                        assert.deepEqual(nodeLoadStack, [1, 2]);
+                        resolve();
+                     });
+                  });
+               });
+            });
+         });
+      });
       describe('itemMouseMove calls nodeMouseMove when dragging', function() {
          let tree = correctCreateTreeControl({
             columns: [],
