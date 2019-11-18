@@ -25,6 +25,10 @@ let _private = {
     getCfg(self) {
         let config = {
             autofocus: false,
+            fittingMode: {
+                vertical: 'adaptive',
+                horizontal: 'overflow'
+            },
             opener: self,
             target: self._container,
             template: 'Controls/popup:PreviewerTemplate',
