@@ -9,6 +9,12 @@
  * @includes ColumnTemplate Controls/grid:ColumnTemplate
  * @includes RowEditor Controls/grid:RowEditor
  * @includes IGridControl Controls/_grid/interface/IGridControl
+ * @includes IItemTemplateOptions Controls/grid:IItemTemplateOptions
+ * @includes IColumnTemplateOptions Controls/grid:IColumnTemplateOptions
+ * @includes IGroupTemplateOptions Controls/grid:IGroupTemplateOptions
+ * @includes ILadderWrapperOptions Controls/grid:ILadderWrapperOptions
+ * @includes IResultsTemplateOptions Controls/grid:IResultsTemplateOptions
+ * @includes IHeaderContentOptions Controls/grid:IHeaderContentOptions
  * @public
  * @author Крайнов Д.О.
  */
