@@ -1148,6 +1148,11 @@ define([
          lists.BaseControl._private.toggleSelection(baseControl, event);
          assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
 
+         baseControl.getViewModel()._markedKey = 5;
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
+
+
          sandbox.restore();
       });
 
