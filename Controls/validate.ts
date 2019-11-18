@@ -33,7 +33,7 @@ import isEmail = require('Controls/_validate/Validators/IsEmail');
 import isRequired = require('Controls/_validate/Validators/IsRequired');
 import isValidDate = require('Controls/_validate/Validators/IsValidDate');
 import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
-import ValidateWrapper = require('wml!Controls/_validate/ValidateWrapper');
+import Highlighter = require('wml!Controls/_validate/Highlighter');
 
 export {default as Controller} from 'Controls/_validate/Controller';
 export {default as Container} from 'Controls/_validate/Container';
@@ -46,5 +46,5 @@ export {
     isRequired,
     isValidDate,
     isValidDateRange,
-    ValidateWrapper
+    Highlighter
 }
