@@ -5,6 +5,7 @@ import { DefaultOpenerFinder } from 'UI/Focus';
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import {Logger} from 'UI/Utils';
+import randomId = require('Core/helpers/Number/randomId');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
@@ -62,12 +63,22 @@ class BaseOpener extends Control<IControlOptions> {
     open(popupOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             const cfg = this._getConfig(popupOptions || {});
-            this._clearPopupIds();
             this._toggleIndicator(true);
-            if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-                this._compatibleOpen(cfg, controller).then((popupId) => resolve(popupId));
+            let resultPromise: Promise<string>;
+            // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
+            if (cfg.isCompoundTemplate) {
+                resultPromise = this._compatibleOpen(cfg, controller);
             } else {
-                this._openPopup(cfg, controller).then((popupId) => resolve(popupId));
+                resultPromise = this._openPopup(cfg, controller);
+            }
+
+            // Удалить resultPromise после перевода страниц на application
+            // Сейчас эта ветка нужно, чтобы запомнить ws3Action, который откроет окно на старой странице
+            // На вдоме отдаем id сразу
+            if (!this._useVDOM()) {
+                resultPromise.then((popupId) => resolve(popupId));
+            } else {
+                resolve(cfg.id);
             }
         }));
     }
@@ -78,7 +89,7 @@ class BaseOpener extends Control<IControlOptions> {
      */
     close(): void {
         const popupId: string = this._getCurrentPopupId();
-        if (popupId) {
+        if (!this._action && popupId) {
             BaseOpener.closeDialog(popupId).addCallback(() => {
                 this._popupId = null;
             });
@@ -131,7 +142,6 @@ class BaseOpener extends Control<IControlOptions> {
     private _openPopup(cfg, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             this._requireModules(cfg, controller).addCallback((result) => {
-                this._clearPopupIds();
                 const popupId = this._getCurrentPopupId();
                 this._showDialog(result.template, cfg, result.controller, popupId, resolve);
             }).addErrback(() => {
@@ -168,6 +178,15 @@ class BaseOpener extends Control<IControlOptions> {
         if (baseConfig.actionOnScroll) {
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
+
+        if (this._isPopupDestroyed()) {
+            this._popupId = null;
+        }
+        if (!this._popupId) {
+            this._popupId = randomId('popup-');
+        }
+        baseConfig.id = this._popupId;
+
         this._prepareNotifyConfig(baseConfig);
         return baseConfig;
     }
@@ -241,10 +260,11 @@ class BaseOpener extends Control<IControlOptions> {
     private _useVDOM(): boolean {
         return BaseOpener.isNewEnvironment() || this._options._vdomOnOldPage;
     }
-    private _clearPopupIds(): void {
-        if (!this.isOpened()) {
-            this._popupId = null;
-        }
+    private _isPopupDestroyed(): boolean {
+        const popupItem = ManagerController.find(this._getCurrentPopupId());
+        return popupItem &&
+            (popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYING ||
+             popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYED);
     }
     private _compatibleOpen(cfg, controller): Promise<string | undefined> {
         return new Promise((resolve) => {
@@ -552,17 +572,12 @@ class BaseOpener extends Control<IControlOptions> {
     }
 
     static _openPopup(popupId, cfg, controller, def) {
-        if (popupId) {
-            if (ManagerController.isPopupCreating(popupId)) {
-                ManagerController.updateOptionsAfterInitializing(popupId, cfg);
-            } else {
-                popupId = ManagerController.update(popupId, cfg);
-            }
-            def.callback(popupId);
-        } else {
+        if (!ManagerController.isPopupCreating(popupId)) {
             popupId = ManagerController.show(cfg, controller);
-            def.callback(popupId);
+        } else {
+            ManagerController.updateOptionsAfterInitializing(popupId, cfg);
         }
+        def.callback(popupId);
     }
 
     static getDefaultOptions() {
