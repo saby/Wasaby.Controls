@@ -31,14 +31,12 @@ import coreMerge = require('Core/core-merge');
  * @public
  */
 
-const _private = {
-    getDialogConfig(config) {
-        config = config || {};
-        // The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
-        config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-        config._vdomOnOldPage = true; // Открывается всегда вдомным
-        return config;
-    }
+const getDialogConfig = (config) => {
+    config = config || {};
+    // The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+    config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+    config._vdomOnOldPage = true; // Открывается всегда вдомным
+    return config;
 };
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
@@ -92,7 +90,34 @@ class Dialog extends BaseOpener {
      * @see closePopup
      */
     open(popupOptions) {
-        super.open(_private.getDialogConfig(popupOptions), POPUP_CONTROLLER);
+        super.open(this._getDialogConfig(popupOptions), POPUP_CONTROLLER);
+    }
+
+    private _getDialogConfig(popupOptions) {
+        return getDialogConfig(popupOptions);
+    }
+
+    static openPopup(config: object): Promise<string> {
+        return new Promise((resolve) => {
+            const newCfg = getDialogConfig(config);
+            if (!newCfg.hasOwnProperty('opener')) {
+                Logger.error(Dialog.prototype._moduleName + ': Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+            }
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
+                    resolve(popupId);
+                });
+            });
+        });
+    }
+
+    static closePopup(popupId: string): void {
+        BaseOpener.closeDialog(popupId);
+    }
+
+    static getDefaultOptions() {
+        // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
+        return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
     }
 }
 
@@ -126,19 +151,6 @@ class Dialog extends BaseOpener {
  * @see close
  * @see open
  */
-Dialog.openPopup = (config: object): Promise<string> => {
-    return new Promise((resolve) => {
-        const newCfg = _private.getDialogConfig(config);
-        if (!newCfg.hasOwnProperty('opener')) {
-            Logger.error(Dialog.prototype._moduleName + ': Для открытия окна через статический метод, обязательно нужно указать опцию opener');
-        }
-        BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-            BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
-                resolve(popupId);
-            });
-        });
-    });
-};
 
 /**
  * Статический метод для закрытия окна по идентификатору.
@@ -167,16 +179,6 @@ Dialog.openPopup = (config: object): Promise<string> => {
  * @see opener
  * @see close
  */
-Dialog.closePopup = (popupId: string): void => {
-    BaseOpener.closeDialog(popupId);
-};
-
-Dialog.getDefaultOptions = () => {
-    // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
-    return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
-};
-
-Dialog._private = _private;
 
 export default Dialog;
 

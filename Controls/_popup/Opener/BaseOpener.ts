@@ -256,9 +256,8 @@ class BaseOpener extends Control<IControlOptions> {
         });
     }
 
-    static showDialog(rootTpl: TemplateFunction, cfg, controller: string, popupId: string, opener: BaseOpener) {
+    static showDialog(rootTpl: TemplateFunction, cfg, controller: string, popupId?: string, opener?: BaseOpener) {
         const def = new Deferred();
-
         if (BaseOpener.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!BaseOpener.isNewEnvironment()) {
                 BaseOpener.getManager().then(() => {
