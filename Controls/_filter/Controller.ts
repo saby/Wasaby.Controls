@@ -174,29 +174,41 @@ const _private = {
 
          getHistoryByItems(historyId: string, items: Array): object|void {
              const historySource = historyUtils.getHistorySource({historyId});
-             const history = historySource.getItems();
+             const historyItems = historySource.getItems();
+             const pinned = historySource.getPinned();
 
              let result;
              let historyData;
              let minimizedItemFromHistory;
              let minimizedItemFromOption;
 
-             if (history && history.getCount()) {
-                 history.each((item, index) => {
-                     if (!result) {
-                         historyData = historySource.getDataObject(item.get('ObjectData'));
-                         minimizedItemFromOption = _private.minimizeFilterItems(items);
-                         minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
+             const findItemInHistory = (hItems) => {
+                 if (hItems && hItems.getCount()) {
+                     hItems.each((item, index) => {
+                         if (!result) {
+                             historyData = historySource.getDataObject(item.get('ObjectData'));
 
-                         if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
-                             result = {
-                                 item,
-                                 data: historyData,
-                                 index
-                             };
+                             if (historyData) {
+                                 minimizedItemFromOption = _private.minimizeFilterItems(items);
+                                 minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
+
+                                 if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
+                                     result = {
+                                         item,
+                                         data: historyData,
+                                         index
+                                     };
+                                 }
+                             }
                          }
-                     }
-                 });
+                     });
+                 }
+             };
+
+             findItemInHistory(historyItems);
+
+             if (!result) {
+                 findItemInHistory(pinned);
              }
 
              return result;
