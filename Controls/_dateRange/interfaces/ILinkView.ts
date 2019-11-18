@@ -88,7 +88,7 @@ export default {
              * @name Controls/_dateRange/interfaces/ILinkView#showPrevArrow
              * @cfg {Boolean} Display the control arrow to switch to the previous period
              * @deprecated Use options {@link prevArrowVisibility} instead.
-             */             
+             */
             showPrevArrow: false,
 
             /**
