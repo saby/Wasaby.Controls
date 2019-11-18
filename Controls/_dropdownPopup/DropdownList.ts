@@ -23,15 +23,15 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                Logger.warn('IGrouped: Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".', self);
             }
          },
-         setPopupOptions: function(self, horizontalAlign, theme) {
-            var align = horizontalAlign || 'right';
+         setPopupOptions: function(self, horizontalPosition, theme) {
+            var align = horizontalPosition || 'right';
             self._popupOptions = {
                className: 'controls-DropdownList__subMenu controls-DropdownList__subMenu_margin theme_' + theme,
 
                // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
                autofocus: false,
-               horizontalAlign: {
-                  side: align
+               direction: {
+                  horizontal: align
                },
                targetPoint: {
                   horizontal: align
@@ -39,8 +39,8 @@ import {SyntheticEvent} from 'Vdom/Vdom'
             };
          },
 
-         getDropdownClass: function(verticalAlign, typeShadow) {
-            return 'controls-DropdownList__popup-' + verticalAlign.side +
+         getDropdownClass: function(verticalPosition, typeShadow) {
+            return 'controls-DropdownList__popup-' + verticalPosition +
                ' controls-DropdownList__popup-shadow-' + typeShadow;
          },
 
@@ -51,8 +51,8 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                   targetPoint: {
                      horizontal: 'right'
                   },
-                  horizontalAlign: {
-                     side: 'right'
+                  direction: {
+                     horizontal: 'right'
                   }
                };
             }
@@ -93,7 +93,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                   hasIconPin: options.hasIconPin
                },
                targetPoint: subMenuPosition.targetPoint,
-               horizontalAlign: subMenuPosition.horizontalAlign,
+               direction: subMenuPosition.direction,
                target: event.target
             };
          },
@@ -253,10 +253,10 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                _private.prepareHeaderConfig(this, newOptions);
             }
 
-            if (newOptions.stickyPosition.horizontalAlign &&
-               (!this._popupOptions || this._popupOptions.horizontalAlign !== newOptions.stickyPosition.horizontalAlign)) {
-               this._dropdownClass = _private.getDropdownClass(newOptions.stickyPosition.verticalAlign, newOptions.typeShadow);
-               _private.setPopupOptions(this, newOptions.stickyPosition.horizontalAlign.side, newOptions.theme);
+            if (newOptions.stickyPosition.direction &&
+               (!this._popupOptions || this._popupOptions.direction !== newOptions.stickyPosition.direction)) {
+               this._dropdownClass = _private.getDropdownClass(newOptions.stickyPosition.direction.vertical, newOptions.typeShadow);
+               _private.setPopupOptions(this, newOptions.stickyPosition.direction.horizontal, newOptions.theme);
             }
          },
 

@@ -24,7 +24,7 @@ var __PopupContent = BaseLayer.extend({
    _beforeUpdate(newOptions): void {
       __PopupContent.superclass._beforeUpdate.apply(this, arguments);
 
-      const isPopupOpenedToTop = newOptions.stickyPosition && newOptions.stickyPosition.verticalAlign.side === 'top';
+      const isPopupOpenedToTop = newOptions.stickyPosition && newOptions.stickyPosition.direction.vertical === 'top';
 
       if (!this._reverseList && isPopupOpenedToTop) {
           // scroll after list render in  _beforePaint hook

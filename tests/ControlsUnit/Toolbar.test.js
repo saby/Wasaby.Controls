@@ -297,8 +297,8 @@ define(
                         horizontal: 'left',
                         vertical: 'top'
                      },
-                     horizontalAlign: {
-                        side: 'right'
+                     direction: {
+                        horizontal: 'right'
                      },
                      target: 'target',
                      templateOptions: {
