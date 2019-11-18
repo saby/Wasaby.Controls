@@ -4,7 +4,8 @@
          listModel="{{ _collection }}"
          itemActions="{{ _options.itemActions }}"
          actionAlignment="{{ _options.actionAlignment }}"
-         actionCaptionPosition="{{ _options.actionCaptionPosition }}">
+         actionCaptionPosition="{{ _options.actionCaptionPosition }}"
+         menuIsShown="{{ _dropdownMenuIsOpen }}">
          <Controls._listRender.Containers.ItemActions
             listModel="{{ _collection }}"
             itemActions="{{ _options.itemActions }}"

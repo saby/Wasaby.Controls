@@ -78,6 +78,16 @@ export default class ItemActionsManager extends BaseManager<IVirtualScrollManage
         );
     }
 
+    getChildActions(item: IItemActionsManageableItem, parent: TItemAction): TItemAction[] {
+        const actions = item.getActions();
+        const allActions = actions && actions.all;
+        if (allActions) {
+            const parentId = parent.id;
+            return allActions.filter((action) => action.parent === parentId);
+        }
+        return [];
+    }
+
     protected _isMatchingActions(oldContainer: IItemActionsContainer, newContainer: IItemActionsContainer): boolean {
         return (
             this._isMatchingActionLists(oldContainer.all, newContainer.all) &&
