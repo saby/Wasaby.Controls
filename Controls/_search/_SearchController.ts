@@ -98,14 +98,13 @@ var SearchController = extend({
 
       if (!this.isLoading && ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength))) {
          this.isLoading = true;
-         _private.search(this, value, force).then((result) => {
-            result = _private.search(this, value, force);
+         result = _private.search(this, value, force);
+         result.then((result) => {
             this.isLoading = false;
          });
       } else if (searchByValueChanged || !valueLength) {
          result = _private.abort(this);
       }
-
       return result;
    },
 
