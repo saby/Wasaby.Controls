@@ -69,23 +69,20 @@ var InfoBoxTemplate = Control.extend({
  */
 /**
  * @name Controls/_popupTemplate/InfoBox#stickyPosition
- * @cfg {StickyPosition} Конфигурация позиционирования окна.
+ * @cfg {StickyPosition} Конфигурация позиционирования вызывающего окна.
  */
 /**
  * @typedef {Object} StickyPosition
- * @property {Object} targetPoint
+ * @description Конфигурация позиционирования вызывающего окна
+ * @property {Object} targetPoint Точка позиционирования.
  * @property {String} targetPoint.vertical
- * * top
- * * bottom
+ * Доступные значения: top, center, bottom.
  * @property {String} targetPoint.horizontal
- * * right
- * * left
+ * Доступные значения: right, left.
  * @property {String} verticalAlign.side
- * * right
- * * left
+ * Доступные значения: right, left.
  * @property {String} horizontalAlign.side
- * * right
- * * left
+ * Доступные значения: right, left.
  * 
  */
 InfoBoxTemplate.getDefaultOptions = function() {
