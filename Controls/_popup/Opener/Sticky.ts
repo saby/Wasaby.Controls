@@ -60,7 +60,7 @@ class Sticky extends BaseOpener {
      * @property {Number} width Текущая ширина всплывающего окна
      * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционируется всплывающее окно.
      * @property {Node} opener Логический инициатор открытия всплывающего окна
-     * @property {Object|String} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+     * @property {fittingMode} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
      * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события всплывающего окна.
      */
 
@@ -380,21 +380,13 @@ export default Sticky;
  */
 
 /**
- * @typedef {Object} fittingMode
- * @property {vertical} vertical
- * @property {horizontal} horizontal
+ * @typedef {Object|String} fittingMode
+ * @property {fittingModeValue} vertical
+ * @property {fittingModeValue} horizontal
  */
 
 /**
- * @typedef {Enum} vertical
- * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
- * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
- * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.
- * @default adaptive
- */
-
-/**
- * @typedef {Enum} horizontal
+ * @typedef {Enum} fittingModeValue
  * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
  * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
  * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.
