@@ -5,18 +5,31 @@
  * @see Controls/_grid/interface/IGridControl/Column.typedef
  * @see Controls/grid:IGridControl#columns
  * @remark
- * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к свойствам, которое описаны в следующей таблице:
- * 
- * * columnIndex порядковый номер колонки. Отсчет от 0.
- * * index — порядковый номер строки. Отсчет от 0.
- * * isEditing — Признак <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/">редактирования по месту</a>.
- * * item — элемент, данные которого отображаются в колонке.
- * * column — конфигурация колонки.
- * 
  * Дополнительно о шаблоне:
  * 
  * * {@link Controls/grid:IColumnTemplateOptions Параметры шаблона}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/ Руководство разработчика}
+ * @example
+ * В следующем примере показано, как изменить параметры шаблона.
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:columns>
+ *       <ws:Array>
+ *          <ws:Object displayProperty="Name">
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                   <ws:contentTemplate>
+ *                      <div title="{{template.itemData.item.Name}}">
+ *                         {{template.itemData.item.Name}}
+ *                      </div>
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:columns>
+ * </Controls.grid:View>
+ * </pre>
  */
 
 
@@ -25,9 +38,70 @@
  * @interface Controls/grid:IColumnTemplateOptions
  * @author Авраменко А.С.
  */
+
 /**
  * @name Controls/grid:IColumnTemplateOptions#contentTemplate
- * @cfg {String} Вёрстка, описывающая содержимое ячейки.
+ * @cfg {String|Function} Вёрстка, описывающая содержимое ячейки.
+ * @remark
+ * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к следующим свойствам:
+ * 
+ * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
+ * * **index** — порядковый номер строки. Отсчет от 0.
+ * * **isEditing** — признак {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирования по месту}.
+ * * **item** — элемент, данные которого отображаются в колонке.
+ * * **column** — {@link Controls/_grid/interface/IGridControl/Column.typedef конфигурация колонки}.
+ * @example
+ * **Пример 1.** В следующем примере показано как получить доступ к itemData, если опция настраивается в рамках родительского шаблона.
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:columns>
+ *       <ws:Array>
+ *          <ws:Object displayProperty="Name">
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                   <ws:contentTemplate>
+ *                      <div title="{{template.itemData.item.Name}}">
+ *                         {{template.itemData.item.Name}}
+ *                      </div>
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:columns>
+ * </Controls.grid:View>
+ * </pre>
+ * **Пример 2.** В следующем примере показано как получить доступ к itemData, если опция настраивается в отдельном файле.
+ * <pre class="brush: html">
+ * <!-- Child.wml -->
+ * <ws:partial template="Controls/grid:ColumnTemplate">
+ *    <ws:contentTemplate>
+ *       <div>{{itemData.item.id}} - {{itemData.item.author}}</div>
+ *    </ws:contentTemplate>
+ * </ws:partial>
+ * </pre>
+ * <pre class="brush: html">
+ * <!-- Parent.wml -->
+ * <Controls.grid:View>
+ *    <ws:columns>
+ *       <ws:Array>
+ *          <ws:Object displayProperty="Name" template="{{ myTemplate }}" />
+ *       </ws:Array>
+ *    </ws:columns>
+ * </Controls.grid:View>
+ * </pre>
+ * <pre class="brush: js">
+ * define('MyControl',
+ *    ['UI/Base', 'wml!Parent', 'wml!Child'], 
+ *    function(Base, template, myTemplate) {
+ *    var ModuleClass = Base.Control.extend({
+ *       _template: template,
+ *       myTemplate: myTemplate,
+ *       // логика работы контрола
+ *    });
+ *    return ModuleClass;
+ * });
+ * </pre>
  */
 export default interface IColumnTemplateOptions {
    contentTemplate?: string;

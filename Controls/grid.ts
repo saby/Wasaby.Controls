@@ -5,6 +5,7 @@
  * @includes ItemTemplate Controls/grid:ItemTemplate
  * @includes ResultsTemplate Controls/grid:ResultsTemplate
  * @includes GroupTemplate Controls/grid:GroupTemplate
+ * @includes HeaderContent Controls/grid:HeaderContent
  * @includes LadderWrapper Controls/grid:LadderWrapper
  * @includes ColumnTemplate Controls/grid:ColumnTemplate
  * @includes RowEditor Controls/grid:RowEditor

@@ -25,7 +25,7 @@
  * @remark
  * Подробнее о шаблоне:
  * 
- * * {@link Controls/grid:GroupTemplate Параметры шаблона}
+ * * {@link Controls/grid:IGroupTemplateOptions Параметры шаблона}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/ Руководство разработчика}
  */
 
@@ -54,18 +54,22 @@
  */
 
 /**
- * @name Controls/grid:IGroupTemplateOptions#rightTemplate
- * @cfg {String|Function} Шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.
- */
-/**
  * @name Controls/grid:IGroupTemplateOptions#columnAlignGroup
  * @cfg {Number} Номер колонки, относительно которой происходит горизонтальное выравнивание текста группы.
- * 
+ * @default 0
  */
+
+/**
+ * @name Controls/grid:IGroupTemplateOptions#rightTemplate
+ * @cfg {String|Function} Шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.
+ * @default Controls/list:GroupContentResultsTemplate
+ */
+
+
 export default interface IGroupTemplateOptions {
    expanderAlign?: string;
    expanderVisible?: boolean;
    textAlign?: string;
-   rightTemplate?: string;
    columnAlignGroup?: number;
+   rightTemplate?: string;
 }

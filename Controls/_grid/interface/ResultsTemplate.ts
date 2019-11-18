@@ -7,12 +7,12 @@
  * @remark
  * Дополнительно о шаблоне:
  * 
- * * {@link Controls/grid:ResultsTemplate Параметры шаблона}
+ * * {@link Controls/grid:IResultsTemplateOptions Параметры шаблона}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ Руководство разработчика}
  */
 
 /**
- * Интерфейс для {@link Controls/grid:LadderWrapper шаблона строки итогов} в табличном представлении.
+ * Интерфейс для {@link Controls/grid:ResultsTemplate шаблона строки итогов} в табличном представлении.
  * @interface Controls/grid:IResultsTemplateOptions
  * @author Авраменко А.С.
  */
