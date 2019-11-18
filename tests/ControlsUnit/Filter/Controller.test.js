@@ -834,11 +834,26 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          filterButtonItem = {
             name: 'testId4',
             value: 'testValue4',
+            resetValue: 'testValue4',
             visibility: true,
             viewMode: 'basic'
          };
          expectedMinItem = {
             name: 'testId4',
+            visibility: false,
+            viewMode: 'basic'
+         };
+         assert.deepStrictEqual(Filter._private.minimizeItem(filterButtonItem), expectedMinItem);
+
+         filterButtonItem = {
+            name: 'testId4',
+            value: 'testValue4',
+            visibility: true,
+            viewMode: 'basic'
+         };
+         expectedMinItem = {
+            name: 'testId4',
+            value: 'testValue4',
             visibility: false,
             viewMode: 'basic'
          };
@@ -902,14 +917,18 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             ]
          });
          const filterItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField2: 'anyValue2'}];
+         let dataObject = null;
          sandbox.replace(HistoryUtils, 'getHistorySource', () => {
             return {
                getItems: () => historyItems,
-               getDataObject: () => [{
-                  id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
-               }]
+               getDataObject: () => dataObject
             };
          });
+         assert.isUndefined(Filter._private.getHistoryByItems('testId', filterItems));
+
+         dataObject = [{
+            id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
+         }];
          assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 0);
          sandbox.restore();
       });

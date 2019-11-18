@@ -79,12 +79,15 @@ const _private = {
             const visibility = !isNeedSaveHistory && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
             const minimizedItem = {};
             const value = getPropValue(item, 'value');
+            const isNeedSaveValue = getPropValue(item, 'resetValue') !== undefined ?
+                value !== undefined && isNeedSaveHistory :
+                true;
 
             if (visibility !== undefined) {
                 minimizedItem.visibility = visibility;
             }
 
-            if (isNeedSaveHistory && value !== undefined) {
+            if (isNeedSaveValue) {
                 minimizedItem.value = getPropValue(item, 'value');
             }
 
@@ -182,15 +185,18 @@ const _private = {
                  history.each((item, index) => {
                      if (!result) {
                          historyData = historySource.getDataObject(item.get('ObjectData'));
-                         minimizedItemFromOption = _private.minimizeFilterItems(items);
-                         minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
 
-                         if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
-                             result = {
-                                 item,
-                                 data: historyData,
-                                 index
-                             };
+                         if (historyData) {
+                             minimizedItemFromOption = _private.minimizeFilterItems(items);
+                             minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
+
+                             if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
+                                 result = {
+                                     item,
+                                     data: historyData,
+                                     index
+                                 };
+                             }
                          }
                      }
                  });
