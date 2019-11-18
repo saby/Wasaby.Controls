@@ -9,7 +9,16 @@
  * <pre>
  *    <Controls.grid:View>
  *       <ws:groupTemplate>
- *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}" />
+ *          <ws:partial
+ *             template="Controls/grid:GroupTemplate"
+ *             expanderVisible="{{ false }}"
+ *             expanderAlign="right"
+ *             textAlign="left"
+ *             columnAlignGroup="1">
+ *             <ws:rightTemplate>
+ *                Примечание отобразится справа от кнопки-экспандера.
+ *             </ws:rightTemplate>
+ *          </ws:partial>
  *       </ws:groupTemplate>
  *    </Controls.grid:View>
  * </pre>

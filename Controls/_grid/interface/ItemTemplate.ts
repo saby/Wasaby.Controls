@@ -19,6 +19,7 @@
  *          <ws:colspanTemplate>
  *             <span>Это текст для объединенных ячеек.</span>
  *          </ws:colspanTemplate>
+ *       </ws:partial>
  *    </ws:itemTemplate>
  * </Controls.grid:View>
  * </pre>
