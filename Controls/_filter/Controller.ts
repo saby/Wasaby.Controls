@@ -220,6 +220,14 @@ const _private = {
             return historyUtils.getHistorySource({historyId}).destroy(item.getId(), {$_history: true});
         },
 
+        deleteCurrentFilterFromHistory(self): void {
+            const history = _private.getHistoryByItems(self._options.historyId, self._filterButtonItems);
+
+            if (history) {
+                _private.deleteFromHistory(history.item, self._options.historyId);
+            }
+        },
+
         processPrefetchOnItemsChanged(self, options): void {
             // Меняют фильтр с помощью кнопки фильтров,
             // но такой фильтр уже может быть сохранён в истории и по нему могут быть закэшированные данные,
@@ -235,7 +243,7 @@ const _private = {
                 const prefetchParams = Prefetch.getPrefetchFromHistory(history.data);
                 const needInvalidate = prefetchParams && Prefetch.needInvalidatePrefetch(history.data);
 
-                if (history.index === ACTIVE_HISTORY_FILTER_INDEX || needInvalidate) {
+                if (needInvalidate) {
                     needDeleteFromHistory = true;
                 }
 
@@ -779,12 +787,26 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             }
          },
 
-         _itemsChanged(event, items) {
+         _filterHistoryApply(event, history): void {
+             if (this._options.prefetchParams) {
+                 _private.processHistoryOnItemsChanged(this, history.items || history, this._options);
+             }
+         },
+
+         _itemsChanged(event, items): void {
             _private.updateFilterItems(this, items);
             _private.applyItemsToFilter(this, this._filter, items);
 
             if (this._options.historyId) {
-                _private.processHistoryOnItemsChanged(this, items, this._options);
+                if (this._options.prefetchParams) {
+                    if (!this._isFilterChanged) {
+                        _private.deleteCurrentFilterFromHistory(this);
+                        Prefetch.clearPrefetchSession(this._filter);
+                    }
+                    this._isFilterChanged = true;
+                } else {
+                    _private.processHistoryOnItemsChanged(this, items, this._options);
+                }
             }
 
             _private.notifyFilterChanged(this);
