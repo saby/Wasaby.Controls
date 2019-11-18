@@ -69,6 +69,9 @@ var
         toggleExpanded: function (dispItem, expand) {
             this._model.toggleExpanded(dispItem, expand);
         },
+        getItemType: function (dispItem) {
+            return this._model.getItemType(dispItem);
+        },
         isExpanded: function (dispItem) {
             return this._model.isExpanded(dispItem);
         },

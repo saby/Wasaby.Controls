@@ -224,6 +224,49 @@ define([
             resolve();
          });
       });
+      it('expandMarkedItem', function() {
+         var
+            toggleExpandedStack = [],
+            rawData =  [{
+                key: 1,
+                parent: null,
+                type: true
+            }, {
+                key: 2,
+                parent: null,
+                type: false
+            }, {
+                key: 3,
+                parent: null,
+                type: null
+            }],
+            cfg = {
+               columns: [],
+               source: new sourceLib.HierarchicalMemory({
+                  data: rawData,
+                  keyProperty: 'key'
+               }),
+               keyProperty: 'key',
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               markedKey: 1
+            },
+            treeControl = correctCreateTreeControl(cfg);
+         treeControl.toggleExpanded = function(key) {
+            toggleExpandedStack.push(key);
+         };
+         var model = treeControl._children.baseControl.getViewModel();
+         model.setItems(new collection.RecordSet({
+            rawData: rawData,
+            keyProperty: 'key'
+         }));
+         treeGrid.TreeControl._private.expandMarkedItem(treeControl);
+         model.setMarkedKey(2);
+         treeGrid.TreeControl._private.expandMarkedItem(treeControl);
+         model.setMarkedKey(3);
+         treeGrid.TreeControl._private.expandMarkedItem(treeControl);
+         assert.deepEqual(toggleExpandedStack, [1, 2]);
+      });
       describe('itemMouseMove calls nodeMouseMove when dragging', function() {
          let tree = correctCreateTreeControl({
             columns: [],

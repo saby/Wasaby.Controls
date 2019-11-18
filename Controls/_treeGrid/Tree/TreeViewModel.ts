@@ -430,6 +430,20 @@ var
             return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
         },
 
+        getItemType(dispItem) {
+            const contents = dispItem && dispItem.getContents();
+            if (contents && contents.get) {
+                const itemType = contents.get(this._options.nodeProperty);
+                if (itemType === false) {
+                    return 'hiddenNode';
+                }
+                if (itemType === true) {
+                    return 'node';
+                }
+            }
+            return 'leaf';
+        },
+
         isExpanded: function(dispItem) {
             var
                 itemId = dispItem.getContents().getId();
