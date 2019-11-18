@@ -148,7 +148,7 @@ define(
             newConfig.source[0].value = 1;
             newConfig.source[0].editorOptions.source = new sourceLib.Memory({
                keyProperty: 'id',
-               data: defaultItems[0]
+               data: Clone(defaultItems[0])
             });
             view._configs = {};
             view._displayText = {};
@@ -193,7 +193,7 @@ define(
             newConfig.source[0].value = 1;
             newConfig.source[0].editorOptions.source = new sourceLib.Memory({
                keyProperty: 'id',
-               data: defaultItems[0]
+               data: Clone(defaultItems[0])
             });
             view._configs = {};
             view._displayText = {};
@@ -575,44 +575,13 @@ define(
             assert.deepStrictEqual(folders, ['1', '5']);
          });
 
-         it('_private:updateHistory', function() {
-            let view = getView(defaultConfig);
-            view._source = Clone(defaultConfig.source);
-            let resultHistoryItems, resultMeta;
-            let source = new history.Source({
-               originSource: new sourceLib.Memory({
-                  keyProperty: 'key',
-                  data: []
-               }),
-               historySource: new history.Service({
-                  historyId: 'TEST_HISTORY_ID'
-               })
-            });
-            source.update = (historyItems, meta) => {
-               resultHistoryItems = historyItems;
-               resultMeta = meta;
-            };
-            view._source[0].editorOptions.source = source;
-            view._configs = {
-               document: {
-                  items: Clone(defaultItems[0]),
-                  displayProperty: 'title',
-                  keyProperty: 'id'
-               }
-            };
-            let items = [{key: 1}];
-            filter.View._private.updateHistory(view, 'document', items);
-            assert.deepEqual(resultHistoryItems, items);
-            assert.deepEqual(resultMeta, {$_history: true});
-         });
-
          it('_private:loadSelectedItems', function(done) {
             let source = [...defaultSource];
             source[1].value = [1];
             let configs = {
                document: {
                   items: new collection.RecordSet({
-                     rawData: defaultItems[0],
+                     rawData: Clone(defaultItems[0]),
                      keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
@@ -742,7 +711,7 @@ define(
             let configs = {
                document: {
                   items: new collection.RecordSet({
-                     rawData: defaultItems[0],
+                     rawData: Clone(defaultItems[0]),
                      keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
@@ -841,7 +810,7 @@ define(
                };
                view._configs.state.items = new collection.RecordSet({
                   keyProperty: 'id',
-                  rawData: defaultItems[1]
+                  rawData: Clone(defaultItems[1])
                });
                let newItems = new collection.RecordSet({
                   keyProperty: 'id',
@@ -876,7 +845,7 @@ define(
                };
                view._configs.state.items = new collection.RecordSet({
                   keyProperty: 'id',
-                  rawData: defaultItems[1]
+                  rawData: Clone(defaultItems[1])
                });
                view._idOpenSelector = 'state';
                let newItems = new collection.RecordSet({
@@ -931,7 +900,7 @@ define(
                };
                view._configs.state.items = new collection.RecordSet({
                   keyProperty: 'id',
-                  rawData: defaultItems[1]
+                  rawData: Clone(defaultItems[1])
                });
                let newItems = new collection.RecordSet({
                   keyProperty: 'id',
@@ -1035,6 +1004,67 @@ define(
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [], '-2': [4]});
                assert.deepStrictEqual(view._displayText.document, {text: 'Deleted', title: 'Deleted', hasMoreText: '' });
+            });
+         });
+
+         describe('View history', function() {
+            let view, hSource;
+            beforeEach(function() {
+               view = getView(defaultConfig);
+               view._source = Clone(defaultConfig.source);
+               view._displayText = {};
+               view._source = Clone(defaultConfig.source);
+               view._configs = {
+                  document: {
+                     items: Clone(defaultItems[0]),
+                     displayProperty: 'title',
+                     keyProperty: 'id'
+                  },
+                  state: {}
+               };
+               view._children = {
+                  StickyOpener: { close: () => {} }
+               };
+               hSource = new history.Source({
+                  originSource: new sourceLib.Memory({
+                     keyProperty: 'key',
+                     data: []
+                  }),
+                  historySource: new history.Service({
+                     historyId: 'TEST_HISTORY_ID'
+                  })
+               });
+
+            });
+
+            it('_private:updateHistory', function() {
+               let resultHistoryItems, resultMeta;
+               hSource.update = (historyItems, meta) => {
+                  resultHistoryItems = historyItems;
+                  resultMeta = meta;
+               };
+               view._source[0].editorOptions.source = hSource;
+               let items = [{key: 1}];
+               filter.View._private.updateHistory(view, 'document', items);
+               assert.deepEqual(resultHistoryItems, items);
+               assert.deepEqual(resultMeta, {$_history: true});
+            });
+
+            it('_private:getPopupConfig historySource', function() {
+               hSource.prepareItems = () => {
+                  return new collection.RecordSet({ rawData: Clone(defaultItems[1]) });
+               };
+               hSource.originSource = new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: defaultItems[0]
+               });
+               view._source[0].editorOptions.source = hSource;
+               view._configs.document.sourceController = {
+                  load: () => {return Deferred.success();},
+                  hasMoreData: () => {return true;}
+               };
+               filter.View._private.getPopupConfig(view, view._configs, view._source);
+               assert.equal(view._configs.document.items.getCount(), 7);
             });
          });
       });
