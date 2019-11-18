@@ -47,11 +47,11 @@ class BaseOpener extends Control<IControlOptions> {
     protected _beforeUnmount(): void {
         this._notify('unregisterOpenerUpdateCallback', [this._openerUpdateCallback], {bubbling: true});
         this._toggleIndicator(false);
-        if (this._openPopupTimerId) {
-            clearTimeout(this._openPopupTimerId);
-            this._openPopupTimerId = null;
-        }
         if (this._options.closePopupBeforeUnmount) {
+            if (this._openPopupTimerId) {
+                clearTimeout(this._openPopupTimerId);
+                this._openPopupTimerId = null;
+            }
             if (this._useVDOM()) {
                 ManagerController.remove(this._popupId);
             } else if (this._action) { // todo Compatible
