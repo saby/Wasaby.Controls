@@ -69,19 +69,20 @@ var InfoBoxTemplate = Control.extend({
  */
 /**
  * @name Controls/_popupTemplate/InfoBox#stickyPosition
- * @cfg {StickyPosition} Конфигурация позиционирования вызывающего окна.
+ * @cfg {StickyPosition} Конфигурация позиционирования всплывающего окна.
  */
 /**
  * @typedef {Object} StickyPosition
- * @description Конфигурация позиционирования вызывающего окна
- * @property {Object} targetPoint Точка позиционирования.
- * @property {String} targetPoint.vertical
- * Доступные значения: top, center, bottom.
- * @property {String} targetPoint.horizontal
+ * @description Конфигурация позиционирования всплывающего окна
+ * @property {Object} targetPoint Точка позиционнирования всплывающего окна относительно вызывающего элемента.
+ * @property {String} targetPoint.vertical Выравнивание по вертикали.
+ * Доступные значения: top, bottom.
+ * @property {String} targetPoint.horizontal Выравнивание по горизонтали.
  * Доступные значения: right, left.
- * @property {String} verticalAlign.side
- * Доступные значения: right, left.
- * @property {String} horizontalAlign.side
+ * @property {Object} direction Устанавливает выравнивание всплывающего окна относительно точки позиционирования.
+ * @property {String} direction.vertical Выравнивание по вертикали.
+ * Доступные значения: top, bottom.
+ * @property {String} direction.horizontal Выравнивание по горизонтали.
  * Доступные значения: right, left.
  * 
  */
