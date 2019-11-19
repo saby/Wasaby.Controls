@@ -2226,7 +2226,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
     _onViewPortResize: function(self, viewPortSize, viewPortRect) {
-        _private.updateIndicatorContainerHeight(self, self._container.getBoundingClientRect(), viewPortRect);
+        // FIXME self._container[0] delete after
+        // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        const container = self._container[0] || self._container;
+        _private.updateIndicatorContainerHeight(self, container.getBoundingClientRect(), viewPortRect);
         self._viewPortSize = viewPortSize;
         self._viewPortRect = viewPortRect;
 
