@@ -182,6 +182,7 @@
    .controls-MonthViewVDOM__tableRow {
       flex-basis: @height_PeriodDialog-monthRange-month-date;
       flex-grow: 0;
+      justify-content: center;
    }
 
    .controls-MonthViewVDOM__item-today-background {
@@ -192,8 +193,13 @@
    }
 
    .controls-MonthViewVDOM__item {
+      max-width: @width_PeriodDialog-monthRange-month-date;
       font-size: @font-size_PeriodDialog-monthRange-month-date;
       margin: 0;
+   }
+
+   .controls-MonthViewVDOM__item-selectedStartEnd {
+      outline: @border-color_RangeSelection-selected-startEnd-edgeBorder solid @outline_PeriodDialog-dateRange;
    }
 
    .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected,
