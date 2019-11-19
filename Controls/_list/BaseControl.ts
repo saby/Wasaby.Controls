@@ -50,6 +50,7 @@ const
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
+const TRIGGER_VISIBILITY_UPDATE_DELAY = 101;
 const INITIAL_PAGES_COUNT = 1;
 const ITEMACTIONS_UNLOCK_DELAY = 200;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
@@ -2101,7 +2102,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
-            });
+            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
         }
 
         // todo KINGO.
@@ -2120,7 +2121,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
-            });
+            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
         }
 
         if (this._restoredScroll !== null) {

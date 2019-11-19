@@ -15,6 +15,10 @@ import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/I
 
 const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
+const POSITION_CLASSES = {
+    bottomRight: 'controls-itemActionsV_position_bottomRight',
+    topRight: 'controls-itemActionsV_position_topRight'
+}
 
 var _private = {
     fillItemAllActions: function(item, options) {
@@ -135,13 +139,23 @@ var _private = {
        });
 
        return children;
-   }
+    },
+    getContainerPaddingClass(classes: string, itemPadding: object):string {
+       let paddingClass = ' ';
+       if (classes.indexOf(POSITION_CLASSES.topRight) !== -1) {
+           paddingClass += 'controls-itemActionsV_padding-top_' + (itemPadding && itemPadding.top === 'null' ? 'null ' : 'default ');
+       } else  if (classes.indexOf(POSITION_CLASSES.bottomRight) !== -1) {
+           paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ');
+       }
+       return paddingClass;
+    }
 };
 
 var ItemActionsControl = Control.extend({
 
     _template: template,
     _itemActionsTemplate: itemActionsTemplate,
+    _getContainerPaddingClass: null,
 
     constructor: function() {
         ItemActionsControl.superclass.constructor.apply(this, arguments);
@@ -157,6 +171,7 @@ var ItemActionsControl = Control.extend({
             this.serverSide = true;
             return;
         }
+        this._getContainerPaddingClass = _private.getContainerPaddingClass.bind(this);
         if (newOptions.useNewModel) {
             return import('Controls/listRender').then((listRender) => {
                 this._itemActionsTemplate = listRender.itemActionsTemplate;

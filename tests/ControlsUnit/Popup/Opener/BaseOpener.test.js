@@ -63,6 +63,8 @@ define(
             let opener = new popup.BaseOpener();
             let isHideIndicatorCall = false;
             opener._indicatorId = '123';
+            opener._openPopupTimerId = '145';
+            opener._options.closePopupBeforeUnmount = true;
 
             opener._notify = (eventName, args) => {
                if (eventName === 'hideIndicator') {
@@ -73,11 +75,15 @@ define(
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
             assert.equal(isHideIndicatorCall, true);
+            assert.equal(opener._openPopupTimerId, null);
 
             isHideIndicatorCall = false;
             opener._indicatorId = null;
+            opener._openPopupTimerId = '145';
+            opener._options.closePopupBeforeUnmount = false;
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
+            assert.equal(opener._openPopupTimerId, '145');
             assert.equal(isHideIndicatorCall, false);
             opener.destroy();
          });
