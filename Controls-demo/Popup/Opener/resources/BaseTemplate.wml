@@ -1,0 +1,20 @@
+<div class="mr-CreateMerge" tabindex="0">
+    <div class="mr-CreateMerge__top">
+        <div class="rowWithLabel">
+            <Controls.input:Label caption="Ветка" required="{{true}}"/>
+            <Controls.input:Text bind:value="_branch" attr:class="rowWithLabel__row"/>
+        </div>
+        <div class="rowWithLabel">
+            <Controls.input:Label caption="Хранилище" required="{{false}}"/>
+            <Controls.input:Text bind:value="_storage" attr:class="rowWithLabel__row"/>
+        </div>
+        <div class="rowWithLabel">
+            <Controls.input:Label caption="Заголовок" required="{{false}}"/>
+            <Controls.input:Text bind:value="_heading" attr:class="rowWithLabel__row"/>
+        </div>
+        <div class="rowWithLabel">
+            <Controls.input:Label caption="Описание" required="{{false}}"/>
+            <Controls.input:Area bind:value="_description" attr:class="rowWithLabel__row"/>
+        </div>
+    </div>
+</div>

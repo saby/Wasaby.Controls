@@ -29,13 +29,15 @@
  */
 
 import CloseButton = require('Controls/_popupTemplate/CloseButton');
-import Stack = require('Controls/_popupTemplate/Stack');
 import Dialog = require('Controls/_popupTemplate/Dialog');
 import { Template as Confirmation, DialogTemplate as ConfirmationDialog } from 'Controls/popupConfirmation';
 import InfoBox = require('Controls/_popupTemplate/InfoBox');
 export {default as Notification} from 'Controls/_popupTemplate/Notification/Base';
 export {default as NotificationSimple} from 'Controls/_popupTemplate/Notification/Simple';
 export {default as StackHeader} from 'Controls/_popupTemplate/Stack/resources/Header';
+export {default as Stack} from 'Controls/_popupTemplate/Stack';
+export {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
+export {default as INotification, INotificationOptions} from 'Controls/_popupTemplate/Notification/interface/INotification';
 
 import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 import DialogController = require('Controls/_popupTemplate/Dialog/Opener/DialogController');
@@ -47,13 +49,11 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import NotificationController = require('Controls/_popupTemplate/Notification/Opener/NotificationController');
 import PreviewerController = require('Controls/_popupTemplate/Previewer/PreviewerController');
 import templateInfoBox = require('Controls/_popupTemplate/InfoBox/Opener/resources/template');
-import {default as INotification, INotificationOptions} from 'Controls/_popupTemplate/Notification/interface/INotification';
 
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
 
 export {
    CloseButton,
-   Stack,
    Dialog,
    Confirmation,
    InfoBox,
@@ -69,8 +69,5 @@ export {
    NotificationController,
    PreviewerController,
    templateInfoBox,
-    INotification,
-    INotificationOptions,
-
    StackStrategy
 };

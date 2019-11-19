@@ -39,7 +39,13 @@
 
 .controls-StackTemplate__top-area_theme_@{themeName} {
    min-height: @header_min-height_stack;
+}
+
+.controls-StackTemplate__top-area-background_theme_@{themeName} {
    background: @header_background-color_stack;
+}
+
+.controls-StackTemplate__top-area-border_theme_@{themeName} {
    border-bottom: @header_bottom-border-thickness_stack solid @header_bottom-border-color_stack;
 }
 
@@ -73,6 +79,10 @@
 .controls-StackTemplate__close_button {
    position: relative;
    z-index: 3;
+}
+
+.controls-StackTemplate__content-area_padding_theme_@{themeName} {
+   margin-right: @width_CloseButton_popup + @header-content_padding-right_stack;
 }
 
 .controls-StackTemplate__close_button_theme_@{themeName} {
