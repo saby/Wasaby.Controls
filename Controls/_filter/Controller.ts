@@ -174,32 +174,43 @@ const _private = {
 
          getHistoryByItems(historyId: string, items: Array): object|void {
              const historySource = historyUtils.getHistorySource({historyId});
-             const history = historySource.getItems();
+             const historyItems = historySource.getItems();
+             const pinned = historySource.getPinned();
 
              let result;
              let historyData;
              let minimizedItemFromHistory;
              let minimizedItemFromOption;
 
-             if (history && history.getCount()) {
-                 history.each((item, index) => {
-                     if (!result) {
-                         historyData = historySource.getDataObject(item.get('ObjectData'));
+             const findItemInHistory = (hItems) => {
+                 if (hItems && hItems.getCount()) {
+                     hItems.each((item, index) => {
+                         if (!result) {
+                             historyData = historySource.getDataObject(item.get('ObjectData'));
 
-                         if (historyData) {
-                             minimizedItemFromOption = _private.minimizeFilterItems(items);
-                             minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
+                             if (historyData) {
+                                 minimizedItemFromOption = _private.minimizeFilterItems(items);
+                                 minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
 
-                             if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
-                                 result = {
-                                     item,
-                                     data: historyData,
-                                     index
-                                 };
+                                 if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
+                                     result = {
+                                         item,
+                                         data: historyData,
+                                         index
+                                     };
+                                 }
                              }
                          }
-                     }
-                 });
+                     });
+                 }
+             };
+
+             findItemInHistory(historyItems);
+
+             if (!result) {
+                 // Поправится, как будем хранить избранное на сервисе истории
+                 // https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+                 findItemInHistory(pinned);
              }
 
              return result;
@@ -207,6 +218,14 @@ const _private = {
 
         deleteFromHistory(item: Model, historyId: string): Promise {
             return historyUtils.getHistorySource({historyId}).destroy(item.getId(), {$_history: true});
+        },
+
+        deleteCurrentFilterFromHistory(self): void {
+            const history = _private.getHistoryByItems(self._options.historyId, self._filterButtonItems);
+
+            if (history) {
+                _private.deleteFromHistory(history.item, self._options.historyId);
+            }
         },
 
         processPrefetchOnItemsChanged(self, options): void {
@@ -224,7 +243,7 @@ const _private = {
                 const prefetchParams = Prefetch.getPrefetchFromHistory(history.data);
                 const needInvalidate = prefetchParams && Prefetch.needInvalidatePrefetch(history.data);
 
-                if (history.index === ACTIVE_HISTORY_FILTER_INDEX || needInvalidate) {
+                if (needInvalidate) {
                     needDeleteFromHistory = true;
                 }
 
@@ -768,12 +787,26 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             }
          },
 
-         _itemsChanged(event, items) {
+         _filterHistoryApply(event, history): void {
+             if (this._options.prefetchParams) {
+                 _private.processHistoryOnItemsChanged(this, history.items || history, this._options);
+             }
+         },
+
+         _itemsChanged(event, items): void {
             _private.updateFilterItems(this, items);
             _private.applyItemsToFilter(this, this._filter, items);
 
             if (this._options.historyId) {
-                _private.processHistoryOnItemsChanged(this, items, this._options);
+                if (this._options.prefetchParams) {
+                    if (!this._isFilterChanged) {
+                        _private.deleteCurrentFilterFromHistory(this);
+                        Prefetch.clearPrefetchSession(this._filter);
+                    }
+                    this._isFilterChanged = true;
+                } else {
+                    _private.processHistoryOnItemsChanged(this, items, this._options);
+                }
             }
 
             _private.notifyFilterChanged(this);

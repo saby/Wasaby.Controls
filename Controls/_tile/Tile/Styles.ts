@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_tile/Tile/Styles
- * @public
+ * @private
  *
  * @css @spacing_TileView-between-items Spacing between items.
  * @css @border-width_TileView-item Thickness of the border around items.

@@ -1,7 +1,7 @@
 /**
  * @author Золотова Элина
  * @mixin Controls/_filterPopup/Button/History/Styles
- * @public
+ * @private
  *
  * @css @height_HistoryList-item Height of history row.
  * @css @spacing_HistoryList-between-leftBorder-content Spacing between border and content of control.
