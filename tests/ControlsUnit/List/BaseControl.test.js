@@ -1025,6 +1025,11 @@ define([
          lists.BaseControl._private.toggleSelection(baseControl, event);
          assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
 
+         baseControl.getViewModel()._markedKey = 5;
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
+
+
          sandbox.restore();
       });
 
@@ -4085,6 +4090,20 @@ define([
          instance.destroy();
       });
 
+      it('getListTopOffset', function () {
+         const bc = {
+            _children: {
+               listView: {
+               }
+            }
+         };
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 0);
+         bc._children.listView.getHeaderHeight = () => 40;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 40);
+         bc._children.listView.getResultsHeight = () => 30;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 70);
+      });
+
       it('should fire "drawItems" event if collection has changed', async function() {
          var
             cfg = {
@@ -4125,7 +4144,8 @@ define([
                },
                viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
-               source: source
+               source: source,
+               virtualScrolling: true
             },
             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
@@ -4261,35 +4281,45 @@ define([
 
       it('setIndicatorContainerHeight: list bigger then scrollContainer', function() {
 
-         const fakeBaseControl = {
-            _loadingIndicatorContainerHeight: null,
-            _container: {
-               getBoundingClientRect: () => ({
-                  top: 100,
-                  bottom: 1000
-               })
-            }
-         };
+          const fakeBaseControl = {
+              _loadingIndicatorContainerHeight: 0,
+              _isScrollShown: true,
+          };
 
-          lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
+          const viewRect = {
+             y: -10,
+             height: 1000
+          };
+
+          const viewPortRect = {
+             y: 100,
+             height: 500
+          };
+
+          lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 500);
        });
 
-      it('setIndicatorContainerHeight: list smaller then scrollContainer', function() {
-         const fakeBaseControl = {
-            _loadingIndicatorContainerHeight: null,
-            _container: {
-               getBoundingClientRect: () => ({
-                  top: 100,
-                  bottom: 300,
-                  height: 200
-               })
-            }
-         };
+       it('setIndicatorContainerHeight: list smaller then scrollContainer', function () {
+          const fakeBaseControl = {
+             _loadingIndicatorContainerHeight: 0,
+             _isScrollShown: true,
+          };
 
-         lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
-         assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
-      });
+          const viewRect = {
+             y: 50,
+             height: 200
+          };
+
+          const viewPortRect = {
+             y: 0,
+             height: 500
+          };
+
+          lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
+          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
+       });
+
 
 
       it('saveScrollOnToggleLoadingIndicator', async function() {

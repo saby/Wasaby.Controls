@@ -34,7 +34,7 @@
    <div class="ControlsDemo-EditableArea__thirdExample ControlsDemo-EditableArea-width">
             <Controls.tabs:Buttons
             attr:class="ControlsDemo-EditableArea__tabs"
-            bind:selectedKey="_selectedTab"
+            bind:selectedKey="_selectedTab2"
             keyProperty="id"
             itemTemplateProperty="itemTemplate"
             source="{{_tabSource2}}"

@@ -22,6 +22,7 @@ define('Controls/Container/Async',
       /**
        * Контейнер для асинхронной загрузки контролов.
        * Подробное описание и примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
+       *
        * @class Controls/Container/Async
        * @extends Core/Control
        * @control
@@ -33,6 +34,7 @@ define('Controls/Container/Async',
       /*
        * Container for asynchronously loading components.
        * Подробное описание и примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
+       *
        * @class Controls/Container/Async
        * @extends Core/Control
        * @control
@@ -40,6 +42,7 @@ define('Controls/Container/Async',
        * @author Белотелов Н.В.
        * @category Container
        */
+
       /**
        * @name Controls/Container/Async#content
        * @cfg {Content} Содержимое контейнера.
@@ -49,6 +52,7 @@ define('Controls/Container/Async',
        * @name Controls/Container/Async#content
        * @cfg {Content} Container contents.
        */
+
       /**
        * @name Controls/Container/Async#templateName
        * @cfg {String} Имя асинхронно загружаемого контрола.
@@ -58,6 +62,7 @@ define('Controls/Container/Async',
        * @name Controls/Container/Async#templateName
        * @cfg {String} Name of asynchronously loading component
        */
+
       /**
        * @name Controls/Container/Async#templateOptions
        * @cfg {Object} Параметры содержимого контейнера Async.

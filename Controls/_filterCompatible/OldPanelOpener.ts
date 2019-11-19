@@ -234,8 +234,8 @@ import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
                corner: isRightAlign ? 'tl' : 'tr',
                opener: this,
                parent: this,
-               horizontalAlign: {
-                  side: isRightAlign ? 'left' : 'right'
+               direction: {
+                  horizontal: isRightAlign ? 'left' : 'right'
                },
                context: this._pickerContext,
                template: 'SBIS3.CONTROLS/Filter/Button/Area',

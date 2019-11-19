@@ -1,7 +1,7 @@
 /**
  * @author Авраменко А.С.
  * @mixin Controls/_paging/PagingStyles
- * @public
+ * @private
  *
  *
  * @css @height_Paging-buttons height of paging buttons

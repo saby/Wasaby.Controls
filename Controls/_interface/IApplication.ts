@@ -2,7 +2,8 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
 
 /**
  * @interface Controls/_interface/IApplication
-*/
+ * @private
+ */
 
 /**
  * @name Controls/_interface/IApplication#scripts

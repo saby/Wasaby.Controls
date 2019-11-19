@@ -5,7 +5,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import {IoC, constants} from 'Env/Env';
+import {constants} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
@@ -155,7 +156,7 @@ import 'Types/entity';
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               result = _private.loadTileViewMode().then(() => {
+               result = _private.loadTileViewMode(self).then(() => {
                   _private.setViewModeSync(self, viewMode, cfg);
                });
             } else {
@@ -197,14 +198,14 @@ import 'Types/entity';
 
             return itemFromRoot;
          },
-         loadTileViewMode: function () {
+         loadTileViewMode: function (self) {
             return new Promise((resolve) => {
                import('Controls/tile').then((tile) => {
                   VIEW_NAMES.tile = tile.TreeView;
                   VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
                   resolve(tile);
                }).catch((err) => {
-                  IoC.resolve('ILogger').error('Controls/_explorer/View', err);
+                  Logger.error('Controls/_explorer/View: ' + err.message, self, err);
                });
             });
          }

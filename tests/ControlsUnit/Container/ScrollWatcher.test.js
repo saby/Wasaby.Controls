@@ -100,7 +100,8 @@ define([
          var containerMock = {
             scrollTop: 10,
             clientHeight: 300,
-            scrollHeight: 400
+            scrollHeight: 400,
+            getBoundingClientRect: () => {}
          };
 
          ins._scrollTopCache = 111;
@@ -132,7 +133,8 @@ define([
          var containerMock = {
             scrollTop: 10,
             clientHeight: 300,
-            scrollHeight: 400
+            scrollHeight: 400,
+            getBoundingClientRect: () => {}
          };
 
          ins._scrollTopCache = 111;

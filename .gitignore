@@ -3,6 +3,7 @@
 /contents.json
 /contents.js
 /tsconfig.base.json
+/tslib.js
 /pages/**/*.css
 /CONTROLS/**/*.css
 /WS.Data

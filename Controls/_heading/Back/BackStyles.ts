@@ -1,6 +1,6 @@
 /**
     * @mixin Controls/_heading/Back/BackStyles
-    * @public
+    * @private
     *
     * @css @background-image-Back_style-primary_size-s Arrow image of back heading with options size 's' and style 'primary'.
     * @css @background-image-Back_style-primary_size-m Arrow image of back heading with options size 'm' and style 'primary'.

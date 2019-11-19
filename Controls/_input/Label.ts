@@ -1,4 +1,3 @@
-import {IoC} from 'Env/Env';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICaption, ICaptionOptions} from 'Controls/interface';

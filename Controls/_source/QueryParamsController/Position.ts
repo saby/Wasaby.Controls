@@ -3,7 +3,7 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {default as IAdditionalQueryParams, Direction, DirectionCfg} from './interface/IAdditionalQueryParams';
 import {default as More} from './More';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 interface IPositionHasMore {
    before: boolean;
@@ -175,15 +175,13 @@ class PositionNavigation {
             newMore[navDirection] = more;
             this._more.setMoreMeta(newMore);
          } else {
-            IoC.resolve('ILogger')
-               .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
+             Logger.error('QueryParamsController/Position: Wrong type of \"more\" value. Must be object');
          }
       } else if (more instanceof Object) {
          if (!loadDirection &&  this._options.direction === 'both') {
             this._more.setMoreMeta({...more});
          } else {
-            IoC.resolve('ILogger')
-                .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
+             Logger.error('QueryParamsController/Position: Wrong type of \"more\" value. Must be boolean');
          }
       }
 
@@ -201,8 +199,7 @@ class PositionNavigation {
                   this._positionByMeta = true;
                }
             } else {
-               IoC.resolve('ILogger')
-                  .error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
+                Logger.error('QueryParamsController/Position: Wrong type of \"nextPosition\" value. Must be object');
             }
          } else {
             if (!loadDirection && this._options.direction === 'both') {
@@ -212,14 +209,12 @@ class PositionNavigation {
                   this._afterPosition = metaNextPosition.after;
                   this._positionByMeta = true;
                } else {
-                  IoC.resolve('ILogger')
-                     .error('QueryParamsController/Position',
+                   Logger.error('QueryParamsController/Position: ' +
                         'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties.' +
                         'Each properties must be Arrays');
                }
             } else {
-               IoC.resolve('ILogger')
-                  .error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Array');
+                Logger.error('QueryParamsController/Position: Wrong type of \"nextPosition\" value. Must be Array');
             }
          }
 

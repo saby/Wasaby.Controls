@@ -112,7 +112,12 @@ var _private = {
                 popupItem.resetValue = (item.resetValue instanceof Object) ? item.resetValue : [item.resetValue];
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
-                        _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
+                        _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter).addCallback(() => {
+                            if (isHistorySource(item.editorOptions.source)) {
+                                popupItem.items = item.editorOptions.source.prepareItems(popupItem.items);
+                                configs[item.name].items = popupItem.items.clone();
+                            }
+                        });
                     }
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                     popupItem.sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
@@ -579,8 +584,8 @@ var Filter = Control.extend({
                     vertical: 'top',
                     horizontal: 'right'
                 };
-                popupOptions.horizontalAlign = {
-                    side: 'left'
+                popupOptions.direction = {
+                    horizontal: 'left'
                 };
             }
             popupOptions.template = this._options.detailPanelTemplateName;
@@ -598,7 +603,11 @@ var Filter = Control.extend({
                 rawData: _private.getPopupConfig(this, this._configs, this._source)
             });
             const popupOptions = {
-                template: this._options.panelTemplateName
+                template: this._options.panelTemplateName,
+                fittingMode: {
+                    horizontal: 'overflow',
+                    vertical: 'adaptive'
+                }
             };
 
             if (name) {
@@ -647,12 +656,10 @@ var Filter = Control.extend({
             _private[result.action].call(this, result);
         }
         if (result.action !== 'moreButtonClick') {
-            _private.notifyChanges(this, this._source);
-
             if (result.history) {
                 this._notify('historyApply', [result.history]);
             }
-
+            _private.notifyChanges(this, this._source);
             this._children.StickyOpener.close();
         }
     },

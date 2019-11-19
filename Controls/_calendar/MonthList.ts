@@ -2,7 +2,6 @@ import {date as formatDate} from 'Types/formatter';
 import {Date as WSDate} from 'Types/entity';
 import {debounce} from 'Types/function';
 import {Base as BaseSource} from 'Types/source';
-import {IoC} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
@@ -21,6 +20,7 @@ import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 import stubTemplate = require('wml!Controls/_calendar/MonthList/Stub');
+import {Logger} from 'UI/Utils';
 
 
 
@@ -82,7 +82,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     protected _beforeMount(options: IModuleComponentOptions): void {
         const position = options.startPosition || options.position || new WSDate();
         if (options.startPosition) {
-            IoC.resolve('ILogger').warn('MonthList', 'Используется устаревшая опция startPosition, используйте опцию position');
+            Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
 
         this._enrichItemsDebounced = debounce(this._enrichItems, 150);
@@ -204,28 +204,44 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _intersectHandler(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
         for (const entry of entries) {
-            this._updateDisplayedPosition(entry);
             this._updateDisplayedItems(entry);
         }
+        this._updateDisplayedPosition(entries);
     }
 
-    private _updateDisplayedPosition(entry: IntersectionObserverSyntheticEntry): void {
-        if (entry.data.type !== ITEM_TYPES.body) {
-            return;
-        }
-        const entryDate = entry.data.date;
+    private _updateDisplayedPosition(entries: IntersectionObserverSyntheticEntry[]): void {
         let date;
-        if (entry.nativeEntry.boundingClientRect.top - entry.nativeEntry.rootBounds.top <= 0) {
-            if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top >= 0) {
-                date = entryDate;
-            } else if (entry.nativeEntry.rootBounds.top - entry.nativeEntry.boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
-                if (this._options.viewMode === 'year') {
-                    date = new this._options.dateConstructor(entryDate.getFullYear() + 1, entryDate.getMonth());
-                } else {
-                    date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + 1);
+
+        // We go around all the elements where the intersection with the scrolled container has changed and
+        // find the element that is at the top and it is not fully displayed.
+        for (const entry of entries) {
+            if (entry.data.type !== ITEM_TYPES.body) {
+                continue;
+            }
+            const entryDate = entry.data.date;
+
+            // We select only those containers that are not fully displayed
+            // and intersect with the scrolled container in its upper part, or lie higher.
+            if (entry.nativeEntry.boundingClientRect.top - entry.nativeEntry.rootBounds.top <= 0) {
+                if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top >= 0) {
+                    // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
+                    date = entryDate;
+                    break;
+                } else if (entry.nativeEntry.rootBounds.top - entry.nativeEntry.boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
+                    // If the container is completely invisible and lies on top of the scrolled area,
+                    // then the next container may intersect with the scrolled area.
+                    // We save the date, and check the following. This condition branch is needed,
+                    // because a situation is possible when the container partially intersected from above, climbed up,
+                    // persecuted, and the lower container approached the upper edge and its intersection did not change.
+                    if (this._options.viewMode === 'year') {
+                        date = new this._options.dateConstructor(entryDate.getFullYear() + 1, entryDate.getMonth());
+                    } else {
+                        date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + 1);
+                    }
                 }
             }
         }
+
         if (date && !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate)) {
             this._lastNotifiedPositionChangedDate = date;
             this._displayedPosition = date;

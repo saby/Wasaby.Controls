@@ -37,7 +37,7 @@ define(
          };
 
          it('Opener: getConfig', () => {
-            let getStackConfig = popupMod.Stack._private.getStackConfig;
+            let getStackConfig = popupMod.Stack.prototype._getStackConfig;
             let config = getStackConfig();
             assert.equal(config.isDefaultOpener, true);
 

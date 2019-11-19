@@ -1,7 +1,7 @@
 /**
  * @author Авраменко А.С.
  * @mixin Controls/_grid/GridStyles
- * @public
+ * @private
  *
  *
  * @css @color_Grid-header color of header text
