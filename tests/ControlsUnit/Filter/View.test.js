@@ -823,7 +823,7 @@ define(
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
-               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'Completed', title: 'Completed, new item, new item 2', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
                assert.strictEqual(view._configs.state.items.getCount(), 9);
 
@@ -887,7 +887,7 @@ define(
                assert.deepStrictEqual(view._source[1].viewMode, 'extended');
                assert.deepStrictEqual(view._source[3].textValue, 'new document');
                assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
-               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: '', title: ''}});
+               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: 'new document', title: ''}});
                assert.isTrue(historyEventFired);
             });
 
@@ -909,7 +909,7 @@ define(
                view._idOpenSelector = 'state';
                view._onSelectorTemplateResult('resultEvent', newItems);
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
-               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'Completed', title: 'Completed, new item, new item 2', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
             });
          });
@@ -986,7 +986,7 @@ define(
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [1, 2], '-2': [-2]});
-               assert.deepStrictEqual(view._displayText.document, {text: 'Folder 2', title: 'Folder 2, In any state, In progress', hasMoreText: ', еще 2' });
+               assert.deepStrictEqual(view._displayText.document, {text: 'In any state', title: 'In any state, In progress, Folder 2', hasMoreText: ', еще 2' });
                assert.deepStrictEqual(filterChanged, {document: {'-1': [1, 2], '-2': [-2]}});
 
                eventResult = {
