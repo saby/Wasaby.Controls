@@ -1184,7 +1184,15 @@ var _private = {
                 _private.applyVirtualScrollIndexesToListModel(self);
             }
         }
-        if (changesType === 'collectionChanged' || changesType === 'indexesChanged' || newModelChanged) {
+        // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
+        // for example if Controls.explorer:View is switched from list to tile mode. The controller
+        // will keep firing `indexesChanged` events, but we should not mark items as changed while
+        // virtual scrolling is disabled.
+        if (
+            changesType === 'collectionChanged' ||
+            changesType === 'indexesChanged' && self._options.virtualScrolling !== false ||
+            newModelChanged
+        ) {
             self._itemsChanged = true;
         }
         self._forceUpdate();
