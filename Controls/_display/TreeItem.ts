@@ -2,14 +2,15 @@ import CollectionItem, {
     IOptions as ICollectionItemOptions,
     ISerializableState as ICollectionItemSerializableState
 } from './CollectionItem';
+import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './ExpandableMixin';
 import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
+import {mixin} from 'Types/util';
 import {register} from 'Types/di';
 
-export interface IOptions<T> extends ICollectionItemOptions<T> {
+export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
     node?: boolean;
-    expanded?: boolean;
     childrenProperty?: string;
     hasChildren?: boolean;
     loaded?: boolean;
@@ -24,10 +25,17 @@ interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
  * Элемент древовидной коллеции
  * @class Controls/_display/TreeItem
  * @extends Controls/_display/CollectionItem
+ * @mixes Controls/_display/ExpandableMixin
  * @public
  * @author Мальцев А.А.
  */
-export default class TreeItem<T> extends CollectionItem<T> {
+export default class TreeItem<T> extends mixin<
+    CollectionItem<any>,
+    ExpandableMixin
+    >(
+    CollectionItem,
+    ExpandableMixin
+) {
     protected _$owner: Tree<T>;
 
     /**
@@ -41,11 +49,6 @@ export default class TreeItem<T> extends CollectionItem<T> {
     protected _$node: boolean;
 
     /**
-     * Развернут или свернут узел. По умолчанию свернут.
-     */
-    protected _$expanded: boolean;
-
-    /**
      * Есть ли дети у узла. По умолчанию есть.
      */
     protected _$hasChildren: boolean;
@@ -57,13 +60,13 @@ export default class TreeItem<T> extends CollectionItem<T> {
 
     constructor(options?: IOptions<T>) {
         super(options);
+        ExpandableMixin.call(this);
 
         if (options && !options.hasOwnProperty('hasChildren') && options.hasOwnProperty('loaded')) {
             this._$hasChildren = !options.loaded;
         }
 
         this._$node = !!this._$node;
-        this._$expanded = !!this._$expanded;
         this._$hasChildren = !!this._$hasChildren;
     }
 
@@ -133,35 +136,6 @@ export default class TreeItem<T> extends CollectionItem<T> {
      */
     setNode(node: boolean): void {
         this._$node = node;
-    }
-
-    /**
-     * Возвращает признак, что узел развернут
-     */
-    isExpanded(): boolean {
-        return this._$expanded;
-    }
-
-    /**
-     * Устанавливает признак, что узел развернут или свернут
-     * @param expanded Развернут или свернут узел
-     * @param [silent=false] Не генерировать событие
-     */
-    setExpanded(expanded: boolean, silent?: boolean): void {
-        if (this._$expanded === expanded) {
-            return;
-        }
-        this._$expanded = expanded;
-        if (!silent) {
-            this._notifyItemChangeToOwner('expanded');
-        }
-    }
-
-    /**
-     * Переключает признак, что узел развернут или свернут
-     */
-    toggleExpanded(): void {
-        this.setExpanded(!this.isExpanded());
     }
 
     /**

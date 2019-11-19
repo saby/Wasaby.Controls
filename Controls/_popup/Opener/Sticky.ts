@@ -60,7 +60,7 @@ class Sticky extends BaseOpener {
      * @property {Number} width Текущая ширина всплывающего окна
      * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционируется всплывающее окно.
      * @property {Node} opener Логический инициатор открытия всплывающего окна
-     * @property {String|Object} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+     * @property {fittingMode} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
      * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события всплывающего окна.
      */
 
@@ -376,33 +376,17 @@ export default Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#fittingMode
- * @cfg {fittingMode|fittingModeString} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+ * @cfg {fittingMode} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
  */
 
 /**
  * @typedef {Object} fittingMode
- * @property {vertical} vertical
- * @property {horizontal} horizontal
+ * @property {fittingModeValue} vertical
+ * @property {fittingModeValue} horizontal
  */
 
 /**
- * @typedef {Enum} vertical
- * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
- * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
- * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.
- * @default adaptive
- */
-
-/**
- * @typedef {Enum} horizontal
- * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
- * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
- * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.
- * @default adaptive
- */
-
-/**
- * @typedef {Enum} fittingModeString
+ * @typedef {Enum} fittingModeValue
  * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
  * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
  * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.

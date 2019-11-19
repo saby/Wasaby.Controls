@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_popupTemplate/Notification/NotificationStyles
- * @public
+ * @private
  * @css @border-width_NotificationBase Width of border.
  * @css @size_NotificationBase-shadow Size of shadow
  * @css @color_NotificationBase-shadow Color of shadow.

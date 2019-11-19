@@ -269,7 +269,7 @@ define(
             cfg.direction.vertical = 'bottom';
             cfg.direction.horizontal = 'left';
             let position = StickyStrategy.getPosition(cfg, targetC);
-            assert.equal(position.top, 460);
+            assert.equal(position.top, 410);
             assert.equal(position.right, 590);
             assert.equal(Object.keys(position).length, 4);
          });
@@ -333,7 +333,7 @@ define(
             position = StickyStrategy.getPosition(cfg, targetCoords);
             targetCoords.topScroll = 0;
             targetCoords.leftScroll = 0;
-            assert.equal(position.left, 410);
+            assert.equal(position.left, 400);
             assert.equal(position.bottom, 600);
             assert.equal(Object.keys(position).length, 4);
          });

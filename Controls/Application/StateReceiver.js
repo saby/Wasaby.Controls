@@ -1,7 +1,6 @@
 define('Controls/Application/StateReceiver', ['Core/core-extend',
    'Core/Serializer',
-   'Env/Env',
-   'View/Executor/Utils', 'UI/Utils'], function(extend, Serializer, Env, Utils, UIUtils) {
+   'View/Executor/Utils', 'UI/Utils'], function(extend, Serializer, Utils, UIUtils) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
