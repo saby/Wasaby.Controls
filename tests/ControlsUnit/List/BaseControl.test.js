@@ -886,10 +886,13 @@ define([
        
       it('_private::handleListScrollSync', () => {
          const self = {};
-         const sandbox = sinon.createSandbox();
 
-         self._virtualScroll = {};
-         sandbox.replace(lists.BaseControl._private, 'getVirtualScrollPlaceholderHeight', () => 1000);
+         self._virtualScroll = {
+            PlaceholdersSizes: {
+               top: 1000,
+               bottom: 1000
+            }
+         };
 
          lists.BaseControl._private.handleListScrollSync(self, {
             scrollTop: 2000,
@@ -899,10 +902,9 @@ define([
 
          assert.deepEqual(self._scrollParams, {
             scrollTop: 3000,
-            scrollHeight: 5000,
+            scrollHeight: 6000,
             clientHeight: 1000
          });
-         sandbox.restore();
       });
 
       it('moveMarker activates the control', async function() {

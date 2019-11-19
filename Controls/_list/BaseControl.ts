@@ -1042,7 +1042,7 @@ var _private = {
         let placeholderHeight = 0;
 
         if (self._virtualScroll) {
-            placeholderHeight = _private.getVirtualScrollPlaceholderHeight(self);
+            placeholderHeight = self._virtualScroll.PlaceholdersSizes.top;
         }
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop - placeholderHeight : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
@@ -1084,10 +1084,9 @@ var _private = {
             _private.getIntertialScrolling(self).scrollStarted();
         }
         if (self._virtualScroll) {
-            const placeholderSizesHeight = _private.getVirtualScrollPlaceholderHeight(self);
             self._scrollParams = {
-                scrollTop: params.scrollTop + placeholderSizesHeight,
-                scrollHeight: params.scrollHeight + placeholderSizesHeight,
+                scrollTop: params.scrollTop + self._virtualScroll.PlaceholdersSizes.top,
+                scrollHeight: params.scrollHeight + _private.getVirtualScrollPlaceholderHeight(self),
                 clientHeight: params.clientHeight
             };
         }
