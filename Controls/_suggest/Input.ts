@@ -68,6 +68,13 @@ var Suggest = Control.extend({
 
    // </editor-fold>
 
+   openSuggest: function() {
+      this._suggestState = true;
+   },
+
+   closeSuggest: function() {
+      this._suggestState = false;
+   },
 
    // <editor-fold desc="handlers">
 
