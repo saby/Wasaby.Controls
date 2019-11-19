@@ -1,5 +1,5 @@
 /**
- * Интерфейс для окна уведомления
+ * Интерфейс для окна уведомления.
  *
  * @interface Controls/_popupTemplate/Notification/interface/INotification
  * @public
@@ -7,14 +7,9 @@
  */
 
 /**
- * @name Controls/_popupTemplate/Notification/Simple#autoClose
- * @cfg {Number} Устанавливает интервал, по истечении которого окно закроется автоматически.
- * @default true
- */
-
-/**
- * @name Controls/_popupTemplate/Notification/Base#style
+ * @name Controls/_popupTemplate/Notification/interface/INotification#style
  * @cfg {String} Устанавливает стиль отображения окна уведомления.
+ * @default secondary
  * @variant warning
  * @variant secondary
  * @variant success
@@ -23,7 +18,7 @@
  */
 
 /**
- * @name Controls/_popupTemplate/Notification/Base#closeButtonVisibility
+ * @name Controls/_popupTemplate/Notification/interface/INotification#closeButtonVisibility
  * @cfg {Boolean} Устанавливает видимость кнопки, закрывающей окно.
  * @default true
  */

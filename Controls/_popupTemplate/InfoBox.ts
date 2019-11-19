@@ -5,7 +5,7 @@ import 'css!theme?Controls/popupTemplate';
 
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
- * @class Controls/_popupTemplate/Infobox
+ * @class Controls/_popupTemplate/InfoBox
  * @extends Core/Control
  * @control
  * @public
@@ -52,7 +52,40 @@ var InfoBoxTemplate = Control.extend({
        this._notify('close', [], { bubbling: true });
     }
 });
-
+/**
+ * @name Controls/_popupTemplate/InfoBox#closeButtonVisibility
+ * @cfg {Boolean} Устанавливает видимость кнопки, закрывающей окно.
+ * @default true
+ */
+/**
+ * @name Controls/_popupTemplate/InfoBox#style
+ * @cfg {String} Устанавливает стиль отображения окна уведомления.
+ * @default secondary
+ * @variant warning
+ * @variant secondary
+ * @variant success
+ * @variant danger
+ * @default secondary
+ */
+/**
+ * @name Controls/_popupTemplate/InfoBox#stickyPosition
+ * @cfg {StickyPosition} Конфигурация позиционирования всплывающего окна.
+ */
+/**
+ * @typedef {Object} StickyPosition
+ * @description Конфигурация позиционирования всплывающего окна
+ * @property {Object} targetPoint Точка позиционнирования всплывающего окна относительно вызывающего элемента.
+ * @property {String} targetPoint.vertical Выравнивание по вертикали.
+ * Доступные значения: top, bottom.
+ * @property {String} targetPoint.horizontal Выравнивание по горизонтали.
+ * Доступные значения: right, left.
+ * @property {Object} direction Устанавливает выравнивание всплывающего окна относительно точки позиционирования.
+ * @property {String} direction.vertical Выравнивание по вертикали.
+ * Доступные значения: top, bottom.
+ * @property {String} direction.horizontal Выравнивание по горизонтали.
+ * Доступные значения: right, left.
+ * 
+ */
 InfoBoxTemplate.getDefaultOptions = function() {
     return {
         closeButtonVisibility: true,
