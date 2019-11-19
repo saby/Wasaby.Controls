@@ -224,6 +224,31 @@ define([
             }],
             options: { viewMode: 'month' },
             date: new Date(2019, 1)
+         }, {
+            title: 'Should generate an event when the 2 elements appeared on top and the next one is half visible. viewMode: "month"',
+            entries: [{
+               nativeEntry: {
+                  boundingClientRect: { top: 0, bottom: 30 },
+                  rootBounds: { top: 55 },
+                  target: { offsetHeight: 30 }
+               },
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.body
+               }
+            }, {
+               nativeEntry: {
+                  boundingClientRect: { top: 30, bottom: 50 },
+                  rootBounds: { top: 55 },
+                  target: { offsetHeight: 20 }
+               },
+               data: {
+                  date: new Date(2019, 1),
+                  type: ItemTypes.body
+               }
+            }],
+            options: { viewMode: 'month' },
+            date: new Date(2019, 2)
          }].forEach(function(test) {
             it(test.title, function() {
                const
