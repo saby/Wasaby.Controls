@@ -76,7 +76,7 @@ var InfoBoxTemplate = Control.extend({
  * <pre>
  * <Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" />
  * </pre>
- * Значение опции задать вручную не нужно.
+ * Значение опции задавать вручную не нужно.
  */
 /**
  * @typedef {Object} StickyPosition
