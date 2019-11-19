@@ -56,8 +56,8 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
         }
     }
 
-    getData(date: string): object {
-        return this._data[date];
+    getData(dateId: string): object {
+        return this._data[monthListUtils.getClearDateId(dateId)];
     }
 
     private _getQuery(start: Date, end: Date): Query {
