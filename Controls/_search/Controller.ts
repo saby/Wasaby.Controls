@@ -5,6 +5,7 @@ import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherSt
 import cInstance = require('Core/core-instance');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
+import _Search from './_Search';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
@@ -18,27 +19,35 @@ const SERVICE_FILTERS = {
 };
 
 var _private = {
-   getSearchController: function (self) {
+   getSearchParams: function (self) {
       var options = self._dataOptions;
-
-      if (!self._searchController) {
-         self._searchController = new _SearchController({
-            searchParam: self._options.searchParam,
-            minSearchLength: self._options.minSearchLength,
-            searchDelay: self._options.searchDelay,
-            searchValueTrim: self._options.searchValueTrim,
-            filter: clone(options.filter),
-            source: options.source,
-            sorting: options.sorting,
-            navigation: options.navigation,
-            searchCallback: _private.searchCallback.bind(self, self),
-            abortCallback: _private.abortCallback.bind(self, self),
-            searchStartCallback: _private.searchStartCallback.bind(self, self),
-            searchErrback: _private.searchErrback.bind(self, self)
-         });
+      return {
+         searchParam: self._options.searchParam,
+         minSearchLength: self._options.minSearchLength,
+         searchDelay: self._options.searchDelay,
+         searchValueTrim: self._options.searchValueTrim,
+         filter: clone(options.filter),
+         source: options.source,
+         sorting: options.sorting,
+         navigation: options.navigation,
+         searchCallback: _private.searchCallback.bind(self, self),
+         abortCallback: _private.abortCallback.bind(self, self),
+         searchStartCallback: _private.searchStartCallback.bind(self, self),
+         searchErrback: _private.searchErrback.bind(self, self)
       }
+   },
 
+   getSearchController: function (self) {
+      if (!self._searchController) {
+         self._searchController = new _SearchController(_private.getSearchParams(self));
+      }
       return self._searchController;
+   },
+   getSearch: function (self) {
+      if (!self._Search) {
+         self._Search = new _Search(_private.getSearchParams(self));
+      }
+      return self._Search;
    },
 
    getOriginSource: function(source: ICrud): ICrud {
@@ -284,13 +293,17 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _search: function (event, value, force) {
       if (this._options.source) {
-         if (value !== this._searchValue) {
+         if (value !== this._searchValue && !this.isLoading()) {
             _private.getSearchController(this).search(value, force);
          }
       } else {
          Logger.error('search:Controller source is required for search', this);
       }
       _private.setInputSearchValue(this, value);
+   },
+
+   isLoading: function() {
+      return _private.getSearch(this).isLoading();
    },
 
    _beforeUnmount: function () {
