@@ -252,6 +252,22 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.deepEqual(self._filter, resultFilter);
       });
 
+      it('Suggest::_searchStart', function() {
+         let suggest = new suggestMod._InputController();
+         let isCallShowIndicator = false;
+         let isCallHideIndicator = false;
+
+         suggest._children.indicator = {
+            show: () => isCallShowIndicator = true,
+            hide: () => isCallHideIndicator = true
+         };
+
+         suggest._searchStart();
+         assert.isTrue(suggest._loading);
+         assert.isTrue(isCallShowIndicator);
+         assert.isTrue(isCallHideIndicator);
+      });
+
       it('Suggest::_searchEnd', function() {
          var suggest = new suggestMod._InputController();
          var errorFired = false;
