@@ -64,6 +64,7 @@ define(
             let isHideIndicatorCall = false;
             opener._indicatorId = '123';
             opener._openPopupTimerId = '145';
+            opener._options.closePopupBeforeUnmount = true;
 
             opener._notify = (eventName, args) => {
                if (eventName === 'hideIndicator') {
@@ -78,11 +79,36 @@ define(
 
             isHideIndicatorCall = false;
             opener._indicatorId = null;
+            opener._openPopupTimerId = '145';
+            opener._options.closePopupBeforeUnmount = false;
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
+            assert.equal(opener._openPopupTimerId, '145');
             assert.equal(isHideIndicatorCall, false);
             opener.destroy();
          });
+      });
+
+      it('multi open', (done) => {
+         const opener = new popup.BaseOpener();
+         opener._openPopup = () => Promise.resolve(null);
+         opener._useVDOM = () => true;
+
+         let popupId1;
+         let popupId2;
+         let popupId3;
+
+         opener.open().then((id) => { popupId1 = id });
+         opener.open().then((id) => { popupId2 = id });
+         opener.open().then((id) => { popupId3 = id });
+
+         setTimeout(() => {
+            assert.equal(popupId1, popupId2);
+            assert.equal(popupId2, popupId3);
+            done();
+         }, 10);
+
+         opener.destroy();
       });
 
       it('getIndicatorConfig', () => {

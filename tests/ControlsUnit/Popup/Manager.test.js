@@ -128,9 +128,14 @@ define(
             element = Manager.find(id);
             element.popupState = 'created';
             id = Manager.update(id, {
-               testOption: 'updated'
+               testOption: 'updated1'
             });
-            assert.equal(element.popupOptions.testOption, 'updated');
+            assert.equal(element.popupOptions.testOption, 'updated1');
+            id = Manager.show({
+               id: id,
+               testOption: 'updated2'
+            }, new BaseController());
+            assert.equal(element.popupOptions.testOption, 'updated2');
          });
 
          it('fireEventHandler', function() {

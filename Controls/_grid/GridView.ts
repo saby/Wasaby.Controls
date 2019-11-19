@@ -208,7 +208,11 @@ var
 
             const canUseTableLayout = !!useTableInOldBrowsers || self._isNoGridSupport;
             self._shouldUseTableLayout = canUseTableLayout && !self._isFullGridSupport;
-        }
+        },
+
+        _resetScroll(self): void {
+            self._notify('doScroll', ['top'], { bubbling: true });
+        },
     },
     GridView = ListView.extend({
         _gridTemplate: null,
@@ -266,6 +270,9 @@ var
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._isHeaderChanged = true;
+                if (this._listModel._isMultiHeader) {
+                    _private._resetScroll(this);
+                }
                 this._listModel.setHeader(newCfg.header);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
@@ -319,7 +326,7 @@ var
             if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 return 0;
             }
-            const hasHeader = !!this._options.header && !!this._options.header.length;
+            const hasHeader = !!this._options.header && !!this._options.header.length && this._listModel.isDrawHeaderWithEmptyList();
             return hasHeader ? this._children.header.getBoundingClientRect().height : 0;
         },
 
@@ -329,7 +336,7 @@ var
             if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 return 0;
             }
-            return this._options.resultsPosition === 'top' ? this._children.results.getBoundingClientRect().height : 0;
+            return this._listModel.getResultsPosition() === 'top' ? this._children.results.getBoundingClientRect().height : 0;
         },
 
         _onItemMouseLeave: function (event, itemData) {

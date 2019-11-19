@@ -50,6 +50,7 @@ const
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
+const TRIGGER_VISIBILITY_UPDATE_DELAY = 101;
 const INITIAL_PAGES_COUNT = 1;
 const ITEMACTIONS_UNLOCK_DELAY = 200;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
@@ -425,7 +426,7 @@ var _private = {
             let toggledItemId = model.getMarkedKey();
 
             if (!model.getItemById(toggledItemId) && model.getCount()) {
-                toggledItemId = model.at(0).getId();
+                toggledItemId = model.at(0).getContents().getId();
             }
 
             if (toggledItemId) {
@@ -2120,7 +2121,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
-            });
+            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
         }
 
         // todo KINGO.
@@ -2139,7 +2140,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
-            });
+            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
         }
 
         if (this._restoredScroll !== null) {
@@ -2221,7 +2222,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
     _onViewPortResize: function(self, viewPortSize, viewPortRect) {
-        _private.updateIndicatorContainerHeight(self, self._container.getBoundingClientRect(), viewPortRect);
+        // FIXME self._container[0] delete after
+        // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        const container = self._container[0] || self._container;
+        _private.updateIndicatorContainerHeight(self, container.getBoundingClientRect(), viewPortRect);
         self._viewPortSize = viewPortSize;
         self._viewPortRect = viewPortRect;
 
