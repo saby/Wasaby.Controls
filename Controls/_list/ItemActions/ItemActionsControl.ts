@@ -197,12 +197,14 @@ var ItemActionsControl = Control.extend({
 
     _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel);
-        if (this._options.useNewModel) {
-            this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
-            this._options.listModel.setMarkedItem(itemData);
-        } else {
-            this.updateItemActions(itemData.actionsItem);
-            this._options.listModel.setMarkedKey(itemData.key);
+        if (!this._destroyed) {
+            if (this._options.useNewModel) {
+                this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
+                this._options.listModel.setMarkedItem(itemData);
+            } else {
+                this.updateItemActions(itemData.actionsItem);
+                this._options.listModel.setMarkedKey(itemData.key);
+            }
         }
     },
 
