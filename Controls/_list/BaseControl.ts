@@ -1176,7 +1176,11 @@ var _private = {
                 _private.applyVirtualScrollIndexesToListModel(self);
             }
         }
-        if (changesType === 'collectionChanged' || changesType === 'indexesChanged' || newModelChanged) {
+        if (
+            changesType === 'collectionChanged' ||
+            changesType === 'indexesChanged' && self._options.virtualScrolling ||
+            newModelChanged
+        ) {
             self._itemsChanged = true;
         }
         self._forceUpdate();
