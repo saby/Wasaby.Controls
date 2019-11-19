@@ -196,7 +196,7 @@ class ModuleClass {
             // and the month of the periods differ or step is not aligned to the new capacity,
             // then we also set adjacent periods.
             if (relationMode === 'byCapacity' ||
-                    (capacityChanged && steps[number] % 12 !== 0 &&
+                    (capacityChanged && steps[number] % 12 !== 0 && periodLength > oldPeriodLength &&
                         (start.getMonth() !== oldStart.getMonth() || steps[number] % periodLength !== 0))) {
                 s = periodLength;
             } else {
@@ -215,6 +215,12 @@ class ModuleClass {
 
         periodType = getPeriodType(start, end);
         oldPeriodType = (oldStart && oldEnd) ? getPeriodType(oldStart, oldEnd) : null;
+
+        if (oldPeriodType === periodTypes.day || oldPeriodType === periodTypes.days) {
+            oldPeriodLength = dateRangeUtil.gePeriodLengthInDays(oldStart, oldEnd);
+        } else {
+            oldPeriodLength = oldPeriodType ? dateRangeUtil.getPeriodLengthInMonths(oldStart, oldEnd) : null;
+        }
 
         if (periodType === periodTypes.day || periodType === periodTypes.days) {
             selectionType = 'days';
