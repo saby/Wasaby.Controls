@@ -223,6 +223,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _viewMode: null,
    _searchValue: null,
    _misspellValue: null,
+   _prevValue: null,
    _root: null,
 
    constructor: function () {
@@ -284,7 +285,8 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _search: function (event, value, force) {
       if (this._options.source) {
-         if (value !== this._searchValue && !this._isSearchControllerLoading()) {
+         if (value !== this._searchValue && (value !== this._prevValue || !this._isSearchControllerLoading())) {
+            this._prevValue = value;
             _private.getSearchController(this).search(value, force);
          }
       } else {
