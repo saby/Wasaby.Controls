@@ -26,7 +26,6 @@
  * @includes IValidationStatus Controls/_interface/IValidationStatus
  * @includes ISelectionType Controls/_interface/ISelectionType
  * @includes IDateConstructor Controls/_interface/IDateConstructor
- * @includes IApplication Controls/_interface/IApplication
  * @public
  * @author Крайнов Д.О.
  */

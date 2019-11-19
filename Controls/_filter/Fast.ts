@@ -164,8 +164,8 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
          },
 
          setValue: function(self, selectedKeys) {
-            if (!selectedKeys.length) {
-               var resetValue = getPropValue(self._items.at(self.lastOpenIndex), 'resetValue');
+            const resetValue = getPropValue(self._items.at(self.lastOpenIndex), 'resetValue');
+            if (!selectedKeys.length || isEqual(selectedKeys, resetValue)) {
                setPropValue(self._items.at(self.lastOpenIndex), 'value', resetValue);
             } else if (self._configs[self.lastOpenIndex].multiSelect) {
                setPropValue(self._items.at(self.lastOpenIndex), 'value', selectedKeys);

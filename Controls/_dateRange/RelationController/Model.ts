@@ -243,7 +243,7 @@ class ModuleClass {
                     //In variable control there is old start and end values,
                     // we send them to check if year has been changed
                     this._slideStartDate(control[0], start, -step, selectionType),
-                    this._slideEndDate(control[1], start, -step + periodLength - 1, selectionType)
+                    this._slideEndDate(control[1], start, -step + periodLength - 1, selectionType, periodLength)
                 ];
             }
             lastDate = control[0];
@@ -264,7 +264,7 @@ class ModuleClass {
                     //In variable control there is old start and end values,
                     // we send them to check if year has been changed
                     this._slideStartDate(control[0], start, step, selectionType),
-                    this._slideEndDate(control[1], start, step + periodLength - 1, selectionType)
+                    this._slideEndDate(control[1], start, step + periodLength - 1, selectionType, periodLength)
                 ];
             }
             lastDate = control[1];
@@ -287,10 +287,10 @@ class ModuleClass {
         return new Date(date.getFullYear(), date.getMonth() + delta, 1);
     }
 
-    private _slideEndDate(lastDate, date, delta, selectionType) {
+    private _slideEndDate(lastDate, date, delta, selectionType, periodLength) {
         if (selectionType === 'days') {
             if (lastDate.getFullYear() !== date.getFullYear()) {
-                return new Date(lastDate.getFullYear(), date.getMonth(), date.getDate() - delta - 1);
+                return new Date(lastDate.getFullYear(), date.getMonth(), date.getDate() + periodLength - 1);
             } else {
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
             }

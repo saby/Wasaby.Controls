@@ -883,6 +883,29 @@ define([
                1, 2, 3, 4, 5, 6, 7, 8, 9, 10
            ], baseControl._virtualScroll._itemsHeights);
        });
+       
+      it('_private::handleListScrollSync', () => {
+         const self = {};
+
+         self._virtualScroll = {
+            PlaceholdersSizes: {
+               top: 1000,
+               bottom: 1000
+            }
+         };
+
+         lists.BaseControl._private.handleListScrollSync(self, {
+            scrollTop: 2000,
+            scrollHeight: 4000,
+            clientHeight: 1000
+         });
+
+         assert.deepEqual(self._scrollParams, {
+            scrollTop: 3000,
+            scrollHeight: 6000,
+            clientHeight: 1000
+         });
+      });
 
       it('moveMarker activates the control', async function() {
          const
@@ -4397,7 +4420,8 @@ define([
                },
                viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
-               source: source
+               source: source,
+               virtualScrolling: true
             },
             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
