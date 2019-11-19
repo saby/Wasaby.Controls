@@ -252,6 +252,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _misspellValue: null,
    _root: null,
    _deepReload: undefined,
+   _prevValue: null,
 
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
@@ -312,7 +313,8 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _search: function (event, value, force) {
       if (this._options.source) {
-         if (value !== this._searchValue && !this._isSearchControllerLoading()) {
+         if (value !== this._searchValue && (value !== this._prevValue || !this._isSearchControllerLoading())) {
+            this._prevValue = value;
             _private.getSearchController(this).search(value, force);
          }
       } else {
