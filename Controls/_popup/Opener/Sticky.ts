@@ -380,7 +380,7 @@ export default Sticky;
  */
 
 /**
- * @typedef {Object|String} fittingMode
+ * @typedef {Object} fittingMode
  * @property {fittingModeValue} vertical
  * @property {fittingModeValue} horizontal
  */
