@@ -285,8 +285,8 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _search: function (event, value, force) {
       if (this._options.source) {
-         if (value !== this._searchValue && (value !== this._prevValue || !this._isSearchControllerLoading())) {
-            this._prevValue = value;
+         const shouldSearch = this._isSearchControllerLoading() ? value !== this._searchValue : true;
+         if (shouldSearch) {
             _private.getSearchController(this).search(value, force);
          }
       } else {
