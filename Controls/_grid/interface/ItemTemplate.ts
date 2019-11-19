@@ -39,7 +39,7 @@
  */
 /**
  * @name Controls/grid:IItemTemplateOptions#marker
- * @cfg {Boolean} Когда параметр установлен в значение true, активный элемент таблицы будет выделяться <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/">маркером</a>.
+ * @cfg {Boolean} Когда параметр установлен в значение true, активный элемент таблицы будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
  * @default true
  */
 /**
@@ -49,7 +49,7 @@
  */
 /**
  * @name Controls/grid:IItemTemplateOptions#clickable
- * @cfg {Boolean} Когда параметр установлен в значение true, используется <a href="https://developer.mozilla.org/ru/docs/Web/CSS/cursor">курсор</a> pointer, а в значении false — default.
+ * @cfg {Boolean} Когда параметр установлен в значение true, используется {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} pointer, а в значении false — default.
  * @default true
  */
 /**

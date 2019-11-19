@@ -72,9 +72,10 @@
  * </Controls.grid:View>
  * </pre>
  * **Пример 2.** В следующем примере показано как получить доступ к itemData, если опция настраивается в отдельном файле.
+ * При этом в директиве ws:partial нужно передать опцию scope.
  * <pre class="brush: html">
  * <!-- Child.wml -->
- * <ws:partial template="Controls/grid:ColumnTemplate">
+ * <ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}">
  *    <ws:contentTemplate>
  *       <div>{{itemData.item.id}} - {{itemData.item.author}}</div>
  *    </ws:contentTemplate>
