@@ -43,7 +43,7 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
 
     protected _beforeUpdate(newOptions: ISwipeControlOptions): void {
         if (!newOptions.menuIsShown && this._options.menuIsShown) {
-            this._resetSwipeState();
+            this._resetSwipeState(newOptions.listModel);
         }
     }
 
@@ -61,7 +61,7 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
 
     protected _onAnimationEnd(): void {
         if (this._animationState === 'close') {
-            this._resetSwipeState();
+            this._resetSwipeState(this._options.listModel);
         }
     }
 
@@ -91,18 +91,20 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
         if (this._animationState === 'open' && !this._options.menuIsShown) {
             this._animationState = 'close';
             if (!animated) {
-                this._resetSwipeState();
+                this._resetSwipeState(this._options.listModel);
             }
         }
     }
 
-    private _resetSwipeState(): void {
+    private _resetSwipeState(model: Collection<Model>): void {
         this._animationState = 'close';
         this._swipeConfig = null;
         // TODO Do we need this here?
         // this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
-        this._options.listModel.setSwipeItem(null);
-        this._options.listModel.setActiveItem(null);
+        if (model && !model.destroyed) {
+            model.setSwipeItem(null);
+            model.setActiveItem(null);
+        }
     }
 
     private _updateSwipeConfig(item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
