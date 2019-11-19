@@ -883,7 +883,7 @@ define([
                1, 2, 3, 4, 5, 6, 7, 8, 9, 10
            ], baseControl._virtualScroll._itemsHeights);
        });
-       
+
       it('_private::handleListScrollSync', () => {
          const self = {};
 
@@ -2260,8 +2260,15 @@ define([
             baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
+         it('control in error state, should not call update', function() {
+            baseControl.__error = true;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 4);
+            baseControl.__error = false;
+         });
          it('without listViewModel should not call update', function() {
             baseControl._listViewModel = null;
+            baseControl._updateItemActions();
             assert.equal(actionsUpdateCount, 4);
          });
       });
