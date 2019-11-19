@@ -15,8 +15,11 @@
 }
 
 // Use "regular" scrolling, where the content immediately ceases to scroll when you remove your finger from the touchscreen.
-.controls-Scroll__content-overflowScrolling {
+.controls-Scroll_webkitOverflowScrollingAuto .controls-Scroll__content-overflowScrolling {
    -webkit-overflow-scrolling: auto;
+}
+
+.controls-Scroll__content-overflowScrolling {
    // to fix flickering on IOS after opening popup's
    // for example: https://online.sbis.ru/opendoc.html?guid=12dcb776-5968-4495-b800-34e153d90284
    perspective: 1000;
