@@ -69,11 +69,14 @@ var InfoBoxTemplate = Control.extend({
  */
 /**
  * @name Controls/_popupTemplate/InfoBox#stickyPosition
- * @cfg {StickyPosition} Устанавливает позиционирование всплывающей подсказки.
- * Обязательная для конфигурации опция.
- * Значение опции следует задать не напрямую в шаблоне, а передать через открывающий контрол {@link Controls/popup:Sticky}.
+ * @cfg {StickyPosition} Содержит сведения о позиционировании всплывающей подсказки.
  * @remark
- * Подробнее о работе с открывающими контролами читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/ здесь}.
+ * При открытии всплывающей подсказки с помощью {@link Controls/popup:Sticky}, в шаблон передаётся значение для опции stickyPosition.
+ * Его рекомендуется использовать для конфигурации Controls/popupTemplate:InfoBox, что и показано в следующем примере.
+ * <pre>
+ * <Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" />
+ * </pre>
+ * Значение опции задать вручную не нужно.
  */
 /**
  * @typedef {Object} StickyPosition
