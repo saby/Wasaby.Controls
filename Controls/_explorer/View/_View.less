@@ -3,3 +3,17 @@
    padding-left:  @spacing_Explorer-path-between-content-borderLeft;
    min-height:    @min-height_Explorer-path;
 }
+
+.controls-Explorer__Path_style_master {
+   background-color: @background-color_List-masterList;
+}
+.controls-Explorer__Path_style_master:before {
+   content: '';
+   z-index: 0;
+   width: @border-width_List-masterList-right;
+   background-color: @border-color_List-masterList;
+   height: 100%;
+   position: absolute;
+   right: 0;
+   top: 0;
+}
