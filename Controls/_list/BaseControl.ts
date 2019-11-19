@@ -1039,7 +1039,12 @@ var _private = {
 
     // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
     delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
-        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
+        let placeholderHeight = 0;
+
+        if (self._virtualScroll) {
+            placeholderHeight = _private.getVirtualScrollPlaceholderHeight(self);
+        }
+        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop - placeholderHeight : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
     getTopOffsetForItemsContainer: function(self, itemsContainer) {
@@ -1070,15 +1075,19 @@ var _private = {
         return i + 1;
     },
 
+    getVirtualScrollPlaceholderHeight(self): number {
+        return self._virtualScroll.PlaceholdersSizes.top + self._virtualScroll.PlaceholdersSizes.bottom;
+    },
 
     handleListScrollSync(self, params) {
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
         }
         if (self._virtualScroll) {
+            const placeholderSizesHeight = _private.getVirtualScrollPlaceholderHeight(self);
             self._scrollParams = {
-                scrollTop: params.scrollTop,
-                scrollHeight: params.scrollHeight,
+                scrollTop: params.scrollTop + placeholderSizesHeight,
+                scrollHeight: params.scrollHeight + placeholderSizesHeight,
                 clientHeight: params.clientHeight
             };
         }

@@ -883,6 +883,27 @@ define([
                1, 2, 3, 4, 5, 6, 7, 8, 9, 10
            ], baseControl._virtualScroll._itemsHeights);
        });
+       
+      it('_private::handleListScrollSync', () => {
+         const self = {};
+         const sandbox = sinon.createSandbox();
+
+         self._virtualScroll = {};
+         sandbox.replace(lists.BaseControl._private, 'getVirtualScrollPlaceholderHeight', () => 1000);
+
+         lists.BaseControl._private.handleListScrollSync(self, {
+            scrollTop: 2000,
+            scrollHeight: 4000,
+            clientHeight: 1000
+         });
+
+         assert.deepEqual(self._scrollParams, {
+            scrollTop: 3000,
+            scrollHeight: 5000,
+            clientHeight: 1000
+         });
+         sandbox.restore();
+      });
 
       it('moveMarker activates the control', async function() {
          const
