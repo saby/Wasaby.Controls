@@ -382,6 +382,27 @@ define(
             let fastData2 = getFastFilterWithItems(configItems);
             filterMod.Fast._private.setValue(fastData2, ['Россия', 'Великобритания']);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
+
+            const fastConfig = {
+               items: [{
+                  id: 'first',
+                  value: 'Россия',
+                  resetValue: ['все страны'],
+                  textValue: '',
+                  properties: {
+                     keyProperty: 'title',
+                     displayProperty: 'title',
+                     multiSelect: false,
+                     source: new sourceLib.Memory({
+                        data: items[0],
+                        keyProperty: 'key'
+                     })
+                  }}
+               ]
+            };
+            fastData2 = getFastFilterWithItems(fastConfig);
+            filterMod.Fast._private.setValue(fastData2, ['все страны']);
+            assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 
          it('onResult footerClick', function() {
