@@ -337,7 +337,7 @@ var
                 return 0;
             }
             // роверка на фактическое существование в верстке results.
-            return this._listModel.getResultsPosition() === 'top' && this._children.results ? this._children.results.getBoundingClientRect().height : 0;
+            return this._children.results ? this._children.results.getBoundingClientRect().height : 0;
         },
 
         _onItemMouseLeave: function (event, itemData) {
