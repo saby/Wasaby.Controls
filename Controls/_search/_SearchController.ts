@@ -96,8 +96,8 @@ var SearchController = extend({
       const valueLength = value.length;
       const searchByValueChanged = this._options.minSearchLength !== null;
       let result;
-
-      if (!this.isLoading && ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength))) {
+      
+      if ((!this.isLoading || !force) && ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength))) {
          this.isLoading = true;
          result = _private.search(this, value, force);
          result.then((result) => {
