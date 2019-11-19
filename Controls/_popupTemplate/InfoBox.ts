@@ -54,12 +54,12 @@ var InfoBoxTemplate = Control.extend({
 });
 /**
  * @name Controls/_popupTemplate/InfoBox#closeButtonVisibility
- * @cfg {Boolean} Устанавливает видимость кнопки, закрывающей окно.
+ * @cfg {Boolean} Устанавливает видимость кнопки для всплывающей подсказки.
  * @default true
  */
 /**
  * @name Controls/_popupTemplate/InfoBox#style
- * @cfg {String} Устанавливает стиль отображения окна уведомления.
+ * @cfg {String} Устанавливает стиль отображения всплывающей подсказки.
  * @default secondary
  * @variant warning
  * @variant secondary
@@ -69,23 +69,37 @@ var InfoBoxTemplate = Control.extend({
  */
 /**
  * @name Controls/_popupTemplate/InfoBox#stickyPosition
- * @cfg {StickyPosition} Конфигурация позиционирования всплывающего окна.
+ * @cfg {StickyPosition} Устанавливает позиционирование всплывающей подсказки.
+ * Обязательная для конфигурации опция.
+ * Значение опции следует задать не напрямую в шаблоне, а передать через открывающий контрол {@link Controls/popup:Sticky}.
+ * @remark
+ * Подробнее о работе с открывающими контролами читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/ здесь}.
  */
 /**
  * @typedef {Object} StickyPosition
- * @description Конфигурация позиционирования всплывающего окна
- * @property {Object} targetPoint Точка позиционнирования всплывающего окна относительно вызывающего элемента.
- * @property {String} targetPoint.vertical Выравнивание по вертикали.
- * Доступные значения: top, bottom.
- * @property {String} targetPoint.horizontal Выравнивание по горизонтали.
- * Доступные значения: right, left.
- * @property {Object} direction Устанавливает выравнивание всплывающего окна относительно точки позиционирования.
- * @property {String} direction.vertical Выравнивание по вертикали.
- * Доступные значения: top, bottom.
- * @property {String} direction.horizontal Выравнивание по горизонтали.
- * Доступные значения: right, left.
- * 
+ * @description Позиционирование всплывающей подсказки.
+ * @property {TargetPoint} targetPoint Точка позиционирования относительно вызывающего элемента.
+ * @property {Direction} direction Выравнивание относительно точки позиционирования.
  */
+
+/**
+ * @typedef {Object} TargetPoint
+ * @description Точка позиционирования всплывающей подсказки относительно вызывающего элемента.
+ * @property {String} vertical Выравнивание по вертикали.
+ * Доступные значения: top, bottom.
+ * @property {String} horizontal Выравнивание по горизонтали.
+ * Доступные значения: right, left.
+ */
+
+/**
+ * @typedef {Object} Direction
+ * @description Выравнивание всплывающей подсказки относительно точки позиционирования.
+ * @property {String} vertical Выравнивание по вертикали.
+ * Доступные значения: top, bottom.
+ * @property {String} horizontal Выравнивание по горизонтали.
+ * Доступные значения: right, left.
+ */
+
 InfoBoxTemplate.getDefaultOptions = function() {
     return {
         closeButtonVisibility: true,
