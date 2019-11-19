@@ -382,7 +382,7 @@
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#alignment
- * @cfg {String} Устанавливает выравнивание кнопки фильтров.
+ * @cfg {String} Задаёт выравнивание элементов объединённого фильтра.
  * @remark
  * Варианты значений:
  * 
