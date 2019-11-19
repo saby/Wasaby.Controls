@@ -101,6 +101,7 @@ var SearchController = extend({
       } else if (searchByValueChanged || !valueLength) {
          result = _private.abort(this);
       }
+      
       return result;
    },
 
