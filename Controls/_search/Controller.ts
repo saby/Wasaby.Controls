@@ -312,7 +312,9 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _search: function (event, value, force) {
       if (this._options.source) {
-         _private.getSearchController(this).search(value, force);
+         if (value !== this._searchValue) {
+            _private.getSearchController(this).search(value, force);
+         }
       } else {
          logger.error('search:Controller', 'source is required for search');
       }

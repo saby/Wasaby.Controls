@@ -89,19 +89,23 @@ var SearchController = extend({
    constructor: function(options) {
       SearchController.superclass.constructor.call(this, options);
       this._options = options;
+      this.isLoading = false;
    },
 
    search: function(value, force) {
       const valueLength = value.length;
       const searchByValueChanged = this._options.minSearchLength !== null;
       let result;
-
-      if ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength)) {
+      if ((!this.isLoading || !force) && ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength))) {
+         this.isLoading = true;
          result = _private.search(this, value, force);
+         result.then((result) => {
+            this.isLoading = false;
+         });
       } else if (searchByValueChanged || !valueLength) {
          result = _private.abort(this);
       }
-
+      
       return result;
    },
 
