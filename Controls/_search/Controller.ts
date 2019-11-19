@@ -312,7 +312,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _search: function (event, value, force) {
       if (this._options.source) {
-         _private.getSearchController(this).search(value, force);
+         const shouldSearch = this._isSearchControllerLoading() ? value !== this._searchValue : true;
+         if (shouldSearch) {
+            _private.getSearchController(this).search(value, force);
+         }
       } else {
          Logger.error('search:Controller source is required for search', this);
       }
@@ -332,6 +335,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _misspellCaptionClick: function () {
       this._search(null, this._misspellValue);
       this._misspellValue = '';
+   },
+
+   _isSearchControllerLoading: function () {
+      return this._searchController && this._searchController.isLoading();
    }
 });
 
