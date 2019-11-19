@@ -466,6 +466,24 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.deepEqual(markedKeyChangedParams, [3]);
          assert.deepEqual(expandedItemsChangedParams,[[1, 2, 3]]);
       });
+
+      it('_isSearchControllerLoading', function() {
+         var searchController = getSearchController();
+         searchController._dataOptions = defaultOptions;
+
+         var result = searchController._isSearchControllerLoading();
+         var expectedResult = null;
+         assert.equal(result, expectedResult);
+
+         var controller = searchMod.Controller._private.getSearchController(searchController);
+         controller.isLoading = function() {
+            return true;
+         };
+         var result = searchController._isSearchControllerLoading();
+         var expectedResult = true;
+         assert.equal(result, expectedResult);
+      });
+
    });
 
 });

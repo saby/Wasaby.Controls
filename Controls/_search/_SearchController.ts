@@ -123,7 +123,12 @@ var SearchController = extend({
 
    abort: function(force) {
       _private.abort(this, force);
+   },
+
+   isLoading: function() {
+      return this._search && this._search.isLoading();
    }
+
 
 });
 
