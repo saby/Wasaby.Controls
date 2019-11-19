@@ -432,6 +432,10 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _onKeyDown: function (e, nativeEvent) {
         switch (nativeEvent.keyCode) {
             case 13: // Enter
+                // Необходимо увести фокус с редактируемой строчки, иначе контролы на ней просто задестроятся и нативное событие 'blur' не отработает
+                // в свою очередь не отработают события контролов 'inputCompleted' и т.д, так же не сработает deactivated
+                this._container.focus();
+
                 if (this._options.editingConfig && !this._sequentialEditing) {
                     this.commitEdit();
                 } else {
