@@ -2452,6 +2452,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
     _updateItemActions: function() {
+        if (this.__error) {
+            return;
+        }
         if (this._listViewModel && this._hasItemActions) {
             this._children.itemActions.updateActions();
         }
