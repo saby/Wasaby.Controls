@@ -223,7 +223,6 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _viewMode: null,
    _searchValue: null,
    _misspellValue: null,
-   _prevValue: null,
    _root: null,
 
    constructor: function () {
