@@ -78,7 +78,13 @@ var _private = {
 
          //abortCallback is called on every input change, when input value is less then minSearchLength,
          //but filter could be already changed, because viewMode: 'search' will change only after data loaded.
-         if (!isEqual(self._options.filter, filter)) {
+
+         // если фильтр был изменен извне, не надо кидать событие filterChanged
+         // у оборачивающего компонента фильтр сменится на старый
+         const isCleanFilters = !filter[self._options.searchParam] && !self._filter[self._options.searchParam];
+         const filterChangedOutside = isCleanFilters && !isEqual(self._filter, filter);
+
+         if (!isEqual(self._options.filter, filter) && !filterChangedOutside) {
             self._notify('filterChanged', [filter]);
          }
          self._notify('searchValueChanged', [self._searchValue]);
@@ -258,6 +264,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (!isEqual(this._options.filter, newOptions.filter)) {
          filter = newOptions.filter;
+         this._filter = filter;
       }
 
       if (this._options.root !== newOptions.root) {
