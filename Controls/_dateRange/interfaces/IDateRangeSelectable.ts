@@ -23,8 +23,10 @@ export = {
        * @remark
        * Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды. 
        * Объект принимает свойства days, weeks и months со значениями типа Array.
-       * @example
-       * {days: [1,4], weeks: [2], months: [1] } 
+       * @example 
+       * <pre class="brush:js">
+       * <Controls.dateRange:Selector ranges="{days: [1,4], weeks: [2], months: [1] }" />
+       * </pre>
        * В данном примере можно выбрать либо 1 день, либо диапазон в 4 дня, либо 2 целые недели, либо 1 месяц
        */
       options.ranges = [];
