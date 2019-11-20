@@ -36,7 +36,7 @@
  * - items - для смены набора элементов.
  * - groupingKeyCallback, groupingTemplate для установки группировки.
  * - itemTemplate - шаблон элемента меню.
- * - footerTamplate - шаблон футера.
+ * - footerTemplate - шаблон футера.
  * - headerTemplate - шаблон шапки.
  */
 
@@ -541,7 +541,8 @@
 
 /**
  * Перезагружает данные из источника данных.
- * @function Controls/_list/interface/IList#reload
+ * @function 
+ * @name Controls/_list/interface/IList#reload
  */
 
 /*

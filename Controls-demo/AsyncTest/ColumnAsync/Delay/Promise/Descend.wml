@@ -1,0 +1,11 @@
+<div class="asyncDemo__column">
+        <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Run" on:click="_setOpen()"/>
+    <ws:if data="{{ _isOpen }}">
+        <Controls.heading:Title  caption="Not Async" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <div class="asyncDemo__column">
+            <ws:for data="i in 5">
+                <Controls-demo.AsyncTest.Childs.Simple.First delay="{{(5-i) * 200}}" value="{{i}}"/>
+            </ws:for>
+        </div>
+    </ws:if>
+</div>

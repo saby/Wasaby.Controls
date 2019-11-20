@@ -24,10 +24,21 @@
         <div class="controls-BaseControl__footerPaging_wrapper">
             <ws:if data="{{_pagingLabelData}}">
                 <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
-                    <div class="controls-BaseControl_paging-label">{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} из {{_pagingLabelData.totalItemsCount}}, по {{_pagingLabelData.pageSize}}</div>
+                    <div class="controls-BaseControl_paging-label"><div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
+                    <Controls.dropdown:Button
+                            attr:class="controls-BaseControl_paging-pageSizeChooser"
+                            keyProperty="id"
+                            style="secondary"
+                            viewMode="link"
+                            fontSize="s"
+                            on:menuItemActivate="_changePageSize()"
+                            caption="{{_pagingLabelData.pageSize}}"
+                            source="{{_pageSizeSource}}">
+                    </Controls.dropdown:Button>
+                    </div>
                 </ws:if>
                 <ws:else>
-                    <div class="controls-BaseControl_paging-label">Всего {{_pagingLabelData.totalItemsCount}}</div>
+                    <div class="controls-BaseControl_paging-label">{{rk('Всего')}} {{_pagingLabelData.totalItemsCount}}</div>
                 </ws:else>
             </ws:if>
             <Controls.paging:Paging attr:class="controls-BaseControl__footerPaging"
@@ -219,9 +230,11 @@
                 parentProperty="{{ _options.parentProperty }}"
                 items="{{ _items }}"
                 nodeProperty="{{ _options.nodeProperty }}"
+                hasChildrenProperty="{{ _options.hasChildrenProperty }}"
                 selectedKeys="{{ _options.selectedKeys }}"
                 excludedKeys="{{ _options.excludedKeys }}"
                 listModel="{{ _listViewModel }}"
+                selectionStrategy="{{_options.selectionStrategy}}"
                 on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                 on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
             />

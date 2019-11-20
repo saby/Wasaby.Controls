@@ -189,7 +189,7 @@ var _private = {
         let expandedItemsKeys: Array[number | string | null] = [];
         let isExpandAll: boolean;
 
-        if (baseControl) {
+        if (baseControl && !self._updateExpandedItemsAfterReload) {
             const viewModel = baseControl.getViewModel();
             isExpandAll = viewModel.isExpandAll();
             if (!isExpandAll) {
@@ -233,6 +233,10 @@ var _private = {
             const modelRoot = viewModel.getRoot();
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
+            if (self._updateExpandedItemsAfterReload) {
+                viewModel.setExpandedItems(options.expandedItems);
+                self._updateExpandedItemsAfterReload = false;
+            }
             const modelExpandedItems = viewModel.getExpandedItems();
             const isDeepReload = _private.isDeepReload(options, self._deepReload);
 
@@ -393,6 +397,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
     _expandOnDragData: null,
+    _updateExpandedItemsAfterReload: false,
     _notifyHandler: tmplNotify,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
@@ -422,7 +427,11 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
         //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
         if (newOptions.expandedItems) {
-            this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
+            if (isEqual(this._options.filter, newOptions.filter) && this._options.source === newOptions.source) {
+                this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
+            } else {
+                this._updateExpandedItemsAfterReload = true;
+            }
         }
         if (newOptions.collapsedItems) {
             this._children.baseControl.getViewModel().setCollapsedItems(newOptions.collapsedItems);
@@ -459,7 +468,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
                 this._children.baseControl.reload();
             }
         }
-        if ((oldOptions.groupMethod !== this._options.groupMethod) || (oldOptions.viewModelConstructor !== this._viewModelConstructor)) {
+        if (oldOptions.groupMethod !== this._options.groupMethod || oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         }
     },
@@ -641,7 +650,8 @@ TreeControl.getDefaultOptions = function() {
         markItemByExpanderClick: true,
         expandByItemClick: false,
         root: null,
-        columns: DEFAULT_COLUMNS_VALUE
+        columns: DEFAULT_COLUMNS_VALUE,
+        selectionStrategy: 'Controls/operations:DeepTreeSelectionStrategy'
     };
 };
 

@@ -1,6 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Container');
-import Env = require('Env/Env');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
@@ -8,6 +7,8 @@ import getZIndex = require('Controls/Utils/getZIndex');
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
+import {ValidationStatus} from "Controls/interface";
+import {Logger} from 'UI/Utils';
 
 export interface IValidateConfig {
     hideInfoBox?: boolean;
@@ -106,6 +107,7 @@ type ValidResult = boolean|null|Promise<boolean>|String;
 class ValidateContainer extends Control {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
+    _contentActive: boolean = false;
     _currentValue: any;
     _validationResult: ValidResult;
     _isNewEnvironment: boolean;
@@ -201,7 +203,7 @@ class ValidateContainer extends Control {
             this.setValidationResult(validationResult, validateConfig);
             resultDeferred.callback(validationResult);
         }).addErrback((e) => {
-            Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
+            Logger.error('Validate: Validation error', this, e);
         });
 
         return resultDeferred;
@@ -268,9 +270,14 @@ class ValidateContainer extends Control {
     }
 
     _focusInHandler(): void {
+        this._contentActive = true;
         if (!this._isOpened) {
             _private.openInfoBox(this);
         }
+    }
+
+    _focusOutHandler(): void {
+        this._contentActive = false;
     }
 
     _mouseInfoboxHandler(event: Event): void {
@@ -312,6 +319,14 @@ class ValidateContainer extends Control {
         if (this._validationResult) {
             this.setValidationResult(null);
         }
+    }
+
+    private _getValidStatus(contentActive): ValidationStatus {
+        //ie is not support focus-within
+        if (this._isValidResult()) {
+            return contentActive ? 'invalidAccent' : 'invalid';
+        }
+        return 'valid';
     }
 
 

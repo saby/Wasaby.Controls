@@ -134,4 +134,22 @@
         </Router.router:Reference>
         <Controls-demo.treeGrid.VirtualScroll.Index/>
     </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/treeGrid/CellPadding/Index' }}">
+            <a href="{{content.href}}">Отсупы в ячейках</a>
+        </Router.router:Reference>
+        <Controls-demo.treeGrid.CellPadding.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/treeGrid/LoadMore/Index' }}">
+            <a href="{{content.href}}">Load More</a>
+        </Router.router:Reference>
+        <Controls-demo.treeGrid.LoadMore.Index/>
+    </div>
 </div>

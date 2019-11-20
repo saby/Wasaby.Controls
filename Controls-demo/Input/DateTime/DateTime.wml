@@ -50,5 +50,10 @@
                         tagStyle="{{'primary'}}"/>
             </div>
         </div>
+            <div class="controlsDemo-Input-DateTime__row-item controlsDemo-Input-DateTime__row-item_grow">
+                <div style="width: 100px">
+                    <Controls.input:Area attr:class="controlsDemo-Input-DateTime__Area" minLines="{{5}}"/>
+                </div>
+            </div>
     </div>
 </div>

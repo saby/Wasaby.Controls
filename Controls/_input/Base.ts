@@ -373,7 +373,7 @@ var _private = {
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_input/interface/IValue
- * @mixes Controls/_input/interface/IValidationStatus
+ * @mixes Controls/_interface/IValidationStatus
  *
  * @public
  * @demo Controls-demo/Input/SizesAndHeights/Index

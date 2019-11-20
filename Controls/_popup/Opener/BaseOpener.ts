@@ -4,8 +4,8 @@ import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import { DefaultOpenerFinder } from 'UI/Focus';
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
+import {Logger} from 'UI/Utils';
 import randomId = require('Core/helpers/Number/randomId');
-import {IoC} from 'Env/Env';
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
@@ -278,7 +278,6 @@ class BaseOpener extends Control<IControlOptions> {
 
     static showDialog(rootTpl: TemplateFunction, cfg, controller: string, popupId?: string, opener?: BaseOpener) {
         const def = new Deferred();
-
         if (BaseOpener.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!BaseOpener.isNewEnvironment()) {
                 BaseOpener.getManager().then(() => {
@@ -411,7 +410,7 @@ class BaseOpener extends Control<IControlOptions> {
                     }
                     def.callback(action);
                 } catch (err) {
-                    IoC.resolve('ILogger').error(BaseOpener.prototype._moduleName, 'Ошибка при открытии окна: ' + err.message);
+                    Logger.error(BaseOpener.prototype._moduleName + ': Ошибка при открытии окна: ' + err.message);
                 }
 
             });
@@ -441,7 +440,7 @@ class BaseOpener extends Control<IControlOptions> {
             BaseOpener.requireModule(config.template),
             BaseOpener.requireModule(controller)
         ]).catch((error: Error) => {
-            IoC.resolve('ILogger').error(this._moduleName, error.message);
+            Logger.error(this._moduleName + ': ' + error.message, undefined, error);
             return error;
         });
     }
@@ -544,7 +543,8 @@ class BaseOpener extends Control<IControlOptions> {
 
         const templateOptions = {};
         CoreMerge(templateOptions, baseConfig.templateOptions || {});
-        CoreMerge(templateOptions, popupOptions.templateOptions || {}, {rec: (options.isRecMerge !== false)});
+        CoreMerge(templateOptions, popupOptions.templateOptions || {}, {rec: false});
+
         const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
 
         // protect against wrong config. Opener must be specified only on popupOptions.
@@ -553,7 +553,7 @@ class BaseOpener extends Control<IControlOptions> {
         }
 
         if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
-            IoC.resolve('ILogger').warn(BaseOpener.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
+            Logger.warn(BaseOpener.prototype._moduleName + ': Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
         }
 
         return baseCfg;

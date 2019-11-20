@@ -1,4 +1,5 @@
 @import "_aliases";
+@import "_notAliasesToDelete";
 
 @tensorFontForIE:                         '1.0.3';
 @tensorFontVer:                           '1.0.3';
@@ -9,26 +10,8 @@
 @color_shadow_popup:                rgba(0,0,0,0.35);
 @color_shadow_danger:               rgba(239, 70, 58, 0.4);
 
-@color_warning:                       @warning_color; // дублирует стиль новой спецификации, удаляем
-@color_success:                       @success_color; // дублирует стиль новой спецификации, удаляем
-@color_link:                          @link_text-color; // дублирует стиль новой спецификации, удаляем
-@color_link-hover:                    @link_hover_text-color; // дублирует стиль новой спецификации, удаляем
-@color_danger:                        @danger_color; // дублирует стиль новой спецификации, удаляем
-@color_primaryV:                      @primary_color; // дублирует стиль новой спецификации, удаляем
-@color_primary:                       @primary_color; // дублирует стиль новой спецификации, удаляем
-@color_active-element:                @color_primary; // дублирует стиль новой спецификации, удаляем
-@color_info:                          @unaccented_icon-color; // дублирует стиль новой спецификации, удаляем
 @color_active-element_disabled:		  #313E78;
-@color_secondary:                     @secondary_color; // дублирует стиль новой спецификации, удаляем
-@color_unselected:                    @unaccented_color; // дублирует стиль новой спецификации, удаляем
-@color_additional:                    @label_text-color; // дублирует стиль новой спецификации, удаляем
-@color_readOnly:                      @readonly_color; // дублирует стиль новой спецификации, удаляем
 @color_separator:                     #EAEAEA;
-
-@color_text_default:                  @text-color;
-@color_text_readonly:                 @color_readOnly;
-@color_placeholder:                   #CCC;
-@color_text_additional:               @unaccented_text-color;
 
 @background-color_footer:           #F5F5F5;
 @background-color_default:          #FFFFFF;
@@ -48,33 +31,19 @@
 @color_overlay_default:             rgba(0, 0, 0, 0.1);
 
 //sizes
-@thickness_border_default:    @border-thickness; // дублирует стиль новой спецификации, удаляем
+
 @thickness_border_accent:     2px;
-
-@height_control_default:    @inline_height_m; // дублирует стиль новой спецификации, удаляем
 @height_control_multi_header: 20px;
-@height_control_l:          @inline_height_xl; // дублирует стиль новой спецификации, удаляем
-
-@height_xs:          @inline_height_xs; // дублирует стиль новой спецификации, удаляем
 @height_s:           18px;
-@height_m:           @inline_height_m; // дублирует стиль новой спецификации, удаляем
+
 @height_l:           30px;
-@height_xl:          @inline_height_xl; // дублирует стиль новой спецификации, удаляем
+
 @height_2xl:         44px;
 
 @line-height_default:       18px;
 @size_shadow_default:       0 0 6px 0;
 
 @border-radius_size_m:        4px;
-
-@font-size_text_s:     @font-size_xs; // дублирует стиль новой спецификации, удаляем
-@font-size_text_m:     @font-size_m; // дублирует стиль новой спецификации, удаляем
-@font-size_text_l:     @font-size_l; // дублирует стиль новой спецификации, удаляем
-@font-size_text_xl:    @font-size_xl; // дублирует стиль новой спецификации, удаляем
-@font-size_text_2xl:   @font-size_2xl; // дублирует стиль новой спецификации, удаляем
-@font-size_text_3xl:   @font-size_3xl; // дублирует стиль новой спецификации, удаляем
-@font-size_text_4xl:   @font-size_4xl; // дублирует стиль новой спецификации, удаляем
-@font-size_text_5xl:   @font-size_5xl; // дублирует стиль новой спецификации, удаляем
 
 @spacing_default_xxs:      2px;
 @spacing_default_xs:       4px;
@@ -83,15 +52,6 @@
 @spacing_default_l:        12px;
 @spacing_default_xl:       16px;
 @spacing_default_xxl:      24px;
-
-@size_icon_s:                 @icon-size_s; // дублирует стиль новой спецификации, удаляем
-@size_icon_m:                 @icon-size_m; // дублирует стиль новой спецификации, удаляем
-@size_icon_l:                 @icon-size_l; // дублирует стиль новой спецификации, удаляем
-
-@font-family_icon_size-s:         @icon_font-family_s; // дублирует стиль новой спецификации, удаляем
-@font-family_icon_size-m:         @icon_font-family_m; // дублирует стиль новой спецификации, удаляем
-@font-family_icon_size-l:         @icon_font-family_l; // дублирует стиль новой спецификации, удаляем
-@font-family_text_default:        @font-family; // дублирует стиль новой спецификации, удаляем
 
 //period dialog
 @color_border_PeriodDialog:       #EAEAEA;
@@ -108,8 +68,29 @@
 @color_DraggingTemplate-counter_val:               #FFFFFF;
 @background-color_DraggingTemplate-counter_val:    #0055BB;
 
-// stack
-@color_border_lite:                 #F0F0F0;
+//Heading
+@color-Separator__icon_style-secondary_hovered_val:     #313E78;
+@color-Separator__icon_style-additional_hovered_val:    #313E78;
+@color_Heading__caption_style-secondary_hovered_val:    #0055BB;
+
+// Counter
+@font-size_Counter_size-l:                                       18px;
+@font-size_Counter_size-s:                                       14px;
+@font-size_Counter_size-m:                                       15px;
+@color_Counter_style-primary_hovered:                            #D94700;
+@color_Counter_style-secondary_hovered:                          #0055BB;
+@color_Counter_style-secondary:                                  #313E78;
+@color_Counter_style-primary:                                    #D94700;
+@color_Counter_style-disabled:                                   #999999;
+
+// Separator
+@width-HeaderSeparator:                                          6px;
+@height-HeaderSeparator:                                         10px;
+@spacing-HeaderSeparator_between_headerSeparator_Header:         10px;
+@color_HeaderSeparator_secondary:                                #729EE6;
+@color_HeaderSeparator_primary:                                  #729EE6;
+@color_HeaderSeparator_primary_hovered:                          #729EE6;
+@color_HeaderSeparator_secondary_hovered:                        #729EE6;
 
 // tile
 @color_shadow_light:                rgba(0,0,0,.15);
@@ -138,11 +119,6 @@
 // border
 @border-style_solid:       solid;
 
-//standard dimensions
-@height_control_default:      @inline_height_m; // дублирует стиль новой спецификации, удаляем
-@height_control_m:            @inline_height_l; // дублирует стиль новой спецификации, удаляем
-@height_control_l:            @inline_height_xl; // дублирует стиль новой спецификации, удаляем
-@height_control_xl:           @inline_height_2xl; // дублирует стиль новой спецификации, удаляем
 @line-height_default:         18px;
 
 @width_control_s:             24px;
@@ -164,26 +140,6 @@
 @font-weight_DecoratorMoney-integer_style_noAccentRegistry_val:   bold;
 @font-weight_DecoratorMoney-integer_style_error_val:              bold;
 @font-weight_DecoratorMoney-fractional_val:                       normal;
-
-// Button
-@border-radius-ToolButton_val:                                    @border-radius_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@min-width_Button_common_val:                                     48px;
-@box-shadow-ToolButton_val:                                       @box-shadow_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@text-shadow_Button_readOnly_val:                                 0;
-@text-shadow_Button_button_val:                                   @text-shadow_button; // дублирует стиль новой спецификации, удаляем
-@box-shadow_Button_common_val:                                    @box-shadow_button; // дублирует стиль новой спецификации, удаляем
-@box-shadow_Button_active_val:                                    @box-shadow_button; // дублирует стиль новой спецификации, удаляем
-@box-shadow-ToolButton_activated_val:                             @box-shadow_button; // дублирует стиль новой спецификации, удаляем
-@text-shadow_ToolButton_val:                                      @text-shadow_button; // дублирует стиль новой спецификации, удаляем
-@text-shadow_ToolButton_readOnly_val:                             @text-shadow_button; // дублирует стиль новой спецификации, удаляем
-@background-color-ToolButton_transparent_val:                     @background-color_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@border-color-ToolButton_val:                                     @border-color_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@border-color-ToolButton_readOnly_val:                            @readonly_border-color_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@background-color-ToolButton_val:                                 @background-color_contrast_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@background_Button_button_primary_hovered_val:                    @primary_hover_background-color_button; // дублирует стиль новой спецификации, удаляем
-@background_Button_secondary_active_val:                          @secondary_active_background-color_button; // дублирует стиль новой спецификации, удаляем
-@background_Button_button_primary_active_val:                     @primary_active_background-color_button; // дублирует стиль новой спецификации, удаляем
-@background_Button:                                               @primary_background-color_button; // дублирует стиль новой спецификации, удаляем
 
 // Image
 @border-radius_Image_m_val:                                       8px;
@@ -261,9 +217,6 @@
 @font-weight_NotificationBase-message_val:                        normal;
 @spacing_NotificationBase-between-border-top-message_val:         18px;
 
-// DatePicker
-@spacing_DatePicker-between-input-button:                                 7px;
-
 // DateRangeRelationButton
 @color_DateRangeRelationButton-byCapacity_hovered_val:            #999;
 
@@ -275,23 +228,6 @@
 
 // FilterLink
 @color_FilterLink:                                                #313e78;
-
-// Render
-@size_Render-tagStyle_val:                                        8px;
-@font-weight_Render_fontStyle_primary_size_s_val:                 bold;
-@font-weight_Render_fontStyle_secondary_size_s_val:               bold;
-@font-weight_Render_fontStyle_primary_size_m_val:                 bold;
-@font-weight_Render_fontStyle_secondary_size_m_val:               bold;
-@font-weight_Render_fontStyle_primary_size_l_val:                 bold;
-@font-weight_Render_fontStyle_secondary_size_l_val:               bold;
-@font-weight_Render_fontStyle_primary_size_default_val:           bold;
-@font-weight_Render_fontStyle_secondary_size_default_val:         bold;
-@font-weight_Render_fontStyle_default_size_s_val:                 normal;
-@font-weight_Render_fontStyle_default_size_m_val:                 normal;
-@font-weight_Render_fontStyle_default_size_l_val:                 normal;
-@font-weight_Render_fontStyle_default_size_default_val:           normal;
-@border-color_input_val:                                          #EAEAEA;
-@border-color-bottom_Render_val:                                  #AAB0C1;
 
 // SelectedCollection
 @width_SelectedCollection-counter-shadow_val:                     20px;
@@ -306,17 +242,6 @@
 @spacing_Lookup-between-inputRender-rightBorder_val:              0;
 @color_Lookup-input-for-comment_val:                              #999999;
 @caret-color_Lookup-input-for-comment_val:                        #999999;
-
-// StackTemplate
-@size_Stack-shadow_val:                                           12px -8px 6px 12px;
-@min-height_StackTemplate-head_val:                               38px;
-@spacing_StackTemplate-between-maximized-button-content-top_val:  7px;
-@spacing_StackTemplate-between-close-button-border-top_val:       5px;
-@font-weight_StackTemplate-caption_secondary_val:                 700;
-@font-weight_StackTemplate-caption_primary_val:                   700;
-@font-weight_StackTemplate-caption_info_val:                      normal;
-@spacing_StackTemplate-between-caption-border-top_val:            25px;
-
 
 // Suggest
 @box-shadow-size_Suggest-popup-verticalAlign_top_val:             0 -4px 6px;
@@ -365,8 +290,7 @@
 // DialogTemplate
 @spacing_dialogTemplate-between-head-border-right_val:                    48px;
 @line-height_dialogTemplate_caption_val:                                  42px;
-@height_DialogTemplate-top-area-val:                                      44px;
-@height_dialogTemplate_footer_val:                                        64px;
+
 @font-weight_dialogTemplate_head_val:                                     bold;
 
 // TileView
@@ -434,7 +358,7 @@
 @padding-horizontal_CheckBox-caption_val:                                 3px;
 @top_CheckBox__iconSuccessful_val:                                        3px;
 @color_CheckBox__iconBox_val:                                             #CCC;
-@height_CheckBox:                                                         @height_m;
+@height_CheckBox:                                                         @inline_height_m;
 @width_CheckBox:                                                          20px;
 
 // FilterButton
@@ -494,6 +418,7 @@
 @width_ConfirmationTemplate-l_val:                                        440px;
 
 // FilterPanel
+@width_FilterPanel-size_s_val:                                            400px;
 @width_FilterPanel-size_m_val:                                            400px;
 @width_FilterPanel-size_l_val:                                            600px;
 @width_FilterPanel-size_xl_val:                                           800px;
@@ -534,10 +459,6 @@
 @color-marker_dark_val:                                                   #D94700;
 @color-marker_val:                                                        #FF7033;
 
-// InputBase
-@spacing_InputBase_between-topBorder-text_val:                            0;
-@spacing_InputBase_between-bottomBorder-text_val:                         0;
-
 // ProgressBar
 @height-ProgressBar_bar_val:                                              3px;
 @color-ProgressBar__bar_val:                                              #CCC;
@@ -561,25 +482,13 @@
 @text-shadow_ToggleButton_pushButton_val:                                  none;
 @padding_Button-wrapper-pushButton_size_s_val:                            0;
 
-//Heading
-@color-Separator__icon_style-secondary_hovered_val:     #313E78;
-@color-Separator__icon_style-additional_hovered_val:    #313E78;
-@color_Heading__caption_style-secondary_hovered_val:    #0055BB;
-@color_Heading_primary:                                 #D94700;
-@color_Heading_secondary:                               #313E78;
-@size_Heading_s:                                        @font-size_text_m;
-@size_Heading_m:                                        @font-size_text_l;
-@size_Heading_l:                                        @font-size_text_3xl;
-@size_Heading_xl:                                       @font-size_text_4xl;
-@font-weight_Heading-caption_val:                        bold;
-
 //BigSeparator
 @size-BigSeparator__icon:                               26px;
 @color_BigSeparator-icon:                               #ccc;
 @color_BigSeparator-icon_hovered:                       #313E78;
 
 //Label
-@height_Label:                                          @height_m;
+@height_Label:                                          @inline_height_m;
 @padding_Label:                                         0 8px 0 0;
 
 //Popup

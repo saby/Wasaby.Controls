@@ -2,7 +2,7 @@
  *
  * Стили для RadioButton и Switch.
  * @mixin Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
- * @public
+ * @private
  * @author Красильников А.С.
  *
  *
@@ -24,7 +24,7 @@
  *
  * Styles of circle in RadioButton and Switch.
  * @mixin Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
- * @public
+ * @private
  * @author Красильников А.С.
  *
  *

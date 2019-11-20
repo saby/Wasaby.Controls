@@ -10,15 +10,8 @@
  * @includes Separator Controls/_toggle/Separator
  * @includes BigSeparator Controls/_toggle/BigSeparator
  * @includes CheckboxItemTemplate Controls/_toggle/CheckboxGroup/resources/ItemTemplate
- * @includes BigSeparatorStyles Controls/_toggle/BigSeparator/BigSeparatorStyles
- * @includes ButtonStyles Controls/_toggle/Button/Styles
- * @includes CheckboxStyles Controls/_toggle/Checkbox/CheckboxStyles
  * @includes ICheckable Controls/_toggle/interface/ICheckable
  * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
- * @includes RadioGroupStyles Controls/_toggle/RadioGroup/RadioGroupStyles
- * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
- * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
- * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
  * @includes switchCircleTemplate Controls/_toggle/resources/SwitchCircle/SwitchCircle
  * @public
  * @author Крайнов Д.О. 
@@ -35,15 +28,8 @@
  * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
  * @includes Separator Controls/_toggle/Separator
  * @includes BigSeparator Controls/_toggle/BigSeparator
- * @includes BigSeparatorStyles Controls/_toggle/BigSeparator/BigSeparatorStyles
- * @includes ButtonStyles Controls/_toggle/Button/Styles
- * @includes CheckboxStyles Controls/_toggle/Checkbox/CheckboxStyles
  * @includes ICheckable Controls/_toggle/interface/ICheckable
  * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
- * @includes RadioGroupStyles Controls/_toggle/RadioGroup/RadioGroupStyles
- * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
- * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
- * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
  * @includes switchCircleTemplate Controls/_toggle/resources/SwitchCircle/SwitchCircle
  * @public
  * @author Крайнов Д.О.

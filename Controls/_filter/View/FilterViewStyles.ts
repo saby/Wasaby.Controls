@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_filter/View/FilterViewStyles
- * @public
+ * @private
  *
  * @css @height_FilterView filter:View height.
  * @css @spacing_FilterView-between-filterButton-text Spacing between filter button and text.

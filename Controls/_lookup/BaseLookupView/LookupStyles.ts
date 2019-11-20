@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_lookup/BaseLookupView/LookupStyles
- * @public
+ * @private
  * @author Капустин И.А.
  *
  * @css @spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup Интервал между оберткой контента и правой границей в режиме множественного выбора.
@@ -30,7 +30,7 @@
  */
 /*
  * @mixin Controls/_lookup/BaseLookupView/LookupStyles
- * @public
+ * @private
  * @author Kapustin I.A.
  *
  * @css @spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup Spacing between input render wrapper and right border in multiple selection mode.

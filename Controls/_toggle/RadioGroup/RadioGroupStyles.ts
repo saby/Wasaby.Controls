@@ -2,7 +2,7 @@
  *
  * Стили для RadioButton и Switch.
  * @mixin Controls/_toggle/RadioGroup/RadioGroupStyles
- * @public
+ * @private
  * @author Красильников А.С.
  *
  * @css @color_RadioItem_caption_selected Color of caption in selected state.
@@ -27,7 +27,7 @@
  *
  * Styles of circle in RadioButton and Switch.
  * @mixin Controls/_toggle/RadioGroup/RadioGroupStyles
- * @public
+ * @private
  * @author Красильников А.С.
  *
  * @css @color_RadioItem_caption_selected Color of caption in selected state.

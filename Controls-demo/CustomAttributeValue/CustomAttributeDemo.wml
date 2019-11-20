@@ -1,0 +1,33 @@
+<div class="customArea">
+
+    <div class="customArea__row">
+        <div class="customArea__column">
+            <Controls.buttons:Button readOnly="{{false}}" caption="Add Standard" on:click="_addStandard()"/>
+            <ws:for data="i in _standardCount">
+                <div class="customArea__standard" value="value is {{i}}">
+                    This is DIV {{i}}
+                </div>
+            </ws:for>
+        </div>
+        <pt-setting class="customArea__column" >
+            <Controls.buttons:Button readOnly="{{false}}" caption="Add Custom" on:click="_addCustom()"/>
+            <ws:for data="i in _customCount">
+                <pt-setting class="customArea__custom" value="value is {{i}}"  >
+                    This is pt-setting {{i}}
+                </pt-setting>
+            </ws:for>
+        </pt-setting>
+        <div class="customArea__column">
+            <Controls.buttons:Button readOnly="{{false}}" caption="Add Control Input" on:click="_addControlInput()"/>
+            <ws:for data="i in _inputControlCount">
+                <Controls.input:Text value="value is {{i}}" placeholder="value is {{i}}"/>
+            </ws:for>
+        </div>
+        <div class="customArea__column">
+            <Controls.buttons:Button readOnly="{{false}}" caption="Add Input" on:click="_addInput()"/>
+            <ws:for data="i in _inputCount">
+                <input value="value is {{i}}" placeholder="value is {{i}}"/>
+            </ws:for>
+        </div>
+    </div>
+</div>

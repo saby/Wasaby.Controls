@@ -16,13 +16,12 @@
 
    /**
     *
-    * Модуль с функцией выделения искомой строки.
-    * Распознаватель тегов для {@link Controls/decorator:Markup}.
+    * Модуль с функцией подсветки искомой строки.
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
     * @public
     * @author Кондаков Р.Н.
-    * @example
+    * @remark
     * JS:
     * <pre>
     *  define("MyControl", ["UI/Base",  "wml!Template", "Controls/decorator"], function(Base, template, decorator) {

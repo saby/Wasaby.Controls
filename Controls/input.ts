@@ -15,7 +15,6 @@
  * @includes TimeInterval Controls/_input/TimeInterval
  * @includes Money Controls/_input/Money
  * @includes INewLineKey Controls/_input/interface/INewLineKey
- * @includes IValidationStatus Controls/_input/interface/IValidationStatus
  * @includes IText Controls/_input/interface/IText
  * @includes INumberLength Controls/_input/interface/INumberLength
  * @includes IBase Controls/_input/interface/IBase
@@ -44,7 +43,6 @@
  * @includes TimeInterval Controls/_input/TimeInterval
  * @includes Money Controls/_input/Money
  * @includes INewLineKey Controls/_input/interface/INewLineKey
- * @includes IValidationStatus Controls/_input/interface/IValidationStatus
  * @includes IText Controls/_input/interface/IText
  * @includes IBase Controls/_input/interface/IBase
  * @includes ITag Controls/_input/interface/ITag
@@ -86,7 +84,6 @@ export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
 export {default as IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
 export {default as ITag, ITagOptions, TagStyle} from 'Controls/_input/interface/ITag';
 export {default as INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
-export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from 'Controls/_input/interface/IValidationStatus';
 export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
 export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 

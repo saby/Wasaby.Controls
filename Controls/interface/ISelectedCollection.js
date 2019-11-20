@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/ISelectedCollection', [
 ], function() {
    /**
@@ -113,8 +114,7 @@ define('Controls/interface/ISelectedCollection', [
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Шаблон выбранного элемента.
     * @remark
-    * Базовый шаблон для Controls/lookup:Input: "Controls.lookup:ItemTemplate".
-    * Базовый шаблон для Controls.lookup:Selector: "Controls.lookup:ButtonItemTemplate".
+    * Базовый шаблон для Controls/lookup:Input и Controls.lookup:Selector: "Controls.lookup:ItemTemplate".
     * Базовый шаблон поддерживают такие параметры как:
     * <ul>
     *    <li>contentTemplate {Function|String} - Шаблон содержимого элемента.</li>
@@ -152,7 +152,7 @@ define('Controls/interface/ISelectedCollection', [
     *          source="{{_source}}"
     *          keyProperty="id">
     *       <ws:itemTemplate>
-    *          <ws:partial template="Controls.lookup:ButtonItemTemplate"
+    *          <ws:partial template="Controls.lookup:ItemTemplate"
     *                      style="primary"
     *                      size="xl"
     *                      displayProperty="title"
@@ -165,8 +165,7 @@ define('Controls/interface/ISelectedCollection', [
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Selected item template.
     * @remark
-    * Base itemTemplate for Controls/lookup:Input: "Controls.lookup:ItemTemplate".
-    * Base itemTemplate for Controls.lookup:Selector: "Controls.lookup:ButtonItemTemplate".
+    * Base itemTemplate for Controls/lookup:Input и Controls.lookup:Selector: "Controls.lookup:ItemTemplate".
     * Base itemTemplate supports these parameters:
     * <ul>
     *    <li>contentTemplate {Function|String} - Template for render item content.</li>
@@ -204,7 +203,7 @@ define('Controls/interface/ISelectedCollection', [
     *          source="{{_source}}"
     *          keyProperty="id">
     *       <ws:itemTemplate>
-    *          <ws:partial template="Controls.lookup:ButtonItemTemplate"
+    *          <ws:partial template="Controls.lookup:ItemTemplate"
     *                      style="primary"
     *                      size="xl"
     *                      displayProperty="title"

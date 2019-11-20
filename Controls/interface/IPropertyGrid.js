@@ -1,8 +1,9 @@
+/* eslint-disable */
 define('Controls/interface/IPropertyGrid', [
 ], function() {
-   
+
    /**
-    * Интерфейс для просмотра и редактирования свойств объекта. 
+    * Интерфейс для просмотра и редактирования свойств объекта.
     * @interface Controls/interface/IPropertyGrid
     * @public
     * @author Герасимов А.М.
@@ -13,8 +14,8 @@ define('Controls/interface/IPropertyGrid', [
     * @interface Controls/interface/IPropertyGrid
     * @public
     * @author Герасимов А.М.
-    */    
-   
+    */
+
    /**
     * @typedef {Object} PropertyGridItems
     * @property {*} value Текущее значение свойства.
@@ -25,8 +26,8 @@ define('Controls/interface/IPropertyGrid', [
     * @typedef {Object} PropertyGridItems
     * @property {*} value Current property value.
     * @property {*} resetValue Property value for reset.
-    */    
-   
+    */
+
    /**
     * @name Controls/interface/IPropertyGrid#items
     * @cfg {PropertyGridItems} Свойства для редактирования или отображения.
@@ -35,6 +36,6 @@ define('Controls/interface/IPropertyGrid', [
    /*
     * @name Controls/interface/IPropertyGrid#items
     * @cfg {PropertyGridItems} Properties for editing or showing.
-    */    
-   
+    */
+
 });

@@ -1,7 +1,7 @@
 /**
     * @author Авраменко А.С.
     * @mixin Controls/_dragnDrop/DraggingTemplate/Styles
-    * @public
+    * @private
     *
     * @css @background-color_DraggingTemplate Background color of the dragging template.
     * @css @border-color_DraggingTemplate Border color of the dragging template.
