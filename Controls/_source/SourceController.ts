@@ -6,11 +6,12 @@ import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
 import Page from 'Controls/_source/QueryParamsController/Page';
 import Position from 'Controls/_source/QueryParamsController/Position';
+import {Logger} from 'UI/Utils';
 
 var _private = {
    prepareSource: function(sourceOpt) {
       if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
-         Env.IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
+          Logger.error('SourceController: Source option has incorrect type');
       }
       return sourceOpt;
    },
@@ -73,7 +74,7 @@ var _private = {
             cntCtr = Position;
             break;
          default:
-            Env.IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
+             Logger.error('SourceController: Undefined navigation source type "' + type + '"');
       }
       if (cntCtr) {
          cntInstance = new cntCtr(cfg);

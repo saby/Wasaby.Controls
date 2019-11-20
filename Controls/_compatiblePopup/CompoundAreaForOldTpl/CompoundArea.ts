@@ -14,6 +14,7 @@ import {InstantiableMixin} from 'Types/entity';
 import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
 import { SyntheticEvent } from 'Vdom/Vdom';
+import {Logger} from 'UI/Utils';
 import 'css!theme?Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
@@ -27,7 +28,6 @@ function finishResultOk(result) {
    return !(result instanceof Error || result === false);
 }
 
-var logger = Env.IoC.resolve('ILogger');
 var allProducedPendingOperations = [];
 var invisibleRe = /ws-invisible/ig;
 var hiddenRe = /ws-hidden/ig;
@@ -388,7 +388,7 @@ var CompoundArea = CompoundContainer.extend([
    _isValidTarget: function(target) {
       var isValid = !target || target instanceof jQuery || (typeof Node !== 'undefined' && target instanceof Node);
       if (!isValid) {
-         logger.error(this._moduleName, 'Передано некорректное значение опции target');
+         Logger.error(this._moduleName, 'Передано некорректное значение опции target', this);
       }
       return isValid;
    },
@@ -1113,11 +1113,10 @@ var CompoundArea = CompoundContainer.extend([
    setOffset: function(newOffset) {
       var popupConfig = this._getManagerConfig();
       if (popupConfig) {
-         popupConfig.popupOptions.horizontalAlign = popupConfig.popupOptions.horizontalAlign || {};
-         popupConfig.popupOptions.horizontalAlign.offset = newOffset.x || 0;
+         popupConfig.popupOptions.offset = popupConfig.popupOptions.offset || {};
 
-         popupConfig.popupOptions.verticalAlign = popupConfig.popupOptions.verticalAlign || {};
-         popupConfig.popupOptions.verticalAlign.offset = newOffset.y || 0;
+         popupConfig.popupOptions.offset.horizontal = newOffset.x || 0;
+         popupConfig.popupOptions.offset.vertical = newOffset.y || 0;
 
          Controller.update(this._getPopupId(), popupConfig.popupOptions);
       }
@@ -1163,7 +1162,7 @@ var CompoundArea = CompoundContainer.extend([
       if (this._isFinishingChildOperations) {
          message = 'У контрола ' + this._moduleName + ' (name = ' + this.getName() + ', id = ' + this.getId() + ') вызывается метод destroy, ' +
             'хотя у него ещё есть незавёршённые операции (свои или от дочерних контролов';
-         logger.error('Lib/Mixins/PendingOperationParentMixin', message);
+         Logger.error('Lib/Mixins/PendingOperationParentMixin: ' + message, this);
       }
 
       this._childPendingOperations = [];// cleanup им вызывать не надо - всё равно там destroy будет работать, у дочернего контрола

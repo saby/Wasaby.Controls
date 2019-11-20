@@ -7,7 +7,7 @@
  * @css @color_Suggest-clear Цвет кнопки "Очистить".
  * @css @icon-size_Suggest-clear Размер кнопки "Очистить".
  * @css @spacing_Suggest-between-afterFieldWrapper-inputRenderWrapper Интервал между правой границей ввода и блоком с иконками.
- * @public
+ * @private
  * @author Герасимов А.М.
  */
 /*
@@ -19,6 +19,6 @@
  * @css @color_Suggest-clear "Clear" button color.
  * @css @icon-size_Suggest-clear "Clear" button size.
  * @css @spacing_Suggest-between-afterFieldWrapper-inputRenderWrapper Spacing between input right border and icon's block.
- * @public
+ * @private
  * @author Gerasimov A.M.
  */

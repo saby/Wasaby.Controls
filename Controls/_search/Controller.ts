@@ -9,6 +9,7 @@ import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import {Logger} from 'UI/Utils';
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -310,7 +311,14 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    },
 
    _search: function (event, value, force) {
-      _private.getSearchController(this).search(value, force);
+      if (this._options.source) {
+         const shouldSearch = this._isSearchControllerLoading() ? value !== this._searchValue : true;
+         if (shouldSearch) {
+            _private.getSearchController(this).search(value, force);
+         }
+      } else {
+         Logger.error('search:Controller source is required for search', this);
+      }
       _private.setInputSearchValue(this, value);
    },
 
@@ -327,6 +335,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _misspellCaptionClick: function () {
       this._search(null, this._misspellValue);
       this._misspellValue = '';
+   },
+
+   _isSearchControllerLoading: function () {
+      return this._searchController && this._searchController.isLoading();
    }
 });
 

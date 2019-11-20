@@ -1,7 +1,7 @@
 /**
  * @author Красильников А.С.
  * @mixin Controls/_toggle/Button/Styles
- * @public
+ * @private
  * @css @height_Button_size_s Height of button with options viewMode 'button' and size 's'.
  * @css @font-size_Button_size_s Font size of button with options viewMode 'button' and size 's'.
  * @css @border-radius_Button_size_s Border radius of button with options viewMode 'button' and size 's'.

@@ -1,7 +1,6 @@
 define('Controls/Application/StateReceiver', ['Core/core-extend',
    'Core/Serializer',
-   'Env/Env',
-   'View/Executor/Utils'], function(extend, Serializer, Env, Utils) {
+   'View/Executor/Utils', 'UI/Utils'], function(extend, Serializer, Utils, UIUtils) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -71,7 +70,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          try {
             this._deserialized = JSON.parse(str, slr.deserialize);
          } catch (e) {
-            Env.IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);
+            UIUtils.Logger.error('Deserialize', 'Cant\'t deserialize ' + str);
          }
       },
 
@@ -81,7 +80,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
             delete this._deserialized[key];
          }
          if (typeof this.receivedStateObjectsArray[key] !== 'undefined') {
-            Env.IoC.resolve('ILogger').warn('SRec::register', 'Try to register instance more than once or duplication of keys happened; current key is "' + key + '"');
+            UIUtils.Logger.warn('SRec::register', 'Try to register instance more than once or duplication of keys happened; current key is "' + key + '"');
          }
          this.receivedStateObjectsArray[key] = inst;
       },

@@ -19,6 +19,8 @@ interface ISwipeControlOptions extends IControlOptions {
     itemActionsPosition?: string;
     actionAlignment?: string;
     actionCaptionPosition?: string;
+
+    menuIsShown?: boolean;
 }
 
 export default class SwipeControl extends Control<ISwipeControlOptions> {
@@ -39,6 +41,12 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
         this._needIcon = (...args) => this._measurer.needIcon(...args);
     }
 
+    protected _beforeUpdate(newOptions: ISwipeControlOptions): void {
+        if (!newOptions.menuIsShown && this._options.menuIsShown) {
+            this._resetSwipeState(newOptions.listModel);
+        }
+    }
+
     protected _onItemSwipe(
         event: SyntheticEvent<null>,
         item: CollectionItem<Model>,
@@ -53,7 +61,7 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
 
     protected _onAnimationEnd(): void {
         if (this._animationState === 'close') {
-            this._resetSwipeState();
+            this._resetSwipeState(this._options.listModel);
         }
     }
 
@@ -80,20 +88,23 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
     }
 
     private _closeSwipe(animated: boolean = false): void {
-        if (this._animationState === 'open') {
+        if (this._animationState === 'open' && !this._options.menuIsShown) {
             this._animationState = 'close';
             if (!animated) {
-                this._resetSwipeState();
+                this._resetSwipeState(this._options.listModel);
             }
         }
     }
 
-    private _resetSwipeState(): void {
+    private _resetSwipeState(model: Collection<Model>): void {
+        this._animationState = 'close';
         this._swipeConfig = null;
         // TODO Do we need this here?
         // this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
-        this._options.listModel.setSwipeItem(null);
-        this._options.listModel.setActiveItem(null);
+        if (model && !model.destroyed) {
+            model.setSwipeItem(null);
+            model.setActiveItem(null);
+        }
     }
 
     private _updateSwipeConfig(item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {

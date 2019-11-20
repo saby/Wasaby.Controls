@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_tile/TreeTileView/Styles
- * @public
+ * @private
  *
  * @css @font-size_TreeTileView-title Font size of nodes title.
  * @css @height_TreeTileView-node Nodes height.

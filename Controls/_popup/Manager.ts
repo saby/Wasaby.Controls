@@ -7,6 +7,7 @@ import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import { goUpByControlTree } from 'UI/Focus';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
@@ -402,7 +403,7 @@ const _private = {
                 }, function(e) {
                     item.removePending = null;
                     if (e.canceled !== true) {
-                        Env.IoC.resolve('ILogger').error('Controls/_popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                        Logger.error('Controls/_popup/Manager/Container: Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', undefined, e);
                         pendingsFinishedCallback && pendingsFinishedCallback();
                     }
 
@@ -524,6 +525,10 @@ const Manager = Control.extend({
      * @param controller popup controller
      */
     show(options, controller): string {
+        if (this.find(options.id)) {
+            this.update(options.id, options);
+            return options.id;
+        }
         const item = this._createItemConfig(options, controller);
         const defaultConfigResult = controller.getDefaultConfig(item);
         _private.addElement(item);
@@ -547,7 +552,7 @@ const Manager = Control.extend({
     },
 
     _createItemConfig(options, controller) {
-        const popupId = randomId('popup-');
+        const popupId = options.id || randomId('popup-');
         const popupConfig = {
             id: popupId,
             modal: options.modal,
@@ -602,7 +607,10 @@ const Manager = Control.extend({
             const isResizingLine = event.target.classList.contains('controls-ResizingLine');
             _private.popupItems.each((item) => {
                 // if we have deactivated popup
-                if (item && (item.waitDeactivated || isResizingLine)) {
+                // Отказываюсь на старых страницах от закрытия окон по деактивации, сам отслеживаю необходимость закрытия
+                // в 20.1000 по работе в план разделю закрытие по клику мимо и по деактивации на 2 разные опции,
+                // из этой проверки нужно удалить item.waitDeactivated и isNewEnvironment()
+                if (item && (item.waitDeactivated || isResizingLine || !_private.isNewEnvironment())) {
                     const parentControls = goUpByControlTree(event.target);
                     const popupInstance = ManagerController.getContainer().getPopupById(item.id);
 

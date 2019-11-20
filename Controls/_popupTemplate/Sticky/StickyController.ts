@@ -20,6 +20,10 @@ const DEFAULT_OPTIONS = {
     targetPoint: {
         vertical: 'top',
         horizontal: 'left'
+    },
+    fittingMode: {
+        horizontal: 'adaptive',
+        vertical: 'adaptive'
     }
 };
 
@@ -48,7 +52,24 @@ const _private = {
                 newCfg.offset.vertical = newCfg.verticalAlign.offset;
             }
         }
-
+        if (typeof config.fittingMode === 'string') {
+            newCfg.fittingMode = {
+                vertical: config.fittingMode,
+                horizontal: config.fittingMode
+            };
+        } else {
+            if (config.fittingMode) {
+                if (!config.fittingMode.vertical) {
+                    newCfg.fittingMode.vertical = 'adaptive';
+                }
+                if (!config.fittingMode.horizontal) {
+                    newCfg.fittingMode.horizontal = 'adaptive';
+                }
+            }
+        }
+        if (!config.fittingMode) {
+            newCfg.fittingMode =  DEFAULT_OPTIONS.fittingMode;
+        }
         return newCfg;
     },
     prepareConfig(self, cfg, sizes) {

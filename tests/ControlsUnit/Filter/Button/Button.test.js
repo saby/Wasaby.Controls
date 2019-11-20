@@ -151,8 +151,8 @@ define(
                   vertical: 'top',
                   horizontal: 'right'
                },
-               horizontalAlign: {
-                  side: 'left'
+               direction: {
+                  horizontal: 'left'
                }
             };
             let filterSelector = {},

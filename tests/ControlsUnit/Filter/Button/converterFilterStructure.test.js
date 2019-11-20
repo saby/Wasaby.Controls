@@ -62,5 +62,37 @@ define(
             var sourceData = converterFilterStructure.convertToSourceData(initFilterStruct);
             assert.deepEqual(sourceData.getRawData(), initRecordItem.getRawData());
          });
+
+         it('Check filterButtonItems visibility', function () {
+            const filterStructure = [
+               {
+                  internalValueField: '1',
+                  value: 'value',
+                  visibilityValue: true
+               },
+               {
+                  internalValueField: '2',
+                  value: 'value',
+                  visibilityValue: false
+               }
+            ];
+            const visibility = {
+               '2': false
+            };
+            const expectedItems = [
+               {
+                  id: '1',
+                  value: 'value'
+               },
+               {
+                  id: '2',
+                  value: 'value',
+                  visibility: false
+               }
+            ];
+            var sourceData = converterFilterStructure.convertToSourceDataArray(filterStructure, visibility);
+            assert.deepEqual(sourceData, expectedItems);
+
+         });
       });
    });

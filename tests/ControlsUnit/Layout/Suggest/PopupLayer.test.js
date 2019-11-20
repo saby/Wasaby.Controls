@@ -39,13 +39,19 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
          };
 
          layer._onResult({
-            verticalAlign: {side: 'test', offset: 10},
-            horizontalAlign: {side: 'test', offset: 20},
+            direction: {
+               vertical: 'test',
+               horizontal: 'test'
+            },
+            offset: {
+               vertical: 10,
+               horizontal: 20
+            },
             targetPoint: {side: 'test'}
          });
 
          assert.deepStrictEqual(resultPopupOptions, layer._popupOptions);
-         
+
          delete openedWithConfig.zIndex;
          assert.deepStrictEqual(resultOpenConfig, openedWithConfig);
       });

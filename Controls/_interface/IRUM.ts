@@ -1,6 +1,7 @@
 /**
  * @interface Controls/_interface/IRUM
-*/
+ * @private
+ */
 
 /** 
  * @name Controls/_interface/IRUM#RUMEnabled

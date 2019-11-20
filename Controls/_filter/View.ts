@@ -112,7 +112,12 @@ var _private = {
                 popupItem.resetValue = (item.resetValue instanceof Object) ? item.resetValue : [item.resetValue];
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
-                        _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
+                        _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter).addCallback(() => {
+                            if (isHistorySource(item.editorOptions.source)) {
+                                popupItem.items = item.editorOptions.source.prepareItems(popupItem.items);
+                                configs[item.name].items = popupItem.items.clone();
+                            }
+                        });
                     }
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                     popupItem.sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
@@ -135,21 +140,26 @@ var _private = {
         return folders;
     },
 
+    getHasMoreText: function(selection) {
+        return selection.length > 1 ? ', ' + rk('еще ') + (selection.length - 1) : '';
+    },
+
     getFastText: function(config, selectedKeys) {
         var textArr = [];
         if (selectedKeys[0] === config.emptyKey && config.emptyText) {
             textArr.push(config.emptyText);
         } else if (config.items) {
-            factory(config.items).each(function (item) {
-                if (selectedKeys.indexOf(object.getPropertyValue(item, config.keyProperty)) !== -1) {
-                    textArr.push(object.getPropertyValue(item, config.displayProperty));
+            factory(selectedKeys).each(function (key) {
+                const selectedItem = config.items.at(config.items.getIndexByValue(config.keyProperty, key));
+                if (selectedItem) {
+                    textArr.push(object.getPropertyValue(selectedItem, config.displayProperty));
                 }
             });
         }
         return {
             text: textArr[0] || '',
             title: textArr.join(', '),
-            hasMoreText: textArr.length > 1 ? ', ' + rk('еще ') + (textArr.length - 1) : ''
+            hasMoreText: _private.getHasMoreText(textArr)
         };
     },
 
@@ -166,7 +176,7 @@ var _private = {
         return textArr.join(', ');
     },
 
-    updateText: function(self, items, configs, needUpdateTextValue = true) {
+    updateText: function(self, items, configs, detailPanelHandler = false) {
         factory(items).each(function(item) {
             if (configs[item.name]) {
                 self._displayText[item.name] = {};
@@ -176,7 +186,12 @@ var _private = {
                     // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
                     const flatSelectedKeys = configs[item.name].nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
                     self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
-                    if (item.textValue !== undefined && needUpdateTextValue) {
+                    if (!self._displayText[item.name].text && detailPanelHandler) {
+                        // If method is called after selecting from detailPanel, then textValue will contains actual display value
+                        self._displayText[item.name].text = item.textValue && item.textValue.split(', ')[0];
+                        self._displayText[item.name].hasMoreText = _private.getHasMoreText(flatSelectedKeys);
+                    }
+                    if (item.textValue !== undefined && !detailPanelHandler) {
                         item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
                     }
                 }
@@ -579,8 +594,8 @@ var Filter = Control.extend({
                     vertical: 'top',
                     horizontal: 'right'
                 };
-                popupOptions.horizontalAlign = {
-                    side: 'left'
+                popupOptions.direction = {
+                    horizontal: 'left'
                 };
             }
             popupOptions.template = this._options.detailPanelTemplateName;
@@ -598,7 +613,11 @@ var Filter = Control.extend({
                 rawData: _private.getPopupConfig(this, this._configs, this._source)
             });
             const popupOptions = {
-                template: this._options.panelTemplateName
+                template: this._options.panelTemplateName,
+                fittingMode: {
+                    horizontal: 'overflow',
+                    vertical: 'adaptive'
+                }
             };
 
             if (name) {
@@ -642,17 +661,15 @@ var Filter = Control.extend({
         if (!result.action) {
             const filterSource = converterFilterItems.convertToFilterSource(result.items);
             _private.prepareItems(this, mergeSource(this._source, filterSource));
-            _private.updateText(this, this._source, this._configs, false);
+            _private.updateText(this, this._source, this._configs, true);
         } else {
             _private[result.action].call(this, result);
         }
         if (result.action !== 'moreButtonClick') {
-            _private.notifyChanges(this, this._source);
-
             if (result.history) {
                 this._notify('historyApply', [result.history]);
             }
-
+            _private.notifyChanges(this, this._source);
             this._children.StickyOpener.close();
         }
     },

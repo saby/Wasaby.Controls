@@ -265,25 +265,13 @@
  */
 
 /**
- * @typedef {String} TextOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
- * @variant ellipsis Текст обрезается, и в конец строки добавляется многоточие.
- * @variant none Стандартное поведение при незаданном свойстве.
- * @default none
- */
-
-/*
- * @typedef {String} TextOverflow Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
- * @variant ellipsis The text is clipped and an ellipsis is added to the end of the line.
- * @variant none Standard behavior, as if the property is not set.
- * @default none
- */
-
-/**
  * @typedef {Object} Column
  * @property {String} width Ширина колонки.
- * В качестве значения свойства можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
+ * В качестве значения свойства можно указать пиксели (px), проценты (%), доли (1fr), "auto", "minmax", "max-content" и "min-content".
  * В значении "auto" ширина колонки устанавливается автоматически исходя из типа и содержимого элемента.
  * В значении "minmax(,)" ширина колонки устанавливается автоматически в рамках заданного интервала. Например, "minmax(600px, 1fr)" означает, что минимальная ширина колонки 600px, а максимальная — 1fr.
+ * В значении "max-content" ширина колонки устанавливается автоматически в зависимости от самой большой ячейки. Например, если в первой строке ширина ячейки 100px, а во второй строке — 200px, тогда ширина колонки будет определена как 200px.
+ * В значении "min-content" ширина колонки устанавливается автоматически в зависимости от самого маленького ячейки. Например, если в первой строке ширина ячейки 100px, а во второй строке — 200px, тогда ширина колонки будет определена как 100px.
  * Для браузеров, которые не поддерживают технологию <a href="https://developer.mozilla.org/ru/docs/web/css/css_grid_layout">CSS Grid Layout</a>, не работает ширина колонки, указанная в долях, "auto" или "minmax". Для таких браузеров используйте свойство compatibleWidth.
  * @property {String} compatibleWidth Ширина колонки в браузерах, не поддерживающих "CSS Grid Layout".
  * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
@@ -296,7 +284,11 @@
  * @property {GridCellVAlign} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
  * По умолчанию содержимое выравнивается по базовой линии (см. {@link align-items https://developer.mozilla.org/ru/docs/Web/CSS/align-items}).
  * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
- * @property {TextOverflow} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * @property {String} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * Доступные значения:
+ * 
+ * * **ellipsis** — текст обрезается, и в конец строки добавляется многоточие.
+ * * **none** — стандартное поведение при незаданном свойстве.
  */
 
 /*
@@ -309,7 +301,10 @@
  * @property {GridCellAlign} [align] Horizontal cell content align.
  * @property {GridCellVAlign} [valign] Vertical cell content align.
  * @property {String} [stickyProperty] The name of the field used to sticking the column data.
- * @property {TextOverflow} [textOverflow] Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
+ * @property {String} [textOverflow=none] Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
+ * 
+ * * **ellipsis** — the text is clipped and an ellipsis is added to the end of the line.
+ * * **none** — standard behavior, as if the property is not set.
  */
 
 /**

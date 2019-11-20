@@ -2,7 +2,8 @@
      attr:ws-no-focus="true">
    <Controls.scroll:Container
            attr:class="controls-ScrollContainer__flex controls-SimplePanel__scroll_theme_{{_options.theme}}"
-           shadowVisible="{{false}}">
+           shadowVisible="{{false}}"
+           scrollbarVisible="{{false}}">
 
          <ws:for data="index, item in _items">
             <ws:partial template="{{_options.itemTemplate}}"

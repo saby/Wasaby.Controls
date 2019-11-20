@@ -5,7 +5,7 @@ import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import ControlsConstants = require('Controls/Constants');
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
 
 /**
@@ -19,29 +19,24 @@ var _private = {
         return action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_ADD;
     },
     checkDeprecated: function(cfg) {
-
         if (cfg.leftSpacing && !this.leftSpacing) {
             this.leftSpacing = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+            Logger.warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
         }
         if (cfg.leftPadding && !this.leftPadding) {
             this.leftPadding = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+            Logger.warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
         }
         if (cfg.rightSpacing && !this.rightSpacing) {
             this.rightSpacing = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+            Logger.warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
         }
         if (cfg.rightPadding && !this.rightPadding) {
             this.rightPadding = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+            Logger.warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
         }
         if (cfg.groupMethod) {
-            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+            Logger.warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
         }
 
     },
