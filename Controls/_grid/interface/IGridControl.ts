@@ -114,7 +114,7 @@
  * @typedef {String} GridCellVAlign
  * @variant top Align content to top side.
  * @variant center Align content to center.
- * @variant  Align content to bottom side.
+ * @variant bottom Align content to bottom side.
  */
 
 /*
