@@ -307,9 +307,8 @@ define(
             source[0].viewMode = 'basic';
             source[1].viewMode = 'basic';
 
-            assert.isTrue(view._needShowFastFilter(defaultSource, 'test'));
-            assert.isFalse(view._needShowFastFilter(source, 'test'));
-            assert.isFalse(view._needShowFastFilter(defaultSource, null));
+            assert.isTrue(view._needShowFastFilter(defaultSource));
+            assert.isFalse(view._needShowFastFilter(source));
          });
 
          it('_open', function() {

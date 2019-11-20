@@ -605,7 +605,10 @@ define(
                keyProperty: 'title'
             });
             fastFilter._open('itemClick', fastFilter._configs[0]._items, 0);
-            assert.strictEqual(expectedConfig.fittingMode, 'overflow');
+            assert.deepStrictEqual(expectedConfig.fittingMode, {
+               horizontal: 'overflow',
+               vertical: 'adaptive'
+            });
             assert.deepStrictEqual(expectedConfig.templateOptions.items, fastFilter._configs[0]._items);
             assert.strictEqual(expectedConfig.templateOptions.selectedKeys[0], 'Россия');
             assert.isTrue(isOpened);

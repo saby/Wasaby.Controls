@@ -701,16 +701,14 @@ var Filter = Control.extend({
         return isReseted;
     },
 
-    _needShowFastFilter(source: object[], panelTemplateName?: string): boolean {
+    _needShowFastFilter(source: object[]): boolean {
         let needShowFastFilter = false;
 
-        if (panelTemplateName) {
-            factory(source).each((item) => {
-                if (!needShowFastFilter && _private.isFrequentItem(item)) {
-                    needShowFastFilter = true;
-                }
-            });
-        }
+        factory(source).each((item) => {
+            if (!needShowFastFilter && _private.isFrequentItem(item)) {
+                needShowFastFilter = true;
+            }
+        });
 
         return needShowFastFilter;
     },
@@ -751,6 +749,7 @@ var Filter = Control.extend({
 
 Filter.getDefaultOptions = function() {
     return {
+        panelTemplateName: 'Controls/filterPopup:SimplePanel',
         alignment: 'right',
         itemTemplate: defaultItemTemplate
     };
