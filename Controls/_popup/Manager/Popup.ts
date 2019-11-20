@@ -1,4 +1,4 @@
-import * as Env from 'Env/Env';
+import {detection, constants} from 'Env/Env';
 import {debounce, delay as runDelayed} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
@@ -8,7 +8,7 @@ import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
 
 const RESIZE_DELAY = 10;
 // on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
-const SCROLL_DELAY = Env.detection.isMobileIOS ? 100 : 10;
+const SCROLL_DELAY = detection.isMobileIOS ? 100 : 10;
 
 interface IPosition {
     position: string;
@@ -66,7 +66,7 @@ class Popup extends Control<IPopupOptions> {
     protected _isEscDown: boolean = false;
 
     private _closeByESC(event: SyntheticEvent<KeyboardEvent>): void {
-        if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+        if (event.nativeEvent.keyCode === constants.key.esc) {
             this._close();
         }
     }
@@ -197,6 +197,10 @@ class Popup extends Control<IPopupOptions> {
         runDelayed(this._callOpenersUpdate.bind(this));
     }
 
+    protected _resizePageHandler(): void {
+        this._notify('popupPageResize', [this._options.id], {bubbling: true});
+    }
+
     protected _controlResize(): void {
         this._notify('popupControlResize', [this._options.id], {bubbling: true});
     }
@@ -231,7 +235,7 @@ class Popup extends Control<IPopupOptions> {
     }
 
     protected _keyDown(event: SyntheticEvent<KeyboardEvent>): void {
-        if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+        if (event.nativeEvent.keyCode === constants.key.esc) {
             this._isEscDown = true;
         }
     }

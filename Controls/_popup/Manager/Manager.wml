@@ -4,6 +4,7 @@
             on:popupBeforePaintOnMount="_eventHandler('popupBeforePaintOnMount')"
             on:popupUpdated="_eventHandler('popupUpdated')"
             on:popupControlResize="_eventHandler('popupControlResize')"
+            on:popupPageResize="_eventHandler('popupPageResize')"
             on:popupAfterUpdated="_eventHandler('popupAfterUpdated')"
             on:popupDeactivated="_eventHandler('popupDeactivated')"
             on:popupActivated="_eventHandler('popupActivated')"

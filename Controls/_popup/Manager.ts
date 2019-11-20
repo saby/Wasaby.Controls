@@ -298,6 +298,14 @@ const _private = {
         return false;
     },
 
+    popupPageResize(id) {
+        const item = _private.find(id);
+        if (item) {
+            return item.controller.pageResized(item, _private.getItemContainer(id));
+        }
+        return false;
+    },
+
     popupDragEnd(id, offset) {
         const element = _private.find(id);
         if (element) {

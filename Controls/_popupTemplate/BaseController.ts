@@ -180,6 +180,10 @@ abstract class BaseController {
         return this._elementUpdated(item, container);
     }
 
+    protected pageResized(item: IPopupItem, container: HTMLDivElement): boolean {
+        return this._elementUpdated(item, container);
+    }
+
     protected needRecalcOnKeyboardShow(): boolean {
         return false;
     }
