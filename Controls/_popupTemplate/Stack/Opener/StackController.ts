@@ -341,7 +341,7 @@ class StackController extends BaseController {
         this._update();
     }
 
-    popupResize(): boolean {
+    resizeInner(): boolean {
         return false;
     }
 
