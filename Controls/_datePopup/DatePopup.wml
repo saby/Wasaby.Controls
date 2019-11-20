@@ -55,6 +55,7 @@
                monthClickable="{{_monthStateEnabled}}"
                bind:position="_displayedDate"
                dateConstructor="{{_options.dateConstructor}}"
+               quantum="{{_options.quantum}}"
                on:monthClick="_monthRangeMonthClick()"
                on:fixedPeriodClick="_monthRangeFixedPeriodClick()">
                   <ws:dayTemplate>
