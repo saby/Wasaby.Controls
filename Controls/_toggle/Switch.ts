@@ -89,7 +89,8 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
    static getDefaultOptions(): object {
       return {
          value: false,
-         captionPosition: 'right'
+         captionPosition: 'right',
+         validationStatus: 'valid'
       };
    }
    static getOptionTypes(): object {
