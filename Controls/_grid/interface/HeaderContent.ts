@@ -7,18 +7,11 @@
  * @remark
  * Подробнее о шаблоне:
  * 
- * * {@link Controls/grid:IHeaderContentOptions Параметры шаблона}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/ Руководство разработчика}
  */
 
 /**
- * Интерфейс для {@link Controls/grid:HeaderContent шаблона заголовка колонки} в {@link Controls/grid:View табличном представлении}.
- * @class Controls/grid:IHeaderContentOptions
- * @author Авраменко А.С.
- */
-
-/**
- * @name Controls/grid:IHeaderContentOptions#contentTemplate
+ * @name Controls/grid:HeaderContent#contentTemplate
  * @cfg {String|Function} Вёрстка, описывающая содержимое ячейки.
  * @remark
  * В области видимости шаблона доступен объект **colData**. Через него можно получить доступ к свойству **column**, которое содержит конфигурацию {@link https://wi.sbis.ru/docs/js/Controls/grid/IGridControl/typedefs/HeaderCell/ ячейки шапки}.

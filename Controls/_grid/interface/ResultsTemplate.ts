@@ -7,18 +7,11 @@
  * @remark
  * Дополнительно о шаблоне:
  * 
- * * {@link Controls/grid:IResultsTemplateOptions Параметры шаблона}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ Руководство разработчика}
  */
 
 /**
- * Интерфейс для {@link Controls/grid:ResultsTemplate шаблона строки итогов} в табличном представлении.
- * @interface Controls/grid:IResultsTemplateOptions
- * @author Авраменко А.С.
- */
-
-/**
- * @name Controls/grid:IResultsTemplateOptions#contentTemplate
+ * @name Controls/grid:ResultsTemplate#contentTemplate
  * @cfg {String|Function} Вёрстка, описывающая содержимое шаблона. 
  */
 

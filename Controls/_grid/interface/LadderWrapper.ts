@@ -7,18 +7,11 @@
  * @remark
  * Дополнительно о шаблоне:
  * 
- * * {@link Controls/grid:ILadderWrapperOptions Параметры шаблона}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ Руководство разработчика}
  */
 
 /**
- * Интерфейс для {@link Controls/grid:LadderWrapper шаблона лесенки} в табличном представлении.
- * @interface Controls/grid:ILadderWrapperOptions
- * @author Авраменко А.С.
- */
-
-/**
- * @name Controls/grid:ILadderWrapperOptions#ladderProperty
+ * @name Controls/grid:LadderWrapper#ladderProperty
  * @cfg {Array.<String>} Имена полей, для которых будет работать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ лесенка}.
  */
 

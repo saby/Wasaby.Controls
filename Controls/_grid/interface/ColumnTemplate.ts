@@ -7,7 +7,6 @@
  * @remark
  * Дополнительно о шаблоне:
  * 
- * * {@link Controls/grid:IColumnTemplateOptions Параметры шаблона}
  * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/ Руководство разработчика}
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
@@ -32,15 +31,8 @@
  * </pre>
  */
 
-
 /**
- * Интерфейс для {@link Controls/grid:ColumnTemplate шаблона отображения ячеек} в табличном представлении.
- * @interface Controls/grid:IColumnTemplateOptions
- * @author Авраменко А.С.
- */
-
-/**
- * @name Controls/grid:IColumnTemplateOptions#contentTemplate
+ * @name Controls/grid:ColumnTemplate#contentTemplate
  * @cfg {String|Function} Вёрстка, описывающая содержимое ячейки.
  * @remark
  * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к следующим свойствам:
