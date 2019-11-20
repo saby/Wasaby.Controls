@@ -102,7 +102,7 @@ var List = Control.extend({
    _notifyHandler: tmplNotify,
    _markedKey: null,
    _items: null,
-   _layerNameL: null,
+   _layerName: null,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
