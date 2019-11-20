@@ -23,6 +23,8 @@
  * @css @spacing_Suggest-more-between-rightBorder-content Интервал между правой границей и содержимым кнопки "еще".
  *
  * @css @spacing_Suggest-between-tabs-suggestions Расстояние между вкладками и предложениями.
+ * @css @margin-top_Suggest__tabs-contentLayer Отступ сверху для вкладок для слоя СontentLayer.
+ * @css @margin-top_Suggest__tabs-popupLayer Отступ сверху для вкладок для слоя PopupLayer.
  *
  * @css @color_Suggest-empty Цвет подсказки пустого текста.
  * @css @spacing_Suggest-empty-between-topBorder-content Интервал между верхней границей и пустым текстом.
@@ -56,6 +58,8 @@
  * @css @spacing_Suggest-more-between-rightBorder-content Spacing between right border and "more" button content.
  *
  * @css @spacing_Suggest-between-tabs-suggestions Spacing between tabs and suggestions.
+ * @css @margin-top_Suggest__tabs-contentLayer Отступ сверху для вкладок для слоя СontentLayer.
+ * @css @margin-top_Suggest__tabs-popupLayer Отступ сверху для вкладок для слоя PopupLayer.
  *
  * @css @color_Suggest-empty Color of suggest empty text.
  * @css @spacing_Suggest-empty-between-topBorder-content Spacing between top border and empty text.
