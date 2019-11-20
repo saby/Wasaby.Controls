@@ -604,7 +604,8 @@ define(
             };
             assert.strictEqual(configs['state'].items.getCount(), 6);
             filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
-               assert.strictEqual(configs['state'].items.getCount(), 6);
+               assert.strictEqual(configs['state'].popupItems.getCount(), 6);
+               assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
             });
@@ -732,6 +733,7 @@ define(
             filterView._configs = configs;
             filterView._displayText = {};
             filterView._beforeUpdate({source: source}).addCallback(() => {
+               assert.strictEqual(configs['state'].popupItems.getCount(), 7);
                assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
@@ -748,12 +750,16 @@ define(
                   document: {
                      items: getItems(Clone(defaultItems[0])),
                      displayProperty: 'title',
-                     keyProperty: 'id'},
+                     keyProperty: 'id',
+                     sourceController: {hasMoreData: () => {return true;}}
+                  },
                   state: {
                      items: getItems(Clone(defaultItems[1])),
                      displayProperty: 'title',
                      keyProperty: 'id',
-                     multiSelect: true}
+                     multiSelect: true,
+                     sourceController: {hasMoreData: () => {return true;}}
+                  }
                };
                view._children = {
                   StickyOpener: { close: () => {} }
@@ -960,7 +966,8 @@ define(
                      keyProperty: 'id',
                      nodeProperty: 'node',
                      parentProperty: 'parent',
-                     multiSelect: true
+                     multiSelect: true,
+                     sourceController: {hasMoreData: () => {return true;}}
                   }
                };
                view._children = {

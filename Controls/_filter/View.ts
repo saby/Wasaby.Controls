@@ -12,7 +12,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
-import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
+import {getItemsWithHistory, isHistorySource, getUniqItems} from 'Controls/_filter/HistoryUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
@@ -108,6 +108,8 @@ var _private = {
                 popupItem.id = item.name;
                 popupItem.selectedKeys = (item.value instanceof Object) ? item.value : [item.value];
                 popupItem.resetValue = (item.resetValue instanceof Object) ? item.resetValue : [item.resetValue];
+                popupItem.items = configs[item.name].popupItems || popupItem.items;
+                popupItem.selectorItems = configs[item.name].items;
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
                         _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter).addCallback(() => {
@@ -216,6 +218,12 @@ var _private = {
         return newKeys;
     },
 
+    setItems: function(config, item, newItems) {
+        config.popupItems = getItemsWithHistory(config.popupItems || CoreClone(config.items), newItems,
+            config.sourceController, item.editorOptions.source, config.keyProperty);
+        config.items = getUniqItems(config.items, newItems, config.keyProeprty);
+    },
+
     loadSelectedItems: function(items, configs) {
         let pDef = new ParallelDeferred();
         factory(items).each(function(item) {
@@ -229,8 +237,7 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
-                        configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems,
-                            configs[item.name].sourceController, item.editorOptions.source, configs[item.name].keyProperty);
+                        _private.setItems(config, item, newItems);
                     });
                     pDef.push(result);
                 }
@@ -262,6 +269,7 @@ var _private = {
         self._configs[item.name].emptyText = item.emptyText;
         self._configs[item.name].emptyKey = item.hasOwnProperty('emptyKey') ? item.emptyKey : null;
         self._configs[item.name].sourceController = null;
+        self._configs[item.name].popupItems = null;
 
         if (options.source) {
             return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
@@ -422,11 +430,15 @@ var _private = {
         factory(result.selectedKeys).each(function(sKey, index) {
             if (sKey) {
                 let curConfig = self._configs[index];
+                const item = _private.getItemByName(self._source, index);
                 if (curConfig.nodeProperty) {
-                    sKey = _private.prepareHierarchySelection(sKey, curConfig, _private.getItemByName(self._source, index).resetValue);
+                    sKey = _private.prepareHierarchySelection(sKey, curConfig, item.resetValue);
                 }
+                const selectedItems = _private.getSelectedItems(curConfig.items, sKey);
+                curConfig.popupItems = getItemsWithHistory(curConfig.popupItems || CoreClone(curConfig.items), selectedItems,
+                    curConfig.sourceController, item.editorOptions.source, curConfig.keyProperty);
                 _private.setValue(self, sKey, index);
-                _private.updateHistory(self, index, result.data, sKey);
+                _private.updateHistory(self, index, selectedItems);
             }
         });
 
@@ -437,13 +449,12 @@ var _private = {
         var curConfig = this._configs[result.id],
             curItem = _private.getItemByName(this._source, result.id),
             newItems = _private.getNewItems(this, result.data, curConfig);
-        if (isHistorySource(curItem.editorOptions.source)) {
-            if (newItems.length) {
-                curConfig.sourceController = null;
-            }
-            _private.updateHistory(this, result.id, factory(result.data).toArray());
+
+        _private.updateHistory(this, result.id, factory(result.data).toArray());
+        _private.setItems(curConfig, curItem, newItems);
+        if (isHistorySource(curItem.editorOptions.source) && newItems.length) {
+            curConfig.sourceController = null;
         }
-        curConfig.items.prepend(newItems);
         let selectedKeys = _private.getSelectedKeys(result.data, curConfig);
         if (curConfig.nodeProperty) {
             selectedKeys = _private.prepareHierarchySelection(selectedKeys, curConfig, curItem.resetValue);
