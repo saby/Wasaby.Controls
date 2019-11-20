@@ -1,7 +1,8 @@
 define('Controls-demo/BreadCrumbs/BreadCrumbs', [
    'Core/Control',
-   'wml!Controls-demo/BreadCrumbs/BreadCrumbs',
-   'Types/entity'
+   'wml!Controls-demo/BreadCrumbs/BreadCrumbs/BreadCrumbs',
+   'Types/entity',
+   'css!Controls-demo/BreadCrumbs/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    template,

@@ -541,7 +541,8 @@
 
 /**
  * Перезагружает данные из источника данных.
- * @function Controls/_list/interface/IList#reload
+ * @function 
+ * @name Controls/_list/interface/IList#reload
  */
 
 /*
