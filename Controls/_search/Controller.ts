@@ -3,12 +3,12 @@ import template = require('wml!Controls/_search/Controller');
 import clone = require('Core/core-clone');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import cInstance = require('Core/core-instance');
+import tmplNotify = require('Controls/Utils/tmplNotify');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
-import tmplNotify = require('Controls/Utils/tmplNotify');
 import {Logger} from 'UI/Utils';
 
 const SERVICE_FILTERS = {
@@ -206,7 +206,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
@@ -232,7 +232,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.

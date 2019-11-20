@@ -502,7 +502,7 @@ const _private = {
        *
        * @class Controls/_filter/Controller
        * @extends Core/Control
-       * @mixes Controls/interface/IFilter
+       * @mixes Controls/_interface/IFilter
        * @mixes Controls/_filter/IPrefetch
        * @control
        * @public
@@ -517,7 +517,7 @@ const _private = {
        *
        * @class Controls/_filter/Controller
        * @extends Core/Control
-       * @mixes Controls/interface/IFilter
+       * @mixes Controls/_interface/IFilter
        * @control
        * @public
        * @author Герасимов А.М.

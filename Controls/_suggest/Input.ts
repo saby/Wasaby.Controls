@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Input/Input');
-import {getOptionTypes} from 'Controls/_suggest/Utils';
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import {getOptionTypes} from 'Controls/_suggest/Utils';
 import 'css!theme?Controls/suggest';
 
 /**
@@ -16,7 +16,7 @@ import 'css!theme?Controls/suggest';
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes CControls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
@@ -38,7 +38,7 @@ import 'css!theme?Controls/suggest';
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
