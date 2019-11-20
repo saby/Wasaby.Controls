@@ -83,7 +83,7 @@ function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
    const allCount = oldItems.getCount();
    const uniqItems = getUniqItems(oldItems, newItems, keyProperty);
 
-   if (sourceController.hasMoreData('down')) {
+   if (sourceController && sourceController.hasMoreData('down')) {
       uniqItems = factory(uniqItems).first(allCount).value(CollectionFactory.recordSet, {
          adapter: oldItems.getAdapter(),
          keyProperty: oldItems.getKeyProperty(),
