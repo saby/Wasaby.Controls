@@ -27,7 +27,6 @@
          inputWidth="{{_inputWidth}}"
          isInputVisible="{{_isInputVisible(_options)}}"
          multiline="{{_multiLineState}}"
-         spacingLeftInput="{{!_multiLineState && _isShowCollection() || _multiLineState && _inputWidth}}"
          forComment="{{_options.comment && !_options.multiSelect && _isShowCollection()}}"
          size="{{_options.size}}"
          trim="{{_options.trim}}"
