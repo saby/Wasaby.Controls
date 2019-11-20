@@ -168,7 +168,10 @@ export default class TileRender extends BaseRender {
         // causing version change. But version should only change when
         // the state actually changes, so probably managers should
         // keep track of the version and not the collection itself.
-        if (this._options.listModel.getHoveredItem() !== item) {
+        if (
+            this._options.listModel && !this._options.listModel.destroyed &&
+            this._options.listModel.getHoveredItem() !== item
+        ) {
             this._options.listModel.setHoveredItem(item);
         }
     }
