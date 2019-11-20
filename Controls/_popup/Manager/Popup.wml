@@ -24,6 +24,6 @@
          on:showIndicator="_showIndicatorHandler()">
       </ws:partial>
    </Controls.event:Register>
-   <Controls.event:Listener event="controlResize" on:controlResize="_update()"/>
+   <Controls.event:Listener event="controlResize" on:controlResize="_resizePageHandler()"/>
    <Controls.event:Listener event="scroll" on:scroll="_scrollHandler()"/>
 </div>
