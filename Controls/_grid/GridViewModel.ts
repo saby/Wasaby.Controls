@@ -341,7 +341,7 @@ var
                 fIdx, idx, item, prevItem,
                 ladderProperties = self._options.ladderProperties,
                 stickyColumn = _private.getStickyColumn(self._options),
-                supportLadder = !!(ladderProperties && ladderProperties.length),
+                supportLadder = self._isSupportLadder(ladderProperties),
                 supportSticky = !!stickyColumn,
                 ladder = {}, ladderState = {}, stickyLadder = {},
                 stickyLadderState = {
@@ -705,7 +705,9 @@ var
             this._setHeader(this._options.header);
             this._updateLastItemKey();
         },
-
+        _isSupportLadder(ladderProperties: []): boolean {
+            return !!(ladderProperties && ladderProperties.length);
+        },
         setTheme(theme: string): void {
             this._options.theme = theme;
         }
@@ -1519,7 +1521,7 @@ var
                 currentColumn.cellClasses = current.getItemColumnCellClasses(current, self._options.theme);
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
-                if (self._options.ladderProperties && self._options.ladderProperties.length) {
+                if (self._isSupportLadder(self._options.ladderProperties)) {
                     currentColumn.ladder = self._ladder.ladder[current.index];
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
