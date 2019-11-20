@@ -19,7 +19,13 @@ export = {
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#ranges
-       * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить произвольный период, можно только выделить заданные периоды.
+       * @cfg {Object} Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды.
+       * @remark
+       * Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды. 
+       * Объект принимает свойства days, weeks и months со значениями типа Array.
+       * Например:
+       * {days: [1,4], weeks: [2], months: [1] } 
+       * В данном примере можно выбрать либо 1 день, либо диапазон в 4 дня, либо 2 целые недели, либо 1 месяц
        */
       options.ranges = [];
 
@@ -29,7 +35,7 @@ export = {
        * @variant range Режим выделения произвольного диапазона.
        * @variant single Режим выделения одного элемента.
        * @variant disable Режим выбора отключен.
-       * @variant ranges Режим выделения квантами. Кванты задаются через опцию {@link https://wi.sbis.ru/docs/js/Controls/dateRange/IDateRangeSelectable/options/ranges/ range}
+       * @variant quantum Режим выделения квантами. Кванты задаются через опцию {@link https://wi.sbis.ru/docs/js/Controls/dateRange/IDateRangeSelectable/options/ranges/ range}
        */
 
       /**
