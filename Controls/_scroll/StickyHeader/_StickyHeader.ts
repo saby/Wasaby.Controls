@@ -44,6 +44,9 @@ var _private = {
 
    _getNormalizedContainer: function(self) {
       //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+      if (!self._container) {
+         return;
+      }
       return self._container.get ? self._container.get(0) : self._container;
    },
 
@@ -359,10 +362,11 @@ var StickyHeader = Control.extend({
    },
 
    _getBottomShadowStyle: function(): string {
+      const container = _private._getNormalizedContainer(this);
       // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
-      if (this._container && this._isSafari13) {
-         return 'bottom: unset; right: unset; top:' + this._container.offsetHeight + 'px;' +
-             'width:' + this._container.offsetWidth + 'px;';
+      if (container && this._isSafari13) {
+         return 'bottom: unset; right: unset; top:' + container.offsetHeight + 'px;' +
+             'width:' + container.offsetWidth + 'px;';
       }
       return '';
    },
