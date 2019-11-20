@@ -3,7 +3,6 @@ import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Env = require('Env/Env');
 import 'Controls/lookup';
-import 'css!theme?Controls/filterPopup';
 
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
@@ -186,6 +185,7 @@ var Lookup = Control.extend({
 });
 
 Lookup._private = _private;
+Lookup._theme = ['Controls/filterPopup'];
 Lookup.getDefaultOptions = function() {
    return {
       lookupTemplateName: 'Controls/lookup:Input'
