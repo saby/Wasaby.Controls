@@ -325,8 +325,7 @@ var
             if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 return 0;
             }
-            const hasHeader = !!this._options.header && !!this._options.header.length && this._listModel.isDrawHeaderWithEmptyList();
-            return hasHeader ? this._children.header.getBoundingClientRect().height : 0;
+            return this._children.header ? this._children.header.getBoundingClientRect().height : 0;
         },
 
         getResultsHeight(): number {
