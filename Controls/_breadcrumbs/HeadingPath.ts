@@ -183,6 +183,23 @@ var _private = {
  * true
  */
 
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#afterBackButtonTemplate
+ * @cfg {Function|string} Шаблон, который расположен между кнопкой назад и хлебными крошками
+ * @example
+ * <pre>
+ *    <Controls.breadcrumbs:HeadingPath
+ *          items="{{_items}}"
+ *          parentProperty="parent"
+ *          keyProperty="id"
+ *          on:itemClick="_onItemClick()">
+ *       <ws:afterBackButtonTemplate>
+ *          <h3>Custom content</h3>
+ *       </ws:afterBackButtonTemplate>
+ *    </Controls.breadcrumbs:HeadingPath>
+ * </pre>
+ */
+
 var BreadCrumbsPath = Control.extend({
     _template: template,
     _backButtonCaption: '',
