@@ -695,10 +695,6 @@ define([
          describe('beforeEndEdit', function() {
             it('Defered', function(done) {
                var
-                   source = new sourceLib.Memory({
-                      keyProperty: 'id',
-                      data: data
-                   }),
                    isIndicatorHasBeenShown = false,
                    isIndicatorHasBeenHiden = false,
                    isAfterEndEditHasBeenNotified = false;
@@ -735,10 +731,6 @@ define([
 
             it('Defered with cancel', function (done) {
                var
-                   source = new sourceLib.Memory({
-                      keyProperty: 'id',
-                      data: data
-                   }),
                    isIndicatorHasBeenShown = false,
                    isIndicatorHasBeenHiden = false,
                    isAfterEndEditHasBeenNotified = false;
@@ -768,6 +760,43 @@ define([
                   assert.isTrue(isIndicatorHasBeenShown);
                   assert.isTrue(isIndicatorHasBeenHiden);
                   assert.isFalse(isAfterEndEditHasBeenNotified);
+                  done();
+               });
+
+            });
+
+            it('Defered with errback', (done) => {
+               let
+                   isIndicatorHasBeenShown = false,
+                   isIndicatorHasBeenHidden = false,
+                   isAfterEndEditHasBeenNotified = false;
+
+               eip._notify = (e) => {
+                  if (e === 'beforeEndEdit') {
+                     return Deferred.success().addCallback(() => {
+                        return (new Deferred()).errback();
+                     });
+                  } else if (e === 'afterEndEdit') {
+                     isAfterEndEditHasBeenNotified = true;
+                  } else if (e === 'showIndicator') {
+                     isIndicatorHasBeenShown = true;
+                  } else if (e === 'hideIndicator') {
+                     isIndicatorHasBeenHidden = true;
+                  }
+               };
+
+               eip.saveOptions({
+                  listModel: listModel
+               });
+
+               eip.beginEdit({
+                  item: listModel.at(0).getContents()
+               });
+
+               eip.cancelEdit().addErrback(function () {
+                  assert.isTrue(isIndicatorHasBeenShown);
+                  assert.isTrue(isIndicatorHasBeenHidden);
+                  assert.isTrue(isAfterEndEditHasBeenNotified);
                   done();
                });
 
@@ -1622,7 +1651,7 @@ define([
                 });
 
             eip.saveOptions({
-               listModel: treeModel,
+               listModel: listModel,
                source: source
             });
 
@@ -1634,7 +1663,7 @@ define([
                assert.equal(options.multiSelectVisibility, 'visible');
             };
 
-            eip._beforeUpdate({multiSelectVisibility: 'visible', listModel: treeModel});
+            eip._beforeUpdate({multiSelectVisibility: 'visible', listModel: listModel});
             assert.isTrue(isItemDataRegenerated);
          });
       });

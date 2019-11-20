@@ -36,7 +36,7 @@
  * - items - для смены набора элементов.
  * - groupingKeyCallback, groupingTemplate для установки группировки.
  * - itemTemplate - шаблон элемента меню.
- * - footerTamplate - шаблон футера.
+ * - footerTemplate - шаблон футера.
  * - headerTemplate - шаблон шапки.
  */
 
@@ -142,7 +142,7 @@
  * В свойству задают имя прикладного класса, которое в результате преобразуется в класс вида "controls-itemActionsV__action_style_имя_прикладного_класса".
  * Он будет установлен для html-контейнера самой операции над записью, а его свойства будут применены как к тексту (свойство title), так и к иконке (свойство icon).
  * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#config-style">руководство разработчика</a>.
- * @property {String} [iconStyle=default] Стиль иконки. 
+ * @property {String} [iconStyle=default] Стиль иконки.
  * Возможные значения: default, attention, error и done.
  * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#config-style">руководство разработчика</a>.
  * @property {Function} handler Обработчик операции.
@@ -169,7 +169,7 @@
  * @name Controls/_list/interface/IList#itemActions
  * @cfg {Array.<ItemAction>} Конфигурация кнопок, которые будут отображаться при наведении указателя мыши на элемент.
  * <a href="/materials/demo-ws4-list-item-actions">См. демо-пример</a>.
- * Внимание: обязательно установите значение в опции <a href="/docs/js/Controls/grid/View/options/keyProperty/">keyProperty</a>, чтобы операции над записью работали корректно. 
+ * Внимание: обязательно установите значение в опции <a href="/docs/js/Controls/grid/View/options/keyProperty/">keyProperty</a>, чтобы операции над записью работали корректно.
  */
 
 /*

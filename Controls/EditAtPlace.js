@@ -6,7 +6,7 @@ define('Controls/EditAtPlace', [
    Env
 ) {
    'use strict';
-
+   /* eslint-disable */
    var _private = {
       beginEdit: function(self, event) {
          Env.IoC.resolve('ILogger').warn('Событие beforeEdit компонента Controls/EditAtPlace было переименовано и будет удалено в версию 3.19.110. Используйте событие beforeBeginEdit компонента Controls/editableArea:View.');
@@ -30,6 +30,6 @@ define('Controls/EditAtPlace', [
          _private.beginEdit(this, event);
       }
    });
-
+   /* eslint-enable */
    return EditAtPlace;
 });

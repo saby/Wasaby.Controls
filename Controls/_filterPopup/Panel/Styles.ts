@@ -1,7 +1,7 @@
 /**
  * @author Золотова Элина
  * @mixin Controls/_filter/Button/Panel/Styles
- * @public
+ * @private
  *
  * @css @background-color_FilterPanel Background color of filter panel.
  * @css @background-color_FilterPanel_horizontal Background color of filter panel, when orientation option set to "horizontal".

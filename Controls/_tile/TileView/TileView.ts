@@ -3,7 +3,6 @@ import template = require('wml!Controls/_tile/TileView/TileView');
 import defaultItemTpl = require('wml!Controls/_tile/TileView/DefaultItemTpl');
 import {TouchContextField} from 'Controls/context';
 import ItemSizeUtils = require('Controls/_tile/TileView/resources/ItemSizeUtils');
-import { IoC } from 'Env/Env';
 import 'css!theme?Controls/tile';
 
 var _private = {
@@ -233,7 +232,7 @@ var TileView = ListView.extend({
     _setHoveredItem: function (itemData, position, startPosition) {
         this._listModel.setHoveredItem({
             key: itemData.key,
-            canShowActions: !position,
+            canShowActions: !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
             zoomCoefficient: this._getZoomCoefficient(),
             position: _private.getPositionStyle(startPosition || position),
             endPosition: _private.getPositionStyle(position)

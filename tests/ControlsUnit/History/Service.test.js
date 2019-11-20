@@ -1,8 +1,10 @@
-define(['Controls/history', 'Core/Deferred'], (history, Deferred) => {
+/* global assert */
+define(['Controls/history', 'Core/Deferred', 'Env/Env'], (history, Deferred, Env) => {
 
    describe('Controls/history:Service', () => {
 
       it('query', () => {
+         if (Env.constants.isServerSide) { return; }
          const service = new history.Service({historyId: 'testId'});
          const loadDeferred = new Deferred();
 
@@ -36,11 +38,9 @@ define(['Controls/history', 'Core/Deferred'], (history, Deferred) => {
 
          assert.equal(methodName, 'Delete');
          assert.deepEqual(methodMeta, {
-            params: {
-               history_id: 'testId',
-               object_id: 'test'
-            }
-         })
+            history_id: 'testId',
+            object_id: 'test'
+         });
       });
 
    });

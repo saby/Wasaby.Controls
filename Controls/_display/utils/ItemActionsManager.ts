@@ -78,14 +78,24 @@ export default class ItemActionsManager extends BaseManager<IVirtualScrollManage
         );
     }
 
+    getChildActions(item: IItemActionsManageableItem, parent: TItemAction): TItemAction[] {
+        const actions = item.getActions();
+        const allActions = actions && actions.all;
+        if (allActions) {
+            const parentId = parent.id;
+            return allActions.filter((action) => action.parent === parentId);
+        }
+        return [];
+    }
+
     protected _isMatchingActions(oldContainer: IItemActionsContainer, newContainer: IItemActionsContainer): boolean {
         return (
-            this._isMatchingActionIds(oldContainer.all, newContainer.all) &&
-            this._isMatchingActionIds(oldContainer.showed, newContainer.showed)
+            this._isMatchingActionLists(oldContainer.all, newContainer.all) &&
+            this._isMatchingActionLists(oldContainer.showed, newContainer.showed)
         );
     }
 
-    protected _isMatchingActionIds(aActions: TItemAction[], bActions: TItemAction[]): boolean {
+    protected _isMatchingActionLists(aActions: TItemAction[], bActions: TItemAction[]): boolean {
         if (!aActions || !bActions) {
             return false;
         }
@@ -94,7 +104,10 @@ export default class ItemActionsManager extends BaseManager<IVirtualScrollManage
             return false;
         }
         for (let i = 0; i < length; i++) {
-            if (aActions[i].id !== bActions[i].id) {
+            if (
+                aActions[i].id !== bActions[i].id ||
+                aActions[i].icon !== bActions[i].icon
+            ) {
                 return false;
             }
         }

@@ -6,7 +6,7 @@
  * @property {Function | String} template Шаблон отображения ошибки
  * @property {Object} [options] параметры построяния шаблона ошибки
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  */
 export interface ViewConfig<TOptions = object> {
     template: any;
@@ -19,6 +19,6 @@ export interface ViewConfig<TOptions = object> {
  * @param {*} объект с параметрами
  * @return {void | Controls/_dataSource/_parking/ViewConfig}
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  */
 export type Handler<TOptions = object> = (config: any) => ViewConfig<TOptions> | void;

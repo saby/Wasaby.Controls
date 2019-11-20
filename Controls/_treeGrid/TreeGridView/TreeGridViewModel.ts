@@ -35,7 +35,7 @@ var _private = {
     },
 
     getExpandedItems<T = unknown>(display, expandedItems: Array<T>, nodeProperty: string): Array<T> {
-        if (expandedItems.length === 1 && expandedItems[0] === null) {
+        if (display && expandedItems.length === 1 && expandedItems[0] === null) {
             const nodes = display.getItems().filter((item) => {
                 return item.getContents().get && item.getContents().get(nodeProperty) !== null
             });
@@ -68,6 +68,9 @@ var
         },
         toggleExpanded: function (dispItem, expand) {
             this._model.toggleExpanded(dispItem, expand);
+        },
+        getItemType: function (dispItem) {
+            return this._model.getItemType(dispItem);
         },
         isExpanded: function (dispItem) {
             return this._model.isExpanded(dispItem);
@@ -116,6 +119,9 @@ var
             this._model.resetExpandedItems();
         },
         isDrawResults: function() {
+            if (this._options.resultsVisibility === 'visible') {
+                return true;
+            }
             var items = this.getDisplay();
             if (items) {
                 var rootItems = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
@@ -210,16 +216,8 @@ var
                     footer.colspanStyles = GridLayoutUtil.getColumnStyles(colspanCfg);
                 }
             };
-
-            if (this._options.task1177672941) {
-                if (current.nodeFooter && current.nodeFooter.length > 0) {
-                    current.nodeFooter.forEach(setNodeFooterRowStyles);
-                }
-            } else {
-                // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
-                if (current.nodeFooter) {
-                    setNodeFooterRowStyles(current.nodeFooter, 0);
-                }
+            if (current.nodeFooters) {
+                current.nodeFooters.forEach(setNodeFooterRowStyles);
             }
             return current;
         },

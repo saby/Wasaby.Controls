@@ -52,9 +52,13 @@ class DialogController extends BaseController {
             }
             if (item.popupOptions.maxWidth) {
                 container.style.maxWidth = item.popupOptions.maxWidth + 'px';
+            } else {
+                container.style.maxWidth = '';
             }
             if (item.popupOptions.maxHeight) {
                 container.style.maxHeight = item.popupOptions.maxHeight + 'px';
+            } else {
+                container.style.maxHeight = '';
             }
         }
 

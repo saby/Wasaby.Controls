@@ -9,6 +9,15 @@
    .controls-ListView__group {
       display: flex;
    }
+
+   // контейнер хэдера controls-Grid__header отсутсвует в partialGridSupport
+   .controls-Grid__header-cell_theme-@{themeName} {
+      color: @color_Grid-header;
+   }
+
+   .controls-Grid__header-cell__content__innerWrapper {
+      max-width: 100%;
+   }
 }
 
 .ws-is-not-full-grid-support {

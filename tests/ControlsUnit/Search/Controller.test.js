@@ -310,6 +310,13 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          assert.equal(value, 'test');
          assert.equal(searchController._inputSearchValue, 'test');
+
+         value = '';
+         searchController._options.source = null;
+         searchController._search(null, 'test2');
+         assert.equal(value, '');
+         assert.equal(searchController._inputSearchValue, 'test2');
+
       });
 
       describe('_beforeMount', function() {
@@ -425,6 +432,40 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(searchController._inputSearchValue, '');
       });
 
+      it('itemOpenHandler with searchNavigationMode="expand"', function() {
+         var searchController = getSearchController(Object.assign(defaultOptions, {
+            searchNavigationMode: 'expand',
+            parentProperty: 'parent',
+            nodeProperty: 'type'
+         }));
+         var markedKeyChangedParams = null;
+         var expandedItemsChangedParams = null;
+         var items = new collection.RecordSet({
+            rawData: [
+               { key: 1, parent: null, type: true },
+               { key: 2, parent: 1, type: true },
+               { key: 3, parent: 2, type: true }
+            ],
+            keyProperty: 'key'
+         });
+         searchController._searchController = {
+            abort: function(){}
+         };
+         searchController._notify = function(eventName, params) {
+            if (eventName === 'markedKeyChanged') {
+               markedKeyChangedParams = params;
+            }
+            if (eventName === 'expandedItemsChanged') {
+               expandedItemsChangedParams = params;
+            }
+         };
+         searchController._root = null;
+         searchController._viewMode = 'search';
+
+         searchController._itemOpenHandler(3, items);
+         assert.deepEqual(markedKeyChangedParams, [3]);
+         assert.deepEqual(expandedItemsChangedParams,[[1, 2, 3]]);
+      });
    });
 
 });

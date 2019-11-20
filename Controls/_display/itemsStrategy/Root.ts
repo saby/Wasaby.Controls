@@ -11,9 +11,10 @@ interface IOptions<S, T> {
  * Стратегия-декоратор для формирования корня дерева
  * @class Controls/_display/ItemsStrategy/Root
  * @mixes Types/_entity/DestroyableMixin
- * @implements Controls/_display/IItemsStrategy
  * @mixes Types/_entity/SerializableMixin
+ * @implements Controls/_display/IItemsStrategy
  * @author Мальцев А.А.
+ * @private
  */
 export default class Root<S, T> extends mixin<
     DestroyableMixin,
@@ -103,17 +104,8 @@ export default class Root<S, T> extends mixin<
 
     _getSerializableState(state: ISerializableState): ISerializableState {
         const resultState = SerializableMixin.prototype._getSerializableState.call(this, state);
-
         resultState.$options = this._options;
-
         return resultState;
-    }
-
-    _setSerializableState(state: ISerializableState): Function {
-        const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-        return function(): void {
-            fromSerializableMixin.call(this);
-        };
     }
 
     // endregion

@@ -34,6 +34,7 @@ import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
+import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -149,7 +150,20 @@ function onCollectionChange<T>(
         case IObservable.ACTION_RESET:
             const projectionOldItems = toArray(this);
             let projectionNewItems;
-            this._reBuild(true);
+            // TODO Здесь был вызов _reBuild(true), который полностью пересоздает все
+            // CollectionItem'ы, из-за чего мы теряли их состояние. ACTION_RESET происходит
+            // не только при полном пересоздании рекордсета, но и например при наборе
+            // "критической массы" изменений при выключенном режиме обработки событий.
+            // https://online.sbis.ru/opendoc.html?guid=573aed02-3c97-4432-9d39-19e53bda8bc0
+            // По идее, нам это не нужно, потому что в случае реального пересоздания рекордсета,
+            // нам передадут его новый инстанс, и мы пересоздадим всю коллекцию сами.
+            // Но на случай, если такой кейс все таки имеет право на жизнь, выписал
+            // задачу в этом разобраться.
+            // https://online.sbis.ru/opendoc.html?guid=bd17a1fb-5d00-4f90-82d3-cb733fe7ab27
+            // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
+            // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
+            // виртуального скролла.
+            this._reBuild(this._$compatibleReset);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -171,6 +185,7 @@ function onCollectionChange<T>(
             this._reFilter();
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
+            this._nextVersion();
             return;
     }
 
@@ -510,6 +525,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$hasMoreData: boolean;
 
+    protected _$compatibleReset: boolean;
+
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
@@ -610,6 +627,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _virtualScrollManager: VirtualScrollManager;
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
+    protected _selectionManager: SelectionManager;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -664,6 +682,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._virtualScrollManager = new VirtualScrollManager(this);
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
+        this._selectionManager = new SelectionManager(this);
     }
 
     destroy(): void {
@@ -1865,7 +1884,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._notifyAfterCollectionChange();
 
         // FIXME Make a list of properties that lead to version update
-        if (properties as String === 'editingContents' || properties as String === 'animated') {
+        if (properties as String === 'editingContents' || properties as String === 'animated' || properties as String === 'canShowActions') {
             this._nextVersion();
         }
     }
@@ -1921,6 +1940,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setSelectedItemsAll(selected: boolean): void {
         this._setSelectedItems(this._getItems(), selected);
+    }
+
+    setSelection(selection: ISelectionMap): void {
+        this._selectionManager.setSelection(selection);
     }
 
     /**
@@ -2105,6 +2128,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setHasMoreData(hasMoreData: boolean): void {
         this._$hasMoreData = hasMoreData;
+    }
+
+    setCompatibleReset(compatible: boolean): void {
+        this._$compatibleReset = compatible;
     }
 
     // region SerializableMixin
@@ -3193,6 +3220,7 @@ Object.assign(Collection.prototype, {
     _$importantItemProperties: null,
     _$virtualScrolling: false,
     _$hasMoreData: false,
+    _$compatibleReset: false,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,

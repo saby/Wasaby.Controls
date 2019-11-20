@@ -89,5 +89,32 @@
         <Controls-demo.grid.Ladder.Index/>
     </div>
 
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/VirtualScroll/Index' }}">
+            <a href="{{content.href}}">Виртуальный скролл</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.VirtualScroll.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/RowSeparator/Index' }}">
+            <a href="{{content.href}}">Межстрочный разделитель</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.RowSeparator.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/Search/Index' }}">
+            <a href="{{content.href}}">Поиск по стране</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.Search.Index/>
+    </div>
+
 
 </div>

@@ -1,12 +1,11 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 /**
- * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри.
- * Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
- *
- *  <a href="/materials/demo-ws4-stack-dialog">Демо-пример</a>.
+ * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри. Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
+ * @remark
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ здесь}.
+ * См. <a href="/materials/demo-ws4-stack-dialog">демо-пример</a>.
  * @class Controls/_popup/Opener/Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
@@ -33,24 +32,21 @@ import {IoC} from 'Env/Env';
  * @public
  */
 
- /**
- *@css @size_Stack-border-left   Thickness of left border
- *@css @color_Stack-border-left  Color of left border
- *@css @padding_Stack-shadow     Padding for shadow
- *@css @size_Stack-shadow        Size of shadow
- *@css @color_Stack-shadow       Color of shadow
+/**
+ * @css @size_Stack-border-left   Thickness of left border
+ * @css @color_Stack-border-left  Color of left border
+ * @css @padding_Stack-shadow     Padding for shadow
+ * @css @size_Stack-shadow        Size of shadow
+ * @css @color_Stack-shadow       Color of shadow
  */
 
-const _private = {
-    getStackConfig(config) {
-        config = config || {};
-        // The stack is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
-        config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-        config._type = 'stack'; // TODO: Compatible for compoundArea
-        return config;
-    }
+const getStackConfig = (config) => {
+    config = config || {};
+    // The stack is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+    config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+    config._type = 'stack'; // TODO: Compatible for compoundArea
+    return config;
 };
-
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
 
 class Stack extends BaseOpener {
@@ -99,8 +95,29 @@ class Stack extends BaseOpener {
      * @param {PopupOptions} popupOptions Stack popup options.
      */
 
-    open(popupOptions) {
-        return super.open(_private.getStackConfig(popupOptions), POPUP_CONTROLLER);
+    open(popupOptions): Promise<string | undefined> {
+        return super.open(this._getStackConfig(popupOptions), POPUP_CONTROLLER);
+    }
+
+    private _getStackConfig(popupOptions) {
+        return getStackConfig(popupOptions);
+    }
+
+    static openPopup(config: object): Promise<string> {
+        return new Promise((resolve) => {
+            const newCfg = getStackConfig(config);
+            if (!newCfg.hasOwnProperty('opener')) {
+                Logger.error('Controls/popup:Stack: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+            }
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
+                    resolve(popupId);
+                });
+            });
+        });
+    }
+    static closePopup(popupId: string): void {
+        BaseOpener.closeDialog(popupId);
     }
 }
 
@@ -145,19 +162,6 @@ class Stack extends BaseOpener {
  * @static
  * @see closePopup
  */
-Stack.openPopup = (config: object): Promise<string> => {
-    return new Promise((resolve) => {
-        const newCfg = _private.getStackConfig(config);
-        if (!newCfg.hasOwnProperty('opener')) {
-            IoC.resolve('ILogger').error(Stack.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
-        }
-        BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-            BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
-                resolve(popupId);
-            });
-        });
-    });
-};
 
 /**
  * Статический метод для закрытия окна по идентификатору.
@@ -197,43 +201,38 @@ Stack.openPopup = (config: object): Promise<string> => {
  * @see openPopup
  */
 
-Stack.closePopup = (popupId: string): void => {
-    BaseOpener.closeDialog(popupId);
-};
-
-Stack._private = _private;
-
-export = Stack;
+export default Stack;
 
 /**
  * @typedef {Object} PopupOptions
  * @description Конфигурация стековой панели.
- * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
- * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
+ * @property {Boolean} [autofocus=true] Определяет, установится ли фокус на шаблон попапа после его открытия.
+ * @property {Boolean} [modal=false] Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
  * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
- * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
- * @property {function|String} template Шаблон всплывающего окна
- * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
- * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
- * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
- * @property {Number} width Текущая ширина всплывающего окна
+ * @property {Boolean} [closeOnOutsideClick=false] Определяет возможность закрытия всплывающего окна по клику вне.
+ * @property {function|String} template Шаблон всплывающего окна.
+ * @property {function|String} templateOptions Опции для контрола, переданного в {@link template}.
+ * @property {Number} minWidth Минимально допустимая ширина всплывающего окна. Значение указывается в px.
+ * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна. Значение указывается в px.
+ * @property {Number} width Текущая ширина всплывающего окна. Значение указывается в px.
  * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
+ * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события стековой панели.
  */
-
 
 /*
  * @typedef {Object} PopupOptions
  * @description Stack popup options.
- * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
- * @property {Boolean} modal Determines whether the window is modal.
+ * @property {Boolean} [autofocus=true] Determines whether focus is set to the template when popup is opened.
+ * @property {Boolean} [modal=false] Determines whether the window is modal.
  * @property {String} className Class names of popup.
- * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
+ * @property {Boolean} [closeOnOutsideClick=false] Determines whether possibility of closing the popup when clicking past.
  * @property {function|String} template Template inside popup.
  * @property {function|String} templateOptions Template options inside popup.
  * @property {Number} minWidth The minimum width of popup.
  * @property {Number} maxWidth The maximum width of popup.
  * @property {Number} width Width of popup.
-
+ * @property {Node} opener Read more {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener there}.
+ * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Callback functions on popup events.
  */
 
 /**

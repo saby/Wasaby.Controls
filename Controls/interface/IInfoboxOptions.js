@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IInfoboxOptions', [
 ], function() {
 
@@ -17,7 +18,7 @@ define('Controls/interface/IInfoboxOptions', [
     * @default {}
     * @public
     * @author Красильников А.С.
-    */    
+    */
 
    /**
     * @typedef {Object} TemplateOptions
@@ -47,7 +48,7 @@ define('Controls/interface/IInfoboxOptions', [
     * @property {Boolean} float Whether the content should wrap around the cross closure.
     * @property {String} style Infobox display style.
     * @property {Number} showDelay Delay before opening.
-    */    
+    */
 
    /**
     * @name Controls/interface/IInfoboxOptions#templateOptions
@@ -57,7 +58,7 @@ define('Controls/interface/IInfoboxOptions', [
    /*
     * @name Controls/interface/IInfoboxOptions#templateOptions
     * @cfg {TemplateOptions[]} Template options inside popup.
-    */    
+    */
 
    /**
     * @typedef {Object} EventHandlers
@@ -71,15 +72,14 @@ define('Controls/interface/IInfoboxOptions', [
     * @description Callback functions on popup events.
     * @property {Function} onClose Callback function is called when popup is closed.
     * @property {Function} onResult Callback function is called at the sendResult event in the popup template.
-    */    
+    */
 
    /**
     * @name Controls/interface/IInfoboxOptions#eventHandlers
     * @cfg {EventHandlers[]} Функции обратного вызова на события всплывающего окна.
-    * @variant onClose Функция обратного вызова, которая вызывается при закрытии всплывающего окна.
     * @default {}
     * @remark
-    * Необходимо учитывать контекст выполнения функций обратного вызова. 
+    * Необходимо учитывать контекст выполнения функций обратного вызова.
     * @example
     * userControl.wml
     * <pre>
@@ -227,6 +227,6 @@ define('Controls/interface/IInfoboxOptions', [
     *         ...
     *     );
     * </pre>
-    */    
+    */
 
 });

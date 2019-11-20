@@ -3,7 +3,7 @@
  */
 import BaseControl = require('Core/Control');
 import {debounce as cDebounce} from 'Types/function';
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
@@ -16,34 +16,34 @@ var
     DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
 var _private = {
-    checkDeprecated: function(cfg) {
+    checkDeprecated: function(cfg, self) {
         // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
         if (cfg.leftSpacing !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+            Logger.warn('IList: Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".', self);
         }
         if (cfg.leftPadding !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+            Logger.warn('IList: Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".', self);
         }
         if (cfg.rightSpacing !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+            Logger.warn('IList: Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".', self);
         }
         if (cfg.rightPadding !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+            Logger.warn('IList: Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".', self);
         }
         if (cfg.rowSpacing !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "rowSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.top and itemPadding.bottom".');
+            Logger.warn('IList: Option "rowSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.top and itemPadding.bottom".', self);
         }
         if (cfg.contextMenuEnabled !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".');
+            Logger.warn('IList: Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".', self);
         }
         if (cfg.markerVisibility === 'always') {
-            Env.IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/_list/interface/IList#markerVisibility is deprecated, use value "visible" instead.');
+            Logger.warn('IList: Value "always" for property Controls/_list/interface/IList#markerVisibility is deprecated, use value "visible" instead.', self);
         }
         if (cfg.markerVisibility === 'demand') {
-            Env.IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/_list/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.');
+            Logger.warn('IList: Value "demand" for property Controls/_list/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.', self);
         }
         if (cfg.results) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "results" is deprecated and removed in 19.200. Use options "resultsPosition" and "resultsTemplate".');
+            Logger.warn('IList: Option "results" is deprecated and removed in 19.200. Use options "resultsPosition" and "resultsTemplate".', self);
         }
     },
 
@@ -86,7 +86,7 @@ var ListView = BaseControl.extend(
             };
         },
        _beforeMount: function(newOptions) {
-            _private.checkDeprecated(newOptions);
+            _private.checkDeprecated(newOptions, this);
             if (newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
             }

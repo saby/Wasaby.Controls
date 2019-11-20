@@ -10,14 +10,14 @@
    </Controls.popup:Sticky>
 
    <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()" attr:class="ControlsDemo-InfoboxTemplate__stickyButton"/>
-   <div style="margin-left: 20px;">
-      <span>direction vertical: </span><Controls.toggle:DoubleSwitch captions="{{['bottom','top']}}" bind:value="_verticalDirection"/>
+   <div style="margin-left: 20px;" class="ControlsDemo-InfoboxTemplate__blockOptions">
+      <span>direction vertical: </span><Controls.toggle:DoubleSwitch captions="{{['bottom','top']}}" bind:value="_verticalDirection" attr:class="ControlsDemo-InfoboxTemplate__verticalDirection"/>
       <br />
-      <span>direction horizontal: </span><Controls.toggle:DoubleSwitch captions="{{['left','right']}}" bind:value="_horizontalDirection"/>
+      <span>direction horizontal: </span><Controls.toggle:DoubleSwitch captions="{{['left','right']}}" bind:value="_horizontalDirection" attr:class="ControlsDemo-InfoboxTemplate__horizontalDirection"/>
       <br />
-      <span>Point vertical: </span><Controls.toggle:DoubleSwitch captions="{{['bottom','top']}}" bind:value="_verticalPoint"/>
+      <span>Point vertical: </span><Controls.toggle:DoubleSwitch captions="{{['bottom','top']}}" bind:value="_verticalPoint" attr:class="ControlsDemo-InfoboxTemplate__verticalPoint"/>
       <br />
-      <span>Point horizontal: </span><Controls.toggle:DoubleSwitch captions="{{['left','right']}}" bind:value="_horizontalPoint"/>
+      <span>Point horizontal: </span><Controls.toggle:DoubleSwitch captions="{{['left','right']}}" bind:value="_horizontalPoint" attr:class="ControlsDemo-InfoboxTemplate__horizontalPoint"/>
    </div>
 
 </div>

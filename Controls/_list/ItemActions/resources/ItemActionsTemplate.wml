@@ -3,6 +3,7 @@
             {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') }}
             {{itemActionsPosition !== 'outside' ? itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight' : ''}}
             controls-itemActionsV_{{itemActionsPosition}}
+            {{getContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding)}}
             {{itemData.isEditing ? 'controls-itemActionsV_editing'}}
             {{itemData.isEditing && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
             {{itemData.isActive && actionMenuIsShown ? 'controls-itemActionsV_visible'}}

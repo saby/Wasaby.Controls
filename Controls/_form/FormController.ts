@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import cInstance = require('Core/core-instance');
 import tmpl = require('wml!Controls/_form/FormController/FormController');
 import Deferred = require('Core/Deferred');
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import dataSource = require('Controls/dataSource');
 
 
@@ -97,10 +97,10 @@ import dataSource = require('Controls/dataSource');
       checkRecordType: function(record) {
          return cInstance.instanceOfModule(record, 'Types/entity:Record');
       },
-      readRecordBeforeMount: function(instance, cfg) {
+      readRecordBeforeMount: (instance, cfg) => {
          // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-         return instance._source.read(cfg.key, cfg.readMetaData).then(function(record) {
+         return instance._source.read(cfg.key, cfg.readMetaData).then((record) => {
             instance._setRecord(record);
             instance._readInMounting = { isError: false, result: record };
 
@@ -111,8 +111,7 @@ import dataSource = require('Controls/dataSource');
             return {
                data: record
             };
-         }, function(e) {
-            Env.IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
+         }, (e: Error) => {
             instance._readInMounting = { isError: true, result: e };
             return instance._processError(e).then(getState);
          });
@@ -176,16 +175,16 @@ import dataSource = require('Controls/dataSource');
       _beforeMount: function(cfg, _, receivedState) {
          this._source = cfg.source || cfg.dataSource;
          if (cfg.dataSource) {
-            Env.IoC.resolve('ILogger').warn('FormController', 'Use option "source" instead of "dataSource"');
+             Logger.warn('FormController: Use option "source" instead of "dataSource"', this);
          }
          if (cfg.initValues) {
-            Env.IoC.resolve('ILogger').warn('FormController', 'Use option "createMetaData" instead of "initValues"');
+             Logger.warn('FormController: Use option "createMetaData" instead of "initValues"', this);
          }
          if (cfg.destroyMeta) {
-            Env.IoC.resolve('ILogger').warn('FormController', 'Use option "destroyMetaData " instead of "destroyMeta"');
+             Logger.warn('FormController: Use option "destroyMetaData " instead of "destroyMeta"', this);
          }
          if (cfg.idProperty) {
-            Env.IoC.resolve('ILogger').warn('FormController', 'Use option "keyProperty " instead of "idProperty"');
+             Logger.warn('FormController: Use option "keyProperty " instead of "idProperty"', this);
          }
 
          receivedState = receivedState || {};
@@ -298,8 +297,8 @@ import dataSource = require('Controls/dataSource');
       },
       _getRecordId: function() {
          if (!this._record.getId && !this._options.idProperty && !this._options.keyProperty) {
-            Env.IoC.resolve('ILogger').error('FormController', 'Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда');
-            return null;
+             Logger.error('FormController: Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда', this);
+             return null;
          }
          var keyProperty = this._options.idProperty || this._options.keyProperty;
          return keyProperty ? this._record.get(keyProperty) : this._record.getId();

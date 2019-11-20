@@ -1,6 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Container');
-import Env = require('Env/Env');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
@@ -8,6 +7,12 @@ import getZIndex = require('Controls/Utils/getZIndex');
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
+import {ValidationStatus} from "Controls/interface";
+import {Logger} from 'UI/Utils';
+
+export interface IValidateConfig {
+    hideInfoBox?: boolean;
+}
 
 /**
  * Контрол, регулирующий валидацию своего контента.
@@ -75,7 +80,6 @@ const _private = {
     closeInfoBox(self) {
         self._closeId = setTimeout(function() {
             _private.forceCloseInfoBox(self);
-            self._isOpened = false;
         }, 300);
     },
 
@@ -94,15 +98,18 @@ const _private = {
                 GlobalPopup._closeInfoBoxHandler(event, delay);
             }
         }
+        self._isOpened = false;
     }
 
 };
 
+type ValidResult = boolean|null|Promise<boolean>|String;
 class ValidateContainer extends Control {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
+    _contentActive: boolean = false;
     _currentValue: any;
-    _validationResult: boolean;
+    _validationResult: ValidResult;
     _isNewEnvironment: boolean;
     _closeId: number;
 
@@ -127,7 +134,7 @@ class ValidateContainer extends Control {
         }
     }
 
-    _callValidators(validators: Function[]) {
+    _callValidators(validators: Function[], validateConfig?: IValidateConfig) {
         let validationResult = null,
             errors = [],
             validatorResult, validator, resultDeferred, index;
@@ -167,7 +174,6 @@ class ValidateContainer extends Control {
         }
 
         resultDeferred = new Deferred();
-        this.setValidationResult(resultDeferred);
 
         // далее, смотрим что возвращают результаты-деферреды
         parallelDeferred.done().getResult().addCallback((results) => {
@@ -194,20 +200,20 @@ class ValidateContainer extends Control {
                 validationResult = errors;
             }
 
-            this.setValidationResult(validationResult);
+            this.setValidationResult(validationResult, validateConfig);
             resultDeferred.callback(validationResult);
         }).addErrback((e) => {
-            Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
+            Logger.error('Validate: Validation error', this, e);
         });
 
         return resultDeferred;
     }
 
-    validate(): Promise<boolean[]> {
+    validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
             this.setValidationResult(undefined);
-            this._callValidators(validators).then(resolve);
+            this._callValidators(validators, validateConfig).then(resolve);
         });
 
     }
@@ -223,12 +229,12 @@ class ValidateContainer extends Control {
      * @description Set the validationResult from the outside
      * @param validationResult
      */
-    setValidationResult(validationResult: boolean|null|Promise<boolean>): void {
+    setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
         this._validationResult = validationResult;
         if (!(validationResult instanceof Promise)) {
             this._forceUpdate();
         }
-        if (validationResult) {
+        if (validationResult && !config.hideInfoBox) {
             _private.openInfoBox(this);
         } else if (this._isOpened && validationResult === null) {
             _private.closeInfoBox(this);
@@ -246,7 +252,7 @@ class ValidateContainer extends Control {
      * @description Get the validationResult
      * @returns {undefined|Array}
      */
-    isValid(): boolean {
+    isValid(): ValidResult {
         return this._validationResult;
     }
 
@@ -264,9 +270,14 @@ class ValidateContainer extends Control {
     }
 
     _focusInHandler(): void {
+        this._contentActive = true;
         if (!this._isOpened) {
             _private.openInfoBox(this);
         }
+    }
+
+    _focusOutHandler(): void {
+        this._contentActive = false;
     }
 
     _mouseInfoboxHandler(event: Event): void {
@@ -308,6 +319,14 @@ class ValidateContainer extends Control {
         if (this._validationResult) {
             this.setValidationResult(null);
         }
+    }
+
+    private _getValidStatus(contentActive): ValidationStatus {
+        //ie is not support focus-within
+        if (this._isValidResult()) {
+            return contentActive ? 'invalidAccent' : 'invalid';
+        }
+        return 'valid';
     }
 
 

@@ -30,23 +30,20 @@ interface IPosition {
       },
 
       getMargins: function(popupCfg, direction) {
-         return popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] + popupCfg.align[direction].offset;
+         return popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] + popupCfg.offset[direction];
       },
 
       getPosition: function(popupCfg, targetCoords, direction) {
          var position = {};
          var isHorizontal = direction === 'horizontal';
-         if (popupCfg.align[direction].side === 'center') {
+         if (popupCfg.direction[direction] === 'center') {
             position[isHorizontal ? 'left' : 'top'] = targetCoords[isHorizontal ? 'left' : 'top'] + targetCoords[isHorizontal ? 'width' : 'height'] / 2 - popupCfg.sizes[isHorizontal ? 'width' : 'height'] / 2 + _private.getMargins(popupCfg, direction) ;
          } else {
-            if (popupCfg.align[direction].side === (isHorizontal ? 'left' : 'top')) {
+            if (popupCfg.direction[direction] === (isHorizontal ? 'left' : 'top')) {
                position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
                    _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction);
             } else {
                position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
-               if (!_private.isIOS13()) {
-                  position[isHorizontal ? 'left' : 'top'] += targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
-               }
             }
          }
          return position;
@@ -81,13 +78,17 @@ interface IPosition {
                taskBarKeyboardIosHeight += 5;
             }
          }
-         return position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         let overflow = position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
+         if (!_private.isIOS13()) {
+            overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         }
+         return overflow;
       },
 
       invertPosition: function(popupCfg, direction) {
          popupCfg.targetPoint[direction] = INVERTING_CONST[popupCfg.targetPoint[direction]];
-         popupCfg.align[direction].side = INVERTING_CONST[popupCfg.align[direction].side];
-         popupCfg.align[direction].offset *= -1;
+         popupCfg.direction[direction] = INVERTING_CONST[popupCfg.direction[direction]];
+         popupCfg.offset[direction] *= -1;
          popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
       },
 
@@ -138,9 +139,9 @@ interface IPosition {
          let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
          let isNegativePos = _private.isNegativePosition(popupCfg, position, targetCoords);
          if (positionOverflow > 0 || isNegativePos) {
-            if (popupCfg.fittingMode === 'fixed') {
+            if (popupCfg.fittingMode[direction] === 'fixed') {
                resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-            } else if (popupCfg.fittingMode === 'overflow') {
+            } else if (popupCfg.fittingMode[direction] === 'overflow') {
                resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else {
                _private.invertPosition(popupCfg, direction);
@@ -164,6 +165,7 @@ interface IPosition {
          _private.fixPosition(resultPosition, targetCoords);
          return resultPosition;
       },
+
 
       restrictContainer: function(position, property, popupCfg, overflow) {
          position[property] = popupCfg.sizes[property] - overflow;

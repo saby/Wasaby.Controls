@@ -11,6 +11,7 @@ import monthListUtils from './Utils';
  * @class Controls/_calendar/MonthList/MonthSource
  * @extends Types/source:Base
  * @author Красильников А.С.
+ * @private
  */
 
 export default class MonthsSource extends Memory {
@@ -100,7 +101,7 @@ export default class MonthsSource extends Memory {
                     month =  delta > 0 ? period[1] : period[0];
                 }
 
-                if (this._header && delta > 0) {
+                if (this._header && delta > 0 && month) {
                     monthHeader = this._shiftRange(month, delta);
                     if (this._isDisplayed(monthHeader)) {
                         this._pushHeader(items, monthHeader);
@@ -162,8 +163,9 @@ export default class MonthsSource extends Memory {
     }
 
     private _getHiddenPeriod(date: Date): Date[] {
+        let range: Date[] = [];
         for (let i = 0; i < this._displayedRanges.length; i++) {
-            const range = this._displayedRanges[i];
+            range = this._displayedRanges[i];
             if (date < range[0]) {
                 return [
                     i === 0 ? null : this._shiftRange(this._displayedRanges[i - 1][1], 1),
@@ -171,7 +173,7 @@ export default class MonthsSource extends Memory {
                 ];
             }
         }
-        return [date, null];
+        return [range[1] ? this._shiftRange(range[1], 1) : date, null];
     }
 
     private _shiftRange(date: Date, delta: number): Date {

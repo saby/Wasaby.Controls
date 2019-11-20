@@ -18,6 +18,7 @@ define('Controls/Application/Compatible', [
    'use strict';
 
    var ViewTemplate = Base.extend({
+      /* eslint-disable */
       _template: template,
       _wasPatched: false,
       _beforeMount: function() {
@@ -57,4 +58,5 @@ define('Controls/Application/Compatible', [
    });
 
    return ViewTemplate;
+   /* eslint-enable */
 });

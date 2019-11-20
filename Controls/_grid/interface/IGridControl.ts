@@ -142,13 +142,12 @@
  * @property {String} caption Текст заголовка ячейки.
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
- * @property {String} template Шаблон заголовка ячейки. По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке столбца при рендере денежных данных.
+ * @property {String} [template=Controls/grid:HeaderContent] Шаблон заголовка ячейки.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
- * @property {String} sortingProperty Свойство, по которому выполняется сортировка. 
- * В качестве значения принимает имя поля. 
- * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки. 
- * Клик по кнопке будет менять порядок сортировки элементов на противоположный. 
+ * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
+ * В качестве значения принимает имя поля.
+ * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки.
+ * Клик по кнопке будет менять порядок сортировки элементов на противоположный.
  * При этом элементы будут отсортированы по полю, имя которого указано в свойстве sortingProperty.
  * <pre class="brush: js">
  * _sorting: null,
@@ -174,10 +173,10 @@
  *    ];
  * }
  * </pre>
- * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
- * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
- * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
- * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
+ * @property {Number} startRow Порядковый номер строки, на которой начинается ячейка.
+ * @property {Number} endRow Порядковый номер строки, на которой заканчивается ячейка.
+ * @property {Number} startColumn Порядковый номер колонки, на которой начинается ячейка.
+ * @property {Number} endColumn Порядковый номер колонки, на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
  * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
@@ -197,14 +196,14 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки шапки нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
+ * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки шапки нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке.
  * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @example
  * Пример 1. Для первой ячейки задаём пользовательский шаблон.
  * <pre>
  *    <Controls.grid:View>
- *       <ws:header> 
+ *       <ws:header>
  *          <ws:Array>
  *              <ws:template>
  *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
@@ -266,67 +265,28 @@
  */
 
 /**
- * @typedef {String} TextOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
- * @variant ellipsis Текст обрезается, и в конец строки добавляется многоточие.
- * @variant none Стандартное поведение при незаданном свойстве.
- * @default none
- */
-
-/*
- * @typedef {String} TextOverflow Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
- * @variant ellipsis The text is clipped and an ellipsis is added to the end of the line.
- * @variant none Standard behavior, as if the property is not set.
- * @default none
- */
-
-/**
  * @typedef {Object} Column
- * @property {String} width Ширина столбца.
- * В качестве значения опции можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
- * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
- * В значении "minmax(,)" устанавливаются минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
- * Ширина, указанная в долях, "auto" и "minmax" не будет применятся в браузерах, не поддерживающих "CSS Grid Layout", в таком случае используйте опцию compatibleWidth.
- * @property {String} compatibleWidth Ширина столбца в браузерах, не поддерживающих "CSS Grid Layout".
- * В качестве значения опции можно указать только пиксели (px), проценты (%). Если не задана, применяется значение "auto".
- * Более подробно о кросбраузерной настройке ширины колонок вы можете почитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/cross-browser/'>статье</a>
- * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
+ * @property {String} width Ширина колонки.
+ * В качестве значения свойства можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
+ * В значении "auto" ширина колонки устанавливается автоматически исходя из типа и содержимого элемента.
+ * В значении "minmax(,)" ширина колонки устанавливается автоматически в рамках заданного интервала. Например, "minmax(600px, 1fr)" означает, что минимальная ширина колонки 600px, а максимальная — 1fr.
+ * Для браузеров, которые не поддерживают технологию <a href="https://developer.mozilla.org/ru/docs/web/css/css_grid_layout">CSS Grid Layout</a>, не работает ширина колонки, указанная в долях, "auto" или "minmax". Для таких браузеров используйте свойство compatibleWidth.
+ * @property {String} compatibleWidth Ширина колонки в браузерах, не поддерживающих "CSS Grid Layout".
+ * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
+ * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в колонке.
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
- * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
- *
- * На корневой элемент пользовательского шаблона следует задать CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
- * <pre>
- * <Controls.grid:View>
- *     <ws:columns>
- *         <ws:Array>
- *             <ws:Object displayProperty="Name" width="200px">
- *                 <ws:template>
- *                     <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L">
- *                         <ws:contentTemplate>
- *                           <!-- контент шаблона -->
- *                         </ws:contentTemplate>
- *                     </ws:partial>
- *                 </ws:template>
- *             </ws:Object>
- *         </ws:Array>
- *     </ws:columns>
- * </Controls.grid:View>
- * </pre>
- *
- * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
- *
- * В области видимости базового шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
- * - <code>columnIndex</code> (тип Number) — порядковый номер колонки. Отсчет от 0.
- * - <code>index</code> (тип Number) — порядковый номер строки. Отсчет от 0.
- * - <code>isEditing</code> (тип Boolean) — признак редактирования по месту.
- * - <code>item</code> (тип Object) — строка, данные которой отображаются в колонке.
- * - <code>column</code> (тип Object) — конфигурация колонки.
+ * О создании пользовательского шаблона читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">здесь</a>.
  * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
  * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
  * @property {GridCellAlign} [align=left] Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
  * По умолчанию содержимое выравнивается по базовой линии (см. {@link align-items https://developer.mozilla.org/ru/docs/Web/CSS/align-items}).
- * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
- * @property {TextOverflow} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
+ * @property {String} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * Доступные значения:
+ * 
+ * * **ellipsis** — текст обрезается, и в конец строки добавляется многоточие.
+ * * **none** — стандартное поведение при незаданном свойстве.
  */
 
 /*
@@ -339,12 +299,15 @@
  * @property {GridCellAlign} [align] Horizontal cell content align.
  * @property {GridCellVAlign} [valign] Vertical cell content align.
  * @property {String} [stickyProperty] The name of the field used to sticking the column data.
- * @property {TextOverflow} [textOverflow] Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
+ * @property {String} [textOverflow=none] Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
+ * 
+ * * **ellipsis** — the text is clipped and an ellipsis is added to the end of the line.
+ * * **none** — standard behavior, as if the property is not set.
  */
 
 /**
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {Array.<Column>} Описывает столбцы таблицы.
+ * @cfg {Array.<Column>} Описывает колонки таблицы.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark Перед отрисовкой убедитесь, что {@link Types/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example
@@ -420,7 +383,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#columnScroll
- * @cfg {Boolean} Включает скроллирование столбцов.
+ * @cfg {Boolean} Включает скроллирование колонок.
  * @default false
  * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
  * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
@@ -436,7 +399,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
- * @cfg {String} Определяет начальное положение горизонтальной прокрутки столбцов, если она включена.
+ * @cfg {String} Определяет начальное положение горизонтальной прокрутки колонок, если она включена.
  * @variant start Устанавливает горизонтальную прокрутку в начальное (крайнее левое) положение.
  * @variant end Устанавливает горизонтальную прокрутку в конечное (крайнее правое) положение.
  * @default start
@@ -454,7 +417,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
- * @cfg {Number} Определяет число зафиксированных столбцов, которые не двигаются при горизонтальном скролле.
+ * @cfg {Number} Определяет число зафиксированных колонок, которые не двигаются при горизонтальном скролле.
  * @default 1
  * @see Controls/_grid/interface/IGridControl#columnScroll
  * @remark
@@ -487,11 +450,19 @@
  /**
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Шаблон строки итогов.
+ * @default Controls/grid:ResultsTemplate
+ * @remark
+ * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
+ * @see resultsPosition
+ * @see resultsVisibility
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Results row template.
+ * @default Controls/grid:ResultsTemplate
+ * @see resultsPosition
+ * @see resultsVisibility
  */
 
 /**
@@ -517,19 +488,25 @@
  */
 
 /**
+ * @name Controls/_grid/interface/IGridControl#editArrowVisibilityCallback
+ * @cfg {Function} Функция обратного вызова для определения видимости кнопки открытия карточки в панели действий по свайпу для конкретной записи.
+ * @remark Первый и единственный аргумент - текущая запись, на которой открывается свайп.
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#showEditArrow
- * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке
+ * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
  * <a href="/materials/demo-ws4-edit-arrow">Example</a>
- * @remark Чтобы расположить кнопку в произвольном месте прикладного шаблона колонки, следует встроить шаблон editArrowTemplate
+ * @remark Чтобы расположить кнопка отображалась в прикладном шаблоне колонки, следует встроить шаблон editArrowTemplate в нужное место
  * @example
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#showEditArrow
- * @cfg {Boolean} Allows showing button in first column on hover.
+ * @cfg {Boolean} Allows showing button in first column on hover and in swipe menu.
  * <a href="/materials/demo-ws4-edit-arrow">Example</a>
- * @remark To place the button in any place of the column template, you should use the editArrowTemplate
+ * @remark To place the button in the user column template, you should use the editArrowTemplate
  * @example
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */

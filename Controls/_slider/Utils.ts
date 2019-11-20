@@ -1,7 +1,7 @@
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import {ISliderBaseOptions} from './Base';
 import {ISliderRangeOptions} from './Range';
-import {SyntheticEvent} from '../../application/Vdom/Vdom';
+import {SyntheticEvent} from 'Vdom/Vdom';
 export interface IScaleData {
     value: number;
     position: number;
@@ -28,10 +28,10 @@ export default {
     },
     checkOptions(opts: ISliderBaseOptions | ISliderRangeOptions): void {
         if (opts.minValue >= opts.maxValue) {
-            IoC.resolve('ILogger').error('Slider', 'minValue must be less than maxValue.');
+            Logger.error('Slider: minValue must be less than maxValue.');
         }
         if (opts.scaleStep < 0) {
-            IoC.resolve('ILogger').error('Slider', 'scaleStep must positive.');
+            Logger.error('Slider: scaleStep must positive.');
         }
     },
     getScaleData(minValue: number, maxValue: number, scaleStep: number): IScaleData[] {
@@ -46,14 +46,14 @@ export default {
         }
         return scaleData;
     },
-    getNativeEventPageX(event: SyntheticEvent<MouseEvent | TouchEvent>) : number {
+    getNativeEventPageX(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
         let targetX = 0;
-        if (event.type === "mousedown" || event.type === "mousemove") {
+        if (event.type === 'mousedown' || event.type === 'mousemove') {
             targetX = event.nativeEvent.pageX;
-        } else if (event.type === "touchstart") {
+        } else if (event.type === 'touchstart') {
             targetX = event.nativeEvent.touches[0].pageX;
         } else {
-            IoC.resolve('ILogger').error('Slider', 'Event type must be mousedown of touchstart.');
+            Logger.error('Slider: Event type must be mousedown of touchstart.');
         }
         return targetX;
     }

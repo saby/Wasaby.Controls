@@ -18,9 +18,11 @@
                         on:tagClick="_notifyHandler('tagClick')"
                         on:tagHover="_notifyHandler('tagHover')">
    <ws:beforeFieldWrapper>
-      <ws:partial options="{{_options}}"
-                  scope="{{_beforeFieldWrapper.scope}}"
-                  template="{{_beforeFieldWrapper.template}}"/>
+      <ws:if data="{{_beforeFieldWrapper.template}}">
+         <ws:partial options="{{_options}}"
+                     scope="{{_beforeFieldWrapper.scope}}"
+                     template="{{_beforeFieldWrapper.template}}"/>
+      </ws:if>
    </ws:beforeFieldWrapper>
    <ws:content>
       <ws:if data="{{_options.readOnly}}">
@@ -45,8 +47,10 @@
       </ws:else>
    </ws:content>
    <ws:afterFieldWrapper>
-      <ws:partial options="{{_options}}"
-                  scope="{{_afterFieldWrapper.scope}}"
-                  template="{{_afterFieldWrapper.template}}"/>
+      <ws:if data="{{_afterFieldWrapper.template}}">
+         <ws:partial options="{{_options}}"
+                     scope="{{_afterFieldWrapper.scope}}"
+                     template="{{_afterFieldWrapper.template}}"/>
+      </ws:if>
    </ws:afterFieldWrapper>
 </Controls._input.Render>

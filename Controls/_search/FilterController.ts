@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_search/FilterController';
 import * as clone from 'Core/core-clone';
+import {isEqual} from 'Types/object';
 
 export interface ISearchFilterController extends IControlOptions {
    searchValue: string;
@@ -17,7 +18,7 @@ export default class SearchFilterController extends Control<ISearchFilterControl
    }
 
    protected _beforeUpdate(newOptions: ISearchFilterController): void {
-      if (this._options.filter !== newOptions.filter) {
+      if (!isEqual(this._options.filter, newOptions.filter)) {
          this._filter = newOptions.filter;
       }
    }

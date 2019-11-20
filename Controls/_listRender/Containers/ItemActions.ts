@@ -26,9 +26,27 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
     // TODO React to collection change here or in the manager
     protected _initializedActions: boolean = false;
 
+    protected _beforeUpdate(options: IItemActionsControlOptions): void {
+        if (
+            this._initializedActions &&
+            (
+                options.listModel !== this._options.listModel ||
+                options.itemActions !== this._options.itemActions ||
+                options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback
+            )
+        ) {
+            this._assignItemActions(
+                options.listModel,
+                options.itemActions,
+                options.itemActionVisibilityCallback
+            );
+        }
+    }
+
     protected _onContainerMouseEnter(): void {
         if (!this._initializedActions) {
-            this._options.listModel.getItemActionsManager().assignItemActions(
+            this._assignItemActions(
+                this._options.listModel,
                 this._options.itemActions,
                 this._options.itemActionVisibilityCallback
             );
@@ -55,6 +73,17 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
             item,
             clickEvent,
             true
+        );
+    }
+
+    protected _assignItemActions(
+        listModel: Collection<Model>,
+        itemActions: any[],
+        itemActionVisibilityCallback: TItemActionVisibilityCallback
+    ): void {
+        listModel.getItemActionsManager().assignItemActions(
+            itemActions,
+            itemActionVisibilityCallback
         );
     }
 

@@ -1,6 +1,6 @@
 define('Controls/Constants', [], function() {
    'use strict';
-   
+   /* eslint-disable */
    /**
     * Константы:
     * - view.hiddenGropup — константа для определения элемента hiddenGroup в {@link Controls/interface/IGrouped#groupingKeyCallback gropingKeyCallback};
@@ -23,8 +23,8 @@ define('Controls/Constants', [], function() {
     *
     * @class Controls/Constants
     * @public
-    */    
-
+    */
+   /* eslint-enable */
    var
       constants = {
          view: {

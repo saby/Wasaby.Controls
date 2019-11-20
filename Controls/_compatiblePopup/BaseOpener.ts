@@ -324,28 +324,33 @@ const BaseOpener = {
       }
 
       if (cfg.hasOwnProperty('direction')) {
+         const newDirection = {
+            horizontal: 'right',
+            vertical: 'bottom'
+         };
          if (cfg.direction === 'right' || cfg.direction === 'left') {
             if (typeof cfg.horizontalAlign !== 'object') {
-               cfg.horizontalAlign = { side: cfg.direction };
+               newDirection.horizontal = cfg.direction;
             }
          } else if (typeof cfg.verticalAlign !== 'object') {
-            cfg.verticalAlign = { side: cfg.direction };
+            newDirection.vertical = cfg.direction;
 
             // magic of old floatarea
             if (typeof cfg.horizontalAlign !== 'object' && cfg.side !== 'center') {
-               cfg.horizontalAlign = { side: cfg.side === 'right' ? 'left' : 'right' };
+               newDirection.horizontal = cfg.side === 'right' ? 'left' : 'right';
             }
          }
+         cfg.direction = newDirection;
       }
 
       if (cfg.hasOwnProperty('offset')) {
          if (cfg.offset.x) {
-            cfg.horizontalAlign = cfg.horizontalAlign || {};
-            cfg.horizontalAlign.offset = parseInt(cfg.offset.x, 10);
+            cfg.offset = cfg.offset || {};
+            cfg.offset.horizontal = parseInt(cfg.offset.x, 10);
          }
          if (cfg.offset.y) {
-            cfg.verticalAlign = cfg.verticalAlign || {};
-            cfg.verticalAlign.offset = parseInt(cfg.offset.y, 10);
+            cfg.offset = cfg.offset || {};
+            cfg.offset.vertical = parseInt(cfg.offset.y, 10);
          }
       }
 
@@ -446,7 +451,8 @@ const BaseOpener = {
    },
    _getConfigFromTemplate(cfg) {
       // get options from template.getDefaultOptions
-      const templateClass = typeof cfg === 'string' ? loadTemplate(cfg) : cfg;
+      let templateClass = typeof cfg === 'string' ? loadTemplate(cfg) : cfg;
+      templateClass = templateClass.default || templateClass;
       return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
    },
    _prepareConfigFromNewToOld(cfg, template) {

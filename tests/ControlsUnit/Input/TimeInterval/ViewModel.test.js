@@ -57,5 +57,12 @@ define([
             sandbox.restore();
          });
       });
+
+      describe('_getStartingPosition', function() {
+         it('Test1', function() {
+            const model = new ViewModel(_options);
+            assert.equal(model._getStartingPosition(), 0);
+         });
+      });
    });
 });

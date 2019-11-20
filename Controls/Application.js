@@ -24,6 +24,9 @@ define('Controls/Application',
     * @extends Core/Control
     *
     * @mixes Controls/Application/BlockLayout/Styles
+    * @mixes Controls/_interface/IApplication
+    * @mixes UI/_base/interface/IHTML
+    * @mixes Controls/_interface/IRUM
     *
     * @control
     * @public
@@ -36,249 +39,20 @@ define('Controls/Application',
     * @class Controls/Application
     * @extends Core/Control
     *
-    * @mixes Controls/Application/BlockLayout/Styles
+    * @mixes Controls-demo/BlockLayouts/Index
+    * @mixes Controls/_interface/IRUM
+    * @mixes Controls/_interface/IApplication
+    * @mixes UI/_base/interface/IRootTemplate
+    * @mixes UI/_base/interface/IHTML
     *
     * @control
     * @public
     * @author Белотелов Н.В.
     */
 
-   /**
-    * @name Controls/Application#staticDomains
-    * @cfg {Number} Список, содержащий набор доменов для загрузки статики.
-    * Список доменов решает задачу загрузки статических ресурсов с нескольких документов. Эти домены будут использоваться для создания путей для статических ресурсов и распределения загрузки для нескольких статических доменов.
-    */
-
-   /*
-    * @name Controls/Application#staticDomains
-    * @cfg {Number} The list of domains for distributing static resources. These domains will be used to create paths
-    * for static resources and distribute downloading for several static domains.
-    * There will be another way to propagate this data after this problem:
-    * https://online.sbis.ru/opendoc.html?guid=d4b76528-b3a0-4b9d-bbe8-72996d4272b2
-    */
-
-   /**
-    * @name Controls/Application#head
-    * @deprecated Используйте {@link headJson}.
-    * @cfg {Content} Дополнительное содержимое тега HEAD. Может принимать более одного корневого узла.
-    */
-
-   /*
-    * @name Controls/Application#head
-    * @deprecated Используйте {@link headJson}.
-    * @cfg {Content} Additional content of HEAD tag. Can accept more than one root node
-    */
-
-   /**
-    * @name Controls/Application#headJson
-    * @deprecated Используйте одну из опций {@link scripts}, {@link styles}, {@link meta} или {@link links}.
-    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head.
-    * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
-    * @remark
-    * Список разрешённых тегов: link, style, script, meta, title.
-    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class.
-    */
-
-   /**
-    * @name Controls/Application#scripts
-    * @cfg {Content} Описание скриптов, которые будут вставлены в head страницы
-    * <pre class="brush:xml">
-    *     <ws:scripts>
-    *        <ws:Array>
-    *           <ws:Object type="text/javascript" src="/cdn/Maintenance/1.0.1/js/checkSoftware.js" data-pack-name="skip" async=""/>
-    *        </ws:Array>
-    *     </ws:scripts>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/Application#meta
-    * @cfg {Content} Позволяет описывать meta информацию страницы.
-    * <pre class="brush:xml">
-    *     <ws:meta>
-    *        <ws:Array>
-    *           <ws:Object name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
-    *        </ws:Array>
-    *     </ws:meta>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/Application#links
-    * @cfg {Content} Позволяет описывать ссылки на дополнительные ресурсы, которые необходимы при загрузке страницы.
-    * <pre class="brush:xml">
-    *     <ws:links>
-    *        <ws:Array>
-    *           <ws:Object rel="shortcut icon" href="{{_options.wsRoot}}img/themes/wi_scheme/favicon.ico?v=2" type="image/x-icon"/>
-    *        </ws:Array>
-    *     </ws:links>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/Application#content
-    * @cfg {Content} Разметка, которая будет встроена в содержимое тега body.
-    */
-
-   /*
-    * @name Controls/Application#content
-    * @cfg {Content} Content of BODY tag
-    */
-
-   /**
-    * @name Controls/Application#scripts
-    * @cfg {Content} Список JS-файлов, которые должны быть подключены на страницу. Скрипты встраиваются перед закрытием. Могут принимать более одного корневого узла.
-    */
-
-   /*
-    * @name Controls/Application#scripts
-    * @cfg {Content} Scripts, that will be pasted after content. Can accept more than one root node
-    */
-
-   /**
-    * @name Controls/Application#appRoot
-    * @cfg {String} Адрес к директории сервиса. Например, "/".
-    * @remark
-    * Значение опции задаётся относительно URL-адреса сервиса.
-    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
-    * Данная настройка попадает в свойство appRoot объекта window.wsConfig.
-    */
-
-   /*
-    * @name Controls/Application#appRoot
-    * @cfg {String} Path to application root url
-    */
-
-   /**
-    * @name Controls/Application#resourceRoot
-    * @cfg {String} Адрес к директории с ресурсами сервиса. Например, "/resources/".
-    * @remark
-    * Значение опции задаётся относительно URL-адреса сервиса.
-    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
-    * Данная настройка попадает в свойство resourceRoot объекта window.wsConfig.
-    */
-
-   /*
-    * @name Controls/Application#resourceRoot
-    * @cfg {String} Path to resource root url
-    */
-
-   /**
-    * @name Controls/Application#wsRoot
-    * @cfg {String} Путь к корню интерфейсного модуля WS.Core. Например, "/resources/WS.Core/".
-    * @remark
-    * Значение опции задаётся относительно URL-адреса сервиса.
-    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
-    * Данная настройка попадает в свойство wsRoot объекта window.wsConfig.
-    */
-
-   /*
-    * @name Controls/Application#wsRoot
-    * @cfg {String} Path to ws root url
-    */
-
-   /**
-    * @name Controls/Application#beforeScripts
-    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением.
-    * @default false
-    */
-
-   /*
-    * @name Controls/Application#beforeScripts
-    * @cfg {Boolean} If it's true, scripts from options scripts will be pasted before other scripts generated by application
-    * otherwise it will be pasted after.
-    */
-
-   /**
-    * @name Controls/Application#viewport
-    * @cfg {String} Атрибут содержимого мета-тега с именем "viewport".
-    */
-
-   /*
-    * @name Controls/Application#viewport
-    * @cfg {String} Content attribute of meta tag with name "viewport"
-    */
-
-   /**
-    * @name Controls/Application#bodyClass
-    * @cfg {String} Дополнительный CSS-класс, который будет задан для тега body.
-    */
-
-   /*
-    * @name Controls/Application#bodyClass
-    * @cfg {String} String with classes, that will be pasted in body's class attribute
-    */
-
-   /**
-    * @name Controls/Application#title
-    * @cfg {String} Значение опции встраивается в содержимое тега title, который определяет заголовок веб-страницы и подпись на вкладке веб-браузера.
-    */
-
-   /*
-    * @name Controls/Application#title
-    * @cfg {String} title of the tab
-    */
-
-   /**
-    * @name Controls/Application#templateConfig
-    * @cfg {Object} Все поля из этого объекта будут переданы в опции контента.
-    */
-
-   /*
-    * @name Controls/Application#templateConfig
-    * @cfg {Object} All fields from this object will be passed to content's options
-    */
-
-   /**
-    * @name Controls/Application#compat
-    * @cfg {Boolean} В значении true создаётся "слой совместимости" для работы с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
-    */
-
-   /*
-    * @name Controls/Application#compat
-    * @cfg {Boolean} If it's true, compatible layer will be loaded
-    */
-
-   /**
-    * @name Controls/Application#builder
-    * @cfg {Boolean} В значении true разрешено создание статической html-страницы через <a href="https://wi.sbis.ru/doc/platform/developmentapl/development-tools/builder/#html_1">билдер</a>.
-    * Необходимое условие создание таких страниц описано <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/#static-html">здесь</a>.
-    * @default false
-    */
-
-   /*
-    * @name Controls/Application#builder
-    * @cfg {Boolean} Allows to create static html with builder
-    */
-
-   /**
-    * @name Controls/Application#builderCompatible
-    * @cfg {Boolean} В значении true на странице загружается слой совместимости для работы с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
-    * Использование опции актуально, когда опция {@link builder} установлена в значение true.
-    */
-
-   /*
-    * @name Controls/Application#builderCompatible
-    * @cfg {Boolean} Will load compatible layer. Works only if builder option is true.
-    */
-
-   /**
-    * @name Controls/Application#width
-    * @cfg {String} Используется контролом Controls/popup:Manager.
-    *
-    * @css @font-size_App__body Font size of page body. This size inherits to other elements in page.
-    */
-
-   /*
-    * @name Controls/Application#width
-    * @cfg {String} Used by Controls.popup:Manager
-    *
-    * @css @font-size_App__body Font size of page body. This size inherits to other elements in page.
-    */
-
    function(Base,
       template,
-      BodyClasses,
+      cBodyClasses,
       Env,
       UIBase,
       scroll,
@@ -298,16 +72,16 @@ define('Controls/Application',
           * @param cfg
           * @param routesConfig
           */
-         initState: function(self, cfg) {
-            self.templateConfig = cfg.templateConfig;
-            self.compat = cfg.compat || false;
+         initState: function(instance, cfg) {
+            instance.templateConfig = cfg.templateConfig;
+            instance.compat = cfg.compat || false;
          },
          calculateBodyClasses: function() {
             // Эти классы вешаются в двух местах. Разница в том, что BodyClasses всегда возвращает один и тот же класс,
             // а TouchDetector реагирует на изменение состояния.
             // Поэтому в Application оставим только класс от TouchDetector
 
-            var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
+            var bodyClasses = cBodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             return bodyClasses;
          },
@@ -368,11 +142,12 @@ define('Controls/Application',
 
       var Page = Base.extend({
          _template: template,
-
+         /* eslint-disable */
          /**
-          * @type {String} Property controls whether or not touch devices use momentum-based scrolling for inner scrollable areas.
+          * @type {String} Property controls whether or not touch devices use momentum-based scrolling for innerscrollable areas.
           * @private
           */
+         /* eslint-enable */
          _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
 
          _dragClass: 'ws-is-no-drag',
@@ -406,6 +181,7 @@ define('Controls/Application',
             this._children.touchendDetect.start(ev);
          },
          _mouseleavePage: function(ev) {
+            /* eslint-disable */
             /**
              * Перемещение элементов на странице происходит по событию mousemove. Браузер генерирует его исходя из
              * доступных ресурсов, и с дополнительными оптимизациями, чтобы не перегружать систему. Поэтому событие не происходит
@@ -415,6 +191,7 @@ define('Controls/Application',
              * В качестве решения, генерируем событие mousemove, на момент ухода мыши за граници экрана.
              * Демо: https://jsfiddle.net/q7rez3v5/
              */
+            /* eslint-enable */
             this._children.mousemoveDetect.start(ev);
          },
          _updateClasses: function() {
@@ -487,7 +264,17 @@ define('Controls/Application',
             }
          },
 
+         _checkDeprecatedOptions: function(opts) {
+            /* eslint-disable */
+            if (opts.compat) {
+               Env.IoC.resolve('ILogger').warn('Опция compat является устаревшей. Для вставки старых контролов внутри VDOM-ного окружения ' +
+                'используйте один из способов, описанных в этой статье: https://wi.sbis.ru/doc/platform/developmentapl/ws3/compound-wasaby/');
+            }
+            /* eslint-enable */
+         },
+
          _beforeMount: function(cfg) {
+            this._checkDeprecatedOptions(cfg);
             this.headTagResolver = this._headTagResolver.bind(this);
             this.BodyClasses = _private.calculateBodyClasses;
             this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
@@ -505,11 +292,13 @@ define('Controls/Application',
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
             if (typeof window !== 'undefined') {
+               /* eslint-disable */
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
                   this.headJson = undefined;
                   this.headValidHtml = undefined;
                }
+               /* eslint-enable */
             }
             this._updateClasses();
 
@@ -525,7 +314,9 @@ define('Controls/Application',
          },
 
          _afterUpdate: function(oldOptions) {
+            /* eslint-disable */
             var elements = document.getElementsByClassName('head-title-tag');
+            /* eslint-enable */
             if (elements.length === 1) {
                // Chrome на ios при вызове History.replaceState, устанавливает в title текущий http адрес.
                // Если после загрузки установить title, который уже был, то он не обновится, и в заголовке вкладки

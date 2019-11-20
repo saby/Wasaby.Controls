@@ -8,10 +8,11 @@ export interface INotificationSimpleOptions extends IControlOptions, INotificati
 }
 
 /**
- * Базовый шаблон <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/'>простого окна уведомления</a>.
+ * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ простого окна уведомления}.
  *
  * @class Controls/_popupTemplate/Notification/Simple
  * @extends Core/Control
+ * @mixes Controls/_popupTemplate/Notification/interface/INotification
  * @control
  * @public
  * @category popup
@@ -21,7 +22,7 @@ export interface INotificationSimpleOptions extends IControlOptions, INotificati
 
 /**
  * @name Controls/_popupTemplate/Notification/Simple#icon
- * @cfg {Object} Устанавливает значок сообщения окна уведомления.
+ * @cfg {String} Устанавливает значок сообщения окна уведомления.
  */
 
 /**

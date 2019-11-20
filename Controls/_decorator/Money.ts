@@ -1,8 +1,8 @@
-import Env = require('Env/Env');
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 import template = require('wml!Controls/_decorator/Money/Money');
+import {Logger} from 'UI/Utils';
 
 /**
  * Преобразует число в денежный формат.
@@ -10,7 +10,6 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @class Controls/_decorator/Money
  * @extends Core/Control
  *
- * @mixes Controls/_decorator/Money/Styles
  * @mixes Controls/_interface/INumberFormat
  *
  * @public
@@ -26,7 +25,6 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @class Controls/_decorator/Money
  * @extends Core/Control
  *
- * @mixes Controls/_decorator/Money/Styles
  * @mixes Controls/_interface/INumberFormat
  *
  * @public
@@ -96,11 +94,11 @@ import template = require('wml!Controls/_decorator/Money/Money');
 var _private = {
    searchPaths: /(-?[0-9]*?)(\.[0-9]{2})/,
 
-   parseNumber: function (value, delimiters) {
+   parseNumber: function (value, delimiters, self) {
       var exec = this.searchPaths.exec(parseFloat(value).toFixed(2));
 
       if (!exec) {
-         Env.IoC.resolve('ILogger').error('Controls/_decorator/Money', 'That is not a valid option value: ' + value + '.');
+         Logger.error('Controls/_decorator/Money: That is not a valid option value: ' + value + '.', self);
          exec = ['0.00', '0', '.00'];
       }
 
@@ -114,10 +112,10 @@ var _private = {
       };
    },
 
-   isUseGrouping: function (options, useLogging) {
+   isUseGrouping: function (options, useLogging, self) {
       if ('delimiters' in options) {
          if (useLogging) {
-            Env.IoC.resolve('ILogger').warn('Controls/_decorator/Money', 'Опция delimiters устарела, используйте useGrouping.');
+            Logger.warn('Controls/_decorator/Money: Опция delimiters устарела, используйте useGrouping.', self);
          }
 
          return options.delimiters;
@@ -126,10 +124,10 @@ var _private = {
       return options.useGrouping;
    },
 
-   getValue: function (options, useLogging) {
+   getValue: function (options, useLogging, self) {
       if ('number' in options) {
          if (useLogging) {
-            Env.IoC.resolve('ILogger').warn('Controls/_decorator/Money', 'Опция number устарела, используйте value.');
+            Logger.warn('Controls/_decorator/Money: Опция number устарела, используйте value.', self);
          }
 
          return options.number.toString();
@@ -156,20 +154,21 @@ var Money = Control.extend({
 
    _beforeMount: function (options) {
       this._parsedNumber = _private.parseNumber(
-         _private.getValue(options, true),
-         _private.isUseGrouping(options, true)
+         _private.getValue(options, true, this),
+         _private.isUseGrouping(options, true, this),
+          this
       );
       this._title = _private.getTitle(options, this._parsedNumber.number);
    },
 
    _beforeUpdate: function (newOptions) {
-      var newUseGrouping = _private.isUseGrouping(newOptions, false);
-      var oldUseGrouping = _private.isUseGrouping(this._options, false);
-      var newValue = _private.getValue(newOptions, false);
-      var oldValue = _private.getValue(this._options, false);
+      var newUseGrouping = _private.isUseGrouping(newOptions, false, this);
+      var oldUseGrouping = _private.isUseGrouping(this._options, false, this);
+      var newValue = _private.getValue(newOptions, false, this);
+      var oldValue = _private.getValue(this._options, false, this);
 
       if (newValue !== oldValue || newUseGrouping !== oldUseGrouping) {
-         this._parsedNumber = _private.parseNumber(newValue, newUseGrouping);
+         this._parsedNumber = _private.parseNumber(newValue, newUseGrouping, this);
       }
       this._title = _private.getTitle(newOptions, this._parsedNumber.number);
    },

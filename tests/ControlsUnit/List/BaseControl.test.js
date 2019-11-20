@@ -149,6 +149,7 @@ define([
          // сорс грузит асинхронно
          setTimeout(function() {
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
+            const prevModel = ctrl._listViewModel;
             ctrl._beforeUpdate(cfg);
 
             // check saving loaded items after new viewModelConstructor
@@ -159,6 +160,7 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
+            assert.equal(prevModel._display, null);
             assert.isTrue(
                cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
                cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
@@ -218,6 +220,20 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingDESC, 'test'), sortingASC);
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
+      });
+
+      it('_private::isItemsSelectionAllowed', () => {
+         let options = {};
+         assert.isFalse(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = undefined;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 0;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 1;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
       });
 
       it('_private::needLoadNextPageAfterLoad', function() {
@@ -868,6 +884,29 @@ define([
            ], baseControl._virtualScroll._itemsHeights);
        });
 
+      it('_private::handleListScrollSync', () => {
+         const self = {};
+
+         self._virtualScroll = {
+            PlaceholdersSizes: {
+               top: 1000,
+               bottom: 1000
+            }
+         };
+
+         lists.BaseControl._private.handleListScrollSync(self, {
+            scrollTop: 2000,
+            scrollHeight: 4000,
+            clientHeight: 1000
+         });
+
+         assert.deepEqual(self._scrollParams, {
+            scrollTop: 3000,
+            scrollHeight: 6000,
+            clientHeight: 1000
+         });
+      });
+
       it('moveMarker activates the control', async function() {
          const
             cfg = {
@@ -1105,14 +1144,20 @@ define([
                 })
              },
              baseControl = new lists.BaseControl(cfg);
+
+         const event = {
+            preventDefault: () => {}
+         };
+         const sandbox = sinon.createSandbox();
+
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          baseControl._children.selectionController = {
             onCheckBoxClick: (key, status) => {
                if (status) {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               } else {
                   baseControl._listViewModel._selectedKeys.pop(key);
+               } else {
+                  baseControl._listViewModel._selectedKeys.push(key);
                }
             }
          };
@@ -1121,6 +1166,17 @@ define([
          lists.BaseControl._private.enterHandler(baseControl);
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
 
+         baseControl._loadingIndicatorState = null;
+         sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
+
+         baseControl.getViewModel()._markedKey = 5;
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
+
+
+         sandbox.restore();
       });
 
       it('loadToDirection up', async function() {
@@ -1423,6 +1479,14 @@ define([
            mockedControl._options.navigation.view = 'demand';
            lists.BaseControl._private.updateShadowMode(mockedControl);
            assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
+
+           mockedControl._options.navigation.view = 'pages';
+           lists.BaseControl._private.updateShadowMode(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
+
+           mockedControl._options.navigation.view = 'maxCount';
+           lists.BaseControl._private.updateShadowMode(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
        });
 
        it ('call updateShadowMode in afterMount', function() {
@@ -1620,14 +1684,21 @@ define([
          bc._loadOffset = {top: 100, bottom: 100};
          bc._children = triggers;
          bc._container = {
-             getBoundingClientRect: () => ({}),
+             getBoundingClientRect: () => ({
+                y: 0,
+                height: 0
+             }),
              clientHeight: 480
          };
          lists.BaseControl._private.onScrollShow(bc, {
             scrollHeight: 400,
-            clientHeight: 1000
+            clientHeight: 1000,
+            viewPortRect: {
+               y: 0,
+               height: 0
+            }
          });
-         bc._onViewPortResize(bc, 600);
+         bc._onViewPortResize(bc, 600, {y: 0,height: 0});
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
          bc._viewResize();
@@ -1640,7 +1711,7 @@ define([
 
          bc.__error = false;
          bc._viewSize = 0;
-         bc._onViewPortResize(bc, 0);
+         bc._onViewPortResize(bc, 0, {y: 0,height: 0});
          assert.deepEqual(bc._loadOffset, {top: 0, bottom: 0});
       });
 
@@ -2160,10 +2231,12 @@ define([
          it('itemsChanged', async function() {
             baseControl._itemsChanged = true;
             await baseControl._beforeUpdate(cfg);
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 2);
          });
          it('_onAfterEndEdit', function() {
             baseControl._onAfterEndEdit({}, {});
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 3);
          });
          it('update on recreating source', async function() {
@@ -2184,9 +2257,20 @@ define([
                viewModelConstructor: lists.ListViewModel
             };
             await baseControl._beforeUpdate(newCfg);
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
-
+         it('control in error state, should not call update', function() {
+            baseControl.__error = true;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 4);
+            baseControl.__error = false;
+         });
+         it('without listViewModel should not call update', function() {
+            baseControl._listViewModel = null;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 4);
+         });
       });
 
       describe('resetScrollAfterReload', function() {
@@ -2229,6 +2313,9 @@ define([
             baseControl._isScrollShown = true;
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isTrue(baseControl._resetScrollAfterReload);
+            await baseControl._afterUpdate(cfg);
+            assert.isFalse(doScrollNotified);
+            baseControl._shouldNotifyOnDrawItems = true;
             await baseControl._afterUpdate(cfg);
             assert.isTrue(doScrollNotified);
 
@@ -2484,27 +2571,38 @@ define([
                return count;
             }
          };
+         const model = {
+            getEditingItemData: function() {
+               return null;
+            }
+         };
+         const editingModel = {
+            getEditingItemData: function() {
+               return {};
+            }
+         };
 
-         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items), "itemActionsPosinon is outside, padding is needed");
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, padding is needed");
          cfg = {
             itemActionsPosition: 'inside'
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items), "itemActionsPosinon is inside, padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is inside, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
             footerTemplate: "footer"
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items), "itemActionsPosinon is outside, footer exists, padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, footer exists, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
             resultsPosition: "bottom"
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
          };
          count = 0;
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items), "itemActionsPosinon is outside, empty items, padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, empty items, padding is not needed");
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, editingModel), "itemActionsPosinon is outside, empty items, run editing in place padding is needed");
       });
       describe('EditInPlace', function() {
          it('beginEdit', function() {
@@ -2588,6 +2686,7 @@ define([
                },
                itemActions: {
                   updateItemActions: () => {
+                     assert.isTrue(called);
                      actionsUpdated = true;
                   }
                }
@@ -4276,6 +4375,20 @@ define([
          instance.destroy();
       });
 
+      it('getListTopOffset', function () {
+         const bc = {
+            _children: {
+               listView: {
+               }
+            }
+         };
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 0);
+         bc._children.listView.getHeaderHeight = () => 40;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 40);
+         bc._children.listView.getResultsHeight = () => 30;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 70);
+      });
+
       it('should fire "drawItems" event if collection has changed', async function() {
          var
             cfg = {
@@ -4314,7 +4427,8 @@ define([
                },
                viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
-               source: source
+               source: source,
+               virtualScrolling: true
             },
             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
@@ -4448,33 +4562,42 @@ define([
        it('setIndicatorContainerHeight: list bigger then scrollContainer', function () {
 
           const fakeBaseControl = {
-              _loadingIndicatorContainerHeight: null,
-              _container: {
-                 getBoundingClientRect: () => ({
-                     top: 100,
-                     bottom: 1000
-                 })
-              }
+              _loadingIndicatorContainerHeight: 0,
+              _isScrollShown: true,
           };
 
-          lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
-          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 400)
+          const viewRect = {
+             y: -10,
+             height: 1000
+          };
+
+          const viewPortRect = {
+             y: 100,
+             height: 500
+          };
+
+          lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
+          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 500);
        });
 
        it('setIndicatorContainerHeight: list smaller then scrollContainer', function () {
-           const fakeBaseControl = {
-               _loadingIndicatorContainerHeight: null,
-               _container: {
-                   getBoundingClientRect: () => ({
-                       top: 100,
-                       bottom: 300,
-                       height: 200
-                   })
-               }
-           };
+          const fakeBaseControl = {
+             _loadingIndicatorContainerHeight: 0,
+             _isScrollShown: true,
+          };
 
-           lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
-           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200)
+          const viewRect = {
+             y: 50,
+             height: 200
+          };
+
+          const viewPortRect = {
+             y: 0,
+             height: 500
+          };
+
+          lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
+          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
 
@@ -4792,7 +4915,7 @@ define([
                   totalItemsCount = 100;
                   assert.deepEqual({
                         totalItemsCount: 100,
-                        pageSize: 10,
+                        pageSize: '10',
                         firstItemNumber: 1,
                         lastItemNumber: 10,
                      },
@@ -4803,13 +4926,43 @@ define([
                   currentPage = 2;
                   assert.deepEqual({
                         totalItemsCount: 15,
-                        pageSize: 10,
+                        pageSize: '10',
                         firstItemNumber: 11,
                         lastItemNumber: 15,
                      },
                      getPagingLabelData(totalItemsCount, pageSize, currentPage)
                   );
                });
+            });
+            it('changePageSize', async function() {
+               let cfg = {
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     view: 'pages',
+                     source: 'page',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     },
+                     sourceConfig: {
+                        pageSize: 5,
+                        page: 0,
+                        hasMore: false
+                     }
+                  }
+               };
+               let baseControl = new lists.BaseControl(cfg);
+               let expectedSourceConfig = {};
+               baseControl.saveOptions(cfg);
+               await baseControl._beforeMount(cfg);
+               baseControl._recreateSourceController = function(newSource, newNavigation) {
+                  assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
+               };
+               expectedSourceConfig.page = 0;
+               expectedSourceConfig.pageSize = 100;
+               expectedSourceConfig.hasMore = false;
+               baseControl._changePageSize({}, {id: 1, title: 100, get: function() {return this.title;}});
+               expectedSourceConfig.page = 1;
+               baseControl.__pagingChangePage({}, 2);
             });
          });
          describe('navigation switch', function() {
@@ -4900,10 +5053,10 @@ define([
          it('resetPagingNavigation', function() {
             let instance = {};
             lists.BaseControl._private.resetPagingNavigation(instance);
-            assert.deepEqual(instance, {_currentPage: 1, _knownPagesCount: 1});
+            assert.deepEqual(instance, {_currentPage: 1, _knownPagesCount: 1, _currentPageSize: 1});
 
-            lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1}});
-            assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1});
+            lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1, pageSize: 5}});
+            assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1, _currentPageSize: 5});
 
          });
       });

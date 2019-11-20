@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_suggest/Layer/ContentLayer/Styles
- * @public
+ * @private
  * @author Герасимов А.М.
  *
  * @css @spacing_Suggest-contentLayer-between-topBorder-input Интервал между верхней границей автодополнения и полем ввода.
@@ -15,7 +15,7 @@
  */
 /*
  * @mixin Controls/_suggest/Layer/ContentLayer/Styles
- * @public
+ * @private
  * @author Герасимов А.М.
  *
  * @css @spacing_Suggest-contentLayer-between-topBorder-input Spacing between top border of suggest and input.

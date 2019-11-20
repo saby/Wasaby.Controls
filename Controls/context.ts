@@ -4,7 +4,7 @@
  * @includes ContextOptions Controls/_context/ContextOptions
  * @includes FilterContextField Controls/_context/FilterContextField
  * @includes SearchContextField Controls/_context/SearchContextField
- * @includes SearchContextField Controls/_context/TouchContextField
+ * @includes TouchContextField Controls/_context/TouchContextField
  * @deprecated 
  * @author Крайнов Д.О.
  */

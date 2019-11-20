@@ -531,7 +531,8 @@ define(
                {
                   testName: 'Delete dot forward followed by single zero',
                   controlConfig: {
-                     useGrouping: true
+                     useGrouping: true,
+                     useAdditionToMaxPrecision: true
                   },
                   splitValue: {
                      before: '123',
@@ -558,7 +559,7 @@ define(
                      delete: '.'
                   },
                   result: {
-                     value: '123.456',
+                     value: '123.56',
                      position: 4
                   },
                   inputType: 'deleteForward'
@@ -576,7 +577,7 @@ define(
                      delete: '.'
                   },
                   result: {
-                     value: '123.4',
+                     value: '12.4',
                      position: 3
                   },
                   inputType: 'deleteBackward'

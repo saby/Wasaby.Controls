@@ -12,7 +12,7 @@ define('Controls/Application/TouchDetector', [
    return Control.extend({
       moveInRow: 1,
 
-      // При инициализации необходимо корректно проставить значение, далее значение определяется в зависимости от событий
+      // При инициализации необходимо проставить значение, далее значение определяется в зависимости от событий
       state: Env.compatibility.touch,
       lastState: Env.compatibility.touch,
       _template: template,

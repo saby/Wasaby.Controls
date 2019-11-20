@@ -24,17 +24,11 @@ var __PopupContent = BaseLayer.extend({
    _beforeUpdate(newOptions): void {
       __PopupContent.superclass._beforeUpdate.apply(this, arguments);
 
-      const isPopupOpenedToTop = newOptions.stickyPosition && newOptions.stickyPosition.verticalAlign.side === 'top';
+      const isPopupOpenedToTop = newOptions.stickyPosition && newOptions.stickyPosition.direction.vertical === 'top';
 
       if (!this._reverseList && isPopupOpenedToTop) {
           // scroll after list render in  _beforePaint hook
          this._shouldScrollToBottom = true;
-
-         // Для Ipad'a при появлении клавиатуры необходимо перепоизиционировать popup вверх,
-         // иначе он становится очень маленьким по высоте и оттуда становится невоозможно выбирать записи
-         if (detection.isMobileIOS) {
-            this._positionFixed = false;
-         }
       }
 
       this._reverseList = isPopupOpenedToTop;
@@ -46,7 +40,9 @@ var __PopupContent = BaseLayer.extend({
          this._notify('controlResize', [], {bubbling: true});
       }
 
-      if (this._options.showContent && !this._positionFixed) {
+      // Для Ipad'а фиксируем автодополнение, только если оно отобразилось вверх, если оно отобразилось вниз,
+      // то при появлении клавиатуры автодополнению может не хватить места тогда оно должно будет отобразиться сверху
+      if (this._options.showContent && !this._positionFixed && (!detection.isMobileIOS || this._reverseList)) {
          this._positionFixed = true;
          this._notify('sendResult', [this._options.stickyPosition], {bubbling: true});
       }

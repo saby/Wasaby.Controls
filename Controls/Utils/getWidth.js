@@ -4,6 +4,7 @@ define('Controls/Utils/getWidth', [
    'use strict';
 
    return {
+      /* eslint-disable */
       getWidth: function(element) {
          var
             measurer = document.createElement('div'),
@@ -26,5 +27,6 @@ define('Controls/Utils/getWidth', [
          });
          return width;
       }
+      /* eslint-enable */
    };
 });

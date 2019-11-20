@@ -1,33 +1,35 @@
-import Control = require('Core/Control');
-import Deferred = require('Core/Deferred');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popup/Previewer/PreviewerTemplate');
 import Utils = require('View/Executor/Utils');
 import 'Controls/Container/Async';
+import {load} from 'Core/library';
 
 /**
  * @class Controls/_popup/Previewer/PreviewerTemplate
+ * @private
  */
 
-      var PreviewerTemplate = Control.extend({
-         _template: template,
+interface IPreviewerOptions extends IControlOptions {
+    template: string|TemplateFunction;
+}
 
-         _beforeMount: function(options) {
-            if (typeof window !== 'undefined' && this._needRequireModule(options.template)) {
-               var def = new Deferred();
-               require([options.template], def.callback.bind(def), def.callback.bind(def));
-               return def;
-            }
-         },
+class PreviewerTemplate extends Control<IPreviewerOptions> {
+    _template: TemplateFunction = template;
 
-         _needRequireModule: function(module) {
-            return typeof module === 'string' && !Utils.RequireHelper.defined(module);
-         },
+    protected _beforeMount(options: IPreviewerOptions): void|Promise<TemplateFunction> {
+        if (typeof window !== 'undefined' && this._needRequireModule(options.template)) {
+            return load(options.template);
+        }
+    }
 
-         _sendResult: function(event) {
-            this._notify('sendResult', [event], { bubbling: true });
-         }
-      });
+    private _needRequireModule(module: string|TemplateFunction): boolean {
+        return typeof module === 'string' && !Utils.RequireHelper.defined(module);
+    }
 
-      export = PreviewerTemplate;
+    private _sendResult(event: Event): void {
+        this._notify('sendResult', [event], {bubbling: true});
+    }
+}
 
+export = PreviewerTemplate;
 

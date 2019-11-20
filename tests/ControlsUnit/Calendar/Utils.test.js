@@ -1,53 +1,53 @@
 /* global define, describe, it, assert */
 define([
    'Controls/dateRange',
-   'SBIS3.CONTROLS/Utils/DateUtil'
+   'Controls/Utils/Date'
 ], function(
    dateRange,
    DateUtil
 ) {
    describe('Controls.Calendar.Utils', function() {
-
-      describe('.formatDateRangeCaption', function() {
-         it('should return emptyCaption option value if options passed as parameter and range dont specified.', function () {
-            let emptyStr = '...';
-            assert.equal(dateRange.Utils.formatDateRangeCaption(null, null, emptyStr), emptyStr);
-         });
-         [
-            { start: new Date(2017, 0, 1), end: new Date(2017, 0, 1), ret: '1 января\'17' },
-            // Single period
-            { start: new Date(2017, 0, 1), end: new Date(2017, 11, 31), ret: '2017' },
-            { start: new Date(2017, 0, 1), end: new Date(2017, 5, 30), ret: 'I полугодие\'17' },
-            { start: new Date(2017, 0, 1), end: new Date(2017, 2, 31), ret: 'I квартал\'17' },
-            { start: new Date(2017, 0, 1), end: new Date(2017, 0, 31), ret: 'Январь\'17' },
-            { start: new Date(2017, 0, 1), end: new Date(2017, 0, 1), ret: '1 января\'17' },
-            // Some years
-            { start: new Date(2017, 0, 1), end: new Date(2018, 11, 31), ret: '2017-2018' },
-            // Several simple periods within a year
-            { start: new Date(2017, 0, 1), end: new Date(2017, 8, 30), ret: 'I-III квартал\'17' },
-            { start: new Date(2017, 0, 1), end: new Date(2017, 1, 28), ret: 'Январь - Февраль\'17' },
-            { start: new Date(2017, 0, 1), end: new Date(2017, 0, 15), ret: '01.01.17 - 15.01.17' },
-            // Within several years
-            { start: new Date(2017, 0, 1), end: new Date(2018, 5, 30), ret: 'Январь\'17 - Июнь\'18' },
-            { start: new Date(2017, 0, 1), end: new Date(2018, 2, 31), ret: 'Январь\'17 - Март\'18' },
-            { start: new Date(2017, 0, 1), end: new Date(2018, 0, 31), ret: 'Январь\'17 - Январь\'18' },
-            { start: new Date(2017, 0, 1), end: new Date(2018, 0, 15), ret: '01.01.17 - 15.01.18' },
-            // Empty period
-            { start: undefined, end: undefined, ret: '...' },
-            { start: null, end: null, ret: '...' },
-            // The first date is not specified
-            { start: undefined, end: new Date(2017, 0, 1), ret: '... - 01.01.17' },
-            { start: null, end: new Date(2017, 0, 1), ret: '... - 01.01.17' },
-            // The second date is not specified
-            { start: new Date(2017, 0, 1), end: undefined, ret: '01.01.17 - ...' },
-            { start: new Date(2017, 0, 1), end: null, ret: '01.01.17 - ...' }
-         ].forEach(function(test) {
-            it('should return correct range string value.', function () {
-               assert.equal(dateRange.Utils.formatDateRangeCaption(test.start, test.end, '...'), test.ret);
-            });
-         });
-
-      });
+      // Тесты дублируются в ветки ws
+      // describe('.formatDateRangeCaption', function() {
+      //    it('should return emptyCaption option value if options passed as parameter and range dont specified.', function () {
+      //       let emptyStr = '...';
+      //       assert.equal(dateRange.Utils.formatDateRangeCaption(null, null, emptyStr), emptyStr);
+      //    });
+      //    [
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 0, 1), ret: '1 января\'17' },
+      //       // Single period
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 11, 31), ret: '2017' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 5, 30), ret: 'I полугодие\'17' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 2, 31), ret: 'I квартал\'17' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 0, 31), ret: 'Январь\'17' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 0, 1), ret: '1 января\'17' },
+      //       // Some years
+      //       { start: new Date(2017, 0, 1), end: new Date(2018, 11, 31), ret: '2017-2018' },
+      //       // Several simple periods within a year
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 8, 30), ret: 'I-III квартал\'17' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 1, 28), ret: 'Январь - Февраль\'17' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2017, 0, 15), ret: '01.01.17 - 15.01.17' },
+      //       // Within several years
+      //       { start: new Date(2017, 0, 1), end: new Date(2018, 5, 30), ret: 'I квартал\'17-II квартал\'18' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2018, 2, 31), ret: 'I квартал\'17-I квартал\'18' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2018, 0, 31), ret: 'Январь\'17 - Январь\'18' },
+      //       { start: new Date(2017, 0, 1), end: new Date(2018, 0, 15), ret: '01.01.17 - 15.01.18' },
+      //       // Empty period
+      //       { start: undefined, end: undefined, ret: '...' },
+      //       { start: null, end: null, ret: '...' },
+      //       // The first date is not specified
+      //       { start: undefined, end: new Date(2017, 0, 1), ret: '... - 01.01.17' },
+      //       { start: null, end: new Date(2017, 0, 1), ret: '... - 01.01.17' },
+      //       // The second date is not specified
+      //       { start: new Date(2017, 0, 1), end: undefined, ret: '01.01.17 - ...' },
+      //       { start: new Date(2017, 0, 1), end: null, ret: '01.01.17 - ...' }
+      //    ].forEach(function(test) {
+      //       it('should return correct range string value.', function () {
+      //          assert.equal(dateRange.Utils.formatDateRangeCaption(test.start, test.end, '...'), test.ret);
+      //       });
+      //    });
+      //
+      // });
 
       it('getFirstDayOffset', function() {
          assert.equal(dateRange.Utils.getFirstDayOffset(2017, 12), 4);

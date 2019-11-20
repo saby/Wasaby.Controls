@@ -1,11 +1,12 @@
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import simpleExtend = require('Core/core-simpleExtend');
 
 
 
 /**
  * @extends Core/core-simpleExtend
-       * @class Controls/_scroll/Model
+ * @class Controls/_scroll/Model
+ * @private
  */
 
 /**
@@ -85,7 +86,7 @@ export = simpleExtend.extend({
          case this._bottomTarget:
             return 'bottom';
          default:
-                  Env.IoC.resolve('ILogger').error('Controls/_scroll/StickyHeader/Model', 'Unexpected target');
+             Logger.error('Controls/_scroll/StickyHeader/Model: Unexpected target');
             return 'bottom';
       }
    },

@@ -1,6 +1,7 @@
 <div class="controls-DateLink">
    <div class="controls-DateLink__wrapper">
       <Controls._dateRange.LinkView
+         name="linkView"
          scope="{{_options}}"
          startValue="{{_options.value}}"
          endValue="{{_options.value}}"

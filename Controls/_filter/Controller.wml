@@ -3,6 +3,7 @@
         filter="{{_filter}}"
         on:filterItemsChanged="_itemsChanged()"
         on:filterChanged="_filterChanged()"
+        on:filterHistoryApply="_filterHistoryApply()"
         filterButtonItems="{{_filterButtonItems}}"
         fastFilterItems="{{_fastFilterItems}}"
         historyId="{{_options.historyId}}"

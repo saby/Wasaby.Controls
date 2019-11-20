@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IGroupedList', [
 ], function() {
 

@@ -26,9 +26,37 @@ export default class Render extends Control<IRenderOptions> {
     protected _templateKeyPrefix: string;
     protected _itemTemplate: TemplateFunction;
 
+    protected _pendingResize: boolean = false;
+    protected _onCollectionChange = (_e: unknown, action: string) => {
+        if (action !== 'ch') {
+            // Notify resize when items are added, removed or replaced, or
+            // when the recordset is reset
+            this._pendingResize = true;
+        }
+    }
+
     protected _beforeMount(options: IRenderOptions): void {
         this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
+
+        this._subscribeToModelChanges(options.listModel);
+    }
+
+    protected _beforeUpdate(newOptions: IRenderOptions): void {
+        if (newOptions.listModel !== this._options.listModel) {
+            this._subscribeToModelChanges(newOptions.listModel);
+        }
+    }
+
+    protected _afterRender(): void {
+        if (this._pendingResize) {
+            this._notify('controlResize', [], { bubbling: true });
+            this._pendingResize = false;
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        this._unsubscribeFromModelChanges(this._options.listModel);
     }
 
     getItemsContainer(): HTMLDivElement {
@@ -76,15 +104,26 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
-        // TODO (moved from editing row)
-        // keydown event should not bubble if processed here, but if we stop propagation
-        // the rich text editor and tab focus movement would break because they listen
-        // to the keydown event on the bubbling phase
-        // https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
-        if (!e.target.closest('.richEditor_TinyMCE') && e.nativeEvent.keyCode !== constants.key.tab) {
-            event.stopPropagation();
-        }
         if (item.isEditing()) {
+            // TODO Will probably be moved to EditInPlace container
+            // keydown event should not bubble if processed here, but if we stop propagation
+            // the rich text editor and tab focus movement would break because they listen
+            // to the keydown event on the bubbling phase
+            // https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
+            //
+            // Escape should not bubble above the edit in place row, because it is only
+            // used to cancel the edit mode. If the keydown event bubbles, some parent
+            // control might handle the event when it is not needed (e.g. if edit in
+            // place is inside of a popup, the popup will be closed).
+            if (
+                e.nativeEvent.keyCode === constants.key.esc ||
+                (
+                    !e.target.closest('.richEditor_TinyMCE') &&
+                    e.nativeEvent.keyCode !== constants.key.tab
+                )
+            ) {
+                e.stopPropagation();
+            }
             // Compatibility with BaseControl and EditInPlace control
             this._notify('editingRowKeyDown', [e.nativeEvent], {bubbling: true});
         }
@@ -93,5 +132,18 @@ export default class Render extends Control<IRenderOptions> {
     protected _canHaveMultiselect(options: IRenderOptions): boolean {
         const visibility = options.multiselectVisibility;
         return visibility === 'onhover' || visibility === 'visible';
+    }
+
+    protected _subscribeToModelChanges(model: Collection<unknown>): void {
+        this._unsubscribeFromModelChanges(this._options.listModel);
+        if (model && !model.destroyed) {
+            model.subscribe('onCollectionChange', this._onCollectionChange);
+        }
+    }
+
+    protected _unsubscribeFromModelChanges(model: Collection<unknown>): void {
+        if (model && !model.destroyed) {
+            this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChange);
+        }
     }
 }

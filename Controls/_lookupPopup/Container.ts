@@ -3,12 +3,11 @@ import template = require('wml!Controls/_lookupPopup/Container');
 import ControllerContext = require('Controls/_lookupPopup/__ControllerContext');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
-import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
 import {ContextOptions} from 'Controls/context';
 import {Controller as SourceController} from 'Controls/source';
 import {selectionToRecord} from 'Controls/operations';
-import {adapter} from 'Types/entity';
+import {adapter as adapterLib} from 'Types/entity';
 import {IData, IDecorator} from 'Types/source';
 import {List, RecordSet} from 'Types/collection';
 import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/interface';
@@ -194,8 +193,8 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             return type;
          },
 
-         getSourceAdapter: function(source:IData): adapter.IAdapter {
-            let adapter: adapter.IAdapter;
+         getSourceAdapter(source: IData): adapterLib.IAdapter {
+            let adapter: adapterLib.IAdapter;
 
             if (cInstance.instanceOfMixin(source, 'Types/_source/IDecorator')) {
                adapter = ((source as IDecorator).getOriginal() as IData).getAdapter();
@@ -206,7 +205,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             return adapter;
          },
 
-         prepareFilter: function(filter: object, selection, searchParam: string|undefined, parentProperty: string): object {
+         prepareFilter(filter: object, selection: TSelectionRecord, searchParam: string|undefined, parentProperty: string): object {
             filter = Utils.object.clone(filter);
 
              // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
@@ -256,16 +255,23 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
 
             return selectedItems;
          },
-         // remove after https://online.sbis.ru/opendoc.html?guid=e4a032d4-d462-495f-a209-70a601455b11
+
          // Задача: необходимо поддержать выбора папки без вложений, если чекбоксом отмечена только папка.
          // Для этого используем флаг recursive у платформенного итератора,
          // который как раз позволяет реализовать выбор папки без вложений.
          // Но сейчас есть проблема, если выделить папку и у дочернего элемента снять чекбокс,
          // то всё равно будет выбрана папка, хотя в этом случае должны выбраться вложения.
          // Решаем это добавлением папки в excluded, если снят чекбокс хотя бы у одного дочернего элемента.
-         prepareRecursiveSelection({selection, items, keyProperty, parentProperty, nodeProperty}): ISelectionObject {
+         prepareNotRecursiveSelection(
+             selection: ISelectionObject,
+             items: RecordSet,
+             keyProperty: string,
+             parentProperty?: string,
+             nodeProperty?: string
+         ): ISelectionObject {
             const isNode = (key): boolean => {
-               return items.getRecordById(key).get(nodeProperty);
+               const item = items.getRecordById(key);
+               return item && item.get(nodeProperty);
             };
 
             const hasExcludedChildren = (key): boolean => {
@@ -294,9 +300,43 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             return selection;
          },
 
-         getSelection(selection: ISelectionObject, adapter, selectionType: TSelectionType, recursiveSelection: boolean): TSelectionRecord {
+         getSelection(
+             selection: ISelectionObject,
+             adapter: adapterLib.IAdapter,
+             selectionType: TSelectionType,
+             recursiveSelection: boolean
+         ): TSelectionRecord {
             const type = _private.getValidSelectionType(selectionType);
             return selectionToRecord(selection, adapter, type, recursiveSelection);
+         },
+
+         loadSelectedItems(self: object, filter: object): Promise<RecordSet> {
+            const dataOptions = self.context.get('dataOptions');
+            const items = dataOptions.items;
+            let indicatorId;
+            let loadItemsPromise;
+
+            if (self._selectedKeys.length || self._excludedKeys.length) {
+               if (!self._options.multiSelect) {
+                  const selectedItems = _private.getEmptyItems(items);
+
+                  selectedItems.add(items.getRecordById(self._selectedKeys[0]));
+                  loadItemsPromise = Promise.resolve(selectedItems);
+               } else {
+                  const sourceController = _private.getSourceController(dataOptions.source);
+                  const loadItemsCallback = (loadedItems) => {
+                     self._notify('hideIndicator', [indicatorId], {bubbling: true});
+                     return loadedItems;
+                  };
+
+                  indicatorId = self._notify('showIndicator', [], {bubbling: true});
+                  loadItemsPromise = sourceController.load(filter).then(loadItemsCallback, loadItemsCallback);
+               }
+            } else {
+               loadItemsPromise = Promise.resolve(_private.getEmptyItems(items));
+            }
+
+            return loadItemsPromise;
          }
       };
 
@@ -308,13 +348,13 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
          _excludedKeys: null,
          _selectCompleteInitiator: false,
 
-         _beforeMount: function(options, context) {
+         _beforeMount(options, context): void {
             this._selectedKeys = _private.getSelectedKeys(options, context);
             this._excludedKeys = [];
             this._initialSelection = _private.getInitialSelectedItems(this, options, context);
          },
 
-         _beforeUpdate: function(newOptions, context) {
+         _beforeUpdate(newOptions, context): void {
             const currentSelectedItems = this._options.selectedItems || this.context.get('selectorControllerContext').selectedItems;
             const newSelectedItems = newOptions.selectedItems || context.selectorControllerContext.selectedItems;
 
@@ -324,66 +364,52 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
          },
 
          _selectComplete(): void {
-            const self = this;
-            const dataOptions = this.context.get('dataOptions');
-            const keyProperty = dataOptions.keyProperty;
-            const items = dataOptions.items;
             const options = this._options;
+            const dataOptions = this.context.get('dataOptions');
+            const items = dataOptions.items;
+            const keyProperty = options.keyProperty;
+            let loadPromise;
 
-            let loadDef;
-            let indicatorId;
+            const isRecursive = options.recursiveSelection;
+            let selectionObject: ISelectionObject = {
+               selected: this._selectedKeys,
+               excluded: this._excludedKeys
+            };
 
-            if (this._selectedKeys.length || this._excludedKeys.length) {
-               const source = dataOptions.source;
-               const adapter = _private.getSourceAdapter(source);
-               const sourceController = _private.getSourceController(source);
-               const multiSelect = options.multiSelect;
-               const selectedItem = items.getRecordById(this._selectedKeys[0]);
+            if (!isRecursive) {
+               selectionObject = _private.prepareNotRecursiveSelection(
+                   selectionObject,
+                   items,
+                   keyProperty,
+                   options.parentProperty,
+                   options.nodeProperty
+               );
+            }
+            const adapter = _private.getSourceAdapter(dataOptions.source);
+            const selection = _private.getSelection(selectionObject, adapter, options.selectionType, isRecursive);
+            const filter = _private.prepareFilter(dataOptions.filter, selection, options.searchParam, options.parentProperty);
 
-               let selection = {
-                  selected: this._selectedKeys,
-                  excluded: this._excludedKeys
-               };
-
-               if (!multiSelect && selectedItem) {
-                  const selectedItems = _private.getEmptyItems(items);
-
-                  selectedItems.add(selectedItem);
-                  loadDef = Deferred.success(selectedItems);
-               } else {
-                  // remove after https://online.sbis.ru/opendoc.html?guid=e4a032d4-d462-495f-a209-70a601455b11
-                  if (!this._options.recursiveSelection) {
-                     selection = _private.prepareRecursiveSelection({
-                        selection,
-                        items,
-                        keyProperty,
-                        parentProperty: options.parentProperty,
-                        nodeProperty: options.nodeProperty
-                     });
-                  }
-                  indicatorId = this._notify('showIndicator', [], {bubbling: true});
-                  loadDef = sourceController.load(
-                     _private.prepareFilter(
-                        dataOptions.filter,
-                        _private.getSelection(selection, adapter, options.selectionType, options.recursiveSelection),
-                         options.searchParam,
-                         options.parentProperty
-                     )
-                  );
-               }
+            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
+            // необходимо уйти от опции selectionLoadMode и вынести загрузку
+            // выбранный записей в отдельный слой.
+            // здесь будет только формирование фильтра
+            if (this._options.selectionLoadMode) {
+               loadPromise = new Promise((resolve) => {
+                  _private.loadSelectedItems(this, filter).then((loadedItems) => {
+                     resolve(_private.prepareResult(
+                            loadedItems,
+                            this._initialSelection,
+                            keyProperty,
+                            this._selectCompleteInitiator
+                         )
+                     );
+                  });
+               });
             } else {
-               loadDef = Deferred.success(_private.getEmptyItems(items));
+               loadPromise = Promise.resolve(filter);
             }
 
-            loadDef.addCallback((result) => {
-               if (indicatorId) {
-                  self._notify('hideIndicator', [indicatorId], {bubbling: true});
-               }
-
-               return _private.prepareResult(result, self._initialSelection, keyProperty, self._selectCompleteInitiator);
-            });
-
-            this._notify('selectionLoad', [loadDef], {bubbling: true});
+            this._notify('selectionLoad', [loadPromise], {bubbling: true});
          },
 
          _selectedKeysChanged: function(event, selectedKeys, added, removed) {
@@ -406,9 +432,10 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
          };
       };
 
-      Container.getDefaultOptions = function() {
+      Container.getDefaultOptions = function getDefaultOptions() {
          return {
-            recursiveSelection: true
+            recursiveSelection: true,
+            selectionLoadMode: true
          };
       };
 

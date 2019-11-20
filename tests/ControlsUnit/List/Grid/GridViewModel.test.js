@@ -829,16 +829,17 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                current = gridViewModel.getCurrent(),
+               topSpacingClasses = ' controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ',
                expected = {
-                  withMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit ' +
+                  withMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  ' +
                      'controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_firstRow ' +
                      'controls-Grid__row-cell_withRowSeparator_firstRow_theme-default controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default ' +
-                     'controls-Grid__row-cell-checkbox_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
+                     'controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses + 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
                      'controls-Grid__row-cell_selected__first-default_theme-default',
-                  withoutMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit ' +
+                  withoutMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  ' +
                      'controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_firstRow ' +
                      'controls-Grid__row-cell_withRowSeparator_firstRow_theme-default controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default ' +
-                     'controls-Grid__row-cell-checkbox_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
+                     'controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses + 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
                      'controls-Grid__row-cell_selected__first-default_theme-default'
                };
             current.isNotFullGridSupport = true;
@@ -946,10 +947,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                current = gridViewModel.getCurrent(),
+               topSpacingClasses = ' controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ',
                expectedResult = [
-                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
                   'controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow_theme-default ' +
-                  'controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses +
                   'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default',
 
                   'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
@@ -1048,6 +1050,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             }
 
             var gridColumn;
+            const topSpacingClasses = ' controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ';
 
             // check first column (multiselect checkbox column)
             assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex".');
@@ -1059,9 +1062,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {needSearchHighlight: false},
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
                   'controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow_theme-default controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default ' +
-                  'controls-Grid__row-cell-checkbox_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
+                  'controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses + 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
                   'controls-Grid__row-cell_selected__first-default_theme-default'
             });
 
@@ -1141,9 +1144,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {needSearchHighlight: false},
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
                   'controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow_theme-default controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default ' +
-                  'controls-Grid__row-cell-checkbox_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
+                  'controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses + 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
                   'controls-Grid__row-cell_selected__first-default_theme-default'
             });
          });
@@ -1346,6 +1349,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          var
             gridViewModel = new gridMod.GridViewModel(cfg),
             imitateTemplate = function() {};
+         it('setTheme', function() {
+            gridViewModel.setTheme('themeName');
+            assert.equal(gridViewModel._options.theme, 'themeName');
+            gridViewModel.setTheme('default');
+            assert.equal(gridViewModel._options.theme, 'default');
+         });
          it('setColumnTemplate', function() {
             assert.equal(null, gridViewModel._columnTemplate, 'Incorrect value "_columnTemplate" before "setColumnTemplate(imitateTemplate)".');
             gridViewModel.setColumnTemplate(imitateTemplate);
@@ -2088,6 +2097,31 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             })
             assert.isFalse(secondRow);
          });
+         it('getColumnScrollCellClasses', function() {
+            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
+            const transformCell = ' controls-Grid__cell_transform';
+            const params = {
+               multiSelectVisibility: 'hidden',
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 0,
+               isMultiHeader: false,
+            };
+            assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
+            assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
+
+         });
+         it('getPaddingForCheckBox', function() {
+            const itemPadding = {
+                  top: 'L',
+                  bottom: 'L'
+               }
+            const resultTop = ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
+            const resultBottom = ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
+            assert.equal(resultTop + resultBottom, gridMod.GridViewModel._private.getPaddingForCheckBox({ theme, itemPadding }));
+         })
+
+
          it('getColumnAlignGroupStyles', function () {
 
             let itemData = {
@@ -2235,6 +2269,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 'display: grid; grid-template-columns: 1fr 123px 321px; grid-column-start: 1; grid-column-end: 2; grid-row-start: 3; grid-row-end: 4;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
+
          });
          it('prepareItemDataForPartialSupport with multiSelection', function () {
             let
@@ -2259,6 +2294,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
+
+            const isYandex = Env.detection.yandex;
+            Env.detection.yandex = true;
+            model.editingRowGridStyles = null;
+
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, editingItemData);
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, groupItemData);
+
+            assert.equal(
+                editingItemData.getEditingRowStyles(),
+                'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
+            );
+            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
+
+            Env.detection.yandex = isYandex;
          });
 
          it('getEditingRowStyles in empty grid can use real template columns', function () {

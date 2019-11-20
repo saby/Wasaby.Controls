@@ -32,6 +32,15 @@ export default class View extends Control<IViewOptions> {
         return libraryLoad(options.render).then(() => null);
     }
 
+    protected _beforeUpdate(options: IViewOptions): void {
+        if (options.items !== this._options.items) {
+            if (this._collection) {
+                this._collection.destroy();
+            }
+            this._collection = this._createCollection(options.collection, options.items, options);
+        }
+    }
+
     protected _beforeUnmount(): void {
         if (this._collection) {
             this._collection.destroy();

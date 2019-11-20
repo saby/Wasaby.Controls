@@ -1,9 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
-import { SyntheticEvent } from 'Vdom/Vdom';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 export interface ISliderBaseOptions extends IControlOptions {
    size?: string;
@@ -13,6 +13,7 @@ export interface ISliderBaseOptions extends IControlOptions {
    scaleStep?: number;
    value: number;
    precision: number;
+   tooltipFormatter?: Function;
 }
 
 const maxPercentValue = 100;
@@ -195,27 +196,49 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base precision="{{0}}"/>
  * </pre>
  */
+
+/**
+ * @name Controls/_slider/Base#tooltipFormatter
+ * @cfg {Function} Функция форматирования подсказки.
+ * @remark
+ * Аргументы функции:
+ * <ul>
+ *    <li>value - текущее положение слайдера</li>
+ * </ul>
+ */
+
+/*
+ * @name Controls/_slider/Base#tooltipFormatter
+ * @cfg {Function} Tooltip formatter function.
+ * @remark
+ * Function Arguments:
+ * <ul>
+ *    <li>value - slider current position</li>
+ * </ul>
+ */
+
 class Base extends Control<ISliderBaseOptions> {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
    private _pointData: IPointDataList = undefined;
    private _scaleData: IScaleData[] = undefined;
-   private _tooltipValue: number | null = null;
+   private _tooltipPosition: number | null = null;
+   private _tooltipValue: string | null = null;
    private _isDrag: boolean = false;
 
    private _render(minValue: number, maxValue: number, value: number): void {
       const rangeLength = maxValue - minValue;
-      const right =  Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
+      const right = Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
       this._pointData[0].position = right;
       this._lineData.width = right;
    }
 
-    private _renderTooltip(minValue: number, maxValue: number, value: number): void {
-       const rangeLength = maxValue - minValue;
-       this._pointData[1].position =
-           Math.min(Math.max(value - minValue, 0), rangeLength) / rangeLength * maxPercentValue;
-    }
+   private _renderTooltip(minValue: number, maxValue: number, value: number): void {
+      const rangeLength = maxValue - minValue;
+      this._pointData[1].position =
+         Math.min(Math.max(value - minValue, 0), rangeLength) / rangeLength * maxPercentValue;
+   }
 
    private _needUpdate(oldOpts: ISliderBaseOptions, newOpts: ISliderBaseOptions): boolean {
       return (oldOpts.scaleStep !== newOpts.scaleStep ||
@@ -227,16 +250,16 @@ class Base extends Control<ISliderBaseOptions> {
    private _checkOptions(opts: ISliderBaseOptions): void {
       Utils.checkOptions(opts);
       if (opts.value < opts.minValue || opts.value > opts.maxValue) {
-         IoC.resolve('ILogger').error('Slider', 'value must be in the range [minValue..maxValue].');
+         Logger.error('Slider: value must be in the range [minValue..maxValue].', this);
       }
    }
 
    private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-      let targetX = Utils.getNativeEventPageX(event);
+      const targetX = Utils.getNativeEventPageX(event);
       const box = this._children.area.getBoundingClientRect();
       const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
       return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
-   };
+   }
 
    private _setValue(val: number): void {
       this._notify('valueChanged', [val]);
@@ -258,7 +281,7 @@ class Base extends Control<ISliderBaseOptions> {
       }
       this._value = options.value === undefined ? options.maxValue : Math.min(options.maxValue, options.value);
       this._render(options.minValue, options.maxValue, this._value);
-      this._renderTooltip(options.minValue, options.maxValue, this._tooltipValue);
+      this._renderTooltip(options.minValue, options.maxValue, this._tooltipPosition);
    }
 
    private _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
@@ -272,17 +295,20 @@ class Base extends Control<ISliderBaseOptions> {
 
    private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
-         this._tooltipValue = this._getValue(event);
+         this._tooltipPosition = this._getValue(event);
+         this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
+            : this._tooltipPosition;
       }
    }
 
    private _onMouseLeave(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
          this._tooltipValue = null;
+         this._tooltipPosition = null;
       }
    }
 
-   private _onMouseUp(event: SyntheticEvent<MouseEvent>): void  {
+   private _onMouseUp(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
          this._isDrag = false;
       }

@@ -5,10 +5,12 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import {Ioc, constants} from 'Env/Env';
+import {constants} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
+import 'css!theme?Controls/tile';
 import 'Types/entity';
 
 
@@ -41,7 +43,7 @@ import 'Types/entity';
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
-               self._options.itemOpenHandler(root);
+               self._options.itemOpenHandler(root, self._items);
             }
             self._forceUpdate();
          },
@@ -139,6 +141,11 @@ import 'Types/entity';
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
          },
+         setViewModeSync: function(self, viewMode, cfg): void {
+            self._viewMode = viewMode;
+            _private.setVirtualScrolling(self, self._viewMode, cfg);
+            _private.setViewConfig(self, self._viewMode);
+         },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
@@ -147,19 +154,16 @@ import 'Types/entity';
             if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
                _private.setRoot(self, dataRoot);
             }
-            self._viewMode = viewMode;
-            _private.setVirtualScrolling(self, self._viewMode, cfg);
+
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               result = new Promise((resolve) => {
-                  _private.loadTileViewMode().then((tile) => {
-                     _private.setViewConfig(self, viewMode);
-                     resolve();
-                  })
-               })
+               result = _private.loadTileViewMode(self).then(() => {
+                  _private.setViewModeSync(self, viewMode, cfg);
+               });
             } else {
-               _private.setViewConfig(self, viewMode);
                result = Promise.resolve();
+               _private.setViewModeSync(self, viewMode, cfg);
             }
+
             return result;
          },
          backByPath: function(self) {
@@ -194,14 +198,14 @@ import 'Types/entity';
 
             return itemFromRoot;
          },
-         loadTileViewMode: function () {
+         loadTileViewMode: function (self) {
             return new Promise((resolve) => {
                import('Controls/tile').then((tile) => {
                   VIEW_NAMES.tile = tile.TreeView;
                   VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
                   resolve(tile);
                }).catch((err) => {
-                  IoC.resolve('ILogger').error('Controls/_explorer/View', err);
+                  Logger.error('Controls/_explorer/View: ' + err.message, self, err);
                });
             });
          }
@@ -280,7 +284,7 @@ import 'Types/entity';
    /**
     * @name Controls/_explorer/View#displayProperty
     * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
-    * @remark Поле используется для вывода хлебных крошек. 
+    * @remark Поле используется для вывода хлебных крошек.
     * @example
     * <pre>
     * <Controls.explorers:View displayProperty="title">
@@ -339,7 +343,9 @@ import 'Types/entity';
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode, cfg);
-            this._children.treeControl.resetExpandedItems();
+            if (cfg.searchNavigationMode !== 'expand') {
+               this._children.treeControl.resetExpandedItems();
+            }
          }
          if (cfg.virtualScrolling !== this._options.virtualScrolling) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);
@@ -386,6 +392,7 @@ import 'Types/entity';
                 _private.setRestoredKeyObject(this, item.getId());
                 _private.setRoot(this, item.getId());
                 this._isGoingFront = true;
+                this.cancelEdit();
             }
          }
          event.stopPropagation();
@@ -453,9 +460,9 @@ import 'Types/entity';
    };
 
    export = Explorer;
-   
+
    /**
     * @event Controls/_explorer/View#arrowClick  Происходит при клике на кнопку "Просмотр записи".
     * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка показывается.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    */ 
+    */

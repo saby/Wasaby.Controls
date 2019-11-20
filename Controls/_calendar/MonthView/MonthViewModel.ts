@@ -125,7 +125,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          textColorClass += '-workday';
       }
 
-      if (scope.selected) {
+      if (scope.selected && (scope.isCurrentMonth || scope.mode === 'extended')) {
          backgroundColorClass += '-selected';
          if (scope.selectedStart || scope.selectedEnd) {
             if (scope.selectionProcessing) {

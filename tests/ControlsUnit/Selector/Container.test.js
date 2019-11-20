@@ -235,20 +235,20 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             keyProperty: 'id'
          });
          let selection = {
-            selected: [0, 1, 2],
+            selected: [0, 1, 2, 'notInRecordSet'],
             excluded: [3]
          };
 
-         let preparedSelection = lookupPopup.Container._private.prepareRecursiveSelection({
-            selection: selection,
-            items: items,
-            keyProperty: 'id',
-            parentProperty: 'parent',
-            nodeProperty: '@parent'
-         });
+         let preparedSelection = lookupPopup.Container._private.prepareNotRecursiveSelection(
+            selection,
+            items,
+            'id',
+            'parent',
+            '@parent'
+         );
 
          assert.deepEqual(preparedSelection, {
-            selected: [0, 1, 2],
+            selected: [0, 1, 2, 'notInRecordSet'],
             excluded: [3, 2]
          });
       });
@@ -284,62 +284,95 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
       });
 
       describe('_selectComplete', function() {
-         let
-            container = new lookupPopup.Container(),
-            loadDef,
-            isSelectionLoad = false,
-            items = getItems(),
-            recordSet = new collection.List({items: items});
+         const getContainer = () => {
+            let
+               container = new lookupPopup.Container(),
+               isSelectionLoad = false,
+               items = getItems(),
+               recordSet = new collection.List({ items: items });
 
-         container.saveOptions({
-            recursiveSelection: true
-         });
+            container.saveOptions({
+               recursiveSelection: true,
+               selectionLoadMode: true
+            });
 
-         recordSet.getRecordById = function(id) {
-            return items[id];
-         };
+            recordSet.getRecordById = function(id) {
+               return items[id];
+            };
 
-         container._selectedKeys = [];
-         container._excludedKeys = [];
-         container.context = {
-            get: function() {
-               return {
-                  source: new sourceLib.Memory(),
-                  items: recordSet,
-                  filter: {}
-               };
-            }
-         };
+            container._selectedKeys = [];
+            container._excludedKeys = [];
+            container.context = {
+               get: function() {
+                  return {
+                     source: new sourceLib.Memory(),
+                     items: recordSet,
+                     filter: {}
+                  };
+               }
+            };
 
-         container._notify = function(eventName, result) {
-            if (eventName === 'selectionLoad') {
-               isSelectionLoad = true;
-               loadDef = result[0];
-            }
+            container._notify = function(eventName, result) {
+               if (eventName === 'selectionLoad') {
+                  container.isSelectionLoad = true;
+                  container.loadDef = result[0];
+               }
+            };
+            return container;
          };
 
          it('selected keys is empty', function() {
-            let clearRecordSet = new collection.List({items: items.slice()});
+            let container = getContainer();
+            let clearRecordSet = new collection.List({items: getItems().slice()});
 
             clearRecordSet.clear();
             container._selectComplete();
 
-            assert.isTrue(isSelectionLoad);
-            assert.deepEqual(loadDef.getResult().resultSelection, clearRecordSet);
+            assert.isTrue(container.isSelectionLoad);
+
+            return new Promise((resolve) => {
+               container.loadDef.then((result) => {
+                  assert.deepEqual(result.resultSelection, clearRecordSet);
+                  resolve();
+               });
+            });
          });
 
          it('single select', function() {
+            let container = getContainer();
             container._selectedKeys = [1];
             container._selectComplete();
-            assert.equal(loadDef.getResult().resultSelection.at(0), items[1]);
+
+            return new Promise((resolve) => {
+               container.loadDef.then((result) => {
+                  assert.deepEqual(result.resultSelection.at(0).getRawData(), getItems()[1].getRawData());
+                  resolve();
+               });
+            });
          });
 
-         it('multi select, check toggle indicator', function(done) {
+         it('selectionLoadMode: false', function() {
+            let container = getContainer();
+            container._selectedKeys = [1];
+            container._options.selectionLoadMode = false;
+            container._selectComplete();
+
+            return new Promise((resolve) => {
+               container.loadDef.then((result) => {
+                  assert.deepEqual(result.selection.get('marked'), ['1']);
+                  resolve();
+               });
+            });
+         });
+
+         it('multi select, check toggle indicator', function() {
             let
                hideIndicatorParam,
                indicatorId = 'fw54dw54d46q46d5',
                isShowIndicator = false,
-               isHideIndicator = false;
+               isHideIndicator = false,
+               container = getContainer(),
+               loadDef;
 
             container._notify = function(eventName, result) {
                switch (eventName){
@@ -350,18 +383,26 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
                   case 'hideIndicator':
                      isHideIndicator = true;
                      hideIndicatorParam = result[0];
+                     break;
+
+                  case 'selectionLoad':
+                     loadDef = result[0];
+                     break;
                }
             };
-
+            container._selectedKeys = [1];
             container._options.multiSelect = true;
             container._selectComplete();
 
             assert.isTrue(isShowIndicator);
-            setTimeout(function() {
-               assert.isTrue(isHideIndicator);
-               assert.equal(hideIndicatorParam, indicatorId);
-               done();
-            }, 0);
+
+            return new Promise((resolve) => {
+               loadDef.then(() => {
+                  assert.isTrue(isHideIndicator);
+                  assert.equal(hideIndicatorParam, indicatorId);
+                  resolve();
+               });
+            });
          });
       });
    });

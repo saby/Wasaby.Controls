@@ -14,7 +14,6 @@
  * @includes IErrorController Controls/_interface/IErrorController
  * @includes ISingleSelectable Controls/_interface/ISingleSelectable
  * @includes IMultiSelectable Controls/_interface/IMultiSelectable
- * @includes ISource Controls/_interface/ISource
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes INumberFormat Controls/_interface/INumberFormat
  * @includes IExpandable Controls/_interface/IExpandable
@@ -24,6 +23,7 @@
  * @includes ITextValue Controls/_interface/ITextValue
  * @includes IPropStorage Controls/_interface/IPropStorage
  * @includes IBorderStyle Controls/_interface/IBorderStyle
+ * @includes IValidationStatus Controls/_interface/IValidationStatus
  * @includes ISelectionType Controls/_interface/ISelectionType
  * @includes IDateConstructor Controls/_interface/IDateConstructor
  * @public
@@ -55,5 +55,9 @@ export {default as ILookup, ILookupOptions} from './_interface/ILookup';
 export {default as IDateMask, IDateMaskOptions, dateMaskConstants} from './_interface/IDateMask';
 export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropStorage';
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
+export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from './_interface/IValidationStatus';
 export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';
-export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelectionRecord, ISelectionObject} from './_interface/ISelectionType';
+export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelectionRecord, ISelectionObject, TKeySelection, TKeysSelection} from './_interface/ISelectionType';
+export {default as ISelectionStrategy} from './_interface/ISelectionStrategy';
+export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
+export {default as IRUM, IRUMOptions} from './_interface/IRUM';
