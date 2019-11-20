@@ -13,10 +13,8 @@
    font-family: @fontFamily;
 }
 
-.icon(@size: @size_icon_s, @fontFamily: @font-family_icon_size-s) {
-   font-size: @size;
-   width: @size;
-   height: @size;
+.icon-common(@font-size: @size_icon_s, @fontFamily: @font-family_icon_size-s) {
+   font-size: @font-size;
    font-family: @fontFamily;
    speak: none;
    font-style: normal;
@@ -24,7 +22,20 @@
    font-variant: normal;
    text-transform: none;
    line-height: 1;
+}
+
+.icon(@size: @size_icon_s, @fontFamily: @font-family_icon_size-s) {
+   .icon-common(@size, @fontFamily);
+   width: @size;
+   height: @size;
    display: inline-block;
+}
+
+.icon-with-size(@font-size: @size_icon_s, @fontFamily: @font-family_icon_size-s, @size: @size_icon_s) {
+   .icon-common(@font-size, @fontFamily);
+   width: @size;
+   height: @size;
+   display: inline-flex;
 }
 
 .compatPlaceholder(@color: @color_placeholder) {
