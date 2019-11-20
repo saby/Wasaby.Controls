@@ -15,8 +15,8 @@
       <Controls.dropdownPopup:MoreButton
               class="controls-SimplePanel-List__hasMoreButton_theme_{{_options.theme}}"
               caption="{[Еще]}..."
-              items="{{_options.items}}"
-              selectedKeys="{{_listModel.getSelectedKeys()}}"
+              items="{{_options.selectorItems}}"
+              selectedKeys="{{_options.selectorSelectedKeys || _listModel.getSelectedKeys()}}"
               selectorTemplate="{{_options.selectorTemplate}}"
               isCompoundTemplate="{{_options.isCompoundTemplate}}"
               selectorOpener="{{_options.selectorOpener}}"
