@@ -133,7 +133,8 @@ var _private = {
         }
         if (self._sourceController) {
             _private.showIndicator(self);
-            _private.hideError(self);
+            // TODO убираем флаг ошибки. Не нужно перерисовывать компонент.
+            self.__error = null;
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
