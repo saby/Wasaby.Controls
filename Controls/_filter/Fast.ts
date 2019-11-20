@@ -297,14 +297,16 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
          loadNewItems: function(self, items, configs) {
             let pDef = new pDeferred();
             chain.factory(items).each(function(item, index) {
-               let keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value: [item.value]);
+               const value = item.value instanceof Array ? item.value: [item.value];
+               let keys = _private.getKeysLoad(configs[index], value);
                if (keys.length) {
                   let itemProperties = clone(getPropValue(item, 'properties'));
                   let properties = {source: itemProperties.source};
                   properties.filter = itemProperties.filter || {};
                   properties.filter[itemProperties.keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
-                     configs[index]._items = getItemsWithHistory(configs[index]._items, items, configs[index]._sourceController, configs[index]._source, configs[index].keyProperty);
+                     configs[index]._items = getItemsWithHistory(configs[index]._items, items,
+                         configs[index]._sourceController, configs[index]._source, configs[index].keyProperty, value);
                   });
                   pDef.push(result);
                } else {

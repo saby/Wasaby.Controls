@@ -204,8 +204,7 @@ var _private = {
         return !isEqual(object.getPropertyValue(item, 'value'), object.getPropertyValue(item, 'resetValue'));
     },
 
-    getKeysUnloadedItems: function(config, value) {
-        let selectedKeys = value instanceof Object ? value : [value];
+    getKeysUnloadedItems: function(config, selectedKeys) {
         let flattenKeys = factory(selectedKeys).flatten().value();
         let newKeys = [];
         factory(flattenKeys).each((key) => {
@@ -221,7 +220,8 @@ var _private = {
         factory(items).each(function(item) {
             if (_private.isFrequentItem(item)) {
                 const config = configs[item.name];
-                let keys = _private.getKeysUnloadedItems(config, item.value);
+                const value = item.value instanceof Object ? item.value : [item.value];
+                let keys = _private.getKeysUnloadedItems(config, value);
                 if (keys.length) {
                     let editorOpts = {source: item.editorOptions.source};
                     editorOpts.filter = {...config.filter};
@@ -230,7 +230,7 @@ var _private = {
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
                         configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems,
-                            configs[item.name].sourceController, item.editorOptions.source, configs[item.name].keyProperty);
+                            configs[item.name].sourceController, item.editorOptions.source, configs[item.name].keyProperty, value);
                     });
                     pDef.push(result);
                 }

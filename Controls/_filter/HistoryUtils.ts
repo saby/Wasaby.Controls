@@ -67,7 +67,7 @@ function isHistorySource(source) {
    return coreInstance.instanceOfModule(source, 'Controls/history:Source');
 }
 
-function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
+function prependNewItems(oldItems, newItems, sourceController, keyProperty, selectedKeys) {
    const allCount = oldItems.getCount();
    const uniqItems = factory(oldItems).filter((item) => {
       if (!newItems.getRecordById(item.get(keyProperty))) {
@@ -76,8 +76,16 @@ function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
    }).value();
 
    if (sourceController.hasMoreData('down')) {
+      let itemKey;
+      const selectedItems = factory(uniqItems).last(newItems.getCount()).filter((uItem) => {
+         itemKey = uItem.get(keyProperty);
+         if (selectedKeys.includes(itemKey) && !newItems.at(newItems.getIndexByValue(keyProperty, itemKey))) {
+            return true;
+         }
+      }).value();
       let lastItems = factory(uniqItems).first(allCount - newItems.getCount()).value();
       newItems.append(lastItems);
+      newItems.append(selectedItems);
    } else {
       newItems.append(uniqItems);
    }
@@ -85,9 +93,9 @@ function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
    return newItems;
 }
 
-function getItemsWithHistory(oldItems, newItems, sourceController, source, keyProperty) {
+function getItemsWithHistory(oldItems, newItems, sourceController, source, keyProperty, selectedKeys) {
    let itemsWithHistory;
-   const resultItems = prependNewItems(oldItems, newItems, sourceController, keyProperty);
+   const resultItems = prependNewItems(oldItems, newItems, sourceController, keyProperty, selectedKeys);
    if (isHistorySource(source)) {
       itemsWithHistory = source.prepareItems(resultItems);
    } else {

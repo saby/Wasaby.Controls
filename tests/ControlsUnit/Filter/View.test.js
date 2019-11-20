@@ -540,10 +540,10 @@ define(
                   ]
                })
             };
-            let keys = filter.View._private.getKeysUnloadedItems(config, null);
+            let keys = filter.View._private.getKeysUnloadedItems(config, [null]);
             assert.strictEqual(keys[0], null);
 
-            keys = filter.View._private.getKeysUnloadedItems(config, 'empty');
+            keys = filter.View._private.getKeysUnloadedItems(config, ['empty']);
             assert.isFalse(!!keys.length);
          });
 

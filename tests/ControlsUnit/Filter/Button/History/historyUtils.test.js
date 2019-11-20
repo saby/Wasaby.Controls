@@ -52,7 +52,7 @@ define(
             });
             let expectedItems = [{ key: 18, title: '18 record' }].concat(initItems.slice(0, 3));
 
-            let resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source);
+            let resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key', [18]);
             assert.equal(resultItems.getCount(), 4);
             assert.deepStrictEqual(resultItems.getRawData(), expectedItems);
             assert.deepStrictEqual(resultItems.getMetaData(), {test: true});
@@ -61,12 +61,24 @@ define(
                keyProperty: 'key',
                rawData: [{ key: 20, title: '20 record' }, {key: 1, title: 'Россия'}]
             });
-            resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key');
+            resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key', [20]);
             assert.equal(resultItems.getCount(), 4);
             assert.equal(resultItems.at(0).getId(), 20);
             assert.equal(resultItems.at(1).getId(), 1);
             assert.equal(resultItems.at(2).getId(), 0);
             assert.equal(resultItems.at(3).getId(), 2);
+
+            newItems = new collection.RecordSet({
+               keyProperty: 'key',
+               rawData: [{ key: 20, title: '20 record' }]
+            });
+            resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key', [20, 3]);
+            assert.equal(resultItems.getCount(), 5);
+            assert.equal(resultItems.at(0).getId(), 20);
+            assert.equal(resultItems.at(1).getId(), 0);
+            assert.equal(resultItems.at(2).getId(), 1);
+            assert.equal(resultItems.at(3).getId(), 2);
+            assert.equal(resultItems.at(4).getId(), 3);
          });
 
          it('isHistorySource', function() {
