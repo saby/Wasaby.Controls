@@ -677,7 +677,7 @@ define(
                ctrl._focusInHandler();
                InputUtility.insert(ctrl, 'test');
                InputUtility.triggerInput(ctrl);
-               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent({
                   keyCode: Env.constants.key.enter
                }));
 
