@@ -66,6 +66,7 @@ import Date = require('Controls/_input/Date/Picker');
 import {default as Render} from 'Controls/_input/Render';
 import TimeInterval from 'Controls/_input/TimeInterval';
 import Money from 'Controls/_input/Money';
+import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask'
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
@@ -115,5 +116,6 @@ export {
     INewLineKey,
     ActualAPI,
     MaskFormatter,
-    PhoneMaskBuilder
+    PhoneMaskBuilder,
+    IDateTimeMask
 };

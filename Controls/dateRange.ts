@@ -25,7 +25,6 @@ export {IDateRangeSelectable};
  * @includes RelationController Controls/_dateRange/RelationController
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
- * @includes IDateTimeMask Controls/_dateRange/interfaces/IDateTimeMask
  * @includes IInput Controls/_dateRange/interfaces/IInput
  * @includes IInputDateTag Controls/_dateRange/interfaces/IInputDateTag
  * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
@@ -51,7 +50,6 @@ export {IDateRangeSelectable};
  * @includes RelationController Controls/_dateRange/RelationController
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
- * @includes IDateTimeMask Controls/_dateRange/interfaces/IDateTimeMask
  * @includes IInput Controls/_dateRange/interfaces/IInput
  * @includes IInputDateTag Controls/_dateRange/interfaces/IInputDateTag
  * @includes ILinkView Controls/_dateRange/interfaces/ILinkView

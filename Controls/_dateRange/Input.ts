@@ -4,7 +4,7 @@ import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils from './Utils';
 import DateRangeModel from './DateRangeModel';
 import {StringValueConverter} from 'Controls/input';
-import IDateTimeMask from './interfaces/IDateTimeMask';
+import {IDateTimeMask} from 'Controls/input';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_dateRange/Input/Input');
 
