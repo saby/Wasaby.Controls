@@ -193,7 +193,7 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @background-color_Grid-row_hover;
    }
-   .controls-Grid__row:hover {
+   .controls-BaseControl_showActions .controls-Grid__row:hover {
       > .controls-Grid__row-cell,
       > .controls-itemActionsV__container {
          > .controls-itemActionsV {
@@ -208,15 +208,17 @@
       background-color: @background-color_Grid-row_hover;
    }
 
-   .controls-Grid_row-cell_hovered_theme-@{themeName},
-   .controls-Grid__row:hover {
-      .controls-Grid__editArrow-blur_theme-@{themeName},
-      .controls-Grid__editArrow-wrapper_theme-@{themeName} {
-         visibility: visible;
+   .controls-BaseControl_showActions {
+      .controls-Grid_row-cell_hovered_theme-@{themeName},
+      .controls-Grid__row:hover {
+         .controls-Grid__editArrow-blur_theme-@{themeName},
+         .controls-Grid__editArrow-wrapper_theme-@{themeName} {
+            visibility: visible;
+         }
       }
    }
 
-   .controls-Grid_row-cell_hovered_theme-@{themeName} > .controls-itemActionsV {
+   .controls-BaseControl_showActions .controls-Grid_row-cell_hovered_theme-@{themeName} > .controls-itemActionsV {
       display: inline-block;
    }
 
