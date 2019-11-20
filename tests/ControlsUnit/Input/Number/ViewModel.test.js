@@ -266,6 +266,21 @@ define(
                assert.equal(model.displayValue, '123.5');
                assert.deepEqual(model.selection, getSelection(4));
             });
+            it('Remove and replace with zero.', function() {
+               model.options = cMerge(model.options, {
+                  precision: 2,
+                  useAdditionToMaxPrecision: true
+               });
+               model.handleInput({
+                  after: '5',
+                  before: '123.',
+                  delete: '4',
+                  insert: ''
+               }, 'deleteBackward');
+
+               assert.equal(model.displayValue, '123.05');
+               assert.deepEqual(model.selection, getSelection(4));
+            });
 
             it('Test1', function() {
                model.value = '123';
