@@ -112,7 +112,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#opener
-    * @cfg {Node} opener Логический инициатор открытия всплывающего окна
+    * @cfg {Node} Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
     */
 
 
