@@ -436,7 +436,7 @@ var _private = {
                 }
                 const selectedItems = _private.getSelectedItems(curConfig.items, sKey);
                 curConfig.popupItems = getItemsWithHistory(curConfig.popupItems || CoreClone(curConfig.items), selectedItems,
-                    curConfig._sourceController, item.editorOptions.source, curConfig.keyProperty);
+                    curConfig.sourceController, item.editorOptions.source, curConfig.keyProperty);
                 _private.setValue(self, sKey, index);
                 _private.updateHistory(self, index, selectedItems);
             }

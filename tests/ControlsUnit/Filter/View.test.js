@@ -751,14 +751,14 @@ define(
                      items: getItems(Clone(defaultItems[0])),
                      displayProperty: 'title',
                      keyProperty: 'id',
-                     _sourceController: {hasMoreData: () => {return true;}}
+                     sourceController: {hasMoreData: () => {return true;}}
                   },
                   state: {
                      items: getItems(Clone(defaultItems[1])),
                      displayProperty: 'title',
                      keyProperty: 'id',
                      multiSelect: true,
-                     _sourceController: {hasMoreData: () => {return true;}}
+                     sourceController: {hasMoreData: () => {return true;}}
                   }
                };
                view._children = {
@@ -967,7 +967,7 @@ define(
                      nodeProperty: 'node',
                      parentProperty: 'parent',
                      multiSelect: true,
-                     _sourceController: {hasMoreData: () => {return true;}}
+                     sourceController: {hasMoreData: () => {return true;}}
                   }
                };
                view._children = {
