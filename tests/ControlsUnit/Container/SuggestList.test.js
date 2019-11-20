@@ -119,8 +119,17 @@ define(
                ]
             });
 
-            suggestList._inputKeydown(null, domEvent);
-            assert.equal(suggestList._markedKey, 'last');
+            it('list is not reverse', function() {
+               suggestList._inputKeydown(null, domEvent);
+               assert.equal(suggestList._markedKey, 'last');
+            });
+
+            it('list is reverse', function() {
+               suggestList._reverseList = true;
+               suggestList._markedKey = null;
+               suggestList._inputKeydown(null, domEvent);
+               assert.equal(suggestList._markedKey, 'first');
+            });
          });
 
          it('_searchEndCallback', function() {
