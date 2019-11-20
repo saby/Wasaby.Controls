@@ -29,7 +29,7 @@ export = {
        * @variant range Режим выделения произвольного диапазона.
        * @variant single Режим выделения одного элемента.
        * @variant disable Режим выбора отключен.
-       * @variant quantum Режим выделения квантами, кванты задаются через опцию quantum.
+       * @variant ranges Режим выделения квантами. Кванты задаются через опцию {@link https://wi.sbis.ru/docs/js/Controls/dateRange/IDateRangeSelectable/options/ranges/ range}
        */
 
       /**
