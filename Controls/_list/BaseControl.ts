@@ -2542,6 +2542,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
             });
         }
+        this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
 
     _onLoadMoreClick: function() {
