@@ -103,25 +103,11 @@
  * </pre>
  */
 
-/**
- * @typedef {String} GridCellAlign
- * @variant left Выровнять содержимое ячейки по левому краю.
- * @variant center Выровнять содержимое ячейки по центру.
- * @variant right Выровнять содержимое ячейки по правому краю.
- */
-
 /*
  * @typedef {String} GridCellAlign
  * @variant left Align content to left side.
  * @variant center Align content to center.
  * @variant right Align content to right side.
- */
-
-/**
- * @typedef {String} GridCellVAlign
- * @variant top Выровнять содержимое ячейки по верхнему краю.
- * @variant center Выровнять содержимое ячейки по центру.
- * @variant bottom Выровнять содержимое ячейки по нижнему краю.
  */
 
 /*
@@ -140,10 +126,18 @@
 /**
  * @typedef {Object} HeaderCell
  * @property {String} caption Текст заголовка ячейки.
- * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
- * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
+ * @property {String} align Выравнивание содержимого ячейки по горизонтали.
+ * Доступные значения:
+ * * **left** — по левому краю.
+ * * **center** — по центру.
+ * * **right** — по правому краю.
+ * @property {String} valign Выравнивание содержимого ячейки по вертикали.
+ * Доступные значения:
+ * * **top** — по верхнему краю.
+ * * **center** — по центру.
+ * * **bottom** — по нижнему краю.
  * @property {String} [template=Controls/grid:HeaderContent] Шаблон заголовка ячейки.
- * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
+ * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/ документации}.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
  * В качестве значения принимает имя поля.
  * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки.
@@ -253,7 +247,7 @@
 
 /*
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<Array.<HeaderCell>>} Describes grid's header.
+ * @cfg {Array.<HeaderCell>} Describes grid's header.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark
  * Base header content template for Controls/grid:View: "Controls/grid:HeaderContent".
@@ -275,8 +269,8 @@
  * Для браузеров, которые не поддерживают технологию <a href="https://developer.mozilla.org/ru/docs/web/css/css_grid_layout">CSS Grid Layout</a>, не работает ширина колонки, указанная в долях, "auto" или "minmax". Для таких браузеров используйте свойство compatibleWidth.
  * @property {String} compatibleWidth Ширина колонки в браузерах, не поддерживающих "CSS Grid Layout".
  * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
- * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в колонке.
- * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
+ * @property {String} displayProperty Имя поля, данные которого отображаются в колонке.
+ * @property {String} [template={@link Controls/grid:ColumnTemplate}] Шаблон отображения ячейки.
  * О создании пользовательского шаблона читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">здесь</a>.
  * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
  * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
