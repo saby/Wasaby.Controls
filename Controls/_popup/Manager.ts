@@ -285,23 +285,23 @@ const _private = {
         return false;
     },
 
-    popupControlResize(id) {
+    popupResizeInner(id) {
         const item = _private.find(id);
         if (item) {
             const parentItem = _private.find(item.parentId);
             // Если над скрытым стековым окном позиционируются другие окна, то не даем им реагировать на внутренние ресайзы
             // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
             if (!parentItem || parentItem.popupOptions.hidden !== true) {
-                return item.controller.popupResize(item, _private.getItemContainer(id));
+                return item.controller.resizeInner(item, _private.getItemContainer(id));
             }
         }
         return false;
     },
 
-    popupPageResize(id) {
+    popupResizeOuter(id) {
         const item = _private.find(id);
         if (item) {
-            return item.controller.pageResized(item, _private.getItemContainer(id));
+            return item.controller.resizeOuter(item, _private.getItemContainer(id));
         }
         return false;
     },

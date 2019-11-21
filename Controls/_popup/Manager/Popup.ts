@@ -197,12 +197,12 @@ class Popup extends Control<IPopupOptions> {
         runDelayed(this._callOpenersUpdate.bind(this));
     }
 
-    protected _resizePageHandler(): void {
-        this._notify('popupPageResize', [this._options.id], {bubbling: true});
+    protected _controlResizeOuterHandler(): void {
+        this._notify('popupResizeOuter', [this._options.id], {bubbling: true});
     }
 
-    protected _controlResize(): void {
-        this._notify('popupControlResize', [this._options.id], {bubbling: true});
+    protected _controlResizeHandler(): void {
+        this._notify('popupResizeInner', [this._options.id], {bubbling: true});
     }
 
     /**

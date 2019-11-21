@@ -108,7 +108,7 @@ class DialogController extends BaseController {
         delete item.startPosition;
     }
 
-    pageResized(item: IPopupItem, container: HTMLDivElement): boolean {
+    resizeOuter(item: IPopupItem, container: HTMLDivElement): boolean {
         // На ios ресайз страницы - это зум. Не реагируем на него.
         if (!detection.isMobileIOS) {
             return this._elementUpdated(item, container);
