@@ -1,6 +1,6 @@
 <div class="controls-demo-FilterView">
    <div class="controls-demo-FilterView__column">
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems1">
          <h3>Fast and button filters</h3>
          <Controls.filter:View source="{{_fastButtonItems}}"
                                alignment="left"
@@ -8,14 +8,14 @@
                                panelTemplateName="Controls/filterPopup:SimplePanel"
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__items1" />
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems2">
          <h3>Fast and button filters</h3>
          <Controls.filter:View source="{{_fastButtonItems2}}"
                                detailPanelTemplateName="Controls-demo/FilterView/resources/Panel"
                                panelTemplateName="Controls/filterPopup:SimplePanel"
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__items2" />
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems3">
          <h3>Fast filter with button "more"</h3>
          <Controls.filter:View source="{{_itemsMore}}"
                                alignment="left"
@@ -23,14 +23,14 @@
                                panelTemplateName="Controls/filterPopup:SimplePanel"
 							   attr:class="demo-FilterView__more" />
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems4">
          <h3>Only fast filter</h3>
          <Controls.filter:View source="{{_fastItems}}"
                                alignment="left"
                                panelTemplateName="Controls/filterPopup:SimplePanel"
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__onlyFast" />
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems5">
          <h3>Only fast filter with one item</h3>
          <Controls.filter:View source="{{_oneFastItems}}"
                                alignment="left"
@@ -38,7 +38,7 @@
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__onlyFast2">
          </Controls.filter:View>
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems6">
          <h3>Only button filter</h3>
          <Controls.filter:View source="{{_buttonItems}}"
                                alignment="left"
@@ -48,7 +48,7 @@
       </div>
    </div>
    <div class="controls-demo-FilterView__column">
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems7">
          <h3>With scroll</h3>
          <Controls.filter:View source="{{_scrollFastItems}}"
                                alignment="left"
@@ -56,7 +56,7 @@
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__scroll">
          </Controls.filter:View>
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems8">
          <h3>With hierarchy and history list</h3>
          <Controls.filter:View source="{{_hierarchyItems}}"
                                alignment="left"
@@ -66,7 +66,7 @@
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__hierarchyHistoryList">
          </Controls.filter:View>
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems9">
          <h3>With hierarchy list</h3>
          <Controls.filter:View source="{{_hierarchyItems2}}"
                                alignment="left"
@@ -74,13 +74,13 @@
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__hierarchyList">
          </Controls.filter:View>
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems10">
          <h3>Custom itemTemplate</h3>
          <Controls.filter:View source="{{_customTemplateItems}}"
                                panelTemplateName="Controls/filterPopup:SimplePanel"
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__custom" />
       </div>
-      <div class="controls-demo-FilterView__item">
+      <div class="controls-demo-FilterView__item demo-FilterView__divItems11">
          <h3>ReadOnly</h3>
          <Controls.filter:View source="{{_fastButtonItems2}}"
                                detailPanelTemplateName="Controls-demo/FilterView/resources/Panel"
