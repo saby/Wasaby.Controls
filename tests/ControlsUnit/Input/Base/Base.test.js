@@ -89,7 +89,7 @@ define(
             );
          });
          it('Insert the value into the unfocused field.', function() {
-            ctrl._getActiveElement = function() {
+            ctrl._getActiveElement = function(done) {
                return {};
             };
 
@@ -97,11 +97,22 @@ define(
                value: ''
             });
             ctrl.paste('test');
-            ctrl._template(ctrl);
+            var res = ctrl._template(ctrl);
 
-            assert.equal(ctrl._getField().value, 'test');
-            assert.equal(ctrl._getField().selectionStart, 0);
-            assert.equal(ctrl._getField().selectionEnd, 0);
+            if (!(res instanceof Promise)) {
+               res = Promise.resolve(res);
+            }
+
+            res.then(() => {
+               try {
+                  assert.equal(ctrl._getField().value, 'test');
+                  assert.equal(ctrl._getField().selectionStart, 0);
+                  assert.equal(ctrl._getField().selectionEnd, 0);
+                  done();
+               } catch(e) {
+                  done(e);
+               }
+            });
          });
          it('Pass null as the value option.', function() {
             ctrl._getActiveElement = function() {
