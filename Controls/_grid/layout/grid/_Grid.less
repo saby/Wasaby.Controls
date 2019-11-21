@@ -105,7 +105,7 @@
 
 .controls-Grid__results-cell_theme-@{themeName} {
    background-color: @background-color_Grid-row-sticky;
-   z-index: @z-index-NonStickyResults;
+   z-index: @z-index-Grid-results-cell;
    min-width: 0;
    min-height: @height_Grid-results-cell;
 }
@@ -127,8 +127,8 @@
    box-sizing: border-box;
    position: relative;
 }
-.controls-Grid__itemAction-z-index {
-   z-index: @z-index-NonStickyResults + 1 // на 1 больше чем у колонок results;
+.controls-Grid__itemAction {
+   z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у колонок results;
 }
 
 

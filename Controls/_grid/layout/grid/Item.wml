@@ -13,7 +13,7 @@
                   itemData="{{itemData}}"
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
                   highlightOnHover="{{highlightOnHover}}"
-                  attr:class="controls-Grid__itemAction-z-index"
+                  attr:class="controls-Grid__itemAction"
                   attr:key="{{itemData.getCurrentColumnKey()}}__actions"/>
    </ws:else>
 </ws:template>
