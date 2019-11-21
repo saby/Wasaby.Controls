@@ -9,7 +9,7 @@ define(['Controls/Utils/FontLoadUtil'], function(FontLoadUtil) {
       });
 
       it('waitForFontLoad should load font once', function() {
-         const sandBox = sinon.createSandBox();
+         const sandBox = sinon.createSandbox();
 
          return new Promise(function(resolve) {
             sandBox.replace(FontLoadUtil._private, 'isLoaded', () => true);
