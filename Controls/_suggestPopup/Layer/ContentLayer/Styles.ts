@@ -12,8 +12,6 @@
  * @css @box-shadow-color_Suggest-contentLayer Цвет тени автодополнения.
  *
  * @css @spacing_Suggest-search-between-topBorder-close Интервал между верхней границей автодополнения и кнопкой закрытия.
- *
- * @css @spacing_Suggest-contentLayer-between-tabs-input Расстояние между полем ввода и вкладками.
  */
 /*
  * @mixin Controls/_suggest/Layer/ContentLayer/Styles
@@ -29,6 +27,4 @@
  * @css @box-shadow-color_Suggest-contentLayer Shadow color of suggest.
  *
  * @css @spacing_Suggest-search-between-topBorder-close Spacing between top border of suggest and close button
- *
- * @css @spacing_Suggest-contentLayer-between-tabs-input Расстояние между полем ввода и вкладками.
  */
