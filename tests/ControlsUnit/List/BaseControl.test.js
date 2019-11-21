@@ -1363,21 +1363,32 @@ define([
          lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.isNull(ctrl._loadingState, 'Wrong loading state');
          assert.isNull(ctrl._loadingIndicatorState, 'Wrong loading state');
+         assert.equal(undefined, ctrl._loadingIndicatorContainerOffsetTop);
 
          ctrl._isMounted = true;
+         ctrl._children.listView = {
+            getHeaderHeight: () => 20,
+            getResultsHeight: () => 20,
+         };
 
          lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+         assert.equal(40, ctrl._loadingIndicatorContainerOffsetTop);
+
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+         assert.equal(40, ctrl._loadingIndicatorContainerOffsetTop);
          lists.BaseControl._private.hideIndicator(ctrl);
+
+         ctrl._scrollTop = 100;
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
+         assert.equal(140, ctrl._loadingIndicatorContainerOffsetTop);
          assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
 
          // картинка должен появляться через 2000 мс, проверим, что её нет сразу
@@ -1396,7 +1407,10 @@ define([
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
          assert.isFalse(!!ctrl._loadingIndicatorTimer);
+
+
       });
+
 
        it ('updateShadowMode', function() {
            var
