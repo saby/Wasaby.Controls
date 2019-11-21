@@ -12,8 +12,10 @@
 }
 
 //Необходимо навесить z-index на индикатор и контент для правильный работы контекста z-index`ов
-.controls-loading-indicator_local, .controls-loading-indicator_content {
+// Крутилка должна быть всегда выше контента и не завязана на его внутренние z-index'ы
+.controls-loading-indicator_content {
    z-index: 1;
+   position: relative;
 }
 
 .controls-loading-indicator_global {
@@ -30,6 +32,7 @@
    width: 100%;
    height: 100%;
    top: 0;
+   z-index: 2;
 }
 
 .controls-loading-indicator_text {
