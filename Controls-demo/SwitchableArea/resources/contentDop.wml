@@ -1,1 +1,1 @@
-<div>New items content {{number}}</div>
+<div class= "content">New items content {{number}}</div>
