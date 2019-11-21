@@ -425,6 +425,7 @@ define(
             let deactivatedCount = 0;
             Manager.remove = () => deactivatedCount++;
             Manager._private.isIgnoreActivationArea = () => false;
+            Manager._private.isNewEnvironment = () => true;
             Manager._private.needClosePopupByDeactivated = () => true;
             let id1 = Manager.show({
                testOption: 'created',

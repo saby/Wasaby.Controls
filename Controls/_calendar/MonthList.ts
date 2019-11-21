@@ -372,6 +372,16 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         return monthListUtils.dateToId(date);
     }
 
+    // Формируем дату для шаблона элемента через эту функцию несмотря на то,
+    // что дата и так содержится в данных для элемента. Проблема в том, что если страница строится на сервере,
+    // и клиент находится в часовом поясе меньшем чем сервер, то даты после десериализации теряют несколько часов.
+    // В результате этого происходит переход на сутки назад.
+    // Десериализуем даты сами из текстового идентификатора пока не будет сделана следующая задача.
+    // https://online.sbis.ru/opendoc.html?guid=d3d0fc8a-06cf-49fb-ad80-ce0a9d9a8632
+    protected _idToDate(dateId: string): Date {
+        return monthListUtils.idToDate(dateId);
+    }
+
     static getDefaultOptions(): object {
         return {
             viewMode: 'year',

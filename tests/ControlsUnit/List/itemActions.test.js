@@ -295,6 +295,20 @@ define([
            assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
            assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
            assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
+
+           var setMarkedKeyCalled = false;
+           var listModel = {
+              setMarkedKey: function() {
+                 setMarkedKeyCalled = true;
+              },
+              getStartIndex: function() {
+                 return 0;
+              }
+           }
+           instance._options.listModel = listModel;
+           instance._destroyed = true;
+           instance._onItemActionsClick(fakeEvent, action, fakeItemData);
+           assert.isFalse(setMarkedKeyCalled);
        });
 
       it('_onItemActionClick in partialGridSupport', function() {
