@@ -141,6 +141,7 @@ class Notification extends BaseOpener {
     open(popupOptions) {
         const config = {...this._options, ...popupOptions};
         _private.clearPopupIds(this);
+        config.id = this._notificationId;
         return Notification.openPopup(config, this._notificationId).then((popupId) => {
             this._notificationId = popupId;
             return popupId;

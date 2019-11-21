@@ -154,11 +154,14 @@ define(
             };
 
             const opener = new Notification({});
-            opener.open().then((id) => {
-               assert.equal(id, '123');
-               opener.close();
-               assert.equal(closeId, '123');
-               done();
+            opener.open().then((id1) => {
+               assert.equal(id1, '123');
+               opener.open().then((id2) => {
+                  assert.equal(id2, '123');
+                  opener.close();
+                  assert.equal(closeId, '123');
+                  done();
+               });
             });
          });
       });
