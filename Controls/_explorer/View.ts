@@ -1,20 +1,20 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
-import {SearchGridViewModel, ViewModel as TreeGridViewModel, TreeGridView, SearchView} from 'Controls/treeGrid';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
-import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import {constants} from 'Env/Env';
-import {Logger} from 'UI/Utils';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
+import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
+import {factory} from 'Types/chain';
+import {constants} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import 'css!theme?Controls/explorer';
 import 'css!theme?Controls/tile';
 import 'Types/entity';
 
 
-   var
+var
       HOT_KEYS = {
          backByPath: constants.key.backspace
       };
@@ -231,7 +231,7 @@ import 'Types/entity';
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/interface/INavigation
-    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/IHierarchy
@@ -263,7 +263,7 @@ import 'Types/entity';
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/interface/INavigation
-    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/ISorting

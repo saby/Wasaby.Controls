@@ -12,7 +12,7 @@ import Deferred = require('Core/Deferred');
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_interface/ISorting

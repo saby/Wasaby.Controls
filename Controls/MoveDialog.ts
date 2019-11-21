@@ -2,14 +2,14 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_MoveDialog/MoveDialog');
 import 'css!theme?Controls/_MoveDialog/MoveDialog';
 
-   /**
+/**
     * Базовый шаблон диалогового окна, используемый в списках при перемещении элементов для выбора целевой папки.
     * - <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover-remover/">См. руководство разработчика</a>
     * - <a href="/materials/demo-ws4-operations-panel">См. демо-пример</a>
     * @class Controls/MoveDialog
     * @extends Core/Control
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/IFilter
     * @mixes Controls/_interface/ISource
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_treeGrid/interface/ITreeControl
@@ -30,7 +30,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @class Controls/MoveDialog
     * @extends Core/Control
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/IFilter
     * @mixes Controls/_interface/ISource
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_treeGrid/interface/ITreeControl

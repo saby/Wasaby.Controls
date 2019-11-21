@@ -15,7 +15,7 @@ import 'Controls/search';
  * @extends Controls/_input/Text
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
@@ -32,7 +32,7 @@ import 'Controls/search';
  * @extends Controls/_input/Text
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG

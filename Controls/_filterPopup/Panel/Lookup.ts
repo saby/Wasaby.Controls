@@ -20,7 +20,7 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
@@ -53,7 +53,7 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
