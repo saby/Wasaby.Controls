@@ -2,7 +2,7 @@ import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 
 import {IParsedNumber} from 'Controls/_input/Number/parse';
 import {decimalSplitter} from 'Controls/_input/Number/constant';
-import {IText, pasteWithRepositioning, remove, removeWithRepositioning} from 'Controls/_input/Base/Util';
+import {IText, paste, pasteWithRepositioning, remove, removeWithRepositioning} from 'Controls/_input/Base/Util';
 
 interface INumberLength {
     precision: number;
@@ -242,6 +242,18 @@ function handleVoid({precision}: INumberLength, value: string): string {
     return value;
 }
 
+function join(original: string[], position: number, additionalZeros: number): string {
+    const value = original.join('');
+
+    if (additionalZeros > 0) {
+        const pastePosition = Math.max(value.indexOf(decimalSplitter) + 1, position);
+        const zeros = '0'.repeat(additionalZeros);
+        return paste(value, zeros, pastePosition);
+    }
+
+    return value;
+}
+
 function concat(original: IParsedNumber, options: INumberDisplay & INumberLength, carriagePosition: number): IText {
     const value: string[] = [];
     let integer: string = original.integer;
@@ -270,12 +282,10 @@ function concat(original: IParsedNumber, options: INumberDisplay & INumberLength
         value.push(decimalSplitter);
     }
 
-    if (options.useAdditionToMaxPrecision) {
-        value.push('0'.repeat(options.precision - original.fractional.length));
-    }
+    const additionalZeros = options.useAdditionToMaxPrecision ? options.precision - original.fractional.length: 0;
 
     return {
-        value: value.join(''),
+        value: join(value, position, additionalZeros),
         carriagePosition: position
     };
 }
