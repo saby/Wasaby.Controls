@@ -258,7 +258,6 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (!isEqual(this._options.filter, newOptions.filter)) {
          filter = newOptions.filter;
-         this._filter = filter;
       }
 
       if (this._options.root !== newOptions.root) {
