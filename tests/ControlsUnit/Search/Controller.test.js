@@ -381,6 +381,27 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.deepEqual(searchController._searchController.getFilter(), {test: 'testValue'});
          });
 
+         it('filter is changed, navigation is changed', function() {
+            var options = getDefaultOptions();
+
+            options.filter = {test: 'testValue'};
+            options.navigation = {};
+            searchMod.Controller._private.getSearchController(searchController);
+            var abortStub = sandbox.stub(searchController._searchController, 'abort');
+
+            searchController._searchValue = '';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            assert.isNull(searchController._searchController);
+            assert.isFalse(abortStub.calledOnce);
+
+            searchMod.Controller._private.getSearchController(searchController);
+            abortStub = sandbox.stub(searchController._searchController, 'abort');
+            searchController._searchValue = '123';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            assert.isNull(searchController._searchController);
+            assert.isTrue(abortStub.calledOnce);
+         });
+
          it('sorting is changed', function() {
             var options = getDefaultOptions();
 
