@@ -73,6 +73,7 @@ define('Controls-demo/FilterView/FilterView',
          _fastButtonItems: null,
          _fastButtonItems2: null,
          _oneFastItems: null,
+         _oneFastItems2: null,
          _customTemplateItems: null,
          _scrollFastItems: null,
          _historyFastItems: null,
@@ -535,6 +536,20 @@ define('Controls-demo/FilterView/FilterView',
                      source: new sourceLib.Memory({
                         idProperty: 'id',
                         data: [{ id: '1', title: 'Acting'}, {id: '2', title: 'All'}]
+                     }),
+                     displayProperty: 'title',
+                     keyProperty: 'id'
+                  },
+                  viewMode: 'frequent'
+               }
+            ];
+            this._oneFastItems2 = [
+               { name: 'type',
+                  value: '1',
+                  editorOptions: {
+                     source: new sourceLib.Memory({
+                        idProperty: 'id',
+                        data: [{ id: '1', title: 'EDO'}, {id: '2', title: 'EDI'}]
                      }),
                      displayProperty: 'title',
                      keyProperty: 'id'

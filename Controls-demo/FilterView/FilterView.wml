@@ -32,11 +32,20 @@
       </div>
       <div class="controls-demo-FilterView__item">
          <h3>Only fast filter with one item</h3>
-         <Controls.filter:View source="{{_oneFastItems}}"
-                               alignment="left"
-                               panelTemplateName="Controls/filterPopup:SimplePanel"
-                               attr:class="controls-demo-FilterView__itemButton demo-FilterView__onlyFast2">
-         </Controls.filter:View>
+         <div class="controls-demo-FilterView__itemWrapper">
+            <Controls.filter:View source="{{_oneFastItems}}"
+                                  alignment="left"
+                                  panelTemplateName="Controls/filterPopup:SimplePanel"
+                                  attr:class="controls-demo-FilterView__itemButton demo-FilterView__onlyFast2">
+            </Controls.filter:View>
+         </div>
+         <div>
+            <Controls.filter:View source="{{_oneFastItems2}}"
+                                  alignment="left"
+                                  panelTemplateName="Controls/filterPopup:SimplePanel"
+                                  attr:class="controls-demo-FilterView__itemButton demo-FilterView__onlyFast3">
+            </Controls.filter:View>
+         </div>
       </div>
       <div class="controls-demo-FilterView__item">
          <h3>Only button filter</h3>
