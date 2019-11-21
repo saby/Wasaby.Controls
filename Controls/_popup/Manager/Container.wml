@@ -13,7 +13,7 @@
                    {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
                    {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"
                                            attr:style="z-index: {{_getPopupZIndex(item, index, item)}};
-                   position: {{item.position.position !== undefined ? item.position.position}};
+                   position: {{item.position.position !== undefined ? item.position.position : 'absolute'}};
                    left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
                    right: {{item.position.right === undefined ? 'auto' : item.position.right + 'px'}};
                    top: {{item.position.top === undefined ? 'auto': item.position.top + 'px'}};
