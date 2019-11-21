@@ -380,15 +380,15 @@ define([
                   return def;
                };
 
-               lists.BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
-                  resolve();
-               }).addErrback(function() {
-                  try {assert.isTrue(false, 'reload() returns errback');
-                  } catch(e) {
-                     reject(e);
-                  }
-                  resolve();
-               });
+               lists.BaseControl._private.reload(ctrl, ctrl._options)
+                  .addCallback(function() {
+                     resolve();
+                  })
+                  .addErrback(function(error) {
+                     reject(error);
+                  });
+            }).addErrback((error) => {
+               reject(error);
             });
          });
       });
