@@ -1730,7 +1730,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _blockItemActionsByScroll: false,
 
-    _hideActionsAfterDrag: false,
+    _showActions: false,
     _needBottomPadding: false,
     _noDataBeforeReload: null,
     _intertialScrolling: null,
@@ -2574,7 +2574,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (targetPosition) {
             this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
         }
-        this._hideActionsAfterDrag = true;
+        this._showActions = false;
     },
     _onViewKeyDown: function(event) {
         let key = event.nativeEvent.keyCode;
@@ -2647,8 +2647,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData, nativeEvent]);
-        if (!this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData() && this._hideActionsAfterDrag) {
-            this._hideActionsAfterDrag = false;
+        if (!this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData() && !this._showActions) {
+            this._showActions = true;
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {

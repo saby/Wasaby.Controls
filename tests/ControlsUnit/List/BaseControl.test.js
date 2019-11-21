@@ -4287,10 +4287,10 @@ define([
             instance._listViewModel.getDragItemData = function() { return null; }
 
             instance._dragEndHandler();
-            assert.isTrue(instance._hideActionsAfterDrag);
+            assert.isFalse(instance._showActions);
 
             instance._itemMouseMove();
-            assert.isFalse(instance._hideActionsAfterDrag);
+            assert.isTrue(instance._showActions);
 
          });
 
