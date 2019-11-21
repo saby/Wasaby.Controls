@@ -1,1 +1,1 @@
-<div class="ControlsDemo-SwitchableArea__content">New items content {{number}}</div>
+<div class="ControlsDemo-SwitchableArea__text">New items content {{number}}</div>
