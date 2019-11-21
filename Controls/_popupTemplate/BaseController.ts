@@ -176,11 +176,11 @@ abstract class BaseController {
         }
     }
 
-    protected popupResize(item: IPopupItem, container: HTMLDivElement): boolean {
+    protected resizeInner(item: IPopupItem, container: HTMLDivElement): boolean {
         return this._elementUpdated(item, container);
     }
 
-    protected pageResized(item: IPopupItem, container: HTMLDivElement): boolean {
+    protected resizeOuter(item: IPopupItem, container: HTMLDivElement): boolean {
         return this._elementUpdated(item, container);
     }
 
