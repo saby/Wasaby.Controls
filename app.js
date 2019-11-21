@@ -47,6 +47,14 @@ function copyRecursiveSync(src, dest) {
    }
 }
 
+function initEnv(req) {
+   var Env = require('Env/Env');
+   Env.constants.resourceRoot = '/';
+   require('contents');
+   Env.constants.modules = contents.modules;
+}
+
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -67,6 +75,7 @@ global.require = global.requirejs = require = requirejs;
 
 console.log('start init');
 require(['Core/core-init'], function(){
+   initEnv();
    console.log('core init success');
 }, function(err){
    console.log(err);
@@ -115,8 +124,6 @@ app.get('/:moduleName/*', function(req, res){
 
       return;
    }
-
-   require('Env/Env').constants.resourceRoot = '/';
 
    const html = tpl({
       lite: true,
