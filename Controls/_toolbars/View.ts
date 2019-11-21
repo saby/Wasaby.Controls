@@ -4,7 +4,7 @@ import template = require('wml!Controls/_toolbars/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
 import {getMenuItems, showType} from 'Controls/Utils/Toolbar';
-import {ActualApi as ButtonActualApi} from 'Controls/buttons';
+import {ActualApi as ButtonActualApi, ButtonTemplate, cssStyleGeneration} from 'Controls/buttons';
 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
@@ -446,7 +446,7 @@ var _private = {
         self._popupOptions = {
             className: (newOptions.popupClassName || '') + ' controls-Toolbar__popup__list_theme-' + self._options.theme,
             targetPoint: {vertical: 'top', horizontal: 'right'},
-            horizontalAlign: {side: 'left'},
+            direction: {horizontal: 'left'},
             eventHandlers: {
                 onResult: self._onResult,
                 onClose: self._closeHandler
@@ -481,7 +481,7 @@ var _private = {
         return {
             opener: self,
             targetPoint: {vertical: 'top', horizontal: 'left'},
-            horizontalAlign: {side: 'right'},
+            direction: {horizontal: 'right'},
             className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme + ' ' + (item.get('popupClassName') || ''),
             templateOptions: {
                 items: self._items,
@@ -526,6 +526,7 @@ var Toolbar = Control.extend({
     showType: showType,
     _template: template,
     _defaultItemTemplate: toolbarItemTemplate,
+    _buttonTemplate: ButtonTemplate,
     _needShowMenu: null,
     _menuItems: null,
     _parentProperty: null,
@@ -589,6 +590,20 @@ var Toolbar = Control.extend({
         }
     },
 
+    _isShowToolbar: function(item, parentProperty) {
+        const itemShowType = item.get('showType');
+        if (itemShowType === showType.MENU) {
+            return false;
+        }
+        const itemHasParentProperty = item.has(parentProperty) && item.get(parentProperty) !== null;
+
+        if (itemHasParentProperty) {
+            return itemShowType === showType.MENU_TOOLBAR;
+        }
+
+        return true;
+    },
+
     _showMenu: function (event) {
         var config = _private.generateMenuConfig(this);
         this._notify('menuOpened', [], {bubbling: true});
@@ -601,12 +616,7 @@ var Toolbar = Control.extend({
     _onResult: function (result) {
         if (result.action === 'itemClick') {
             var item = result.data[0];
-            /**
-             * По клику на кнопку из тулбара показывается выпадающее меню. Текущий стандарт не позволяет
-             * задавать футер. Для решения этой задачи прикладные программисты настраивают футер вручную. Для
-             * этого им требется некоторая информация из нативного события, например таргет.
-             */
-            this._notify('itemClick', [item, result.event]);
+            this._notify('itemClick', [item]);
 
             // menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
             if (this._children.menuOpener && !item.get(this._nodeProperty)) {
@@ -617,6 +627,22 @@ var Toolbar = Control.extend({
 
     _closeHandler: function () {
         this._notify('menuClosed', [], {bubbling: true});
+    },
+
+    _getButtonConfig: function(item) {
+        const size = 'm';
+        const icon = item.get('buttonIcon') || item.get('icon');
+        const style = item.get('buttonStyle');
+        const viewMode = item.get('buttonViewMode');
+        const iconStyle = item.get('buttonIconStyle') || item.get('iconStyle');
+        const transparent = item.get('buttonTransparent');
+        const caption = item.get('displayProperty') || item.get('buttonCaption');
+        const readOnly = item.get('buttonReadOnly') || item.get('readOnly');
+        const cfg = {};
+        cssStyleGeneration.call(cfg, {
+            size, icon, style, viewMode, iconStyle, transparent, caption, readOnly
+        });
+        return cfg
     }
 });
 
@@ -627,7 +653,7 @@ Toolbar.getDefaultOptions = function() {
 };
 //TODO: Пока не добавлена возможность загружать темизированную css-ку, загружаю ToolbarPopup статически.
 //TODO: https://online.sbis.ru/opendoc.html?guid=b963cb6d-f640-45a9-acdc-aab887ea2f4a
-Toolbar._theme = ['Controls/toolbars'];
+Toolbar._theme = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
 Toolbar._private = _private;
 
 export default Toolbar;

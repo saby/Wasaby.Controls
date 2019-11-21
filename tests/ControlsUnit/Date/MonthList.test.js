@@ -2,7 +2,7 @@ define([
    'Core/core-merge',
    'Types/collection',
    'Controls/calendar',
-   'SBIS3.CONTROLS/Utils/DateUtil',
+   'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils',
    'Controls/_calendar/MonthList/ItemTypes',
    'wml!Controls/_calendar/MonthList/MonthTemplate',

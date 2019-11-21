@@ -74,10 +74,19 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                }));
             } else {
                query.where(function(item) {
-                  if (parent !== undefined) {
-                     return item.get('parent') === parent;
+                  if (filter.parent && filter.parent.indexOf) {
+                     for (var i = 0; i < filter.parent.length; i++) {
+                        if (item.get('parent') === filter.parent[i]) {
+                           return true;
+                        }
+                     }
+                     return false;
                   } else {
-                     return item.get('parent') === null;
+                     if (parent !== undefined) {
+                        return item.get('parent') === parent;
+                     } else {
+                        return item.get('parent') === null;
+                     }
                   }
                });
                TreeMemory.superclass.query.apply(this, arguments).addCallback(function(data) {

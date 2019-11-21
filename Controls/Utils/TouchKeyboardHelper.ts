@@ -63,6 +63,12 @@ const TouchKeyboardHelper = {
       return 0;
    },
 
+   /*
+      В методе написан комментарий, предлагающий альтернативный способ определения видимости клавиатуры на ios.
+      Этот способо не подходит для Wasaby, т.к. фаза построения контрола - асинхронная, фокус, проставленный
+      в поле ввода асинхронно не приводит к показу клавиатуры. Для вычисления клавиатуры на Wasaby передаю опцию
+      notConsiderFocusPosition, которая отключает определение видимости клавиатуры по фокусу в полях ввода.
+   */
    isKeyboardVisible(notConsiderFocusPosition: boolean): boolean {
       let isVisible: boolean = this._keyboardVisible;
 

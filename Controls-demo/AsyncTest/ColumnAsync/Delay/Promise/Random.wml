@@ -1,0 +1,13 @@
+<div class="asyncDemo__column">
+        <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Run" on:click="_setOpen()"/>
+    <ws:if data="{{ _isOpen }}">
+        <Controls.heading:Title  caption="Not Async" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <div class="asyncDemo__column">
+            <Controls-demo.AsyncTest.Childs.Simple.First delay="2100" value="0"/>
+            <Controls-demo.AsyncTest.Childs.Simple.First delay="300" value="1"/>
+            <Controls-demo.AsyncTest.Childs.Simple.First delay="1800" value="2"/>
+            <Controls-demo.AsyncTest.Childs.Simple.First delay="700" value="3"/>
+            <Controls-demo.AsyncTest.Childs.Simple.First delay="1500" value="4"/>
+        </div>
+    </ws:if>
+</div>

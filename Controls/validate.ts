@@ -9,6 +9,7 @@
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
  * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes SelectionContainer Controls/_validate/SelectionContainer
  * @public
  * @author Красильников А.С.
  */
@@ -22,7 +23,8 @@
  * @includes isRequired Controls/_validate/Validators/IsRequired
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
- * includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes SelectionContainer Controls/_validate/SelectionContainer
  * @public
  * @author Красильников А.С.
  */
@@ -36,8 +38,8 @@ export {default as Controller} from 'Controls/_validate/Controller';
 export {default as Container} from 'Controls/_validate/Container';
 export {default as InputContainer} from 'Controls/_validate/InputContainer';
 export {default as DateRangeContainer} from 'Controls/_validate/DateRange';
+export {default as SelectionContainer} from 'Controls/_validate/SelectionContainer';
 export {default as Selection} from 'Controls/_validate/Selection';
-
 export {
     isEmail,
     isRequired,

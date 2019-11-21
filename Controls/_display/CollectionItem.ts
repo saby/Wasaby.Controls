@@ -221,7 +221,7 @@ export default class CollectionItem<T> extends mixin<
      * @param selected Элемент выбран
      * @param [silent=false] Не уведомлять владельца об изменении признака выбранности
      */
-    setSelected(selected: boolean, silent?: boolean): void {
+    setSelected(selected: boolean|null, silent?: boolean): void {
         if (this._$selected === selected) {
             return;
         }

@@ -5,9 +5,10 @@ define(
       'Types/chain',
       'ControlsUnit/Filter/Button/History/testHistorySource',
       'Controls/filter',
-      'Types/entity'
+      'Types/entity', 
+      'Env/Env'
    ],
-   function(List, Serializer, chain, HistorySourceDemo, filter, entity) {
+   function(List, Serializer, chain, HistorySourceDemo, filter, entity, Env) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
@@ -118,6 +119,8 @@ define(
          });
 
          it('pin click', function() {
+            // ! unit-тест без assert
+            if (Env.constants.isServerSide) { return; }
             var savedList = list;
             chain.factory(list._options.items).each(function(item) {
                if (item) {

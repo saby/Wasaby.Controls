@@ -1,17 +1,16 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import coreMerge = require('Core/core-merge');
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
-const _private = {
-    getStickyConfig(config) {
-        config = config || {};
-        config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-        config._vdomOnOldPage = config.hasOwnProperty('_vdomOnOldPage') ? config._vdomOnOldPage : true; // Открывается всегда вдомным
-        return config;
-    }
+const getStickyConfig = (config) => {
+    config = config || {};
+    config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+    config._vdomOnOldPage = config.hasOwnProperty('_vdomOnOldPage') ? config._vdomOnOldPage : true; // Открывается всегда вдомным
+    return config;
 };
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
+
 /*
  * Component that opens a popup that is positioned relative to a specified element.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
@@ -27,7 +26,8 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
 
 /**
  * Контрол, открывающий всплывающее окно, которое позиционнируется относительно вызывающего элемента.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
+ * @remark
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ здесь}.
  * @class Controls/_popup/Opener/Sticky
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/interface/IOpener
@@ -48,19 +48,20 @@ class Sticky extends BaseOpener {
      * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
      * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
      * @property {function|String} template Шаблон всплывающего окна
-     * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
+     * @property {function|String} templateOptions  Опции для контрола, переданного в {@link template}
      * @property {Object} targetPoint Точка позиционнирования всплывающего окна относительно вызывающего элемента.
-     * @property {Object} direction  Устанавливает выравнивание всплывающего окна относительно точки позиционнирования.
+     * @property {Object} direction Устанавливает выравнивание всплывающего окна относительно точки позиционнирования.
      * @property {Object} offset Устанавливает отступы от точки позиционнирования до всплывающего окна
-     * @property {Number} minWidth  Минимальная ширина всплывающего окна
+     * @property {Number} minWidth Минимальная ширина всплывающего окна
      * @property {Number} maxWidth Максимальная ширина всплывающего окна
      * @property {Number} minHeight Минимальная высота всплывающего окна
      * @property {Number} maxHeight Максимальная высота всплывающего окна
      * @property {Number} height Текущая высота всплывающего окна
      * @property {Number} width Текущая ширина всплывающего окна
-     * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционнируется всплывающее окно.
+     * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционируется всплывающее окно.
      * @property {Node} opener Логический инициатор открытия всплывающего окна
-     * @property {String} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+     * @property {fittingMode} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+     * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события всплывающего окна.
      */
 
     /*
@@ -69,9 +70,6 @@ class Sticky extends BaseOpener {
      * @function Controls/_popup/Opener/Sticky#open
      * @param {PopupOptions} popupOptions Sticky popup options.
      * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
-     * @example
-     * wml
-     * <pre>
      */
 
     /**
@@ -118,10 +116,32 @@ class Sticky extends BaseOpener {
      * @see close
      * @see openPopup
      * @see closePopup
-
      */
-    open(config) {
-        BaseOpener.prototype.open.call(this, _private.getStickyConfig(config), POPUP_CONTROLLER);
+    open(popupOptions): Promise<string | undefined> {
+        return super.open(getStickyConfig(popupOptions), POPUP_CONTROLLER);
+    }
+
+    static openPopup(config: object): Promise<string> {
+        return new Promise((resolve) => {
+            const newCfg = getStickyConfig(config);
+            if (!newCfg.hasOwnProperty('opener')) {
+                Logger.error('Controls/popup:Sticky: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+            }
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
+                    resolve(popupId);
+                });
+            });
+        });
+    }
+
+    static closePopup(popupId: string): void {
+        BaseOpener.closeDialog(popupId);
+    }
+
+    static getDefaultOptions() {
+        // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
+        return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
     }
 }
 
@@ -152,11 +172,9 @@ class Sticky extends BaseOpener {
  *       Sticky.closePopup(this._popupId);
  *    }
  * </pre>
-
  * @see closePopup
  * @see close
  * @see open
-
  */
 
 /*
@@ -168,19 +186,7 @@ class Sticky extends BaseOpener {
  * @static
  * @see closePopup
  */
-Sticky.openPopup = (config: object): Promise<string> => {
-    return new Promise((resolve) => {
-        const newCfg = _private.getStickyConfig(config);
-        if (!newCfg.hasOwnProperty('opener')) {
-            IoC.resolve('ILogger').error(Sticky.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
-        }
-        BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-            BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
-                resolve(popupId);
-            });
-        });
-    });
-};
+
 /**
  * Статический метод для закрытия окна по идентификатору.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/#open-popup Подробнее}.
@@ -216,15 +222,8 @@ Sticky.openPopup = (config: object): Promise<string> => {
  * @static
  * @see openPopup
  */
-Sticky.closePopup = (popupId: string): void => {
-    BaseOpener.closeDialog(popupId);
-};
 
-Sticky.getDefaultOptions = function() {
-    // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
-    return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
-};
-export = Sticky;
+export default Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#close
@@ -298,7 +297,7 @@ export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#target
- * @cfg {Node|Control} Элемент (DOM-элемент или контрол), относительно которого позиционнируется всплывающее окно.
+ * @cfg {Node|Control} Элемент (DOM-элемент или контрол), относительно которого позиционируется всплывающее окно.
  */
 
 /**
@@ -369,7 +368,7 @@ export = Sticky;
  * @cfg {offset} Sets the offset of the targetPoint.
  */
 
- /**
+/**
  * @typedef {Object} offset
  * @property {Number} vertical
  * @property {Number} horizontal
@@ -377,7 +376,17 @@ export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#fittingMode
- * @cfg {Enum} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+ * @cfg {fittingMode} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+ */
+
+/**
+ * @typedef {Object} fittingMode
+ * @property {fittingModeValue} vertical
+ * @property {fittingModeValue} horizontal
+ */
+
+/**
+ * @typedef {Enum} fittingModeValue
  * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
  * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
  * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.

@@ -13,7 +13,7 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
  * @mixes Controls/interface/IBreadCrumbs
  * @mixes Controls/_breadcrumbs/BreadCrumbsStyles
  * @control
- * @public
+ * @private
  * @author Авраменко А.С.
  * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
  */
@@ -27,7 +27,7 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
  * @mixes Controls/interface/IBreadCrumbs
  * @mixes Controls/_breadcrumbs/BreadCrumbsStyles
  * @control
- * @public
+ * @private
  * @author Авраменко А.С.
  * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
  */

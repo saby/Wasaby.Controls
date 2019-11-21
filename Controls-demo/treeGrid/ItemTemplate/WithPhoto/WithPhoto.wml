@@ -1,0 +1,77 @@
+<div class="controlsDemo__wrapper_fixed_width">
+
+    <div class="controlsDemo__wrapper">
+        <div>16px image</div>
+        <Controls.treeGrid:View
+                attr:class="demoTreeWithProto__treeGrid16"
+                keyProperty="id"
+                source="{{_viewSource}}"
+                columns="{{_columns}}"
+                parentProperty="parent"
+                nodeProperty="type">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/treeGrid:ItemTemplate" expanderSize="s" itemData="{{itemData}}" />
+            </ws:itemTemplate>
+        </Controls.treeGrid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <div>24px image</div>
+        <Controls.treeGrid:View
+                attr:class="demoTreeWithProto__treeGrid24"
+                keyProperty="id"
+                source="{{_viewSource}}"
+                columns="{{_columns}}"
+                parentProperty="parent"
+                nodeProperty="type">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/treeGrid:ItemTemplate" expanderSize="m" itemData="{{itemData}}" />
+            </ws:itemTemplate>
+        </Controls.treeGrid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <div>32px image</div>
+        <Controls.treeGrid:View
+                attr:class="demoTreeWithProto__treeGrid32"
+                keyProperty="id"
+                source="{{_viewSource}}"
+                columns="{{_columns}}"
+                parentProperty="parent"
+                nodeProperty="type">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/treeGrid:ItemTemplate" expanderSize="l" itemData="{{itemData}}" />
+            </ws:itemTemplate>
+        </Controls.treeGrid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <div>40px image</div>
+        <Controls.treeGrid:View
+                attr:class="demoTreeWithProto__treeGrid40"
+                keyProperty="id"
+                source="{{_viewSource}}"
+                columns="{{_columns}}"
+                parentProperty="parent"
+                nodeProperty="type">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/treeGrid:ItemTemplate" expanderSize="xl" itemData="{{itemData}}" />
+            </ws:itemTemplate>
+        </Controls.treeGrid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <div>Two levels tree</div>
+        <Controls.treeGrid:View
+                attr:class="demoTreeWithProto__treeGridTwoLevels"
+                keyProperty="id"
+                parentProperty="Раздел"
+                nodeProperty="Раздел@"
+                source="{{_viewSourceTwo}}"
+                columns="{{_twoLvlColumns}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/treeGrid:ItemTemplate" withoutLevelPadding="{{true}}" itemData="{{itemData}}"/>
+            </ws:itemTemplate>
+        </Controls.treeGrid:View>
+    </div>
+</div>

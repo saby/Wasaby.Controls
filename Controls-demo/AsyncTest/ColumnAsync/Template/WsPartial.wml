@@ -1,0 +1,16 @@
+<div class="asyncDemo__column">
+    <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Run" on:click="_setOpen()"/>
+    <ws:if data="{{ _isOpen }}">
+        <ws:for data="i in 2">
+            <div class="asyncDemo__row">
+                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Async"/>
+                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/NotAsync"/>
+            </div>
+        </ws:for>
+        <div class="asyncDemo__row">
+            <ws:for data="i in 2">
+                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Combination" indexOpt="{{i}}"/>
+            </ws:for>
+        </div>
+    </ws:if>
+</div>

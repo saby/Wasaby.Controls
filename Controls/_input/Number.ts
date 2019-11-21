@@ -1,4 +1,4 @@
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Number/ViewModel');
@@ -47,7 +47,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
 var _private = {
     validateOptions: function (options) {
         if (options.integersLength <= 0) {
-            Env.IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
+            Logger.error('Number: Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
         }
     },
     convertToNumber: function (value) {
@@ -115,4 +115,4 @@ NumberInput.getOptionTypes = function () {
 };
 
 export = NumberInput;
-   
+

@@ -5,7 +5,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import {IoC, constants} from 'Env/Env';
+import {constants} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
@@ -42,7 +43,7 @@ import 'Types/entity';
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
-               self._options.itemOpenHandler(root);
+               self._options.itemOpenHandler(root, self._items);
             }
             self._forceUpdate();
          },
@@ -155,7 +156,7 @@ import 'Types/entity';
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               result = _private.loadTileViewMode().then(() => {
+               result = _private.loadTileViewMode(self).then(() => {
                   _private.setViewModeSync(self, viewMode, cfg);
                });
             } else {
@@ -197,14 +198,14 @@ import 'Types/entity';
 
             return itemFromRoot;
          },
-         loadTileViewMode: function () {
+         loadTileViewMode: function (self) {
             return new Promise((resolve) => {
                import('Controls/tile').then((tile) => {
                   VIEW_NAMES.tile = tile.TreeView;
                   VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
                   resolve(tile);
                }).catch((err) => {
-                  IoC.resolve('ILogger').error('Controls/_explorer/View', err);
+                  Logger.error('Controls/_explorer/View: ' + err.message, self, err);
                });
             });
          }
@@ -342,7 +343,9 @@ import 'Types/entity';
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode, cfg);
-            this._children.treeControl.resetExpandedItems();
+            if (cfg.searchNavigationMode !== 'expand') {
+               this._children.treeControl.resetExpandedItems();
+            }
          }
          if (cfg.virtualScrolling !== this._options.virtualScrolling) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);

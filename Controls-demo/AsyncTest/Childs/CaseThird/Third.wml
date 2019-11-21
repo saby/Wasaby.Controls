@@ -1,0 +1,3 @@
+<div>
+    <Controls.heading:Title  caption="_isFilterWrapper" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+</div>

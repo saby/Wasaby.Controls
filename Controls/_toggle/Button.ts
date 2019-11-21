@@ -182,7 +182,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
    protected _iconStyle: string;
 
    private _optionsGeneration(options: IToggleButtonOptions): void {
-      const currentButtonClass = Classes.getCurrentButtonClass(options.style);
+      const currentButtonClass = Classes.getCurrentButtonClass(options.style, this);
 
       // Называть _style нельзя, так как это состояние используется для темизации
       this._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;

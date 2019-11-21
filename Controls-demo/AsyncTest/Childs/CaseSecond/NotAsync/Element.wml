@@ -1,0 +1,1 @@
+<div class="asyncDemo__element">{{_options.value}}</div>

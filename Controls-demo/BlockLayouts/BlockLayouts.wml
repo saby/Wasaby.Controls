@@ -2,13 +2,13 @@
    <div class="controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">Статическая вертикальная раскладка</div>
       <div>
-         <div class="controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-bottom">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-bottom">
             <div class="controlsDemo-BlockLayouts__block">1</div>
          </div>
-         <div class="controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-bottom">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-bottom">
             <div class="controlsDemo-BlockLayouts__block">2</div>
          </div>
-         <div class="controls-BlockLayout__block_style_2">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2">
             <div class="controlsDemo-BlockLayouts__block">3</div>
          </div>
       </div>
@@ -16,10 +16,10 @@
    <div class="controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">Статическая вертикальная раскладка. Блоки заполняют предоставленную область не полностью.</div>
       <div class="controls-BlockLayout_background" style="height: 600px;">
-         <div class="controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-bottom">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-bottom">
             <div class="controlsDemo-BlockLayouts__block">1</div>
          </div>
-         <div class="controls-BlockLayout__block_style_2">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2">
             <div class="controlsDemo-BlockLayouts__block">2</div>
          </div>
       </div>
@@ -27,13 +27,13 @@
    <div class="controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">Статическая горизонтальная раскладка</div>
       <div class="ws-flexbox">
-         <div class="controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-right ws-flex-grow-1">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-right ws-flex-grow-1">
             <div class="controlsDemo-BlockLayouts__block">1</div>
          </div>
-         <div class="controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-right ws-flex-grow-1">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-right ws-flex-grow-1">
             <div class="controlsDemo-BlockLayouts__block">2</div>
          </div>
-         <div class="controls-BlockLayout__block_style_2 ws-flex-grow-1">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 ws-flex-grow-1">
             <div class="controlsDemo-BlockLayouts__block">3</div>
          </div>
       </div>
@@ -42,22 +42,22 @@
       <div class="controls-text-label_theme-{{_options.theme}}">Статическая смешанная раскладка</div>
       <div>
          <div class="ws-flexbox controls-BlockLayout__block_border-bottom">
-            <div class="controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-right ws-flex-grow-1">
+            <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-right ws-flex-grow-1">
                <div class="controlsDemo-BlockLayouts__block">1</div>
             </div>
-            <div class="controls-BlockLayout__block_style_2 ws-flex-grow-1">
+            <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 ws-flex-grow-1">
                <div class="controlsDemo-BlockLayouts__block">2</div>
             </div>
          </div>
          <div class="ws-flexbox controls-BlockLayout__block_border-bottom">
-            <div class="controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-right ws-flex-grow-1">
+            <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 controls-BlockLayout__block_border-right ws-flex-grow-1">
                <div class="controlsDemo-BlockLayouts__block">3</div>
             </div>
-            <div class="controls-BlockLayout__block_style_2 ws-flex-grow-1">
+            <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2 ws-flex-grow-1">
                <div class="controlsDemo-BlockLayouts__block">4</div>
             </div>
          </div>
-         <div class="controls-BlockLayout__block_style_2">
+         <div class="controls-BlockLayout__block controls-BlockLayout__block_style_2">
             <div class="controlsDemo-BlockLayouts__block">5</div>
          </div>
       </div>

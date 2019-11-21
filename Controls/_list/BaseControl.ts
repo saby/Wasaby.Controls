@@ -21,14 +21,15 @@ import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {constants, detection, IoC} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
-
+import {Memory} from 'Types/source';
+import {Logger} from 'UI/Utils';
 import {create as diCreate} from 'Types/di';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
@@ -37,6 +38,14 @@ var
     defaultSelectedKeys = [],
     defaultExcludedKeys = [];
 
+const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
+                         {id: 2, title: '10', pageSize: 10},
+                         {id: 3, title: '25', pageSize: 25},
+                         {id: 4, title: '50', pageSize: 50},
+                         {id: 5, title: '100', pageSize: 100},
+                         {id: 6, title: '200', pageSize: 200},
+                         {id: 7, title: '500', pageSize: 500},
+                         {id: 8, title: '1000', pageSize: 1000}];
 const
     HOT_KEYS = {
         moveMarkerToNext: constants.key.down,
@@ -116,7 +125,7 @@ let getData = (crudResult: CrudResult): Promise<any> => {
 var _private = {
     checkDeprecated: function(cfg) {
         if (cfg.historyIdCollapsedGroups) {
-            IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
     },
 
@@ -143,8 +152,8 @@ var _private = {
                 }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
-                    self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
-                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, cfg.navigation.sourceConfig.pageSize, self._currentPage);
+                    self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, self._currentPageSize);
+                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, self._currentPageSize, self._currentPage);
                 }
                 var
                     isActive,
@@ -242,7 +251,7 @@ var _private = {
                 cfg.afterReloadCallback(cfg);
             }
             resDeferred.callback();
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+            Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
         }
         return resDeferred;
     },
@@ -553,7 +562,7 @@ var _private = {
                 });
             });
         }
-        IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+        Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
     },
 
     // Применяем расчитанные и хранимые на virtualScroll стартовый и конечный индексы на модель.
@@ -688,8 +697,7 @@ var _private = {
 
         if (navigation && navigation.view === 'maxCount') {
             if (!navigation.viewConfig || typeof navigation.viewConfig.maxCountValue !== 'number') {
-                IoC.resolve('ILogger')
-                   .error('BaseControl', 'maxCountValue is required for "maxCount" navigation type.');
+                Logger.error('BaseControl: maxCountValue is required for "maxCount" navigation type.');
             } else {
                 result = navigation.viewConfig.maxCountValue > listViewModel.getCount();
             }
@@ -1271,8 +1279,7 @@ var _private = {
                    if (typeof self._options.contextMenuConfig === 'object') {
                       cMerge(defaultMenuConfig, self._options.contextMenuConfig);
                    } else {
-                      IoC.resolve('ILogger').error('CONTROLS.ListView',
-                         'Некорректное значение опции contextMenuConfig. Ожидается объект');
+                       Logger.error('Controls/list:View: Некорректное значение опции contextMenuConfig. Ожидается объект');
                    }
                 }
 
@@ -1505,7 +1512,7 @@ var _private = {
         if (typeof totalItemsCount === 'number') {
             pagingLabelData = {
                 totalItemsCount: totalItemsCount,
-                pageSize: pageSize,
+                pageSize: pageSize.toString(),
                 firstItemNumber: (currentPage - 1) * pageSize + 1,
                 lastItemNumber: Math.min(currentPage * pageSize, totalItemsCount)
             };
@@ -1515,7 +1522,7 @@ var _private = {
         return pagingLabelData;
     },
 
-    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
+    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty: string}): SourceController {
         return new SourceController({
             source: source,
             navigation: navigation,
@@ -1525,7 +1532,7 @@ var _private = {
 
     checkRequiredOptions: function(options) {
         if (options.keyProperty === undefined) {
-            IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
+            Logger.warn('BaseControl: Option "keyProperty" is required.');
         }
     },
 
@@ -1543,6 +1550,7 @@ var _private = {
     },
     resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
+        self._currentPageSize = navigation && navigation.sourceConfig && navigation.sourceConfig.pageSize || 1;
 
         //TODO: KINGO
         // нумерация страниц пейджинга начинается с 1, а не с 0 , поэтому текущая страница пейджига это страница навигации + 1
@@ -1581,14 +1589,19 @@ var _private = {
             self._virtualScrollTriggerVisibility = null;
             self._pagingVisible = false;
         }
-
-        if (!self._pagingNavigation) {
+        if (self._pagingNavigation) {
+            _private.resetPagingNavigation(self, cfg.navigation);
+            self._pageSizeSource = new Memory({
+                keyProperty: 'id',
+                data: PAGE_SIZE_ARRAY
+            })
+        } else {
             self._pagingNavigationVisible = false;
             _private.resetPagingNavigation(self, cfg.navigation);
         }
     },
     updateNavigation: function(self) {
-        self._pagingNavigationVisible = self._pagingNavigation && self._knownPagesCount > 1;
+        self._pagingNavigationVisible = self._pagingNavigation;
     },
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
@@ -1709,9 +1722,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     //Variables for paging navigation
     _knownPagesCount: INITIAL_PAGES_COUNT,
     _currentPage: INITIAL_PAGES_COUNT,
+    _currentPageSize: null,
     _pagingNavigation: false,
     _pagingNavigationVisible: false,
     _pagingLabelData: null,
+    _pageSizeSource: null,
 
     _blockItemActionsByScroll: false,
 
@@ -1803,8 +1818,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
-                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
-                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, newOptions.navigation.sourceConfig.pageSize, self._currentPage);
+                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
+                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
@@ -2036,9 +2051,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (itemsCount === 1) {
                     loadCallback(items.at(0));
                 } else if (itemsCount > 1) {
-                    IoC.resolve('ILogger').error('BaseControl', 'reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
+                    Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
                 } else {
-                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::query returns empty recordSet.');
+                    Logger.info('BaseControl: reloadItem::query returns empty recordSet.');
                 }
                 return items;
             });
@@ -2047,7 +2062,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (item) {
                     loadCallback(item);
                 } else {
-                    IoC.resolve('ILogger').info('BaseControl', 'reloadItem::read do not returns record.');
+                    Logger.info('BaseControl: reloadItem::read do not returns record.');
                 }
                 return item;
             });
@@ -2458,7 +2473,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._listViewModel && this._hasItemActions) {
             this._children.itemActions.updateActions();
         }
-    }
+    },
     _onAfterEndEdit: function(event, item, isAdd) {
         this._shouldUpdateItemActions = true;
         return this._notify('afterEndEdit', [item, isAdd]);
@@ -2642,14 +2657,25 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     __pagingChangePage: function (event, page) {
         this._currentPage = page;
+        this._applyPagingNavigationState({page: this._currentPage});
+    },
+    _changePageSize: function(e, item) {
+        this._currentPageSize = item.get('pageSize');
+        this._applyPagingNavigationState({pageSize: this._currentPageSize});
+    },
+    _applyPagingNavigationState: function(params) {
         var newNavigation = cClone(this._options.navigation);
-        newNavigation.sourceConfig.page = page - 1;
+        if (params.pageSize) {
+            newNavigation.sourceConfig.pageSize = params.pageSize;
+        }
+        if (params.page) {
+            newNavigation.sourceConfig.page = params.page - 1;
+            newNavigation.sourceConfig.pageSize = this._currentPageSize;
+        }
         this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
-        var self = this;
-        _private.reload(self, self._options);
+        _private.reload(this, this._options);
         this._shouldRestoreScrollPosition = true;
     },
-
     _recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
 
         if (this._sourceController) {
@@ -2709,7 +2735,8 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
-        stickyHeader: true
+        stickyHeader: true,
+        selectionStrategy: 'Controls/operations:FlatSelectionStrategy'
     };
 };
 export = BaseControl;

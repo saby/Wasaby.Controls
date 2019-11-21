@@ -17,10 +17,11 @@
  * @includes IButton Controls/_buttons/interface/IButton
  * @author Красильников А.С.
  */
+import * as ButtonTemplate from 'wml!Controls/_buttons/ButtonBase';
 
-export {default as Button} from './_buttons/Button';
+export {default as Button, cssStyleGeneration} from './_buttons/Button';
 export {default as ActualApi} from './_buttons/ActualApi';
 export {IHref as IHref} from './_buttons/interface/IHref';
 export {IClick as IClick} from './_buttons/interface/IClick';
 export {IButton as IButton} from './_buttons/interface/IButton';
-
+export {ButtonTemplate};

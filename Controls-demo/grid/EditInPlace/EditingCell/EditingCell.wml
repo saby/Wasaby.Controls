@@ -1,0 +1,12 @@
+<div class="controlsDemo__cell">
+    <Controls.list:AddButton caption="Add record" on:click="list.beginAdd()" class="test_add_record_1"/>
+    <Controls.grid:View
+            name="list"
+            keyProperty="id"
+            source="{{_viewSource}}"
+            columns="{{_columns}}">
+        <ws:editingConfig>
+            <ws:Object editOnClick="{{true}}" autoAdd="{{true}}"/>
+        </ws:editingConfig>
+    </Controls.grid:View>
+</div>

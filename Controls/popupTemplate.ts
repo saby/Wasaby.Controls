@@ -9,9 +9,7 @@
  * @includes InfoBox Controls/_popupTemplate/InfoBox
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
- * @includes NotificationStyles Controls/_popupTemplate/Notification/NotificationStyles
  * @includes INotification Controls/_popupTemplate/Notification/interface/INotification
- * @includes CloseButtonStyles Controls/_popupTemplate/CloseButton/CloseButtonStyles
  * @public
  * @author Крайнов Д.О.
  */
@@ -26,8 +24,6 @@
  * @includes InfoBox Controls/_popupTemplate/InfoBox
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
- * @includes NotificationStyles Controls/_popupTemplate/Notification/NotificationStyles
- * @includes CloseButtonStyles Controls/_popupTemplate/CloseButton/CloseButtonStyles
  * @public
  * @author Крайнов Д.О.
  */

@@ -104,17 +104,8 @@ export default class Root<S, T> extends mixin<
 
     _getSerializableState(state: ISerializableState): ISerializableState {
         const resultState = SerializableMixin.prototype._getSerializableState.call(this, state);
-
         resultState.$options = this._options;
-
         return resultState;
-    }
-
-    _setSerializableState(state: ISerializableState): Function {
-        const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-        return function(): void {
-            fromSerializableMixin.call(this);
-        };
     }
 
     // endregion

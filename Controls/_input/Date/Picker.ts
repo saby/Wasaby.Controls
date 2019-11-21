@@ -69,7 +69,9 @@ import 'css!theme?Controls/input';
             target: this._container,
             template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker',
-            horizontalAlign: { side: 'right' },
+            direction: {
+                horizontal: 'right'
+            },
             targetPoint: { horizontal: 'left' },
             fittingMode: 'overflow',
             eventHandlers: {

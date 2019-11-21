@@ -1,0 +1,67 @@
+<div class="asyncDemo">
+    <Controls.heading:Title caption="Тест асинхронной генерации контролов" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+    <div class="asyncDemo__column">
+        <Controls.heading:Title caption="Кейс № 1" readOnly="{{true}}" fontColorStyle="primary" fontSize="3xl"/>
+        <Controls.heading:Title caption="Тест направлен на воспроизведение ошибки неправильного вертикального порядка построения контролов" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <Controls.heading:Title caption="Примеры ошибок" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <div class="asyncDemo__row">
+            <Controls.buttons:Button href="{{'https://online.sbis.ru/doc/8cf98f50-73b0-411c-8e9a-3eb365c7362b'}}" readOnly="{{false}}" fontSize="s" inlineHeight="s"  caption="SMOKE автотесты ..." attr:class="asyncDemo__navigationButton"/>
+            <Controls.buttons:Button href="{{'https://online.sbis.ru/doc/a7c9d29f-6f93-445c-a125-bc4c3b17deb3'}}" readOnly="{{false}}" fontSize="s" inlineHeight="s"  caption="Пункт С компьютера ..." attr:class="asyncDemo__navigationButton"/>
+        </div>
+        <Controls.heading:Title caption="Перейти к тестам" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FAscend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FAscendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FDescend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FDescendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FRandom'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #5" attr:class="asyncDemo__navigationButton"/>
+
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FAscend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #6" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FAscendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #7" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FDescend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #8" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FDescendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #9" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FRandom'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #10" attr:class="asyncDemo__navigationButton"/>
+
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FContainerAsync%252FWithoutAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #11" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FContainerAsync%252FWithAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #12" attr:class="asyncDemo__navigationButton"/>
+
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FTemplate%252FWsPartial'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #13" attr:class="asyncDemo__navigationButton"/>
+
+    </div>
+
+    <div class="asyncDemo__column">
+        <Controls.heading:Title caption="Кейс № 2" readOnly="{{true}}" fontColorStyle="primary" fontSize="3xl"/>
+        <Controls.heading:Title caption="Тест направлен на воспроизведение ошибки неправильного порядка глубины построения контролов" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <Controls.heading:Title caption="Примеры" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <div class="asyncDemo__row">
+            <Controls.buttons:Button href="{{'https://online.sbis.ru/doc/cd3c186d-9291-4912-8464-18b9a875ab16'}}" readOnly="{{false}}" fontSize="s" inlineHeight="s"  caption="(layout-chrome) 19.610 schemeeditor" attr:class="asyncDemo__navigationButton"/>
+        </div>
+
+        <Controls.heading:Title caption="Перейти к тестам" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest1'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest2'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest3'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest4'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest5'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #5" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest6'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #6" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest7'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #7" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest8'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #8" attr:class="asyncDemo__navigationButton"/>
+
+    </div>
+
+
+    <div class="asyncDemo__column">
+        <Controls.heading:Title caption="Кейс № 3" readOnly="{{true}}" fontColorStyle="primary" fontSize="3xl"/>
+        <Controls.heading:Title caption="Тест направлен на воспроизведение ошибки неправильного порядка горизонтального построения контролов" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <Controls.heading:Title caption="Примеры" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <div class="asyncDemo__row">
+            <Controls.buttons:Button href="{{'https://online.sbis.ru/doc/f8d272ff-d8c0-447f-8bec-fd3a021fd3b0'}}" readOnly="{{false}}" fontSize="s" inlineHeight="s"  caption="ПРИЕМОЧНЫЕ автотесты ..." attr:class="asyncDemo__navigationButton"/>
+        </div>
+        <Controls.heading:Title caption="Перейти к тестам" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FNotAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FDecreaseAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FIncreaseAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
+        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FRandomAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
+
+    </div>
+
+</div>

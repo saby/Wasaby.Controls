@@ -7,6 +7,7 @@ import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import 'Controls/decorator';
+import {Logger} from 'UI/Utils';
 
 
       /**
@@ -187,27 +188,27 @@ import 'Controls/decorator';
             }
          },
 
-         validateLines: function(min, max) {
+         validateLines: function(min, max, self) {
             var validated = true;
 
             if (min > max) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines and maxLines options are not set correctly. The minLines more than the maxLines.');
+               Logger.error('Controls/_input/Area: The minLines and maxLines options are not set correctly. The minLines more than the maxLines.', self);
             }
 
             if (min < 1) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines options are not set correctly. The minLines less than one.');
+               Logger.error('Controls/_input/Area: The minLines options are not set correctly. The minLines less than one.', self);
             }
 
             if (max < 1) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
+               Logger.error('Controls/_input/Area: The maxLines options are not set correctly. The maxLines less than one.', self);
             }
 
             if (min > 10 || max > 10) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines and maxLines options are not set correctly. Values greater than 10 are not supported.');
+                Logger.error('Controls/_input/Area: The minLines and maxLines options are not set correctly. Values greater than 10 are not supported.', self);
             }
 
             return validated;
@@ -243,7 +244,7 @@ import 'Controls/decorator';
          _beforeMount: function(options) {
             Area.superclass._beforeMount.apply(this, arguments);
 
-            _private.validateLines(options.minLines, options.maxLines);
+            _private.validateLines(options.minLines, options.maxLines, this);
             this._heightLine = ActualAPI.heightLine(options.size, options.fontSize);
          },
 

@@ -7,7 +7,9 @@ function getFewCategories(): Array<{
     title: string,
     description: string,
     byDemand?: 'Popular' | 'Unpopular' | 'Hit!',
-    tplPath?: string
+    tplPath?: string,
+    clickable?: boolean,
+    hovered?: boolean
 }> {
     return [
         {
@@ -15,36 +17,51 @@ function getFewCategories(): Array<{
             title: 'Notebooks',
             description: 'Trusted Reviews ranks all your top laptop and notebook options, whether you want a ...',
             byDemand: 'Popular',
-            tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateNoHighlight'
+            tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateNoHighlight',
+            clickable: false,
+            hovered: false,
+            value: 'clickable - false, hovered - false'
         },
         {
             id: 2,
             title: 'Tablets',
             byDemand: 'Unpopular',
-            description: 'Tablets are great for playing games, reading, homework, keeping kids entertained in the back seat of the car'
+            description: 'Tablets are great for playing games, reading, homework, keeping kids entertained in the back seat of the car',
+            clickable: true,
+            hovered: true,
+            value: 'clickable - true, hovered - true'
         },
         {
             id: 3,
             title: 'Laptop computers',
             description: 'Explore PCs and laptops to discover the right device that powers all that you do',
             byDemand: 'Unpopular',
-            tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateWithDescription'
+            tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateWithDescription',
+            clickable: false,
+            hovered: true,
+            value: 'clickable - false, hovered - true'
         },
         {
             id: 4,
             title: 'Apple gadgets',
             description: 'Explore new Apple accessories for a range of Apple products',
             byDemand: 'Hit!',
-            tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateNoHighlight'
+            tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateNoHighlight',
+            clickable: true,
+            hovered: false,
+            value: 'clickable - true, hovered - false'
         },
         {
             id: 5,
             title: 'Android gadgets',
             description: 'These 25 clever phone accessories and Android-compatible gadgets',
             byDemand: 'Popular',
-            tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateWithDescription'
+            tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateWithDescription',
+            clickable: false,
+            hovered: false,
+            value: 'clickable - false, hovered - false'
         }
-    ]
+    ];
 }
 
 function getGroupedCatalog(): Array<{

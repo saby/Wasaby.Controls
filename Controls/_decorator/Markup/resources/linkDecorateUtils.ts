@@ -125,7 +125,7 @@ function isLinkGoodForDecorating(linkNode) {
  * Модуль с утилитами для работы с декорированной ссылкой.
  *
  * @class Controls/_decorator/Markup/resources/linkDecorateUtils
- * @public
+ * @private
  * @author Кондаков Р.Н.
  */
 

@@ -1,10 +1,10 @@
 define('Controls/Utils/tmplNotify', [], function() {
-
    'use strict';
 
    /**
     * A handler to use in templates to proxy events to the logic parent.
     */
+   /* eslint-disable */
    return function(event, eventName) {
       /**
        * We can't ignore bubbling events here, because no one guarantees they're the same.
@@ -14,4 +14,5 @@ define('Controls/Utils/tmplNotify', [], function() {
       var args = Array.prototype.slice.call(arguments, 2);
       return this._notify(eventName, args);
    };
+   /* eslint-enable */
 });

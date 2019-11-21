@@ -1,0 +1,17 @@
+<div class="asyncDemo__row">
+    <div>
+        {{_options.value}} {{_options.delay}}:&nbsp;
+    </div>
+    <Controls.heading:Title  caption="Not Async" readOnly="{{true}}" fontColorStyle="secondary" fontSize="s"/>
+    <ws:for data="i in 3">
+        <ws:if data="{{ i === 2 }}">
+            <Controls-demo.AsyncTest.Childs.Simple.ThirdNested delay="{{i * 200 + (_options.value * 50)}}" value="{{i}}"/>
+        </ws:if>
+        <ws:else data="{{ i === 1 }}">
+            <Controls-demo.AsyncTest.Childs.Simple.ThirdNested delay="{{(5-i) * 200 + ((5-_options.value) * 50)}}" value="{{i}}"/>
+        </ws:else>
+        <ws:else>
+            <Controls-demo.AsyncTest.Childs.Simple.ThirdNested delay="{{i * 300}}" value="{{i}}"/>
+        </ws:else>
+    </ws:for>
+</div>

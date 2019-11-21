@@ -56,7 +56,7 @@ import template = require('wml!Controls/_dateRange/Input/Input');
  * @demo Controls-demo/Input/Date/RangePG
  * @category Input
  * @author Красильников А.С.
- */ 
+ */
 
 var Component = Control.extend([], {
     _template: template,
@@ -87,7 +87,7 @@ var Component = Control.extend([], {
             target: this._container,
             template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker',
-            horizontalAlign: { side: 'right' },
+            direction: {horizontal: 'right'},
             targetPoint: { horizontal: 'left' },
             fittingMode: 'overflow',
             eventHandlers: {

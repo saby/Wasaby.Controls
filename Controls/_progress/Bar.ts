@@ -1,13 +1,13 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import barTemplate = require('wml!Controls/_progress/Bar/Bar');
 
 export interface IBarOptions extends IControlOptions {
    value?: number;
 }
 /**
- * Базовый индикатор выполнения процесса. 
+ * Базовый индикатор выполнения процесса.
  * Отображает полосу прогресса выполнения.
  * @class Controls/_progress/Bar
  * @extends Core/Control
@@ -35,7 +35,7 @@ export interface IBarOptions extends IControlOptions {
  * @css @color-ProgressBar__bar Progress bar background color
  * @css @height-ProgressBar_bar Progress bar height
  * @css @color-ProgressBar__progress Progress bar fill color
- */ 
+ */
 
 /**
  * @name Controls/_progress/Bar#value
@@ -49,7 +49,7 @@ export interface IBarOptions extends IControlOptions {
  * @cfg {Number} Progress in percents (ratio of the filled part)
  * @remark
  * An integer from 1 to 100.
- */ 
+ */
 class Bar extends Control<IBarOptions> {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = barTemplate;
@@ -58,7 +58,7 @@ class Bar extends Control<IBarOptions> {
    private _getWidth(val: number): string {
       const maxPercentValue = 100;
       if (val < 0 || val > maxPercentValue) {
-         IoC.resolve('ILogger').error('Bar', 'The value must be in range of [0..100]');
+         Logger.error('Bar: The value must be in range of [0..100]', this);
       }
       return (val > 0 ? Math.min(val, maxPercentValue) + '%' : '0px');
    }

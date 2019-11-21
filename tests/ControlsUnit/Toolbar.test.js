@@ -6,75 +6,133 @@ define(
       'Types/source'
    ],
    (toolbars, entity, collection, sourceLib) => {
-   describe('Toolbar', () => {
-   let defaultItems = [
-      {
-         id: '1',
-         title: 'Запись 1',
-         parent: null,
-         '@parent': null
-      },
-      {
-         id: '2',
-         title: 'Запись 2',
-         parent: null,
-         '@parent': true,
-         icon: 'icon-Ezy',
-         iconStyle: 'super'
-      },
-      {
-         id: '3',
-         title: 'Запись 3',
-         icon: 'icon-medium icon-Doge icon-primary',
-         parent: null,
-         '@parent': null,
-         showType: 2
-      },
-      {
-         id: '4',
-         title: 'Запись 4',
-         buttonViewMode: 'link',
-         parent: '2',
-         '@parent': null,
-         showType: 0
-      },
-      {
-         id: '5',
-         title: 'Запись 4',
-         buttonViewMode: 'link'
-      }
-   ];
+      describe('Toolbar', () => {
+         let defaultItems = [
+            {
+               id: '1',
+               title: 'Запись 1',
+               parent: null,
+               '@parent': null
+            },
+            {
+               id: '2',
+               title: 'Запись 2',
+               parent: null,
+               '@parent': true,
+               icon: 'icon-Ezy',
+               iconStyle: 'super'
+            },
+            {
+               id: '3',
+               title: 'Запись 3',
+               icon: 'icon-medium icon-Doge icon-primary',
+               parent: null,
+               '@parent': null,
+               showType: 2
+            },
+            {
+               id: '4',
+               title: 'Запись 4',
+               buttonViewMode: 'link',
+               parent: '2',
+               '@parent': null,
+               showType: 0
+            },
+            {
+               id: '5',
+               title: 'Запись 4',
+               buttonViewMode: 'link'
+            }
+         ];
 
-   let records = new collection.RecordSet({
-      rawData: defaultItems
-   });
-   let config = {
-      items: new sourceLib.Memory({
-         keyProperty: 'id',
-         data: defaultItems
-      }),
-      parentProperty: 'parent',
-      nodeProperty: '@parent'
-   };
-   let itemWithMenu = new entity.Model({
-      rawData: defaultItems[1]
-   });
-   let itemWithOutMenu = new entity.Model({
-      rawData: defaultItems[5]
-   });
-   let toolbar = new toolbars.View(config);
+         let records = new collection.RecordSet({
+            rawData: defaultItems
+         });
+         let config = {
+            items: new sourceLib.Memory({
+               keyProperty: 'id',
+               data: defaultItems
+            }),
+            parentProperty: 'parent',
+            nodeProperty: '@parent'
+         };
+         let itemWithMenu = new entity.Model({
+            rawData: defaultItems[1]
+         });
+         let itemWithOutMenu = new entity.Model({
+            rawData: defaultItems[5]
+         });
+         let toolbar = new toolbars.View(config);
+         toolbar._beforeMount(config);
 
-   toolbar._notify = (e, data) => {
-      assert.equal(data[0].id, 'myTestItem');
-      assert.equal(e, 'itemClick');
-   };
-   toolbar._children.menuOpener = {
-      close: setTrue.bind(this, assert),
-      open: setTrue.bind(this, assert)
-   };
-   toolbar._children.popupTarget = {
-      _container: 'target'
-   };
+         toolbar._notify = (e, data) => {
+            assert.equal(data[0].id, 'myTestItem');
+            assert.equal(e, 'itemClick');
+         };
+         toolbar._children.menuOpener = {
+            close: setTrue.bind(this, assert),
+            open: setTrue.bind(this, assert)
+         };
+         toolbar._children.popupTarget = {
+            _container: 'target'
+         };
+
+         describe('_isShowToolbar', function() {
+            it('Test1', function() {
+               const item = new entity.Record({
+                  rawData: {
+                     parent: null,
+                     showType: 2
+                  }
+               });
+               assert.isTrue(toolbar._isShowToolbar(item, toolbar._parentProperty));
+            });
+            it('Test2', function() {
+               const item = new entity.Record({
+                  rawData: {
+                     parent: 0,
+                     showType: 2
+                  }
+               });
+               assert.isFalse(toolbar._isShowToolbar(item, toolbar._parentProperty));
+            });
+            it('Test3', function() {
+               const item = new entity.Record({
+                  rawData: {
+                     parent: null,
+                     showType: 1
+                  }
+               });
+               assert.isTrue(toolbar._isShowToolbar(item, toolbar._parentProperty));
+            });
+            it('Test4', function() {
+               const item = new entity.Record({
+                  rawData: {
+                     parent: 0,
+                     showType: 1
+                  }
+               });
+               assert.isTrue(toolbar._isShowToolbar(item, toolbar._parentProperty));
+            });
+            it('Test5', function() {
+               const item = new entity.Record({
+                  rawData: {
+                     parent: null,
+                     showType: 0
+                  }
+               });
+               assert.isFalse(toolbar._isShowToolbar(item, toolbar._parentProperty));
+            });
+            it('Test6', function() {
+               const item = new entity.Record({
+                  rawData: {
+                     parent: 0,
+                     showType: 0
+                  }
+               });
+               assert.isFalse(toolbar._isShowToolbar(item, toolbar._parentProperty));
+            });
+         });
 
          describe('publicMethod', function() {
             it('check received state', () => {
@@ -110,7 +168,10 @@ define(
                toolbar._children.popupTarget = {
                   _container: 'target'
                };
-               toolbar._showMenu({ stopPropagation: () => {} });
+               toolbar._showMenu({
+                  stopPropagation: () => {
+                  }
+               });
                assert.equal(isOpened, true);
             });
             it('click toolbar item', function() {
@@ -120,10 +181,15 @@ define(
                   assert.equal(data[1], 'nativeEvent');
                   isNotify = true;
                };
-               toolbar._onItemClick({ stopPropagation: () => {}, nativeEvent: 'nativeEvent' }, {
+               toolbar._onItemClick({
+                  stopPropagation: () => {
+                  }, nativeEvent: 'nativeEvent'
+               }, {
                   id: 'myTestItem',
-                  get: () => {},
-                  handler: () => {}
+                  get: () => {
+                  },
+                  handler: () => {
+                  }
                });
                assert.equal(isNotify, true);
             });
@@ -148,7 +214,10 @@ define(
                   eventString += e;
                   isNotify = true;
                };
-               toolbar._onItemClick({ stopPropagation: () => {} }, itemWithMenu);
+               toolbar._onItemClick({
+                  stopPropagation: () => {
+                  }
+               }, itemWithMenu);
                assert.equal(eventString, 'menuOpeneditemClick');
                assert.equal(isNotify, true);
             });
@@ -180,7 +249,12 @@ define(
                toolbar._children.menuOpener.close = function() {
                   isMenuClosed = true;
                };
-               toolbar._onResult({ action: 'itemClick', event: { name: 'event', stopPropagation: () => {} }, data: [itemWithMenu] });
+               toolbar._onResult({
+                  action: 'itemClick', event: {
+                     name: 'event', stopPropagation: () => {
+                     }
+                  }, data: [itemWithMenu]
+               });
             });
             it('menu not closed if item has child', function() {
                let isMenuClosed = false;
@@ -193,8 +267,7 @@ define(
             it('item popup config generation', function() {
                var
                   testItem = new entity.Model({
-                     rawData:
-                     {
+                     rawData: {
                         buttonViewMode: 'buttonViewMode',
                         popupClassName: 'popupClassName',
                         keyProperty: 'itemKeyProperty',
@@ -224,8 +297,8 @@ define(
                         horizontal: 'left',
                         vertical: 'top'
                      },
-                     horizontalAlign: {
-                        side: 'right'
+                     direction: {
+                        horizontal: 'right'
                      },
                      target: 'target',
                      templateOptions: {
@@ -293,7 +366,12 @@ define(
                toolbar._children.menuOpener.close = function() {
                   isMenuClosed = true;
                };
-               toolbar._onResult({ action: 'itemClick', event: { name: 'event', stopPropagation: () => {} }, data: [itemWithOutMenu] });
+               toolbar._onResult({
+                  action: 'itemClick', event: {
+                     name: 'event', stopPropagation: () => {
+                     }
+                  }, data: [itemWithOutMenu]
+               });
                assert.equal(isMenuClosed, true, 'toolbar closed, but his submenu did not');
             });
             it('_closeHandler', () => {

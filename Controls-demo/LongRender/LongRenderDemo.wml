@@ -1,0 +1,10 @@
+<div>
+    <Controls-demo.LongRender.DelayedControl name="0" delay="210"/>
+    <Controls-demo.LongRender.DelayedControl name="1" delay="210"/>
+    <Controls-demo.LongRender.DelayedControl name="2" delay="210"/>
+    <Controls-demo.LongRender.DelayedControl name="3" delay="250"/>
+    <Controls-demo.LongRender.DelayedControl name="4" delay="290"/>
+    <Controls-demo.LongRender.DelayedControl name="5" delay="211"/>
+    <Controls-demo.LongRender.DelayedControl name="6" delay="210"/>
+    <Controls-demo.LongRender.DelayedControl name="7" delay="280"/>
+</div>

@@ -1,0 +1,3 @@
+<div>
+    <Controls.heading:Title caption="Control {{_options.name}} Too long {{_delay}}"  readOnly="{{true}}" fontColorStyle="primary" fontSize="3xl"/>
+</div>
