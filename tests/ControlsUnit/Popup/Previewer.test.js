@@ -71,7 +71,7 @@ define(
             assert.equal(config.targetPoint, targetPoint);
             assert.equal(config.direction, direction);
             assert.equal(config.isCompoundTemplate, true);
-            assert.equal(JSON.stringify(config.fittingMode), JSON.stringify(fittingMode));
+            assert.deepEqual(config.fittingMode, fittingMode);
 
             PWInstance.saveOptions({});
             config = PWInstance._private.getCfg(PWInstance);
