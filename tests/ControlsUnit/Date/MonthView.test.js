@@ -91,9 +91,30 @@ define([
                mv = calendarTestUtils.createComponent(calendar.MonthView, config);
 
             sandbox.stub(mv, '_notify');
-            mv._mouseEnterHandler({}, item);
+            [{
+               isCurrentMonth: false,
+               mode: 'extended'
+            }, {
+               isCurrentMonth: true,
+               mode: 'current'
+            }].forEach(function (test) {
+               mv._mouseEnterHandler({}, item, test.mode, test.isCurrentMonth);
+               sinon.assert.calledWith(mv._notify, 'itemMouseEnter', [item]);
+            });
+            sandbox.restore();
+         });
 
-            sinon.assert.calledWith(mv._notify, 'itemMouseEnter', [item]);
+         it('should\'t generate "itemMouseEnter" event', function () {
+            let sandbox = sinon.sandbox.create(),
+               item = 'item',
+               mv = calendarTestUtils.createComponent(calendar.MonthView, config),
+               isCurrentMonth = false,
+               mode = 'current';
+
+            sandbox.stub(mv, '_notify');
+
+            mv._mouseEnterHandler({}, item, mode, isCurrentMonth);
+            sinon.assert.notCalled(mv._notify);
             sandbox.restore();
          });
       });
