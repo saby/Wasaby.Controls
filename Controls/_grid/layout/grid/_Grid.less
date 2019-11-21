@@ -126,10 +126,11 @@
    height: 100%;
    box-sizing: border-box;
    position: relative;
-   .controls-itemActionsV {
-      z-index: @z-index-NonStickyResults + 1 // на 1 больше чем у колонок results;
-   }
 }
+.controls-Grid__itemAction-z-index {
+   z-index: @z-index-NonStickyResults + 1 // на 1 больше чем у колонок results;
+}
+
 
 .controls-Grid__row-cell_theme-@{themeName} {
    border-top: @height_Grid-row-separator solid;
