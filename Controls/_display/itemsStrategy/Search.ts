@@ -1,18 +1,22 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import Tree from '../Tree';
 import TreeItem from '../TreeItem';
+import TreeItemDecorator from '../TreeItemDecorator';
 import BreadcrumbsItem from '../BreadcrumbsItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from 'Types/entity';
 import {mixin} from 'Types/util';
 import {Map} from 'Types/shim';
+
+const FORGET_TIMEOUT = 1000;
+let lastTimeForget = 0;
 
 interface IOptions<S, T> {
     source: IItemsStrategy<S, T>;
 }
 
 interface ISortOptions<S, T extends TreeItem<S>> {
-    originalBreadcrumbs: Map<T, BreadcrumbsItem<S>>;
-    originalParents: Map<T, TreeItem<S>>;
+    treeItemToDecorator: Map<T, TreeItemDecorator<S>>;
+    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>>;
     display: Tree<S, T>;
 }
 
@@ -20,15 +24,15 @@ interface ISortOptions<S, T extends TreeItem<S>> {
  * Strategy-decorator which supposed to join expanded nodes into one element.
  * @class Controls/_display/ItemsStrategy/Search
  * @mixes Types/_entity/DestroyableMixin
- * @mixes Types/_entity/SerializableMixin
  * @implements Controls/_display/IItemsStrategy
+ * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  * @private
  */
 export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
->(
+    >(
     DestroyableMixin,
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
@@ -38,14 +42,14 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
     protected _options: IOptions<S, T>;
 
     /**
-     * Original parents: item -> its breadcrumbs
+     * Map from leaf to its decorator: TreeItem -> TreeItemDecorator
      */
-    protected _originalBreadcrumbs: Map<T, BreadcrumbsItem<S>> = new Map<T, BreadcrumbsItem<S>>();
+    protected _treeItemToDecorator: Map<T, TreeItemDecorator<S>> = new Map<T, TreeItemDecorator<S>>();
 
-     /**
-      * Original parents: item -> original parent
-      */
-     protected _originalParents: Map<T, TreeItem<S>> = new Map<T, TreeItem<S>>();
+    /**
+     * Map from node to its breadcrumbs: TreeItem -> BreadcrumbsItem
+     */
+    protected _treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>> = new Map<T, BreadcrumbsItem<S>>();
 
     constructor(options: IOptions<S, T>) {
         super();
@@ -54,8 +58,8 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
 
     destroy(): void {
         super.destroy();
-        this._originalBreadcrumbs = null;
-        this._originalParents = null;
+        this._treeItemToDecorator = null;
+        this._treeItemToBreadcrumbs = null;
     }
 
     // region IItemsStrategy
@@ -97,16 +101,18 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
     getDisplayIndex(index: number): number {
         const sourceIndex = this.source.getDisplayIndex(index);
         const sourceItem = this.source.items[sourceIndex];
+        const mappedItem = this._treeItemToDecorator.get(sourceItem) || sourceItem;
         const items = this._getItems();
-        const itemIndex = items.indexOf(sourceItem);
+        const itemIndex = items.indexOf(mappedItem as T);
 
         return itemIndex === -1 ? items.length : itemIndex;
     }
 
     getCollectionIndex(index: number): number {
         const items = this._getItems();
-        const item = items[index];
-        const sourceIndex = this.source.items.indexOf(item);
+        const mappedItem = items[index];
+        const item = mappedItem instanceof TreeItemDecorator ? mappedItem.getSource() : mappedItem;
+        const sourceIndex = this.source.items.indexOf(item as T);
 
         return sourceIndex >= 0 ? this.source.getCollectionIndex(sourceIndex) : -1;
     }
@@ -140,8 +146,8 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
      */
     protected _getItems(): T[] {
         return Search.sortItems<S, T>(this.source.items, {
-            originalBreadcrumbs: this._originalBreadcrumbs,
-            originalParents: this._originalParents,
+            treeItemToDecorator: this._treeItemToDecorator,
+            treeItemToBreadcrumbs: this._treeItemToBreadcrumbs,
             display: this.options.display as Tree<S, T>
         });
     }
@@ -156,37 +162,33 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
      * @param options Options
      */
     static sortItems<S, T extends TreeItem<S> = TreeItem<S>>(items: T[], options: ISortOptions<S, T>): T[] {
-        const {display, originalBreadcrumbs, originalParents}: ISortOptions<S, T> = options;
-
+        const {display, treeItemToDecorator, treeItemToBreadcrumbs}: ISortOptions<S, T> = options;
         const sortedItems = [];
+
+        function getBreadCrumbsFor(item: T): BreadcrumbsItem<S> {
+            let breadcrumbs = item && treeItemToBreadcrumbs.get(item);
+
+            if (!breadcrumbs && item) {
+                breadcrumbs = new BreadcrumbsItem<S>({
+                    contents: null,
+                    owner: display,
+                    last: item
+                });
+                treeItemToBreadcrumbs.set(item, breadcrumbs);
+            }
+
+            return breadcrumbs;
+        }
+
         let prevBreadCrumbs;
         items.forEach((item, index) => {
+            let resultItem = item;
+
             if (item instanceof TreeItem) {
-                // Restore original parent
-                if (originalParents.has(item)) {
-                    item.setParent(originalParents.get(item));
-                    originalParents.delete(item);
-                }
-
                 if (item.isNode()) {
-                    // Create breadcrumbs for each node even though it's not last in chain because it can be used later
-                    if (!originalBreadcrumbs.has(item)) {
-                        originalBreadcrumbs.set(item, new BreadcrumbsItem<S>({
-                            contents: null,
-                            owner: display,
-                            last: item
-                        }));
-                    }
-
                     // Look at the next item after current node
                     const next = items[index + 1];
                     const nextIsTreeItem = next instanceof TreeItem;
-
-                    // Restore original parent in next tree item
-                    if (originalParents.has(next) && nextIsTreeItem) {
-                        next.setParent(originalParents.get(next));
-                        originalParents.delete(next);
-                    }
 
                     // Check that the next tree item is a node with bigger level.
                     // If it's not that means we've reached the end of current breadcrumbs.
@@ -196,7 +198,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
 
                     // Add completed breadcrumbs to show even empty
                     if (isLastBreadcrumb) {
-                        prevBreadCrumbs = originalBreadcrumbs.get(item);
+                        prevBreadCrumbs = getBreadCrumbsFor(item);
                         sortedItems.push(prevBreadCrumbs);
                     }
 
@@ -205,7 +207,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                 }
 
                 // Get breadcrumbs by leaf's parent
-                const currentBreadcrumbs = originalBreadcrumbs.get(item.getParent() as T);
+                const currentBreadcrumbs = getBreadCrumbsFor(item.getParent() as T);
                 if (currentBreadcrumbs) {
                     // Add actual breadcrumbs if it has been changed
                     if (currentBreadcrumbs !== prevBreadCrumbs) {
@@ -213,24 +215,44 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                     }
 
                     // This is a leaf outside breadcrumbs so set the current breadcrumbs as its parent.
-                    // All leaves outside breadcrumbs should be at next level after breadcrumbs itself.
-                    originalParents.set(item, item.getParent());
-                    item.setParent(currentBreadcrumbs as any);
+                    // All leaves outside breadcrumbs should be at the next level after breadcrumbs itself.
+                    let decoratedItem = treeItemToDecorator.get(item);
+                    if (!decoratedItem) {
+                        decoratedItem = new TreeItemDecorator({
+                            source: item,
+                            parent: currentBreadcrumbs
+                        });
+                        treeItemToDecorator.set(item, decoratedItem);
+                    }
+                    resultItem = decoratedItem as unknown as T;
                 }
                 prevBreadCrumbs = currentBreadcrumbs;
             }
 
-            sortedItems.push(item);
+            sortedItems.push(resultItem);
         });
 
-        // Forget unused breadcrumbs
-        const toDelete = [];
-        originalBreadcrumbs.forEach((value, key) => {
-            if (items.indexOf(key) === -1) {
-                toDelete.push(key);
-            }
-        });
-        toDelete.forEach((key) => originalBreadcrumbs.delete(key));
+        if (Date.now() - lastTimeForget > FORGET_TIMEOUT) {
+            lastTimeForget = Date.now();
+
+            // Forget unused leaf decorators
+            const decoratorsToDelete = [];
+            treeItemToDecorator.forEach((value, key) => {
+                if (items.indexOf(key) === -1) {
+                    decoratorsToDelete.push(key);
+                }
+            });
+            decoratorsToDelete.forEach((key) => treeItemToDecorator.delete(key));
+
+            // Forget unused breadcrumbs
+            const breadcrumbsToDelete = [];
+            treeItemToBreadcrumbs.forEach((value, key) => {
+                if (items.indexOf(key) === -1) {
+                    breadcrumbsToDelete.push(key);
+                }
+            });
+            breadcrumbsToDelete.forEach((key) => treeItemToBreadcrumbs.delete(key));
+        }
 
         return sortedItems;
     }
@@ -241,6 +263,6 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
 Object.assign(Search.prototype, {
     '[Controls/_display/itemsStrategy/Search]': true,
     _moduleName: 'Controls/display:itemsStrategy.Search',
-    _originalBreadcrumbs: null,
-    _originalParents: null
+    _treeItemToDecorator: null,
+    _treeItemToBreadcrumbs: null
 });
