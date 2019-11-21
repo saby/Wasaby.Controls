@@ -51,6 +51,7 @@ const _private = {
     },
     compatibleOpen(self, popupOptions): Promise<string> {
         const config = BaseOpener.getConfig({}, popupOptions);
+        delete config.id;
         return new Promise((resolve) => {
             Promise.all([
                 BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
