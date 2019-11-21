@@ -154,12 +154,13 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
      */
     static sortItems<S, T extends TreeItem<S> = TreeItem<S>>(items: T[], options: ISortOptions<S, T>): T[] {
         const {display, treeItemToDecorator, treeItemToBreadcrumbs}: ISortOptions<S, T> = options;
+        const root = display && display.getRoot();
         const sortedItems = [];
 
         function getBreadCrumbsFor(item: T): BreadcrumbsItem<S> {
             let breadcrumbs = item && treeItemToBreadcrumbs.get(item);
 
-            if (!breadcrumbs && item) {
+            if (!breadcrumbs && item && item !== root) {
                 breadcrumbs = new BreadcrumbsItem<S>({
                     contents: null,
                     owner: display,
