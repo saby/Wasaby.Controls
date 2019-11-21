@@ -133,12 +133,11 @@ var _private = {
         }
         if (self._sourceController) {
             _private.showIndicator(self);
+            _private.hideError(self);
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
-                // TODO убираем флаг ошибки только после запроса
-                self.__error = null;
                 if (list.getCount()) {
                     self._loadedItems = list;
                 }
@@ -800,8 +799,7 @@ var _private = {
         }
         const children = self._children;
         const scrollEmitter = children.ScrollEmitter;
-        // scrollEmitter может не существовать, если была заглушка с ошибкой
-        if (!scrollEmitter || scrollEmitter.__started) {
+        if (scrollEmitter.__started) {
             return;
         }
         const triggers = {
