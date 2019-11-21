@@ -91,7 +91,7 @@ class InfoBoxController extends StickyController.constructor {
         return true;
     }
 
-    popupResize(item: IPopupItem, container: HTMLDivElement): boolean {
+    resizeInner(item: IPopupItem, container: HTMLDivElement): boolean {
         return super.elementUpdated.call(this, item, container);
     }
 
