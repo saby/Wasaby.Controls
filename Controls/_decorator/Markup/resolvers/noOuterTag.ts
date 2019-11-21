@@ -8,6 +8,7 @@
     *
     * Модуль с функцией получения html без внешнего тега.
     * Распознаватель тегов для jsonToHtml в {@link Controls/decorator:Converter}.
+    * @remark Подробнее о формате JsonML читайте {@link /doc/platform/developmentapl/service-development/service-contract/logic/json-markup-language/ здесь}.
     *
     * @class Controls/_decorator/Markup/resolvers/noOuterTag
     * @public
