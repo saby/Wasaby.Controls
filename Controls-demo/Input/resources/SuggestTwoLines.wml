@@ -10,7 +10,7 @@
         <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
     </ws:navigation>
     <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
-        <ws:templateOptions demoClass="demo-SuggestInputList">
+        <ws:templateOptions>
             <ws:itemSuggestTemplate>
                 <div class="controls-demo-SuggestV__full">
                     <div class="controls-demo-SuggestV__info">

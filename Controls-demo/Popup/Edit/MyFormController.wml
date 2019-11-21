@@ -22,21 +22,21 @@
                 <div class="controls-MyFormController__block">
                     <div class="controls-MyFormController__row controls-MyFormController__title">Название:</div>
                     <div class="controls-MyFormController__row">
-                        <Controls.input:Text bind:value="_record.name" class="demo-MyFormController__name"/>
+                        <Controls.input:Text bind:value="_record.name"/>
                     </div>
                 </div>
 
                 <div class="controls-MyFormController__block">
                     <div class="controls-MyFormController__row controls-MyFormController__title">Цена:</div>
                     <div class="controls-MyFormController__row">
-                        <Controls.input:Number bind:value="_record.price" class="demo-MyFormController__price"/>
+                        <Controls.input:Number bind:value="_record.price"/>
                     </div>
                 </div>
 
                 <div class="controls-MyFormController__block">
                     <div class="controls-MyFormController__row controls-MyFormController__title">Остаток:</div>
                     <div class="controls-MyFormController__row">
-                        <Controls.input:Number bind:value="_record.balance" class="demo-MyFormController__balance"/>
+                        <Controls.input:Number bind:value="_record.balance"/>
                     </div>
                 </div>
 
