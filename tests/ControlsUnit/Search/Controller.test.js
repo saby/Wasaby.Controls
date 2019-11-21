@@ -297,6 +297,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       it('_search', function() {
          var searchController = getSearchController();
          var value;
+         var isLoading = false;
          searchController._dataOptions = defaultOptions;
          //initialize searchController
          searchMod.Controller._private.getSearchController(searchController);
@@ -305,12 +306,21 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchController._searchController.search = function(searchVal) {
             value = searchVal;
          };
+         searchController._searchController.isLoading = function() {
+            return isLoading;
+         };
 
          searchController._search(null, 'test');
 
          assert.equal(value, 'test');
          assert.equal(searchController._inputSearchValue, 'test');
 
+         value = '';
+         isLoading = true;
+         searchController._search(null, 'test');
+         assert.equal(value, '');
+
+         isLoading = false;
          value = '';
          searchController._options.source = null;
          searchController._search(null, 'test2');
