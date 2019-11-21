@@ -963,8 +963,8 @@ var _private = {
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
-            self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
         }
+        self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
                 self._loadingIndicatorTimer = null;
