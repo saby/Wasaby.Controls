@@ -616,6 +616,7 @@ define(['Controls/grid'], function(gridMod) {
                return false
             }
          };
+         gridView._children.header = undefined;
          gridView._children.results = undefined;
 
          assert.equal(0, gridView.getHeaderHeight());
