@@ -115,7 +115,7 @@ var _private = {
                         _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter).addCallback(() => {
                             if (isHistorySource(item.editorOptions.source)) {
                                 popupItem.items = item.editorOptions.source.prepareItems(popupItem.items);
-                                configs[item.name].items = popupItem.items.clone();
+                                configs[item.name].popupItems = popupItem.items.clone();
                             }
                         });
                     }
