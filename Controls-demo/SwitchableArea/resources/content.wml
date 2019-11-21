@@ -1,4 +1,4 @@
-<div class= "content" style="padding: 20px;">
+<div class="ControlsDemo-SwitchableArea__content" style="padding: 20px;">
    content 1 <br />
    selected: {{selected}} <br />
    additionalOptions: {{additionalOptions}} <br />

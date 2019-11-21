@@ -1,6 +1,6 @@
 <div>
     <Controls.switchableArea:View itemTemplateProperty="itemTemplate" items="{{_items}}" selectedKey="{{_demoSelectedKey}}"/>
-    <Controls.buttons:Button attr:class = "switchableArea__button" on:click="clickHandler('0')" readOnly="{{false}}" caption="1 content" buttonStyle="primary" viewMode="button"/>
-    <Controls.buttons:Button attr:class = "switchableArea__button" on:click="clickHandler('1')" readOnly="{{false}}" caption="2 content" buttonStyle="primary" viewMode="button"/>
-    <Controls.buttons:Button attr:class = "switchableArea__button" on:click="clickHandler('2')" readOnly="{{false}}" caption="3 content" buttonStyle="primary" viewMode="button"/>
+    <Controls.buttons:Button attr:class="ControlsDemo-SwitchableArea__button" on:click="clickHandler('0')" readOnly="{{false}}" caption="1 content" buttonStyle="primary" viewMode="button"/>
+    <Controls.buttons:Button attr:class="ControlsDemo-SwitchableArea__button" on:click="clickHandler('1')" readOnly="{{false}}" caption="2 content" buttonStyle="primary" viewMode="button"/>
+    <Controls.buttons:Button attr:class="ControlsDemo-SwitchableArea__button" on:click="clickHandler('2')" readOnly="{{false}}" caption="3 content" buttonStyle="primary" viewMode="button"/>
 </div>
