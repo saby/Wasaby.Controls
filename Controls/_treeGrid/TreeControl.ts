@@ -502,7 +502,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
 
     setMarkedKey: function(key) {
-        this._notify('markedKeyChanged', key);
+        this._notify('markedKeyChanged', [key]);
     },
     scrollToItem(key: string|number, toBottom: boolean): void {
         this._children.baseControl.scrollToItem(key, toBottom);
