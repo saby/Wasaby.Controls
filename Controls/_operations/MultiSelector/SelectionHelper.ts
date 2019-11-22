@@ -107,7 +107,7 @@ export function hasSelectedParent(key: Tkey, selectedKeys: Tkeys, excludedKeys: 
       hasExcludedParent: boolean = false,
       currentParentId: Tkey|undefined = getParentId(key, model, hierarchyRelation);
 
-   for (;currentParentId; currentParentId = getParentId(currentParentId, model, hierarchyRelation)) {
+   for (;currentParentId !== null && currentParentId !== undefined; currentParentId = getParentId(currentParentId, model, hierarchyRelation)) {
       if (selectedKeys.includes(currentParentId)) {
          hasSelectedParent = true;
          break;
