@@ -1073,6 +1073,7 @@ define(
                };
                filter.View._private.getPopupConfig(view, view._configs, view._source);
                assert.equal(view._configs.document.popupItems.getCount(), 7);
+               assert.isTrue(view._configs.document.isLoading.isReady());
             });
          });
       });

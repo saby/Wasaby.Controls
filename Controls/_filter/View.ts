@@ -33,10 +33,10 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
- * 
+ *
  * @see Controls/filterPopup:SimplePanel
  * @see Controls/filterPopup:DetailPanel
- * @see Controls/filter:FastContainer
+ * @see Controls/filter:ViewContainer
  */
 
 /*
@@ -53,7 +53,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @author Золотова Э.Е.
  * @see Controls/filterPopup:SimplePanel
  * @see Controls/filterPopup:DetailPanel
- * @see Controls/filter:FastContainer
+ * @see Controls/filter:ViewContainer
  */
 
 var _private = {
@@ -118,8 +118,9 @@ var _private = {
                 popupItem.items = configs[item.name].popupItems || popupItem.items;
                 popupItem.selectorItems = configs[item.name].items;
                 if (item.editorOptions.source) {
-                    if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
-                        _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter).addCallback(() => {
+                    if (!configs[item.name].source && (!configs[item.name].isLoading || configs[item.name].isLoading.isReady())) {
+                        // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
+                        configs[item.name].isLoading = _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter).addCallback(() => {
                             if (isHistorySource(item.editorOptions.source)) {
                                 popupItem.items = item.editorOptions.source.prepareItems(popupItem.items);
                                 configs[item.name].popupItems = popupItem.items.clone();
