@@ -4,6 +4,8 @@ import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/re
 import cMerge = require('Core/core-merge');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/_popupTemplate/BaseController';
+import * as ThemesController from 'Core/Themes/ThemesControllerNew';
+
 import collection = require('Types/collection');
 
 interface IInfoBoxThemeConstants {
@@ -34,12 +36,19 @@ function getConstants() {
 
 // todo: https://online.sbis.ru/opendoc.html?guid=b385bef8-31dd-4601-9716-f3593dfc9d41
 let constants: IInfoBoxThemeConstants = {};
+
+function initConstants(): Promise<any> {
+    return ThemesController.getInstance().loadCssWithAppTheme('Controls/popupTemplate').then(() => {
+        constants = getConstants();
+    });
+}
+
 if (document) {
     if (document.body) {
-        constants = getConstants();
+        initConstants();
     } else {
         document.addEventListener('DOMContentLoaded', () => {
-            constants = getConstants();
+            initConstants();
         });
     }
 }
@@ -69,7 +78,6 @@ const INVERTED_SIDES: IInfoBoxSide = {
  */
 class InfoBoxController extends StickyController.constructor {
     _openedPopupId: string = null;
-    static _theme: string[] = ['Controls/popupTemplate'];
     TYPE: string = 'InfoBox';
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {

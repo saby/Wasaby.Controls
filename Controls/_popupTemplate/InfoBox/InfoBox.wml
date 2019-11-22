@@ -1,4 +1,4 @@
-<div class="controls-InfoBoxTemplate controls-InfoBoxTemplate__arrow-side-position-{{_arrowSide}} controls-InfoBoxTemplate__arrow-side-{{_arrowPosition}}" >
+<div class="controls-InfoBoxTemplate_theme-{{_options.theme}} controls-InfoBoxTemplate__arrow-side-position-{{_arrowSide}} controls-InfoBoxTemplate__arrow-side-{{_arrowPosition}}" >
    <div class="controls-InfoBoxTemplate__content_theme-{{_options.theme}}
    {{_options.styleType==='outline' ? 'controls-InfoBoxTemplate_style_outline_' + _options.style + '_theme-' + _options.theme : 
    'controls-InfoBoxTemplate_style_marker_theme-' + _options.theme + ' controls-InfoBoxTemplate_style_marker-' + _arrowSide + '_' + _options.style + '_theme-' + _options.theme }}">

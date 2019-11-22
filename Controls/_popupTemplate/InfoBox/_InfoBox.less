@@ -1,12 +1,12 @@
 @spacing_Infobox-between-border-arrow: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2;
 
-.controls-InfoBoxTemplate {
+.controls-InfoBoxTemplate_theme-@{themeName} {
    display: flex;
    height: 100%;
 
    //todo: will be fixed by https://online.sbis.ru/opendoc.html?guid=3b0e32ca-240a-4047-a64d-e62af28420e9
 
-   .controls-StickyHeader__background_theme-@{themeName}, .controls-Grid__header-cell {
+   .controls-StickyHeader__background, .controls-Grid__header-cell {
       background-color: @background-color_Infobox_default;
    }
 }
