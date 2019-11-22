@@ -5,7 +5,6 @@ import cMerge = require('Core/core-merge');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/_popupTemplate/BaseController';
 import collection = require('Types/collection');
-import 'css!theme?Controls/popupTemplate';
 
 interface IInfoBoxThemeConstants {
     ARROW_WIDTH?: number;
@@ -70,6 +69,7 @@ const INVERTED_SIDES: IInfoBoxSide = {
  */
 class InfoBoxController extends StickyController.constructor {
     _openedPopupId: string = null;
+    static _theme: string[] = ['Controls/popupTemplate'];
     TYPE: string = 'InfoBox';
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {

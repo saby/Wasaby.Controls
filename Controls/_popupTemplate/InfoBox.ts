@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/InfoBox/InfoBox');
 import Env = require('Env/Env');
-import 'css!theme?Controls/popupTemplate';
 
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
@@ -110,5 +109,7 @@ InfoBoxTemplate.getDefaultOptions = function() {
         style: 'default'
     };
 };
+
+InfoBoxTemplate._theme = [ 'Controls/popupTemplate' ];
 
 export = InfoBoxTemplate;

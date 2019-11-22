@@ -1,7 +1,7 @@
 @spacing_Infobox-between-border-arrow: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2;
 
 
-.controls-InfoBox {
+.controls-InfoBox_theme-@{themeName} {
    padding-top:   @spacing_Infobox-between-content-border-top;
    padding-right: @spacing_Infobox-between-content-border-right;
    padding-bottom: @spacing_Infobox-between-content-border-bottom;
@@ -18,12 +18,12 @@
  * Presumably the problem is in the font. Error written https://online.sbis.ru/opendoc.html?guid=1e389bc5-8be7-4394-abdd-231e3ec040a8
  */
 .ws-is-firefox {
-   .controls-InfoBox {
+   .controls-InfoBox_theme-@{themeName} {
       padding-top: @spacing_Infobox-between-content-border-top - 1;
    }
 }
 
-.controls-InfoBox__closeButton {
+.controls-InfoBox__closeButton_theme-@{themeName} {
    position: absolute;
    top: @spacing_Infobox-between-top-close-button;
    right: @spacing_Infobox-between-right-close-button;
@@ -39,15 +39,15 @@
    height: 100%;
 }
 
-.controls-InfoBox__message_margin {
+.controls-InfoBox__message_margin_theme-@{themeName} {
    margin-right: @spacing_Infobox-between-message-border;
 }
 
-.controls-InfoBox__message {
+.controls-InfoBox__message_theme-@{themeName} {
    font-size: @font-size_Infobox-message;
 }
 
-.controls-InfoBox_floatElement {
+.controls-InfoBox_floatElement_theme-@{themeName} {
    width: @size_Infobox-float-element;
    height: @size_Infobox-float-element;
    float: right;
