@@ -193,16 +193,25 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
 
          cfg.markedKey = 3;
          model = new SearchViewModel(cfg);
+         model.subscribe('onMarkedKeyChanged', function(e, key) {
+            cfg.markedKey = key;
+         });
          model.getItems().removeAt(2);
          assert.equal(5, model.getMarkedKey());
 
          cfg.markedKey = 2;
          model = new SearchViewModel(cfg);
+         model.subscribe('onMarkedKeyChanged', function(e, key) {
+            cfg.markedKey = key;
+         });
          model.getItems().removeAt(1);
          assert.equal(5, model.getMarkedKey());
 
          cfg.markedKey = 7;
          model = new SearchViewModel(cfg);
+         model.subscribe('onMarkedKeyChanged', function(e, key) {
+            cfg.markedKey = key;
+         });
          model.getItems().removeAt(4);
          assert.equal(6, model.getMarkedKey());
 
