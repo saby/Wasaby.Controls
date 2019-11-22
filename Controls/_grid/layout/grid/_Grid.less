@@ -1,3 +1,5 @@
+@z-index-Grid-results-cell: 1;
+
 .controls-Grid {
    display: -ms-grid;
    display: grid;
@@ -105,7 +107,7 @@
 
 .controls-Grid__results-cell_theme-@{themeName} {
    background-color: @background-color_Grid-row-sticky;
-   z-index: 1;
+   z-index: @z-index-Grid-results-cell;
    min-width: 0;
    min-height: @height_Grid-results-cell;
 }
@@ -127,6 +129,10 @@
    box-sizing: border-box;
    position: relative;
 }
+.controls-Grid__itemAction {
+   z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у колонок results;
+}
+
 
 .controls-Grid__row-cell_theme-@{themeName} {
    border-top: @height_Grid-row-separator solid;
