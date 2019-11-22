@@ -72,8 +72,13 @@ export default class TreeItem<T> extends mixin<
 
     // region Public methods
 
-    getOwner: () => Tree<T>;
-    setOwner: (owner: Tree<T>) => void;
+    getOwner(): Tree<T> {
+        return super.getOwner() as Tree<T>;
+    }
+
+    setOwner(owner: Tree<T>): void {
+        super.setOwner(owner);
+    }
 
     /**
      * Возвращает родительский узел

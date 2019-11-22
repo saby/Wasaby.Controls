@@ -27,6 +27,7 @@
  * @includes ISelectionType Controls/_interface/ISelectionType
  * @includes IDateConstructor Controls/_interface/IDateConstructor
  * @includes IApplication Controls/_interface/IApplication
+ * @includes IFilter Controls/_interface/IFilter
  * @public
  * @author Крайнов Д.О.
  */
@@ -62,3 +63,4 @@ export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelec
 export {default as ISelectionStrategy} from './_interface/ISelectionStrategy';
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
+export {default as IFilter, IFilterOptions} from './_interface/IFilter';

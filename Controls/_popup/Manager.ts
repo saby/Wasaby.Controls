@@ -286,15 +286,23 @@ const _private = {
         return false;
     },
 
-    popupControlResize(id) {
+    popupResizeInner(id) {
         const item = _private.find(id);
         if (item) {
             const parentItem = _private.find(item.parentId);
             // Если над скрытым стековым окном позиционируются другие окна, то не даем им реагировать на внутренние ресайзы
             // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
             if (!parentItem || parentItem.popupOptions.hidden !== true) {
-                return item.controller.popupResize(item, _private.getItemContainer(id));
+                return item.controller.resizeInner(item, _private.getItemContainer(id));
             }
+        }
+        return false;
+    },
+
+    popupResizeOuter(id) {
+        const item = _private.find(id);
+        if (item) {
+            return item.controller.resizeOuter(item, _private.getItemContainer(id));
         }
         return false;
     },
@@ -607,7 +615,10 @@ const Manager = Control.extend({
             const isResizingLine = event.target.classList.contains('controls-ResizingLine');
             _private.popupItems.each((item) => {
                 // if we have deactivated popup
-                if (item && (item.waitDeactivated || isResizingLine)) {
+                // Отказываюсь на старых страницах от закрытия окон по деактивации, сам отслеживаю необходимость закрытия
+                // в 20.1000 по работе в план разделю закрытие по клику мимо и по деактивации на 2 разные опции,
+                // из этой проверки нужно удалить item.waitDeactivated и isNewEnvironment()
+                if (item && (item.waitDeactivated || isResizingLine || !_private.isNewEnvironment())) {
                     const parentControls = goUpByControlTree(event.target);
                     const popupInstance = ManagerController.getContainer().getPopupById(item.id);
 

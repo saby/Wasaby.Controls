@@ -113,6 +113,24 @@ define([
 
          assert.equal(lookup._inputValue, '');
          assert.isTrue(isCalculatingSizes);
+
+         // Проверка на сброс поля ввода при изменении коллекции
+         lookup._inputValue = 'not reset value';
+         lookup._beforeUpdate({
+            items: new collection.List(),
+            readOnly: !lookup._options.readOnly,
+            value: lookup._options.value
+         });
+         assert.equal(lookup._inputValue, '');
+
+         // Если передали новое value, то применится оно и сбоса не будет
+         lookup._inputValue = 'not reset value';
+         lookup._beforeUpdate({
+            items: new collection.List(),
+            readOnly: !lookup._options.readOnly,
+            value: 'new value'
+         });
+         assert.equal(lookup._inputValue, 'new value');
       });
 
       it('_changeValueHandler', function() {

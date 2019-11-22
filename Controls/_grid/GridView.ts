@@ -325,8 +325,7 @@ var
             if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 return 0;
             }
-            const hasHeader = !!this._options.header && !!this._options.header.length && this._listModel.isDrawHeaderWithEmptyList();
-            return hasHeader ? this._children.header.getBoundingClientRect().height : 0;
+            return this._children.header ? this._children.header.getBoundingClientRect().height : 0;
         },
 
         getResultsHeight(): number {
@@ -336,7 +335,7 @@ var
                 return 0;
             }
             // роверка на фактическое существование в верстке results.
-            return this._listModel.getResultsPosition() === 'top' && this._children.results ? this._children.results.getBoundingClientRect().height : 0;
+            return this._children.results ? this._children.results.getBoundingClientRect().height : 0;
         },
 
         _onItemMouseLeave: function (event, itemData) {

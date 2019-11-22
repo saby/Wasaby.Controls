@@ -597,9 +597,6 @@ define(['Controls/grid'], function(gridMod) {
              };
          const gridView = new gridMod.GridView(cfg);
          gridView._listModel = {
-            getResultsPosition: function() {
-               return 'top'
-            },
             isDrawHeaderWithEmptyList: function() {
                return true
             }
@@ -615,13 +612,11 @@ define(['Controls/grid'], function(gridMod) {
          assert.equal(20, gridView.getResultsHeight());
 
          gridView._listModel = {
-            getResultsPosition: function() {
-               return 'bottom'
-            },
             isDrawHeaderWithEmptyList: function() {
                return false
             }
          };
+         gridView._children.header = undefined;
          gridView._children.results = undefined;
 
          assert.equal(0, gridView.getHeaderHeight());

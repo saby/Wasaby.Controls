@@ -67,7 +67,7 @@ export default class Container extends Control implements IContainer {
         this.__updateConfig(options);
     }
     protected _beforeUpdate(options: IContainerConfig) {
-        if (!options.viewConfig || isEqual(options.viewConfig, this._options.viewConfig)) {
+        if (isEqual(options.viewConfig, this._options.viewConfig)) {
             return;
         }
         this.__updateConfig(options);

@@ -10,6 +10,6 @@
                             selected="{{item[_options.keyProperty] === _options.selectedKey}}"/>
             </ws:for>
         </div>
-        <div class="{{_options.validationStatus ? 'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
+        <div class="{{_options.validationStatus!== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
     </div>
 </div>

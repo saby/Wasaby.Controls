@@ -28,6 +28,7 @@
                            on:selectedKeysChanged="selectedKeysChanged()"
                            on:excludedKeysChanged="excludedKeysChanged()"
                            on:itemClick="itemClick()"
+                           on:itemMouseDown="_tmplNotify('itemMouseDown')"
                            on:rootChanged="_tmplNotify('rootChanged')"
                            on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
                            on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
