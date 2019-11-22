@@ -190,6 +190,11 @@ const
       _isFullGridSupport: true,
 
       _beforeMount(opt) {
+          /* В 19.710 сделаны правки по compound-слою, без которых событие resize не продывалось вообще.
+             Зато теперь оно стреляет по 10-20 лишних раз отрисовку очередной страницы навигационной панели.
+             По идее надо править на стороне compoundControl, но Шипин адски боится его трогать, да и не понимает, как
+             это править на его стороне. По идее это даст профит и в остальных местах со скролом колонок.
+             https://online.sbis.ru/opendoc.html?guid=43ba1e3f-1366-4b36-8713-5e8a30c7bc13 */
          this._debouncedUpdateSizes = _private.prepareDebouncedUpdateSizes();
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
          this._isNotGridSupport = opt.listModel.isNoGridSupport();
