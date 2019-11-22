@@ -1,0 +1,27 @@
+<div class="firstCase__columnArea">
+    <Controls.Container.Async templateName="Controls/heading:Title">
+        <ws:partial template="{{ content.resolvedTemplate }}" caption="I'm Third Child {{_options.indexOpt}}" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+    </Controls.Container.Async>
+    <div class="firstCase__rowArea">
+        <div class="firstCase__childArea">
+            <ws:for data="i in _multipleControls">
+                <Controls.buttons:Button href="#" readOnly="{{false}}" icon="icon-Send" iconSize="m" caption="Not Async Control from Child {{i}}" iconStyle="default"/>
+                <ws:for data="j in _multipleControls">
+                    <Controls.Container.Async templateName="Controls/input:Text">
+                        <ws:partial template="{{ content.resolvedTemplate }}" value="Async {{i}} {{j}}" />
+                    </Controls.Container.Async>
+                </ws:for>
+            </ws:for>
+        </div>
+        <div class="firstCase__childArea">
+            <ws:for data="i in _multipleControls">
+                <Controls.Container.Async templateName="Controls/buttons:Button">
+                    <ws:partial template="{{ content.resolvedTemplate }}" readOnly="{{false}}" icon="icon-Send" iconSize="m" caption="Async Control from Child {{i}}" iconStyle="default" />
+                </Controls.Container.Async>
+                <ws:for data="j in _multipleControls">
+                    <Controls.input:Text value="Not Async {{i}} {{j}}" />
+                </ws:for>
+            </ws:for>
+        </div>
+    </div>
+</div>

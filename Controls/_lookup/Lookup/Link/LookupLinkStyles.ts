@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @public
+ * @private
  * @author Капустин И.А.
  *
  * @css @font-size_LookupLink Размер ссылки.
@@ -11,7 +11,7 @@
  */
 /*
  * @mixin Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @public
+ * @private
  * @author Kapustin I.A.
  *
  * @css @font-size_LookupLink The size of the link.

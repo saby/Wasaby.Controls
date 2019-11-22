@@ -5,7 +5,8 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/Fast/Container');
 
 /**
- * Контейнер для {@link Controls/_filter/Fast}.
+ * Контейнер для {@link Controls/filter:Fast}.
+ * @remark
  * Получает результат дочернего события "filterChanged" и уведомляет о всплывающем событии "filterChanged".
  * Получает реквизиты из контекста и передает их в {@link Controls/_filter/Fast}.
  * NOTE:Должен находиться внутри Controls/_filter/Controller.
@@ -17,6 +18,7 @@ import template = require('wml!Controls/_filter/Fast/Container');
  * @author Герасимов А.М.
  * @control
  * @public
+ * @deprecated
  */
 
 /*

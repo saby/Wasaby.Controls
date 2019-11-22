@@ -22,7 +22,7 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * @extends Core/Control
     * @mixes Controls/_dragnDrop/DraggingTemplate/Styles
     * @control
-    * @public
+    * @private
     * @author Авраменко А.С.
     * @category DragNDrop
     */
@@ -34,7 +34,7 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * @extends Core/Control
     * @mixes Controls/_dragnDrop/DraggingTemplate/Styles
     * @control
-    * @public
+    * @private
     * @author Авраменко А.С.
     * @category DragNDrop
     */

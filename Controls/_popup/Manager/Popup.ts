@@ -100,7 +100,7 @@ class Popup extends Control<IPopupOptions> {
         this._stringTemplate = typeof options.template === 'string';
     }
 
-    protected _afterRender(oldOptions: IPopupOptions): void {
+    protected _afterUpdate(oldOptions: IPopupOptions): void {
         this._notify('popupAfterUpdated', [this._options.id], {bubbling: true});
 
         if (this._isResized(oldOptions, this._options)) {

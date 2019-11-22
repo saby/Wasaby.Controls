@@ -1,7 +1,7 @@
 /**
  * @author Авраменко А.С.
  * @mixin Controls/_treeGrid/TreeGrid/Styles
- * @public
+ * @private
  *
  *
  * @css @spacing_TreeGridView-row-expander-between-content_borderTop_s 's' spacing betwen expander icon and border top

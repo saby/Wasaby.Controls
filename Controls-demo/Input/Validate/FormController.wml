@@ -24,6 +24,7 @@
                      <ws:content>
                         <Controls.input:Text
                            name="textBox2"
+                           attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"
                            bind:value="_value2"/>
                      </ws:content>
                   </Controls.validate:Container>
@@ -37,6 +38,7 @@
                      <ws:content>
                         <Controls.input:Text
                            name="textBox5"
+                           attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"
                            bind:value="_value1"
                            placeholder="Email"/>
                      </ws:content>
@@ -51,12 +53,77 @@
                      </ws:validators>
                      <ws:content>
                         <Controls.input:Text
+                                attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"
                            name="textBox5"
                            bind:value="_value5"
                            placeholder="Email"/>
                      </ws:content>
                   </Controls.validate:Container>
+                  <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
+                     <ws:validators>
+                        <ws:Function value="{{_instruction }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
+                     </ws:validators>
+                     <ws:content>
+                        <Controls.toggle:Checkbox bind:value="_instruction" caption="Ознакомлен(-а) с инструкцией"/>
+                     </ws:content>
+                  </Controls.validate:Container>
+                  <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
+                     <ws:validators>
+                        <ws:Function value="{{_switchState}}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
+                     </ws:validators>
+                     <ws:content>
+                        <Controls.toggle:Switch bind:value="_switchState" captionPosition="right" caption="State"/>
+                     </ws:content>
+                  </Controls.validate:Container>
+                  <Controls.validate:SelectionContainer name="ControllerValidate3" attr:class="validateDemo_element">
+                     <ws:validators>
+                        <ws:Function value="{{_sourceNumber }}">Controls-demo/Input/Validate/FormController:prototype.isSelected</ws:Function>
+                     </ws:validators>
+                     <ws:content>
+                           <Controls.toggle:RadioGroup on:selectedKeyChanged="_selectedHandler()" keyProperty="id"
+                                                       selectedKey="{{_sourceNumber}}" source="{{_sourceConfig}}"/>
+                     </ws:content>
+                  </Controls.validate:SelectionContainer>
+                  <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
+                     <ws:validators>
+                        <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
+                     </ws:validators>
+                     <ws:content>
+                        <Controls.buttons:Button caption="Выбрать адрес" fontColorStyle="link" viewMode="link" fontSize="m"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                     </ws:content>
+                  </Controls.validate:Container>
+                  <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
+                     <ws:validators>
+                        <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
+                     </ws:validators>
+                     <ws:content>
+                        <Controls.buttons:Button icon="icon-Send" iconSize="s" caption="Отправить" fontColorStyle="link"
+                                                 viewMode="link" fontSize="m"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                     </ws:content>
+                  </Controls.validate:Container>
+                  <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
+                     <ws:validators>
+                        <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
+                     </ws:validators>
+                     <ws:content>
+                        <Controls.list:AddButton readOnly="{{false}}" caption="Наименование"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                     </ws:content>
+                  </Controls.validate:Container>
+                  <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
+                     <ws:validators>
+                        <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
+                     </ws:validators>
+                     <ws:content>
+                        <Controls.buttons:Button iconSize="m" icon="icon-Save" fontColorStyle="link" viewMode="link" fontSize="m"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                     </ws:content>
+                  </Controls.validate:Container>
                   <Controls.buttons:Button caption="Проверить данные" attr:style="margin: 10px 0 0 16px;" name="updateButton" on:click="_clickHandler()"
+                                                                                                                      attr:class="ControlsDemo-ValidateInfobox_submit"/>
+                  <Controls.buttons:Button caption="Очистить валидацию" attr:style="margin: 10px 0 0 16px;" name="cleanValid" on:click="_cleanValid()"
                                            attr:class="ControlsDemo-ValidateInfobox_submit"/>
                </div>
             </div>

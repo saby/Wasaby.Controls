@@ -4915,7 +4915,7 @@ define([
                   totalItemsCount = 100;
                   assert.deepEqual({
                         totalItemsCount: 100,
-                        pageSize: 10,
+                        pageSize: '10',
                         firstItemNumber: 1,
                         lastItemNumber: 10,
                      },
@@ -4926,13 +4926,43 @@ define([
                   currentPage = 2;
                   assert.deepEqual({
                         totalItemsCount: 15,
-                        pageSize: 10,
+                        pageSize: '10',
                         firstItemNumber: 11,
                         lastItemNumber: 15,
                      },
                      getPagingLabelData(totalItemsCount, pageSize, currentPage)
                   );
                });
+            });
+            it('changePageSize', async function() {
+               let cfg = {
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     view: 'pages',
+                     source: 'page',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     },
+                     sourceConfig: {
+                        pageSize: 5,
+                        page: 0,
+                        hasMore: false
+                     }
+                  }
+               };
+               let baseControl = new lists.BaseControl(cfg);
+               let expectedSourceConfig = {};
+               baseControl.saveOptions(cfg);
+               await baseControl._beforeMount(cfg);
+               baseControl._recreateSourceController = function(newSource, newNavigation) {
+                  assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
+               };
+               expectedSourceConfig.page = 0;
+               expectedSourceConfig.pageSize = 100;
+               expectedSourceConfig.hasMore = false;
+               baseControl._changePageSize({}, {id: 1, title: 100, get: function() {return this.title;}});
+               expectedSourceConfig.page = 1;
+               baseControl.__pagingChangePage({}, 2);
             });
          });
          describe('navigation switch', function() {
@@ -5023,10 +5053,10 @@ define([
          it('resetPagingNavigation', function() {
             let instance = {};
             lists.BaseControl._private.resetPagingNavigation(instance);
-            assert.deepEqual(instance, {_currentPage: 1, _knownPagesCount: 1});
+            assert.deepEqual(instance, {_currentPage: 1, _knownPagesCount: 1, _currentPageSize: 1});
 
-            lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1}});
-            assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1});
+            lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1, pageSize: 5}});
+            assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1, _currentPageSize: 5});
 
          });
       });

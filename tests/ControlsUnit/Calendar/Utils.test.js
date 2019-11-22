@@ -1,7 +1,7 @@
 /* global define, describe, it, assert */
 define([
    'Controls/dateRange',
-   'SBIS3.CONTROLS/Utils/DateUtil'
+   'Controls/Utils/Date'
 ], function(
    dateRange,
    DateUtil

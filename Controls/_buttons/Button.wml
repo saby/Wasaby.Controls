@@ -1,36 +1,16 @@
-<a attr:class="controls-BaseButton
-            controls-Button_{{_viewMode}} controls-Button_{{_viewMode}}_theme-{{_options.theme}}
-            controls-Button_{{_options.readOnly ? 'readonly' : 'clickable'}}
-            controls-Button_{{_viewMode}}_style-{{_buttonStyle}}_theme-{{_options.theme}}
-            controls-Button_bg{{_contrastBackground ? '-contrast' : '-same'}}_theme-{{_options.theme}}
-            {{_height ? ' controls-inlineheight-' + _height + '_theme-' + _options.theme}}
-            {{_height ? ' controls-Button-inlineheight-' + _height + '_theme-' + _options.theme}}
-            {{_height ? ' controls-Button_' + _viewMode + '_' + _height + '_theme-' + _options.theme}}"
-    attr:title="{{_options.tooltip}}"
-    on:click="_clickHandler()"
-    on:keypress="_keyUpHandler()"
-    attr:href="{{_options.href}}">
-    <span attr:class="controls-BaseButton__wrapper
-                        controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}
-                        controls-Button_{{_viewMode}}__wrapper-fontsize-{{_fontSize}}_theme-{{_options.theme}}
-                        controls-Button__wrapper_viewMode-{{_viewMode}}
-                        {{_height ? ' controls-Button__wrapper_' + _viewMode + '_' + _height + '_theme-' + _options.theme}}">
-        <ws:if data="{{!!_icon}}">
-            <i attr:class="controls-Button__icon controls-icon {{_icon}}
-                            {{_iconSize ? 'controls-icon_size-' + _iconSize + '_theme-' + _options.theme}}
-                            {{_iconStyle ? 'controls-icon_style-' + _iconStyle + '_theme-' + _options.theme}}"/>
-        </ws:if>
-        <ws:if data="{{!!_caption}}">
-           <span attr:class="controls-BaseButton__text
-            {{_options.readOnly ? ' controls-Button__text_readonly_' + _viewMode + '_theme-' + _options.theme :
-             (_fontColorStyle ?  ' controls-text-' + _fontColorStyle + '_theme-' + _options.theme +
-                            ' controls-Button__text-' + _fontColorStyle + '_viewMode-' + _viewMode + '_theme-' + _options.theme :
-                                                            'controls-Button__text_clickable_theme-' + _options.theme)}}
-                                {{_hasIcon ? ' controls-Button__text_gap_theme-' + _options.theme}}
-                                controls-Button__text_viewMode-{{_viewMode}}_theme-{{_options.theme}}">
-              <ws:if data="{{_stringCaption}}">{{_caption}}</ws:if>
-              <ws:else><ws:partial template="{{_caption}}"/></ws:else>
-           </span>
-        </ws:if>
-    </span>
-</a>
+<ws:partial template="wml!Controls/_buttons/ButtonBase"
+            _viewMode="{{_viewMode}}"
+            _options="{{_options}}"
+            _buttonStyle="{{_buttonStyle}}"
+            _contrastBackground="{{_contrastBackground}}"
+            _height="{{_height}}"
+            _fontSize="{{_fontSize}}"
+            _icon="{{_icon}}"
+            _iconSize="{{_iconSize}}"
+            _caption="{{_caption}}"
+            _fontColorStyle="{{_fontColorStyle}}"
+            _hasIcon="{{_hasIcon}}"
+            _stringCaption="{{_stringCaption}}"
+            _iconStyle="{{_iconStyle}}"
+            on:click="_clickHandler()"
+            on:keypress="_keyUpHandler()"/>

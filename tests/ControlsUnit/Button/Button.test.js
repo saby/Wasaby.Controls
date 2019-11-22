@@ -325,39 +325,24 @@ define(['Controls/buttons'], function(buttons) {
       });
 
       describe('constructor() and _beforeUpdate()', function() {
-         var optionsCorrect = false;
-         function redefinitionCssStyleGeneration() {
-            var original = buttons.Button.prototype.cssStyleGeneration;
-            buttons.Button.prototype.cssStyleGeneration = function(options) {
-               if (options.style === 'test' && options.size === 'size') {
-                  optionsCorrect = true;
-               }
-            };
-            buttons.Button.prototype.cssStyleGeneration.original = original;
-         }
+         var inst;
+
+         beforeEach(function() {
+            inst = {};
+         });
 
          it('constructor', function() {
-            redefinitionCssStyleGeneration();
-            var opt = {
-               style: 'test',
-               size: 'size'
-            };
-            buttons.Button.prototype._beforeMount(opt);
-            assert(optionsCorrect);
+            buttons.Button.prototype._beforeMount.call(inst, {
+               style: 'primary'
+            });
+            assert.equal(inst._buttonStyle, 'primary');
          });
 
          it('_beforeUpdate', function() {
-            redefinitionCssStyleGeneration();
-            var opt = {
-               style: 'test',
-               size: 'size'
-            };
-            buttons.Button.prototype._beforeUpdate(opt);
-            assert(optionsCorrect);
-         });
-
-         afterEach(function() {
-            buttons.Button.prototype.cssStyleGeneration = buttons.Button.prototype.cssStyleGeneration.original;
+            buttons.Button.prototype._beforeMount.call(inst, {
+               style: 'primary'
+            });
+            assert.equal(inst._buttonStyle, 'primary');
          });
       });
       describe('click', function() {

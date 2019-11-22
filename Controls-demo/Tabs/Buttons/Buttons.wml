@@ -1,6 +1,6 @@
 <div class="root">
     <div class="separator">Прижатые к правому краю</div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__rightAlign">
         <Controls.tabs:Buttons
                       bind:selectedKey='SelectedKey1'
                       keyProperty="id"
@@ -8,7 +8,7 @@
         />
     </div>
     <div class="separator">Прижатые к левому краю</div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__leftAlign">
         <Controls.tabs:Buttons
                 bind:selectedKey="SelectedKeyLeft"
                 keyProperty="id"
@@ -16,7 +16,7 @@
         />
     </div>
     <div class="separator">Главная вкладка отдельно от остальных вкладок</div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__mainSeparate">
         <Controls.tabs:Buttons
                       bind:selectedKey='SelectedKey2'
                       keyProperty="id"
@@ -25,7 +25,7 @@
         />
      </div>
     <div class="separator">Главная вкладка вместе с другими вкладками</div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__allTogether">
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey9'
                 keyProperty="id"
@@ -34,7 +34,7 @@
         />
     </div>
     <div class="separator">Вкладки с кастомным содержимым</div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__custom">
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey5'
                 keyProperty="id"
@@ -43,7 +43,7 @@
         />
     </div>
     <div class="separator">Прикладной контент перед вкладками</div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__contentBefore">
         <div class="demo-TabButtons-container controls-Tabs__item-underline_theme-{{_options.theme}}">
                 <Controls.heading:Title caption="Бизнес" style="secondary"/>
         </div>
@@ -55,7 +55,7 @@
         />
     </div>
     <div class="separator">Style="secondary", custom displayProperty</div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__displayProperty">
         <Controls.tabs:Buttons
                       bind:selectedKey='SelectedKey3'
                       keyProperty="id"
@@ -71,7 +71,7 @@
         </Controls.tabs:Buttons>
     </div>
     <div class="separator">Style="secondary", with space template</div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__withSpace">
         <Controls.tabs:Buttons
                       bind:selectedKey='SelectedKey4'
                       keyProperty="id"
@@ -87,7 +87,7 @@
         <span>Style="primary", change source after click</span>
         <div class="clickmebtn" on:click="_setSource()">click me</div>
     </div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__clickable">
         <Controls.tabs:Buttons
                       bind:selectedKey='SelectedKey6'
                       keyProperty="id"
@@ -98,7 +98,7 @@
     </div>
     <div class="separator">Style="secondary", with Photo item template</div>
     <div class="photo_before_bg"></div>
-    <div class="demo-TabButtons">
+    <div class="demo-TabButtons ControlsDemo-Tabs__withPhoto">
         <Controls.tabs:Buttons
                       bind:selectedKey='SelectedKey7'
                       keyProperty="id"

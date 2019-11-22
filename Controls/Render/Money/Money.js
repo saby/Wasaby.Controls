@@ -3,24 +3,23 @@ define('Controls/Render/Money/Money', [
    'wml!Controls/Render/Money/Money',
    'css!theme?Controls/Render/Money/Money'
 ], function(Control, Template) {
-
    'use strict';
 
    var
       _private = {
          getPartsOfNumber: function(text, alwaysFraction) {
-            text = text + '';
+            var newText = text + '';
             var
                integer,
-               fraction =  text.split('.')[1] || (alwaysFraction ? '00' : ''),
+               fraction = newText.split('.')[1] || (alwaysFraction ? '00' : ''),
                numReg = /^-?([0]*)(\d+)\.?\d*\D*$/,
                regResult;
-            if (!text.match(numReg)) {
+            if (!newText.match(numReg)) {
                integer = '0';
             }
-            regResult = text.replace(numReg, '$2');
-            integer = integer === '0' ? integer : (text.substr(0, 1) === '-' ? '-' : '') + (regResult.replace(/(?=(\d{3})+$)/g, ' ').trim());
-            if (fraction.length == 1 && alwaysFraction) {
+            regResult = newText.replace(numReg, '$2');
+            integer = integer === '0' ? integer : (newText.substr(0, 1) === '-' ? '-' : '') + (regResult.replace(/(?=(\d{3})+$)/g, ' ').trim());
+            if (fraction.length === 1 && alwaysFraction) {
                fraction = fraction + '0';
             }
             return {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IFormController', [
 ], function() {
 
@@ -15,7 +16,7 @@ define('Controls/interface/IFormController', [
     * @interface Controls/interface/IFormController
     * @public
     * @author Красильников А.С.
-    */    
+    */
 
    /**
     * @name Controls/interface/IFormController#record
@@ -25,7 +26,7 @@ define('Controls/interface/IFormController', [
    /*
     * @name Controls/interface/IFormController#record
     * @cfg {Types/entity:Model} Record that produced the control initialization data.
-    */    
+    */
 
    /**
     * @name Controls/interface/IFormController#key
@@ -35,31 +36,31 @@ define('Controls/interface/IFormController', [
    /*
     * @name Controls/interface/IFormController#key
     * @cfg {String} The key by which the record will be received
-    */    
+    */
 
    /**
     * @name Controls/interface/IFormController#keyProperty
-    * @cfg {String} Имя свойства элемента, однозначно идентифицирующего элемент коллекции. 
+    * @cfg {String} Имя свойства элемента, однозначно идентифицирующего элемент коллекции.
     */
 
    /*
     * @name Controls/interface/IFormController#keyProperty
     * @cfg {String} Name of the item property that uniquely identifies collection item
-    */    
+    */
 
    /**
     * @name Controls/interface/IFormController#isNewRecord
     * @cfg {Boolean} Флаг "Новая запись" означает, что запись инициализируется в источнике данных, но не сохраняется.
     * Если запись помечена флагом isNewRecord, то при сохранении записи запрос на БЛ будет выполнен, даже если запись не изменена.
     * Также при уничтожении контрола будет вызвано удаление записи.
-    */    
+    */
 
    /*
     * @name Controls/interface/IFormController#isNewRecord
     * @cfg {Boolean} "New record" flag, which means that the record is initialized in the data source, but not saved.
     * If the record is marked isNewRecord flag, when saving the record, the request for BL will be executed, even if the record is not changed.
     * Also when control destroying will be called deleting the record.
-    */    
+    */
 
    /**
     * @name Controls/interface/IFormController#createMetaData
@@ -71,7 +72,7 @@ define('Controls/interface/IFormController', [
     * @name Controls/interface/IFormController#createMetaData
     * @cfg {Object} Initial values what will be argument of create method called when key option and record option are not exist. More {@link Types/source:ICrud#create}
     * Also its default value for create method.
-    */    
+    */
 
    /**
     * @name Controls/interface/IFormController#readMetaData
@@ -83,7 +84,7 @@ define('Controls/interface/IFormController', [
     * @name Controls/interface/IFormController#readMetaData
     * @cfg {Object} Additional meta data what will be argument of read method called when key option is exists. More {@link Types/source:ICrud#read}
     * Also its default value for read method.
-    */    
+    */
 
    /**
     * @name Controls/interface/IFormController#destroyMetaData
@@ -95,12 +96,12 @@ define('Controls/interface/IFormController', [
     * @name Controls/interface/IFormController#destroyMetaData
     * @cfg {Object} Additional meta data what will be argument of destroying of draft record. More {@link Types/source:ICrud#destroy}
     * Also its default value for destroy method.
-    */    
+    */
 
    /**
     * @name Controls/interface/IFormController#errorContainer
     * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения шаблона ошибки по данным от {@link Controls/_dataSource/_error/Controller}
-    */ 
+    */
 
    /**
     * Обновляет запись в источнике данных. Подробнее {@link Types/source:ICrud#update}
@@ -110,7 +111,7 @@ define('Controls/interface/IFormController', [
    /*
     * Updates a record in the data source.  More {@link Types/source:ICrud#update}
     * @function Controls/interface/IFormController#update
-    */    
+    */
 
    /**
     * Создает пустую запись через источник данных. Подробнее {@link Types/source:ICrud#create}
@@ -122,7 +123,7 @@ define('Controls/interface/IFormController', [
     * Creates an empty record through a data source. More {@link Types/source:ICrud#create}
     * @function Controls/interface/IFormController#create
     * @param {Object} createMetaData
-    */    
+    */
 
    /**
     * Считывает запись из источника данных. Подробнее {@link Types/source:ICrud#read}
@@ -136,7 +137,7 @@ define('Controls/interface/IFormController', [
     * @function Controls/interface/IFormController#read
     * @param {String} key
     * @param {Object} readMetaData
-    */    
+    */
 
    /**
     * Удаляет запись из источника данных. Подробнее {@link Types/source:ICrud#delete}
@@ -148,7 +149,7 @@ define('Controls/interface/IFormController', [
     * Removes an record from the data source. More {@link Types/source:ICrud#delete}
     * @function Controls/interface/IFormController#delete
     * @param {Object} destroyMetaData
-    */    
+    */
 
    /**
     * Запускает процесс валидации.
@@ -160,7 +161,7 @@ define('Controls/interface/IFormController', [
     * Starts validating process.
     * @function Controls/interface/IFormController#validate
     * @returns {Core/Deferred} deferred of result of validation
-    */    
+    */
 
    /**
     * @event Controls/interface/IFormController#createSuccessed Происходит, когда запись создана успешно.
@@ -172,7 +173,7 @@ define('Controls/interface/IFormController', [
     * @event Controls/interface/IFormController#createSuccessed Happens when record create successful
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Model} Editable record
-    */    
+    */
 
    /**
     * @event Controls/interface/IFormController#createFailed Происходит, когда запись создать не удалось.
@@ -184,7 +185,7 @@ define('Controls/interface/IFormController', [
     * @event Controls/interface/IFormController#createFailed Happens when record create failed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
-    */    
+    */
 
    /**
     * @event Controls/interface/IFormController#readSuccessed Происходит, когда запись прочитана успешно.
@@ -208,7 +209,7 @@ define('Controls/interface/IFormController', [
     * @event Controls/interface/IFormController#readFailed Happens when record read failed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
-    */    
+    */
 
    /**
     * @event Controls/interface/IFormController#updateSuccessed Происходит, когда запись обновлена успешно.
@@ -234,7 +235,7 @@ define('Controls/interface/IFormController', [
     * @event Controls/interface/IFormController#updateFailed Happens when record update failed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
-    */    
+    */
 
    /**
     * @event Controls/interface/IFormController#deleteSuccessed Происходит, когда запись удалена успешно.
@@ -258,7 +259,7 @@ define('Controls/interface/IFormController', [
     * @event Controls/interface/IFormController#deleteFailed Happens when record delete failed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
-    */    
+    */
 
    /**
     * @event Controls/interface/IFormController#isNewRecordChanged Происходит, когда запись инициализируется в источнике данных.

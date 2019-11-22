@@ -1,14 +1,15 @@
 /**
  * @author Золотова Элина
  * @mixin Controls/_filter/Button/Panel/Styles
- * @public
+ * @private
  *
  * @css @background-color_FilterPanel Background color of filter panel.
  * @css @background-color_FilterPanel_horizontal Background color of filter panel, when orientation option set to "horizontal".
  *
- * @css @width_FilterPanel-size_m The width of the panel on which css class controls-FilterPanel__width-m is set.
- * @css @width_FilterPanel-size_l The width of the panel on which css class controls-FilterPanel__width-l is set.
- * @css @width_FilterPanel-size_xl The width of the panel on which css class controls-FilterPanel__width-xl is set.
+ * @css @width_FilterPanel-size_s Ширина панели, на которой установлен класс controls-FilterPanel__width-s.
+ * @css @width_FilterPanel-size_m Ширина панели, на которой установлен класс controls-FilterPanel__width-m.
+ * @css @width_FilterPanel-size_l Ширина панели, на которой установлен класс controls-FilterPanel__width-l.
+ * @css @width_FilterPanel-size_xl Ширина панели, на которой установлен класс controls-FilterPanel__width-xl.
  *
  * @css @width_FilterPanel-filtersWrapper-size_m The width of the panel's filters block, when orientation option set to "horizontal" and css class controls-FilterPanel__width-m is set.
  * @css @width_FilterPanel-HistoryList-size_m The width of the panel's history block, when orientation option set to "horizontal" and css class controls-FilterPanel__width-m is set.

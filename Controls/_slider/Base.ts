@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
@@ -250,16 +250,16 @@ class Base extends Control<ISliderBaseOptions> {
    private _checkOptions(opts: ISliderBaseOptions): void {
       Utils.checkOptions(opts);
       if (opts.value < opts.minValue || opts.value > opts.maxValue) {
-         IoC.resolve('ILogger').error('Slider', 'value must be in the range [minValue..maxValue].');
+         Logger.error('Slider: value must be in the range [minValue..maxValue].', this);
       }
    }
 
    private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-      let targetX = Utils.getNativeEventPageX(event);
+      const targetX = Utils.getNativeEventPageX(event);
       const box = this._children.area.getBoundingClientRect();
       const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
       return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
-   };
+   }
 
    private _setValue(val: number): void {
       this._notify('valueChanged', [val]);

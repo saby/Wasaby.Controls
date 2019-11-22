@@ -2,8 +2,8 @@ import Control = require('Core/Control');
 import ViewModel from './ViewModel';
 import template = require('wml!Controls/_switchableArea/View');
 import defaultItemTemplate from './ItemTpl';
-import {IoC} from 'Env/Env';
 import {factory} from 'Types/chain';
+import {Logger} from 'UI/Utils';
 
 
 /**
@@ -93,7 +93,7 @@ var View = Control.extend({
         });
 
         if (selectedKey === undefined) {
-            IoC.resolve('ILogger').error(this._moduleName, 'Incorrect selectedKey');
+            Logger.error(this._moduleName + ': Incorrect selectedKey', this);
             if (options.items instanceof Array) {
                 selectedKey = options.items[0].id || options.items[0].key;
             } else {

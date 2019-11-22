@@ -4,7 +4,7 @@ import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils from './Utils';
 import DateRangeModel from './DateRangeModel';
 import {StringValueConverter} from 'Controls/input';
-import IDateTimeMask from './interfaces/IDateTimeMask';
+import {IDateTimeMask} from 'Controls/input';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_dateRange/Input/Input');
 
@@ -56,7 +56,7 @@ import template = require('wml!Controls/_dateRange/Input/Input');
  * @demo Controls-demo/Input/Date/RangePG
  * @category Input
  * @author Красильников А.С.
- */ 
+ */
 
 var Component = Control.extend([], {
     _template: template,
@@ -87,7 +87,7 @@ var Component = Control.extend([], {
             target: this._container,
             template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker',
-            horizontalAlign: { side: 'right' },
+            direction: {horizontal: 'right'},
             targetPoint: { horizontal: 'left' },
             fittingMode: 'overflow',
             eventHandlers: {

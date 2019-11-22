@@ -5,9 +5,10 @@ define(
       'Controls/history',
       'Types/collection',
       'Core/core-clone',
-      'Core/Deferred'
+      'Core/Deferred', 
+      'Env/Env'
    ],
-   function(filterPopup, filter, history, collection, Clone, Deferred) {
+   function(filterPopup, filter, history, collection, Clone, Deferred,Env) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -49,6 +50,7 @@ define(
          });
 
          it('Init::historyItems', function(done) {
+            if (Env.constants.isServerSide) { return done(); }
             var config2 = {
                items: items,
                historyId: 'TEST_PANEL_HISTORY_ID'
@@ -431,6 +433,7 @@ define(
             });
 
             it('_private:reloadHistoryItems', function() {
+               if (Env.constants.isServerSide) { return; }
                filter.HistoryUtils.getHistorySource({historyId: 'TEST_RELOAD_ITEMS_HISTORY_ID'}).getItems = () => {
                   return historyItems;
                };
@@ -544,6 +547,7 @@ define(
          });
 
          it('_historyItemsChanged', function() {
+            if (Env.constants.isServerSide) { return; }
             var panel = getFilterPanel(config);
             filterPopup.DetailPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
             panel._historyId = 'TEST_HISTORY_ID';

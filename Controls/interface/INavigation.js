@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/INavigation', [
 ], function() {
 
@@ -136,6 +137,8 @@ define('Controls/interface/INavigation', [
    /**
     * @name Controls/interface/INavigation#navigation
     * @cfg {Navigation} Конфигурация навигации по списку. Настройка навигации источника данных (страниц, смещения, положения) и визуального отображения навигации (страниц, бесконечного скролла и т.д.).
+    * @remark
+    * Подробнее о конфигурации навигации по списку читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/navigation/ руководстве разработчика}.
     * @example
     * В этом примере в списке будут отображаться 2 элемента.
     * TMPL:

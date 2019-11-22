@@ -1,5 +1,5 @@
 /**
- * Интерфейс для окна подтверждения
+ * Интерфейс для окна подтверждения.
  *
  * @interface Controls/_popup/Opener/interface/IConfirmation
  * @public

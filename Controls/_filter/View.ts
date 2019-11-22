@@ -33,6 +33,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
+ * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/
  */
 
 /*
@@ -47,6 +48,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @control
  * @public
  * @author Золотова Э.Е.
+ * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/
  */
 
 var _private = {
@@ -603,8 +605,8 @@ var Filter = Control.extend({
                     vertical: 'top',
                     horizontal: 'right'
                 };
-                popupOptions.horizontalAlign = {
-                    side: 'left'
+                popupOptions.direction = {
+                    horizontal: 'left'
                 };
             }
             popupOptions.template = this._options.detailPanelTemplateName;

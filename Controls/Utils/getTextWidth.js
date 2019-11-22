@@ -1,5 +1,5 @@
 define('Controls/Utils/getTextWidth', function() {
-
+   /* eslint-disable */
    /**
     * Модуль, в котором реализована функция <b>getTextWidth(parent, child)</b>.
     * Высчитывает ширину переданного текста в пикселях.
@@ -18,7 +18,7 @@ define('Controls/Utils/getTextWidth', function() {
     *     helpers.getTextWidth("helloWorld")
     * </pre>
     *
-    * @class SBIS3.CONTROLS/Utils/GetTextWidth
+    * @class Controls/Utils/getTextWidth
     * @public
     * @author Мальцев Алексей Александрович
     */
@@ -40,4 +40,5 @@ define('Controls/Utils/getTextWidth', function() {
 
       return rect;
    };
+   /* eslint-enable */
 });

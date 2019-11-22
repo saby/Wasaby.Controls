@@ -1,7 +1,7 @@
 /**
  * @author Авраменко А.С.
  * @mixin Controls/_masterDetail/List/Styles
- * @public
+ * @private
  *
  *
  * @css @background-color_List-masterList background color of master list of MasterDetail

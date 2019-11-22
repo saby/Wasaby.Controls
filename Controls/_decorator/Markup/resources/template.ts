@@ -3,8 +3,7 @@
  */
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
-import { IoC } from 'Env/Env';
-// import {Logger} from 'UI/Utils'; 
+import {Logger} from 'UI/Utils';
 import 'css!theme?Controls/decorator';
 
    var markupGenerator,
@@ -58,7 +57,7 @@ import 'css!theme?Controls/decorator';
            strNode = '"Невалидный Json узел"';
        }
 
-       IoC.resolve('ILogger').error('View/Executor/TClosure', `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`);
+       Logger.error('View/Executor/TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`);
        // Logger.error(`Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}\n`, control, {});
    }
 
@@ -231,8 +230,7 @@ import 'css!theme?Controls/decorator';
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-         IoC.resolve('ILogger').error('View/Executor/TClosure', e.message, e);
-         // Logger.error(e.message, control, e);
+          Logger.error('View/Executor/TClosure: ' + e.message, undefined, e);
       } finally {
          markupGenerator.escape = oldEscape;
       }

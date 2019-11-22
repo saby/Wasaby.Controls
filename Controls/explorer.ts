@@ -4,7 +4,6 @@
  * @includes View Controls/_explorer/View
  * @includes SearchItemTemplate wml!Controls/_treeGrid/SearchView/Item
  * @includes IExplorer Controls/_explorer/interface/IExplorer
- * @includes Styles Controls/_explorer/Styles
  * @public
  * @author Крайнов Д.О.
  */

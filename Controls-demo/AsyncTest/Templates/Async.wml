@@ -1,0 +1,12 @@
+<div class="asyncDemo__column">
+    <Controls.Container.Async templateName="Controls/heading:Title">
+        <ws:partial template="{{ content.resolvedTemplate }}" caption="Async" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+    </Controls.Container.Async>
+    <div class="asyncDemo__column">
+        <ws:for data="i in 3">
+            <Controls.Container.Async templateName="Controls/input:Number">
+                <ws:partial template="{{ content.resolvedTemplate }}" value="{{i}}" />
+            </Controls.Container.Async>
+        </ws:for>
+    </div>
+</div>
