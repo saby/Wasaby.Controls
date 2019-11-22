@@ -21,7 +21,7 @@ class ViewModel extends BaseViewModel {
     protected _convertToDisplayValue(value: string | number): string {
         const displayValue = super._convertToDisplayValue(value).toString();
 
-        return format(parse(displayValue), this._options, 0).value;
+        return format(parse(displayValue), this._options, displayValue.length).value;
     }
 
     private static zeroFractionalPart: RegExp = new RegExp(`\\${decimalSplitter}?0*$`, 'g');

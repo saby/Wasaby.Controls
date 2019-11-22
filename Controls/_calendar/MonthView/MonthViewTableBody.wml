@@ -1,7 +1,7 @@
 <div for="index, week in monthViewModel.getMonthArray()" class="controls-MonthViewVDOM__tableRow {{_themeCssClass}}">
    <div for="indexOfDay, value in week"
         on:click="_dayClickHandler(value.date, mode, value.isCurrentMonth)"
-        on:mouseenter="_mouseEnterHandler(value.date)"
+        on:mouseenter="_mouseEnterHandler(value.date, mode, value.isCurrentMonth)"
         attr:class="controls-MonthViewVDOM__item {{ monthViewModel._prepareClass({'value': value}) }} {{_themeCssClass}}"
         data-date="{{value.id}}"
    >
@@ -10,6 +10,7 @@
          value="{{value}}"
          _themeCssClass="{{_themeCssClass}}"
          mode="{{mode}}"
+         _isDayInteractionAllowed="{{_isDayInteractionAllowed}}"
       />
    </div>
 </div>

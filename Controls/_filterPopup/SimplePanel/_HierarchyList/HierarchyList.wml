@@ -20,6 +20,8 @@
               resetValue="{{_options.resetValue}}"
               multiSelect="{{_options.multiSelect}}"
               items="{{_nodeItems[index]}}"
+              selectorItems="{{_options.selectorItems}}"
+              selectorSelectedKeys="{{_flatSelectedKeys}}"
               showSeparator="{{false}}"
               on:itemClick="_itemClickHandler(index)"
               on:checkBoxClick="_checkBoxClickHandler(index)"

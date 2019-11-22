@@ -347,7 +347,9 @@ import {SyntheticEvent} from "Vdom/Vdom"
          _afterMount: function() {
             if (!isEmpty(this._registrar._registry)) {
                _private.calcSizeCache(this, _private.getDOMContainer(this._container));
-               _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
+               const container = _private.getDOMContainer(this._container);
+               _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight,
+                   container.getBoundingClientRect());
             }
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },

@@ -23,12 +23,11 @@ import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {constants, detection} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
-import {ICrud} from "Types/source";
+import {ICrud, Memory} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
-import {Memory} from 'Types/source';
 import {Logger} from 'UI/Utils';
 import {create as diCreate} from 'Types/di';
 
@@ -1664,7 +1663,7 @@ var _private = {
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IBaseControl
  * @mixes Controls/interface/IEditableList
@@ -2543,6 +2542,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
             });
         }
+        this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
 
     _onLoadMoreClick: function() {

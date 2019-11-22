@@ -15,6 +15,7 @@
                     sorting="{{_options.sorting}}"
                     searchParam="{{_options.searchParam}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
+                    layerName="{{_options.layerName}}"
                     searchDelay="{{_searchDelay}}"
                     tabsSelectedKeyChangedCallback="{{_tabsSelectedKeyChanged}}"
                     name="suggestListWrapper"

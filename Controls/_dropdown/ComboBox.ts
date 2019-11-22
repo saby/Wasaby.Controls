@@ -25,7 +25,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/ISingleSelectable
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/IInputPlaceholder
@@ -47,7 +47,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/ISingleSelectable
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/_input/interface/IBase
