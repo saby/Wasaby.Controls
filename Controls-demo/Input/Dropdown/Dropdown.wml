@@ -114,11 +114,35 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMyTemplate"
                                   keyProperty="id"
                                   displayProperty="title"
-                                  attr:class="demo-InputDropdown__withComment"
+                                  iconSize="s"
+                                  attr:class="demo-InputDropdown__withComment ControlsDemo-InputDropdown__item"
                                   popupClassName="ControlsDemo-InputDropdownn-width"
                                   contentTemplate="wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon"
-                                  itemTemplate="wml!Controls-demo/Input/Dropdown/itemTemplateDropdown"
-                                  source="{{_createMemory(_myTemplateItems)}}"/>
+                                  source="{{_createMemory(_myTemplateItems)}}">
+            <ws:itemTemplate>
+               <ws:partial template="Controls/dropdown:ItemTemplate"
+                           iconAlign="right"
+                           multiLine="{{true}}">
+                  <ws:footerContentTemplate>
+                     <div>{{itemTemplate.itemData.item.get('comment')}}</div>
+                  </ws:footerContentTemplate>
+               </ws:partial>
+            </ws:itemTemplate>
+         </Controls.dropdown:Input>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysWithDescription"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  attr:class="demo-InputDropdown__withComment"
+                                  source="{{_createMemory(_itemsWithDescription)}}">
+            <ws:itemTemplate>
+               <ws:partial template="Controls/dropdown:ItemTemplate"
+                           multiLine="{{true}}">
+                  <ws:footerContentTemplate>
+                     <div>{{itemTemplate.itemData.item.get('description')}}</div>
+                  </ws:footerContentTemplate>
+               </ws:partial>
+            </ws:itemTemplate>
+         </Controls.dropdown:Input>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divWithEmpty">
          <h3>With empty text</h3>
