@@ -19,7 +19,7 @@ export = {
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#ranges
-       * @cfg {Object} Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды.
+       * @cfg {Object} Кванты.
        * @remark
        * Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды. 
        * Объект принимает свойства days, weeks, months, quarters, halfyears, и years со значениями типа Array.
