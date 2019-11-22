@@ -12,6 +12,11 @@ define([
 ) {
    describe('Controls.List.ListControl.ListViewModel', function() {
       var data;
+      var subscribeOnMarkedKeyChanged = function(lvm) {
+         lvm.subscribe('onMarkedKeyChanged', function(e, key) {
+            lvm.setMarkedKey(key);
+         });
+      };
       beforeEach(function() {
          data = [
             {
@@ -193,7 +198,7 @@ define([
                 markerVisibility: 'onactivated',
              },
              iv = new lists.ListViewModel(cfg);
-
+         subscribeOnMarkedKeyChanged(iv);
          let modelVersion = 0;
 
          iv._nextModelVersion = () => {
@@ -317,6 +322,8 @@ define([
                markedKey: 1
             });
 
+         subscribeOnMarkedKeyChanged(model);
+         subscribeOnMarkedKeyChanged(modelWithoutItems);
          // Should not set marker
          model._options.markerVisibility = 'hidden';
          model.setItems(items);
@@ -336,17 +343,10 @@ define([
          model.setItems(items);
          assert.equal(1, model._markedKey);
 
-         var
-            markedKeyChangedCalled = false,
-            cb = function() {
-               markedKeyChangedCalled = true;
-            };
-         model.subscribe('onMarkedKeyChanged', cb);
+         modelWithoutItems.updateMarker();
          assert.equal(modelWithoutItems._markedKey, null);
          modelWithoutItems.setItems(items);
          assert.equal(modelWithoutItems._markedKey, 1);
-         model.unsubscribe('onMarkedKeyChanged', cb);
-         assert.isFalse(markedKeyChangedCalled);
       });
 
       it('should set markerFrom state', function () {
@@ -393,24 +393,6 @@ define([
              },
              model;
 
-         // Should not set marker
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'onactivated';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'hidden';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-         cfg.markedKey = 1;
-         cfg.markerVisibility = 'hidden';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-
-
          // Should set marker
          cfg.markedKey = 2;
          cfg.markerVisibility = 'onactivated';
@@ -420,11 +402,15 @@ define([
          cfg.markedKey = null;
          cfg.markerVisibility = 'always';
          model = new lists.ListViewModel(cfg);
+         subscribeOnMarkedKeyChanged(model);
+         model.updateMarker();
          assert.equal(1, model._markedKey);
 
          cfg.markedKey = null;
          cfg.markerVisibility = 'visible';
          model = new lists.ListViewModel(cfg);
+         subscribeOnMarkedKeyChanged(model);
+         model.updateMarker();
          assert.equal(1, model._markedKey);
 
          cfg.markedKey = 2;
@@ -514,6 +500,7 @@ define([
 
             cfg.markedKey = 3; // item 3, (item.index = 2)
             model = new lists.ListViewModel(cfg);
+            subscribeOnMarkedKeyChanged(model);
             // remove item 3
             model.getItems().removeAt(2);
             assert.equal(5, model.getMarkedKey()); // expect marker on item 1
@@ -531,6 +518,7 @@ define([
 
             cfg.markedKey = 2;
             model = new lists.ListViewModel(cfg);
+            subscribeOnMarkedKeyChanged(model);
             // remove item 2 (item placed, before group expander)
             model.getItems().removeAt(1);
             assert.equal(4, model.getMarkedKey()); // expected marker on item 5
@@ -547,6 +535,7 @@ define([
 
             cfg.markedKey = 1;
             model = new lists.ListViewModel(cfg);
+            subscribeOnMarkedKeyChanged(model);
             model.getItems().removeAt(3); // remove item 6 (without markedKey)
             assert.equal(1, model.getMarkedKey());
 
@@ -563,6 +552,7 @@ define([
             markedKey: 1
          };
          model = new lists.ListViewModel(cfg);
+         subscribeOnMarkedKeyChanged(model);
          // remove last item
          model.getItems().removeAt(0);
          assert.equal(null, model.getMarkedKey()); //marker must be null
@@ -603,6 +593,7 @@ define([
 
          listModel.subscribe('onMarkedKeyChanged', function(e, key) {
             assert.equal(key, 1);
+            listModel.setMarkedKey(key);
             markedKeyChangedFired = true;
          });
          listModel.setItems(new collection.RecordSet({rawData: data, keyProperty: 'id'}));

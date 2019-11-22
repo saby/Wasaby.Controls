@@ -80,7 +80,7 @@
         multiSelectReady="{{_multiSelectReady}}"
         listModel="{{_listViewModel}}"
         on:animationend="_onAnimationEnd()"
-        on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+        on:markedKeyChanged="_markedKeyChangedHandler()"
         on:itemClick="_onItemClick()"
         on:groupClick="_onGroupClick()"
         on:editArrowClick="_notifyHandler('editArrowClick')"

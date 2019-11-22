@@ -313,7 +313,11 @@ var _private = {
             if (self._options.useNewModel) {
                 model.setMarkedItem(model.getItemBySourceId(key));
             } else {
-                model.setMarkedKey(key);
+                if (self._options.markedKey === undefined) {
+                    self._markedKey = key;
+                    model.setMarkedKey(key);
+                }
+                self._notify('markedKeyChanged', key);
             }
             _private.scrollToItem(self, key);
         }
@@ -1723,10 +1727,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _resetScrollAfterReload: false,
 
     _itemReloaded: false,
+    _markedKey: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
+        if (typeof options.markedKey !== 'undefined') {
+            this._markedKey = options.markedKey;
+        }
         this.__errorController = options.errorController || new dataSourceError.Controller({});
     },
 
@@ -1763,6 +1771,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             let viewModelConfig = cClone(newOptions);
+            viewModelConfig = cMerge(viewModelConfig, { markedKey: self._markedKey });
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
             }
@@ -1925,7 +1934,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
-                items
+                items: items,
+                markedKey: self._markedKey
             }));
             if (this._virtualScroll) {
                 this._virtualScroll.ItemsCount = this._listViewModel.getCount();
@@ -2334,7 +2344,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._listViewModel.setMarkedItem(itemData);
             } else {
                 var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
-                this._listViewModel.setMarkedKey(newKey);
+                _private.setMarkedKey(this, newKey);
             }
             this._listViewModel.setActiveItem(itemData);
         }
@@ -2393,7 +2403,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedItem(this._listViewModel.getItemBySourceItem(item));
         } else {
             var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
-            this._listViewModel.setMarkedKey(newKey);
+            _private.setMarkedKey(this, newKey);
         }
     },
 
@@ -2491,10 +2501,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._options.useNewModel) {
             this._listViewModel.setMarkedItem(itemData);
         } else {
-            this._listViewModel.setMarkedKey(itemData.key);
+            _private.setMarkedKey(this, itemData.key);
         }
     },
-
+    _markedKeyChangedHandler(e, markedKey) {
+        _private.setMarkedKey(this, markedKey);
+    },
+    setMarkedKey(key) {
+        _private.setMarkedKey(this, key);
+    },
     _closeActionsMenu: function(args) {
         _private.closeActionsMenu(this, args);
     },
@@ -2708,7 +2723,6 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
-        markedKey: null,
         stickyHeader: true
     };
 };

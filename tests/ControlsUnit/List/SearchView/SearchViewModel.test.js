@@ -145,6 +145,11 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
       });
 
       it('isGroup', function() {
+         var subscribeOnMarkedKeyChanged = function(lvm) {
+            lvm.subscribe('onMarkedKeyChanged', function(e, key) {
+               lvm.setMarkedKey(key);
+            });
+         };
          var cfg = {
             items: new Collection.RecordSet({
                rawData: [{
@@ -193,16 +198,19 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
 
          cfg.markedKey = 3;
          model = new SearchViewModel(cfg);
+         subscribeOnMarkedKeyChanged(model);
          model.getItems().removeAt(2);
          assert.equal(5, model.getMarkedKey());
 
          cfg.markedKey = 2;
          model = new SearchViewModel(cfg);
+         subscribeOnMarkedKeyChanged(model);
          model.getItems().removeAt(1);
          assert.equal(5, model.getMarkedKey());
 
          cfg.markedKey = 7;
          model = new SearchViewModel(cfg);
+         subscribeOnMarkedKeyChanged(model);
          model.getItems().removeAt(4);
          assert.equal(6, model.getMarkedKey());
 

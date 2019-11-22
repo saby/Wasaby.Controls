@@ -105,12 +105,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._actions = {};
         ListViewModel.superclass.constructor.apply(this, arguments);
 
-        if (this._items && cfg.markerVisibility !== 'hidden') {
-            if (cfg.markedKey !== null || cfg.markerVisibility === 'always' || cfg.markerVisibility === 'visible') {
-                this._markedKey = cfg.markedKey;
-                this.updateMarker(cfg.markedKey);
-            }
-        }
+        this._markedKey = cfg.markedKey;
+
 
         this._selectedKeys = cfg.selectedKeys || [];
 
@@ -271,53 +267,47 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     markAddingItem(): void {
         this._savedMarkedKey = this._markedKey;
-        this._markedKey = this._editingItemData.key;
-        this._nextModelVersion(true, 'markedKeyChanged');
-        this._notify('onMarkedKeyChanged', this._markedKey);
+        this._notify('onMarkedKeyChanged', this._editingItemData.key);
     },
 
     restoreMarker(): void {
         if (this._savedMarkedKey) {
-            this._markedKey = this._savedMarkedKey;
+            this._notify('onMarkedKeyChanged', this._savedMarkedKey);
             this._savedMarkedKey = undefined;
-            this._nextModelVersion(true, 'markedKeyChanged');
-            this._notify('onMarkedKeyChanged', this._markedKey);
         }
     },
 
-    setMarkedKey: function(key) {
-        if (key === this._markedKey) {
+    setMarkedKey(key): void {
+        if (this._markedKey === key) {
             return;
         }
         this._markedKey = key;
-        this._savedMarkedKey = undefined;
-        this._updateMarker(key);
         this._nextModelVersion(true, 'markedKeyChanged');
-        this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
-    _updateMarker: function(markedKey):void {
-        this._markedKey = markedKey;
+    _getActualMarkedKey(key) {
         if (this._options.markerVisibility === 'hidden' ||
             this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
-            return;
+            return key;
         }
-
-        // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (!_private.getItemByMarkedKey(this, markedKey) && this.getCount()) {
-            this._markedKey = this._items.at(0).getId();
+        if (!_private.getItemByMarkedKey(this, key)) {
+            if(this.getCount()) {
+                return this._items.at(0).getId();
+            }
+            else {
+                return null;
+            }
         }
-
+        else {
+            return key;
+        }
     },
-
-
 
     updateMarker: function(markedKey):void {
         const curMarkedKey = this._markedKey;
-        this._updateMarker(markedKey);
-        if (curMarkedKey !== this._markedKey) {
-            this._notify('onMarkedKeyChanged', this._markedKey);
-            this._nextModelVersion(true);
+        const actualMarkedKey = this._getActualMarkedKey(markedKey);
+        if (curMarkedKey !== actualMarkedKey) {
+            this._notify('onMarkedKeyChanged', actualMarkedKey);
         }
     },
 

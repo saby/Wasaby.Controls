@@ -17,6 +17,10 @@ define([
 ], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
+      var originSetMarkedKey = lists.BaseControl._private.setMarkedKey;
+      var fakeSetMarkedKey = function(inst, key) {
+         inst._listViewModel.setMarkedKey(key);
+      }
       beforeEach(function() {
          data = [
             {
@@ -743,6 +747,7 @@ define([
          lists.BaseControl._private.scrollToItem = function() {};
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
+         lists.BaseControl._private.setMarkedKey = fakeSetMarkedKey;
          assert.equal(2, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
             target: {
@@ -1026,6 +1031,8 @@ define([
              baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
+         baseControl._listViewModel.subscribe('onMarkedKeyChanged', baseControl._markedKeyChangedHandler.bind(baseControl));
+         baseControl._listViewModel.updateMarker();
          assert.equal(1, baseControl._listViewModel.getMarkedKey());
          baseControl._loadingIndicatorState = 'all';
          baseControl._onViewKeyDown({
@@ -2115,6 +2122,8 @@ define([
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
 
+         lnBaseControl._listViewModel.subscribe('onMarkedKeyChanged', lnBaseControl._markedKeyChangedHandler.bind(lnBaseControl));
+         lnBaseControl._listViewModel.updateMarker();
          assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
 
          return new Promise(function (resolve) {
@@ -2426,6 +2435,7 @@ define([
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
 
+         lnBaseControl._listViewModel.subscribe('onMarkedKeyChanged', lnBaseControl._markedKeyChangedHandler.bind(lnBaseControl));
          setTimeout(function() {
             assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid initial value of markedKey.');
             lnBaseControl.reload();
@@ -2452,6 +2462,7 @@ define([
 
                // reload with new source (first item with id "firstItem")
                lnBaseControl._beforeUpdate(lnCfg2);
+               lnBaseControl._listViewModel.subscribe('onMarkedKeyChanged', lnBaseControl._markedKeyChangedHandler.bind(lnBaseControl));
 
                setTimeout(function() {
                   assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');

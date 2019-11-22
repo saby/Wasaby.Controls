@@ -119,9 +119,6 @@ var ListView = BaseControl.extend(
             if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
                 this._listModel.setItemPadding(newOptions.itemPadding);
             }
-            if (newOptions.markedKey) {
-                this._listModel.setMarkedKey(newOptions.markedKey);
-            }
 
             // TODO https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             if (this._options.leftSpacing !== newOptions.leftSpacing) {
@@ -162,8 +159,8 @@ var ListView = BaseControl.extend(
             if (!this._options._innerList) {
                 this.resizeNotifyOnListChanged();
             }
-            if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
-                this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
+            if ((this._options.markedKey === null || this._options.markedKey === undefined) && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
+                this._listModel.updateMarker();
             }
         },
 

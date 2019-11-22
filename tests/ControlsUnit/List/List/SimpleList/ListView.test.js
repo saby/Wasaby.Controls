@@ -126,8 +126,6 @@ define([
 
          lv._listModel.setMarkedKey(1);
          assert.equal(lv._listModel.getMarkedKey(), 1);
-         lv._beforeUpdate(cfg);
-         assert.equal(lv._listModel.getMarkedKey(), 2);
 
          model = new lists.ListViewModel({
             items: testData2,
@@ -451,7 +449,7 @@ define([
             assert.isTrue(stub.calledOnce);
          });
 
-         it('should not fire markedKeyChanged if _options.markerVisibility is \'visible\', but markedKey is not undefined', function() {
+         it('should not fire markedKeyChanged if _options.markerVisibility is \'visible\', but markedKey is not undefined or null', function() {
             var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
@@ -464,7 +462,7 @@ define([
                listModel: model,
                keyProperty: 'id',
                markerVisibility: 'visible',
-               markedKey: null
+               markedKey: 1
             };
             var lv = new lists.ListView(cfg);
             lv.saveOptions(cfg);
