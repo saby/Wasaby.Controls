@@ -381,14 +381,15 @@ export default Sticky;
 
 /**
  * @typedef {Object} fittingMode
+ * @description Свойства fittingMode
  * @property {fittingModeValue} vertical
  * @property {fittingModeValue} horizontal
  */
 
 /**
  * @typedef {Enum} fittingModeValue
- * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
- * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
- * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.
+ * @variant fixed Позиционнирование не меняется. Если окно не помещается на экране, то оно обрезается.
+ * @variant overflow Окно сдвигается относительно целевого элемента, если и в этом случае места не хватает, то контент ужимается.
+ * @variant adaptive Выбираются такие значения опций {@link Controls/_popup/Opener/Sticky#targetPoint} и {@link Controls/_popup/Opener/Sticky#direction}, при которых на экране сможет уместиться наибольшая часть контента.
  * @default adaptive
  */
