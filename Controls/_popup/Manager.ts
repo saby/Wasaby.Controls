@@ -83,6 +83,7 @@ const _private = {
             _private.updateOverlay();
             _private.redrawItems();
             self._notify('managerPopupDestroyed', [element, _private.popupItems], {bubbling: true});
+            EnvEvent.Bus.channel('popupManager').notify('managerPopupDestroyed', element, _private.popupItems);
         });
     },
 
@@ -158,6 +159,7 @@ const _private = {
         if (item) {
             if (!item.popupOptions.isCompoundTemplate) {
                 this._notify('managerPopupCreated', [item, _private.popupItems], {bubbling: true});
+                EnvEvent.Bus.channel('popupManager').notify('managerPopupCreated', item, _private.popupItems);
             }
         }
     },
