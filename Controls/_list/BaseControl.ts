@@ -123,7 +123,7 @@ let getData = (crudResult: CrudResult): Promise<any> => {
 var _private = {
     checkDeprecated: function(cfg) {
         if (cfg.historyIdCollapsedGroups) {
-            Logger.warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
     },
 
@@ -247,7 +247,7 @@ var _private = {
                 cfg.afterReloadCallback(cfg);
             }
             resDeferred.callback();
-            Logger.error('BaseControl', 'Source option is undefined. Can\'t load data');
+            Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
         }
         return resDeferred;
     },
@@ -513,7 +513,7 @@ var _private = {
                 });
             });
         }
-        Logger.error('BaseControl', 'Source option is undefined. Can\'t load data');
+        Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
     },
 
     checkLoadToDirectionCapability: function(self, filter) {
@@ -977,8 +977,7 @@ var _private = {
                     if (typeof self._options.contextMenuConfig === 'object') {
                         cMerge(defaultMenuConfig, self._options.contextMenuConfig);
                     } else {
-                        Logger.error('CONTROLS.ListView',
-                            'Некорректное значение опции contextMenuConfig. Ожидается объект');
+                        Logger.error('BaseControl', 'maxCountValue is required for "maxCount" navigation type.');
                     }
                 }
 
@@ -1539,9 +1538,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.onScrollHide(this);
     },
 
-    viewportResizeHandler(_: SyntheticEvent<Event>, viewportHeight: number): void {
-        _private.setIndicatorContainerHeight(this, viewportHeight);
+    viewportResizeHandler(_: SyntheticEvent<Event>, viewportHeight: number, viewportRect): void {
+        const container = this._container[0] || this._container;
+        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
         this._viewPortSize = viewportHeight;
+        this._viewPortRect = viewportRect;
     },
 
     scrollResizeHandler(_: SyntheticEvent<Event>, params: unknown): void {
@@ -1577,6 +1578,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     triggerOffsetChangedHandler(_: SyntheticEvent<Event>, top: number, bottom: number): void {
         this._loadOffsetTop = top;
         this._loadOffsetBottom = bottom;
+    },
+
+    _viewResize(): void {
+        const container = this._container[0] || this._container;
+        this._viewSize = container.clientHeight;
+        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
     },
 
     // todo Костыль, т.к. построение ListView зависит от SelectionController.
@@ -1743,9 +1750,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (itemsCount === 1) {
                     loadCallback(items.at(0));
                 } else if (itemsCount > 1) {
-                    Logger.error('BaseControl', 'reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
+                    Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
                 } else {
-                    Logger.info('BaseControl', 'reloadItem::query returns empty recordSet.');
+                    Logger.info('BaseControl: reloadItem::query returns empty recordSet.');
                 }
                 return items;
             });
@@ -1754,7 +1761,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (item) {
                     loadCallback(item);
                 } else {
-                    Logger.info('BaseControl', 'reloadItem::read do not returns record.');
+                    Logger.info('BaseControl: reloadItem::read do not returns record.');
                 }
                 return item;
             });

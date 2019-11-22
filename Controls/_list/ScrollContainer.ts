@@ -1,15 +1,13 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import * as template from 'wml!Controls/_list/ScrollController/ScrollController';
-import {IObservable} from 'Types/collection';
-import VirtualScroll from './ScrollController/VirtualScroll';
+import * as template from 'wml!Controls/_list/ScrollContainer/ScrollContainer';
+import VirtualScroll from './ScrollContainer/VirtualScroll';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {detection} from 'Env/Env';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import InertialScrolling from './resources/utils/InertialScrolling';
-import {CollectionItem} from 'Controls/display';
 import {throttle} from 'Types/function';
-import {Record as entityRecord, descriptor} from 'Types/entity';
-import {IDirection, IVirtualPageSizeMode, IVirtualScrollMode} from './interface/IVirtualScroll';
+import {descriptor} from 'Types/entity';
+import {IDirection, IVirtualScrollMode} from './interface/IVirtualScroll';
 
 const SCROLLMOVE_DELAY = 150;
 export const DEFAULT_VIRTUAL_PAGE_SIZE = 100;

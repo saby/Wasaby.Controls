@@ -266,6 +266,8 @@ export default class VirtualScrollController {
 
     /**
      * Добавляет высоты записей
+     * @remark Используется при загрузке вверх, когда необходимо сместить индексы записей
+     * TODO В будущем высоты будут браться в itemHeightProperty
      * @param {number} itemIndex
      * @param {number} itemsHeightsCount
      */
