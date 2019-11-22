@@ -9,8 +9,16 @@
  *    <Controls.grid:View>
  *       <ws:groupTemplate>
  *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}" textAlign="left">
+ *             <ws:contentTemplate>
+ *                <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+ *                <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
+ *             </ws:contentTemplate>
  *             <ws:rightTemplate>
- *                {{ itemData.item.title }}
+ *                <ws:partial template="Controls/list:GroupContentResultsTemplate">
+ *                   <ws:contentTemplate>
+ *                      {{ itemData.item.title }}
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
  *             </ws:rightTemplate>
  *          </ws:partial>
  *       </ws:groupTemplate>
@@ -68,6 +76,22 @@
  * @default Controls/list:GroupContentResultsTemplate
  * @remark
  * Собственные переменные отсутствуют в области этого шаблона.
+ * @example
+ * <pre>
+ *    <Controls.grid:View>
+ *       <ws:groupTemplate>
+ *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}" textAlign="left">
+ *             <ws:rightTemplate>
+ *                <ws:partial template="Controls/list:GroupContentResultsTemplate">
+ *                   <ws:contentTemplate>
+ *                      {{ itemData.item.title }}
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:rightTemplate>
+ *          </ws:partial>
+ *       </ws:groupTemplate>
+ *    </Controls.grid:View>
+ * </pre>
  */
 
 /**
@@ -80,6 +104,28 @@
  * * **true** — отображается.
  * * **false** — скрыта.
  */
+
+/**
+ * @name Controls/grid:GroupTemplate#contentTemplate
+ * @cfg {String|Function} Шаблон, описывающий заголовок группы.
+ * @default true
+ * @remark
+ * В области видимости шаблона доступна переменная **itemData**, в которой есть свойство **item** — результат того, что возвращено из функции {@link Controls/grid:View#groupingKeyCallback groupingKeyCallback}.
+ * @example
+ * <pre>
+ *    <Controls.grid:View>
+ *       <ws:groupTemplate>
+ *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}" textAlign="left">
+ *             <ws:contentTemplate>
+ *                <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+ *                <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
+ *             </ws:contentTemplate>
+ *          </ws:partial>
+ *       </ws:groupTemplate>
+ *    </Controls.grid:View>
+ * </pre>
+ */
+
 
 export default interface IGroupTemplateOptions {
    expanderAlign?: string;
