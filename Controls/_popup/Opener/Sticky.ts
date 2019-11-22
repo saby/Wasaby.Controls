@@ -376,7 +376,7 @@ export default Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#fittingMode
- * @cfg {fittingMode} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+ * @cfg {fittingMode} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционированием.
  */
 
 /**
@@ -388,7 +388,7 @@ export default Sticky;
 
 /**
  * @typedef {Enum} fittingModeValue
- * @variant fixed Позиционнирование не меняется. Если окно не помещается на экране, то оно обрезается.
+ * @variant fixed Позиционирование не меняется. Если окно не помещается на экране, то оно обрезается.
  * @variant overflow Окно сдвигается относительно целевого элемента, если и в этом случае места не хватает, то контент ужимается.
  * @variant adaptive Выбираются такие значения опций {@link Controls/_popup/Opener/Sticky#targetPoint} и {@link Controls/_popup/Opener/Sticky#direction}, при которых на экране сможет уместиться наибольшая часть контента.
  * @default adaptive
