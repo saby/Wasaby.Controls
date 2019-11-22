@@ -2574,6 +2574,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (targetPosition) {
             this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
         }
+
+        // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
         this._showActions = false;
     },
     _onViewKeyDown: function(event) {
