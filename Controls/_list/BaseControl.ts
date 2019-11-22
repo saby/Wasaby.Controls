@@ -317,7 +317,7 @@ var _private = {
                     self._markedKey = key;
                     model.setMarkedKey(key);
                 }
-                self._notify('markedKeyChanged', key);
+                self._notify('markedKeyChanged', [key]);
             }
             _private.scrollToItem(self, key);
         }
