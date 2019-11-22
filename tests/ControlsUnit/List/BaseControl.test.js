@@ -735,14 +735,14 @@ define([
                   }, {
                      key: 3
                   }]
-               }),
-               markedKey: 2
+               })
             },
             baseControl = new lists.BaseControl(cfg),
             originalScrollToItem = lists.BaseControl._private.scrollToItem;
          lists.BaseControl._private.scrollToItem = function() {};
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
+         lists.BaseControl._private.setMarkedKey(baseControl, 2);
          assert.equal(2, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
             target: {
@@ -2079,7 +2079,7 @@ define([
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
-      it('reload with changing source/navig/filter should call scroll to start', function() {
+      it('reload with changing source/navig/filter should call scroll to start', async function() {
 
          var
              lnSource = new sourceLib.Memory({
@@ -2107,13 +2107,13 @@ define([
                 viewName: 'Controls/List/ListView',
                 source: lnSource,
                 keyProperty: 'id',
-                markedKey: 3,
                 viewModelConstructor: lists.ListViewModel
              },
              lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
-         lnBaseControl._beforeMount(lnCfg);
+         await lnBaseControl._beforeMount(lnCfg);
+         lnBaseControl._listViewModel.setMarkedKey(3);
 
          assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
 
@@ -2405,7 +2405,6 @@ define([
                viewName: 'Controls/List/ListView',
                source: lnSource,
                keyProperty: 'id',
-               markedKey: 1,
                viewModelConstructor: lists.ListViewModel
             },
             lnCfg2 = {
@@ -2418,14 +2417,13 @@ define([
                   }]
                }),
                keyProperty: 'id',
-               markedKey: 1,
                viewModelConstructor: lists.ListViewModel
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
-
+         lists.BaseControl._private.setMarkedKey(lnBaseControl, 1);
          setTimeout(function() {
             assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid initial value of markedKey.');
             lnBaseControl.reload();
@@ -2452,6 +2450,7 @@ define([
 
                // reload with new source (first item with id "firstItem")
                lnBaseControl._beforeUpdate(lnCfg2);
+               lists.BaseControl._private.setMarkedKey(lnBaseControl, 1);
 
                setTimeout(function() {
                   assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');
@@ -3423,7 +3422,7 @@ define([
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
 
-         it('_onItemContextMenu', function() {
+         it('_onItemContextMenu', async function() {
             var callBackCount = 0;
             var cfg = {
                    items: new collection.RecordSet({
@@ -3471,10 +3470,13 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
+            await instance._beforeMount(cfg);
+            instance.getViewModel().subscribe('onMarkedKeyChanged', function(e, key) {
+               instance.getViewModel()._options.markedKey = key;
+            });
             assert.equal(instance.getViewModel()._markedKey, undefined);
             instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(instance.getViewModel()._markedKey, 1);
+            assert.equal(instance.getViewModel().getMarkedKey(), 1);
             assert.equal(callBackCount, 0);
          });
 
