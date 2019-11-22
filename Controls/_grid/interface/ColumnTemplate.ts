@@ -12,13 +12,43 @@
  * <Controls.grid:View>
  *    <ws:columns>
  *       <ws:Array>
- *          <ws:Object displayProperty="Name">
+ *          <ws:Object displayProperty="name">
  *             <ws:template>
  *                <ws:partial template="Controls/grid:ColumnTemplate">
  *                   <ws:contentTemplate>
- *                      <div title="{{template.itemData.item.Name}}">
- *                         {{template.itemData.item.Name}}
+ *                      <div title="{{template.itemData.item.name}}">
+ *                         {{template.itemData.item.name}}
  *                      </div>
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:columns>
+ * </Controls.grid:View>
+ * </pre>
+ */
+
+/**
+ * @name Controls/grid:ColumnTemplate#editArrowTemplate
+ * @cfg {String|Function} Шаблон позволяет отобразить стрелку-шеврон (см. {@link Controls/grid:IGridControl#showEditArrow}), когда задан пользовательский шаблон (см. contentTemplate) в Controls/grid:ColumnTemplate.
+ * Шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
+ * @default wml!Controls/_grid/_editArrowTemplate
+ * @example
+ * Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон.
+ * При этом добавлено отображение кнопки-шеврона.
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:columns>
+ *       <ws:Array>
+ *          <ws:Object displayProperty="name">
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                   <ws:contentTemplate>
+ *                      <div title="{{template.itemData.item.name}}">
+ *                         {{template.itemData.item.name}}
+ *                      </div>
+ *                      <ws:partial template="{{template.editArrowTemplate}}"/>
  *                   </ws:contentTemplate>
  *                </ws:partial>
  *             </ws:template>
@@ -32,6 +62,7 @@
 /**
  * @name Controls/grid:ColumnTemplate#contentTemplate
  * @cfg {String|Function} Шаблон, описывающий содержимое ячейки.
+ * @default undefined
  * @remark
  * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к следующим свойствам:
  * 

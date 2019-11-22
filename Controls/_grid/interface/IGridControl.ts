@@ -502,10 +502,13 @@
 /**
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
- * <a href="/materials/demo-ws4-edit-arrow">Example</a>
- * @remark Чтобы расположить кнопка отображалась в прикладном шаблоне колонки, следует встроить шаблон editArrowTemplate в нужное место
+ * @remark
+ * См. <a href="/materials/demo-ws4-edit-arrow">демо-пример</a>
+ * Чтобы кнопка отображалась в прикладном шаблоне колонки, следует самостоятельно встроить шаблон {@link Controls/grid:ColumnTemplate#editArrowTemplate} в нужное место.
  * @example
+ * <pre>
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
+ * </pre>
  */
 
 /*

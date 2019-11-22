@@ -6,11 +6,34 @@
  * @see Controls/grid:IGridControl#columns
  * @remark
  * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ здесь}.
+ * @example
+ * <pre class="brush: html">
+ * <Controls.grid:View ladderProperties="{{ ['date'] }}">
+ *    <ws:columns>
+ *       <ws:Array>
+ *          <ws:Object width="1fr">
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                   <ws:contentTemplate>
+ *                      <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
+ *                         <div class="demoGrid__date">
+ *                            {{template.itemData.item['date']}}
+ *                         </div>
+ *                      </ws:partial>
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:columns>
+ * </Controls.grid:View>
+ * </pre>
  */
 
 /**
  * @name Controls/grid:LadderWrapper#ladderProperty
- * @cfg {Array.<String>} Имена полей, для которых будет работать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ лесенка}.
+ * @cfg {Array.<String>|String} Имена полей, для которых будет работать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ лесенка}.
+ * @default undefined
  */
 
 
