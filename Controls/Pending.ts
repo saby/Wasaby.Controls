@@ -127,7 +127,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
                   event.preventDefault();
                   event.returnValue = '';
                } else {
-                  window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+                  window.removeEventListener('beforeunload', self._beforeUnloadHandler);
                }
             };
             window.addEventListener('beforeunload', self._beforeUnloadHandler);
