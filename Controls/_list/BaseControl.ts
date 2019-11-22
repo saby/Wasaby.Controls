@@ -1729,6 +1729,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _blockItemActionsByScroll: false,
 
+    _showActions: false,
     _needBottomPadding: false,
     _noDataBeforeReload: null,
     _intertialScrolling: null,
@@ -2573,6 +2574,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (targetPosition) {
             this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
         }
+
+        // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
+        this._showActions = false;
     },
     _onViewKeyDown: function(event) {
         let key = event.nativeEvent.keyCode;
@@ -2645,6 +2649,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData, nativeEvent]);
+        if (!this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData() && !this._showActions) {
+            this._showActions = true;
+        }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData, nativeEvent]);
