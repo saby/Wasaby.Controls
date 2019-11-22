@@ -5,8 +5,11 @@ import { detection } from 'Env/Env';
 import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {debounce} from 'Types/function';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
+
+const DELAY_UPDATE_SIZES = 16;
 
 const
    _private = {
@@ -164,6 +167,10 @@ const
             scroll.style.display = 'none';
          }
       },
+
+      prepareDebouncedUpdateSizes: function() {
+          return debounce(_private.updateSizes, DELAY_UPDATE_SIZES);
+      }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -183,6 +190,7 @@ const
       _isFullGridSupport: true,
 
       _beforeMount(opt) {
+         this._debouncedUpdateSizes = _private.prepareDebouncedUpdateSizes();
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
          this._isNotGridSupport = opt.listModel.isNoGridSupport();
          this._isFullGridSupport = opt.listModel.isFullGridSupport();
@@ -190,7 +198,7 @@ const
       },
 
       _afterMount() {
-         _private.updateSizes(this);
+         this._debouncedUpdateSizes(this);
          if (this._options.columnScrollStartPosition === 'end' && this._isColumnScrollVisible()) {
             this._positionChangedHandler(null, this._contentSize - this._contentContainerSize);
          }
@@ -210,7 +218,7 @@ const
          ) {
             // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл, что-бы он не распирал таблицу при изменении ширины
             _private.setDispalyNoneForScroll(this._children.content);
-            _private.updateSizes(this);
+            this._debouncedUpdateSizes(this);
             _private.removeDisplayFromScroll(this._children.content);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
@@ -227,7 +235,7 @@ const
       },
 
       _resizeHandler() {
-         _private.updateSizes(this);
+         this._debouncedUpdateSizes(this);
       },
 
       _isColumnScrollVisible: function() {
@@ -316,4 +324,5 @@ const
            return delta;
        }
    });
+ColumnScroll._private = _private;
 export = ColumnScroll;
