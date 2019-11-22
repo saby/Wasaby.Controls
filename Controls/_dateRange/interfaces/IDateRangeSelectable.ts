@@ -22,7 +22,7 @@ export = {
        * @cfg {Object} Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды.
        * @remark
        * Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды. 
-       * Объект принимает свойства days, weeks и months со значениями типа Array.
+       * Объект принимает свойства days, weeks, months, quarters, halfyears, и years со значениями типа Array.
        * @example 
        * <pre class="brush:js">
        * <Controls.dateRange:Selector ranges="{days: [1,4], weeks: [2], months: [1] }" />
