@@ -1,6 +1,6 @@
-import ScrollController from 'Controls/_list/ScrollController';
+import ScrollController from 'Controls/_list/ScrollContainer';
 
-describe('Controls/_list/ScrollController', () => {
+describe('Controls/_list/ScrollContainer', () => {
     describe('_afterMount', () => {
         const instance = new ScrollController();
         instance._options = {};
@@ -108,9 +108,10 @@ describe('Controls/_list/ScrollController', () => {
             };
             instance.virtualScroll = {
                 scrollTop: 100,
-                getItemsHeights(startIndex, stopIndex) {
-                    return startIndex + stopIndex;
-                }
+                getRestoredScrollPosition() {
+                    return 102;
+                },
+                actualizeSavedIndexes() {}
             };
             instance.saveScrollPosition = true;
             instance.savedScrollDirection = 'up';
@@ -133,113 +134,6 @@ describe('Controls/_list/ScrollController', () => {
             instance.itemsContainerReadyHandler({}, container);
             assert.equal(instance.virtualScroll.itemsContainer, container);
             assert.equal(instance.itemsContainer, container);
-        });
-    });
-    describe('init model', () => {
-        const instance = new ScrollController();
-        const model = {
-            subscribe() {
-                this.subscribed = true;
-            }
-        };
-        it('instance saved and subscribe added', () => {
-            instance.subscribeToModelChange(model);
-            assert.isTrue(model.subscribed);
-            assert.equal(model, instance.viewModel);
-        });
-    });
-    describe('collectionChangedHandler', () => {
-        const instance = new ScrollController();
-        instance.virtualScroll = {
-            recalcRangeToDirection(direction) {
-                this.__recalcFromIndex = false;
-                this.__recalcFromDirection = true;
-                this.recalcDirection = direction;
-            },
-            recalcRangeFromNewItems(direction) {
-                this.__recalcFromIndex = true;
-                this.__recalcFromDirection = false;
-                this.recalcDirection = direction;
-            },
-            setStartIndex() {
-                this.__indexesMoved = true;
-            },
-            cutItemsHeights(startIndex: number, stopIndex: number) {
-                this.__heightsCut = true;
-            },
-            itemsContainer: {},
-            insertItemsHeights(startIndex: number, length: number) {
-                this.__itemsHeightsInserted = true;
-            },
-            itemsCount: 10
-        };
-        instance._options = {
-            viewModel: {
-                getCount() {
-                    return this.__count;
-                },
-                __count: 20,
-                getStartIndex() {
-                    return this.__startIndex;
-                },
-                __startIndex: 0
-            },
-            useNewModel: true
-        };
-        instance.triggerVisibility = {};
-        instance._forceUpdate = () => {
-        };
-        it('action - items added, direction - down, items from loader', () => {
-            instance.actualStopIndex = 9;
-            instance.itemsFromLoadToDirection = true;
-            instance.collectionChangedHandler('onCollectionChange', null, 'a', {length: 10}, 10, null, null);
-            assert.isTrue(instance.virtualScroll.__recalcFromIndex);
-            assert.equal('down', instance.virtualScroll.recalcDirection);
-            assert.isTrue(instance.virtualScroll.__itemsHeightsInserted);
-            instance.virtualScroll.__itemsHeightsInserted = false;
-            instance.virtualScroll.recalcDirection = null;
-        });
-        it('action - items added, direction - down, items from user action', () => {
-            instance.actualStopIndex = 20;
-            instance._options.viewModel.__count = 30;
-            instance.itemsFromLoadToDirection = false;
-            instance.triggerVisibility = { down: true };
-            instance.collectionChangedHandler('onCollectionChange', null, 'a', {length: 10}, 10, null, null);
-            assert.isTrue(instance.virtualScroll.__recalcFromDirection);
-            assert.equal('down', instance.virtualScroll.recalcDirection);
-            assert.isTrue(instance.virtualScroll.__itemsHeightsInserted);
-            instance.virtualScroll.__itemsHeightsInserted = false;
-            instance.virtualScroll.recalcDirection = null;
-        });
-        it('action - items added, direction - up, items from loader', () => {
-            instance.actualStopIndex = 9;
-            instance._options.viewModel.__startIndex = 4;
-            instance.itemsFromLoadToDirection = true;
-            instance.collectionChangedHandler('onCollectionChange', null, 'a', {length: 10}, 3, null, null);
-            assert.isTrue(instance.virtualScroll.__recalcFromIndex);
-            assert.equal('up', instance.virtualScroll.recalcDirection);
-            assert.isTrue(instance.virtualScroll.__itemsHeightsInserted);
-            assert.isTrue(instance.virtualScroll.__indexesMoved);
-            instance.virtualScroll.__itemsHeightsInserted = false;
-            instance.virtualScroll.recalcDirection = null;
-        });
-        it('action - items removed, direction - down', () => {
-            instance._options.viewModel.__startIndex = 0;
-            instance.collectionChangedHandler('onCollectionChanged', null, 'rm', null, null, {length: 1}, 1);
-            assert.isTrue(instance.virtualScroll.__recalcFromIndex);
-            assert.isTrue(instance.virtualScroll.__heightsCut);
-            assert.equal('down', instance.virtualScroll.recalcDirection);
-        });
-        it('action - items removed, direction - down', () => {
-            instance._options.viewModel.__startIndex = 2;
-            instance.collectionChangedHandler('onCollectionChanged', null, 'rm', null, null, {length: 1}, 1);
-            assert.isTrue(instance.virtualScroll.__recalcFromIndex);
-            assert.isTrue(instance.virtualScroll.__heightsCut);
-            assert.equal('up', instance.virtualScroll.recalcDirection);
-        });
-        it('items changed set', () => {
-            instance.collectionChangedHandler('onCollectionChanged', null, 'some', null, null, null, null);
-            assert.isTrue(instance.itemsChanged);
         });
     });
     describe('viewResize', () => {
@@ -323,7 +217,8 @@ describe('Controls/_list/ScrollController', () => {
         instance.virtualScroll = {
             recalcRangeToDirection(direction) {
                 this.recalcDirection = direction;
-            }
+            },
+            triggerVisibility: {}
         };
         instance._options = {
             virtualScrolling: true

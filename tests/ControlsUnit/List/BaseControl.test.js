@@ -2242,7 +2242,7 @@ define([
             .at(2), ctrl._listViewModel.getMarkedItem()
             .getContents());
       });
-      it('needFooterPadding', function() {
+      it ('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
          };
@@ -2270,12 +2270,12 @@ define([
          assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is inside, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
-            footerTemplate: 'footer'
+            footerTemplate: "footer"
          };
          assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, footer exists, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
-            resultsPosition: 'bottom'
+            resultsPosition: "bottom"
          };
          assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
          cfg = {
@@ -2285,6 +2285,7 @@ define([
          assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, empty items, padding is not needed");
          assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, editingModel), "itemActionsPosinon is outside, empty items, run editing in place padding is needed");
       });
+
       describe('EditInPlace', function() {
          it('beginEdit', function() {
             var opt = {

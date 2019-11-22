@@ -1,6 +1,6 @@
-import VirtualScroll from 'Controls/_list/ScrollController/VirtualScroll';
+import VirtualScroll from 'Controls/_list/ScrollContainer/VirtualScroll';
 
-describe('Controls/_list/ScrollController/VirtualScroll', () => {
+describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
     const heights = [20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40];
     const children = heights.map((offsetHeight) => ({offsetHeight: offsetHeight, className: ''}));
     describe('common virtual scroll', () => {
@@ -25,6 +25,12 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
                 },
                 placeholderChangedCallback() {
                     affectingInstance.placeholderChanged = true;
+                },
+                viewModel: {
+                    subscribe() {},
+                    getStartIndex() {
+                        return vsInstance.startIndex;
+                    }
                 }
             });
 
@@ -85,21 +91,6 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             assert.equal(0, vsInstance.startIndex);
             assert.equal(20, vsInstance.stopIndex);
         });
-
-        it('recalcFromNewItems', () => {
-            vsInstance.itemsCount = 40;
-            vsInstance.insertItemsHeights(20, 20);
-            vsInstance.triggerOffset = 50;
-            vsInstance.scrollTop = 150;
-            vsInstance.recalcRangeFromNewItems('down');
-            assert.equal(0, vsInstance.startIndex);
-            assert.equal(20, vsInstance.stopIndex);
-
-            vsInstance.setStartIndex(10);
-            vsInstance.recalcRangeFromNewItems('up');
-            assert.equal(10, vsInstance.startIndex);
-            assert.equal(30, vsInstance.stopIndex);
-        });
         it('getActiveElement', () => {
             vsInstance.itemsContainerHeight = 600;
             vsInstance.scrollTop = 0;
@@ -131,6 +122,34 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.recalcRangeToDirection('up');
             assert.equal(6, vsInstance.startIndex);
             assert.equal(24, vsInstance.stopIndex);
+        });
+        it('itemsAddedHandler', () => {
+            vsInstance.itemsCount = 20;
+            vsInstance.reset();
+            vsInstance.recalcItemsHeights();
+            vsInstance.itemsCount = 40;
+            vsInstance.itemsAddedHandler(20, {length: 20} as object[]);
+            assert.equal(0, vsInstance.startIndex);
+            assert.equal(24, vsInstance.stopIndex);
+            vsInstance.itemsCount = 20;
+            vsInstance.reset();
+            vsInstance.actualizeSavedIndexes();
+            vsInstance.itemsCount = 40;
+            vsInstance.recalcItemsHeights();
+            vsInstance.itemsFromLoadToDirection = true;
+            vsInstance.itemsAddedHandler(0, {length: 20} as object[]);
+            assert.equal(16, vsInstance.startIndex);
+            assert.equal(40, vsInstance.stopIndex);
+            assert.equal(20, vsInstance.savedStartIndex);
+            assert.equal(40, vsInstance.savedStopIndex);
+        });
+        it('itemsRemovedHandler', () => {
+            vsInstance.itemsCount = 20;
+            vsInstance.reset();
+            vsInstance.itemsCount = 19;
+            vsInstance.itemsRemovedHandler(19, {length: 1} as object[]);
+            assert.equal(0, vsInstance.startIndex);
+            assert.equal(19, vsInstance.stopIndex);
         });
     });
 });
