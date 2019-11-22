@@ -1492,6 +1492,9 @@ define([
 
          treeControl._children = {
             baseControl: {
+               setMarkedKey: function(key) {
+                  treeGridViewModel.setMarkedKey(key);
+               },
                getViewModel: function() {
                   return treeGridViewModel;
                }
@@ -1545,6 +1548,9 @@ define([
 
          treeControl._children = {
             baseControl: {
+               setMarkedKey: function(key) {
+                  treeGridViewModel.setMarkedKey(key);
+               },
                getViewModel: function() {
                   return treeGridViewModel;
                }
@@ -1552,7 +1558,10 @@ define([
          };
 
          treeGrid.TreeControl._private.toggleExpanded = function(){};
-
+         treeGridViewModel.subscribe('onMarkedKeyChanged', function(e, key) {
+            treeGridViewModel.setMarkedKey(key);
+         });
+         treeGridViewModel._model.updateMarker();
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 

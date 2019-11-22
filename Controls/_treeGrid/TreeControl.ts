@@ -483,7 +483,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _onExpanderClick: function(e, dispItem) {
         _private.toggleExpanded(this, dispItem);
         if (this._options.markItemByExpanderClick) {
-            this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());
+            this._children.baseControl.setMarkedKey(dispItem.getContents().getId());
         }
         e.stopImmediatePropagation();
     },
@@ -511,7 +511,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
 
     setMarkedKey: function(key) {
-        this._children.baseControl.getViewModel().setMarkedKey(key);
+        this._notify('markedKeyChanged', key);
     },
     scrollToItem(key: string|number, toBottom: boolean): void {
         this._children.baseControl.scrollToItem(key, toBottom);
