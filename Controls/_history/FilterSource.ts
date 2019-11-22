@@ -64,40 +64,36 @@ var _private = {
       return items;
    },
 
+   createHistoryItem: function(item, format?) {
+      const rawData = {
+         d: [
+            item.getId(),
+            item.get('ObjectData'),
+            item.get('HistoryId')
+         ],
+         s: [
+             { n: 'ObjectId', t: 'Строка' },
+             { n: 'ObjectData', t: 'Строка' },
+             { n: 'HistoryId', t: 'Строка' }
+         ]
+      };
+      return new entity.Model({
+         rawData: rawData,
+         adapter: item.getAdapter(),
+         format: format
+      });
+   },
+
    fillPinned: function (self, history, items) {
       var config = {
          adapter: new entity.adapter.Sbis()
       };
-      var item, rawData;
+      let item;
 
       chain.factory(history.pinned).filter(function (element) {
          return element.get('ObjectData') !== DEFAULT_FILTER;
       }).value(collection.factory.recordSet, config).forEach(function (element) {
-         rawData = {
-            d: [
-               element.getId(),
-               element.get('ObjectData'),
-               element.get('HistoryId')
-            ],
-            s: [{
-                  n: 'ObjectId',
-                  t: 'Строка'
-               },
-               {
-                  n: 'ObjectData',
-                  t: 'Строка'
-               },
-               {
-                  n: 'HistoryId',
-                  t: 'Строка'
-               }
-            ]
-         };
-         item = new entity.Model({
-            rawData: rawData,
-            adapter: element.getAdapter(),
-            format: items.getFormat()
-         });
+         item = _private.createHistoryItem(element, items.getFormat());
 
          item.set('pinned', true);
          items.add(item);
@@ -111,7 +107,7 @@ var _private = {
       let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
       var maxLength = self.historySource._recent - pinnedCount - 1;
       var currentCount = 0;
-      var item, rawData, isPinned;
+      var item, isPinned;
 
       chain.factory(history.recent).filter(function (element) {
          isPinned = history.pinned.getRecordById(element.getId());
@@ -120,30 +116,7 @@ var _private = {
          }
          return !isPinned && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
       }).value(collection.factory.recordSet, config).forEach(function (element) {
-         rawData = {
-            d: [
-               element.getId(),
-               element.get('ObjectData'),
-               element.get('HistoryId')
-            ],
-            s: [{
-                  n: 'ObjectId',
-                  t: 'Строка'
-               },
-               {
-                  n: 'ObjectData',
-                  t: 'Строка'
-               },
-               {
-                  n: 'HistoryId',
-                  t: 'Строка'
-               }
-            ]
-         };
-         item = new entity.Model({
-            rawData: rawData,
-            adapter: element.getAdapter()
-         });
+         item = _private.createHistoryItem(element);
          items.add(item);
       });
    },
@@ -207,7 +180,7 @@ var _private = {
       });
    },
 
-   getHistoryItem: function (self, data) {
+   findHistoryItem: function (self, data) {
       var history = self._history;
 
       return this.findItem(self, history.pinned, data) || this.findItem(self, history.recent, data) || null;
@@ -342,7 +315,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          _private.updateRecent(this, data);
       }
       if (meta.hasOwnProperty('$_addFromData')) {
-         item = _private.getHistoryItem(self, data);
+         item = _private.findHistoryItem(self, data);
          if (item) {
             meta = {
                '$_history': true

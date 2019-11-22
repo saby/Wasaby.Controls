@@ -135,7 +135,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
          });
 
          it('_openSubDropdown', function () {
-            
+
          });
 
          it('check hierarchy', function() {
@@ -186,26 +186,24 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
             dropDownConfig = getDropDownConfig();
             dropDownConfig.stickyPosition = {
-               horizontalAlign: {
-                  offset: 0,
-                  side: 'right'
-               },
-               verticalAlign: {
-                  offset: 0,
-                  side: 'top'
+               direction: {
+                  horizontal: 'right',
+                  vertical: 'top'
                }
             };
             dropDownList = getDropDownListWithConfig(dropDownConfig);
 
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig);
-            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'right' });
+            assert.deepEqual(dropDownList._popupOptions.direction, { horizontal: 'right' });
             assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-top controls-DropdownList__popup-shadow-suggestionsContainer');
 
-            dropDownConfig.stickyPosition.horizontalAlign.side = 'left';
-            dropDownConfig.stickyPosition.verticalAlign.side = 'bottom';
+            dropDownConfig.stickyPosition.direction = {
+               horizontal: 'left',
+               vertical: 'bottom'
+            };
             dropDownList._beforeUpdate(dropDownConfig);
-            assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'left' });
+            assert.deepEqual(dropDownList._popupOptions.direction, { horizontal: 'left' });
             assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-bottom controls-DropdownList__popup-shadow-suggestionsContainer');
 
             /**** CHANGE HEADER CONFIG *******************/
@@ -370,7 +368,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   hasIconPin: dropDownList._options.hasIconPin
                },
                targetPoint: dropDownList._popupOptions.targetPoint,
-               horizontalAlign: dropDownList._popupOptions.horizontalAlign,
+               direction: dropDownList._popupOptions.direction,
                target: "MyTarget"
             };
 
@@ -379,7 +377,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
             dropDownList._options.rootKey = null;
             expectedConfig.targetPoint.horizontal = 'right';
-            expectedConfig.horizontalAlign.side = 'right';
+            expectedConfig.direction.horizontal = 'right';
 
             inFactConfig = dropdownPopup.List._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
             assert.deepEqual(expectedConfig, inFactConfig);

@@ -2,9 +2,9 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Selector/Selector');
 import Merge = require('Core/core-merge');
 import {Controller} from 'Controls/source';
-import {Source, Service} from 'Controls/history';
+import {Service, Source} from 'Controls/history';
 import {object} from 'Types/util';
-import {descriptor} from 'Types/entity';
+import {getOptionTypes} from 'Controls/_suggest/Utils';
 import 'css!theme?Controls/suggest';
 
 /**
@@ -15,9 +15,10 @@ import 'css!theme?Controls/suggest';
  * @extends Controls/input:Text
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
+ * @mixes Controls/_suggest/Selector/Styles
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  * @control
  * @public
@@ -31,9 +32,10 @@ import 'css!theme?Controls/suggest';
  * @extends Controls/input:Text
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
+ * @mixes Controls/_suggest/Selector/Styles
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  * @control
  * @public
@@ -154,14 +156,7 @@ var Suggest = Control.extend({
 
 });
 
-Suggest.getOptionTypes = function() {
-   return {
-      displayProperty: descriptor(String).required(),
-      suggestTemplate: descriptor(Object).required(),
-      searchParam: descriptor(String).required()
-   };
-};
-
+Suggest.getOptionTypes = getOptionTypes;
 Suggest.getDefaultOptions = function() {
    return {
       minSearchLength: 3,

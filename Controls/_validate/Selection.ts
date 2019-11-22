@@ -1,38 +1,6 @@
-import Container from 'Controls/_validate/Container';
-import {TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls/_validate/Selection');
+import SelectionContainer from './SelectionContainer';
+import {Logger} from 'UI/Utils';
 
-/**
- * Контрол, регулирующий валидацию своего контента.
- * Используется с контролами, поддерживающими интерфейс IMultiSelectable( {@link Controls/_interface/IMultiSelectable} )
- * Автоматически запускает валидацию при смене значения в контроле и при его деактивации.
- * @class Controls/_validate/Selection
- * @extends Controls/_validate/Container
- * @control
- * @public
- * @author Красильников А.С.
- */
+Logger.warn('Validate: Use SelectionContainer instead Selection');
 
-class Selection extends Container {
-    _template: TemplateFunction = template;
-    _shouldValidate: boolean;
-
-    _deactivatedHandler(): void {
-        this._shouldValidate = true;
-        this._forceUpdate();
-    }
-
-    _selectedKeysChangedHandler(event: Event, value: string): void {
-        this._notify('selectedKeysChanged', [value]);
-        this._cleanValid();
-    }
-
-    protected _afterUpdate(): void {
-        if (this._shouldValidate) {
-            this._shouldValidate = false;
-            this.validate();
-        }
-    }
-}
-
-export default Selection;
+export default SelectionContainer;

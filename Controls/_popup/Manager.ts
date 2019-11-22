@@ -7,6 +7,7 @@ import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import { goUpByControlTree } from 'UI/Focus';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
@@ -412,7 +413,7 @@ const _private = {
                 }, function(e) {
                     item.removePending = null;
                     if (e.canceled !== true) {
-                        Env.IoC.resolve('ILogger').error('Controls/_popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                        Logger.error('Controls/_popup/Manager/Container: Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', undefined, e);
                         pendingsFinishedCallback && pendingsFinishedCallback();
                     }
 

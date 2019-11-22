@@ -24,6 +24,10 @@ let _private = {
     },
     getCfg(self) {
         let config = {
+            fittingMode: {
+                vertical: 'adaptive',
+                horizontal: 'overflow'
+            },
             autofocus: false,
             opener: self,
             target: self._container,
@@ -46,11 +50,11 @@ let _private = {
         if (self._options.targetPoint) {
             config.targetPoint = self._options.targetPoint;
         }
-        if (self._options.verticalAlign) {
-            config.verticalAlign = self._options.verticalAlign;
+        if (self._options.direction) {
+            config.direction = self._options.direction;
         }
-        if (self._options.horizontalAlign) {
-            config.horizontalAlign = self._options.horizontalAlign;
+        if (self._options.offset) {
+            config.offset = self._options.offset;
         }
         return config;
     },

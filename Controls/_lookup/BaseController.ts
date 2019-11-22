@@ -2,13 +2,14 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/BaseController/BaseController');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import ToSourceModel = require('Controls/Utils/ToSourceModel');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {List, RecordSet} from 'Types/collection';
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import ToSourceModel = require('Controls/Utils/ToSourceModel');
+import {descriptor} from 'Types/entity';
 
-   var _private = {
+var _private = {
       loadItems: function(self, options, selectedKeys, sourceIsChanged) {
          var filter = clone(options.filter || {});
          var resultDef = new Deferred();
@@ -284,9 +285,15 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
    });
 
    CollectionController._private = _private;
-   CollectionController.getDefaultOptions = function() {
+   CollectionController.getDefaultOptions = function getDefaultOptions(): object {
       return {
-         selectedKeys: []
+         selectedKeys: [],
+         multiSelect: false
+      };
+   };
+   CollectionController.getOptionTypes = function getOptionsTypes(): object {
+      return {
+         multiSelect: descriptor(Boolean)
       };
    };
 

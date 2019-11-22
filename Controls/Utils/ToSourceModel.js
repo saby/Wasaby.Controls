@@ -9,15 +9,14 @@ define('Controls/Utils/ToSourceModel', [
    'Types/util',
    'Types/source'
 ], function(Di, cInstance, coreClone, chain, Utils, sourceLib) {
-
-   function getModel(model, config) {
-      return typeof model === 'string' ? Di.create(model, config) : new model(config);
+   function getModel(Model, config) {
+      return typeof Model === 'string' ? Di.create(Model, config) : new Model(config);
    }
 
    function getSourceModel(source) {
       var model;
 
-      //до выполнения задачи https://online.sbis.ru/opendoc.html?guid=4190d360-e9de-49ed-a1a4-7420686134d0
+      // до выполнения задачи https://online.sbis.ru/opendoc.html?guid=4190d360-e9de-49ed-a1a4-7420686134d0
       if (source instanceof sourceLib.PrefetchProxy) {
          model = source._$target.getModel();
       } else {
@@ -46,7 +45,8 @@ define('Controls/Utils/ToSourceModel', [
             dataSourceModelInstance = getModel(dataSourceModel, {});
 
             /* FIXME гразный хак, чтобы изменение рекордсета не влекло за собой изменение родительского рекорда
-             Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
+             Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи
+             и указывать в качестве типа прикладную модель.
              Задача:
              https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
             if (cInstance.instanceOfMixin(items, 'Types/_entity/ManyToManyMixin')) {
@@ -68,11 +68,13 @@ define('Controls/Utils/ToSourceModel', [
             }
 
             chain.factory(items).each(function(rec, index) {
-
                /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
                 чтобы не было конфликтов при мерже полей этих записей */
-               if (dataSourceModelInstance._moduleName !==  rec._moduleName) {
-                  (newRec = getModel(dataSourceModel, { adapter: rec.getAdapter(), format: rec.getFormat() })).merge(rec);
+               if (dataSourceModelInstance._moduleName !== rec._moduleName) {
+                  (newRec = getModel(dataSourceModel, {
+                     adapter: rec.getAdapter(),
+                     format: rec.getFormat()
+                  })).merge(rec);
                   if (cInstance.instanceOfModule(items, 'Types/collection:List')) {
                      items.replace(newRec, index);
                   } else {
@@ -87,10 +89,11 @@ define('Controls/Utils/ToSourceModel', [
          }
 
          /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
-            отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
+            отличный от поля с ключём, установленного в поле связи.
+            Это связно с тем, что "связь" устанавливается по опеределённому полю,
             и не обязательному по первичному ключу у записей в списке. */
          chain.factory(items).each(function(rec) {
-            if (cInstance.instanceOfModule(rec, 'Types/entity:Model') &&  rec.getKeyProperty() !== idProperty && rec.get(idProperty) !== undefined) {
+            if (cInstance.instanceOfModule(rec, 'Types/entity:Model') && rec.getKeyProperty() !== idProperty && rec.get(idProperty) !== undefined) {
                rec.setKeyProperty(idProperty);
             }
          });

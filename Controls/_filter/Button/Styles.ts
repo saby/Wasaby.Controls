@@ -1,7 +1,7 @@
 /**
  * @author Золотова Э.Е.
  * @mixin Controls/_filter/Button/Styles
- * @public
+ * @private
  *
  * @css @height_FilterButton Filter/Button height.
  * @css @min-width_FilterButton min-width of Filter/Button.

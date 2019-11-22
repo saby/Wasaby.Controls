@@ -1,21 +1,24 @@
 export type TSelectionType = 'all' | 'leaf' | 'node';
 
+export type TKeySelection = number|string|null;
+export type TKeysSelection = Array<number|null>|Array<string|null>;
+
 export type TSelectionRecord = Record<{
-    marked: number[]|string[],
-    excluded: number[]|string[],
+    marked: TKeysSelection,
+    excluded: TKeysSelection,
     type: TSelectionType,
     recursive: boolean
 }>;
 
 export interface ISelectionObject {
-    selected: string[]|number[];
-    excluded: string[]|number[];
-}
+    selected: TKeysSelection;
+    excluded: TKeysSelection;
+};
 
 export interface ISelectionTypeOptions {
     selectionType: TSelectionType;
     recursiveSelection: boolean;
-}
+};
 
 /**
  * Интерфейс для контролов, поддерживающих выбор записей определённого типа.
@@ -27,7 +30,7 @@ export interface ISelectionTypeOptions {
 
 export default interface ISelectionType {
     readonly '[Controls/_interface/ISelectionType]': boolean;
-}
+};
 
 /**
  * @name Controls/_interface/ISelectionType#selectionType

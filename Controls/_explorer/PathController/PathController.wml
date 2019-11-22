@@ -9,6 +9,7 @@
                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                   on:arrowActivated="_notifyHandler('arrowActivated')"
                   on:itemClick="_notifyHandler('itemClick')"
+                  on:itemMouseDown="_notifyHandler('itemMouseDown')"
                   on:arrowClick="_notifyHandler('arrowClick')"/>
    </Controls.Container.Async>
 </ws:template>

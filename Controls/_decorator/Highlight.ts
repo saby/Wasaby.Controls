@@ -1,8 +1,8 @@
-import {IoC} from  'Env/Env';
 import {descriptor} from 'Types/entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as RegExpUtil from 'Controls/Utils/RegExp';
 import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
+import {Logger} from 'UI/Utils';
 
 /*
  * Highlighting the searched phrase.
@@ -140,7 +140,7 @@ export class Highlight extends Control<IHighlightOptions> {
                 }
                 break;
             default:
-                IoC.resolve('ILogger').error(this._moduleName, `"${by}" search is not supported.`);
+                Logger.error(this._moduleName + ': ' + `"${by}" search is not supported.`, this);
                 words = [highlight];
                 break;
         }
@@ -148,9 +148,9 @@ export class Highlight extends Control<IHighlightOptions> {
         words = words.filter(Highlight._isNotEmpty);
 
         if (words.length === 0) {
-            IoC.resolve('ILogger').warn(this._moduleName, 'When searching there is a problem, there are no ' +
+            Logger.warn(this._moduleName + ': When searching there is a problem, there are no ' +
                 'words in the highlight option. Perhaps the control is not used for its intended purpose or ' +
-                'is not required now.');
+                'is not required now.', this);
         }
 
         const regexp: RegExp = this._calculateRegExp(words, searchMode);
@@ -180,7 +180,7 @@ export class Highlight extends Control<IHighlightOptions> {
             case 'substring':
                 return new RegExp(`${value}`, flags);
             default:
-                IoC.resolve('ILogger').error(this._moduleName, `Unsupported search mode: ${searchMode}.`);
+                Logger.error(this._moduleName + `: Unsupported search mode: ${searchMode}.`, this);
                 return new RegExp(`${value}`, flags);
         }
     }

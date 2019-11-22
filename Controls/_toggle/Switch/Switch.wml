@@ -20,14 +20,18 @@
    </ws:if>
 </ws:template>
 
-<span class="controls-Switch controls-Switch_theme-{{_options.theme}}" on:click="_clickHandler()"
+<span class="controls-Switch controls-Switch_theme-{{_options.theme}}"
+            on:click="_clickHandler()"
       title="{{_options.tooltip}}">
-   <ws:if data="{{_options.captionPosition === 'left'}}">
-      <ws:partial template="caption"/>
-      <ws:partial template="toggle"/>
-   </ws:if>
-   <ws:else>
-      <ws:partial template="toggle"/>
-      <ws:partial template="caption"/>
-   </ws:else>
+   <div class="controls-invalid-container">
+      <ws:if data="{{_options.captionPosition === 'left'}}">
+         <ws:partial template="caption"/>
+         <ws:partial template="toggle"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="toggle"/>
+         <ws:partial template="caption"/>
+      </ws:else>
+       <div class="{{ _options.validationStatus!== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
+   </div>
 </span>

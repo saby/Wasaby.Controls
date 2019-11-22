@@ -1,0 +1,12 @@
+<div class="asyncDemo__column">
+    <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Run" on:click="_setOpen()"/>
+    <ws:if data="{{ _isOpen }}">
+        <div class="asyncDemo__row">
+            <Controls-demo.AsyncTest.Childs.CaseThird.First delay="400" value="1"/>
+            <Controls-demo.AsyncTest.Childs.CaseThird.Second delay="1200" value="1"/>
+            <div name="filterWrapper" class="asyncDemo__row">
+                <Controls-demo.AsyncTest.Childs.CaseThird.Third delay="2500" value="1" />
+            </div>
+        </div>
+    </ws:if>
+</div>

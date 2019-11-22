@@ -1,6 +1,6 @@
 /**
     * @mixin Controls/_dropdownPopup/DropdownListStyles
-    * @public
+    * @private
     *
     * @css @max-width_DropdownList Max width dropdown list.
     * @css @background_DropdownList Background color of dropdown list.

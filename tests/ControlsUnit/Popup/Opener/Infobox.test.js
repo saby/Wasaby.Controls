@@ -141,11 +141,9 @@ define(
 
       describe('Controls/Popup/Template/InfoBox', () => {
          let getStickyPosition = (hAlign, vAlign, hCorner, vCorner) => ({
-            horizontalAlign: {
-               side: hAlign
-            },
-            verticalAlign: {
-               side: vAlign
+            direction: {
+               horizontal: hAlign,
+               vertical: vAlign
             },
             targetPoint: {
                vertical: vCorner,

@@ -5,7 +5,8 @@ define(
       'Types/source',
       'Types/collection',
       'Controls/history',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Core/nativeExtensions'
    ],
    function(filter, Clone, sourceLib, collection, history, Deferred) {
       describe('Filter:View', function() {

@@ -4,7 +4,7 @@ import coreMerge = require('Core/core-merge');
 import {Date as WSDate, DateTime, Time} from 'Types/entity';
 import Model = require('Controls/_input/DateTime/Model');
 import {DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, getMaskType, TIME_MASK_TYPE} from './DateTime/Utils';
-import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
+import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/DateTime/DateTime');
 

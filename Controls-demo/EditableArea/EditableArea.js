@@ -37,33 +37,7 @@ define('Controls-demo/EditableArea/EditableArea', [
             align: 'left',
             name: 'Компания "Сбис плюс"',
             itemTemplate: exampleTabTemplate2
-         }],
-      toolbarItems = [
-         {
-            id: '1',
-            icon: 'icon-Print',
-            title: 'Распечатать',
-            '@parent': false,
-            parent: null,
-            buttonViewMode: 'iconToolbar'
-         },
-         {
-            id: '2',
-            icon: 'icon-RelatedDocumentsDown',
-            title: 'Связанные документы',
-            '@parent': false,
-            parent: null,
-            buttonViewMode: 'iconToolbar'
-         },
-         {
-            id: '3',
-            icon: 'icon-Question2',
-            title: 'Задать вопрос',
-            '@parent': false,
-            parent: null,
-            buttonViewMode: 'iconToolbar'
-         }
-      ];
+         }];
 
    var EditableArea = Control.extend({
       _template: template,
@@ -86,10 +60,6 @@ define('Controls-demo/EditableArea/EditableArea', [
          this._tabSource2 = new source.Memory({
             keyProperty: 'id',
             data: tabsData2
-         });
-         this._toolbarSource = new source.Memory({
-            keyProperty: 'id',
-            data: toolbarItems
          });
       }
    });

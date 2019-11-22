@@ -1,7 +1,7 @@
 /**
  * @author Авраменко А.С.
  * @mixin Controls/_list/ListStyles
- * @public
+ * @private
  *
  *
  * @css @color_ListView-empty text color of empty ListView

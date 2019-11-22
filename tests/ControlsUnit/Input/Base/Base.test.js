@@ -16,7 +16,8 @@ define(
          var ctrl = new inputMod.Base();
          var _private = inputMod.Base._private;
          makeInstanceCompatible(ctrl);
-         ctrl._template({});
+         ctrl._beforeMount({});
+         ctrl._template(ctrl);
 
          beforeEach(function() {
             calls = [];

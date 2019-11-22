@@ -1,0 +1,8 @@
+<div class="asyncDemo__column">
+    <Controls.heading:Title  caption="Not Async" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+    <div class="asyncDemo__column">
+        <ws:for data="i in 3">
+            <Controls.input:Number value="{{i}}"/>
+        </ws:for>
+    </div>
+</div>

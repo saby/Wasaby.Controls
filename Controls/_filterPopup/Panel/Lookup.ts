@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import 'Controls/lookup';
 import 'css!theme?Controls/filterPopup';
 
@@ -20,7 +20,7 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
@@ -53,7 +53,7 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
@@ -128,7 +128,7 @@ var _private = {
       if (typeof self._options.lookupTemplateName === 'string') {
          return self._children.lookup;
       } else {
-         Env.IoC.resolve('ILogger').error('Option "Controls/_filterPopup/Panel/Lookup:lookupTemplateName" only supports string type');
+          Logger.error('Option "Controls/_filterPopup/Panel/Lookup:lookupTemplateName" only supports string type', self);
       }
    },
 

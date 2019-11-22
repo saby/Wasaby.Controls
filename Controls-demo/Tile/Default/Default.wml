@@ -1,0 +1,8 @@
+<Controls.tile:View
+        tileMode="dynamic"
+        displayProperty="title"
+        imageProperty="image"
+        keyProperty="id"
+        source="{{_viewSource}}">
+
+</Controls.tile:View>

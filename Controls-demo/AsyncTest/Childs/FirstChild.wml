@@ -1,0 +1,10 @@
+<div>
+    <Controls.heading:Title  caption="I'm First Child {{_options.indexOpt}}" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+    <div class="firstCase__childArea">
+        <Controls.heading:Title  caption="Not Async Control from Child" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <ws:for data="i in _multipleControls">
+            <Controls.buttons:Button href="#" readOnly="{{false}}" icon="icon-Send" iconSize="m" caption="Not Async Control from Child {{i}}" iconStyle="default"/>
+        </ws:for>
+    </div>
+</div>
+

@@ -92,7 +92,7 @@
             </ws:navigation>
          </Controls.dropdown:Input>
       </div>
-      <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divMultiSelectMore">
+      <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divMultiSelectHiddenMore">
          <h3>MultiSelect and hidden "more" button in footer</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect4"
                                   keyProperty="id"

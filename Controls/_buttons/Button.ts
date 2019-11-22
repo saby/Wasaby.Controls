@@ -19,14 +19,38 @@ import {
     IIconStyle,
     IIconStyleOptions,
     ITooltip,
-    ITooltipOptions
+    ITooltipOptions,
 } from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
+import 'wml!Controls/_buttons/ButtonBase';
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
    IButtonOptions {}
+
+export function cssStyleGeneration(options: IButtonOptions): void {
+    const currentButtonClass = ActualApi.styleToViewMode(options.style);
+    const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
+
+    this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly);
+    this._contrastBackground = ActualApi.contrastBackground(options);
+    this._viewMode = oldViewModeToken.viewMode;
+    if (typeof oldViewModeToken.contrast !== 'undefined') {
+        this._contrastBackground = oldViewModeToken.contrast;
+    }
+    this._height = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewMode);
+    this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
+    this._fontSize = ActualApi.fontSize(options);
+    this._hasIcon = !!options.icon;
+
+    this._caption = options.caption;
+    this._stringCaption = typeof options.caption === 'string';
+
+    this._icon = options.icon;
+    this._iconSize = options.icon ? ActualApi.iconSize(options) : '';
+    this._iconStyle = options.icon ? ActualApi.iconStyle(options) : '';
+}
 
 /**
  * Графический контрол, который предоставляет пользователю возможность простого запуска события при нажатии на него.
@@ -103,35 +127,12 @@ class Button extends Control<IButtonOptions> implements
    private _iconSize: string;
    private _iconStyle: string;
 
-   private cssStyleGeneration(options: IButtonOptions): void {
-      const currentButtonClass = ActualApi.styleToViewMode(options.style);
-      const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
-
-      this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly);
-      this._contrastBackground = ActualApi.contrastBackground(options);
-      this._viewMode = oldViewModeToken.viewMode;
-      if (typeof oldViewModeToken.contrast !== 'undefined') {
-         this._contrastBackground = oldViewModeToken.contrast;
-      }
-      this._height = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewMode);
-      this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
-      this._fontSize = ActualApi.fontSize(options);
-      this._hasIcon = !!options.icon;
-
-      this._caption = options.caption;
-      this._stringCaption = typeof options.caption === 'string';
-
-      this._icon = options.icon;
-      this._iconSize = options.icon ? ActualApi.iconSize(options) : '';
-      this._iconStyle = options.icon ? ActualApi.iconStyle(options) : '';
-   }
-
    protected _beforeMount(options: IButtonOptions): void {
-      this.cssStyleGeneration(options);
+      cssStyleGeneration.call(this, options);
    }
 
    protected _beforeUpdate(newOptions: IButtonOptions): void {
-      this.cssStyleGeneration(newOptions);
+      cssStyleGeneration.call(this, newOptions);
    }
 
    private _keyUpHandler(e: SyntheticEvent): void {

@@ -5,7 +5,7 @@ import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import template = require('wml!Controls/_list/Mover/Mover');
 import {isEqual} from 'Types/object';
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import {ContextOptions as dataOptions} from 'Controls/context';
 import {Confirmation} from 'Controls/popup';
 
@@ -271,7 +271,7 @@ var Mover = Control.extend({
                 this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
             } else {
                 this._moveDialogTemplate = options.moveDialogTemplate;
-                Env.IoC.resolve('ILogger').warn('Mover', 'Wrong type of moveDialogTemplate option, use object notation instead of template function');
+                Logger.warn('Mover', 'Wrong type of moveDialogTemplate option, use object notation instead of template function', this);
             }
         }
     },

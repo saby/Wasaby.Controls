@@ -22,6 +22,7 @@
                                     virtualScrolling="{{_virtualScrolling}}"
                                     dragControlId="{{ _dragControlId }}"
                                     on:itemClick="_onItemClick()"
+                                    on:itemMouseDown="_notifyHandler('itemMouseDown')"
                                     on:checkboxClick="_notifyHandler('checkboxClick')"
                                     on:itemSwipe="_notifyHandler('itemSwipe')"
                                     on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"

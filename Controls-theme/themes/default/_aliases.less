@@ -47,7 +47,14 @@
 @icon-color:                 #000000;
 //Цвет иконок отображающих дополнительную информацию.
 @unaccented_icon-color:      #CCC;
-
+//Цвет фона контрола при ошибке валидации при установке фокуса
+@invalid_focus_background-color:         #FADADD;
+//Цвет обводки контрола при ошибке валидации
+@invalid_border-color:                 @danger_color;
+//отступ от контрола до обводки валидации сверху и снизу
+@invalid_padding-vertical:                  2px;
+//отступ от контрола до обводки валидации справа и слева
+@invalid_padding-horizontal:                  4px;
 
 //Переменные, использующиеся для InfoboxButton.
 //Цвет иконки InfoboxButton.
@@ -186,8 +193,6 @@
 //Цвет фона полей ввода при ошибке валидации.
 //Примечание: равен цвету фона по-умолчанию.
 @invalid_background-color_inputText:                  @background-color;
-//Цвет фона полей ввода при ошибке валидации при установке фокуса.
-@invalid_focus_background-color_inputText:            #FADADD;
 //Цвет фона полей ввода в состоянии "только для чтения".
 //Примечание: равен цвету фона по-умолчанию.
 @readonly_background-color_inputText:                 transparent;
@@ -202,11 +207,11 @@
 @border-color_focus_inputText:                        #EAEAEA #EAEAEA #AAB0C1 #EAEAEA;
 //Цвет границы полей ввода при ошибке валидации.
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
-@invalid_border-color_inputText:                      @danger_color;
+@invalid_border-color_inputText:                      @invalid_border-color;
 //Цвет границы полей ввода при ошибке валидации при установке фокуса
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
 //Примечание: по-умолчанию равен цвету элементов отображающих опасность или ошибку.
-@invalid_focus_border-color_inputText:                @danger_color;
+@invalid_focus_border-color_inputText:                @invalid_border-color;
 //Цвет границы полей ввода в состоянии "только для чтения".
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
 //Примечание: по-умолчанию равен цвету элементов отображающих опасность или ошибку.
@@ -373,18 +378,18 @@
 @primary_active_background-color_button:              #FDD2C0;
 //цвет фона неосновной кнопки.
 @secondary_background-color_button:                   transparent;
-//контрастный цвет фона основной кнопки.
+//контрастный цвет фона неосновной кнопки.
 //Примечание: равен цвету фона по-умолчанию.
-@secondaty_contrast_background-color_button:          @background-color;
-//цвет фона основной кнопки при наведении мыши.
+@secondary_contrast_background-color_button:          @background-color;
+//цвет фона неосновной кнопки при наведении мыши.
 @secondary_hover_background-color_button:             #F0F5FB;
-//цвет фона основной кнопки при нажатии на нее.
+//цвет фона неосновной кнопки при нажатии на нее.
 @secondary_active_background-color_button:            #E1ECF6;
 //цвет фона кнопки в состоянии "только для чтения".
 @readonly_background-color_button:                    transparent;
 //контрастный цвет фона кнопки в состоянии "только для чтения".
 //Примечание: равен цвету фона по-умолчанию.
-@readonly_constast_background-color_button:           @background-color;
+@readonly_contrast_background-color_button:           @background-color;
 //Толщина обводки кнопки.
 //Примечание: равна толщине обводки по-умолчанию.
 @border-thickness_button:                             @border-thickness;

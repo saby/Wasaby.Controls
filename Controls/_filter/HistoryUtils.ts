@@ -41,7 +41,7 @@ function createHistorySource(cfg) {
 }
 
 function getHistorySource(cfg) {
-   if (Env.constants.isBuildOnServer) {
+   if (Env.constants.isServerSide) {
       return createHistorySource(cfg);
    } else {
       HISTORY_SOURCE[cfg.historyId] = HISTORY_SOURCE[cfg.historyId] || createHistorySource(cfg);

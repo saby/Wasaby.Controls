@@ -19,6 +19,7 @@
 
            attr:class="controls-Grid_columnScroll"
            on:itemClick="_notifyHandler('itemClick')"
+           on:itemMouseDown="_notifyHandler('itemMouseDown')"
            on:checkboxClick="_notifyHandler('checkboxClick')"
            on:itemSwipe="_notifyHandler('itemSwipe')"
            on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"

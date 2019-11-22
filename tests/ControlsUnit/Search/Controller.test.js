@@ -463,23 +463,40 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(searchController._inputSearchValue, '');
       });
 
-      it('_isSearchControllerLoading', function() {
-         var searchController = getSearchController();
-         searchController._dataOptions = defaultOptions;
-
-         var result = searchController._isSearchControllerLoading();
-         var expectedResult = null;
-         assert.equal(result, expectedResult);
-
-         var controller = searchMod.Controller._private.getSearchController(searchController);
-         controller.isLoading = function() {
-            return true;
+      it('itemOpenHandler with searchNavigationMode="expand"', function() {
+         var searchController = getSearchController(Object.assign(defaultOptions, {
+            searchNavigationMode: 'expand',
+            parentProperty: 'parent',
+            nodeProperty: 'type'
+         }));
+         var markedKeyChangedParams = null;
+         var expandedItemsChangedParams = null;
+         var items = new collection.RecordSet({
+            rawData: [
+               { key: 1, parent: null, type: true },
+               { key: 2, parent: 1, type: true },
+               { key: 3, parent: 2, type: true }
+            ],
+            keyProperty: 'key'
+         });
+         searchController._searchController = {
+            abort: function(){}
          };
-         var result = searchController._isSearchControllerLoading();
-         var expectedResult = true;
-         assert.equal(result, expectedResult);
-      });
+         searchController._notify = function(eventName, params) {
+            if (eventName === 'markedKeyChanged') {
+               markedKeyChangedParams = params;
+            }
+            if (eventName === 'expandedItemsChanged') {
+               expandedItemsChangedParams = params;
+            }
+         };
+         searchController._root = null;
+         searchController._viewMode = 'search';
 
+         searchController._itemOpenHandler(3, items);
+         assert.deepEqual(markedKeyChangedParams, [3]);
+         assert.deepEqual(expandedItemsChangedParams,[[1, 2, 3]]);
+      });
    });
 
 });

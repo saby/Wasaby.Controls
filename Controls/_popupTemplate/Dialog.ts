@@ -15,7 +15,7 @@ const prepareCloseButton = {
 const DialogTemplate = Control.extend({
 
     /**
-     * Базовый шаблон <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#template'>диалогового окна</a>.
+     * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#template диалогового окна}.
      * @class Controls/_popupTemplate/Dialog
      * @extends Core/Control
      * @control

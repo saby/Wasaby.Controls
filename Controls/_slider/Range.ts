@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
@@ -275,22 +275,22 @@ class Range extends Control<ISliderRangeOptions> {
    private _checkOptions(opts: ISliderRangeOptions): void {
       Utils.checkOptions(opts);
       if (opts.startValue < opts.minValue || opts.startValue > opts.maxValue) {
-         IoC.resolve('ILogger').error('Slider', 'startValue must be in the range [minValue..maxValue].');
+         Logger.error('Slider', 'startValue must be in the range [minValue..maxValue].', this);
       }
       if (opts.endValue < opts.minValue || opts.endValue > opts.maxValue) {
-         IoC.resolve('ILogger').error('Slider', 'endValue must be in the range [minValue..maxValue].');
+          Logger.error('Slider', 'endValue must be in the range [minValue..maxValue].', this);
       }
       if (opts.startValue > opts.endValue) {
-         IoC.resolve('ILogger').error('Slider', 'startValue must be less than or equal to endValue.');
+          Logger.error('Slider', 'startValue must be less than or equal to endValue.', this);
       }
    }
 
    private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-      let targetX = Utils.getNativeEventPageX(event);
+      const targetX = Utils.getNativeEventPageX(event);
       const box = this._children.area.getBoundingClientRect();
       const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
       return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
-   };
+   }
 
    private _needUpdate(oldOpts: ISliderRangeOptions, newOpts: ISliderRangeOptions): boolean {
       return (oldOpts.scaleStep !== newOpts.scaleStep ||
@@ -398,7 +398,7 @@ class Range extends Control<ISliderRangeOptions> {
 
    static getDefaultOptions(): object {
       return {
-         theme: "default",
+         theme: 'default',
          size: 'm',
          borderVisible: false,
          minValue: undefined,

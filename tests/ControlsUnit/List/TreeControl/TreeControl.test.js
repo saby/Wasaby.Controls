@@ -1379,7 +1379,7 @@ define([
                setTimeout(()=>{
                   treeControl1._beforeUpdate(_cfg);
                   setTimeout(()=>{
-                     assert.deepEqual([1], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
+                     assert.deepEqual([], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
                      done();
                   }, 10);
                }, 10);

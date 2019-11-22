@@ -2,34 +2,21 @@ define([
    'Controls/_list/BaseControl/SelectionController',
    'Types/collection',
    'Types/entity',
-   'Controls/operations'
+   'Controls/operations',
+   'Controls/list',
+   'ControlsUnit/ListData'
 ], function(
    SelectionController,
    collection,
    entity,
-   operations
+   operations,
+   list,
+   ListData
 ) {
    'use strict';
    describe('Controls.List.BaseControl.SelectionControllerWithLimit', function() {
       var
          instance,
-         items = [
-            {
-               'id': 1
-            }, {
-               'id': 2
-            }, {
-               'id': 3
-            }, {
-               'id': 4
-            }, {
-               'id': 5
-            }, {
-               'id': 6
-            }, {
-               'id': 7
-            }
-         ],
          rs,
          cfg,
          sandbox;
@@ -37,17 +24,16 @@ define([
       beforeEach(function() {
          sandbox = sinon.createSandbox();
          rs = new collection.RecordSet({
-            keyProperty: 'id',
-            rawData: items
+            keyProperty: ListData.KEY_PROPERTY,
+            rawData: ListData.getFlatItems()
          });
          cfg = {
             selectedKeys: [],
             excludedKeys: [],
             items: rs,
-            keyProperty: 'id',
-            listModel: {
-               updateSelection: sandbox.stub()
-            }
+            keyProperty: ListData.KEY_PROPERTY,
+            selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
+            listModel: new list.ListViewModel({items: rs})
          };
          instance = new SelectionController();
          instance.saveOptions(cfg);
@@ -101,17 +87,21 @@ define([
          await instance._beforeMount(cfg);
          const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
-         assert.isTrue(instance._multiselection.getCount() === 7);
+         return instance._multiselection.getCount().then((itemsCount) => {
+            assert.isTrue(itemsCount === 7);
+         });
       });
 
       it('getCount with isAllItemsLoaded == false', async function() {
          await instance._beforeMount(cfg);
          const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
-         instance._multiselection._isAllItemsLoaded = function() {
+         instance._multiselection._selectionStrategy._isAllItemsLoaded = function() {
             return false;
          };
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
-         assert.isTrue(instance._multiselection.getCount() === 100);
+         return instance._multiselection.getCount().then((itemsCount) => {
+            assert.isTrue(itemsCount === 100);
+         });
       });
    });
 });

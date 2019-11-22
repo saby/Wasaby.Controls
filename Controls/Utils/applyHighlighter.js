@@ -1,5 +1,4 @@
 define('Controls/Utils/applyHighlighter', [], function() {
-
    'use strict';
 
    return function(highlighters) {
@@ -7,9 +6,11 @@ define('Controls/Utils/applyHighlighter', [], function() {
          result = '',
          args = arguments;
 
-      highlighters && highlighters.forEach(function(highlighter) {
-         result += highlighter.apply(undefined, Array.prototype.slice.call(args, 1));
-      });
+      if (highlighters) {
+         highlighters.forEach(function(highlighter) {
+            result += highlighter.apply(undefined, Array.prototype.slice.call(args, 1));
+         });
+      }
 
       return result;
    };
