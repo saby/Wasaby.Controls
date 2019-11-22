@@ -45,7 +45,7 @@ define(
                inst._isStickySupport = true;
                inst._options.content = TemplateUtil.content;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader__background_theme-default controls-StickyHeader_position" style="top: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader__background controls-StickyHeader_position" style="top: 0px;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div><div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
