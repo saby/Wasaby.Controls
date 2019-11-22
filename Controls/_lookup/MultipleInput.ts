@@ -17,7 +17,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -49,7 +49,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable

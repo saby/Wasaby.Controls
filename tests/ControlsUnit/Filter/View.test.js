@@ -605,7 +605,8 @@ define(
             };
             assert.strictEqual(configs['state'].items.getCount(), 6);
             filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
-               assert.strictEqual(configs['state'].items.getCount(), 6);
+               assert.strictEqual(configs['state'].popupItems.getCount(), 6);
+               assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
             });
@@ -733,6 +734,7 @@ define(
             filterView._configs = configs;
             filterView._displayText = {};
             filterView._beforeUpdate({source: source}).addCallback(() => {
+               assert.strictEqual(configs['state'].popupItems.getCount(), 7);
                assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
@@ -749,12 +751,16 @@ define(
                   document: {
                      items: getItems(Clone(defaultItems[0])),
                      displayProperty: 'title',
-                     keyProperty: 'id'},
+                     keyProperty: 'id',
+                     sourceController: {hasMoreData: () => {return true;}}
+                  },
                   state: {
                      items: getItems(Clone(defaultItems[1])),
                      displayProperty: 'title',
                      keyProperty: 'id',
-                     multiSelect: true}
+                     multiSelect: true,
+                     sourceController: {hasMoreData: () => {return true;}}
+                  }
                };
                view._children = {
                   StickyOpener: { close: () => {} }
@@ -824,7 +830,7 @@ define(
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
-               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'Completed', title: 'Completed, new item, new item 2', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
                assert.strictEqual(view._configs.state.items.getCount(), 9);
 
@@ -888,7 +894,7 @@ define(
                assert.deepStrictEqual(view._source[1].viewMode, 'extended');
                assert.deepStrictEqual(view._source[3].textValue, 'new document');
                assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
-               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: '', title: ''}});
+               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: 'new document', title: ''}});
                assert.isTrue(historyEventFired);
             });
 
@@ -910,7 +916,7 @@ define(
                view._idOpenSelector = 'state';
                view._onSelectorTemplateResult('resultEvent', newItems);
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
-               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'Completed', title: 'Completed, new item, new item 2', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
             });
          });
@@ -961,7 +967,8 @@ define(
                      keyProperty: 'id',
                      nodeProperty: 'node',
                      parentProperty: 'parent',
-                     multiSelect: true
+                     multiSelect: true,
+                     sourceController: {hasMoreData: () => {return true;}}
                   }
                };
                view._children = {
@@ -987,7 +994,7 @@ define(
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [1, 2], '-2': [-2]});
-               assert.deepStrictEqual(view._displayText.document, {text: 'Folder 2', title: 'Folder 2, In any state, In progress', hasMoreText: ', еще 2' });
+               assert.deepStrictEqual(view._displayText.document, {text: 'In any state', title: 'In any state, In progress, Folder 2', hasMoreText: ', еще 2' });
                assert.deepStrictEqual(filterChanged, {document: {'-1': [1, 2], '-2': [-2]}});
 
                eventResult = {
@@ -1065,7 +1072,7 @@ define(
                   hasMoreData: () => {return true;}
                };
                filter.View._private.getPopupConfig(view, view._configs, view._source);
-               assert.equal(view._configs.document.items.getCount(), 7);
+               assert.equal(view._configs.document.popupItems.getCount(), 7);
             });
          });
       });

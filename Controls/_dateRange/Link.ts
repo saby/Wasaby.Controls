@@ -10,6 +10,7 @@ import 'css!theme?Controls/dateRange';
  *
  * @class Controls/_dateRange/Link
  * @extends Core/Control
+ * @interface Controls/interface/IInputDateTime
  * @mixes Controls/interface/ILinkView
  * @mixes Controls/_dateRange/interfaces/IInputSelectable
  * @control

@@ -17,6 +17,10 @@ var _private = {
       if (context && context.suggestOptionsField) {
          self._suggestListOptions = context.suggestOptionsField.options;
 
+         if (!self._layerName && self._suggestListOptions.layerName) {
+            self._layerName = self._suggestListOptions.layerName.split('_').pop();
+         }
+
          if (self._suggestListOptions.dialogMode) {
             if (self._suggestListOptions.navigation) {
                var navigation = clone(self._suggestListOptions.navigation);
@@ -98,6 +102,7 @@ var List = Control.extend({
    _notifyHandler: tmplNotify,
    _markedKey: null,
    _items: null,
+   _layerName: null,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
@@ -135,7 +140,8 @@ var List = Control.extend({
          itemsCount = items && items.getCount();
 
       if (this._markedKey === null && itemsCount && domEvent.nativeEvent.keyCode === constants.key.up) {
-         this._markedKey = items.at(itemsCount - 1).getId();
+         let indexLastItem = this._reverseList ? 0 : itemsCount - 1;
+         this._markedKey = items.at(indexLastItem).getId();
       } else {
          /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
           remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */

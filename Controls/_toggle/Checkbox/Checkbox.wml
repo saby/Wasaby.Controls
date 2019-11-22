@@ -4,7 +4,6 @@
              class="controls-Checkbox__wrapper
                     controls-Checkbox__wrapper_theme-{{_options.theme}}
                     {{_options.readOnly ? 'controls-Checkbox__disabled' : 'controls-Checkbox__enabled'}}
-
                     {{_options.value ? ' controls-Checked__checked'}}
                     {{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}"
              title="{{_options.tooltip}}">
@@ -28,6 +27,6 @@
                         iconStyle="{{_options.iconStyle}}"
                         caption="{{_options.caption}}"/>
         </div>
-        <div class="{{_options.validationStatus ? 'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
+        <div class="{{_options.validationStatus !== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
     </div>
 </div>

@@ -24,6 +24,10 @@ let _private = {
     },
     getCfg(self) {
         let config = {
+            fittingMode: {
+                vertical: 'adaptive',
+                horizontal: 'overflow'
+            },
             autofocus: false,
             opener: self,
             target: self._container,

@@ -270,7 +270,8 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITo
          value: false,
          triState: false,
          iconSize: 'default',
-         iconStyle: 'secondary'
+         iconStyle: 'secondary',
+         validationStatus: 'valid'
       };
    }
 

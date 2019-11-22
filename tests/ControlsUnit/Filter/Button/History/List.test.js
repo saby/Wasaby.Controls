@@ -171,6 +171,7 @@ define(
             let closed = false;
             const sandBox = sinon.createSandbox();
             const self = {
+               _options: {},
                _children: {
                   stickyOpener: {
                      close: () => closed = true

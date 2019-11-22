@@ -2,7 +2,7 @@ import {descriptor} from 'Types/entity';
 import dateControlsUtils from './../Utils';
 
 /**
- * mixin Controls/_dateRange/interfaces/ILinkView
+ * @mixin Controls/_dateRange/interfaces/ILinkView
  * @public
  */
 var EMPTY_CAPTIONS = {
@@ -88,7 +88,7 @@ export default {
              * @name Controls/_dateRange/interfaces/ILinkView#showPrevArrow
              * @cfg {Boolean} Display the control arrow to switch to the previous period
              * @deprecated Use options {@link prevArrowVisibility} instead.
-             */             
+             */
             showPrevArrow: false,
 
             /**
@@ -132,6 +132,7 @@ export default {
             /*
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Text that is used if the period is not selected.
+             * @default Не указан
              */
             emptyCaption: EMPTY_CAPTIONS.NOT_SPECIFIED,
 

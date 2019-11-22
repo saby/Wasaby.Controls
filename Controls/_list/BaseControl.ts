@@ -23,12 +23,11 @@ import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {constants, detection} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
-import {ICrud} from "Types/source";
+import {ICrud, Memory} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
-import {Memory} from 'Types/source';
 import {Logger} from 'UI/Utils';
 import {create as diCreate} from 'Types/di';
 
@@ -1047,7 +1046,12 @@ var _private = {
 
     // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
     delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
-        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
+        let placeholderHeight = 0;
+
+        if (self._virtualScroll) {
+            placeholderHeight = self._virtualScroll.PlaceholdersSizes.top;
+        }
+        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop - placeholderHeight : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
     getTopOffsetForItemsContainer: function(self, itemsContainer) {
@@ -1078,6 +1082,9 @@ var _private = {
         return i + 1;
     },
 
+    getVirtualScrollPlaceholderHeight(self): number {
+        return self._virtualScroll.PlaceholdersSizes.top + self._virtualScroll.PlaceholdersSizes.bottom;
+    },
 
     handleListScrollSync(self, params) {
         if (detection.isMobileIOS) {
@@ -1085,8 +1092,8 @@ var _private = {
         }
         if (self._virtualScroll) {
             self._scrollParams = {
-                scrollTop: params.scrollTop,
-                scrollHeight: params.scrollHeight,
+                scrollTop: params.scrollTop + self._virtualScroll.PlaceholdersSizes.top,
+                scrollHeight: params.scrollHeight + _private.getVirtualScrollPlaceholderHeight(self),
                 clientHeight: params.clientHeight
             };
         }
@@ -1184,7 +1191,15 @@ var _private = {
                 _private.applyVirtualScrollIndexesToListModel(self);
             }
         }
-        if (changesType === 'collectionChanged' || changesType === 'indexesChanged' || newModelChanged) {
+        // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
+        // for example if Controls.explorer:View is switched from list to tile mode. The controller
+        // will keep firing `indexesChanged` events, but we should not mark items as changed while
+        // virtual scrolling is disabled.
+        if (
+            changesType === 'collectionChanged' ||
+            changesType === 'indexesChanged' && self._options.virtualScrolling !== false ||
+            newModelChanged
+        ) {
             self._itemsChanged = true;
         }
         self._forceUpdate();
@@ -1648,7 +1663,7 @@ var _private = {
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IBaseControl
  * @mixes Controls/interface/IEditableList
@@ -1714,6 +1729,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _blockItemActionsByScroll: false,
 
+    _showActions: false,
     _needBottomPadding: false,
     _noDataBeforeReload: null,
     _intertialScrolling: null,
@@ -2451,6 +2467,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
     _updateItemActions: function() {
+        if (this.__error) {
+            return;
+        }
         if (this._listViewModel && this._hasItemActions) {
             this._children.itemActions.updateActions();
         }
@@ -2524,6 +2543,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
             });
         }
+        this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
 
     _onLoadMoreClick: function() {
@@ -2554,6 +2574,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (targetPosition) {
             this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
         }
+
+        // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
+        this._showActions = false;
     },
     _onViewKeyDown: function(event) {
         let key = event.nativeEvent.keyCode;
@@ -2626,6 +2649,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData, nativeEvent]);
+        if (!this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData() && !this._showActions) {
+            this._showActions = true;
+        }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData, nativeEvent]);

@@ -11,6 +11,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/_toolbars/IToolbarSource
  * @control
  * @public
  * @author Авраменко А.С.

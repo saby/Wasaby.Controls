@@ -121,7 +121,7 @@ var MAX_NUMBER_ITEMS = 5;
 
       deleteFavorite: function(self) {
          _private.removeRecord(self, self._editItem);
-         _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage);
+         _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage, self._options.filterItems);
          self._children.stickyOpener.close();
          self._notify('historyChanged');
       },
@@ -155,15 +155,15 @@ var MAX_NUMBER_ITEMS = 5;
          } else {
             self._historyStorage.prepend(record);
          }
-         _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage);
+         _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage, self._options.filterItems);
          record.acceptChanges();
          self._notify('historyChanged');
       },
 
-      updateFavoriteList: function(favoriteList, localStorage, globalStorage) {
+      updateFavoriteList: function(favoriteList, localStorage, globalStorage, filterItems) {
          favoriteList.assign(localStorage.getHistory());
          favoriteList.prepend(globalStorage.getHistory());
-         _private.convertToItems(favoriteList);
+         _private.convertToItems(favoriteList, filterItems);
       },
 
       updateFavorite(self, item, text, target): void {
@@ -183,9 +183,10 @@ var MAX_NUMBER_ITEMS = 5;
          self._children.stickyOpener.open(popupOptions);
       },
 
-      convertToItems: function(favoriteList) {
+      convertToItems: function(favoriteList, items) {
          factory(favoriteList).each((favoriteItem) => {
-            favoriteItem.get('data').set('filterPanelItems', convertToSourceDataArray(favoriteItem.get('data').get('filter')));
+            favoriteItem.get('data').set('filterPanelItems', convertToSourceDataArray(favoriteItem.get('data').get('filter'),
+                _private.mapByField(items, 'visibility')));
          });
       }
    };
@@ -213,7 +214,7 @@ var MAX_NUMBER_ITEMS = 5;
              this._favoriteList = options.favoriteItems;
              this._historyStorage = options.historyStorage;
              this._historyGlobalStorage = options.historyGlobalStorage;
-             _private.convertToItems(this._favoriteList);
+             _private.convertToItems(this._favoriteList, options.filterItems);
              this._historyCount = Constants.MAX_HISTORY_REPORTS - this._favoriteList.getCount();
          }
       },

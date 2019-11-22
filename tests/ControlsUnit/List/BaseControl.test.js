@@ -884,6 +884,29 @@ define([
            ], baseControl._virtualScroll._itemsHeights);
        });
 
+      it('_private::handleListScrollSync', () => {
+         const self = {};
+
+         self._virtualScroll = {
+            PlaceholdersSizes: {
+               top: 1000,
+               bottom: 1000
+            }
+         };
+
+         lists.BaseControl._private.handleListScrollSync(self, {
+            scrollTop: 2000,
+            scrollHeight: 4000,
+            clientHeight: 1000
+         });
+
+         assert.deepEqual(self._scrollParams, {
+            scrollTop: 3000,
+            scrollHeight: 6000,
+            clientHeight: 1000
+         });
+      });
+
       it('moveMarker activates the control', async function() {
          const
             cfg = {
@@ -2237,8 +2260,15 @@ define([
             baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
+         it('control in error state, should not call update', function() {
+            baseControl.__error = true;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 4);
+            baseControl.__error = false;
+         });
          it('without listViewModel should not call update', function() {
             baseControl._listViewModel = null;
+            baseControl._updateItemActions();
             assert.equal(actionsUpdateCount, 4);
          });
       });
@@ -4235,6 +4265,34 @@ define([
             });
             return done;
          });
+         it('hideActionsAfterDrag', async function() {
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg);
+            await instance._beforeMount(cfg);
+            instance.saveOptions(cfg);
+
+            instance._listViewModel.getDragTargetPosition = function() { return null; }
+            instance._listViewModel.getDragEntity = function() { return null; }
+            instance._listViewModel.getDragItemData = function() { return null; }
+
+            instance._dragEndHandler();
+            assert.isFalse(instance._showActions);
+
+            instance._itemMouseMove();
+            assert.isTrue(instance._showActions);
+
+         });
 
       });
 
@@ -4397,7 +4455,8 @@ define([
                },
                viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
-               source: source
+               source: source,
+               virtualScrolling: true
             },
             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);

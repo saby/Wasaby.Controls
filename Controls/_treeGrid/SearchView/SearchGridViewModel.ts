@@ -18,7 +18,9 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         }
         return item;
     },
-
+    _isSupportLadder: function() {
+        return false;
+    },
     _isFirstInGroup: function(item:Record|[Record]):boolean {
         item = item[0] || item;
         return SearchGridViewModel.superclass._isFirstInGroup.call(this, item);

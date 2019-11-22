@@ -68,6 +68,12 @@ body:not(.ws-is-ie10) .controls-BlockLayout__block:after {
    border: @border-width_BlockLayout-block solid @border-color_BlockLayout-block;
    border-radius: @border-radius_BlockLayout-block;
    box-shadow: @box-shadow_BlockLayout-block;
+   /**
+    * Область между блоками реализуется через border. Тень рисуется поверх каждого блока.
+    * Граница соседнего блока может перекрывать тень. Чтобы такого не было нужно расположить тень выше всех.
+    * https://jsfiddle.net/q41Lmb7s/
+    */
+   z-index: 1;
 }
 
 .controls-BlockLayout__block_border- {
