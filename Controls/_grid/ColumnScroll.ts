@@ -167,6 +167,10 @@ const
             scroll.style.display = 'none';
          }
       },
+
+      prepareDebouncedUpdateSizes: function() {
+          return debounce(_private.updateSizes, DELAY_UPDATE_SIZES);
+      }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -186,7 +190,7 @@ const
       _isFullGridSupport: true,
 
       _beforeMount(opt) {
-         this._debouncedUpdateSizes = debounce(_private.updateSizes, DELAY_UPDATE_SIZES);
+         this._debouncedUpdateSizes = _private.prepareDebouncedUpdateSizes();
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
          this._isNotGridSupport = opt.listModel.isNoGridSupport();
          this._isFullGridSupport = opt.listModel.isFullGridSupport();
@@ -320,4 +324,5 @@ const
            return delta;
        }
    });
+ColumnScroll._private = _private;
 export = ColumnScroll;
