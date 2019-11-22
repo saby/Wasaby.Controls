@@ -875,7 +875,25 @@ var _private = {
         return i + 1;
     },
 
+<<<<<<< HEAD
     handleListScrollSync(self, params) {
+=======
+    getVirtualScrollPlaceholderHeight(self): number {
+        return self._virtualScroll.PlaceholdersSizes.top + self._virtualScroll.PlaceholdersSizes.bottom;
+    },
+
+    handleListScrollSync(self, params) {
+        if (detection.isMobileIOS) {
+            _private.getIntertialScrolling(self).scrollStarted();
+        }
+        if (self._virtualScroll) {
+            self._scrollParams = {
+                scrollTop: params.scrollTop + self._virtualScroll.PlaceholdersSizes.top,
+                scrollHeight: params.scrollHeight + _private.getVirtualScrollPlaceholderHeight(self),
+                clientHeight: params.clientHeight
+            };
+        }
+>>>>>>> rc-20.1000
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, params.scrollTop);
         }
@@ -1852,6 +1870,30 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforePaint(): void {
+<<<<<<< HEAD
+=======
+        if (this._virtualScroll && !this._virtualScroll.ItemsContainer) {
+            this._setScrollItemContainer();
+        }
+        if (this._virtualScroll && this._itemsChanged) {
+            this._virtualScroll.updateItemsSizes();
+            _private.applyPlaceholdersSizes(this);
+        }
+
+        _private.updateShadowMode(this);
+
+        if (this._virtualScroll && this._applyScrollTopCallback) {
+            this._applyScrollTopCallback();
+            this._applyScrollTopCallback = null;
+            // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
+            // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
+            this._checkLoadToDirectionTimeout = setTimeout(() => {
+                _private.checkLoadToDirectionCapability(this);
+                this._checkLoadToDirectionTimeout = null;
+            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
+        }
+
+>>>>>>> rc-20.1000
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
@@ -1863,13 +1905,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
+<<<<<<< HEAD
 
             if (!this._options.virtualScrolling) {
                 this._checkLoadToDirectionTimeout = setTimeout(() => {
-                    this._children.scrollController.checkCapability();
+                    this._children.scrollController.checkTriggerVisibility();
                     clearTimeout(this._checkLoadToDirectionTimeout);
                 });
             }
+=======
+            this._checkLoadToDirectionTimeout = setTimeout(() => {
+                _private.checkLoadToDirectionCapability(this);
+                this._checkLoadToDirectionTimeout = null;
+            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
+>>>>>>> rc-20.1000
         }
 
         if (this._restoredScroll !== null) {
@@ -1923,6 +1972,84 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'End': _private.scrollToEdge(this, 'down'); break;
         }
     },
+<<<<<<< HEAD
+=======
+    _updateLoadOffset: function(viewSize, viewPortSize) {
+        let minSize = viewSize !== null && viewPortSize !== null ? Math.min(viewSize, viewPortSize) : 0;
+        let offset = Math.floor(minSize / 3);
+        this._setLoadOffset(offset, offset);
+    },
+
+    _setLoadOffset: function(top, bottom) {
+        if (this.__error) {
+            return;
+        }
+        if (!this._loadOffset) {
+            this._loadOffset = {};
+        }
+        this._loadOffset.top = top;
+        this._loadOffset.bottom = bottom;
+
+        this._loadOffsetTop = top || this._loadOffsetTop;
+        this._loadOffsetBottom = bottom || this._loadOffsetBottom;
+
+        this._children.topVirtualScrollTrigger.style.top = Math.floor(this._loadOffset.top) + 'px';
+        this._children.topLoadTrigger.style.top = Math.floor(this._loadOffset.top * 1.3) + 'px';
+        this._children.bottomVirtualScrollTrigger.style.bottom = Math.floor(this._loadOffset.bottom) + 'px';
+        this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
+    },
+    _onViewPortResize: function(self, viewPortSize, viewPortRect) {
+        // FIXME self._container[0] delete after
+        // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        const container = self._container[0] || self._container;
+        _private.updateIndicatorContainerHeight(self, container.getBoundingClientRect(), viewPortRect);
+        self._viewPortSize = viewPortSize;
+        self._viewPortRect = viewPortRect;
+
+        if (self._needScrollCalculation) {
+            self._updateLoadOffset(self._viewSize, self._viewPortSize);
+        }
+        if (!self._isScrollShown) {
+            self._setLoadOffset(0, 0);
+        }
+    },
+
+    _onScrollResize: function(self, params) {
+        const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
+        if (_private.needScrollPaging(self._options.navigation)) {
+            // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
+            // поэтому нужен таймаут
+            setTimeout(() => {
+                self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
+            }, 18);
+        }
+    },
+
+    __onEmitScroll: function(e, type, params) {
+        var self = this;
+        switch (type) {
+            case 'loadTopStart': _private.onScrollLoadEdgeStart(self, 'up'); break;
+            case 'loadTopStop': _private.onScrollLoadEdgeStop(self, 'up'); break;
+            case 'loadBottomStart': _private.onScrollLoadEdgeStart(self, 'down'); break;
+            case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
+
+            case 'virtualPageTopStart': _private.updateVirtualWindowStart(self, 'up', params); break;
+            case 'virtualPageTopStop': _private.updateVirtualWindowStop(self, 'up'); break;
+            case 'virtualPageBottomStart': _private.updateVirtualWindowStart(self, 'down', params); break;
+            case 'virtualPageBottomStop': _private.updateVirtualWindowStop(self, 'down'); break;
+
+            // TODO KINGO. Проверяем именно синхронный скролл, т.к. стандартный scrollMove стреляет с debounce 100 мс.
+            case 'scrollMoveSync': _private.handleListScrollSync(self, params); break;
+            case 'scrollMove': _private.handleListScroll(self, params); break;
+            case 'virtualScrollMove': _private.virtualScrollMove(self, params); break;
+            case 'canScroll': _private.onScrollShow(self, params); break;
+            case 'cantScroll': _private.onScrollHide(self); break;
+
+            case 'viewPortResize': self._onViewPortResize(self, params[0], params[1]); break;
+            case 'scrollResize': self._onScrollResize(self, params); break;
+        }
+    },
+>>>>>>> rc-20.1000
 
     __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
@@ -2029,9 +2156,28 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _viewResize(): void {
+<<<<<<< HEAD
+        _private.setIndicatorContainerHeight(this, this._viewPortSize);
+=======
+        // todo Check, maybe remove "this._virtualScroll.ItemsContainer"?
+        if (this._virtualScroll && this._virtualScroll.ItemsContainer) {
+            this._virtualScroll.updateItemsSizes();
+            _private.applyPlaceholdersSizes(this);
+            _private.updateShadowMode(this);
+        }
         const container = this._container[0] || this._container;
-
+        this._viewSize = container.clientHeight;
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
+        if (this._needScrollCalculation) {
+            this._updateLoadOffset(this._viewSize, this._viewPortSize);
+        }
+    },
+    _setScrollItemContainer: function () {
+        if (!this._children.listView || !this._virtualScroll) {
+            return;
+        }
+        this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
+>>>>>>> rc-20.1000
     },
 
     beginEdit: function(options) {

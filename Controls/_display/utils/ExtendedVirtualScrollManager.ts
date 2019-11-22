@@ -1,27 +1,18 @@
-import BaseManager from './BaseManager';
+import BaseManager from './VirtualScrollManager';
 import { EnumeratorCallback } from 'Types/collection';
-import CollectionItem from '../CollectionItem';
 
-export interface IVirtualScrollEnumerator {
-    setPosition(position: number): void;
-    moveNext(): boolean;
-    getCurrentIndex(): number;
-    getCurrent(): unknown;
-}
-
-export interface IVirtualScrollManageableCollection {
-    getStartIndex(): number;
-    getStopIndex(): number;
-    getEnumerator(): IVirtualScrollEnumerator;
-    getSourceIndexByIndex(): number;
-    at(index: number): CollectionItem<uknown>;
-}
-
-export default class VirtualScrollManager extends BaseManager<IVirtualScrollManageableCollection> {
-    isItemVisible(index: number): boolean {
+export default class VirtualScrollManager extends BaseManager {
+    isItemVisible = (index: number): boolean => {
         return index >= this._collection.getStartIndex() && index <= this._collection.getStopIndex();
     }
 
+    /**
+     * Применяет флаг того, что элемент был хоть раз отрисован
+     * @remark Необходимо применять этот флаг, для того чтобы отображать все элементы, которые хоть раз были отрисованы,
+     * даже если они не находятся в пределах startindex и stopindex
+     * @param {number} startIndex
+     * @param {number} stopIndex
+     */
     applyRenderedItems(startIndex: number, stopIndex: number): void {
         for (let i = startIndex; i < stopIndex; i++) {
             this._collection.at(i).setRendered(true);

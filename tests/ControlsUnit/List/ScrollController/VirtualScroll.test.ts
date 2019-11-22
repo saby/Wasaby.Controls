@@ -60,13 +60,13 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             assert.deepEqual(vsInstance.itemsOffsets, itemsOffsets)
         });
         it('recalcFromIndex', () => {
-            vsInstance.recalcFromIndex(1);
+            vsInstance.recalcRangeFromIndex(1);
 
             assert.equal(0, vsInstance.startIndex);
             assert.equal(20, vsInstance.stopIndex);
 
             vsInstance.itemsCount = 40;
-            vsInstance.recalcFromIndex(5);
+            vsInstance.recalcRangeFromIndex(5);
             assert.equal(5, vsInstance.startIndex);
             assert.equal(24, vsInstance.stopIndex);
         });
@@ -81,7 +81,7 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
         it('recalcFromScrollTop', () => {
             vsInstance.scrollTop = 0;
             vsInstance.setStartIndex(4);
-            vsInstance.recalcFromScrollTop();
+            vsInstance.recalcRangeFromScrollTop();
             assert.equal(0, vsInstance.startIndex);
             assert.equal(20, vsInstance.stopIndex);
         });
@@ -91,12 +91,12 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.insertItemsHeights(20, 20);
             vsInstance.triggerOffset = 50;
             vsInstance.scrollTop = 150;
-            vsInstance.recalcFromNewItems('down');
+            vsInstance.recalcRangeFromNewItems('down');
             assert.equal(0, vsInstance.startIndex);
             assert.equal(20, vsInstance.stopIndex);
 
             vsInstance.setStartIndex(10);
-            vsInstance.recalcFromNewItems('up');
+            vsInstance.recalcRangeFromNewItems('up');
             assert.equal(10, vsInstance.startIndex);
             assert.equal(30, vsInstance.stopIndex);
         });
@@ -121,14 +121,14 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.setStartIndex(0);
             vsInstance.itemsCount = 40;
             vsInstance.scrollTop = 160;
-            vsInstance.recalcToDirection('down');
+            vsInstance.recalcRangeToDirection('down');
             assert.equal(0, vsInstance.startIndex);
             assert.equal(24, vsInstance.stopIndex);
             vsInstance.setStartIndex(10);
             vsInstance.recalcItemsHeights();
             vsInstance.viewportHeight = 200;
             vsInstance.scrollTop = 10;
-            vsInstance.recalcToDirection('up');
+            vsInstance.recalcRangeToDirection('up');
             assert.equal(6, vsInstance.startIndex);
             assert.equal(24, vsInstance.stopIndex);
         });

@@ -21,7 +21,7 @@ interface IOptions extends IControlOptions {
     viewModel: unknown;
     useNewModel: boolean;
     virtualScrolling: boolean;
-    scrollCalculation: boolean;
+    observeScroll: boolean;
 }
 
 interface IScrollParams {
@@ -42,7 +42,7 @@ const SIZE_RELATION_TO_VIEWPORT = 0.3;
  * @control
  * @extends UI/Base:Control
  */
-export default class ScrollController extends Control<IOptions> {
+export default class ScrollContainer extends Control<IOptions> {
     protected _template: TemplateFunction = template;
     protected virtualScroll: VirtualScroll;
     private itemsContainer: HTMLElement;
@@ -98,19 +98,14 @@ export default class ScrollController extends Control<IOptions> {
     protected topTriggerOffset: number = DEFAULT_TRIGGER_OFFSET;
     protected bottomTriggerOffset: number = DEFAULT_TRIGGER_OFFSET;
     private __mounted: boolean;
-    itemsFromLoadToDirection: boolean = false;
+
+    set itemsFromLoadToDirection(value) {
+        this.virtualScroll.itemsFromLoadToDirection = value;
+    }
 
     protected _beforeMount(options: IOptions): void {
         if (options.virtualScrolling) {
-            this.virtualScroll = new VirtualScroll({
-                pageSize: options.virtualPageSize,
-                segmentSize: options.virtualSegmentSize,
-                placeholderChangedCallback: this.placeholdersChangedCallback,
-                indexesChangedCallback: this.indexesChangedCallback,
-                loadMoreCallback: this.loadMoreCallback
-            });
-            this.virtualScroll.triggerOffset = this.topTriggerOffset;
-            this.initModel(options.viewModel, options.useNewModel);
+            this.initVirtualScrolling(options);
             this.reset(this.viewModel.getCount());
         }
     }
@@ -118,17 +113,17 @@ export default class ScrollController extends Control<IOptions> {
     protected _afterMount(): void {
         this.__mounted = true;
 
-        if (this._options.scrollCalculation) {
+        if (this._options.observeScroll) {
             this.registerScroll();
         }
     }
 
     protected _beforeUpdate(options: IOptions): void {
         if (this._options.viewModel !== options.viewModel) {
-            this.initModel(options.viewModel, options.useNewModel);
+            this.initVirtualScrolling(options);
         }
 
-        if (this._options.scrollCalculation) {
+        if (this._options.observeScroll) {
             this.registerScroll();
         }
     }
@@ -161,13 +156,9 @@ export default class ScrollController extends Control<IOptions> {
 
         if (this.saveScrollPosition) {
             if (this.savedScrollDirection) {
-                this.scrollToPosition(this.savedScrollDirection === 'up' ?
-                    this.virtualScroll.scrollTop + this.virtualScroll.getItemsHeights(this.actualStartIndex, this.savedStartIndex) :
-                    this.virtualScroll.scrollTop - this.virtualScroll.getItemsHeights(this.savedStartIndex, this.actualStartIndex)
-                );
+                this.scrollToPosition(this.virtualScroll.getRestoredScrollPosition(this.savedScrollDirection));
             }
-            this.savedStartIndex = this.actualStartIndex;
-            this.savedStopIndex = this.actualStopIndex;
+            this.virtualScroll.actualizeSavedIndexes();
             this.saveScrollPosition = false;
             this.savedScrollDirection = null;
             this.checkCapabilityWithTimeout();
@@ -207,81 +198,18 @@ export default class ScrollController extends Control<IOptions> {
      * @param {unknown} model
      * @param {boolean} useNewModel
      */
-    private initModel(model: unknown, useNewModel: boolean): void {
-        this.viewModel = model;
-
-        if (useNewModel) {
-            model.subscribe('onCollectionChange', (...args: unknown[]) => {
-                this.collectionChangedHandler.apply(this, [args[0], null, ...args.slice(1)]);
-            });
-        } else {
-            model.subscribe('onListChange', this.collectionChangedHandler);
-        }
-    }
-
-    /**
-     * Обработчик смены данных в модели
-     * @param {string} event
-     * @param {string} changesType
-     * @param {string} action
-     * @param {CollectionItem<entityRecord>[]} newItems
-     * @param {number} newItemsIndex
-     * @param {CollectionItem<entityRecord>[]} removedItems
-     * @param {number} removedItemsIndex
-     */
-    private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: CollectionItem<entityRecord>[],
-                                        newItemsIndex: number, removedItems: CollectionItem<entityRecord>[], removedItemsIndex: number): void => {
-        const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
-
-        if (this.virtualScroll && (changesType === 'collectionChanged' || newModelChanged) && action) {
-            const newCount = this._options.viewModel.getCount();
-            this.virtualScroll.itemsCount = newCount;
-
-            if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
-                this.virtualScroll.insertItemsHeights(newItemsIndex, newItems.length);
-
-                // Обновляем виртуальный скроллинг, только если он инициализирован, так как в другом случае,
-                // мы уже не можем на него повлиять
-                if (this.virtualScroll && this.virtualScroll.itemsContainer) {
-                    const direction = newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
-
-                    if (direction === 'down') {
-                        if (this.actualStopIndex === newCount - newItems.length && this.triggerVisibility.down && !this.itemsFromLoadToDirection) {
-                            this.virtualScroll.recalcToDirection(direction);
-                        } else {
-                            this.virtualScroll.recalcFromNewItems(direction);
-                        }
-                    } else {
-                        if (this.itemsFromLoadToDirection) {
-                            this.savedStopIndex += newItems.length;
-                            this.savedStartIndex += newItems.length;
-                            this.virtualScroll.setStartIndex(this.actualStartIndex + newItems.length);
-                        }
-                        this.virtualScroll.recalcFromNewItems(direction);
-                    }
-
-                    this.saveScrollPosition = true;
-                    this.savedScrollDirection = direction;
-                }
-            }
-
-            if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
-                this.virtualScroll.cutItemsHeights(removedItemsIndex, removedItems.length);
-
-                // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
-                // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
-                // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
-                if (this.virtualScroll && this.virtualScroll.itemsContainer) {
-                    this.virtualScroll.recalcFromNewItems(
-                        removedItemsIndex < this._options.viewModel.getStartIndex() ? 'up' : 'down'
-                    );
-                }
-            }
-        }
-
-        if (changesType === 'collectionChanged' || changesType === 'indexesChanged' || newModelChanged) {
-            this.itemsChanged = true;
-        }
+    private initVirtualScrolling(options: IOptions): void {
+        this.viewModel = options.viewModel;
+        this.virtualScroll = new VirtualScroll({
+            pageSize: options.virtualPageSize,
+            segmentSize: options.virtualSegmentSize,
+            placeholderChangedCallback: this.placeholdersChangedCallback,
+            indexesChangedCallback: this.indexesChangedCallback,
+            loadMoreCallback: this.loadMoreCallback,
+            viewModel: options.viewModel,
+            useNewModel: options.useNewModel
+        });
+        this.virtualScroll.triggerOffset = this.topTriggerOffset;
     }
 
     protected viewResizeHandler(): void {
@@ -306,7 +234,7 @@ export default class ScrollController extends Control<IOptions> {
      */
     protected throttledUpdateIndexesByVirtualScrollMove = throttle((params) => {
         this.virtualScroll.scrollTop = params.scrollTop;
-        this.virtualScroll.recalcFromScrollTop();
+        this.virtualScroll.recalcRangeFromScrollTop();
     }, SCROLLMOVE_DELAY, true);
 
     protected emitListScrollHandler(event: SyntheticEvent<Event>, type: string, params: IScrollParams | unknown[]): void {
@@ -361,7 +289,7 @@ export default class ScrollController extends Control<IOptions> {
                 if (this.virtualScroll.canScrollToItem(itemIndex)) {
                     callback();
                 } else {
-                    this.virtualScroll.recalcFromIndex(itemIndex);
+                    this.virtualScroll.recalcRangeFromIndex(itemIndex);
                     this.afterRenderCallback = callback;
                 }
             } else {
@@ -461,6 +389,7 @@ export default class ScrollController extends Control<IOptions> {
 
     private changeTriggerVisibility(direction: IDirection, state: boolean): void {
         this.triggerVisibility[direction] = state;
+        this.virtualScroll.triggerVisibility[direction] = state;
         this._notify('triggerVisibilityChanged', [direction, state]);
     }
 
@@ -478,7 +407,7 @@ export default class ScrollController extends Control<IOptions> {
             }
 
             this.inertialScrolling.callAfterScrollStopped(() => {
-                this.virtualScroll.recalcToDirection(direction);
+                this.virtualScroll.recalcRangeToDirection(direction);
             });
         } else {
             this._notify('loadMore', [direction]);

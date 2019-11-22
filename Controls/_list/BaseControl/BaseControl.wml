@@ -81,7 +81,7 @@
     </Controls.dragnDrop:Container>
 </ws:template>
 <ws:template name="viewTpl">
-    <Controls._list.ScrollController
+    <Controls._list.ScrollContainer
             name="scrollController"
             on:scrollMoveSync="scrollMoveSyncHandler()"
             on:scrollMove="scrollMoveHandler()"
@@ -96,7 +96,7 @@
             on:activeElementChanged="_notifyHandler('activeElementChanged')"
             on:viewResize="_viewResize()"
             viewModel="{{_listViewModel}}"
-            scrollCalculation="{{_needScrollCalculation}}"
+            observeScroll="{{_needScrollCalculation}}"
             scope="{{_options}}">
         <ws:partial
                 name="{{name}}"
@@ -135,7 +135,7 @@
                 <ws:partial template="emptyTemplateIf"/>
             </ws:emptyTemplate>
         </ws:partial>
-    </Controls._list.ScrollController>
+    </Controls._list.ScrollContainer>
 </ws:template>
 <ws:template name="fullView">
     <ws:if data="{{_options.itemsDragNDrop}}">

@@ -17,10 +17,10 @@ describe('Controls/_list/ScrollController', () => {
                     }
                 }
             };
-            instance._options = {scrollCalculation: false};
+            instance._options = {observeScroll: false};
             instance._afterMount();
             assert.isUndefined(instance.__scrollRegistered);
-            instance._options = {scrollCalculation: true};
+            instance._options = {observeScroll: true};
             instance._afterMount();
             assert.isTrue(instance.__scrollRegistered);
         });
@@ -143,7 +143,7 @@ describe('Controls/_list/ScrollController', () => {
             }
         };
         it('instance saved and subscribe added', () => {
-            instance.initModel(model);
+            instance.subscribeToModelChange(model);
             assert.isTrue(model.subscribed);
             assert.equal(model, instance.viewModel);
         });
@@ -151,12 +151,12 @@ describe('Controls/_list/ScrollController', () => {
     describe('collectionChangedHandler', () => {
         const instance = new ScrollController();
         instance.virtualScroll = {
-            recalcToDirection(direction) {
+            recalcRangeToDirection(direction) {
                 this.__recalcFromIndex = false;
                 this.__recalcFromDirection = true;
                 this.recalcDirection = direction;
             },
-            recalcFromNewItems(direction) {
+            recalcRangeFromNewItems(direction) {
                 this.__recalcFromIndex = true;
                 this.__recalcFromDirection = false;
                 this.recalcDirection = direction;
@@ -321,7 +321,7 @@ describe('Controls/_list/ScrollController', () => {
     describe('checkCapability', () => {
         const instance = new ScrollController();
         instance.virtualScroll = {
-            recalcToDirection(direction) {
+            recalcRangeToDirection(direction) {
                 this.recalcDirection = direction;
             }
         };
@@ -333,19 +333,19 @@ describe('Controls/_list/ScrollController', () => {
         };
 
         it('update view window didn`t call', () => {
-            instance.checkCapability();
+            instance.checkTriggerVisibility();
             assert.isUndefined(instance.virtualScroll.recalcDirection);
         });
 
         it('update view window called, direction up', () => {
             instance.triggerVisibility.up = true;
-            instance.checkCapability();
+            instance.checkTriggerVisibility();
             assert.equal('up', instance.virtualScroll.recalcDirection);
             instance.triggerVisibility.up = false;
         });
         it('update view window called, direction down', () => {
             instance.triggerVisibility.down = true;
-            instance.checkCapability();
+            instance.checkTriggerVisibility();
             assert.equal('down', instance.virtualScroll.recalcDirection);
             instance.triggerVisibility.down = false;
         });
