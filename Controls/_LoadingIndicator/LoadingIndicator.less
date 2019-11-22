@@ -11,9 +11,16 @@
    user-select: none;
 }
 
-//Необходимо навесить z-index на индикатор и контент для правильный работы контекста z-index`ов
-.controls-loading-indicator_local, .controls-loading-indicator_content {
+// Необходимо навесить z-index на индикатор и контент для правильный работы контекста z-index`ов
+// Крутилка должна быть всегда выше контента и не завязана на его внутренние z-index'ы
+// Добавляю контенту z-index = 1, крутилке z-index = 2.
+.controls-loading-indicator_content {
    z-index: 1;
+   position: relative;
+}
+
+.controls-loading-indicator_local {
+   z-index: 2;
 }
 
 .controls-loading-indicator_global {
@@ -30,9 +37,6 @@
    width: 100%;
    height: 100%;
    top: 0;
-}
-
-.controls-loading-indicator_text {
 }
 
 .controls-loading-indicator_overlay-none {

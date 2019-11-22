@@ -268,6 +268,7 @@ Search.getDefaultOptions = function getDefaultOptions() {
    defaultOptions.trim = false;
    defaultOptions.placeholder = rk('Найти') + '...';
    defaultOptions.searchButtonVisible = true;
+   defaultOptions.validationStatus = 'valid';
 
    return defaultOptions;
 };

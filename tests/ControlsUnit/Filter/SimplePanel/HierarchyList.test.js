@@ -32,6 +32,7 @@ define(
             resetValue: ['2'],
             id: 'text',
             items: defaultItems.clone(),
+            selectorItems: defaultItems.clone(),
             selectedKeys: [],
             multiSelect: true
          };
@@ -84,7 +85,7 @@ define(
                emptyKey: defaultConfig.emptyKey,
                hasApplyButton: defaultConfig.hasApplyButton
             });
-            let config = {...defaultConfig, items: sbisItems};
+            let config = {...defaultConfig, items: sbisItems, selectorItems: sbisItems};
             let list = getHierarchyList(config);
             list._beforeMount(config);
             assert.deepStrictEqual(list._listModel._options, expectedListModel._options);

@@ -265,7 +265,7 @@ class StickyController extends BaseController {
         return true;
     }
 
-    popupResize(item, container): Boolean {
+    resizeInner(item, container): Boolean {
         return this.elementAfterUpdated(item, container);
     }
 

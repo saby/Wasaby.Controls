@@ -35,6 +35,7 @@ define('Controls/Utils/FontLoadUtil', [
       };
 
    return {
+      _private: _private,
       __loadedFonts: LOADED_FONTS_FOR_CLASS,
       waitForFontLoad: function(className) {
          var def = new Deferred();

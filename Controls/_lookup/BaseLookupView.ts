@@ -93,6 +93,8 @@ var BaseLookupView = Control.extend({
 
         if (newOptions.value !== this._options.value) {
             this._inputValue = newOptions.value;
+        } else if (currentOptions.items !== newOptions.items) {
+            _private.resetInputValue(this);
         }
 
         if (!isNeedUpdate) {
@@ -101,10 +103,6 @@ var BaseLookupView = Control.extend({
                     isNeedUpdate = true;
                 }
             });
-        }
-
-        if (currentOptions.items !== newOptions.items) {
-            _private.resetInputValue(this);
         }
 
         if (isNeedUpdate) {

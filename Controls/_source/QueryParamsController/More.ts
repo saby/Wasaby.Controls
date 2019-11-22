@@ -11,6 +11,8 @@ type MoreRecord = Record<{
 }>;
 type MoreRecordSet = RecordSet<MoreRecord>;
 
+type TKey = string|number;
+
 class More {
     protected more: MoreRecordSet = null;
 
@@ -38,7 +40,7 @@ class More {
         return moreResult;
     }
 
-    getMoreMeta(key?: string|number): unknown {
+    getMoreMeta(key?: TKey): unknown {
         let moreResult: unknown;
         let moreIndex: Number;
 
@@ -57,8 +59,34 @@ class More {
         return moreResult;
     }
 
-    setMoreMeta(moreMeta: MoreRecordSet|unknown): void {
-        this.more = this.resolveMore(moreMeta);
+    setMoreMeta(moreMeta: MoreRecordSet|unknown, key?: TKey): void {
+        if (key) {
+            const more = this._getMoreByKey(key);
+
+            if (more) {
+                more.set('nav_result', moreMeta);
+            } else {
+                this.more.add(new Record({
+                    rawData: {
+                        id: key,
+                        nav_result: moreMeta
+                    }
+                }));
+            }
+        } else {
+            this.more = this.resolveMore(moreMeta);
+        }
+    }
+
+    private _getMoreByKey(key: TKey): MoreRecord|void {
+        const moreIndex = this.more.getIndexByValue('id', key);
+        let moreRec;
+
+        if (moreIndex !== -1) {
+            moreRec = this.more.at(moreIndex);
+        }
+
+        return moreRec;
     }
 }
 
