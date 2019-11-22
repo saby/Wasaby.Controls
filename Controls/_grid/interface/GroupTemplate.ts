@@ -11,9 +11,7 @@
  *          <ws:partial
  *             template="Controls/grid:GroupTemplate"
  *             expanderVisible="{{ false }}"
- *             expanderAlign="right"
- *             textAlign="left"
- *             columnAlignGroup="1">
+ *             textAlign="left">
  *             <ws:rightTemplate>
  *                Примечание отобразится справа от кнопки-экспандера.
  *             </ws:rightTemplate>
@@ -29,19 +27,36 @@
 
 /**
  * @name Controls/grid:GroupTemplate#expanderAlign
- * @cfg {String} Расположение кнопки-экспандера. Доступные значения опции: hidden, right и left.
+ * @cfg {String} Расположение кнопки-экспандера, позволяющей сворачивать/разворачивать группу.
  * @default left
+ * @remark
+ * Доступные значения:
+ * 
+ * * **right** — справа от заголовка.
+ * * **left** — слева от заголовка.
  */
 
 /**
  * @name Controls/grid:GroupTemplate#expanderVisible
  * @cfg {Boolean} Видимость кнопки-экспандера.
  * @default true
+ * @remark
+ * Доступные значения:
+ * 
+ * * **true** — отображается.
+ * * **false** — не отображается.
  */
 
 /**
  * @name Controls/grid:GroupTemplate#textAlign
- * @cfg {String} Горизонтальное выравнивание текста группы. По умолчанию выравнивается по центру. Доступные значения опции: "left" и "right".
+ * @cfg {String} Горизонтальное выравнивание заголовка группы.
+ * @default center
+ * @remark
+ * Доступные значения:
+ * 
+ * * **right** — по правому краю.
+ * * **center** — по центру.
+ * * **left** — по левому краю.
  */
 
 /**
@@ -52,7 +67,7 @@
 
 /**
  * @name Controls/grid:GroupTemplate#rightTemplate
- * @cfg {String|Function} Шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.
+ * @cfg {String|Function} Шаблон, выводимый в правой заголовка группы.
  * @default Controls/list:GroupContentResultsTemplate
  */
 

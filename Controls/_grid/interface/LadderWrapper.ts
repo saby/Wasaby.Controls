@@ -5,9 +5,7 @@
  * @see Controls/grid:View#ladderProperties
  * @see Controls/grid:IGridControl#columns
  * @remark
- * Дополнительно о шаблоне:
- * 
- * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ Руководство разработчика}
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ здесь}.
  */
 
 /**

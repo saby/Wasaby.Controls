@@ -9,8 +9,7 @@
  * <pre>
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial
- *          template="Controls/grid:ItemTemplate"
+ *       <ws:partial template="Controls/grid:ItemTemplate"
  *          marker="{{false}}"
  *          highlightOnHover="{{false}}"
  *          clickable="{{false}}"
@@ -23,14 +22,12 @@
  * </Controls.grid:View>
  * </pre>
  * @remark
- * Дополнительно о шаблоне:
- * 
- * * {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ Руководство разработчика}
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
  */
 
 /**
  * @name Controls/grid:ItemTemplate#marker
- * @cfg {Boolean} Когда параметр установлен в значение true, активный элемент таблицы будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
+ * @cfg {Boolean} Когда параметр установлен в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
  * @default true
  */
 /**
@@ -50,11 +47,11 @@
  */
 /**
  * @name Controls/grid:ItemTemplate#colspanTemplate
- * @cfg {String|Function} Шаблон отображения объединенных ячеек.
+ * @cfg {String|Function} Шаблон, описывающий содержимое элемента, когда ячейки объединены (см. colspan).
  */
 /**
  * @name Controls/grid:ItemTemplate#contentTemplate
- * @cfg {String|Function} Шаблон содержимого ячейки.
+ * @cfg {String|Function} Шаблон, описывающий содержимое элемента.
  * @remark
  * В области видимости шаблона доступен объект itemData. Из него можно получить доступ к свойству item — это объект, который содержит данные обрабатываемого элемента. Т.е. можно получить доступ к полям и их значениям.
  */
