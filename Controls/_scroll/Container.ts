@@ -275,6 +275,7 @@ var
       _bottomPlaceholderSize: 0,
 
       _scrollTopAfterDragEnd: undefined,
+      _scrollLockedPosition: null,
 
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
