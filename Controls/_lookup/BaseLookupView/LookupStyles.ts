@@ -7,6 +7,10 @@
  * @css @min-height_Lookup-input-render_multiLine Минимальная высота контента в многострочном режиме.
  * @css @height_Lookup-input-wrapper_default Высота обертки над полем ввода.
  * @css @line-height_Lookup-input-wrapper_default Высота строки обертки над полем ввода.
+ * @css @height_Lookup-input-wrapper_xs Высота обертки над полем ввода размера xs.
+ * @css @line-height_Lookup-input-wrapper_xs Высота строки обертки над полем ввода размера xs.
+ * @css @height_Lookup-input-wrapper_s Высота обертки над полем ввода размера s.
+ * @css @line-height_Lookup-input-wrapper_s Высота строки обертки над полем ввода размера s.
  * @css @height_Lookup-input-wrapper_l Высота обертки над полем ввода размера l.
  * @css @line-height_Lookup-input-wrapper_l Высота строки обертки над полем ввода размера l.
  * @css @height_Lookup-input-wrapper_xl Высота обертки над полем ввода размера xl.
