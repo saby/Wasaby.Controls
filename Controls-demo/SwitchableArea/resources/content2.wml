@@ -1,5 +1,5 @@
 <div style="padding: 20px;">
-   <div class="ControlsDemo-SwitchableArea__text">
+   <div class="ControlsDemo-SwitchableArea__text ControlsDemo-SwitchableArea__text_content2">
       content 2 <br />
       selected: {{selected}} <br />
       additionalOptions: {{additionalOptions}} <br />
