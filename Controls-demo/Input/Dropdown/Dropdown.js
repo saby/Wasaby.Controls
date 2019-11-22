@@ -38,6 +38,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _groupTextItems: null,
       _groupHierarchyItems: null,
       _oneItem: null,
+      _itemsWithDescription: null,
       _selectedKeysSimple: null,
       _selectedKeysSub: null,
       _selectedKeysHierarchy: null,
@@ -61,11 +62,13 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeysMultiSelect2: null,
       _selectedKeysMultiSelect3: null,
       _selectedKeysMultiSelect4: null,
+      _selectedKeysMultiSelect5: null,
       _selectedKeysGroup: null,
       _selectedKeysGroupText: null,
       _selectedKeysGroupHierarchy: null,
       _selectedKeyOneItem: null,
       _selectedKeysOneEmpty: null,
+      _selectedKeysWithDescription: null,
 
 
       _beforeMount: function() {
@@ -252,6 +255,10 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             { id: 13, title: 'Coordination of change prices', parent: 6, group: 'coord' },
             { id: 14, title: 'Matching new dish', parent: 6, group: 'coord' }
          ];
+         this._itemsWithDescription = [
+            { id: 1, title: 'adaptive', description: 'infrequently used accordion sections are hidden' },
+            { id: 2, title: 'full', description: 'all accordion sections are visible' }
+         ];
          this._historySource = historySource.createMemory();
          this._historySourceMulti = historySource.createMemory();
          this._selectedKeysSimple = [1];
@@ -277,11 +284,13 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeysMultiSelect2 = [6, 7];
          this._selectedKeysMultiSelect3 = [];
          this._selectedKeysMultiSelect4 = [1];
+         this._selectedKeysMultiSelect5 = [1];
          this._selectedKeysGroup = [1];
          this._selectedKeysGroupText = [1];
          this._selectedKeysGroupHierarchy = [1];
          this._selectedKeyOneItem = [1];
          this._selectedKeysOneEmpty = [1];
+         this._selectedKeysWithDescription = [1];
       },
       _createMemory: function(items) {
          return new source.Memory({

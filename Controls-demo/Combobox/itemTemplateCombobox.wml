@@ -1,13 +1,9 @@
 <ws:partial template="Controls/dropdown:ItemTemplate"
             itemData="{{itemData}}"
             marker="{{false}}"
+            displayProperty="text"
             multiLine="{{true}}">
-   <ws:contentTemplate>
-      <div class="{{!itemData.emptyText ? 'ControlsDemo-ComboboxVDOM__myTempalte'}}">
-         {{itemData.getPropValue(itemData.item, 'text')}}
-         <div class="ControlsDemo-ComboboxVDOM__comment">
-            {{itemData.getPropValue(itemData.item, 'comment')}}
-         </div>
-      </div>
-   </ws:contentTemplate>
+   <ws:additionalTextTemplate>
+      <div>{{itemData.item.get('comment')}}</div>
+   </ws:additionalTextTemplate>
 </ws:partial>
