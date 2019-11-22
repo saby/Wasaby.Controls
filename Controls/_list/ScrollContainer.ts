@@ -70,7 +70,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private itemsChanged: boolean;
 
     // Таймаут для проверки необходимости дозагрузки данных
-    private checkCapabilityTimeout: number;
+    private checkTriggerVisibilityTimeout: number;
 
     // Флаг и стейт для индикации необходимости сохранения позиции скролла и его направления
     private saveScrollPosition: boolean;
@@ -146,7 +146,7 @@ export default class ScrollContainer extends Control<IOptions> {
             this.applyScrollTopCallback();
             this.applyScrollTopCallback = null;
 
-            this.checkCapabilityWithTimeout();
+            this.checkTriggerVisibilityWithTimeout();
         }
 
         if (this.afterRenderCallback) {
@@ -161,12 +161,12 @@ export default class ScrollContainer extends Control<IOptions> {
             this.virtualScroll.actualizeSavedIndexes();
             this.saveScrollPosition = false;
             this.savedScrollDirection = null;
-            this.checkCapabilityWithTimeout();
+            this.checkTriggerVisibilityWithTimeout();
         }
     }
 
     protected _beforeUnmount(): void {
-        clearTimeout(this.checkCapabilityTimeout);
+        clearTimeout(this.checkTriggerVisibilityTimeout);
     }
 
     protected itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
@@ -177,12 +177,6 @@ export default class ScrollContainer extends Control<IOptions> {
         this.itemsContainer = itemsContainer;
     }
 
-    private checkCapabilityWithTimeout(): void {
-        this.checkCapabilityTimeout = setTimeout(() => {
-            this.checkCapability();
-            clearTimeout(this.checkCapabilityTimeout);
-        });
-    }
 
     /**
      * Обновление режима тени, в зависимости от размеров виртуальных распорок
@@ -314,12 +308,20 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
+    checkTriggerVisibilityWithTimeout(): void {
+        this.checkTriggerVisibilityTimeout = setTimeout(() => {
+            this.checkTriggerVisibility();
+            clearTimeout(this.checkTriggerVisibilityTimeout);
+        });
+    }
+
+
     /**
      * Проверка на видимость триггеров
      * @remark Иногда, уже после загрузки данных триггер остается видимым, в таком случае вызвать повторную загрузку
      * данных
      */
-    checkCapability(): void {
+    private checkTriggerVisibility(): void {
         if (!this.applyScrollTopCallback) {
             if (this.triggerVisibility.up) {
                 this.updateViewWindow('up');

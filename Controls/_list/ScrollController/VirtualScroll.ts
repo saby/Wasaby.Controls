@@ -1,8 +1,9 @@
 import {IDirection} from '../interface/IVirtualScroll';
-import {DEFAULT_VIRTUAL_PAGE_SIZE} from '../ScrollContainer';
-import {Record as entityRecord} from "../../../application/Types/entity";
-import {CollectionItem} from "../../display";
-import {IObservable} from "../../../application/Types/collection";
+import {Record as entityRecord} from 'Types/entity';
+import {CollectionItem} from 'Controls/display';
+import {IObservable} from 'Types/collection';
+
+const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
 
 const DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION = 1 / 4;
 

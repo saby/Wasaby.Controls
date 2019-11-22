@@ -1870,30 +1870,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforePaint(): void {
-<<<<<<< HEAD
-=======
-        if (this._virtualScroll && !this._virtualScroll.ItemsContainer) {
-            this._setScrollItemContainer();
-        }
-        if (this._virtualScroll && this._itemsChanged) {
-            this._virtualScroll.updateItemsSizes();
-            _private.applyPlaceholdersSizes(this);
-        }
-
-        _private.updateShadowMode(this);
-
-        if (this._virtualScroll && this._applyScrollTopCallback) {
-            this._applyScrollTopCallback();
-            this._applyScrollTopCallback = null;
-            // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
-            // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
-            this._checkLoadToDirectionTimeout = setTimeout(() => {
-                _private.checkLoadToDirectionCapability(this);
-                this._checkLoadToDirectionTimeout = null;
-            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
-        }
-
->>>>>>> rc-20.1000
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
@@ -1905,20 +1881,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-<<<<<<< HEAD
 
             if (!this._options.virtualScrolling) {
-                this._checkLoadToDirectionTimeout = setTimeout(() => {
-                    this._children.scrollController.checkTriggerVisibility();
-                    clearTimeout(this._checkLoadToDirectionTimeout);
-                });
+                this._children.scrollController.checkTriggerVisibilityWithTimeout();
             }
-=======
-            this._checkLoadToDirectionTimeout = setTimeout(() => {
-                _private.checkLoadToDirectionCapability(this);
-                this._checkLoadToDirectionTimeout = null;
-            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
->>>>>>> rc-20.1000
         }
 
         if (this._restoredScroll !== null) {
@@ -1972,8 +1938,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'End': _private.scrollToEdge(this, 'down'); break;
         }
     },
-<<<<<<< HEAD
-=======
+
     _updateLoadOffset: function(viewSize, viewPortSize) {
         let minSize = viewSize !== null && viewPortSize !== null ? Math.min(viewSize, viewPortSize) : 0;
         let offset = Math.floor(minSize / 3);
