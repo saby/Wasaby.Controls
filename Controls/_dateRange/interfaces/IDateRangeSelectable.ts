@@ -19,7 +19,13 @@ export = {
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#ranges
-       * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить произвольный период, можно только выделить заданные периоды.
+       * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды. 
+       * Объект принимает свойства days, weeks, months, halfyears, quarters и years со значениями типа Array.
+       * @example 
+       * <pre class="brush:js">
+       * <Controls.dateRange:Selector ranges="{days: [1,4], weeks: [2], months: [1] }" />
+       * </pre>
+       * В данном примере можно выбрать либо 1 день, либо диапазон в 4 дня, либо 2 целые недели, либо 1 месяц
        */
       options.ranges = [];
 
