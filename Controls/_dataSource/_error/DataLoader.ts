@@ -42,6 +42,7 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
                           ctx?: unknown,
                           receivedState?: IErrorContainerReceivedState): Promise<IErrorContainerReceivedState> | void {
       if (receivedState) {
+         this._sources = sources;
          this._errorViewConfig = receivedState.errorViewConfig;
       } else {
          return DataLoader.load(sources, requestTimeout).then(({sources, errors}) => {

@@ -50,6 +50,7 @@ const _private = {
     },
     compatibleOpen(self, popupOptions): Promise<string> {
         const config = BaseOpener.getConfig({}, popupOptions);
+        delete config.id;
         return new Promise((resolve) => {
             Promise.all([
                 BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
@@ -141,6 +142,7 @@ class Notification extends BaseOpener {
     open(popupOptions) {
         const config = {...this._options, ...popupOptions};
         _private.clearPopupIds(this);
+        config.id = this._notificationId;
         return Notification.openPopup(config, this._notificationId).then((popupId) => {
             this._notificationId = popupId;
             return popupId;

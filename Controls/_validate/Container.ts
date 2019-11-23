@@ -335,6 +335,7 @@ class ValidateContainer extends Control {
     _isValidResult(): boolean {
         return this._validationResult && !(this._validationResult instanceof Promise);
     }
+
 }
 
 export default ValidateContainer;

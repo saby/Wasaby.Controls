@@ -32,6 +32,6 @@
          <ws:partial template="toggle"/>
          <ws:partial template="caption"/>
       </ws:else>
-       <div class="{{_options.validationStatus ? 'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
+       <div class="{{ _options.validationStatus!== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
    </div>
 </span>

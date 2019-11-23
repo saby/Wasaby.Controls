@@ -4,6 +4,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/resources/footer',
       'wml!Controls-demo/Popup/Opener/DialogTpl',
+      'wml!Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
       'css!Controls-demo/Popup/PopupPage',
       'css!Controls-demo/Popup/Opener/resources/StackHeader'
    ],
@@ -46,7 +47,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
                modal: true,
                maxHeight: 700,
                maxWidth: 700,
-               minWidth: 550
+               minWidth: 450
             });
          },
          openSticky: function() {
@@ -90,7 +91,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.stack.open({
                opener: this._children.button7,
                width: 800,
-               template: 'Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
+               template: 'wml!Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
             });
          }
       });

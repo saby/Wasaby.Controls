@@ -55,17 +55,18 @@ var _private = {
       self._filter = {};
    },
 
-   updateSource: function(self, data) {
+   updateSource: function(self, reverseList) {
       const source = _private.getOriginSource(self._options.source);
+      let data = self._data;
       let items = data.getRawData();
 
-      if (self._options.reverseList) {
+      if (reverseList) {
          items = _private.reverseData(items, source);
       }
 
       self._source = new PrefetchProxy({
          data: {
-            query: self._options.reverseList ?
+            query: reverseList ?
                 new DataSet({
                    rawData: items,
                    adapter: data.getAdapter(),
@@ -76,8 +77,6 @@ var _private = {
          },
          target: source
       });
-      self._navigation = self._options.navigation;
-      self._filter = _private.getCurrentFilter(self);
    },
 
    reverseData: function(data, source) {
@@ -149,7 +148,10 @@ var _private = {
       }
 
       self._searchDeferred = new Deferred();
-      _private.updateSource(self, result.data);
+      self._data = result.data;
+      _private.updateSource(self, self._options.reverseList);
+      self._navigation = self._options.navigation;
+      self._filter = _private.getCurrentFilter(self);
       self._searchDeferred.callback();
       self._forceUpdate();
    },
@@ -258,26 +260,6 @@ var _private = {
       return _private.getCorrectSource(source);
    },
 
-   reverseSourceData: function(self) {
-      let source = _private.getOriginSource(self._source);
-
-      if (source.data) {
-         /* toDO !KONGO Вынуждены использовать PrefetchProxy до перевода саггеста на search/Controller
-           https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63
-           Использовать приходится, т.к. мы не можем просто пересоздать выпадашку с новыми данными,
-           т.к. владельцем данных и является сама выпадашка, а использование Memory вызывает искусственную задержку,
-           из-за которой моргают данные */
-         self._source = new PrefetchProxy({
-            target: new Memory({
-               model: source.getModel(),
-               keyProperty: source.getIdProperty(),
-               data: _private.reverseData(source.data, source),
-               adapter: source.getAdapter()
-            })
-         });
-      }
-   },
-
    getCurrentFilter(self): object {
       return self._searchController ?
           self._searchController.getFilter() :
@@ -290,6 +272,7 @@ var List = Control.extend({
    _template: template,
    _searchDeferred: null,
    _searchMode: false,
+   _data: null,
 
    _beforeMount: function(options, context) {
       this._source = options.source;
@@ -333,8 +316,8 @@ var List = Control.extend({
          this._searchController = null;
          _private.getSearchController(this, newOptions).setFilter(currentFilter);
       }
-      if (oldReverseList !== newOptions.reverseList) {
-         _private.reverseSourceData(this);
+      if (oldReverseList !== newOptions.reverseList && this._data) {
+         _private.updateSource(this, newOptions.reverseList);
       }
       _private.checkContextValues(this, context);
    },

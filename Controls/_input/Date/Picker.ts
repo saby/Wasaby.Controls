@@ -2,7 +2,7 @@ import {detection} from 'Env/Env';
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
-import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
+import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/Date/Picker/Picker');
 import 'css!theme?Controls/input';

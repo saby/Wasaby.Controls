@@ -883,7 +883,7 @@ define([
                1, 2, 3, 4, 5, 6, 7, 8, 9, 10
            ], baseControl._virtualScroll._itemsHeights);
        });
-       
+
       it('_private::handleListScrollSync', () => {
          const self = {};
 
@@ -2260,8 +2260,15 @@ define([
             baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
+         it('control in error state, should not call update', function() {
+            baseControl.__error = true;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 4);
+            baseControl.__error = false;
+         });
          it('without listViewModel should not call update', function() {
             baseControl._listViewModel = null;
+            baseControl._updateItemActions();
             assert.equal(actionsUpdateCount, 4);
          });
       });
@@ -4257,6 +4264,34 @@ define([
                done();
             });
             return done;
+         });
+         it('hideActionsAfterDrag', async function() {
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg);
+            await instance._beforeMount(cfg);
+            instance.saveOptions(cfg);
+
+            instance._listViewModel.getDragTargetPosition = function() { return null; }
+            instance._listViewModel.getDragEntity = function() { return null; }
+            instance._listViewModel.getDragItemData = function() { return null; }
+
+            instance._dragEndHandler();
+            assert.isFalse(instance._showActions);
+
+            instance._itemMouseMove();
+            assert.isTrue(instance._showActions);
+
          });
 
       });
