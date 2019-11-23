@@ -24,7 +24,7 @@ const prepareConfig = (config) => {
     const newConfig = cClone(config);
 
     newConfig.closeOnOutsideClick = true;
-    newConfig.className = 'controls-PreviewerController_theme-' + config.theme;
+    newConfig.className = 'controls-PreviewerController';
     newConfig._vdomOnOldPage = true;
     return newConfig;
 };

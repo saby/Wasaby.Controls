@@ -6,7 +6,9 @@
    padding-right: @spacing_Infobox-between-content-border-right;
    padding-bottom: @spacing_Infobox-between-content-border-bottom;
    padding-left:   @spacing_Infobox-between-content-border-left;
+}
 
+.controls-InfoBox {
    height: 100%;
    box-sizing: border-box;
    overflow: auto;
@@ -24,15 +26,18 @@
 }
 
 .controls-InfoBox__closeButton_theme-@{themeName} {
-   position: absolute;
    top: @spacing_Infobox-between-top-close-button;
    right: @spacing_Infobox-between-right-close-button;
-   cursor: pointer;
    color: @color_Infobox-close-button;
 
    &:hover {
       color: @color_Infobox-close-button_hover;
    }
+}
+
+.controls-InfoBox__closeButton {
+   position: absolute;
+   cursor: pointer;
 }
 
 .controls-InfoBox__content {
@@ -50,6 +55,9 @@
 .controls-InfoBox_floatElement_theme-@{themeName} {
    width: @size_Infobox-float-element;
    height: @size_Infobox-float-element;
+}
+
+.controls-InfoBox_floatElement {
    float: right;
 }
 

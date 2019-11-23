@@ -1,16 +1,16 @@
-<div class="controls-InfoBoxTemplate_theme-{{_options.theme}} controls-InfoBoxTemplate__arrow-side-position-{{_arrowSide}} controls-InfoBoxTemplate__arrow-side-{{_arrowPosition}}" >
-   <div class="controls-InfoBoxTemplate__content_theme-{{_options.theme}}
+<div class="controls-InfoBoxTemplate controls-InfoBoxTemplate_theme-{{_options.theme}} controls-InfoBoxTemplate__arrow-side-position-{{_arrowSide}} controls-InfoBoxTemplate__arrow-side-{{_arrowPosition}}" >
+   <div class="ontrols-InfoBoxTemplate__content controls-InfoBoxTemplate__content_theme-{{_options.theme}}
    {{_options.styleType==='outline' ? 'controls-InfoBoxTemplate_style_outline_' + _options.style + '_theme-' + _options.theme : 
    'controls-InfoBoxTemplate_style_marker_theme-' + _options.theme + ' controls-InfoBoxTemplate_style_marker-' + _arrowSide + '_' + _options.style + '_theme-' + _options.theme }}">
       <ws:if data="{{_options.content}}">
          <ws:partial template="{{_options.content}}" />
       </ws:if>
       <ws:if data="{{_options.closeButtonVisibility}}">
-         <Controls._popupTemplate.CloseButton attr:class="controls-InfoBoxTemplate__closeButton_theme-@{themeName}" on:click="_close()" viewMode="link" attr:ws-no-focus="true" />
+         <Controls._popupTemplate.CloseButton attr:class="controls-InfoBoxTemplate__closeButton controls-InfoBoxTemplate__closeButton_theme-{{_options.theme}}" on:click="_close()" viewMode="link" attr:ws-no-focus="true" />
       </ws:if>
    </div>
-   <div class="controls-InfoBoxTemplate__arrow-wrapper-{{_arrowSide}}_theme-{{_options.theme}}">
-      <div class="controls-InfoBoxTemplate__arrow_theme-{{_options.theme}}
+   <div class="controls-InfoBoxTemplate__arrow-wrapper controls-InfoBoxTemplate__arrow-wrapper-{{_arrowSide}}_theme-{{_options.theme}}">
+      <div class="controls-InfoBoxTemplate__arrow controls-InfoBoxTemplate__arrow_theme-{{_options.theme}}
        controls-InfoBoxTemplate__arrow-{{_options.style}}_theme-{{_options.theme}}
         controls-InfoBoxTemplate__arrow-{{_arrowSide}}_theme-{{_options.theme}}
          controls-InfoBoxTemplate__arrow-position-{{_arrowPosition}}_theme-{{_options.theme}}"></div>
