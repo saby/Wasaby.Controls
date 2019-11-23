@@ -44,6 +44,9 @@ interface IPosition {
                    _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction);
             } else {
                position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
+               if (_private.isIOS12()) {
+                  position[isHorizontal ? 'left' : 'top'] += targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+               }
             }
          }
          return position;
@@ -126,6 +129,9 @@ interface IPosition {
 
        isIOS13() {
          return this._isMobileIOS() && Env.detection.IOSVersion > 12;
+      },
+      isIOS12() {
+         return this._isMobileIOS() && Env.detection.IOSVersion === 12;
       },
 
        _isMobileIOS() {
