@@ -4,7 +4,7 @@
 
 .controls-SortButton__content {
 	.baseline-fix();
-	display: block;
+	display: flex;
 	align-items: baseline;
 }
 
@@ -17,7 +17,7 @@
 
 .controls-SortButton__icon_theme-@{themeName} {
 	color: @color_SortButton-icon;
-	align-self: center;
+	align-self: @align-self_SortButton-icon;
 	display: inline-block;
 	background-repeat: no-repeat;
 	background-size: @size_SortButton-icon @size_SortButton-icon;
