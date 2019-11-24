@@ -17,6 +17,10 @@ var _private = {
       if (context && context.suggestOptionsField) {
          self._suggestListOptions = context.suggestOptionsField.options;
 
+         if (!self._layerName && self._suggestListOptions.layerName) {
+            self._layerName = self._suggestListOptions.layerName.split('_').pop();
+         }
+
          if (self._suggestListOptions.dialogMode) {
             if (self._suggestListOptions.navigation) {
                var navigation = clone(self._suggestListOptions.navigation);
@@ -98,6 +102,7 @@ var List = Control.extend({
    _notifyHandler: tmplNotify,
    _markedKey: null,
    _items: null,
+   _layerName: null,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);

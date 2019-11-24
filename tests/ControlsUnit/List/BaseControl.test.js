@@ -4265,6 +4265,34 @@ define([
             });
             return done;
          });
+         it('hideActionsAfterDrag', async function() {
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg);
+            await instance._beforeMount(cfg);
+            instance.saveOptions(cfg);
+
+            instance._listViewModel.getDragTargetPosition = function() { return null; }
+            instance._listViewModel.getDragEntity = function() { return null; }
+            instance._listViewModel.getDragItemData = function() { return null; }
+
+            instance._dragEndHandler();
+            assert.isFalse(instance._showActions);
+
+            instance._itemMouseMove();
+            assert.isTrue(instance._showActions);
+
+         });
 
       });
 

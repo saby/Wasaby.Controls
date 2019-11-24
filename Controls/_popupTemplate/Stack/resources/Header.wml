@@ -1,4 +1,6 @@
-<div class="controls-StackTemplate__top-area controls-StackTemplate__top-area_theme_{{_options.theme}}">
+<div class="controls-StackTemplate__top-area controls-StackTemplate__top-area_theme_{{_options.theme}}
+            controls-StackTemplate__top-area-background_theme_{{_options.theme}}
+            {{_options.headerBorderVisible ? 'controls-StackTemplate__top-area-border_theme_' + _options.theme}} ">
    <div class="controls-StackTemplate__top-area-content">
       <ws:if data="{{_options.headingCaption}}">
          <div class="controls-StackTemplate__caption controls-StackTemplate__caption_theme_{{_options.theme}}">

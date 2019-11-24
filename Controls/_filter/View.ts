@@ -33,7 +33,10 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
- * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/
+ * 
+ * @see Controls/filterPopup:SimplePanel
+ * @see Controls/filterPopup:DetailPanel
+ * @see Controls/filter:FastContainer
  */
 
 /*
@@ -48,7 +51,9 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @control
  * @public
  * @author Золотова Э.Е.
- * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/
+ * @see Controls/filterPopup:SimplePanel
+ * @see Controls/filterPopup:DetailPanel
+ * @see Controls/filter:FastContainer
  */
 
 var _private = {
@@ -701,16 +706,14 @@ var Filter = Control.extend({
         return isReseted;
     },
 
-    _needShowFastFilter(source: object[], panelTemplateName?: string): boolean {
+    _needShowFastFilter(source: object[]): boolean {
         let needShowFastFilter = false;
 
-        if (panelTemplateName) {
-            factory(source).each((item) => {
-                if (!needShowFastFilter && _private.isFrequentItem(item)) {
-                    needShowFastFilter = true;
-                }
-            });
-        }
+        factory(source).each((item) => {
+            if (!needShowFastFilter && _private.isFrequentItem(item)) {
+                needShowFastFilter = true;
+            }
+        });
 
         return needShowFastFilter;
     },
@@ -751,6 +754,7 @@ var Filter = Control.extend({
 
 Filter.getDefaultOptions = function() {
     return {
+        panelTemplateName: 'Controls/filterPopup:SimplePanel',
         alignment: 'right',
         itemTemplate: defaultItemTemplate
     };

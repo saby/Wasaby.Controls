@@ -150,7 +150,7 @@
                 <ws:partial template="loadingIndicator"/>
             </ws:if>
 
-            <ws:partial template="fullView" name="listView"/>
+            <ws:partial template="fullView" name="listView" attr:class="{{_showActions ? 'controls-BaseControl_showActions'}}"/>
 
             <Controls._list.EditInPlace
                 ws:content="listView"
