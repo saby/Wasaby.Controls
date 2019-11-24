@@ -325,7 +325,17 @@ var _private = {
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
-            _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
+            // TODO Update after MarkerManager is fully implemented
+            let nextKey;
+            if (self._options.useNewModel) {
+                const nextItem = model.getNext(model.getMarkedItem());
+                const contents = nextItem && nextItem.getContents();
+                nextKey = contents && contents.getId();
+            } else {
+                nextKey = model.getNextItemKey(model.getMarkedKey());
+            }
+
+            _private.moveMarker(self, nextKey);
         }
     },
     moveMarkerToPrevious: function (self, event) {
@@ -1328,7 +1338,7 @@ var _private = {
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IFilter
+ @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IBaseControl
  * @mixes Controls/interface/IEditableList
@@ -1477,11 +1487,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     } else {
                         self._items = self._listViewModel.getItems();
                     }
-                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items);
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
-                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
-                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, newOptions.navigation.sourceConfig.pageSize, self._currentPage);
+                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
+                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
@@ -2035,7 +2045,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._updateItemActions();
+        this._shouldUpdateItemActions = true;
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
@@ -2103,6 +2113,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
             });
         }
+        this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
 
     _onLoadMoreClick: function() {
