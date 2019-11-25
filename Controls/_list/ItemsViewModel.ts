@@ -383,8 +383,17 @@ var ItemsViewModel = BaseViewModel.extend({
         return itemKey;
     },
     _getDisplayItemCacheKey: function(dispItem) {
-        const key = ItemsUtil.getDisplayItemKey(dispItem, this._options.keyProperty);
-        return this._convertItemKeyToCacheKey(key);
+        let key = ItemsUtil.getDisplayItemKey(dispItem, this._options.keyProperty);
+        key = this._convertItemKeyToCacheKey(key);
+
+        const contents = dispItem.getContents();
+        if (Array.isArray(contents)) {
+            key += '_breadcrumbs';
+        } else if (typeof contents === 'string') {
+            key += '_group';
+        }
+
+        return key;
     },
     isCachedItemData: function(itemKey) {
         return (
