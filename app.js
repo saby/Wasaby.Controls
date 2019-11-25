@@ -12,7 +12,9 @@ const pathToResources = hasPathToResources ? process.argv[2].replace('--applicat
 const requirejs = require(path.join('saby-units', 'lib', 'requirejs', 'r.js'));
 global.requirejs = requirejs;
 
-// Configuring requirejs
+// Configuring requirejs]
+global.wsConfig = {};
+wsConfig.versioning = true;
 const createConfig = require(path.join(root, pathToResources, 'WS.Core', 'ext', 'requirejs', 'config.js'));
 const config = createConfig(
    path.join(root, pathToResources),
@@ -51,7 +53,6 @@ function initEnv(req) {
    var Env = require('Env/Env');
    Env.constants.resourceRoot = '/';
    require(path.join(root, pathToResources, 'contents'));
-   console.log(JSON.stringify(contents));
    Env.constants.modules = contents.modules;
 }
 
