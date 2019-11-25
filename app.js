@@ -50,7 +50,8 @@ function copyRecursiveSync(src, dest) {
 function initEnv(req) {
    var Env = require('Env/Env');
    Env.constants.resourceRoot = '/';
-   require('contents');
+   require(path.join(root, pathToResources, 'contents'));
+   console.log(JSON.stringify(contents));
    Env.constants.modules = contents.modules;
 }
 
