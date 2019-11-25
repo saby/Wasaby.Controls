@@ -650,6 +650,9 @@ var _private = {
     },
 
     checkLoadToDirectionCapability: function(self, filter) {
+        if (self._destroyed) {
+            return;
+        }
         if (self._needScrollCalculation) {
             // TODO Когда список становится пустым (например после поиска или смены фильтра),
             // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
