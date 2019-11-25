@@ -187,7 +187,6 @@ define([
                    rawData: data,
                    keyProperty: 'id'
                 }),
-                markedKey: 1,
                 keyProperty: 'id',
                 displayProperty: 'title',
                 markerVisibility: 'onactivated',
@@ -196,6 +195,7 @@ define([
 
          let modelVersion = 0;
 
+         iv.setMarkedKey(1);
          iv._nextModelVersion = () => {
             modelVersion++;
          };
@@ -308,15 +308,14 @@ define([
                 items: new collection.RecordSet({
                    rawData: [],
                    keyProperty: 'id'
-                }),
-                markedKey: null
+                })
              }),
             modelWithoutItems = new lists.ListViewModel({
                markerVisibility: 'visible',
                keyProperty: 'id',
-               markedKey: 1
             });
-
+         model.setMarkedKey(null);
+         modelWithoutItems.setMarkedKey(1);
          // Should not set marker
          model._options.markerVisibility = 'hidden';
          model.setItems(items);
@@ -342,9 +341,9 @@ define([
                markedKeyChangedCalled = true;
             };
          model.subscribe('onMarkedKeyChanged', cb);
-         assert.equal(modelWithoutItems._markedKey, null);
+         assert.equal(modelWithoutItems.getMarkedKey(), null);
          modelWithoutItems.setItems(items);
-         assert.equal(modelWithoutItems._markedKey, 1);
+         assert.equal(modelWithoutItems.getMarkedKey(), 1);
          model.unsubscribe('onMarkedKeyChanged', cb);
          assert.isFalse(markedKeyChangedCalled);
       });
@@ -377,68 +376,6 @@ define([
 
       });
 
-      it('set marker on ctor', function() {
-
-         var cfg = {
-                keyProperty: 'id',
-                items: new collection.RecordSet({
-                   rawData: [
-                      {id: 1, title: 'item 1'},
-                      {id: 2, title: 'item 2'},
-                      {id: 3, title: 'item 3'}
-                   ],
-                   keyProperty: 'id'
-                }),
-                markedKey: null
-             },
-             model;
-
-         // Should not set marker
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'onactivated';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'hidden';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-         cfg.markedKey = 1;
-         cfg.markerVisibility = 'hidden';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-
-
-         // Should set marker
-         cfg.markedKey = 2;
-         cfg.markerVisibility = 'onactivated';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(2, model._markedKey);
-
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'always';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(1, model._markedKey);
-
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'visible';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(1, model._markedKey);
-
-         cfg.markedKey = 2;
-         cfg.markerVisibility = 'always';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(2, model._markedKey);
-
-         cfg.markedKey = 2;
-         cfg.markerVisibility = 'visible';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(2, model._markedKey);
-
-
-      });
       it('setMarkerOnValidItem', function() {
          var cfg = {
             keyProperty: 'id',
@@ -512,8 +449,8 @@ define([
              */
 
 
-            cfg.markedKey = 3; // item 3, (item.index = 2)
             model = new lists.ListViewModel(cfg);
+            model.setMarkedKey(3);// item 3, (item.index = 2)
             // remove item 3
             model.getItems().removeAt(2);
             assert.equal(5, model.getMarkedKey()); // expect marker on item 1
@@ -529,8 +466,8 @@ define([
                item 6
              */
 
-            cfg.markedKey = 2;
             model = new lists.ListViewModel(cfg);
+            model.setMarkedKey(2);
             // remove item 2 (item placed, before group expander)
             model.getItems().removeAt(1);
             assert.equal(4, model.getMarkedKey()); // expected marker on item 5
@@ -545,8 +482,8 @@ define([
               item 6
          */
 
-            cfg.markedKey = 1;
             model = new lists.ListViewModel(cfg);
+            model.setMarkedKey(1);
             model.getItems().removeAt(3); // remove item 6 (without markedKey)
             assert.equal(1, model.getMarkedKey());
 
@@ -559,10 +496,10 @@ define([
 
                ],
                idProperty: 'id'
-            }),
-            markedKey: 1
+            })
          };
          model = new lists.ListViewModel(cfg);
+         model.setMarkedKey(1);
          // remove last item
          model.getItems().removeAt(0);
          assert.equal(null, model.getMarkedKey()); //marker must be null
@@ -570,23 +507,29 @@ define([
 
       it('Selection', function() {
          var cfg = {
-            items: data,
+            items: new collection.RecordSet({
+               rawData: data,
+               keyProperty: 'id'
+            }),
             keyProperty: 'id',
             displayProperty: 'title',
             markerVisibility: 'visible',
             markedKey: 2
          };
 
+
          var iv = new lists.ListViewModel(cfg);
+         iv.subscribe('onMarkedKeyChanged', function(e, key) {
+            cfg.markedKey = key;
+         });
          var marItem = iv.getMarkedItem();
          assert.equal(iv._display.at(1), marItem, 'Incorrect selectedItem');
-         assert.equal(iv._markedKey, 2, 'Incorrect _markedKey value');
+         assert.equal(iv.getMarkedKey(), 2, 'Incorrect _markedKey value');
 
 
          iv.setMarkedKey(3);
          marItem = iv.getMarkedItem();
-         assert.equal(2, iv._options.markedKey, 'Incorrect markedKey option value');
-         assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
+         assert.equal(iv.getMarkedKey(), 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });
@@ -602,11 +545,12 @@ define([
             markedKeyChangedFired = false;
 
          listModel.subscribe('onMarkedKeyChanged', function(e, key) {
+            cfg.markedKey = key;
             assert.equal(key, 1);
             markedKeyChangedFired = true;
          });
          listModel.setItems(new collection.RecordSet({rawData: data, keyProperty: 'id'}));
-         assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
+         assert.equal(listModel.getMarkedKey(), 1, 'Incorrect _markedKey value after setItems.');
          assert.equal(listModel.getMarkedItem(), listModel._display.at(0), 'Incorrect _markedItem after setItems.');
          assert.isTrue(markedKeyChangedFired, 'onMarkedKeyChanged event should fire after setItems');
       });
