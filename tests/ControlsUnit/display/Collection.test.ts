@@ -4066,6 +4066,33 @@ describe('Controls/_display/Collection', () => {
 
             assert.deepEqual(given, expected);
         });
+
+        describe('should increase version if certain properties of source collection item change', () => {
+            const propertiesOfInterest = [
+                'editingContents',
+                'animated',
+                'canShowActions'
+            ];
+            propertiesOfInterest.forEach((property) => {
+                it(property, () => {
+                    const items = [{
+                        id: 1,
+                        editingContents: null,
+                        animated: null,
+                        canShowActions: null
+                    }];
+                    const list = new RecordSet({
+                        rawData: items
+                    });
+                    const display = new CollectionDisplay({
+                        collection: list
+                    });
+                    const prevVersion = display.getVersion();
+                    list.at(0).set(property, true);
+                    assert.isAbove(display.getVersion(), prevVersion);
+                });
+            });
+        });
     });
 
     describe('::getDefaultDisplay()', () => {
@@ -4182,5 +4209,162 @@ describe('Controls/_display/Collection', () => {
                 cloneDecorator = cloneDecorator.source;
             }
         });
+    });
+
+    it('.getDisplayProperty()', () => {
+        const displayProperty = 'displayProperty';
+        const collection = new CollectionDisplay({
+            collection: [],
+            displayProperty
+        });
+        assert.strictEqual(collection.getDisplayProperty(), displayProperty);
+    });
+
+    it('.setMultiSelectVisibility()', () => {
+        const multiSelectVisibility = 'multiSelectVisibility';
+        const collection = new CollectionDisplay({
+            collection: [],
+            multiSelectVisibility
+        });
+        assert.strictEqual(
+            collection.getMultiSelectVisibility(),
+            multiSelectVisibility,
+            `multiSelectVisibility should get initialized from options`
+        );
+
+        const prevVersion = collection.getVersion();
+        collection.setMultiSelectVisibility('anotherVisibility');
+        assert.strictEqual(
+            collection.getMultiSelectVisibility(),
+            'anotherVisibility',
+            '.setMultiSelectVisibility() should change multiSelectVisibility'
+        );
+        assert.isAbove(
+            collection.getVersion(),
+            prevVersion,
+            '.setMultiSelectVisibility() should increase collection version'
+        )
+    });
+
+    it('.getRowSpacing()', () => {
+        const rowSpacing = 'rowSpacing';
+        const collection = new CollectionDisplay({
+            collection: [],
+            rowSpacing
+        });
+        assert.strictEqual(collection.getRowSpacing(), rowSpacing);
+    });
+
+    it('.getLeftSpacing()', () => {
+        const leftSpacing = 'leftSpacing';
+        const collection = new CollectionDisplay({
+            collection: [],
+            leftSpacing
+        });
+        assert.strictEqual(collection.getLeftSpacing(), leftSpacing);
+    });
+
+    it('.getRightSpacing()', () => {
+        const rightSpacing = 'rightSpacing';
+        const collection = new CollectionDisplay({
+            collection: [],
+            rightSpacing
+        });
+        assert.strictEqual(collection.getRightSpacing(), rightSpacing);
+    });
+
+    it('.setEditingConfig()', () => {
+        const editingConfig = 'editingConfig';
+        const collection = new CollectionDisplay({
+            collection: [],
+            editingConfig
+        });
+
+        const prevVersion = collection.getVersion();
+        collection.setEditingConfig('anotherEditingConfig');
+        assert.isAbove(
+            collection.getVersion(),
+            prevVersion,
+            '.setEditingConfig() should increase collection version'
+        )
+    });
+
+    it('.getSearchValue()', () => {
+        const searchValue = 'searchValue';
+        const collection = new CollectionDisplay({
+            collection: [],
+            searchValue
+        });
+        assert.strictEqual(collection.getSearchValue(), searchValue);
+    });
+
+    describe('.setViewIndices()', () => {
+        it('changes the start and stop index and increases the version', () => {
+            const collection = new CollectionDisplay({
+                collection: [0, 1, 2, 3, 4, 5]
+            });
+            const prevVersion = collection.getVersion();
+
+            collection.setViewIndices(2, 3);
+            assert.strictEqual(collection.getStartIndex(), 2);
+            assert.strictEqual(collection.getStopIndex(), 3);
+            assert.isAbove(
+                collection.getVersion(),
+                prevVersion,
+                '.setViewIndices() should increase collection version'
+            );
+        });
+
+        it('respects items count', () => {
+            const collection = new CollectionDisplay({
+                collection: [0, 1, 2, 3, 4, 5]
+            });
+
+            collection.setViewIndices(-10, 100);
+            assert.strictEqual(collection.getStartIndex(), 0);
+            assert.strictEqual(collection.getStopIndex(), 6);
+        });
+    });
+
+    it('.getItemBySourceId()', () => {
+        const list = new RecordSet({
+            rawData: items,
+            keyProperty: 'id'
+        });
+        const collection = new CollectionDisplay({
+            collection: list,
+            keyProperty: 'id'
+        });
+        const item = collection.getItemBySourceId(1);
+        assert.strictEqual(item.getContents().getId(), 1);
+    });
+
+    it('.getIndexByKey()', () => {
+        const list = new RecordSet({
+            rawData: items,
+            keyProperty: 'id'
+        });
+        const collection = new CollectionDisplay({
+            collection: list,
+            keyProperty: 'id'
+        });
+        assert.strictEqual(
+            collection.getIndexByKey(5),
+            items.findIndex((item) => item.id === 5)
+        );
+    });
+
+    it('.getFirstItem()', () => {
+        assert.strictEqual(
+            display.getFirstItem(),
+            items[0]
+        );
+    });
+
+    it('.getLastItem()', () => {
+        assert.strictEqual(
+            display.getLastItem(),
+            items[items.length - 1]
+        );
     });
 });
