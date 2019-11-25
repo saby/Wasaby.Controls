@@ -2234,9 +2234,10 @@ define([
                   actionsUpdateCount++;
                }
             }
-         }
-         it('afterMount', function() {
-            baseControl._afterMount(cfg);
+         };
+         baseControl._afterMount(cfg);
+         it('_initItemActions', function() {
+            baseControl._initItemActions();
             assert.equal(actionsUpdateCount, 1);
          });
          it('itemsChanged', async function() {
