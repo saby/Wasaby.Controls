@@ -3,31 +3,56 @@
  * @class Controls/suggestPopup:FooterTemplate
  * @author Герасимов А.М.
  * @see Controls/suggestPopup
+ * @see Controls/interface/ISuggest#footerTemplate
  * @example
  * Пример:
  * <pre>
- * <ws:partial template="Controls/suggestPopup:FooterTemplate">
- *    <ws:showSelectorButtonTemplate>
- *       <ws:partial template="{{_options.showSelectorButtonTemplate}}" attr:class="myClass"/>
- *    </ws:showSelectorButtonTemplate>
- * </ws:partial>
+ * <Controls.suggest:Input>
+ *    <ws:footerTemplate>
+ *       <ws:templateName>
+ *          <ws:partial template="Controls/suggestPopup:FooterTemplate">
+ *             <ws:showSelectorButtonTemplate>
+ *                <span on:click="_showAllClick()">
+ *                   <span>Моя кнопка</span>
+ *                </span>
+ *             </ws:showSelectorButtonTemplate>
+ *          </ws:partial>
+ *       </ws:templateName>
+ *    </ws:footerTemplate>
+ * </Controls.suggest:Input>
  * </pre>
  * @remark
- * Дополнительно о шаблоне:
- * 
- * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/autocompletion/index/ Руководство разработчика}
+ * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/autocompletion/index/ здесь}.
  */
 
 /**
  * @name Controls/suggestPopup:FooterTemplate#showMoreButtonTemplate
- * @cfg {function|String} Шаблон кнопки "Показать всё".
- * @default true
+ * @cfg {Function|String} Шаблон кнопки "Ещё".
+ * @example 
+ * <pre>
+ * <ws:partial template="Controls/suggestPopup:FooterTemplate">
+ *    <ws:showMoreButtonTemplate>
+ *       <span on:click="_showAllClick()">
+ *          <span>Моя кнопка</span>
+ *       </span>
+ *    </ws:showMoreButtonTemplate>
+ * </ws:partial>
+ * </pre>
  */
 
 /**
  * @name Controls/suggestPopup:FooterTemplate#showSelectorButtonTemplate
- * @cfg {function|String} Шаблон кнопки "Ещё".
- * @default true
+ * @cfg {Function|String} Шаблон кнопки "Показать всё".
+ * @example 
+ * <pre>
+ * <ws:partial template="Controls/suggestPopup:FooterTemplate">
+ *    <ws:showSelectorButtonTemplate>
+ *       <span on:click="_showAllClick()">
+ *          <span>Моя кнопка</span>
+ *       </span>
+ *    </ws:showSelectorButtonTemplate>
+ * </ws:partial>
+ * </pre>
  */
 export default interface IFooterTemplateOptions {
     showMoreButtonTemplate?: string;
