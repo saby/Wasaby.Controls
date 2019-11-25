@@ -4,7 +4,8 @@
 >
    <div
       class="controls-EditableArea
-      {{_isEditing ? 'controls-EditableArea_isEditing_style_' + (_options.style)}}"
+      {{_isEditing ? 'controls-EditableArea_isEditing_style_' + (_options.style)}}
+      controls-EditableArea_{{_options.readOnly ? 'readonly' : 'clickable'}}"
    >
       <ws:partial
          template="{{_options.content}}"

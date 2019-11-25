@@ -1654,8 +1654,16 @@ define([
             ctrl.__onPagingArrowClick({}, 'Next');
             assert.equal('pageDown', result[0], 'Wrong state of scroll after clicking to Next');
 
+            assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Next until _afterUpdate');
+            ctrl._afterUpdate(cfg);
+            assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in _afterUpdate');
+
             ctrl.__onPagingArrowClick({}, 'Prev');
             assert.equal('pageUp', result[0], 'Wrong state of scroll after clicking to Prev');
+
+            assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Prev until _afterUpdate');
+            ctrl._afterUpdate(cfg);
+            assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in _afterUpdate');
 
             done();
          }, 100);
