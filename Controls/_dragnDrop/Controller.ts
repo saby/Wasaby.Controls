@@ -49,6 +49,11 @@ import 'Controls/_dragnDrop/DraggingTemplate';
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
             this._draggingTemplateOptions = draggingTemplateOptions;
             this._draggingTemplate = draggingTemplate;
+         },
+
+         _beforeUnmount: function() {
+             this._draggingTemplateOptions = null;
+             this._draggingTemplate = null;
          }
       });
 
