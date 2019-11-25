@@ -1,32 +1,11 @@
 /**
  * Шаблон, который по умолчанию используется для отображения выбранных значений в контроле {@link Controls/lookup:Input}.
  * 
- * @interface Controls/lookup:ItemTemplate
+ * @class Controls/lookup:ItemTemplate
  * @author Капустин И.А.
- * 
+ * @see Controls/lookup
+ * @see Controls/lookup:Input
  * @remark
- * Шаблон поддерживает следующие параметры:
- * <ul>
- *    <li>contentTemplate {Function|String} — шаблон для отображения выбранной записи.</li>
- *    <li>crossTemplate {Function|String} — шаблон крестика удаления элемента.</li>
- *    <li>displayProperty {String} —  название поля, значение которого отображается при выборе элемента.</li>
- *    <li>clickable {Boolean} — позволяет установить кликабельность выбранного значения (допустим только в случае использования contentTemplate по умолчанию).</li>
- *    <li>size {Enum} — размер записей (допустим только в случае использования contentTemplate по умолчанию):</li>
- *    <ul>
- *       <li>m</li>
- *       <li>l</li>
- *       <li>xl</li>
- *       <li>2xl</li>
- *       <li>3xl</li>
- *    </ul>
- *    <li>style {Enum} — стиль записей (допустим только в случае использования contentTemplate по умолчанию).</li>
- *    <ul>
- *       <li>default</li>
- *       <li>bold</li>
- *       <li>accent</li>
- *       <li>primary</li>
- *    </ul>
- * </ul>
  *
  * Если вы переопределите contentTemplate/crossTemplate, вы не будете уведомлены о событиях itemClick/crossClick.
  * Для правильной работы необходимо пометить свой контент классами:
@@ -51,3 +30,100 @@
  *    </Controls.lookup:Selector>
  * </pre>
  */
+
+/**
+ * @name Controls/lookup:ItemTemplate#contentTemplate
+ * @cfg {String} Шаблон для отображения выбранной записи.
+ * @example
+ * <pre>
+ * <Controls.lookup:Selector
+ *    contentTemplate="Controls/Template:MyContentTemplate">
+ * </Controls.lookup:Selector>
+ * </pre>
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#crossTemplate
+ * @cfg {String} Шаблон крестика удаления элемента.
+ * @example
+ * <pre>
+ * <Controls.lookup:Selector
+ *    crossTemplate="Controls/Template:MyCrossTemplate">
+ * </Controls.lookup:Selector>
+ * </pre>
+ */
+ 
+/**
+ * @name Controls/lookup:ItemTemplate#displayProperty
+ * @cfg {String} Название поля, значение которого отображается при выборе элемента.
+ * @example
+ * <pre>
+ *    <Controls.lookup:Selector>
+ *       <ws:itemTemplate>
+ *          <ws:partial template="Controls.lookup:ItemTemplate"
+ *                      displayProperty="title"
+ *                      ... />
+ *       </ws:itemTemplate>
+ *    </Controls.lookup:Selector>
+ * </pre>
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#clickable
+ * @cfg {Boolean} Позволяет установить кликабельность выбранного значения (допустим только в случае использования contentTemplate по умолчанию).
+ * @example
+ * <pre>
+ *    <Controls.lookup:Selector>
+ *       <ws:itemTemplate>
+ *          <ws:partial template="Controls.lookup:ItemTemplate"
+ *                      clickable="{{true}}"
+ *                      ... />
+ *       </ws:itemTemplate>
+ *    </Controls.lookup:Selector>
+ * </pre>
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#size
+ * @cfg {String} Размер записей (допустим только в случае использования contentTemplate по умолчанию).
+ * @remark 
+ * Доступные значения: m, l, xl, 2xl, 3xl.
+ * @example
+ * <pre>
+ *    <Controls.lookup:Selector>
+ *       <ws:itemTemplate>
+ *          <ws:partial template="Controls.lookup:ItemTemplate"
+ *                      size="xl"
+ *                      ... />
+ *       </ws:itemTemplate>
+ *    </Controls.lookup:Selector>
+ * </pre>
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#style
+ * @cfg {String} Стиль записей (допустим только в случае использования contentTemplate по умолчанию).
+ * @remark 
+ * Доступные значения: default, bold, accent, primary.
+ * @example
+ * <pre>
+ *    <Controls.lookup:Selector>
+ *       <ws:itemTemplate>
+ *          <ws:partial template="Controls.lookup:ItemTemplate"
+ *                      style="primary"
+ *                      ... />
+ *       </ws:itemTemplate>
+ *    </Controls.lookup:Selector>
+ * </pre>
+ */
+
+export default interface IItemTemplateOptions {
+    crossTemplate?: string;
+    displayProperty?: string;
+    clickable?: boolean;
+    size?: string;
+    style?: string;
+    contentTemplate?: string;
+ }
+
+ 
