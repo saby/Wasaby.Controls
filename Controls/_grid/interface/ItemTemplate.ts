@@ -9,28 +9,24 @@
  * <pre>
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial
- *          template="Controls/grid:ItemTemplate"
+ *       <ws:partial template="Controls/grid:ItemTemplate"
  *          marker="{{false}}"
  *          highlightOnHover="{{false}}"
- *          clickable="{{false}}"
- *          colspan="{{true}}">
- *          <ws:colspanTemplate>
- *             <span>Это текст для объединенных ячеек.</span>
- *          </ws:colspanTemplate>
+ *          clickable="{{false}}">
+ *          <ws:contentTemplate>
+ *             Это мой шаблон отображения элемента.
+ *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
  * </Controls.grid:View>
  * </pre>
  * @remark
- * Дополнительно о шаблоне:
- * 
- * * {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ Руководство разработчика}
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
  */
 
 /**
  * @name Controls/grid:ItemTemplate#marker
- * @cfg {Boolean} Когда параметр установлен в значение true, активный элемент таблицы будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
+ * @cfg {Boolean} Когда параметр установлен в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
  * @default true
  */
 /**
@@ -44,19 +40,34 @@
  * @default true
  */
 /**
- * @name Controls/grid:ItemTemplate#colspan
- * @cfg {Boolean} Когда параметр установлен в значение true, ячейки будут объединены по горизонтали.
- * @default false
- */
-/**
- * @name Controls/grid:ItemTemplate#colspanTemplate
- * @cfg {String|Function} Шаблон отображения объединенных ячеек.
- */
-/**
  * @name Controls/grid:ItemTemplate#contentTemplate
- * @cfg {String|Function} Шаблон содержимого ячейки.
+ * @cfg {String|Function} Шаблон, описывающий содержимое элемента.
+ * @default undefined
  * @remark
- * В области видимости шаблона доступен объект itemData. Из него можно получить доступ к свойству item — это объект, который содержит данные обрабатываемого элемента. Т.е. можно получить доступ к полям и их значениям.
+ * В области видимости шаблона доступен объект **itemData**.
+ * Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
+ */
+/**
+ * @name Controls/grid:ItemTemplate#itemActionsTemplate
+ * @cfg {String|Function} Шаблон позволяет отобразить панель {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опций записи}, когда задан пользовательский шаблон (см. contentTemplate) в Controls/grid:ItemTemplate.
+ * Шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
+ * @default wml!Controls/_list/ItemActions/resources/ItemActionsTemplate
+ * @example
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/grid:ItemTemplate"
+ *          marker="{{false}}"
+ *          highlightOnHover="{{false}}"
+ *          clickable="{{false}}">
+ *          <ws:contentTemplate>
+ *             Это мой шаблон отображения элемента.
+ *             <ws:partial template="{{itemTemplate.itemActionsTemplate}}" />
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.grid:View>
+ * </pre>
  */
 export default interface IItemTemplateOptions {
    marker?: boolean;

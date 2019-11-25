@@ -25,9 +25,9 @@ export default {
    getGlobalPopupOpeners: function() {
       return this._globalPopupOpeners;
    },
-   scrollHandler: function() {
+   scrollHandler: function(container) {
       if (this._managerWrapper) {
-         this._managerWrapper._scrollHandler();
+         this._managerWrapper._scrollHandler(container);
       }
    },
    registerListener: function(event, registerType, component, callback) {

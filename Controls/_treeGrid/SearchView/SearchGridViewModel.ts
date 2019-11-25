@@ -1,6 +1,6 @@
 import TreeGridViewModel = require('Controls/_treeGrid/TreeGridView/TreeGridViewModel');
 import SearchViewModel = require('Controls/_treeGrid/SearchView/SearchViewModel');
-import {Record} from "../../../application/Types/entity";
+import {Record} from 'Types/entity';
 
 var SearchGridViewModel = TreeGridViewModel.extend({
     _createModel: function(cfg) {

@@ -650,6 +650,9 @@ var _private = {
     },
 
     checkLoadToDirectionCapability: function(self, filter) {
+        if (self._destroyed) {
+            return;
+        }
         if (self._needScrollCalculation) {
             // TODO Когда список становится пустым (например после поиска или смены фильтра),
             // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
@@ -797,8 +800,11 @@ var _private = {
         }
     },
     scrollPage: function(self, direction) {
-        _private.setMarkerAfterScroll(self);
-        self._notify('doScroll', ['page' + direction], { bubbling: true });
+        if (!self._scrollPageLocked) {
+            self._scrollPageLocked = true;
+            _private.setMarkerAfterScroll(self);
+            self._notify('doScroll', ['page' + direction], { bubbling: true });
+        }
     },
     startScrollEmitter: function(self) {
         if (self.__error) {
@@ -1736,6 +1742,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _checkLoadToDirectionTimeout: null,
 
     _resetScrollAfterReload: false,
+    _scrollPageLocked: false,
 
     _itemReloaded: false,
 
@@ -2218,6 +2225,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
         }
+
+        this._scrollPageLocked = false;
     },
 
     __onPagingArrowClick: function(e, arrow) {

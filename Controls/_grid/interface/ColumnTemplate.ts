@@ -5,21 +5,19 @@
  * @see Controls/_grid/interface/IGridControl/Column.typedef
  * @see Controls/grid:IGridControl#columns
  * @remark
- * Дополнительно о шаблоне:
- * 
- * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/ Руководство разработчика}
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/ здесь}.
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
  * <pre>
  * <Controls.grid:View>
  *    <ws:columns>
  *       <ws:Array>
- *          <ws:Object displayProperty="Name">
+ *          <ws:Object displayProperty="name">
  *             <ws:template>
  *                <ws:partial template="Controls/grid:ColumnTemplate">
  *                   <ws:contentTemplate>
- *                      <div title="{{template.itemData.item.Name}}">
- *                         {{template.itemData.item.Name}}
+ *                      <div title="{{template.itemData.item.name}}">
+ *                         {{template.itemData.item.name}}
  *                      </div>
  *                   </ws:contentTemplate>
  *                </ws:partial>
@@ -32,8 +30,39 @@
  */
 
 /**
+ * @name Controls/grid:ColumnTemplate#editArrowTemplate
+ * @cfg {String|Function} Шаблон позволяет отобразить стрелку-шеврон (см. {@link Controls/grid:IGridControl#showEditArrow}), когда задан пользовательский шаблон (см. contentTemplate) в Controls/grid:ColumnTemplate.
+ * Шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
+ * @default wml!Controls/_grid/_editArrowTemplate
+ * @example
+ * Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон.
+ * При этом добавлено отображение кнопки-шеврона.
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:columns>
+ *       <ws:Array>
+ *          <ws:Object displayProperty="name">
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                   <ws:contentTemplate>
+ *                      <div title="{{template.itemData.item.name}}">
+ *                         {{template.itemData.item.name}}
+ *                      </div>
+ *                      <ws:partial template="{{template.editArrowTemplate}}"/>
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:columns>
+ * </Controls.grid:View>
+ * </pre>
+ */
+
+/**
  * @name Controls/grid:ColumnTemplate#contentTemplate
- * @cfg {String|Function} Вёрстка, описывающая содержимое ячейки.
+ * @cfg {String|Function} Шаблон, описывающий содержимое ячейки.
+ * @default undefined
  * @remark
  * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к следующим свойствам:
  * 
@@ -43,7 +72,7 @@
  * * **item** — элемент, данные которого отображаются в колонке.
  * * **column** — {@link Controls/_grid/interface/IGridControl/Column.typedef конфигурация колонки}.
  * @example
- * **Пример 1.** В следующем примере показано как получить доступ к itemData, если опция настраивается в рамках родительского шаблона.
+ * **Пример 1.** Шаблон ячейки задан в конфигурации родительского контрола.
  * <pre>
  * <Controls.grid:View>
  *    <ws:columns>
@@ -63,8 +92,8 @@
  *    </ws:columns>
  * </Controls.grid:View>
  * </pre>
- * **Пример 2.** В следующем примере показано как получить доступ к itemData, если опция настраивается в отдельном файле.
- * При этом в директиве ws:partial нужно передать опцию scope.
+ * **Пример 2.** Шаблон ячейки описан в отдельном файле, импортирован в родительский контрол и передан в опцию.
+ * В этом случае для доступа к переменной itemData нужно дополнительно задать опцию scope.
  * <pre class="brush: html">
  * <!-- Child.wml -->
  * <ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}">
