@@ -8,6 +8,7 @@ import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
 import template = require('wml!Controls/_scroll/Scroll/Scroll');
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import {Bus} from 'Env/Event';
 import {isEqual} from 'Types/object';
 import 'Controls/_scroll/Scroll/Watcher';
 import 'Controls/event';
@@ -104,6 +105,7 @@ import * as newEnv from 'Core/helpers/isNewEnvironment';
 var
    _private = {
       SHADOW_HEIGHT: 8,
+      KEYBOARD_SHOWING_DURATION: 500,
 
       /**
        * Получить расположение тени внутри контейнера в зависимости от прокрутки контента.
@@ -273,6 +275,7 @@ var
       _bottomPlaceholderSize: 0,
 
       _scrollTopAfterDragEnd: undefined,
+      _scrollLockedPosition: null,
 
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
@@ -387,6 +390,9 @@ var
          if (Env.detection.isMobileIOS) {
             this._overflowScrolling = true;
             needUpdate = true;
+
+            this._lockScrollPositionUntilKeyboardShown = this._lockScrollPositionUntilKeyboardShown.bind(this);
+            Bus.globalChannel().subscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
          }
 
          if (needUpdate) {
@@ -416,12 +422,15 @@ var
          }
       },
 
-       _beforeUnmount(): void {
-           //TODO Compatibility на старых страницах нет Register, который скажет controlResize
-           if (!newEnv() && window) {
-               window.removeEventListener('resize', this._resizeHandler);
-           }
-       },
+      _beforeUnmount(): void {
+         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+         if (!newEnv() && window) {
+            window.removeEventListener('resize', this._resizeHandler);
+         }
+
+         Bus.globalChannel().unsubscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
+         this._lockScrollPositionUntilKeyboardShown = null;
+      },
 
       _isShadowVisibleMode: function() {
          return this._shadowVisiblityMode.top === 'visible' || this._shadowVisiblityMode.bottom === 'visible';
@@ -499,11 +508,15 @@ var
 
       _scrollHandler: function(ev) {
          const scrollTop = _private.getScrollTop(this, this._children.content);
-         // Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события.
-         // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
-         // и вернуться к исходному размеру.
-         // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
-         if (this._scrollTop !== scrollTop) {
+
+         if (this._scrollLockedPosition !== null) {
+            this._children.content.scrollTop = this._scrollLockedPosition;
+
+            // Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события.
+            // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
+            // и вернуться к исходному размеру.
+            // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
+         } else if (this._scrollTop !== scrollTop) {
             if (!this._dragging) {
                this._scrollTop = scrollTop;
                this._notify('scroll', [this._scrollTop]);
@@ -824,6 +837,16 @@ var
          this._headersHeight.bottom = bottomHeight;
          this._displayState.contentHeight = _private.getContentHeight(this);
          this._scrollbarStyles =  'top:' + topHeight + 'px; bottom:' + bottomHeight + 'px;';
+      },
+
+      /* При получении фокуса input'ами на IOS13, может вызывается подскролл у ближайшего контейнера со скролом,
+         IPAD пытается переместить input к верху страницы. Проблема не повторяется,
+         если input будет выше клавиатуры после открытия. */
+      _lockScrollPositionUntilKeyboardShown(): void {
+         this._scrollLockedPosition = this._scrollTop;
+         setTimeout(() => {
+            this._scrollLockedPosition = null;
+         }, _private.KEYBOARD_SHOWING_DURATION);
       }
    });
 
