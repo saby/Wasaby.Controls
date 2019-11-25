@@ -14,7 +14,7 @@ global.requirejs = requirejs;
 
 // Configuring requirejs]
 global.wsConfig = {};
-wsConfig.versioning = true;
+wsConfig.versioning = false;
 const createConfig = require(path.join(root, pathToResources, 'WS.Core', 'ext', 'requirejs', 'config.js'));
 const config = createConfig(
    path.join(root, pathToResources),
