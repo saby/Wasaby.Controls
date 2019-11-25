@@ -388,8 +388,8 @@ export default Sticky;
 
 /**
  * @typedef {Enum} fittingModeValue
- * @variant fixed Позиционирование не меняется. Содержимое окна не выходит за пределы экрана.
- * @variant overflow Окно сдвигается в видимую область экрана. Размеры popup'a ограничены размерами окна браузера.
- * @variant adaptive Инвертируются значения {@link Controls/_popup/Opener/Sticky#targetPoint targetPoint} и {@link Controls/_popup/Opener/Sticky#direction direction}. Если и в этом случае Popup'у не хватает места, то выбирается вариант позиционирования, при котором помещается наибольшая часть контента.
+ * @variant fixed Окно не сдвигается относительно целевого элемента. Размеры окна меняются так, чтобы его содержимое не выходило за пределы экрана.
+ * @variant overflow Окно сдвигается относительно целевого элемента в видимую область экрана. Размеры popup'a ограничены размерами окна браузера.
+ * @variant adaptive Инвертируются значения {@link Controls/_popup/Opener/Sticky#targetPoint targetPoint} и {@link Controls/_popup/Opener/Sticky#direction direction}. Если и в этом случае Popup'у не хватает места, то выбирается вариант позиционирования, при котором на экране помещается наибольшая часть контента.
  * @default adaptive
  */
