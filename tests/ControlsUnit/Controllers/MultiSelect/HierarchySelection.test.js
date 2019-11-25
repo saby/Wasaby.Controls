@@ -629,6 +629,39 @@ define([
             assert.deepEqual([5, 2], selectionInstance.excludedKeys);
          });*/
 
+         it('toggle all with id folder, which when cast to a boolean type, returns false', function() {
+            let items = [
+               {
+                  [ListData.KEY_PROPERTY]: 0,
+                  [ListData.PARENT_PROPERTY]: null,
+                  [ListData.NODE_PROPERTY]: true,
+                  [ListData.HAS_CHILDREN_PROPERTY]: true
+               }, {
+                  [ListData.KEY_PROPERTY]: 1,
+                  [ListData.PARENT_PROPERTY]: 0,
+                  [ListData.NODE_PROPERTY]: true,
+                  [ListData.HAS_CHILDREN_PROPERTY]: false
+               }
+            ];
+
+            cfg = getConfig({
+               selectedKeys: [1],
+               listModel: getListModel(new collection.RecordSet({
+                  rawData: items,
+                  keyProperty: ListData.KEY_PROPERTY
+               }))
+            });
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance._listModel._model.setRoot(0);
+            selectionInstance.toggleAll();
+            assert.deepEqual([0], selectionInstance.selectedKeys);
+            assert.deepEqual([0, 1], selectionInstance.excludedKeys);
+
+            selectionInstance.toggleAll();
+            assert.deepEqual([1], selectionInstance.selectedKeys);
+            assert.deepEqual([], selectionInstance.excludedKeys);
+         });
+
          it('selectAll and unselectAll in unselected folder', function(done) {
             // remove current root from data
             allData.removeAt(0);

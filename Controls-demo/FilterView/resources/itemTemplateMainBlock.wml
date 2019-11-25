@@ -139,7 +139,7 @@
 <ws:template name="detailingPeriod">
 <Controls.filterPopup:Dropdown displayProperty="title"
                                        bind:selectedKeys="item.value"
-                                       keyProperty="id"
+                                       keyProperty="key"
                                        parentProperty="parent"
                                        nodeProperty="parent@"
                                        source="{{item.source}}">

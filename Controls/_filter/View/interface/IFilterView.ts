@@ -472,13 +472,13 @@
  */
 
 /**
- * @event Controls/_filter/View/interface/IFilterView#itemsChanged Происходит при изменении опции items.
+ * @event Controls/_filter/View/interface/IFilterView#sourceChanged Происходит при изменении опции source.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<FilterItem>} items Новая структура фильтра.
  */
 
 /*
- * @event Controls/_filter/View/interface/IFilterView#itemsChanged Happens when items changed.
+ * @event Controls/_filter/View/interface/IFilterView#sourceChanged Happens when source changed.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} items New items.
  */

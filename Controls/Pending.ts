@@ -26,7 +26,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     *    - showLoadingIndicator (Boolean) - показывать индикатор загрузки или нет (во время регистрации пендинга)
     *    - onPendingFail (Function) - будет вызвана при попытке завершить пендинг (вызовы finishPendingOperations).
     *    Функция помогает завершить Promise. Пользователь должен завершить Promise (второй аргумент) в этой функции.
-    *    Это может быть синхронное или асинхронное завершение. 
+    *    Это может быть синхронное или асинхронное завершение.
     *
     * onPendingFail имеет 2 аргумента - [forceFinishValue, resultPromise].
     * forceFinishValue дает дополнительную информацию о завершении Promise.
@@ -36,7 +36,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     * Например, если в пендинге зарегистрирована измененная запись и нам нужно сохранить изменения, по умолчанию мы можем запросить подтверждение сохранения.
     * Но forceFinishValue может завершаться принудительно без подтверждения сохранения.
     *
-    * cancelFinishingPending - отменяет Promise, который возвращен finishPendingOperations. Этот Promise никогда не завершится. 
+    * cancelFinishingPending - отменяет Promise, который возвращен finishPendingOperations. Этот Promise никогда не завершится.
     * Полезно использовать, когда пендинг не может быть завершен сейчас, но будет завершен позднее другим способом.
     * Например, когда всплывающее окно ожидает завершения пендингов перед закрытием, но запись не может быть сохранена из-за ошибок валидации.
     * В этом случае, если мы не отменим Promise с помощью finishPendingOperations, всплывающеe окно будет закрыто позже, когда будут исправлены ошибки валидации.
@@ -97,7 +97,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     * @author Красильников А.С.
     * @public
     */
-    
+
 
    /**
     * @event pendingsFinished Событие произойдет в момент, когда в Controls/Pending не останется пендингов.
@@ -109,7 +109,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     * @event pendingsFinished Event will be notified in moment when no more pendings in Controls/Pending
     * (after moment of last pending is resolving).
     * @param {SyntheticEvent} eventObject.
-    */    
+    */
 
    // pending identificator counter
    var cnt = 0;
@@ -126,6 +126,8 @@ import ParallelDeferred = require('Core/ParallelDeferred');
                if (self._hasRegisteredPendings()) {
                   event.preventDefault();
                   event.returnValue = '';
+               } else {
+                  window.removeEventListener('beforeunload', self._beforeUnloadHandler);
                }
             };
             window.addEventListener('beforeunload', self._beforeUnloadHandler);
@@ -220,7 +222,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
        * If onPendingFail is not setted, pending registration notified control is responsible for pending's Promise resolving.
        * @param forceFinishValue this argument use as argument of onPendingFail.
        * @returns {Deferred} Promise resolving when all pendings will be resolved
-       */       
+       */
       finishPendingOperations: function(forceFinishValue) {
          var resultDeferred = new Deferred(),
             parallelDef = new ParallelDeferred(),

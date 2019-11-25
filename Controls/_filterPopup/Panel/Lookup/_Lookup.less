@@ -5,3 +5,11 @@
 .controls-FilterPanel__Lookup_link {
   margin-right:  @spacing_FilterPanelLookup-between-lookup-link;
 }
+
+// Единственное решение, которое позволяет сдвинуть поле ввода влево
+// с помощью отрицательного margin'a
+// и не получить дырку справа от поля ввода на ширину этого сдвига
+.controls-Input_negativeOffset_theme_@{themeName}.controls-FilterPanel__LookupSelector {
+  display: block;
+  width: auto;
+}
