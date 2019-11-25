@@ -26,6 +26,9 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
                 placeholderChangedCallback() {
                     affectingInstance.placeholderChanged = true;
                 },
+                saveScrollPositionCallback() {
+                    affectingInstance.positionSaved = true;
+                },
                 viewModel: {
                     subscribe() {},
                     getStartIndex() {
