@@ -376,19 +376,20 @@ export default Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#fittingMode
- * @cfg {fittingMode} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+ * @cfg {fittingMode} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционированием.
  */
 
 /**
  * @typedef {Object} fittingMode
+ * @description Опция {@link Controls/_popup/Opener/Sticky Sticky}, определеяющая поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
  * @property {fittingModeValue} vertical
  * @property {fittingModeValue} horizontal
  */
 
 /**
  * @typedef {Enum} fittingModeValue
- * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
- * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
- * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.
+ * @variant fixed Окно не сдвигается относительно целевого элемента. Размеры окна меняются так, чтобы его содержимое не выходило за пределы экрана.
+ * @variant overflow Окно сдвигается относительно целевого элемента в видимую область экрана. Размеры popup'a ограничены размерами окна браузера.
+ * @variant adaptive Инвертируются значения {@link Controls/_popup/Opener/Sticky#targetPoint targetPoint} и {@link Controls/_popup/Opener/Sticky#direction direction}. Если и в этом случае Popup'у не хватает места, то выбирается вариант позиционирования, при котором на экране помещается наибольшая часть контента.
  * @default adaptive
  */
