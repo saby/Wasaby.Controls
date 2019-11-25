@@ -19,8 +19,10 @@ import { ISelectionStrategy, ISelectionStrategyOptions } from 'Controls/interfac
 type TChangeSelectionType = 'selectAll'|'unselectAll'|'toggleAll';
 
 var _private = {
-    notifyAndUpdateSelection: function (self, oldSelectedKeys, oldExcludedKeys) {
+    notifyAndUpdateSelection: function(self, options) {
         let
+            oldSelectedKeys = self._options.selectedKeys,
+            oldExcludedKeys = self._options.excludedKeys,
             newSelectedKeys = self._multiselection.selectedKeys,
             newExcludedKeys = self._multiselection.excludedKeys,
             selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
@@ -54,7 +56,7 @@ var _private = {
          4) Прокидывать событие в Container/Scroll.
          Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
          */
-       self._multiselection.getCount().then((selectedItemsCount: number|null) => {
+       self._multiselection.getCount(options.source, options.filter).then((selectedItemsCount: number|null) => {
           self._notify('listSelectedKeysCountChanged', [selectedItemsCount], {bubbling: true});
        });
        self._multiselection.updateSelectionForRender();
@@ -76,7 +78,7 @@ var _private = {
             if (action === collection.IObservable.ACTION_REMOVE) {
                 this._multiselection.remove(_private.getItemsKeys(removedItems));
             }
-            _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+            _private.notifyAndUpdateSelection(this, this._options);
         }
     },
 
@@ -93,7 +95,7 @@ var _private = {
         if (needChangeSelection) {
             this._multiselection.setLimit(limit);
             this._multiselection[typeName]();
-            _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+            _private.notifyAndUpdateSelection(this, this._options);
         }
     },
 
@@ -178,7 +180,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
         if (selectionChanged) {
             this._multiselection.selectedKeys = newOptions.selectedKeys;
             this._multiselection.excludedKeys = newOptions.excludedKeys;
-            _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+            _private.notifyAndUpdateSelection(this, newOptions);
         } else if (itemsIsChanged || modelIsChanged) {
            this._multiselection.updateSelectionForRender();
         }
@@ -190,7 +192,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
         } else {
             this._multiselection.select([key]);
         }
-        _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+        _private.notifyAndUpdateSelection(this, this._options);
     },
 
     _beforeUnmount: function () {

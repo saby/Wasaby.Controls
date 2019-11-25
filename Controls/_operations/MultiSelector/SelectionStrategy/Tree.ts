@@ -7,16 +7,12 @@ import { ViewModel } from 'Controls/treeGrid';
 import { Record } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { ISelectionStrategy, ISelectionStrategyOptions } from 'Controls/interface';
+import { ISelectionStrategy, ISelectionStrategyOptions, ISelectionConfig } from 'Controls/interface';
 
 export default class TreeSelectionStrategy implements ISelectionStrategy {
-   protected _source: SbisService;
-   protected _filter: Object;
    protected _selectionCountMethodName: string;
 
    public constructor(options: ISelectionStrategyOptions) {
-      this._source = options.source;
-      this._filter = options.filter;
       this._selectionCountMethodName = options.selectionCountMethodName;
    }
 
@@ -60,7 +56,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       };
    }
 
-   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, hierarchyRelation: relation.Hierarchy): Promise {
+   public getCount({selectedKeys, excludedKeys, model, source, filter, hierarchyRelation}: ISelectionConfig): Promise<number, null> {
       let countItemsSelected: number|null = 0;
       let rootId: TKey = this._getRoot(model);
       let selectedNodes: TKeys;
@@ -87,7 +83,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
 
       return new Promise((resolve) => {
          if (countItemsSelected === null && this._selectionCountMethodName) {
-            resolve(getCountBySource(this._source, this._selectionCountMethodName, selectedKeys, excludedKeys, this._filter));
+            resolve(getCountBySource(source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter));
          } else {
             resolve(countItemsSelected);
          }

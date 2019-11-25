@@ -89,26 +89,46 @@ define([
 
       describe('getCount', function() {
          it('without selection', function() {
-            return treeStrategy.getCount(selectedKeys, excludedKeys, model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount({
+               selectedKeys: selectedKeys,
+               excludedKeys: excludedKeys,
+               model: model,
+               hierarchyRelation: hierarchyRelation
+            }).then((itemsCount) => {
                assert.equal(itemsCount, 0);
             });
          });
 
          it('with selected items', function() {
-            return treeStrategy.getCount([1, 2, 10, 15], excludedKeys, model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount({
+               selectedKeys: [1, 2, 10, 15],
+               excludedKeys: excludedKeys,
+               model: model,
+               hierarchyRelation: hierarchyRelation
+            }).then((itemsCount) => {
                assert.equal(itemsCount, 4);
             });
          });
 
          it('with selected and excluded items', function() {
-            return treeStrategy.getCount([1, 2, 10], [3, 4], model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount({
+               selectedKeys: [1, 2, 10],
+               excludedKeys: [3, 4],
+               model: model,
+               hierarchyRelation: hierarchyRelation
+            }).then((itemsCount) => {
                assert.equal(itemsCount, 3);
             });
          });
 
          it('select root', function() {
             model.getItems().setMetaData({more: false});
-            return treeStrategy.getCount([null], [null], model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount({
+               selectedKeys: [null],
+               excludedKeys: [null],
+               model: model,
+               hierarchyRelation: hierarchyRelation
+            }).then((itemsCount) => {
                assert.equal(itemsCount, 3);
             });
          });
@@ -116,19 +136,34 @@ define([
          it('select root with excluded', function() {
             // Дети корня 1,6,7
             model.getItems().setMetaData({more: 3});
-            return treeStrategy.getCount([null], [null, 1, 7, 10], model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount({
+               selectedKeys: [null],
+               excludedKeys: [null, 1, 7, 10],
+               model: model,
+               hierarchyRelation: hierarchyRelation
+            }).then((itemsCount) => {
                assert.equal(itemsCount, 1);
             });
          });
 
          it('with not loaded selected root', function() {
-            return treeStrategy.getCount([null], [null], model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount({
+               selectedKeys: [null],
+               excludedKeys: [null],
+               model: model,
+               hierarchyRelation: hierarchyRelation
+            }).then((itemsCount) => {
                assert.equal(itemsCount, null);
             });
          });
 
          it('with not loaded node', function() {
-            return treeStrategy.getCount([10], [10], model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount({
+               selectedKeys: [10],
+               excludedKeys: [10],
+               model: model,
+               hierarchyRelation: hierarchyRelation
+            }).then((itemsCount) => {
                assert.equal(itemsCount, null);
             });
          });
@@ -155,7 +190,7 @@ define([
             assert.deepEqual(selectionForModel, new Map([[1, true], [6, true], [7, true]]));
          });
 
-         it('select root', function() {
+         it('select root with excluded', function() {
             let selectionForModel = treeStrategy.getSelectionForModel([null], [null, 6, 7, 10], model, 0, '', hierarchyRelation);
             assert.deepEqual(selectionForModel, new Map([[1, true]]));
          });

@@ -2,6 +2,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 import { Collection } from 'Controls/display';
 
+import { SbisService, PrefetchProxy } from 'Types/source';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
@@ -157,8 +158,15 @@ export default class Selection {
     * Returns the number of selected items.
     * @returns {number}
     */
-   public getCount(): Promise {
-      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._listModel, this._limit);
+   public getCount(source: SbisService|PrefetchProxy, filter: Object): Promise<number|null> {
+      return this._selectionStrategy.getCount({
+         selectedKeys: this._selectedKeys,
+         excludedKeys: this._excludedKeys,
+         model: this._listModel,
+         limit: this._limit,
+         filter: filter,
+         source: source
+      });
    }
 
    /**

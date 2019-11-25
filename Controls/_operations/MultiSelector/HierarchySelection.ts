@@ -5,6 +5,7 @@ import { getChildrenIds, removeSelectionChildren } from 'Controls/_operations/Mu
 import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
 import { Tree as TreeCollection } from 'Controls/display';
 
+import { SbisService, PrefetchProxy } from 'Types/source';
 import { ViewModel } from 'Controls/treeGrid';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
@@ -108,8 +109,15 @@ export default class HierarchySelection extends Selection {
       }
    }
 
-   public getCount(): Promise {
-      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._listModel, 0, this._hierarchyRelation);
+   public getCount(source: SbisService|PrefetchProxy, filter: Object): Promise<number|null> {
+      return this._selectionStrategy.getCount({
+         selectedKeys: this._selectedKeys,
+         excludedKeys: this._excludedKeys,
+         model: this._listModel,
+         hierarchyRelation: this._hierarchyRelation,
+         filter: filter,
+         source: source
+      });
    }
 
    protected _getSelectionForModel(): void {

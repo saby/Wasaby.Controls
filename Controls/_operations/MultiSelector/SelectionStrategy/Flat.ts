@@ -6,18 +6,14 @@ import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { ISelectionStrategy, ISelectionStrategyOptions } from 'Controls/interface';
+import { ISelectionStrategy, ISelectionStrategyOptions, ISelectionConfig } from 'Controls/interface';
 
 const ALL_SELECTION_VALUE = null;
 
 export default class FlatSelectionStrategy implements ISelectionStrategy {
-   protected _source: SbisService;
-   protected _filter: Object;
    protected _selectionCountMethodName: string;
 
    public constructor(options: ISelectionStrategyOptions) {
-      this._source = options.source;
-      this._filter = options.filter;
       this._selectionCountMethodName = options.selectionCountMethodName;
    }
 
@@ -53,7 +49,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       };
    }
 
-   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number): Promise {
+   public getCount({selectedKeys, excludedKeys, model, limit, source, filter}: ISelectionConfig): Promise<number|null> {
       let countItemsSelected: number|null = null;
       let items: RecordSet|List = getItems(model);
       let itemsCount: number = items.getCount();
@@ -70,7 +66,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
 
       return new Promise((resolve) => {
          if (countItemsSelected === null && this._selectionCountMethodName) {
-            resolve(getCountBySource(this._source, this._selectionCountMethodName, selectedKeys, excludedKeys, this._filter));
+            resolve(getCountBySource(source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter));
          } else {
             resolve(countItemsSelected);
          }
