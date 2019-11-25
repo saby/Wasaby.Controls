@@ -1070,8 +1070,8 @@ define(
                   load: () => {return Deferred.success();},
                   hasMoreData: () => {return true;}
                };
-               filter.View._private.getPopupConfig(view, view._configs, view._source);
-               assert.equal(view._configs.document.popupItems.getCount(), 7);
+               let resultItems = filter.View._private.getPopupConfig(view, view._configs, view._source);
+               assert.isOk(resultItems[0].loadDeferred);
             });
          });
       });

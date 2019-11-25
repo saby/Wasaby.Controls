@@ -1,10 +1,12 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
 import CoreClone = require('Core/core-clone');
+import ParallelDeferred = require('Core/ParallelDeferred');
 import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/itemTemplate';
 
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
+import {isHistorySource} from 'Controls/_filter/HistoryUtils';
 
 /**
  * Панель "быстрых фильтров" для {@link Controls/filter:View}.
@@ -33,13 +35,23 @@ import {isEqual} from 'Types/object';
 var _private = {
 
     getItems: function(self, initItems) {
-        var items = [];
+        let items = [];
+        let pDef = new ParallelDeferred();
         factory(initItems).each(function(item, index) {
             var curItem = item.getRawData();
             curItem.initSelectedKeys = self._items ? self._items[index].initSelectedKeys : CoreClone(item.get('selectedKeys'));
+            if (curItem.loadDeferred) {
+                pDef.push(curItem.loadDeferred.addCallback(() => {
+                    if (isHistorySource(curItem.source)) {
+                        curItem.items = curItem.source.prepareItems(curItem.items);
+                    }
+                }));
+            }
             items.push(curItem);
         });
-        return items;
+        return pDef.done().getResult().addCallback(() => {
+            return items;
+        });
     },
 
     isEqualKeys: function(oldKeys, newKeys) {
@@ -90,15 +102,21 @@ var Panel = Control.extend({
     _items: null,
 
     _beforeMount: function(options) {
-        this._items = _private.getItems(this, options.items);
-        this._hasApplyButton = _private.hasApplyButton(this._items);
+        let self = this;
+        return _private.getItems(this, options.items).addCallback((items) => {
+            self._items = items;
+            self._hasApplyButton = _private.hasApplyButton(self._items);
+        });
     },
 
     _beforeUpdate: function(newOptions) {
-        var itemsChanged = newOptions.items !== this._options.items;
+        const itemsChanged = newOptions.items !== this._options.items;
         if (itemsChanged) {
-            this._items = _private.getItems(this, newOptions.items);
-            this._needShowApplyButton = _private.needShowApplyButton(this._items);
+            let self = this;
+            return _private.getItems(this, newOptions.items).addCallback((items) => {
+                self._items = items;
+                self._needShowApplyButton = _private.needShowApplyButton(self._items);
+            });
         }
     },
 
