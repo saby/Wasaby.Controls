@@ -103,10 +103,7 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     protected _beforeMount(options: IOptions): void {
-        if (options.virtualScrolling) {
-            this.initVirtualScrolling(options);
-            this.reset(this.viewModel.getCount());
-        }
+        this.initModel(options);
     }
 
     protected _afterMount(): void {
@@ -119,7 +116,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _beforeUpdate(options: IOptions): void {
         if (this._options.viewModel !== options.viewModel) {
-            this.initVirtualScrolling(options);
+            this.initModel(options);
         }
 
         if (this._options.observeScroll) {
@@ -191,8 +188,15 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param {unknown} model
      * @param {boolean} useNewModel
      */
-    private initVirtualScrolling(options: IOptions): void {
+    private initModel(options: IOptions): void {
         this.viewModel = options.viewModel;
+
+        if (options.virtualScrolling) {
+            this.initModelObserving(options);
+        }
+    }
+
+    private initModelObserving(options: IOptions): void {
         this.virtualScroll = new VirtualScroll({
             pageSize: options.virtualPageSize,
             segmentSize: options.virtualSegmentSize,
