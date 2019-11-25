@@ -18,6 +18,13 @@ export interface ISelectionStrategyOptions {
    selectionCountMethodName?: string
 }
 
+/**
+ * Интерфейс стратегий выбора.
+ *
+ * @interface Controls/_interface/ISelectionStrategy
+ * @public
+ * @author Капустин И.А.
+ */
 // параметры hierarchyRelation и keyProperty нужен для поддержки старой модели, с полным переходом на новую они уйдут
 export default interface ISelectionStrategy {
    select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
@@ -26,3 +33,9 @@ export default interface ISelectionStrategy {
    getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit?: number, keyProperty?: string, hierarchyRelation?: relation.Hierarchy): Map<TKey, boolean|null>;
    isAllSelected(folderId: Tkey, selectedKeys: TKeys, excludedKeys?: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): boolean;
 }
+
+/**
+ * @name Controls/_interface/ISelectionStrategy#selectionCountMethodName
+ * @cfg {String} Название метода, который вернет количество выбранных элементов.
+ * @remark Будет вызван, если стратегии, на основании известных ей данных, не удалось определить количество выбранных записей.
+ */

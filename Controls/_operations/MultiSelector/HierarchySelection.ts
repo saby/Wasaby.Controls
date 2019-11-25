@@ -5,7 +5,7 @@ import { getChildrenIds, removeSelectionChildren } from 'Controls/_operations/Mu
 import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
 import { Tree as TreeCollection } from 'Controls/display';
 
-import { SbisService, PrefetchProxy } from 'Types/source';
+import { Rpc, PrefetchProxy } from 'Types/source';
 import { ViewModel } from 'Controls/treeGrid';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
@@ -55,21 +55,21 @@ export default class HierarchySelection extends Selection {
       }
    }
 
-   public select(keys: TKeys): void {
+   select(keys: TKeys): void {
       let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
 
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
    }
 
-   public unselect(keys: TKeys): void {
+   unselect(keys: TKeys): void {
       let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
 
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
    }
 
-   public selectAll(): void {
+   selectAll(): void {
       let rootId: TKey = this._getRoot();
 
       this.select([rootId]);
@@ -77,7 +77,7 @@ export default class HierarchySelection extends Selection {
       this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
    }
 
-   public unselectAll(): void {
+   unselectAll(): void {
       let rootId: TKey = this._getRoot();
       let metaData: Object = this._getItems().getMetaData();
 
@@ -90,7 +90,7 @@ export default class HierarchySelection extends Selection {
       }
    }
 
-   public toggleAll(): void {
+   toggleAll(): void {
       let
          rootId: TKey = this._getRoot(),
          oldSelectedKeys: TKeys = this._selectedKeys.slice(),
@@ -109,7 +109,7 @@ export default class HierarchySelection extends Selection {
       }
    }
 
-   public getCount(source: SbisService|PrefetchProxy, filter: Object): Promise<number|null> {
+   getCount(source: Rpc|PrefetchProxy, filter: Object): Promise<number|null> {
       return this._selectionStrategy.getCount({
          selectedKeys: this._selectedKeys,
          excludedKeys: this._excludedKeys,

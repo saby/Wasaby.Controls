@@ -1,7 +1,6 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { getItems, getCountBySource } from 'Controls/_operations/MultiSelector/SelectionHelper';
 
-import { SbisService } from 'Types/source';
 import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
@@ -10,14 +9,22 @@ import { ISelectionStrategy, ISelectionStrategyOptions, ISelectionConfig } from 
 
 const ALL_SELECTION_VALUE = null;
 
+/**
+ * Базовая стратегия выбора в плоском списке.
+ * @class Controls/_operations/MultiSelector/SelectionStrategy/Flat
+ * @mixes Controls/_interface/ISelectionStrategy
+ * @control
+ * @public
+ * @author Капустин И.А.
+ */
 export default class FlatSelectionStrategy implements ISelectionStrategy {
    protected _selectionCountMethodName: string;
 
-   public constructor(options: ISelectionStrategyOptions) {
+   constructor(options: ISelectionStrategyOptions) {
       this._selectionCountMethodName = options.selectionCountMethodName;
    }
 
-   public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
+   select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
 
@@ -33,7 +40,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       };
    }
 
-   public unSelect(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
+   unSelect(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
 
@@ -49,7 +56,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       };
    }
 
-   public getCount({selectedKeys, excludedKeys, model, limit, source, filter}: ISelectionConfig): Promise<number|null> {
+   getCount({selectedKeys, excludedKeys, model, limit, source, filter}: ISelectionConfig): Promise<number|null> {
       let countItemsSelected: number|null = null;
       let items: RecordSet|List = getItems(model);
       let itemsCount: number = items.getCount();
@@ -64,16 +71,14 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
          countItemsSelected = selectedKeys.length;
       }
 
-      return new Promise((resolve) => {
-         if (countItemsSelected === null && this._selectionCountMethodName) {
-            resolve(getCountBySource(source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter));
-         } else {
-            resolve(countItemsSelected);
-         }
-      });
+      if (countItemsSelected === null && this._selectionCountMethodName) {
+         return getCountBySource(source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter);
+      } else {
+         return Promise.resolve(countItemsSelected);
+      }
    }
 
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number, keyProperty: string): Map<TKey, boolean> {
+   getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number, keyProperty: string): Map<TKey, boolean> {
       let
          selectionResult: Map<TKey, boolean> = new Map(),
          selectedItemsCount: number = 0,
@@ -99,7 +104,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       return selectionResult;
    }
 
-   public isAllSelected(roodId: Tkey, selectedKeys: TKeys): boolean {
+   isAllSelected(roodId: Tkey, selectedKeys: TKeys): boolean {
       return selectedKeys.includes(roodId);
    }
 

@@ -787,3 +787,16 @@
  * @name Controls/_list/interface/IList#itemPadding
  */
 
+/**
+ * @typedef {Object} SelectionStrategy
+ * @property {String} name Класс со стратегией выбора.
+ * @property {Object} options Опции для стратегии выбора.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#selectionStrategy
+ * @cfg {SelectionStrategy} Стратегия выбора задает логику поведения при отметки записей в режиме множественого выбора.
+ * @remark Опция актуальна только при multiSelectVisibility: true.
+ * Для плоских спиков по дефолту используется {@link Controls/operations:FlatSelectionStrategy}, для иерархических {@link Controls/operations:DeepTreeSelectionStrategy}.
+ * @see Controls/operations:TreeSelectionStrategy
+ */

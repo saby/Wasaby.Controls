@@ -1405,7 +1405,6 @@ var _private = {
  * @mixes Controls/interface/INavigation
  @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/_list/interface/IBaseControl
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
  * @control

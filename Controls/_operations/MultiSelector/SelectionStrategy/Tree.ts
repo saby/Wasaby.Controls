@@ -9,14 +9,23 @@ import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 import { ISelectionStrategy, ISelectionStrategyOptions, ISelectionConfig } from 'Controls/interface';
 
+/**
+ * Стратегия выбора для иерархического списка, для работы с ним как с плоским.
+ * Записи не зависимы между собой, выбор родительских узлов никак не отражается на их детей.
+ * @class Controls/_operations/MultiSelector/SelectionStrategy/Tree
+ * @mixes Controls/_interface/ISelectionStrategy
+ * @control
+ * @public
+ * @author Капустин И.А.
+ */
 export default class TreeSelectionStrategy implements ISelectionStrategy {
    protected _selectionCountMethodName: string;
 
-   public constructor(options: ISelectionStrategyOptions) {
+   constructor(options: ISelectionStrategyOptions) {
       this._selectionCountMethodName = options.selectionCountMethodName;
    }
 
-   public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): ISelection {
+   select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
 
@@ -36,7 +45,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       };
    }
 
-   public unSelect(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): ISelection {
+   unSelect(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
 
@@ -56,7 +65,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       };
    }
 
-   public getCount({selectedKeys, excludedKeys, model, source, filter, hierarchyRelation}: ISelectionConfig): Promise<number, null> {
+   getCount({selectedKeys, excludedKeys, model, source, filter, hierarchyRelation}: ISelectionConfig): Promise<number, null> {
       let countItemsSelected: number|null = 0;
       let rootId: TKey = this._getRoot(model);
       let selectedNodes: TKeys;
@@ -81,16 +90,14 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
          countItemsSelected = null;
       }
 
-      return new Promise((resolve) => {
-         if (countItemsSelected === null && this._selectionCountMethodName) {
-            resolve(getCountBySource(source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter));
-         } else {
-            resolve(countItemsSelected);
-         }
-      });
+      if (countItemsSelected === null && this._selectionCountMethodName) {
+         return getCountBySource(source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter);
+      } else {
+         return Promise.resolve(countItemsSelected);
+      }
    }
 
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, keyProperty: string, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean> {
+   getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, keyProperty: string, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean> {
       let selectionResult: Map<TKey, boolean> = new Map();
 
       getItems(model).forEach((item) => {
@@ -107,7 +114,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       return selectionResult;
    }
 
-   public isAllSelected(nodeId: Tkey, selectedKeys: TKeys, excludedKeys: TKeys): boolean {
+   isAllSelected(nodeId: Tkey, selectedKeys: TKeys, excludedKeys: TKeys): boolean {
       return selectedKeys.includes(nodeId) && excludedKeys.includes(nodeId);
    }
 

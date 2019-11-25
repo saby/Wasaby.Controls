@@ -16,8 +16,18 @@ interface IEntryPath {
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 
+/**
+ * Базовая стратегия выбора в иерархическогом списке.
+ * При выборе родительского узла, так же в выборку попадают все его дети.
+ * @class Controls/_operations/MultiSelector/SelectionStrategy/DeepTree
+ * @extends Controls/_operations/MultiSelector/SelectionStrategy/Tree
+ * @mixes Controls/_interface/ISelectionStrategy
+ * @control
+ * @public
+ * @author Капустин И.А.
+ */
 export default class DeepTreeSelectionStrategy extends TreeSelectionStrategy implements ISelectionStrategy {
-   public getCount({selectedKeys, excludedKeys, model, source, filter, hierarchyRelation}: ISelectionConfig): Promise<number|null> {
+   getCount({selectedKeys, excludedKeys, model, source, filter, hierarchyRelation}: ISelectionConfig): Promise<number|null> {
       let countItemsSelected: number|null = 0;
       let items: Record = SelectionHelper.getItems(model);
       let rootId: TKey = this._getRoot(model);
@@ -47,16 +57,14 @@ export default class DeepTreeSelectionStrategy extends TreeSelectionStrategy imp
          countItemsSelected = null;
       }
 
-      return new Promise((resolve) => {
-         if (countItemsSelected === null && this._selectionCountMethodName) {
-            resolve(SelectionHelper.getCountBySource(this._source, this._selectionCountMethodName, selectedKeys, excludedKeys, this._filter));
-         } else {
-            resolve(countItemsSelected);
-         }
-      });
+      if (countItemsSelected === null && this._selectionCountMethodName) {
+         return SelectionHelper.getCountBySource(this._source, this._selectionCountMethodName, selectedKeys, excludedKeys, this._filter);
+      } else {
+         return Promise.resolve(countItemsSelected);
+      }
    }
 
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, keyProperty: string, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean|null> {
+   getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, keyProperty: string, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean|null> {
       let selectionResult: Map<TKey, boolean|null> = new Map();
       let selectedKeysWithEntryPath: TKeys = this._mergeEntryPath(selectedKeys, SelectionHelper.getItems(model));
 
@@ -83,7 +91,7 @@ export default class DeepTreeSelectionStrategy extends TreeSelectionStrategy imp
       return selectionResult;
    }
 
-   public isAllSelected(nodeId: TKey, selectedKeys: Tkeys, excludedKeys: Tkeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): boolean {
+   isAllSelected(nodeId: TKey, selectedKeys: Tkeys, excludedKeys: Tkeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): boolean {
       return selectedKeys.includes(nodeId) || !excludedKeys.includes(nodeId) &&
          SelectionHelper.hasSelectedParent(nodeId, selectedKeys, excludedKeys, model, hierarchyRelation);
    }

@@ -3,7 +3,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { Collection, Tree as TreeCollection } from 'Controls/display';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 
-import { SbisService, PrefetchProxy } from 'Types/source';
+import { Rpc, PrefetchProxy } from 'Types/source';
 import { Record, List } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { ListViewModel } from 'Controls/list';
@@ -19,7 +19,7 @@ interface IEntryPath {
    parent: String|number|null
 }
 
-function _getOriginalSource(source: SbisService|PrefetchProxy): SbisService {
+function _getOriginalSource(source: Rpc|PrefetchProxy): Rpc {
    if (source.getOriginal) {
       source = source.getOriginal();
    }
@@ -212,8 +212,8 @@ export function removeSelectionChildren(nodeId, selectedKeys, excludedKeys, mode
    ArraySimpleValuesUtil.removeSubArray(excludedKeys, childrenIds);
 };
 
-export function getCountBySource(source: SbisService|PrefetchProxy, selectionCountMethodName: string, selectedKeys: TKeys, excludedKeys: TKeys, filter: Object): Promise<number|null> {
-   let originalSource: SbisService = _getOriginalSource(source);
+export function getCountBySource(source: Rpc|PrefetchProxy, selectionCountMethodName: string, selectedKeys: TKeys, excludedKeys: TKeys, filter: Object): Promise<number|null> {
+   let originalSource: Rpc = _getOriginalSource(source);
 
    filter = {... filter};
    filter.selection = selectionToRecord({
@@ -222,7 +222,7 @@ export function getCountBySource(source: SbisService|PrefetchProxy, selectionCou
    }, originalSource.getAdapter());
 
    return new Promise((resolve) => {
-      originalSource.call(selectionCountMethodName, filter)
+      originalSource.call(selectionCountMethodName, {filter: filter})
          .addCallback((itemsSelectedCount) => {
             resolve(itemsSelectedCount);
          })

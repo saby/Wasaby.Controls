@@ -2,7 +2,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 import { Collection } from 'Controls/display';
 
-import { SbisService, PrefetchProxy } from 'Types/source';
+import { Rpc, PrefetchProxy } from 'Types/source';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
@@ -50,19 +50,19 @@ export default class Selection {
    protected _excludedKeys: TKeys = [];
    protected _limit: number = 0;
 
-   public get selectedKeys(): TKeys {
+   get selectedKeys(): TKeys {
       return this._selectedKeys;
    }
 
-   public set selectedKeys(keys: TKeys): void {
+   set selectedKeys(keys: TKeys): void {
       this._selectedKeys = keys;
    }
 
-   public get excludedKeys(): TKeys {
+   get excludedKeys(): TKeys {
       return this._excludedKeys;
    }
 
-   public set excludedKeys(keys: TKeys): void {
+   set excludedKeys(keys: TKeys): void {
       this._excludedKeys = keys;
    }
 
@@ -78,7 +78,7 @@ export default class Selection {
     * Add keys to selection.
     * @param {Array} keys Keys to add to selection.
     */
-   public select(keys: TKeys): void {
+   select(keys: TKeys): void {
       if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
          this._increaseLimit(keys.slice());
       }
@@ -93,7 +93,7 @@ export default class Selection {
     * Remove keys from selection.
     * @param {Array} keys Keys to remove from selection.
     */
-   public unselect(keys: TKeys): void {
+   unselect(keys: TKeys): void {
       let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys, this._listModel);
 
       this._selectedKeys = selection.selected;
@@ -104,7 +104,7 @@ export default class Selection {
     * Delete keys from anywhere.
     * @param {Array} keys Keys to remove.
     */
-   public remove(keys: TKeys): void {
+   remove(keys: TKeys): void {
       this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
       this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
    }
@@ -113,7 +113,7 @@ export default class Selection {
     * Select all items.
     * @remark Sets selectedKeys to [null].
     */
-   public selectAll(): void {
+   selectAll(): void {
       this._selectedKeys = [ALL_SELECTION_VALUE];
 
       // При выборе "Отметить все" лимит не передается, а предыдущий установленный сбрасывается раньше вызова selectAll,
@@ -126,7 +126,7 @@ export default class Selection {
    /**
     * Remove selection from all items.
     */
-   public unselectAll(): void {
+   unselectAll(): void {
       this._selectedKeys = [];
       this._excludedKeys = [];
    }
@@ -134,7 +134,7 @@ export default class Selection {
    /**
     * Invert selection.
     */
-   public toggleAll(): void {
+   toggleAll(): void {
       if (this._selectionStrategy.isAllSelected(ALL_SELECTION_VALUE, this._selectedKeys, this._excludedKeys)) {
          let excludedKeys: TKeys = this._excludedKeys.slice();
          this.unselectAll();
@@ -150,7 +150,7 @@ export default class Selection {
     * Sets limit.
     * @param {Number} value
     */
-   public setLimit(value: number): void {
+   setLimit(value: number): void {
       this._limit = value;
    }
 
@@ -158,7 +158,7 @@ export default class Selection {
     * Returns the number of selected items.
     * @returns {number}
     */
-   public getCount(source: SbisService|PrefetchProxy, filter: Object): Promise<number|null> {
+   getCount(source: Rpc|PrefetchProxy, filter: Object): Promise<number|null> {
       return this._selectionStrategy.getCount({
          selectedKeys: this._selectedKeys,
          excludedKeys: this._excludedKeys,
@@ -172,7 +172,7 @@ export default class Selection {
    /**
     * Transforms selection to single array of selectedKeys and set it to model. Used for rendering checkboxes in lists.
     */
-   public updateSelectionForRender(): void {
+   updateSelectionForRender(): void {
       let selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();
 
       if (this._listModel instanceof Collection) {
@@ -187,7 +187,7 @@ export default class Selection {
       }
    }
 
-   public setListModel(listModel: Collection|ListViewModel): void {
+   setListModel(listModel: Collection|ListViewModel): void {
       this._listModel = listModel;
    }
 
