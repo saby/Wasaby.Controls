@@ -1004,11 +1004,11 @@ var Base = Control.extend({
     },
 
     _calculateValueForTemplate: function () {
-        var model = this._viewModel;
-        var field = this._getField();
+        const model = this._viewModel;
+        const field = this._getField();
 
         if (model.shouldBeChanged && field) {
-            _private.updateField(this, model.displayValue, model.selection);
+            this._updateFieldInTemplate();
             model.changesHaveBeenApplied();
 
             if (_private.isFieldFocused(this) && !field.readOnly) {
@@ -1017,6 +1017,11 @@ var Base = Control.extend({
         }
 
         return model.displayValue;
+    },
+
+    _updateFieldInTemplate: function() {
+        const model = this._viewModel;
+        _private.updateField(this, model.displayValue, model.selection);
     },
 
     _recalculateLocationVisibleArea: function (field, displayValue, selection) {
