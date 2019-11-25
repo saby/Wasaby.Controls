@@ -389,7 +389,11 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private changeTriggerVisibility(direction: IDirection, state: boolean): void {
         this.triggerVisibility[direction] = state;
-        this.virtualScroll.triggerVisibility[direction] = state;
+
+        if (this._options.virtualScrolling) {
+            this.virtualScroll.triggerVisibility[direction] = state;
+        }
+
         this._notify('triggerVisibilityChanged', [direction, state]);
     }
 
