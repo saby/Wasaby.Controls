@@ -3,7 +3,7 @@
 def version = '20.1000'
 
 node ('controls') {
-    checkout_pipeline("rc-${version}")
+    checkout_pipeline("20.1000/kua/comlete_unit_output_err")
     run_branch = load '/home/sbis/jenkins_pipeline/platforma/branch/run_branch'
     run_branch.execute('controls', version)
 }
