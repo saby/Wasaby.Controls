@@ -270,13 +270,23 @@
  * @property {String} compatibleWidth Ширина колонки в браузерах, не поддерживающих "CSS Grid Layout".
  * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
  * @property {String} displayProperty Имя поля, данные которого отображаются в колонке.
- * @property {String} [template={@link Controls/grid:ColumnTemplate}] Шаблон отображения ячейки.
+ * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
  * О создании пользовательского шаблона читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">здесь</a>.
  * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
  * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
- * @property {GridCellAlign} [align=left] Выравнивание содержимого ячейки по горизонтали.
- * @property {GridCellVAlign} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
- * По умолчанию содержимое выравнивается по базовой линии (см. {@link align-items https://developer.mozilla.org/ru/docs/Web/CSS/align-items}).
+ * @property {String} [align=left] Выравнивание содержимого ячейки по горизонтали.
+ * Доступные значения:
+ * 
+ * * **left** — по левому краю.
+ * * **center** — по центру.
+ * * **right** — по правому краю.
+ * @property {String} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
+ * Доступные значения:
+ * 
+ * * **top** — по верхнему краю.
+ * * **center** — по центру.
+ * * **bottom** — по нижнему краю.
+ * * **baseline** — по базовой линии (см. {@link https://developer.mozilla.org/ru/docs/Web/CSS/align-items align-items}).
  * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
  * @property {String} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  * Доступные значения:
@@ -492,10 +502,13 @@
 /**
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
- * <a href="/materials/demo-ws4-edit-arrow">Example</a>
- * @remark Чтобы расположить кнопка отображалась в прикладном шаблоне колонки, следует встроить шаблон editArrowTemplate в нужное место
+ * @remark
+ * См. <a href="/materials/demo-ws4-edit-arrow">демо-пример</a>
+ * Чтобы кнопка отображалась в прикладном шаблоне колонки, следует самостоятельно встроить шаблон {@link Controls/grid:ColumnTemplate#editArrowTemplate} в нужное место.
  * @example
+ * <pre>
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
+ * </pre>
  */
 
 /*
