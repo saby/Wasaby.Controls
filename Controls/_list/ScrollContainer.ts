@@ -198,6 +198,7 @@ export default class ScrollContainer extends Control<IOptions> {
             placeholderChangedCallback: this.placeholdersChangedCallback,
             indexesChangedCallback: this.indexesChangedCallback,
             loadMoreCallback: this.loadMoreCallback,
+            saveScrollPositionCallback: this.saveScrollPositionCallback,
             viewModel: options.viewModel,
             useNewModel: options.useNewModel
         });
@@ -446,6 +447,11 @@ export default class ScrollContainer extends Control<IOptions> {
             this.applyScrollTopCallback();
             this.applyScrollTopCallback = null;
         }
+    }
+
+    private saveScrollPositionCallback = (direction: IDirection): void => {
+        this.savedScrollDirection = direction;
+        this.saveScrollPosition = true;
     }
 
     /**

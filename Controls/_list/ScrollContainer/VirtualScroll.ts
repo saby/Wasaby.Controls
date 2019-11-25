@@ -16,6 +16,7 @@ interface IVirtualScrollControllerOptions {
     indexesChangedCallback: Function;
     loadMoreCallback: Function;
     placeholderChangedCallback: Function;
+    saveScrollPositionCallback: Function;
     viewModel: unknown;
     useNewModel: boolean;
 }
@@ -38,6 +39,7 @@ export default class VirtualScrollController {
     private indexesChangedCallback: Function;
     private loadMoreCallback: Function;
     private placeholderChangedCallback: Function;
+    private saveScrollPositionCallback: Function;
     private viewModel: unknown;
     private useNewModel: boolean;
     triggerVisibility: {
@@ -68,6 +70,7 @@ export default class VirtualScrollController {
         this.indexesChangedCallback = options.indexesChangedCallback;
         this.loadMoreCallback = options.loadMoreCallback;
         this.placeholderChangedCallback = options.placeholderChangedCallback;
+        this.saveScrollPositionCallback = options.saveScrollPositionCallback;
         this.viewModel = options.viewModel;
         this.useNewModel = options.useNewModel;
         this.subscribeToModelChange(options.viewModel, options.useNewModel);
@@ -347,6 +350,8 @@ export default class VirtualScrollController {
                 }
                 this.recalcRangeToDirection(direction);
             }
+
+            this.saveScrollPositionCallback(direction);
         }
     }
 

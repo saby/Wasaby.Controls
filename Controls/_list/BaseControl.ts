@@ -21,7 +21,7 @@ import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {constants, detection} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
-import {ICrud} from "Types/source";
+import {ICrud, Memory} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDireciton} from './interface/IVirtualScroll';
@@ -914,7 +914,15 @@ var _private = {
                 }
             }
         }
-        if (changesType === 'collectionChanged' || changesType === 'indexesChanged' || newModelChanged) {
+        // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
+        // for example if Controls.explorer:View is switched from list to tile mode. The controller
+        // will keep firing `indexesChanged` events, but we should not mark items as changed while
+        // virtual scrolling is disabled.
+        if (
+            changesType === 'collectionChanged' ||
+            changesType === 'indexesChanged' && self._options.virtualScrolling !== false ||
+            newModelChanged
+        ) {
             self._itemsChanged = true;
         }
         self._forceUpdate();
@@ -993,7 +1001,7 @@ var _private = {
                     if (typeof self._options.contextMenuConfig === 'object') {
                         cMerge(defaultMenuConfig, self._options.contextMenuConfig);
                     } else {
-                        Logger.error('BaseControl', 'maxCountValue is required for "maxCount" navigation type.');
+                        Logger.error('Controls/list:View: Некорректное значение опции contextMenuConfig. Ожидается объект');
                     }
                 }
 
@@ -1236,7 +1244,7 @@ var _private = {
         return pagingLabelData;
     },
 
-    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
+    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty: string}): SourceController {
         return new SourceController({
             source: source,
             navigation: navigation,
@@ -1246,7 +1254,7 @@ var _private = {
 
     checkRequiredOptions: function(options) {
         if (options.keyProperty === undefined) {
-            Logger.warn('BaseControl', 'Option "keyProperty" is required.');
+            Logger.warn('BaseControl: Option "keyProperty" is required.');
         }
     },
 
@@ -1275,7 +1283,13 @@ var _private = {
         self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
 
-        if (!self._pagingNavigation) {
+        if (self._pagingNavigation) {
+            _private.resetPagingNavigation(self, cfg.navigation);
+            self._pageSizeSource = new Memory({
+                keyProperty: 'id',
+                data: PAGE_SIZE_ARRAY
+            });
+        } else {
             self._pagingNavigationVisible = false;
             _private.resetPagingNavigation(self, cfg.navigation);
         }

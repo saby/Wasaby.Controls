@@ -42,6 +42,10 @@ import { ISelectionMap, default as SelectionManager } from './utils/SelectionMan
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
+const VIRTUAL_SCROLL_MODE = {
+    HIDE: 'hide',
+    REMOVE: 'remove'
+};
 
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
@@ -685,7 +689,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
-        this._virtualScrollManager = options.virtualScrollMode === 'remove' ?
+        this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
             new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
@@ -2090,7 +2094,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._startIndex = newStart;
             this._stopIndex = newStop;
 
-            if (this._$virtualScrollMode === 'hide') {
+            if (this._$virtualScrollMode === VIRTUAL_SCROLL_MODE.HIDE) {
                 this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
             }
 
@@ -3237,7 +3241,7 @@ Object.assign(Collection.prototype, {
     _$editingConfig: null,
     _$unique: false,
     _$importantItemProperties: null,
-    _$virtualScrollMode: 'remove',
+    _$virtualScrollMode: VIRTUAL_SCROLL_MODE.REMOVE,
     _$virtualScrolling: false,
     _$hasMoreData: false,
     _$compatibleReset: false,
