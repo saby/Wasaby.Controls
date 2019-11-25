@@ -1325,6 +1325,9 @@ define([
                   setTimeout(function() {
                      try {
                         assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                        ctrl._destroyed = true;
+                        ctrl._children = null;
+                        lists.BaseControl._private.checkLoadToDirectionCapability(ctrl);
                      }
                      catch(e) {
                         done(e);
