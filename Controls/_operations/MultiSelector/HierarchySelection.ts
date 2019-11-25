@@ -77,7 +77,7 @@ var
             parentExcluded = false,
             parentSelected = false;
 
-         while (parentId) {
+         while (parentId !== null && parentId !== undefined) {
             if (selectedKeys.indexOf(parentId) !== -1) {
                parentSelected = true;
                break;
@@ -256,7 +256,7 @@ var HierarchySelection = Selection.extend({
          }
 
          parentId = _private.getParentId(key, this._items, this._hierarchyRelation.getParentProperty());
-         while (parentId) {
+         while (parentId !== null && parentId !== undefined) {
             if (this._isAllSelection(this._getParams(parentId))) {
                ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
             }
