@@ -628,7 +628,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
-    protected _virtualScrollMode: IVirtualScrollMode;
+    protected _$virtualScrollMode: IVirtualScrollMode;
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
     protected _selectionManager: SelectionManager;
@@ -680,7 +680,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._stopIndex = this.getCount();
 
-        this._virtualScrollMode = options.virtualScrollMode;
+        this._$virtualScrollMode = options.virtualScrollMode;
 
         this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);
@@ -2090,7 +2090,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._startIndex = newStart;
             this._stopIndex = newStop;
 
-            if (this._virtualScrollMode === 'hide') {
+            if (this._$virtualScrollMode === 'hide') {
                 this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
             }
 
@@ -3237,6 +3237,7 @@ Object.assign(Collection.prototype, {
     _$editingConfig: null,
     _$unique: false,
     _$importantItemProperties: null,
+    _$virtualScrollMode: 'remove',
     _$virtualScrolling: false,
     _$hasMoreData: false,
     _$compatibleReset: false,
