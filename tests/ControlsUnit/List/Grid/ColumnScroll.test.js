@@ -2,6 +2,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
    'use strict';
 
+   ColumnScroll._private.prepareDebouncedUpdateSizes = function() {
+      return ColumnScroll._private.updateSizes;
+   };
+
    describe('Controls.ColumnScroll', function() {
       var
          cfg = {
@@ -14,6 +18,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             stickyColumnsCount: 1,
             listModel: {
                isFullGridSupport: () => true,
+               isNoGridSupport: () => false,
                getResultsPosition: () => undefined,
                getItems: () => ({
                   getCount: () => 3
@@ -110,6 +115,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             }
          };
          sccColumnScroll.saveOptions(changedCfg);
+         sccColumnScroll._beforeMount(changedCfg);
          sccColumnScroll._afterMount(changedCfg);
          assert.strictEqual(sccColumnScroll._contentSize, 600);
          assert.strictEqual(sccColumnScroll._contentContainerSize, 400);
@@ -148,6 +154,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                columnScrollStartPosition: 'end',
                listModel: {
                   isFullGridSupport: () => true,
+                  isNoGridSupport: () => false,
                   getResultsPosition: () => undefined
                }
             },
@@ -186,6 +193,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          endColumnScroll._options.listModel.getItems = () => ({
             getCount: () => 3
          });
+         endColumnScroll._beforeMount(cfg);
          endColumnScroll._afterMount(cfg);
          assert.strictEqual(endColumnScroll._contentSize, 500);
          assert.strictEqual(endColumnScroll._contentContainerSize, 250);
@@ -231,6 +239,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          };
 
          clearColumnScroll.saveOptions(cfg);
+         clearColumnScroll._beforeMount(cfg);
          clearColumnScroll._afterMount(cfg);
 
          assert.equal(clearColumnScroll._contentSize, 500);
@@ -385,6 +394,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             }
          };
          clearColumnScroll.saveOptions({...cfg, stickyColumnsCount: undefined});
+         clearColumnScroll._beforeMount({...cfg, stickyColumnsCount: undefined});
          clearColumnScroll._afterMount({...cfg, stickyColumnsCount: undefined});
          assert.equal(clearColumnScroll._contentSize, 500);
          assert.equal(clearColumnScroll._contentContainerSize, 250);
@@ -418,6 +428,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             }
          };
          clearColumnScroll.saveOptions({...cfg, stickyColumnsCount: undefined});
+         clearColumnScroll._beforeMount({...cfg, stickyColumnsCount: undefined});
          clearColumnScroll._afterMount({...cfg, stickyColumnsCount: undefined});
          assert.equal(clearColumnScroll._contentSize, 250);
          assert.equal(clearColumnScroll._contentContainerSize, 250);
@@ -527,6 +538,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             columnScrollStartPosition: 'end',
             listModel: {
                isFullGridSupport: () => true,
+               isNoGridSupport: () => false,
                getResultsPosition: () => undefined,
                getItems: () => ({
                   getCount: () => 3
@@ -562,6 +574,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             }
          };
          newColumnScroll.saveOptions(newCfg);
+         newColumnScroll._beforeMount(newCfg);
          newColumnScroll._afterMount(newCfg);
 
          assert.equal(450, newColumnScroll._contentSize);
@@ -675,6 +688,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             stickyColumnsCount: 1,
             listModel: {
                isFullGridSupport: () => true,
+               isNoGridSupport: () => false,
                getResultsPosition: () => undefined,
                getItems: () => ({
                   getCount: () => 3
@@ -710,6 +724,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             }
          };
          newColumnScroll.saveOptions(newCfg);
+         newColumnScroll._beforeMount(newCfg);
          newColumnScroll._afterMount(newCfg);
 
          assert.equal(450, newColumnScroll._contentSize);
