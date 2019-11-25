@@ -155,6 +155,7 @@ var StickyHeader = Control.extend({
       //Let the listeners know that the element is no longer fixed before the unmount.
       this._fixationStateChangeHandler('', this._model.fixedPosition);
       this._observeHandler = undefined;
+      this._observer = undefined;
       this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
    },
 
