@@ -256,12 +256,12 @@ export default class VirtualScrollController {
      */
     private getItemsHeights(startIndex: number, stopIndex: number): number {
         let height = 0;
+        const fixedStartIndex = Math.max(startIndex, 0);
+        const fixedStopIndex = Math.min(stopIndex, this.itemsHeights.length);
         const items = this.itemsHeights;
 
-        if (typeof items[startIndex] !== 'undefined' && typeof items[stopIndex - 1] !== 'undefined') {
-            for (let i = startIndex; i < stopIndex; i++) {
-                height += items[i];
-            }
+        for (let i = fixedStartIndex; i < fixedStopIndex; i++) {
+            height += items[i];
         }
 
         return height;
@@ -340,16 +340,13 @@ export default class VirtualScrollController {
         if (this.itemsContainer) {
             const direction = newItemsIndex <= this.viewModel.getStartIndex() ? 'up' : 'down';
 
-            if (direction === 'down') {
-                this.recalcRangeToDirection(direction);
-            } else {
-                if (this.itemsFromLoadToDirection) {
-                    this.savedStopIndex += newItems.length;
-                    this.savedStartIndex += newItems.length;
-                    this.setStartIndex(this.startIndex + newItems.length);
-                }
-                this.recalcRangeToDirection(direction);
+            if (direction === 'up' && this.itemsFromLoadToDirection) {
+                this.savedStopIndex += newItems.length;
+                this.savedStartIndex += newItems.length;
+                this.setStartIndex(this.startIndex + newItems.length);
             }
+
+            this.recalcRangeToDirection(direction);
 
             this.saveScrollPositionCallback(direction);
         }

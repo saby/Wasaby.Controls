@@ -29,6 +29,7 @@ interface IScrollParams {
 }
 
 const DEFAULT_TRIGGER_OFFSET = 100;
+const TRIGGER_VISIBILITY_DELAY = 101;
 const SIZE_RELATION_TO_VIEWPORT = 0.3;
 
 /**
@@ -311,7 +312,7 @@ export default class ScrollContainer extends Control<IOptions> {
         this.checkTriggerVisibilityTimeout = setTimeout(() => {
             this.checkTriggerVisibility();
             clearTimeout(this.checkTriggerVisibilityTimeout);
-        });
+        }, TRIGGER_VISIBILITY_DELAY);
     }
 
 
