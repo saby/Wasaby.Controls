@@ -181,6 +181,25 @@ define(
             result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
             assert.isOk(result);
          });
+
+         it('_private::destroy', () => {
+            const self = {
+               _history: {
+                  recent: createRecordSet(recentData)
+               }
+            };
+
+            assert.equal(self._history.recent.getCount(), 11);
+
+            historyMod.FilterSource._private.destroy(self, '1');
+            assert.equal(self._history.recent.getCount(), 10);
+
+            historyMod.FilterSource._private.destroy(self, ['2']);
+            assert.equal(self._history.recent.getCount(), 9);
+
+            historyMod.FilterSource._private.destroy(self, 'noDataWithThisKey');
+            assert.equal(self._history.recent.getCount(), 9);
+         });
       });
    }
 );
