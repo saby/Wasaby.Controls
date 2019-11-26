@@ -795,8 +795,8 @@
 
 /**
  * @name Controls/_list/interface/IList#selectionStrategy
- * @cfg {SelectionStrategy} Стратегия выбора задает логику поведения при отметки записей в режиме множественого выбора.
+ * @cfg {SelectionStrategy} Стратегия выбора задает логику поведения при отметке записей в режиме множественого выбора.
  * @remark Опция актуальна только при multiSelectVisibility: true.
- * Для плоских спиков по дефолту используется {@link Controls/operations:FlatSelectionStrategy}, для иерархических {@link Controls/operations:DeepTreeSelectionStrategy}.
+ * @default Controls/operations:FlatSelectionStrategy
  * @see Controls/operations:TreeSelectionStrategy
  */
