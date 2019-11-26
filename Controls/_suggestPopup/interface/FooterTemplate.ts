@@ -8,16 +8,14 @@
  * Пример:
  * <pre>
  * <Controls.suggest:Input>
- *    <ws:footerTemplate>
- *       <ws:templateName>
- *          <ws:partial template="Controls/suggestPopup:FooterTemplate">
- *             <ws:showSelectorButtonTemplate>
- *                <span on:click="_showAllClick()">
- *                   <span>Моя кнопка</span>
- *                </span>
- *             </ws:showSelectorButtonTemplate>
- *          </ws:partial>
- *       </ws:templateName>
+ *    <ws:footerTemplate templateName="Controls/suggestPopup:FooterTemplate">
+ *       <ws:templateOptions>   
+ *          <ws:showSelectorButtonTemplate>
+ *             <span on:click="_showAllClick()">
+ *                <span>Моя кнопка</span>
+ *             </span>
+ *          </ws:showSelectorButtonTemplate>
+ *       </ws:templateOptions>
  *    </ws:footerTemplate>
  * </Controls.suggest:Input>
  * </pre>
