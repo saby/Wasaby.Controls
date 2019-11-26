@@ -45,6 +45,8 @@
                                     on:sortingChanged="_notifyHandler('sortingChanged')"
                                     on:itemExpanded="_notifyHandler('itemExpanded')"
                                     on:itemCollapsed="_notifyHandler('itemCollapsed')"
+                                    on:itemExpand="_notifyHandler('itemExpand')"
+                                    on:itemCollapse="_notifyHandler('itemCollapse')"
                                     on:expandedItemsChanged="_notifyHandler('expandedItemsChanged')"
                                     on:collapsedItemsChanged="_notifyHandler('collapsedItemsChanged')"
                                     on:editArrowClick="_notifyHandler('editArrowClick')"

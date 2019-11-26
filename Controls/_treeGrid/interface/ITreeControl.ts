@@ -217,6 +217,14 @@
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  */
 
+/**
+ * @event Controls/_treeGrid/interface/ITreeControl#itemExpand Происходит перед развертыванием узла.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Разворачиваемый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ */
+
 /*
  * @event Controls/_treeGrid/interface/ITreeControl#itemExpanded Occurs after node expansion.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
@@ -227,6 +235,14 @@
  * @event Controls/_treeGrid/interface/ITreeControl#itemCollapsed Происходит после сворачивания узла.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Свёрнутый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ */
+
+/**
+ * @event Controls/_treeGrid/interface/ITreeControl#itemCollapse Происходит перед сворачиванием узла.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  */
