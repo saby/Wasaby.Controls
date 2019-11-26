@@ -42,7 +42,7 @@ define('Controls/interface/IPrinter', [], function() {
     * @description Выгружает реестр в соответствующий формат.
     * @param {Object} params Дополнительная информация.
     * @param {String} params.name Имя файла, используемого для экспорта.
-    * @param {Boolean} params.pageLandscape Определяет, какую ориентацию будет иметь страница - книжную или альбомную.
+    * @param {Boolean} params.pageOrientation Определяет, какую ориентацию будет иметь страница - книжную или альбомную.
     * @param {Array.<Column>} params.columns Список столбцов для экспорта.
     * @param {String} params.parentProperty Имя поля, содержащего идентификатор родительского элемента.
     * @example
@@ -52,7 +52,7 @@ define('Controls/interface/IPrinter', [], function() {
     * _beforeMount: function() {
     *    this.params = {
     *       name: 'myFile',
-    *       pageLandscape: true,
+    *       pageOrientation: true,
     *       columns: [{ field: 'Name', title: 'Name' }, { field: 'Date', title: 'Date' }],
     *       parentProperty: 'parent'
     *    };
@@ -66,7 +66,7 @@ define('Controls/interface/IPrinter', [], function() {
     * @function Controls/interface/IPrinter#execute
     * @param {Object} params Additional information.
     * @param {String} params.name File name to use for exported file.
-    * @param {Boolean} params.pageLandscape Determines whether the page will be in portrait or landscape orientation.
+    * @param {Boolean} params.pageOrientation Determines whether the page will be in portrait or landscape orientation.
     * @param {Array.<Column>} params.columns List of columns to export.
     * @param {String} params.parentProperty Name of the field that contains item's parent identifier.
     * @example
@@ -74,7 +74,7 @@ define('Controls/interface/IPrinter', [], function() {
     * <pre>
     *    var params = {
     *       name: 'myFile',
-    *       pageLandscape: true,
+    *       pageOrientation: true,
     *       columns: [{ field: 'Name', name: 'Name' }, { field: 'Date', name: 'Date' }],
     *       parentProperty: 'parent'
     *    };
