@@ -94,6 +94,16 @@ define([
          assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
       });
 
+      it('_private.canStartDragNDrop', function() {
+         var
+            explorer = new explorerMod.View({});
+
+         explorer._viewMode = 'table';
+         assert.isTrue(explorerMod.View._private.canStartDragNDrop(explorer));
+         explorer._viewMode = 'search';
+         assert.isFalse(explorerMod.View._private.canStartDragNDrop(explorer));
+      });
+
       it('_private.getRoot', function() {
          var
             cfg = {

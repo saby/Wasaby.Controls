@@ -254,7 +254,13 @@ var _private = {
         }
         return resDeferred;
     },
-
+    canStartDragNDrop(domEvent: any, cfg: any): boolean {
+        return (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
+            !(domEvent.nativeEvent.button) &&
+            !cfg.readOnly &&
+            cfg.itemsDragNDrop &&
+            !domEvent.target.closest('.controls-DragNDrop__notDraggable');
+    },
     /**
      * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
      * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
@@ -2529,7 +2535,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             self = this,
             dragStartResult;
 
-        if (!(domEvent.nativeEvent.button) && !this._options.readOnly && this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
+        if (_private.canStartDragNDrop(domEvent, this._options)) {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
