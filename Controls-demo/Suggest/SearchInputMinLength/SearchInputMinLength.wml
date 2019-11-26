@@ -1,0 +1,30 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h3>Минимальное количество символов: 1</h3>
+      <Controls.suggest:SearchInput
+              bind:value="_suggestCustomValue"
+              displayProperty="title"
+              searchParam="title"
+              minSearchLength="{{1}}"
+              navigation="{{_defaultNavigation}}"
+              source="{{_suggestSource}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestSearchListWide"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:SearchInput>
+  </div>
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h3>Минимальное количество символов: 4</h3>
+      <Controls.suggest:SearchInput
+              bind:value="_suggestDefaultValue"
+              displayProperty="title"
+              searchParam="title"
+              minSearchLength="{{4}}"
+              navigation="{{_defaultNavigation}}"
+              source="{{_suggestSource}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestSearchListWide"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:SearchInput>
+   </div>
+</div>

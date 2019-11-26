@@ -1,0 +1,30 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h3>Поиск без задержки</h3>
+      <Controls.suggest:SearchInput
+              bind:value="_suggestCustomValue"
+              displayProperty="title"
+              searchParam="title"
+              searchDelay="{{0}}"
+              navigation="{{_defaultNavigation}}"
+              source="{{_suggestSource}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestSearchListWide"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:SearchInput>
+  </div>
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h3>Поиск с задержкой 1.5 секунды</h3>
+      <Controls.suggest:SearchInput
+              bind:value="_suggestDefaultValue"
+              displayProperty="title"
+              searchParam="title"
+              searchDelay="{{1500}}"
+              navigation="{{_defaultNavigation}}"
+              source="{{_suggestSource}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestSearchListWide"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:SearchInput>
+   </div>
+</div>

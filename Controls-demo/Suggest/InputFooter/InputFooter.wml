@@ -1,0 +1,30 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h3>Настриваемый шаблон подвала</h3>
+      <Controls.suggest:Input
+              bind:value="_suggestCustomValue"
+              displayProperty="title"
+              searchParam="title"
+              navigation="{{_defaultNavigation}}"
+              source="{{_suggestSource}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestInputList"/>
+          </ws:suggestTemplate>
+          <ws:footerTemplate templateName="Controls-demo/Suggest/resources/FooterTemplate"/>
+      </Controls.suggest:Input>
+  </div>
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h3>Без подвала</h3>
+      <Controls.suggest:Input
+              bind:value="_suggestDefaultValue"
+              displayProperty="title"
+              searchParam="title"
+              navigation="{{_defaultNavigation}}"
+              source="{{_suggestSource}}"
+              footerTemplate="{{null}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestInputList"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:Input>
+   </div>
+</div>

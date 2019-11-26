@@ -37,6 +37,16 @@ define('Controls-demo/Suggest/Suggest', [
       constructor: function() {
          VDomSuggest.superclass.constructor.apply(this, arguments);
 
+         this._defaultNavigation = {
+            source: 'page',
+            view: 'page',
+            sourceConfig: {
+               pageSize: 2,
+               page: 0,
+               hasMore: false
+            }
+         };
+
          this._companiesData = MemorySourceData.companies.slice();
          this._departmentsData = MemorySourceData.departments.concat([
             {id: 8, department: 'Разработка Сбис', owner: 'Новиков Д.В.', title: 'Разработка Сбис'},

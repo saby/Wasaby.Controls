@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h3>Вкладки в шаблоне автодополнения</h3>
+      <Controls.suggest:Input
+              bind:value="_suggestCustomValue"
+              displayProperty="title"
+              searchParam="title"
+              minSearchLength="{{1}}"
+              navigation="{{_defaultNavigation}}"
+              source="{{_suggestTabSource}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate">
+              <ws:templateOptions demoClass="demo-SuggestInputList"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:Input>
+  </div>
+</div>

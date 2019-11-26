@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper">
+  <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+     <h3>Отображение в поле ввода имени руководителя отдела</h3>
+     <Controls.suggest:SearchInput
+             attr:class="ControlsDemo-Suggest__simple"
+             bind:value="_suggestDownValue"
+             displayProperty="owner"
+             searchParam="title"
+             navigation="{{_defaultNavigation}}"
+             source="{{_suggestSource}}">
+         <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+             <ws:templateOptions demoClass="demo-SuggestSearchListWide"/>
+         </ws:suggestTemplate>
+     </Controls.suggest:SearchInput>
+  </div>
+</div>
