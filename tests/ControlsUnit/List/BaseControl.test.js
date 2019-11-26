@@ -885,12 +885,13 @@ define([
        });
 
       it('_private::handleListScrollSync', () => {
-         const self = {};
-
-         self._virtualScroll = {
-            PlaceholdersSizes: {
-               top: 1000,
-               bottom: 1000
+         const self = {
+            _scrollPageLocked: true,
+            _virtualScroll: {
+               PlaceholdersSizes: {
+                  top: 1000,
+                  bottom: 1000
+               }
             }
          };
 
@@ -899,7 +900,7 @@ define([
             scrollHeight: 4000,
             clientHeight: 1000
          });
-
+         assert.isFalse(self._scrollPageLocked);
          assert.deepEqual(self._scrollParams, {
             scrollTop: 3000,
             scrollHeight: 6000,
@@ -1638,12 +1639,15 @@ define([
          setTimeout(function() {
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-
+            ctrl._scrollPageLocked = true;
             // прокручиваем к низу, проверяем состояние пэйджинга
             lists.BaseControl._private.handleListScroll(ctrl, {
                scrollTop: 300,
                position: 'down'
             });
+
+            assert.isFalse(ctrl._scrollPageLocked);
+
             assert.deepEqual({
                stateBegin: 'normal',
                statePrev: 'normal',
