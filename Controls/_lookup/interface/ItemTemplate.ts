@@ -33,7 +33,7 @@
 
 /**
  * @name Controls/lookup:ItemTemplate#contentTemplate
- * @cfg {String} Шаблон для отображения выбранной записи.
+ * @cfg {String|Function} Шаблон для отображения выбранной записи.
  * @example
  * <pre>
  * <Controls.lookup:Selector
@@ -44,11 +44,21 @@
 
 /**
  * @name Controls/lookup:ItemTemplate#crossTemplate
- * @cfg {String} Шаблон крестика удаления элемента.
+ * @cfg {String|Function} Шаблон крестика удаления элемента.
+ * @remark
+ * Использование опции неактуально, когда контрол работает в режиме чтения (опция readOnly в значении true).
  * @example
  * <pre>
- * <Controls.lookup:Selector
- *    crossTemplate="Controls/Template:MyCrossTemplate">
+ * <Controls.lookup:Selector>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls.lookup:ItemTemplate">
+ *          <ws:contentTemplate>
+ *             <ws:partial crossTemplate="Controls/Template:MyCrossTemplate">
+ *                Это мой шаблон крестика.
+ *             </ws:partial>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
  * </Controls.lookup:Selector>
  * </pre>
  */
@@ -56,11 +66,12 @@
 /**
  * @name Controls/lookup:ItemTemplate#displayProperty
  * @cfg {String} Название поля, значение которого отображается при выборе элемента.
+ * @default undefined
  * @example
  * <pre>
  *    <Controls.lookup:Selector>
  *       <ws:itemTemplate>
- *          <ws:partial template="Controls.lookup:ItemTemplate"
+ *          <ws:partial template="Controls/lookup:ItemTemplate"
  *                      displayProperty="title"
  *                      ... />
  *       </ws:itemTemplate>
@@ -70,13 +81,17 @@
 
 /**
  * @name Controls/lookup:ItemTemplate#clickable
- * @cfg {Boolean} Позволяет установить кликабельность выбранного значения (допустим только в случае использования contentTemplate по умолчанию).
+ * @cfg {Boolean} Позволяет установить кликабельность выбранного значения.
+ * @remark 
+ * Допустим только в случае использования contentTemplate по умолчанию.
+ * Также, по умолчанию выставляется в true, когда опции multiselect и readOnly выставлены в true и false соответственно.
+ * @default true
  * @example
  * <pre>
  *    <Controls.lookup:Selector>
  *       <ws:itemTemplate>
- *          <ws:partial template="Controls.lookup:ItemTemplate"
- *                      clickable="{{true}}"
+ *          <ws:partial template="Controls/lookup:ItemTemplate"
+ *                      clickable="{{false}}"
  *                      ... />
  *       </ws:itemTemplate>
  *    </Controls.lookup:Selector>
@@ -85,14 +100,16 @@
 
 /**
  * @name Controls/lookup:ItemTemplate#size
- * @cfg {String} Размер записей (допустим только в случае использования contentTemplate по умолчанию).
+ * @cfg {String} Размер записей.
  * @remark 
- * Доступные значения: m, l, xl, 2xl, 3xl.
+ * Допустим только в случае использования contentTemplate по умолчанию.
+ * Доступные значения: m, l, xl, 2xl, 3xl. В зависимости от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} значениям задаются собственные величины px.
+ * @default default
  * @example
  * <pre>
  *    <Controls.lookup:Selector>
  *       <ws:itemTemplate>
- *          <ws:partial template="Controls.lookup:ItemTemplate"
+ *          <ws:partial template="Controls/lookup:ItemTemplate"
  *                      size="xl"
  *                      ... />
  *       </ws:itemTemplate>
@@ -102,14 +119,16 @@
 
 /**
  * @name Controls/lookup:ItemTemplate#style
- * @cfg {String} Стиль записей (допустим только в случае использования contentTemplate по умолчанию).
+ * @cfg {String} Стиль записей.
  * @remark 
+ * Допустим только в случае использования contentTemplate по умолчанию.
  * Доступные значения: default, bold, accent, primary.
+ * @default default
  * @example
  * <pre>
  *    <Controls.lookup:Selector>
  *       <ws:itemTemplate>
- *          <ws:partial template="Controls.lookup:ItemTemplate"
+ *          <ws:partial template="Controls/lookup:ItemTemplate"
  *                      style="primary"
  *                      ... />
  *       </ws:itemTemplate>
