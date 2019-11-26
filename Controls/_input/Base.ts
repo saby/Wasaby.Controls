@@ -863,11 +863,14 @@ var Base = Control.extend({
     },
 
     _focusInHandler: function (event) {
+        let firstFocusByTab = this._firstFocus;
+
         if (this._options.selectOnClick) {
             this._viewModel.select();
         }
 
         if (this._focusByMouseDown) {
+            firstFocusByTab = false;
             this._firstClick = true;
         }
 
@@ -878,9 +881,9 @@ var Base = Control.extend({
 
         /**
          * When a filled field was mounted, its carriage is placed at the beginning of the text. For example, in chrome, firefox,
-         * IE10-11, can still where. The carriage needs to have a position in accordance with the model. So we change it to first focus.
+         * IE10-11, can still where. The carriage needs to have a position in accordance with the model. So we change it to first focus and tab.
          */
-        if (this._firstFocus) {
+        if (firstFocusByTab) {
             this._firstFocus = false;
             this._updateSelection(this._viewModel.selection);
         }
