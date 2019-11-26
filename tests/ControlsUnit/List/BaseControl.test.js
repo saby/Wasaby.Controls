@@ -275,6 +275,22 @@ define([
          assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, maxCountNaviation));
       });
 
+      it('_private::checkLoadToDirectionCapability', () => {
+         const self = {_options: {}};
+         const sandbox = sinon.createSandbox();
+         const myFilter = {testField: 'testValue'};
+
+         self._needScrollCalculation = false;
+         // loadToDirectionIfNeed вызывается с фильтром, переданным в checkLoadToDirectionCapability
+         sandbox.replace(lists.BaseControl._private, 'needLoadByMaxCountNavigation', () => true);
+         sandbox.replace(lists.BaseControl._private, 'loadToDirectionIfNeed', (baseControl, direction, filter) => {
+            assert.equal(direction, 'down');
+            assert.deepEqual(filter, myFilter);
+         });
+         lists.BaseControl._private.checkLoadToDirectionCapability(self, myFilter);
+         sandbox.restore();
+      });
+
       it('setHasMoreData', async function() {
          var gridColumns = [
             {
