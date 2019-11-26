@@ -285,6 +285,33 @@
  * * **none** — стандартное поведение при незаданном свойстве.
  */
 
+ /**
+ * @typedef {Object} cellPadding
+ * @property {HorizontalCellPaddingEnum} [left] Отступ от левой границы ячейки.
+ * @property {HorizontalCellPaddingEnum} [right] Отступ от правой границы ячейки.
+ */
+
+ /*
+ * @typedef {Object} HorizontalCellPaddingEnum
+ * @variant S Small padding.
+ * @variant M Medium padding.* @variant null Medium padding.
+ * @default null
+ */
+
+ /*
+ * @example
+ * columns: [
+ * {
+ * width: 1fr,
+ * cellPadding: { left: M, right: M }
+ * },
+ * {
+ * width: 1fr,
+ * cellPadding: { left: S, right: S }
+ * }
+ * ]
+ */
+
 /*
  * @typedef {Object} Column
  * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) or fraction (for example 1fr) and the value “auto”. The width specified in fr, "auto" and "minmax" will not be applied in browsers that do not support "CSS Grid Layout", in this case use the compatibleWidth option.
