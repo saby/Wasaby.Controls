@@ -1604,6 +1604,7 @@ var
 
         setBaseItemTemplateResolver(baseItemTemplateResolver: () => TemplateFunction): void {
             this._baseItemTemplateResolver = baseItemTemplateResolver;
+            this.resetCachedItemData();
         },
 
         getItems: function() {
