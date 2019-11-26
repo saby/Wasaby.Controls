@@ -285,20 +285,20 @@
  * * **none** — стандартное поведение при незаданном свойстве.
  */
 
- /**
+/**
  * @typedef {Object} cellPadding
  * @property {HorizontalCellPaddingEnum} [left] Отступ от левой границы ячейки.
  * @property {HorizontalCellPaddingEnum} [right] Отступ от правой границы ячейки.
  */
 
- /*
+/*
  * @typedef {Object} HorizontalCellPaddingEnum
  * @variant S Small padding.
  * @variant M Medium padding.* @variant null Medium padding.
  * @default null
  */
 
- /*
+/*
  * @example
  * columns: [
  * {
