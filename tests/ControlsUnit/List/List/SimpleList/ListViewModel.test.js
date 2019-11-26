@@ -520,7 +520,7 @@ define([
 
          var iv = new lists.ListViewModel(cfg);
          iv.subscribe('onMarkedKeyChanged', function(e, key) {
-            cfg.markedKey = key;
+            iv.setMarkedKeyInOptions(key);
          });
          var marItem = iv.getMarkedItem();
          assert.equal(iv._display.at(1), marItem, 'Incorrect selectedItem');

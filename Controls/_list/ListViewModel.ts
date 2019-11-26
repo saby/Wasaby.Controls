@@ -281,6 +281,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     setMarkedKeyInOptions(key): void {
         this._options.markedKey = this._getActualMarker(key);
+        this._nextModelVersion(true, 'markedKeyChanged');
     },
     setMarkedKey: function(key) {
         if (key === this.getMarkedKey()) {
@@ -311,10 +312,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _applyMarkedKey(markedKey): void {
         if (this._options.markedKey === undefined) {
             this._markedKey = markedKey;
+            this._nextModelVersion(true, 'markedKeyChanged');
         }
-        this._nextModelVersion(true, 'markedKeyChanged');
         this._notify('onMarkedKeyChanged', markedKey);
-
     },
 
     updateMarker: function(markedKey): void {
