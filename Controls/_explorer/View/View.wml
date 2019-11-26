@@ -21,6 +21,7 @@
                                     itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"
                                     virtualScrolling="{{_virtualScrolling}}"
                                     dragControlId="{{ _dragControlId }}"
+                                    canStartDragNDrop="{{ _canStartDragNDrop }}"
                                     on:itemClick="_onItemClick()"
                                     on:itemMouseDown="_notifyHandler('itemMouseDown')"
                                     on:checkboxClick="_notifyHandler('checkboxClick')"

@@ -10,7 +10,6 @@ import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
 import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
 import {detection} from 'Env/Env';
-import 'css!theme?Controls/popupTemplate';
 
 /**
  * Stack Popup Controller

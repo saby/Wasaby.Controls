@@ -1,9 +1,9 @@
-import Env = require('Env/Env');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Base = require('Controls/_input/Base');
 import ViewModel = require('Controls/_input/Mask/ViewModel');
 import entity = require('Types/entity');
 
+import {Logger} from 'UI/Utils';
 import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
 
 
@@ -206,7 +206,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
 
                if (replacer && _private.regExpQuantifiers.test(mask)) {
                   validation = false;
-                  Env.IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/_input/Mask/options/replacer/');
+                  Logger.error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/_input/Mask/options/replacer/');
                } else {
                   validation = true;
                }

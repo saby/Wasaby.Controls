@@ -82,7 +82,7 @@ class ModuleClass {
 
         periodType = getPeriodType(updatedRange[0], updatedRange[1]);
 
-        if (periodType === periodTypes.day || periodType === periodTypes.days) {
+        if (this._periodTypeIsDay(periodType)) {
             this._relationMode = 'byCapacity';
         }
 
@@ -176,6 +176,10 @@ class ModuleClass {
         return ranges;
     }
 
+    private _periodTypeIsDay(periodType) {
+        return (periodType === periodTypes.day || periodType === periodTypes.days);
+    }
+
     private _getUpdatedRanges(ranges, rangeIndex, newRange, relationMode, steps) {
         let selectionType = 'months',
             start = newRange[0],
@@ -196,7 +200,7 @@ class ModuleClass {
             // and the month of the periods differ or step is not aligned to the new capacity,
             // then we also set adjacent periods.
             if (relationMode === 'byCapacity' ||
-                    (capacityChanged && steps[number] % 12 !== 0 &&
+                    (capacityChanged && steps[number] % 12 !== 0 && periodLength > oldPeriodLength &&
                         (start.getMonth() !== oldStart.getMonth() || steps[number] % periodLength !== 0))) {
                 s = periodLength;
             } else {
@@ -216,15 +220,20 @@ class ModuleClass {
         periodType = getPeriodType(start, end);
         oldPeriodType = (oldStart && oldEnd) ? getPeriodType(oldStart, oldEnd) : null;
 
-        if (periodType === periodTypes.day || periodType === periodTypes.days) {
+        if (this._periodTypeIsDay(oldPeriodType)) {
+            oldPeriodLength = dateRangeUtil.gePeriodLengthInDays(oldStart, oldEnd);
+        } else {
+            oldPeriodLength = oldPeriodType ? dateRangeUtil.getPeriodLengthInMonths(oldStart, oldEnd) : null;
+        }
+
+        if (this._periodTypeIsDay(periodType)) {
             selectionType = 'days';
             periodLength = dateRangeUtil.gePeriodLengthInDays(start, end);
         } else {
             periodLength = periodType ? dateRangeUtil.getPeriodLengthInMonths(start, end) : null;
         }
 
-        if ((periodType === periodTypes.days || periodType === periodTypes.day) &&
-            (oldPeriodType === periodTypes.days || oldPeriodType === periodTypes.day)) {
+        if (this._periodTypeIsDay(periodType) && this._periodTypeIsDay(oldPeriodType)) {
             capacityChanged = periodLength !== dateRangeUtil.gePeriodLengthInDays(oldStart, oldEnd);
         } else {
             capacityChanged = periodType !== oldPeriodType;

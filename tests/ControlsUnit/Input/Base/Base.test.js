@@ -425,8 +425,9 @@ define(
                   value: ''
                });
                ctrl._getActiveElement = function() {
-                  return {};
+                  return ctrl._getField();
                };
+               ctrl._isBrowserPlatform = true;
                EnvEvent.Bus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
             });
             afterEach(function() {
@@ -437,12 +438,29 @@ define(
                   value: 'test'
                });
 
+               ctrl._firstFocus = true;
                ctrl._focusInHandler();
 
-               assert.deepEqual(ctrl._viewModel.selection, {
-                  start: 4,
-                  end: 4
+               assert.equal(ctrl._getField().selectionStart, 4);
+               assert.equal(ctrl._getField().selectionEnd, 4);
+            });
+            it('Focus the field by click.', function() {
+               ctrl._beforeUpdate({
+                  value: 'test'
                });
+
+               ctrl._firstFocus = true;
+               ctrl._getActiveElement = function() {
+                  return {};
+               };
+               ctrl._mouseDownHandler();
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+               ctrl._focusInHandler();
+
+               assert.equal(ctrl._getField().selectionStart, 0);
+               assert.equal(ctrl._getField().selectionEnd, 0);
             });
          });
          describe('Focus out event', function() {

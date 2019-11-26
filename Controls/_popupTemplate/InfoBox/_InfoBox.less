@@ -1,11 +1,10 @@
 @spacing_Infobox-between-border-arrow: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2;
-
 .controls-InfoBoxTemplate {
    display: flex;
    height: 100%;
-
+}
+.controls-InfoBoxTemplate_theme-@{themeName} {
    //todo: will be fixed by https://online.sbis.ru/opendoc.html?guid=3b0e32ca-240a-4047-a64d-e62af28420e9
-
    .controls-StickyHeader__background, .controls-Grid__header-cell {
       background-color: @background-color_Infobox_default;
    }
@@ -23,23 +22,27 @@
    flex-direction: column;
 }
 
-.controls-InfoBoxTemplate__arrow {
+.controls-InfoBoxTemplate__arrow_theme-@{themeName} {
    width: @size_Infobox-arrow;
    height: @size_Infobox-arrow;
    border-width: @border-width_Infobox;
-   border-style: solid;
-   border-top: none;
-   border-left: none;
    background: @background-color_Infobox_default;
+   
+}
+
+.controls-InfoBoxTemplate__arrow{
    content: '';
    box-sizing: border-box;
    position: relative;
+   border-style: solid;
+   border-top: none;
+   border-left: none;
 }
 
 .controls-InfoBoxTemplate__arrow {
   @variants: default, danger, info, secondary, warning, success, primary;
   .for(@variants, {
-    &-@{_item} {
+    &-@{_item}_theme-@{themeName} {
       border-right-color: ~"@{border-color_Infobox_@{_item}}";
       border-bottom-color: ~"@{border-color_Infobox_@{_item}}";
     }
@@ -49,7 +52,7 @@
 .controls-InfoBoxTemplate_style_outline {
    @variants: default,  danger;
   .for(@variants, {
-    &_@{_item} {
+    &_@{_item}_theme-@{themeName} {
       background: @background-color_Infobox_default;
       box-shadow: ~"@{color_Infobox-shadow_@{_item}}" @box-shadow_Infobox;
       border: @border-width_Infobox solid ~"@{border-color_Infobox_@{_item}}";
@@ -57,7 +60,7 @@
   });
 }
 
-.controls-InfoBoxTemplate_style_marker {
+.controls-InfoBoxTemplate_style_marker_theme-@{themeName} {
   background: @background-color_Infobox_default;
   box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
   border: @border-width_Infobox solid @border-color_Infobox_default;
@@ -66,7 +69,7 @@
 .controls-InfoBoxTemplate_style_marker-top {
   @variants: default, danger, info, secondary, warning, success, primary;
   .for(@variants, {
-    &_@{_item} {
+    &_@{_item}_theme-@{themeName} {
       border-top: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
     }
   });
@@ -74,7 +77,7 @@
 .controls-InfoBoxTemplate_style_marker-bottom {
   @variants: default, danger, info, secondary, warning, success, primary;
   .for(@variants, {
-    &_@{_item} {
+    &_@{_item}_theme-@{themeName} {
       border-bottom: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
     }
   });
@@ -82,7 +85,7 @@
 .controls-InfoBoxTemplate_style_marker-left {
   @variants: default, danger, info, secondary, warning, success, primary;
   .for(@variants, {
-    &_@{_item} {
+    &_@{_item}_theme-@{themeName} {
       border-left: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
     }
   });
@@ -90,7 +93,7 @@
 .controls-InfoBoxTemplate_style_marker-right {
   @variants: default, danger, info, secondary, warning, success, primary;
   .for(@variants, {
-    &_@{_item} {
+    &_@{_item}_theme-@{themeName} {
       border-right: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
     }
   });
@@ -99,18 +102,24 @@
 .controls-InfoBoxTemplate__content {
    position: relative;
    box-sizing: border-box;
-   max-width: @max-width_Infobox;
    flex-shrink: 1;
    height: 100%;
    width: 100%;
    overflow: hidden;
 }
 
-.controls-InfoBoxTemplate__closeButton {
+.controls-InfoBoxTemplate__content_theme-@{themeName} {
+   max-width: @max-width_Infobox;
+}
+
+.controls-InfoBoxTemplate__closeButton { 
    position: absolute;
+   cursor: pointer;
+}
+
+.controls-InfoBoxTemplate__closeButton_theme-@{themeName} {
    top: @spacing_Infobox-between-top-close-button;
    right: @spacing_Infobox-between-right-close-button;
-   cursor: pointer;
    color: @color_Infobox-close-button;
 
    &:hover {
@@ -118,52 +127,55 @@
    }
 }
 
-.controls-InfoBoxTemplate__arrow-wrapper-top, .controls-InfoBoxTemplate__arrow-wrapper-bottom {
-   width: @spacing_Infobox-between-target-popup + 1;
-   height: @spacing_Infobox-between-target-popup;
-   flex-shrink: 0;
-}
-.controls-InfoBoxTemplate__arrow-wrapper-left, .controls-InfoBoxTemplate__arrow-wrapper-right {
-   width: @spacing_Infobox-between-target-popup;
-   height: @spacing_Infobox-between-target-popup + 1;
+.controls-InfoBoxTemplate__arrow-wrapper {
    flex-shrink: 0;
 }
 
-.controls-InfoBoxTemplate__arrow-top {
+.controls-InfoBoxTemplate__arrow-wrapper-top_theme-@{themeName}, .controls-InfoBoxTemplate__arrow-wrapper-bottom_theme-@{themeName} {
+   width: @spacing_Infobox-between-target-popup + 1;
+   height: @spacing_Infobox-between-target-popup;
+  
+}
+.controls-InfoBoxTemplate__arrow-wrapper-left_theme-@{themeName}, .controls-InfoBoxTemplate__arrow-wrapper-right_theme-@{themeName} {
+   width: @spacing_Infobox-between-target-popup;
+   height: @spacing_Infobox-between-target-popup + 1;
+}
+
+.controls-InfoBoxTemplate__arrow-top_theme-@{themeName} {
    transform: rotate(-135deg);
    top: @size_Infobox-arrow/2 - @border-width_Infobox;
 }
 
-.controls-InfoBoxTemplate__arrow-bottom {
+.controls-InfoBoxTemplate__arrow-bottom_theme-@{themeName} {
    transform: rotate(45deg);
    bottom: @size_Infobox-arrow/2;
 }
 
-.controls-InfoBoxTemplate__arrow-top, .controls-InfoBoxTemplate__arrow-bottom {
-   &.controls-InfoBoxTemplate__arrow-position-start {
+.controls-InfoBoxTemplate__arrow-top_theme-@{themeName}, .controls-InfoBoxTemplate__arrow-bottom_theme-@{themeName} {
+   &.controls-InfoBoxTemplate__arrow-position-start_theme-@{themeName} {
       left: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow  + @border-width_Infobox;
    }
 
-   &.controls-InfoBoxTemplate__arrow-position-end {
+   &.controls-InfoBoxTemplate__arrow-position-end_theme-@{themeName} {
       right: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow + @border-width_Infobox;
    }
 }
 
-.controls-InfoBoxTemplate__arrow-left {
+.controls-InfoBoxTemplate__arrow-left_theme-@{themeName} {
    transform: rotate(135deg);
    left: @size_Infobox-arrow/2 - @border-width_Infobox;
 }
 
-.controls-InfoBoxTemplate__arrow-right {
+.controls-InfoBoxTemplate__arrow-right_theme-@{themeName} {
    transform: rotate(-45deg);
    right: @size_Infobox-arrow/2;
 }
 
-.controls-InfoBoxTemplate__arrow-left, .controls-InfoBoxTemplate__arrow-right {
-   &.controls-InfoBoxTemplate__arrow-position-start {
+.controls-InfoBoxTemplate__arrow-left_theme-@{themeName}, .controls-InfoBoxTemplate__arrow-right_theme-@{themeName} {
+   &.controls-InfoBoxTemplate__arrow-position-start_theme-@{themeName} {
       top: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow + @border-width_Infobox;
    }
-   &.controls-InfoBoxTemplate__arrow-position-end {
+   &.controls-InfoBoxTemplate__arrow-position-end_theme-@{themeName} {
       bottom: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow + @border-width_Infobox;
    }
 }

@@ -3,10 +3,10 @@ define(
       'Core/core-instance',
       'Controls/input',
       'ControlsUnit/resources/ProxyCall',
-      'Env/Env',
+      'UI/Utils',
       'Vdom/Vdom'
    ],
-   function(instance, inputMod, ProxyCall, Env, Vdom) {
+   function(instance, inputMod, ProxyCall, UIUtils, Vdom) {
       'use strict';
 
       describe('Controls/_input/Text', function() {
@@ -184,12 +184,12 @@ define(
             });
          });
          describe('Validate the constraint option.', function() {
-            var fn = Env.IoC.resolve('ILogger').error;
+            var fn = UIUtils.Logger.error;
             beforeEach(function() {
-               Env.IoC.resolve('ILogger').error = ProxyCall.apply(fn, 'error', calls, true);
+               UIUtils.Logger.error = ProxyCall.apply(fn, 'error', calls, true);
             });
             afterEach(function() {
-               Env.IoC.resolve('ILogger').error = fn;
+               UIUtils.Logger.error = fn;
             });
             it('[0-9]', function() {
                ctrl._beforeMount({

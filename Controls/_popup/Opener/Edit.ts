@@ -209,6 +209,7 @@ import Deferred = require('Core/Deferred');
           */
          close: function() {
             this._children.Opener.close();
+            this._resultHandler = null;
          },
 
          /**

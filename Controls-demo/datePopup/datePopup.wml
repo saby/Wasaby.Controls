@@ -6,6 +6,7 @@
          <div>
             <h3>Any period</h3>
             <Controls.datePopup
+               attr:class="controls-PeriodDialog_1"
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
             />
@@ -14,6 +15,7 @@
          <div>
             <h3>Single Day</h3>
             <Controls.datePopup
+               attr:class="controls-PeriodDialog_2"
                startValue="{{_startValue}}"
                endValue="{{_startValue}}"
                selectionType="single"
@@ -23,6 +25,7 @@
          <div>
             <h3>Day, 1 month, 1 year</h3>
             <Controls.datePopup
+               attr:class="controls-PeriodDialog_3"
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
                selectionType="quantum"
@@ -33,6 +36,7 @@
          <div>
             <h3>Day, 3 days, week, 1 month</h3>
             <Controls.datePopup
+               attr:class="controls-PeriodDialog_4"
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
                selectionType="quantum"
@@ -43,6 +47,7 @@
          <div>
             <h3>The minimum period is a month</h3>
             <Controls.datePopup
+               attr:class="controls-PeriodDialog_5"
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
                minRange="month"
