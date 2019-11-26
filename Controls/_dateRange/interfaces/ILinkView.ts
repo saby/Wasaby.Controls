@@ -127,12 +127,12 @@ export default {
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
+             * @default Не указан
              */
 
             /*
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Text that is used if the period is not selected.
-             * @default Не указан
              */
             emptyCaption: EMPTY_CAPTIONS.NOT_SPECIFIED,
 
