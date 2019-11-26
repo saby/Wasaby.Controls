@@ -52,5 +52,25 @@
                     endTagStyle="{{'success'}}"/>
          </div>
       </div>
+<!--TODO: Переделать Validation demo, полсе добавления валидатора в контрол https://online.sbis.ru/opendoc.html?guid=b66089af-18cf-4a5d-b729-1beb7f230c12-->
+      <h3>Validation demo</h3>
+      <div class="controlsDemo-Input-DateRange__row">
+         <div class="controlsDemo-Input-DateRange__row-item">
+            <Controls.validate:InputContainer>
+               <ws:validators>
+                  <ws:Function value="{{_endDate}}" >Controls/validate:isValidDate</ws:Function>
+                  <ws:Function value="{{_startDate}}" >Controls/validate:isValidDate</ws:Function>
+                  <ws:Function value="{{_startDate}}">Controls/validate:isRequired</ws:Function>
+                  <ws:Function value="{{_endDate}}">Controls/validate:isRequired</ws:Function>
+                  <ws:Function startValue="{{_startDate}}" endValue="{{_endDate}}">Controls/validate:isValidDateRange</ws:Function>
+               </ws:validators>
+               <ws:content>
+                  <Controls.dateRange:Input
+                          bind:startValue="_startDate"
+                          bind:endValue="_endDate"/>
+               </ws:content>
+            </Controls.validate:InputContainer>
+         </div>
+      </div>
    </div>
 </div>
