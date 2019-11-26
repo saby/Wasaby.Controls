@@ -98,6 +98,8 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    background-color: @background-color_BaseControl-loadingIndicator;
    border-radius: @border-radius_BaseControl-loadingIndicator;
    z-index: 1;
+   display: inline-flex;
+   align-items: center;
 }
 .controls-BaseControl__loadingIndicatorImg {
    background: @background-image_BaseControl-loadingIndicator 0 0 no-repeat;/**/
@@ -134,4 +136,49 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 }
 .controls-BaseControl_paging-pageSizeChooser {
    margin-left: @spacing_BaseControl-paging_label_right;
+}
+
+.controls-BaseControl__abortSearch {
+   display: inline-block;
+   color: @color_BaseControl-abortSearch;
+   margin-left: @spacing_BaseControl-between-indicator-abortSearch;
+}
+
+.ws-is-no-touch .controls-BaseControl__abortSearch:hover {
+   text-decoration: underline;
+   color: @color_BaseControl-abortSearch_hover;
+   cursor: pointer;
+}
+
+.controls-BaseControl__abortSearch:active {
+   text-decoration: underline;
+   color: @color_BaseControl-abortSearch_hover;
+}
+
+.controls-BaseControl__continueSearch {
+   display: flex;
+   justify-content: center;
+}
+
+.controls-BaseControl__continueSearch_caption {
+   color: @color_BaseControl-abortSearch;
+   align-items: center;
+   display: inline-flex;
+}
+
+.ws-is-no-touch .controls-BaseControl__continueSearch_caption:hover {
+   text-decoration: underline;
+   color: @color_BaseControl-abortSearch_hover;
+   cursor: pointer;
+}
+
+.controls-BaseControl__continueSearch_caption:active {
+   text-decoration: underline;
+   color: @color_BaseControl-abortSearch_hover;
+}
+
+.controls-BaseControl__continueSearch_icon {
+   display: inline-block;
+   margin-right: @spacing_BaseControl-between-searchIcon-continueSearch;
+   .icon(@icon-size_BaseControls-continueSearch-icon, @font-family_BaseControls-continueSearch-icon);
 }

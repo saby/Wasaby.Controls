@@ -29,6 +29,7 @@ import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
+import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import {create as diCreate} from 'Types/di';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
@@ -518,6 +519,9 @@ var _private = {
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
+            if (self._options.searchValue) {
+                _private.getPortionedSearch(self).startSearch();
+            }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
@@ -554,7 +558,8 @@ var _private = {
                     }
                 }
                 return addedItems;
-            }).addErrback(function(error) {
+            }).addErrback((error) => {
+                _private.hideIndicator(self);
                 return _private.crudErrback(self, {
                     error,
                     dataLoadErrback: userErrback
@@ -759,12 +764,17 @@ var _private = {
         }
     },
 
-    loadToDirectionIfNeed: function(self, direction, filter) {
-        //source controller is not created if "source" option is undefined
-        // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
-        if (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) {
-            if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
-                _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData(direction));
+    loadToDirectionIfNeed: function (self, direction, filter?) {
+        const sourceController = self._sourceController;
+        const checkLoadCapabilityByControllers =
+            // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
+            (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) &&
+            (!self._options.searchValue || _private.getPortionedSearch(self).shouldSearch());
+
+        if (checkLoadCapabilityByControllers) {
+            // source controller is not created if "source" option is undefined
+            if (sourceController && sourceController.hasMoreData(direction) && !sourceController.isLoading() && !self._loadedItems) {
+                _private.setHasMoreData(self._listViewModel, sourceController.hasMoreData(direction));
                 _private.loadToDirection(
                    self, direction,
                    self._options.dataLoadCallback,
@@ -1112,6 +1122,25 @@ var _private = {
 
     getIntertialScrolling: function(self): IntertialScrolling {
         return self._intertialScrolling || (self._intertialScrolling = new IntertialScrolling());
+    },
+
+    getPortionedSearch(self): PortionedSearch {
+        return self._portionedSearch || (self._portionedSearch = new PortionedSearch({
+            searchStopCallback: () => {
+                self._showContinueSearchButton = true;
+                self._sourceController.cancelLoading();
+            },
+            searchResetCallback: () => {
+                self._showContinueSearchButton = false;
+            },
+            searchContinueCallback: () => {
+                self._showContinueSearchButton = false;
+                _private.loadToDirectionIfNeed(self, 'down');
+            },
+            searchAbortCallback: () => {
+                self._sourceController.cancelLoading();
+            }
+        }));
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -1978,6 +2007,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (newOptions.searchValue !== this._options.searchValue) {
             this._listViewModel.setSearchValue(newOptions.searchValue);
+
+            if (!newOptions.searchValue) {
+                _private.getPortionedSearch(self).reset();
+            }
         }
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
@@ -2557,6 +2590,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onLoadMoreClick: function() {
         _private.loadToDirectionIfNeed(this, 'down');
+    },
+
+    _continueSearch(): void {
+        _private.getPortionedSearch(this).continueSearch();
+    },
+
+    _abortSearch(): void {
+        _private.getPortionedSearch(this).abortSearch();
     },
 
     _nativeDragStart: function(event) {

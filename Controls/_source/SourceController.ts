@@ -1,6 +1,5 @@
 import cExtend = require('Core/core-simpleExtend');
 import cInstance = require('Core/core-instance');
-import Env = require('Env/Env');
 import sourceLib = require('Types/source');
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
