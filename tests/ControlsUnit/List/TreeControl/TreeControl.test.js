@@ -261,9 +261,9 @@ define([
             keyProperty: 'key'
          }));
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
-         model.setMarkedKeyInOptions(2);
+         model.setMarkedKey(2);
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
-         model.setMarkedKeyInOptions(3);
+         model.setMarkedKey(3);
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
          assert.deepEqual(toggleExpandedStack, [1, 2]);
       });

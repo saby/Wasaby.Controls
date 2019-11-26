@@ -1960,7 +1960,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.markedKey !== this._options.markedKey) {
-            this._listViewModel.setMarkedKeyInOptions(newOptions.markedKey);
+            this._listViewModel.setMarkedKey(newOptions.markedKey);
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility) {
@@ -2723,7 +2723,7 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
-        markedKey: undefined,
+        markedKey: null,
         stickyHeader: true
     };
 };
