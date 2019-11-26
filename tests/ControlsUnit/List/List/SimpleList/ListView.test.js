@@ -123,11 +123,11 @@ define([
          var lv = new lists.ListView(cfg);
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
-         lv._listModel.subscribe('onMarkedKeyChanged', function(e, key) {
-            lv._listModel._options.markedKey = key;
-         });
+
          lv._listModel.setMarkedKey(1);
          assert.equal(lv._listModel.getMarkedKey(), 1);
+         lv._beforeUpdate(cfg);
+         assert.equal(lv._listModel.getMarkedKey(), 2);
 
          model = new lists.ListViewModel({
             items: testData2,
