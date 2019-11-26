@@ -207,6 +207,9 @@ import 'Types/entity';
                   IoC.resolve('ILogger').error('Controls/_explorer/View', err);
                });
             });
+         },
+         canStartDragNDrop(self): boolean {
+            return self._viewMode !== 'search';
          }
       };
 
@@ -321,6 +324,7 @@ import 'Types/entity';
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
+         this._canStartDragNDrop = _private.canStartDragNDrop.bind(null, this);
 
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          //process items from options to create a path
