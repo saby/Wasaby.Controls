@@ -5,7 +5,6 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
-import 'css!theme?Controls/popupTemplate';
 import * as cInstance from 'Core/core-instance';
 
 const DEFAULT_OPTIONS = {

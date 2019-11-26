@@ -1,0 +1,8 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <Controls.input:Area attr:class="controlsDemo__input" placeholder="Enter your name" bind:value="_areaValue" maxLines="{{3}}"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.buttons:Button attr:ws-no-focus="true" caption="Change text" on:click="_change()"/>
+   </div>
+</div>

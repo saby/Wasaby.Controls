@@ -73,7 +73,6 @@ export default interface IItemTemplateOptions {
    marker?: boolean;
    highlightOnHover?: boolean;
    clickable?: boolean;
-   colspan?: boolean;
-   colspanTemplate?: string;
    contentTemplate?: string;
+   itemActionsTemplate?: string;
 }
