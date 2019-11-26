@@ -103,9 +103,10 @@ export default class VirtualScrollController {
     /**
      * Пересчет индексов "видимого" набора данных при скроллировании
      * @param {IDirection} direction
-     * @param {number} segmentSize
+     * @param {boolean} shouldLoad
      */
-    recalcRangeToDirection(direction: IDirection, segmentSize: number = this.segmentSize): void {
+    recalcRangeToDirection(direction: IDirection, shouldLoad: boolean = true): void {
+        const segmentSize = this.segmentSize;
         let newStartIndex = this.startIndex;
         let newStopIndex = this.stopIndex;
         let needToLoadMore: boolean = false;
@@ -135,7 +136,7 @@ export default class VirtualScrollController {
         }
 
 
-        if (needToLoadMore) {
+        if (needToLoadMore && shouldLoad) {
             this.loadMoreCallback(direction);
         }
     }
@@ -346,7 +347,7 @@ export default class VirtualScrollController {
                 this.setStartIndex(this.startIndex + newItems.length);
             }
 
-            this.recalcRangeToDirection(direction);
+            this.recalcRangeToDirection(direction, false);
 
             this.saveScrollPositionCallback(direction);
         }
@@ -360,7 +361,7 @@ export default class VirtualScrollController {
         // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
         if (this.itemsContainer) {
             this.recalcRangeToDirection(
-                removedItemsIndex < this.viewModel.getStartIndex() ? 'up' : 'down'
+                removedItemsIndex < this.viewModel.getStartIndex() ? 'up' : 'down', false
             );
         }
     }

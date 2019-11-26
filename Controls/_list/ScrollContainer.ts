@@ -208,6 +208,7 @@ export default class ScrollContainer extends Control<IOptions> {
             useNewModel: options.useNewModel
         });
         this.virtualScroll.triggerOffset = this.topTriggerOffset;
+        this.reset(this.viewModel.getCount());
     }
 
     protected viewResizeHandler(): void {
