@@ -36,8 +36,14 @@
  * @cfg {String|Function} Шаблон для отображения выбранной записи.
  * @example
  * <pre>
- * <Controls.lookup:Selector
- *    contentTemplate="Controls/Template:MyContentTemplate">
+ * <Controls.lookup:Selector>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls.lookup:ItemTemplate">
+ *          <ws:contentTemplate>
+ *             Это мой шаблон крестика.
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
  * </Controls.lookup:Selector>
  * </pre>
  */
@@ -46,17 +52,15 @@
  * @name Controls/lookup:ItemTemplate#crossTemplate
  * @cfg {String|Function} Шаблон крестика удаления элемента.
  * @remark
- * Использование опции неактуально, когда контрол работает в режиме чтения (опция readOnly в значении true).
+ * Использование опции неактуально, когда контрол работает в режиме чтения (опция {@link https://wi.sbis.ru/docs/js/Controls/heading/Title/options/readOnly/?v=20.1000 readOnly} в значении true).
  * @example
  * <pre>
  * <Controls.lookup:Selector>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls.lookup:ItemTemplate">
- *          <ws:contentTemplate>
- *             <ws:partial crossTemplate="Controls/Template:MyCrossTemplate">
- *                Это мой шаблон крестика.
- *             </ws:partial>
- *          </ws:contentTemplate>
+ *          <ws:crossTemplate>
+ *             Это мой шаблон крестика.
+ *          </ws:crossTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
  * </Controls.lookup:Selector>
@@ -83,8 +87,8 @@
  * @name Controls/lookup:ItemTemplate#clickable
  * @cfg {Boolean} Позволяет установить кликабельность выбранного значения.
  * @remark 
- * Допустим только в случае использования contentTemplate по умолчанию.
- * Также, по умолчанию выставляется в true, когда опции multiselect и readOnly выставлены в true и false соответственно.
+ * Допускается задавать параметр только в случае, когда contentTemplate используется по умолчанию.
+ * Также, по умолчанию выставляется в true, когда опции {@link https://wi.sbis.ru/docs/js/Controls/lookup/Input/options/multiSelect/?v=20.1000 multiselect} и {@link https://wi.sbis.ru/docs/js/Controls/heading/Title/options/readOnly/?v=20.1000 readOnly} выставлены в true и false соответственно.
  * @default true
  * @example
  * <pre>
@@ -102,7 +106,7 @@
  * @name Controls/lookup:ItemTemplate#size
  * @cfg {String} Размер записей.
  * @remark 
- * Допустим только в случае использования contentTemplate по умолчанию.
+ * Допускается задавать параметр только в случае, когда contentTemplate используется по умолчанию.
  * Доступные значения: m, l, xl, 2xl, 3xl. В зависимости от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} значениям задаются собственные величины px.
  * @default default
  * @example
