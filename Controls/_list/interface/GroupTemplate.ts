@@ -34,15 +34,21 @@
 /**
  * @name Controls/list:GroupTemplate#expanderVisibile
  * @cfg {Boolean} Видимость кнопки-экспандера, позволяющей сворачивать/разворачивать группу.
+ * @remark
+ * Доступные значения:
+ * 
+ * * **true** — отображается.
+ * * **false** — скрыта.
+ * 
  * @default true
  */
 
 /**
  * @name Controls/list:GroupTemplate#textAlign
- * @cfg {String} Горизонтальное выравнивание заголовка группы. Доступные значения опции: "left" и "right".
+ * @cfg {String} Горизонтальное выравнивание заголовка группы. 
  * @default undefined 
  * @remark
- * Когда опций не задана, заголовок выравнивается по центру.
+ * Когда значение опции не задано, заголовок выравнивается по центру.
  * Доступные значения:
  * 
  * * **right** — по правому краю.
@@ -55,7 +61,6 @@
  * @default Controls/list:GroupContentResultsTemplate
  * @remark 
  * Собственные переменные отсутствуют в области этого шаблона. Может использоваться, например, для вывода итогов по группе.
- * @default title
  * @example
  * <pre>
  *    <Controls.list:View>
