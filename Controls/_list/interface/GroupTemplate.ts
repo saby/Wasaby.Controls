@@ -11,8 +11,13 @@
  *    <ws:groupTemplate>
  *       <ws:partial template="Controls/list:GroupTemplate"
  *          separatorVisibility="{{ false }}"
- *          expanderVisibility="{{ true }}"
- *          textAlign="left" />
+ *          expanderVisible="{{ false }}"
+ *          textAlign="left">
+ *          <ws:contentTemplate>
+ *             <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+ *             <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
  *    </ws:groupTemplate>
  * </Controls.list:View>
  * </pre>
@@ -65,7 +70,7 @@
  * <pre>
  *    <Controls.list:View>
  *       <ws:groupTemplate>
- *          <ws:partial template="Controls/list:GroupTemplate" expanderVisible="{{ false }}" textAlign="left">
+ *          <ws:partial template="Controls/list:GroupTemplate">
  *             <ws:rightTemplate>
  *                <ws:partial template="Controls/list:GroupContentResultsTemplate">
  *                   <ws:contentTemplate>
@@ -102,7 +107,7 @@
 
 export default interface IGroupTemplateOptions {
     separatorVisibility?: boolean;
-    expanderVisibility?: boolean;
+    expanderVisible?: boolean;
     textAlign?: string;
     rightTemplate?: string;
     contentTemplate?: string;
