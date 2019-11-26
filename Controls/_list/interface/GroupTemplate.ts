@@ -10,7 +10,7 @@
  * <Controls.list:View ... >
  *    <ws:groupTemplate>
  *       <ws:partial template="Controls/list:GroupTemplate"
- *          separatorVisibility="{{ true }}"
+ *          separatorVisibility="{{ false }}"
  *          expanderVisibility="{{ true }}"
  *          textAlign="left" />
  *    </ws:groupTemplate>
@@ -79,10 +79,32 @@
  * </pre>
  */
 
+/**
+ * @name Controls/list:GroupTemplate#contentTemplate
+ * @cfg {String|Function} Шаблон, описывающий заголовок группы.
+ * @default true
+ * @remark
+ * В области видимости шаблона доступна переменная **itemData**, в которой есть свойство **item** — результат того, что возвращено из функции {@link Controls/grid:View#groupingKeyCallback groupingKeyCallback}.
+ * @example
+ * <pre>
+ *    <Controls.list:View>
+ *       <ws:groupTemplate>
+ *          <ws:partial template="Controls/list:GroupTemplate" expanderVisible="{{ false }}" textAlign="left">
+ *             <ws:contentTemplate>
+ *                <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+ *                <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
+ *             </ws:contentTemplate>
+ *          </ws:partial>
+ *       </ws:groupTemplate>
+ *    </Controls.list:View>
+ * </pre>
+ */
+
 export default interface IGroupTemplateOptions {
     separatorVisibility?: boolean;
     expanderVisibility?: boolean;
     textAlign?: string;
     rightTemplate?: string;
+    contentTemplate?: string;
  }
  
