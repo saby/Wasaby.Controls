@@ -1,5 +1,5 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { getItems, isNode, getSelectedChildrenCount, getParentId, getChildren, getCountBySource } from 'Controls/_operations/MultiSelector/SelectionHelper';
+import { getItems, isNode, getSelectedChildrenCount, getParentId, getChildren, getSelectionCount } from 'Controls/_operations/MultiSelector/SelectionHelper';
 
 import { relation } from 'Types/entity';
 import { Tree as TreeCollection } from 'Controls/display';
@@ -90,11 +90,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
          countItemsSelected = null;
       }
 
-      if (countItemsSelected === null && this._selectionCountMethodName) {
-         return getCountBySource(source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter);
-      } else {
-         return Promise.resolve(countItemsSelected);
-      }
+      return getSelectionCount(countItemsSelected, source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter, false);
    }
 
    getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, keyProperty: string, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean> {

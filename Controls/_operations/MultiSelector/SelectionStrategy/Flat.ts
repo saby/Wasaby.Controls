@@ -1,5 +1,5 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { getItems, getCountBySource } from 'Controls/_operations/MultiSelector/SelectionHelper';
+import { getItems, getSelectionCount } from 'Controls/_operations/MultiSelector/SelectionHelper';
 
 import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
@@ -71,11 +71,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
          countItemsSelected = selectedKeys.length;
       }
 
-      if (countItemsSelected === null && this._selectionCountMethodName) {
-         return getCountBySource(source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter);
-      } else {
-         return Promise.resolve(countItemsSelected);
-      }
+      return getSelectionCount(countItemsSelected, source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter);
    }
 
    getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number, keyProperty: string): Map<TKey, boolean> {

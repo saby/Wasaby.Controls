@@ -27,6 +27,26 @@ function _getOriginalSource(source: Rpc|PrefetchProxy): Rpc {
    return source;
 }
 
+function getCountBySource(source: Rpc|PrefetchProxy, selectionCountMethodName: string, selectedKeys: TKeys, excludedKeys: TKeys, filter: Object, recursive: boolean = true): Promise<number|null> {
+   let originalSource: Rpc = _getOriginalSource(source);
+
+   filter = {... filter};
+   filter.selection = selectionToRecord({
+      selected: selectedKeys,
+      excluded: excludedKeys
+   }, originalSource.getAdapter(), 'all', recursive);
+
+   return new Promise((resolve) => {
+      originalSource.call(selectionCountMethodName, {filter: filter})
+         .addCallback((itemsSelectedCount) => {
+            resolve(itemsSelectedCount);
+         })
+         .addErrback(() => {
+            resolve(null);
+         });
+   });
+};
+
 export function isNode(item: Record, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy): boolean {
    if (model instanceof TreeCollection) {
       return model.getItemBySourceId(item.getId()).isNode();
@@ -212,22 +232,10 @@ export function removeSelectionChildren(nodeId, selectedKeys, excludedKeys, mode
    ArraySimpleValuesUtil.removeSubArray(excludedKeys, childrenIds);
 };
 
-export function getCountBySource(source: Rpc|PrefetchProxy, selectionCountMethodName: string, selectedKeys: TKeys, excludedKeys: TKeys, filter: Object): Promise<number|null> {
-   let originalSource: Rpc = _getOriginalSource(source);
-
-   filter = {... filter};
-   filter.selection = selectionToRecord({
-      selected: selectedKeys,
-      excluded: excludedKeys
-   }, originalSource.getAdapter());
-
-   return new Promise((resolve) => {
-      originalSource.call(selectionCountMethodName, {filter: filter})
-         .addCallback((itemsSelectedCount) => {
-            resolve(itemsSelectedCount);
-         })
-         .addErrback(() => {
-            resolve(null);
-         });
-   });
-};
+export function getSelectionCount(selectionCount: number|null, source: Rpc|PrefetchProxy, selectionCountMethodName: string, selectedKeys: TKeys, excludedKeys: TKeys, filter: Object, recursive: boolean): Promise<number|null> {
+   if (selectionCount === null && selectionCountMethodName) {
+      return getCountBySource(source, selectionCountMethodName, selectedKeys, excludedKeys, filter, recursive);
+   } else {
+      return Promise.resolve(selectionCount);
+   }
+}

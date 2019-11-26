@@ -57,11 +57,7 @@ export default class DeepTreeSelectionStrategy extends TreeSelectionStrategy imp
          countItemsSelected = null;
       }
 
-      if (countItemsSelected === null && this._selectionCountMethodName) {
-         return SelectionHelper.getCountBySource(this._source, this._selectionCountMethodName, selectedKeys, excludedKeys, this._filter);
-      } else {
-         return Promise.resolve(countItemsSelected);
-      }
+      return SelectionHelper.getSelectionCount(countItemsSelected, source, this._selectionCountMethodName, selectedKeys, excludedKeys, filter);
    }
 
    getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, limit: number, keyProperty: string, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean|null> {
