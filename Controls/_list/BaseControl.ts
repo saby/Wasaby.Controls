@@ -2129,6 +2129,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
              */
             this._notify('saveScrollPosition', [], { bubbling: true });
         }
+        // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
+        // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
+        // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
+        // устанавливаем скролл в "0".
+        // Как итог - контент мелькает. Поэтому сбрасываем скролл в 0 именно ДО отрисовки.
+        // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=c3812a26-2301-4998-8283-bcea2751f741
+        // Демка нативного поведения: https://jsfiddle.net/alex111089/rjuc7ey6/1/
+        if (this._shouldNotifyOnDrawItems) {
+            if (this._resetScrollAfterReload) {
+                this._notify('doScroll', ['top'], {bubbling: true});
+                this._resetScrollAfterReload = false;
+            }
+        }
     },
 
     _beforePaint(): void {
@@ -2187,10 +2200,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
-            if (this._resetScrollAfterReload) {
-                this._notify('doScroll', ['top'], { bubbling: true });
-                this._resetScrollAfterReload = false;
-            }
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
