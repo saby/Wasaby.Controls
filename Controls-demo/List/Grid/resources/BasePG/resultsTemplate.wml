@@ -1,4 +1,4 @@
-<ws:partial template="Controls/grid:Results" scope="{{_options}}">
+<ws:partial template="Controls/grid:ResultsTemplate" scope="{{_options}}">
    <ws:contentTemplate>
       <div><b>All items count:</b> 6</div>
    </ws:contentTemplate>
