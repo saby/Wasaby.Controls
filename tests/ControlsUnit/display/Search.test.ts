@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { Search } from 'Controls/display';
 import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 

@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { GroupItem } from 'Controls/display';
 
 describe('Controls/_display/GroupItem', () => {

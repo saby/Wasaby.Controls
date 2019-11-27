@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { TreeItem } from 'Controls/display';
 

@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import Direct from 'Controls/_display/itemsStrategy/Direct';
 
 import {

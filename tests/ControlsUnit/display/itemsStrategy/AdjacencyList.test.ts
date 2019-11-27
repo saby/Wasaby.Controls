@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import IItemsStrategy, {IOptions} from 'Controls/_display/IItemsStrategy';
 import AdjacencyList from 'Controls/_display/itemsStrategy/AdjacencyList';
 

@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import {
     Abstract as Display,
     Collection as CollectionDisplay,

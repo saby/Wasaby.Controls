@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { Flags as FlagsDisplay } from 'Controls/display';
 import { Flags as FlagsType } from 'Types/collection';
 

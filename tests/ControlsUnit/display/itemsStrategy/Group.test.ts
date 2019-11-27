@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import Group from 'Controls/_display/itemsStrategy/Group';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 

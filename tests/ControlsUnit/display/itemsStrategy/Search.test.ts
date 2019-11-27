@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import Search from 'Controls/_display/itemsStrategy/Search';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';

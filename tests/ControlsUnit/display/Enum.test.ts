@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { Enum as EnumDisplay } from 'Controls/display';
 import { Enum as EnumType } from 'Types/collection';
 

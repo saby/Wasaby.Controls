@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { TreeItem } from 'Controls/display';
 
 describe('Controls/_display/TreeItem', () => {

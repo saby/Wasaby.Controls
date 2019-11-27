@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { CollectionItem } from 'Controls/display';
 
 interface IChangedData<T> {

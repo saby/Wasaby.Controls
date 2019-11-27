@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import Composer from 'Controls/_display/itemsStrategy/Composer';
 
 describe('Controls/_display/itemsStrategy/Composer', () => {

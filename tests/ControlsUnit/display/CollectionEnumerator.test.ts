@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import DisplayEnumerator from 'Controls/_display/CollectionEnumerator';
 
 describe('Controls/_display/CollectionEnumerator', () => {

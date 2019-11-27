@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import User from 'Controls/_display/itemsStrategy/User';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import {SortFunction} from 'Controls/_display/Collection';

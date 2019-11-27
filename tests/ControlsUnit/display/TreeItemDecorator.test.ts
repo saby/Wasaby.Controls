@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import TreeItemDecorator from 'Controls/_display/TreeItemDecorator';
 import { TreeItem } from 'Controls/display';
 

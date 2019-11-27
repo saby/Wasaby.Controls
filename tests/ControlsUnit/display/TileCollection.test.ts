@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { TileCollection } from 'Controls/display';
 import { List } from 'Types/collection';
 

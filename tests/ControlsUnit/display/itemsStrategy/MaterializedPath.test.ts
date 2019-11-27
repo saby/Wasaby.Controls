@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import MaterializedPath, {IOptions} from 'Controls/_display/itemsStrategy/MaterializedPath';
 
 import {
