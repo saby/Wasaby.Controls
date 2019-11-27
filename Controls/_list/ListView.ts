@@ -18,21 +18,6 @@ var
 var _private = {
     checkDeprecated: function(cfg) {
         // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-        if (cfg.leftSpacing !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
-        }
-        if (cfg.leftPadding !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
-        }
-        if (cfg.rightSpacing !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
-        }
-        if (cfg.rightPadding !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
-        }
-        if (cfg.rowSpacing !== undefined) {
-            Env.IoC.resolve('ILogger').warn('IList', 'Option "rowSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.top and itemPadding.bottom".');
-        }
         if (cfg.contextMenuEnabled !== undefined) {
             Env.IoC.resolve('ILogger').warn('IList', 'Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".');
         }
@@ -123,22 +108,6 @@ var ListView = BaseControl.extend(
                 this._listModel.setMarkedKey(newOptions.markedKey);
             }
 
-            // TODO https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            if (this._options.leftSpacing !== newOptions.leftSpacing) {
-                this._listModel.setLeftSpacing(newOptions.leftSpacing);
-            }
-            if (this._options.leftPadding !== newOptions.leftPadding) {
-                this._listModel.setLeftPadding(newOptions.leftPadding);
-            }
-            if (this._options.rightSpacing !== newOptions.rightSpacing) {
-                this._listModel.setRightSpacing(newOptions.rightSpacing);
-            }
-            if (this._options.rightPadding !== newOptions.rightPadding) {
-                this._listModel.setRightPadding(newOptions.rightPadding);
-            }
-            if (this._options.rowSpacing !== newOptions.rowSpacing) {
-                this._listModel.setRowSpacing(newOptions.rowSpacing);
-            }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
 

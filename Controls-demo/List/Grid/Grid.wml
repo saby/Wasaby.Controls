@@ -34,9 +34,6 @@
          <ws:content>
             <Controls.grid:View
                     attr:class="demo-Grid__control test_grid_2"
-                    leftPadding="S"
-                    rightPadding="M"
-                    rowSpacing="M"
                     keyProperty="id"
                     displayProperty="title"
                     bind:markedKey="_markedKey2"
@@ -49,6 +46,7 @@
                     on:actionClick="_onActionClick()"
                     itemActionVisibilityCallback="{{_showAction}}"
                     columns="{{gridColumns}}">
+               <ws:itemPadding right="M" left="S" top="M" bottom="M"/>
             </Controls.grid:View>
          </ws:content>
       </Controls.scroll:Container>
@@ -63,8 +61,6 @@
                   <Controls.operations:Container>
                      <Controls.grid:View
                              attr:class="demo-Grid__control test_grid_3"
-                             leftPadding="M"
-                             rightPadding="L"
                              displayProperty="title"
                              bind:markedKey="_markedKey3"
                              rowSeparatorVisibility="{{true}}"
@@ -75,6 +71,7 @@
                              itemActionVisibilityCallback="{{_showAction}}"
                              itemActionsPosition="outside"
                              columns="{{gridColumns}}">
+                        <ws:itemPadding right="L" left="M"/>
                      </Controls.grid:View>
                   </Controls.operations:Container>
                </Controls.list:Container>
@@ -85,9 +82,6 @@
          <ws:content>
             <Controls.grid:View
                     attr:class="demo-Grid__control test_grid_4"
-                    leftPadding="L"
-                    rightPadding="XL"
-                    rowSpacing="L"
                     keyProperty="id"
                     displayProperty="title"
                     bind:markedKey="_markedKey4"
@@ -98,6 +92,7 @@
                     on:actionClick="_onActionClick()"
                     itemActionVisibilityCallback="{{_showAction}}"
                     columns="{{gridColumns}}">
+               <ws:itemPadding right="XL" left="L" top="L" bottom="L"/>
             </Controls.grid:View>
          </ws:content>
       </Controls.scroll:Container>

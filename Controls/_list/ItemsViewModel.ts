@@ -19,27 +19,6 @@ var _private = {
         return action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_ADD;
     },
     checkDeprecated: function(cfg) {
-
-        if (cfg.leftSpacing && !this.leftSpacing) {
-            this.leftSpacing = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
-        }
-        if (cfg.leftPadding && !this.leftPadding) {
-            this.leftPadding = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
-        }
-        if (cfg.rightSpacing && !this.rightSpacing) {
-            this.rightSpacing = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
-        }
-        if (cfg.rightPadding && !this.rightPadding) {
-            this.rightPadding = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
-        }
         if (cfg.groupMethod) {
             Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
         }
@@ -243,9 +222,6 @@ var ItemsViewModel = BaseViewModel.extend({
                 item: dispItem.getContents(),
                 dispItem: dispItem,
 
-                //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-                leftSpacing: this._options.leftSpacing || this._options.leftPadding,
-                rightSpacing: this._options.rightSpacing || this._options.rightPadding,
                 _preferVersionAPI: true,
                 getVersion: function() {
                     return self._calcItemVersion(itemData.item, itemData.key);

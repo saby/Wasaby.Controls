@@ -48,7 +48,7 @@
 </ws:template>
 <ws:template name="colTpl">
    <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
-      <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}"/>
+      <ws:partial template="itemActionsTemplateChooser"/>
    </ws:if>
 
    <ws:if data="{{itemData.columnScroll && colspan}}">
@@ -68,7 +68,7 @@
 
 </ws:template>
 <ws:template name="stickyCell">
-   <ws:if data="{{!itemData.isNoGridSupport() && itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+   <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{itemData.gridCellStyles}}"/>
    </ws:if>
    <Controls.scroll:StickyHeader position="topbottom"

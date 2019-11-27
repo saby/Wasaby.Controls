@@ -2,7 +2,8 @@ import {detection} from 'Env/Env';
 
 const FULL_GRID_IOS_VERSION = 12;
 const OLD_IE_LAST_VERSION = 11;
-const DEFAULT_COLUMN_WIDTH = '1fr';
+const DEFAULT_GRID_COLUMN_WIDTH = '1fr';
+const DEFAULT_TABLE_COLUMN_WIDTH = 'auto';
 
 const RegExps = {
     pxValue: new RegExp('^[0-9]+px$'),
@@ -59,6 +60,10 @@ function isOldIE(): boolean {
 
 function isCompatibleWidth(width: string | number): boolean {
     return !!width && !!(`${width}`.match(RegExps.percentValue) || `${width}`.match(RegExps.pxValue));
+}
+
+function getDefaultColumnWidth(): string {
+    return isFullGridSupport() ? DEFAULT_GRID_COLUMN_WIDTH : DEFAULT_TABLE_COLUMN_WIDTH;
 }
 
 function getColumnStyles(cfg: IColumnOptions): string {
@@ -128,7 +133,7 @@ function toCssString(cssRules: ICssRule[]): string {
 
 export {
     isCompatibleWidth,
-    DEFAULT_COLUMN_WIDTH,
+    getDefaultColumnWidth,
     RegExps,
 
     isFullGridSupport,
