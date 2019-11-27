@@ -81,20 +81,63 @@
 /**
  * @name Controls/grid:GroupTemplate#rightTemplate
  * @cfg {String|Function} Шаблон, выводимый на горизонтальной линии-разделителе в правой части.
- * @default Controls/list:GroupContentResultsTemplate
+ * @default undefined
  * @remark
- * Собственные переменные отсутствуют в области видимости этого шаблона.
+ * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
+ * 
+ * * {@link Types/entity:Record item} — результат того, что возвращено из функции {@link Controls/grid:View#groupingKeyCallback groupingKeyCallback}.
+ * * {@link Types/collection:RecordSet#metaData metaData} — метаданные рекордсета, который загружен для таблицы.
  * @example
+ * **Пример 1.** Контрол и шаблон сконфигурированы в одном WML-файле.
  * <pre>
- *    <Controls.grid:View>
- *       <ws:groupTemplate>
- *          <ws:partial template="Controls/grid:GroupTemplate">
- *             <ws:rightTemplate>
- *                {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
- *             </ws:rightTemplate>
- *          </ws:partial>
- *       </ws:groupTemplate>
- *    </Controls.grid:View>
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="Controls/grid:GroupTemplate">
+ *          <ws:rightTemplate>
+ *             {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
+ *          </ws:rightTemplate>
+ *       </ws:partial>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
+ * <pre>
+ * <!-- file1.wml -->
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="file2.wml" scope="{{groupTemplate}}"/>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre>
+ * <!-- file2.wml -->
+ * <ws:partial template="Controls/grid:GroupTemplate">
+ *    <ws:rightTemplate>
+ *       {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
+ *    </ws:rightTemplate>
+ * </ws:partial>
+ * </pre>
+ * 
+ * **Пример 3.** Шаблон rightTemplate сконфигурирован в отдельном WML-файле.
+ * 
+ * <pre>
+ * <!-- file1.wml -->
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="Controls/grid:GroupTemplate">
+ *          <ws:rightTemplate>
+ *             <ws:partial template="file2.wml" scope="{{rightTemplate}}"/>
+ *          </ws:rightTemplate>
+ *       </ws:partial>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre>
+ * <!-- file2.wml -->
+ * {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
  * </pre>
  */
 
@@ -102,22 +145,24 @@
  * @name Controls/grid:GroupTemplate#contentTemplate
  * @cfg {String|Function} Шаблон, описывающий заголовок группы.
  * @remark
- * В области видимости шаблона доступна переменная **itemData**.
- * Через неё можно получить доступ к свойству **item** — результат того, что возвращено из функции {@link Controls/grid:View#groupingKeyCallback groupingKeyCallback}.
+ * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
+ * 
+ * * {@link Types/entity:Record item} — результат того, что возвращено из функции {@link Controls/grid:View#groupingKeyCallback groupingKeyCallback}.
+ * * {@link Types/collection:RecordSet#metaData metaData} — метаданные рекордсета, который загружен для таблицы.
  * @example
- * **Пример 1.** Контрол и шаблоны сконфигурированы в одном WML-файле.
+ * **Пример 1.** Контрол и шаблон сконфигурированы в одном WML-файле.
  * 
  * <pre class="brush: html">
- *    <Controls.grid:View>
- *       <ws:groupTemplate>
- *          <ws:partial template="Controls/grid:GroupTemplate">
- *             <ws:contentTemplate>
- *                <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
- *                <ws:if data="{{contentTemplate.itemData.item === 'works'}}">Работы</ws:if>
- *             </ws:contentTemplate>
- *          </ws:partial>
- *       </ws:groupTemplate>
- *    </Controls.grid:View>
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="Controls/grid:GroupTemplate">
+ *          <ws:contentTemplate>
+ *             <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+ *             <ws:if data="{{contentTemplate.itemData.item === 'works'}}">Работы</ws:if>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
  * </pre>
  * 
  * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
@@ -144,15 +189,15 @@
  * 
  * <pre class="brush: html">
  * <!-- file1.wml -->
- *    <Controls.grid:View>
- *       <ws:groupTemplate>
- *          <ws:partial template="Controls/grid:GroupTemplate">
- *             <ws:contentTemplate>
- *                <ws:partial template="file2.wml" scope="{{contentTemplate}}"/>
- *             </ws:contentTemplate>
- *          </ws:partial>
- *       </ws:groupTemplate>
- *    </Controls.grid:View>
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="Controls/grid:GroupTemplate">
+ *          <ws:contentTemplate>
+ *             <ws:partial template="file2.wml" scope="{{contentTemplate}}"/>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
  * </pre>
  * 
  * <pre>
