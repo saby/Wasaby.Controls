@@ -967,7 +967,7 @@ var _private = {
         };
     },
 
-    showIndicator: function(self, direction = 'all') {
+    showIndicator(self, direction: 'down' | 'up' | 'all' = 'all'): void {
         if (!self._isMounted || !!self._loadingState) {
             return;
         }
@@ -990,12 +990,13 @@ var _private = {
         }
     },
 
-    hideIndicator: function(self) {
+    hideIndicator(self): void {
         if (!self._isMounted) {
-            return
+            return;
         }
         self._loadingState = null;
         self._showLoadingIndicatorImage = false;
+        self._loadingIndicatorContainerOffsetTop = 0;
         if (self._loadingIndicatorTimer) {
             clearTimeout(self._loadingIndicatorTimer);
             self._loadingIndicatorTimer = null;
@@ -1717,6 +1718,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _loadOffset: null,
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
+    _loadingIndicatorContainerOffsetTop: 0,
     _menuIsShown: null,
     _viewSize: null,
     _viewPortSize: null,
@@ -2707,6 +2709,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             loadingIndicatorState: this._loadingIndicatorState
         });
     },
+
+    _getLoadingIndicatorStyles(): string {
+        let styles = '';
+
+        if (this._loadingIndicatorState === 'all') {
+            if (this._loadingIndicatorContainerHeight) {
+                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+            }
+            if (this._loadingIndicatorContainerOffsetTop) {
+                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+            }
+        }
+        return styles;
+    },
+
     _onHoveredItemChanged: function(e, item, container) {
         this._notify('hoveredItemChanged', [item, container]);
     },
