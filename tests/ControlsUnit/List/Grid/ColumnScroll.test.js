@@ -50,6 +50,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                         },
                         offsetWidth: 76
                      };
+                  },
+                  style: {
+                     removeProperty: () => true
                   }
                }]
             }
@@ -109,6 +112,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 26
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -183,6 +189,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -232,7 +241,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                                },
                                offsetWidth: 76
                             };
-                         }
+                         },
+                     style: {
+                        removeProperty: () => true
+                     }
                   }]
                }
             }
@@ -336,7 +348,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                                },
                                offsetWidth: 76
                             };
-                         }
+                         },
                   }]
                }
             },
@@ -388,7 +400,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                                },
                                offsetWidth: 76
                             };
-                         }
+                         },
                   }]
                }
             }
@@ -422,7 +434,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
                         function () {
                            return null;
-                        }
+                        },
+                     style: {
+                        removeProperty: () => true
+                     }
                   }]
                }
             }
@@ -504,6 +519,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -568,6 +586,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -602,6 +623,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -635,6 +659,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -666,6 +693,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -718,6 +748,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -752,6 +785,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
