@@ -1,12 +1,10 @@
 const MAX_SEARCH_DURATION = 10000;
-const SEARCH_STATES = {
-  NOT_STARTED: null,
-  STARTED: 'started',
-  STOPPED: 'stopped',
-  CONTINUED: 'continued'
-};
-
-type SearchState = null | 'started' | 'stopped' | 'continued';
+enum SEARCH_STATES {
+  NOT_STARTED = null,
+  STARTED = 'started',
+  STOPPED = 'stopped',
+  CONTINUED = 'continued'
+}
 
 export interface IPortionedSearchOptions {
     searchStopCallback: Function;
@@ -17,7 +15,7 @@ export interface IPortionedSearchOptions {
 
 export default class PortionedSearch<PortionedSearchOptions> {
     protected _searchTimer: number = null;
-    protected _searchState: SearchState = null;
+    protected _searchState: SEARCH_STATES = null;
     protected _options: IPortionedSearchOptions = null;
 
     constructor(constructorOptions: IPortionedSearchOptions) {
@@ -66,11 +64,11 @@ export default class PortionedSearch<PortionedSearchOptions> {
         }
     }
 
-    private _setSearchState(state: SearchState): void {
+    private _setSearchState(state: SEARCH_STATES): void {
         this._searchState = state;
     }
 
-    private _getSearchState(): SearchState {
+    private _getSearchState(): SEARCH_STATES {
         return this._searchState;
     }
 }

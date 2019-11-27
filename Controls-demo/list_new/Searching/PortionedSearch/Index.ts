@@ -2,8 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/Searching/PortionedSearch/PortionedSearch';
 import PortionedSearchSource from 'Controls-demo/list_new/Searching/PortionedSearch/Source';
 import {Memory} from 'Types/source';
-import {generateData} from '../../DemoHelpers/DataCatalog';
-import 'css!Controls-demo/Controls-demo';
+import {generateData} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -42,5 +41,7 @@ export default class extends Control {
         this._searchValue = '';
         this._filter = {};
     }
+
+    static _theme: string[] = ['Controls/Classes', 'Controls-demo/Controls-demo'];
 
 }
