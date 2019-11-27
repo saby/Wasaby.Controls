@@ -1,6 +1,6 @@
 const MAX_SEARCH_DURATION = 10000;
 enum SEARCH_STATES {
-  NOT_STARTED = null,
+  NOT_STARTED = 0,
   STARTED = 'started',
   STOPPED = 'stopped',
   CONTINUED = 'continued'
@@ -15,7 +15,7 @@ export interface IPortionedSearchOptions {
 
 export default class PortionedSearch<PortionedSearchOptions> {
     protected _searchTimer: number = null;
-    protected _searchState: SEARCH_STATES = null;
+    protected _searchState: SEARCH_STATES = 0;
     protected _options: IPortionedSearchOptions = null;
 
     constructor(constructorOptions: IPortionedSearchOptions) {
