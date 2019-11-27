@@ -285,17 +285,17 @@
  * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  * <pre>
  * columns: [{
- *    width: 1fr,
+ *    width: '1fr',
  *    cellPadding: {
- *        left: M, 
- *        right: M 
+ *        left: 'M', 
+ *        right: 'M' 
  *    }
  * },
  * {
- *    width: 1fr,
+ *    width: '1fr',
  *    cellPadding: { 
- *        left: S,
- *        right: S 
+ *        left: 'S',
+ *        right: 'S' 
  *    }
  * }]
  * </pre>
