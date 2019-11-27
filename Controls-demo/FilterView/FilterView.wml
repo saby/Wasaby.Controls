@@ -17,7 +17,6 @@
          <h3>Fast filter with button "more"</h3>
          <Controls.filter:View source="{{_itemsMore}}"
                                alignment="left"
-                               on:itemsChanged="_itemsMoreChanged()"
 							   attr:class="demo-FilterView__more" />
       </div>
       <div class="controls-demo-FilterView__item">
