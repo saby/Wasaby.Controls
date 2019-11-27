@@ -725,17 +725,20 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
          },
 
         resetPrefetch(): void {
-             const filter = clone(this._filter);
-             const historyId = this._options.historyId;
-             const history = _private.getHistoryByItems(historyId, this._filterButtonItems);
+            const filter = clone(this._filter);
+            const historyId = this._options.historyId;
 
-             if (history) {
-                 _private.deleteFromHistory(history.item, historyId);
-             }
+            return _private.getHistoryItems(this, historyId).then(() => {
+                const history = _private.getHistoryByItems(historyId, this._filterButtonItems);
 
-             this._isFilterChanged = true;
-             _private.setFilter(this, Prefetch.clearPrefetchSession(filter));
-             _private.notifyFilterChanged(this);
+                if (history) {
+                    _private.deleteFromHistory(history.item, historyId);
+                }
+
+                this._isFilterChanged = true;
+                _private.setFilter(this, Prefetch.clearPrefetchSession(filter));
+                _private.notifyFilterChanged(this);
+            });
         },
 
         _beforeMount: function(options, context, receivedState): Promise<IFilterHistoryData|{}> {
