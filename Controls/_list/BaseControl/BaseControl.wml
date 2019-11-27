@@ -20,7 +20,7 @@
     <ws:if data="{{_showContinueSearchButton}}">
         <div class="controls-BaseControl__continueSearch" on:click="_continueSearch()">
             <div class="controls-BaseControl__continueSearch_caption">
-                <div class="controls-BaseControl__continueSearch_icon icon-Search2"></div>
+                <div class="controls-BaseControl__continueSearch_icon controls-icon icon-Search2 controls-icon_size-m_theme-{{_options.theme}}"></div>
                 {[Продолжить поиск]}
             </div>
         </div>
