@@ -311,7 +311,7 @@
  * @typedef {Object} HorizontalCellPaddingEnum
  * @variant S Небольшой отступ.
  * @variant M Средний отступ.
- * @variant null Средний отступ.
+ * @variant null Нулевой отступ.
  * @default null
  */
 
