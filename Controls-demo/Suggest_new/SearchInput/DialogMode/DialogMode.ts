@@ -11,7 +11,6 @@ export default class extends Control{
    private _defaultNavigation: object;
    protected _beforeMount() {
       this._source = getSuggestSourceWithImages();
-      console.log(this._source);
       this._defaultNavigation = getDefaultNavigation();
    }
 }
