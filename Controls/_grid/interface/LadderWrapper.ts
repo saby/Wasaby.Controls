@@ -17,7 +17,7 @@
  *                   <ws:contentTemplate>
  *                      <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
  *                         <div class="demoGrid__date">
- *                            {{template.itemData.item['date']}}
+ *                            {{contentTemplate.itemData.item['date']}}
  *                         </div>
  *                      </ws:partial>
  *                   </ws:contentTemplate>
@@ -32,7 +32,7 @@
 
 /**
  * @name Controls/grid:LadderWrapper#ladderProperty
- * @cfg {Array.<String>|String} Имена полей, для которых будет работать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ лесенка}.
+ * @cfg {Array.<String>|String} Устанавливает имена полей, для которых будет работать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ лесенка}.
  * @default undefined
  */
 

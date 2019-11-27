@@ -24,7 +24,7 @@
 
 /**
  * @name Controls/grid:ResultsTemplate#contentTemplate
- * @cfg {String|Function} Шаблон, описывающий содержимое строки итогов. 
+ * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое строки итогов. 
  * @default undefined
  */
 

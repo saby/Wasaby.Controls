@@ -14,7 +14,7 @@
  *          highlightOnHover="{{false}}"
  *          clickable="{{false}}">
  *          <ws:contentTemplate>
- *             Это мой шаблон отображения элемента.
+ *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
@@ -41,28 +41,75 @@
  */
 /**
  * @name Controls/grid:ItemTemplate#contentTemplate
- * @cfg {String|Function} Шаблон, описывающий содержимое элемента.
+ * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
  * @default undefined
  * @remark
  * В области видимости шаблона доступен объект **itemData**.
  * Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
- */
-/**
- * @name Controls/grid:ItemTemplate#itemActionsTemplate
- * @cfg {String|Function} Шаблон позволяет отобразить панель {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опций записи}, когда задан пользовательский шаблон (см. contentTemplate) в Controls/grid:ItemTemplate.
+ * 
+ * Также в области видимости шаблона есть переменная **itemActionsTemplate** — шаблон, который позволяет отобразить панель {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опций записи} в шаблоне.
  * Шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
- * @default wml!Controls/_list/ItemActions/resources/ItemActionsTemplate
+ * Работа с переменной показана в примере № 4.
  * @example
+ * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
  * <pre>
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/grid:ItemTemplate"
- *          marker="{{false}}"
- *          highlightOnHover="{{false}}"
- *          clickable="{{false}}">
+ *       <ws:partial template="Controls/grid:ItemTemplate">
  *          <ws:contentTemplate>
- *             Это мой шаблон отображения элемента.
- *             <ws:partial template="{{itemTemplate.itemActionsTemplate}}" />
+ *             {{contentTemplate.itemData.item.title}}
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
+ * <pre>
+ * <!-- file1.wml --> 
+ * <Controls.grid:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="wml!file2" scope="{{itemTemplate}}"/>
+ *    </ws:itemTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre>
+ * <!-- file2.wml -->
+ * <ws:partial template="Controls/grid:ItemTemplate">
+ *    <ws:contentTemplate>
+ *       {{contentTemplate.itemData.item.title}}
+ *    </ws:contentTemplate>
+ * </ws:partial>
+ * </pre>
+ * 
+ * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
+ * 
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/grid:ItemTemplate">
+ *          <ws:contentTemplate>
+ *             <ws:partial template="wml!file2" scope="{{contentTemplate}}"/>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre>
+ * <!-- file2.wml -->
+ * {{contentTemplate.itemData.item.title}}
+ * </pre>
+ * 
+ * **Пример 4.** Для пользовательского шаблона задано отображение опций записи.
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/grid:ItemTemplate">
+ *          <ws:contentTemplate>
+ *             {{contentTemplate.itemData.item.title}}
+ *             <ws:partial template="{{contentTemplate.itemActionsTemplate}}" />
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>

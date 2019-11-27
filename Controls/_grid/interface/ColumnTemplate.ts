@@ -16,39 +16,9 @@
  *             <ws:template>
  *                <ws:partial template="Controls/grid:ColumnTemplate">
  *                   <ws:contentTemplate>
- *                      <div title="{{template.itemData.item.name}}">
- *                         {{template.itemData.item.name}}
+ *                      <div title="{{contentTemplate.itemData.item.name}}">
+ *                         {{contentTemplate.itemData.item.name}}
  *                      </div>
- *                   </ws:contentTemplate>
- *                </ws:partial>
- *             </ws:template>
- *          </ws:Object>
- *       </ws:Array>
- *    </ws:columns>
- * </Controls.grid:View>
- * </pre>
- */
-
-/**
- * @name Controls/grid:ColumnTemplate#editArrowTemplate
- * @cfg {String|Function} Шаблон позволяет отобразить стрелку-шеврон (см. {@link Controls/grid:IGridControl#showEditArrow}), когда задан пользовательский шаблон (см. contentTemplate) в Controls/grid:ColumnTemplate.
- * Шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
- * @default wml!Controls/_grid/_editArrowTemplate
- * @example
- * Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон.
- * При этом добавлено отображение кнопки-шеврона.
- * <pre>
- * <Controls.grid:View>
- *    <ws:columns>
- *       <ws:Array>
- *          <ws:Object displayProperty="name">
- *             <ws:template>
- *                <ws:partial template="Controls/grid:ColumnTemplate">
- *                   <ws:contentTemplate>
- *                      <div title="{{template.itemData.item.name}}">
- *                         {{template.itemData.item.name}}
- *                      </div>
- *                      <ws:partial template="{{template.editArrowTemplate}}"/>
  *                   </ws:contentTemplate>
  *                </ws:partial>
  *             </ws:template>
@@ -61,18 +31,22 @@
 
 /**
  * @name Controls/grid:ColumnTemplate#contentTemplate
- * @cfg {String|Function} Шаблон, описывающий содержимое ячейки.
- * @default undefined
+ * @cfg {String|Function} Устанавливает пользовательский шаблон для отображения содержимого ячейки.
+ * @see Controls/grid:IGridControl#showEditArrow
  * @remark
- * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к следующим свойствам:
+ * В области видимости шаблона доступен объект **itemData** со следующими свойствами:
  * 
  * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
  * * **index** — порядковый номер строки. Отсчет от 0.
- * * **isEditing** — признак {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирования по месту}.
- * * **item** — элемент, данные которого отображаются в колонке.
- * * **column** — {@link Controls/_grid/interface/IGridControl/Column.typedef конфигурация колонки}.
+ * * **isEditing** (тип Boolean) — признак {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирования по месту}.
+ * * **item** (тип {@link Types/entity:Record}) — элемент, данные которого отображаются в колонке.
+ * * **column** (тип {@link Controls/_grid/interface/IGridControl/Column.typedef Column.typedef}) — объект с конфигурацией колонки.
+ * 
+ * Также в области видимости шаблона есть переменная **editArrowTemplate** — шаблон, который позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в шаблоне.
+ * Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
+ * Работа с переменной показана в примере № 4.
  * @example
- * **Пример 1.** Шаблон ячейки задан в конфигурации родительского контрола.
+ * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
  * <pre>
  * <Controls.grid:View>
  *    <ws:columns>
@@ -81,8 +55,8 @@
  *             <ws:template>
  *                <ws:partial template="Controls/grid:ColumnTemplate">
  *                   <ws:contentTemplate>
- *                      <div title="{{template.itemData.item.Name}}">
- *                         {{template.itemData.item.Name}}
+ *                      <div title="{{contentTemplate.itemData.item.Name}}">
+ *                         {{contentTemplate.itemData.item.Name}}
  *                      </div>
  *                   </ws:contentTemplate>
  *                </ws:partial>
@@ -92,37 +66,79 @@
  *    </ws:columns>
  * </Controls.grid:View>
  * </pre>
- * **Пример 2.** Шаблон ячейки описан в отдельном файле, импортирован в родительский контрол и передан в опцию.
- * В этом случае для доступа к переменной itemData нужно дополнительно задать опцию scope.
- * <pre class="brush: html">
- * <!-- Child.wml -->
- * <ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}">
- *    <ws:contentTemplate>
- *       <div>{{itemData.item.id}} - {{itemData.item.author}}</div>
- *    </ws:contentTemplate>
- * </ws:partial>
- * </pre>
- * <pre class="brush: html">
- * <!-- Parent.wml -->
+ * 
+ * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
+ * <pre>
+ * <!-- file1.wml --> 
  * <Controls.grid:View>
  *    <ws:columns>
  *       <ws:Array>
- *          <ws:Object displayProperty="Name" template="{{ myTemplate }}" />
+ *          <ws:Object displayProperty="Name">
+ *             <ws:template>
+ *                <ws:partial template="wml!file2" scope="{{template}}"/>
+ *             </ws:template>
+ *          </ws:Object>
  *       </ws:Array>
  *    </ws:columns>
  * </Controls.grid:View>
  * </pre>
- * <pre class="brush: js">
- * define('MyControl',
- *    ['UI/Base', 'wml!Parent', 'wml!Child'], 
- *    function(Base, template, myTemplate) {
- *    var ModuleClass = Base.Control.extend({
- *       _template: template,
- *       myTemplate: myTemplate,
- *       // логика работы контрола
- *    });
- *    return ModuleClass;
- * });
+ * 
+ * <pre>
+ * <!-- file2.wml -->
+ * <ws:partial template="Controls/grid:ColumnTemplate">
+ *    <ws:contentTemplate>
+ *       <div>{{contentTemplate.itemData.item.Name}}</div>
+ *    </ws:contentTemplate>
+ * </ws:partial>
+ * </pre>
+ * 
+ * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
+ * 
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:columns>
+ *       <ws:Array>
+ *          <ws:Object displayProperty="Name">
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                   <ws:contentTemplate>
+ *                      <ws:partial template="wml!file2" scope="{{contentTemplate}}"/>
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:columns>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre>
+ * <!-- file2.wml -->
+ * <div title="{{contentTemplate.itemData.item.Name}}">
+ *    {{contentTemplate.itemData.item.Name}}
+ * </div>
+ * </pre>
+ * 
+ * **Пример 4.** Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон. При этом добавлено отображение кнопки-шеврона.
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:columns>
+ *       <ws:Array>
+ *          <ws:Object displayProperty="name">
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                   <ws:contentTemplate>
+ *                      <div title="{{contentTemplate.itemData.item.name}}">
+ *                         {{contentTemplate.itemData.item.name}}
+ *                      </div>
+ *                      <ws:partial template="{{contentTemplate.editArrowTemplate}}"/>
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:columns>
+ * </Controls.grid:View>
  * </pre>
  */
 export default interface IColumnTemplateOptions {
