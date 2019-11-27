@@ -42,8 +42,7 @@
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/lookup:ItemTemplate">
  *          <ws:contentTemplate> 
- *             <span>{{itemTemplate.item.categoryNumber}}</span>
- *             <span>{{itemTemplate.item.category}}</span>
+ *             <span>{{contentTemplate.itemData.item.categoryNumber}}</span>
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
@@ -55,7 +54,7 @@
  * @name Controls/lookup:ItemTemplate#crossTemplate
  * @cfg {String|Function} Шаблон крестика удаления элемента.
  * @remark
- * Использование опции неактуально, когда контрол работает в режиме чтения (опция {@link https://wi.sbis.ru/docs/js/Controls/heading/Title/options/readOnly/?v=20.1000 readOnly} в значении true).
+ * Использование опции неактуально, когда контрол работает в режиме чтения (опция {@link UI/Base:Control#readOnly readOnly} в значении true).
  * @example
  * <pre>
  * <Controls.lookup:Selector>
