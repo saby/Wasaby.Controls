@@ -223,7 +223,7 @@ const
          ) {
             // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл, что-бы он не распирал таблицу при изменении ширины
             _private.setDispalyNoneForScroll(this._children.content);
-            this._debouncedUpdateSizes(this);
+            _private.updateSizes(this);
             _private.removeDisplayFromScroll(this._children.content);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
