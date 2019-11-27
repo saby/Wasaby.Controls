@@ -53,7 +53,7 @@
 
     <!-- Шаблон пустой таблицы -->
     <ws:if data="{{_options.emptyTemplate}}">
-        <ws:partial template="wml!Controls/_grid/layout/common/EmptyTemplate"
+        <ws:partial template="wml!Controls/_grid/EmptyTemplate"
                     emptyTemplate="{{ _options.emptyTemplate }}"
                     listModel="{{ _listModel }}"
                     isFullGridSupport="{{ _isFullGridSupport }}"

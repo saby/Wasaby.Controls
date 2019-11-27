@@ -74,7 +74,7 @@ var
                     'fullWithoutMultiSelect',
                     {
                         columnIndex: currentColumn.columnIndex,
-                        columnsLength: itemData.columns.length
+                        columnsLength: self._columns.length
                     });
            }
            return style;

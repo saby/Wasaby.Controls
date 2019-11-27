@@ -1627,75 +1627,30 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
           });
 
          it('getCellStyle', function() {
-            var
-                testCases = [
-                   {
-                      inputData: {
-                         itemData: {
-                            multiSelectVisibility: 'hidden',
-                            columns: [{}, {}]
-                         },
-                         currentColumn: {
-                            styleForLadder: 'LADDER_STYLE;',
-                            columnIndex: 0
-                         },
-                         isNotFullGridSupport: false,
-                         colspan: false
-                      },
-                      resultData: 'LADDER_STYLE;'
-                   },
-                   {
-                      inputData: {
-                         itemData: {
-                            multiSelectVisibility: 'hidden',
-                            columns: [{}, {}]
-                         },
-                         currentColumn: {
-                            columnIndex: 0
-                         },
-                         isNotFullGridSupport: false,
-                         colspan: false
-                      },
-                      resultData: ''
-                   },
-                   {
-                      inputData: {
-                         itemData: {
-                            multiSelectVisibility: 'hidden',
-                            columns: [{}, {}]
-                         },
-                         currentColumn: {
-                            styleForLadder: 'LADDER_STYLE;',
-                            columnIndex: 0
-                         },
-                         isNotFullGridSupport: false,
-                         colspan: true
-                      },
-                      resultData: 'LADDER_STYLE;grid-column-start: 1; grid-column-end: 3;'
-                   },
-                   {
-                      inputData: {
-                         itemData: {
-                            multiSelectVisibility: 'hidden',
-                            columns: [{}, {}]
-                         },
-                         currentColumn: {
-                            styleForLadder: 'LADDER_STYLE;',
-                            columnIndex: 0
-                         },
-                         isNotFullGridSupport: false,
-                         colspan: true
-                      },
-                      resultData: 'LADDER_STYLE;grid-column-start: 1; grid-column-end: 3;'
-                   }
-                ];
-            gridViewModel._options.multiSelectVisibility = 'hidden';
-            testCases.forEach(function(testCase, idx) {
-               assert.equal(testCase.resultData,
-                   gridMod.GridViewModel._private.getCellStyle(gridViewModel, testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan, testCase.inputData.isNotFullGridSupport),
-                   'Invalid result data in test #' + idx);
-            });
-            gridViewModel._options.multiSelectVisibility = 'visible';
+            let gvm = new gridMod.GridViewModel({...cfg, multiSelectVisibility: 'hidden', columns: [{}, {}]});
+
+            assert.equal(
+                gridMod.GridViewModel._private.getCellStyle(gvm, {},  {
+                   styleForLadder: 'LADDER_STYLE;',
+                   columnIndex: 0
+                }, false, false),
+                'LADDER_STYLE;'
+            );
+
+            assert.equal(
+                gridMod.GridViewModel._private.getCellStyle(gvm, {},  {
+                   columnIndex: 0
+                }, false, false),
+                ''
+            );
+
+            assert.equal(
+                gridMod.GridViewModel._private.getCellStyle(gvm, {},  {
+                   styleForLadder: 'LADDER_STYLE;',
+                   columnIndex: 0
+                }, true, false),
+                'LADDER_STYLE;grid-column-start: 1; grid-column-end: 3;'
+            );
          });
 
           it('_prepareColgroupColumns', function() {

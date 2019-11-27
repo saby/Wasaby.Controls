@@ -13,7 +13,7 @@ import * as TableLayout from 'wml!Controls/_grid/layout/table/GridView';
 
 import * as GridHeader from 'wml!Controls/_grid/layout/grid/Header';
 import * as TableHeader from 'wml!Controls/_grid/layout/table/Header';
-import * as HeaderContentTpl from 'wml!Controls/_grid/layout/common/HeaderContent';
+import * as HeaderContentTpl from 'wml!Controls/_grid/HeaderContent';
 
 import * as GridResults from 'wml!Controls/_grid/layout/grid/Results';
 import * as TableResults from 'wml!Controls/_grid/layout/table/Results';
