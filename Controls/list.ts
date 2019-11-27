@@ -10,7 +10,7 @@
  * @library Controls/list
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
- * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
+ * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes View Controls/_list/List
@@ -34,7 +34,7 @@
  * @library Controls/list
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
- * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
+ * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes View Controls/_list/List
