@@ -374,11 +374,24 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          it('filter is changed', function() {
             var options = getDefaultOptions();
+            var sandbox = sinon.createSandbox();
 
             options.filter = {test: 'testValue'};
             searchMod.Controller._private.getSearchController(searchController);
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.deepEqual(searchController._searchController.getFilter(), {test: 'testValue'});
+
+            // filter and navigation changed
+            options.filter = {test: 'testValue', test1: 'testValue1'};
+            options.navigation = {};
+            searchController._searchValue = 'test';
+            searchController._viewMode = 'search';
+
+            var notifyStub = sandbox.stub(searchController, '_notify');
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            assert.isTrue(notifyStub.withArgs('filterChanged', [{test1: 'testValue1'}]).calledOnce);
+            searchController._viewMode = '';
+            sandbox.restore();
          });
 
          it('filter is changed, navigation is changed', function() {

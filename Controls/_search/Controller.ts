@@ -293,14 +293,17 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
 
       if (this._searchController) {
-         if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
+         if (filter) {
+            this._searchController.setFilter(clone(filter));
+         }
+
+         if (_private.needUpdateSearchController(currentOptions, this._dataOptions) ||
+             _private.needUpdateSearchController(this._options, newOptions)) {
             if (this._searchValue) {
                this._searchController.abort(true);
             }
             this._searchController = null;
             _private.setInputSearchValue(this, '');
-         } else if (filter) {
-            this._searchController.setFilter(clone(filter));
          }
 
          if (!isEqual(this._options.sorting, newOptions.sorting)) {
