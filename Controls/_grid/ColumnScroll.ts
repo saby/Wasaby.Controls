@@ -6,6 +6,7 @@ import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {debounce} from 'Types/function';
+import {isFullGridSupport} from './utils/GridLayoutUtil';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -43,7 +44,7 @@ const
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
             newContentContainerSize = null;
-         if (!self._isFullGridSupport) {
+         if (!isFullGridSupport()) {
             newContentContainerSize = self._children.content.offsetWidth;
          } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
@@ -78,10 +79,9 @@ const
             self._options.stickyColumnsCount,
             self._options.header[0]
          );
-         self._scrollWidth = self._options.listModel.isFullGridSupport() ?
+         self._scrollWidth = isFullGridSupport() ?
               self._children.content.offsetWidth - self._fixedColumnsWidth :
               self._children.content.offsetWidth;
-
       },
       calculateShadowState(scrollPosition, containerSize, contentSize) {
          let
@@ -184,10 +184,8 @@ const
       _transformSelector: '',
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
-      _isNotGridSupport: false,
       _contentSizeForHScroll: 0,
       _scrollWidth: 0,
-      _isFullGridSupport: true,
 
       _beforeMount(opt) {
           /* В 19.710 сделаны правки по compound-слою, без которых событие resize не продывалось вообще.
@@ -197,8 +195,6 @@ const
              https://online.sbis.ru/opendoc.html?guid=43ba1e3f-1366-4b36-8713-5e8a30c7bc13 */
          this._debouncedUpdateSizes = _private.prepareDebouncedUpdateSizes();
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
-         this._isNotGridSupport = opt.listModel.isNoGridSupport();
-         this._isFullGridSupport = opt.listModel.isFullGridSupport();
          this._positionHandler = this._positionChangedHandler.bind(this);
       },
 
@@ -207,7 +203,7 @@ const
          if (this._options.columnScrollStartPosition === 'end' && this._isColumnScrollVisible()) {
             this._positionChangedHandler(null, this._contentSize - this._contentContainerSize);
          }
-         if (!this._isFullGridSupport) {
+         if (!isFullGridSupport()) {
             this._contentSizeForHScroll = this._contentSize;
          }
       },
@@ -257,7 +253,7 @@ const
       },
 
       _setOffsetForHScroll() {
-         if (this._isFullGridSupport) {
+         if (isFullGridSupport()) {
             _private.setOffsetForHScroll(this);
          }
       },

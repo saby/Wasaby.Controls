@@ -124,9 +124,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             keyProperty: 'id'
          }),
          itemActions: itemActions,
-         leftPadding: 'XL',
-         rightPadding: 'L',
-         rowSpacing: 'L',
+         itemPadding: {
+            left: 'XL',
+            right: 'L',
+            top: 'L',
+            bottom: 'L'
+         },
          rowSeparatorVisibility: true,
          style: 'default',
          sorting: [{price: 'DESC'}],
@@ -1380,16 +1383,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(gridColumns)".');
          });
 
-         it('should +1 on row index on rows after editting', function () {
-            const native = gridViewModel._isPartialGridSupport;
-            gridViewModel._isPartialGridSupport = true;
-            gridViewModel._model._editingItemData = { rowIndex: 1};
-
-            const iData = gridViewModel.getItemDataByItem(gridViewModel.getDisplay().at(2));
-            assert.equal(iData.rowIndex, 4);
-            gridViewModel._isPartialGridSupport = native;
-         });
-
          it('isLastColumn', function () {
             // has multiselect, 5 columns
             const itemData = gridViewModel.getItemDataByItem(gridViewModel.getDisplay().at(2));
@@ -1408,41 +1401,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(itemData.hasNextColumn(), true);
             assert.equal(itemData.hasNextColumn(true), false);
          });
-
-         it('setEditingItemData', function () {
-
-            const nativeFn = gridViewModel._model._setEditingItemData;
-            const initialStatus = gridViewModel._isPartialGridSupport;
-
-            let called = false;
-
-            gridViewModel._isPartialGridSupport = true;
-
-            gridViewModel._model._setEditingItemData = (iData) => {
-               called = true;
-               assert.equal(iData.rowIndex, 2);
-            };
-
-            gridViewModel.getColumnsWidthForEditingRow = () => [];
-
-            gridViewModel._setEditingItemData({
-               index: 1
-            });
-            assert.isTrue(called);
-
-            gridViewModel._isPartialGridSupport = initialStatus;
-            gridViewModel._model._setEditingItemData = nativeFn;
-         });
-
-          it('update prefix setEditingItemData with column scroll', function () {
-              const initialStatus = gridViewModel._isPartialGridSupport;
-              gridViewModel._isPartialGridSupport = false;
-              gridViewModel.getColumnsWidthForEditingRow = () => [];
-              const oldPrefixItemVersion = gridViewModel._model._prefixItemVersion;
-              gridViewModel._setEditingItemData({index: 1});
-              assert.equal(oldPrefixItemVersion+1, gridViewModel._model._prefixItemVersion);
-              gridViewModel._isPartialGridSupport = initialStatus;
-          });
 
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
@@ -1859,53 +1817,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ], 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
          });
 
-         it('prepareColumnsWidth', function () {
-            let
-                paramItemData = {},
-                realWidths = ['1fr', '15px', '16px'],
-                calledCallback = false,
-                savedColumns = clone(gridViewModel._columns);
-
-            gridViewModel.getColumnsWidthForEditingRow = function (iData) {
-               calledCallback = true;
-               assert.equal(iData, paramItemData);
-               return realWidths;
-            };
-
-            gridViewModel.setMultiSelectVisibility('hidden');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), realWidths);
-            assert.isTrue(calledCallback);
-
-            calledCallback = false;
-            gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr', '15px', '16px']);
-            assert.isTrue(calledCallback);
-
-            calledCallback = false;
-            gridViewModel.setMultiSelectVisibility('hidden');
-            gridViewModel.setColumns([{width:'1px'}]);
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1px']);
-            assert.isFalse(calledCallback);
-
-            gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1px']);
-            assert.isFalse(calledCallback);
-
-            calledCallback = false;
-            gridViewModel.setMultiSelectVisibility('hidden');
-            gridViewModel.setColumns([{width:'minmax(100px, 1fr)'}]);
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1fr', '15px', '16px']);
-            assert.isTrue(calledCallback);
-
-            calledCallback = false;
-            gridViewModel.setMultiSelectVisibility('visible');
-            gridViewModel.setColumns([{width:'minmax(100px, 1fr)'}]);
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr', '15px', '16px']);
-            assert.isTrue(calledCallback);
-
-            gridViewModel.setColumns(savedColumns);
-         });
-
          it('getCurrentColgroupColumn && goToNextColgroupColumn && isEndColgroupColumn && resetColgroupColumns', function () {
             assert.deepEqual({
                classes: 'controls-Grid__colgroup-column controls-Grid__colgroup-columnMultiSelect_theme-default',
@@ -1950,41 +1861,42 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(0, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" after "resetColgroupColumns()".');
          });
          it('getColspanForNoGridSupport', function() {
-            assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('hidden', true), 1);
-            assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('hidden', false), 1);
-            assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', true), 2);
-            assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', false), 1);
+            assert.isTrue(false);
+            // assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('hidden', true), 1);
+            // assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('hidden', false), 1);
+            // assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', true), 2);
+            // assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', false), 1);
          });
-         it('getColspanStyles', function() {
+         it('getColspanStylesFor', function() {
             assert.equal(
-               gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2),
+               gridMod.GridViewModel._private.getColspanStylesFor('hidden', 0, 2),
                ' grid-column: 1 / 3;'
             );
 
             assert.equal(
-               gridMod.GridViewModel._private.getColspanStyles('hidden', 1, 2),
+               gridMod.GridViewModel._private.getColspanStylesFor('hidden', 1, 2),
                undefined
             );
 
             // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             assert.equal(
-               gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2, true),
+               gridMod.GridViewModel._private.getColspanStylesFor('hidden', 0, 2, true),
                ' grid-column: 1 / 2;'
             );
 
             assert.equal(
-               gridMod.GridViewModel._private.getColspanStyles('visible', 0, 2),
+               gridMod.GridViewModel._private.getColspanStylesFor('visible', 0, 2),
                undefined
             );
 
             assert.equal(
-               gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2),
+               gridMod.GridViewModel._private.getColspanStylesFor('visible', 1, 2),
                ' grid-column: 2 / 3;'
             );
 
             // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             assert.equal(
-               gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2, true),
+               gridMod.GridViewModel._private.getColspanStylesFor('visible', 1, 2, true),
                ' grid-column: 2 / 3;'
             );
          });
@@ -2246,106 +2158,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model = null;
          });
 
-         it('prepareItemDataForPartialSupport without multiSelection', function () {
-            let
-                groupItemData = {
-                   key: '234',
-                   isGroup: true,
-                   rowIndex: 2
-                },
-                editingItemData = {
-                   key: '234',
-                   isEditing: true,
-                   rowIndex: 2
-                };
-
-            model.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
-            model.setMultiSelectVisibility('hidden');
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, editingItemData);
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, groupItemData);
-
-            assert.equal(
-                editingItemData.getEditingRowStyles(),
-                'display: grid; grid-template-columns: 1fr 123px 321px; grid-column-start: 1; grid-column-end: 2; grid-row-start: 3; grid-row-end: 4;'
-            );
-            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
-
-         });
-         it('prepareItemDataForPartialSupport with multiSelection', function () {
-            let
-                groupItemData = {
-                   key: '234',
-                   isGroup: true,
-                   rowIndex: 2
-                },
-                editingItemData = {
-                   key: '234',
-                   isEditing: true,
-                   rowIndex: 2
-                };
-
-            model.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
-            model.setMultiSelectVisibility('visible');
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, editingItemData);
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, groupItemData);
-
-            assert.equal(
-                editingItemData.getEditingRowStyles(),
-                'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
-            );
-            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
-
-            const isYandex = Env.detection.yandex;
-            Env.detection.yandex = true;
-            model.editingRowGridStyles = null;
-
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, editingItemData);
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, groupItemData);
-
-            assert.equal(
-                editingItemData.getEditingRowStyles(),
-                'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
-            );
-            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
-
-            Env.detection.yandex = isYandex;
-         });
-
-         it('getEditingRowStyles in empty grid can use real template columns', function () {
-            model = new gridMod.GridViewModel({
-               ...cfg,
-               header: null,
-               items: new collection.RecordSet({
-                  rawData: [],
-                  keyProperty: 'id'
-               })
-            });
-
-            let
-                groupItemData = {
-                   key: '234',
-                   isGroup: true,
-                   rowIndex: 2
-                },
-                editingItemData = {
-                   key: '234',
-                   isEditing: true,
-                   rowIndex: 2
-                };
-
-            model.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
-
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, editingItemData);
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, groupItemData);
-
-            assert.equal(
-                editingItemData.getEditingRowStyles(),
-                'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
-            );
-            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
-
-         });
-
          describe('getEmptyTemplateStyles', () => {
             describe('IE', () => {
                let nativeDetection;
@@ -2547,21 +2359,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
          });
 
-         it('hovered item should have prefix "HOVERED_" in version', function () {
-            model._model._calcItemVersion = () => '';
-
-            let
-                hoveredItem = model.getDisplay().at(0),
-                notHoveredItem = model.getDisplay().at(1);
-
-            model.setHoveredItem(hoveredItem);
-            model._isPartialGridSupport = true;
-            model._shouldUseTableLayout = false;
-            assert.equal('HOVERED_', model._calcItemVersion(hoveredItem, hoveredItem.key));
-
-            assert.equal('', model._calcItemVersion(notHoveredItem, notHoveredItem.key));
-         });
-
       });
       describe('no grid support', () => {
          let
@@ -2617,9 +2414,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                {title: 'fourth', width: '12%', compatibleWidth: '12%'},
                {title: 'last', width: 'auto'}
             ];
-
-            model._isPartialGridSupport = false;
-            model._shouldUseTableLayout = true;
 
             for (let i = 0; i < initialColumns.length; i++) {
                assert.deepEqual(

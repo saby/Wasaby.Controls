@@ -19,21 +19,6 @@ function isLastColumn(
 export type TreeGridColspanableElements = GridColspanableElements | 'node' | 'nodeFooter';
 
 var _private = {
-    // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
-    prepareGroupGridStyles: function (self, current) {
-        current.rowIndex = self._getRowIndexHelper().getIndexByDisplayIndex(current.index);
-        current.gridGroupStyles = GridLayoutUtil.toCssString([
-            {
-                name: 'grid-row',
-                value: current.rowIndex+1
-            },
-            {
-                name: '-ms-grid-row',
-                value: current.rowIndex+1
-            }
-        ]);
-    },
-
     getExpandedItems<T = unknown>(display, expandedItems: Array<T>, nodeProperty: string): Array<T> {
         if (display && expandedItems.length === 1 && expandedItems[0] === null) {
             const nodes = display.getItems().filter((item) => {
@@ -44,7 +29,6 @@ var _private = {
             return <Array<T>>expandedItems;
         }
     }
-
 };
 
 var
@@ -142,14 +126,6 @@ var
 
             current.isLastColumn = isLastColumn;
 
-            // For browsers with partial grid support need to calc real rows' index and set explicit rows' style
-            // with grid-row and grid-column
-            if (self._isPartialGridSupport && !self._shouldUseTableLayout) {
-                if (current.isGroup) {
-                    _private.prepareGroupGridStyles(this, current);
-                }
-            }
-
             current.getCurrentColumn = function () {
                 let
                     currentColumn = superGetCurrentColumn();
@@ -164,13 +140,6 @@ var
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__hiddenNode' + `_theme-${theme}`;
                 } else {
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item' + `_theme-${theme}`;
-                }
-
-                if (self._isPartialGridSupport && !self._shouldUseTableLayout) {
-                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles({
-                        columnStart: currentColumn.columnIndex,
-                        rowStart: current.rowIndex
-                    });
                 }
 
                 return currentColumn;
@@ -198,7 +167,6 @@ var
 
             const setNodeFooterRowStyles = (footer, index) => {
                 footer.columns = current.columns;
-                footer.isPartialGridSupport = self._isPartialGridSupport;
                 footer.shouldUseTableLayout = self._shouldUseTableLayout;
                 footer.colspan = self.getColspanFor('nodeFooter');
                 footer.getLevelIndentClasses = current.getLevelIndentClasses;
@@ -206,10 +174,10 @@ var
                     columnStart: self._options.multiSelectVisibility !== 'hidden' ? 1 : 0,
                     columnSpan: self._columns.length,
                 };
-                if ((self._isPartialGridSupport && !self._shouldUseTableLayout) || current.columnScroll) {
+                if (current.columnScroll) {
                     footer.rowIndex = current.rowIndex + index + 1;
 
-                    // TODO: Удалить rowStart после полного перехода на table-layout. Заменить вызов getCellStyles на getColumnStyles.
+                    // TODO: Разобраться, зачем это нужно для columnScroll.
                     // По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
                     footer.colspanStyles = GridLayoutUtil.getCellStyles({...colspanCfg, rowStart: footer.rowIndex});
                 } else if (self._isFullGridSupport) {
