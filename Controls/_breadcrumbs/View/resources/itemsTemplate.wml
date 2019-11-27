@@ -1,16 +1,57 @@
 <div attr:class="controls-BreadCrumbsView__items">
-    <ws:for data="itemData in items">
-        <ws:if data="{{itemData.isDots}}">
-            <ws:partial template="{{itemTemplate}}" displayProperty="{{ displayProperty }}" itemData="{{itemData}}" on:click="_onItemClick(itemData)"/>
+    <ws:if data="{{items[0].isDots}}">
+        <ws:partial template="{{itemTemplate}}" displayProperty="{{ displayProperty }}" itemData="{{items[0]}}" attr:class="controls-BreadCrumbsView__crumb__edge" on:click="_onItemClick(itemData)"/>
+    </ws:if>
+    <ws:else>
+        <ws:partial attr:class="{{applyHighlighter(highlighter, items[0].item.getId(), items[0].hasArrow)}}"
+                    template="{{itemTemplate}}"
+                    itemData="{{items[0]}}"
+                    displayProperty="{{ displayProperty }}"
+                    on:mouseEnter="_onHoveredItemChanged(items[0].item)"
+                    on:mouseLeave="_onHoveredItemChanged()"
+                    attr:class="controls-BreadCrumbsView__crumb__edge"
+                    on:click="_onItemClick(items[0])"/>
+    </ws:else>
+
+        <ws:if data="{{items.length > 2}}">
+            <div class="controls-BreadCrumbsView__items__middle">
+                <ws:for data="index, itemData in items">
+                    <ws:if data="{{index !== (items.length - 1) && index !== 0}}">
+                        <ws:if data="{{itemData.isDots}}">
+                            <ws:partial template="{{itemTemplate}}" displayProperty="{{ displayProperty }}" itemData="{{itemData}}" on:click="_onItemClick(itemData)"/>
+                        </ws:if>
+                        <ws:else>
+                            <ws:partial attr:class="{{applyHighlighter(highlighter, itemData.item.getId(), itemData.hasArrow)}}"
+                                        template="{{itemTemplate}}"
+                                        itemData="{{itemData}}"
+                                        displayProperty="{{ displayProperty }}"
+                                        on:mouseEnter="_onHoveredItemChanged(itemData.item)"
+                                        on:mouseLeave="_onHoveredItemChanged()"
+                                        on:click="_onItemClick(itemData)"/>
+                        </ws:else>
+                    </ws:if>
+                </ws:for>
+                <div class="controls-BreadCrumbsView__menu" on:click="_dotsClick()">
+                    <div class="controls-BreadCrumbsView__menu__dots">
+                        <span class="controls-BreadCrumbsView__arrow icon-size icon-DayForwardBsLine controls-BreadCrumbsView__arrow_enabled"></span>
+                        <span>...</span>
+                    </div>
+                </div>
+            </div>
+
         </ws:if>
-        <ws:else>
-            <ws:partial attr:class="{{applyHighlighter(highlighter, itemData.item.getId(), itemData.hasArrow)}}"
-                        template="{{itemTemplate}}"
-                        itemData="{{itemData}}"
-                        displayProperty="{{ displayProperty }}"
-                        on:mouseEnter="_onHoveredItemChanged(itemData.item)"
-                        on:mouseLeave="_onHoveredItemChanged()"
-                        on:click="_onItemClick(itemData)"/>
-        </ws:else>
-    </ws:for>
+
+    <ws:if data="{{items[items.length - 1].isDots}}">
+        <ws:partial template="{{itemTemplate}}" displayProperty="{{ displayProperty }}" itemData="{{items[items.length - 1]}}" on:click="_onItemClick(itemData)" attr:class="controls-BreadCrumbsView__crumb__edge"/>
+    </ws:if>
+    <ws:else>
+        <ws:partial attr:class="{{applyHighlighter(highlighter, items[items.length - 1].item.getId(), items[items.length - 1].hasArrow)}}"
+                    template="{{itemTemplate}}"
+                    itemData="{{items[items.length - 1]}}"
+                    displayProperty="{{ displayProperty }}"
+                    on:mouseEnter="_onHoveredItemChanged(items[items.length - 1].item)"
+                    on:mouseLeave="_onHoveredItemChanged()"
+                    attr:class="controls-BreadCrumbsView__crumb__edge"
+                    on:click="_onItemClick(items[items.length - 1])"/>
+    </ws:else>
 </div>

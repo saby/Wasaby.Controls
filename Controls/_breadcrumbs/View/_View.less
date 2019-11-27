@@ -1,8 +1,49 @@
+.controls-BreadCrumbsView__items {
+   display: inline-flex;
+   overflow: hidden;
+   max-width: 100%;
+}
+.controls-BreadCrumbsView__crumb__edge {
+   flex-shrink: 0;
+   white-space: nowrap;
+}
+.controls-BreadCrumbsView__items__middle {
+   width: 100%;
+   overflow: hidden;
+   display: inline-block;
+   white-space: nowrap;
+   height: 18px;
+   flex-shrink:1;
+}
+.controls-BreadCrumbsView__crumb {
+   display: inline-block;
+   overflow: hidden;
+   max-width: 100%;
+   min-width: 30px;
+   .baseline-fix();
+   font-size: @font-size_BreadCrumbs-baseline;
+   height: @height_BreadCrumbs-items;
+}
+.controls-BreadCrumbsView__menu {
+   float: right;
+   position: relative;
+   top: -25px;
+   z-index: 5;
+}
+.controls-BreadCrumbsView__menu__dots {
+   position: absolute;
+   top: 0;
+   left: -25px;
+   background: white;
+   box-shadow: -1em 0 0.4em white;
+}
+
 .controls-BreadCrumbsView {
    white-space: nowrap;
    flex-grow: 1;
    max-width: 100%;
 }
+/*
 
 .controls-BreadCrumbsView__wrapper {
    display: flex;
@@ -28,6 +69,8 @@
       font-size: @font-size_BreadCrumbs-baseline;
    }
 }
+*/
+
 
 .controls-BreadCrumbsView__dropTarget_withArrow, .controls-BreadCrumbsView__dropTarget_withoutArrow {
    &:after {
@@ -53,9 +96,7 @@
 }
 
 .controls-BreadCrumbsView__titleWrapper {
-   flex-shrink: 0;
    cursor: pointer;
-   position: relative;
    overflow: hidden;
    min-width: 0;
 }
@@ -82,7 +123,7 @@
    color: @color_BreadCrumbs-arrow;
    flex-shrink: 0;
 }
-
+/*
 .controls-BreadCrumbsView__title_min {
    //класс существует только для удобства замеров
    min-width: @min-width_BreadCrumbs-text;
@@ -140,3 +181,4 @@
       transform: translateY(-50%);
    }
 }
+*/

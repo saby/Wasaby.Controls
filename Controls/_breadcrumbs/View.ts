@@ -28,7 +28,11 @@ var BreadCrumbsView = Control.extend({
     },
 
     _onItemClick: function (e, itemData) {
-        if (itemData.isDots) {
+            if (!this._options.readOnly) {
+                this._notify('itemClick', [itemData.item]);
+            }
+    },
+    _dotsClick: function (e) {
             var rs = new RecordSet({
                 rawData: this._options.items.map(function (item) {
                     var newItem = {};
@@ -51,11 +55,6 @@ var BreadCrumbsView = Control.extend({
                 }
             });
             e.stopPropagation();
-        } else {
-            if (!this._options.readOnly) {
-                this._notify('itemClick', [itemData.item]);
-            }
-        }
     },
 
     _applyHighlighter: applyHighlighter,
