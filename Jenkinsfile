@@ -3,6 +3,7 @@
 def version = '20.1000'
 
 node ('controls') {
-
-	allPipelineUI()
+    checkout_pipeline("20.1000/bls/libs_1")
+   // run_branch = load '/home/sbis/jenkins_pipeline/platforma/branch/run_branch'
+   // run_branch.execute('controls', version)
 }
