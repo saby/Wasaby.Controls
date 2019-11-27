@@ -679,7 +679,7 @@ var _private = {
             }
             _private.checkVirtualScrollCapability(self);
         } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
-            _private.loadToDirectionIfNeed(self, 'down', self._options.filter);
+            _private.loadToDirectionIfNeed(self, 'down', filter);
         }
     },
 
