@@ -1,6 +1,5 @@
 <Controls.Application title="Demo-example: {{_options.caption}}"
-                      headJson="{{ headJson }}"
-                      appRoot="/materials/">
+                      headJson="{{ headJson }}">
    <ws:content>
       <Controls.scroll:Container attr:class="controls-ApplicationWrapper__scroll">
          <div class="controls-ApplicationWrapper__content">
