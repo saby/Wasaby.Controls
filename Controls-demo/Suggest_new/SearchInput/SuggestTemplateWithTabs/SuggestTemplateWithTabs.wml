@@ -1,0 +1,15 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container controlsDemo__mb3">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth300">
+      <h4>Вкладки в шаблоне автодополнения</h4>
+      <Controls.suggest:SearchInput
+              bind:value="_suggestCustomValue"
+              displayProperty="title"
+              searchParam="title"
+              navigation="{{_defaultNavigation}}"
+              source="{{_source}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTabTemplate">
+              <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:SearchInput>
+  </div>
+</div>

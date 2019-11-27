@@ -1,0 +1,17 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+         <h4>Отображение в поле ввода имени руководителя отдела</h4>
+         <Controls.suggest:Selector
+                 attr:class="controlsDemo__input"
+                 bind:value="_suggestDownValue"
+                 displayProperty="owner"
+                 searchParam="title"
+                 placeholder="Введите название отдела"
+                 navigation="{{_defaultNavigation}}"
+                 source="{{_source}}">
+             <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTemplate">
+                 <ws:templateOptions demoClass="demo-SuggestInputList"/>
+             </ws:suggestTemplate>
+         </Controls.suggest:Selector>
+    </div>
+</div>
