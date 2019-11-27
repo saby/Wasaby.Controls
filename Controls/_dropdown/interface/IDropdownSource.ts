@@ -8,12 +8,12 @@ export interface IDropdownSourceOptions {
  * Интерфейс для источника данных, который возвращает данные в формате,
  * необходимом для контролов Dropdown:Input, Dropdown:Button
  *
- * @interface Controls/_dropdown/IDropdownSource
+ * @interface Controls/_dropdown/interface/IDropdownSource
  * @public
  * @author Золотова Э.Е.
  */
 export default interface IDropdownSource {
-    readonly '[Controls/_dropdown/IDropdownSource]': boolean;
+    readonly '[Controls/_dropdown/interface/IDropdownSource]': boolean;
 }
 
 /**
@@ -36,7 +36,7 @@ export default interface IDropdownSource {
  */
 
 /**
- * @name Controls/_dropdown/IDropdownSource#source
+ * @name Controls/_dropdown/interface/IDropdownSource#source
  * @cfg {SourceCfg} Объект, который реализует интерфейс {@link Types/source/ICrud ICrud}, необходимый для работы с источником данных.
  * @default undefined
  * @remark
