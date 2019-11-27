@@ -39,6 +39,7 @@ const
           }
       },
       updateSizes(self) {
+          // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
          _private.setDispalyNoneForScroll(self._children.content);
          _private.drawTransform(self, 0);
          let
@@ -71,6 +72,7 @@ const
          self._setOffsetForHScroll();
          self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
          _private.drawTransform(self, self._scrollPosition);
+         // после расчетов убираем display: none
          _private.removeDisplayFromScroll(self._children.content);
       },
       updateFixedColumnWidth(self) {
@@ -223,7 +225,6 @@ const
              !isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })
              || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
          ) {
-            // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл, что-бы он не распирал таблицу при изменении ширины
             this._debouncedUpdateSizes(this);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
