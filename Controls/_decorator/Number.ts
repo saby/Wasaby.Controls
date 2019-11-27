@@ -1,3 +1,5 @@
+import {numberToString} from 'Controls/_decorator/numberToString';
+
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import template = require('wml!Controls/_decorator/Number/Number');
@@ -106,7 +108,7 @@ import template = require('wml!Controls/_decorator/Number/Number');
             if (typeof fractionSize === 'number') {
                number = _private[roundMode](number, fractionSize);
             } else {
-               number = number.toString();
+               number = numberToString(number);
             }
 
             /**
