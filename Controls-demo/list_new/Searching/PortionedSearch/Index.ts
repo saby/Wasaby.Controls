@@ -42,6 +42,7 @@ export default class extends Control {
         this._filter = {};
     }
 
-    static _theme: string[] = ['Controls/Classes', 'Controls-demo/Controls-demo'];
+    static _theme: string[] = ['Controls/Classes'];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 
 }
