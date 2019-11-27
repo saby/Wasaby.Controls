@@ -628,14 +628,6 @@ define('Controls-demo/FilterView/FilterView',
 
          _itemsChanged: function(event, items) {
             this._hierarchyItems = Clone(items);
-         },
-
-         _itemsMoreChanged: function(event, items) {
-            this._itemsMore = Clone(items);
-            this._itemsMore[0].editorOptions.source = new sourceLib.Memory({
-               idProperty: 'id',
-               data: this._itemsMultiSelect
-            });
          }
       });
 
