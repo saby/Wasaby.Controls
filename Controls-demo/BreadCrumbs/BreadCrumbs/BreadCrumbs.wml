@@ -6,8 +6,6 @@
     <Controls.breadcrumbs:Path attr:id="oneCrumb" items="{{items1}}" on:itemClick="_onItemClick()" keyProperty="id" />
     <h2>Две крошки</h2>
     <Controls.breadcrumbs:Path attr:id="twoCrumbs" items="{{items2}}" on:itemClick="_onItemClick()" keyProperty="id" />
-    <h2>Две крошки, но одна из них не может сжиматься</h2>
-    <Controls.breadcrumbs:Path attr:id="twoCrumbsButDifferent" items="{{items3}}" on:itemClick="_onItemClick()" keyProperty="id" />
     <h2>Path</h2>
     <Controls.breadcrumbs:HeadingPath attr:id="path"
                                items="{{items}}"

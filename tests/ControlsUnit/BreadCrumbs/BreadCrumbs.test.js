@@ -98,8 +98,7 @@ define([
             var itemData = {
                item: {
                   title: '...'
-               },
-               isDots: true
+               }
             };
             var stopPropagationCalled = false;
             bc._children = {
@@ -111,7 +110,7 @@ define([
                   }
                }
             };
-            bc._onItemClick({
+            bc._dotsClick({
                target: 123,
                stopPropagation: function() {
                   stopPropagationCalled = true;
@@ -119,16 +118,6 @@ define([
             }, itemData);
             assert.isTrue(stopPropagationCalled);
          });
-      });
-      it('_onResize', function(done) {
-         bc._children = {
-            menuOpener: {
-               close: function() {
-                  done();
-               }
-            }
-         };
-         bc._onResize();
       });
       it('_onResult', function(done) {
          var args = {
