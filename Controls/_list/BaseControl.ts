@@ -2583,18 +2583,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         keysHandler(event, HOT_KEYS, _private, this, dontStop);
     },
     _dragEnter: function(event, dragObject) {
-        var
-            dragEnterResult,
-            draggingItemProjection;
-
         if (
+            dragObject &&
             !this._listViewModel.getDragEntity() &&
             cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
-            dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
+            const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-                draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
+                const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
                 this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
                 this._listViewModel.setDragEntity(dragObject.entity);
             } else if (dragEnterResult === true) {
