@@ -148,4 +148,13 @@ define('Controls/interface/IFastFilter', [
     * @param {Object} filter New filter.
     */
 
+   /**
+    * @event Controls/_filter/View/interface/IFilterView#selectorCallback Происходит при выборе элементов из справочника.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    * @param {RecordSet} initialItems Список выбранных элементов, перед открытием справочника.
+    * @param {RecordSet} newItems Список выбранных элементов, после выбора из справочника.
+    * @param {String} name Имя фильтра, справочник которого был открыт.
+    * Подробнее - {@link Controls/interface/ISelectorDialog#selectorCallback selectorCallback}.
+    */
+
 });

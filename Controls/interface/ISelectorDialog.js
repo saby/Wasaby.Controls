@@ -78,7 +78,7 @@ define('Controls/interface/ISelectorDialog', [
     */
 
    /**
-    * @event Controls/_interface/ISelectorDialog#selectorCallback Происходит при выборе элементов из справочника.
+    * @event Controls/interface/ISelectorDialog#selectorCallback Происходит при выборе элементов из справочника.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {RecordSet} initialItems Список выбранных элементов, перед открытием справочника.
     * @param {RecordSet} newItems Список выбранных элементов, после выбора из справочника.
@@ -113,7 +113,7 @@ define('Controls/interface/ISelectorDialog', [
     * </pre>
     */
    /*
-    * @event Controls/_interface/ISelectorDialog#selectorCallback Occurs when selected items with selector.
+    * @event Controls/interface/ISelectorDialog#selectorCallback Occurs when selected items with selector.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {RecordSet} initialItems List of selected items before opening the directory.
     * @param {RecordSet} newItemsThe list of selected items, after selecting from the directory.

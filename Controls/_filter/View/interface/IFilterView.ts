@@ -484,6 +484,15 @@
  */
 
 /**
+ * @event Controls/_filter/View/interface/IFilterView#selectorCallback Происходит при выборе элементов из справочника.
+ * Подробнее - {@link Controls/interface/ISelectorDialog#selectorCallback selectorCallback}.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {RecordSet} initialItems Список выбранных элементов, перед открытием справочника.
+ * @param {RecordSet} newItems Список выбранных элементов, после выбора из справочника.
+ * @param {String} name Имя фильтра, справочник которого был открыт.
+ */
+
+/**
  * Открыть панель фильтрации с шабоном переданным в опции {@link Controls/_filter/View/interface/IFilterView#detailPanelTemplateName detailPanelTemplateName}.
  * @example
  * TS:
