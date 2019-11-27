@@ -39,6 +39,7 @@ const
           }
       },
       updateSizes(self) {
+         _private.setDispalyNoneForScroll(self._children.content);
          _private.drawTransform(self, 0);
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
@@ -70,6 +71,7 @@ const
          self._setOffsetForHScroll();
          self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
          _private.drawTransform(self, self._scrollPosition);
+         _private.removeDisplayFromScroll(self._children.content);
       },
       updateFixedColumnWidth(self) {
          self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
@@ -222,9 +224,7 @@ const
              || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
          ) {
             // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл, что-бы он не распирал таблицу при изменении ширины
-            _private.setDispalyNoneForScroll(this._children.content);
-            _private.updateSizes(this);
-            _private.removeDisplayFromScroll(this._children.content);
+            this._debouncedUpdateSizes(this);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
             _private.updateFixedColumnWidth(this);
