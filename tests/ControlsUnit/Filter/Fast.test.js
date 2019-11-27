@@ -610,6 +610,7 @@ define(
                vertical: 'adaptive'
             });
             assert.deepStrictEqual(expectedConfig.templateOptions.items, fastFilter._configs[0]._items);
+            assert.deepStrictEqual(expectedConfig.templateOptions.selectorItems, fastFilter._configs[0]._items);
             assert.strictEqual(expectedConfig.templateOptions.selectedKeys[0], 'Россия');
             assert.isTrue(isOpened);
 

@@ -52,7 +52,7 @@
                <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
                   <Controls._dropdownPopup.MoreButton attr:class="controls-DropdownList{{_options.multiSelect ? '_multiSelect'}}__hasMoreButton_theme_{{_options.theme}}"
                                                       caption="{{_options.moreButtonCaption}}"
-                                                      items="{{_options.items}}"
+                                                      items="{{_options.selectorItems || _options.items}}"
                                                       selectedKeys="{{_options.selectedKeys}}"
                                                       selectorTemplate="{{_options.selectorTemplate}}"
                                                       isCompoundTemplate="{{_options.isCompoundTemplate}}"
