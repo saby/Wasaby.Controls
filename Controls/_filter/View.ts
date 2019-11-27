@@ -119,12 +119,7 @@ var _private = {
                 popupItem.selectorItems = configs[item.name].items;
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
-                        _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter).addCallback(() => {
-                            if (isHistorySource(item.editorOptions.source)) {
-                                popupItem.items = item.editorOptions.source.prepareItems(popupItem.items);
-                                configs[item.name].popupItems = popupItem.items.clone();
-                            }
-                        });
+                        popupItem.loadDeferred = _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
                     }
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                     popupItem.sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
