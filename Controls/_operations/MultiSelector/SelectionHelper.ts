@@ -21,7 +21,7 @@ export function isNode(item: Record, model: ViewModel|TreeCollection, hierarchyR
    if (model instanceof TreeCollection) {
       return model.getItemBySourceId(item.getId()).isNode();
    } else {
-      return hierarchyRelation.isNode(item) !== null;
+      return hierarchyRelation ? hierarchyRelation.isNode(item) !== null : false;
    }
 };
 
@@ -29,7 +29,7 @@ export function isHasChildren(item: Record, model: ViewModel|TreeCollection, hie
    if (model instanceof TreeCollection) {
       return model.getItemBySourceId(item.getId()).isHasChildren();
    } else {
-      return hierarchyRelation.hasDeclaredChildren(item) !== false;
+      return hierarchyRelation ? hierarchyRelation.hasDeclaredChildren(item) !== false : false;
    }
 };
 
@@ -37,7 +37,7 @@ export function getParentProperty(model: ViewModel|TreeCollection, hierarchyRela
    if (model instanceof TreeCollection) {
       return model.getParentProperty();
    } else {
-      return hierarchyRelation.getParentProperty();
+      return hierarchyRelation && hierarchyRelation.getParentProperty();
    }
 };
 
@@ -61,7 +61,7 @@ export function getChildren(nodeId: Tkey, model: ViewModel|TreeCollection, hiera
             children.push(item);
          }
       });
-   } else {
+   } else if (hierarchyRelation) {
       children = hierarchyRelation.getChildren(nodeId, getItems(model));
    }
 

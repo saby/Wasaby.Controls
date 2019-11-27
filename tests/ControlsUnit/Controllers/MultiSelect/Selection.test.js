@@ -5,13 +5,13 @@ define([
    'Types/collection',
    'Controls/operations',
    'Controls/list',
-   'Controls/_operations/MultiSelector/SelectionStrategy/Flat',
+   'Controls/treeGrid',
    'ControlsUnit/ListData'
 ], function(
    collection,
    operations,
    list,
-   FlatSelectionStrategy,
+   treeGrid,
    ListData
 ) {
    describe('Controls.operations:Selection', function() {
@@ -22,7 +22,7 @@ define([
             items: items,
             keyProperty: 'id',
             listModel: new list.ListViewModel({items: config && config.items || items}),
-            selectionStrategy: new FlatSelectionStrategy.default()
+            selectionStrategy: new operations.FlatSelectionStrategy()
          }, config || {});
       }
 
@@ -293,6 +293,17 @@ define([
          assert.deepEqual([], selectionInstance.selectedKeys, 'Constructor: wrong field values');
          assert.deepEqual([], selectionInstance.excludedKeys, 'Constructor: wrong field values');
          assert.deepEqual({}, selectionInstance._listModel._selectedKeys);
+      });
+
+      it('with tree selection strategy', function() {
+         cfg = getConfig({
+            selectedKeys: [1],
+            listModel: new treeGrid.ViewModel({columns: [], items: items}),
+            selectionStrategy: new operations.DeepTreeSelectionStrategy()
+         });
+         selectionInstance = new operations.Selection(cfg);
+         selectionInstance.updateSelectionForRender();
+         assert.deepEqual({1: true}, selectionInstance._listModel._model._selectedKeys);
       });
    });
 });
