@@ -4,7 +4,7 @@
                     attr:style="width: 100px"
                      on:click="backClickHdl()">&lt;&nbsp;Назад</a>
 
-   <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
+   <div attr:class="ControlsDemo-Page_scrollContainer ControlsDemo-Page_scrollContainer_native">
       <Router.router:Route mask="app/:app">
          <Controls-demo.RootTemplateWrapper>
             <ws:if data="{{content.app && content.templateLoaded}}">
@@ -21,5 +21,5 @@
             </ws:else>
          </Controls-demo.RootTemplateWrapper>
       </Router.router:Route>
-   </Controls.scroll:Container>
+   </div>
 </div>
