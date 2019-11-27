@@ -42,18 +42,6 @@ function isFullGridSupport(): boolean {
     return (!detection.isWinXP || detection.yandex) && (!detection.isNotFullGridSupport || _isFullGridSafari());
 }
 
-function isPartialGridSupport(): boolean {
-    const isOldIEBrowser = detection.isIE && !detection.isModernIE;
-    const noGridSupport = (detection.isWinXP && !detection.yandex) || isOldIEBrowser;
-    const fullGridSupport = _isFullGridSafari();
-
-    return detection.isNotFullGridSupport && !(noGridSupport || fullGridSupport);
-}
-
-function isNoGridSupport(): boolean {
-    return !isFullGridSupport() && !isPartialGridSupport();
-}
-
 function isOldIE(): boolean {
     return detection.isIE && detection.IEVersion <= OLD_IE_LAST_VERSION;
 }
@@ -137,8 +125,6 @@ export {
     RegExps,
 
     isFullGridSupport,
-    isPartialGridSupport,
-    isNoGridSupport,
     isOldIE,
 
     getColumnStyles,

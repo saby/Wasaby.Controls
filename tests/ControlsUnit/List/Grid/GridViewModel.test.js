@@ -340,95 +340,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'Invalid result data in test #' + idx);
             });
          });
-         it('getCellStyle', function() {
-            var
-               testCases = [
-                  {
-                     inputData: {
-                        itemData: {
-                           multiSelectVisibility: 'hidden',
-                           columns: [{}, {}]
-                        },
-                        currentColumn: {
-                           styleForLadder: 'LADDER_STYLE;',
-                           columnIndex: 0
-                        },
-                        isNotFullGridSupport: false,
-                        colspan: false
-                     },
-                     resultData: 'LADDER_STYLE;'
-                  },
-                  {
-                     inputData: {
-                        itemData: {
-                           multiSelectVisibility: 'hidden',
-                           columns: [{}, {}]
-                        },
-                        currentColumn: {
-                           columnIndex: 0
-                        },
-                        isNotFullGridSupport: false,
-                        colspan: false
-                     },
-                     resultData: ''
-                  },
-                  {
-                     inputData: {
-                        itemData: {
-                           multiSelectVisibility: 'hidden',
-                           columns: [{}, {}]
-                        },
-                        currentColumn: {
-                           styleForLadder: 'LADDER_STYLE;',
-                           columnIndex: 0
-                        },
-                        isNotFullGridSupport: false,
-                        colspan: true
-                     },
-                     resultData: 'LADDER_STYLE; grid-column: 1 / 3;'
-                  },
-                  {
-                     inputData: {
-                        itemData: {
-                           multiSelectVisibility: 'hidden',
-                           columns: [{}, {}]
-                        },
-                        currentColumn: {
-                           styleForLadder: 'LADDER_STYLE;',
-                           columnIndex: 0
-                        },
-                        isNotFullGridSupport: false,
-                        colspan: true
-                     },
-                     resultData: 'LADDER_STYLE; grid-column: 1 / 3;'
-                  }
-               ];
-            testCases.forEach(function(testCase, idx) {
-               assert.equal(testCase.resultData,
-                  gridMod.GridViewModel._private.getCellStyle(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan, testCase.inputData.isNotFullGridSupport),
-                  'Invalid result data in test #' + idx);
-            });
-         });
-         it('getCellStyle should set styles for partial support if has colspan', function () {
-            let nativeFn =GridLayoutUtil.isPartialGridSupport;
-            GridLayoutUtil.isPartialGridSupport = () => true;
 
-            let
-                itemData = {
-                   multiSelectVisibility: 'hidden',
-                   columns: [{}, {}]
-                },
-                currentColumn = {
-                   columnIndex: 0
-                };
-
-            assert.equal(
-                gridMod.GridViewModel._private.getCellStyle(itemData, currentColumn, true),
-                ' grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;'
-            );
-
-            GridLayoutUtil.isPartialGridSupport = nativeFn;
-         });
          it('getPaddingCellClasses', function() {
             var
                paramsWithoutMultiselect = {
@@ -516,17 +428,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                rowIndex: 0,
                style: 'default'
             };
+            const nativeIsFullGridSupport = GridLayoutUtil.isFullGridSupport;
+            GridLayoutUtil.isFullGridSupport = () => false;
             assert.equal(
                 ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_null_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses(paramsWithMultiselect, theme)
             );
 
-            paramsWithMultiselect.isTableLayout = false;
+            GridLayoutUtil.isFullGridSupport = () => true;
 
             assert.equal(
                 ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_null_theme-default controls-Grid__cell_spacingBackButton_with_multiSelection_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses(paramsWithMultiselect, theme)
             );
+            GridLayoutUtil.isFullGridSupport = nativeIsFullGridSupport;
          });
          it('getPaddingHeaderCellClasses for multiHeader', function() {
            /*
@@ -1424,6 +1339,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__header-cell-checkbox_theme-default',
                index: 0,
+               colSpan: 1,
+               rowSpan: 1,
                cellContentClasses: '',
                cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: 'visible',
@@ -1511,6 +1428,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__header-cell-checkbox_theme-default',
                index: 0,
+               rowSpan: 1,
+               colSpan: 1,
                cellContentClasses: '',
                cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: 'visible',
@@ -1615,7 +1534,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('right breadcrumbs colspan for table layout', function() {
 
             const gridViewModel = new gridMod.GridViewModel({...cfg, multiSelectVisibility: 'visible'});
-            gridViewModel._shouldUseTableLayout = true;
             gridViewModel._isMultyHeader = true;
             gridViewModel._headerRows[0][1].isBreadCrumbs = true;
 
@@ -1648,36 +1566,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}], gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns([])" with multiselect.');
             gridViewModel._prepareResultsColumns(gridColumns, true);
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns(gridColumns)" with multiselect.');
-         });
-
-         it('getFooterStyles without display', function() {
-            var
-                called = false,
-                savedFunc = gridMod.GridViewModel._private.getFooterStyles,
-                model = new gridMod.GridViewModel({
-                   columns: gridColumns
-                });
-
-            gridMod.GridViewModel._private.getFooterStyles = function() {
-               called = true;
-            };
-
-            model.getDisplay = function() {
-               return 123;
-            };
-
-            model.getFooterStyles();
-            assert.isTrue(called);
-
-            called = false;
-            model.getDisplay = function() {
-               return null;
-            };
-
-            model.getFooterStyles();
-            assert.isFalse(called);
-
-            gridMod.GridViewModel._private.getFooterStyles = savedFunc;
          });
 
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
@@ -1738,6 +1626,77 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
               gridViewModel._headerRows[0][1] = originBreadcrumbsCell;
           });
 
+         it('getCellStyle', function() {
+            var
+                testCases = [
+                   {
+                      inputData: {
+                         itemData: {
+                            multiSelectVisibility: 'hidden',
+                            columns: [{}, {}]
+                         },
+                         currentColumn: {
+                            styleForLadder: 'LADDER_STYLE;',
+                            columnIndex: 0
+                         },
+                         isNotFullGridSupport: false,
+                         colspan: false
+                      },
+                      resultData: 'LADDER_STYLE;'
+                   },
+                   {
+                      inputData: {
+                         itemData: {
+                            multiSelectVisibility: 'hidden',
+                            columns: [{}, {}]
+                         },
+                         currentColumn: {
+                            columnIndex: 0
+                         },
+                         isNotFullGridSupport: false,
+                         colspan: false
+                      },
+                      resultData: ''
+                   },
+                   {
+                      inputData: {
+                         itemData: {
+                            multiSelectVisibility: 'hidden',
+                            columns: [{}, {}]
+                         },
+                         currentColumn: {
+                            styleForLadder: 'LADDER_STYLE;',
+                            columnIndex: 0
+                         },
+                         isNotFullGridSupport: false,
+                         colspan: true
+                      },
+                      resultData: 'LADDER_STYLE;grid-column-start: 1; grid-column-end: 3;'
+                   },
+                   {
+                      inputData: {
+                         itemData: {
+                            multiSelectVisibility: 'hidden',
+                            columns: [{}, {}]
+                         },
+                         currentColumn: {
+                            styleForLadder: 'LADDER_STYLE;',
+                            columnIndex: 0
+                         },
+                         isNotFullGridSupport: false,
+                         colspan: true
+                      },
+                      resultData: 'LADDER_STYLE;grid-column-start: 1; grid-column-end: 3;'
+                   }
+                ];
+            gridViewModel._options.multiSelectVisibility = 'hidden';
+            testCases.forEach(function(testCase, idx) {
+               assert.equal(testCase.resultData,
+                   gridMod.GridViewModel._private.getCellStyle(gridViewModel, testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan, testCase.inputData.isNotFullGridSupport),
+                   'Invalid result data in test #' + idx);
+            });
+            gridViewModel._options.multiSelectVisibility = 'visible';
+         });
 
           it('_prepareColgroupColumns', function() {
             assert.deepEqual(gridViewModel._colgroupColumns, [
@@ -1859,46 +1818,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" before "resetColgroupColumns()".');
             gridViewModel.resetColgroupColumns();
             assert.equal(0, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" after "resetColgroupColumns()".');
-         });
-         it('getColspanForNoGridSupport', function() {
-            assert.isTrue(false);
-            // assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('hidden', true), 1);
-            // assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('hidden', false), 1);
-            // assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', true), 2);
-            // assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', false), 1);
-         });
-         it('getColspanStylesFor', function() {
-            assert.equal(
-               gridMod.GridViewModel._private.getColspanStylesFor('hidden', 0, 2),
-               ' grid-column: 1 / 3;'
-            );
-
-            assert.equal(
-               gridMod.GridViewModel._private.getColspanStylesFor('hidden', 1, 2),
-               undefined
-            );
-
-            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            assert.equal(
-               gridMod.GridViewModel._private.getColspanStylesFor('hidden', 0, 2, true),
-               ' grid-column: 1 / 2;'
-            );
-
-            assert.equal(
-               gridMod.GridViewModel._private.getColspanStylesFor('visible', 0, 2),
-               undefined
-            );
-
-            assert.equal(
-               gridMod.GridViewModel._private.getColspanStylesFor('visible', 1, 2),
-               ' grid-column: 2 / 3;'
-            );
-
-            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            assert.equal(
-               gridMod.GridViewModel._private.getColspanStylesFor('visible', 1, 2, true),
-               ' grid-column: 2 / 3;'
-            );
          });
          it('getItemDataByItem: hovered item should be compared by key', function () {
             let current = gridViewModel.getCurrent();
@@ -2133,270 +2052,23 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          })
       });
 
-      describe('partial grid support', () => {
-         let
-             nativeIsPartialGridSupport,
-             nativeIsFullGridSupport,
-             model;
-
-         before(() => {
-            nativeIsPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
-            GridLayoutUtil.isPartialGridSupport = () => true;
-            nativeIsFullGridSupport = GridLayoutUtil.isFullGridSupport;
-            GridLayoutUtil.isFullGridSupport = () => false;
-         });
-         after(() => {
-            GridLayoutUtil.isPartialGridSupport = nativeIsPartialGridSupport;
-            GridLayoutUtil.isFullGridSupport = nativeIsFullGridSupport;
-         });
-
-         beforeEach(() => {
-            model = new gridMod.GridViewModel(cfg);
-         });
-         afterEach(() => {
-            model.destroy();
-            model = null;
-         });
-
-         describe('getEmptyTemplateStyles', () => {
-            describe('IE', () => {
-               let nativeDetection;
-               before(() => {
-                  nativeDetection = clone(Env.detection);
-                  Env.detection = { isIE: true };
-               });
-               after(() => {
-                  Env.detection = nativeDetection;
-               });
-
-               it('no checkbox && has header && results in top', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = 'top';
-                  assert.equal(
-                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('has checkbox && has header && results in top', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = 'top';
-                  assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('no checkbox && hasn\'t header && results in top', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._header = null;
-                  model._options.resultsPosition = 'top';
-                  assert.equal(
-                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('has checkbox && hasn\'t header && results in top', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._header = null;
-                  model._options.resultsPosition = 'top';
-                  assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-
-               it('no checkbox && has header && results in bottom', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = 'bottom';
-                  assert.equal(
-                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('has checkbox && has header && results in bottom', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = 'bottom';
-                  assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('no checkbox && hasn\'t header && results in bottom', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._header = null;
-                  model._options.resultsPosition = 'bottom';
-                  assert.equal(
-                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('has checkbox && hasn\'t header && results in bottom', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._header = null;
-                  model._options.resultsPosition = 'bottom';
-                  assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-
-               it('no checkbox && has header && no results', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = null;
-                  assert.equal(
-                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('has checkbox && has header && no results', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = null;
-                  assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('no checkbox && hasn\'t header && no results', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._header = null;
-                  model._options.resultsPosition = null;
-                  assert.equal(
-                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-               it('has checkbox && hasn\'t header && no results', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._header = null;
-                  model._options.resultsPosition = null;
-                  assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
-                      model.getEmptyTemplateStyles()
-                  );
-               });
-
-            });
-            describe('other old browsers', () => {
-               it('no checkbox && has header && results in top', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
-               });
-               it('has checkbox && has header && results in top', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
-               });
-               it('no checkbox && hasn\'t header && results in top', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._header = null;
-                  model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
-               });
-               it('has checkbox && hasn\'t header && results in top', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._header = null;
-                  model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
-               });
-
-               it('no checkbox && has header && results in bottom', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
-               });
-               it('has checkbox && has header && results in bottom', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
-               });
-               it('no checkbox && hasn\'t header && results in bottom', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._header = null;
-                  model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
-               });
-               it('has checkbox && hasn\'t header && results in bottom', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._header = null;
-                  model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
-               });
-
-               it('no checkbox && has header && no results', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
-               });
-               it('has checkbox && has header && no results', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._setHeader([{}]);
-                  model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
-               });
-               it('no checkbox && hasn\'t header && no results', () => {
-                  model.setMultiSelectVisibility('hidden');
-                  model._header = null;
-                  model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
-               });
-               it('has checkbox && hasn\'t header && no results', () => {
-                  model.setMultiSelectVisibility('visible');
-                  model._header = null;
-                  model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
-               });
-            });
-         });
-
-      });
       describe('no grid support', () => {
          let
-             nativeIsPartialGridSupport,
-             nativeIsNoGridSupport,
+             nativeIsFullGridSupport = GridLayoutUtil.isFullGridSupport,
+             nativeGetDefaultColumnWidth = GridLayoutUtil.getDefaultColumnWidth,
              model;
 
-         before(() => {
-            nativeIsPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
-            nativeIsNoGridSupport = GridLayoutUtil.isPartialGridSupport;
-            GridLayoutUtil.isPartialGridSupport = () => false;
-            GridLayoutUtil.isNoGridSupport = () => true;
-         });
-         after(() => {
-            GridLayoutUtil.isPartialGridSupport = nativeIsPartialGridSupport;
-            GridLayoutUtil.isNoGridSupport = nativeIsNoGridSupport;
-         });
 
          beforeEach(() => {
             model = new gridMod.GridViewModel(cfg);
+            GridLayoutUtil.isFullGridSupport = () => false;
+            GridLayoutUtil.getDefaultColumnWidth = () => 'auto';
          });
          afterEach(() => {
             model.destroy();
             model = null;
-         });
-
-         it('getColspan', function () {
-            let itemData = {
-               columns: {
-                  length: 5
-               },
-               multiSelectVisibility: 'hidden'
-            };
-            assert.equal(1, gridMod.GridViewModel._private.getColspan(itemData));
-            assert.equal(1, gridMod.GridViewModel._private.getColspan(itemData, false));
-            assert.equal(5, gridMod.GridViewModel._private.getColspan(itemData, true));
-            itemData.multiSelectVisibility = 'visible';
-            assert.equal(4, gridMod.GridViewModel._private.getColspan(itemData, true));
+            GridLayoutUtil.isFullGridSupport = nativeIsFullGridSupport;
+            GridLayoutUtil.getDefaultColumnWidth = nativeGetDefaultColumnWidth;
          });
 
          it('_prepareCrossBrowserColumn', function () {

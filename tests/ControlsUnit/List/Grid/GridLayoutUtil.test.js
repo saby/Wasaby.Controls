@@ -43,8 +43,6 @@ define([
          it('modern chrome is full grid support', () => {
             Env.detection.isNotFullGridSupport = false;
             assert.isTrue(Util.isFullGridSupport());
-            assert.isFalse(Util.isPartialGridSupport());
-            assert.isFalse(Util.isNoGridSupport());
          });
          it('safari ver >=12 is full grid support', () => {
             Env.detection = {
@@ -58,8 +56,6 @@ define([
                isNoGridSupport: true
             };
             assert.isTrue(Util.isFullGridSupport());
-            assert.isFalse(Util.isPartialGridSupport());
-            assert.isFalse(Util.isNoGridSupport());
          });
          it('safari desktop is full grid support', () => {
             Env.detection = {
@@ -72,8 +68,6 @@ define([
                isNoGridSupport: true
             };
             assert.isTrue(Util.isFullGridSupport());
-            assert.isFalse(Util.isPartialGridSupport());
-            assert.isFalse(Util.isNoGridSupport());
          });
          it('safari ver <12 is partial grid support', () => {
             Env.detection = {
@@ -87,8 +81,6 @@ define([
                isNoGridSupport: true
             };
             assert.isFalse(Util.isFullGridSupport());
-            assert.isTrue(Util.isPartialGridSupport());
-            assert.isFalse(Util.isNoGridSupport());
          });
          it('Edge is partial grid support', () => {
             Env.detection = {
@@ -100,8 +92,6 @@ define([
                isNoGridSupport: true
             };
             assert.isFalse(Util.isFullGridSupport());
-            assert.isTrue(Util.isPartialGridSupport());
-            assert.isFalse(Util.isNoGridSupport());
          });
          it('IE>9 is partial grid support', () => {
             Env.detection = {
@@ -113,8 +103,6 @@ define([
                isNoGridSupport: true
             };
             assert.isFalse(Util.isFullGridSupport());
-            assert.isTrue(Util.isPartialGridSupport());
-            assert.isFalse(Util.isNoGridSupport());
          });
          it('chrome in xp is no grid support', () => {
             Env.detection = {
@@ -127,8 +115,6 @@ define([
                isNoGridSupport: true
             };
             assert.isFalse(Util.isFullGridSupport());
-            assert.isFalse(Util.isPartialGridSupport());
-            assert.isTrue(Util.isNoGridSupport());
          });
          it('yandex in xp is partial grid support', () => {
             Env.detection = {
@@ -141,8 +127,6 @@ define([
                isNoGridSupport: false
             };
             assert.isFalse(Util.isFullGridSupport());
-            assert.isTrue(Util.isPartialGridSupport());
-            assert.isFalse(Util.isNoGridSupport());
          });
          it('mozila in xp is no grid support', () => {
             Env.detection = {
@@ -156,8 +140,6 @@ define([
                firefox: true
             };
             assert.isFalse(Util.isFullGridSupport());
-            assert.isFalse(Util.isPartialGridSupport());
-            assert.isTrue(Util.isNoGridSupport());
          });
 
       });

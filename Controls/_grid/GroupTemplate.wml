@@ -32,8 +32,19 @@
       </ws:if>
    </div>
 </ws:template>
-<ws:if data="{{!itemData.isFullGridSupport()}}">
-   <tr attr:class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}" attr:key="group-{{itemData.item}}">
+
+<ws:if data="{{itemData.isFullGridSupport()}}">
+   <div class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}"
+        key="group-{{itemData.item}}">
+      <ws:partial template="groupContentTemplate" attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}}"/>
+      <ws:if data="{{columnAlignGroup !== undefined && columnAlignGroup < itemData.columns.length - (itemData.hasMultiSelect ? 1 : 0)}}">
+         <ws:partial template="groupRightTemplate"
+                     attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).right}}"/>
+      </ws:if>
+   </div>
+</ws:if>
+<ws:else>
+   <tr key="group-{{itemData.item}}" class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}">
       <td class="controls-ListView__groupCellContent" colspan="{{columnAlignGroup ? columnAlignGroup : itemData.columns.length}}">
          <ws:partial template="groupContentTemplate"/>
       </td>
@@ -43,24 +54,4 @@
          </td>
       </ws:if>
    </tr>
-</ws:if>
-<ws:else data="{{itemData.isPartialGridSupport()}}">
-      <ws:partial template="groupContentTemplate"
-                  attr:class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}"
-                  attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}}"
-                  attr:key="group-{{itemData.item}}"/>
-      <ws:if data="{{columnAlignGroup !== undefined && columnAlignGroup !== undefined && columnAlignGroup < itemData.columns.length - (itemData.hasMultiSelect ? 1 : 0)}}">
-         <ws:partial template="groupRightTemplate"
-                     attr:class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}"
-                     attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).right}}"/>
-      </ws:if>
-</ws:else>
-<ws:else>
-   <div attr:class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}" attr:key="group-{{itemData.item}}">
-      <ws:partial template="groupContentTemplate" attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}}"/>
-      <ws:if data="{{columnAlignGroup !== undefined && columnAlignGroup < itemData.columns.length - (itemData.hasMultiSelect ? 1 : 0)}}">
-         <ws:partial template="groupRightTemplate"
-                     attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).right}}"/>
-      </ws:if>
-   </div>
 </ws:else>

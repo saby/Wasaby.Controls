@@ -76,18 +76,33 @@ define(['Controls/grid'], function(gridMod) {
             'Incorrect result "prepareGridTemplateColumns without checkbox".');
       });
       it('Footer', function() {
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default',
-            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', itemPadding: { left: 'S' } }, theme),
-            'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: onhover, itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default',
-            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'visible', itemPadding: { left: 'S' } }, theme),
-            'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: visible, itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_s_theme-default',
-            gridMod.GridView._private.calcFooterPaddingClass({ itemPadding: { left: 'S' } }, theme),
-            'Incorrect result "calcFooterPaddingClass({itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_default_theme-default',
-            gridMod.GridView._private.calcFooterPaddingClass({ }, theme),
-            'Incorrect result "calcFooterPaddingClass({ })".');
+         var
+             cfg = {
+                columns: [
+                   { displayProperty: 'field1', template: 'column1' },
+                   { displayProperty: 'field2', template: 'column2' }
+                ],
+                multiSelectVisibility: 'onhover',
+                itemPadding: {
+                   left: 'S'
+                },
+                theme
+             },
+             gridView = new gridMod.GridView(cfg);
+
+         gridView.saveOptions(cfg);
+
+
+         assert.equal(gridView._calcFooterPaddingClass(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
+
+         gridView._options.multiSelectVisibility = 'visible';
+         assert.equal(gridView._calcFooterPaddingClass(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
+
+         gridView._options.multiSelectVisibility = 'hidden';
+         assert.equal(gridView._calcFooterPaddingClass(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_s_theme-default');
+
+         gridView._options.itemPadding = undefined;
+         assert.equal(gridView._calcFooterPaddingClass(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_default_theme-default');
       });
       it('beforeMount', function() {
          var

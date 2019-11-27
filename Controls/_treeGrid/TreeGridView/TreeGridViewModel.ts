@@ -167,7 +167,7 @@ var
 
             const setNodeFooterRowStyles = (footer, index) => {
                 footer.columns = current.columns;
-                footer.shouldUseTableLayout = self._shouldUseTableLayout;
+                footer.isFullGridSupport = GridLayoutUtil.isFullGridSupport();
                 footer.colspan = self.getColspanFor('nodeFooter');
                 footer.getLevelIndentClasses = current.getLevelIndentClasses;
                 const colspanCfg = {
@@ -180,7 +180,7 @@ var
                     // TODO: Разобраться, зачем это нужно для columnScroll.
                     // По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
                     footer.colspanStyles = GridLayoutUtil.getCellStyles({...colspanCfg, rowStart: footer.rowIndex});
-                } else if (self._isFullGridSupport) {
+                } else if (footer.isFullGridSupport) {
                     footer.colspanStyles = GridLayoutUtil.getColumnStyles(colspanCfg);
                 }
             };

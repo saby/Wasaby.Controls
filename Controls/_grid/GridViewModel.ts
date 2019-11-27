@@ -456,14 +456,6 @@ var
                 fixedColumns: `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stickyColumnsCount}; z-index: 3;`,
                 scrollableColumns: `grid-column: ${center} / ${end}; -ms-grid-column: ${center}; -ms-grid-column-span: ${scrollableColumnsCount}; z-index: auto;`,
             };
-        },
-
-        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-        // И перейти на detection после лечения https://online.sbis.ru/opendoc.html?guid=c058ed70-f505-4861-a906-96453ae6485f
-        setGridSupportStatus(self: GridViewModel, useTableInOldBrowsers: boolean): void {
-            self._isNoGridSupport = GridLayoutUtil.isNoGridSupport();
-            self._isFullGridSupport = GridLayoutUtil.isFullGridSupport();
-            self._shouldUseTableLayout = !GridLayoutUtil.isFullGridSupport();
         }
     },
 
@@ -500,7 +492,6 @@ var
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
-            _private.setGridSupportStatus(this, cfg.useTableInOldBrowsers);
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
                 if (changesType === 'collectionChanged') {
                     this._ladder = _private.prepareLadder(this);
@@ -700,7 +691,7 @@ var
         },
 
         isStickyHeader: function() {
-           return this._options.stickyHeader && this._isFullGridSupport;
+           return this._options.stickyHeader && GridLayoutUtil.isFullGridSupport();
         },
 
         getCurrentHeaderColumn: function(rowIndex, columnIndex) {
@@ -796,7 +787,7 @@ var
                     startRow = 1;
                     endRow = 2;
                 }
-                if (this._shouldUseTableLayout) {
+                if (!GridLayoutUtil.isFullGridSupport()) {
                     headerColumn.rowSpan = endRow - startRow;
                     // Для хлебных крошек колспан проставляется выше и не зависит от мультишапки.
                     if (!headerColumn.column.isBreadCrumbs) {
@@ -820,7 +811,7 @@ var
 
             if (columnIndex === 0 && rowIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
                 cellStyles = GridLayoutUtil.getMultiHeaderStyles(1, 2, 1, this._maxEndRow, 0)
-                if (this._shouldUseTableLayout) {
+                if (GridLayoutUtil.isFullGridSupport()) {
                     headerColumn.rowSpan = this._maxEndRow - 1;
                     headerColumn.colSpan = 1;
                 }
@@ -1185,9 +1176,7 @@ var
 
             stickyColumn = _private.getStickyColumn(this._options)
 
-            current.shouldUseTableLayout = this._shouldUseTableLayout;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
-            current.isPartialGridSupport = this.isPartialGridSupport.bind(this);
             current.resolveBaseItemTemplate = this._baseItemTemplateResolver;
 
             current.columnScroll = this._options.columnScroll;
@@ -1570,17 +1559,11 @@ var
         },
 
         isFullGridSupport(): boolean {
-            return this._isFullGridSupport;
+            return GridLayoutUtil.isFullGridSupport();
         },
 
-        // TODO: Возможно тоже можно удалить проверку после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
         isNoGridSupport(): boolean {
-            return this._isNoGridSupport;
-        },
-
-        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-        shouldUseTableLayout(): boolean {
-            return this._shouldUseTableLayout;
+            return !GridLayoutUtil.isFullGridSupport();
         },
 
         getFooterStyles(): string {

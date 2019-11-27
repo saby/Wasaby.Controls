@@ -1,7 +1,7 @@
 <ws:template name="gridTemplate">
    <ws:partial template="{{_gridTemplate}}"
                _listModel="{{_listModel}}"
-               _isFullGridSupport="{{_isFullGridSupport}}"
+               _isFullGridSupport="{{_listModel.isFullGridSupport()}}"
                _gridViewClasses="{{_getGridViewClasses()}}"
                _gridViewStyles="{{_getGridViewStyles()}}"
                _baseHeaderTemplate="{{_baseHeaderTemplate}}"

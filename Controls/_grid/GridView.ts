@@ -99,12 +99,11 @@ var
         _headerContentTemplate: HeaderContentTpl,
         _isHeaderChanged: false,
 
-        _isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
         _notifyHandler: tmplNotify,
 
         _beforeMount(cfg) {
             _private.checkDeprecated(cfg, this);
-            _private.setBaseTemplates(this, cfg, GridLayoutUtil.isFullGridSupport());
+            _private.setBaseTemplates(this, GridLayoutUtil.isFullGridSupport());
             const resultSuper = GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setBaseItemTemplateResolver(this._resolveBaseItemTemplate.bind(this));
             this._listModel.setColumnTemplate(ColumnTpl);
