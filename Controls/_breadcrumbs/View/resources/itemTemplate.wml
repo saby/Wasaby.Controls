@@ -1,4 +1,4 @@
-<div class="controls-BreadCrumbsView__crumb{{itemData.withOverflow ? ' controls-BreadCrumbsView__crumb_withOverflow'}}">
+<div class="controls-BreadCrumbsView__crumb{{itemData.withOverflow ? ' controls-BreadCrumbsView__crumb_withOverflow' }}">
     <ws:if data="{{ itemData.hasArrow }}">
         <span class="controls-BreadCrumbsView__arrow icon-size icon-DayForwardBsLine{{_options.readOnly ? '' : ' controls-BreadCrumbsView__arrow_enabled'}}"></span>
     </ws:if>
