@@ -11,7 +11,7 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
- * @includes GroupTemplate wml!Controls/_list/GroupTemplate
+ * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
@@ -35,7 +35,7 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
- * @includes GroupTemplate wml!Controls/_list/GroupTemplate
+ * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover

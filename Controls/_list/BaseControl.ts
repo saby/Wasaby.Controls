@@ -838,6 +838,7 @@ var _private = {
                 });
             }
         }
+        self._scrollPageLocked = false;
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -886,6 +887,7 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
+        self._scrollPageLocked = false;
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -931,7 +933,10 @@ var _private = {
         ) {
             self._itemsChanged = true;
         }
-        self._forceUpdate();
+        // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
+        if (self._isMounted) {
+            self._forceUpdate();
+        }
     },
 
     initListViewModelHandler: function(self, model, useNewModel: boolean) {
@@ -1436,6 +1441,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _scrollPageLocked: false,
 
     _itemReloaded: false,
+    _itemActionsInitialized: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1655,7 +1661,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _afterMount: function() {
         this._isMounted = true;
-        this._updateItemActions();
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
@@ -1704,7 +1709,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.markedKey !== this._options.markedKey) {
-            this._listViewModel.setMarkedKeyInOptions(newOptions.markedKey);
+            this._listViewModel.setMarkedKey(newOptions.markedKey);
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility) {
@@ -1854,6 +1859,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
              */
             this._notify('saveScrollPosition', [], { bubbling: true });
         }
+        // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
+        // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
+        // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
+        // устанавливаем скролл в "0".
+        // Как итог - контент мелькает. Поэтому сбрасываем скролл в 0 именно ДО отрисовки.
+        // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=c3812a26-2301-4998-8283-bcea2751f741
+        // Демка нативного поведения: https://jsfiddle.net/alex111089/rjuc7ey6/1/
+        if (this._shouldNotifyOnDrawItems) {
+            if (this._resetScrollAfterReload) {
+                this._notify('doScroll', ['top'], {bubbling: true});
+                this._resetScrollAfterReload = false;
+            }
+        }
     },
 
     _beforePaint(): void {
@@ -1881,15 +1899,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
-        if (this._shouldUpdateItemActions){
+        if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
-            if (this._resetScrollAfterReload) {
-                this._notify('doScroll', ['top'], { bubbling: true });
-                this._resetScrollAfterReload = false;
-            }
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
@@ -2064,6 +2078,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
+    },
+    _initItemActions(): void {
+        if (!this._itemActionsInitialized) {
+            this._updateItemActions();
+            this._itemActionsInitialized = true;
+            this._shouldUpdateItemActions = false;
+        }
     },
     _updateItemActions: function() {
         if (this.__error) {
@@ -2341,6 +2362,7 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
+        markedKey: null,
         stickyHeader: true,
         selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
         virtualScrollMode: 'remove'

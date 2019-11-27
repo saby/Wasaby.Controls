@@ -392,19 +392,16 @@ define([
                      return def;
                   };
 
-                  lists.BaseControl._private.reload(ctrl, ctrl._options)
-                     .addCallback(function() {
-                        resolve();
-                     })
-                     .addErrback(function() {
-                        try {
-                           assert.isTrue(false, 'reload() returns errback');
-                        } catch (e) {
-                           reject(e);
-                        }
-                        resolve();
-                     });
-               });
+               lists.BaseControl._private.reload(ctrl, ctrl._options)
+                  .addCallback(function() {
+                     resolve();
+                  })
+                  .addErrback(function(error) {
+                     reject(error);
+                  });
+            }).addErrback((error) => {
+               reject(error);
+            });
          });
       });
 
@@ -707,7 +704,8 @@ define([
                   }, {
                      key: 3
                   }]
-               })
+               }),
+               markedKey: 2
             },
             baseControl = new lists.BaseControl(cfg),
             originalScrollToItem = lists.BaseControl._private.scrollToItem;
@@ -715,7 +713,6 @@ define([
          };
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         lists.BaseControl._private.setMarkedKey(baseControl, 2);
          assert.equal(2, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
             target: {
@@ -1396,12 +1393,15 @@ define([
          setTimeout(function() {
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-
+            ctrl._scrollPageLocked = true;
             // прокручиваем к низу, проверяем состояние пэйджинга
             lists.BaseControl._private.handleListScroll(ctrl, {
                scrollTop: 300,
                position: 'down'
             });
+
+            assert.isFalse(ctrl._scrollPageLocked);
+
             assert.deepEqual({
                stateBegin: 'normal',
                statePrev: 'normal',
@@ -1749,7 +1749,7 @@ define([
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
-      it('reload with changing source/navig/filter should call scroll to start', async function() {
+      it('reload with changing source/navig/filter should call scroll to start', function() {
 
          var
              lnSource = new sourceLib.Memory({
@@ -1777,13 +1777,13 @@ define([
                 viewName: 'Controls/List/ListView',
                 source: lnSource,
                 keyProperty: 'id',
+                markedKey: 3,
                 viewModelConstructor: lists.ListViewModel
              },
              lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
-         await lnBaseControl._beforeMount(lnCfg);
-         lnBaseControl._listViewModel.setMarkedKey(3);
+         lnBaseControl._beforeMount(lnCfg);
 
          assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
 
@@ -1899,8 +1899,9 @@ define([
                }
             }
          };
-         it('afterMount', function() {
-            baseControl._afterMount(cfg);
+         baseControl._afterMount(cfg);
+         it('_initItemActions', function() {
+            baseControl._initItemActions();
             assert.equal(actionsUpdateCount, 1);
          });
          it('itemsChanged', async function() {
@@ -1991,7 +1992,7 @@ define([
             await baseControl._afterUpdate(cfg);
             assert.isFalse(doScrollNotified);
             baseControl._shouldNotifyOnDrawItems = true;
-            await baseControl._afterUpdate(cfg);
+            await baseControl._beforeRender(cfg);
             assert.isTrue(doScrollNotified);
 
          });
@@ -2085,6 +2086,7 @@ define([
                viewName: 'Controls/List/ListView',
                source: lnSource,
                keyProperty: 'id',
+               markedKey: 1,
                viewModelConstructor: lists.ListViewModel
             },
             lnCfg2 = {
@@ -2097,13 +2099,14 @@ define([
                   }]
                }),
                keyProperty: 'id',
+               markedKey: 1,
                viewModelConstructor: lists.ListViewModel
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
-         lists.BaseControl._private.setMarkedKey(lnBaseControl, 1);
+
          setTimeout(function() {
             assert.equal(lnBaseControl.getViewModel()
                .getMarkedKey(), 1, 'Invalid initial value of markedKey.');
@@ -2135,7 +2138,6 @@ define([
 
                // reload with new source (first item with id "firstItem")
                lnBaseControl._beforeUpdate(lnCfg2);
-               lists.BaseControl._private.setMarkedKey(lnBaseControl, 1);
 
                setTimeout(function() {
                   assert.equal(lnBaseControl.getViewModel()
@@ -3149,7 +3151,7 @@ define([
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
 
-         it('_onItemContextMenu', async function() {
+         it('_onItemContextMenu', function() {
             var callBackCount = 0;
             var cfg = {
                   items: new collection.RecordSet({
@@ -3203,13 +3205,10 @@ define([
             };
 
             instance.saveOptions(cfg);
-            await instance._beforeMount(cfg);
-            instance.getViewModel().subscribe('onMarkedKeyChanged', function(e, key) {
-               instance.getViewModel()._options.markedKey = key;
-            });
+            instance._beforeMount(cfg);
             assert.equal(instance.getViewModel()._markedKey, undefined);
             instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(instance.getViewModel().getMarkedKey(), 1);
+            assert.equal(instance.getViewModel()._markedKey, 1);
             assert.equal(callBackCount, 0);
          });
 

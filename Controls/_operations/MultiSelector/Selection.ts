@@ -162,8 +162,7 @@ export default class Selection {
    }
 
    /**
-    * Transforms selection to single array of selectedKeys and returns it. Used for rendering checkboxes in lists.
-    * @returns {Object}
+    * Transforms selection to single array of selectedKeys and set it to model. Used for rendering checkboxes in lists.
     */
    public updateSelectionForRender(): void {
       let selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();

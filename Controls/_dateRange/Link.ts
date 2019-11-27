@@ -1,7 +1,5 @@
 import BaseControl = require('Core/Control');
-import coreMerge = require('Core/core-merge');
 import ILinkView from './interfaces/ILinkView';
-import IRangeSelectable from './interfaces/IInputSelectable';
 import componentTmpl = require('wml!Controls/_dateRange/Link/Link');
 import 'css!theme?Controls/dateRange';
 
@@ -12,7 +10,6 @@ import 'css!theme?Controls/dateRange';
  * @extends Core/Control
  * @interface Controls/interface/IInputDateTime
  * @mixes Controls/interface/ILinkView
- * @mixes Controls/_dateRange/interfaces/IInputSelectable
  * @control
  * @public
  * @category Input
@@ -68,13 +65,11 @@ var Component = BaseControl.extend({
 Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function() {
-   return coreMerge(coreMerge({
-      vdomDialog: true
-   }, IRangeSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
+   return {vdomDialog: true, ...ILinkView.getDefaultOptions()};
 };
 
 Component.getOptionTypes = function() {
-   return coreMerge(coreMerge({}, IRangeSelectable.getOptionTypes()), ILinkView.getOptionTypes());
+   return ILinkView.getOptionTypes();
 };
 
 export default Component;

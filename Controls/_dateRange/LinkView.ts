@@ -136,7 +136,7 @@ var Component = BaseControl.extend({
    },
    _beforeUpdate: function(options) {
       var changed = this._rangeModel.update(options);
-      if (changed) {
+      if (changed || this._options.emptyCaption !== options.emptyCaption || this._options.captionFormatter !== options.captionFormatter) {
          _private._updateCaption(this, options);
       }
       _private._updateStyles(this, this._options, options);
