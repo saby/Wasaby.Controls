@@ -1238,10 +1238,6 @@ var
             this._model.setMarkedKey(key);
         },
 
-        setMarkedKeyInOptions: function(key) {
-            this._model.setMarkedKeyInOptions(key);
-        },
-
         setMarkerVisibility: function(markerVisibility) {
             this._model.setMarkerVisibility(markerVisibility);
         },

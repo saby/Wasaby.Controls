@@ -13,11 +13,11 @@ import {ActualApi as ButtonActualApi, ButtonTemplate, cssStyleGeneration} from '
  * @class Controls/_toolbars/View
  * @extends Core/Control
  * @mixes Controls/_interface/ITooltip
+ * @mixes Controls/_toolbars/IToolbarSource
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/interface/IIconSize
- * @mixes Controls/_toolbars/IToolbarSource
  * @control
  * @public
  * @category Toolbar

@@ -61,7 +61,7 @@ var _private = {
         }
     },
     isSelected(self: ListViewModel, current: IListItemData): boolean {
-        const markedItem = _private.getItemByMarkedKey(self, self.getMarkedKey());
+        const markedItem = _private.getItemByMarkedKey(self, self._markedKey);
         if (markedItem) {
             const item = markedItem.getContents ? markedItem.getContents() : markedItem;
             return item.getId ? item.getId() === current.key : false;
@@ -107,6 +107,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (this._items && cfg.markerVisibility !== 'hidden') {
             if (cfg.markedKey !== null || cfg.markerVisibility === 'always' || cfg.markerVisibility === 'visible') {
+                this._markedKey = cfg.markedKey;
                 this.updateMarker(cfg.markedKey);
             }
         }
@@ -246,7 +247,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             version = 'DRAG_POSITION_' + this._dragTargetPosition.position + '_' + version;
         }
 
-        if (this.getMarkedKey() === key) {
+        if (this._markedKey === key) {
             version = 'MARKED_' + version;
         }
         if (this._activeItem && this._activeItem.item === item) {
@@ -269,59 +270,54 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     markAddingItem(): void {
-        this._savedMarkedKey = this.getMarkedKey();
-        this._applyMarkedKey(this._editingItemData.key);
+        this._savedMarkedKey = this._markedKey;
+        this._markedKey = this._editingItemData.key;
+        this._nextModelVersion(true, 'markedKeyChanged');
+        this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
     restoreMarker(): void {
         if (this._savedMarkedKey) {
-            this._applyMarkedKey(this._savedMarkedKey);
+            this._markedKey = this._savedMarkedKey;
             this._savedMarkedKey = undefined;
+            this._nextModelVersion(true, 'markedKeyChanged');
+            this._notify('onMarkedKeyChanged', this._markedKey);
         }
-    },
-    setMarkedKeyInOptions(key): void {
-        this._options.markedKey = this._getActualMarker(key);
-    },
-    setMarkedKey: function(key) {
-        if (key === this.getMarkedKey()) {
-            return;
-        }
-        const actualMarker = this._getActualMarker(key);
-        this._savedMarkedKey = undefined;
-        this._applyMarkedKey(actualMarker);
     },
 
-    _getActualMarker: function(markedKey): void {
+    setMarkedKey: function(key) {
+        if (key === this._markedKey) {
+            return;
+        }
+        this._markedKey = key;
+        this._savedMarkedKey = undefined;
+        this._updateMarker(key);
+        this._nextModelVersion(true, 'markedKeyChanged');
+        this._notify('onMarkedKeyChanged', this._markedKey);
+    },
+
+    _updateMarker: function(markedKey):void {
+        this._markedKey = markedKey;
         if (this._options.markerVisibility === 'hidden' ||
-            this._options.markerVisibility === 'onactivated' && (markedKey === null || markedKey === undefined)) {
-            return markedKey;
+            this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
+            return;
         }
 
         // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (!_private.getItemByMarkedKey(this, markedKey)){
-            if (this.getCount()) {
-                return this._items.at(0).getId();
-            } else {
-                return null;
-            }
+        if (!_private.getItemByMarkedKey(this, markedKey) && this.getCount()) {
+            this._markedKey = this._items.at(0).getId();
         }
-        return markedKey;
-    },
-
-    _applyMarkedKey(markedKey): void {
-        if (this._options.markedKey === undefined) {
-            this._markedKey = markedKey;
-        }
-        this._nextModelVersion(true, 'markedKeyChanged');
-        this._notify('onMarkedKeyChanged', markedKey);
 
     },
 
-    updateMarker: function(markedKey): void {
-        const curMarkedKey = this.getMarkedKey();
-        const actualMarker = this._getActualMarker(markedKey);
-        if (curMarkedKey !== actualMarker) {
-            this._applyMarkedKey(actualMarker);
+
+
+    updateMarker: function(markedKey):void {
+        const curMarkedKey = this._markedKey;
+        this._updateMarker(markedKey);
+        if (curMarkedKey !== this._markedKey) {
+            this._notify('onMarkedKeyChanged', this._markedKey);
+            this._nextModelVersion(true);
         }
     },
 
@@ -369,10 +365,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
     getMarkedKey: function() {
-        return this._options.markedKey !== undefined ? this._options.markedKey : this._markedKey;
+        return this._markedKey;
     },
     getMarkedItem: function() {
-        return _private.getItemByMarkedKey(this, this.getMarkedKey());
+        return _private.getItemByMarkedKey(this, this._markedKey);
     },
     getSelectionStatus: function(key) {
         return this._selectedKeys[key] !== undefined;
@@ -502,7 +498,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         //we should try to set markedKey by options, if there were no items before
         //this._markedKey setted in constructor only if items were in constructor config
-        this.updateMarker(this.getMarkedKey());
+        this.updateMarker(currentItems ? this._markedKey : this._options.markedKey);
         this._nextModelVersion();
     },
 
@@ -524,10 +520,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         _private.updateIndexes(this, 0, this.getCount());
         if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
-            const markedKey = this.getMarkedKey();
-            const curenMarkerIndex = this.getIndexByKey(markedKey);
-            const curentItem = _private.getItemByMarkedKey(this, markedKey);
-            if (markedKey && curenMarkerIndex === -1 && !curentItem) {
+            const curenMarkerIndex = this.getIndexByKey(this._markedKey);
+            const curentItem = _private.getItemByMarkedKey(this, this._markedKey);
+            if (this._markedKey && curenMarkerIndex === -1 && !curentItem) {
                 const prevValidItem = this.getPreviousItem(removedItemsIndex);
                 const nextValidItem = this.getNextItem(removedItemsIndex);
                 if (nextValidItem) {

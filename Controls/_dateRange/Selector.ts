@@ -3,7 +3,7 @@ import coreMerge = require('Core/core-merge');
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import {IDateRangeOptions} from "./interfaces/IDateRange";
 import ILinkView from './interfaces/ILinkView';
-import IInputSelectable from './interfaces/IInputSelectable';
+import IDateRangeSelectable = require('./interfaces/IDateRangeSelectable');
 import DateRangeModel from './DateRangeModel';
 import CalendarControlsUtils from './Utils';
 import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
@@ -57,7 +57,7 @@ const _private = {
 
         if (options.hasOwnProperty('startValue')) {
             opts.startValue = options.startValue;
-            if (options.selectionType === IInputSelectable.SELECTION_TYPES.single) {
+            if (options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single) {
                 opts.endValue = options.startValue;
             }
         }
@@ -172,11 +172,11 @@ Component.getDefaultOptions = function () {
     return coreMerge(coreMerge({
         minRange: 'day',
         vdomDialog: true
-    }, IInputSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
+    }, IDateRangeSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
 };
 
 Component.getOptionTypes = function () {
-    return coreMerge(coreMerge({}, IInputSelectable.getOptionTypes()), ILinkView.getOptionTypes());
+    return coreMerge(coreMerge({}, IDateRangeSelectable.getOptionTypes()), ILinkView.getOptionTypes());
 };
 Component._theme = ['Controls/dateRange'];
 export default Component;
