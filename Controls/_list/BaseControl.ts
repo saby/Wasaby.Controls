@@ -1040,6 +1040,7 @@ var _private = {
                 });
             }
         }
+        self._scrollPageLocked = false;
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -1107,6 +1108,7 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
+        self._scrollPageLocked = false;
     },
 
     getIntertialScrolling: function(self): IntertialScrolling {
