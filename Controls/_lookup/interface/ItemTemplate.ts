@@ -21,7 +21,7 @@
  *          source="{{_source}}"
  *          keyProperty="id">
  *       <ws:itemTemplate>
- *          <ws:partial template="Controls.lookup:ItemTemplate"
+ *          <ws:partial template="Controls/lookup:ItemTemplate"
  *                      style="primary"
  *                      size="xl"
  *                      displayProperty="title"
@@ -34,17 +34,20 @@
 /**
  * @name Controls/lookup:ItemTemplate#contentTemplate
  * @cfg {String|Function} Шаблон для отображения выбранной записи.
+ * @remark
+ * В области видимости шаблона доступна переменная **itemData**, в которой есть свойство **item** — выбранный элемент.
  * @example
  * <pre>
- * <Controls.lookup:Selector>
+ * <Controls.lookup:Input>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls.lookup:ItemTemplate">
- *          <ws:contentTemplate>
- *             Это мой шаблон крестика.
+ *       <ws:partial template="Controls/lookup:ItemTemplate">
+ *          <ws:contentTemplate> 
+ *             <span>{{itemTemplate.item.categoryNumber}}</span>
+ *             <span>{{itemTemplate.item.category}}</span>
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
- * </Controls.lookup:Selector>
+ * </Controls.lookup:Input>
  * </pre>
  */
 
@@ -57,7 +60,7 @@
  * <pre>
  * <Controls.lookup:Selector>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls.lookup:ItemTemplate">
+ *       <ws:partial template="Controls/lookup:ItemTemplate">
  *          <ws:crossTemplate>
  *             Это мой шаблон крестика.
  *          </ws:crossTemplate>
@@ -88,7 +91,7 @@
  * @cfg {Boolean} Позволяет установить кликабельность выбранного значения.
  * @remark 
  * Допускается задавать параметр только в случае, когда contentTemplate используется по умолчанию.
- * Также, по умолчанию выставляется в true, когда опции {@link https://wi.sbis.ru/docs/js/Controls/lookup/Input/options/multiSelect/?v=20.1000 multiselect} и {@link https://wi.sbis.ru/docs/js/Controls/heading/Title/options/readOnly/?v=20.1000 readOnly} выставлены в true и false соответственно.
+ * Также, по умолчанию выставляется в true, когда опции {@link Controls/lookup:Input#multiselect multiselect} и {@link UI/Base:Control#readOnly readOnly} выставлены в true и false соответственно.
  * @default true
  * @example
  * <pre>
