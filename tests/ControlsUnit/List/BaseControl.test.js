@@ -2327,7 +2327,7 @@ define([
             await baseControl._afterUpdate(cfg);
             assert.isFalse(doScrollNotified);
             baseControl._shouldNotifyOnDrawItems = true;
-            await baseControl._afterUpdate(cfg);
+            await baseControl._beforeRender(cfg);
             assert.isTrue(doScrollNotified);
 
          });
