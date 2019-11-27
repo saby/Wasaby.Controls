@@ -106,7 +106,7 @@
  * <!-- file1.wml -->
  * <Controls.grid:View>
  *    <ws:groupTemplate>
- *       <ws:partial template="file2.wml" scope="{{groupTemplate}}"/>
+ *       <ws:partial template="wml!file2" scope="{{groupTemplate}}"/>
  *    </ws:groupTemplate>
  * </Controls.grid:View>
  * </pre>
@@ -128,7 +128,7 @@
  *    <ws:groupTemplate>
  *       <ws:partial template="Controls/grid:GroupTemplate">
  *          <ws:rightTemplate>
- *             <ws:partial template="file2.wml" scope="{{rightTemplate}}"/>
+ *             <ws:partial template="wml!file2" scope="{{rightTemplate}}"/>
  *          </ws:rightTemplate>
  *       </ws:partial>
  *    </ws:groupTemplate>
@@ -170,7 +170,7 @@
  * <!-- file1.wml -->
  * <Controls.grid:View>
  *    <ws:groupTemplate>
- *       <ws:partial template="file2.wml" scope="{{groupTemplate}}"/>
+ *       <ws:partial template="wml!file2" scope="{{groupTemplate}}"/>
  *    </ws:groupTemplate>
  * </Controls.grid:View>
  * </pre>
@@ -193,7 +193,7 @@
  *    <ws:groupTemplate>
  *       <ws:partial template="Controls/grid:GroupTemplate">
  *          <ws:contentTemplate>
- *             <ws:partial template="file2.wml" scope="{{contentTemplate}}"/>
+ *             <ws:partial template="wml!file2" scope="{{contentTemplate}}"/>
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:groupTemplate>
