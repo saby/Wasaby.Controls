@@ -1209,7 +1209,10 @@ var _private = {
         ) {
             self._itemsChanged = true;
         }
-        self._forceUpdate();
+        // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
+        if (self._isMounted) {
+            self._forceUpdate();
+        }
     },
 
     initListViewModelHandler: function(self, model, useNewModel: boolean) {
@@ -1738,6 +1741,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _scrollPageLocked: false,
 
     _itemReloaded: false,
+    _itemActionsInitialized: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1908,7 +1912,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
         }
-        this._updateItemActions();
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
@@ -2197,7 +2200,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
         }
-        if (this._shouldUpdateItemActions){
+        if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
         }
@@ -2476,6 +2479,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
+    },
+    _initItemActions(): void {
+        if (!this._itemActionsInitialized) {
+            this._updateItemActions();
+            this._itemActionsInitialized = true;
+            this._shouldUpdateItemActions = false;
+        }
     },
     _updateItemActions: function() {
         if (this.__error) {
