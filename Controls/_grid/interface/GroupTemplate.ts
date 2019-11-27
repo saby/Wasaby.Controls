@@ -23,7 +23,7 @@
 
 /**
  * @name Controls/grid:GroupTemplate#expanderAlign
- * @cfg {String} Расположение кнопки-экспандера относительно заголовка группы.
+ * @cfg {String} Устанавливает расположение кнопки-экспандера относительно заголовка группы.
  * @default left
  * @remark
  * Доступные значения:
@@ -37,7 +37,7 @@
 
 /**
  * @name Controls/grid:GroupTemplate#expanderVisible
- * @cfg {Boolean} Видимость кнопки-экспандера.
+ * @cfg {Boolean} Устанавливает видимость кнопки-экспандера.
  * @default true
  * @remark
  * Доступные значения:
@@ -51,7 +51,7 @@
 
 /**
  * @name Controls/grid:GroupTemplate#textAlign
- * @cfg {String} Горизонтальное выравнивание заголовка группы.
+ * @cfg {String} Устанавливает горизонтальное выравнивание заголовка группы.
  * @default undefined
  * @remark
  * Доступные значения:
@@ -63,13 +63,13 @@
 
 /**
  * @name Controls/grid:GroupTemplate#columnAlignGroup
- * @cfg {Number} Номер колонки, относительно которой происходит горизонтальное выравнивание заголовка группы.
+ * @cfg {Number} Устанавливает номер колонки, относительно которой происходит горизонтальное выравнивание заголовка группы.
  * @default undefined
  */
 
 /**
  * @name Controls/grid:GroupTemplate#separatorVisibility
- * @cfg {Boolean} Видимость горизонтальной линии-разделителя.
+ * @cfg {Boolean} Устанавливает видимость горизонтальной линии-разделителя.
  * @default true
  * @remark
  * Доступные значение:
@@ -80,7 +80,7 @@
 
 /**
  * @name Controls/grid:GroupTemplate#rightTemplate
- * @cfg {String|Function} Шаблон, выводимый на горизонтальной линии-разделителе в правой части.
+ * @cfg {String|Function} Устанавливает пользовательский шаблон, выводимый на горизонтальной линии-разделителе в правой части.
  * @default undefined
  * @remark
  * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
@@ -143,7 +143,7 @@
 
 /**
  * @name Controls/grid:GroupTemplate#contentTemplate
- * @cfg {String|Function} Шаблон, описывающий заголовок группы.
+ * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий заголовок группы.
  * @remark
  * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
  * 

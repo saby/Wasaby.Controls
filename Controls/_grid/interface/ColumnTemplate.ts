@@ -44,7 +44,7 @@
  * 
  * Также в области видимости шаблона есть переменная **editArrowTemplate** — шаблон, который позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в шаблоне.
  * Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
- * Пример использования приведён в примере № 4.
+ * Работа с переменной показана в примере № 4.
  * @example
  * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
  * <pre>
@@ -77,6 +77,7 @@
  *             <ws:template>
  *                <ws:partial template="wml!file2" scope="{{template}}"/>
  *             </ws:template>
+ *          </ws:Object>
  *       </ws:Array>
  *    </ws:columns>
  * </Controls.grid:View>
@@ -86,7 +87,7 @@
  * <!-- file2.wml -->
  * <ws:partial template="Controls/grid:ColumnTemplate">
  *    <ws:contentTemplate>
- *       <div>{{contentTemplate.itemData.item.id}}</div>
+ *       <div>{{contentTemplate.itemData.item.Name}}</div>
  *    </ws:contentTemplate>
  * </ws:partial>
  * </pre>
