@@ -1,5 +1,5 @@
-<div class="controlsDemo__wrapper">
-   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+<div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth500">
       <h3>Шаблон пустого списка с кнопкой</h3>
       <Controls.suggest:SearchInput
               bind:value="_suggestCustomValue"

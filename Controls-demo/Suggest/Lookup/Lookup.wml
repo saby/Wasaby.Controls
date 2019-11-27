@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h4>Поле связи с автодополнением</h4>
+      <Controls.lookup:Input
+           source="{{_suggestSource}}"
+           placeholder="Введите название отдела"
+           keyProperty="id"
+           searchParam="title"
+           navigation="{{_defaultNavigation}}"
+           displayProperty="title">
+         <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate"/>
+      </Controls.lookup:Input>
+   </div>
+</div>

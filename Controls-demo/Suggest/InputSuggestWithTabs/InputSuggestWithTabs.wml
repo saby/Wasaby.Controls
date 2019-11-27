@@ -1,6 +1,6 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>Вкладки в шаблоне автодополнения</h3>
+      <h4>Вкладки в шаблоне автодополнения</h4>
       <Controls.suggest:Input
               bind:value="_suggestCustomValue"
               displayProperty="title"

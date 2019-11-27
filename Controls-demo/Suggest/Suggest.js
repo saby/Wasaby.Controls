@@ -11,7 +11,8 @@ define('Controls-demo/Suggest/Suggest', [
    'Controls-demo/Search/SearchMemory',
    'Controls-demo/Utils/MemorySourceFilter',
    'Controls-demo/Utils/MemorySourceData',
-   'css!Controls-demo/Suggest/Suggest'
+   'css!Controls-demo/Suggest/Suggest',
+   'css!Controls-demo/Controls-demo'
 ], function(Control, template, source, SearchMemory, memorySourceFilter, MemorySourceData) {
    'use strict';
 

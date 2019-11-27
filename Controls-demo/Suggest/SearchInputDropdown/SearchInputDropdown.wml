@@ -1,6 +1,6 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container">
   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-     <h3>Открытие автодополнения при фокусе</h3>
+     <h4>Открытие автодополнения при фокусе</h4>
      <Controls.suggest:SearchInput
              attr:class="ControlsDemo-Suggest__simple"
              bind:value="_suggestDownValue"

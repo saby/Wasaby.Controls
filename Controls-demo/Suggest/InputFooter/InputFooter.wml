@@ -1,6 +1,6 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>Настриваемый шаблон подвала</h3>
+      <h4>Настриваемый шаблон подвала</h4>
       <Controls.suggest:Input
               bind:value="_suggestCustomValue"
               displayProperty="title"
@@ -14,7 +14,7 @@
       </Controls.suggest:Input>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>Без подвала</h3>
+      <h4>Без подвала</h4>
       <Controls.suggest:Input
               bind:value="_suggestDefaultValue"
               displayProperty="title"

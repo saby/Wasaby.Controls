@@ -1,6 +1,6 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>list:View с пользовательскими операциями</h3>
+      <h4>list:View с пользовательскими операциями</h4>
       <Controls.suggest:Input
               bind:value="_suggestCustomValue"
               displayProperty="title"

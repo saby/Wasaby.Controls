@@ -1,6 +1,6 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>list:View в шаблоне автодоплнения</h3>
+      <h4>list:View в шаблоне автодополнения</h4>
       <Controls.suggest:Input
               bind:value="_suggestCustomValue"
               displayProperty="title"
@@ -13,7 +13,7 @@
       </Controls.suggest:Input>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>grid:View в шаблоне автодоплнения</h3>
+      <h4>grid:View в шаблоне автодополнения</h4>
       <Controls.suggest:Input
               bind:value="_suggestDefaultValue"
               displayProperty="title"

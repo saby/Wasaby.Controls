@@ -1,30 +1,14 @@
-define('Controls-demo/Suggest/resources/SuggestTabTemplate', [
-   'Core/Control',
-   'wml!Controls-demo/Suggest/resources/SuggestTabTemplate',
-   'Types/source',
-   'Controls/list'
-], function(Control, template, sourceLib) {
-
-   'use strict';
-
-   var tabSourceData = [
-      {id: 1, title: 'Контрагенты', text: 'test', align: 'left'},
-      {id: 2, title: 'Компании', text: 'test', align: 'left'}
-   ];
-
-   return Control.extend({
-      _template: template,
-      _tabsSelectedKey: null,
-
-      _beforeMount: function () {
-         this._tabsOptions = {
-            source: new sourceLib.Memory({
-               keyProperty: 'id',
-               data: tabSourceData
-            }),
-            keyProperty: 'id',
-            displayProperty: 'title'
-         };
-      }
-   });
+define("Controls-demo/Suggest/resources/SuggestTabTemplate", ["require", "exports", "tslib", "UI/Base", "wml!Controls-demo/Suggest/resources/SuggestTabTemplate"], function (require, exports, tslib_1, Base_1, controlTemplate) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var SuggestTabTemplate = /** @class */ (function (_super) {
+        tslib_1.__extends(SuggestTabTemplate, _super);
+        function SuggestTabTemplate() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this._template = controlTemplate;
+            return _this;
+        }
+        return SuggestTabTemplate;
+    }(Base_1.Control));
+    exports.default = SuggestTabTemplate;
 });

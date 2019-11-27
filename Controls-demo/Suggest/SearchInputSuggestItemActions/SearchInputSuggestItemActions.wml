@@ -1,6 +1,6 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container">
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>list:View в шаблоне автодоплнения</h3>
+      <h4>list:View в шаблоне автодополнения</h4>
       <Controls.suggest:SearchInput
               bind:value="_suggestCustomValue"
               displayProperty="title"

@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 import * as Suggest from 'Controls-demo/Suggest/Suggest';
 import controlTemplate = require('wml!Controls-demo/Suggest/SearchInputNavigation/SearchInputNavigation');
 

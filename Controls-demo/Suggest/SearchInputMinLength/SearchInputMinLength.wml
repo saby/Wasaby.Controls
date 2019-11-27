@@ -1,6 +1,6 @@
-<div class="controlsDemo__wrapper">
-   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>Минимальное количество символов: 1</h3>
+<div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth500">
+      <h4>Минимальное количество символов: 1</h4>
       <Controls.suggest:SearchInput
               bind:value="_suggestCustomValue"
               displayProperty="title"
@@ -14,7 +14,7 @@
       </Controls.suggest:SearchInput>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>Минимальное количество символов: 4</h3>
+      <h4>Минимальное количество символов: 4</h4>
       <Controls.suggest:SearchInput
               bind:value="_suggestDefaultValue"
               displayProperty="title"
