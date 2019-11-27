@@ -9,11 +9,11 @@ define('Controls-demo/Suggest/resources/SuggestTemplate', [
    'wml!Controls-demo/Suggest/resources/SuggestTemplate',
    'Controls/list'
 ], function(Control, template) {
-
+   
    'use strict';
-
+   
    return Control.extend({
       _template: template
    });
-
+   
 });
