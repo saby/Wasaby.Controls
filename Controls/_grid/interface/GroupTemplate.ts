@@ -150,7 +150,7 @@
  * * {@link Types/entity:Record item} — результат того, что возвращено из функции {@link Controls/grid:View#groupingKeyCallback groupingKeyCallback}.
  * * {@link Types/collection:RecordSet#metaData metaData} — метаданные рекордсета, который загружен для таблицы.
  * @example
- * **Пример 1.** Контрол и шаблон сконфигурированы в одном WML-файле.
+ * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
  * 
  * <pre class="brush: html">
  * <Controls.grid:View>
