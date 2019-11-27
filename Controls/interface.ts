@@ -61,6 +61,6 @@ export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus
 export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';
 export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelectionRecord, ISelectionObject, TKeySelection, TKeysSelection} from './_interface/ISelectionType';
 export {default as ISelectionStrategy} from './_interface/ISelectionStrategy';
-export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
+export {default as IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions} from './_interface/IFilter';

@@ -13,10 +13,6 @@
  * @cfg {string} Позволяет задать имя страницы при отображении RUM-статистики
  */
 
- 
-export default interface IRUM {
-    readonly '[Controls/_interface/IRUM]': boolean
-};
 
 export interface IRUMOptions {
     RUMEnabled?: boolean,

@@ -24,7 +24,7 @@ define('Controls/Application',
     * @extends Core/Control
     *
     * @mixes Controls/Application/BlockLayout/Styles
-    * @mixes Controls/_interface/IApplication
+    * @mixes Controls/_interface/IHeadOptions
     * @mixes UI/_base/interface/IHTML
     * @mixes Controls/_interface/IRUM
     *
@@ -41,7 +41,7 @@ define('Controls/Application',
     *
     * @mixes Controls-demo/BlockLayouts/Index
     * @mixes Controls/_interface/IRUM
-    * @mixes Controls/_interface/IApplication
+    * @mixes Controls/_interface/IHeadOptions
     * @mixes UI/_base/interface/IRootTemplate
     * @mixes UI/_base/interface/IHTML
     *

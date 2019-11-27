@@ -1,12 +1,10 @@
-import {IHTMLOptions, IHTML} from 'UI/Base';
-
 /**
- * @interface Controls/_interface/IApplication
+ * @interface Controls/_interface/IHeadOptions
  * @private
  */
 
 /**
- * @name Controls/_interface/IApplication#scripts
+ * @name Controls/_interface/IHeadOptions#scripts
  * @cfg {Content} Описание скриптов, которые будут вставлены в head страницы
  * <pre class="brush:xml">
  *     <ws:scripts>
@@ -18,7 +16,7 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
 */
 
 /**
- * @name Controls/_interface/IApplication#meta
+ * @name Controls/_interface/IHeadOptions#meta
  * @cfg {Content} Позволяет описывать meta информацию страницы.
  * <pre class="brush:xml">
  *     <ws:meta>
@@ -30,7 +28,7 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
 */
 
 /** 
- * @name Controls/_interface/IApplication#links
+ * @name Controls/_interface/IHeadOptions#links
  * @cfg {Content} Позволяет описывать ссылки на дополнительные ресурсы, которые необходимы при загрузке страницы.
  * <pre class="brush:xml">
  *     <ws:links>
@@ -41,7 +39,7 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
  * </pre>
 */
 /** 
- * @name Controls/_interface/IApplication#headJson
+ * @name Controls/_interface/IHeadOptions#headJson
  * @deprecated Используйте одну из опций {@link scripts}, {@link meta} или {@link links}.
  * @cfg {object} Разметка, которая будет встроена в содержимое тега head.
  * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
@@ -66,18 +64,14 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
 */
 
 /**
- * @name Controls/_interface/IApplication#title
+ * @name Controls/_interface/IHeadOptions#title
  * @cfg {String} Значение опции встраивается в содержимое тега title, который определяет заголовок веб-страницы и подпись на вкладке веб-браузера.
 */
 
 /**
- * @name Controls/_interface/IApplication#title
+ * @name Controls/_interface/IHeadOptions#title
  * @cfg {String} title of the tab
 */
-
-export default interface IApplication {
-    readonly '[Controls/_interface/IApplication]': boolean
-};
 
 export interface IAttributes {
     [index: string]: string | undefined
@@ -85,9 +79,10 @@ export interface IAttributes {
 
 export type HeadJson = [string, Record<string, string>][];
 
-export interface IApplicationOptions {
+export interface IHeadOptions {
     scripts?: Array<IAttributes>,
     links?: Array<IAttributes>,
     meta?: Array<IAttributes>,
-    headJson?: HeadJson
+    headJson?: HeadJson,
+    title?: string
 }
