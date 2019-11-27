@@ -81,7 +81,7 @@ define(
             assert.isTrue(panel._hasApplyButton);
          });
 
-         it('_beforeUpdate', function() {
+         it('_beforeUpdate', function(done) {
             let panel = getPanel(defaultConfig);
             panel._beforeMount(defaultConfig);
 
@@ -102,9 +102,11 @@ define(
             assert.isFalse(panel._needShowApplyButton);
 
             expectedItems[0].selectedKeys = [1];
-            panel._beforeUpdate(newConfig);
-            assert.deepStrictEqual(panel._items, expectedItems);
-            assert.isTrue(panel._needShowApplyButton);
+            panel._beforeUpdate(newConfig).addCallback(() => {
+               assert.deepStrictEqual(panel._items, expectedItems);
+               assert.isTrue(panel._needShowApplyButton);
+               done();
+            });
          });
 
          it('_itemClickHandler', function() {

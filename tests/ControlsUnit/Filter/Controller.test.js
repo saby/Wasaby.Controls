@@ -999,23 +999,29 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          let isDeletedFromHistory = false;
          let historyItems = null;
 
+         sandbox.replace(Filter._private, 'getHistoryItems', () => Promise.resolve());
          sandbox.replace(Filter._private, 'getHistoryByItems', () => historyItems);
          sandbox.replace(Filter._private, 'deleteFromHistory', () => isDeletedFromHistory = true);
 
          controller._filter = filter;
          controller._notify = () => {};
 
-         controller.resetPrefetch();
-         assert.isTrue(controller._filter !== filter);
-         assert.deepEqual(controller._filter, {testField: 'testValue'});
-         assert.isFalse(isDeletedFromHistory);
+         return new Promise((resolve) => {
+            controller.resetPrefetch().then(() => {
+               assert.isTrue(controller._filter !== filter);
+               assert.deepEqual(controller._filter, {testField: 'testValue'});
+               assert.isFalse(isDeletedFromHistory);
 
-         historyItems = ['testItem'];
-         controller.resetPrefetch();
-         assert.deepEqual(controller._filter, {testField: 'testValue'});
-         assert.isTrue(isDeletedFromHistory);
+               historyItems = ['testItem'];
+               controller.resetPrefetch().then(() => {
+                  assert.deepEqual(controller._filter, {testField: 'testValue'});
+                  assert.isTrue(isDeletedFromHistory);
 
-         sandbox.restore();
+                  sandbox.restore();
+                  resolve();
+               });
+            });
+         });
       });
    });
 

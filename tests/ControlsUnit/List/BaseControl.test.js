@@ -284,6 +284,22 @@ define([
          assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, maxCountNaviation));
       });
 
+      it('_private::checkLoadToDirectionCapability', () => {
+         const self = {_options: {}};
+         const sandbox = sinon.createSandbox();
+         const myFilter = {testField: 'testValue'};
+
+         self._needScrollCalculation = false;
+         // loadToDirectionIfNeed вызывается с фильтром, переданным в checkLoadToDirectionCapability
+         sandbox.replace(lists.BaseControl._private, 'needLoadByMaxCountNavigation', () => true);
+         sandbox.replace(lists.BaseControl._private, 'loadToDirectionIfNeed', (baseControl, direction, filter) => {
+            assert.equal(direction, 'down');
+            assert.deepEqual(filter, myFilter);
+         });
+         lists.BaseControl._private.checkLoadToDirectionCapability(self, myFilter);
+         sandbox.restore();
+      });
+
       it('setHasMoreData', async function() {
          var gridColumns = [
             {
@@ -1139,27 +1155,34 @@ define([
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
 
+         ctrl._scrollTop = 200;
+
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
          lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.isNull(ctrl._loadingState, 'Wrong loading state');
          assert.isNull(ctrl._loadingIndicatorState, 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
 
          ctrl._isMounted = true;
 
          lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
          lists.BaseControl._private.hideIndicator(ctrl);
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
          assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 200, 'Wrong top offset');
 
-         // картинка должен появляться через 2000 мс, проверим, что её нет сразу
+         // картинка должнa появляться через 2000 мс, проверим, что её нет сразу
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
 
          // искуственно покажем картинку
