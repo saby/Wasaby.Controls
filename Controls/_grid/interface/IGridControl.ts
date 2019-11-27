@@ -455,7 +455,7 @@
 
  /**
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
- * @cfg {Function} Шаблон строки итогов.
+ * @cfg {Function} Устанавливает шаблон отображения строки итогов.
  * @default Controls/grid:ResultsTemplate
  * @remark
  * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
@@ -473,9 +473,17 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsPosition
- * @cfg {String} Положение строки итогов.
- * @variant top Вывести итоги над списком.
- * @variant bottom Вывести итоги под списком.
+ * @cfg {String} Устанавливает положение строки итогов.
+ * @remark
+ * Доступные значения:
+ * 
+ * * **top** — над списком.
+ * * **bottom** — под списком.
+ * * **undefined** — строка итогов скрыта.
+ * @default undefined
+ * @result
+ * @see resultsTemplate
+ * @see resultsVisibility
  */
 
 /*
@@ -487,10 +495,15 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsVisibility
- * @cfg {String} Режим отображения строки итогов.
- * @variant hasdata Строка итогов отображается при наличии более 1 записи в списке.
- * @variant visible Строка итогов отображается всегда, вне зависимости от количества данных в списке.
+ * @cfg {String} Устанавливает режим отображения строки итогов.
+ * @remark
+ * Доступные значения:
+ * 
+ * * **hasdata** — отображается при наличии более 1 записи в списке.
+ * * **visible** — отображается всегда, вне зависимости от количества записей в списке.
  * @default hasData
+ * @see resultsTemplate
+ * @see resultsPosition
  */
 
 /**
