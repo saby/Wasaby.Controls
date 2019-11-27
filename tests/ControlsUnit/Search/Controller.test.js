@@ -375,6 +375,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          it('filter is changed', function() {
             var options = getDefaultOptions();
             var sandbox = sinon.createSandbox();
+            var aborted;
 
             options.filter = {test: 'testValue'};
             searchMod.Controller._private.getSearchController(searchController);
@@ -387,9 +388,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             searchController._searchValue = 'test';
             searchController._viewMode = 'search';
 
-            var notifyStub = sandbox.stub(searchController, '_notify');
+            sandbox.replace(searchController._searchController, 'abort', () => {
+               aborted = true;
+            });
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
-            assert.isTrue(notifyStub.withArgs('filterChanged', [{test1: 'testValue1'}]).calledOnce);
+            assert.isTrue(aborted);
             searchController._viewMode = '';
             sandbox.restore();
          });
