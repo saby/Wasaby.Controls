@@ -16,7 +16,7 @@
  *       <ws:partial template="Controls/grid:RowEditor" scope="{{_options}}">
  *          <ws:content>
  *             Этот отображается в режиме редактирования.
- *             <Controls.dropdown:Combobox bind:selectedKey="itemData.item.documentSign" ... />
+ *             <Controls.dropdown:Combobox bind:selectedKey="content.itemData.item.documentSign"  />
  *          </ws:content>
  *       </ws:partial>
  *    </ws:itemTemplate>
@@ -26,7 +26,7 @@
 
 /**
  * @name Controls/grid:RowEditor#content
- * @cfg {String|Function} Шаблон, описывающий содержимое элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ режиме редактирования}.
+ * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ режиме редактирования}.
  * @default undefined
  */
 

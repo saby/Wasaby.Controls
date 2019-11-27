@@ -15,7 +15,7 @@
  *             <ws:template>
  *                <ws:partial template="Controls/grid:HeaderContent">
  *                   <ws:contentTemplate>
- *                      {{colData.column.title}}
+ *                      {{contentTemplate.colData.column.title}}
  *                   </ws:contentTemplate>
  *                </ws:partial>
  *             </ws:template>
@@ -28,11 +28,80 @@
 
 /**
  * @name Controls/grid:HeaderContent#contentTemplate
- * @cfg {String|Function} Шаблон, описывающий содержимое ячейки.
- * @default undefined
+ * @cfg {String|Function} Устанавливает пользовательский шаблон для отображения содержимого ячейки шапки.
  * @remark
  * В области видимости шаблона доступен объект **colData**.
  * Через него можно получить доступ к свойству **column**, которое содержит конфигурацию {@link https://wi.sbis.ru/docs/js/Controls/grid/IGridControl/typedefs/HeaderCell/ ячейки шапки}.
+ * @example
+ * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
+ * <pre>
+ * <Controls.grid:View>
+ *    <ws:header>
+ *       <ws:Array>
+ *          <ws:Object>
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:HeaderContent">
+ *                   <ws:contentTemplate>
+ *                      {{contentTemplate.colData.column.title}}
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:header>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
+ * <pre>
+ * <!-- file1.wml --> 
+ * <Controls.grid:View>
+ *    <ws:header>
+ *       <ws:Array>
+ *          <ws:Object>
+ *             <ws:template>
+ *                <ws:partial template="wml!file2" scope="{{template}}"/>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:header>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre>
+ * <!-- file2.wml -->
+ * <ws:partial template="Controls/grid:HeaderContent">
+ *    <ws:contentTemplate>
+ *       {{contentTemplate.colData.column.title}}
+ *    </ws:contentTemplate>
+ * </ws:partial>
+ * </pre>
+ * 
+ * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
+ * 
+ * <pre>
+ * <!-- file1.wml --> 
+ * <Controls.grid:View>
+ *    <ws:header>
+ *       <ws:Array>
+ *          <ws:Object>
+ *             <ws:template>
+ *                <ws:partial template="Controls/grid:HeaderContent">
+ *                   <ws:contentTemplate>
+ *                      <ws:partial template="wml!file2" scope="{{contentTemplate}}"/>
+ *                   </ws:contentTemplate>
+ *                </ws:partial>
+ *             </ws:template>
+ *          </ws:Object>
+ *       </ws:Array>
+ *    </ws:header>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre>
+ * <!-- file2.wml -->
+ * {{contentTemplate.colData.column.title}}
+ * </pre>
  */
 
 export default interface IHeaderContentOptions {

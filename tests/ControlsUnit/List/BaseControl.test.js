@@ -3191,6 +3191,9 @@ define([
             notifiedEntity = dragEntity && dragEntity[0];
          };
 
+         ctrl._dragEnter({}, undefined);
+         assert.isNull(notifiedEvent);
+
          const badDragObject = { entity: {} };
          ctrl._dragEnter({}, badDragObject);
          assert.isNull(notifiedEvent);
