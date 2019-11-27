@@ -21,9 +21,7 @@ var Constants = {
     /**
      * The minimum count of recent item
      */
-    MIN_RECENT: 3,
-
-    FOR_CLIENT: 1
+    MIN_RECENT: 3
 };
 
 export = Constants;

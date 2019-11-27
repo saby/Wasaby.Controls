@@ -99,7 +99,7 @@ var _private = {
    updatePinned: function (self, data, meta) {
       const id = data.getId();
       const historyId = data.get('HistoryId') || self._historyId;
-      if (meta.historyType === Constants.FOR_CLIENT) {
+      if (meta.historyType) {
          _private.callQuery(self, 'PinForClient', {
             history_id: historyId,
             object_id: id,

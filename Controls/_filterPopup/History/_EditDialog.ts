@@ -115,6 +115,12 @@ class EditDialog extends Control<IEditDialog> {
         return resultItems;
     }
 
+    static getDefaultOptions(): object {
+        return {
+            globalKey: 0
+        };
+    }
+
     static _theme: string[] = ['Controls/filterPopup'];
 }
 
