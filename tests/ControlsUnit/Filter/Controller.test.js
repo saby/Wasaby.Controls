@@ -77,6 +77,9 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          assert.deepEqual(filterLayout._filterButtonItems[0].textValue, 'historyText');
          assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
          assert.deepEqual(filterLayout._filter, {testKey: 'historyValue', testKey2: 'testValue'});
+
+         filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, prefetchParams: {}, historyItems: [] }, {}, receivedItems);
+         assert.isTrue(filterLayout._isFilterChanged);
       });
 
       it('_beforeUpdate new items', function () {
