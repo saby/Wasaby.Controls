@@ -5,7 +5,7 @@ import {IObservable} from 'Types/collection';
 import * as getDimension from 'Controls/Utils/getDimensions';
 
 const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
-
+const DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION = 1 / 4;
 
 type IVirtualItem = number;
 
@@ -65,7 +65,7 @@ export default class VirtualScrollController {
 
     constructor(options: IVirtualScrollControllerOptions) {
         this.pageSize = options.pageSize || DEFAULT_VIRTUAL_PAGE_SIZE;
-        this.segmentSize = options.segmentSize || Math.ceil(this.pageSize / 4);
+        this.segmentSize = options.segmentSize || Math.ceil(this.pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION);
         this.indexesChangedCallback = options.indexesChangedCallback;
         this.loadMoreCallback = options.loadMoreCallback;
         this.placeholderChangedCallback = options.placeholderChangedCallback;
