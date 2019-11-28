@@ -592,17 +592,21 @@ var _private = {
     },
 
     loadToDirectionIfNeed: function(self, direction, filter) {
-        if (self._options.navigation &&
-            self._options.navigation.view === 'infinity' &&
+        const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
+            !self._loadedItems :
+            true;
+        const allowLoadBySource =
             self._sourceController &&
             self._sourceController.hasMoreData(direction) &&
-            !self._sourceController.isLoading() && !self._loadedItems) {
+            !self._sourceController.isLoading();
+
+        if (allowLoadBySource && allowLoadByLoadedItems) {
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData(direction));
             _private.loadToDirection(
-                self, direction,
-                self._options.dataLoadCallback,
-                self._options.dataLoadErrback,
-                filter
+               self, direction,
+               self._options.dataLoadCallback,
+               self._options.dataLoadErrback,
+               filter
             );
         }
     },
