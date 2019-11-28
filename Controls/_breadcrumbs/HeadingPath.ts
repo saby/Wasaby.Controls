@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import BreadCrumbsUtil from './Utils'
+import BreadCrumbsUtil from './Utils';
 import getWidthUtil = require('Controls/Utils/getWidth');
 import {ItemsUtil} from 'Controls/list';
 import FontLoadUtil = require('Controls/Utils/FontLoadUtil');
@@ -11,7 +11,7 @@ import Common from './HeadingPath/Common';
 import 'Controls/heading';
 
 var _private = {
-    calculateClasses(
+  /* calculateClasses(
        self,
        maxCrumbsWidth: number,
        minCrumbsWidth: number,
@@ -45,49 +45,17 @@ var _private = {
           }
        }));
    },
+    */
 
-    calculateItems: function (self, options, containerWidth) {
-        var
-            backButtonWidth,
-            availableWidth,
-            homeWidth,
-            homePathSpacing;
-
+    calculateItems: function (self, options) {
         self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], self._options.displayProperty);
 
         //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
-        if (options.items.length > 1 && containerWidth > 0) {
+        if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
-           homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__homeContainer"><div class="controls-BreadCrumbsPath__home icon-Home3"></div></div>');
-           homePathSpacing = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing"></div>');
-           if (!options.header) {
-              backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
-                 _options: {
-                    theme: self._options.theme,
-                    backButtonCaption: self._backButtonCaption,
-                    counterCaption: self._getCounterCaption(options.items)
-                 }
-              }));
-              _private.calculateClasses(
-                 self,
-                 BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, options.displayProperty),
-                 BreadCrumbsUtil.getMinCrumbsWidth(self._breadCrumbsItems.length),
-                 backButtonWidth,
-                 containerWidth - homeWidth - homePathSpacing
-              );
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems);
+            self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
 
-              if (self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half') {
-                  availableWidth = containerWidth / 2;
-              } else if (self._backButtonClass === 'controls-BreadCrumbsPath__backButton_short') {
-                  availableWidth = containerWidth - self._backButtonMinWidth;
-              } else {
-                  availableWidth = containerWidth - backButtonWidth;
-              }
-              BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth - homePathSpacing);
-           } else {
-              BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, containerWidth - homeWidth - homePathSpacing);
-              self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
-           }
         } else {
             self._visibleItems = null;
             self._breadCrumbsItems = null;
@@ -95,20 +63,20 @@ var _private = {
             self._breadCrumbsClass = '';
         }
         self._viewUpdated = true;
-    },
+    }
 
-    getContainer: function(self) {
+   /* getContainer: function(self) {
         return self._container[0] || self._container;
     },
 
-    getContainerSpacing: function(self) {
+   getContainerSpacing: function(self) {
         let computedStyle = window.getComputedStyle(_private.getContainer(self));
         return parseInt(computedStyle.paddingLeft, 10) + parseInt(computedStyle.paddingRight, 10);
     },
 
     getAvailableContainerWidth: function(self):number {
         return  _private.getContainer(self).clientWidth - _private.getContainerSpacing(self);
-    }
+    }*/
 };
 
 /**
@@ -207,28 +175,26 @@ var BreadCrumbsPath = Control.extend({
     _breadCrumbsItems: null,
     _backButtonClass: '',
     _breadCrumbsClass: '',
-    _oldWidth: 0,
     _viewUpdated: false,
-    _backButtonMinWidth: 0,
 
     _afterMount: function () {
-        this._oldWidth = _private.getAvailableContainerWidth(this);
+       /* this._oldWidth = _private.getAvailableContainerWidth(this);*/
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
-                    this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);
-                    _private.calculateItems(this, this._options, this._oldWidth);
+                  /*  this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);*/
+                    _private.calculateItems(this, this._options);
                     this._forceUpdate();
                 }.bind(this));
             }.bind(this));
         }
     },
 
-    _beforeUpdate: function (newOptions) {
+   /* _beforeUpdate: function (newOptions) {
         if (this._options.theme !== newOptions.theme) {
            this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);
         }
-        const containerWidth = _private.getAvailableContainerWidth(this);
+
 
         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;
@@ -242,6 +208,8 @@ var BreadCrumbsPath = Control.extend({
             this._notify('controlResize', [], {bubbling: true});
         }
     },
+    */
+
 
     _notifyHandler: tmplNotify,
     _applyHighlighter: applyHighlighter,
@@ -251,12 +219,12 @@ var BreadCrumbsPath = Control.extend({
         Common.onBackButtonClick.call(this, e);
     },
 
-    _onResize: function () {
+   /* _onResize: function () {
         // Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
        // todo здесь нужно звать _forceUpdate чтобы произошла перерисовка, потому что логика пересчета в _beforeUpdate. нужно оттуда логику выносить сюда!
        this._forceUpdate();
     },
-
+*/
     _onHomeClick: function () {
        /**
         * TODO: _options.root is actually current root, so it's wrong to use it. For now, we can take root from the first item. Revert this commit after:

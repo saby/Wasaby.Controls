@@ -13,7 +13,7 @@ var
     measurer;
 
 var _private = {
-    initializeConstants: function () {
+   /* initializeConstants: function () {
         if (initialized) {
             return;
         }
@@ -31,7 +31,7 @@ var _private = {
             displayProperty: 'title'
         }));
         initialized = true;
-    },
+    },*/
 
     getItemData: function (index, items, withOverflow = false) {
         var
@@ -43,9 +43,9 @@ var _private = {
             hasArrow: count > 1 && index !== 0,
             withOverflow: withOverflow
         };
-    },
+    }
 
-    getMeasurer: function():HTMLElement {
+ /*   getMeasurer: function():HTMLElement {
         //create measurer once on page
         if (!measurer) {
             measurer = document.createElement('div');
@@ -80,18 +80,17 @@ var _private = {
 
     canShrink: function (itemWidth, currentWidth, availableWidth) {
         return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
-    }
+    }*/
 };
 
 export default {
-    calculateBreadCrumbsToDraw: function (self, items, availableWidth) {
-        _private.initializeConstants();
+    calculateBreadCrumbsToDraw: function (self, items) {
         self._visibleItems = [];
             self._visibleItems = items.map(function (item, index, items) {
                 return _private.getItemData(index, items);
             });
     },
-
+/*
     getMaxCrumbsWidth: function (items, displayProperty) {
         _private.initializeConstants();
 
@@ -108,7 +107,7 @@ export default {
             return itemsCount * BREAD_CRUMB_MIN_WIDTH - ARROW_WIDTH;
         }
     },
-
+*/
     shouldRedraw: function (currentItems, newItems, oldWidth, availableWidth) {
         return currentItems !== newItems || oldWidth !== availableWidth;
     }
