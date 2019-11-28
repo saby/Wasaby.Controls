@@ -66,12 +66,12 @@
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
  * @property {EditorOptions} editorOptions Опции для редактора.
  * @property {FilterViewMode} viewMode Режим отображения фильтра.
+ * @property {Boolean} doNotSaveToHistory Флаг для отмены сохранения фильтра в истории.
  * @property {Boolean} visibility Отображение параметра фильтрации в блоке "Еще можно отобрать".
  * @property {String} type Тип значения в поле фильтра.
- * @property {Boolean} saveToHistory Флаг для сохранения фильтра в истории.
  * Если тип поля не указан, он будет автоматически определяться по значению фильтра.
  * Для каждого типа будет построен соответствующий редактор этого типа.
- * 
+ *
  * В настоящей версии фреймворка поддерживается только 1 значение — dataRange.
  * При его установке будет построен контрол выбора периода в строке фильтра.
  */
@@ -84,7 +84,7 @@
  * @property {String} textValue Text value of filter field.  Used to display a textual representation of the filter
  * @property {EditorOptions} editorOptions Options for editor
  * @property {FilterViewMode} viewMode Filter view mode
- * @property {Boolean} saveToHistory Flag to save filter in history
+ * @property {Boolean} doNotSaveToHistory Flag to cancel saving filter in history
  */
 
 /**
@@ -115,7 +115,7 @@
  * JS:
  * <pre>
  *    this._source = [
- *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent', saveToHistory: false,
+ *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent', doNotSaveToHistory: true,
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
  *                    keyProperty: 'id',
@@ -129,7 +129,7 @@
  *                 keyProperty: 'id'
  *          }
  *       },
- *       { name: 'group', value: '1', resetValue: 'null', textValue: '', viewMode: 'basic', saveToHistory: true },
+ *       { name: 'group', value: '1', resetValue: 'null', textValue: '', viewMode: 'basic' },
  *       { name: 'deleted', value: true, resetValue: false, textValue: 'Deleted', viewMode: 'extended' }
  *    ];
  * </pre>
