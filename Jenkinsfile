@@ -1,9 +1,10 @@
 @Library('pipeline@bls/mew_ui') _
 
-version = '20.1000'
+def version = '20.1000'
 
 node ('controls') {
-    checkout_pipeline()
+    echo version
+    checkout_pipeline(version)
    // run_branch = load '/home/sbis/jenkins_pipeline/platforma/branch/run_branch'
    // run_branch.execute('controls', version)
 }
