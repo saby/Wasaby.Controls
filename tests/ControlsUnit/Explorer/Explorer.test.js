@@ -311,8 +311,8 @@ define([
       });
 
       it('_beforeUpdate', function() {
-         const cfg = { viewMode: 'tree' };
-         const cfg2 = { viewMode: 'search' };
+         const cfg = { viewMode: 'tree', root: null };
+         const cfg2 = { viewMode: 'search' , root: null };
          const instance = new explorerMod.View(cfg);
          let resetExpandedItemsCalled = false;
          instance._children = {
@@ -331,6 +331,11 @@ define([
 
          instance._beforeUpdate(cfg2);
          assert.isFalse(resetExpandedItemsCalled);
+
+         instance._isGoingFront = true;
+         instance.saveOptions(cfg);
+         instance._beforeUpdate(cfg2);
+         assert.isFalse(instance._isGoingFront);
       });
 
       it('_onBreadCrumbsClick', function() {
