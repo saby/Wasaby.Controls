@@ -77,6 +77,7 @@ import MaskFormatter = require('Controls/_input/Mask/Formatter');
 import PhoneMaskBuilder = require('Controls/_input/Phone/MaskBuilder');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
 
+import hoursFormat from  'Controls/_input/InputCallback/hoursFormat'
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
@@ -89,6 +90,7 @@ export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} 
 export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 
 const InputCallback = {
+    hoursFormat,
     lengthConstraint
 };
 
