@@ -9,12 +9,9 @@
  * <pre>
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/grid:ItemTemplate"
- *          marker="{{false}}"
- *          highlightOnHover="{{false}}"
- *          clickable="{{false}}">
+ *       <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}">
  *          <ws:contentTemplate>
- *             Это мой шаблон отображения элемента.
+ *             {{ contentTemplate. }}
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
