@@ -2,10 +2,9 @@ import {IDirection} from '../interface/IVirtualScroll';
 import {Record as entityRecord} from 'Types/entity';
 import {CollectionItem} from 'Controls/display';
 import {IObservable} from 'Types/collection';
+import * as getDimension from 'Controls/Utils/getDimensions';
 
 const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
-
-const DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION = 1 / 4;
 
 
 type IVirtualItem = number;
@@ -66,7 +65,7 @@ export default class VirtualScrollController {
 
     constructor(options: IVirtualScrollControllerOptions) {
         this.pageSize = options.pageSize || DEFAULT_VIRTUAL_PAGE_SIZE;
-        this.segmentSize = options.segmentSize || this.pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION;
+        this.segmentSize = options.segmentSize || Math.ceil(this.pageSize / 4);
         this.indexesChangedCallback = options.indexesChangedCallback;
         this.loadMoreCallback = options.loadMoreCallback;
         this.placeholderChangedCallback = options.placeholderChangedCallback;
@@ -415,7 +414,7 @@ export default class VirtualScrollController {
         }
 
         for (let i = 0; i < updateLength; i++) {
-            this.itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[startChildrenIndex + i].offsetHeight;
+            this.itemsHeights[startUpdateIndex + i] = getDimension(this._itemsContainer.children[startChildrenIndex + i] as HTMLElement).height;
         }
     }
 
