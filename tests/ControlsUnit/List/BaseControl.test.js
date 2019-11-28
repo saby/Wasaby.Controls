@@ -291,6 +291,32 @@ define([
          sandbox.restore();
       });
 
+      it('_private::loadToDirectionIfNeed', () => {
+         const self = {
+            _sourceController: {
+               hasMoreData: () => true,
+               isLoading: () => false
+            },
+            _loadedItems: new collection.RecordSet(),
+            _options: {
+               navigation: {}
+            }
+         };
+         const sandbox = sinon.createSandbox();
+         let isLoadStarted;
+
+         // navigation.view !== 'infinity'
+         sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+         sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+         sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+            isLoadStarted = true;
+         });
+
+         lists.BaseControl._private.loadToDirectionIfNeed(self);
+         assert.isTrue(isLoadStarted);
+         sandbox.restore();
+      });
+
       it('setHasMoreData', async function() {
          var gridColumns = [
             {
@@ -3190,6 +3216,9 @@ define([
             notifiedEvent = eventName;
             notifiedEntity = dragEntity && dragEntity[0];
          };
+
+         ctrl._dragEnter({}, undefined);
+         assert.isNull(notifiedEvent);
 
          const badDragObject = { entity: {} };
          ctrl._dragEnter({}, badDragObject);
