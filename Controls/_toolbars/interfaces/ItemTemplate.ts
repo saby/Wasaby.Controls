@@ -171,6 +171,18 @@
  * </pre>
  */
 
+/**
+ * @name Controls/toolbars:ItemTemplate#contentTemplate
+ * @cfg {String|Function} Шаблон, описывающий содержимое кнопки.
+ * @remark
+ * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к свойству **item** - это объект, который содержит данные обрабатываемого элемента.
+ * @example
+ * <pre>
+ * <Controls.toolbars:View 
+ *    contentTemplate="Controls/toolbars:defaultContentTemplate">
+ * </Controls.toolbars:View>
+ * </pre>
+ */
 
 export default interface IItemTemplateOptions {
     buttonStyle?: string;
@@ -180,5 +192,6 @@ export default interface IItemTemplateOptions {
     displayProperty?: string;
     iconStyleProperty?: string;
     iconProperty?: string;
+    contentTemplate?: string;
  }
  
