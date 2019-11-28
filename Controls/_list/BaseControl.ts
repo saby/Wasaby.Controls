@@ -762,7 +762,15 @@ var _private = {
         //source controller is not created if "source" option is undefined
         // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
         if (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) {
-            if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
+            const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
+                !self._loadedItems :
+                true;
+            const allowLoadBySource =
+                self._sourceController &&
+                self._sourceController.hasMoreData(direction) &&
+                !self._sourceController.isLoading();
+
+            if (allowLoadBySource && allowLoadByLoadedItems) {
                 _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData(direction));
                 _private.loadToDirection(
                    self, direction,
