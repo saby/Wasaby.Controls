@@ -184,7 +184,6 @@ var BreadCrumbsPath = Control.extend({
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
                   /*  this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);*/
                     _private.calculateItems(this, this._options);
-                    this._forceUpdate();
                 }.bind(this));
             }.bind(this));
         }

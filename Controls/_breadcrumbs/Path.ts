@@ -42,7 +42,6 @@ var BreadCrumbs = Control.extend({
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, this._options.items);
-                this._forceUpdate();
             }.bind(this));
         }
     },
@@ -66,16 +65,17 @@ var BreadCrumbs = Control.extend({
     }
 
  */
-    _notifyHandler: tmplNotify,
-/*
-    _onResize: function() {
-        this._redrawIfNeed(this._options.items, this._options.items);
-    },
- */
-   _beforeUnmount: function() {
-      this._notify('unregister', ['controlResize', this], { bubbling: true });
-   }
 
+        _notifyHandler: tmplNotify
+    /*
+        _onResize: function() {
+            this._redrawIfNeed(this._options.items, this._options.items);
+        },
+
+       _beforeUnmount: function() {
+          this._notify('unregister', ['controlResize', this], { bubbling: true });
+       }
+     */
 
 });
 

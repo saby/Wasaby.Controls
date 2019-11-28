@@ -9,13 +9,14 @@
    max-width: 50%;
    overflow: hidden;
    text-overflow: ellipsis;
+   font-size: @font-size_BreadCrumbs-title;
 }
+
 .controls-BreadCrumbsView__items__middle {
-   width: 100%;
+
    overflow: hidden;
    display: inline-block;
    white-space: nowrap;
-   height: 18px;
    flex-shrink:1;
 }
 .controls-BreadCrumbsView__crumb {
@@ -24,8 +25,12 @@
    max-width: 100%;
    min-width: 30px;
    .baseline-fix();
-   font-size: @font-size_BreadCrumbs-baseline;
    height: @height_BreadCrumbs-items;
+   &:before {
+      font-size: @font-size_BreadCrumbs-baseline;
+   }
+
+
 }
 .controls-BreadCrumbsView__menu {
    float: right;
@@ -38,8 +43,9 @@
    top: 0;
    left: -25px;
    background: white;
-   box-shadow: -1em 0 0.4em white;
+   box-shadow: -1px 0px 9px 14px white;
    cursor: pointer;
+   padding-right: 2px;
 }
 
 .controls-BreadCrumbsView {
@@ -160,7 +166,7 @@
 }
 
 .ws-is-hover {
-   .controls-BreadCrumbsView__crumb:hover {
+   .controls-BreadCrumbsView__crumb:hover, .controls-BreadCrumbsView__menu__dots:hover {
       .controls-BreadCrumbsView__title_enabled {
          color: @color_BreadCrumbs-title_hovered;
          text-decoration: underline;
@@ -171,6 +177,7 @@
       }
    }
 }
+
 
 //Класс сделан только для удобства замеров
 .controls-BreadCrumbsView__crumbMeasurer {

@@ -107,8 +107,10 @@ export default {
             return itemsCount * BREAD_CRUMB_MIN_WIDTH - ARROW_WIDTH;
         }
     },
-*/
+
     shouldRedraw: function (currentItems, newItems, oldWidth, availableWidth) {
         return currentItems !== newItems || oldWidth !== availableWidth;
     }
+
+ */
 };

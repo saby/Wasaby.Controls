@@ -6,6 +6,7 @@
                     on:mouseEnter="_onHoveredItemChanged(items[0].item)"
                     on:mouseLeave="_onHoveredItemChanged()"
                     attr:class="controls-BreadCrumbsView__crumb__edge"
+                    edge="{{items.length > 1}}"
                     on:click="_onItemClick(items[0])"/>
         <ws:if data="{{items.length > 2}}">
             <div class="controls-BreadCrumbsView__items__middle">
@@ -23,7 +24,7 @@
                 <div class="controls-BreadCrumbsView__menu" on:click="_dotsClick()">
                     <div class="controls-BreadCrumbsView__menu__dots">
                         <span class="controls-BreadCrumbsView__arrow icon-size icon-DayForwardBsLine controls-BreadCrumbsView__arrow_enabled"></span>
-                        <span>...</span>
+                        <span class="controls-BreadCrumbsView__title controls-BreadCrumbsView__title_enabled">...</span>
                     </div>
                 </div>
             </div>
@@ -37,6 +38,7 @@
                     on:mouseEnter="_onHoveredItemChanged(items[items.length - 1].item)"
                     on:mouseLeave="_onHoveredItemChanged()"
                     attr:class="controls-BreadCrumbsView__crumb__edge"
+                    edge="true"
                     on:click="_onItemClick(items[items.length - 1])"/>
        </ws:if>
 </div>
