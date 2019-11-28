@@ -344,6 +344,8 @@ import 'Types/entity';
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
+
+         //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
          if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
             this._isGoingFront = false;
          }
