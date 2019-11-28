@@ -60,6 +60,9 @@ const _private = {
             }
             if (filterButtonItems && fastFilterItems) {
                historyItems = _private.cloneItems(filterButtonItems);
+               historyItems.filter(item => {
+                  return item.saveToHistory || item.saveToHistory === undefined;
+               });
 
                _private.equalItemsIterator(filterButtonItems, fastFilterItems, setTextValue);
             } else {
