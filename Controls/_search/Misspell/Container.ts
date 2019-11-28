@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Misspell/Container');
 
 /**
- * Конрол загружает и отображает {@link Controls/search:Misspell}.
+ * Контрол загружает и отображает {@link Controls/search:Misspell}.
  * При клике по подсказке контрол генерируется всплывающее событие, которое обрабатывает {@link Controls/search:Controller}.
  * 
  * @class Controls/_search/Misspell/Container

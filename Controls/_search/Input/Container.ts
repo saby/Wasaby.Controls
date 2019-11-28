@@ -3,8 +3,8 @@ import template = require('wml!Controls/_search/Input/Container');
 import {constants} from 'Env/Env';
 
 /**
- * Контрол используют в качестве контейнера для {@link Controls/_search/Input/Search Controls/search:Input}. 
- * Он обеспечивает передачу параметра фильтрации в {@link Controls/_search/Controller Controls/search:Controller}.
+ * Контрол используют в качестве контейнера для {@link Controls/search:Input}. 
+ * Он обеспечивает передачу параметра фильтрации в {@link Controls/search:Controller}.
  *
  * @class Controls/_search/Input/Container
  * @extends Core/Control
