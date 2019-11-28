@@ -5,7 +5,7 @@
  * @see Controls/treeGrid:View#itemTemplate
  * @see Controls/treeGrid:View#itemTemplateProperty
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <Controls.treeGrid:View>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/treeGrid:ItemTemplate" levelIndentSize="null" expanderSize="l" expanderIcon="node">
@@ -86,57 +86,77 @@
 /**
  * @name Controls/treeGrid:ItemTemplate#contentTemplate
  * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
- * @default undefined
  * @remark
  * В области видимости шаблона доступен объект **itemData**.
  * Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
+ * 
+ * Также в области видимости шаблона есть переменная **itemActionsTemplate** — шаблон, который позволяет отобразить панель {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опций записи} в шаблоне.
+ * Шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
+ * Работа с переменной показана в примере № 4.
  * @example
- * 
- * **Пример 1.** Шаблон строки в конфигурации родительского контрола.
- * 
- * <pre>
- * <Controls.treeGrid:View>
+ * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
+ * <pre class="brush: html">
+ * <Controls.grid:View>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/treeGrid:ItemTemplate">
  *          <ws:contentTemplate>
- *             <div title="{{itemTemplate.itemData.item.Name}}">
- *                {{itemTemplate.itemData.item.Name}}
- *             </div>
+ *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
- * </Controls.treeGrid:View>
+ * </Controls.grid:View>
  * </pre>
  * 
- * **Пример 2.** Шаблон строки описан в отдельном файле, импортирован в родительский контрол и передан в опцию.
+ * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
+ * <pre class="brush: html">
+ * <!-- file1.wml --> 
+ * <Controls.grid:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="wml!file2" scope="{{itemTemplate}}"/>
+ *    </ws:itemTemplate>
+ * </Controls.grid:View>
+ * </pre>
  * 
  * <pre class="brush: html">
- * <!-- Child.wml -->
- * <ws:partial template="Controls/treeGrid:ItemTemplate" scope="{{_options}}">
+ * <!-- file2.wml -->
+ * <ws:partial template="Controls/treeGrid:ItemTemplate">
  *    <ws:contentTemplate>
- *       <div title="{{itemData.item.Name}}">
- *          {{itemData.item.Name}}
- *       </div>
+ *       {{contentTemplate.itemData.item.title}}
  *    </ws:contentTemplate>
  * </ws:partial>
  * </pre>
  * 
+ * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
+ * 
  * <pre class="brush: html">
- * <!-- Parent.wml -->
- * <Controls.treeGrid:View itemTemplate="{{ myTemplate }}" />
+ * <Controls.grid:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/treeGrid:ItemTemplate">
+ *          <ws:contentTemplate>
+ *             <ws:partial template="wml!file2" scope="{{contentTemplate}}"/>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.grid:View>
  * </pre>
  * 
- * <pre class="brush: js">
- * define('MyControl',
- *    ['UI/Base', 'wml!Parent', 'wml!Child'], 
- *    function(Base, template, myTemplate) {
- *    var ModuleClass = Base.Control.extend({
- *       _template: template,
- *       myTemplate: myTemplate,
- *       // логика работы контрола
- *    });
- *    return ModuleClass;
- * });
+ * <pre class="brush: html">
+ * <!-- file2.wml -->
+ * {{contentTemplate.itemData.item.title}}
+ * </pre>
+ * 
+ * **Пример 4.** Для пользовательского шаблона задано отображение опций записи.
+ * <pre class="brush: html">
+ * <Controls.grid:View>
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/treeGrid:ItemTemplate">
+ *          <ws:contentTemplate>
+ *             {{contentTemplate.itemData.item.title}}
+ *             <ws:partial template="{{contentTemplate.itemActionsTemplate}}" />
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.grid:View>
  * </pre>
  */
 

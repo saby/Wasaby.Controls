@@ -5,13 +5,13 @@
  * @see Controls/grid:View#groupTemplate
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
- * <pre>
+ * <pre class="brush: html">
  *    <Controls.grid:View>
  *       <ws:groupTemplate>
  *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}">
  *             <ws:contentTemplate>
- *                <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
- *                <ws:if data="{{contentTemplate.itemData.item === 'works'}}">Работы</ws:if>
+ *                <ws:if data="{{contentTemplate.itemData.item === 'tasks'}}">Задачи</ws:if>
+ *                <ws:if data="{{contentTemplate.itemData.item === 'error'}}">Ошибки</ws:if>
  *             </ws:contentTemplate>
  *          </ws:partial>
  *       </ws:groupTemplate>
@@ -89,7 +89,7 @@
  * * {@link Types/collection:RecordSet#metaData metaData} — метаданные рекордсета, который загружен для таблицы.
  * @example
  * **Пример 1.** Контрол и шаблон сконфигурированы в одном WML-файле.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:groupTemplate>
  *       <ws:partial template="Controls/grid:GroupTemplate">
@@ -102,7 +102,7 @@
  * </pre>
  * 
  * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
- * <pre>
+ * <pre class="brush: html">
  * <!-- file1.wml -->
  * <Controls.grid:View>
  *    <ws:groupTemplate>
@@ -111,7 +111,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * <ws:partial template="Controls/grid:GroupTemplate">
  *    <ws:rightTemplate>
@@ -122,7 +122,7 @@
  * 
  * **Пример 3.** Шаблон rightTemplate сконфигурирован в отдельном WML-файле.
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file1.wml -->
  * <Controls.grid:View>
  *    <ws:groupTemplate>
@@ -135,7 +135,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
  * </pre>
@@ -166,7 +166,7 @@
  * </pre>
  * 
  * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
- * <pre>
+ * <pre class="brush: html">
  * <!-- file1.wml -->
  * <Controls.grid:View>
  *    <ws:groupTemplate>
@@ -175,7 +175,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * <ws:partial template="Controls/grid:GroupTemplate">
  *    <ws:contentTemplate>
@@ -200,7 +200,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
  * <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
