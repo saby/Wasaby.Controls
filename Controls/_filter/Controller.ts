@@ -60,15 +60,15 @@ const _private = {
             }
             if (filterButtonItems && fastFilterItems) {
                historyItems = _private.cloneItems(filterButtonItems);
-
-               historyItems.filter(item => {
-                  return item.saveToHistory || item.saveToHistory === undefined;
-               });
-
                _private.equalItemsIterator(filterButtonItems, fastFilterItems, setTextValue);
             } else {
                historyItems = _private.cloneItems(filterButtonItems || fastFilterItems);
             }
+
+            historyItems = historyItems.filter(item => {
+               return item.saveToHistory || item.saveToHistory === undefined;
+            });
+
             return _private.minimizeFilterItems(historyItems);
          },
 

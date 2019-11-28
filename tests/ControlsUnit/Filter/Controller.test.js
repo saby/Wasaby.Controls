@@ -627,6 +627,26 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          }, {
             id: 'testId3',
          }]);
+
+         var saveToHistoryItems = [{
+            id: 'testId2',
+            value: '',
+            resetValue: '',
+            saveToHistory: false
+         }, {
+            id: 'testId3',
+            value: 'testValue3',
+            resetValue: '',
+            saveToHistory: true
+         }, {
+            id: 'testId4',
+            value: 'testValue4',
+            resetValue: ''
+         }];
+
+         historyItems = Filter._private.prepareHistoryItems(saveToHistoryItems, fastFilterItems);
+         assert.deepEqual(historyItems, [{ id: 'testId3' }, { id: 'testId4' }]);
+
       });
 
       it('_private.isFilterChanged', function() {
