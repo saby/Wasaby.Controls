@@ -12,7 +12,9 @@ const pathToResources = hasPathToResources ? process.argv[2].replace('--applicat
 const requirejs = require(path.join('saby-units', 'lib', 'requirejs', 'r.js'));
 global.requirejs = requirejs;
 
-// Configuring requirejs
+// Configuring requirejs]
+global.wsConfig = {};
+wsConfig.versioning = false;
 const createConfig = require(path.join(root, pathToResources, 'WS.Core', 'ext', 'requirejs', 'config.js'));
 const config = createConfig(
    path.join(root, pathToResources),
@@ -47,6 +49,14 @@ function copyRecursiveSync(src, dest) {
    }
 }
 
+function initEnv(req) {
+   var Env = require('Env/Env');
+   Env.constants.resourceRoot = '/';
+   require(path.join(root, pathToResources, 'contents'));
+   Env.constants.modules = contents.modules;
+}
+
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -67,6 +77,7 @@ global.require = global.requirejs = require = requirejs;
 
 console.log('start init');
 require(['Core/core-init'], function(){
+   initEnv();
    console.log('core init success');
 }, function(err){
    console.log(err);
@@ -115,8 +126,6 @@ app.get('/:moduleName/*', function(req, res){
 
       return;
    }
-
-   require('Env/Env').constants.resourceRoot = '/';
 
    const html = tpl({
       lite: true,

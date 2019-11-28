@@ -34,12 +34,18 @@ import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
+import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
+import {IVirtualScrollMode} from 'Controls/list';
 import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
+const VIRTUAL_SCROLL_MODE = {
+    HIDE: 'hide',
+    REMOVE: 'remove'
+};
 
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
@@ -99,6 +105,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     editingConfig: any;
     unique?: boolean;
     importantItemProperties?: string[];
+    virtualScrollMode: IVirtualScrollMode;
 }
 
 export interface ICollectionCounters {
@@ -624,7 +631,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _markerManager: MarkerManager;
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
-    protected _virtualScrollManager: VirtualScrollManager;
+    protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
+    protected _$virtualScrollMode: IVirtualScrollMode;
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
     protected _selectionManager: SelectionManager;
@@ -676,10 +684,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._stopIndex = this.getCount();
 
+        this._$virtualScrollMode = options.virtualScrollMode;
+
         this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
-        this._virtualScrollManager = new VirtualScrollManager(this);
+        this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
+            new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
         this._selectionManager = new SelectionManager(this);
@@ -2082,6 +2093,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (newStart !== this._startIndex || newStop !== this._stopIndex) {
             this._startIndex = newStart;
             this._stopIndex = newStop;
+
+            if (this._$virtualScrollMode === VIRTUAL_SCROLL_MODE.HIDE) {
+                this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
+            }
+
             this._nextVersion();
             return true;
         }
@@ -2113,7 +2129,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     getViewIterator(): {
-        each: (callback: EnumeratorCallback<unknown>, context?: object) => void
+        each: (callback: EnumeratorCallback<unknown>, context?: object) => void;
+        isItemVisible: (index: number) => boolean;
     } {
         if (this._$virtualScrolling) {
             return this._virtualScrollManager;
@@ -2132,6 +2149,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setCompatibleReset(compatible: boolean): void {
         this._$compatibleReset = compatible;
+    }
+
+    isItemVisible = (index: number) => true;
+
+    isItemHidden(index: number): boolean {
+        return !this.getViewIterator().isItemVisible();
     }
 
     // region SerializableMixin
@@ -3218,6 +3241,7 @@ Object.assign(Collection.prototype, {
     _$editingConfig: null,
     _$unique: false,
     _$importantItemProperties: null,
+    _$virtualScrollMode: VIRTUAL_SCROLL_MODE.REMOVE,
     _$virtualScrolling: false,
     _$hasMoreData: false,
     _$compatibleReset: false,

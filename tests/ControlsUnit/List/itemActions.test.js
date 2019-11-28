@@ -311,49 +311,6 @@ define([
            assert.isFalse(setMarkedKeyCalled);
        });
 
-      it('_onItemActionClick in partialGridSupport', function() {
-           var cfg = {
-               listModel: listViewModel,
-               itemActions: actions,
-               fix1177894367: true
-           };
-           var instance = new lists.ItemActionsControl(cfg);
-           instance.saveOptions(cfg);
-           listViewModel.isPartialGridSupport = () => true;
-           var item = {};
-           var fakeItemData = {
-               actionsItem: item,
-               item: item,
-               index: 0,
-               key: 2,
-               columnIndex: 1
-           };
-           var fakeHTMLElement = {
-               className: 'controls-ListView__itemV'
-           };
-           instance._container = {
-               querySelectorAll: function(selector) {
-                   if (selector === '.controls-Grid__row-cell[data-r="0"]') {
-                       return [
-                           fakeHTMLElement
-                       ];
-                   }
-               }
-           };
-           const fakeEvent = {
-               stopPropagation: function() {}
-           };
-           const action = {
-               handler: sandbox.stub()
-           };
-           const notifyStub = sandbox.stub(instance, '_notify');
-
-           instance._onItemActionsClick(fakeEvent, action, fakeItemData);
-           assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
-           assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
-           assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
-       });
-
       it('should update itemActions on click', function () {
          let
              cfg = {

@@ -1,3 +1,5 @@
+export type IDirection = 'up' | 'down';
+
 /**
  * Интерфейс для поддержки виртуального скроллирования в списках.
  *
@@ -52,4 +54,23 @@
  *     <li>S - number of items that will be inserted/removed on reaching the end of displayed items.</li>
  * </ul>
  * <b>Note for Controls/Grid:View and Controls/TreeGrid:View</b>: the value of the virtualPageSize should be less then 1000/total columns count in grid.
+ */
+
+/**
+ * @name Controls/_list/interface/IVirtualScroll#virtualSegmentSize
+ * @cfg {number} Количество подгружаемых элементов при скроллировании
+ * @remark Если опция не задана, то virtualSegmentSize высчитывается по формуле virtualPageSize / 4.
+ */
+
+/**
+ * @typedef {string} IVirtualScrollMode
+ * @variant remove Скрытые записи удаляются из DOM
+ * @variant hide Скрытые записи скрываются из DOM с помощью ws-hidden
+ */
+export type IVirtualScrollMode = 'remove' | 'hide';
+
+/**
+ * @name Controls/_list/interface/IVirtualScroll#virtualScrollMode
+ * @cfg {IVirtualScrollMode} Режим скрытия записей в виртуальном скроллинге
+ * @default remove
  */

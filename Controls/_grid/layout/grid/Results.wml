@@ -48,7 +48,6 @@
                   listModel="{{ listModel }}"
                   multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
                   currentResultsColumn="{{listModel.getCurrentResultsColumn()}}"
-                  attr:style="{{ listModel.getCurrentResultsColumn().gridCellStyles }}"
                   offset="{{listModel.getResultOffset() ? listModel.getResultOffset()}}"/>
    </ws:for>
 </ws:else>
