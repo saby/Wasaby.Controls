@@ -203,6 +203,7 @@ var
 
 var HierarchySelection = Selection.extend({
    _hierarchyRelation: null,
+   _entriesPath: null,
 
    constructor: function(options) {
       HierarchySelection.superclass.constructor.apply(this, arguments);
@@ -340,15 +341,21 @@ var HierarchySelection = Selection.extend({
       return countItems;
    },
 
+   getSelectedKeysForRender: function() {
+      let entriesPath = this._items.getMetaData()[FIELD_ENTRY_PATH] || [];
+
+      this._entriesPath = entriesPath.map((entryPath) => entryPath.parent);
+      return HierarchySelection.superclass.getSelectedKeysForRender.apply(this, arguments);
+   },
+
    _getSelectionStatus: function(item) {
       let
          status = false,
          hasExcludedChildren,
          itemId = item.get(this._options.keyProperty),
-         entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH] || [],
          isParentSelected = _private.isParentSelected(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items),
          hasSelectedChildren = _private.getSelectedChildrenCount(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items) > 0 ||
-            _private.hasNotLoadedSelectedChildren(this._hierarchyRelation, itemId, this._items, entryPath);
+            _private.hasNotLoadedSelectedChildren(this._hierarchyRelation, itemId, this._items, this._entriesPath);
 
       if (this._excludedKeys.indexOf(itemId) !== -1) {
          status = hasSelectedChildren ? null : false;

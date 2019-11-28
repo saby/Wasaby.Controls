@@ -786,9 +786,16 @@ define([
             };
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance._items.setMetaData({
-               ENTRY_PATH: [1, 2]
+               ENTRY_PATH: [{
+                  id: 4,
+                  parent: 2
+               }, {
+                  id: 2,
+                  parent: 1
+               }]
             });
 
+            selectionInstance.getSelectedKeysForRender();
             assert.equal(selectionInstance._getSelectionStatus(selectionInstance._items.at(0)), null);
          });
       });
