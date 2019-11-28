@@ -751,6 +751,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             if (receivedState) {
                 _private.setFilterItems(this, options.filterButtonSource, options.fastFilterSource, receivedState);
                 _private.itemsReady(this, filter, receivedState);
+
+                if (options.prefetchParams) {
+                    this._isFilterChanged = true;
+                }
             } else {
                 return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((history) => {
                     _private.itemsReady(this, filter, history);

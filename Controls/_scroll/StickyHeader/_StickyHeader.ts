@@ -150,7 +150,11 @@ var StickyHeader = Control.extend({
    _beforeUnmount: function() {
       this._model.destroy();
       this._stickyDestroy = true;
-      this._observer.disconnect();
+
+      // его может и не быть, если контрол рушится не успев замаунтиться
+      if (this._observer) {
+          this._observer.disconnect();
+      }
 
       //Let the listeners know that the element is no longer fixed before the unmount.
       this._fixationStateChangeHandler('', this._model.fixedPosition);

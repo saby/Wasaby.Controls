@@ -179,6 +179,8 @@ class BaseOpener extends Control<IControlOptions> {
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
 
+        this._vdomOnOldPage = baseConfig._vdomOnOldPage;
+
         if (this._isPopupDestroyed()) {
             this._popupId = null;
         }
@@ -258,14 +260,17 @@ class BaseOpener extends Control<IControlOptions> {
     }
 
     private _useVDOM(): boolean {
-        return BaseOpener.isNewEnvironment() || this._options._vdomOnOldPage;
+        return BaseOpener.isNewEnvironment() || this._vdomOnOldPage;
     }
+
     private _isPopupDestroyed(): boolean {
         const popupItem = ManagerController.find(this._getCurrentPopupId());
         return popupItem &&
             (popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYING ||
-             popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYED);
+             popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYED ||
+             popupItem.startRemove === true);
     }
+
     private _compatibleOpen(cfg, controller): Promise<string | undefined> {
         return new Promise((resolve) => {
             requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (Layer) => {

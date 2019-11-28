@@ -137,7 +137,14 @@ import {SyntheticEvent} from "Vdom/Vdom"
          onScrollContainer: function(self, container, withObserver) {
             var curPosition;
             var sizeCache = _private.getSizeCache(self, container);
-            self._scrollTopCache = container.scrollTop;
+
+             const newScrollTop = container.scrollTop;
+
+             if (newScrollTop === self._scrollTopCache) {
+                 return;
+             }
+
+             self._scrollTopCache = container.scrollTop;
             if (!sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
                sizeCache = _private.getSizeCache(self, container);
@@ -394,10 +401,10 @@ import {SyntheticEvent} from "Vdom/Vdom"
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
          },
 
-         setScrollTop(scrollTop: number): void {
+         setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
             var self = this;
             const container = _private.getDOMContainer(self._container);
-            if (self._isVirtualPlaceholderMode()) {
+            if (self._isVirtualPlaceholderMode() && !withoutPlaceholder) {
                const cachedScrollTop = scrollTop;
                const sizeCache = _private.getSizeCache(self, container);
                const realScrollTop = scrollTop - this._topPlaceholderSize;
@@ -418,6 +425,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                }
             } else {
                container.scrollTop = scrollTop;
+                _private.onScrollContainer(this, _private.getDOMContainer(this._container), false);
             }
          },
 

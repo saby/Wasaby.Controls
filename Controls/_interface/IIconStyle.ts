@@ -27,6 +27,7 @@ export default interface IIconStyle {
  * @variant warning
  * @variant danger
  * @variant info
+ * @variant label
  * @variant default
  * @default secondary
  * @remark
