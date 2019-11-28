@@ -344,6 +344,10 @@ import 'Types/entity';
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
+         if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
+            this._isGoingFront = false;
+         }
+
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode, cfg);
             this._children.treeControl.resetExpandedItems();
