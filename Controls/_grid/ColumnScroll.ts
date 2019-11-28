@@ -173,7 +173,7 @@ const
       },
 
       prepareDebouncedUpdateSizes: function() {
-          return debounce(_private.updateSizes, DELAY_UPDATE_SIZES);
+          return debounce(_private.updateSizes, DELAY_UPDATE_SIZES, true);
       }
    },
    ColumnScroll = Control.extend({
