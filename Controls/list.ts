@@ -13,6 +13,7 @@
  * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
+ * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
@@ -37,6 +38,7 @@
  * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
+ * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
