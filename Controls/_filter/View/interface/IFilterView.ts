@@ -68,6 +68,7 @@
  * @property {FilterViewMode} viewMode Режим отображения фильтра.
  * @property {Boolean} visibility Отображение параметра фильтрации в блоке "Еще можно отобрать".
  * @property {String} type Тип значения в поле фильтра.
+ * @property {Boolean} saveToHistory Флаг для сохранения фильтра в истории.
  * Если тип поля не указан, он будет автоматически определяться по значению фильтра.
  * Для каждого типа будет построен соответствующий редактор этого типа.
  * 
@@ -83,6 +84,7 @@
  * @property {String} textValue Text value of filter field.  Used to display a textual representation of the filter
  * @property {EditorOptions} editorOptions Options for editor
  * @property {FilterViewMode} viewMode Filter view mode
+ * @property {Boolean} saveToHistory Flag to save filter in history
  */
 
 /**
@@ -92,7 +94,7 @@
  * Свойство "value" из каждого элемента будет вставлено в фильтр по имени этого элемента.
  * @example
  * Пример настройки опции "filterSource" для двух фильтров.
- * Первый фильтр отобразится в главном блоке "Отбираются".
+ * Первый фильтр отобразится в главном блоке "Отбираются" и не будет сохранен в истории.
  * Второй фильтр будет отображаться в блоке "Еще можно отобрать", так как для него установлено свойство visibility = false.
  * TMPL:
  * <pre>
@@ -113,7 +115,7 @@
  * JS:
  * <pre>
  *    this._source = [
- *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent',
+ *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent', saveToHistory: false,
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
  *                    keyProperty: 'id',
@@ -127,7 +129,7 @@
  *                 keyProperty: 'id'
  *          }
  *       },
- *       { name: 'group', value: '1', resetValue: 'null', textValue: '', viewMode: 'basic' },
+ *       { name: 'group', value: '1', resetValue: 'null', textValue: '', viewMode: 'basic', saveToHistory: true },
  *       { name: 'deleted', value: true, resetValue: false, textValue: 'Deleted', viewMode: 'extended' }
  *    ];
  * </pre>
