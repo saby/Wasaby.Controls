@@ -680,6 +680,15 @@
  * @param {HTMLElement} itemContainer Контейнер элемента.
  */
 
+/**
+ * @event Controls/_list/interface/IList#activeElementChanged Происходит при смене активного элемента в процессе скроллирования
+ * @param {Vdom/Vdom:SyntheticEvent<Event>} event Дескриптор события
+ * @param {string} key Ключ активного элемента
+ * @remark Активным элементом считается последний элемент, который находится выше середины вьюпорта.
+ * Для высчитывания активного элемента в списочном контроле должен быть включен виртуальный скроллинг.
+ * @see shouldCheckActiveElement
+ */
+
 /*
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.

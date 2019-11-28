@@ -91,6 +91,8 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$hovered: boolean;
 
+    protected _$rendered: boolean;
+
     protected _instancePrefix: string;
 
     /**
@@ -342,6 +344,14 @@ export default class CollectionItem<T> extends mixin<
         if (!silent) {
             this._notifyItemChangeToOwner('active');
         }
+    }
+
+    isRendered(): boolean {
+        return this._$rendered;
+    }
+
+    setRendered(state: boolean): void {
+        this._$rendered = state;
     }
 
     getWrapperClasses(): string {

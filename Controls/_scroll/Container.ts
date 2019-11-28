@@ -15,6 +15,7 @@ import 'Controls/event';
 import 'Controls/_scroll/Scroll/Scrollbar';
 import 'css!theme?Controls/scroll';
 import * as newEnv from 'Core/helpers/isNewEnvironment';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 
 /**
@@ -791,14 +792,6 @@ var
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         function getScrollTop(element: Element): number {
-            const scrollTop = element.scrollTop;
-            // scrollTop in MobileIOS at the moment of inertial scrolling and display overflow is equals negative value.
-            if (Env.detection.isMobileIOS && scrollTop < 0) {
-               return 0;
-            }
-            return scrollTop;
-         }
          // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
          // дерганья и лишняя загрузка данных.
@@ -807,22 +800,16 @@ var
          if (Env.detection.isMobileIOS) {
             this.setOverflowScrolling('auto');
          }
-         this._savedScrollTop = getScrollTop(this._children.content);
-         this._savedScrollPosition = this._children.content.scrollHeight - this._savedScrollTop;
       },
 
-      _restoreScrollPosition: function(e, removedHeight, direction) {
+      _restoreScrollPosition: function(e: SyntheticEvent<Event>, position: number): void {
          /**
           * Only closest scroll container should react to this event, so we have to stop propagation here.
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         if (direction === 'up') {
-            this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition + removedHeight;
-         } else {
-            this._children.content.scrollTop = this._savedScrollTop - removedHeight;
-         }
-         // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
+         this._children.scrollWatcher.setScrollTop(position, true);
+          // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
          // дерганья и лишняя загрузка данных.
          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.

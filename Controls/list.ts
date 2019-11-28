@@ -61,7 +61,6 @@ import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
-import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
 import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
@@ -92,6 +91,7 @@ import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
+import {IVirtualScrollMode} from './_list/interface/IVirtualScroll';
 
 import {Paging} from 'Controls/paging';
 
@@ -105,7 +105,6 @@ export {
     Mover,
     Remover,
     Paging,
-    VirtualScroll,
     DataContainer,
     _forTemplate,
     _swipeActionTemplate,
@@ -134,5 +133,6 @@ export {
     ItemsView,
     ItemsViewModel,
     HotKeysContainer,
-    InertialScrolling
+    InertialScrolling,
+    IVirtualScrollMode
 };
