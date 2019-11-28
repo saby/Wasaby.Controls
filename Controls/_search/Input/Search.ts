@@ -9,13 +9,9 @@ import {constants} from 'Env/Env';
 const SEARCH_BY_CLICK_THROTTLE = 300;
 
 /**
- * Контрол, позволяющий пользователю вводить однострочный текст.
- * Функционал идентичен полю ввода, но контрол имеет другое оформление.
- *
- * О том, как настроить поиск в списке, ипользуя контрол "input:Search", можно прочитать <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
- *
- * <a href="/materials/demo-ws4-search-container">Демо с контролами search:Input и List</a>.
- * <a href="/materials/demo-ws4-filter-search-new">Демо с контролами filter:Selector, search:Input и List</a>.
+ * Контрол "Строка поиска". Является однострочным полем ввода. 
+ * Контрол используют в реестрах для ввода поискового запроса. 
+ * Функционал контрола идентичен полям ввода из библиотеки {@link Controls/input}, однока в отличие от них имеет собственное визуальное оформление.
  *
  * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base
