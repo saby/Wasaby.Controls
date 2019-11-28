@@ -76,18 +76,33 @@ define(['Controls/grid'], function(gridMod) {
             'Incorrect result "prepareGridTemplateColumns without checkbox".');
       });
       it('Footer', function() {
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default',
-            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', itemPadding: { left: 'S' } }, theme),
-            'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: onhover, itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default',
-            gridMod.GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'visible', itemPadding: { left: 'S' } }, theme),
-            'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: visible, itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_s_theme-default',
-            gridMod.GridView._private.calcFooterPaddingClass({ itemPadding: { left: 'S' } }, theme),
-            'Incorrect result "calcFooterPaddingClass({itemPadding: left: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_default_theme-default',
-            gridMod.GridView._private.calcFooterPaddingClass({ }, theme),
-            'Incorrect result "calcFooterPaddingClass({ })".');
+         var
+             cfg = {
+                columns: [
+                   { displayProperty: 'field1', template: 'column1' },
+                   { displayProperty: 'field2', template: 'column2' }
+                ],
+                multiSelectVisibility: 'onhover',
+                itemPadding: {
+                   left: 'S'
+                },
+                theme
+             },
+             gridView = new gridMod.GridView(cfg);
+
+         gridView.saveOptions(cfg);
+
+
+         assert.equal(gridView._calcFooterPaddingClass(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
+
+         gridView._options.multiSelectVisibility = 'visible';
+         assert.equal(gridView._calcFooterPaddingClass(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
+
+         gridView._options.multiSelectVisibility = 'hidden';
+         assert.equal(gridView._calcFooterPaddingClass(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_s_theme-default');
+
+         gridView._options.itemPadding = undefined;
+         assert.equal(gridView._calcFooterPaddingClass(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_default_theme-default');
       });
       it('beforeMount', function() {
          var
@@ -181,30 +196,6 @@ define(['Controls/grid'], function(gridMod) {
          gridView._beforeUpdate({resultsPosition: 'bottom'});
          assert.isTrue(setResultPosinionCalled, 'setPesultPosinion');
       });
-      it('fill itemsContainer from separated columns', function () {
-
-         let
-             realItemsContainer = {},
-             refOnRealItemsContainer = realItemsContainer,
-             partialGridView = {
-                _options: {
-                   multiSelectVisibility: 'hidden'
-                },
-                _listModel: {
-                   getColumns: () => [{}, {}]
-                },
-                _itemsContainerForPartialSupport: refOnRealItemsContainer,
-                _container: {
-                   getElementsByClassName: () => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-                }
-             };
-
-         gridMod.GridView._private.fillItemsContainerForPartialSupport(partialGridView);
-
-         assert.equal(refOnRealItemsContainer, realItemsContainer);
-         assert.deepEqual([1,3,5,7,9], realItemsContainer.children);
-
-      });
 
       it('getGridTemplateColumns', function () {
          var
@@ -216,184 +207,6 @@ define(['Controls/grid'], function(gridMod) {
 
          assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, true), 'grid-template-columns: max-content 1fr auto 1fr;');
          assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, false), 'grid-template-columns: 1fr auto 1fr;');
-      });
-
-      it('getColumnsWidthForEditingRow', function () {
-
-         let
-             gridView = new gridMod.GridView({}),
-             testFallback = false;
-
-         gridView = {
-            _options: {
-               multiSelectVisibility: 'hidden',
-               columns: [
-                  {displayProperty: 'field1', width: '1fr'},
-                  {displayProperty: 'field2', width: 'auto'},
-                  {displayProperty: 'field3'},
-               ]
-            },
-            _listModel: {
-               getHeader: () => [],
-               getCount: () => 1,
-               isDrawHeaderWithEmptyList: () => true
-            },
-            _container: {
-               getElementsByClassName: function (className) {
-                  if (className === 'controls-Grid__header-cell') {
-                     return [
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 10}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 11}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 12}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 13}
-                           }
-                        },
-                     ]
-                  } else if (className === 'controls-Grid__row-cell') {
-                     return [
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 20}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 21}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 22}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 23}
-                           }
-                        },
-                     ]
-                  }
-               },
-               querySelectorAll: function(selector) {
-                  if (testFallback) {
-                     return [];
-                  }
-                  if (selector === '.controls-Grid__row-cell[data-r="0"]') {
-                     return [
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 20}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 21}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 22}
-                           }
-                        },
-                        {
-                           getBoundingClientRect: () => {
-                              return {width: 23}
-                           }
-                        },
-                     ];
-                  }
-               }
-            }
-         };
-
-
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['10px', '11px', '12px']);
-
-         gridView._options.multiSelectVisibility = 'visible';
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '13px']);
-
-         gridView._listModel.getCount = () => 0;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '13px']);
-
-         gridView._listModel.getCount = () => 1;
-         gridView._listModel.getHeader = () => null;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '23px']);
-
-         testFallback = true;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '23px']);
-
-         gridView._listModel.getCount = () => 0;
-         gridView._listModel.getHeader = () => null;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['1fr', 'auto', '1fr']);
-      });
-
-      it('getNoColspanRowCells', () => {
-         const
-            row1 = [{}],
-            row2 = [{}, {}],
-            row3 = [{}, {}, {}],
-            container = {
-               querySelectorAll: (selector) => {
-                  if (selector.indexOf('data-r="0"') >= 0) {
-                     return row1;
-                  } else if (selector.indexOf('data-r="1"') >= 0) {
-                     return row2;
-                  } else if (selector.indexOf('data-r="2"') >= 0) {
-                     return row3;
-                  }
-                  return [];
-               }
-            };
-
-         assert.strictEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}], false),
-            row1,
-            'failed scenario: 1 column, no multiselect'
-         );
-
-         assert.strictEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}], true),
-            row2,
-            'failed scenario: 1 column, multiselect'
-         );
-
-         assert.strictEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}], false),
-            row2,
-            'failed scenario: 2 columns, no multiselect'
-         );
-
-         assert.strictEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}], false),
-            row3,
-            'failed scenario: 3 columns, no multiselect'
-         );
-
-         assert.deepEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}], true),
-            [],
-            'failed scenario: 3 column, multiselect (more columns than exist in the grid)'
-         );
-
-         assert.deepEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}, {}], false),
-            [],
-            'failed scenario: 4 columns, no multiselect (more columns than exist in the grid)'
-         );
       });
 
       it('getUpperCells', function () {

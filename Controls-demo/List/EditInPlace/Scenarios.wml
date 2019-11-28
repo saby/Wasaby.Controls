@@ -9,12 +9,11 @@
       on:afterBeginEdit="_toggleAddButton(false)"
       on:afterEndEdit="_toggleAddButton(true)"
       columns="{{ _gridColumns }}"
-      leftPadding="S"
-      rightPadding="S"
       itemActionsPosition="outside"
       itemActions="{{_itemActions}}"
       dataLoadCallback="{{_dataLoadCallback}}"
       keyProperty="id">
+      <ws:itemPadding right="S" left="S"/>
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}" autoAdd="{{true}}"/>
       </ws:editingConfig>

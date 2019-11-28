@@ -320,33 +320,6 @@ define(['Controls/treeGrid',
 
       });
 
-      it('prepareGroupGridStyles', function () {
-         var
-             initialColumns = [{
-                width: '1fr',
-                displayProperty: 'title'
-             }],
-             model = new treeGrid.ViewModel({
-                items: new collection.RecordSet({
-                   keyProperty: 'id',
-                   rawData: [
-                      {id: 0, title: 'i0', parent: null, type: true},
-                      {id: 1, title: 'i1', parent: null, type: false},
-                      {id: 2, title: 'i2', parent: null, type: null}
-                   ]
-                }),
-                keyProperty: 'id',
-                nodeProperty: 'type',
-                parentProperty: 'parent',
-                columns: initialColumns
-             }),
-             current = model.getCurrent();
-
-         treeGrid.ViewModel._private.prepareGroupGridStyles(model, current);
-
-         assert.equal(current.gridGroupStyles, 'grid-row: 1; -ms-grid-row: 1;');
-      });
-
       it('setExpandedItems', function() {
 
          treeGridViewModel._model._expandedItems = null;
