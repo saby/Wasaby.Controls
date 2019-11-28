@@ -118,16 +118,6 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
                }
             });
          });
-         it('current.rowIndex', function() {
-            let current = searchModel.getCurrent();
-            assert.equal(current.rowIndex, 1);
-            searchModel.goToNext();
-            current = searchModel.getCurrent();
-            assert.equal(current.rowIndex, 2);
-            searchModel.goToNext();
-            current = searchModel.getCurrent();
-            assert.equal(searchModel.getCurrent().rowIndex, 3);
-         });
          it('current.breadCrumbs', function() {
             assert.isFalse(searchModel.getCurrent().breadCrumbs);
             searchModel.goToNext();

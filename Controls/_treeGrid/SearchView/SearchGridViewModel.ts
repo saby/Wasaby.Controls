@@ -6,12 +6,6 @@ var SearchGridViewModel = TreeGridViewModel.extend({
     _createModel: function(cfg) {
         return new SearchViewModel(cfg);
     },
-    _calcRowIndex(current) {
-        if (current.breadCrumbs && current.index !== -1) {
-            return this._getRowIndexHelper().getIndexByDisplayIndex(current.index);
-        }
-        return SearchGridViewModel.superclass._calcRowIndex.apply(this, arguments);
-    },
     getActionsItem(item) {
         if (!!item.forEach) {
             return item[item.length - 1];

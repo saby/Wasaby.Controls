@@ -6,16 +6,8 @@ import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
 import {detection} from 'Env/Env';
 import {isEqual} from 'Types/object';
 import {
-    getBottomPaddingRowIndex,
-    getFooterIndex,
-    getIndexByDisplayIndex,
-    getIndexById,
-    getIndexByItem,
     getMaxEndRow,
-    getResultsIndex,
-    getRowsArray,
-    getTopOffset,
-    IBaseGridRowIndexOptions
+    getRowsArray
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 import cClone = require('Core/core-clone');
 import ControlsConstants = require('Controls/Constants');
@@ -1110,41 +1102,6 @@ var
             this._model.goToNext();
         },
 
-        _calcRowIndex: function(current) {
-            if (current.isGroup) {
-                return this._getRowIndexHelper().getIndexByDisplayIndex(current.index);
-            } else if (current.index !== -1) {
-                return this._getRowIndexHelper().getIndexById(current.key);
-            }
-        },
-
-        _getRowIndexHelper() {
-            let
-                cfg: IBaseGridRowIndexOptions = {
-                    display: this.getDisplay(),
-                    hasHeader: !!this.getHeader(),
-                    resultsPosition: this.getResultsPosition(),
-                    multiHeaderOffset: this.getMultiHeaderOffset(),
-                    hasBottomPadding: this._options._needBottomPadding,
-                    hasColumnScroll: this._options.columnScroll
-                },
-                hasEmptyTemplate = !!this._options.emptyTemplate;
-
-            if (this.getEditingItemData()) {
-                cfg.editingRowIndex = this.getEditingItemData().index;
-            }
-
-            return {
-                getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
-                getIndexById: (id) => getIndexById({id, ...cfg}),
-                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
-                getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
-                getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
-                getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
-                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multiHeaderOffset,  cfg.hasColumnScroll)
-            };
-        },
-
         setMenuState(state: string): void {
             this._model.setMenuState(state);
         },
@@ -1219,14 +1176,6 @@ var
             if (stickyColumn && !detection.isNotFullGridSupport) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
                 current.stickyColumnIndex = stickyColumn.index;
-            }
-
-            // TODO: Разобраться, зачем это. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-            if (current.columnScroll) {
-                current.rowIndex = this._calcRowIndex(current);
-                if (this.getEditingItemData() && (current.rowIndex >= this.getEditingItemData().rowIndex)) {
-                    current.rowIndex++;
-                }
             }
 
             if (current.isGroup) {
@@ -1326,10 +1275,8 @@ var
                     }
                 }
 
-                // TODO: Проверить. https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
                 if (current.columnScroll) {
-                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles({
-                        rowStart: current.rowIndex,
+                    currentColumn.gridCellStyles = GridLayoutUtil.getColumnStyles({
                         columnStart: currentColumn.columnIndex
                     });
                 } else {
@@ -1418,17 +1365,6 @@ var
 
         _setEditingItemData: function (itemData) {
             this._model._setEditingItemData(itemData);
-
-            /*
-            * https://online.sbis.ru/opendoc.html?guid=8a8dcd32-104c-4564-8748-2748af03b4f1
-            * Нужно пересчитать и перерисовать записи после начала и завершения редактирования.
-            * При старте редактирования индексы пересчитываются, и, в случе если началось добавление, индексы записей после добавляемой увеличиваются на 1.
-            * При отмене добавления индексы нужно вернуть в изначальное состояние.
-            * */
-            // TODO: Разобраться, нужно ли. https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-            if (this._options.columnScroll) {
-                this._nextModelVersion();
-            }
         },
 
         getEditingItemData(): object | null {

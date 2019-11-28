@@ -1,11 +1,5 @@
 import {GridViewModel} from 'Controls/grid';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
-import {
-    getBottomPaddingRowIndex,
-    getFooterIndex,
-    getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset, IBaseTreeGridRowIndexOptions
-} from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil';
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
 
 function isLastColumn(
@@ -170,18 +164,12 @@ var
                 footer.isFullGridSupport = GridLayoutUtil.isFullGridSupport();
                 footer.colspan = self.getColspanFor('nodeFooter');
                 footer.getLevelIndentClasses = current.getLevelIndentClasses;
-                const colspanCfg = {
-                    columnStart: self._options.multiSelectVisibility !== 'hidden' ? 1 : 0,
-                    columnSpan: self._columns.length,
-                };
-                if (current.columnScroll) {
-                    footer.rowIndex = current.rowIndex + index + 1;
 
-                    // TODO: Разобраться, зачем это нужно для columnScroll.
-                    // По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-                    footer.colspanStyles = GridLayoutUtil.getCellStyles({...colspanCfg, rowStart: footer.rowIndex});
-                } else if (footer.isFullGridSupport) {
-                    footer.colspanStyles = GridLayoutUtil.getColumnStyles(colspanCfg);
+                if (current.columnScroll && footer.isFullGridSupport) {
+                    footer.colspanStyles = GridLayoutUtil.getColumnStyles({
+                        columnStart: self._options.multiSelectVisibility !== 'hidden' ? 1 : 0,
+                        columnSpan: self._columns.length
+                    });
                 }
             };
             if (current.nodeFooters) {
@@ -207,39 +195,6 @@ var
             } else {
                 return TreeGridViewModel.superclass.getColspanFor.apply(this, arguments);
             }
-        },
-
-        _getRowIndexHelper() {
-
-            let
-                self = this,
-                cfg: IBaseTreeGridRowIndexOptions = {
-                    display: this.getDisplay(),
-                    hasHeader: !!this.getHeader(),
-                    hasBottomPadding: this._options._needBottomPadding,
-                    resultsPosition: this.getResultsPosition(),
-                    multiHeaderOffset: this.getMultiHeaderOffset(),
-                    hierarchyRelation: self._model.getHierarchyRelation(),
-                    hasMoreStorage: self._model.getHasMoreStorage() || {},
-                    expandedItems: _private.getExpandedItems(self.getDisplay(), self._model.getExpandedItems() || [], self._options.nodeProperty),
-                    hasNodeFooterTemplate: !!self._model.getNodeFooterTemplate(),
-                    hasColumnScroll: this._options.columnScroll,
-                },
-                hasEmptyTemplate = !!this._options.emptyTemplate;
-
-            if (this.getEditingItemData()) {
-                cfg.editingRowIndex = this.getEditingItemData().index;
-            }
-
-            return {
-                getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
-                getIndexById: (id) => getIndexById({id, ...cfg}),
-                getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
-                getResultsIndex: () => getResultsIndex({hasEmptyTemplate, ...cfg}),
-                getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
-                getFooterIndex: () => getFooterIndex({hasEmptyTemplate, ...cfg}),
-                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multiHeaderOffset, cfg.hasColumnScroll),
-            };
         }
     });
 
