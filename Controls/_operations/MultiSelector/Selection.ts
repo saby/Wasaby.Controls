@@ -83,7 +83,7 @@ export default class Selection {
          this._increaseLimit(keys.slice());
       }
 
-      let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys, this._listModel);
+      let selection: ISelection = this._selectionStrategy.select(this.getSelection(), keys, this._listModel);
 
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
@@ -94,7 +94,7 @@ export default class Selection {
     * @param {Array} keys Keys to remove from selection.
     */
    unselect(keys: TKeys): void {
-      let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys, this._listModel);
+      let selection: ISelection = this._selectionStrategy.unSelect(this.getSelection(), keys, this._listModel);
 
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
@@ -135,7 +135,7 @@ export default class Selection {
     * Invert selection.
     */
    toggleAll(): void {
-      if (this._selectionStrategy.isAllSelected(ALL_SELECTION_VALUE, this._selectedKeys, this._excludedKeys)) {
+      if (this._selectionStrategy.isAllSelected(this.getSelection(), ALL_SELECTION_VALUE)) {
          let excludedKeys: TKeys = this._excludedKeys.slice();
          this.unselectAll();
          this.select(excludedKeys);
@@ -159,10 +159,7 @@ export default class Selection {
     * @returns {number}
     */
    getCount(source: Rpc|PrefetchProxy, filter: Object): Promise<number|null> {
-      return this._selectionStrategy.getCount({
-         selectedKeys: this._selectedKeys,
-         excludedKeys: this._excludedKeys,
-         model: this._listModel,
+      return this._selectionStrategy.getCount(this.getSelection(), this._listModel, {
          limit: this._limit,
          filter: filter,
          source: source
@@ -191,9 +188,15 @@ export default class Selection {
       this._listModel = listModel;
    }
 
+   getSelection(): ISelection {
+      return {
+         selected: this._selectedKeys,
+         excluded: this._excludedKeys
+      }
+   }
+
    protected _getSelectionForModel(): Map<TKey, boolean> {
-      return this._selectionStrategy.getSelectionForModel(
-         this._selectedKeys, this._excludedKeys, this._listModel, this._limit, this._keyProperty);
+      return this._selectionStrategy.getSelectionForModel(this.getSelection(), this._listModel, this._limit, this._keyProperty);
    }
 
    /**
@@ -207,7 +210,7 @@ export default class Selection {
          selectedItemsCount: number = 0,
          limit: number = this._limit ? this._limit - this._excludedKeys.length : 0,
          selectionForModel: Map<TKey, boolean> = this._selectionStrategy.getSelectionForModel(
-            this._selectedKeys, this._excludedKeys, this._listModel, this._limit, this._keyProperty);
+            this.getSelection(), this._listModel, this._limit, this._keyProperty);
 
       this._getItems().forEach((item) => {
          let key: TKey = item.get(this._keyProperty);

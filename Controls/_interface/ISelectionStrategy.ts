@@ -4,14 +4,10 @@ import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/_interface/ISelectionType';
 
-export interface ISelectionConfig {
-   selectedKeys: TKeys,
-   excludedKeys: TKeys,
-   model: Collection|ListViewModel,
+export interface IQueryParams {
    limit?: number,
    filter?: Object,
    source?: SbisService|PrefetchProxy
-   hierarchyRelation?: relation.Hierarchy
 }
 
 export interface ISelectionStrategyOptions {
@@ -27,11 +23,11 @@ export interface ISelectionStrategyOptions {
  */
 // параметры hierarchyRelation и keyProperty нужен для поддержки старой модели, с полным переходом на новую они уйдут
 export default interface ISelectionStrategy {
-   select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
-   unSelect(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
-   getCount(config: ISelectionConfig): Promise<number|null>;
-   getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit?: number, keyProperty?: string, hierarchyRelation?: relation.Hierarchy): Map<TKey, boolean|null>;
-   isAllSelected(folderId: Tkey, selectedKeys: TKeys, excludedKeys?: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): boolean;
+   select(selection: ISelection, keys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
+   unSelect(selection: ISelection, keys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
+   getCount(selection: ISelection, model: Collection|ListViewModel, queryParams: IQueryParams): Promise<number|null>;
+   getSelectionForModel(selection: ISelection, model: Collection|ListViewModel, limit?: number, keyProperty?: string, hierarchyRelation?: relation.Hierarchy): Map<TKey, boolean|null>;
+   isAllSelected(selection: ISelection, folderId: Tkey, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): boolean;
 }
 
 /**
