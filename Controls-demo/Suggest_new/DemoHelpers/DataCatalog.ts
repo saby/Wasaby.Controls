@@ -42,6 +42,21 @@ function getDefaultNavigation() {
    };
 }
 
+function getMaxCountNavigation() {
+   return {
+      source: 'page',
+      view: 'maxCount',
+      sourceConfig: {
+         pageSize: 2,
+         page: 0,
+         hasMore: false
+      },
+      viewConfig: {
+         maxCountValue: 4
+      }
+   };
+}
+
 function getSuggestTabSource() {
    return new SearchMemory({
       keyProperty: 'id',
@@ -86,6 +101,7 @@ function getSuggestSourceWithImages() {
 
 export {
    getDefaultNavigation,
+   getMaxCountNavigation,
    getSuggestSource,
    getSuggestTabSource,
    getSuggestSourceLong,

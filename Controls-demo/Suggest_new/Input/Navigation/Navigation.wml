@@ -26,4 +26,18 @@
           </ws:suggestTemplate>
       </Controls.suggest:Input>
    </div>
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h4>Подгружать данные, пока не будет достигут порог</h4>
+      <Controls.suggest:Input
+              attr:class="controlsDemo__input"
+              bind:value="_maxCountValue"
+              displayProperty="title"
+              searchParam="title"
+              navigation="{{_maxCountNavigation}}"
+              source="{{_source}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestInputList"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:Input>
+   </div>
 </div>

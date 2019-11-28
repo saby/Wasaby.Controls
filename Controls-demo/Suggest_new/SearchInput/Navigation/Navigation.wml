@@ -12,12 +12,25 @@
           </ws:suggestTemplate>
       </Controls.suggest:SearchInput>
   </div>
-   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth300">
       <h4>Без указания настроек навигации</h4>
       <Controls.suggest:SearchInput
               bind:value="_suggestDefaultValue"
               displayProperty="title"
               searchParam="title"
+              source="{{_source}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:SearchInput>
+   </div>
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <h4>Подгружать данные, пока не будет достигут порог</h4>
+      <Controls.suggest:SearchInput
+              bind:value="_maxCountValue"
+              displayProperty="title"
+              searchParam="title"
+              navigation="{{_maxCountNavigation}}"
               source="{{_source}}">
           <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTemplate">
               <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
