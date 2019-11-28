@@ -682,9 +682,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
         }
 
+        if (options.itemPadding) {
+            this.setItemsSpacings(options.itemPadding);
+        }
+
         this._stopIndex = this.getCount();
 
-        this._$virtualScrollMode = options.virtualScrollMode;
+        this._$virtualScrollMode = options.virtualScrollMode || options.virtualScrollConfig.mode;
 
         this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);
@@ -2023,6 +2027,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
+    setItemsSpacings(itemPadding: {top: string, left: string, right: string}): void {
+        this._$rowSpacing = itemPadding.top;
+        this._$leftSpacing = itemPadding.left;
+        this._$rightSpacing = itemPadding.right;
+    }
+
     getRowSpacing(): string {
         return this._$rowSpacing;
     }
@@ -2154,7 +2164,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     isItemVisible = (index: number) => true;
 
     isItemHidden(index: number): boolean {
-        return !this.getViewIterator().isItemVisible();
+        return !this.getViewIterator().isItemVisible(index);
     }
 
     // region SerializableMixin

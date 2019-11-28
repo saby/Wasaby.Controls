@@ -297,7 +297,7 @@ var _private = {
     },
 
     scrollToItem: function(self, key) {
-        self._children.scrollController.scrollToItem(key);
+        return self._children.scrollController.scrollToItem(key);
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
@@ -1632,6 +1632,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._loadOffsetBottom = bottom;
     },
 
+    changeIndicatorStateHandler(_: SyntheticEvent<Event>, state: boolean, indicatorName: 'top' | 'bottom'): void {
+          if (state) {
+              this._children[`${indicatorName}LoadingIndicator`].style.display = '';
+          } else {
+              this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
+          }
+    },
+
     _viewResize(): void {
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
@@ -1827,7 +1835,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     scrollToItem(key: string|number): void {
-        _private.scrollToItem(this, key);
+        return _private.scrollToItem(this, key);
     },
 
     _beforeUnmount: function() {
@@ -2317,19 +2325,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     },
 
-    _getLoadingIndicatorClasses(): string {
+    _getLoadingIndicatorClasses(state?: string): string {
         const hasItems = !!this._items && !!this._items.getCount();
         return _private.getLoadingIndicatorClasses({
             hasItems,
             hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: this._loadingIndicatorState
+            loadingIndicatorState: state || this._loadingIndicatorState
         });
     },
 
-    _getLoadingIndicatorStyles(): string {
+    _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
+        const indicatorState = state || this._loadingIndicatorState;
 
-        if (this._loadingIndicatorState === 'all') {
+        if (indicatorState === 'all') {
             if (this._loadingIndicatorContainerHeight) {
                 styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
             }
