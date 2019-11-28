@@ -4,7 +4,7 @@ import {constants} from 'Env/Env';
 
 /**
  * Контрол используют в качестве контейнера для {@link Controls/search:Input}. 
- * Он обеспечивает передачу текстового значения, введённого в Controls/search:Input.
+ * Он обеспечивает передачу текстового значения, введённого в Controls/search:Input, в {@link Controls/search:Controller}
  *
  * @class Controls/_search/Input/Container
  * @extends Core/Control
