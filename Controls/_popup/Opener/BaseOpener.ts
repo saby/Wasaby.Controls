@@ -179,6 +179,8 @@ class BaseOpener extends Control<IControlOptions> {
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
 
+        this._vdomOnOldPage = baseConfig._vdomOnOldPage;
+
         if (this._isPopupDestroyed()) {
             this._popupId = null;
         }
@@ -258,7 +260,7 @@ class BaseOpener extends Control<IControlOptions> {
     }
 
     private _useVDOM(): boolean {
-        return BaseOpener.isNewEnvironment() || this._options._vdomOnOldPage;
+        return BaseOpener.isNewEnvironment() || this._vdomOnOldPage;
     }
     private _isPopupDestroyed(): boolean {
         const popupItem = ManagerController.find(this._getCurrentPopupId());
