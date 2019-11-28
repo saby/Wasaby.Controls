@@ -1,9 +1,9 @@
 define([
    'Controls/Container/Async/ModuleLoader',
-   'Core/IoC'
+   'Env/Env'
 ], function(
    ModuleLoader,
-   IoC
+   envLib
 ) {
 
    function checkError(logErrors, errorMessage, message, originErrorMessage) {
@@ -20,10 +20,10 @@ define([
    describe('Dynamic loading Controls/Container/Async/ModuleLoader', function() {
       var ml;
       var logErrors = [];
-      var originalLogger = IoC.resolve('ILogger');
+      var originalLogger = envLib.IoC.resolve('ILogger');
       beforeEach(function() {
          logErrors = [];
-         IoC.bind('ILogger', {
+         envLib.IoC.bind('ILogger', {
             warn: originalLogger.warn,
             error: function(error, message, originError) {
                logErrors.push({
@@ -54,7 +54,7 @@ define([
          };
       });
       afterEach(function() {
-         IoC.bind('ILogger', originalLogger);
+         envLib.IoC.bind('ILogger', originalLogger);
          ml.clearCache();
       });
       it('Load sync no cache', function() {
