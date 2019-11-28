@@ -93,7 +93,8 @@ var View = Control.extend({
         });
 
         if (selectedKey === undefined) {
-            IoC.resolve('ILogger').error(this._moduleName, 'Incorrect selectedKey');
+            //TODO: только в 722
+            IoC.resolve('ILogger').warn(this._moduleName, 'Incorrect selectedKey');
             if (options.items instanceof Array) {
                 selectedKey = options.items[0].id || options.items[0].key;
             } else {
