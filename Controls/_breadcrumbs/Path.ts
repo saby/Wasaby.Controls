@@ -44,7 +44,9 @@ var BreadCrumbs = Control.extend({
             }.bind(this));
         }
     },
+
   _notifyHandler: tmplNotify
+
 });
 
 BreadCrumbs.getDefaultOptions = function () {

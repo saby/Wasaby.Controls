@@ -527,7 +527,8 @@ var
         },
         setTheme(theme: string): void {
             this._options.theme = theme;
-        }
+        },
+
         _updateLastItemKey(): void {
             if (this.getItems()) {
                 this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
@@ -1062,7 +1063,7 @@ var
         },
         setMarkerOnValidItem: function(index) {
             this._model.setMarkerOnValidItem(index);
-        }
+        },
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);
         },
