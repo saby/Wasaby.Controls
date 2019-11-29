@@ -29,6 +29,7 @@ import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import { Logger } from 'UI/Utils';
 import {create as diCreate} from 'Types/di';
+import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1362,6 +1363,27 @@ var _private = {
         if (model) {
             model.setHasMoreData(hasMoreData);
         }
+    },
+    loadSavedSorting(self, cfg): Deffered {
+        var defResult =  new Deferred();
+        const propStorageId = cfg.propStorageId;
+            if (propStorageId) {
+                getSettings([propStorageId]).then((storage) => {
+                    if (storage && storage[propStorageId]) {
+                        self._loadedSorting = storage[propStorageId];
+                    }
+                    defResult.callback();
+                });
+            } else {
+                defResult.callback();
+            }
+        return defResult;
+    },
+    saveSorting(cfg): void {
+        const propStorageId = cfg.propStorageId;
+        if (propStorageId && cfg.sorting) {
+            setSettings({[propStorageId]: cfg.sorting});
+        }
     }
 };
 
@@ -1449,6 +1471,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemReloaded: false,
     _itemActionsInitialized: false,
+    _loadedSorting: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1463,8 +1486,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @return {Promise}
      * @protected
      */
-    _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
+    _beforeMount: function(cfg, context, receivedState: ReceivedState = {}) {
         var self = this;
+        let newOptions = {...cfg};
 
         // todo Костыль, т.к. построение ListView зависит от SelectionController.
         // Будет удалено при выполнении одного из пунктов:
@@ -1489,91 +1513,97 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
-            let viewModelConfig = cClone(newOptions);
-            if (collapsedGroups) {
-                viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
-            }
 
-            if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
-                self._viewModelConstructor = newOptions.viewModelConstructor;
-                if (receivedData) {
-                    viewModelConfig.items = receivedData;
-                } else {
-                    delete viewModelConfig.items;
+            return _private.loadSavedSorting(self, newOptions).addCallback(() => {
+                if (self._loadedSorting) {
+                    newOptions.sorting = self._loadedSorting;
                 }
-                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
-            } else if (newOptions.useNewModel && receivedData) {
-                self._listViewModel = self._createNewModel(
-                    receivedData,
-                    viewModelConfig,
-                    newOptions.viewModelConstructor
-                );
-                if (newOptions.itemsReadyCallback) {
-                    newOptions.itemsReadyCallback(self._listViewModel.getCollection());
+
+                let viewModelConfig = cClone(newOptions);
+                if (collapsedGroups) {
+                    viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
                 }
-            }
-            if (self._listViewModel) {
-                _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
-            }
 
-            if (newOptions.source) {
-                self._sourceController = _private.getSourceController(newOptions);
-
-
-                if (receivedData) {
-                    self._sourceController.calculateState(receivedData);
-                    if (newOptions.useNewModel) {
-                        self._items = self._listViewModel.getCollection();
+                if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
+                    self._viewModelConstructor = newOptions.viewModelConstructor;
+                    if (receivedData) {
+                        viewModelConfig.items = receivedData;
                     } else {
-                        self._items = self._listViewModel.getItems();
+                        delete viewModelConfig.items;
                     }
-                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
-                    if (self._pagingNavigation) {
-                        var hasMoreData = self._items.getMetaData().more;
-                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
+                    self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
+                } else if (newOptions.useNewModel && receivedData) {
+                    self._listViewModel = self._createNewModel(
+                        receivedData,
+                        viewModelConfig,
+                        newOptions.viewModelConstructor
+                    );
+                    if (newOptions.itemsReadyCallback) {
+                        newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                     }
+                }
+                if (self._listViewModel) {
+                    _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                }
 
-                    if (newOptions.serviceDataLoadCallback instanceof Function) {
-                        newOptions.serviceDataLoadCallback(self._items);
-                    }
-                    if (newOptions.dataLoadCallback instanceof Function) {
-                        newOptions.dataLoadCallback(self._items);
-                    }
-                    _private.prepareFooter(self, newOptions.navigation, self._sourceController);
-                    return;
-                }
-                if (receivedError) {
-                    return _private.showError(self, receivedError);
-                }
-                return _private.reload(self, newOptions).addCallback((result) => {
-                    if (newOptions.useNewModel && !self._listViewModel && result.data) {
-                        self._listViewModel = self._createNewModel(
-                            result.data,
-                            viewModelConfig,
-                            newOptions.viewModelConstructor
-                        );
-                        if (newOptions.itemsReadyCallback) {
-                            newOptions.itemsReadyCallback(self._listViewModel.getCollection());
+                if (newOptions.source) {
+                    self._sourceController = _private.getSourceController(newOptions);
+
+                    if (receivedData) {
+                        self._sourceController.calculateState(receivedData);
+                        if (newOptions.useNewModel) {
+                            self._items = self._listViewModel.getCollection();
+                        } else {
+                            self._items = self._listViewModel.getItems();
                         }
-                        if (self._listViewModel) {
-                            _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                        self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
+                        if (self._pagingNavigation) {
+                            var hasMoreData = self._items.getMetaData().more;
+                            self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
+                            self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
                         }
+
+                        if (newOptions.serviceDataLoadCallback instanceof Function) {
+                            newOptions.serviceDataLoadCallback(self._items);
+                        }
+                        if (newOptions.dataLoadCallback instanceof Function) {
+                            newOptions.dataLoadCallback(self._items);
+                        }
+                        _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+                        return;
                     }
-                    // TODO Kingo.
-                    // В случае, когда в опцию источника передают PrefetchProxy
-                    // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
-                    // когда список обёрнут в DataContainer.
-                    // Т.к. и список и DataContainer из _beforeMount возвращают рекордсет
-                    // то при построении на сервере и последующем оживлении на клиенте
-                    // при сериализации это будет два разных рекордсета.
-                    // Если при загрузке данных возникла ошибка, то ошибку надо вернуть, чтобы при оживлении на клиенте
-                    // не было перезапроса за данными.
-                    if (result.errorConfig || !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
-                        return getState(result);
+                    if (receivedError) {
+                        return _private.showError(self, receivedError);
                     }
-                });
-            }
+                    return _private.reload(self, newOptions).addCallback((result) => {
+                        if (newOptions.useNewModel && !self._listViewModel && result.data) {
+                            self._listViewModel = self._createNewModel(
+                                result.data,
+                                viewModelConfig,
+                                newOptions.viewModelConstructor
+                            );
+                            if (newOptions.itemsReadyCallback) {
+                                newOptions.itemsReadyCallback(self._listViewModel.getCollection());
+                            }
+                            if (self._listViewModel) {
+                                _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                            }
+                        }
+                        // TODO Kingo.
+                        // В случае, когда в опцию источника передают PrefetchProxy
+                        // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
+                        // когда список обёрнут в DataContainer.
+                        // Т.к. и список и DataContainer из _beforeMount возвращают рекордсет
+                        // то при построении на сервере и последующем оживлении на клиенте
+                        // при сериализации это будет два разных рекордсета.
+                        // Если при загрузке данных возникла ошибка, то ошибку надо вернуть, чтобы при оживлении на клиенте
+                        // не было перезапроса за данными.
+                        if (result.errorConfig || !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                            return getState(result);
+                        }
+                    });
+                }
+            });
         });
 
     },
@@ -1668,6 +1698,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _afterMount: function() {
         this._isMounted = true;
+        if (this._loadedSorting && !isEqual(this._loadedSorting, this._options.sorting)) {
+            this._notify('sortingChanged', [this._loadedSorting]);
+        }
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
@@ -1747,6 +1780,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (sortingChanged) {
+            _private.saveSorting(newOptions);
             this._listViewModel.setSorting(newOptions.sorting);
         }
 

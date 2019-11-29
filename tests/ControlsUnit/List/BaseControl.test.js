@@ -16,6 +16,15 @@ define([
    'Core/polyfill/PromiseAPIDeferred'
 ], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
+      var mockSaveSorting = function() {};
+      var mockLoadSavedSorting = function () {
+         return new Promise(function(resolve) {resolve();});
+      };
+      var originalSaveSorting = lists.BaseControl._private.saveSorting;
+      var originalLoadSavedSorting = lists.BaseControl._private.loadSavedSorting;
+
+      lists.BaseControl._private.saveSorting = mockSaveSorting;
+      lists.BaseControl._private.loadSavedSorting = mockLoadSavedSorting;
       var data, result, source, rs, sandbox;
       beforeEach(function() {
          data = [
@@ -112,74 +121,75 @@ define([
          ctrl.saveOptions(cfg);
          var mountResult = ctrl._beforeMount(cfg);
          assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
+         mountResult.addCallback(() => {
+            assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
+            assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
-         assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
-         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
+            // received state 3'rd argument
+            mountResult = ctrl._beforeMount(cfg, {}, rs);
+            assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
 
-         // received state 3'rd argument
-         mountResult = ctrl._beforeMount(cfg, {}, rs);
-         assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
+            assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
+            assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
-         assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
-         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
+            // создаем новый сорс
+            var oldSourceCtrl = ctrl._sourceController;
 
-         // создаем новый сорс
-         var oldSourceCtrl = ctrl._sourceController;
+            source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            });
 
-         source = new sourceLib.Memory({
-            keyProperty: 'id',
-            data: data
-         });
+            var filter2 = { 3: 3 };
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               dataLoadCallback: function() {
+                  dataLoadFired = true;
+               },
+               viewModelConstructor: treeGrid.TreeViewModel,
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               filter: filter2
+            };
 
-         var filter2 = { 3: 3 };
-         cfg = {
-            viewName: 'Controls/List/ListView',
-            source: source,
-            dataLoadCallback: function() {
-               dataLoadFired = true;
-            },
-            viewModelConstructor: treeGrid.TreeViewModel,
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            filter: filter2
-         };
-
-         // сорс грузит асинхронно
-         setTimeout(function() {
-            assert.equal(ctrl._items, ctrl.getViewModel().getItems());
-            const prevModel = ctrl._listViewModel;
-            ctrl._beforeUpdate(cfg);
-
-            // check saving loaded items after new viewModelConstructor
-            // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
-            assert.equal(ctrl._items, ctrl.getViewModel()
-               .getItems());
-            assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
-            assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
-            ctrl.saveOptions(cfg);
-            assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
-            assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
-            assert.equal(prevModel._display, null);
-            assert.isTrue(
-               cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
-               cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
-            );
+            // сорс грузит асинхронно
             setTimeout(function() {
-               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-               ctrl._children.listView = {
-                  getItemsContainer: function() {
-                     return {
-                        children: []
-                     };
-                  }
-               };
-               ctrl._afterUpdate({});
-               ctrl._beforeUnmount();
-               done();
-            }, 100);
-         }, 1);
+               assert.equal(ctrl._items, ctrl.getViewModel().getItems());
+               const prevModel = ctrl._listViewModel;
+               ctrl._beforeUpdate(cfg);
+
+               // check saving loaded items after new viewModelConstructor
+               // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
+               assert.equal(ctrl._items, ctrl.getViewModel()
+                  .getItems());
+               assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
+               assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
+               ctrl.saveOptions(cfg);
+               assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
+               assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
+               assert.equal(prevModel._display, null);
+               assert.isTrue(
+                  cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
+                  cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
+               );
+               setTimeout(function() {
+                  assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+                  ctrl._children.listView = {
+                     getItemsContainer: function() {
+                        return {
+                           children: []
+                        };
+                     }
+                  };
+                  ctrl._afterUpdate({});
+                  ctrl._beforeUnmount();
+                  done();
+               }, 100);
+            }, 5);
+         });
       });
 
       it('beforeMount: right indexes with virtual scroll and receivedState', function() {
@@ -1893,23 +1903,20 @@ define([
             lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
-         lnBaseControl._beforeMount(lnCfg);
-         assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
-
-         lnBaseControl._isScrollShown = true;
-         lnBaseControl.reload()
-            .addCallback(() => {
-               assert.equal(lnBaseControl._markedKeyForRestoredScroll, 3); // set to existing markedKey
-            })
-            .addCallback(() => {
-               let lnCfg2 = clone(lnCfg);
-               lnCfg2.source = lnSource2;
-               lnBaseControl._isScrollShown = true;
-               lnBaseControl._beforeUpdate(lnCfg2)
-                  .addCallback(() => {
-                     assert.equal(lnBaseControl._markedKeyForRestoredScroll, 4); // set to first item, because markedKey = 3, no longer exist
-                  });
-            });
+         lnBaseControl._beforeMount(lnCfg).addCallback(() => {
+            assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+            lnBaseControl._isScrollShown = true;
+            lnBaseControl.reload()
+               .addCallback(() => {
+                  let lnCfg2 = clone(lnCfg);
+                  lnCfg2.source = lnSource2;
+                  lnBaseControl._isScrollShown = true;
+                  lnBaseControl._beforeUpdate(lnCfg2)
+                     .addCallback(() => {
+                        assert.equal(lnBaseControl._markedKeyForRestoredScroll, 4); // set to first item, because markedKey = 3, no longer exist
+                     });
+               });
+         });
       });
       it('hasItemActions', function() {
          let itemAct = [1, 2, 3];
@@ -2100,7 +2107,7 @@ define([
       });
 
 
-      it('List navigation by keys and after reload', function(done) {
+      it('List navigation by keys and after reload', async function() {
          // mock function working with DOM
          lists.BaseControl._private.scrollToItem = function() {
          };
@@ -2154,7 +2161,7 @@ define([
             lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
-         lnBaseControl._beforeMount(lnCfg);
+         await lnBaseControl._beforeMount(lnCfg);
 
          setTimeout(function() {
             assert.equal(lnBaseControl.getViewModel()
@@ -2191,7 +2198,7 @@ define([
                setTimeout(function() {
                   assert.equal(lnBaseControl.getViewModel()
                      .getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');
-                  done();
+
                }, 1);
             }, 1);
          }, 1);
@@ -3199,11 +3206,12 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
-            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+            instance._beforeMount(cfg).addCallback(() => {
+               instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+            });
          });
 
-         it('_onItemContextMenu', function() {
+         it('_onItemContextMenu', function(done) {
             var callBackCount = 0;
             var cfg = {
                   items: new collection.RecordSet({
@@ -3255,16 +3263,20 @@ define([
                   }
                }
             };
-
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
-            assert.equal(instance.getViewModel()._markedKey, undefined);
-            instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(instance.getViewModel()._markedKey, 1);
-            assert.equal(callBackCount, 0);
+            setTimeout(() => {
+               instance._beforeMount(cfg);
+               setTimeout(() => {
+                  assert.equal(instance.getViewModel()._markedKey, undefined);
+                  instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
+                  assert.equal(instance.getViewModel()._markedKey, 1);
+                  assert.equal(callBackCount, 0);
+                  done();
+               }, 1);
+            }, 1);
          });
 
-         it('close context menu if its owner was removed', function() {
+         it('close context menu if its owner was removed', async function() {
             let
                swipeClosed = false,
                itemActionsOpenerClosed = false,
@@ -3309,7 +3321,7 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
+            await instance._beforeMount(cfg);
             instance._menuIsShown = true;
             instance._itemWithShownMenu = {
                getId: () => '123321'
@@ -3337,7 +3349,7 @@ define([
             assert.isTrue(swipeClosed);
          });
 
-         it('showActionsMenu context', function() {
+         it('showActionsMenu context', async function() {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -3375,12 +3387,12 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
+            await instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
             assert.equal(callBackCount, 0);
          });
 
-         it('no showActionsMenu context without actions', function() {
+         it('no showActionsMenu context without actions', async function() {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -3410,12 +3422,12 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
+            await instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData);
             assert.equal(callBackCount, 0); // проверяем что не открывали меню
          });
 
-         it('showActionsMenu no context', function() {
+         it('showActionsMenu no context', async function() {
             var callBackCount = 0;
             var
                cfg = {
@@ -3472,7 +3484,7 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
+            await instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
             setTimeout(function() {
                assert.equal(itemData, instance._listViewModel._activeItem);
@@ -3481,7 +3493,7 @@ define([
             }, 100);
          });
 
-         it('closeActionsMenu', function() {
+         it('closeActionsMenu', async function() {
             var callBackCount = 0;
             var
                cfg = {
@@ -3506,7 +3518,7 @@ define([
                   }
                };
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
+            await instance._beforeMount(cfg);
             instance._children = {
                itemActionsOpener: {
                   close: function() {
@@ -3555,7 +3567,7 @@ define([
             assert.isFalse(instance._menuIsShown);
          });
 
-         it('closeActionsMenu item with children', function() {
+         it('closeActionsMenu item with children', async function() {
             var cfg = {
                   viewName: 'Controls/List/ListView',
                   viewModelConstructor: lists.ListViewModel,
@@ -3563,7 +3575,7 @@ define([
                },
                instance = new lists.BaseControl(cfg);
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
+            await instance._beforeMount(cfg);
             instance._listViewModel._activeItem = {
                item: true
             };
@@ -3611,7 +3623,7 @@ define([
                },
                instance;
 
-            function initTest(multiSelectVisibility) {
+            async function initTest(multiSelectVisibility) {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -3635,23 +3647,23 @@ define([
                   }
                };
                instance.saveOptions(cfg);
-               instance._beforeMount(cfg);
+               await instance._beforeMount(cfg);
             }
 
-            it('multiSelectVisibility: visible, should start animation', function() {
-               initTest('visible');
+            it('multiSelectVisibility: visible, should start animation', async function() {
+               await initTest('visible');
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
             });
 
-            it('multiSelectVisibility: onhover, should start animation', function() {
-               initTest('onhover');
+            it('multiSelectVisibility: onhover, should start animation', async function() {
+               await initTest('onhover');
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
             });
 
-            it('multiSelectVisibility: hidden, should not start animation', function() {
-               initTest('hidden');
+            it('multiSelectVisibility: hidden, should not start animation', async function() {
+               await initTest('hidden');
                instance._listSwipe({}, itemData, childEvent);
                assert.isNotOk(instance.getViewModel()._rightSwipedItem);
             });
@@ -3668,7 +3680,7 @@ define([
                   multiSelectStatus: false,
                   item: {}
                };
-            it('list has item actions, event should not fire', function() {
+            it('list has item actions, event should not fire', async function() {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -3691,7 +3703,7 @@ define([
                   }
                };
                instance.saveOptions(cfg);
-               instance._beforeMount(cfg);
+               await instance._beforeMount(cfg);
                instance._notify = function(eventName) {
                   if (eventName === 'itemSwipe') {
                      throw new Error('itemSwipe event should not fire if the list has itemActions');
@@ -3700,7 +3712,7 @@ define([
                instance._listSwipe({}, itemData, childEvent);
             });
 
-            it('list has multiselection, event should not fire', function() {
+            it('list has multiselection, event should not fire', async function() {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -3723,7 +3735,7 @@ define([
                   }
                };
                instance.saveOptions(cfg);
-               instance._beforeMount(cfg);
+               await instance._beforeMount(cfg);
                instance._notify = function(eventName) {
                   if (eventName === 'itemSwipe') {
                      throw new Error('itemSwipe event should not fire if the list has multiselection');
@@ -3834,7 +3846,7 @@ define([
                return done;
             });
 
-            it('list doesn\'t handle swipe, event should fire', function() {
+            it('list doesn\'t handle swipe, event should fire', async function() {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -3857,7 +3869,7 @@ define([
                   }
                };
                instance.saveOptions(cfg);
-               instance._beforeMount(cfg);
+               await instance._beforeMount(cfg);
                instance._notify = function(eventName, eventArgs, eventOptions) {
                   assert.equal(eventName, 'itemSwipe');
                   assert.deepEqual(eventArgs, [itemData.actionsItem, childEvent]);
