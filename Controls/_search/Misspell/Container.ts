@@ -2,8 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Misspell/Container');
 
 /**
- * Контрол загружает и отображает {@link Controls/search:Misspell}.
- * При клике по подсказке контрол генерируется всплывающее событие, которое обрабатывает {@link Controls/search:Controller}.
+ * Контрол-контейнер для {@link Controls/list:Container}, который обеспечивает загрузку и отображение {@link Controls/search:Misspell}, если поиск был произведён в неправильной раскладке.
  * 
  * @class Controls/_search/Misspell/Container
  * @extends Core/Control
