@@ -1,560 +1,149 @@
-.controls-Button_viewMode-pushButton.theme_@{themeName}, .controls-Button_viewMode-pushButton_readOnly.theme_@{themeName} {
-   border-style: solid;
-   border-width: @thickness_ToggleButton-border_pushButton;
-   border-radius: @border-radius_ToggleButton_pushButton;
-}
-
-.controls-Button_viewMode-pushButton.theme_@{themeName} {
-   cursor: pointer;
-   text-shadow: @text-shadow_ToggleButton_pushButton;
-}
-
-.controls-Button_viewMode-pushButton_readOnly.theme_@{themeName} {
-   color: @color_ToggleButton_pushButton_readOnly;
-}
-
-.controls-Button_viewMode-pushButton_readOnly_style-common.theme_@{themeName} {
-   border-color: @border-color_ToggleButton_pushButton_readOnly;
-   background: @background_ToggleButton_pushButton_readOnly;
-}
-
-.controls-Button_viewMode-pushButton_toggle_on_readOnly_style-common.theme_@{themeName} {
-   border-color: @border-color_ToggleButton_pushButton_readOnly_toggled;
-   background: @background_ToggleButton_pushButton_readOnly_toggled;
-}
-
-.controls-Button_viewMode-toolButton_toggle_on.theme_@{themeName} {
-   box-shadow: none;
-}
-
-.controls-Button_viewMode-pushButton_style-common.theme_@{themeName} {
-   border-color: @border-color_ToggleButton_pushButton;
-   background: @background_ToggleButton_pushButton;
-}
-
-.controls-Button_viewMode-pushButton_toggle_on_style-common.theme_@{themeName} {
-   background: @background_ToggleButton_pushButton_toggled;
-}
-
-.controls-Button_style {
-   @variants: secondary, primary, info, danger, warning, success;
-   .for(@variants, { &-@{_item}_viewMode-pushButton_toggle_on.theme_@{themeName} {
-      border-color: ~"@{border-color_ToggleButton_toggle_on-@{_item}}";
-   }});
-}
-
-.controls-Button_style {
-   @variants: secondary, primary, info, danger, warning, success;
-   .for(@variants, { &-@{_item}_viewMode-toolButton_toggle_on.theme_@{themeName} {
-      border-color: ~"@{border-color_ToggleButton_toggle_on-@{_item}}";
-   }});
-}
-
-.controls-Button_viewMode-pushButton_size-s.theme_@{themeName} {
-   height: @height_ToggleButton-pushButton_s;
-   min-width: @min-width_ToggleButton-pushButton_s;
-   font-size: @font-size_ToggleButton-pushButton_l;
-}
-
-.controls-Button_viewMode-pushButton_size-m.theme_@{themeName} {
-   height: @height_ToggleButton-pushButton_m;
-   min-width: @min-width_ToggleButton-pushButton_m;
-   font-size: @font-size_ToggleButton-pushButton_l;
-}
-
-.controls-Button_viewMode-pushButton_size-l.theme_@{themeName} {
-   height: @height_ToggleButton-pushButton_l;
-   min-width: @min-width_ToggleButton-pushButton_l;
-   font-size: @font-size_ToggleButton-pushButton_l;
-}
-
-.controls-Button__wrapper_viewMode-pushButton_size-s.theme_@{themeName} {
-   padding: @padding_Button-wrapper-pushButton_size_s;
-   .justify-content(center);
-}
-
-.controls-Button__wrapper_viewMode-pushButton_size-m.theme_@{themeName} {
-   padding: @padding_Button-wrapper-pushButton_size_m;
-   .justify-content(center);
-}
-
-.controls-Button__wrapper_viewMode-pushButton_size-l.theme_@{themeName} {
-   padding: @padding_Button-wrapper-pushButton_size_l;
-   .justify-content(center);
-}
-
-.controls-Button__icon{
-   @variants: secondary, primary, info, danger, warning, success;
-   .for(@variants, { &-@{_item}_toggle_on.theme_@{themeName} {
-      color: ~"@{color_ToggleButton_icon-@{_item}_toggle_on}";
-   }});
-}
-
-.controls-Button_viewMode-pushButton:active.theme_@{themeName} {
-   .controls-Button__icon-secondary {
-      color: @color_ToggleButton-icon_pushButton_secondary_hovered;
-   }
-}
-
-.controls-Button__icon-secondary_iconStyle-secondary_viewMode-toolButton_toggle_on.theme_@{themeName} {
-   color: @color_secondary;
-}
-
-.controls-Button__icon-secondary_iconStyle-secondary_viewMode-pushButton_toggle_on.theme_@{themeName} {
-   color: @color_secondary;
-}
-
-.controls-Button__text_viewMode-pushButton.theme_@{themeName}{
-   color: @color_ToggleButton_pushButton-text;
-}
-
-.ws-is-hover {
-   .controls-Button_style-secondary_viewMode-pushButton:hover.theme_@{themeName} {
-      .controls-Button__icon-secondary {
-         color: @color_ToggleButton-icon_pushButton_secondary_hovered;
-      }
-   }
-
-   .controls-Button_viewMode-pushButton_style-common:hover.theme_@{themeName} {
-      background: @background_ToggleButton_pushButton_hovered;
-      border-color: @border-color_ToggleButton_pushButton_hovered;
-   }
-}
-
-
-//Эти стили переехали из кнопки. Т.к. в кнопках они больше не нужны а тоггл их использует
-.controls-ToggleButton__content {
-   .button-wrapper-default-style();
-   &:before {
-      content: "\200b";
-   }
-}
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-link.theme_@{themeName} {
-   color: @color_Link_secondary;
-}
-
-.controls-ToggleButton.controls-Button_style-success_viewMode-link.theme_@{themeName} {
-   color: @color_Link_success;
-}
-
-.controls-ToggleButton.controls-Button_style-danger_viewMode-link.theme_@{themeName} {
-   color: @color_Link_danger;
-}
-
-.controls-ToggleButton.controls-Button_style-info_viewMode-link.theme_@{themeName} {
-   color: @color_Link_info;
-}
-
-.controls-ToggleButton.controls-Button_style-warning_viewMode-link.theme_@{themeName} {
-   color: @color_Link_warning;
-}
-
-.controls-ToggleButton.controls-Button_style-primary_viewMode-link.theme_@{themeName} {
-   color: @color_Link_primary;
-}
-
-.controls-ToggleButton.controls-Button_style-default_viewMode-link.theme_@{themeName} {
-   color: @color_text_default;
-}
-.ws-is-hover {
-   .controls-ToggleButton.controls-Button_style-secondary_viewMode-link:hover.theme_@{themeName} {
-      color: @color_Link_secondary_hovered;
-   }
-   .controls-Button_style-secondary_viewMode-toolButton:hover.theme_@{themeName} {
-      .controls-Button__icon-secondary {
-         color: @color_Link_secondary_hovered;
-      }
-   }
-
-   .controls-Button_style-secondary_viewMode-link:hover.theme_@{themeName} {
-      .controls-Button__icon-secondary {
-         color: @color_Link_secondary_hovered;
-      }
-   }
-}
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-link:active.theme_@{themeName} {
-   color: @color_Link_secondary_hovered;
-}
-.controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
-   .controls-Button__icon-secondary {
-      color: @color_Link_secondary_hovered;
-   }
-}
-
-.controls-Button_style-secondary_viewMode-link:active.theme_@{themeName} {
-   .controls-Button__icon-secondary {
-      color: @color_Link_secondary_hovered;
-   }
-}
-
-.controls-ToggleButton__icon.controls-Button__icon-info.theme_@{themeName} {
-   color: @color_info;
-}
-
-.controls-ToggleButton__icon.controls-Button__icon-success.theme_@{themeName} {
-   color: @color_success;
-}
-
-.controls-ToggleButton__icon.controls-Button__icon-danger.theme_@{themeName} {
-   color: @color_danger;
-}
-
-.controls-ToggleButton__icon.controls-Button__icon-warning.theme_@{themeName} {
-   color: @color_warning;
-}
-
-.controls-ToggleButton__icon.controls-Button__icon-secondary.theme_@{themeName} {
-   color: @color_secondary;
-}
-
-.controls-ToggleButton__icon.controls-Button__icon-primary.theme_@{themeName} {
-   color: @color_primary;
-}
-
-.controls-ToggleButton__icon.controls-Button__icon-default.theme_@{themeName} {
-   color: @color_text_default;
-}
-
-.controls-ToggleButton__text.controls-ToggleButton__text.controls-Button__text_gap.theme_@{themeName} {
-   margin-left: @spacing_Button-between-icon-and-text;
-}
-.ws-is-hover {
-   .controls-ToggleButton.controls-Button_viewMode-link:hover.theme_@{themeName} {
-      .controls-BaseButton__text {
-         text-decoration: underline;
-      }
-   }
-}
-
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-link_size-s.theme_@{themeName} {
-   font-size: @font-size_Link-s;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-link_size-m.theme_@{themeName} {
-   font-size: @font-size_Link-m;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-link_size-default.theme_@{themeName} {
-   font-size: @font-size_Link-default;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-link_size-l.theme_@{themeName} {
-   font-size: @font-size_Link-l;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-link_size-xl.theme_@{themeName} {
-   font-size: @font-size_Link-xl;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
-   font-size: @font-size_Button_size_s;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-m.theme_@{themeName} {
-   font-size: @font-size_Button_size_m;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-default.theme_@{themeName} {
-   font-size: @font-size_Button_size_default;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-l.theme_@{themeName} {
-   font-size: @font-size_Button_size_l;
-}
-.controls-ToggleButton.controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
-   color: @color-ToolButton_readOnly;
-}
-
-.controls-ToggleButton.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
-   cursor: default;
-}
-.controls-ToggleButton.controls-Button_viewMode-link_readOnly.theme_@{themeName} {
-   color: @color_text_readonly;
-}
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-s.theme_@{themeName}, .controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-m.theme_@{themeName},
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-l.theme_@{themeName}, .controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-default.theme_@{themeName} {
-   user-select: none;
-}
-.controls-ToggleButton.controls-Button_viewMode-toolButton.theme_@{themeName} {
-   cursor: pointer;
-}
-.controls-ToggleButton.controls-Button_viewMode-link.theme_@{themeName} {
-   cursor: pointer;
-}
-.controls-ToggleButton.controls-Button_viewMode-button.theme_@{themeName} {
-    cursor: pointer;
-    user-select: none;
-   border-style: solid;
-   border-width: @thickness_Button__border;
-   text-shadow: @text-shadow_Button_button;
-}
-.controls-ToggleButton.controls-Button_viewMode-toolButton.theme_@{themeName} {
-   border-style: @border-style-ToolButton;
-   border-width: @border-width-ToolButton;
-   text-shadow: @text-shadow_ToolButton;
-}
-.controls-ToggleButton.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
-   cursor: default;
-   user-select: none;
-   text-shadow: @text-shadow_Button_readOnly;
-}
-.controls-ToggleButton.controls-Button_style-primary_viewMode-button.theme_@{themeName} {
-   border-color: @border-color_Button_button_primary;
-}
-.controls-ToggleButton.controls-Button_style-primary_viewMode-button:active.theme_@{themeName} {
-   border-color: @border-color_Button_button_primary_hovered;
-}
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-button.theme_@{themeName} {
-   border-color: @border-color_Button_secondary;
-}
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-button:active.theme_@{themeName} {
-   border-color: @border-color_Button_secondary_hovered;
-}
-.controls-ToggleButton.controls-Button_viewMode-button_readOnly.theme_@{themeName} {
-   border-color: @border-color_Button_readOnly;
-}
-.controls-ToggleButton.controls-Button_viewMode-toolButton_style-common.theme_@{themeName} {
-   border-color: @border-color-ToolButton;
-}
-.controls-ToggleButton.controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
-   border-color: @border-color-ToolButton_readOnly;
-   text-shadow: @text-shadow_ToolButton_readOnly;
-}
-.ws-is-hover {
-   .controls-ToggleButton.controls-Button_style-primary_viewMode-button:hover.theme_@{themeName} {
-      background: @background_Button_button_primary_hovered;
-   }
-
-   .controls-ToggleButton.controls-Button_style-secondary_viewMode-button:hover.theme_@{themeName} {
-      background: @background_Button_secondary_hovered;
-   }
-
-   .controls-ToggleButton.controls-Button_style-secondary_viewMode-button:active.theme_@{themeName} {
-      background: @background_Button_secondary_active;
-   }
-
-   .controls-ToggleButton.controls-Button_style-primary_viewMode-button:active.theme_@{themeName} {
-      background: @background_Button_button_primary_active;
-   }
-   .controls-ToggleButton.controls-Button_style-danger_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_danger;
-   }
-
-   .controls-ToggleButton.controls-Button_style-warning_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_warning;
-   }
-
-   .controls-ToggleButton.controls-Button_style-success_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_success;
-   }
-
-   .controls-ToggleButton.controls-Button_style-info_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_info;
-   }
-
-   .controls-ToggleButton.controls-Button_style-primary_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color_primary;
-   }
-
-   .controls-ToggleButton.controls-Button_style-secondary_viewMode-toolButton:hover.theme_@{themeName} {
-      border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
-   }
-}
-
-//toolbutton active style
-.controls-ToggleButton.controls-Button_style-danger_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_danger;
-}
-
-.controls-ToggleButton.controls-Button_style-warning_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_warning;
-}
-
-.controls-ToggleButton.controls-Button_style-success_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_success;
-}
-
-.controls-ToggleButton.controls-Button_style-info_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_info;
-}
-
-.controls-ToggleButton.controls-Button_style-primary_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color_primary;
-}
-
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-toolButton:active.theme_@{themeName} {
-   border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
-}
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
-   .justify-content(center);
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-m.theme_@{themeName} {
-   .justify-content(center);
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-default.theme_@{themeName} {
-   .justify-content(center);
-}
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-l.theme_@{themeName} {
-   .justify-content(center);
-}
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-s.theme_@{themeName}, .controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-m.theme_@{themeName},
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-l.theme_@{themeName}, .controls-ToggleButton__content.controls-Button__wrapper_viewMode-toolButton_size-default.theme_@{themeName} {
+.controls-Button__wrapper_viewMode-pushButton {
    justify-content: center;
 }
-
-.controls-ToggleButton.controls-Button_viewMode-toolButton.theme_@{themeName}, .controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
-   box-shadow: @box-shadow-ToolButton;
-}
-.controls-ToggleButton.controls-Button_viewMode-toolButton:active.theme_@{themeName} {
-   box-shadow: @box-shadow-ToolButton_activated;
-}
-.controls-ToggleButton.controls-Button_viewMode-button.theme_@{themeName} {
-   box-shadow: @box-shadow_Button_common;
+//toolButton
+.controls-Button_toolButton_style-secondary_toggled_theme-@{themeName} {
+   border-color: @secondary_toggled_border-color_toggleButton_toolButton;
 }
 
-.controls-ToggleButton.controls-Button_viewMode-button:active.theme_@{themeName} {
-   box-shadow: @box-shadow_Button_active;
-}
-/**/
-.controls-ToggleButton.controls-Button_style-primary_viewMode-button.theme_@{themeName} {
-
-   background: @background_Button_button_primary;
+.controls-Button_toolButton_style-danger_toggled_theme-@{themeName} {
+   border-color: @success_color;
 }
 
-.controls-ToggleButton.controls-Button_style-primary_viewMode-button:active.theme_@{themeName} {
-   background: @background_Button_button_primary_active;
+.controls-Button_toolButton_style-success_toggled_theme-@{themeName} {
+   border-color: @danger_color;
 }
 
-.controls-ToggleButton.controls-Button_style-primary_viewMode-button_readOnly.theme_@{themeName} {
-   background: @background_Button-primary_readOnly;
+.controls-Button_toolButton_style-readonly_toggled_theme-@{themeName} {
+   border-color: @readonly_border-color_button_toolButton;
 }
 
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-button.theme_@{themeName} {
-   background: @background_Button_secondary;
+//borders
+.controls-Button_pushButton, .controls-Button_toolButton {
+   border-style: solid;
 }
 
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-button:active.theme_@{themeName} {
-   background: @background_Button_secondary_active;
+.controls-Button_pushButton_theme-@{themeName} {
+   border-width: @border-thickness_button;
+   border-radius: @border-radius_toggleButton_pushButton;
+   box-shadow: @box-shadow_toggleButton_pushButton;
 }
 
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-button_readOnly.theme_@{themeName} {
-   background: @background_Button-secondary_readOnly;
-}
-.controls-ToggleButton.controls-Button_style-secondary_viewMode-Button_readOnly.theme_@{themeName} {
-   background: @background_Button-secondary_readOnly;
+.controls-Button_pushButton_style-secondary_theme-@{themeName} {
+   border-color: transparent;
 }
 
-.controls-ToggleButton.controls-Button_style-primary_viewMode-Button_readOnly.theme_@{themeName} {
-   background: @background_Button-primary_readOnly;
+.controls-Button_pushButton_style-primary_theme-@{themeName} {
+   border-color: transparent;
 }
+
+.controls-Button_pushButton_style-danger_theme-@{themeName} {
+   border-color: transparent;
+}
+
+.controls-Button_pushButton_style-success_theme-@{themeName} {
+   border-color: transparent;
+}
+
+.controls-Button_pushButton_style-readonly_theme-@{themeName} {
+   border-color: transparent;
+}
+
+.controls-Button_pushButton_style-secondary_toggled_theme-@{themeName} {
+   border-color: @secondary_toggled_border-color_toggleButton_pushButton;
+}
+
+.controls-Button_pushButton_style-primary_toggled_theme-@{themeName} {
+   border-color: @secondary_toggled_border-color_toggleButton_pushButton;
+}
+
+.controls-Button_pushButton_style-danger_toggled_theme-@{themeName} {
+   border-color: @danger_color;
+}
+
+.controls-Button_pushButton_style-success_toggled_theme-@{themeName} {
+   border-color: @success_color;
+}
+
+.controls-Button_pushButton_style-readonly_toggled_theme-@{themeName} {
+   border-color: @readonly_toggled_border-color_toggleButton_pushButton;
+}
+
+//background
+.controls-Button_pushButton_style-secondary_theme-@{themeName}.controls-Button_bg-contrast_theme-@{themeName} {
+   background-color: @secondary_contrast_background-color_toggleButton_pushButton;
+}
+
+.controls-Button_pushButton_style-secondary_theme-@{themeName}.controls-Button_bg-same_theme-@{themeName} {
+   background-color: @secondary_background-color_toggleButton_pushButton;
+}
+
+.controls-Button_pushButton_style-secondary_toggled_theme-@{themeName}.controls-Button_bg-contrast_theme-@{themeName} {
+   background-color: @secondary_contrast_toggled_background-color_toggleButton_pushButton;
+}
+
+.controls-Button_pushButton_style-secondary_toggled_theme-@{themeName}.controls-Button_bg-same_theme-@{themeName} {
+   background-color: @secondary_toggled_background-color_toggleButton_pushButton;
+}
+
+.controls-Button_pushButton_style-readonly_theme-@{themeName}.controls-Button_bg-contrast_theme-@{themeName} {
+   background-color: @readonly_contrast_toggled_background-color_toggleButton_pushButton;
+}
+
+.controls-Button_pushButton_style-readonly_theme-@{themeName}.controls-Button_bg-same_theme-@{themeName} {
+   background-color: @readonly_toggled_background-color_toggleButton_pushButton;
+}
+
 .ws-is-hover {
-   .controls-ToggleButton.controls-Button_style-primary_viewMode-button:hover.theme_@{themeName} {
-      background: @background_Button_button_primary_hovered;
+   .controls-Button_pushButton_style-secondary_theme-@{themeName}:hover.controls-Button_bg-contrast_theme-@{themeName} {
+      background-color: @secondary_contrast_hover_background-color_toggleButton_pushButton;
    }
 
-   .controls-ToggleButton.controls-Button_style-secondary_viewMode-button:hover.theme_@{themeName} {
-      background: @background_Button_secondary_hovered;
-   }
-
-   .controls-ToggleButton.controls-Button_style-secondary_viewMode-button:active.theme_@{themeName} {
-      background: @background_Button_secondary_active;
-   }
-
-   .controls-ToggleButton.controls-Button_style-primary_viewMode-button:active.theme_@{themeName} {
-      background: @background_Button_button_primary_active;
-   }
-
-}
-
-
-.controls-ToggleButton.controls-Button_viewMode-toolButton_withBackground.theme_@{themeName} {
-   background-color: @background-color-ToolButton;
-}
-
-.controls-ToggleButton.controls-Button_viewMode-toolButton_transparent.theme_@{themeName} {
-   background-color: @background-color-ToolButton_transparent;
-}
-.ws-is-hover {
-   .controls-ToggleButton.controls-Button_viewMode-toolButton:hover.theme_@{themeName} {
-      background-color: @background-color-ToolButton_hovered;
-   }
-
-   .controls-ToggleButton.controls-Button_viewMode-toolButton_transparent:hover.theme_@{themeName} {
-      background-color: @background-color-IconButton_transparent_hovered;
+   .controls-Button_pushButton_style-secondary_theme-@{themeName}:hover.controls-Button_bg-same_theme-@{themeName} {
+      background-color: @secondary_hover_background-color_toggleButton_pushButton;
    }
 }
 
-.controls-ToggleButton.controls-Button_viewMode-toolButton_withBackground:active.theme_@{themeName} {
-   background-color: @background-color-ToolButton_hovered;
+.ws-is-no-touch,
+.ws-is-touch {
+   .controls-Button_pushButton_style-secondary_theme-@{themeName}:active.controls-Button_bg-contrast_theme-@{themeName} {
+      background-color: @secondary_contrast_hover_background-color_toggleButton_pushButton;
+   }
+
+   .controls-Button_pushButton_style-secondary_theme-@{themeName}:active.controls-Button_bg-same_theme-@{themeName} {
+      background-color: @secondary_hover_background-color_toggleButton_pushButton;
+   }
 }
 
-.controls-ToggleButton.controls-Button_viewMode-toolButton_transparent:active.theme_@{themeName} {
-   background-color: @background-color-IconButton_transparent_hovered;
+//this is square buttons, that's why width is equal to height
+.controls-Button_pushButton_xs_theme-@{themeName} {
+   min-width: @inline_height_xs;
 }
 
-.controls-ToggleButton.controls-Button_viewMode-button_size-s.theme_@{themeName} {
-   height: @height_Button_size_s;
-
-   .border-radius(@border-radius_Button_size_s);
+.controls-Button_pushButton_s_theme-@{themeName} {
+   min-width: @inline_height_s;
 }
 
-.controls-ToggleButton.controls-Button_viewMode-button_size-default.theme_@{themeName} {
-   height: @height_Button_size_default;
-   .border-radius(@border-radius_Button_size_default);
+.controls-Button_pushButton_m_theme-@{themeName} {
+   min-width: @inline_height_m;
 }
 
-.controls-ToggleButton.controls-Button_viewMode-button_size-m.theme_@{themeName} {
-   height: @height_Button_size_m;
-   .border-radius(@border-radius_Button_size_m);
+.controls-Button_pushButton_l_theme-@{themeName} {
+   min-width: @inline_height_l;
 }
 
-.controls-ToggleButton.controls-Button_viewMode-button_size-l.theme_@{themeName} {
-   height: @height_Button_size_l;
-   .border-radius(@border-radius_Button_size_l);
+.controls-Button_pushButton_xl_theme-@{themeName} {
+   min-width: @inline_height_xl;
 }
 
-.controls-ToggleButton.controls-Button_viewMode-toolButton.theme_@{themeName}, .controls-Button_viewMode-toolButton_readOnly.theme_@{themeName} {
-   border-radius: @border-radius-ToolButton;
+.controls-Button_pushButton_2xl_theme-@{themeName} {
+   min-width: @inline_height_2xl;
 }
 
-
-.controls-ToggleButton.controls-Button_viewMode-toolButton_size-s.theme_@{themeName} {
-   height: @height-ToolButton_size-s;
-   min-width: @width-ToolButton_size-s;
+.controls-Button_pushButton_default_theme-@{themeName} {
+   min-width: @inline_height_default;
 }
 
-.controls-ToggleButton.controls-Button_viewMode-toolButton_size-m.theme_@{themeName} {
-   height: @height-ToolButton_size-m;
-   min-width: @width-ToolButton_size-m;
-}
-.controls-ToggleButton.controls-Button_viewMode-toolButton_size-default.theme_@{themeName} {
-   height: @height-ToolButton_size-default;
-   min-width: @width-ToolButton_size-default;
-}
-
-.controls-ToggleButton.controls-Button_viewMode-toolButton_size-l.theme_@{themeName} {
-   height: @height-ToolButton_size-l;
-   min-width: @width-ToolButton_size-l;
-}
-
-.controls-ToggleButton.controls-Button_viewMode-button.theme_@{themeName} {
-  min-width: @min-width_Button_common;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-s.theme_@{themeName} {
-   padding: @padding_Button-wrapper_size_s;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-m.theme_@{themeName} {
-   padding: @padding_Button-wrapper_size_m;
-}
-
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-default.theme_@{themeName} {
-   padding: @padding_Button-wrapper_size_default;
-}
-.controls-ToggleButton__content.controls-Button__wrapper_viewMode-button_size-l.theme_@{themeName} {
-   padding: @padding_Button__wrapper_size_l;
+.controls-Button_pushButton:active {
+   box-shadow: none;
 }

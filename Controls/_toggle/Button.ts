@@ -1,17 +1,16 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Classes from './Button/Classes';
-import {ActualApi} from 'Controls/buttons';
+import {ActualApi, cssStyleGeneration} from 'Controls/buttons';
 import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions, IButton, IButtonOptions, IIconStyle, IIconStyleOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
 
-export interface IToggleButtonOptions extends
-   IControlOptions, ICheckableOptions, ITooltipOptions, IButtonOptions, IIconStyleOptions {
-   icons: string[];
-   captions: string[];
-   viewMode: string;
+export interface IToggleButtonOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IButtonOptions, IIconStyleOptions {
+    icons: string[];
+    captions: string[];
+    viewMode: string;
 }
 
 /**
@@ -24,7 +23,6 @@ export interface IToggleButtonOptions extends
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IButton
  * @implements Controls/_interface/IIconStyle
- * @mixes Controls/_toggle/Button/Styles
  * @control
  * @public
  * @author Красильников А.С.
@@ -160,68 +158,89 @@ export interface IToggleButtonOptions extends
  * </pre>
  */
 const stickyButton = [
-   'pushButton',
-   'toolButton'
+    'pushButton',
+    'toolButton'
 ];
 
 class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
-   '[Controls/_toggle/interface/ICheckable]': true;
-   '[Controls/_interface/IButton]': true;
-   '[Controls/_interface/IIconStyle]': true;
-   '[Controls/_interface/ITooltip]': true;
+    '[Controls/_toggle/interface/ICheckable]': true;
+    '[Controls/_interface/IButton]': true;
+    '[Controls/_interface/IIconStyle]': true;
+    '[Controls/_interface/ITooltip]': true;
 
-   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: TemplateFunction = ToggleButtonTemplate;
+    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+    protected _template: TemplateFunction = ToggleButtonTemplate;
 
-   protected _icon: string;
-   protected _buttonStyle: string;
-   protected _transparent: boolean;
-   protected _viewMode: string;
-   protected _state: string;
-   protected _caption: string;
-   protected _iconStyle: string;
+    protected _icon: string;
+    protected _buttonStyle: string;
+    protected _transparent: boolean;
+    protected _viewMode: string;
+    protected _state: string;
+    protected _caption: string;
+    protected _iconStyle: string;
 
-   private _optionsGeneration(options: IToggleButtonOptions): void {
-      const currentButtonClass = Classes.getCurrentButtonClass(options.style, this);
+    private _optionsGeneration(options: IToggleButtonOptions): void {
+        const currentButtonClass = Classes.getCurrentButtonClass(options.style, this);
 
-      // Называть _style нельзя, так как это состояние используется для темизации
-      this._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;
-      this._transparent = options.transparent;
-      this._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;
-      this._state = (stickyButton.indexOf(this._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
-      this._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
-      this._icon = (options.icons ? (!options.value && options.icons[1] ? options.icons[1] : options.icons[0]) : '');
-      this._iconStyle = ActualApi.iconStyleTransformation(options.iconStyle, true);
-   }
+        // Называть _style нельзя, так как это состояние используется для темизации
+        this._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;
+        this._transparent = options.transparent;
+        this._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;
+        this._state = (stickyButton.indexOf(this._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
+        this._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
+        this._icon = (options.icons ? (!options.value && options.icons[1] ? options.icons[1] : options.icons[0]) : '');
+        this._iconStyle = ActualApi.iconStyleTransformation(options.iconStyle, true);
+    }
 
-   private _clickHandler(): void {
-      if (!this._options.readOnly) {
-         this._notify('valueChanged', [!this._options.value]);
-      }
-   }
+    private _clickHandler(): void {
+        if (!this._options.readOnly) {
+            this._notify('valueChanged', [!this._options.value]);
+        }
+    }
 
-   private _keyUpHandler(e: SyntheticEvent): void {
-      if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
-         this._notify('click');
-      }
-   }
+    private _keyUpHandler(e: SyntheticEvent): void {
+        if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
+            this._notify('click');
+        }
+    }
 
-   protected _beforeMount(newOptions: IToggleButtonOptions): void {
-      this._optionsGeneration(newOptions);
-   }
+    protected _beforeMount(newOptions: IToggleButtonOptions): void {
+        cssStyleGeneration.call(this, newOptions);
 
-   protected _beforeUpdate(newOptions: IToggleButtonOptions): void {
-      this._optionsGeneration(newOptions);
-   }
+        const value = newOptions.value;
+        this._icon = (newOptions.icons ? (!value && newOptions.icons[1] ? newOptions.icons[1] : newOptions.icons[0]) : '');
+        this._hasIcon = !!this._icon;
 
-   static _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
-   static getDefaultOptions(): object {
-      return {
-         viewMode: 'link',
-         style: 'secondary',
-         size: 'l',
-         iconStyle: 'secondary'
-      };
-   }
+        this._caption = (newOptions.captions ? (!newOptions.value && newOptions.captions[1] ? newOptions.captions[1] : newOptions.captions[0]) : '');
+        this._stringCaption = typeof this._caption === 'string';
+
+        this._iconSize = this._icon ? ActualApi.iconSize(newOptions) : '';
+        this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions) : '';
+    }
+
+    protected _beforeUpdate(newOptions: IToggleButtonOptions): void {
+        cssStyleGeneration.call(this, newOptions);
+
+        const value = newOptions.value;
+        this._icon = (newOptions.icons ? (!value && newOptions.icons[1] ? newOptions.icons[1] : newOptions.icons[0]) : '');
+        this._hasIcon = !!this._icon;
+
+        this._caption = (newOptions.captions ? (!newOptions.value && newOptions.captions[1] ? newOptions.captions[1] : newOptions.captions[0]) : '');
+        this._stringCaption = typeof this._caption === 'string';
+
+        this._iconSize = this._icon ? ActualApi.iconSize(newOptions) : '';
+        this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions) : '';
+    }
+
+    static _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
+
+    static getDefaultOptions(): object {
+        return {
+            viewMode: 'button',
+            iconStyle: 'secondary',
+            theme: 'default'
+        };
+    }
 }
+
 export default ToggleButton;

@@ -1,7 +1,7 @@
 <a attr:class="controls-BaseButton
             controls-Button_{{_viewMode}} controls-Button_{{_viewMode}}_theme-{{_options.theme}}
             controls-Button_{{_options.readOnly ? 'readonly' : 'clickable'}}
-            controls-Button_{{_viewMode}}_style-{{_buttonStyle}}_theme-{{_options.theme}}
+            controls-Button_{{_viewMode}}_style-{{_buttonStyle}}{{_toggled ? '_toggled' : ''}}_theme-{{_options.theme}}
             controls-Button_bg{{_contrastBackground ? '-contrast' : '-same'}}_theme-{{_options.theme}}
             {{_height ? ' controls-inlineheight-' + _height + '_theme-' + _options.theme}}
             {{_height ? ' controls-Button-inlineheight-' + _height + '_theme-' + _options.theme}}

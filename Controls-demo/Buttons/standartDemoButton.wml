@@ -167,34 +167,34 @@
             <div>
                 <div class="demo-Button__Label">For the color picker panel.</div>
                 <div class="ControlsDemo__colorPanel">
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState4" size="s" icons="{{['icon-16 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState5" size="s" icons="{{['icon-16 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState6" size="s" icons="{{['icon-16 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState7" size="s" icons="{{['icon-16 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState8" size="s" icons="{{['icon-16 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState9" size="s" icons="{{['icon-16 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState4" size="s" icons="{{['icon-16 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState5" size="s" icons="{{['icon-16 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState6" size="s" icons="{{['icon-16 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState7" size="s" icons="{{['icon-16 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState8" size="s" icons="{{['icon-16 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState9" size="s" icons="{{['icon-16 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
                 </div>
             </div>
             <div>
                 <div class="demo-Button__Label">For the text editor. First variant.</div>
                 <div class="demo-Button__background_simple ControlsDemo__textEditor">
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState11" size="m" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState12" size="m" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState13" size="m" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState14" size="m" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState15" size="m" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
-                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState10" size="m" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState11" size="m" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState12" size="m" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState13" size="m" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState14" size="m" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState15" size="m" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.toggle:Button attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" bind:value="toggleState10" size="m" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
                 </div>
             </div>
             <div>
                 <div class="demo-Button__Label">For the text editor. Second variant.</div>
                 <div class="demo-Button__background_simple ControlsDemo__textEditor2">
-                    <Controls.toggle:Button on:valueChanged="clickChangeState(16)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState16}}" size="l" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.toggle:Button on:valueChanged="clickChangeState(17)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState17}}" size="l" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.toggle:Button on:valueChanged="clickChangeState(18)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState18}}" size="l" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.toggle:Button on:valueChanged="clickChangeState(19)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState19}}" size="l" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.toggle:Button on:valueChanged="clickChangeState(20)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState20}}" size="l" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
-                    <Controls.toggle:Button on:valueChanged="clickChangeState(21)" attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" value="{{toggleState21}}" size="l" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(16)" attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" value="{{toggleState16}}" size="l" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(17)" attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" value="{{toggleState17}}" size="l" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(18)" attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" value="{{toggleState18}}" size="l" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(19)" attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" value="{{toggleState19}}" size="l" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(20)" attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" value="{{toggleState20}}" size="l" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
+                    <Controls.toggle:Button on:valueChanged="clickChangeState(21)" attr:class="demo-Button__testBlock__controlPanel" contrastBackground="{{true}}" value="{{toggleState21}}" size="l" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="toolButton" transparent="{{false}}"/>
                 </div>
             </div>
             <div>
@@ -244,7 +244,7 @@
                 <div class="demo-Button__Label">Get the link</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" iconSize="s" icon="icon-Erase" iconStyle="error" fontColorStyle="link" viewMode="link" fontSize="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" iconSize="s" icon="icon-Erase" iconStyle="danger" fontColorStyle="link" viewMode="link" fontSize="m"/>
                 <div class="demo-Button__Label">Delete</div>
             </div>
         </div>
@@ -287,7 +287,7 @@
                 <div class="demo-Button__Label">Filter</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" iconSize="m" icon="icon-Erase" iconStyle="error" fontColorStyle="link" viewMode="link" fontSize="m"/>
+                <Controls.buttons:Button readOnly="{{false}}" iconSize="m" icon="icon-Erase" iconStyle="danger" fontColorStyle="link" viewMode="link" fontSize="m"/>
                 <div class="demo-Button__Label">Delete</div>
             </div>
             <div attr:class="test_element">
@@ -330,11 +330,11 @@
                 <div class="demo-Button__Label">Add</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" iconStyle="done" iconSize="s" icon="icon-Yes" buttonStyle="secondary" viewMode="toolButton" inlineHeight="l"/>
+                <Controls.buttons:Button readOnly="{{false}}" iconStyle="success" iconSize="s" icon="icon-Yes" buttonStyle="secondary" viewMode="toolButton" inlineHeight="l"/>
                 <div class="demo-Button__Label">Confirm</div>
             </div>
             <div attr:class="test_element">
-                <Controls.buttons:Button readOnly="{{false}}" iconStyle="error" iconSize="s" icon="icon-Erase" buttonStyle="secondary" viewMode="toolButton" inlineHeight="l"/>
+                <Controls.buttons:Button readOnly="{{false}}" iconStyle="danger" iconSize="s" icon="icon-Erase" buttonStyle="secondary" viewMode="toolButton" inlineHeight="l"/>
                 <div class="demo-Button__Label">Delete</div>
             </div>
             <div attr:class="test_element">
