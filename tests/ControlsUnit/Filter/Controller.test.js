@@ -629,7 +629,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             id: 'testId2',
             value: '',
             resetValue: '',
-            doNotSaveToHistory: false
+            doNotSaveToHistory: true
          }, {
             id: 'testId3',
             value: 'testValue3',
@@ -642,7 +642,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             id: 'testId5',
             value: 'testValue4',
             resetValue: '',
-            doNotSaveToHistory: false
+            doNotSaveToHistory: true
          }];
 
          historyItems = Filter._private.prepareHistoryItems(saveToHistoryItems, fastFilterItems);
