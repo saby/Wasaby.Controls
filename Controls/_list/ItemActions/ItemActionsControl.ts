@@ -225,7 +225,7 @@ var ItemActionsControl = Control.extend({
 
     updateActions(): void {
         _private.updateActions(this, this._options);
-    }
+    },
    getChildren(
       action: object,
       actions: object[]
