@@ -17,7 +17,7 @@ define([
       HeadingPath = HeadingPath.default;
       BreadCrumbsUtil = BreadCrumbsUtil.default;
 
-      var path, data, DrawBreadCrumbs;
+      var path, data, drawBreadCrumbs;
 
 
       beforeEach(function() {
@@ -73,7 +73,7 @@ define([
       });
       describe('_afterMount', function() {
          afterEach(function() {
-            BreadCrumbsUtil.DrawBreadCrumbs = DrawBreadCrumbs;
+            BreadCrumbsUtil.drawBreadCrumbs = drawBreadCrumbs;
          });
       });
 
@@ -112,12 +112,12 @@ define([
 
    describe('Controls.BreadCrumbs.Path', function() {
 
-      var DrawBreadCrumbs;
-         DrawBreadCrumbs = BreadCrumbsUtil.DrawBreadCrumbs;
-         BreadCrumbsUtil.DrawBreadCrumbs = function() {
+      var drawBreadCrumbs;
+         drawBreadCrumbs = BreadCrumbsUtil.drawBreadCrumbs;
+         BreadCrumbsUtil.drawBreadCrumbs = function() {
 
          };
 
-      BreadCrumbsUtil.DrawBreadCrumbs = DrawBreadCrumbs;
+      BreadCrumbsUtil.drawBreadCrumbs = drawBreadCrumbs;
    });
 });

@@ -22,7 +22,6 @@
    display: inline-block;
    overflow: hidden;
    max-width: 100%;
-   min-width: 30px;
    .baseline-fix();
    height: @height_BreadCrumbs-items;
    &:before {
@@ -32,17 +31,22 @@
 .controls-BreadCrumbsView__menu {
    float: right;
    position: relative;
-   top: -25px;
+   top: @spacing_BreadCrumbs-menu;
    z-index: 5;
 }
 .controls-BreadCrumbsView__menu__dots {
    position: absolute;
    top: 0;
-   left: -25px;
+   left: @spacing_BreadCrumbs-menu;
    background: white;
-   box-shadow: -1px 0px 9px 14px white;
+   box-shadow: @box-shadow_BreadCrumbs-menu;
    cursor: pointer;
-   padding-right: 2px;
+}
+.controls-BreadCrumbsView__max-width {
+   max-width: 100%;
+}
+.controls-BreadCrumbsView__max-width__edge {
+   max-width: 50%;
 }
 
 .controls-BreadCrumbsView {

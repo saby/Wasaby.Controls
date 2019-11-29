@@ -40,7 +40,7 @@ var BreadCrumbs = Control.extend({
     _afterMount: function () {
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
-                BreadCrumbsUtil.DrawBreadCrumbs(this, this._options.items);
+                BreadCrumbsUtil.drawBreadCrumbs(this, this._options.items);
             }.bind(this));
         }
     },

@@ -1,12 +1,10 @@
 <div attr:class="controls-BreadCrumbsView__items">
-    <ws:partial attr:class="{{applyHighlighter(highlighter, items[0].item.getId(), items[0].hasArrow)}} controls-BreadCrumbsView__crumb__edge"
-                template="{{itemTemplate}}"
+    <ws:partial template="{{_templatePart}}"
                 itemData="{{items[0]}}"
-                displayProperty="{{ displayProperty }}"
-                on:mouseEnter="_onHoveredItemChanged(items[0].item)"
-                on:mouseLeave="_onHoveredItemChanged()"
+                attr:class="{{applyHighlighter(highlighter, items[0].item.getId(), items[0].hasArrow)}} controls-BreadCrumbsView__crumb__edge"
                 edge="{{items.length > 1}}"
-                on:click="_onItemClick(items[0])"/>
+    />
+
     <ws:if data="{{items.length > 2}}">
         <div class="controls-BreadCrumbsView__items__middle">
             <ws:for data="index, itemData in items">
