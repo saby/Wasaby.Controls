@@ -10,7 +10,7 @@
     </ws:template>
 
     <ws:partial attr:class="controls-BreadCrumbsView__crumb__edge"
-            template="templatePart"
+                template="templatePart"
                 itemData="{{items[0]}}"
                 edge="{{items.length > 1}}"
                 on:click="_onItemClick(items[0])"
