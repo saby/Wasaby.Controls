@@ -38,45 +38,13 @@ var BreadCrumbs = Control.extend({
     _viewUpdated: false,
 
     _afterMount: function () {
-       /* this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});*/
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, this._options.items);
             }.bind(this));
         }
     },
-/*
-    _beforeUpdate: function (newOptions) {
-        this._redrawIfNeed(this._options.items, newOptions.items);
-    },
-    _redrawIfNeed: function(currentItems, newItems) {
-        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems, this._oldWidth, this._container.clientWidth)) {
-            this._oldWidth = this._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newItems, this._container.clientWidth);
-            this._viewUpdated = true;
-        }
-    }
-
-    _afterUpdate: function() {
-        if (this._viewUpdated) {
-            this._viewUpdated = false;
-            this._notify('controlResize', [], {bubbling: true});
-        }
-    }
-
- */
-
-        _notifyHandler: tmplNotify
-    /*
-        _onResize: function() {
-            this._redrawIfNeed(this._options.items, this._options.items);
-        },
-
-       _beforeUnmount: function() {
-          this._notify('unregister', ['controlResize', this], { bubbling: true });
-       }
-     */
-
+  _notifyHandler: tmplNotify
 });
 
 BreadCrumbs.getDefaultOptions = function () {

@@ -11,42 +11,6 @@ import Common from './HeadingPath/Common';
 import 'Controls/heading';
 
 var _private = {
-  /* calculateClasses(
-       self,
-       maxCrumbsWidth: number,
-       minCrumbsWidth: number,
-       backButtonWidth: number,
-       availableWidth: number
-    ): void {
-        if (maxCrumbsWidth > availableWidth / 2 && backButtonWidth > availableWidth / 2) {
-           self._backButtonClass = 'controls-BreadCrumbsPath__backButton_half';
-           self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_half';
-        } else {
-            if (availableWidth - backButtonWidth < minCrumbsWidth || backButtonWidth > availableWidth / 2) {
-                self._backButtonClass = 'controls-BreadCrumbsPath__backButton_short';
-                self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_long'
-            } else {
-                self._backButtonClass = '';
-                self._breadCrumbsClass = '';
-            }
-
-            if (maxCrumbsWidth > availableWidth / 2) {
-                self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
-            }
-        }
-    },
-
-   getBackButtonMinWidth(theme): number {
-       return getWidthUtil.getWidth(backButtonTemplate({
-          _options: {
-             theme: theme,
-             backButtonCaption: '1',
-             backButtonClass: 'controls-BreadCrumbsPath__backButton_short controls-BreadCrumbsPath__backButton_zeroWidth'
-          }
-       }));
-   },
-    */
-
     calculateItems: function (self, options) {
         self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], self._options.displayProperty);
 
@@ -64,19 +28,6 @@ var _private = {
         }
         self._viewUpdated = true;
     }
-
-   /* getContainer: function(self) {
-        return self._container[0] || self._container;
-    },
-
-   getContainerSpacing: function(self) {
-        let computedStyle = window.getComputedStyle(_private.getContainer(self));
-        return parseInt(computedStyle.paddingLeft, 10) + parseInt(computedStyle.paddingRight, 10);
-    },
-
-    getAvailableContainerWidth: function(self):number {
-        return  _private.getContainer(self).clientWidth - _private.getContainerSpacing(self);
-    }*/
 };
 
 /**
@@ -178,37 +129,14 @@ var BreadCrumbsPath = Control.extend({
     _viewUpdated: false,
 
     _afterMount: function () {
-       /* this._oldWidth = _private.getAvailableContainerWidth(this);*/
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
-                  /*  this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);*/
                     _private.calculateItems(this, this._options);
                 }.bind(this));
             }.bind(this));
         }
     },
-
-   /* _beforeUpdate: function (newOptions) {
-        if (this._options.theme !== newOptions.theme) {
-           this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);
-        }
-
-
-        if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
-            this._oldWidth = containerWidth;
-            _private.calculateItems(this, newOptions, containerWidth);
-        }
-    },
-
-    _afterUpdate: function() {
-        if (this._viewUpdated) {
-            this._viewUpdated = false;
-            this._notify('controlResize', [], {bubbling: true});
-        }
-    },
-    */
-
 
     _notifyHandler: tmplNotify,
     _applyHighlighter: applyHighlighter,
@@ -217,13 +145,6 @@ var BreadCrumbsPath = Control.extend({
     _onBackButtonClick: function (e: Event) {
         Common.onBackButtonClick.call(this, e);
     },
-
-   /* _onResize: function () {
-        // Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
-       // todo здесь нужно звать _forceUpdate чтобы произошла перерисовка, потому что логика пересчета в _beforeUpdate. нужно оттуда логику выносить сюда!
-       this._forceUpdate();
-    },
-*/
     _onHomeClick: function () {
        /**
         * TODO: _options.root is actually current root, so it's wrong to use it. For now, we can take root from the first item. Revert this commit after:
@@ -242,7 +163,7 @@ BreadCrumbsPath.getDefaultOptions = function () {
         displayProperty: 'title',
         root: null,
         backButtonStyle: 'secondary',
-        showActionButton: true,
+        showActionButton: true
     };
 };
 
