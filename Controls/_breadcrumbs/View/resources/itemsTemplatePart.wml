@@ -1,7 +1,0 @@
-<ws:partial template="{{itemTemplate}}"
-            itemData="{{itemData}}"
-            displayProperty="{{ displayProperty }}"
-            on:mouseEnter="_onHoveredItemChanged(itemData.item)"
-            on:mouseLeave="_onHoveredItemChanged()"
-            edge="{{edge}}"
-            on:click="_onItemClick(itemData)"/>

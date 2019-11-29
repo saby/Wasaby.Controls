@@ -4,7 +4,6 @@ import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadcrumbs/View/View');
 import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
 import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
-import templatePart = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplatePart');
 
 
 import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
@@ -24,7 +23,6 @@ import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 var BreadCrumbsView = Control.extend({
     _template: template,
     _itemsTemplate: itemsTemplate,
-    _templatePart: templatePart,
 
     _beforeMount: function () {
         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
