@@ -76,7 +76,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat {
     private _isUseGrouping(options: IMoneyOptions, useLogging: boolean): boolean {
         if ('delimiters' in options) {
             if (useLogging) {
-                Logger.error('Controls/_decorator/Money: Опция delimiters устарела, используйте useGrouping.', this);
+                Logger.warn('Controls/_decorator/Money: Опция delimiters устарела, используйте useGrouping.', this);
             }
 
             return options.delimiters;
@@ -88,7 +88,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat {
     _getValue(options: IMoneyOptions, useLogging: boolean) {
         if ('number' in options) {
             if (useLogging) {
-                Logger.error('Controls/_decorator/Money: Опция number устарела, используйте value.', this);
+                Logger.warn('Controls/_decorator/Money: Опция number устарела, используйте value.', this);
             }
 
             return options.number.toString();
