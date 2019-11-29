@@ -147,6 +147,8 @@ var _private = {
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 if (list.getCount()) {
                     self._loadedItems = list;
+                } else {
+                    self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
                 }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
