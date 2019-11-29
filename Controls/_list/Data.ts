@@ -67,15 +67,11 @@ type GetSourceResult = {
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
 
       var _private = {
-         isEqualItems: function(oldList:RecordSet, newList:RecordSet, checkKeyProperty: boolean|void):boolean {
-            let result = oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
+         isEqualItems: function(oldList:RecordSet, newList:RecordSet):boolean {
+            return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
                (newList.getModel() === oldList.getModel()) &&
                (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
-
-            return checkKeyProperty ?
-                result && (newList.getKeyProperty() === oldList.getKeyProperty()) :
-                result;
          },
 
          updateDataOptions: function(self, dataOptions) {
@@ -135,9 +131,9 @@ type GetSourceResult = {
             }
          },
 
-         resolvePrefetchSourceResult: function(self, result: GetSourceResult, checkKeyProperty: boolean) {
+         resolvePrefetchSourceResult: function(self, result: GetSourceResult) {
             if (result.data) {
-               if (_private.isEqualItems(self._items, result.data, checkKeyProperty)) {
+               if (_private.isEqualItems(self._items, result.data)) {
                   self._items.assign(result.data);
                } else {
                   self._items = result.data;
@@ -207,7 +203,7 @@ type GetSourceResult = {
             if (this._options.source !== newOptions.source) {
                this._loading = true;
                return _private.createPrefetchSource(this).addCallback((result) => {
-                  _private.resolvePrefetchSourceResult(this, result, newOptions.task1178324764);
+                  _private.resolvePrefetchSourceResult(this, result);
                   _private.updateDataOptions(this, this._dataOptionsContext);
                   this._dataOptionsContext.updateConsumers();
                   this._loading = false;
