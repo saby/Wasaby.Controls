@@ -33,7 +33,10 @@ define(
                   Env.detection['test::isMobileIOS'] = true;
                }
             });
-            it('touchStart -> blur', function() {
+            it('focus -> touchStart -> blur', function() {
+               controller.focusHandler();
+               assert.equal(calls.length, 0);
+
                controller.touchStartHandler();
                assert.equal(calls.length, 1);
                assert.deepEqual(calls[0], {
@@ -48,7 +51,10 @@ define(
                   arguments: ['MobileInputFocusOut']
                });
             });
-            it('focus -> blur', function() {
+            it('touchStart -> focus -> blur', function() {
+               controller.touchStartHandler();
+               assert.equal(calls.length, 0);
+
                controller.focusHandler();
                assert.equal(calls.length, 1);
                assert.deepEqual(calls[0], {
@@ -65,14 +71,14 @@ define(
             });
             it('touchStart -> focus -> blur', function() {
                controller.touchStartHandler();
+               assert.equal(calls.length, 0);
+
+               controller.focusHandler();
                assert.equal(calls.length, 1);
                assert.deepEqual(calls[0], {
                   name: 'notify',
                   arguments: ['MobileInputFocus']
                });
-
-               controller.focusHandler();
-               assert.equal(calls.length, 1);
 
                controller.blurHandler();
                assert.equal(calls.length, 2);
