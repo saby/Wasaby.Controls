@@ -172,7 +172,7 @@
  * @property {Number} startColumn Порядковый номер колонки, на которой начинается ячейка.
  * @property {Number} endColumn Порядковый номер колонки, на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
- * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+ * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
 
 /*
@@ -290,9 +290,39 @@
  * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
  * @property {String} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  * Доступные значения:
- * 
- * * **ellipsis** — текст обрезается, и в конец строки добавляется многоточие.
+ * * * **ellipsis** — текст обрезается, и в конец строки добавляется многоточие.
  * * **none** — стандартное поведение при незаданном свойстве.
+ * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+ * <pre>
+ * columns: [{
+ *    width: '1fr',
+ *    cellPadding: {
+ *        left: 'M', 
+ *        right: 'M' 
+ *    }
+ * },
+ * {
+ *    width: '1fr',
+ *    cellPadding: { 
+ *        left: 'S',
+ *        right: 'S' 
+ *    }
+ * }]
+ * </pre>
+ */
+
+/**
+ * @typedef {Object} CellPadding
+ * @property {HorizontalCellPaddingEnum} [left=null] Отступ от левой границы ячейки.
+ * @property {HorizontalCellPaddingEnum} [right=null] Отступ от правой границы ячейки.
+ */
+
+/**
+ * @typedef {Object} HorizontalCellPaddingEnum
+ * @variant S Небольшой отступ.
+ * @variant M Средний отступ.
+ * @variant null Нулевой отступ.
+ * @default null
  */
 
 /*
