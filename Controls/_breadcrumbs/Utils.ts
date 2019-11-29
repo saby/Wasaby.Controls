@@ -21,7 +21,7 @@ var _private = {
 };
 
 export default {
-    calculateBreadCrumbsToDraw: function (self, items) {
+    DrawBreadCrumbs: function (self, items) {
         self._visibleItems = [];
             self._visibleItems = items.map(function (item, index, items) {
                 return _private.getItemData(index, items);

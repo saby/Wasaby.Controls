@@ -63,12 +63,6 @@ var BreadCrumbsView = Control.extend({
         this._notify('hoveredItemChanged', [item]);
     },
 
-    _onResize: function () {
-        this._children.menuOpener.close();
-        // todo добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
-       this._forceUpdate();
-    },
-
     _onResult: function (event, args) {
         var actionName = args && args.action;
 
