@@ -2,7 +2,7 @@ import BaseControl = require('Core/Control');
 import ILinkView from './interfaces/ILinkView';
 import componentTmpl = require('wml!Controls/_dateRange/Link/Link');
 import 'css!theme?Controls/dateRange';
-
+import getOptions from 'Controls/Utils/datePopupUtils';
 /**
  * Controls that allows user to select date value in calendar.
  *
@@ -24,18 +24,12 @@ var Component = BaseControl.extend({
    _openDialog: function(event) {
       const container = this._children.linkView.getDialogTarget();
       var cfg = {
-         opener: this,
+         ...getOptions.getCommonOptions(this),
          target: container,
          template: 'Controls/datePopup',
          className: 'controls-PeriodDialog__picker',
-         direction: {horizontal: 'right'},
-         targetPoint: { horizontal: 'left' },
-         eventHandlers: {
-            onResult: this._onResult.bind(this)
-         },
          templateOptions: {
-            startValue: this._options.value,
-            endValue: this._options.value,
+            ...getOptions.getTemplateOptions(this),
             headerType: 'link',
             closeButtonEnabled: true,
             rangeselect: false,

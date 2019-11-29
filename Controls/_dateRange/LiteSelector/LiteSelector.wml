@@ -5,7 +5,7 @@
       startValue="{{_rangeModel.startValue}}"
       endValue="{{_rangeModel.endValue}}"
       on:rangeChanged="_rangeChangedHandler()"
-      on:linkClick="openDialog()"
+      on:linkClick="_openDialog()"
       attr:class="controls-DateRangeSelectorLite__view {{_isMinWidth ? 'controls-DateRangeSelectorLite__view_minWidth'}}"
    />
 
@@ -13,8 +13,7 @@
                                  template="Controls/dateLitePopup"
                                  closeOnOutsideClick="{{true}}"
                                  actionOnScroll="close"
-                                 _vdomOnOldPage="{{true}}"
-                                 on:result="_onResult()">
+                                 _vdomOnOldPage="{{true}}">
       <ws:direction vertical="bottom" horizontal="center"/>
       <ws:targetPoint vertical="top" horizontal="center"/>
    </Controls.popup:Sticky>
