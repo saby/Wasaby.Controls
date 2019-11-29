@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {INumberFormatOptions, INumberFormat} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
-import {numberToString} from 'Controls/_decorator/numberToString';
+import numberToString from 'Controls/Utils/Formatting/numberToString';
 import * as splitIntoTriads from 'Controls/Utils/splitIntoTriads';
 import * as template from 'wml!Controls/_decorator/Money/Money';
 

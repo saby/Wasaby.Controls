@@ -1,4 +1,4 @@
-import {numberToString} from 'Controls/_decorator/numberToString';
+import numberToString from 'Controls/Utils/Formatting/numberToString';
 
 import Control = require('Core/Control');
 import entity = require('Types/entity');

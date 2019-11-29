@@ -3,7 +3,7 @@ import {Logger} from 'UI/Utils';
 const exponentialSymbol = 'e';
 const parseExponentialNotation = new RegExp(`^(\\d+)\\.?(\\d+|)${exponentialSymbol}(\\+|-)(\\d+)$`);
 
-export function numberToString(original: number): string {
+export default function numberToString(original: number): string {
     if (Math.abs(original) === Infinity) {
         return '0';
     }
