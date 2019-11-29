@@ -1012,6 +1012,25 @@ define(
                assert.deepStrictEqual(view._source[0].value, {'-1': [], '-2': [4]});
                assert.deepStrictEqual(view._displayText.document, {text: 'Deleted', title: 'Deleted', hasMoreText: '' });
             });
+
+            it ('moreButtonClick', function () {
+               let filterChanged, isClosed;
+               view._notify = (event, data) => {
+                  if (event === 'filterChanged') {
+                     filterChanged = data[0];
+                  }
+               };
+               let eventResult = {
+                  action: 'moreButtonClick',
+                  id: 'document'
+               };
+               view._children = {
+                  StickyOpener: { close: () => {isClosed = true;} }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.strictEqual(view._idOpenSelector, 'document');
+               assert.isTrue(isClosed);
+            });
          });
 
          describe('View history', function() {
