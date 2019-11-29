@@ -21,6 +21,8 @@
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
+ * @includes IFieldData Controls/_input/interface/IFieldData
+ * @includes ICallbackData Controls/_input/interface/ICallbackData
  *
  * @public
  * @author Крайнов Д.О.
@@ -48,6 +50,8 @@
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
+ * @includes IFieldData Controls/_input/interface/IFieldData
+ * @includes ICallbackData Controls/_input/interface/ICallbackData
  *
  * @public
  * @author Крайнов Д.О.
