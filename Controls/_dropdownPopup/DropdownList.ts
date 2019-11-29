@@ -127,9 +127,9 @@ import {SyntheticEvent} from 'Vdom/Vdom'
             const key = item.get(self._options.keyProperty),
                clickOnEmptyItem = item.get(self._options.keyProperty) === null,
                clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
-               hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null
-                  && (!isEqual(self._listModel.getSelectedKeys(), self._options.selectedKeys) || self._options.selectedKeys.indexOf(key) !== -1);
-            return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
+               hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null,
+               needToSelect = !isEqual(self._listModel.getSelectedKeys(), self._options.selectedKeys) || self._options.selectedKeys.indexOf(key) !== -1;
+            return self._options.multiSelect && !clickOnEmptyItem && (hasSelection && needToSelect || clickOnCheckBox);
          },
 
          getRootKey: function(key) {
