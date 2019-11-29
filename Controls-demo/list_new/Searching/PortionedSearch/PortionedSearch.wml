@@ -1,0 +1,19 @@
+<div class="controlsDemo__wrapper">
+    <Controls.scroll:Container attr:class="controlsDemo__height400">
+        <Controls.scroll:HotKeysContainer>
+            <Controls.list:View
+                    name="view"
+                    keyProperty="id"
+                    source="{{_viewSource}}"
+                    searchValue="{{_searchValue}}"
+                    filter="{{_filter}}">
+                <ws:navigation source="page" view="infinity">
+                    <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
+                    <ws:viewConfig pagingMode="direct"/>
+                </ws:navigation>
+            </Controls.list:View>
+        </Controls.scroll:HotKeysContainer>
+    </Controls.scroll:Container>
+    <a href="#" class="controls-text-link_theme-default" style="position: relative; z-index: 99999; margin-right: 10px" on:click="_startSearch()">start search</a>
+    <a href="#" class="controls-text-link_theme-default" style="position: relative; z-index: 99999; margin-right: 10px" on:click="_resetSearch()">reset search</a>
+</div>
