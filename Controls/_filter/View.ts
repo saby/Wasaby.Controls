@@ -661,11 +661,11 @@ var Filter = Control.extend({
     _rangeChangedHandler: function(event, start, end) {
        let dateRangeItem = _private.getDateRangeItem(this._source);
        dateRangeItem.value = [start, end];
-       _private.notifyChanges(this, this._source);
        return new Promise((resolve) => { require(['Controls/dateRange'], dateRange => {
              dateRangeItem.textValue = dateRange.Utils.formatDateRangeCaption(start, end,
                 this._dateRangeItem.editorOptions.emptyCaption || 'Не указан');
              this._dateRangeItem = object.clone(dateRangeItem);
+             _private.notifyChanges(this, this._source);
              resolve();
             });
        });
