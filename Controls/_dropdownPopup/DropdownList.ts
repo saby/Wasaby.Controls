@@ -124,11 +124,10 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          },
 
          isNeedUpdateSelectedKeys: function(self, target, item) {
-            const key = item.get(self._options.keyProperty),
-               clickOnEmptyItem = item.get(self._options.keyProperty) === null,
+            const clickOnEmptyItem = item.get(self._options.keyProperty) === null,
                clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
                hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null,
-               needToSelect = !isEqual(self._listModel.getSelectedKeys(), self._options.selectedKeys) || self._options.selectedKeys.indexOf(key) !== -1;
+               needToSelect = !isEqual(self._listModel.getSelectedKeys(), self._options.selectedKeys);
             return self._options.multiSelect && !clickOnEmptyItem && (hasSelection && needToSelect || clickOnCheckBox);
          },
 

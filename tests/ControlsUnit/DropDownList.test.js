@@ -462,6 +462,12 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropdownList._beforeMount(config);
             assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(4)));
 
+            // multiSelect = true && has selected items && click on checkbox
+            isCheckBox = true;
+            config.selectedKeys = [2, 3];
+            dropdownList._beforeMount(config);
+            assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(2)));
+
             // multiSelect = true && click on checkbox
             isCheckBox = true;
             assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
@@ -529,6 +535,10 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropdownList._itemClickHandler(event2, items.at(1));
             assert.deepEqual(dropdownList._listModel.getSelectedKeys(), [3, 2]);
             assert.isTrue(dropdownList._needShowApplyButton);
+
+            config.selectedKeys = [2, 3];
+            dropdownList._itemClickHandler(event2, items.at(1));
+            assert.deepEqual(result, expectedResult);
 
             //resize event fired after control update
             dropdownList._beforeUpdate(config);
