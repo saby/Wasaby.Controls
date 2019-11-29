@@ -25,7 +25,7 @@ import {ICrud, Memory} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDireciton} from './interface/IVirtualScroll';
-import {debounce, throttle} from 'Types/function';
+import {debounce} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
@@ -607,7 +607,7 @@ var _private = {
             !sourceController.isLoading();
         const allowLoadBySearch =
             !self._options.searchValue ||
-            _private.getPortionedSearch(self).shouldSearch()
+            _private.getPortionedSearch(self).shouldSearch();
 
         if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
             _private.setHasMoreData(self._listViewModel, sourceController.hasMoreData(direction));
