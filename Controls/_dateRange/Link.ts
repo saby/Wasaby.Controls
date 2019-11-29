@@ -8,7 +8,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  *
  * @class Controls/_dateRange/Link
  * @extends Core/Control
- * @interface Controls/interface/IInputDateTime
+ * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/interface/ILinkView
  * @control
  * @public
