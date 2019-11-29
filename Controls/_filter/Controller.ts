@@ -60,13 +60,14 @@ const _private = {
             }
             if (filterButtonItems && fastFilterItems) {
                historyItems = _private.cloneItems(filterButtonItems);
+
                _private.equalItemsIterator(filterButtonItems, fastFilterItems, setTextValue);
             } else {
                historyItems = _private.cloneItems(filterButtonItems || fastFilterItems);
             }
 
             historyItems = historyItems.filter(item => {
-               return !item.doNotSaveToHistory || item.doNotSaveToHistory === undefined;
+               return !item.doNotSaveToHistory;
             });
 
             return _private.minimizeFilterItems(historyItems);
