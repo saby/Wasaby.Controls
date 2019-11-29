@@ -204,10 +204,6 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
-
-                    if (self._children && self._children.scrollController) {
-                        self._children.scrollController.reset(self._listViewModel.getCount());
-                    }
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
