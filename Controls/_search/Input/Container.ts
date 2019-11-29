@@ -3,13 +3,8 @@ import template = require('wml!Controls/_search/Input/Container');
 import {constants} from 'Env/Env';
 
 /**
- * Контейнер для контрола с {@link Controls/interface/IInputField}.
- * Получает результат дочернего события "filterChanged" и уведомляет о всплывающем событии "search".
- * Важно: Должен быть обернут в {@link Controls/_search/Controller}.
- *
- * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
- *
- * <a href="/materials/demo/demo-ws4-explorer-with-search">Демо-пример</a>.
+ * Контрол используют в качестве контейнера для {@link Controls/search:Input}. 
+ * Он обеспечивает передачу текстового значения, введённого в Controls/search:Input, в {@link Controls/search:Controller}
  *
  * @class Controls/_search/Input/Container
  * @extends Core/Control
