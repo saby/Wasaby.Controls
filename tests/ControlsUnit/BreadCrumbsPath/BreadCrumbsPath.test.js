@@ -2,7 +2,6 @@ define([
    'Controls/_breadcrumbs/HeadingPath',
    'Controls/_breadcrumbs/Path',
    'Controls/_breadcrumbs/Utils',
-   'Controls/Utils/getWidth',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred',
    'Types/entity'
@@ -10,7 +9,6 @@ define([
    HeadingPath,
    Path,
    BreadCrumbsUtil,
-   getWidthUtil,
    FontLoadUtil,
    Deferred,
    entity

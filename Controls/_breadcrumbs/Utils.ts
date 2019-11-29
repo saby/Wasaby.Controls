@@ -1,5 +1,4 @@
 import {ItemsUtil} from 'Controls/list';
-import getWidthUtil = require('Controls/Utils/getWidth');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
 import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
