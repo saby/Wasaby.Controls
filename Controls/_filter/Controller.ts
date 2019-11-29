@@ -66,7 +66,7 @@ const _private = {
             }
 
             historyItems = historyItems.filter(item => {
-               return item.doNotSaveToHistory || item.doNotSaveToHistory === undefined;
+               return !item.doNotSaveToHistory || item.doNotSaveToHistory === undefined;
             });
 
             return _private.minimizeFilterItems(historyItems);
