@@ -46,7 +46,7 @@
          bind:selectedKey="_multiselectVisibility"
          source="{{_multiselectVisibilitySource}}"
          keyProperty="id"
-         attr:class="demo-Search__multiselectVisibilitySource"/>
+         attr:class="demo-Search__multiselectVisibility"/>
       </div>
    </div>
 </div>
