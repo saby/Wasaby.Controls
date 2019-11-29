@@ -42,7 +42,7 @@ export {
    Controller,
    Container,
    selectionToRecord,
-   MultiSelector as SimpleMultiSelector
+   MultiSelector as SimpleMultiSelector,
    FlatSelectionStrategy,
    TreeSelectionStrategy,
    DeepTreeSelectionStrategy
