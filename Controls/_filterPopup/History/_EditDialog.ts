@@ -8,7 +8,7 @@ import DialogTemplate = require('wml!Controls/_filterPopup/History/_Favorite/Edi
 
 interface IEditDialog extends IControlOptions {
     items: object[];
-    globalKey: 0|1;
+    isClient: boolean;
     isFavorite: boolean;
     editedTextValue: string;
 }
@@ -16,8 +16,8 @@ interface IEditDialog extends IControlOptions {
 const globalConfig = new Memory({
     keyProperty: 'key',
     data: [
-        {key: 0, title: rk('Для меня')},
-        {key: 1, title: rk('Для всех'), comment: rk('Отчёт будет доступен для всех сотрудников')}
+        {key: false, title: rk('Для меня')},
+        {key: true, title: rk('Для всех'), comment: rk('Отчёт будет доступен для всех сотрудников')}
     ]
 });
 
@@ -26,7 +26,7 @@ class EditDialog extends Control<IEditDialog> {
 
     private _textValue: string;
     private _placeholder: string;
-    private _globalKey: number;
+    private _isClient: boolean;
     private _globalSource = globalConfig;
     private _selectedFilters: string[];
     private _source: Memory;
@@ -53,7 +53,7 @@ class EditDialog extends Control<IEditDialog> {
     private prepareConfig(self: EditDialog, options: IEditDialog): void {
         self._placeholder = options.editedTextValue;
         self._textValue = options.isFavorite ? options.editedTextValue : '';
-        self._globalKey = options.globalKey;
+        self._isClient = options.isClient;
         self._selectedFilters = [];
         self._source = self.getItemsSource(self, options.items);
     }
@@ -63,14 +63,14 @@ class EditDialog extends Control<IEditDialog> {
     }
 
     protected _beforeUpdate(newOptions: IEditDialog): void {
-        if (newOptions.items !== this._options.items || newOptions.globalKey !== this._options.globalKey ||
+        if (newOptions.items !== this._options.items || newOptions.isClient !== this._options.isClient ||
             newOptions.isFavorite !== this._options.isFavorite || newOptions.editedTextValue !== this._options.editedTextValue) {
             this.prepareConfig(this, newOptions);
         }
     }
 
     protected _delete(): void {
-        this.sendResult({action: 'delete'});
+        this.sendResult({action: 'delete', isClient: this._isClient});
     }
 
     protected _apply(): void {
@@ -83,7 +83,7 @@ class EditDialog extends Control<IEditDialog> {
                     rawData: {
                         items: this.getItemsToSave(this._options.items, this._selectedFilters),
                         linkText: this._textValue || this._placeholder,
-                        isClient: this._globalKey
+                        isClient: this._isClient
                     }
                 })
             };
@@ -117,7 +117,7 @@ class EditDialog extends Control<IEditDialog> {
 
     static getDefaultOptions(): object {
         return {
-            globalKey: 0
+            isClient: false
         };
     }
 

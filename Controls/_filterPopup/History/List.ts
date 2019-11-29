@@ -5,6 +5,8 @@ import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
 import Utils = require('Types/util');
 import Serializer = require('Core/Serializer');
+import * as Merge from 'Core/core-merge';
+import * as Clone from 'Core/core-clone';
 import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import {factory} from 'Types/chain';
@@ -32,7 +34,7 @@ var MAX_NUMBER_ITEMS = 5;
       },
 
       setObjectData: function(editItem, data) {
-         editItem.set('ObjectData', JSON.stringify(data.getRawData(), new Serializer().serialize));
+         editItem.set('ObjectData', JSON.stringify(data, new Serializer().serialize));
       },
 
       getStringHistoryFromItems: function(items, resetValues) {
@@ -77,15 +79,15 @@ var MAX_NUMBER_ITEMS = 5;
          }
       },
 
-      removeRecordFromOldFavorite: function(self, itemData, item) {
+       // TODO: Delete with old favorite
+       removeRecordFromOldFavorite: function(self, itemData, item) {
          let storage = self._historyStorage;
          if (itemData.globalParams || itemData.isClient) {
             storage = self._historyGlobalStorage;
          }
          let recordIndex = storage.getIndexByValue('id', item.get('ObjectId'));
          if (recordIndex !== -1) {
-            // FIXME
-            // storage.removeAt(recordIndex);
+            storage.removeAt(recordIndex);
          }
          return recordIndex;
       },
@@ -112,17 +114,17 @@ var MAX_NUMBER_ITEMS = 5;
          return {
             items,
             editedTextValue: savedTextValue || '',
-            globalKey: history.globalParams === undefined ? history.isClient : history.globalParams,
+            isClient: history.globalParams === undefined ? !!history.isClient : !!history.globalParams,
             isFavorite: item.get('pinned') || item.get('client')
          };
       },
 
-      deleteFavorite: function(self) {
+      deleteFavorite: function(self, data) {
          _private.getSource(self._options.historyId).remove(self._editItem, {
-            $_favorite: true, historyType: self._editItem.get('client')
+            $_favorite: true, isClient: data.isClient
          });
 
-         // TODO Delete
+         // TODO: Delete with old favorite
          let editItemData = _private.getSource(self._options.historyId).getDataObject(self._editItem);
          _private.removeRecordFromOldFavorite(self, editItemData, self._editItem);
          _private.updateOldFavoriteList(self);
@@ -133,11 +135,12 @@ var MAX_NUMBER_ITEMS = 5;
 
       saveFavorite: function(self, record) {
          let editItemData = _private.getSource(self._options.historyId).getDataObject(self._editItem);
-         _private.setObjectData(self._editItem, record);
+         let ObjectData = Merge(Clone(editItemData), record.getRawData());
+         _private.setObjectData(self._editItem, ObjectData);
 
          _private.minimizeHistoryItems(record);
 
-         // TODO Delete, leave the branch 'else'
+         // TODO: Delete with old favorite, leave the branch 'else'
          // Удаляем запись из старых списков, ниже добавим в новые, если ее нет
          const index = _private.removeRecordFromOldFavorite(self, editItemData, self._editItem);
          _private.updateOldFavoriteList(self);
@@ -147,20 +150,21 @@ var MAX_NUMBER_ITEMS = 5;
                self._editItem.set('ObjectId', ObjectId);
                _private.getSource(self._options.historyId).update(self._editItem, {
                   $_pinned: true,
-                  historyType: record.get('isClient')
+                  isClient: record.get('isClient')
                });
             });
          } else {
-            // from new favorite. Если сменился тип: удалить и сохранить заново, иначе - обновить
+            // for new favorite
             _private.getSource(self._options.historyId).update(self._editItem, {
                $_favorite: true,
-               historyType: record.get('isClient')
+               isClient: record.get('isClient')
             });
          }
          self._notify('historyChanged');
       },
 
-      updateOldFavoriteList: function(self) {
+       // TODO: Delete with old favorite
+       updateOldFavoriteList: function(self) {
          self._oldFavoriteList.assign(self._historyStorage.getHistory());
          self._oldFavoriteList.prepend(self._historyGlobalStorage.getHistory());
          _private.convertToNewFormat(self, self._oldFavoriteList, self._options.filterItems);
@@ -183,7 +187,8 @@ var MAX_NUMBER_ITEMS = 5;
          self._children.stickyOpener.open(popupOptions);
       },
 
-      convertToNewFormat: function(self, favoriteList, filterItems) {
+       // TODO: Delete with old favorite
+       convertToNewFormat: function(self, favoriteList, filterItems) {
          factory(favoriteList).each((favoriteItem) => {
             let data = favoriteItem.get('data');
             favoriteItem.get('data').set('items', convertToSourceDataArray(data.get('filter'),  _private.mapByField(filterItems, 'visibility')));
@@ -243,7 +248,7 @@ var MAX_NUMBER_ITEMS = 5;
          if (data.action === 'save') {
             _private.saveFavorite(this, data.record);
          } else if (data.action === 'delete') {
-            _private.deleteFavorite(this);
+            _private.deleteFavorite(this, data);
          }
       },
 

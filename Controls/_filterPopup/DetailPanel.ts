@@ -94,6 +94,7 @@ import {Logger} from 'UI/Utils';
          }
       },
 
+      //TODO: Delete with old favorite
       loadFavoriteItems: function(self, historyId) {
          let loadDef = new Deferred();
          require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {

@@ -62,26 +62,34 @@ var _private = {
          history_id: self._historyId || data.get('HistoryId'),
          object_id: data.getId(),
          data: data.get('ObjectData'),
-         history_type: meta.historyType
+         history_type: Number(meta.isClient)
       });
    },
 
-   updateHistory: function (self, data, meta) {
+    deleteItem: function(self, data, meta) {
+        return _private.callQuery(self, 'Delete', {
+            history_id: self._historyId,
+            object_id: data.getId(),
+            history_type: Number(meta.isClient)
+        });
+    },
+
+    updateHistory: function (self, data, meta) {
       if (meta.parentKey) {
-         _private.getHistoryDataSource(self).call('AddHierarchy', {
+         _private.callQuery(self, 'AddHierarchy', {
             history_id: self._historyId,
             parent1: meta.parentKey,
             id: data.id
          });
       } else if (data.ids) {
-         _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
+         _private.callQuery(self, _private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
             history_id: self._historyId,
             ids: data.ids,
             history_context: null
          });
       } else {
          var id = data.getId();
-         _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('Add', 'AddInt', id), {
+         _private.callQuery(self, _private.getMethodNameByIdType('Add', 'AddInt', id), {
             history_id: data.get('HistoryId') || self._historyId,
             id: id,
             history_context: null
@@ -99,7 +107,7 @@ var _private = {
    updatePinned: function (self, data, meta) {
       const id = data.getId();
       const historyId = data.get('HistoryId') || self._historyId;
-      if (meta.historyType) {
+      if (meta.isClient) {
          _private.callQuery(self, 'PinForClient', {
             history_id: historyId,
             object_id: id,
@@ -113,14 +121,6 @@ var _private = {
             pin: !!meta['$_pinned']
          });
       }
-   },
-
-   deleteItem: function(self, data, meta) {
-      _private.callQuery(self, 'Delete', {
-         history_id: self._historyId,
-         object_id: data.getId(),
-         history_type: meta.historyType
-      });
    },
 
    incrementUsage: function (self) {
@@ -295,7 +295,7 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin, SerializableMixi
    },
 
    deleteItem: function(data, meta) {
-      _private.deleteItem(this, data, meta);
+      return _private.deleteItem(this, data, meta);
    },
 
    query(): Deferred<DataSet> {
@@ -334,14 +334,13 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin, SerializableMixi
       return resultDef;
    },
 
-   destroy(keys: number|string|Array<number|string>): Deferred<null> {
+   destroy(id: number|string): Deferred<null> {
       let  result;
 
-      if (keys) {
-         const key = keys instanceof Array ? keys[0] : keys;
+      if (id) {
          result = _private.callQuery(this, 'Delete', {
                history_id: this._historyId,
-               object_id: key
+               object_id: id
          });
       } else {
          result = Deferred.success(null);

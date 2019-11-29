@@ -188,7 +188,7 @@ define(
                };
             });
 
-            List._private.deleteFavorite(self);
+            List._private.deleteFavorite(self, {});
             assert.isTrue(closed);
             sinon.assert.calledOnce(List._private.removeRecordFromOldFavorite);
             sinon.assert.calledOnce(List._private.updateOldFavoriteList);
