@@ -21,7 +21,7 @@ define('Controls-demo/operations/ShowSelectedMemory', [
    }
 
    function getChildren(items, parent) {
-      return items.filter((item) => {
+      return items.filter(function(item) {
          return isChildByNode(item, items, parent)
       });
    }
@@ -44,7 +44,7 @@ define('Controls-demo/operations/ShowSelectedMemory', [
    function isSelected(item, items, selection) {
       var selected = selection.get('marked');
 
-      return includes(selected, item.id) || getChildren(items, item.id).filter((item) => {
+      return includes(selected, item.id) || getChildren(items, item.id).filter(function(item) {
             return includes(selected, item.id);
          }).length;
    }
@@ -72,7 +72,7 @@ define('Controls-demo/operations/ShowSelectedMemory', [
          if (selection) {
             var isAllSelected = selection.get('marked').includes(null) && selection.get('excluded').includes(null);
 
-            query.where((item) => {
+            query.where(function(item) {
                item = getById(items, item.get('id'));
                if (isSelected(item, items, selection) && isChildByNode(item, items, parent) ||
                   isAllSelected && item['Раздел'] === null && !includes(selection.get('excluded'), item.id)) {
@@ -90,7 +90,7 @@ define('Controls-demo/operations/ShowSelectedMemory', [
             });
          }
 
-         return ShowSelectedMemory.superclass.query.apply(this, arguments).addCallback((data) => {
+         return ShowSelectedMemory.superclass.query.apply(this, arguments).addCallback(function(data) {
             var originalGetAll = data.getAll;
 
             data.getAll = function() {
