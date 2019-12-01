@@ -92,3 +92,8 @@ export type IVirtualScrollMode = 'remove' | 'hide';
  * @cfg {IVirtualScrollMode} Режим скрытия записей в виртуальном скроллинге
  * @default remove
  */
+
+/**
+ * @name Controls/_list/interface/IVirtualScroll#virtualScrollConfig
+ * @cfg {IVirtualScrollConfig} Конфигурация виртуального скроллинга
+ */
