@@ -2,12 +2,10 @@ import {IDirection} from '../interface/IVirtualScroll';
 import {Record as entityRecord} from 'Types/entity';
 import {CollectionItem} from 'Controls/display';
 import {IObservable} from 'Types/collection';
-import * as getDimensions from 'Controls/Utils/getDimensions';
+import * as getDimension from 'Controls/Utils/getDimensions';
 
 const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
-
 const DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION = 1 / 4;
-
 
 type IVirtualItem = number;
 
@@ -71,7 +69,7 @@ export default class VirtualScrollController {
 
     constructor(options: IVirtualScrollControllerOptions) {
         const pageSize = options.pageSize || DEFAULT_VIRTUAL_PAGE_SIZE;
-        const segmentSize = pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION;
+        const segmentSize = Math.ceil(pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION);
         this._options = {
             ...options,
             pageSize, segmentSize
@@ -171,9 +169,9 @@ export default class VirtualScrollController {
     reset(startIndex?: number): void {
         this.itemsHeights = [];
         this.itemsOffsets = [];
-        const initialIndex = this.startIndex || 0;
+        const initialIndex = startIndex || 0;
 
-        if (this.itemHeightProperty) {
+        if (this._options.itemHeightProperty) {
             this.recalcFromItemHeightProperty(initialIndex);
         } else {
             this.recalcRangeFromIndex(initialIndex );
@@ -285,8 +283,8 @@ export default class VirtualScrollController {
         let stopIndex: number;
 
         for (let i = startIndex; i < this.itemsCount; i++) {
-            const itemHeight = this._options.viewModel.at(i).getContents().get(this.itemHeightProperty);
-            if (sumHeight + itemHeight < this._options.viewportHeight) {
+            const itemHeight = this._options.viewModel.at(i).getContents().get(this._options.itemHeightProperty);
+            if (sumHeight + itemHeight <= this._options.viewportHeight) {
                 stopIndex = i;
                 sumHeight += itemHeight;
             } else {
@@ -463,7 +461,7 @@ export default class VirtualScrollController {
         }
 
         for (let i = 0; i < updateLength; i++) {
-            const itemHeight = getDimensions(this._itemsContainer.children[startChildrenIndex + i] as HTMLElement).height;
+            const itemHeight = getDimension(this._itemsContainer.children[startChildrenIndex + i] as HTMLElement).height;
 
             this.itemsHeights[startUpdateIndex + i] = itemHeight;
             this.itemsOffsets[startUpdateIndex + i] = sum;

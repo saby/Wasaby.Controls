@@ -3,6 +3,9 @@
         <ws:if data="{{_showLoadingIndicatorImage}}">
             <div class="controls-BaseControl__loadingIndicatorImg-wrapper">
                 <div class="controls-BaseControl__loadingIndicatorImg"></div>
+                <ws:if data="{{_options.searchValue}}">
+                    <div class="controls-BaseControl__abortSearch" on:click="_abortSearch()">{[Прервать поиск]}</div>
+                </ws:if>
             </div>
         </ws:if>
     </div>
@@ -12,7 +15,14 @@
     <ws:if data="{{_loadingIndicatorState && _loadingIndicatorState !== 'up'}}">
         <ws:partial template="loadingIndicator"/>
     </ws:if>
-
+    <ws:if data="{{_showContinueSearchButton}}">
+        <div class="controls-BaseControl__continueSearch" on:click="_continueSearch()">
+            <div class="controls-BaseControl__continueSearch_caption">
+                <div class="controls-BaseControl__continueSearch_icon controls-icon icon-Search2 controls-icon_size-m_theme-{{_options.theme}}"></div>
+                {[Продолжить поиск]}
+            </div>
+        </div>
+    </ws:if>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content">
             <ws:partial template="{{_options.footerTemplate}}"/>

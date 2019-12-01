@@ -42,7 +42,6 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
             searchViewModel,
             superclassGetItemDataByItem = SearchViewModel.superclass.getItemDataByItem,
             treeView = new TreeGridView({});
-         treeView._isFullGridSupport = true;
          SearchViewModel.superclass.getItemDataByItem = function(breadCrumbs) {
             const itemData = {
                item: {},
