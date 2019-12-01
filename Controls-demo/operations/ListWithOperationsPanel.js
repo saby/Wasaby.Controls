@@ -1,6 +1,6 @@
-define('Controls-demo/SelectionStrategies/ListWithOperationsPanel', [
+define('Controls-demo/operations/ListWithOperationsPanel', [
    'Core/Control',
-   'wml!Controls-demo/SelectionStrategies/ListWithOperationsPanel'
+   'wml!Controls-demo/operations/ListWithOperationsPanel'
 ], function(Control, template) {
    'use strict';
 

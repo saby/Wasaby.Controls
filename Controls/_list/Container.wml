@@ -1,6 +1,6 @@
 <ws:partial template="{{_options.content}}"
             on:expandedItemsChanged="_expandedItemsChanged()"
-            filter="{{_dataOptions.filter}}"
+            filter="{{_options.filter || _dataOptions.filter}}"
             navigation="{{_dataOptions.navigation}}"
             sorting="{{_dataOptions.sorting}}"
             keyProperty="{{_dataOptions.keyProperty}}"

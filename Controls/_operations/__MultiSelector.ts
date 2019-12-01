@@ -17,6 +17,16 @@ const DEFAULT_ITEMS = [
    }
 ];
 
+const SHOW_SELECTED_ITEM =  {
+   id: 'showSelected',
+   title: rk('Показать отмеченнные')
+};
+
+const SHOW_ALL_ITEM =  {
+   id: 'showAll',
+   title: rk('Показать все')
+};
+
 type TKeys = string[]|number[];
 type TCount = void|number;
 type TRoot = null|string|number;
@@ -33,9 +43,10 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    protected _menuSource: Memory = null;
    protected _sizeChanged: boolean = false;
    protected _menuCaption: string = null;
+   protected _isShowSelectedItems: boolean = false;
 
    protected _beforeMount(options: IMultiSelectorOptions): void {
-      this._menuSource = this._getMenuSource();
+      this._menuSource = this._getMenuSource(options.withShowSelected);
       this._updateSelection(options.selectedKeys, options.excludedKeys, options.selectedKeysCount, options.root);
    }
 
@@ -55,10 +66,25 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       }
    }
 
-   private _getMenuSource(): Memory {
+   protected _viewTypeChanged(e: SyntheticEvent, typeView: string): void {
+      this._isShowSelectedItems = typeView === 'showSelected';
+      this._menuSource = this._getMenuSource(this._options.withShowSelected);
+   }
+
+   private _getAdditionalMenuItems(withShowSelected: boolean): Array<Object> {
+      if (!withShowSelected) {
+         return [];
+      } else if (this._isShowSelectedItems) {
+         return [SHOW_ALL_ITEM];
+      } else {
+         return [SHOW_SELECTED_ITEM];
+      }
+   }
+
+   private _getMenuSource(withShowSelected: boolean): Memory {
       return new Memory({
          keyProperty: 'id',
-         data: DEFAULT_ITEMS
+         data: DEFAULT_ITEMS.concat(this._getAdditionalMenuItems(withShowSelected))
       });
    }
 
@@ -77,10 +103,21 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       this._sizeChanged = true;
    }
 
-   private _onMenuItemActivate(event: SyntheticEvent<'menuItemActivate'>, item: Model): void {
-      this._notify('selectedTypeChanged', [item.get('id')], {
-         bubbling: true
-      });
+   protected _onMenuItemActivate(event: SyntheticEvent<'menuItemActivate'>, item: Model): void {
+      let itemId: string = item.get('id');
+
+      if (itemId === 'showSelected' || itemId === 'showAll') {
+         this._notify('viewTypeChanged', [itemId], {
+            bubbling: true
+         });
+
+         this._isShowSelectedItems = !this._isShowSelectedItems;
+         this._menuSource = this._getMenuSource(this._options.withShowSelected);
+      } else {
+         this._notify('selectedTypeChanged', [itemId], {
+            bubbling: true
+         });
+      }
    }
 
    static getDefaultOptions(): object {

@@ -3,4 +3,5 @@
    scope="{{_options}}"
    on:selectedKeysChanged="_selectionChangeHandler('listSelectedKeysChanged')"
    on:excludedKeysChanged="_selectionChangeHandler('listExcludedKeysChanged')"
+   on:rootChanged="_selectionChangeHandler('listRootChanged')"
 />
