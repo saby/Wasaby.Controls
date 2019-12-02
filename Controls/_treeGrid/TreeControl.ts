@@ -84,10 +84,12 @@ var _private = {
             !_private.isExpandAll(self._options.expandedItems) &&
             !self._nodesSourceControllers[nodeKey] &&
             !dispItem.isRoot() &&
-            (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
+            _private.shouldLoadChildren(self, item)
         ) {
             self._children.baseControl.showIndicator();
             filter[options.parentProperty] = nodeKey;
+            // сортировка записей обеспечивается только на server-side, если понадобится перед загрузкой
+            // очистить дочерние элементы загружаемого узла, то делать это нужно здесь.
             _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
                 .load(filter, options.sorting)
                 .addCallback((list) => {
@@ -108,7 +110,17 @@ var _private = {
         }
     },
     shouldLoadChildren: function(self, node): boolean {
-        if (self._options.hasChildrenProperty) {
+        // todo remove isMultiNavigation and "else" by task
+        // https://online.sbis.ru/opendoc.html?guid=4b0845de-f84b-4cd9-87f3-c2dfb824ac9b
+        const isMultiNavigation = self._options.navigation &&
+            self._options.navigation.sourceConfig &&
+            self._options.navigation.sourceConfig.multiNavigation;
+
+        if (isMultiNavigation) { // Загруженность узла определяем по множественной навигации
+            const key = node.get(self._options.keyProperty);
+            return isMultiNavigation && !self._nodesSourceControllers[key];
+        } else if (self._options.hasChildrenProperty) {
+            // Загруженность узла определяем по наличию в рекордсете его дочерних записей.
             const
                 listViewModel = self._children.baseControl.getViewModel(),
                 hasChildren = node.get(self._options.hasChildrenProperty),

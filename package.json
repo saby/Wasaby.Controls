@@ -76,7 +76,7 @@
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
-      "tslint": "^5.18.0",
+      "tslint": "^5.20.1",
       "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-20.1000"
    }
 }
