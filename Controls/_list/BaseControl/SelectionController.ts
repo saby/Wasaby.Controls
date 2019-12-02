@@ -6,7 +6,7 @@ import template = require('wml!Controls/_list/BaseControl/SelectionController');
 import {isEqual} from 'Types/object';
 import { load } from 'Core/library';
 import merge = require('Core/core-merge');
-import { ISelectionStrategy } from 'Controls/interface';
+import { ISelectionStrategy } from 'Controls/operations';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController

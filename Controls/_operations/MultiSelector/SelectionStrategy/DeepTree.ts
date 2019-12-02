@@ -3,13 +3,13 @@ import getSelectedChildrenCount from 'Controls/_operations/MultiSelector/getSele
 import removeSelectionChildren from 'Controls/_operations/MultiSelector/removeSelectionChildren';
 import { isNode, getItems, getChildren } from 'Controls/_operations/MultiSelector/ModelCompability';
 
+import { IQueryParams } from 'Controls/_operations/MultiSelector/SelectionStrategy/Base';
 import { relation } from 'Types/entity';
 import { Tree as TreeCollection } from 'Controls/display';
 import { ViewModel } from 'Controls/treeGrid';
 import { Record } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection
-   ISelectionStrategy, ISelectionConfig, ISelectionQuery as IQueryParams} from 'Controls/interface/';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject } from 'Controls/interface/';
 
 
 interface IEntryPath {
@@ -24,13 +24,12 @@ const FIELD_ENTRY_PATH = 'ENTRY_PATH';
  * При выборе родительского узла, так же в выборку попадают все его дети.
  * @class Controls/_operations/MultiSelector/SelectionStrategy/DeepTree
  * @extends Controls/_operations/MultiSelector/SelectionStrategy/Tree
- * @mixes Controls/_interface/ISelectionStrategy
  * @control
  * @public
  * @author Капустин И.А.
  */
 export default class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
-   protected recursive: boolean = true;
+   protected _recursive: boolean = true;
 
    protected _getCount(selection: ISelection, model: TreeCollection|ViewModel, queryParams: IQueryParams, hierarchyRelation: relation.Hierarchy): number|null {
       let countItemsSelected: number|null = 0;

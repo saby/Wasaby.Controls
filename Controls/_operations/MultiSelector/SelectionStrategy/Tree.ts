@@ -1,4 +1,4 @@
-import BaseSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Base';
+import { default as BaseSelectionStrategy, IQueryParams } from 'Controls/_operations/MultiSelector/SelectionStrategy/Base';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import getSelectedChildrenCount from 'Controls/_operations/MultiSelector/getSelectedChildrenCount';
 import { isNode, getParentProperty, getItems, getChildren } from 'Controls/_operations/MultiSelector/ModelCompability';
@@ -8,14 +8,13 @@ import { relation, Record } from 'Types/entity';
 import { Tree as TreeCollection } from 'Controls/display';
 import { ViewModel } from 'Controls/treeGrid';
 import { RecordSet } from 'Types/collection';
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection,
-   ISelectionStrategy, ISelectionStrategyOptions, ISelectionQuery as IQueryParams } from 'Controls/interface/';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 
 /**
  * Стратегия выбора для иерархического списка, для работы с ним как с плоским.
  * Записи не зависимы между собой, выбор родительских узлов никак не отражается на их детей.
  * @class Controls/_operations/MultiSelector/SelectionStrategy/Tree
- * @mixes Controls/_interface/ISelectionStrategy
+ * @extends Controls/_operations/MultiSelector/SelectionStrategy/Base
  * @control
  * @public
  * @author Капустин И.А.

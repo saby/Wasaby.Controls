@@ -1,4 +1,4 @@
-import BaseSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Base';
+import { default as BaseSelectionStrategy, IQueryParams } from 'Controls/_operations/MultiSelector/SelectionStrategy/Base';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 import clone = require('Core/core-clone');
@@ -6,15 +6,14 @@ import clone = require('Core/core-clone');
 import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection,
-   ISelectionStrategy, ISelectionStrategyOptions, ISelectionQuery as IQueryParams } from 'Controls/interface/';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 
 const ALL_SELECTION_VALUE = null;
 
 /**
  * Базовая стратегия выбора в плоском списке.
  * @class Controls/_operations/MultiSelector/SelectionStrategy/Flat
- * @mixes Controls/_interface/ISelectionStrategy
+ * @extends Controls/_operations/MultiSelector/SelectionStrategy/Base
  * @control
  * @public
  * @author Капустин И.А.
