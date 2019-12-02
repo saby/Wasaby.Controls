@@ -8,7 +8,7 @@
  * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/ здесь}.
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:columns>
  *       <ws:Array>
@@ -42,12 +42,10 @@
  * * **item** (тип {@link Types/entity:Record}) — элемент, данные которого отображаются в колонке.
  * * **column** (тип {@link Controls/_grid/interface/IGridControl/Column.typedef Column.typedef}) — объект с конфигурацией колонки.
  * 
- * Также в области видимости шаблона есть переменная **editArrowTemplate** — шаблон, который позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в шаблоне.
- * Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
- * Работа с переменной показана в примере № 4.
+ * Также в области видимости шаблона есть переменная **editArrowTemplate**, которая позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон}. Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}. Работа с переменной показана в примере № 4.
  * @example
  * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:columns>
  *       <ws:Array>
@@ -68,7 +66,7 @@
  * </pre>
  * 
  * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
- * <pre>
+ * <pre class="brush: html">
  * <!-- file1.wml --> 
  * <Controls.grid:View>
  *    <ws:columns>
@@ -83,7 +81,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * <ws:partial template="Controls/grid:ColumnTemplate">
  *    <ws:contentTemplate>
@@ -94,7 +92,7 @@
  * 
  * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
  * 
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:columns>
  *       <ws:Array>
@@ -112,7 +110,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * <div title="{{contentTemplate.itemData.item.Name}}">
  *    {{contentTemplate.itemData.item.Name}}
@@ -120,7 +118,7 @@
  * </pre>
  * 
  * **Пример 4.** Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон. При этом добавлено отображение кнопки-шеврона.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:columns>
  *       <ws:Array>
