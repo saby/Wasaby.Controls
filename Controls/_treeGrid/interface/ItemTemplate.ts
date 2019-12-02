@@ -1,49 +1,91 @@
 /**
- * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/grid:View табличном представлении}.
- * @class Controls/grid:ItemTemplate
+ * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/treeGrid:View дереве}.
+ * @class Controls/treeGrid:ItemTemplate
  * @author Авраменко А.С.
- * @see Controls/grid:View#itemTemplate
- * @see Controls/grid:View#itemTemplateProperty
+ * @see Controls/treeGrid:View#itemTemplate
+ * @see Controls/treeGrid:View#itemTemplateProperty
  * @example
- * В следующем примере показано, как изменить параметры шаблона.
  * <pre class="brush: html">
- * <Controls.grid:View>
+ * <Controls.treeGrid:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}">
+ *       <ws:partial template="Controls/treeGrid:ItemTemplate" levelIndentSize="null" expanderSize="l" expanderIcon="node">
  *          <ws:contentTemplate>
- *             {{contentTemplate.itemData.item.title}}
+ *             <div title="{{contentTemplate.itemData.item.Name}}">
+ *                {{contentTemplate.itemData.item.Name}}
+ *             </div>
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
- * </Controls.grid:View>
+ * </Controls.treeGrid:View>
  * </pre>
- * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
  */
 
+
 /**
- * @name Controls/grid:ItemTemplate#marker
- * @cfg {Boolean} Когда параметр установлен в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
- * @default true
- */
-/**
- * @name Controls/grid:ItemTemplate#highlightOnHover
- * @cfg {Boolean} Когда параметр установлен в значение true, элемент таблицы будет подсвечиваться при наведении курсора мыши.
- * @default true
- */
-/**
- * @name Controls/grid:ItemTemplate#clickable
+ * @name Controls/treeGrid:ItemTemplate#clickable
  * @cfg {Boolean} Устанавливает тип {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора}.
  * @default true
+ * @remark
  * Доступные значения
  * 
  * * **true** — используется курсор pointer.
  * * **false** — используется курсор default.
  */
+
 /**
- * @name Controls/grid:ItemTemplate#contentTemplate
- * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
+ * @name Controls/treeGrid:ItemTemplate#expanderSize
+ * @cfg {String} Устанавливает размер иконки для узла и скрытого узла.
+ * @default s
+ * @remark
+ * Доступные значения s, m, l и xl.
+ * 
+ */
+
+/**
+ * @name Controls/treeGrid:ItemTemplate#expanderIcon
+ * @cfg {String} Устанавливает стиль отображения иконки для узла и скрытого узла.
  * @default undefined
+ * @remark
+ * Доступные значения:
+ * 
+ * * **none** — иконки всех узлов не отображаются.
+ * * **node** — иконки всех узлов отображаются как иконки узлов.
+ * * **hiddenNode** — иконки всех узлов отображаются как иконки скрытых узлов.
+ */
+
+/**
+ * @name Controls/treeGrid:ItemTemplate#withoutLevelPadding
+ * @cfg {Boolean} Убирает отступы для элементов иерархии.
+ * @default false
+ * @remark
+ * Доступные значения:
+ * 
+ * * **true** — отступы убраны.
+ * * **false** — отступы присутствуют.
+ */
+
+/**
+ * @name Controls/treeGrid:ItemTemplate#levelIndentSize
+ * @cfg {String} Устанавливает размер отступа элемента иерархии.
+ * @default s
+ * @remark
+ * Доступные значения s, m, l и xl.
+ * 
+ */
+
+/**
+ * @name Controls/treeGrid:ItemTemplate#marker
+ * @cfg {Boolean} Когда параметр установлен в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
+ * @default true
+ */
+/**
+ * @name Controls/treeGrid:ItemTemplate#highlightOnHover
+ * @cfg {Boolean} Когда параметр установлен в значение true, элемент таблицы будет подсвечиваться при наведении курсора мыши.
+ * @default true
+ */
+/**
+ * @name Controls/treeGrid:ItemTemplate#contentTemplate
+ * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
  * @remark
  * В области видимости шаблона доступен объект **itemData**.
  * Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
@@ -56,7 +98,7 @@
  * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/grid:ItemTemplate">
+ *       <ws:partial template="Controls/treeGrid:ItemTemplate">
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>
@@ -77,7 +119,7 @@
  * 
  * <pre class="brush: html">
  * <!-- file2.wml -->
- * <ws:partial template="Controls/grid:ItemTemplate">
+ * <ws:partial template="Controls/treeGrid:ItemTemplate">
  *    <ws:contentTemplate>
  *       {{contentTemplate.itemData.item.title}}
  *    </ws:contentTemplate>
@@ -89,7 +131,7 @@
  * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/grid:ItemTemplate">
+ *       <ws:partial template="Controls/treeGrid:ItemTemplate">
  *          <ws:contentTemplate>
  *             <ws:partial template="wml!file2" scope="{{contentTemplate}}"/>
  *          </ws:contentTemplate>
@@ -107,7 +149,7 @@
  * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/grid:ItemTemplate">
+ *       <ws:partial template="Controls/treeGrid:ItemTemplate">
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *             <ws:partial template="{{contentTemplate.itemActionsTemplate}}" />
@@ -117,10 +159,14 @@
  * </Controls.grid:View>
  * </pre>
  */
+
 export default interface IItemTemplateOptions {
-   marker?: boolean;
-   highlightOnHover?: boolean;
-   clickable?: boolean;
    contentTemplate?: string;
-   itemActionsTemplate?: string;
+   highlightOnHover?: boolean;
+   marker?: boolean;
+   withoutLevelPadding?: boolean;
+   expanderIcon?: string;
+   expanderSize?: string;
+   levelIndentSize?: string;
+   clickable?: boolean;
 }
