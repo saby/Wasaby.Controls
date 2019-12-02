@@ -46,6 +46,7 @@ export default {
         }
         return scaleData;
     },
+
     getNativeEventPageX(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
         let targetX = 0;
         if (event.type === 'mousedown' || event.type === 'mousemove') {

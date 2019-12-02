@@ -13,7 +13,9 @@ export interface ISliderBaseOptions extends IControlOptions {
    scaleStep?: number;
    value: number;
    precision: number;
+   format?: string;
    tooltipFormatter?: Function;
+
 }
 
 const maxPercentValue = 100;
@@ -334,7 +336,8 @@ class Base extends Control<ISliderBaseOptions> {
          maxValue: undefined,
          scaleStep: undefined,
          value: undefined,
-         precision: 0
+         precision: 0,
+         format: 'ms'
       };
    }
 
@@ -343,6 +346,10 @@ class Base extends Control<ISliderBaseOptions> {
          size: EntityDescriptor(String).oneOf([
             's',
             'm'
+         ]),
+         format: EntityDescriptor(String).oneOf([
+             'hour',
+             'ms'
          ]),
          borderVisible: EntityDescriptor(Boolean),
          minValue: EntityDescriptor(Number).required,

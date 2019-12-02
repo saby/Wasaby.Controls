@@ -17,7 +17,7 @@
                     name="{{point.name}}"
                     style="left:{{point.position}}%;">
                   <ws:if data="{{point.name=='tooltip' && !_options.readOnly && (_tooltipValue || _tooltipValue==0)}}">
-                     <div class="controls-Slider__tooltipValue controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue">{{_tooltipValue}}</div>
+                     <div class="controls-Slider__tooltipValue controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue">{{_options.format === 'hour' ? _tooltipValue + ':00' : _tooltipValue}}</div>
                   </ws:if>
                </div>
             </ws:if>
@@ -44,7 +44,7 @@
    </div>
    <div if="{{_scaleData && !_options.borderVisible}}" class="controls-Slider__scale">
       <ws:for data="key, segment in _scaleData">
-         <span class="controls-Slider__segment controls-Slider__segment_theme-{{_options.theme}} controls-Slider__segment{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}">{{segment.value}}</span>
+         <span class="controls-Slider__segment controls-Slider__segment_theme-{{_options.theme}} controls-Slider__segment{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}">{{_options.format === 'hour' ? segment.value + ':00' : segment.value}}</span>
       </ws:for>
    </div>
 </div>

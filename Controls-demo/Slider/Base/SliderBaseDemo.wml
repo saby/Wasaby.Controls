@@ -10,6 +10,7 @@
             precision="{{_precision}}"
             borderVisible="{{_borderVisible}}"
             readOnly="{{_readOnly}}"
+            format="{{_format}}"
             bind:value="_value"
             on:valueChanged="changeValue()"
          />
