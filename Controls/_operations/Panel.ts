@@ -111,6 +111,16 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * </pre>
  */
 
+/**
+ * @name Controls/_operations/Panel#withShowSelected
+ * @cfg {Boolean} Задает отображение кнопки "Показать отмеченные" в меню мультивыбора.
+ * @default false
+ * @example
+ * <pre>
+ *    <Controls.operations:Panel withShowSelected="true"/>
+ * </pre>
+ */
+
 
 var Panel = Control.extend({
    _template: template

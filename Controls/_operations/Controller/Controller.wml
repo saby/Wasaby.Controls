@@ -3,8 +3,7 @@
       <ws:partial
          template="{{_options.content}}"
          scope="{{_options}}"
-         filter="{{_filter}}"
-         viewMode="{{_showSelectedEntries ? 'search': _options.viewMode}}"
+         viewMode="{{_options.filter && _options.filter.selectionWithPaths ? 'search': _options.viewMode}}"
          on:listSelectedKeysChanged="_notifyHandler('selectedKeysChanged')"
          on:listExcludedKeysChanged="_notifyHandler('excludedKeysChanged')"
          on:listRootChanged="_rootListChanged()"

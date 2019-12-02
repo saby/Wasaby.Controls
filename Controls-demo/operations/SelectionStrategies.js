@@ -9,7 +9,7 @@ define('Controls-demo/operations/SelectionStrategies', [
    'css!Controls-demo/OperationsPanel/Demo/Demo'
 ], function(Control, template, MemorySource, Data) {
    'use strict';
-a
+
    return Control.extend({
       _template: template,
       _treeSelectionStrategy: null,

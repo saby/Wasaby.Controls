@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_operations/__MultiSelector';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {TKeySelection as TKey, TKeysSelection as TKeys} from 'Controls/interface/';
 
 const DEFAULT_ITEMS = [
    {
@@ -27,15 +28,13 @@ const SHOW_ALL_ITEM =  {
    title: rk('Показать все')
 };
 
-type TKeys = string[]|number[];
 type TCount = void|number;
-type TRoot = null|string|number;
 
 export interface IMultiSelectorOptions extends IControlOptions {
    selectedKeys: TKeys;
    excludedKeys: TKeys;
    selectedKeysCount: TCount;
-   root: TRoot;
+   root: TKey;
 }
 
 export default class MultiSelector extends Control<IMultiSelectorOptions> {
@@ -46,16 +45,20 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    protected _isShowSelectedItems: boolean = false;
 
    protected _beforeMount(options: IMultiSelectorOptions): void {
-      this._menuSource = this._getMenuSource(options.withShowSelected);
+      this._menuSource = this._getMenuSource(options);
       this._updateSelection(options.selectedKeys, options.excludedKeys, options.selectedKeysCount, options.root);
    }
 
    protected _beforeUpdate(options: IMultiSelectorOptions): void {
       const currOpts = this._options;
-      if (currOpts.selectedKeys !== options.selectedKeys ||
-          currOpts.excludedKeys !== options.excludedKeys ||
-          currOpts.selectedKeysCount !== options.selectedKeysCount) {
+      const selectionIsChanged = currOpts.selectedKeys !== options.selectedKeys || currOpts.excludedKeys !== options.excludedKeys;
+
+      if (selectionIsChanged || currOpts.selectedKeysCount !== options.selectedKeysCount) {
          this._updateSelection(options.selectedKeys, options.excludedKeys, options.selectedKeysCount, options.root);
+      }
+
+      if (selectionIsChanged || currOpts.withShowSelected !== options.withShowSelected) {
+         this._menuSource = this._getMenuSource(options);
       }
    }
 
@@ -68,27 +71,30 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
 
    protected _viewTypeChanged(e: SyntheticEvent, typeView: string): void {
       this._isShowSelectedItems = typeView === 'showSelected';
-      this._menuSource = this._getMenuSource(this._options.withShowSelected);
+      this._menuSource = this._getMenuSource(this._options);
    }
 
-   private _getAdditionalMenuItems(withShowSelected: boolean): Array<Object> {
-      if (!withShowSelected) {
-         return [];
-      } else if (this._isShowSelectedItems) {
-         return [SHOW_ALL_ITEM];
-      } else {
-         return [SHOW_SELECTED_ITEM];
+   private _getAdditionalMenuItems(options: IMultiSelectorOptions): Array<Object> {
+      let additionalItems: Array<Object> = [];
+      let isAllSelected = options.selectedKeys.includes(options.root) && options.excludedKeys.includes(options.root);
+
+      if (this._isShowSelectedItems) {
+         additionalItems.push(SHOW_ALL_ITEM);
+      } else if (options.withShowSelected && options.selectedKeys.length && (!isAllSelected || options.excludedKeys.length > 1)) {
+         additionalItems.push(SHOW_SELECTED_ITEM);
       }
+
+      return additionalItems;
    }
 
-   private _getMenuSource(withShowSelected: boolean): Memory {
+   private _getMenuSource(options: IMultiSelectorOptions): Memory {
       return new Memory({
          keyProperty: 'id',
-         data: DEFAULT_ITEMS.concat(this._getAdditionalMenuItems(withShowSelected))
+         data: DEFAULT_ITEMS.concat(this._getAdditionalMenuItems(options))
       });
    }
 
-   private _updateSelection(selectedKeys: TKeys, excludedKeys: TKeys, count: TCount, root: TRoot): void {
+   private _updateSelection(selectedKeys: TKeys, excludedKeys: TKeys, count: TCount, root: TKey): void {
       const selectedCount = count === undefined ? selectedKeys.length : count;
 
       if (selectedCount > 0 && selectedKeys.length) {
@@ -107,12 +113,12 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       let itemId: string = item.get('id');
 
       if (itemId === 'showSelected' || itemId === 'showAll') {
-         this._notify('viewTypeChanged', [itemId], {
+         this._isShowSelectedItems = !this._isShowSelectedItems;
+         this._menuSource = this._getMenuSource(this._options);
+
+         this._notify('viewModeChanged', [itemId], {
             bubbling: true
          });
-
-         this._isShowSelectedItems = !this._isShowSelectedItems;
-         this._menuSource = this._getMenuSource(this._options.withShowSelected);
       } else {
          this._notify('selectedTypeChanged', [itemId], {
             bubbling: true
@@ -122,7 +128,9 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
 
    static getDefaultOptions(): object {
       return {
-         root: null
+         root: null,
+         selectedKeys: [],
+         excludedKeys: []
       };
    }
 }

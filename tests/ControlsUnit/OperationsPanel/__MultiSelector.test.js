@@ -62,47 +62,37 @@ define([
          assert.equal(instance._menuCaption, 'Отметить');
       });
       it('_getMenuSource', function() {
-         var instance = new MultiSelector.default();
-         var menuSource = instance._getMenuSource();
-         assert.equal(menuSource._$data.length, 3);
+         let instance = new MultiSelector.default();
+         let options = MultiSelector.default.getDefaultOptions();
+
+         assert.equal(instance._getMenuSource(options)._$data.length, 3);
+
+         instance._isShowSelectedItems = true;
+         assert.equal(instance._getMenuSource(options)._$data.length, 4);
+
+         instance._isShowSelectedItems = false;
+         options.withShowSelected = true;
+         options.selectedKeys = [1, 2, 3];
+         assert.equal(instance._getMenuSource(options)._$data.length, 4);
       });
       it('_onMenuItemActivate', function() {
-         var instance = new MultiSelector.default();
-         instance.notify = function(eventName, argumentsArray) {
-            assert.equal(argumentsArray[0], 'selectAll');
-            assert.equal(eventName, 'selectedTypeChanged');
-         };
-         instance._onMenuItemActivate(
-            {},
-            {
-               get: function() {
-                  return 1;
-               }
+         let instance = new MultiSelector.default();
+         let idItemMenu = 'selectAll';
+         let recordMenu = {
+            get: function() {
+               return idItemMenu;
             }
-         );
+         };
 
-         instance.notify = function(eventName, argumentsArray) {
-            assert.equal(argumentsArray[0], 'unselectAll');
+         instance._options = MultiSelector.default.getDefaultOptions();
+         instance._notify = function(eventName, argumentsArray) {
+            assert.equal(argumentsArray[0], idItemMenu);
+            assert.equal(eventName, ['showSelected', 'showAll'].includes(idItemMenu) ? 'viewModeChanged' : 'selectedTypeChanged');
          };
-         instance._onMenuItemActivate(
-            {},
-            {
-               get: function() {
-                  return 2;
-               }
-            }
-         );
-         instance.notify = function(eventName, argumentsArray) {
-            assert.equal(argumentsArray[0], 'toggleAll');
-         };
-         instance._onMenuItemActivate(
-            {},
-            {
-               get: function() {
-                  return 3;
-               }
-            }
-         );
+         instance._onMenuItemActivate({}, recordMenu);
+
+         idItemMenu = 'showSelected';
+         instance._onMenuItemActivate({}, recordMenu);
       });
       it('_beforeMount', function() {
          var instance = new MultiSelector.default();
@@ -124,22 +114,38 @@ define([
          assert.equal(instance._menuCaption, 'Отмечено: 2');
       });
       it('_beforeUpdate', function() {
-         var instance = new MultiSelector.default();
-         var newOptions = {
+         let instance = new MultiSelector.default();
+         let newOptions = {
             selectedKeys: [null],
             excludedKeys: [],
             selectedKeysCount: 0,
             root: null
          };
+         let isUpdateMenu = false;
+
+         instance._getMenuSource = () =>  isUpdateMenu = true;
          instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отмечено всё');
+         assert.isTrue(isUpdateMenu);
+
+         isUpdateMenu = false;
          newOptions.selectedKeys = [];
          instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отметить');
+         assert.isTrue(isUpdateMenu);
+
          newOptions.selectedKeys = [1, 2];
          newOptions.selectedKeysCount = 2;
          instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
+
+         isUpdateMenu = false;
+         instance._beforeUpdate(instance._options);
+         assert.isFalse(isUpdateMenu);
+
+         newOptions.withShowSelected = true;
+         instance._beforeUpdate(newOptions);
+         assert.isTrue(isUpdateMenu);
       });
       it('_afterUpdate', function() {
          var instance = new MultiSelector.default();
