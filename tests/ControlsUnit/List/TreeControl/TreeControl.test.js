@@ -151,6 +151,7 @@ define([
             };
          };
 
+         var clearChildrenCalled = false;
          //viewmodel moch
          treeControl._children.baseControl.getViewModel = function() {
             return {
@@ -168,6 +169,9 @@ define([
                getChildren: function() {return [1]},
                getIndexByKey: function() {
 
+               },
+               clearChildren: function() {
+                  clearChildrenCalled = true;
                },
                getCount:function(){
                   return 2;
@@ -219,6 +223,7 @@ define([
                }
             });
             assert.isTrue(isSourceControllerUsed);
+            assert.isTrue(clearChildrenCalled);
             assert.isTrue(nodeLoadCallbackCalled);
             treeGrid.TreeControl._private.createSourceController = originalCreateSourceController;
             resolve();
@@ -450,6 +455,7 @@ define([
       });
 
       it('TreeControl.toggleExpanded with sorting', function() {
+         let clearChildrenCalled = false;
          let treeControl = correctCreateTreeControl({
             columns: [],
             root: null,
@@ -459,6 +465,9 @@ define([
                keyProperty: 'id'
             })
          });
+         treeControl._children.baseControl.getViewModel().clearChildren = function() {
+            clearChildrenCalled = true;
+         };
          let expandSorting;
          let originalCreateSourceController = treeGrid.TreeControl._private.createSourceController;
          treeGrid.TreeControl._private.createSourceController = function() {
@@ -466,9 +475,9 @@ define([
                load: function(filter, sorting) {
                   var result = Deferred.success([]);
                   expandSorting = sorting;
-                  return result
+                  return result;
                }
-            }
+            };
          };
 
          treeGrid.TreeControl._private.toggleExpanded(treeControl, {
@@ -486,6 +495,7 @@ define([
          treeGrid.TreeControl._private.createSourceController = originalCreateSourceController;
 
          assert.deepEqual([{sortField: 'DESC'}], expandSorting);
+         assert.isTrue(clearChildrenCalled);
       });
 
       it('_private.shouldLoadChildren', function() {
