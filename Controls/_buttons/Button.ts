@@ -126,6 +126,7 @@ class Button extends Control<IButtonOptions> implements
    private _icon: string;
    private _iconSize: string;
    private _iconStyle: string;
+   protected _hoverIcon: boolean = true;
 
    protected _beforeMount(options: IButtonOptions): void {
       cssStyleGeneration.call(this, options);

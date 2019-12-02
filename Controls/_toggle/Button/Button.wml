@@ -6,6 +6,7 @@
             _height="{{_height}}"
             _fontSize="{{_fontSize}}"
             _icon="{{_icon}}"
+            _hoverIcon="{{_hoverIcon}}"
             _toggled="{{_options.value}}"
             _iconSize="{{_iconSize}}"
             _caption="{{_caption}}"

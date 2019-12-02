@@ -178,6 +178,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
     protected _state: string;
     protected _caption: string;
     protected _iconStyle: string;
+    protected _hoverIcon: boolean = true;
 
     private _optionsGeneration(options: IToggleButtonOptions): void {
         const currentButtonClass = Classes.getCurrentButtonClass(options.style, this);
@@ -216,6 +217,10 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
 
         this._iconSize = this._icon ? ActualApi.iconSize(newOptions) : '';
         this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions) : '';
+
+        if (this._options.viewMode === 'pushButton' || this._options.viewMode === 'toolButton') {
+            this._hoverIcon = !newOptions.value;
+        }
     }
 
     protected _beforeUpdate(newOptions: IToggleButtonOptions): void {
@@ -230,6 +235,10 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
 
         this._iconSize = this._icon ? ActualApi.iconSize(newOptions) : '';
         this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions) : '';
+
+        if (this._options.viewMode === 'pushButton' || this._options.viewMode === 'toolButton') {
+            this._hoverIcon = !newOptions.value;
+        }
     }
 
     static _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
