@@ -59,13 +59,13 @@
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{true}}" iconSize="s" icon="icon-Author" fontColorStyle="link" viewMode="toolButton" inlineHeight="xl"/>
     <span class="baseline_span">С текстом для престы и карри</span>
-    <Controls.toggle:Button readOnly="{{true}}" bind:value="toggleState" size="l" icons="{{['icon-16 icon-Send']}}" fontColorStyle="link" viewMode="link"/>
+    <Controls.toggle:Button readOnly="{{true}}" bind:value="toggleState" icons="{{['icon-Send']}}" iconSize="s" fontColorStyle="link" viewMode="link"/>
     <span class="baseline_span">С текстом для престы и карри</span>
-    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
+    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" contrastBackground="{{true}}" icons="{{['icon-Send']}}" iconSize="m" style="secondary" viewMode="toolButton"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-16 icon-Send']}}" fontColorStyle="link" viewMode="link"/>
+    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" icons="{{['icon-Send']}}" iconSize="s" fontColorStyle="link" viewMode="link"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="secondary" viewMode="toolButton"/>
+    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" contrastBackground="{{true}}" icons="{{['icon-Send']}}" buttonStyle="secondary" viewMode="toolButton"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" size="xl" captions="{{['caption']}}" fontColorStyle="link" viewMode="link"/>
+    <Controls.toggle:Button readOnly="{{false}}" bind:value="toggleState" captions="{{['caption']}}" fontColorStyle="link" viewMode="link" fontSize="3xl"/>
 </div>
