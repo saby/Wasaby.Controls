@@ -51,6 +51,9 @@ var _private = {
     },
     toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
         listViewModel.toggleExpanded(dispItem, expanded);
+        self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [dispItem.getContents()]);
+
+        // todo: удалить события itemExpanded и itemCollapsed в 20.2000.
         self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
     },
     expandMarkedItem: function(self) {
@@ -78,7 +81,9 @@ var _private = {
         const nodeKey = item.getId();
         const expanded = !listViewModel.isExpanded(dispItem);
         const options = self._options;
+        self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
+        // todo: удалить события itemExpand и itemCollapse в 20.2000.
         self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
         if (
             !_private.isExpandAll(self._options.expandedItems) &&

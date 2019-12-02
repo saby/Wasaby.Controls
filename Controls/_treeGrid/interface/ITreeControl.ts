@@ -215,6 +215,23 @@
  * @param {Types/entity:Model} node Развёрнутый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ * @deprecated Событие устарело и вскором времени будет его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#afterItemExpand}.
+ */
+
+/**
+ * @event Controls/_treeGrid/interface/ITreeControl#afterItemExpand Происходит после развертывания узла.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Развёрнутый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ */
+
+/**
+ * @event Controls/_treeGrid/interface/ITreeControl#beforeItemExpand Происходит перед развертыванием узла.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Разворачиваемый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  */
 
 /**
@@ -223,6 +240,7 @@
  * @param {Types/entity:Model} node Разворачиваемый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ * @deprecated Событие устарело и вскором времени будет его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#beforeItemExpand}.
  */
 
 /*
@@ -237,10 +255,28 @@
  * @param {Types/entity:Model} node Свёрнутый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ * @deprecated Событие устарело и вскором времени будет его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#afterItemCollapse}.
+ */
+
+/**
+ * @event Controls/_treeGrid/interface/ITreeControl#afterItemCollapse Происходит после сворачивания узла.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Свёрнутый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  */
 
 /**
  * @event Controls/_treeGrid/interface/ITreeControl#itemCollapse Происходит перед сворачиванием узла.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Сворачиваемый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ * @deprecated Событие устарело и вскором времени будет его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#beforeItemCollapse}.
+ */
+
+/**
+ * @event Controls/_treeGrid/interface/ITreeControl#beforeItemCollapse Происходит перед сворачиванием узла.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
