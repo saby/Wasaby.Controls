@@ -1622,6 +1622,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                getCount: () => [1]
             })
             assert.isFalse(newGridModel.isDrawResults())
+            newGridModel = null;
+            newGridModel = new gridMod.GridViewModel({
+               keyProperty: 'id',
+               displayProperty: 'title',
+               header: gridHeader,
+               columns: gridColumns,
+               items: new collection.RecordSet({
+                  rawData: gridData,
+                  keyProperty: 'id'
+               }),
+               resultsPosition: 'top'
+            })
+            newGridModel.destroy();
+            assert.equal(undefined, newGridModel.getResultsPosition())
          });
 
           it('getResultsPosition with setHasMoreData', function() {
