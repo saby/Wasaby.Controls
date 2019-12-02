@@ -58,14 +58,14 @@ var BreadCrumbs = Control.extend({
             BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newItems, this._container.clientWidth);
             this._viewUpdated = true;
         }
-    }
+    },
 
     _afterUpdate: function() {
         if (this._viewUpdated) {
             this._viewUpdated = false;
             this._notify('controlResize', [], {bubbling: true});
         }
-    }
+    },
     _notifyHandler: tmplNotify,
 
     _onResize: function() {

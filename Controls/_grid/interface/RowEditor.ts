@@ -4,13 +4,13 @@
  * @author Авраменко А.С.
  * @see Controls/grid:View#itemTemplate
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/grid:ItemTemplate">
  *          <ws:contentTemplate>
  *             Этот отображается в режиме просмотра.
- *             <ws:partial template="{{itemTemplate.itemActionsTemplate}}" />
+ *             <ws:partial template="{{contentTemplate.itemActionsTemplate}}" />
  *          </ws:contentTemplate>
  *       </ws:partial>
  *       <ws:partial template="Controls/grid:RowEditor" scope="{{_options}}">

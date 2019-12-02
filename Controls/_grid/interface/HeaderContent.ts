@@ -7,7 +7,7 @@
  * @remark
  * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/ здесь}.
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:header>
  *       <ws:Array>
@@ -34,7 +34,7 @@
  * Через него можно получить доступ к свойству **column**, которое содержит конфигурацию {@link https://wi.sbis.ru/docs/js/Controls/grid/IGridControl/typedefs/HeaderCell/ ячейки шапки}.
  * @example
  * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:header>
  *       <ws:Array>
@@ -53,7 +53,7 @@
  * </pre>
  * 
  * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
- * <pre>
+ * <pre class="brush: html">
  * <!-- file1.wml --> 
  * <Controls.grid:View>
  *    <ws:header>
@@ -68,7 +68,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * <ws:partial template="Controls/grid:HeaderContent">
  *    <ws:contentTemplate>
@@ -79,7 +79,7 @@
  * 
  * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file1.wml --> 
  * <Controls.grid:View>
  *    <ws:header>
@@ -98,7 +98,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * {{contentTemplate.colData.column.title}}
  * </pre>

@@ -189,18 +189,9 @@ var _private = {
 };
 
 /**
- * Контрол-контроллер поиска позволяет осуществлять поиск данных в {@link Controls/list:View}
- * с помощью любого компонента с интерфейсом {@link Controls/interface/IInputField}.
- * Контроллер поиска позволяет:
- * 1) установить задержку перед поиском;
- * 2) установить количество символов;
- * 3) установить параметры поиска;
- * 4) изменить раскладку клавиатуры для случаев неудачного поиска.
- * Следует запомнить: Контрол с интерфейсом {@link Controls/interface/IInputField} должен быть обернут в {@link Controls/_search/Input/Container}.
- *
- * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
- *
- * <a href="/materials/demo/demo-ws4-explorer-with-search">Демо-пример</a>.
+ * Контрол используют в качестве контроллера для организации поиска в реестрах. 
+ * Он обеспечивает связь между {@link Controls/search:InputContainer} и {@link Controls/list:Container} — контейнерами для строки поиска и списочного контрола соответветственно. 
+ * С помощью этого контрола можно настроить: временную задержку между вводом символа и началом поиска, количество символов, с которых начинается поиск, параметры фильтрации и другое.
  *
  * @class Controls/_search/Controller
  * @extends Core/Control

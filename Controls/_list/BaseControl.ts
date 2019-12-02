@@ -25,9 +25,10 @@ import {ICrud, Memory} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDireciton} from './interface/IVirtualScroll';
-import {debounce, throttle} from 'Types/function';
+import {debounce} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
-import { Logger } from 'UI/Utils';
+import {Logger} from 'UI/Utils';
+import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import {create as diCreate} from 'Types/di';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
@@ -147,6 +148,8 @@ var _private = {
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 if (list.getCount()) {
                     self._loadedItems = list;
+                } else {
+                    self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
                 }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
@@ -203,10 +206,6 @@ var _private = {
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
-                    }
-
-                    if (self._children && self._children.scrollController) {
-                        self._children.scrollController.reset(self._listViewModel.getCount());
                     }
                 }
 
@@ -486,6 +485,9 @@ var _private = {
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
+            if (self._options.searchValue) {
+                _private.getPortionedSearch(self).startSearch();
+            }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
@@ -522,7 +524,8 @@ var _private = {
                     }
                 }
                 return addedItems;
-            }).addErrback(function(error) {
+            }).addErrback((error) => {
+                _private.hideIndicator(self);
                 return _private.crudErrback(self, {
                     error,
                     dataLoadErrback: userErrback
@@ -592,16 +595,20 @@ var _private = {
     },
 
     loadToDirectionIfNeed: function(self, direction, filter) {
+        const sourceController = self._sourceController;
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
             !self._loadedItems :
             true;
         const allowLoadBySource =
-            self._sourceController &&
-            self._sourceController.hasMoreData(direction) &&
-            !self._sourceController.isLoading();
+            sourceController &&
+            sourceController.hasMoreData(direction) &&
+            !sourceController.isLoading();
+        const allowLoadBySearch =
+            !self._options.searchValue ||
+            _private.getPortionedSearch(self).shouldSearch();
 
-        if (allowLoadBySource && allowLoadByLoadedItems) {
-            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData(direction));
+        if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
+            _private.setHasMoreData(self._listViewModel, sourceController.hasMoreData(direction));
             _private.loadToDirection(
                self, direction,
                self._options.dataLoadCallback,
@@ -894,6 +901,25 @@ var _private = {
 
         self._scrollTop = params.scrollTop;
         self._scrollPageLocked = false;
+    },
+
+    getPortionedSearch(self): PortionedSearch {
+        return self._portionedSearch || (self._portionedSearch = new PortionedSearch({
+            searchStopCallback: () => {
+                self._showContinueSearchButton = true;
+                self._sourceController.cancelLoading();
+            },
+            searchResetCallback: () => {
+                self._showContinueSearchButton = false;
+            },
+            searchContinueCallback: () => {
+                self._showContinueSearchButton = false;
+                _private.loadToDirectionIfNeed(self, 'down');
+            },
+            searchAbortCallback: () => {
+                self._sourceController.cancelLoading();
+            }
+        }));
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -1725,6 +1751,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (newOptions.searchValue !== this._options.searchValue) {
             this._listViewModel.setSearchValue(newOptions.searchValue);
+
+            if (!newOptions.searchValue) {
+                _private.getPortionedSearch(self).reset();
+            }
         }
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
@@ -2175,6 +2205,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onLoadMoreClick: function() {
         _private.loadToDirectionIfNeed(this, 'down');
+    },
+
+    _continueSearch(): void {
+        _private.getPortionedSearch(this).continueSearch();
+    },
+
+    _abortSearch(): void {
+        _private.getPortionedSearch(this).abortSearch();
     },
 
     _nativeDragStart: function(event) {

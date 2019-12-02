@@ -15,10 +15,8 @@
  *             <ws:template>
  *                <ws:partial template="Controls/grid:ColumnTemplate">
  *                   <ws:contentTemplate>
- *                      <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
- *                         <div class="demoGrid__date">
- *                            {{contentTemplate.itemData.item['date']}}
- *                         </div>
+ *                      <ws:partial template="Controls/grid:LadderWrapper" ladderProperty="date">
+ *                         {{contentTemplate.itemData.item['date']}}
  *                      </ws:partial>
  *                   </ws:contentTemplate>
  *                </ws:partial>
