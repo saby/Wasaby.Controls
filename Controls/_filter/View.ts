@@ -659,9 +659,9 @@ var Filter = Control.extend({
     },
 
     _rangeChangedHandler: function(event, start, end) {
-       let dateRangeItem = _private.getDateRangeItem(this._source);
-       dateRangeItem.value = [start, end];
        return new Promise((resolve) => { require(['Controls/dateRange'], dateRange => {
+             let dateRangeItem = _private.getDateRangeItem(this._source);
+             dateRangeItem.value = [start, end];
              dateRangeItem.textValue = dateRange.Utils.formatDateRangeCaption(start, end,
                 this._dateRangeItem.editorOptions.emptyCaption || 'Не указан');
              this._dateRangeItem = object.clone(dateRangeItem);
