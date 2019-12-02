@@ -22,14 +22,11 @@ var _private = {
         self._stopIndex = stopIndex;
     },
     getItemPadding: function(cfg) {
-        if (cfg.itemPadding) {
-            return cfg.itemPadding;
-        }
-        return {
-            left: cfg.leftSpacing || cfg.leftPadding,
-            right: cfg.rightSpacing || cfg.rightPadding,
-            top: cfg.rowSpacing,
-            bottom: cfg.rowSpacing
+        return cfg.itemPadding || {
+            left: 'default',
+            right: 'default',
+            top: 'default',
+            bottom: 'default'
         };
     },
     getSpacingClassList: function(cfg) {
@@ -125,26 +122,6 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     setItemPadding: function(itemPadding) {
         this._options.itemPadding = itemPadding;
-        this._nextModelVersion();
-    },
-    setLeftPadding: function(leftPadding) {
-        this._options.leftPadding = leftPadding;
-        this._nextModelVersion();
-    },
-    setRightPadding: function(rightPadding) {
-        this._options.rightPadding = rightPadding;
-        this._nextModelVersion();
-    },
-    setLeftSpacing: function(leftSpacing) {
-        this._options.leftSpacing = leftSpacing;
-        this._nextModelVersion();
-    },
-    setRightSpacing: function(rightSpacing) {
-        this._options.rightSpacing = rightSpacing;
-        this._nextModelVersion();
-    },
-    setRowSpacing: function(rowSpacing) {
-        this._options.rowSpacing = rowSpacing;
         this._nextModelVersion();
     },
     getItemPadding: function() {

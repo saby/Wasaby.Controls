@@ -172,7 +172,7 @@
  * @property {Number} startColumn Порядковый номер колонки, на которой начинается ячейка.
  * @property {Number} endColumn Порядковый номер колонки, на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
- * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+ * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
 
 /*
@@ -290,9 +290,39 @@
  * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
  * @property {String} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  * Доступные значения:
- * 
- * * **ellipsis** — текст обрезается, и в конец строки добавляется многоточие.
+ * * * **ellipsis** — текст обрезается, и в конец строки добавляется многоточие.
  * * **none** — стандартное поведение при незаданном свойстве.
+ * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+ * <pre>
+ * columns: [{
+ *    width: '1fr',
+ *    cellPadding: {
+ *        left: 'M', 
+ *        right: 'M' 
+ *    }
+ * },
+ * {
+ *    width: '1fr',
+ *    cellPadding: { 
+ *        left: 'S',
+ *        right: 'S' 
+ *    }
+ * }]
+ * </pre>
+ */
+
+/**
+ * @typedef {Object} CellPadding
+ * @property {HorizontalCellPaddingEnum} [left=null] Отступ от левой границы ячейки.
+ * @property {HorizontalCellPaddingEnum} [right=null] Отступ от правой границы ячейки.
+ */
+
+/**
+ * @typedef {Object} HorizontalCellPaddingEnum
+ * @variant S Небольшой отступ.
+ * @variant M Средний отступ.
+ * @variant null Нулевой отступ.
+ * @default null
  */
 
 /*
@@ -455,7 +485,7 @@
 
  /**
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
- * @cfg {Function} Шаблон строки итогов.
+ * @cfg {Function} Устанавливает шаблон отображения строки итогов.
  * @default Controls/grid:ResultsTemplate
  * @remark
  * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
@@ -473,9 +503,17 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsPosition
- * @cfg {String} Положение строки итогов.
- * @variant top Вывести итоги над списком.
- * @variant bottom Вывести итоги под списком.
+ * @cfg {String} Устанавливает положение строки итогов.
+ * @remark
+ * Доступные значения:
+ * 
+ * * **top** — над списком.
+ * * **bottom** — под списком.
+ * * **undefined** — строка итогов скрыта.
+ * @default undefined
+ * @result
+ * @see resultsTemplate
+ * @see resultsVisibility
  */
 
 /*
@@ -487,10 +525,15 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsVisibility
- * @cfg {String} Режим отображения строки итогов.
- * @variant hasdata Строка итогов отображается при наличии более 1 записи в списке.
- * @variant visible Строка итогов отображается всегда, вне зависимости от количества данных в списке.
+ * @cfg {String} Устанавливает режим отображения строки итогов.
+ * @remark
+ * Доступные значения:
+ * 
+ * * **hasdata** — отображается при наличии более 1 записи в списке.
+ * * **visible** — отображается всегда, вне зависимости от количества записей в списке.
  * @default hasData
+ * @see resultsTemplate
+ * @see resultsPosition
  */
 
 /**

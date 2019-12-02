@@ -1,16 +1,3 @@
-<ws:if data="{{listModel.shouldUseTableLayout()}}">
-    <ws:partial template="wml!Controls/_grid/layout/table/Results"
-                listModel="{{listModel}}"
-                contentTemplate="{{contentTemplate}}"/>
-</ws:if>
-<ws:else data="{{listModel.isPartialGridSupport()}}">
-    <!-- TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635-->
-    <ws:partial template="wml!Controls/_grid/layout/partialGrid/Results"
-                listModel="{{listModel}}"
-                contentTemplate="{{contentTemplate}}"/>
-</ws:else>
-<ws:else>
-    <ws:partial template="wml!Controls/_grid/layout/grid/Results"
-                listModel="{{listModel}}"
-                contentTemplate="{{contentTemplate}}"/>
-</ws:else>
+<!-- Вызывает базовый шаблон строки результатов: table или grid. Используется, только если шаблон -->
+<!-- результатов был переопределен. В остальных случаях напрямую из GridView вызывается нужный шаблон. -->
+<ws:partial template="{{ baseResultsTemplate }}" listModel="{{listModel}}" contentTemplate="{{contentTemplate}}"/>

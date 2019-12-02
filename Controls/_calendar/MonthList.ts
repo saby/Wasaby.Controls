@@ -63,6 +63,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _startPositionId: string;
     private _positionToScroll: Date;
     private _displayedPosition: Date;
+    private _lastPositionFromOptions: Date;
 
     private _itemTemplate: TemplateFunction;
     private _itemHeaderTemplate: TemplateFunction;
@@ -93,6 +94,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
         this._positionToScroll = position;
         this._displayedPosition = position;
+        this._lastNotifiedPositionChangedDate = position;
     }
 
     protected _afterMount(): void {
@@ -107,8 +109,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._updateSource(options, this._options);
         this._updateVirtualPageSize(options, this._options);
         if (options.position !== this._displayedPosition) {
-            this._displayedPosition = options.position;
-            this._scrollToPosition(options.position);
+            // Не инициализируем перестроение списка пока не завершится пребыбущая перерисовка.
+            // https://online.sbis.ru/opendoc.html?guid=4c2ee6ae-c41d-4bc2-97e7-052963074621
+            if (!this._lastPositionFromOptions) {
+                this._displayedPosition = options.position;
+                this._scrollToPosition(options.position);
+            }
+            this._lastPositionFromOptions = options.position;
         }
     }
 
@@ -129,7 +136,16 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     protected _drawItemsHandler(): void {
-        this._updateScrollAfterViewModification();
+        // Подскроливаем к нужной позиции только если не меняли позицию через опции пока список перерисовывался.
+        // Иначе перерисовываем список по самой последней позиции установленной через опции.
+        // https://online.sbis.ru/opendoc.html?guid=4c2ee6ae-c41d-4bc2-97e7-052963074621
+        if (+this._displayedPosition === +this._lastPositionFromOptions) {
+            this._updateScrollAfterViewModification();
+            this._lastPositionFromOptions = null;
+        } else if (this._lastPositionFromOptions) {
+            this._displayedPosition = this._lastPositionFromOptions;
+            this._scrollToPosition(this._displayedPosition);
+        }
     }
 
     private _updateItemTemplate(options: IModuleComponentOptions): void {
@@ -191,9 +207,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         } else {
             this._displayedDates = [];
             this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
-            // After changing the navigation options, we must call the "reload" to redraw the control.
-            // Position option is the initial position from which control is initially drawn.
-            this._children.months.reload();
         }
     }
 
@@ -242,7 +255,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             }
         }
 
-        if (date && !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate)) {
+        if (date && !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate) && !this._lastPositionFromOptions) {
             this._lastNotifiedPositionChangedDate = date;
             this._displayedPosition = date;
             this._notify('positionChanged', [date]);

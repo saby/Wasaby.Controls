@@ -1,22 +1,28 @@
 <ws:template name="multiSelectIfNeed">
     <ws:if data="{{footer.multiSelectVisibility !== 'hidden'}}">
-        <ws:if data="{{footer.shouldUseTableLayout}}">
-            <td></td>
+        <ws:if data="{{footer.isFullGridSupport}}">
+            <div></div>
         </ws:if>
         <ws:else>
-            <div></div>
+            <td></td>
         </ws:else>
     </ws:if>
 </ws:template>
 
 <ws:template name="footerContent">
-    <div class="controls-TreeGrid__nodeFooterContent controls-TreeGrid__nodeFooterContent_theme-{{theme}}" style="{{footer.colspanStyles || ''}}" data-key="{{footer.key}}">
+    <div class="controls-TreeGrid__nodeFooterContent controls-TreeGrid__nodeFooterContent_theme-{{theme}}" style="{{footer.colspanStyles || ''}}">
         <ws:for data="i in footer.level">
             <div class="controls-TreeGrid__row-levelPadding {{footer.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
         </ws:for>
         <div class="{{footer.getExpanderPaddingClasses(expanderSize, theme)}}"></div>
         <ws:if data="{{footer.hasMoreStorage}}">
-            <Controls.buttons:Button fontSize="xs" attr:class="controls-TreeGrid__nodeFooterLoadMore controls-TreeGrid__nodeFooterLoadMore_theme-{{theme}}" viewMode="link" fontColorStyle="link" caption="{{rk('Еще') + '...'}}" on:click="_onLoadMoreClick(footer.dispItem)" readOnly="{{false}}"/>
+            <Controls.buttons:Button attr:class="controls-TreeGrid__nodeFooterLoadMore controls-TreeGrid__nodeFooterLoadMore_theme-{{theme}}"
+                                     fontSize="xs"
+                                     viewMode="link"
+                                     fontColorStyle="link"
+                                     caption="{{rk('Еще') + '...'}}"
+                                     on:click="_onLoadMoreClick(footer.dispItem)"
+                                     readOnly="{{false}}"/>
         </ws:if>
         <ws:else>
             <ws:if data="{{footer.template}}">
@@ -29,28 +35,23 @@
 <ws:template name="footer">
     <ws:partial template="multiSelectIfNeed"/>
 
-    <ws:if data="{{footer.shouldUseTableLayout}}">
+    <ws:if data="{{footer.isFullGridSupport}}">
+        <ws:partial template="footerContent"/>
+    </ws:if>
+    <ws:else>
         <td colspan="{{footer.colspan}}">
             <ws:partial template="footerContent"/>
         </td>
-    </ws:if>
-    <ws:else>
-        <ws:partial template="footerContent"/>
     </ws:else>
 </ws:template>
 
-
-<ws:if data="{{footer.shouldUseTableLayout}}">
-    <tr attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{footer.key}}">
-        <ws:partial template="footer"/>
-    </tr>
-</ws:if>
-<ws:else data="{{footer.isPartialGridSupport}}">
-    <!-- TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635 -->
-    <ws:partial template="footer"/>
-</ws:else>
-<ws:else>
-    <div attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{footer.key}}">
+<ws:if data="{{footer.isFullGridSupport}}">
+    <div class="controls-Grid__row controls-TreeGrid__nodeFooter" key="nodeFooter_{{footer.key}}">
         <ws:partial template="footer"/>
     </div>
+</ws:if>
+<ws:else>
+    <tr class="controls-Grid__row controls-TreeGrid__nodeFooter" key="nodeFooter_{{footer.key}}">
+        <ws:partial template="footer"/>
+    </tr>
 </ws:else>
