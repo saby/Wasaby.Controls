@@ -1,0 +1,19 @@
+<div>
+    <div class="event-example__wrapper">
+        <div class="exampleBlock">
+            <h3>Example</h3>
+            <Controls.slider:Base
+                    scaleStep="{{_scaleStep}}"
+                    minValue="{{_minValue}}"
+                    maxValue="{{_maxValue}}"
+                    size="{{_size}}"
+                    precision="{{_precision}}"
+                    borderVisible="{{_borderVisible}}"
+                    readOnly="{{_readOnly}}"
+                    format="{{_format}}"
+                    bind:value="_value"
+                    on:valueChanged="changeValue()"
+            />
+        </div>
+    </div>
+</div>
