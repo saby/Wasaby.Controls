@@ -214,7 +214,6 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
     private _hasIcon: boolean;
     private _viewMode: string;
     private _height: string;
-    private _state: string;
     private _caption: string | TemplateFunction;
     private _stringCaption: boolean;
     private _icon: string;
@@ -235,8 +234,10 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         this._iconSize = this._icon ? ActualApi.iconSize(newOptions) : '';
         this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions) : '';
 
-        if (this._options.viewMode === 'pushButton' || this._options.viewMode === 'toolButton') {
+        if (newOptions.viewMode === 'pushButton' || newOptions.viewMode === 'toolButton') {
             this._hoverIcon = !newOptions.value;
+        } else {
+            this._hoverIcon = true;
         }
     }
 

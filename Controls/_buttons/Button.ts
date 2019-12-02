@@ -168,7 +168,6 @@ class Button extends Control<IButtonControlOptions> implements
    private _hasIcon: boolean;
    private _viewMode: string;
    private _height: string;
-   private _state: string;
    private _caption: string | TemplateFunction;
    private _stringCaption: boolean;
    private _icon: string;
