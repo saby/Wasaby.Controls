@@ -118,7 +118,7 @@ export default class TileRender extends BaseRender {
 
         const viewContainer = this._options.tileScalingMode === 'inside'
             ? this.getItemsContainer()
-            : document.documentElement;
+            : document && document.documentElement;
         const viewContainerRect = viewContainer.getBoundingClientRect();
 
         const targetItemSize = this._options.listModel.getItemContainerSize(itemContainer);
@@ -128,7 +128,7 @@ export default class TileRender extends BaseRender {
             viewContainerRect
         );
 
-        const documentRect = document.documentElement.getBoundingClientRect();
+        const documentRect = document && document.documentElement.getBoundingClientRect();
         const targetItemPositionInDocument = this._options.listModel.getItemContainerPositionInDocument(
             targetItemPosition,
             viewContainerRect,
