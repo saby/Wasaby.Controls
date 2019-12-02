@@ -165,7 +165,7 @@ var _private = {
                 }
 
                 if (cfg.serviceDataLoadCallback instanceof Function) {
-                    cfg.serviceDataLoadCallback(list);
+                    cfg.serviceDataLoadCallback(self._items, list);
                 }
 
                 if (cfg.dataLoadCallback instanceof Function) {
