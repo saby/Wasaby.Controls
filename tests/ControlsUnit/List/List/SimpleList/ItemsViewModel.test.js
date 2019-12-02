@@ -552,13 +552,6 @@ define([
             model._convertItemKeyToCacheKey(456)
          );
 
-         // emulate breadcrumbs
-         const crumbsDisplay = { getContents: () => [{}, {}, dispItem.getContents()] };
-         assert.strictEqual(
-            model._getDisplayItemCacheKey(crumbsDisplay),
-            model._convertItemKeyToCacheKey(456)
-         );
-
          // emulate group
          const groupDisplay = { getContents: () => 'hiddenGroup' };
          assert.strictEqual(

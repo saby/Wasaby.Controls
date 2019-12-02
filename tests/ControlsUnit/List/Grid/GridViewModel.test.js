@@ -896,6 +896,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(!!data.isFirstInGroup);
          });
 
+         it('getItemDataByItem cache is reset on base template change', () => {
+            const gridViewModel = new gridMod.GridViewModel(cfg);
+            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+
+            assert.isNotOk(data.resolveBaseItemTemplate);
+
+            const resolver = {};
+            gridViewModel.setBaseItemTemplateResolver(resolver);
+            data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+
+            assert.strictEqual(data.resolveBaseItemTemplate, resolver);
+         });
+
          it('getMultiSelectClassList visible', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'visible';
