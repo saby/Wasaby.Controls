@@ -67,11 +67,10 @@ define([
 
          assert.equal(instance._getMenuSource(options)._$data.length, 3);
 
-         instance._isShowSelectedItems = true;
+         options.selectionViewMode = 'selected';
          assert.equal(instance._getMenuSource(options)._$data.length, 4);
 
-         instance._isShowSelectedItems = false;
-         options.withShowSelected = true;
+         options.selectionViewMode = 'all';
          options.selectedKeys = [1, 2, 3];
          assert.equal(instance._getMenuSource(options)._$data.length, 4);
       });
@@ -87,7 +86,7 @@ define([
          instance._options = MultiSelector.default.getDefaultOptions();
          instance._notify = function(eventName, argumentsArray) {
             assert.equal(argumentsArray[0], idItemMenu);
-            assert.equal(eventName, ['showSelected', 'showAll'].includes(idItemMenu) ? 'viewModeChanged' : 'selectedTypeChanged');
+            assert.equal(eventName, 'selectedTypeChanged');
          };
          instance._onMenuItemActivate({}, recordMenu);
 

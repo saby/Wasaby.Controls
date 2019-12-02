@@ -1,16 +1,13 @@
 <Controls.event:Register name="registrator" register="selectedTypeChanged">
-   <Controls.event:Register name="viewTypeChanged" register="viewTypeChanged">
-      <ws:partial
-         template="{{_options.content}}"
-         scope="{{_options}}"
-         viewMode="{{_options.filter && _options.filter.selectionWithPaths ? 'search': _options.viewMode}}"
-         on:listSelectedKeysChanged="_notifyHandler('selectedKeysChanged')"
-         on:listExcludedKeysChanged="_notifyHandler('excludedKeysChanged')"
-         on:listRootChanged="_rootListChanged()"
-         on:listSelectedKeysCountChanged="_selectedKeysCountChanged()"
-         selectedKeysCount="{{ _selectedKeysCount }}"
-         on:selectedTypeChanged="_selectedTypeChangedHandler()"
-         on:viewTypeChanged="_viewTypeChangedHandler()"
-      />
-   </Controls.event:Register>
+   <ws:partial
+           template="{{_options.content}}"
+           scope="{{_options}}"
+           viewMode="{{_options.selectionViewMode === 'selected' ? 'search': _options.viewMode}}"
+           itemOpenHandler="{{_itemOpenHandler}}"
+           on:listSelectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+           on:listExcludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+           on:listSelectedKeysCountChanged="_selectedKeysCountChanged()"
+           selectedKeysCount="{{ _selectedKeysCount }}"
+           on:selectedTypeChanged="_selectedTypeChangedHandler()"
+   />
 </Controls.event:Register>

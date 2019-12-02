@@ -35,8 +35,16 @@ export = class MultiSelector extends Control {
    protected _selectedKeysCount: number|null;
    private _notifyHandler: Function = tmplNotify;
 
+   protected _beforeMount() {
+      this._itemOpenHandler = this._itemOpenHandler.bind(this);
+   }
+
    protected _selectedTypeChangedHandler(event: SyntheticEvent<null>, typeName: string, limit: number): void {
-      this._children.registrator.start(typeName, limit);
+      if (typeName === 'all' || typeName === 'selected') {
+         this._notify('selectionViewModeChanged', [typeName]);
+      } else {
+         this._children.registrator.start(typeName, limit);
+      }
    }
 
    protected _selectedKeysCountChanged(e, count: number|null): void {
@@ -46,12 +54,15 @@ export = class MultiSelector extends Control {
       // TODO: по этой задаче сделаю так, что опции selectedKeysCount вообще не будет: https://online.sbis.ru/opendoc.html?guid=d9b840ba-8c99-49a5-98d3-78715d10d540
    }
 
-   protected _rootListChanged(event: SyntheticEvent<null>, newCurrentRoot: string|number|null): void {
+   protected _itemOpenHandler(newCurrentRoot: string|number|null): void {
       let root: string|number|null = 'root' in this._options ? this._options.root : null;
 
-      if (newCurrentRoot !== root) {
-         this._notify('viewModeChanged', ['showAll']);
-         this._children.viewTypeChanged.start('showAll');
+      if (newCurrentRoot !== root && this._options.selectionViewMode === 'selected') {
+         this._notify('selectionViewModeChanged', ['all']);
+      }
+
+      if (this._options.itemOpenHandler instanceof Function) {
+         return this._options.itemOpenHandler.apply(this, arguments);
       }
    }
 }

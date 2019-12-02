@@ -10,8 +10,7 @@ define(['Controls/operations', 'Types/source'], function (operations, source) {
          filterController._beforeUpdate({filter: {}, source: sourceInstance});
          assert.deepEqual(filterController._filter, {});
 
-         filterController._showSelectedEntries = true;
-         filterController._beforeUpdate({filter: {}, source: sourceInstance});
+         filterController._beforeUpdate({filter: {}, source: sourceInstance, selectionViewMode: 'selected'});
          assert.isTrue('selectionWithPaths' in filterController._filter);
       });
    });

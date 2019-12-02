@@ -9,7 +9,7 @@
                                           selectedKeysCount="{{ _options.selectedKeysCount }}"
                                           size="{{_options.size}}"
                                           fontSize="{{_options.fontSize}}"
-                                          withShowSelected="{{_options.withShowSelected}}"
+                                          selectionViewMode="{{_options.selectionViewMode}}"
                                           root="{{_options.root}}"/>
     <div class="controls-operationsPanelV__multiSelector_separator"></div>
 </div>

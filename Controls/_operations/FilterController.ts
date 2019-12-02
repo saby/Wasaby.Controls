@@ -7,42 +7,33 @@ import { TKeysSelection as TKeys } from 'Controls/interface/';
 import { Rpc, PrefetchProxy } from 'Types/source';
 
 
-export interface ISearchFilterController extends IControlOptions {
+export interface IOperationsFilterController extends IControlOptions {
+   selectionViewMode: string;
    selectedKeys: TKeys;
    excludedKeys: TKeys;
    source: Rpc|PrefetchProxy
    filter: Object;
 }
 
-export default class SearchFilterController extends Control<ISearchFilterController> {
+export default class OperationsFilterController extends Control<IOperationsFilterController> {
    protected _template: TemplateFunction = template;
    protected _filter: object = null;
-   protected _showSelectedEntries: boolean = false;
 
-   protected _beforeMount(options: ISearchFilterController): void {
-      this._filter = SearchFilterController.prepareFilter(options.filter, options.selectedKeys, options.excludedKeys, options.source, this._showSelectedEntries);
+   protected _beforeMount(options: IOperationsFilterController): void {
+      this._filter = OperationsFilterController.prepareFilter(options.filter, options.selectedKeys, options.excludedKeys, options.source, options.selectionViewMode);
    }
 
-   protected _beforeUpdate(newOptions: ISearchFilterController): void {
-      if (!isEqual(this._options.filter, newOptions.filter)) {
-         this._filter = SearchFilterController.prepareFilter(newOptions.filter, newOptions.selectedKeys, newOptions.excludedKeys, newOptions.source, this._showSelectedEntries);
+   protected _beforeUpdate(newOptions: IOperationsFilterController): void {
+      if (!isEqual(this._options.filter, newOptions.filter) || this._options.selectionViewMode !== newOptions.selectionViewMode) {
+         this._filter = OperationsFilterController.prepareFilter(newOptions.filter, newOptions.selectedKeys, newOptions.excludedKeys, newOptions.source, newOptions.selectionViewMode);
       }
    }
 
-   protected _viewModeChangedHandler(event: SyntheticEvent<null>, modeView: string) {
-      let showSelectedEntries = modeView === 'showSelected';
-
-      if (this._showSelectedEntries !== showSelectedEntries) {
-         this._showSelectedEntries = showSelectedEntries;
-         this._filter = SearchFilterController.prepareFilter(this._options.filter, this._options.selectedKeys, this._options.excludedKeys, this._options.source, showSelectedEntries);
-      }
-   }
-
-   private static prepareFilter(filter: object, selectedKeys: TKeys, excludedKeys: TKeys, source: Rpc|PrefetchProxy, showSelectedEntries: boolean): object {
+   private static prepareFilter(filter: object, selectedKeys: TKeys, excludedKeys: TKeys, source: Rpc|PrefetchProxy, selectionViewMode: string): object {
       const preparedFilter = {...filter};
       const source = source.getOriginal ? source.getOriginal() : source;
 
-      if (showSelectedEntries) {
+      if (selectionViewMode === 'selected') {
          preparedFilter.selectionWithPaths = selectionToRecord({
             selected: selectedKeys || [],
             excluded: excludedKeys || []

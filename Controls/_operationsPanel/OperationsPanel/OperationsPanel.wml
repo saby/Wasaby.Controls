@@ -4,7 +4,7 @@
                                        size="{{_options.multiSelectSize}}"
                                        fontSize="{{_options.multiSelectFontSize}}"
                                        selectedKeysCount="{{ _options.selectedKeysCount }}"
-                                       withShowSelected="{{ _options.withShowSelected }}"
+                                       selectionViewMode="{{ _options.selectionViewMode }}"
                                        root="{{ _options.root }}"
                                        attr:class="{{ _initialized ? '' : 'ws-invisible' }}" />
    <div class="controls-operationsPanelV__actions_theme-{{_options.theme}} controls-operationsPanelV__actions{{ _initialized ? '' : ' controls-operationsPanelV__actions_notInitialized' }}" name="toolbarBlock">

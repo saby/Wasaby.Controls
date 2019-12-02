@@ -112,12 +112,21 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  */
 
 /**
- * @name Controls/_operations/Panel#withShowSelected
- * @cfg {Boolean} Задает отображение кнопки "Показать отмеченные" в меню мультивыбора.
- * @default false
+ * @name Controls/_operations/Panel#selectionViewMode
+ * @cfg {Enum} Задает отображение кнопки "Показать отмеченные" в меню мультивыбора.
+ * @variant undefined Кпопка скрыта
+ * @variant all Кнопка "Показать отмеченные"
+ * @variant selected Кнопка "Показать все"
+ * @default undefined
  * @example
  * <pre>
- *    <Controls.operations:Panel withShowSelected="true"/>
+ *    Control.extend({
+ *       _selectionViewMode: 'all'
+ *       ...
+ *    });
+ * </pre>
+ * <pre>
+ *    <Controls.operationsPanel:OperationsPanel bind:selectionViewMode="_selectionViewMode"/>
  * </pre>
  */
 
