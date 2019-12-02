@@ -203,6 +203,11 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.recalcRangeToDirection('up');
             assert.equal(5, affectingInstance.startIndex);
             assert.equal(24, affectingInstance.stopIndex);
+            instance.startIndex = 0;
+            instance.stopIndex = 20;
+            instance.itemsCount = 20;
+            instance.recalcRangeToDirection('up');
+            assert.equal('up', affectingInstance.loadDirection);
         });
         it('itemsAddedHandler', () => {
             const instance = new VirtualScroll(defaultOptions);
