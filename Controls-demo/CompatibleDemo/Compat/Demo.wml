@@ -1,0 +1,32 @@
+<div class="compatibleDemo__column">
+    <div class="compatibleDemo__row">
+        <SBIS3.CONTROLS.Label caption="{{ _text }}"/>
+    </div>
+<!--    <div class="compatibleDemo__row">-->
+<!--        <Controls.heading:Title caption="Controls.input:Text:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="compatibleDemo__row__fill"/>-->
+<!--        <Controls.input:Text name="textBox" bind:value="_text" />-->
+<!--    </div>-->
+    <div class="compatibleDemo__row">
+        <SBIS3.CONTROLS.Label caption="SBIS3.CONTROLS.TextBox" owner="MyTextBox" class="compatibleDemo__row__fill"/>
+        <SBIS3.CONTROLS.TextBox text="{{ 'myContextFieldName'|mutable:_text }}" class="myTextBox"/>
+    </div>
+    <div class="compatibleDemo__row">
+        <SBIS3.CONTROLS.Label caption="SBIS3.CONTROLS.TextBox" owner="MyTextBoxSecond" class="compatibleDemo__row__fill"/>
+        <SBIS3.CONTROLS.TextBox text="{{ 'myContextFieldName'|mutable:_text }}" class="myTextBoxSecond"/>
+    </div>
+
+    <div class="compatibleDemo__row">
+        <Controls-demo.CompatibleDemo.Compat.DemoControls.TextBoxWrapper _text="{{ _text }}"/>
+    </div>
+
+    <div class="compatibleDemo__row">
+        <Controls-demo.CompatibleDemo.Compat.DemoControls.TextBoxWrapperStyled _text="{{ _text }}"/>
+    </div>
+
+    <div class="compatibleDemo__row">
+        <Controls-demo.CompatibleDemo.Compat.DemoControls.OldWrapperForWasabyEditable/>
+    </div>
+    <div class="compatibleDemo__row">
+        <Controls-demo.CompatibleDemo.Compat.DemoControls.OldWrapperForWasaby _text="{{ _text }}"/>
+    </div>
+</div>
