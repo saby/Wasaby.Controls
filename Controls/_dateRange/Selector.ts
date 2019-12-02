@@ -94,6 +94,7 @@ var Component = BaseControl.extend({
     },
 
     _openDialog: function (event) {
+        const container = this._children.linkView.getDialogTarget();
         const ranges = this._options.ranges;
         let className = 'controls-DatePopup__selector-marginTop ';
 
@@ -105,7 +106,7 @@ var Component = BaseControl.extend({
         }
         const cfg = {
             opener: this,
-            target: this._container,
+            target: container,
             template: 'Controls/datePopup',
             className,
             horizontalAlign: {side: 'right'},

@@ -278,6 +278,20 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
                 id: monthListUtils.dateToId(new Date(2019, 5)),
                 type: ITEM_TYPES.body
             }]
+        }, {
+            options: {
+                displayedRanges: [[new Date(2019, 0), new Date(2019, 3)]],
+                viewMode: 'month',
+                monthHeaderTemplate: {}
+            },
+            query: (new Query()).where({'id>=': monthListUtils.dateToId(new Date(2019, 2))}),
+            resp: [{
+                id: monthListUtils.dateToId(new Date(2019, 3)),
+                type: ITEM_TYPES.body
+            }, {
+                id: monthListUtils.dateToId(new Date(2019, 4)),
+                type: ITEM_TYPES.stub
+            }]
         }].forEach((test, i) => {
             it(`should return proper data ${i}`, () => {
                 const source = new MonthsSource(test.options);

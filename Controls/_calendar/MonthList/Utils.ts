@@ -6,7 +6,10 @@ export default {
         return formatDate(date, 'YYYY-MM-DD');
     },
     idToDate: function(str: string, dateConstructor: Function): Date {
-        const d: Array<string> = str.replace('h', '').split('-');
+        const d: string[] = this.getClearDateId(str).split('-');
         return new (dateConstructor || WSDate)(d[0], (parseInt(d[1], 10) || 1) - 1);
+    },
+    getClearDateId: function(dateId: string): string {
+        return dateId.replace('h', '');
     }
 };

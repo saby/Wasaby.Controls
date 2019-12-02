@@ -83,16 +83,16 @@
   right: 0;
 }
 
-.controls-itemActionsV_position_bottomRight_padding-bottom_default {
+.controls-itemActionsV_padding-bottom_default {
   padding-bottom: @spacing_ItemActions-between-content-border-bottom_position_inside;
 }
-.controls-itemActionsV_position_bottomRight_padding-bottom_null {
+.controls-itemActionsV_padding-bottom_null {
   padding-bottom: 0;
 }
-.controls-itemActionsV_position_topRight_padding-top_default {
+.controls-itemActionsV_padding-top_default {
   padding-top: @spacing_ItemActions-between-content-border-top_position_inside;
 }
-.controls-itemActionsV_position_topRight_padding-top_null {
+.controls-itemActionsV_padding-top_null {
   padding-top: 0;
 }
 .controls-itemActionsV_editing {
@@ -106,10 +106,13 @@
 .controls-itemActionsV_editingToolbarVisible {
   padding-right: 0;
 }
+// todo https://online.sbis.ru/opendoc.html?guid=803e1e7c-9e4d-4bc2-8627-0b732037d804
+.controls-itemActionsV__action .controls-itemActionsV__action_icon {
+  display: flex;
+}
 .controls-itemActionsV__action_icon {
   width: @width_ItemActions-action;
   height: @height_ItemActions-action;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -155,7 +158,7 @@
 }
 
 .controls-itemActionsV__action_icon_size_s {
-   .icon(@font-size_ItemActions-icon_size_s, @font-family_ItemActions-icon_size_s);
+   .icon-with-size(@font-size_ItemActions-icon_size_s, @font-family_ItemActions-icon_size_s, @width_ItemActions-action);
 }
 
 .controls-itemActionsV__action_title {

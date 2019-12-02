@@ -44,9 +44,12 @@ define(
                data: sourceDataEdited
             });
             data._dataOptionsContext = new contexts.ContextOptions();
-            data._beforeUpdate({source: newSource, idProperty: 'id'}).addCallback(function(items) {
+            var loadDef = data._beforeUpdate({source: newSource, idProperty: 'id'})
+            assert.isTrue(data._loading);
+            loadDef.addCallback(function(items) {
                try {
                   assert.deepEqual(data._items.getRawData(), sourceDataEdited);
+                  assert.isFalse(data._loading);
                   done();
                } catch (e) {
                   done(e)

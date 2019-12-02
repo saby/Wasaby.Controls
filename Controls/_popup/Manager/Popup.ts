@@ -1,4 +1,4 @@
-import * as Env from 'Env/Env';
+import {detection, constants} from 'Env/Env';
 import {debounce, delay as runDelayed} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
@@ -8,7 +8,7 @@ import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
 
 const RESIZE_DELAY = 10;
 // on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
-const SCROLL_DELAY = Env.detection.isMobileIOS ? 100 : 10;
+const SCROLL_DELAY = detection.isMobileIOS ? 100 : 10;
 
 interface IPosition {
     position: string;
@@ -66,7 +66,7 @@ class Popup extends Control<IPopupOptions> {
     protected _isEscDown: boolean = false;
 
     private _closeByESC(event: SyntheticEvent<KeyboardEvent>): void {
-        if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+        if (event.nativeEvent.keyCode === constants.key.esc) {
             this._close();
         }
     }
@@ -82,7 +82,7 @@ class Popup extends Control<IPopupOptions> {
     protected _afterMount(): void {
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
          * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
-        this._controlResize = debounce(this._controlResize.bind(this), RESIZE_DELAY, true);
+        this._controlResizeHandler = debounce(this._controlResizeHandler.bind(this), RESIZE_DELAY, true);
         this._scrollHandler = debounce(this._scrollHandler.bind(this), SCROLL_DELAY);
 
         if (this.waitForPopupCreated) {
@@ -100,7 +100,7 @@ class Popup extends Control<IPopupOptions> {
         this._stringTemplate = typeof options.template === 'string';
     }
 
-    protected _afterUpdate(oldOptions: IPopupOptions): void {
+    protected _afterRender(oldOptions: IPopupOptions): void {
         this._notify('popupAfterUpdated', [this._options.id], {bubbling: true});
 
         if (this._isResized(oldOptions, this._options)) {
@@ -197,8 +197,12 @@ class Popup extends Control<IPopupOptions> {
         runDelayed(this._callOpenersUpdate.bind(this));
     }
 
-    protected _controlResize(): void {
-        this._notify('popupControlResize', [this._options.id], {bubbling: true});
+    protected _controlResizeOuterHandler(): void {
+        this._notify('popupResizeOuter', [this._options.id], {bubbling: true});
+    }
+
+    protected _controlResizeHandler(): void {
+        this._notify('popupResizeInner', [this._options.id], {bubbling: true});
     }
 
     /**
@@ -231,7 +235,7 @@ class Popup extends Control<IPopupOptions> {
     }
 
     protected _keyDown(event: SyntheticEvent<KeyboardEvent>): void {
-        if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+        if (event.nativeEvent.keyCode === constants.key.esc) {
             this._isEscDown = true;
         }
     }

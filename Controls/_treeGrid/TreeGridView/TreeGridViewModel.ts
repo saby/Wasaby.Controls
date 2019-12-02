@@ -35,7 +35,7 @@ var _private = {
     },
 
     getExpandedItems<T = unknown>(display, expandedItems: Array<T>, nodeProperty: string): Array<T> {
-        if (expandedItems.length === 1 && expandedItems[0] === null) {
+        if (display && expandedItems.length === 1 && expandedItems[0] === null) {
             const nodes = display.getItems().filter((item) => {
                 return item.getContents().get && item.getContents().get(nodeProperty) !== null
             });
@@ -68,6 +68,9 @@ var
         },
         toggleExpanded: function (dispItem, expand) {
             this._model.toggleExpanded(dispItem, expand);
+        },
+        getItemType: function (dispItem) {
+            return this._model.getItemType(dispItem);
         },
         isExpanded: function (dispItem) {
             return this._model.isExpanded(dispItem);

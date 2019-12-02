@@ -3,7 +3,6 @@ import template = require('wml!Controls/_filterPopup/SimplePanel/_HierarchyList/
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import emptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate');
-import clone = require('Core/core-clone');
 import {DropdownViewModel} from 'Controls/dropdownPopup';
 import hierarchyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_HierarchyList/hierarchyItemTemplate');
 
@@ -75,13 +74,14 @@ var HierarchyList = Control.extend({
     _emptyItemTemplate: emptyItemTemplate,
 
     _beforeMount: function(options) {
-        this._folders = _private.getFolders(options.items, options.nodeProperty);
+        this._folders = _private.getFolders(options.selectorItems, options.nodeProperty);
         this._selectedKeys = _private.getSelectedKeys(options.selectedKeys, this._folders, options.emptyKey);
+        this._flatSelectedKeys = _private.getViewModelSelectedKeys(this._selectedKeys, options.emptyKey);
         this._nodeItems = _private.getNodeItems(this._folders, options);
 
         this._listModel = new DropdownViewModel({
             items: options.items,
-            selectedKeys: _private.getViewModelSelectedKeys(this._selectedKeys, options.emptyKey),
+            selectedKeys: this._flatSelectedKeys,
             keyProperty: options.keyProperty,
             itemTemplateProperty: options.itemTemplateProperty,
             displayProperty: options.displayProperty,

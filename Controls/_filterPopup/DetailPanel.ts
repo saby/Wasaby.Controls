@@ -117,24 +117,37 @@ import 'Controls/form';
 
       loadHistoryItems: function(self, historyId, isReportPanel) {
          if (historyId) {
-            let pDef = new ParallelDeferred();
+            const pDef = new ParallelDeferred();
+            const config = {
+               historyId,
+               pinned: true,
+               recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
+            };
+            const historyLoad = HistoryUtils.loadHistoryItems(config)
+                .addCallback((items) => {
+                   const historySource = HistoryUtils.getHistorySource(config);
+                   let historyItems;
+
+                   if (isReportPanel) {
+                       // Поправится, как будем хранить избранное на сервисе истории
+                       // https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+                      historySource.historySource._pinned = false;
+                      historyItems = historySource.getItems();
+                   } else {
+                      historyItems = items;
+                   }
+                   self._historyItems = _private.filterHistoryItems(self, historyItems);
+                   return self._historyItems;
+                })
+                .addErrback(() => {
+                   self._historyItems = new List({ items: [] });
+                });
+
+            pDef.push(historyLoad);
+
             if (isReportPanel) {
                pDef.push(_private.loadFavoriteItems(self, historyId));
             }
-            let config = {
-               historyId: historyId,
-
-                // the report filters panel uses favorite history, for it we don't request pinned items from the history service
-                pinned: !isReportPanel,
-               recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
-            };
-            let historyLoad = HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
-               self._historyItems = _private.filterHistoryItems(self, items);
-               return self._historyItems;
-            }).addErrback(function() {
-               self._historyItems = new List({ items: [] });
-            });
-            pDef.push(historyLoad);
             return pDef.done().getResult().addCallback(() => {
                return self._historyItems;
             });

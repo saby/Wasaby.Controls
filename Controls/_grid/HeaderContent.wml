@@ -10,6 +10,10 @@
                     type="{{colData.column.sortingType}}"
                     value="{{colData.sortingDirection}}"/>
         </ws:if>
-        <ws:else>{{colData.column.caption || colData.column.title}}</ws:else>
+        <ws:else>
+            <div class="controls-Grid__header-cell__content__innerWrapper">
+                {{colData.column.caption || colData.column.title}}
+            </div>
+        </ws:else>
     </ws:else>
 </div>

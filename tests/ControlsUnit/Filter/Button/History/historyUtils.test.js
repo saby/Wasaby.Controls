@@ -64,8 +64,8 @@ define(
             resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key');
             assert.equal(resultItems.getCount(), 4);
             assert.equal(resultItems.at(0).getId(), 20);
-            assert.equal(resultItems.at(1).getId(), 1);
-            assert.equal(resultItems.at(2).getId(), 0);
+            assert.equal(resultItems.at(1).getId(), 0);
+            assert.equal(resultItems.at(2).getId(), 1);
             assert.equal(resultItems.at(3).getId(), 2);
          });
 

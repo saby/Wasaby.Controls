@@ -138,11 +138,13 @@ var Component = Control.extend([], {
          this._model.setCurrentDate();
       }
       if (key === Env.constants.key.plus || key === Env.constants.key.minus) {
-      // on +/- buttons press date should be increased or decreased in field by one day
-         var delta = key === Env.constants.key.plus ? 1 : -1;
-         var localDate = new this._dateConstructor(this._model.value);
-         localDate.setDate(this._model.value.getDate() + delta);
-         this._model.value = localDate;
+      //on +/- buttons press date should be increased or decreased in field by one day if date is not empty
+         if (this._model.value) {
+            var delta = key === Env.constants.key.plus ? 1 : -1;
+            var localDate = new this._dateConstructor(this._model.value);
+            localDate.setDate(this._model.value.getDate() + delta);
+            this._model.value = localDate;
+         }
       }
    },
 

@@ -44,7 +44,7 @@ interface IPosition {
                    _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction);
             } else {
                position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
-               if (!_private.isIOS13()) {
+               if (_private.isIOS12()) {
                   position[isHorizontal ? 'left' : 'top'] += targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
                }
             }
@@ -81,7 +81,11 @@ interface IPosition {
                taskBarKeyboardIosHeight += 5;
             }
          }
-         return position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         let overflow = position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
+         if (!_private.isIOS13()) {
+            overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         }
+         return overflow;
       },
 
       invertPosition: function(popupCfg, direction) {
@@ -125,6 +129,9 @@ interface IPosition {
 
        isIOS13() {
          return this._isMobileIOS() && Env.detection.IOSVersion > 12;
+      },
+      isIOS12() {
+         return this._isMobileIOS() && Env.detection.IOSVersion === 12;
       },
 
        _isMobileIOS() {

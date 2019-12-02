@@ -34,7 +34,7 @@
                         data="{{ itemTemplate.itemData.item.getRawData() }}">
                      <ws:partial
                            template="{{_getTemplate(itemTemplate.itemData.item)}}"
-                           date="{{itemTemplate.itemData.item.date}}"
+                           date="{{_idToDate(itemTemplate.itemData.item.id)}}"
                            extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
                            startValue="{{itemTemplate.itemData.item.startValue}}"
                            endValue="{{itemTemplate.itemData.item.endValue}}"

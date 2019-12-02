@@ -35,7 +35,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
             return scrollHeight - clientHeight > 1;
          },
 
-          sendCanScroll: function (self, clientHeight, scrollHeight) {
+          sendCanScroll: function (self, clientHeight, scrollHeight, viewPortRect) {
               let eventName;
               let params = {};
 
@@ -45,7 +45,8 @@ import {SyntheticEvent} from "Vdom/Vdom"
                       eventName = 'canScroll';
                       params = {
                           clientHeight,
-                          scrollHeight
+                          scrollHeight,
+                          viewPortRect
                       };
                   }
               } else {
@@ -121,12 +122,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
             _private.calcSizeCache(self, container);
             sizeCache = _private.getSizeCache(self, container);
-            _private.sendCanScroll(self, sizeCache.clientHeight, sizeCache.scrollHeight);
+            _private.sendCanScroll(self, sizeCache.clientHeight, sizeCache.scrollHeight, container.getBoundingClientRect());
             if (!withObserver) {
                _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
             }
             if (oldClientHeight !== sizeCache.clientHeight) {
-                _private.sendByRegistrar(self, 'viewPortResize', [sizeCache.clientHeight]);
+                _private.sendByRegistrar(self, 'viewPortResize', [sizeCache.clientHeight, container.getBoundingClientRect()]);
             }
             if ((oldClientHeight !== sizeCache.clientHeight) || (oldScrollHeight !== sizeCache.scrollHeight)) {
                 _private.sendByRegistrar(self, 'scrollResize', {...sizeCache});
@@ -271,12 +272,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
                sizeCache = _private.getSizeCache(self, container);
             }
             if (_private.isCanScroll(sizeCache.clientHeight, sizeCache.scrollHeight)) {
-               self._registrar.startOnceTarget(component, 'canScroll', {...sizeCache});
+               self._registrar.startOnceTarget(component, 'canScroll', {...sizeCache, viewPortRect: container.getBoundingClientRect()});
             } else {
                self._registrar.startOnceTarget(component, 'cantScroll');
             }
 
-            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight]);
+            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight, container.getBoundingClientRect()]);
 
             if (!withObserver) {
                //TODO надо кидать не всем компонентам, а адресно одному
@@ -346,7 +347,9 @@ import {SyntheticEvent} from "Vdom/Vdom"
          _afterMount: function() {
             if (!isEmpty(this._registrar._registry)) {
                _private.calcSizeCache(this, _private.getDOMContainer(this._container));
-               _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
+               const container = _private.getDOMContainer(this._container);
+               _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight,
+                   container.getBoundingClientRect());
             }
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },

@@ -760,6 +760,7 @@ define([
 
       describe('_getSelectionStatus', function() {
          it('without entry path', function() {
+            const sandbox = sinon.createSandbox();
             cfg = {
                selectedKeys: [4],
                excludedKeys: [],
@@ -768,8 +769,11 @@ define([
                listModel: getListModel()
             };
             selectionInstance = new operations.HierarchySelection(cfg);
+            const hasNotLoadedSelectedChildrenStub = sandbox.stub(operations.HierarchySelection._private, 'hasNotLoadedSelectedChildren');
 
             assert.isFalse(selectionInstance._getSelectionStatus(selectionInstance._items.at(0)));
+            assert.isTrue(hasNotLoadedSelectedChildrenStub.calledOnce);
+            sandbox.restore();
          });
 
          it('with entry path', function() {
@@ -782,9 +786,16 @@ define([
             };
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance._items.setMetaData({
-               ENTRY_PATH: [1, 2]
+               ENTRY_PATH: [{
+                  id: 4,
+                  parent: 2
+               }, {
+                  id: 2,
+                  parent: 1
+               }]
             });
 
+            selectionInstance.getSelectedKeysForRender();
             assert.equal(selectionInstance._getSelectionStatus(selectionInstance._items.at(0)), null);
          });
       });

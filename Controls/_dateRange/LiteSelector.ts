@@ -63,7 +63,7 @@ var Component = BaseControl.extend({
 
     openDialog: function (event) {
         var className;
-
+        const container = this._children.linkView.getDialogTarget();
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
             className = 'controls-DateRangeSelectorLite__picker-years-only';
         } else {
@@ -75,7 +75,7 @@ var Component = BaseControl.extend({
 
         this._children.opener.open({
             opener: this,
-            target: this._container,
+            target: container,
             className: className,
             fittingMode: 'overflow',
             templateOptions: {

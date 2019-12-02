@@ -27,6 +27,8 @@ const _private = {
     remove(self, id) {
         const item = _private.find(id);
         if (item) {
+            // TODO: https://online.sbis.ru/opendoc.html?guid=7a963eb8-1566-494f-903d-f2228b98f25c
+            item.startRemove = true;
             return new Promise((resolve) => {
                 _private.closeChilds(self, item).then(() => {
                     _private.finishPendings(id, null, null, () => {
@@ -83,6 +85,7 @@ const _private = {
             _private.updateOverlay();
             _private.redrawItems();
             self._notify('managerPopupDestroyed', [element, _private.popupItems], {bubbling: true});
+            EnvEvent.Bus.channel('popupManager').notify('managerPopupDestroyed', element, _private.popupItems);
         });
     },
 
@@ -158,6 +161,7 @@ const _private = {
         if (item) {
             if (!item.popupOptions.isCompoundTemplate) {
                 this._notify('managerPopupCreated', [item, _private.popupItems], {bubbling: true});
+                EnvEvent.Bus.channel('popupManager').notify('managerPopupCreated', item, _private.popupItems);
             }
         }
     },
@@ -285,15 +289,23 @@ const _private = {
         return false;
     },
 
-    popupControlResize(id) {
+    popupResizeInner(id) {
         const item = _private.find(id);
         if (item) {
             const parentItem = _private.find(item.parentId);
             // Если над скрытым стековым окном позиционируются другие окна, то не даем им реагировать на внутренние ресайзы
             // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
             if (!parentItem || parentItem.popupOptions.hidden !== true) {
-                return item.controller.popupResize(item, _private.getItemContainer(id));
+                return item.controller.resizeInner(item, _private.getItemContainer(id));
             }
+        }
+        return false;
+    },
+
+    popupResizeOuter(id) {
+        const item = _private.find(id);
+        if (item) {
+            return item.controller.resizeOuter(item, _private.getItemContainer(id));
         }
         return false;
     },
@@ -524,6 +536,10 @@ const Manager = Control.extend({
      * @param controller popup controller
      */
     show(options, controller): string {
+        if (this.find(options.id)) {
+            this.update(options.id, options);
+            return options.id;
+        }
         const item = this._createItemConfig(options, controller);
         const defaultConfigResult = controller.getDefaultConfig(item);
         _private.addElement(item);
@@ -547,7 +563,7 @@ const Manager = Control.extend({
     },
 
     _createItemConfig(options, controller) {
-        const popupId = randomId('popup-');
+        const popupId = options.id || randomId('popup-');
         const popupConfig = {
             id: popupId,
             modal: options.modal,
@@ -602,7 +618,10 @@ const Manager = Control.extend({
             const isResizingLine = event.target.classList.contains('controls-ResizingLine');
             _private.popupItems.each((item) => {
                 // if we have deactivated popup
-                if (item && (item.waitDeactivated || isResizingLine)) {
+                // Отказываюсь на старых страницах от закрытия окон по деактивации, сам отслеживаю необходимость закрытия
+                // в 20.1000 по работе в план разделю закрытие по клику мимо и по деактивации на 2 разные опции,
+                // из этой проверки нужно удалить item.waitDeactivated и isNewEnvironment()
+                if (item && (item.waitDeactivated || isResizingLine || !_private.isNewEnvironment())) {
                     const parentControls = goUpByControlTree(event.target);
                     const popupInstance = ManagerController.getContainer().getPopupById(item.id);
 

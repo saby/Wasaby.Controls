@@ -101,7 +101,7 @@ export default class MonthsSource extends Memory {
                     month =  delta > 0 ? period[1] : period[0];
                 }
 
-                if (this._header && delta > 0) {
+                if (this._header && delta > 0 && month) {
                     monthHeader = this._shiftRange(month, delta);
                     if (this._isDisplayed(monthHeader)) {
                         this._pushHeader(items, monthHeader);

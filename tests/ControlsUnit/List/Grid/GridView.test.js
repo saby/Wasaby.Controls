@@ -124,6 +124,15 @@ define(['Controls/grid'], function(gridMod) {
          gridView._beforeUpdate(cfg);
          gridMod.GridView.superclass._beforeUpdate = superclassBeforeUpdate;
          assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
+         gridView._listModel = {
+            _isMultiHeader: true,
+            setHeader: () => null
+         };
+
+         let resetWasCalled = false;
+         gridMod.GridView._private._resetScroll = () => {resetWasCalled = true}
+         gridView._beforeUpdate({...cfg, header: [{}, {}, {}, {}]});
+         assert.isTrue(resetWasCalled);
       });
       it('afterMount and beforePaint', function() {
          var
@@ -576,6 +585,44 @@ define(['Controls/grid'], function(gridMod) {
             0
          ]);
       });
+      it('getResultsHeight and getHeaderHeight', function() {
+         const cfg = {
+                columns: [
+                   { displayProperty: 'field1', template: 'column1' },
+                   { displayProperty: 'field2', template: 'column2' }
+                ],
+                header: gridHeader,
+                resultsPosition: 'top',
+                multiSelectVisibility: 'hidden',
+             };
+         const gridView = new gridMod.GridView(cfg);
+         gridView._listModel = {
+            isDrawHeaderWithEmptyList: function() {
+               return true
+            }
+         };
+         gridView._children.header = {
+            getBoundingClientRect: () => ({ height: 40 })
+         }
+         gridView._children.results = {
+            getBoundingClientRect: () => ({ height: 20 })
+         }
+         gridView.saveOptions(cfg);
+         assert.equal(40, gridView.getHeaderHeight());
+         assert.equal(20, gridView.getResultsHeight());
+
+         gridView._listModel = {
+            isDrawHeaderWithEmptyList: function() {
+               return false
+            }
+         };
+         gridView._children.header = undefined;
+         gridView._children.results = undefined;
+
+         assert.equal(0, gridView.getHeaderHeight());
+         assert.equal(0, gridView.getResultsHeight());
+
+      });
       it('resize on list changed with column scroll', function() {
          let cfg = {
                columns: [
@@ -635,4 +682,5 @@ define(['Controls/grid'], function(gridMod) {
          });
       });
    });
+
 });

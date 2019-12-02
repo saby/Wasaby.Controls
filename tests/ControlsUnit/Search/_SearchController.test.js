@@ -61,6 +61,30 @@ define(
             assert.deepEqual(searchController.getFilter(), {test: 'test'});
          });
 
+         it('isLoading', function() {
+            var searchController = new searchLib._SearchController({
+               minSearchLength: 3,
+               source: source,
+               filter: {}
+            });
+
+            var result = searchController.isLoading();
+            assert.equal(result, null);
+            searchLib._SearchController._private.getSearch(searchController).addCallback(function(search) {
+               search.isLoading = function() {
+                  return false;
+               };
+               result = searchController.isLoading();
+               assert.equal(result, false);
+
+               search.isLoading = function() {
+                  return true;
+               };
+
+               assert.equal(result, true);
+            });
+         });
+
          it('search', function(done) {
             var filter = {};
             var aborted = false;

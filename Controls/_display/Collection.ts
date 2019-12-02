@@ -184,6 +184,7 @@ function onCollectionChange<T>(
             this._reFilter();
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
+            this._nextVersion();
             return;
     }
 
@@ -1880,7 +1881,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._notifyAfterCollectionChange();
 
         // FIXME Make a list of properties that lead to version update
-        if (properties as String === 'editingContents' || properties as String === 'animated') {
+        if (properties as String === 'editingContents' || properties as String === 'animated' || properties as String === 'canShowActions') {
             this._nextVersion();
         }
     }

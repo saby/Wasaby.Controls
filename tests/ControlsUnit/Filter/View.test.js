@@ -148,7 +148,7 @@ define(
             newConfig.source[0].value = 1;
             newConfig.source[0].editorOptions.source = new sourceLib.Memory({
                keyProperty: 'id',
-               data: defaultItems[0]
+               data: Clone(defaultItems[0])
             });
             view._configs = {};
             view._displayText = {};
@@ -193,7 +193,7 @@ define(
             newConfig.source[0].value = 1;
             newConfig.source[0].editorOptions.source = new sourceLib.Memory({
                keyProperty: 'id',
-               data: defaultItems[0]
+               data: Clone(defaultItems[0])
             });
             view._configs = {};
             view._displayText = {};
@@ -555,35 +555,24 @@ define(
             assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
          });
 
-         it('_private:updateHistory', function() {
-            let view = getView(defaultConfig);
-            view._source = Clone(defaultConfig.source);
-            let resultHistoryItems, resultMeta;
-            let source = new history.Source({
-               originSource: new sourceLib.Memory({
-                  keyProperty: 'key',
-                  data: []
-               }),
-               historySource: new history.Service({
-                  historyId: 'TEST_HISTORY_ID'
-               })
+         it('_private:getFolderIds', function() {
+            const items = new collection.RecordSet({
+               rawData: [
+                  {key: '1', title: 'In any state', node: true, parent: null},
+                  {key: '2', title: 'In progress', node: false, parent: 1},
+                  {key: '3', title: 'Completed', node: false, parent: 1},
+                  {key: '4', title: 'Completed positive', node: true, parent: 1},
+                  {key: '5', title: 'Completed positive', node: true}
+               ],
+               keyProperty: 'key'
             });
-            source.update = (historyItems, meta) => {
-               resultHistoryItems = historyItems;
-               resultMeta = meta;
-            };
-            view._source[0].editorOptions.source = source;
-            view._configs = {
-               document: {
-                  items: Clone(defaultItems[0]),
-                  displayProperty: 'title',
-                  keyProperty: 'id'
-               }
-            };
-            let items = [{key: 1}];
-            filter.View._private.updateHistory(view, 'document', items);
-            assert.deepEqual(resultHistoryItems, items);
-            assert.deepEqual(resultMeta, {$_history: true});
+            const folders = filter.View._private.getFolderIds({
+               items: items,
+               nodeProperty: 'node',
+               parentProperty: 'parent',
+               keyProperty: 'key'
+            });
+            assert.deepStrictEqual(folders, ['1', '5']);
          });
 
          it('_private:loadSelectedItems', function(done) {
@@ -592,7 +581,7 @@ define(
             let configs = {
                document: {
                   items: new collection.RecordSet({
-                     rawData: defaultItems[0],
+                     rawData: Clone(defaultItems[0]),
                      keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
@@ -615,7 +604,8 @@ define(
             };
             assert.strictEqual(configs['state'].items.getCount(), 6);
             filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
-               assert.strictEqual(configs['state'].items.getCount(), 6);
+               assert.strictEqual(configs['state'].popupItems.getCount(), 6);
+               assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
             });
@@ -722,7 +712,7 @@ define(
             let configs = {
                document: {
                   items: new collection.RecordSet({
-                     rawData: defaultItems[0],
+                     rawData: Clone(defaultItems[0]),
                      keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
@@ -743,6 +733,7 @@ define(
             filterView._configs = configs;
             filterView._displayText = {};
             filterView._beforeUpdate({source: source}).addCallback(() => {
+               assert.strictEqual(configs['state'].popupItems.getCount(), 7);
                assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
@@ -759,12 +750,16 @@ define(
                   document: {
                      items: getItems(Clone(defaultItems[0])),
                      displayProperty: 'title',
-                     keyProperty: 'id'},
+                     keyProperty: 'id',
+                     sourceController: {hasMoreData: () => {return true;}}
+                  },
                   state: {
                      items: getItems(Clone(defaultItems[1])),
                      displayProperty: 'title',
                      keyProperty: 'id',
-                     multiSelect: true}
+                     multiSelect: true,
+                     sourceController: {hasMoreData: () => {return true;}}
+                  }
                };
                view._children = {
                   StickyOpener: { close: () => {} }
@@ -821,7 +816,7 @@ define(
                };
                view._configs.state.items = new collection.RecordSet({
                   keyProperty: 'id',
-                  rawData: defaultItems[1]
+                  rawData: Clone(defaultItems[1])
                });
                let newItems = new collection.RecordSet({
                   keyProperty: 'id',
@@ -834,7 +829,7 @@ define(
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
-               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'Completed', title: 'Completed, new item, new item 2', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
                assert.strictEqual(view._configs.state.items.getCount(), 9);
 
@@ -856,7 +851,7 @@ define(
                };
                view._configs.state.items = new collection.RecordSet({
                   keyProperty: 'id',
-                  rawData: defaultItems[1]
+                  rawData: Clone(defaultItems[1])
                });
                view._idOpenSelector = 'state';
                let newItems = new collection.RecordSet({
@@ -898,7 +893,7 @@ define(
                assert.deepStrictEqual(view._source[1].viewMode, 'extended');
                assert.deepStrictEqual(view._source[3].textValue, 'new document');
                assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
-               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: '', title: ''}});
+               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: 'new document', title: ''}});
                assert.isTrue(historyEventFired);
             });
 
@@ -911,7 +906,7 @@ define(
                };
                view._configs.state.items = new collection.RecordSet({
                   keyProperty: 'id',
-                  rawData: defaultItems[1]
+                  rawData: Clone(defaultItems[1])
                });
                let newItems = new collection.RecordSet({
                   keyProperty: 'id',
@@ -920,7 +915,7 @@ define(
                view._idOpenSelector = 'state';
                view._onSelectorTemplateResult('resultEvent', newItems);
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
-               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'Completed', title: 'Completed, new item, new item 2', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
             });
          });
@@ -971,7 +966,8 @@ define(
                      keyProperty: 'id',
                      nodeProperty: 'node',
                      parentProperty: 'parent',
-                     multiSelect: true
+                     multiSelect: true,
+                     sourceController: {hasMoreData: () => {return true;}}
                   }
                };
                view._children = {
@@ -997,7 +993,7 @@ define(
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [1, 2], '-2': [-2]});
-               assert.deepStrictEqual(view._displayText.document, {text: 'Folder 2', title: 'Folder 2, In any state, In progress', hasMoreText: ', еще 2' });
+               assert.deepStrictEqual(view._displayText.document, {text: 'In any state', title: 'In any state, In progress, Folder 2', hasMoreText: ', еще 2' });
                assert.deepStrictEqual(filterChanged, {document: {'-1': [1, 2], '-2': [-2]}});
 
                eventResult = {
@@ -1015,6 +1011,86 @@ define(
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [], '-2': [4]});
                assert.deepStrictEqual(view._displayText.document, {text: 'Deleted', title: 'Deleted', hasMoreText: '' });
+            });
+
+            it ('moreButtonClick', function () {
+               let filterChanged, isClosed;
+               view._notify = (event, data) => {
+                  if (event === 'filterChanged') {
+                     filterChanged = data[0];
+                  }
+               };
+               let eventResult = {
+                  action: 'moreButtonClick',
+                  id: 'document'
+               };
+               view._children = {
+                  StickyOpener: { close: () => {isClosed = true;} }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.strictEqual(view._idOpenSelector, 'document');
+               assert.isTrue(isClosed);
+            });
+         });
+
+         describe('View history', function() {
+            let view, hSource;
+            beforeEach(function() {
+               view = getView(defaultConfig);
+               view._source = Clone(defaultConfig.source);
+               view._displayText = {};
+               view._source = Clone(defaultConfig.source);
+               view._configs = {
+                  document: {
+                     items: Clone(defaultItems[0]),
+                     displayProperty: 'title',
+                     keyProperty: 'id'
+                  },
+                  state: {}
+               };
+               view._children = {
+                  StickyOpener: { close: () => {} }
+               };
+               hSource = new history.Source({
+                  originSource: new sourceLib.Memory({
+                     keyProperty: 'key',
+                     data: []
+                  }),
+                  historySource: new history.Service({
+                     historyId: 'TEST_HISTORY_ID'
+                  })
+               });
+
+            });
+
+            it('_private:updateHistory', function() {
+               let resultHistoryItems, resultMeta;
+               hSource.update = (historyItems, meta) => {
+                  resultHistoryItems = historyItems;
+                  resultMeta = meta;
+               };
+               view._source[0].editorOptions.source = hSource;
+               let items = [{key: 1}];
+               filter.View._private.updateHistory(view, 'document', items);
+               assert.deepEqual(resultHistoryItems, items);
+               assert.deepEqual(resultMeta, {$_history: true});
+            });
+
+            it('_private:getPopupConfig historySource', function() {
+               hSource.prepareItems = () => {
+                  return new collection.RecordSet({ rawData: Clone(defaultItems[1]) });
+               };
+               hSource.originSource = new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: defaultItems[0]
+               });
+               view._source[0].editorOptions.source = hSource;
+               view._configs.document.sourceController = {
+                  load: () => {return Deferred.success();},
+                  hasMoreData: () => {return true;}
+               };
+               let resultItems = filter.View._private.getPopupConfig(view, view._configs, view._source);
+               assert.isOk(resultItems[0].loadDeferred);
             });
          });
       });

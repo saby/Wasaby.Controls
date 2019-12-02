@@ -77,7 +77,7 @@ var
             parentExcluded = false,
             parentSelected = false;
 
-         while (parentId) {
+         while (parentId !== null && parentId !== undefined) {
             if (selectedKeys.indexOf(parentId) !== -1) {
                parentSelected = true;
                break;
@@ -180,17 +180,21 @@ var
          });
       },
 
-      hasNotLoadedSelectedChildren: function(hierarchyRelation, itemId, items, entryPath) {
-         let
-            hasChildren = false,
-            loadedChildrenIds = _private.getChildrenIds(hierarchyRelation, itemId, items);
+      hasNotLoadedSelectedChildren(hierarchyRelation, itemId, items, entryPath): boolean {
+         let hasChildren = false;
 
-         if (loadedChildrenIds.length) {
-            loadedChildrenIds.forEach(function(currentItemId) {
-               hasChildren = hasChildren || _private.hasNotLoadedSelectedChildren(hierarchyRelation, currentItemId, items, entryPath);
-            });
-         } else {
-            hasChildren = entryPath.indexOf(itemId) !== -1;
+         if (entryPath.length) {
+            const loadedChildrenIds = _private.getChildrenIds(hierarchyRelation, itemId, items);
+
+            if (loadedChildrenIds.length) {
+               loadedChildrenIds.forEach((currentItemId) => {
+                  hasChildren =
+                      hasChildren ||
+                      _private.hasNotLoadedSelectedChildren(hierarchyRelation, currentItemId, items, entryPath);
+               });
+            } else {
+               hasChildren = entryPath.indexOf(itemId) !== -1;
+            }
          }
 
          return hasChildren;
@@ -199,6 +203,7 @@ var
 
 var HierarchySelection = Selection.extend({
    _hierarchyRelation: null,
+   _entriesPath: null,
 
    constructor: function(options) {
       HierarchySelection.superclass.constructor.apply(this, arguments);
@@ -252,7 +257,7 @@ var HierarchySelection = Selection.extend({
          }
 
          parentId = _private.getParentId(key, this._items, this._hierarchyRelation.getParentProperty());
-         while (parentId) {
+         while (parentId !== null && parentId !== undefined) {
             if (this._isAllSelection(this._getParams(parentId))) {
                ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [key]);
             }
@@ -336,15 +341,21 @@ var HierarchySelection = Selection.extend({
       return countItems;
    },
 
+   getSelectedKeysForRender: function() {
+      let entriesPath = this._items.getMetaData()[FIELD_ENTRY_PATH] || [];
+
+      this._entriesPath = entriesPath.map((entryPath) => entryPath.parent);
+      return HierarchySelection.superclass.getSelectedKeysForRender.apply(this, arguments);
+   },
+
    _getSelectionStatus: function(item) {
       let
          status = false,
          hasExcludedChildren,
          itemId = item.get(this._options.keyProperty),
-         entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH] || [],
          isParentSelected = _private.isParentSelected(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items),
          hasSelectedChildren = _private.getSelectedChildrenCount(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items) > 0 ||
-            _private.hasNotLoadedSelectedChildren(this._hierarchyRelation, itemId, this._items, entryPath);
+            _private.hasNotLoadedSelectedChildren(this._hierarchyRelation, itemId, this._items, this._entriesPath);
 
       if (this._excludedKeys.indexOf(itemId) !== -1) {
          status = hasSelectedChildren ? null : false;
@@ -383,7 +394,9 @@ var HierarchySelection = Selection.extend({
    },
 
    _getRoot: function() {
-      return this._options.listModel.getRoot().getContents();
+      let rootItem = this._options.listModel.getRoot();
+
+      return rootItem && rootItem.getContents();
    },
 
    _selectedItemsIsLoaded: function(keys) {
@@ -404,6 +417,7 @@ var HierarchySelection = Selection.extend({
    }
 });
 
+HierarchySelection._private = _private;
 HierarchySelection.SELECTION_STATUS = SELECTION_STATUS;
 
 export default HierarchySelection;

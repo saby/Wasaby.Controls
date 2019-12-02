@@ -6,13 +6,16 @@ import { RecordSet } from 'Types/collection';
 export function processItemActionClick(
     event: SyntheticEvent<MouseEvent>,
     action: any,
-    item: CollectionItem<Model>
+    item: CollectionItem<Model>,
+    fromDropdown = false
 ): void {
     event.stopPropagation();
     if (action._isMenu) {
         openActionsMenu.call(this, item, event);
     } else if (action['parent@']) {
-        // self._notify('menuActionClick', [itemData, event, action]);
+        if (!fromDropdown) {
+            openActionsSubmenu.call(this, item, action, event);
+        }
     } else {
         const contents = item.getContents();
         const itemContainer = getItemContainer.call(this, item);
@@ -85,12 +88,56 @@ export function openActionsMenu(
     }
 }
 
+// TODO A lot of common dropdown code between openActionsMenu and openActionsSubmenu,
+// but it's not 100% the same. Refactor the common code into a separate function.
+function openActionsSubmenu(
+    item: CollectionItem<Model>,
+    parentAction: any,
+    event: SyntheticEvent<MouseEvent>
+): void {
+    const childActions = this._options.listModel.getItemActionsManager().getChildActions(item, parentAction);
+    if (childActions.length > 0) {
+        const closeHandler = closeActionsMenu.bind(this);
+        const submenuRecordSet = new RecordSet({ rawData: childActions, keyProperty: 'id' });
+        const menuConfig = {
+            items: submenuRecordSet,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'parent@',
+            groupTemplate: this._options.contextMenuConfig && this._options.contextMenuConfig.groupTemplate,
+            groupingKeyCallback: this._options.contextMenuConfig && this._options.contextMenuConfig.groupingKeyCallback,
+            rootKey: parentAction.id,
+            showHeader: true,
+            dropdownClassName: 'controls-itemActionsV__popup',
+            headConfig: {
+                caption: parentAction.title
+            }
+        };
+        const dropdownConfig = {
+            opener: this,
+            target: event.target,
+            templateOptions: menuConfig,
+            eventHandlers: {
+                onResult: closeHandler,
+                onClose: closeHandler
+            },
+            className: 'controls-DropdownList__margin-head'
+        };
+
+        this._options.listModel.setActiveItem(item);
+
+        import('css!Controls/input').then(() => {
+            this._notify('requestDropdownMenuOpen', [dropdownConfig]);
+        });
+    }
+}
+
 export function closeActionsMenu(args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] }): void {
     // If menu needs to close because one of the actions was clicked, process
     // the action handler first
     if (args && args.action === 'itemClick') {
         const action = args.data && args.data[0] && args.data[0].getRawData();
-        processItemActionClick.call(this, args.event, action, this._options.listModel.getActiveItem());
+        processItemActionClick.call(this, args.event, action, this._options.listModel.getActiveItem(), true);
 
         // If this action has children, don't close the menu if it was clicked
         if (action['parent@']) {
@@ -101,7 +148,6 @@ export function closeActionsMenu(args?: { action: string, event: SyntheticEvent<
     // TODO Move this to the manager as well??
     this._options.listModel.setActiveItem(null);
     this._notify('requestDropdownMenuClose');
-    // TODO Close swipe menu too
 }
 
 function getFakeMenuTarget(realTarget: HTMLElement): { getBoundingClientRect(): ClientRect|DOMRect } {

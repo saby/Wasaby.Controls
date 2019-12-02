@@ -240,8 +240,10 @@ class ModuleClass {
                 respRanges[rangeIndex - i] = ranges[rangeIndex - i];
             } else {
                 respRanges[rangeIndex - i] = [
-                    this._slideStartDate(start, -step, selectionType),
-                    this._slideEndDate(start, -step + periodLength - 1, selectionType)
+                    //In variable control there is old start and end values,
+                    // we send them to check if year has been changed
+                    this._slideStartDate(control[0], start, -step, selectionType),
+                    this._slideEndDate(control[1], start, -step + periodLength - 1, selectionType, periodLength)
                 ];
             }
             lastDate = control[0];
@@ -259,8 +261,10 @@ class ModuleClass {
                 respRanges[rangeIndex + i] = ranges[rangeIndex + i];
             } else {
                 respRanges[rangeIndex + i] = [
-                    this._slideStartDate(start, step, selectionType),
-                    this._slideEndDate(start, step + periodLength - 1, selectionType)
+                    //In variable control there is old start and end values,
+                    // we send them to check if year has been changed
+                    this._slideStartDate(control[0], start, step, selectionType),
+                    this._slideEndDate(control[1], start, step + periodLength - 1, selectionType, periodLength)
                 ];
             }
             lastDate = control[1];
@@ -268,16 +272,28 @@ class ModuleClass {
         return respRanges;
     }
 
-    private _slideStartDate(date, delta, selectionType) {
+    private _slideStartDate(lastDate, date, delta, selectionType) {
         if (selectionType === 'days') {
-            return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
+            //if year has been changed, returns equal dates with different years
+            //example: (13.11.2018 - 15.11.2018) - (13.11.2019 - 15.11.2019)
+            //else, returns same closest period
+            //example: (10.11.2019 - 12.11.2019) - (13.11.2019 - 15.11.2019)
+            if (lastDate.getFullYear() !== date.getFullYear()) {
+                return new Date(lastDate.getFullYear(), date.getMonth(), date.getDate());
+            } else {
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
+            }
         }
         return new Date(date.getFullYear(), date.getMonth() + delta, 1);
     }
 
-    private _slideEndDate(date, delta, selectionType) {
+    private _slideEndDate(lastDate, date, delta, selectionType, periodLength) {
         if (selectionType === 'days') {
-            return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
+            if (lastDate.getFullYear() !== date.getFullYear()) {
+                return new Date(lastDate.getFullYear(), date.getMonth(), date.getDate() + periodLength - 1);
+            } else {
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
+            }
         }
         return new Date(date.getFullYear(), date.getMonth() + delta + 1, 0);
     }

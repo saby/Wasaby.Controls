@@ -128,6 +128,7 @@ const Global = Control.extend({
       Dialog.openPopup({
          template,
          templateOptions,
+         opener: null,
          eventHandlers: {
             onClose: () => {
                this._onDialogClosed();

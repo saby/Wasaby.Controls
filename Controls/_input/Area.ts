@@ -232,6 +232,18 @@ import 'Controls/decorator';
                   event.stopPropagation();
                }
             }
+         },
+         fixSyncFakeArea: function(self) {
+            /**
+             * 1) На MacOS иногда между выпонением обработчика и перерестроением успевает перерисоваться страница. Из-за этого происходят скачки.
+             * 2) В chrome иногда, когда происходит увеличение количества строк, при вставке, не происходит отрисовки текста на новых строках.
+             * Значение в textarea меняется в обработчике события input, а значение в fakeField в шаблоне на момент перестроения.
+             * Так как размеры textarea зависят от fakeField, поэтому их значения на момент перерисовки страници должны быть одинаковыми. Иначе
+             * возникают проблемы 1-2. Чтобы избежать проблем меняем значение fakeField в обработчике.
+             */
+            if (Env.detection.isMacOSDesktop || Env.detection.chrome) {
+               self._children.fakeField.innerText = self._viewModel.displayValue + self._field.scope.emptySymbol;
+            }
          }
       };
 
@@ -259,18 +271,14 @@ import 'Controls/decorator';
          _inputHandler: function() {
             Area.superclass._inputHandler.apply(this, arguments);
 
-            /**
-             * 1) На MacOS иногда между выпонением обработчика и перерестроением успевает перерисоваться страница. Из-за этого происходят скачки.
-             * 2) В chrome иногда, когда происходит увеличение количисетва строк, при вставке, не происходит отрисовки текста на новых строках.
-             * Значение в textarea меняется в обработчике события input, а значение в fakeField в шаблоне на момент перестроения.
-             * Так как размеры textarea зависят от fakeField, поэтому их значения на момент перерисовки страници должны быть одинаковыми. Иначе
-             * возникают проблемы 1-2. Чтобы избежать проблем меняем значение fakeField в обработчике.
-             */
-            if (Env.detection.isMacOSDesktop || Env.detection.chrome) {
-               this._children.fakeField.innerText = this._viewModel.displayValue + this._field.scope.emptySymbol;
-            }
+            _private.fixSyncFakeArea(this);
 
             this._recalculateLocationVisibleArea(this._getField(), this._viewModel.displayValue, this._viewModel.selection);
+         },
+
+         _updateFieldInTemplate: function () {
+            Area.superclass._updateFieldInTemplate.apply(this, arguments);
+            _private.fixSyncFakeArea(this);
          },
 
          _keyDownHandler: function(event) {

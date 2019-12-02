@@ -207,6 +207,9 @@ import 'Types/entity';
                   IoC.resolve('ILogger').error('Controls/_explorer/View', err);
                });
             });
+         },
+         canStartDragNDrop(self): boolean {
+            return self._viewMode !== 'search';
          }
       };
 
@@ -321,6 +324,7 @@ import 'Types/entity';
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
+         this._canStartDragNDrop = _private.canStartDragNDrop.bind(null, this);
 
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          //process items from options to create a path
@@ -340,6 +344,12 @@ import 'Types/entity';
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
+
+         //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
+         if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
+            this._isGoingFront = false;
+         }
+
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode, cfg);
             this._children.treeControl.resetExpandedItems();
@@ -389,6 +399,7 @@ import 'Types/entity';
                 _private.setRestoredKeyObject(this, item.getId());
                 _private.setRoot(this, item.getId());
                 this._isGoingFront = true;
+                this.cancelEdit();
             }
          }
          event.stopPropagation();

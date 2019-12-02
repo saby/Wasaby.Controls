@@ -48,8 +48,12 @@ const _private = {
         return ViewModel.superclass.handleInput.call(self, _private.prepareData(result), inputType);
     },
 
-    handleRemovalSplitterTriad: function (splitValue, inputType) {
-        if (splitValue.delete === ' ') {
+    isLiteral: function(value) {
+        return value === ' ' || value === decimalSplitter;
+    },
+
+    handleRemovalLiteral: function (splitValue, inputType) {
+        if (_private.isLiteral(splitValue.delete)) {
             if (inputType === 'deleteBackward') {
                 splitValue.before = splitValue.before.slice(0, -1);
             }
@@ -57,6 +61,21 @@ const _private = {
                 splitValue.after = splitValue.after.substring(1);
             }
         }
+    },
+
+    leaveOnlyIntegerPath: function (value, splitValue, options) {
+        if (value === '-') {
+            return true;
+        }
+        /**
+         * Если наличие дробной части управляется пользователем с помощью ввода точки, то
+         * целая часть может быть только в случае, когда точка удалена, и после неё ничего нет.
+         */
+        if (splitValue.delete === decimalSplitter && !options.useAdditionToMaxPrecision && splitValue.after === '') {
+            return true;
+        }
+
+        return false;
     },
 
     recoverText: function (splitValue): IText {
@@ -134,7 +153,7 @@ var ViewModel = BaseViewModel.extend({
         var displayValue = value === null ? '' : value.toString();
 
         if (displayValue && this._options.showEmptyDecimals) {
-            return format(parse(displayValue, this._options), this._options, 0).value;
+            return format(parse(displayValue, this._options), this._options, displayValue.length).value;
         }
 
         if (this._options.useGrouping) {
@@ -178,7 +197,7 @@ var ViewModel = BaseViewModel.extend({
 
         let parsedNumber: IParsedNumber;
 
-        _private.handleRemovalSplitterTriad(splitValue, inputType);
+        _private.handleRemovalLiteral(splitValue, inputType);
 
         text = _private.recoverText(splitValue);
 
@@ -209,7 +228,7 @@ var ViewModel = BaseViewModel.extend({
                     carriagePosition: 1
                 }, inputType);
             }
-            if (text.value === '-' || splitValue.delete === decimalSplitter && splitValue.after === '') {
+            if (_private.leaveOnlyIntegerPath(text.value, splitValue, this._options)) {
                 return _private.superHandleInput(this, {
                     value: splitValue.before,
                     carriagePosition: splitValue.before.length

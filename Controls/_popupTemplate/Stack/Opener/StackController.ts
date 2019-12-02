@@ -107,10 +107,11 @@ const _private = {
     getStackParentCoords() {
         const elements = document.getElementsByClassName('controls-Popup__stack-target-container');
         const targetCoords = TargetCoords.get(elements && elements.length ? elements[0] : document.body);
-
+        // calc with scroll, because stack popup has fixed position only on desktop and can scroll with page
+        const leftPageScroll = detection.isMobilePlatform ? 0 : targetCoords.leftScroll;
         return {
             top: Math.max(targetCoords.top, 0),
-            right: document.documentElement.clientWidth - targetCoords.right + targetCoords.leftScroll // calc with scroll, because stack popup has fixed position and can scroll with page
+            right: document.documentElement.clientWidth - targetCoords.right + leftPageScroll
         };
     },
 
@@ -340,7 +341,7 @@ class StackController extends BaseController {
         this._update();
     }
 
-    popupResize(): boolean {
+    resizeInner(): boolean {
         return false;
     }
 

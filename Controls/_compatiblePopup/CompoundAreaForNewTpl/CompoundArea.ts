@@ -244,6 +244,7 @@ const moduleClass = CompoundControl.extend({
          if (self._options._initCompoundArea) {
             self._notifyOnSizeChanged(self, self);
             self._options._initCompoundArea(self);
+            self._options._initCompoundArea = null;
          }
          self._finishPopupOpenedDeferred();
          self._isVDomTemplateMounted = true;

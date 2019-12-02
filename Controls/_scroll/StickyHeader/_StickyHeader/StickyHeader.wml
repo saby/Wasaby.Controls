@@ -17,5 +17,5 @@
    <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
    <div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom
                {{ !_isShadowVisible('bottom') ? ' ws-invisible' }}"
-       style="{{_getBottomShadowStyle()}}"></div>
+       style="{{_bottomShadowStyle}}"></div>
 </div>

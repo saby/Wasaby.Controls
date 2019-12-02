@@ -68,12 +68,22 @@ var TileViewModel = ListViewModel.extend({
     setHoveredItem: function (hoveredItem) {
         if (this._hoveredItem !== hoveredItem) {
             this._hoveredItem = hoveredItem;
-            this._nextModelVersion(false, 'hoveredItemChanged');
+            this._nextModelVersion(true, 'hoveredItemChanged');
         }
     },
 
     getHoveredItem: function () {
         return this._hoveredItem;
+    },
+
+    _calcItemVersion: function (item, key) {
+        let version = TileViewModel.superclass._calcItemVersion.apply(this, arguments);
+
+        if (this._hoveredItem && this._hoveredItem.key === key) {
+            version = `HOVERED_${version}`;
+        }
+
+        return version;
     },
 
     setActiveItem: function (activeItem) {

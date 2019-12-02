@@ -222,6 +222,20 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
 
+      it('_private::isItemsSelectionAllowed', () => {
+         let options = {};
+         assert.isFalse(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = undefined;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 0;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+
+         options.selectedKeysCount = 1;
+         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
+      });
+
       it('_private::needLoadNextPageAfterLoad', function() {
          let list = new collection.RecordSet({
             rawData: [
@@ -259,6 +273,48 @@ define([
          itemsCount = 20;
          assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, infinityNavigation));
          assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, maxCountNaviation));
+      });
+
+      it('_private::checkLoadToDirectionCapability', () => {
+         const self = {_options: {}};
+         const sandbox = sinon.createSandbox();
+         const myFilter = {testField: 'testValue'};
+
+         self._needScrollCalculation = false;
+         // loadToDirectionIfNeed вызывается с фильтром, переданным в checkLoadToDirectionCapability
+         sandbox.replace(lists.BaseControl._private, 'needLoadByMaxCountNavigation', () => true);
+         sandbox.replace(lists.BaseControl._private, 'loadToDirectionIfNeed', (baseControl, direction, filter) => {
+            assert.equal(direction, 'down');
+            assert.deepEqual(filter, myFilter);
+         });
+         lists.BaseControl._private.checkLoadToDirectionCapability(self, myFilter);
+         sandbox.restore();
+      });
+
+      it('_private::loadToDirectionIfNeed', () => {
+         const self = {
+            _sourceController: {
+               hasMoreData: () => true,
+               isLoading: () => false
+            },
+            _loadedItems: new collection.RecordSet(),
+            _options: {
+               navigation: {}
+            }
+         };
+         const sandbox = sinon.createSandbox();
+         let isLoadStarted;
+
+         // navigation.view !== 'infinity'
+         sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+         sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+         sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+            isLoadStarted = true;
+         });
+
+         lists.BaseControl._private.loadToDirectionIfNeed(self);
+         assert.isTrue(isLoadStarted);
+         sandbox.restore();
       });
 
       it('setHasMoreData', async function() {
@@ -870,6 +926,30 @@ define([
            ], baseControl._virtualScroll._itemsHeights);
        });
 
+      it('_private::handleListScrollSync', () => {
+         const self = {
+            _scrollPageLocked: true,
+            _virtualScroll: {
+               PlaceholdersSizes: {
+                  top: 1000,
+                  bottom: 1000
+               }
+            }
+         };
+
+         lists.BaseControl._private.handleListScrollSync(self, {
+            scrollTop: 2000,
+            scrollHeight: 4000,
+            clientHeight: 1000
+         });
+         assert.isFalse(self._scrollPageLocked);
+         assert.deepEqual(self._scrollParams, {
+            scrollTop: 3000,
+            scrollHeight: 6000,
+            clientHeight: 1000
+         });
+      });
+
       it('moveMarker activates the control', async function() {
          const
             cfg = {
@@ -1107,14 +1187,20 @@ define([
                 })
              },
              baseControl = new lists.BaseControl(cfg);
+
+         const event = {
+            preventDefault: () => {}
+         };
+         const sandbox = sinon.createSandbox();
+
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          baseControl._children.selectionController = {
             onCheckBoxClick: (key, status) => {
                if (status) {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               } else {
                   baseControl._listViewModel._selectedKeys.pop(key);
+               } else {
+                  baseControl._listViewModel._selectedKeys.push(key);
                }
             }
          };
@@ -1123,6 +1209,17 @@ define([
          lists.BaseControl._private.enterHandler(baseControl);
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
 
+         baseControl._loadingIndicatorState = null;
+         sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
+
+         baseControl.getViewModel()._markedKey = 5;
+         lists.BaseControl._private.toggleSelection(baseControl, event);
+         assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
+
+
+         sandbox.restore();
       });
 
       it('loadToDirection up', async function() {
@@ -1271,6 +1368,9 @@ define([
                   setTimeout(function() {
                      try {
                         assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                        ctrl._destroyed = true;
+                        ctrl._children = null;
+                        lists.BaseControl._private.checkLoadToDirectionCapability(ctrl);
                      }
                      catch(e) {
                         done(e);
@@ -1306,27 +1406,34 @@ define([
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
 
+         ctrl._scrollTop = 200;
+
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
          lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.isNull(ctrl._loadingState, 'Wrong loading state');
          assert.isNull(ctrl._loadingIndicatorState, 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
 
          ctrl._isMounted = true;
 
          lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
          lists.BaseControl._private.hideIndicator(ctrl);
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
          assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 200, 'Wrong top offset');
 
-         // картинка должен появляться через 2000 мс, проверим, что её нет сразу
+         // картинка должнa появляться через 2000 мс, проверим, что её нет сразу
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
 
          // искуственно покажем картинку
@@ -1581,12 +1688,15 @@ define([
          setTimeout(function() {
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-
+            ctrl._scrollPageLocked = true;
             // прокручиваем к низу, проверяем состояние пэйджинга
             lists.BaseControl._private.handleListScroll(ctrl, {
                scrollTop: 300,
                position: 'down'
             });
+
+            assert.isFalse(ctrl._scrollPageLocked);
+
             assert.deepEqual({
                stateBegin: 'normal',
                statePrev: 'normal',
@@ -1630,14 +1740,21 @@ define([
          bc._loadOffset = {top: 100, bottom: 100};
          bc._children = triggers;
          bc._container = {
-             getBoundingClientRect: () => ({}),
+             getBoundingClientRect: () => ({
+                y: 0,
+                height: 0
+             }),
              clientHeight: 480
          };
          lists.BaseControl._private.onScrollShow(bc, {
             scrollHeight: 400,
-            clientHeight: 1000
+            clientHeight: 1000,
+            viewPortRect: {
+               y: 0,
+               height: 0
+            }
          });
-         bc._onViewPortResize(bc, 600);
+         bc._onViewPortResize(bc, 600, {y: 0,height: 0});
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
          bc._viewResize();
@@ -1650,7 +1767,7 @@ define([
 
          bc.__error = false;
          bc._viewSize = 0;
-         bc._onViewPortResize(bc, 0);
+         bc._onViewPortResize(bc, 0, {y: 0,height: 0});
          assert.deepEqual(bc._loadOffset, {top: 0, bottom: 0});
       });
 
@@ -1865,8 +1982,16 @@ define([
             ctrl.__onPagingArrowClick({}, 'Next');
             assert.equal('pageDown', result[0], 'Wrong state of scroll after clicking to Next');
 
+            assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Next until _afterUpdate');
+            ctrl._afterUpdate(cfg);
+            assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in _afterUpdate');
+
             ctrl.__onPagingArrowClick({}, 'Prev');
             assert.equal('pageUp', result[0], 'Wrong state of scroll after clicking to Prev');
+
+            assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Prev until _afterUpdate');
+            ctrl._afterUpdate(cfg);
+            assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in _afterUpdate');
 
             done();
          }, 100);
@@ -2162,9 +2287,10 @@ define([
                   actionsUpdateCount++;
                }
             }
-         }
-         it('afterMount', function() {
-            baseControl._afterMount(cfg);
+         };
+         baseControl._afterMount(cfg);
+         it('_initItemActions', function() {
+            baseControl._initItemActions();
             assert.equal(actionsUpdateCount, 1);
          });
          it('itemsChanged', async function() {
@@ -2199,7 +2325,17 @@ define([
             baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
-
+         it('control in error state, should not call update', function() {
+            baseControl.__error = true;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 4);
+            baseControl.__error = false;
+         });
+         it('without listViewModel should not call update', function() {
+            baseControl._listViewModel = null;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 4);
+         });
       });
 
       describe('resetScrollAfterReload', function() {
@@ -2245,7 +2381,7 @@ define([
             await baseControl._afterUpdate(cfg);
             assert.isFalse(doScrollNotified);
             baseControl._shouldNotifyOnDrawItems = true;
-            await baseControl._afterUpdate(cfg);
+            await baseControl._beforeRender(cfg);
             assert.isTrue(doScrollNotified);
 
          });
@@ -2959,6 +3095,43 @@ define([
          ctrl._itemMouseDown({}, {key: 1}, {nativeEvent: {button: 0}});
          assert.isUndefined(ctrl._itemDragData);
       });
+      it('can\'t start drag if canStartDragNDrop return false', function () {
+         let
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               canStartDragNDrop: function() {
+                  return false;
+               }
+            },
+            ctrl = new lists.BaseControl();
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         ctrl.itemsDragNDrop = true;
+         ctrl._itemMouseDown({}, {key: 1}, {nativeEvent: {button: 0}});
+         assert.isUndefined(ctrl._itemDragData);
+      });
       describe('mouseDown with different buttons', function() {
          it('dragNDrop do not start on right or middle mouse button', async function() {
             var source = new sourceLib.Memory({
@@ -3043,6 +3216,9 @@ define([
             notifiedEvent = eventName;
             notifiedEntity = dragEntity && dragEntity[0];
          };
+
+         ctrl._dragEnter({}, undefined);
+         assert.isNull(notifiedEvent);
 
          const badDragObject = { entity: {} };
          ctrl._dragEnter({}, badDragObject);
@@ -4304,6 +4480,20 @@ define([
          instance.destroy();
       });
 
+      it('getListTopOffset', function () {
+         const bc = {
+            _children: {
+               listView: {
+               }
+            }
+         };
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 0);
+         bc._children.listView.getHeaderHeight = () => 40;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 40);
+         bc._children.listView.getResultsHeight = () => 30;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 70);
+      });
+
       it('should fire "drawItems" event if collection has changed', async function() {
          var
             cfg = {
@@ -4342,7 +4532,8 @@ define([
                },
                viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
-               source: source
+               source: source,
+               virtualScrolling: true
             },
             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
@@ -4476,33 +4667,42 @@ define([
        it('setIndicatorContainerHeight: list bigger then scrollContainer', function () {
 
           const fakeBaseControl = {
-              _loadingIndicatorContainerHeight: null,
-              _container: {
-                 getBoundingClientRect: () => ({
-                     top: 100,
-                     bottom: 1000
-                 })
-              }
+              _loadingIndicatorContainerHeight: 0,
+              _isScrollShown: true,
           };
 
-          lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
+          const viewRect = {
+             y: -10,
+             height: 1000
+          };
+
+          const viewPortRect = {
+             y: 100,
+             height: 500
+          };
+
+          lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 500);
        });
 
        it('setIndicatorContainerHeight: list smaller then scrollContainer', function () {
-           const fakeBaseControl = {
-               _loadingIndicatorContainerHeight: null,
-               _container: {
-                   getBoundingClientRect: () => ({
-                       top: 100,
-                       bottom: 300,
-                       height: 200
-                   })
-               }
-           };
+          const fakeBaseControl = {
+             _loadingIndicatorContainerHeight: 0,
+             _isScrollShown: true,
+          };
 
-           lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
-           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200)
+          const viewRect = {
+             y: 50,
+             height: 200
+          };
+
+          const viewPortRect = {
+             y: 0,
+             height: 500
+          };
+
+          lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
+          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
 
@@ -4669,6 +4869,7 @@ define([
                up: false,
                down: true
             };
+            ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             ctrl._afterMount(cfg);
@@ -4718,6 +4919,7 @@ define([
             await lists.BaseControl._private.reload(ctrl, cfgClone);
 
             assert.equal(2, queryCallsCount);
+            assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);
          });
          it('Navigation position', function() {
             return new Promise(function(resolve, reject) {

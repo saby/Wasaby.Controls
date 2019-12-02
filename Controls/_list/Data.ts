@@ -67,11 +67,15 @@ type GetSourceResult = {
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
 
       var _private = {
-         isEqualItems: function(oldList:RecordSet, newList:RecordSet):boolean {
-            return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
+         isEqualItems: function(oldList:RecordSet, newList:RecordSet, checkKeyProperty: boolean|void):boolean {
+            let result = oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
                (newList.getModel() === oldList.getModel()) &&
                (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
+
+            return checkKeyProperty ?
+                result && (newList.getKeyProperty() === oldList.getKeyProperty()) :
+                result;
          },
 
          updateDataOptions: function(self, dataOptions) {
@@ -131,9 +135,9 @@ type GetSourceResult = {
             }
          },
 
-         resolvePrefetchSourceResult: function(self, result: GetSourceResult) {
+         resolvePrefetchSourceResult: function(self, result: GetSourceResult, checkKeyProperty: boolean) {
             if (result.data) {
-               if (_private.isEqualItems(self._items, result.data)) {
+               if (_private.isEqualItems(self._items, result.data, checkKeyProperty)) {
                   self._items.assign(result.data);
                } else {
                   self._items = result.data;
@@ -165,6 +169,7 @@ type GetSourceResult = {
       var Data = Control.extend(/** @lends Controls/_list/Data.prototype */{
 
          _template: template,
+         _loading: false,
 
          _beforeMount: function(options, context, receivedState:RecordSet|undefined):Deferred<GetSourceResult>|void {
             let self = this;
@@ -197,24 +202,24 @@ type GetSourceResult = {
          },
 
          _beforeUpdate: function(newOptions) {
-            var self = this;
-
             _private.resolveOptions(this, newOptions);
 
             if (this._options.source !== newOptions.source) {
-               return _private.createPrefetchSource(this).addCallback(function(result) {
-                  _private.resolvePrefetchSourceResult(self, result);
-                  _private.updateDataOptions(self, self._dataOptionsContext);
-                  self._dataOptionsContext.updateConsumers();
-                  self._forceUpdate();
+               this._loading = true;
+               return _private.createPrefetchSource(this).addCallback((result) => {
+                  _private.resolvePrefetchSourceResult(this, result, newOptions.task1178324764);
+                  _private.updateDataOptions(this, this._dataOptionsContext);
+                  this._dataOptionsContext.updateConsumers();
+                  this._loading = false;
+                  this._forceUpdate();
                   return result;
                });
-            } if (newOptions.filter !== self._options.filter ||
-                     newOptions.navigation !== self._options.navigation ||
-                     newOptions.sorting !== self._options.sorting ||
-                     newOptions.keyProperty !== self._options.keyProperty) {
-               _private.updateDataOptions(self, self._dataOptionsContext);
-               self._dataOptionsContext.updateConsumers();
+            } if (newOptions.filter !== this._options.filter ||
+                     newOptions.navigation !== this._options.navigation ||
+                     newOptions.sorting !== this._options.sorting ||
+                     newOptions.keyProperty !== this._options.keyProperty) {
+               _private.updateDataOptions(this, this._dataOptionsContext);
+               this._dataOptionsContext.updateConsumers();
             }
          },
 

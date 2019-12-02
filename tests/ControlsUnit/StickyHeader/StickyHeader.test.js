@@ -32,6 +32,29 @@ define([
          });
       });
 
+      describe('_beforeUnmount', function() {
+         it('should destroy all inner objects', function() {
+            const
+               sandbox = sinon.createSandbox(),
+               component = createComponent(StickyHeader, options);
+
+            component._container = {
+               offsetParent: 0
+            };
+            component._model = {
+               destroy: sinon.fake()
+            };
+            component._observer = {
+               disconnect: sinon.fake()
+            };
+
+            component._beforeUnmount();
+            assert.isUndefined(component._observeHandler);
+            assert.isUndefined(component._observer);
+            sandbox.restore();
+         });
+      });
+
       describe('_getStyle', function() {
          it('should set correct z-index', function() {
             const component = createComponent(StickyHeader, {fixedZIndex: 2});

@@ -158,6 +158,13 @@ var Component = BaseControl.extend({
       _private._updateCaption(this);
    },
 
+   getDialogTarget () {
+       if (this._options.nextArrowVisibility || this._options.prevArrowVisibility || this._options.showNextArrow || this._options.showPrevArrow) {
+           return this._children.openDialogTarget;
+       }
+      return this._container;
+   },
+
    _onClick: function() {
       if (!this._options.readOnly && this._options.clickable) {
          this._notify('linkClick');

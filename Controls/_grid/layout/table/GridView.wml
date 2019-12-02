@@ -2,10 +2,10 @@
               controls-Grid_table-layout_{{_listModel._isFixedLayout() ? 'fixed' : 'auto'}}">
     <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{_listModel}}"/>
     <ws:if data="{{_listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList()}}">
-        <ws:partial template="wml!Controls/_grid/layout/table/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
+        <ws:partial template="wml!Controls/_grid/layout/table/Header" listModel="{{_listModel}}"  attr:name="header" defaultHeaderContent="{{_headerContentTemplate}}"/>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
-        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
+        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}" attr:name="results"/>
     </ws:if>
     <ws:if data="{{isHorizontalScrollVisible}}">
         <Controls._grid.ScrollWrapper
@@ -55,7 +55,7 @@
         </ws:if>
     </tbody>
     <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
-        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
+        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}" attr:name="results"/>
     </ws:if>
     <tr>
         <td class="{{_calcFooterPaddingClass(_options)}}"

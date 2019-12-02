@@ -67,6 +67,16 @@ var
          };
          return data;
       },
+      _getDisplayItemCacheKey(dispItem): number|string {
+         let key = SearchViewModel.superclass._getDisplayItemCacheKey.call(this, dispItem);
+         if (dispItem) {
+            const item = dispItem.getContents();
+            if (item && isBreadCrumbsItem(item)) {
+               key += '_breadcrumbs';
+            }
+         }
+         return key;
+      },
        _getItemVersion(item: Record|Record[]): string {
            if (isBreadCrumbsItem(item)) {
                const versions = [];

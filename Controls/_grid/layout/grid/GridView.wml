@@ -1,9 +1,9 @@
 <div attr:class="controls-Grid controls-Grid_{{_options.style}}_theme-{{_options.theme}}" attr:style="{{_getGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiSelectVisibility() !== 'hidden')}}">
     <ws:if data="{{_listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList()}}">
-        <ws:partial template="wml!Controls/_grid/layout/grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
+        <ws:partial template="wml!Controls/_grid/layout/grid/Header" attr:name="header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
-        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
+        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}" attr:name="results"/>
     </ws:if>
     <ws:if data="{{isHorizontalScrollVisible}}">
         <Controls._grid.ScrollWrapper
@@ -48,7 +48,7 @@
         </ws:else>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
-        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
+        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}" attr:name="results"/>
     </ws:if>
     <div attr:class="{{_calcFooterPaddingClass(_options)}}"
          attr:style="{{_listModel.getFooterStyles()}}">

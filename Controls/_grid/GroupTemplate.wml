@@ -32,7 +32,7 @@
       </ws:if>
    </div>
 </ws:template>
-<ws:if data="{{itemData.isNoGridSupport()}}">
+<ws:if data="{{itemData.shouldUseTableLayout}}">
    <tr attr:class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}" attr:key="group-{{itemData.item}}">
       <td class="controls-ListView__groupCellContent" colspan="{{columnAlignGroup ? columnAlignGroup : itemData.columns.length}}">
          <ws:partial template="groupContentTemplate"/>

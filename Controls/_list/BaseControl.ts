@@ -50,6 +50,7 @@ const
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
+const TRIGGER_VISIBILITY_UPDATE_DELAY = 101;
 const INITIAL_PAGES_COUNT = 1;
 const ITEMACTIONS_UNLOCK_DELAY = 200;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
@@ -139,6 +140,8 @@ var _private = {
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 if (list.getCount()) {
                     self._loadedItems = list;
+                } else {
+                    self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
                 }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
@@ -244,6 +247,25 @@ var _private = {
             IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
         }
         return resDeferred;
+    },
+    canStartDragNDrop(domEvent: any, cfg: any): boolean {
+        return (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
+            !(domEvent.nativeEvent.button) &&
+            !cfg.readOnly &&
+            cfg.itemsDragNDrop &&
+            !domEvent.target.closest('.controls-DragNDrop__notDraggable');
+    },
+    /**
+     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+     *
+     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+     */
+    isItemsSelectionAllowed(options: object): boolean {
+        return options.hasOwnProperty('selectedKeysCount');
     },
 
     resolveIndicatorStateAfterReload: function(self, list):void {
@@ -403,16 +425,22 @@ var _private = {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
     },
-    toggleSelection: function(self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
-        let model, markedKey;
-        if (self._children.selectionController) {
-            model = self.getViewModel();
-            markedKey = model.getMarkedKey();
-            self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
-            _private.moveMarkerToNext(self, event);
+    toggleSelection(self, event): void {
+        const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
+                                     self._children.selectionController;
+
+        if (allowToggleSelection) {
+            const model = self.getViewModel();
+            let toggledItemId = model.getMarkedKey();
+
+            if (!model.getItemById(toggledItemId) && model.getCount()) {
+                toggledItemId = model.at(0).getContents().getId();
+            }
+
+            if (toggledItemId) {
+                self._children.selectionController.onCheckBoxClick(toggledItemId, model.getSelectionStatus(toggledItemId));
+                _private.moveMarkerToNext(self, event);
+            }
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
@@ -622,6 +650,9 @@ var _private = {
     },
 
     checkLoadToDirectionCapability: function(self, filter) {
+        if (self._destroyed) {
+            return;
+        }
         if (self._needScrollCalculation) {
             // TODO Когда список становится пустым (например после поиска или смены фильтра),
             // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
@@ -642,7 +673,7 @@ var _private = {
             }
             _private.checkVirtualScrollCapability(self);
         } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
-            _private.loadToDirectionIfNeed(self, 'down', self._options.filter);
+            _private.loadToDirectionIfNeed(self, 'down', filter);
         }
     },
 
@@ -733,7 +764,15 @@ var _private = {
         //source controller is not created if "source" option is undefined
         // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
         if (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) {
-            if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
+            const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
+                !self._loadedItems :
+                true;
+            const allowLoadBySource =
+                self._sourceController &&
+                self._sourceController.hasMoreData(direction) &&
+                !self._sourceController.isLoading();
+
+            if (allowLoadBySource && allowLoadByLoadedItems) {
                 _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData(direction));
                 _private.loadToDirection(
                    self, direction,
@@ -770,8 +809,11 @@ var _private = {
         }
     },
     scrollPage: function(self, direction) {
-        _private.setMarkerAfterScroll(self);
-        self._notify('doScroll', ['page' + direction], { bubbling: true });
+        if (!self._scrollPageLocked) {
+            self._scrollPageLocked = true;
+            _private.setMarkerAfterScroll(self);
+            self._notify('doScroll', ['page' + direction], { bubbling: true });
+        }
     },
     startScrollEmitter: function(self) {
         if (self.__error) {
@@ -857,6 +899,8 @@ var _private = {
         }
         self._isScrollShown = true;
 
+        self._viewPortRect = params.viewPortRect;
+
         const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
         if (!self._scrollPagingCtr) {
             if (_private.needScrollPaging(self._options.navigation)) {
@@ -933,14 +977,15 @@ var _private = {
         };
     },
 
-    showIndicator: function(self, direction = 'all') {
+    showIndicator(self, direction: 'down' | 'up' | 'all' = 'all'): void {
         if (!self._isMounted || !!self._loadingState) {
-            return
+            return;
         }
 
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
+            self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
         }
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
@@ -955,12 +1000,13 @@ var _private = {
         }
     },
 
-    hideIndicator: function(self) {
+    hideIndicator(self): void {
         if (!self._isMounted) {
-            return
+            return;
         }
         self._loadingState = null;
         self._showLoadingIndicatorImage = false;
+        self._loadingIndicatorContainerOffsetTop = 0;
         if (self._loadingIndicatorTimer) {
             clearTimeout(self._loadingIndicatorTimer);
             self._loadingIndicatorTimer = null;
@@ -1005,6 +1051,7 @@ var _private = {
                 });
             }
         }
+        self._scrollPageLocked = false;
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -1016,7 +1063,12 @@ var _private = {
 
     // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
     delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
-        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
+        let placeholderHeight = 0;
+
+        if (self._virtualScroll) {
+            placeholderHeight = self._virtualScroll.PlaceholdersSizes.top;
+        }
+        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop - placeholderHeight : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
     getTopOffsetForItemsContainer: function(self, itemsContainer) {
@@ -1047,6 +1099,9 @@ var _private = {
         return i + 1;
     },
 
+    getVirtualScrollPlaceholderHeight(self): number {
+        return self._virtualScroll.PlaceholdersSizes.top + self._virtualScroll.PlaceholdersSizes.bottom;
+    },
 
     handleListScrollSync(self, params) {
         if (detection.isMobileIOS) {
@@ -1054,8 +1109,8 @@ var _private = {
         }
         if (self._virtualScroll) {
             self._scrollParams = {
-                scrollTop: params.scrollTop,
-                scrollHeight: params.scrollHeight,
+                scrollTop: params.scrollTop + self._virtualScroll.PlaceholdersSizes.top,
+                scrollHeight: params.scrollHeight + _private.getVirtualScrollPlaceholderHeight(self),
                 clientHeight: params.clientHeight
             };
         }
@@ -1064,6 +1119,7 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
+        self._scrollPageLocked = false;
     },
 
     getIntertialScrolling: function(self): IntertialScrolling {
@@ -1153,10 +1209,21 @@ var _private = {
                 _private.applyVirtualScrollIndexesToListModel(self);
             }
         }
-        if (changesType === 'collectionChanged' || changesType === 'indexesChanged' || newModelChanged) {
+        // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
+        // for example if Controls.explorer:View is switched from list to tile mode. The controller
+        // will keep firing `indexesChanged` events, but we should not mark items as changed while
+        // virtual scrolling is disabled.
+        if (
+            changesType === 'collectionChanged' ||
+            changesType === 'indexesChanged' && self._options.virtualScrolling !== false ||
+            newModelChanged
+        ) {
             self._itemsChanged = true;
         }
-        self._forceUpdate();
+        // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
+        if (self._isMounted) {
+            self._forceUpdate();
+        }
     },
 
     initListViewModelHandler: function(self, model, useNewModel: boolean) {
@@ -1568,22 +1635,38 @@ var _private = {
     hasItemActions: function(itemActions, itemActionsProperty) {
         return !!(itemActions || itemActionsProperty);
     },
-    setIndicatorContainerHeight(self, viewPortSize: number): void {
-        const listBoundingRect = ((self._container[0] || self._container) as HTMLElement).getBoundingClientRect();
-
-        if (listBoundingRect.bottom < viewPortSize) {
-            self._loadingIndicatorContainerHeight = listBoundingRect.height;
+    updateIndicatorContainerHeight(self, viewRect: DOMRect, viewPortRect: DOMRect): void {
+        let top;
+        let bottom;
+        if (self._isScrollShown || (self._needScrollCalculation && viewRect && viewPortRect)) {
+            top = Math.max(viewRect.y, viewPortRect.y);
+            bottom = Math.min(viewRect.y + viewRect.height, viewPortRect.y + viewPortRect.height);
         } else {
-            self._loadingIndicatorContainerHeight = viewPortSize;
+            top = viewRect.top;
+            bottom = viewRect.bottom;
+        }
+        let newHeight = bottom - top - _private.getListTopOffset(self);
+
+        if (self._loadingIndicatorContainerHeight !== newHeight) {
+            self._loadingIndicatorContainerHeight = newHeight;
         }
     },
-
-    setHasMoreData(model, hasMoreData: boolean) {
+    getListTopOffset(self): number {
+        const view = self._children && self._children.listView;
+        let height = 0;
+        if (view && view.getHeaderHeight) {
+            height += view.getHeaderHeight();
+        }
+        if (view && view.getResultsHeight) {
+            height += view.getResultsHeight();
+        }
+        return height;
+    },
+    setHasMoreData(model, hasMoreData: boolean): boolean {
         if (model) {
             model.setHasMoreData(hasMoreData);
         }
     }
-
 };
 
 /**
@@ -1645,6 +1728,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _loadOffset: null,
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
+    _loadingIndicatorContainerOffsetTop: 0,
     _menuIsShown: null,
     _viewSize: null,
     _viewPortSize: null,
@@ -1666,8 +1750,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _checkLoadToDirectionTimeout: null,
 
     _resetScrollAfterReload: false,
+    _scrollPageLocked: false,
 
     _itemReloaded: false,
+    _itemActionsInitialized: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1838,7 +1924,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
         }
-        this._updateItemActions();
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
@@ -2061,6 +2146,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
              */
             this._notify('saveScrollPosition', [], { bubbling: true });
         }
+        // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
+        // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
+        // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
+        // устанавливаем скролл в "0".
+        // Как итог - контент мелькает. Поэтому сбрасываем скролл в 0 именно ДО отрисовки.
+        // Пример ошибки: https://online.sbis.ru/opendoc.html?guid=c3812a26-2301-4998-8283-bcea2751f741
+        // Демка нативного поведения: https://jsfiddle.net/alex111089/rjuc7ey6/1/
+        if (this._shouldNotifyOnDrawItems) {
+            if (this._resetScrollAfterReload) {
+                this._notify('doScroll', ['top'], {bubbling: true});
+                this._resetScrollAfterReload = false;
+            }
+        }
     },
 
     _beforePaint(): void {
@@ -2082,7 +2180,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
-            });
+            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
         }
 
         // todo KINGO.
@@ -2101,7 +2199,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
-            });
+            }, TRIGGER_VISIBILITY_UPDATE_DELAY);
         }
 
         if (this._restoredScroll !== null) {
@@ -2114,15 +2212,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
         }
-        if (this._shouldUpdateItemActions){
+        if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
-            if (this._resetScrollAfterReload) {
-                this._notify('doScroll', ['top'], { bubbling: true });
-                this._resetScrollAfterReload = false;
-            }
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
@@ -2148,6 +2242,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
         }
+
+        this._scrollPageLocked = false;
     },
 
     __onPagingArrowClick: function(e, arrow) {
@@ -2182,10 +2278,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.bottomVirtualScrollTrigger.style.bottom = Math.floor(this._loadOffset.bottom) + 'px';
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
-    _onViewPortResize: function(self, viewPortSize) {
-        _private.setIndicatorContainerHeight(self, viewPortSize);
-
+    _onViewPortResize: function(self, viewPortSize, viewPortRect) {
+        // FIXME self._container[0] delete after
+        // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        const container = self._container[0] || self._container;
+        _private.updateIndicatorContainerHeight(self, container.getBoundingClientRect(), viewPortRect);
         self._viewPortSize = viewPortSize;
+        self._viewPortRect = viewPortRect;
+
         if (self._needScrollCalculation) {
             self._updateLoadOffset(self._viewSize, self._viewPortSize);
         }
@@ -2225,7 +2325,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'canScroll': _private.onScrollShow(self, params); break;
             case 'cantScroll': _private.onScrollHide(self); break;
 
-            case 'viewPortResize': self._onViewPortResize(self, params[0]); break;
+            case 'viewPortResize': self._onViewPortResize(self, params[0], params[1]); break;
             case 'scrollResize': self._onScrollResize(self, params); break;
         }
     },
@@ -2251,16 +2351,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
 
-        /**
-         * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
-         * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
-         * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
-         * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
-         *
-         * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
-         * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
-         */
-        if (direction === 'right' && !isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
+        if (direction === 'right' && !isSwiped && _private.isItemsSelectionAllowed(this._options)) {
             const key = this._options.useNewModel ? itemData.getId() : itemData.key;
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
             /**
@@ -2295,7 +2386,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
         }
-        if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
+        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
             this._notify('itemSwipe', [actionsItem, childEvent]);
         }
     },
@@ -2354,8 +2445,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.applyPlaceholdersSizes(this);
             _private.updateShadowMode(this);
         }
-        this._viewSize = (this._container[0] || this._container).clientHeight;
-        _private.setIndicatorContainerHeight(this, this._viewPortSize);
+        const container = this._container[0] || this._container;
+        this._viewSize = container.clientHeight;
+        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
         if (this._needScrollCalculation) {
             this._updateLoadOffset(this._viewSize, this._viewPortSize);
         }
@@ -2400,11 +2492,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
+    _initItemActions(): void {
+        if (!this._itemActionsInitialized) {
+            this._updateItemActions();
+            this._itemActionsInitialized = true;
+            this._shouldUpdateItemActions = false;
+        }
+    },
     _updateItemActions: function() {
-        if (this._hasItemActions) {
+        if (this.__error) {
+            return;
+        }
+        if (this._listViewModel && this._hasItemActions) {
             this._children.itemActions.updateActions();
         }
-    }
+    },
     _onAfterEndEdit: function(event, item, isAdd) {
         this._shouldUpdateItemActions = true;
         return this._notify('afterEndEdit', [item, isAdd]);
@@ -2451,7 +2553,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             self = this,
             dragStartResult;
 
-        if (!(domEvent.nativeEvent.button) && !this._options.readOnly && this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
+        if (_private.canStartDragNDrop(domEvent, this._options)) {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
@@ -2514,18 +2616,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         keysHandler(event, HOT_KEYS, _private, this, dontStop);
     },
     _dragEnter: function(event, dragObject) {
-        var
-            dragEnterResult,
-            draggingItemProjection;
-
         if (
+            dragObject &&
             !this._listViewModel.getDragEntity() &&
             cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
-            dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
+            const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-                draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
+                const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
                 this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
                 this._listViewModel.setDragEntity(dragObject.entity);
             } else if (dragEnterResult === true) {
@@ -2617,6 +2716,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             loadingIndicatorState: this._loadingIndicatorState
         });
     },
+
+    _getLoadingIndicatorStyles(): string {
+        let styles = '';
+
+        if (this._loadingIndicatorState === 'all') {
+            if (this._loadingIndicatorContainerHeight) {
+                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+            }
+            if (this._loadingIndicatorContainerOffsetTop) {
+                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+            }
+        }
+        return styles;
+    },
+
     _onHoveredItemChanged: function(e, item, container) {
         this._notify('hoveredItemChanged', [item, container]);
     },

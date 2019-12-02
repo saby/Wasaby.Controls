@@ -24,9 +24,10 @@ var Component = BaseControl.extend({
    _template: componentTmpl,
 
    _openDialog: function(event) {
+      const container = this._children.linkView.getDialogTarget();
       var cfg = {
          opener: this,
-         target: this._container,
+         target: container,
          template: 'Controls/datePopup',
          className: 'controls-PeriodDialog__picker',
          horizontalAlign: { side: 'right' },

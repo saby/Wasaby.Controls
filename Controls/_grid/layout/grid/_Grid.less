@@ -1,3 +1,5 @@
+@z-index-Grid-results-cell: 1;
+
 .controls-Grid {
    display: -ms-grid;
    display: grid;
@@ -105,7 +107,7 @@
 
 .controls-Grid__results-cell_theme-@{themeName} {
    background-color: @background-color_Grid-row-sticky;
-   z-index: 1;
+   z-index: @z-index-Grid-results-cell;
    min-width: 0;
    min-height: @height_Grid-results-cell;
 }
@@ -127,6 +129,10 @@
    box-sizing: border-box;
    position: relative;
 }
+.controls-Grid__itemAction {
+   z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у колонок results;
+}
+
 
 .controls-Grid__row-cell_theme-@{themeName} {
    border-top: @height_Grid-row-separator solid;
@@ -463,13 +469,20 @@
    box-sizing: border-box;
 }
 
+.ws-is-mobile-chrome-ios .controls-Grid__row-cell_selected-master_theme-@{themeName},
+.ws-is-desktop-safari .controls-Grid__row-cell_selected-master_theme-@{themeName},
+.ws-is-mobile-safari .controls-Grid__row-cell_selected-master_theme-@{themeName} {
+   // ave safari 13
+   // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
+   // иначе все position: absolute элементы внутри position: sticky
+   // начинают сроиться относительно родителя уровнем выше
+   transform: translateZ(0);
+}
+
 .controls-Grid__row-cell_selected-master_theme-@{themeName} {
    z-index: 1;
    background-color: @background-color_List-masterList-item_selected;
-   /* Пока нет фикс шапок
-   position: sticky;
-   top: 0;
-   bottom: 0; */
+
    &:before {
       content: '';
       z-index: 2;
@@ -560,6 +573,7 @@
 
 .controls-Grid__header-cell_justify_content_center {
    justify-content: center;
+   text-align: center;
 }
 
 .controls-Grid__header-cell_align_items_top {

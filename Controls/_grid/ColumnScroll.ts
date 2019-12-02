@@ -5,8 +5,11 @@ import { detection } from 'Env/Env';
 import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {debounce} from 'Types/function';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
+
+const DELAY_UPDATE_SIZES = 16;
 
 const
    _private = {
@@ -36,6 +39,8 @@ const
           }
       },
       updateSizes(self) {
+          // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
+         _private.setDispalyNoneForScroll(self._children.content);
          _private.drawTransform(self, 0);
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
@@ -67,6 +72,8 @@ const
          self._setOffsetForHScroll();
          self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
          _private.drawTransform(self, self._scrollPosition);
+         // после расчетов убираем display: none
+         _private.removeDisplayFromScroll(self._children.content);
       },
       updateFixedColumnWidth(self) {
          self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
@@ -164,6 +171,10 @@ const
             scroll.style.display = 'none';
          }
       },
+
+      prepareDebouncedUpdateSizes: function() {
+          return debounce(_private.updateSizes, DELAY_UPDATE_SIZES, true);
+      }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -183,6 +194,12 @@ const
       _isFullGridSupport: true,
 
       _beforeMount(opt) {
+          /* В 19.710 сделаны правки по compound-слою, без которых событие resize не продывалось вообще.
+             Зато теперь оно стреляет по 10-20 лишних раз отрисовку очередной страницы навигационной панели.
+             По идее надо править на стороне compoundControl, но Шипин адски боится его трогать, да и не понимает, как
+             это править на его стороне. По идее это даст профит и в остальных местах со скролом колонок.
+             https://online.sbis.ru/opendoc.html?guid=43ba1e3f-1366-4b36-8713-5e8a30c7bc13 */
+         this._debouncedUpdateSizes = _private.prepareDebouncedUpdateSizes();
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
          this._isNotGridSupport = opt.listModel.isNoGridSupport();
          this._isFullGridSupport = opt.listModel.isFullGridSupport();
@@ -190,7 +207,7 @@ const
       },
 
       _afterMount() {
-         _private.updateSizes(this);
+         this._debouncedUpdateSizes(this);
          if (this._options.columnScrollStartPosition === 'end' && this._isColumnScrollVisible()) {
             this._positionChangedHandler(null, this._contentSize - this._contentContainerSize);
          }
@@ -208,10 +225,7 @@ const
              !isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })
              || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
          ) {
-            // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл, что-бы он не распирал таблицу при изменении ширины
-            _private.setDispalyNoneForScroll(this._children.content);
-            _private.updateSizes(this);
-            _private.removeDisplayFromScroll(this._children.content);
+            this._debouncedUpdateSizes(this);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
             _private.updateFixedColumnWidth(this);
@@ -227,7 +241,7 @@ const
       },
 
       _resizeHandler() {
-         _private.updateSizes(this);
+         this._debouncedUpdateSizes(this);
       },
 
       _isColumnScrollVisible: function() {
@@ -316,4 +330,5 @@ const
            return delta;
        }
    });
+ColumnScroll._private = _private;
 export = ColumnScroll;

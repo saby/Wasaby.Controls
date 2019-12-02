@@ -240,6 +240,18 @@ var _private = {
    // Для этого всегда создаём новый инстанс Serializer'a
    getSerialize: function () {
       return new Serializer();
+   },
+
+   destroy(self, keys: number|string|Array<number|string>): void {
+      const recent = self._history && self._history.recent;
+
+      if (recent) {
+         const recentItem = recent.getRecordById(keys instanceof Array ? keys[0] : keys);
+
+         if (recentItem) {
+            recent.remove(recentItem);
+         }
+      }
    }
 };
 
@@ -366,11 +378,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
    destroy(keys: number|string|Array<number|string>, meta?: object): Deferred<null> {
       if (meta && meta.hasOwnProperty('$_history')) {
-         const recent = this._history && this._history.recent;
-
-         if (recent) {
-            recent.remove(recent.getRecordById(keys instanceof Array ? keys[0] : keys));
-         }
+         _private.destroy(this, keys);
       }
 
       return _private.getSourceByMeta(this, meta).destroy(keys, meta);
@@ -409,6 +417,10 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
     */
    getRecent: function () {
       return this._history.recent;
+   },
+
+   getPinned() {
+      return this._history.pinned;
    },
 
    /**

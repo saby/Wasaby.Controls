@@ -101,17 +101,17 @@ import Env = require('Env/Env');
    /**
     * @name Controls/_popupTemplate/CloseButton#size
     * @cfg {String} Устанавливает размер кнопки. Значение задается общими обозначениями размера.
-    * @variant l Средний размер кнопки.
-    * @variant m Большой размер кнопки.
+    * @variant l Большой размер кнопки.
+    * @variant m Средний размер кнопки.
     * @default m
     * @remark
     * Размер устанавливается только для кнопок вида toolButton.
     * @example
-    * Устанавливается средний размер кнопки:
+    * Устанавливается большой размер кнопки:
     * <pre>
     *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
-    * Устанавливается большой размер кнопки:
+    * Устанавливается средний размер кнопки:
     * <pre>
     *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}" size="m"/>
     * </pre>
@@ -120,8 +120,8 @@ import Env = require('Env/Env');
    /*
     * @name Controls/_popupTemplate/CloseButton#size
     * @cfg {String} Close button size. The value is given by common size notations.
-    * @variant l Medium button size.
-    * @variant m Large button size.
+    * @variant l Large button size.
+    * @variant m Medium button size.
     * @default m
     * @remark
     * Close button has this size only in toolButton view mode.

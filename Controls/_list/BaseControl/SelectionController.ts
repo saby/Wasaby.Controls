@@ -146,15 +146,20 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
     },
 
     _beforeUpdate: function (newOptions) {
-        var
+        let
             oldSelection = this._multiselection.getSelection(),
-            selectionChanged = !isEqual(newOptions.selectedKeys, oldSelection.selected) || !isEqual(newOptions.excludedKeys, oldSelection.excluded);
+            itemsIsChanged: boolean = newOptions.items !== this._options.items,
+            modelIsChanged: boolean = this._options.listModel !== newOptions.listModel,
+            selectionChanged: boolean = !isEqual(newOptions.selectedKeys, oldSelection.selected) || !isEqual(newOptions.excludedKeys, oldSelection.excluded);
 
-        if (newOptions.items !== this._options.items) {
+        if (modelIsChanged) {
+            this._multiselection.setListModel(newOptions.listModel);
+        }
+
+        if (itemsIsChanged) {
             this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
             newOptions.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
             this._multiselection.setItems(newOptions.items);
-            this._options.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
         }
 
         if (selectionChanged) {
@@ -163,12 +168,8 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
             _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
         }
 
-        if (this._options.listModel !== newOptions.listModel) {
+        if (modelIsChanged || itemsIsChanged) {
             newOptions.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
-
-            if (this._multiselection) {
-                this._multiselection.setListModel(newOptions.listModel);
-            }
         }
     },
 
