@@ -842,7 +842,7 @@ var
         // -----------------------------------------------------------
 
         getResultsPosition: function() {
-            if (this.isDrawResults()) {
+            if (this._options && this.isDrawResults()) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
