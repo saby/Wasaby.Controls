@@ -674,14 +674,13 @@ var Filter = Control.extend({
                 this._notify('historyApply', [result.history]);
             }
             _private.notifyChanges(this, this._source);
-            this._children.StickyOpener.close();
         }
+        this._children.StickyOpener.close();
     },
 
     _onSelectorTemplateResult: function(event, items) {
         let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._idOpenSelector].initSelectorItems, items, this._idOpenSelector]) || items;
         this._resultHandler(event, {action: 'selectorResult', id: this._idOpenSelector, data: resultSelectedItems});
-        this._children.StickyOpener.close();
     },
 
     _isFastReseted: function() {
