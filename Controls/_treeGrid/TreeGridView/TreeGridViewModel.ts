@@ -208,7 +208,12 @@ var
                 return TreeGridViewModel.superclass.getColspanFor.apply(this, arguments);
             }
         },
-
+        getChildren(nodeKey) {
+            return this._model.getChildren(nodeKey);
+        },
+        clearChildren(nodeKey: string|number): void {
+            this._model.clearChildren(nodeKey);
+        },
         _getRowIndexHelper() {
 
             let

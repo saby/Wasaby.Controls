@@ -740,8 +740,14 @@ var
                 this._options.hasChildrenProperty = hasChildrenProperty;
             }
         },
-        getChildren: function(rootId) {
-            return this._hierarchyRelation.getChildren(rootId, this._items);
+        getChildren(nodeKey: string|number): [object] {
+            return this._hierarchyRelation.getChildren(nodeKey, this._items);
+        },
+        clearChildren(nodeKey: string|number): void {
+            const items = this._items;
+            this.getChildren(nodeKey).forEach((item) => {
+                items.remove(item);
+            });
         }
     });
 
