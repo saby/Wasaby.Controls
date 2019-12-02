@@ -11,7 +11,7 @@ import Common from './HeadingPath/Common';
 import 'Controls/heading';
 
 var _private = {
-   DrawItems: function (self, options) {
+   drawItems: function (self, options) {
         self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], self._options.displayProperty);
 
         //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
@@ -132,9 +132,21 @@ var BreadCrumbsPath = Control.extend({
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
-                    _private.DrawItems(this, this._options);
+                    _private.drawItems(this, this._options);
                 }.bind(this));
             }.bind(this));
+        }
+    },
+    _beforeUpdate: function (newOptions) {
+
+        if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items)) {
+            _private.drawItems(this, newOptions);
+        }
+    },
+
+    _afterUpdate: function() {
+        if (this._viewUpdated) {
+            this._viewUpdated = false;
         }
     },
 

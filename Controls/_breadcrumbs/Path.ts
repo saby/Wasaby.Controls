@@ -44,8 +44,24 @@ var BreadCrumbs = Control.extend({
             }.bind(this));
         }
     },
+    _beforeUpdate: function (newOptions) {
+        this._redrawIfNeed(this._options.items, newOptions.items);
+    },
+    _redrawIfNeed: function(currentItems, newItems) {
+        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems)) {
+            BreadCrumbsUtil.drawBreadCrumbs(this, newItems);
+            this._viewUpdated = true;
+        }
+    },
 
-  _notifyHandler: tmplNotify
+    _afterUpdate: function() {
+        if (this._viewUpdated) {
+            this._viewUpdated = false;
+        }
+    },
+
+
+    _notifyHandler: tmplNotify
 
 });
 

@@ -25,5 +25,9 @@ export default {
             self._visibleItems = items.map(function (item, index, items) {
                 return _private.getItemData(index, items);
             });
+    },
+    shouldRedraw: function (currentItems, newItems) {
+        return currentItems !== newItems;
     }
+
 };
