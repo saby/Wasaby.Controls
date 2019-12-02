@@ -148,6 +148,8 @@ var _private = {
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 if (list.getCount()) {
                     self._loadedItems = list;
+                } else {
+                    self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
                 }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
@@ -204,10 +206,6 @@ var _private = {
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
-                    }
-
-                    if (self._children && self._children.scrollController) {
-                        self._children.scrollController.reset(self._listViewModel.getCount());
                     }
                 }
 

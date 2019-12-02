@@ -4620,6 +4620,7 @@ define([
                up: false,
                down: true
             };
+            ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             ctrl._afterMount(cfg);
@@ -4669,6 +4670,7 @@ define([
             await lists.BaseControl._private.reload(ctrl, cfgClone);
 
             assert.equal(2, queryCallsCount);
+            assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);
          });
          it('Navigation position', function() {
             return new Promise(function(resolve, reject) {
