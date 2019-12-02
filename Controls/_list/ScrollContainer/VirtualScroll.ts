@@ -35,7 +35,6 @@ export default class VirtualScrollController {
     private savedStopIndex: number = 0;
     private itemsHeights: IVirtualItem[] = [];
     private itemsOffsets: number[] = [];
-    private itemHeightProperty: string;
     private _options: IVirtualScrollControllerOptions;
     triggerVisibility: {
         up: boolean;

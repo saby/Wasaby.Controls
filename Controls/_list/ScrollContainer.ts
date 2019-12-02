@@ -352,11 +352,12 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param {number} itemsCount
      * @param {string|number} initialKey
      */
-    reset(itemsCount: number, initialKey: string|number): void {
+    reset(itemsCount: number, initialKey?: string|number): void {
         if (this.virtualScroll) {
+            const initialIndex = this.viewModel.getIndexByKey(initialKey);
             this.itemsChanged = true;
             this.virtualScroll.itemsCount = itemsCount;
-            this.virtualScroll.reset(this.viewModel.getIndexByKey(initialKey));
+            this.virtualScroll.reset(initialIndex === -1 ? 0 : initialIndex);
         }
     }
 
