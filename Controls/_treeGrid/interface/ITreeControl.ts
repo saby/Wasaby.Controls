@@ -215,7 +215,7 @@
  * @param {Types/entity:Model} node Развёрнутый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * @deprecated Событие устарело и вскором времени будет его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#afterItemExpand}.
+ * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#afterItemExpand}.
  */
 
 /**
@@ -240,7 +240,7 @@
  * @param {Types/entity:Model} node Разворачиваемый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * @deprecated Событие устарело и вскором времени будет его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#beforeItemExpand}.
+ * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#beforeItemExpand}.
  */
 
 /*
@@ -255,7 +255,7 @@
  * @param {Types/entity:Model} node Свёрнутый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * @deprecated Событие устарело и вскором времени будет его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#afterItemCollapse}.
+ * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#afterItemCollapse}.
  */
 
 /**
@@ -272,7 +272,7 @@
  * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * @deprecated Событие устарело и вскором времени будет его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#beforeItemCollapse}.
+ * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_treeGrid/interface/ITreeControl#beforeItemCollapse}.
  */
 
 /**
