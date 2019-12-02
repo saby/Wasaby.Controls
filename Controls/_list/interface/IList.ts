@@ -494,7 +494,7 @@
  *    this._myItems.removeAt(0);
  * }
  * </pre>
- * @see Controls/_list/interface/IList#dataLoadCallback
+ * @see Controls/list:IList#dataLoadCallback
  */
 
 /**
@@ -514,7 +514,7 @@
  *    });
  * }
  * </pre>
- * @see Controls/_list/interface/IList#itemsReadyCallback
+ * @see Controls/list:IList#itemsReadyCallback
  */
 
 /**
