@@ -237,7 +237,9 @@ const
       },
 
       _resizeHandler() {
-         this._debouncedUpdateSizes(this);
+          if (this._children.content.offsetWidth) {
+              this._debouncedUpdateSizes(this);
+          }
       },
 
       _isColumnScrollVisible: function() {
