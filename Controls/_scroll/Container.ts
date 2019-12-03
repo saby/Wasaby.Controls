@@ -16,7 +16,7 @@ import 'Controls/_scroll/Scroll/Scrollbar';
 import 'css!theme?Controls/scroll';
 import * as newEnv from 'Core/helpers/isNewEnvironment';
 import {SyntheticEvent} from 'Vdom/Vdom';
-
+import {Logger} from "UI/Utils";
 
 /**
  * Контейнер с тонким скроллом.
@@ -73,11 +73,30 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 /**
  * @name Controls/_scroll/Container#shadowVisible
  * @cfg {Boolean} Следует ли показывать тень (когда содержимое не подходит).
+ * @deprecated Используйте {@link topShadowVisibility} и {@link bottomShadowVisibility}
  */
 
 /*
  * @name Controls/_scroll/Container#shadowVisible
  * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
+ * @deprecated Use {@link topShadowVisibility} and {@link bottomShadowVisibility} instead.
+ */
+
+/**
+ * @typedef {String} shadowVisibility
+ * @variant auto Видимость зависит от состояния скролируемой области.
+ * @variant visible Всегда видима.
+ * @variant hidden Всегда не видима.
+ */
+
+/**
+ * @name Controls/_scroll/Container#topShadowVisibility
+ * @cfg {shadowVisibility} Устанавливает режим отображения тени сверху.
+ */
+
+/**
+ * @name Controls/_scroll/Container#bottomShadowVisibility
+ * @cfg {shadowVisibility} Устанавливает режим отображения тени снизу.
  */
 
 /**
@@ -103,6 +122,30 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @variant normal Default theme (for bright backgrounds).
  * @variant inverted Inverted theme (for dark backgrounds).
  */
+
+const enum SHADOW_VISIBILITY {
+   HIDDEN = 'hidden',
+   VISIBLE = 'visible',
+   AUTO = 'auto'
+}
+
+const enum POSITION {
+   TOP = 'top',
+   BOTTOM = 'bottom'
+}
+
+const
+   SHADOW_ENABLE_MAP = {
+      hidden: false,
+      visible: true,
+      auto: true
+   },
+   INITIAL_SHADOW_VISIBILITY_MAP = {
+      hidden: false,
+      visible: true,
+      auto: false
+   };
+
 var
    _private = {
       SHADOW_HEIGHT: 8,
@@ -134,6 +177,37 @@ var
          return shadowPosition;
       },
 
+      isShadowEnable: function(options, position: POSITION): boolean {
+         if (options.shadowVisible === false) {
+            return false;
+         }
+         return SHADOW_ENABLE_MAP[options[`${position}ShadowVisibility`]];
+      },
+
+      isShadowVisible: function(self, position: POSITION, shadowPosition: string): boolean {
+         const
+             visibleFromInnerComponents = self._shadowVisibilityByInnerComponents[position],
+             visibleOptionValue = self._options[`${position}ShadowVisibility`];
+
+         if (self._options.shadowVisible === false) {
+            return false;
+         }
+
+         if (visibleFromInnerComponents !== SHADOW_VISIBILITY.AUTO) {
+            return SHADOW_ENABLE_MAP[visibleFromInnerComponents];
+         }
+
+         if (visibleOptionValue !== SHADOW_VISIBILITY.AUTO) {
+            return SHADOW_ENABLE_MAP[visibleOptionValue];
+         }
+
+         return shadowPosition.indexOf(position) !== -1;
+      },
+
+      getInitialShadowVisibleState: function (options, position: POSITION): boolean {
+         return INITIAL_SHADOW_VISIBILITY_MAP[options[`${position}ShadowVisibility`]];
+      },
+
       getScrollHeight: function(container) {
          return container.scrollHeight;
       },
@@ -152,7 +226,7 @@ var
          self._notify('scroll', [self._scrollTop]);
       },
 
-      calcHasScroll: function(self) {
+      calcCanScroll: function(self) {
          var
             scrollHeight = _private.getScrollHeight(self._children.content),
             containerHeight = _private.getContainerHeight(self._children.content);
@@ -187,11 +261,20 @@ var
       },
 
       calcDisplayState: function(self) {
+         const shadowPosition = _private.getShadowPosition(self);
          return {
             heightFix: _private.calcHeightFix(self),
-            hasScroll: _private.calcHasScroll(self),
+            canScroll: _private.calcCanScroll(self),
             contentHeight: _private.getContentHeight(self),
-            shadowPosition: _private.getShadowPosition(self)
+            shadowPosition,
+            shadowEnable: {
+               top: _private.isShadowEnable(self._options, POSITION.TOP),
+               bottom: _private.isShadowEnable(self._options, POSITION.BOTTOM)
+            },
+            shadowVisible: {
+               top: _private.isShadowVisible(self, POSITION.TOP, shadowPosition),
+               bottom: _private.isShadowVisible(self, POSITION.BOTTOM, shadowPosition)
+            }
          };
       },
 
@@ -211,10 +294,12 @@ var
       },
 
       updateDisplayState: function(self, displayState) {
-         self._displayState.hasScroll = displayState.hasScroll;
+         self._displayState.canScroll = displayState.canScroll;
          self._displayState.heightFix = displayState.heightFix;
          self._displayState.contentHeight = displayState.contentHeight;
          self._displayState.shadowPosition = displayState.shadowPosition;
+         self._displayState.shadowEnable = displayState.shadowEnable;
+         self._displayState.shadowVisible = displayState.shadowVisible;
       },
 
       proxyEvent: function(self, event, eventName, args) {
@@ -261,7 +346,7 @@ var
 
       _pagingState: null,
 
-      _shadowVisiblityMode: null,
+      _shadowVisibilityByInnerComponents: null,
 
       /**
              * @type {Controls/_scroll/Context|null}
@@ -287,13 +372,17 @@ var
             self = this,
             def;
 
-         this._shadowVisiblityMode = {
-            top: 'auto',
-            bottom: 'auto'
+         if ('shadowVisible' in options) {
+            Logger.warn('Controls/scroll:Container: Опция shadowVisible устарела, используйте topShadowVisibility и bottomShadowVisibility.', self);
          }
+
+         this._shadowVisibilityByInnerComponents = {
+            top: SHADOW_VISIBILITY.AUTO,
+            bottom: SHADOW_VISIBILITY.AUTO
+         };
          this._displayState = {};
          this._stickyHeaderContext = new StickyHeaderContext({
-            shadowPosition: options.shadowVisible ? 'bottom' : ''
+            shadowPosition: options.topShadowVisibility !== SHADOW_VISIBILITY.HIDDEN ? 'bottom' : ''
          });
          this._headersHeight = {
             top: 0,
@@ -321,7 +410,15 @@ var
             def.addCallback(function() {
                var
                   displayState = {
-                     heightFix: ScrollHeightFixUtil.calcHeightFix()
+                     heightFix: ScrollHeightFixUtil.calcHeightFix(),
+                     shadowEnable: {
+                        top: _private.isShadowEnable(options, 'top'),
+                        bottom: _private.isShadowEnable(options, 'bottom')
+                     },
+                     shadowVisible: {
+                        top: _private.getInitialShadowVisibleState(options, 'top'),
+                        bottom: _private.getInitialShadowVisibleState(options, 'bottom')
+                     }
                   },
                   styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
 
@@ -365,9 +462,9 @@ var
           * The following states cannot be defined in _beforeMount because the DOM is needed.
           */
 
-         calculatedOptionValue = _private.calcHasScroll(this);
+         calculatedOptionValue = _private.calcCanScroll(this);
          if (calculatedOptionValue) {
-            this._displayState.hasScroll = calculatedOptionValue;
+            this._displayState.canScroll = calculatedOptionValue;
             needUpdate = true;
          }
 
@@ -376,6 +473,18 @@ var
          calculatedOptionValue = _private.getShadowPosition(this);
          if (calculatedOptionValue) {
             this._displayState.shadowPosition = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.isShadowVisible(this, POSITION.TOP, this._displayState.shadowPosition);
+         if (calculatedOptionValue !== this._displayState.shadowVisible.top) {
+            this._displayState.shadowVisible.top = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.isShadowVisible(this, POSITION.BOTTOM, this._displayState.shadowPosition);
+         if (calculatedOptionValue !== this._displayState.shadowVisible.bottom) {
+            this._displayState.shadowVisible.bottom = calculatedOptionValue;
             needUpdate = true;
          }
 
@@ -408,8 +517,8 @@ var
       },
 
       _beforeUpdate: function(options, context) {
-         this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible && this._displayState.hasScroll;
-         this._updateStickyHeaderContext(options.shadowVisible);
+         this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible && this._displayState.canScroll;
+         this._updateStickyHeaderContext();
       },
 
       _afterUpdate: function() {
@@ -433,43 +542,32 @@ var
          this._lockScrollPositionUntilKeyboardShown = null;
       },
 
-      _isShadowVisibleMode: function() {
-         return this._shadowVisiblityMode.top === 'visible' || this._shadowVisiblityMode.bottom === 'visible';
-      },
-
-      _shadowVisible: function(position) {
-         // Костыль для 320. Разобраться почему стало падать по
-         // https://online.sbis.ru/opendoc.html?guid=cd7105de-9c05-4f91-964a-36c7f08765ad
-         if (typeof this._displayState.shadowPosition !== 'string') {
-            return false;
-         }
+      _shadowVisible: function(position: POSITION) {
 
          // Do not show shadows on the scroll container if there are fixed headers. They display their own shadows.
-         if (this._children.stickyController.hasFixed(position)) {
+         if (this._children.stickyController && this._children.stickyController.hasFixed(position)) {
             return false;
          }
-
-          if (this._shadowVisiblityMode[position] === 'visible') {
-              return true;
-          }
 
          // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
          // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
          // and immediately after the second event it is not necessary.
          // These conditions appear during scrollTop < 0. Just do not display the shadow when scrollTop < 0.
-         if (Env.detection.isMobileIOS && position === 'top' && _private.getScrollTop(this, this._children.content) < 0) {
+         if (Env.detection.isMobileIOS && position === POSITION.TOP &&
+               _private.getScrollTop(this, this._children.content) < 0) {
             return false;
          }
 
-         return this._displayState.shadowPosition.indexOf(position) !== -1;
+         return this._displayState.shadowVisible[position];
       },
 
       _updateShadowMode(event, shadowVisibleObject): void {
-         this.setShadowMode(shadowVisibleObject);
+         this._shadowVisibilityByInnerComponents = shadowVisibleObject;
       },
 
       setShadowMode: function(shadowVisibleObject) {
-         this._shadowVisiblityMode = shadowVisibleObject;
+         // Спилить после того как удалят использование в engine
+         this._shadowVisibilityByInnerComponents = shadowVisibleObject;
       },
 
       setOverflowScrolling: function(value: string) {
@@ -567,7 +665,7 @@ var
       },
 
       _scrollbarTaken: function() {
-         if (this._showScrollbarOnHover && this._displayState.hasScroll) {
+         if (this._showScrollbarOnHover && this._displayState.canScroll) {
             this._notify('scrollbarTaken', [], { bubbling: true });
          }
       },
@@ -639,7 +737,7 @@ var
       },
 
       _scrollbarVisibility: function() {
-         return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._displayState.hasScroll && this._showScrollbarOnHover);
+         return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._displayState.canScroll && this._showScrollbarOnHover);
       },
 
       /**
@@ -669,30 +767,21 @@ var
        * @param shadowVisible
        * @private
        */
-      _updateStickyHeaderContext: function(shadowVisible) {
+      _updateStickyHeaderContext: function() {
          var
-            shadowPosition = '',
-            shadowVisible = { top: false, bottom: false };
+            shadowPosition: string = '',
+            topShadowVisible: boolean = false,
+            bottomShadowVisible: boolean = false;
 
-         if ((shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll) {
-            // в before/afterMount this._displayState.shadowPosition еще не задан
-            if (this._displayState.shadowPosition) {
-                shadowVisible.top = this._displayState.shadowPosition.indexOf('top') !== -1;
-                shadowVisible.bottom = this._displayState.shadowPosition.indexOf('bottom') !== -1;
-            }
-
-            if (this._shadowVisiblityMode.top === 'visible') {
-               shadowVisible.top = true;
-            }
-            if (this._shadowVisiblityMode.bottom === 'visible') {
-               shadowVisible.bottom = true;
-            }
+         if (this._displayState.canScroll) {
+            topShadowVisible = this._displayState.shadowVisible.top;
+            bottomShadowVisible = this._displayState.shadowVisible.bottom;
          }
 
-         if (shadowVisible.top) {
+         if (topShadowVisible) {
             shadowPosition += 'top';
          }
-         if (shadowVisible.bottom) {
+         if (bottomShadowVisible) {
             shadowPosition += 'bottom';
          }
 
@@ -839,7 +928,8 @@ var
 
 Scroll.getDefaultOptions = function() {
    return {
-      shadowVisible: true,
+      topShadowVisibility: SHADOW_VISIBILITY.AUTO,
+      bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
       scrollbarVisible: true
    };
 };

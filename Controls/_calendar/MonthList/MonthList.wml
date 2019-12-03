@@ -6,6 +6,8 @@
       name="scroll"
       attr:class="MonthList-ScrollContainer"
       scrollbarVisible="{{false}}"
+      topShadowVisibility="visible"
+      bottomShadowVisibility="visible"
       on:scroll="_scrollHandler()">
       <Controls.list:View
          source="{{_viewSource}}"
