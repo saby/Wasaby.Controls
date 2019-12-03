@@ -8,7 +8,7 @@
               minSearchLength="{{1}}"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/MinSearchLength/resources/SuggestTemplate">
               <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
           </ws:suggestTemplate>
       </Controls.suggest:SearchInput>
@@ -22,7 +22,7 @@
               minSearchLength="{{4}}"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/MinSearchLength/resources/SuggestTemplate">
               <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
           </ws:suggestTemplate>
       </Controls.suggest:SearchInput>

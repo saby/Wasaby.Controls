@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Suggest_new/resources/SuggestTemplate');
+import controlTemplate = require('wml!Controls-demo/Suggest_new/Selector/ItemActions/resources/SuggestTemplate');
 
 class SuggestTemplate extends Control{
    protected _template: TemplateFunction = controlTemplate;

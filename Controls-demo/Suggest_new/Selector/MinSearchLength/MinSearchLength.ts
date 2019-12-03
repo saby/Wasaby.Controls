@@ -4,7 +4,7 @@ import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import {Memory} from 'Types/source';
 import {_departmentsDataLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Selector/MinSearchLength/MinSearchLength');
-import suggestTemplate = require('wml!Controls-demo/Suggest_new/resources/SuggestTemplate');
+import suggestTemplate = require('wml!Controls-demo/Suggest_new/Selector/MinSearchLength/resources/SuggestTemplate');
 import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control{

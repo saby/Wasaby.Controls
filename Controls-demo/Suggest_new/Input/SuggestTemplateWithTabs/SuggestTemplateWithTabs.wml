@@ -9,7 +9,7 @@
               minSearchLength="{{1}}"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTabTemplate">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/Input/SuggestTemplateWithTabs/resources/SuggestTabTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
       </Controls.suggest:Input>

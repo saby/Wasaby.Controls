@@ -1,8 +1,8 @@
 import {Control, TemplateFunction} from "UI/Base";
 import {Memory} from 'Types/source';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/EmptyTemplate/EmptyTemplate');
-import suggestTemplate = require('wml!Controls-demo/Suggest_new/resources/SuggestTemplate');
-import emptyTemplate = require('wml!Controls-demo/Suggest_new/resources/EmptyTemplate');
+import suggestTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/EmptyTemplate/resources/SuggestTemplate');
+import emptyTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/EmptyTemplate/resources/EmptyTemplate');
 import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/Suggest_new/Index';
 

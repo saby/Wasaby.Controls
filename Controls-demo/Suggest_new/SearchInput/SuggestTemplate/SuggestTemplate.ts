@@ -4,8 +4,8 @@ import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import {Memory} from 'Types/source';
 import {_departmentsDataLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/SuggestTemplate/SuggestTemplate');
-import suggestTemplate = require('wml!Controls-demo/Suggest_new/resources/SuggestTemplate');
-import suggestTemplateGrid = require('wml!Controls-demo/Suggest_new/resources/SuggestTemplateGrid');
+import suggestTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/SuggestTemplate/resources/SuggestTemplate');
+import suggestTemplateGrid = require('wml!Controls-demo/Suggest_new/SearchInput/SuggestTemplate/resources/SuggestTemplateGrid');
 import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control{

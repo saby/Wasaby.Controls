@@ -8,8 +8,8 @@
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:emptyTemplate templateName="wml!Controls-demo/Suggest_new/resources/EmptyTemplate"/>
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
+          <ws:emptyTemplate templateName="wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/EmptyTemplate"/>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/SuggestTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
       </Controls.suggest:Selector>
@@ -23,7 +23,7 @@
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/SuggestTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
       </Controls.suggest:Selector>

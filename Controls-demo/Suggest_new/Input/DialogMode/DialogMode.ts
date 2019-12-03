@@ -4,7 +4,7 @@ import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import {Memory} from 'Types/source';
 import {_departmentsWithImges} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Input/DialogMode/DialogMode');
-import suggestTemplate = require('wml!Controls-demo/Suggest_new/resources/SuggestTemplatePopup');
+import suggestTemplate = require('wml!Controls-demo/Suggest_new/Input/DialogMode/resources/SuggestTemplatePopup');
 import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/Suggest_new/Index';
 

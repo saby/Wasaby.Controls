@@ -9,7 +9,7 @@
              placeholder="Введите название отдела"
              navigation="{{_navigation}}"
              source="{{_source}}">
-         <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
+         <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/DisplayProperty/resources/SuggestTemplate">
              <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
          </ws:suggestTemplate>
      </Controls.suggest:SearchInput>

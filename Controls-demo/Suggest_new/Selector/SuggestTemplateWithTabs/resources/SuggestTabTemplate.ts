@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
-import controlTemplate = require('wml!Controls-demo/Suggest_new/resources/SuggestTabTemplate');
+import controlTemplate = require('wml!Controls-demo/Suggest_new/Selector/SuggestTemplateWithTabs/resources/SuggestTabTemplate');
 
 class SuggestTabTemplate extends Control{
    protected _template: TemplateFunction = controlTemplate;
