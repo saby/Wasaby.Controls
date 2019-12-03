@@ -240,7 +240,11 @@ var
                 getFooterIndex: () => getFooterIndex({hasEmptyTemplate, ...cfg}),
                 getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multiHeaderOffset, cfg.hasColumnScroll),
             };
-        }
+        },
+
+        getChildren(nodeKey, items) {
+            return this._model.getChildren(nodeKey, items);
+        },
     });
 
 TreeGridViewModel._private = _private;
