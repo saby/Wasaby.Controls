@@ -11,8 +11,10 @@ define([
       let
          treeStrategy,
          recordSet, model,
-         selectedKeys = [],
-         excludedKeys = [],
+         selection = {
+            selected: [],
+            excluded: []
+         },
          hierarchyRelation = new entity.relation.Hierarchy({
             keyProperty: ListData.KEY_PROPERTY,
             parentProperty: ListData.PARENT_PROPERTY,
@@ -21,114 +23,127 @@ define([
          });
 
       beforeEach(function() {
-         selectedKeys = [];
-         excludedKeys = [];
+         selection = {
+            selected: [],
+            excluded: []
+         };
          recordSet = new collection.RecordSet({
             keyProperty: ListData.KEY_PROPERTY,
             rawData: ListData.getItems()
          });
          model = new treeGrid.ViewModel({columns: [], items: recordSet});
-         treeStrategy = new operations.TreeSelectionStrategy();
+         treeStrategy = new operations.TreeSelectionStrategy({});
       });
 
       it('select', function() {
-         let selectResult = treeStrategy.select([], selectedKeys, excludedKeys, model, hierarchyRelation);
+         let selectResult = treeStrategy.select(selection, [], model, hierarchyRelation);
          assert.deepEqual(selectResult.selected, []);
          assert.deepEqual(selectResult.excluded, []);
 
-         selectResult = treeStrategy.select([1, 2, 9], selectedKeys, excludedKeys, model, hierarchyRelation);
+         selectResult = treeStrategy.select(selection, [1, 2, 9], model, hierarchyRelation);
          assert.deepEqual(selectResult.selected, [1, 2, 9]);
          assert.deepEqual(selectResult.excluded, []);
 
-         selectedKeys = [];
-         excludedKeys = [1, 6, 9];
-         selectResult = treeStrategy.select([1, 2, 9], selectedKeys, excludedKeys, model, hierarchyRelation);
+         selection.selected = [];
+         selection.excluded = [1, 6, 9];
+         selectResult = treeStrategy.select(selection, [1, 2, 9], model, hierarchyRelation);
          assert.deepEqual(selectResult.selected, [2]);
          assert.deepEqual(selectResult.excluded, [6]);
       });
 
       it('unSelect', function() {
-         let selectResult = treeStrategy.unSelect([3, 4], selectedKeys, excludedKeys, model, hierarchyRelation);
+         let selectResult = treeStrategy.unSelect(selection, [3, 4], model, hierarchyRelation);
          assert.deepEqual(selectResult.selected, []);
          assert.deepEqual(selectResult.excluded, []);
 
          // 2 - родитедль 3 и 4
-         selectedKeys = [2];
-         selectResult = treeStrategy.unSelect([3, 4], selectedKeys, excludedKeys, model, hierarchyRelation);
+         selection.selected = [2];
+         selectResult = treeStrategy.unSelect(selection, [3, 4], model, hierarchyRelation);
          assert.deepEqual(selectResult.selected, [2]);
          assert.deepEqual(selectResult.excluded, []);
 
-         excludedKeys = [2];
-         selectResult = treeStrategy.unSelect([3, 4], selectedKeys, excludedKeys, model, hierarchyRelation);
+         selection.excluded = [2];
+         selectResult = treeStrategy.unSelect(selection, [3, 4], model, hierarchyRelation);
          assert.deepEqual(selectResult.selected, [2]);
          assert.deepEqual(selectResult.excluded, [2, 3, 4]);
 
 
-         selectedKeys = [1, 2, 3, 4];
-         excludedKeys = [9];
-         selectResult = treeStrategy.unSelect([3, 4, 5], selectedKeys, excludedKeys, model, hierarchyRelation);
+         selection.selected = [1, 2, 3, 4];
+         selection.excluded = [9];
+         selectResult = treeStrategy.unSelect(selection, [3, 4, 5], model, hierarchyRelation);
          assert.deepEqual(selectResult.selected, [1, 2]);
          assert.deepEqual(selectResult.excluded, [9]);
       });
 
       it('isAllSelected', function() {
-         assert.isFalse(treeStrategy.isAllSelected(null, selectedKeys, excludedKeys));
+         assert.isFalse(treeStrategy.isAllSelected(selection, null));
 
-         selectedKeys = [null];
-         assert.isFalse(treeStrategy.isAllSelected(null, selectedKeys, excludedKeys));
+         selection.selected = [null];
+         assert.isFalse(treeStrategy.isAllSelected(selection, null));
 
-         excludedKeys = [null];
-         assert.isTrue(treeStrategy.isAllSelected(null, selectedKeys, excludedKeys));
+         selection.excluded = [null];
+         assert.isTrue(treeStrategy.isAllSelected(selection, null));
 
-         assert.isFalse(treeStrategy.isAllSelected(1, selectedKeys, excludedKeys));
+         assert.isFalse(treeStrategy.isAllSelected(selection, 1));
 
-         selectedKeys = [1];
-         excludedKeys = [1];
-         assert.isTrue(treeStrategy.isAllSelected(1, selectedKeys, excludedKeys));
+         selection.selected = [1];
+         selection.excluded = [1];
+         assert.isTrue(treeStrategy.isAllSelected(selection, 1));
       });
 
       describe('getCount', function() {
          it('without selection', function() {
-            return treeStrategy.getCount(selectedKeys, excludedKeys, model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount(selection, model, {}, hierarchyRelation).then((itemsCount) => {
                assert.equal(itemsCount, 0);
             });
          });
 
          it('with selected items', function() {
-            return treeStrategy.getCount([1, 2, 10, 15], excludedKeys, model, 0, hierarchyRelation).then((itemsCount) => {
+            selection.selected = [1, 2, 10, 15];
+            return treeStrategy.getCount(selection, model, {}, hierarchyRelation).then((itemsCount) => {
                assert.equal(itemsCount, 4);
             });
          });
 
          it('with selected and excluded items', function() {
-            return treeStrategy.getCount([1, 2, 10], [3, 4], model, 0, hierarchyRelation).then((itemsCount) => {
+            selection.selected = [1, 2, 10];
+            selection.excluded = [3, 4];
+            return treeStrategy.getCount(selection, model, {}, hierarchyRelation).then((itemsCount) => {
                assert.equal(itemsCount, 3);
             });
          });
 
          it('select root', function() {
+            selection.selected = [null];
+            selection.excluded = [null];
             model.getItems().setMetaData({more: false});
-            return treeStrategy.getCount([null], [null], model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount(selection, model, {}, hierarchyRelation).then((itemsCount) => {
                assert.equal(itemsCount, 3);
             });
          });
 
          it('select root with excluded', function() {
             // Дети корня 1,6,7
+            selection.selected = [null];
+            selection.excluded = [null, 1, 7, 10];
             model.getItems().setMetaData({more: 3});
-            return treeStrategy.getCount([null], [null, 1, 7, 10], model, 0, hierarchyRelation).then((itemsCount) => {
+            return treeStrategy.getCount(selection, model, {}, hierarchyRelation).then((itemsCount) => {
                assert.equal(itemsCount, 1);
             });
          });
 
          it('with not loaded selected root', function() {
-            return treeStrategy.getCount([null], [null], model, 0, hierarchyRelation).then((itemsCount) => {
+            selection.selected = [null];
+            selection.excluded = [null];
+            return treeStrategy.getCount(selection, model, {}, hierarchyRelation).then((itemsCount) => {
                assert.equal(itemsCount, null);
             });
          });
 
          it('with not loaded node', function() {
-            return treeStrategy.getCount([10], [10], model, 0, hierarchyRelation).then((itemsCount) => {
+            selection.selected = [10];
+            selection.excluded = [10];
+            return treeStrategy.getCount(selection, model, {}, hierarchyRelation).then((itemsCount) => {
                assert.equal(itemsCount, null);
             });
          });
@@ -136,27 +151,34 @@ define([
 
       describe('getSelectionForModel', function() {
          it('without selection', function() {
-            let selectionForModel = treeStrategy.getSelectionForModel(selectedKeys, excludedKeys, model, 0, '', hierarchyRelation);
+            let selectionForModel = treeStrategy.getSelectionForModel(selection, model, 0, '', hierarchyRelation);
             assert.deepEqual(selectionForModel, new Map());
          });
 
          it('with selected items', function() {
-            let selectionForModel = treeStrategy.getSelectionForModel([1, 2, 10], excludedKeys, model, 0, '', hierarchyRelation);
+            selection.selected = [1, 2, 10];
+            let selectionForModel = treeStrategy.getSelectionForModel(selection, model, 0, '', hierarchyRelation);
             assert.deepEqual(selectionForModel, new Map([[1, true], [2, true]]));
          });
 
          it('with selected and excluded items', function() {
-            let selectionForModel = treeStrategy.getSelectionForModel([1, 4], [4], model, 0, '', hierarchyRelation);
+            selection.selected = [1, 4];
+            selection.excluded = [4];
+            let selectionForModel = treeStrategy.getSelectionForModel(selection, model, 0, '', hierarchyRelation);
             assert.deepEqual(selectionForModel, new Map([[1, true]]));
          });
 
          it('select root', function() {
-            let selectionForModel = treeStrategy.getSelectionForModel([null], [null], model, 0, '', hierarchyRelation);
+            selection.selected = [null];
+            selection.excluded = [null];
+            let selectionForModel = treeStrategy.getSelectionForModel(selection, model, 0, '', hierarchyRelation);
             assert.deepEqual(selectionForModel, new Map([[1, true], [6, true], [7, true]]));
          });
 
-         it('select root', function() {
-            let selectionForModel = treeStrategy.getSelectionForModel([null], [null, 6, 7, 10], model, 0, '', hierarchyRelation);
+         it('select root with excluded', function() {
+            selection.selected = [null];
+            selection.excluded = [null, 6, 7, 10];
+            let selectionForModel = treeStrategy.getSelectionForModel(selection, model, 0, '', hierarchyRelation);
             assert.deepEqual(selectionForModel, new Map([[1, true]]));
          });
       });

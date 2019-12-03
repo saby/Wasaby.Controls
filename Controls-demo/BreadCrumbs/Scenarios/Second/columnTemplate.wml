@@ -3,7 +3,7 @@
             itemData="{{itemData}}">
    <ws:contentTemplate>
       <ws:if data="{{!itemData.dispItem.isNode()}}">
-         <Controls.decorator:Money number="{{itemData.item[itemData.column.displayProperty]}}"
+         <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
                                    delimiters="{{true}}"/>
          <span if="{{itemData.columnIndex === 2}}">шт</span>
       </ws:if>

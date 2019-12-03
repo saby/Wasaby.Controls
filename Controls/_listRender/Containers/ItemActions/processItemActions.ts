@@ -7,7 +7,7 @@ export function processItemActionClick(
     event: SyntheticEvent<MouseEvent>,
     action: any,
     item: CollectionItem<Model>,
-    fromDropdown = false
+    fromDropdown: boolean = false
 ): void {
     event.stopPropagation();
     if (action._isMenu) {
@@ -133,20 +133,24 @@ function openActionsSubmenu(
 }
 
 export function closeActionsMenu(args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] }): void {
-    // If menu needs to close because one of the actions was clicked, process
-    // the action handler first
-    if (args && args.action === 'itemClick') {
-        const action = args.data && args.data[0] && args.data[0].getRawData();
-        processItemActionClick.call(this, args.event, action, this._options.listModel.getActiveItem(), true);
+    // Actions dropdown can start closing after the view itself was unmounted already, in which case
+    // the model would be destroyed and there would be no need to process the action itself
+    if (this._options.listModel && !this._options.listModel.destroyed) {
+        // If menu needs to close because one of the actions was clicked, process
+        // the action handler first
+        if (args && args.action === 'itemClick') {
+            const action = args.data && args.data[0] && args.data[0].getRawData();
+            processItemActionClick.call(this, args.event, action, this._options.listModel.getActiveItem(), true);
 
-        // If this action has children, don't close the menu if it was clicked
-        if (action['parent@']) {
-            return;
+            // If this action has children, don't close the menu if it was clicked
+            if (action['parent@']) {
+                return;
+            }
         }
-    }
 
-    // TODO Move this to the manager as well??
-    this._options.listModel.setActiveItem(null);
+        // TODO Move this to the manager as well??
+        this._options.listModel.setActiveItem(null);
+    }
     this._notify('requestDropdownMenuClose');
 }
 

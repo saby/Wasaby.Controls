@@ -148,6 +148,8 @@ var _private = {
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 if (list.getCount()) {
                     self._loadedItems = list;
+                } else {
+                    self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
                 }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
@@ -204,10 +206,6 @@ var _private = {
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
-                    }
-
-                    if (self._children && self._children.scrollController) {
-                        self._children.scrollController.reset(self._listViewModel.getCount());
                     }
                 }
 
@@ -1405,7 +1403,6 @@ var _private = {
  * @mixes Controls/interface/INavigation
  @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/_list/interface/IBaseControl
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
  * @control
@@ -2423,7 +2420,9 @@ BaseControl.getDefaultOptions = function() {
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
         stickyHeader: true,
-        selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
+        selectionStrategy: {
+           name: 'Controls/operations:FlatSelectionStrategy'
+        },
         virtualScrollMode: 'remove'
     };
 };

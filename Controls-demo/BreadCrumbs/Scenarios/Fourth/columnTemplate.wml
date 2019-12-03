@@ -2,8 +2,8 @@
             attr:class="controls-Grid__row-cell__content_baseline_L"
             itemData="{{itemData}}">
    <ws:contentTemplate>
-      <Controls.decorator:Money number="{{itemData.item[itemData.column.displayProperty]}}"
-                                style="{{itemData.column.displayProperty !== 'sum' ? 'noBasicRegistry' : ''}}"
+      <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
+                                style="{{itemData.column.displayProperty !== 'sum' ? 'noBasicRegistry' : 'default'}}"
                                 delimiters="{{true}}"/>
       <span if="{{!itemData.dispItem.isNode() && itemData.columnIndex === 1}}">шт</span>
    </ws:contentTemplate>

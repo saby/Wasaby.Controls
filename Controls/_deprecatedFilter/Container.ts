@@ -54,7 +54,7 @@ var _private = {
          recent = that.getHistorySource(self, id).getRecent();
          if (recent.getCount()) {
             lastFilter = recent.at(0);
-            return that.getHistorySource(self, id).getDataObject(lastFilter.get('ObjectData'));
+            return that.getHistorySource(self, id).getDataObject(lastFilter);
          }
       });
    },

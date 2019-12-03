@@ -493,6 +493,44 @@ define([
          assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called.');
       });
 
+      it('save loaded items into the controls\' state', async function () {
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                source: new sourceLib.Memory({}),
+                viewModelConstructor: lists.ListViewModel,
+             },
+             loadedItems = new collection.RecordSet({
+                keyProperty: 'id',
+                rawData: [
+                   {
+                      id: 1,
+                      title: 'qwe'
+                   }
+                ]
+             }),
+             ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         // Empty list
+         assert.isUndefined(ctrl._loadedItems);
+
+         ctrl._sourceController.load = () => ({
+            addCallback(fn) {
+               fn(loadedItems);
+               return {
+                  addErrback: () => {}
+               };
+            }
+         });
+
+         await ctrl.reload();
+
+         assert.deepEqual(ctrl._loadedItems, loadedItems);
+      });
+
       it('_needScrollCalculation', function(done) {
          var source = new sourceLib.Memory({
             keyProperty: 'id',
@@ -4620,6 +4658,7 @@ define([
                up: false,
                down: true
             };
+            ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             ctrl._afterMount(cfg);
@@ -4669,6 +4708,7 @@ define([
             await lists.BaseControl._private.reload(ctrl, cfgClone);
 
             assert.equal(2, queryCallsCount);
+            assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);
          });
          it('Navigation position', function() {
             return new Promise(function(resolve, reject) {

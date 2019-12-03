@@ -5,7 +5,6 @@ import Merge = require('Core/core-merge');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import converterFilterItems = require('Controls/_filter/converterFilterItems');
-import {Utils} from 'Controls/dateRange';
 import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
@@ -118,8 +117,9 @@ var _private = {
                 popupItem.items = configs[item.name].popupItems || popupItem.items;
                 popupItem.selectorItems = configs[item.name].items;
                 if (item.editorOptions.source) {
-                    if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
+                    if (!configs[item.name].source && (!configs[item.name].loadDeferred || configs[item.name].loadDeferred.isReady())) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
                         popupItem.loadDeferred = _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
+                        configs[item.name].loadDeferred = popupItem.loadDeferred;
                     }
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                     popupItem.sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
@@ -194,7 +194,7 @@ var _private = {
                         self._displayText[item.name].hasMoreText = _private.getHasMoreText(flatSelectedKeys);
                     }
                     if (item.textValue !== undefined && !detailPanelHandler) {
-                        item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
+                        item.textValue = self._displayText[item.name].title;
                     }
                 }
             }
@@ -223,7 +223,7 @@ var _private = {
     setItems: function(config, item, newItems) {
         config.popupItems = getItemsWithHistory(config.popupItems || CoreClone(config.items), newItems,
             config.sourceController, item.editorOptions.source, config.keyProperty);
-        config.items = getUniqItems(config.items, newItems, config.keyProeprty);
+        config.items = getUniqItems(config.items, newItems, config.keyProperty);
     },
 
     loadSelectedItems: function(items, configs) {
@@ -239,6 +239,9 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
+                        if (config.dataLoadCallback) {
+                            config.dataLoadCallback(newItems);
+                        }
                         _private.setItems(config, item, newItems);
                     });
                     pDef.push(result);
@@ -254,7 +257,7 @@ var _private = {
             queryFilter = Merge(filter, {historyId: instance.historyId});
         }
             // As the data source can be history source, then you need to merge the filter
-            queryFilter = historyUtils.getSourceFilter(filter, source);
+        queryFilter = historyUtils.getSourceFilter(filter, source);
         return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback(function(items) {
             instance.items = items;
             if (dataLoadCallback) {
@@ -306,8 +309,10 @@ var _private = {
             }
         });
 
+        self._loadDeferred = pDef.done().getResult();
+
         // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
-        return pDef.done().getResult().addCallback(function() {
+        return self._loadDeferred.addCallback(function() {
             return _private.loadSelectedItems(self._source, self._configs).addCallback(() => {
                 _private.updateText(self, self._source, self._configs);
                 return {
@@ -592,6 +597,10 @@ var Filter = Control.extend({
     },
 
     _beforeUnmount() {
+        if (this._loadDeferred) {
+            this._loadDeferred.cancel();
+            this._loadDeferred = null;
+        }
         this._configs = null;
         this._displayText = null;
     },
@@ -660,12 +669,14 @@ var Filter = Control.extend({
     },
 
     _rangeChangedHandler: function(event, start, end) {
-        let dateRangeItem = _private.getDateRangeItem(this._source);
-        dateRangeItem.value = [start, end];
-        dateRangeItem.textValue = Utils.formatDateRangeCaption(start, end,
-            this._dateRangeItem.editorOptions.emptyCaption || 'Не указан');
-        _private.notifyChanges(this, this._source);
-        this._dateRangeItem = object.clone(dateRangeItem);
+       return import('Controls/dateRange').then((dateRange) => {
+          let dateRangeItem = _private.getDateRangeItem(this._source);
+          dateRangeItem.value = [start, end];
+          dateRangeItem.textValue = dateRange.Utils.formatDateRangeCaption(start, end,
+             this._dateRangeItem.editorOptions.emptyCaption || 'Не указан');
+          this._dateRangeItem = object.clone(dateRangeItem);
+          _private.notifyChanges(this, this._source);
+       });
     },
 
     _resultHandler: function(event, result) {
@@ -681,14 +692,13 @@ var Filter = Control.extend({
                 this._notify('historyApply', [result.history]);
             }
             _private.notifyChanges(this, this._source);
-            this._children.StickyOpener.close();
         }
+        this._children.StickyOpener.close();
     },
 
     _onSelectorTemplateResult: function(event, items) {
         let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._idOpenSelector].initSelectorItems, items, this._idOpenSelector]) || items;
         this._resultHandler(event, {action: 'selectorResult', id: this._idOpenSelector, data: resultSelectedItems});
-        this._children.StickyOpener.close();
     },
 
     _isFastReseted: function() {
