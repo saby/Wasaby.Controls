@@ -206,7 +206,7 @@ var _private = {
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
-                _private.resolveIndicatorStateAfterReload(self, list);
+                _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
                 resDeferred.callback({
                     data: list
@@ -266,7 +266,7 @@ var _private = {
         return options.hasOwnProperty('selectedKeysCount');
     },
 
-    resolveIndicatorStateAfterReload: function(self, list):void {
+    resolveIndicatorStateAfterReload: function(self, list, navigation):void {
         if (!self._isMounted) {
             return;
         }
@@ -275,9 +275,14 @@ var _private = {
         const hasMoreDataUp = self._sourceController.hasMoreData('up');
 
         if (!list.getCount()) {
-            //because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
-            //otherwise empty template will shown
-            if ((hasMoreDataDown || hasMoreDataUp) && self._needScrollCalculation) {
+            const needShowIndicatorByNavigation =
+                (navigation && navigation.view === 'maxCount') ||
+                self._needScrollCalculation;
+            const needShowIndicatorByMeta = hasMoreDataDown || hasMoreDataUp;
+
+            // because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
+            // otherwise empty template will shown
+            if (needShowIndicatorByNavigation && needShowIndicatorByMeta) {
                 if (self._listViewModel && self._listViewModel.getCount()) {
                     _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
                 } else {
@@ -475,7 +480,7 @@ var _private = {
             if (userCallback && userCallback instanceof Function) {
                 userCallback(addedItems, direction);
             }
-            _private.resolveIndicatorStateAfterReload(self, addedItems);
+            _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
 
             if (self._virtualScroll) {
                 self._itemsFromLoadToDirection = true;
