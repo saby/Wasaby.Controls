@@ -85,12 +85,12 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.reset();
 
             assert.equal(0, affectingInstance.startIndex, 'without initial index');
-            assert.equal(3, affectingInstance.stopIndex);
+            assert.equal(4, affectingInstance.stopIndex);
 
             instance.reset(4);
 
             assert.equal(4, affectingInstance.startIndex, 'with initial index');
-            assert.equal(7, affectingInstance.stopIndex);
+            assert.equal(8, affectingInstance.stopIndex);
 
             instance = new VirtualScroll({
                 ...defaultOptions,
