@@ -19,7 +19,7 @@ export default class extends Control {
     protected _beforeMount() {
         this._viewSource = new MemorySource({
             keyProperty: 'id',
-            data: Gadgets.getData().slice(-5),
+            data: Gadgets.getData(),
             parentProperty: 'parent'
         });
     }
