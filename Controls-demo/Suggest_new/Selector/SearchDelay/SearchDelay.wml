@@ -9,7 +9,7 @@
               searchDelay="{{0}}"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
       </Controls.suggest:Selector>
@@ -24,7 +24,7 @@
               searchDelay="{{1500}}"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
       </Controls.suggest:Selector>

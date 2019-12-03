@@ -9,7 +9,7 @@
            searchParam="title"
            navigation="{{_navigation}}"
            displayProperty="title">
-         <ws:suggestTemplate templateName="{{_suggestTemplate}}"/>
+         <ws:suggestTemplate templateName="wml!Controls-demo/Lookup/resources/SuggestTemplate"/>
       </Controls.lookup:Input>
    </div>
 </div>

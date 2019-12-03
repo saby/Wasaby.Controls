@@ -7,10 +7,10 @@
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
               <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
           </ws:suggestTemplate>
-          <ws:footerTemplate templateName="{{_footerTemplate}}"/>
+          <ws:footerTemplate templateName="wml!Controls-demo/Suggest_new/resources/FooterTemplate"/>
       </Controls.suggest:SearchInput>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
@@ -22,7 +22,7 @@
               navigation="{{_navigation}}"
               source="{{_source}}"
               footerTemplate="{{null}}">
-          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
               <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
           </ws:suggestTemplate>
       </Controls.suggest:SearchInput>

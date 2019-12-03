@@ -8,7 +8,7 @@
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
               <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
           </ws:suggestTemplate>
       </Controls.suggest:Input>

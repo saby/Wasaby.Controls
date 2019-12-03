@@ -8,10 +8,10 @@
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
-          <ws:footerTemplate templateName="{{_footerTemplate}}"/>
+          <ws:footerTemplate templateName="wml!Controls-demo/Suggest_new/resources/FooterTemplate"/>
       </Controls.suggest:Selector>
   </div>
 </div>

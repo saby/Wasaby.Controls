@@ -8,7 +8,7 @@
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/resources/SuggestTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
       </Controls.suggest:Input>
@@ -22,7 +22,7 @@
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="{{_suggestTemplateGrid}}">
+          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTemplateGrid">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
       </Controls.suggest:Input>
