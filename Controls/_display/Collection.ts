@@ -35,7 +35,7 @@ import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
 import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
-import {IVirtualScrollMode} from 'Controls/list';
+import {IVirtualScrollConfig} from 'Controls/list';
 import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
 // tslint:disable-next-line:ban-comma-operator
@@ -105,7 +105,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     editingConfig: any;
     unique?: boolean;
     importantItemProperties?: string[];
-    virtualScrollMode: IVirtualScrollMode;
+    virtualScrollConfig: IVirtualScrollConfig;
 }
 
 export interface ICollectionCounters {
@@ -688,7 +688,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._stopIndex = this.getCount();
 
-        this._$virtualScrollMode = options.virtualScrollMode || options.virtualScrollConfig.mode;
+        const virtualScrollConfig = options.virtualScrollConfig || {mode: options.virtualScrollMode};
+
+        this._$virtualScrollMode = virtualScrollConfig.mode;
 
         this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);

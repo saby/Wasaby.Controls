@@ -91,7 +91,7 @@ import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
-import {IVirtualScrollMode} from './_list/interface/IVirtualScroll';
+import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 
 import {Paging} from 'Controls/paging';
 
@@ -134,5 +134,5 @@ export {
     ItemsViewModel,
     HotKeysContainer,
     InertialScrolling,
-    IVirtualScrollMode
+    IVirtualScrollConfig
 };
