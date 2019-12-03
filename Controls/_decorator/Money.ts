@@ -189,7 +189,8 @@ class Money extends Control<IMoneyOptions> implements INumberFormat {
         return {
             style: 'default',
             useGrouping: true,
-            showEmptyDecimals: true
+            showEmptyDecimals: true,
+            value: null
         };
     }
 
