@@ -1,8 +1,9 @@
 define(
    [
-      'Controls/filterPopup'
+      'Controls/filterPopup',
+      'Core/core-clone'
    ],
-   function(filterPopup) {
+   function(filterPopup, Clone) {
       describe('FilterHistory:EditDialog', function() {
          let items = [
             {id: 'period', value: [2], textValue: 'Today'},
@@ -14,7 +15,7 @@ define(
 
          let defaultConfig = {
             items: items,
-            globalParams: 0,
+            isClient: 0,
             isFavorite: false,
             editedTextValue: 'Today, Ivanov K.K.'
          };
@@ -24,8 +25,8 @@ define(
             dialog.prepareConfig(dialog, defaultConfig);
             assert.equal(dialog._placeholder, defaultConfig.editedTextValue);
             assert.equal(dialog._textValue, '');
-            assert.equal(dialog._globalKey, 0);
-            assert.deepEqual(dialog._selectedFilters, ['period', 'warehouse', 'sender', 'author', 'responsible']);
+            assert.equal(dialog._isClient, 0);
+            assert.deepEqual(dialog._selectedFilters, ['period', 'author']);
             assert.isOk(dialog._source);
          });
 
@@ -36,11 +37,11 @@ define(
             let newConfig = {...defaultConfig};
             newConfig.editedTextValue = 'new text';
             newConfig.isFavorite = true;
-            newConfig.globalParams = 1;
+            newConfig.isClient = 1;
             dialog._beforeUpdate(newConfig);
             assert.equal(dialog._textValue, newConfig.editedTextValue);
-            assert.equal(dialog._globalKey, newConfig.globalParams);
-            assert.deepEqual(dialog._selectedFilters, ['period', 'warehouse', 'sender', 'author', 'responsible']);
+            assert.equal(dialog._isClient, newConfig.isClient);
+            assert.deepEqual(dialog._selectedFilters, ['period', 'author']);
          });
 
          it('_delete', function() {
@@ -56,7 +57,7 @@ define(
             };
 
             dialog._delete();
-            assert.deepEqual(expectedResult, {action: 'delete'});
+            assert.equal(expectedResult.action, 'delete');
             assert.isTrue(isClosed);
          });
 
@@ -81,10 +82,18 @@ define(
             dialog._selectedFilters = ['author'];
             dialog._apply();
             assert.equal(expectedResult.action, 'save');
-            assert.deepEqual(expectedResult.record.get('filterPanelItems')[0], {id: 'period', textValue: ''});
-            assert.equal(expectedResult.record.get('linkText'), '');
-            assert.equal(expectedResult.record.get('globalParams'), 0);
+            assert.equal(expectedResult.record.get('linkText'), dialog._placeholder);
+            assert.equal(expectedResult.record.get('isClient'), 0);
             assert.isTrue(isClosed);
+         });
+
+         it ('getItemsToSave', function() {
+            let dialog = new filterPopup._EditDialog();
+            dialog.prepareConfig(dialog, defaultConfig);
+
+            let expectedItems = Clone(items);
+            let resultItems = dialog.getItemsToSave(items, dialog._selectedFilters);
+            assert.deepEqual(expectedItems, resultItems);
          });
       });
    });

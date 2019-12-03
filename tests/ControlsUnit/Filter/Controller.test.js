@@ -961,7 +961,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          sandbox.replace(HistoryUtils, 'getHistorySource', () => {
             return {
                getItems: () => historyItems,
-               getDataObject: (data) => data,
+               getDataObject: (data) => data.get('ObjectData'),
                getPinned: () => pinnedItems
             };
          });
