@@ -69,6 +69,23 @@ define(
             assert.equal(element.popupOptions.testOption, 'created');
          });
 
+         it('add popup async', function(done) {
+            const Manager = getManager();
+            const Controller = new BaseController();
+            Controller.getDefaultConfig = () => {
+               assert.equal(Manager._private.popupItems.getCount(), 0);
+               setTimeout(() => {
+                  assert.equal(Manager._private.popupItems.getCount(), 1);
+                  Manager.destroy();
+                  done();
+               }, 30);
+               return Promise.resolve();
+            };
+            id = Manager.show({
+               testOption: 'created'
+            }, Controller);
+         });
+
          it('getMaxZIndexPopupIdForActivate', function(done) {
             let Manager = getManager();
             let id1 = Manager.show({}, new BaseController());
