@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper">
+    <Controls.buttons:Button caption="First req" on:click="_onChangeSource()"/>
+    <Controls.buttons:Button caption="Second req" on:click="_onChangeSource2()"/>
+    <Controls.buttons:Button caption="Third req" on:click="_onChangeSource3()"/>
+
+    <Controls.grid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            columns="{{_columns}}">
+        <ws:emptyTemplate>
+            <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
+                <ws:contentTemplate>No data available!</ws:contentTemplate>
+            </ws:partial>
+        </ws:emptyTemplate>
+    </Controls.grid:View>
+</div>

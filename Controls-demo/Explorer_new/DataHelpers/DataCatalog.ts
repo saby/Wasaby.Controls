@@ -1,3 +1,5 @@
+import * as explorerImages from 'Controls-demo/Explorer/ExplorerImages';
+
 export const Gadgets = {
    getData: () => [{
    id: 1,
@@ -281,7 +283,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
          discr: '5',
-         price: 123
+         price: 123,
+         image: explorerImages[1]
    }, {
       id: 83,
       'parent': null,
@@ -289,7 +292,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
          discr: '5',
-         price: 123
+         price: 123,
+         image: explorerImages[2]
    }, {
       id: 84,
       'parent': null,
@@ -297,7 +301,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
          discr: '5',
-         price: 123
+         price: 123,
+         image: explorerImages[3]
    }, {
       id: 85,
       'parent': null,
@@ -305,7 +310,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
          discr: '5',
-         price: 123
+         price: 123,
+         image: explorerImages[4]
    }, {
       id: 86,
       'parent': null,
@@ -313,7 +319,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
       discr: '5',
-      price: 123
+      price: 123,
+      image: explorerImages[5]
    }],
 
    getColumns: () => [

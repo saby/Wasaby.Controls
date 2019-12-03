@@ -23,7 +23,7 @@
                         columns="{{_columns}}"
                         parentProperty="parent"
                         nodeProperty="type">
-                    <ws:itemPadding top="M" bottom="M"/>
+                    <ws:itemPadding top="null" bottom="null"/>
                 </Controls.treeGrid:View>
             </div>
 

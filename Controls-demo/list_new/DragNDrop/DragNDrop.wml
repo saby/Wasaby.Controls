@@ -8,12 +8,11 @@
                             on:dragStart="_dragStart()"
                             on:dragEnd="_dragEnd()"
                             displayProperty="title"
+                            itemsReadyCallback="{{_itemsReadyCallback}}"
                             itemsDragNDrop="{{true}}">
                         <ws:draggingTemplate>
                             <ws:partial template="Controls/dragnDrop:DraggingTemplate"
-                                        mainText="{{draggingTemplate.entity._options.mainText}}"
-                                        image="{{draggingTemplate.entity._options.image}}"
-                                        additionalText="{{draggingTemplate.entity._options.additionalText}}">
+                                        mainText="{{draggingTemplate.entity._options.title}}">
                             </ws:partial>
                         </ws:draggingTemplate>
                     </Controls.list:View>

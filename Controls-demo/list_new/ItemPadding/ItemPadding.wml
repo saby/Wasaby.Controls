@@ -29,7 +29,7 @@
 <!--                <Controls.list:View keyProperty="id" source="{{_viewSource}}"/>-->
 <!--            </div>-->
 
-            <div class="controlsDemo__cell controlsDemo__mr2">
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру null</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
                     <ws:itemPadding left="null" right="null"/>
@@ -43,28 +43,28 @@
 <!--                </Controls.list:View>-->
 <!--            </div>-->
 
-            <div class="controlsDemo__cell controlsDemo__mr2">
-                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-s">
+                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру S</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
                     <ws:itemPadding left="M" right="M"/>
                 </Controls.list:View>
             </div>
 
-            <div class="controlsDemo__cell controlsDemo__mr2">
-                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру L</div>
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-m">
+                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
                     <ws:itemPadding left="L" right="L"/>
                 </Controls.list:View>
             </div>
 
-            <div class="controlsDemo__cell controlsDemo__mr2">
-                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру XL</div>
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-l">
+                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру L</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
                     <ws:itemPadding left="XL" right="XL"/>
                 </Controls.list:View>
             </div>
 
-            <div class="controlsDemo__cell">
+            <div class="controlsDemo__cell controlsDemo-hor-padding-xxl">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру XXL</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
                     <ws:itemPadding left="XXL" right="XXL"/>
@@ -78,7 +78,7 @@
         <div class="controlsDemo__wrapper controlsDemo__flexRow">
 
 
-            <div class="controlsDemo__cell controlsDemo__mr2">
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-ver-padding-null">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру null</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
                     <ws:itemPadding top="null" bottom="null"/>
@@ -86,7 +86,7 @@
             </div>
 
 
-            <div class="controlsDemo__cell controlsDemo__mr2">
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-ver-padding-m">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
                     <ws:itemPadding top="M" bottom="M"/>
@@ -94,10 +94,10 @@
             </div>
 
 
-            <div class="controlsDemo__cell controlsDemo__mr2">
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-ver-padding-l">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру L</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
-                    <ws:itemPadding top="L" bottom="L"/>
+
                 </Controls.list:View>
             </div>
 

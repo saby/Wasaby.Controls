@@ -24,7 +24,7 @@ export default class extends Control {
 
    private _itemsReady(items) {
       this._itemsFirst = items;
-   },
+   }
 
    private _dragStart(event, items) {
       var firstItem = this._itemsFirst.getRecordById(items[0]);
