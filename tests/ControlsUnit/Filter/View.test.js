@@ -740,6 +740,18 @@ define(
             });
          });
 
+         it('_beforeUnmount', function() {
+            let view = getView(defaultConfig);
+
+            view._beforeMount(defaultConfig);
+            assert.isOk(view._configs);
+            assert.isOk(view._loadDeferred);
+
+            view._beforeUnmount();
+            assert.isNull(view._configs);
+            assert.isNull(view._loadDeferred);
+         });
+
          describe('View::resultHandler', function() {
             let view;
             beforeEach(function() {
@@ -1091,6 +1103,15 @@ define(
                };
                let resultItems = filter.View._private.getPopupConfig(view, view._configs, view._source);
                assert.isOk(resultItems[0].loadDeferred);
+
+               const sandBox = sinon.createSandbox();
+               sandBox.stub(filter.View._private, 'loadItemsFromSource').returns({
+                  isReady: () => {return false;}
+               });
+
+               filter.View._private.getPopupConfig(view, view._configs, view._source);
+               sinon.assert.calledOnce(filter.View._private.loadItemsFromSource);
+               sandBox.restore();
             });
          });
       });
