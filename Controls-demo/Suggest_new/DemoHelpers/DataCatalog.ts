@@ -30,7 +30,7 @@ function getLongData() {
    return data;
 }
 
-function getDefaultNavigation() {
+function getNavigation() {
    return {
       source: 'page',
       view: 'page',
@@ -100,7 +100,7 @@ function getSuggestSourceWithImages() {
 }
 
 export {
-   getDefaultNavigation,
+   getNavigation,
    getMaxCountNavigation,
    getSuggestSource,
    getSuggestTabSource,

@@ -1,16 +1,23 @@
 import {Control, TemplateFunction} from "UI/Base";
 import {Memory} from 'Types/source';
-import {getDefaultNavigation, getSuggestSourceLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
+import {getNavigation, getSuggestSourceLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/FooterTemplate/FooterTemplate');
+import suggestTemplate = require('wml!Controls-demo/Suggest_new/resources/SuggestTemplate');
+import footerTemplate = require('wml!Controls-demo/Suggest_new/resources/FooterTemplate');
 import 'css!Controls-demo/Controls-demo';
-import 'css!Controls-demo/Suggest_new/Index';
 
 export default class extends Control{
    protected _template: TemplateFunction = controlTemplate;
+   private _demoSuggestTemplate: TemplateFunction = suggestTemplate;
+   private _demoFooterTemplate: TemplateFunction = footerTemplate;
+   protected _suggestTemplate: string;
+   protected _footerTemplate: string;
    private _source: Memory;
-   private _defaultNavigation: object;
+   private _navigation: object;
    protected _beforeMount() {
+      this._suggestTemplate = 'wml!Controls-demo/Suggest_new/resources/SuggestTemplate';
+      this._footerTemplate = 'wml!Controls-demo/Suggest_new/resources/FooterTemplate';
       this._source = getSuggestSourceLong();
-      this._defaultNavigation = getDefaultNavigation();
+      this._navigation = getNavigation();
    }
 }

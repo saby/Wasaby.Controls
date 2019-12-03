@@ -1,15 +1,15 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container controlsDemo__mb3">
   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-     <h4>Отображение в поле ввода имени руководителя отдела</h4>
+     <div class="controls-text-label_theme-{{_options.theme}}">Отображение в поле ввода имени руководителя отдела</div>
      <Controls.suggest:SearchInput
              attr:class="ControlsDemo-Suggest__simple"
              bind:value="_suggestDownValue"
              displayProperty="owner"
              searchParam="title"
              placeholder="Введите название отдела"
-             navigation="{{_defaultNavigation}}"
+             navigation="{{_navigation}}"
              source="{{_source}}">
-         <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTemplate">
+         <ws:suggestTemplate templateName="{{_suggestTemplate}}">
              <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
          </ws:suggestTemplate>
      </Controls.suggest:SearchInput>

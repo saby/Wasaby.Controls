@@ -1,17 +1,21 @@
 import {Control, TemplateFunction} from "UI/Base";
 import {Memory} from 'Types/source';
-import {getDefaultNavigation, getMaxCountNavigation, getSuggestSourceLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
+import {getNavigation, getMaxCountNavigation, getSuggestSourceLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Input/Navigation/Navigation');
+import suggestTemplate = require('wml!Controls-demo/Suggest_new/resources/SuggestTemplate');
 import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control{
    protected _template: TemplateFunction = controlTemplate;
+   private _demoSuggestTemplate: TemplateFunction = suggestTemplate;
+   protected _suggestTemplate: string;
    private _source: Memory;
-   private _defaultNavigation: object;
+   private _navigation: object;
    private _maxCountNavigation: object;
    protected _beforeMount() {
+      this._suggestTemplate = 'wml!Controls-demo/Suggest_new/resources/SuggestTemplate';
       this._source = getSuggestSourceLong();
-      this._defaultNavigation = getDefaultNavigation();
+      this._navigation = getNavigation();
       this._maxCountNavigation = getMaxCountNavigation();
    }
 }

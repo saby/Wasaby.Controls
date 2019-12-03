@@ -1,27 +1,27 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container controlsDemo__mb3">
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth300">
-      <h3>Шаблон пустого списка с кнопкой</h3>
+      <div class="controls-text-label_theme-{{_options.theme}}">Шаблон пустого списка с кнопкой</div>
       <Controls.suggest:SearchInput
               bind:value="_suggestCustomValue"
               displayProperty="title"
               searchParam="title"
-              navigation="{{_defaultNavigation}}"
+              navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:emptyTemplate templateName="Controls-demo/Suggest_new/resources/EmptyTemplate"/>
-          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTemplate">
+          <ws:emptyTemplate templateName="{{_emptyTemplate}}"/>
+          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
               <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
           </ws:suggestTemplate>
       </Controls.suggest:SearchInput>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
-      <h3>Шаблон пустого списка по умолчанию</h3>
+      <div class="controls-text-label_theme-{{_options.theme}}">Шаблон пустого списка по умолчанию</div>
       <Controls.suggest:SearchInput
               bind:value="_suggestDefaultValue"
               displayProperty="title"
               searchParam="title"
-              navigation="{{_defaultNavigation}}"
+              navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/resources/SuggestTemplate">
+          <ws:suggestTemplate templateName="{{_suggestTemplate}}">
               <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
           </ws:suggestTemplate>
       </Controls.suggest:SearchInput>
