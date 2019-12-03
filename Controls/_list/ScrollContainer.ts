@@ -54,6 +54,8 @@ export default class ScrollContainer extends Control<IOptions> {
     private scrollRegistered: boolean = false;
 
     private indicatorTimeout: number;
+
+    // Стейт отвечающий за показ синхронного индикатора загрузки
     private indicatorState: string;
 
     // Флаг фейкового скролла, необходим для корректного рассчета активного элемента
@@ -143,18 +145,9 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         if (this.indicatorState) {
-            const callback = () => {
+            this.indicatorTimeout = setTimeout(() => {
                 this._notify('changeIndicatorState', [true, this.indicatorState]);
-            };
-
-            if (detection.isMobileIOS) {
-                callback();
-            } else {
-                this.indicatorTimeout = setTimeout(() => {
-                    callback();
-                }, LOADING_INDICATOR_SHOW_TIMEOUT);
-            }
-
+            }, LOADING_INDICATOR_SHOW_TIMEOUT);
         }
     }
 
@@ -480,7 +473,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private updateViewWindow(direction: IDirection, params?: IScrollParams): void {
         this.changeTriggerVisibility(direction, true);
         if (this._options.virtualScrolling) {
-            if (this.virtualScroll.isLoaded()) {
+            if (this.virtualScroll.isLoaded(document)) {
                 if (params) {
                     this.virtualScroll.viewportHeight = params.clientHeight;
                 }

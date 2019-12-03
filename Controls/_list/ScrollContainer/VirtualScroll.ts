@@ -86,7 +86,7 @@ export default class VirtualScrollController {
 
         if (this._options.pageSize < this.itemsCount) {
             newStartIndex = itemIndex;
-            newStopIndex = newStartIndex + this._options.pageSize - 1;
+            newStopIndex = newStartIndex + this._options.pageSize;
 
             if (newStopIndex >= this.itemsCount) {
                 newStopIndex = this.itemsCount;
@@ -173,7 +173,7 @@ export default class VirtualScrollController {
         if (this._options.itemHeightProperty) {
             this.recalcFromItemHeightProperty(initialIndex);
         } else {
-            this.recalcRangeFromIndex(initialIndex );
+            this.recalcRangeFromIndex(initialIndex);
         }
         this.actualizeSavedIndexes();
     }
@@ -254,7 +254,13 @@ export default class VirtualScrollController {
         return this.itemsOffsets[index];
     }
 
-    isLoaded(): boolean {
+    /**
+     * Проверяет что отображемые записи соответствуют текущему стейту видимых индексов
+     * @returns {boolean}
+     * @remark Иногда триггер может сообщить, что нужно совершить подгрузку, при этом предыдущая пачка записей еще не
+     * отрисовалась.
+     */
+    isLoaded(document?: Document): boolean {
         let isLoaded = true;
         let startChildrenIndex = 0;
         let updateLength = this.stopIndex - this.startIndex;
