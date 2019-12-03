@@ -1,4 +1,5 @@
 <Controls._list.BaseControl scope="{{_options}}"
+                            sorting="{{_sorting ? _sorting : _options.sorting}}"
                            name="baseControl">
    <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partail, потому что изменения только в замыкании функции-->
    <ws:partial template="{{content.viewTemplate}}" itemTemplate="{{_options.itemTemplate}}"/>

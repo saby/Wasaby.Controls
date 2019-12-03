@@ -8,6 +8,7 @@ import selectionToRecord = require('Controls/_operations/MultiSelector/selection
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
+import PropStorageUtil = require('Controls/_list/resources/utils/PropStorageUtil');
 
 var
     HOT_KEYS = {
@@ -399,6 +400,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _expandOnDragData: null,
     _updateExpandedItemsAfterReload: false,
     _notifyHandler: tmplNotify,
+    _sorting: null,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -413,7 +415,18 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._beforeLoadToDirectionCallback = _private.beforeLoadToDirectionCallback.bind(null, this);
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
+    _beforeMount(cfg) {
+        return PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']).addCallback((loadedCfg) => {
+            if (loadedCfg && loadedCfg.sorting) {
+                this._sorting = loadedCfg.sorting;
+            }
+        });
+    },
     _afterMount: function() {
+        if (this._sorting && !isEqual(this._sorting, this._options.sorting)) {
+            this._notify('sortingChanged', [this._sorting]);
+            this._sorting = null;
+        }
         _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
     },
     _onNodeRemoved: function(event, nodeId) {
@@ -436,7 +449,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (newOptions.collapsedItems) {
             this._children.baseControl.getViewModel().setCollapsedItems(newOptions.collapsedItems);
         }
-
+        if (!isEqual(newOptions.sorting, this._options.sorting)) {
+            PropStorageUtil.saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
+        }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
         }

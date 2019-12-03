@@ -1,6 +1,8 @@
 import Control = require('Core/Control');
 import ListControlTpl = require('wml!Controls/_list/ListControl/ListControl');
+import PropStorageUtil = require('Controls/_list/resources/utils/PropStorageUtil');
 import Deferred = require('Core/Deferred');
+import {isEqual} from 'Types/object';
 
 /**
  * Plain list control with custom item template. Can load data from data source.
@@ -25,6 +27,25 @@ import Deferred = require('Core/Deferred');
 
 var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype */{
     _template: ListControlTpl,
+    _sorting: null,
+    _beforeMount(cfg) {
+        return PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']).addCallback((loadedCfg) => {
+            if (loadedCfg && loadedCfg.sorting) {
+                this._sorting = loadedCfg.sorting;
+            }
+        });
+    },
+    _afterMount() {
+        if (this._sorting && !isEqual(this._sorting, this._options.sorting)) {
+            this._notify('sortingChanged', [this._sorting]);
+            this._sorting = null;
+        }
+    },
+    _beforeUpdate(cfg) {
+        if (!isEqual(cfg.sorting, this._options.sorting)) {
+            PropStorageUtil.saveConfig(cfg.propStorageId, ['sorting'], cfg);
+        }
+    },
     reload: function () {
         return this._children.baseControl.reload();
     },
