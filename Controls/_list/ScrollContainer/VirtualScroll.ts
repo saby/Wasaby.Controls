@@ -16,8 +16,10 @@ interface IVirtualScrollControllerOptions {
     loadMoreCallback: Function;
     placeholderChangedCallback: Function;
     saveScrollPositionCallback: Function;
+    itemHeightProperty: string;
     viewModel: unknown;
     useNewModel: boolean;
+    viewportHeight: number;
 }
 
 type IPlaceholders = [number, number];
@@ -31,23 +33,24 @@ export default class VirtualScrollController {
     private stopIndex: number = 0;
     private savedStartIndex: number = 0;
     private savedStopIndex: number = 0;
-    private segmentSize: number = 0;
-    private pageSize: number = 0;
     private itemsHeights: IVirtualItem[] = [];
     private itemsOffsets: number[] = [];
-    private indexesChangedCallback: Function;
-    private loadMoreCallback: Function;
-    private placeholderChangedCallback: Function;
-    private saveScrollPositionCallback: Function;
-    private viewModel: unknown;
-    private useNewModel: boolean;
+    private _options: IVirtualScrollControllerOptions;
     triggerVisibility: {
         up: boolean;
         down: boolean;
     } = {up: false, down: false};
     triggerOffset: number = 0;
     itemsCount: number = 0;
-    viewportHeight: number = 0;
+
+    set viewportHeight(value: number) {
+        this._options.viewportHeight = value;
+    }
+
+    get viewportHeight(): number {
+        return this._options.viewportHeight;
+    }
+
     scrollTop: number = 0;
     itemsContainerHeight: number = 0;
     itemsFromLoadToDirection: boolean = false;
@@ -64,14 +67,12 @@ export default class VirtualScrollController {
     }
 
     constructor(options: IVirtualScrollControllerOptions) {
-        this.pageSize = options.pageSize || DEFAULT_VIRTUAL_PAGE_SIZE;
-        this.segmentSize = options.segmentSize || Math.ceil(this.pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION);
-        this.indexesChangedCallback = options.indexesChangedCallback;
-        this.loadMoreCallback = options.loadMoreCallback;
-        this.placeholderChangedCallback = options.placeholderChangedCallback;
-        this.saveScrollPositionCallback = options.saveScrollPositionCallback;
-        this.viewModel = options.viewModel;
-        this.useNewModel = options.useNewModel;
+        const pageSize = options.pageSize || DEFAULT_VIRTUAL_PAGE_SIZE;
+        const segmentSize = Math.ceil(pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION);
+        this._options = {
+            ...options,
+            pageSize, segmentSize
+        };
         this.subscribeToModelChange(options.viewModel, options.useNewModel);
     }
 
@@ -83,13 +84,13 @@ export default class VirtualScrollController {
         let newStartIndex = this.startIndex;
         let newStopIndex = this.stopIndex;
 
-        if (this.pageSize < this.itemsCount) {
+        if (this._options.pageSize < this.itemsCount) {
             newStartIndex = itemIndex;
-            newStopIndex = newStartIndex + this.pageSize - 1;
+            newStopIndex = newStartIndex + this._options.pageSize;
 
             if (newStopIndex >= this.itemsCount) {
                 newStopIndex = this.itemsCount;
-                newStartIndex = newStopIndex - this.pageSize;
+                newStartIndex = newStopIndex - this._options.pageSize;
             }
         } else {
             newStartIndex = 0;
@@ -105,7 +106,8 @@ export default class VirtualScrollController {
      * @param {boolean} shouldLoad
      */
     recalcRangeToDirection(direction: IDirection, shouldLoad: boolean = true): void {
-        const segmentSize = this.segmentSize;
+        this.actualizeSavedIndexes();
+        const segmentSize = this._options.segmentSize;
         let newStartIndex = this.startIndex;
         let newStopIndex = this.stopIndex;
         let needToLoadMore: boolean = false;
@@ -136,7 +138,7 @@ export default class VirtualScrollController {
 
 
         if (needToLoadMore && shouldLoad) {
-            this.loadMoreCallback(direction);
+            this._options.loadMoreCallback(direction);
         }
     }
 
@@ -153,22 +155,27 @@ export default class VirtualScrollController {
             newStartIndex++;
         }
 
-        this.indexesChangedCallback(
-            this.startIndex = Math.max(newStartIndex - (Math.trunc(this.pageSize / 2)), 0),
-            this.stopIndex = Math.min(this.startIndex + this.pageSize, this.itemsCount));
-        this.placeholderChangedCallback(this.calcPlaceholderSize());
+        this._options.indexesChangedCallback(
+            this.startIndex = Math.max(newStartIndex - (Math.trunc(this._options.pageSize / 2)), 0),
+            this.stopIndex = Math.min(this.startIndex + this._options.pageSize, this.itemsCount));
+        this._options.placeholderChangedCallback(this.calcPlaceholderSize());
 
     }
 
     /**
      * Обнуляет данные о записях, стартует виртуальный скроллинг с нуля
      */
-    reset(): void {
+    reset(startIndex?: number): void {
         this.itemsHeights = [];
         this.itemsOffsets = [];
-        this.indexesChangedCallback(this.startIndex = 0, this.stopIndex = Math.min(this.startIndex + this.pageSize,
-            this.itemsCount));
-        this.placeholderChangedCallback(this.calcPlaceholderSize());
+        const initialIndex = startIndex || 0;
+
+        if (this._options.itemHeightProperty) {
+            this.recalcFromItemHeightProperty(initialIndex);
+        } else {
+            this.recalcRangeFromIndex(initialIndex);
+        }
+        this.actualizeSavedIndexes();
     }
 
     /**
@@ -180,7 +187,6 @@ export default class VirtualScrollController {
         const updateLength = Math.min(this.stopIndex - startIndex, items.length);
 
         this.updateItemsHeights(startIndex, updateLength);
-        this.updateItemsOffsets();
     }
 
     actualizeSavedIndexes(): void {
@@ -202,7 +208,7 @@ export default class VirtualScrollController {
         let canScroll = false;
 
         if (this.startIndex <= index && this.stopIndex >= index) {
-            if (this.viewportHeight < this.itemsContainer.offsetHeight - this.itemsOffsets[index]) {
+            if (this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index]) {
                 canScroll = true;
             }
         }
@@ -217,7 +223,7 @@ export default class VirtualScrollController {
      */
     setStartIndex(index: number): void {
         this.startIndex = Math.max(0, index);
-        this.stopIndex = Math.min(this.itemsCount, this.startIndex + this.pageSize);
+        this.stopIndex = Math.min(this.itemsCount, this.startIndex + this._options.pageSize);
     }
 
     getActiveElement(): number {
@@ -230,7 +236,7 @@ export default class VirtualScrollController {
         } else {
             let itemIndex;
             const halfDivider = 2;
-            const viewportCenter = this.scrollTop + (this.viewportHeight / halfDivider);
+            const viewportCenter = this.scrollTop + (this._options.viewportHeight / halfDivider);
 
             for (let i = this.startIndex; i < this.stopIndex; i++) {
                 if (this.itemsOffsets[i] < viewportCenter) {
@@ -246,6 +252,58 @@ export default class VirtualScrollController {
 
     getItemOffset(index: number): number {
         return this.itemsOffsets[index];
+    }
+
+    /**
+     * Проверяет что отображемые записи соответствуют текущему стейту видимых индексов
+     * @returns {boolean}
+     * @remark Иногда триггер может сообщить, что нужно совершить подгрузку, при этом предыдущая пачка записей еще не
+     * отрисовалась.
+     */
+    isLoaded(document?: Document): boolean {
+        let isLoaded = true;
+        let startChildrenIndex = 0;
+        let updateLength = this.stopIndex - this.startIndex;
+
+        for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
+            if (!this._itemsContainer.children[i].className.includes('ws-hidden')) {
+                startChildrenIndex = i;
+                break;
+            }
+        }
+
+        for (let i = 0; i < updateLength; i++) {
+            const child = this.itemsContainer.children[startChildrenIndex + i];
+
+            if (!child || child.className.includes('ws-hidden') || !document.body.contains(child)) {
+                isLoaded = false;
+            }
+        }
+
+        return isLoaded;
+    }
+
+    /**
+     * Высчитывает индексы видимого набора исходя из itemHeightProperty
+     * @param {number} startIndex
+     * @remark Если разработчик знает данные о высотах элементов и viewport, то он может указать их в данных элемента
+     * и рассчет видимого набора элементов будет выполнен без подсчета высот элементов
+     */
+    private recalcFromItemHeightProperty(startIndex: number): void {
+        let sumHeight = 0;
+        let stopIndex: number;
+
+        for (let i = startIndex; i < this.itemsCount; i++) {
+            const itemHeight = this._options.viewModel.at(i).getContents().get(this._options.itemHeightProperty);
+            if (sumHeight + itemHeight <= this._options.viewportHeight) {
+                stopIndex = i;
+                sumHeight += itemHeight;
+            } else {
+                break;
+            }
+        }
+
+        this.checkIndexesChanged(startIndex, stopIndex);
     }
 
     /**
@@ -270,7 +328,6 @@ export default class VirtualScrollController {
     /**
      * Добавляет высоты записей
      * @remark Используется при загрузке вверх, когда необходимо сместить индексы записей
-     * TODO В будущем высоты будут браться в itemHeightProperty
      * @param {number} itemIndex
      * @param {number} itemsHeightsCount
      */
@@ -317,10 +374,10 @@ export default class VirtualScrollController {
      */
     private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: CollectionItem<entityRecord>[],
                                         newItemsIndex: number, removedItems: CollectionItem<entityRecord>[], removedItemsIndex: number): void => {
-        const newModelChanged = this.useNewModel && action && action !== IObservable.ACTION_CHANGE;
+        const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
 
         if ((changesType === 'collectionChanged' || newModelChanged) && action) {
-            this.itemsCount = this.viewModel.getCount();
+            this.itemsCount = this._options.viewModel.getCount();
 
             if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
                 this.itemsAddedHandler(newItemsIndex, newItems);
@@ -342,7 +399,7 @@ export default class VirtualScrollController {
         // Обновляем виртуальный скроллинг, только если он инициализирован, так как в другом случае,
         // мы уже не можем на него повлиять
         if (this.itemsContainer) {
-            const direction = newItemsIndex <= this.viewModel.getStartIndex() ? 'up' : 'down';
+            const direction = newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
 
             if (direction === 'up' && this.itemsFromLoadToDirection) {
                 this.savedStopIndex += newItems.length;
@@ -352,7 +409,7 @@ export default class VirtualScrollController {
 
             this.recalcRangeToDirection(direction, false);
 
-            this.saveScrollPositionCallback(direction);
+            this._options.saveScrollPositionCallback(direction);
         }
     }
 
@@ -364,14 +421,14 @@ export default class VirtualScrollController {
         // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
         if (this.itemsContainer) {
             this.recalcRangeToDirection(
-                removedItemsIndex < this.viewModel.getStartIndex() ? 'up' : 'down', false
+                removedItemsIndex < this._options.viewModel.getStartIndex() ? 'up' : 'down', false
             );
         }
     }
 
     private isScrolledToBottom(): boolean {
         return this.stopIndex === this.itemsCount &&
-            this.scrollTop + this.viewportHeight === this.itemsContainerHeight;
+            this.scrollTop + this._options.viewportHeight === this.itemsContainerHeight;
     }
 
     private isScrolledToTop(): boolean {
@@ -386,8 +443,8 @@ export default class VirtualScrollController {
      */
     private checkIndexesChanged(newStartIndex: number, newStopIndex: number, direction?: string): void {
         if (this.stopIndex !== newStopIndex || this.startIndex !== newStartIndex) {
-            this.indexesChangedCallback(this.startIndex = newStartIndex, this.stopIndex = newStopIndex, direction);
-            this.placeholderChangedCallback(this.calcPlaceholderSize());
+            this._options.indexesChangedCallback(this.startIndex = newStartIndex, this.stopIndex = newStopIndex, direction);
+            this._options.placeholderChangedCallback(this.calcPlaceholderSize());
         }
     }
 
@@ -409,6 +466,7 @@ export default class VirtualScrollController {
      */
     private updateItemsHeights(startUpdateIndex: number, updateLength: number): void {
         let startChildrenIndex = 0;
+        let sum = 0;
 
         for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
             if (this._itemsContainer.children[i].className.indexOf('ws-hidden') === -1) {
@@ -418,19 +476,11 @@ export default class VirtualScrollController {
         }
 
         for (let i = 0; i < updateLength; i++) {
-            this.itemsHeights[startUpdateIndex + i] = getDimension(this._itemsContainer.children[startChildrenIndex + i] as HTMLElement).height;
-        }
-    }
+            const itemHeight = getDimension(this._itemsContainer.children[startChildrenIndex + i] as HTMLElement).height;
 
-    /**
-     * Обновляет оффсеты "видимого" набора данных
-     */
-    private updateItemsOffsets(): void {
-        let sum: number = 0;
-
-        for (let i = this.startIndex; i < this.stopIndex; i++) {
-            this.itemsOffsets[i] = sum;
-            sum += this.itemsHeights[i];
+            this.itemsHeights[startUpdateIndex + i] = itemHeight;
+            this.itemsOffsets[startUpdateIndex + i] = sum;
+            sum += itemHeight;
         }
     }
 
@@ -446,7 +496,7 @@ export default class VirtualScrollController {
 
         if (direction === 'up') {
             let stopIndex = this.stopIndex - 1;
-            const offsetDistance = this.viewportHeight * 2 + this.scrollTop + this.triggerOffset;
+            const offsetDistance = this._options.viewportHeight * 2 + this.scrollTop + this.triggerOffset;
 
             while (this.itemsOffsets[stopIndex] > offsetDistance) {
                 stopIndex--;
@@ -455,7 +505,7 @@ export default class VirtualScrollController {
         } else {
             let startIndex = this.startIndex;
             let sumHeight = 0;
-            const offsetDistance = this.scrollTop - this.triggerOffset - this.viewportHeight;
+            const offsetDistance = this.scrollTop - this.triggerOffset - this._options.viewportHeight;
 
 
             while (sumHeight + items[startIndex] < offsetDistance) {
