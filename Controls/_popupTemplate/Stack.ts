@@ -28,6 +28,7 @@ const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplate
  * @demo Controls-demo/Popup/Templates/StackTemplatePG
+ * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
  */
 
 /**
@@ -39,7 +40,13 @@ const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
 /**
  * @name Controls/_popupTemplate/Stack#headerBorderVisible
  * @cfg {Boolean} Определяет, будет ли отображаться граница шапки панели.
- * default true
+ * @default true
+ * @remark
+ * Позволяет скрыть отображение нижней границы headerContentTemplate. Используется для построения двухуровневых шапок.
+ * Необходимо поместить свой контейнер с шапкой в bodeContentTemplate и навесить класс,
+ * добавляющий фон для шапки: controls-StackTemplate__top-area-background_theme_{{_options.theme}},
+ * и класс, добавляющий нижнюю границу для шапки: controls-StackTemplate__top-area-border_theme_{{_options.theme}}
+ * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
  */
 
 /**

@@ -464,13 +464,18 @@ define(
             };
             view._source = source;
             view._dateRangeItem = dateItem;
-            view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31));
-            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
-            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");
-            assert.deepStrictEqual(newFilter, {
-               date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
-               author: 'Ivanov K.K.',
-               state: [1]});
+            return new Promise(function(resolve) {
+               view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31)).addCallback(function () {
+                  assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
+                  assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");
+                  assert.deepStrictEqual(newFilter, {
+                     date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
+                     author: 'Ivanov K.K.',
+                     state: [1]
+                  });
+                  resolve();
+               })
+            })
          });
 
          it('_private:getDateRangeItem', () => {
