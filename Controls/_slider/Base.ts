@@ -1,19 +1,16 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {ISlider, ISliderOptions} from './interface/ISlider';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-export interface ISliderBaseOptions extends IControlOptions {
+export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
    size?: string;
-   borderVisible?: boolean;
    minValue: number;
    maxValue: number;
-   scaleStep?: number;
    value: number;
-   precision: number;
-   tooltipFormatter?: Function;
 }
 
 const maxPercentValue = 100;
@@ -25,7 +22,7 @@ const maxPercentValue = 100;
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Base
- * @mixes Controls/_slider/ISlider
+ * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Base/SliderBaseDemo
  */
@@ -37,7 +34,7 @@ const maxPercentValue = 100;
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Base
- * @mixes Controls/_slider/ISlider
+ * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Base/SliderBaseDemo
  */
@@ -136,7 +133,7 @@ const maxPercentValue = 100;
  */
 
 
-class Base extends Control<ISliderBaseOptions> {
+class Base extends Control<ISliderBaseOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;

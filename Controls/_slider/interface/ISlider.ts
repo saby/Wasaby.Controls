@@ -1,7 +1,13 @@
+export interface ISliderOptions {
+    borderVisible?: boolean;
+    scaleStep?: number;
+    precision: number;
+    tooltipFormatter?: Function;
+}
 /**
  * Интерфейс для контрола Слайдер.
  *
- * @interface Controls/_slider/ISlider
+ * @interface Controls/_slider/interface/ISlider
  * @public
  * @author Бондарь А.В.
  */
@@ -9,13 +15,17 @@
 /*
  * Interface for the "Slider" control.
  *
- * @interface Controls/_slider/ISlider
+ * @interface Controls/_slider/interface/ISlider
  * @public
  * @author Бондарь А.В.
  */
 
+export interface ISlider {
+    readonly '[Controls/_slider/interface/ISlider]': boolean;
+}
+
 /**
- * @name Controls/_slider/ISlider#borderVisible
+ * @name Controls/_slider/interface/ISlider#borderVisible
  * @cfg {Boolean} Устанавливает границу вокруг контрола.
  * @example
  * Слайдер с границей:
@@ -25,7 +35,7 @@
  */
 
 /*
- * @name Controls/_slider/ISlider#borderVisible
+ * @name Controls/_slider/interface/ISlider#borderVisible
  * @cfg {Boolean} sets the stroke around control
  * @example
  * Slider with border
@@ -35,7 +45,7 @@
  */
 
 /**
- * @name Controls/_slider/ISlider#scaleStep
+ * @name Controls/_slider/interface/ISlider#scaleStep
  * @cfg {Number} Параметр scaleStep определяет шаг шкалы, расположенной под слайдером.
  * @remark Шкала отображается, когда опция {@link borderVisible} установлена в значения false, а параметр scaleStep положительный.
  * @example
@@ -46,7 +56,7 @@
  */
 
 /*
- * @name Controls/_slider/ISlider#scaleStep
+ * @name Controls/_slider/interface/ISlider#scaleStep
  * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
  * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
  * @example
@@ -57,7 +67,7 @@
  */
 
 /**
- * @name Controls/_slider/ISlider#precision
+ * @name Controls/_slider/interface/ISlider#precision
  * @cfg {Number} Количество символов в десятичной части.
  * @remark Должно быть неотрицательным.
  * @example
@@ -68,7 +78,7 @@
  */
 
 /*
- * @name Controls/_slider/ISlider#precision
+ * @name Controls/_slider/interface/ISlider#precision
  * @cfg {Number} Number of characters in decimal part.
  * @remark Must be non-negative
  * @example
@@ -79,7 +89,7 @@
  */
 
 /**
- * @name Controls/_slider/ISlider#tooltipFormatter
+ * @name Controls/_slider/interface/ISlider#tooltipFormatter
  * @cfg {Function} Функция форматирования подсказки.
  * @remark
  * Аргументы функции:
@@ -89,7 +99,7 @@
  */
 
 /*
- * @name Controls/_slider/ISlider#tooltipFormatter
+ * @name Controls/_slider/interface/ISlider#tooltipFormatter
  * @cfg {Function} Tooltip formatter function.
  * @remark
  * Function Arguments:

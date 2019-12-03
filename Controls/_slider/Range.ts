@@ -1,20 +1,17 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {ISlider, ISliderOptions} from './interface/ISlider';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
-export interface ISliderRangeOptions extends IControlOptions {
+export interface ISliderRangeOptions extends IControlOptions, ISliderOptions {
    size?: string;
-   borderVisible?: boolean;
    minValue: number;
    maxValue: number;
-   scaleStep?: number;
    startValue: number;
    endValue: number;
-   precision: number;
-   tooltipFormatter?: Function;
 }
 
 const maxPercentValue = 100;
@@ -26,7 +23,7 @@ const maxPercentValue = 100;
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Range
- * @mixes Controls/_slider/ISlider
+ * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Range/SliderRangeDemo
  */
@@ -38,7 +35,7 @@ const maxPercentValue = 100;
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Range
- * @mixes Controls/_slider/ISlider
+ * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Range/SliderRangeDemo
  */
@@ -163,7 +160,7 @@ const maxPercentValue = 100;
  */
 
 
-class Range extends Control<ISliderRangeOptions> {
+class Range extends Control<ISliderRangeOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
