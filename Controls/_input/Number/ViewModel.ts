@@ -1,6 +1,7 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 
+import toString from 'Controls/Utils/Formatting/toString';
 import {format} from 'Controls/_input/Number/format';
 import {IText, paste, replaceWithRepositioning} from 'Controls/_input/Base/Util';
 import {IParsedNumber, parse} from 'Controls/_input/Number/parse';
@@ -150,7 +151,7 @@ var ViewModel = BaseViewModel.extend({
      * @protected
      */
     _convertToDisplayValue: function (value) {
-        var displayValue = value === null ? '' : value.toString();
+        let displayValue = toString(value);
 
         if (displayValue && this._options.showEmptyDecimals) {
             return format(parse(displayValue, this._options), this._options, displayValue.length).value;

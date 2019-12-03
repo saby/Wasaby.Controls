@@ -16,6 +16,7 @@ import Deferred = require('Core/Deferred');
        * * 'sticky' — используйте опции {@link Controls/popup:Sticky}
        * <a href="/materials/demo-ws4-popup-edit">Демо-пример</a>
        * @class Controls/_popup/Opener/Edit
+       * @mixes Controls/interface/IOpener
        * @control
        * @public
        * @author Красильников А.С.

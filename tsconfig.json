@@ -5,12 +5,15 @@
     "outDir": "./application",
     "types": [
       "typedef",
-      "wasaby-app"
+      "wasaby-app",
+      "chai",
+      "mocha"
     ],
     "experimentalDecorators": true
   },
   "include": [
     "Controls/**/*.ts",
-    "Controls-demo/**/*.ts"
+    "Controls-demo/**/*.ts",
+    "tests/ControlsUnit/**/*.ts"
   ]
 }

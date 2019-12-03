@@ -332,6 +332,10 @@ define(
                },
                value: 123456.3,
                displayValue: '123 456.30'
+            }, {
+               options: {},
+               value: 1e21,
+               displayValue: '1000000000000000000000'
             }].forEach(function(test) {
                it(`value: ${test.value}, displayValue: ${test.displayValue}, options: ${JSON.stringify(test.options)}`, function() {
                   const model = new ViewModel(test.options, null);

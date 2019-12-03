@@ -61,12 +61,42 @@ define([
             };
             sandbox.stub(component, '_notify');
 
-            component._onResultWS3(startValue, endValue);
+            component._onResultWS3('event',startValue, endValue);
 
             sinon.assert.calledWith(component._notify, 'startValueChanged');
             sinon.assert.calledWith(component._notify, 'endValueChanged');
             sinon.assert.calledWith(component._notify, 'inputCompleted');
             sinon.assert.called(component._children.opener.close);
+            sandbox.restore();
+         });
+         it('shouldn\'t call _notify if startValue hasn\'t change', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(dateRange.Input, options),
+               startValue = new Date(2017, 11, 2);
+
+            sandbox.stub(component, '_notify');
+
+            component._rangeModel._startValue = startValue;
+
+            component._rangeModel.startValue = startValue;
+
+            sinon.assert.notCalled(component._notify);
+            sandbox.restore();
+         });
+         it('shouldn\'t call _notify if endValue hasn\'t change', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(dateRange.Input, options),
+               endValue = new Date(2017, 11, 2);
+
+            sandbox.stub(component, '_notify');
+
+            component._rangeModel._endValue = endValue;
+
+            component._rangeModel.endValue = endValue;
+
+            sinon.assert.notCalled(component._notify);
             sandbox.restore();
          });
       });

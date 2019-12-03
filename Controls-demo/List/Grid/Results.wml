@@ -1,5 +1,5 @@
 <ws:if data="{{ column.result }}">
-   <Controls.decorator:Money number="{{column.result}}" style="accentResults"/>
+   <Controls.decorator:Money value="{{column.result}}" style="accentResults"/>
 </ws:if>
 <ws:else>
    <invisible-node />

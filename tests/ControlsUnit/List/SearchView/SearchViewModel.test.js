@@ -226,5 +226,20 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          model.setHoveredItem(null);
          assert.isNull(model.getHoveredItem());
       });
+
+      it('_getDisplayItemCacheKey works for breadcrumbs', function() {
+         const model = new SearchViewModel({
+            root: 'myTestRoot',
+            keyProperty: 'id',
+            items: []
+         });
+
+         // emulate breadcrumbs
+         const crumbsDisplay = { getContents: () => [{}, {}, { id: 456 }] };
+         assert.strictEqual(
+            model._getDisplayItemCacheKey(crumbsDisplay),
+            '456_breadcrumbs'
+         );
+      });
    });
 });

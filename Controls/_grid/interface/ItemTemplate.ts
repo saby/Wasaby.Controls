@@ -6,13 +6,10 @@
  * @see Controls/grid:View#itemTemplateProperty
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/grid:ItemTemplate"
- *          marker="{{false}}"
- *          highlightOnHover="{{false}}"
- *          clickable="{{false}}">
+ *       <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}">
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>
@@ -36,8 +33,12 @@
  */
 /**
  * @name Controls/grid:ItemTemplate#clickable
- * @cfg {Boolean} Когда параметр установлен в значение true, используется {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} pointer, а в значении false — default.
+ * @cfg {Boolean} Устанавливает тип {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора}.
  * @default true
+ * Доступные значения
+ * 
+ * * **true** — используется курсор pointer.
+ * * **false** — используется курсор default.
  */
 /**
  * @name Controls/grid:ItemTemplate#contentTemplate
@@ -52,7 +53,7 @@
  * Работа с переменной показана в примере № 4.
  * @example
  * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/grid:ItemTemplate">
@@ -65,7 +66,7 @@
  * </pre>
  * 
  * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
- * <pre>
+ * <pre class="brush: html">
  * <!-- file1.wml --> 
  * <Controls.grid:View>
  *    <ws:itemTemplate>
@@ -74,7 +75,7 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * <ws:partial template="Controls/grid:ItemTemplate">
  *    <ws:contentTemplate>
@@ -85,7 +86,7 @@
  * 
  * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
  * 
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/grid:ItemTemplate">
@@ -97,13 +98,13 @@
  * </Controls.grid:View>
  * </pre>
  * 
- * <pre>
+ * <pre class="brush: html">
  * <!-- file2.wml -->
  * {{contentTemplate.itemData.item.title}}
  * </pre>
  * 
  * **Пример 4.** Для пользовательского шаблона задано отображение опций записи.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/grid:ItemTemplate">

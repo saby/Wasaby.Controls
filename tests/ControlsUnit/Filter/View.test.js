@@ -464,13 +464,18 @@ define(
             };
             view._source = source;
             view._dateRangeItem = dateItem;
-            view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31));
-            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
-            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");
-            assert.deepStrictEqual(newFilter, {
-               date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
-               author: 'Ivanov K.K.',
-               state: [1]});
+            return new Promise(function(resolve) {
+               view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31)).addCallback(function () {
+                  assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
+                  assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");
+                  assert.deepStrictEqual(newFilter, {
+                     date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
+                     author: 'Ivanov K.K.',
+                     state: [1]
+                  });
+                  resolve();
+               })
+            })
          });
 
          it('_private:getDateRangeItem', () => {
@@ -1011,6 +1016,25 @@ define(
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [], '-2': [4]});
                assert.deepStrictEqual(view._displayText.document, {text: 'Deleted', title: 'Deleted', hasMoreText: '' });
+            });
+
+            it ('moreButtonClick', function () {
+               let filterChanged, isClosed;
+               view._notify = (event, data) => {
+                  if (event === 'filterChanged') {
+                     filterChanged = data[0];
+                  }
+               };
+               let eventResult = {
+                  action: 'moreButtonClick',
+                  id: 'document'
+               };
+               view._children = {
+                  StickyOpener: { close: () => {isClosed = true;} }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.strictEqual(view._idOpenSelector, 'document');
+               assert.isTrue(isClosed);
             });
          });
 

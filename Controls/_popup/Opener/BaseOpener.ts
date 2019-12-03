@@ -304,7 +304,9 @@ class BaseOpener extends Control<IControlOptions> {
                     });
                 });
             } else if (BaseOpener.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-                BaseOpener._openPopup(popupId, cfg, controller, def);
+                BaseOpener.getManager().then(() => {
+                    BaseOpener._openPopup(popupId, cfg, controller, def);
+                });
             } else {
                 requirejs(['Controls/compatiblePopup'], function(compatiblePopup) {
                     compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl);
@@ -606,15 +608,32 @@ class BaseOpener extends Control<IControlOptions> {
     // TODO Compatible
     static getManager() {
         if (!ManagerWrapperCreatingPromise) {
-            const managerContainer = document.createElement('div');
-            managerContainer.classList.add('controls-PopupContainer');
-            document.body.insertBefore(managerContainer, document.body.firstChild);
+            if (!isNewEnvironment()) {
+                const managerContainer = document.createElement('div');
+                managerContainer.classList.add('controls-PopupContainer');
+                document.body.insertBefore(managerContainer, document.body.firstChild);
 
-            ManagerWrapperCreatingPromise = new Promise((resolve) => {
-                require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
-                    Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
+                ManagerWrapperCreatingPromise = new Promise((resolve) => {
+                    require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
+                        Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
+                    });
                 });
-            });
+            } else {
+                // Защита от случаев, когда позвали открытие окна до полного построения страницы
+                if (ManagerController.getManager()) {
+                    return Promise.resolve();
+                } else {
+                    ManagerWrapperCreatingPromise = new Promise((resolve) => {
+                        const intervalDelay: number = 20;
+                        const intervalId: number = setInterval(() => {
+                            if (ManagerController.getManager()) {
+                                clearInterval(intervalId);
+                                resolve();
+                            }
+                        }, intervalDelay);
+                    });
+                }
+            }
         }
 
         return ManagerWrapperCreatingPromise;

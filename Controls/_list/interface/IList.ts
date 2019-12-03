@@ -494,7 +494,7 @@
  *    this._myItems.removeAt(0);
  * }
  * </pre>
- * @see Controls/_list/interface/IList#dataLoadCallback
+ * @see Controls/list:IList#dataLoadCallback
  */
 
 /**
@@ -514,7 +514,7 @@
  *    });
  * }
  * </pre>
- * @see Controls/_list/interface/IList#itemsReadyCallback
+ * @see Controls/list:IList#itemsReadyCallback
  */
 
 /**
@@ -544,7 +544,9 @@
  */
 
 /**
- * Перезагружает данные из источника данных.
+ * Перезагружает данные из источника данных. 
+ * При перезагрузке в фильтр уходит список развернутых узлов (с целью восстановить пользователю структуру, которая была до перезагрузки). 
+ * В дальнейшем также планируется передавать навигацию, в настоящее время этот функционал в разработке.
  * @function 
  * @name Controls/_list/interface/IList#reload
  */

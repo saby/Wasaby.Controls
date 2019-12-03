@@ -374,6 +374,10 @@ export default class VirtualScrollController {
             if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
                 this.itemsRemovedHandler(removedItemsIndex, removedItems);
             }
+
+            if (action === IObservable.ACTION_RESET) {
+                this.reset();
+            }
         }
     }
 
