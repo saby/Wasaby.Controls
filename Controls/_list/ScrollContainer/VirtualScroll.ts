@@ -283,6 +283,12 @@ export default class VirtualScrollController {
         return isLoaded;
     }
 
+    /**
+     * Высчитывает индексы видимого набора исходя из itemHeightProperty
+     * @param {number} startIndex
+     * @remark Если разработчик знает данные о высотах элементов и viewport, то он может указать их в данных элемента
+     * и рассчет видимого набора элементов будет выполнен без подсчета высот элементов
+     */
     private recalcFromItemHeightProperty(startIndex: number): void {
         let sumHeight = 0;
         let stopIndex: number;

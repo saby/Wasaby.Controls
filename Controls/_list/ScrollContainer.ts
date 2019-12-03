@@ -56,7 +56,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private indicatorTimeout: number;
 
     // Стейт отвечающий за показ синхронного индикатора загрузки
-    private indicatorState: string;
+    private indicatorState: 'up' | 'down';
 
     // Флаг фейкового скролла, необходим для корректного рассчета активного элемента
     private fakeScroll: boolean = false;
