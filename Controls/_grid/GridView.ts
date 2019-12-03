@@ -296,6 +296,9 @@ var
             if (this._options.header && this._options.items === null && newCfg.items) {
                this._isHeaderChanged = true;
             }
+            if (this._options.columnScroll !== newCfg.columnScroll) {
+                this._listModel.setColumnScroll(newCfg.columnScroll);
+            }
         },
 
         _afterRender() {
