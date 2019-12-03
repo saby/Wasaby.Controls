@@ -8,7 +8,6 @@ define('Controls-demo/List/Grid/ColumnScroll', [
    'wml!Controls-demo/List/Grid/DemoCostPrice',
    'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
    'wml!Controls-demo/List/Grid/DemoName',
-   'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
    'Controls/scroll',
    'Controls/grid',
