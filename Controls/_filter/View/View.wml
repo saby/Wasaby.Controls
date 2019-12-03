@@ -17,7 +17,11 @@
 <div class="controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}">
    <div class="controls-FilterView__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{_dateRangeItem}}">
-         <ws:partial template="Controls/_filter/Editors/DateRange" scope="{{_dateRangeItem.editorOptions}}" value="{{_dateRangeItem.value}}" on:rangeChanged="_rangeChangedHandler()"/>
+         <ws:partial template="Controls/_filter/Editors/DateRange"
+                     scope="{{_dateRangeItem.editorOptions}}"
+                     templateName="{{_dateRangeItem.editorTemplateName}}"
+                     value="{{_dateRangeItem.value}}"
+                     on:rangeChanged="_rangeChangedHandler()"/>
       </ws:if>
       <ws:if data="{{_needShowFastFilter(_source) && _isFastReseted() && _options.detailPanelTemplateName}}">
          <ws:partial template="itemTemplate"
@@ -62,7 +66,7 @@
            _vdomOnOldPage="{{true}}"
            on:result="_resultHandler()">
    </Controls.popup:Sticky>
-   <wS:if data="{{_hasSelectorTemplate}}">
+   <ws:if data="{{_hasSelectorTemplate}}">
       <Controls.popup:Stack name="selectorOpener" on:result="_onSelectorTemplateResult()" />
-   </wS:if>
+   </ws:if>
 </div>

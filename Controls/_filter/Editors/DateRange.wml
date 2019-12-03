@@ -1,7 +1,7 @@
-<Controls.dateRange:LiteSelector
-        attr:class="controls-FilterEditor-DateRange"
-        scope="{{_options}}"
-        startValue="{{_options.value[0]}}"
-        endValue="{{_options.value[1]}}"
-        on:rangeChanged="_rangeChanged()"
+<ws:partial template="{{_options.templateName || 'Controls/dateRange:LiteSelector'}}"
+            attr:class="controls-FilterEditor-DateRange"
+            scope="{{_options}}"
+            startValue="{{_options.value[0]}}"
+            endValue="{{_options.value[1]}}"
+            on:rangeChanged="_rangeChanged()"
 />
