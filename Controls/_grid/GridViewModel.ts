@@ -1893,6 +1893,10 @@ var
             this._model.clearReloadedMarks();
         },
 
+        hasModelOptions(): boolean {
+            return !!this._options;
+        },
+
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
