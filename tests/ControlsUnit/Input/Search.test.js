@@ -121,12 +121,15 @@ define(
             });
 
             it('isVisibleResetButton', function() {
-               let self = { _options: { readOnly: false, value: '' } };
-               assert.isFalse(searchMod.Input._private.isVisibleResetButton.call(self));
-               self._options.value = 'test text';
-               assert.isTrue(searchMod.Input._private.isVisibleResetButton.call(self));
-               self._options.readOnly = true;
-               assert.isFalse(searchMod.Input._private.isVisibleResetButton.call(self));
+               let search = new searchMod.Input();
+               search._beforeMount({ readOnly: false, value: '' });
+               assert.isFalse(searchMod.Input._private.isVisibleResetButton.call(search));
+
+               search._viewModel.displayValue = 'test text';
+               assert.isTrue(searchMod.Input._private.isVisibleResetButton.call(search));
+
+               search._options.readOnly = true;
+               assert.isFalse(searchMod.Input._private.isVisibleResetButton.call(search));
             });
          });
       });
