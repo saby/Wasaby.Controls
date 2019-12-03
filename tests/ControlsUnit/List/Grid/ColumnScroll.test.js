@@ -20,6 +20,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                isFullGridSupport: () => true,
                isNoGridSupport: () => false,
                getResultsPosition: () => undefined,
+               hasModelOptions: () => true,
                getItems: () => ({
                   getCount: () => 3
                })
@@ -161,7 +162,8 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                listModel: {
                   isFullGridSupport: () => true,
                   isNoGridSupport: () => false,
-                  getResultsPosition: () => undefined
+                  getResultsPosition: () => undefined,
+                  hasModelOptions: () => true,
                }
             },
             endColumnScroll = new ColumnScroll(cfg);
@@ -558,6 +560,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                isFullGridSupport: () => true,
                isNoGridSupport: () => false,
                getResultsPosition: () => undefined,
+               hasModelOptions: () => true,
                getItems: () => ({
                   getCount: () => 3
                })
@@ -720,6 +723,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                isFullGridSupport: () => true,
                isNoGridSupport: () => false,
                getResultsPosition: () => undefined,
+               hasModelOptions: () => true,
                getItems: () => ({
                   getCount: () => 3
                })
@@ -921,7 +925,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._leftOffsetForHScroll, 0);
          assert.equal(columnScroll._offsetForHScroll, 0);
 
-
+         columnScroll._isFullGridSupport = true;
+         columnScroll._options.listModel.hasModelOptions = () => false;
+         columnScroll._setOffsetForHScroll();
+         assert.equal(columnScroll._offsetForHScroll, 50);
       });
    });
 });
