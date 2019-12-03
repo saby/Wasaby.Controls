@@ -3,7 +3,7 @@
             itemData="{{itemData}}">
    <ws:contentTemplate>
       <Controls.decorator:Money number="{{itemData.item[itemData.column.displayProperty]}}"
-                                style="{{itemData.column.displayProperty !== 'sum' ? 'noBasicRegistry' : ''}}"
+                                style="{{itemData.column.displayProperty !== 'sum' ? 'noBasicRegistry' : 'default'}}"
                                 delimiters="{{true}}"/>
       <span if="{{!itemData.dispItem.isNode() && itemData.columnIndex === 1}}">шт</span>
    </ws:contentTemplate>
