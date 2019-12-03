@@ -19,6 +19,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             listModel: {
                isFullGridSupport: () => true,
                getResultsPosition: () => undefined,
+               hasModelOptions: () => true,
                getItems: () => ({
                   getCount: () => 3
                })
@@ -157,7 +158,8 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                columnScrollStartPosition: 'end',
                listModel: {
                   isFullGridSupport: () => true,
-                  getResultsPosition: () => undefined
+                  getResultsPosition: () => undefined,
+                   hasModelOptions: () => true,
                }
             },
             endColumnScroll = new ColumnScroll(cfg);
@@ -553,6 +555,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             listModel: {
                isFullGridSupport: () => true,
                getResultsPosition: () => undefined,
+               hasModelOptions: () => true,
                getItems: () => ({
                   getCount: () => 3
                })
@@ -714,6 +717,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             listModel: {
                isFullGridSupport: () => true,
                getResultsPosition: () => undefined,
+               hasModelOptions: () => true,
                getItems: () => ({
                   getCount: () => 3
                })
@@ -909,6 +913,11 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          columnScroll._leftOffsetForHScroll = 0;
          columnScroll._offsetForHScroll = 0;
+
+          columnScroll._isFullGridSupport = true;
+          columnScroll._options.listModel.hasModelOptions = () => false;
+          columnScroll._setOffsetForHScroll();
+          assert.equal(columnScroll._offsetForHScroll, 50);
       });
    });
 });

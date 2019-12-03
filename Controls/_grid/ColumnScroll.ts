@@ -150,7 +150,7 @@ const
               }
               self._offsetForHScroll += firstCell.offsetHeight;
           }
-          if (self._options.listModel.getResultsPosition() === 'top') {
+          if (self._options.listModel.hasModelOptions() && self._options.listModel.getResultsPosition() === 'top') {
               const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
               if (ResultsContainer && !!ResultsContainer.length) {
                   self._offsetForHScroll += ResultsContainer[0].offsetHeight;
