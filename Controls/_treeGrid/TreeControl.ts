@@ -84,7 +84,7 @@ var _private = {
             !_private.isExpandAll(self._options.expandedItems) &&
             !self._nodesSourceControllers[nodeKey] &&
             !dispItem.isRoot() &&
-            (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
+            _private.shouldLoadChildren(self, nodeKey)
         ) {
             self._children.baseControl.showIndicator();
             filter[options.parentProperty] = nodeKey;
@@ -107,15 +107,10 @@ var _private = {
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
         }
     },
-    shouldLoadChildren: function(self, node): boolean {
-        if (self._options.hasChildrenProperty) {
-            const
-                listViewModel = self._children.baseControl.getViewModel(),
-                hasChildren = node.get(self._options.hasChildrenProperty),
-                children = hasChildren && listViewModel.getChildren(node.getId());
-            return hasChildren && (!children || children.length === 0);
-        }
-        return true;
+    shouldLoadChildren: function(self, nodeKey): boolean {
+        // загружаем узел только в том случае, если он не был загружен ранее
+        // это можно определить по наличию его nodeSourceController'a
+        return !self._nodesSourceControllers[nodeKey];
     },
     prepareHasMoreStorage(sourceControllers: Record<string, SourceController>): Record<string, boolean> {
         const hasMore = {};
@@ -277,6 +272,16 @@ var _private = {
                 if (!isEqual({}, hasMore)) {
                     viewModel.setHasMoreStorage(hasMore);
                 }
+            }
+            if (loadedList) {
+                loadedList.each((item) => {
+                    if (item.get(options.nodeProperty) !== null) {
+                        const itemKey = item.getId();
+                        if (!self._nodesSourceControllers[itemKey] && viewModel.getChildren(itemKey, loadedList).length) {
+                            _private.createSourceControllerForNode(self, itemKey, options.source, options.navigation);
+                        }
+                    }
+                });
             }
         }
         // reset deepReload after loading data (see reload method or constructor)
