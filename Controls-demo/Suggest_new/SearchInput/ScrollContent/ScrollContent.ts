@@ -3,8 +3,8 @@ import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import {Memory} from 'Types/source';
 import {_departmentsDataLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
-import controlTemplate = require('wml!Controls-demo/Suggest_new/Input/Navigation/Navigation');
-import suggestTemplate = require('wml!Controls-demo/Suggest_new/Input/Navigation/resources/SuggestTemplate');
+import controlTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/ScrollContent/ScrollContent');
+import suggestTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/ScrollContent/resources/SuggestTemplate');
 import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control{
@@ -12,8 +12,6 @@ export default class extends Control{
    private _suggestTemplate: TemplateFunction = suggestTemplate;
    private _source: Memory;
    private _navigation: object;
-   private _maxCountNavigation: object;
-
    protected _beforeMount() {
       this._source = new SearchMemory({
          keyProperty: 'id',
@@ -25,21 +23,9 @@ export default class extends Control{
          source: 'page',
          view: 'page',
          sourceConfig: {
-            pageSize: 12,
+            pageSize: 2,
             page: 0,
             hasMore: false
-         }
-      };
-      this._maxCountNavigation = {
-         source: 'page',
-         view: 'maxCount',
-         sourceConfig: {
-            pageSize: 4,
-            page: 0,
-            hasMore: false
-         },
-         viewConfig: {
-            maxCountValue: 12
          }
       };
    }
