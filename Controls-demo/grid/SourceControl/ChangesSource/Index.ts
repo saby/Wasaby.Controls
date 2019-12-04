@@ -6,23 +6,6 @@ import Deferred = require('Core/Deferred');
 
 import 'css!Controls-demo/Controls-demo'
 
-class demoSource extends Memory {
-    queryNumber: number = 0;
-    pending: Promise<any>;
-    private query(query) {
-        const self = this;
-        // return this.pending.addCallback(() => {
-            return super.query.apply(this, arguments).addCallback((items) => {
-                const rawData = items.getRawData();
-                rawData.meta.more = this.queryNumber < 2;
-                items.setRawData(rawData);
-                this.queryNumber++;
-                return items;
-            });
-        // })
-
-    }
-}
 
 const data = [
     {
@@ -61,6 +44,26 @@ const data = [
 
     }];
 
+class demoSource extends Memory {
+    queryNumber: number = 0;
+    pending: Promise<any>;
+    private query(query) {
+        const self = this;
+        // return this.pending.addCallback(() => {
+        return super.query.apply(this, arguments).addCallback((items) => {
+            const rawData = items.getRawData();
+            rawData.items = data.filter((cur) => cur.load === this.queryNumber);
+            rawData.meta.more = this.queryNumber < 2;
+            rawData.meta.total = rawData.items.length;
+            items.setRawData(rawData);
+            this.queryNumber++;
+            return items;
+        });
+        // })
+
+    }
+}
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;
@@ -79,16 +82,13 @@ export default class extends Control {
             source: 'page',
             view: 'infinity',
             sourceConfig: {
-                pageSize: 5,
+                pageSize: 3,
                 page: 0,
             },
         };
         this._viewSource2 = new demoSource({
             keyProperty: 'id',
             data: data,
-            filter: function(item) {
-                return item.get('load') === this.queryNumber;
-            }
         });
         // window.testCounter = 0;
         // const originalQuery = this._viewSource2.query;
