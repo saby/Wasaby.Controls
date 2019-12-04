@@ -70,6 +70,7 @@ type GetSourceResult = {
          isEqualItems: function(oldList:RecordSet, newList:RecordSet):boolean {
             return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
                (newList.getModel() === oldList.getModel()) &&
+               (newList.getKeyProperty() === oldList.getKeyProperty()) &&
                (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
          },
