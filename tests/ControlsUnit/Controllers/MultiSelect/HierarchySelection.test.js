@@ -19,7 +19,7 @@ define([
             excludedKeys: [],
             keyProperty: ListData.KEY_PROPERTY,
             listModel: getListModel(),
-            selectionStrategy: new DeepTreeSelectionStrategy.default()
+            selectionStrategy: new DeepTreeSelectionStrategy.default({})
          }, config || {});
       }
 

@@ -89,7 +89,7 @@ var _private = {
       if (suggestBottomSideCoord < 0) {
          height = suggestSize.height + suggestBottomSideCoord + 'px';
       } else if (suggestBottomSideCoord > dropDownContainerSize.height) {
-         height = suggestSize.height - (suggestBottomSideCoord - dropDownContainerSize.height) + 'px';
+         height = dropDownContainerSize.height - suggestSize.top + 'px';
       } else if (height) {
          height = 'auto';
       }

@@ -493,6 +493,44 @@ define([
          assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called.');
       });
 
+      it('save loaded items into the controls\' state', async function () {
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                source: new sourceLib.Memory({}),
+                viewModelConstructor: lists.ListViewModel,
+             },
+             loadedItems = new collection.RecordSet({
+                keyProperty: 'id',
+                rawData: [
+                   {
+                      id: 1,
+                      title: 'qwe'
+                   }
+                ]
+             }),
+             ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         // Empty list
+         assert.isUndefined(ctrl._loadedItems);
+
+         ctrl._sourceController.load = () => ({
+            addCallback(fn) {
+               fn(loadedItems);
+               return {
+                  addErrback: () => {}
+               };
+            }
+         });
+
+         await ctrl.reload();
+
+         assert.deepEqual(ctrl._loadedItems, loadedItems);
+      });
+
       it('_needScrollCalculation', function(done) {
          var source = new sourceLib.Memory({
             keyProperty: 'id',
@@ -4117,17 +4155,19 @@ define([
                   return 1;
                }
             },
-            _notify: () => {
-            },
-            _isMounted: true
+            _notify: () => {},
+            _isMounted: true,
+         };
+         const navigation = {
+            view: 'maxCount'
          };
          var emptyList = new collection.List();
          var list = new collection.List({ items: [{ test: 'testValue' }] });
 
-         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList, navigation);
          assert.equal(baseControlMock._loadingState, 'down');
 
-         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list, navigation);
          assert.isNull(baseControlMock._loadingState);
 
       });

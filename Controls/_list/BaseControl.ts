@@ -210,7 +210,7 @@ var _private = {
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
-                _private.resolveIndicatorStateAfterReload(self, list);
+                _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
                 resDeferred.callback({
                     data: list
@@ -270,7 +270,7 @@ var _private = {
         return options.hasOwnProperty('selectedKeysCount');
     },
 
-    resolveIndicatorStateAfterReload: function(self, list):void {
+    resolveIndicatorStateAfterReload: function(self, list, navigation):void {
         if (!self._isMounted) {
             return;
         }
@@ -279,9 +279,14 @@ var _private = {
         const hasMoreDataUp = self._sourceController.hasMoreData('up');
 
         if (!list.getCount()) {
-            //because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
-            //otherwise empty template will shown
-            if ((hasMoreDataDown || hasMoreDataUp) && self._needScrollCalculation) {
+            const needShowIndicatorByNavigation =
+                (navigation && navigation.view === 'maxCount') ||
+                self._needScrollCalculation;
+            const needShowIndicatorByMeta = hasMoreDataDown || hasMoreDataUp;
+
+            // because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
+            // otherwise empty template will shown
+            if (needShowIndicatorByNavigation && needShowIndicatorByMeta) {
                 if (self._listViewModel && self._listViewModel.getCount()) {
                     _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
                 } else {
@@ -296,7 +301,7 @@ var _private = {
     },
 
     scrollToItem: function(self, key) {
-        self._children.scrollController.scrollToItem(key);
+        return self._children.scrollController.scrollToItem(key);
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
@@ -444,7 +449,7 @@ var _private = {
             if (userCallback && userCallback instanceof Function) {
                 userCallback(addedItems, direction);
             }
-            _private.resolveIndicatorStateAfterReload(self, addedItems);
+            _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
 
             if (self._options.virtualScrolling && self._isMounted) {
                 self._children.scrollController.itemsFromLoadToDirection = true;
@@ -1403,7 +1408,6 @@ var _private = {
  * @mixes Controls/interface/INavigation
  @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/_list/interface/IBaseControl
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
  * @control
@@ -1662,6 +1666,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._loadOffsetBottom = bottom;
     },
 
+    changeIndicatorStateHandler(_: SyntheticEvent<Event>, state: boolean, indicatorName: 'top' | 'bottom'): void {
+          if (state) {
+              this._children[`${indicatorName}LoadingIndicator`].style.display = '';
+          } else {
+              this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
+          }
+    },
+
     _viewResize(): void {
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
@@ -1861,7 +1873,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     scrollToItem(key: string|number): void {
-        _private.scrollToItem(this, key);
+        return _private.scrollToItem(this, key);
     },
 
     _beforeUnmount: function() {
@@ -2359,19 +2371,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     },
 
-    _getLoadingIndicatorClasses(): string {
+    _getLoadingIndicatorClasses(state?: string): string {
         const hasItems = !!this._items && !!this._items.getCount();
         return _private.getLoadingIndicatorClasses({
             hasItems,
             hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: this._loadingIndicatorState
+            loadingIndicatorState: state || this._loadingIndicatorState
         });
     },
 
-    _getLoadingIndicatorStyles(): string {
+    _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
+        const indicatorState = state || this._loadingIndicatorState;
 
-        if (this._loadingIndicatorState === 'all') {
+        if (indicatorState === 'all') {
             if (this._loadingIndicatorContainerHeight) {
                 styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
             }
@@ -2421,7 +2434,9 @@ BaseControl.getDefaultOptions = function() {
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
         stickyHeader: true,
-        selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
+        selectionStrategy: {
+           name: 'Controls/operations:FlatSelectionStrategy'
+        },
         virtualScrollMode: 'remove'
     };
 };

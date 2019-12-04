@@ -541,12 +541,13 @@ const Manager = Control.extend({
         }
         const item = this._createItemConfig(options, controller);
         const defaultConfigResult = controller.getDefaultConfig(item);
-        _private.addElement(item);
         if (defaultConfigResult instanceof Promise) {
             defaultConfigResult.then(() => {
+                _private.addElement(item);
                 _private.redrawItems();
             });
         } else {
+            _private.addElement(item);
             _private.redrawItems();
         }
         return item.id;

@@ -10,6 +10,8 @@
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes INotification Controls/_popupTemplate/Notification/interface/INotification
+ * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
+ * 
  * @public
  * @author Крайнов Д.О.
  */
@@ -24,6 +26,7 @@
  * @includes InfoBox Controls/_popupTemplate/InfoBox
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
+ * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
  * @public
  * @author Крайнов Д.О.
  */

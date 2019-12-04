@@ -114,8 +114,7 @@ var Component = Control.extend([], {
     },
 
     _onResult: function (startValue, endValue) {
-        this._rangeModel.startValue = startValue;
-        this._rangeModel.endValue = endValue;
+        this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
         this._notifyInputCompleted();
     },
