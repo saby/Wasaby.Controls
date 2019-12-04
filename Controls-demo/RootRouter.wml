@@ -18,7 +18,7 @@
             </ws:if>
             <ws:else>
                <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&#160;<a href='#' on:click="goHomeHandler()">разводящую</a></div>
-            </ws:else>/vdomSynchronizer.test.js
+            </ws:else>
          </Controls-demo.RootTemplateWrapper>
       </Router.router:Route>
    </Controls.scroll:Container>
