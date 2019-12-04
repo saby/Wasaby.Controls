@@ -39,7 +39,7 @@ export default class extends Control{
             hasMore: false
          },
          viewConfig: {
-            maxCountValue: 4
+            maxCountValue: 12
          }
       };
    }
