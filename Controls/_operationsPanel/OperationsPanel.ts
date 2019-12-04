@@ -180,10 +180,10 @@ var _private = {
 /**
  * @name Controls/_operationsPanel/OperationsPanel#selectionViewMode
  * @cfg {String} Задает отображение кнопки "Показать отмеченные" в меню мультивыбора.
- * @variant undefined Кпопка скрыта
+ * @variant null Кпопка скрыта
  * @variant all Кнопка "Показать отмеченные"
  * @variant selected Кнопка "Показать все"
- * @default undefined
+ * @default null
  * @example
  * <pre>
  *    Control.extend({
