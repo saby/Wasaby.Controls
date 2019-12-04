@@ -103,7 +103,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.reset();
 
             assert.equal(0, affectingInstance.startIndex, 'with item height property');
-            assert.equal(6, affectingInstance.stopIndex);
+            assert.equal(8, affectingInstance.stopIndex);
         });
         it('recalcItemsHeights', () => {
             const instance = new VirtualScroll(defaultOptions);
@@ -146,7 +146,8 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.viewportHeight = 400;
 
             assert.isTrue(instance.canScrollToItem(1));
-            assert.isFalse(instance.canScrollToItem(19));
+            assert.isFalse(instance.canScrollToItem(18));
+            assert.isTrue(instance.canScrollToItem(19));
             assert.isFalse(instance.canScrollToItem(21));
         });
         it('recalcFromScrollTop', () => {
