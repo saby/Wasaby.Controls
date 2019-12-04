@@ -52,7 +52,9 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
         this._borderStyle = this._prepareBorderStyle(options);
     }
 
-    private _closeClick(): void {
+    private _closeClick(ev: Event): void {
+        // Клик по крестику закрытия не должен всплывать выше и обрабатываться событием click на контейнере
+        ev.stopPropagation();
         this._notify('close', []);
     }
 
