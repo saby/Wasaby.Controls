@@ -41,16 +41,16 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    let sorting = cfg.sorting;
    let filter = cfg.filter;
 
-   const getSortingPromise = PropStorageUtil.loadSavedConfig;
-   const getFilterPromise = FilterController.getCalculatedFilter;
+   let sortingPromise;
+   let filterPromise;
    if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
-      getFilterPromise(cfg);
+      filterPromise = FilterController.getCalculatedFilter(cfg);
    }
    if (cfg.propStorageId) {
-      getSortingPromise(cfg.propStorageId, ['sorting']);
+      sortingPromise = PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']);
    }
 
-   return Promise.all([getFilterPromise, getSortingPromise]).then((resolvedData: Array) => {
+   return Promise.all([filterPromise, sortingPromise]).then((resolvedData: Array) => {
       let [filterObject, loadedCfg] = resolvedData;
       if (loadedCfg && loadedCfg.sorting) {
          sorting = loadedCfg.sorting;
