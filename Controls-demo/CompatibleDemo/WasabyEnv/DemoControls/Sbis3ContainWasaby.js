@@ -1,6 +1,6 @@
-define('Controls-demo/CompatibleDemo/Compat/DemoControls/OldWrapperForWasaby', [
+define('Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/Sbis3ContainWasaby', [
    'Lib/Control/CompoundControl/CompoundControl',
-   'wml!Controls-demo/CompatibleDemo/Compat/DemoControls/OldWrapperForWasaby',
+   'wml!Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/Sbis3ContainWasaby',
    'UI/Base',
    'Vdom/Vdom',
    'Controls/_input/Text',
@@ -11,17 +11,24 @@ define('Controls-demo/CompatibleDemo/Compat/DemoControls/OldWrapperForWasaby', [
       _dotTplFn: template,
       _text: null,
 
-      init: function() {
+      init: function(opts) {
          CompatibleDemoNext.superclass.init.call(this);
          this.myTextBoxElement = this._container.find('.for__ws4');
          this.myTextBox = Base.Control.createControl(
             Text,
             {
-               name: 'myTextBox',
-               value: this._text,
+               name: 'myTextBoxWasaby',
             },
             this.myTextBoxElement
          );
+         makeInstanceCompatible(this.myTextBox);
+         this.subscribeTo(this.myTextBox, 'onTextChange', function() {
+         //    alert(1);
+         });
+      },
+
+      setTest: function(){
+         this.getContainer().find('.textBox');
       },
 
       destroy: function() {

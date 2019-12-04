@@ -1,11 +1,11 @@
-define('Controls-demo/CompatibleDemo/Compat/DemoControls/OldWrapperForWasaby', [
+define('Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/WS3Container', [
    'Lib/Control/CompoundControl/CompoundControl',
-   'wml!Controls-demo/CompatibleDemo/Compat/DemoControls/OldWrapperForWasaby',
+   'wml!Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/WS3Container',
    'UI/Base',
    'Vdom/Vdom',
-   'Controls/_input/Text',
+   'Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/WasabyContainer',
    'Core/helpers/Hcontrol/makeInstanceCompatible'
-], function(CompoundControl, template, Base, Vdom, Text, makeInstanceCompatible) {
+], function(CompoundControl, template, Base, Vdom, WasabyContainer, makeInstanceCompatible) {
 
    var CompatibleDemoNext = CompoundControl.extend({
       _dotTplFn: template,
@@ -15,15 +15,17 @@ define('Controls-demo/CompatibleDemo/Compat/DemoControls/OldWrapperForWasaby', [
          CompatibleDemoNext.superclass.init.call(this);
          this.myTextBoxElement = this._container.find('.for__ws4');
          this.myTextBox = Base.Control.createControl(
-            Text,
+            WasabyContainer,
             {
-               name: 'myTextBox',
-               value: this._text,
+               name: 'myTextBox'
             },
             this.myTextBoxElement
          );
       },
 
+      setTest: function(){
+         this.getContainer().find('.textBox');
+      },
       destroy: function() {
          if (this.myTextBox) {
             Vdom.Synchronizer.unMountControlFromDOM(
