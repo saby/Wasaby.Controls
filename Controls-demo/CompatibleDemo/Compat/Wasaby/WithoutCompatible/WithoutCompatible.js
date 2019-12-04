@@ -1,7 +1,7 @@
-define('Controls-demo/CompatibleDemo/Compat/Wasaby/WithoutCompatible',
+define('Controls-demo/CompatibleDemo/Compat/Wasaby/WithoutCompatible/WithoutCompatible',
    [
       'Lib/Control/CompoundControl/CompoundControl',
-      'wml!Controls-demo/CompatibleDemo/Compat/Wasaby/WithoutCompatible',
+      'wml!Controls-demo/CompatibleDemo/Compat/Wasaby/WithoutCompatible/WithoutCompatible',
       'css!Controls-demo/CompatibleDemo/CompatibleDemo'
    ],
    function(CompoundControl, template) {

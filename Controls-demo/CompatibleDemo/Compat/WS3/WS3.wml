@@ -7,4 +7,3 @@
         <SBIS3.CONTROLS.TextBox text="{{ 'myContextFieldName'|mutable:_text }}" name="myTextBox"/>
     </div>
 </div>
-

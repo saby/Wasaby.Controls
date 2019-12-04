@@ -6,18 +6,7 @@
         <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
             <Router.router:Route mask="app/:app">
                 <Controls-demo.RootTemplateWrapper>
-                    <ws:if data="{{content.app && content.templateLoaded}}">
-                        <ws:if data="{{ isReloading }}">
-                            <invisible-node/>
-                        </ws:if>
-                        <ws:else>
-                            <Controls.Container.Async templateName="{{content.app}}"
-                                                      attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
-                        </ws:else>
-                    </ws:if>
-                    <ws:else>
-                        <div>Может быть перейти на&nbsp;<a href='#' on:click="goHomeHandler()">разводящую</a></div>
-                    </ws:else>
+                    <Controls.Container.Async templateName="Controls-demo/CompatibleDemo/WasabyEnv/Demo"/>
                 </Controls-demo.RootTemplateWrapper>
             </Router.router:Route>
         </Controls.scroll:Container>

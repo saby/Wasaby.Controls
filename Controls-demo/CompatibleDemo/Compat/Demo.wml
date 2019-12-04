@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="compatibleDemo__row">
-            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWasaby%252FWithoutCompatible'}}">Wasaby без слоя совместимости</a>
+            <a href="{{'/Controls-demo/CompatibleDemo/Compat/Wasaby/WithoutCompatible'}}">Wasaby без слоя совместимости</a>
         </div>
     </div>
     <hr/>
@@ -33,7 +33,7 @@
             <b>Загрузка WS3-контрола в старом окружении без CompaundControl.</b>
         </div>
         <div class="compatibleDemo__row">
-            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWS3%252FWS3'}}">WS3 без CompaondControl</a>
+            <a href="{{'/Controls-demo/CompatibleDemo/Compat/WS3'}}">WS3 без CompaondControl</a>
         </div>
     </div>
     <hr/>
@@ -52,7 +52,7 @@
             </div>
         </div>
         <div class="compatibleDemo__row">
-            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWS3Compound%252FWS3Compound'}}">WS3 c CompoundControl</a>
+            <a href="{{'/Controls-demo/CompatibleDemo/Compat/WS3Compound'}}">WS3 c CompoundControl</a>
         </div>
     </div>
     <hr/>
@@ -61,7 +61,7 @@
             <b>Загрузка WS3-контрола в старом окружении в контроле обертке.</b>
         </div>
         <div class="compatibleDemo__row">
-            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWS3UnderWrapper%252FWS3UnderWrapper'}}">WS3 в контроле обертке</a>
+            <a href="{{'/Controls-demo/CompatibleDemo/Compat/WS3UnderWrapper'}}">WS3 в контроле обертке</a>
         </div>
     </div>
     <hr/>
@@ -70,7 +70,7 @@
             <b>Создание wasaby-контрола в старом окружении через  Base.Control.createControl().</b>
         </div>
         <div class="compatibleDemo__row">
-            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWasaby%252FCreateControl'}}">Wasaby-контрол в старом окружении</a>
+            <a href="{{'/Controls-demo/CompatibleDemo/Compat/Wasaby/CreateControl'}}">Wasaby-контрол в старом окружении</a>
         </div>
     </div>
     <hr/>
@@ -79,7 +79,7 @@
             <b>Создание wasaby-контрола в старом окружении через CoreCreator.</b>
         </div>
         <div class="compatibleDemo__row">
-            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWasaby%252FCoreCreator'}}">Wasaby-контрол в старом окружении</a>
+            <a href="{{'/Controls-demo/CompatibleDemo/Compat/Wasaby/CoreCreator'}}">Wasaby-контрол в старом окружении</a>
         </div>
     </div>
     <hr/>
@@ -98,7 +98,7 @@
             </div>
         </div>
         <div class="compatibleDemo__row">
-            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWasaby%252FCreateControlWithValue'}}">Wasaby-контрол в старом окружении с опцией value</a>
+            <a href="{{'/Controls-demo/CompatibleDemo/Compat/Wasaby/CreateControlWithValue'}}">Wasaby-контрол в старом окружении с опцией value</a>
         </div>
     </div>
     <hr/>
