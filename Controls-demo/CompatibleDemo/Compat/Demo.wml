@@ -1,32 +1,105 @@
 <div class="compatibleDemo__column">
     <div class="compatibleDemo__row">
-        <SBIS3.CONTROLS.Label caption="{{ _text }}"/>
+        <SBIS3.CONTROLS.Label caption="Application compat = true" />
     </div>
-<!--    <div class="compatibleDemo__row">-->
-<!--        <Controls.heading:Title caption="Controls.input:Text:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="compatibleDemo__row__fill"/>-->
-<!--        <Controls.input:Text name="textBox" bind:value="_text" />-->
-<!--    </div>-->
-    <div class="compatibleDemo__row">
-        <SBIS3.CONTROLS.Label caption="SBIS3.CONTROLS.TextBox" owner="MyTextBox" class="compatibleDemo__row__fill"/>
-        <SBIS3.CONTROLS.TextBox text="{{ 'myContextFieldName'|mutable:_text }}" class="myTextBox"/>
+    <hr/>
+    <div class="compatibleDemo__column">
+        <div class="compatibleDemo__row">
+            <b>Загрузка Wasaby-контрола в старом окружении без слоя совместимости.</b>
+        </div>
+        <div class="compatibleDemo__row">
+            Проблемы:
+        </div>
+        <div class="compatibleDemo__row">
+            <div class="compatibleDemo__column">
+                <div class="compatibleDemo__row">
+                    1) Не оживает верстка. Нет реактивности.
+                </div>
+                <div class="compatibleDemo__row">
+                    2) Пропадают значения по-умолчанию.
+                </div>
+                <div class="compatibleDemo__row">
+                    3) Проблемы с фокусом при вводе.
+                </div>
+            </div>
+        </div>
+        <div class="compatibleDemo__row">
+            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWasaby%252FWithoutCompatible'}}">Wasaby без слоя совместимости</a>
+        </div>
     </div>
-    <div class="compatibleDemo__row">
-        <SBIS3.CONTROLS.Label caption="SBIS3.CONTROLS.TextBox" owner="MyTextBoxSecond" class="compatibleDemo__row__fill"/>
-        <SBIS3.CONTROLS.TextBox text="{{ 'myContextFieldName'|mutable:_text }}" class="myTextBoxSecond"/>
+    <hr/>
+    <div class="compatibleDemo__column">
+        <div class="compatibleDemo__row">
+            <b>Загрузка WS3-контрола в старом окружении без CompaundControl.</b>
+        </div>
+        <div class="compatibleDemo__row">
+            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWS3%252FWS3'}}">WS3 без CompaondControl</a>
+        </div>
     </div>
-
-    <div class="compatibleDemo__row">
-        <Controls-demo.CompatibleDemo.Compat.DemoControls.TextBoxWrapper _text="{{ _text }}"/>
+    <hr/>
+    <div class="compatibleDemo__column">
+        <div class="compatibleDemo__row">
+            <b>Загрузка WS3-контрола в старом окружении с CompaundControl.</b>
+        </div>
+        <div class="compatibleDemo__row">
+            Проблемы:
+        </div>
+        <div class="compatibleDemo__row">
+            <div class="compatibleDemo__column">
+                <div class="compatibleDemo__row">
+                    1) Контрол не построится. В консоль упадет ошибка.
+                </div>
+            </div>
+        </div>
+        <div class="compatibleDemo__row">
+            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWS3Compound%252FWS3Compound'}}">WS3 c CompoundControl</a>
+        </div>
     </div>
-
-    <div class="compatibleDemo__row">
-        <Controls-demo.CompatibleDemo.Compat.DemoControls.TextBoxWrapperStyled _text="{{ _text }}"/>
+    <hr/>
+    <div class="compatibleDemo__column">
+        <div class="compatibleDemo__row">
+            <b>Загрузка WS3-контрола в старом окружении в контроле обертке.</b>
+        </div>
+        <div class="compatibleDemo__row">
+            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWS3UnderWrapper%252FWS3UnderWrapper'}}">WS3 в контроле обертке</a>
+        </div>
     </div>
-
-    <div class="compatibleDemo__row">
-        <Controls-demo.CompatibleDemo.Compat.DemoControls.OldWrapperForWasabyEditable/>
+    <hr/>
+    <div class="compatibleDemo__column">
+        <div class="compatibleDemo__row">
+            <b>Создание wasaby-контрола в старом окружении через  Base.Control.createControl().</b>
+        </div>
+        <div class="compatibleDemo__row">
+            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWasaby%252FCreateControl'}}">Wasaby-контрол в старом окружении</a>
+        </div>
     </div>
-    <div class="compatibleDemo__row">
-        <Controls-demo.CompatibleDemo.Compat.DemoControls.OldWrapperForWasaby _text="{{ _text }}"/>
+    <hr/>
+    <div class="compatibleDemo__column">
+        <div class="compatibleDemo__row">
+            <b>Создание wasaby-контрола в старом окружении через CoreCreator.</b>
+        </div>
+        <div class="compatibleDemo__row">
+            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWasaby%252FCoreCreator'}}">Wasaby-контрол в старом окружении</a>
+        </div>
     </div>
+    <hr/>
+    <div class="compatibleDemo__column">
+        <div class="compatibleDemo__row">
+            <b>Создание wasaby-контрола в старом окружении через Base.Control.createControl(). С опцией value</b>
+        </div>
+        <div class="compatibleDemo__row">
+            Проблемы:
+        </div>
+        <div class="compatibleDemo__row">
+            <div class="compatibleDemo__column">
+                <div class="compatibleDemo__row">
+                    1) Контрол нельзя будет редактировать.
+                </div>
+            </div>
+        </div>
+        <div class="compatibleDemo__row">
+            <a href="{{'/Controls-demo/app/Controls-demo%252FCompatibleDemo%252FCompat%252FWasaby%252FCreateControlWithValue'}}">Wasaby-контрол в старом окружении с опцией value</a>
+        </div>
+    </div>
+    <hr/>
 </div>

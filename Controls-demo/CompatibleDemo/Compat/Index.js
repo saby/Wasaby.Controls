@@ -55,6 +55,9 @@ define('Controls-demo/CompatibleDemo/Compat/Index', [
                return window.location;
             }
             return null;
+         },
+         goHomeHandler: function() {
+            window.location = "/Controls-demo%2FCompatibleDemo%2FCompat%2FDemo";
          }
       }
    );
