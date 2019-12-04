@@ -11,7 +11,7 @@ import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
 type HistoryItems = object[];
-}
+
 interface IFilter {
    filter: Record<string, unknown>;
    historyItems: HistoryItems;
