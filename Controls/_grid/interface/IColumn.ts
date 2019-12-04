@@ -1,8 +1,8 @@
 import {TemplateFunction} from 'UI/Base';
 type TCellPaddingVariant = 'S' | 'M' | 'null';
 interface ICellPadding {
-    left: TCellPaddingVariant;
-    right: TCellPaddingVariant;
+    left?: TCellPaddingVariant;
+    right?: TCellPaddingVariant;
 }
 /**
  * Интерфейс для конфигурации колонки табличного представления.
