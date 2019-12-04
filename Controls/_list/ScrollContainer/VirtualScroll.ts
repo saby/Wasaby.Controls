@@ -59,6 +59,7 @@ export default class VirtualScrollController {
 
     set itemsContainer(container: HTMLElement) {
         this._itemsContainer = container;
+        this.itemsContainerHeight = container.offsetHeight;
         this.recalcItemsHeights();
     }
 

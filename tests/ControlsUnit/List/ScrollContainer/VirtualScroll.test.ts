@@ -3,7 +3,7 @@ import VirtualScroll from 'Controls/_list/ScrollContainer/VirtualScroll';
 describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
     const heights = [20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40];
     const children = heights.map((offsetHeight) => ({offsetHeight: offsetHeight, className: '', getBoundingClientRect() { return {height: this.offsetHeight}}}));
-    const itemsContainer = {children};
+    const itemsContainer = {children, offsetHeight: 600};
     const viewModel = {
         at(index) {
             return {
@@ -251,6 +251,11 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.stopIndex = 100;
             instance.itemsCount = 100;
             assert.isFalse(instance.isLoaded({body: {contains: () => true}}));
+        })
+        it('set items container', () => {
+            const instance = new VirtualScroll(defaultOptions);
+            instance.itemsContainer = itemsContainer;
+            assert.equal(instance.itemsContainerHeight, itemsContainer.offsetHeight);
         });
     });
 });
