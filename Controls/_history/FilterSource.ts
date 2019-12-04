@@ -214,9 +214,11 @@ var _private = {
          _private.updatePinned(self, data, metaPin);
 
          hService.deleteItem(data, { isClient: 1 });
-      } else {
+      } else if (meta.isClient) {
          _private.addClient(self, data);
          hService.update(data, { $_pinned: false });
+      } else if (!meta.isClient)  {
+         _private.updatePinned(self, data, metaPin);
       }
 
       return hService.update(data, metaPin);
