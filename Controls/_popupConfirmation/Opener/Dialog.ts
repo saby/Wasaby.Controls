@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 /// <amd-module name='Controls/_popupConfirmation/Opener/Dialog' />
 // @ts-ignore
 import { Converter as MarkupConverter } from 'Controls/decorator';

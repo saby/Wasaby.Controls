@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
 import {descriptor} from 'Types/entity';

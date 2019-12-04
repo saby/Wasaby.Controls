@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');

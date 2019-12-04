@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import Control = require('Core/Control');
 // @ts-ignore
 import format = require('Core/helpers/String/format');

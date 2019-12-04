@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import Control = require('Core/Control');
 import Env = require('Env/Env');
 import MenuItemsTpl = require('wml!Controls/_dropdownPopup/DropdownList');

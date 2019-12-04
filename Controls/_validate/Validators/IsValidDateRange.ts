@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import dateUtils = require('Controls/Utils/Date');
 /**
  * Функция, позволяющая проверить период на валидность.

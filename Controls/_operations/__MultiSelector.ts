@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_operations/__MultiSelector';
 import {Memory} from 'Types/source';

@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import {Controller as ManagerController} from 'Controls/popup';

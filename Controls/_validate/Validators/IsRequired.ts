@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import cInstance = require('Core/core-instance');
 /**
  *

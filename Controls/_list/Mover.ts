@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');

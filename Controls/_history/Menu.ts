@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import {Button as Menu, MenuUtils} from 'Controls/dropdown';
 import itemTemplate = require('wml!Controls/_history/resources/itemTemplate');
 

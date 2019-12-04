@@ -2,11 +2,12 @@ define('Controls-demo/Input/Auth',
    [
       'Core/Control',
       'wml!Controls-demo/Input/Auth/Auth',
+      'i18n!Controls-demo_localization',
 
       'Controls/input',
       'css!Controls-demo/Input/Auth/Auth'
    ],
-   function(Control, template) {
+   function(Control, template, rk) {
       'use strict';
 
       return Control.extend({

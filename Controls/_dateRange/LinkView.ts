@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls_localization');
 import BaseControl = require('Core/Control');
 import {IoC} from 'Env/Env';
 import CalendarControlsUtils from './Utils';
