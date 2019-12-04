@@ -185,7 +185,7 @@ class Notification extends BaseOpener {
         });
     }
 
-    private static _getCompatibleConfig(BaseOpenerCompat, config) {
+    static _getCompatibleConfig(BaseOpenerCompat, config) {
         const cfg = BaseOpenerCompat.prepareNotificationConfig(config);
         cfg.notHide = !cfg.autoClose;
         return cfg;
@@ -244,11 +244,11 @@ class Notification extends BaseOpener {
     static closePopup (popupId: string): void {
         BaseOpener.closeDialog(popupId);
     }
-}
 
-Notification.getDefaultOptions = function() {
-    const baseOpenerOptions = BaseOpener.getDefaultOptions();
-    return {...baseOpenerOptions, ...BASE_OPTIONS};
-};
+     static getDefaultOptions() : object {
+        const baseOpenerOptions = BaseOpener.getDefaultOptions();
+        return {...baseOpenerOptions, ...BASE_OPTIONS};
+    }
+}
 
 export default Notification;

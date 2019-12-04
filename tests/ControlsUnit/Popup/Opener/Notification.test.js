@@ -2,11 +2,11 @@ define(
    [
       'Controls/popupTemplate',
       'Controls/_popupTemplate/Notification/Opener/NotificationContent',
-      'Controls/_popup/Opener/Notification',
+      'Controls/popup',
       'Controls/_popupTemplate/Notification/Opener/NotificationController',
       'Types/collection'
    ],
-   (popupTemplate, NotificationContent, Notification, NotificationController, collection) => {
+   (popupTemplate, NotificationContent, popup, NotificationController, collection) => {
       'use strict';
 
       describe('Controls/_popup/Opener/Notification', () => {
@@ -128,14 +128,14 @@ define(
                autoClose: true
             };
 
-            Notification._private.getCompatibleConfig({
+            popup.Notification._getCompatibleConfig({
                prepareNotificationConfig: function(config) {
                   return config;
                }
             }, cfg);
             assert.equal(cfg.notHide, false);
             cfg.autoClose = false;
-            Notification._private.getCompatibleConfig({
+            popup.Notification._getCompatibleConfig({
                prepareNotificationConfig: function(config) {
                   return config;
                }
@@ -145,15 +145,15 @@ define(
 
          it('Notification opener open/close', (done) => {
             let closeId = null;
-            Notification.openPopup = () => {
+            popup.Notification.openPopup = () => {
                return Promise.resolve('123');
             };
 
-            Notification.closePopup = (id) => {
+            popup.Notification.closePopup = (id) => {
                closeId = id;
             };
 
-            const opener = new Notification({});
+            const opener = new popup.Notification({});
             opener.open().then((id1) => {
                assert.equal(id1, '123');
                opener.open().then((id2) => {
