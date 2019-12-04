@@ -15,7 +15,7 @@
                                   attr:class="controls-FilterPanel__FavoriteEditDialog">
 
       <ws:headerContentTemplate>
-         <Controls.source:SelectedKey bind:selectedKey="_globalKey">
+         <Controls.source:SelectedKey bind:selectedKey="_isClient">
             <Controls.dropdown:Input
                     displayProperty="title"
                     keyProperty="key"

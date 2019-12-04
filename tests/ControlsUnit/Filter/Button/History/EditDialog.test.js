@@ -63,6 +63,7 @@ define(
 
          it('_apply', function() {
             let dialog = new filterPopup._EditDialog();
+            let isShowedConfirm = false;
             dialog.saveOptions(defaultConfig);
             dialog.prepareConfig(dialog, defaultConfig);
             dialog._selectedFilters = [];
@@ -75,9 +76,12 @@ define(
                }
             };
 
+            dialog.showConfirmation = () => {isShowedConfirm = true};
+
             dialog._apply();
             assert.deepEqual(expectedResult, {});
             assert.isFalse(isClosed);
+            assert.isTrue(isShowedConfirm);
 
             dialog._selectedFilters = ['author'];
             dialog._apply();
