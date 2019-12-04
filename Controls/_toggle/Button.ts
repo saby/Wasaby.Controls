@@ -55,7 +55,7 @@ export interface IToggleButtonOptions extends
  * @author Красильников А.С.
  * @category Toggle
  *
- * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
+ * @demo Controls-demo/toggle/Button/ViewModes/Index
  */
 
 /*
@@ -78,7 +78,7 @@ export interface IToggleButtonOptions extends
  * @author Красильников А.С.
  * @category Toggle
  *
- * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
+ * @demo Controls-demo/toggle/Button/ViewModes/Index
  */
 
 /**
