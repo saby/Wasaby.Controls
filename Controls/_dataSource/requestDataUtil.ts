@@ -59,10 +59,11 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
          filter = filterObject.filter;
       }
       return sourceController.load(filter, sorting).then((data: RecordSet) => {
-         return {
-            data,
-            historyItems: filterObject.historyItems
-         };
+         let result = {data};
+         if (filterObject) {
+            result.historyItems = filterObject.historyItems;
+         }
+         return result;
       });
    });
 }
