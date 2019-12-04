@@ -66,15 +66,9 @@ define([
                sandbox = sinon.createSandbox(),
                control = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
-            control._children = {
-               scroll: {
-                  setShadowMode: sinon.fake()
-               }
-            };
             sandbox.stub(control, '_canScroll').returns([true]);
             sandbox.stub(control, '_scrollToDate');
             control._afterMount();
-            sinon.assert.called(control._children.scroll.setShadowMode);
             sinon.assert.called(control._scrollToDate);
             sandbox.restore();
          });

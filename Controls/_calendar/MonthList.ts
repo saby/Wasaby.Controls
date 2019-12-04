@@ -98,9 +98,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     protected _afterMount(): void {
-        // TODO: We need another api to control the shadow visibility
-        // https://online.sbis.ru/opendoc.html?guid=1737a12a-9dd1-45fa-a70c-bc0c9aa40a3d
-        this._children.scroll.setShadowMode({ top: 'visible', bottom: 'visible' });
         this._updateScrollAfterViewModification();
     }
 
