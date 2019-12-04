@@ -17,7 +17,7 @@ interface IValidateResult {
  * @extends Core/Control
  * @control
  * @public
- * @demo Controls-demo/Input/Validate/Controller
+ * @demo Controls-demo/Input/Validate/FormController
  * @author Красильников А.С.
  */
 

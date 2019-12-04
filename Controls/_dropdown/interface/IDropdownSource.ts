@@ -59,22 +59,22 @@ export default interface IDropdownSource {
  *        keyProperty: 'key',
  *        data: [
  *          {
- *             id: '1',
+ *             key: '1',
  *             icon: 'icon-EmptyMessage',
  *             iconStyle: 'info',
  *             title: 'Message'
  *          },
  *          {
- *             id: '2',
+ *             key: '2',
  *             icon: 'icon-TFTask',
- *             title: 'Task
+ *             title: 'Task'
  *          },
  *          {
- *             id: '3',
+ *             key: '3',
  *             title: 'Report',
  *          },
  *          {
- *              id: '4',
+ *              key: '4',
  *              title: 'News',
  *              readOnly: true
  *          }

@@ -1,0 +1,36 @@
+<div attr:style="display: flex; justify-content: space-around;">
+   <Controls.scroll:Container scn="1" attr:style="width: 50%; height: 600px;">
+      <Controls.list:View
+         keyProperty="key"
+         displayProperty="title"
+         source="{{ _viewSource }}"
+         multiSelectVisibility="hidden"
+         navigation="{{ _navigation }}"
+
+         virtualScrolling="{{ true }}"
+         virtualPageSize="{{ 60 }}"
+
+         name="listView"
+         useNewModel="{{ true }}">
+         <ws:editingConfig toolbarVisibility="{{ true }}" />
+         <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate" abc="{{ itemTemplate.item.increaseCounter('ItemTemplate') }}">
+               <ws:contentTemplate>
+                  <div>{{ contentTemplate.item.getContents().title }}</div>
+               </ws:contentTemplate>
+            </ws:partial>
+         </ws:itemTemplate>
+      </Controls.list:View>
+   </Controls.scroll:Container>
+   <div attr:style="width: 50%; display: flex; flex-wrap: wrap;">
+      <ws:for data="cnt in _counters">
+         <div
+            attr:key="counter-{{ cnt.key }}"
+            attr:class="counter-{{ cnt.key }} {{ cnt.updated ? 'counter-updated' }}"
+            attr:style="margin: 0 14px; {{ cnt.updated ? 'color: red;' }}">
+            <span class="itemName">item {{ cnt.key }}</span> -&nbsp;
+            <span class="counter">{{ cnt.count }}</span>
+         </div>
+      </ws:for>
+   </div>
+</div>

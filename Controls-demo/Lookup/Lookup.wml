@@ -1,0 +1,15 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">Поле связи с автодополнением</div>
+      <Controls.lookup:Input
+           attr:class="controlsDemo__input"
+           source="{{_source}}"
+           placeholder="Введите название отдела"
+           keyProperty="id"
+           searchParam="title"
+           navigation="{{_navigation}}"
+           displayProperty="title">
+         <ws:suggestTemplate templateName="wml!Controls-demo/Lookup/resources/SuggestTemplate"/>
+      </Controls.lookup:Input>
+   </div>
+</div>

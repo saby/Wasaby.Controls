@@ -1,0 +1,3 @@
+<Controls.suggestPopup:ListContainer attr:class="{{_options.classListWrapper}}">
+    <Controls.list:View displayProperty="title" keyProperty="id" itemActions="{{_itemActions}}"/>
+</Controls.suggestPopup:ListContainer>

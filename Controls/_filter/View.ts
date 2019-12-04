@@ -194,7 +194,7 @@ var _private = {
                         self._displayText[item.name].hasMoreText = _private.getHasMoreText(flatSelectedKeys);
                     }
                     if (item.textValue !== undefined && !detailPanelHandler) {
-                        item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
+                        item.textValue = self._displayText[item.name].title;
                     }
                 }
             }
@@ -223,7 +223,7 @@ var _private = {
     setItems: function(config, item, newItems) {
         config.popupItems = getItemsWithHistory(config.popupItems || CoreClone(config.items), newItems,
             config.sourceController, item.editorOptions.source, config.keyProperty);
-        config.items = getUniqItems(config.items, newItems, config.keyProeprty);
+        config.items = getUniqItems(config.items, newItems, config.keyProperty);
     },
 
     loadSelectedItems: function(items, configs) {
@@ -239,6 +239,9 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
+                        if (config.dataLoadCallback) {
+                            config.dataLoadCallback(newItems);
+                        }
                         _private.setItems(config, item, newItems);
                     });
                     pDef.push(result);

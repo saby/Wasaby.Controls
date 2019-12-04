@@ -182,7 +182,9 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
             // Get keys of selected items
             chain.factory(items).each(function(item) {
                var key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
-               if (key !== getPropValue(self._items.at(self.lastOpenIndex), 'resetValue')) {
+               if (key !== getPropValue(self._items.at(self.lastOpenIndex), 'resetValue') &&
+                   // select empty item
+                   !(self._configs[self.lastOpenIndex].emptyText && key === null)) {
                   selectedKeys.push(key);
                }
             });
@@ -462,7 +464,7 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
                if (!(sKey instanceof Array)) {
                   sKey = [sKey];
                }
-               if (sKey[0] === null && config.emptyText) {
+               if ((sKey[0] === null || !sKey.length) && config.emptyText) {
                   text.push(config.emptyText);
                } else {
                   chain.factory(config._items).each(function(item) {

@@ -1375,6 +1375,11 @@ var
             this._nextModelVersion();
         },
 
+        setColumnScroll(columnScroll: boolean): void {
+            this._options.columnScroll = columnScroll;
+            this._nextModelVersion();
+        },
+
         setLadderProperties: function(ladderProperties) {
             if (!isEqual(this._options.ladderProperties, ladderProperties)) {
                 this._options.ladderProperties = ladderProperties;

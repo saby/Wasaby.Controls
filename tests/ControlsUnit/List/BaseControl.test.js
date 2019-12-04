@@ -4155,17 +4155,19 @@ define([
                   return 1;
                }
             },
-            _notify: () => {
-            },
-            _isMounted: true
+            _notify: () => {},
+            _isMounted: true,
+         };
+         const navigation = {
+            view: 'maxCount'
          };
          var emptyList = new collection.List();
          var list = new collection.List({ items: [{ test: 'testValue' }] });
 
-         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList, navigation);
          assert.equal(baseControlMock._loadingState, 'down');
 
-         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list, navigation);
          assert.isNull(baseControlMock._loadingState);
 
       });

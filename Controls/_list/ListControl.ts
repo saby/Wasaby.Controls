@@ -49,7 +49,7 @@ var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype
     },
 
     scrollToItem(key: string|number, toBottom: boolean): void {
-        this._children.baseControl.scrollToItem(key, toBottom);
+        return this._children.baseControl.scrollToItem(key, toBottom);
     },
 });
 

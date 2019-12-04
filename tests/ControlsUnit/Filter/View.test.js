@@ -583,6 +583,7 @@ define(
          it('_private:loadSelectedItems', function(done) {
             let source = [...defaultSource];
             source[1].value = [1];
+            let isDataLoad;
             let configs = {
                document: {
                   items: new collection.RecordSet({
@@ -603,6 +604,7 @@ define(
                   emptyText: 'all state',
                   emptyKey: null,
                   sourceController: {hasMoreData: () => {return true;}},
+                  dataLoadCallback: () => {isDataLoad = true},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
@@ -612,6 +614,7 @@ define(
                assert.strictEqual(configs['state'].popupItems.getCount(), 6);
                assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
+               assert.isTrue(isDataLoad);
                done();
             });
          });

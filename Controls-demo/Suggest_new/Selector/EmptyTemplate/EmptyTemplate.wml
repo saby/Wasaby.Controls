@@ -1,0 +1,31 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">Шаблон пустого списка с кнопкой</div>
+      <Controls.suggest:Selector
+              attr:class="controlsDemo__input"
+              bind:value="_suggestCustomValue"
+              displayProperty="title"
+              searchParam="title"
+              navigation="{{_navigation}}"
+              source="{{_source}}">
+          <ws:emptyTemplate templateName="wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/EmptyTemplate"/>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestInputList"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:Selector>
+  </div>
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">Шаблон пустого списка по умолчанию</div>
+      <Controls.suggest:Selector
+              attr:class="controlsDemo__input"
+              bind:value="_suggestDefaultValue"
+              displayProperty="title"
+              searchParam="title"
+              navigation="{{_navigation}}"
+              source="{{_source}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestInputList"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:Selector>
+   </div>
+</div>
