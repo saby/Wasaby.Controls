@@ -3,7 +3,6 @@
                            on:itemMouseLeave="_onItemMouseLeave()"
                            on:dragEnd="_dragEnd()"
                            scope="{{_options}}"
-                           sorting="{{_sorting ? _sorting : _options.sorting}}"
                            name="baseControl"
                            on:keyDown="_onTreeViewKeyDown()"
                            on:itemClick="_onItemClick()"
