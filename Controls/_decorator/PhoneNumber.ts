@@ -1,10 +1,10 @@
 import Phone from './Phone';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 class PhoneNumber extends Phone {
     constructor(...args) {
         super(args);
-        IoC.resolve('ILogger').error('Controls.decorator:PhoneNumber', 'Контрол был переименован. Используйте Controls.decorator:Phone');
+        Logger.error('Controls.decorator:PhoneNumber: Контрол был переименован. Используйте Controls.decorator:Phone', this);
     }
 }
 export = PhoneNumber;

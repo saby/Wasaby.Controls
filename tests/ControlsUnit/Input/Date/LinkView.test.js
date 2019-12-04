@@ -242,5 +242,16 @@ define([
             sandbox.restore();
          });
       });
+      describe('_beforeUpdate', function() {
+         it('should update caption', function() {
+            const component = calendarTestUtils.createComponent(dateRange.LinkView, config),
+               caption = component._caption,
+               testCaptionFormatter = function () {
+                  return 'test';
+               };
+            component._beforeUpdate({...config, captionFormatter: testCaptionFormatter});
+            assert.notEqual(component._caption, caption);
+         });
+      });
    });
 });

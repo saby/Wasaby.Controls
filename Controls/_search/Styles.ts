@@ -1,7 +1,7 @@
 /**
  * @author Герасимов А.М.
  * @mixin Controls/_search/Styles
- * @public
+ * @private
  *
  * @css @background-color_Search Background color of Search control.
  * @css @background-color_Search_style_header Background color of Search control when style option in set to "header'

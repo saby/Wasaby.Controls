@@ -4,7 +4,7 @@
 import Control = require('Core/Control');
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import {Controller as SourceController} from 'Controls/source';
 import {factory} from 'Types/chain';
 import * as cInstance from 'Core/core-instance';
@@ -47,16 +47,16 @@ var _private = {
       prepareItemOrder: function(order) {
          return '-ms-flex-order:' + order + '; order:' + order;
       },
-      prepareItemClass: function(item, order, options, lastRightOrder) {
+      prepareItemClass: function(item, order, options, lastRightOrder, self) {
          var
             classes = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme],
             modifyToNewStyle = '';
          if (options.style === 'default') {
             modifyToNewStyle = 'primary';
-            Env.IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = primary вместо style = default');
+            Logger.warn('Tabs/Buttons: Используются устаревшие стили. Используйте style = primary вместо style = default', self);
          } else if (options.style === 'additional') {
             modifyToNewStyle = 'secondary';
-            Env.IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = secondary вместо style = additional');
+            Logger.warn('Tabs/Buttons: Используются устаревшие стили. Используйте style = secondary вместо style = additional', self);
          } else {
             modifyToNewStyle = options.style;
          }
@@ -108,7 +108,7 @@ var _private = {
     * @public
     * @category List
     * @author Красильников А.С.
-    * @demo Controls-demo/Tabs/ButtonsDemoPG
+    * @demo Controls-demo/Tabs/Buttons
     * @css controls-Tabs__item-underline_theme-{{_options.theme}} Позволяет добавить горизонтальный разделитель к прикладному контенту, чтобы расположить его перед вкладками.
     */
 
@@ -474,10 +474,10 @@ var _private = {
                     // При рекваере шаблона, он возвращает массив, в 0 индексе которого лежит объект с функцией
                     if (typeof value[key] === 'function' || value[key] instanceof Array && typeof value[key][0].func === 'function') {
                         hasFunction = true;
-                        Env.IoC.resolve('ILogger').warn(this._moduleName, `
-                         Из источника данных вернулся набор записей с функцией в поле ${key}.
+                        Logger.warn(this._moduleName +  `
+                         : Из источника данных вернулся набор записей с функцией в поле ${key}.
                          В наборе данных должны быть простые типы.
-                         Для задания шаблона - нужно указать имя этого шаблона.`);
+                         Для задания шаблона - нужно указать имя этого шаблона.`, this);
                     }
                 }
             }
@@ -507,7 +507,7 @@ var _private = {
          this._notify('selectedKeyChanged', [key]);
       },
       _prepareItemClass: function(item, index) {
-         return _private.prepareItemClass(item, this._itemsOrder[index], this._options, this._lastRightOrder);
+         return _private.prepareItemClass(item, this._itemsOrder[index], this._options, this._lastRightOrder, this);
       },
       _prepareItemOrder: function(index) {
          return _private.prepareItemOrder(this._itemsOrder[index]);

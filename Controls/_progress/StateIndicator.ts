@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import stateIndicatorTemplate = require('wml!Controls/_progress/StateIndicator/StateIndicator');
 import { SyntheticEvent } from 'Vdom/Vdom';
 
@@ -44,7 +44,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  *
  * @public
  * @demo Controls-demo/StateIndicator/StateIndicatorDemo
- */ 
+ */
 
 /**
  * @name Controls/_progress/StateIndicator#scale
@@ -68,7 +68,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * <pre class="brush:html">
  *   <Controls.progress:StateIndicator scale="{{5}}"/>
  * </pre>
- */ 
+ */
 
 /**
  * @typedef {Object} IndicatorCategory
@@ -82,7 +82,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @property {Number} value=0 Percents of the corresponding category
  * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
  * @property {String} title='' category note
- */ 
+ */
 
 /**
  * @name Controls/_progress/StateIndicator#data
@@ -90,7 +90,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * <pre class="brush:html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
- * @remark 
+ * @remark
  * Используется, если для диаграммы нужно установить несколько категорий. Количество элементов массива задает количество категорий диаграммы.
  */
 
@@ -100,7 +100,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * <pre class="brush:html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
- */ 
+ */
 
 /**
  * @event Controls/_progress/StateIndicator#itemEnter Происходит при наведении курсора мыши на диаграмму.
@@ -112,7 +112,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @event Controls/_progress/StateIndicator#itemEnter Occurs when mouse enters sectors of indicator
  * @param {Vdom/Vdom:SyntheticEvent} eventObject event descriptor.
  *
- */ 
+ */
 class StateIndicator extends Control<IStateIndicatorOptions>{
    protected _template: TemplateFunction = stateIndicatorTemplate;
    private _colorState: number[];
@@ -122,30 +122,26 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    private _checkData(opts: IStateIndicatorOptions): void {
       let sum = 0;
       if (isNaN(opts.scale)) {
-         IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect,' +
-                              'it is non-numeric value');
+          Logger.error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it is non-numeric value', this);
       }
       if (opts.scale > maxPercentValue || opts.scale < 1) {
-         IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect,' +
-                              'it must be in range (0..100]');
+          Logger.error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it must be in range (0..100]', this);
       }
 
-      sum = opts.data.map(Object).reduce((sum, d) => {
-         return sum + Math.max(d.value, 0);
+      sum = opts.data.map(Object).reduce((curSum, d) => {
+         return curSum + Math.max(d.value, 0);
       }, 0);
 
       if (isNaN(sum)) {
-         IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect,' +
-                              'it contains non-numeric values');
+          Logger.error('StateIndicator', 'Data is incorrect, it contains non-numeric values', this);
       }
       if (sum > maxPercentValue) {
-         IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect.' +
-                               'Values total is greater than 100%');
+          Logger.error('StateIndicator', 'Data is incorrect. Values total is greater than 100%', this);
       }
    }
 
    private _setColors(data: IIndicatorCategory[]): string[] {
-      let colors: string[] = [];
+      const colors: string[] = [];
       for (let i = 0; i < data.length; i++) {
          colors[i] = data[i].className ? data[i].className : (defaultColors[i] ? defaultColors[i] : '');
       }
@@ -207,7 +203,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       this._colorState  = this._calculateColorState(opts, this._colors, this._numSectors);
    }
 
-   private _mouseEnterIndicatorHandler(e: SyntheticEvent): void {
+   private _mouseEnterIndicatorHandler(e: SyntheticEvent<MouseEvent>): void {
       this._notify('itemEnter', [e.target]);
    }
 
@@ -234,7 +230,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    static getOptionTypes(): object {
       return {
          scale: EntityDescriptor(Number),
-         data: EntityDescriptor(Array),
+         data: EntityDescriptor(Array)
       };
    }
 }

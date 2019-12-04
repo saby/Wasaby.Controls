@@ -5,7 +5,7 @@
             misspellValue="{{_misspellValue}}"
             itemOpenHandler="{{_itemOpenHandler}}"
             viewMode="{{_viewMode}}"
-            loading="{{_loading}}"
+            loading="{{_loading || _options.loading}}"
             dataLoadCallback="{{_dataLoadCallback}}"
             deepReload="{{_deepReload}}"
             root="{{_root}}"

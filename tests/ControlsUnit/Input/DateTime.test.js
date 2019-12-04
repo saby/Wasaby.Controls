@@ -200,6 +200,27 @@ define([
             assert.deepEqual(model.value, localDate);
             sandbox.restore();
          });
+
+         it('should not change date, if value is empty', function(){
+            const sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(input.DateBase, optionsWithEmptyDate);
+            [{
+               nativeEvent: {
+                  keyCode: constants.key.minus
+               },
+               stopImmediatePropagation: sinon.fake()
+            }, {
+               nativeEvent: {
+                  keyCode: constants.key.plus
+               },
+               stopImmediatePropagation: sinon.fake()
+            }].forEach(function (event) {
+               component._onKeyDown(event);
+               const model = component._model;
+               assert.isUndefined(model.value);
+            });
+            sandbox.restore();
+         });
       });
    });
 });

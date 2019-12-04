@@ -3,12 +3,13 @@ import template = require('wml!Controls/_search/Controller');
 import clone = require('Core/core-clone');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import cInstance = require('Core/core-instance');
+import tmplNotify = require('Controls/Utils/tmplNotify');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {Logger} from 'UI/Utils';
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -188,24 +189,15 @@ var _private = {
 };
 
 /**
- * Контрол-контроллер поиска позволяет осуществлять поиск данных в {@link Controls/list:View}
- * с помощью любого компонента с интерфейсом {@link Controls/interface/IInputField}.
- * Контроллер поиска позволяет:
- * 1) установить задержку перед поиском;
- * 2) установить количество символов;
- * 3) установить параметры поиска;
- * 4) изменить раскладку клавиатуры для случаев неудачного поиска.
- * Следует запомнить: Контрол с интерфейсом {@link Controls/interface/IInputField} должен быть обернут в {@link Controls/_search/Input/Container}.
- *
- * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
- *
- * <a href="/materials/demo/demo-ws4-explorer-with-search">Демо-пример</a>.
+ * Контрол используют в качестве контроллера для организации поиска в реестрах. 
+ * Он обеспечивает связь между {@link Controls/search:InputContainer} и {@link Controls/list:Container} — контейнерами для строки поиска и списочного контрола соответветственно. 
+ * С помощью этого контрола можно настроить: временную задержку между вводом символа и началом поиска, количество символов, с которых начинается поиск, параметры фильтрации и другое.
  *
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
@@ -231,7 +223,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
@@ -292,12 +284,17 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
 
       if (this._searchController) {
-         if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
-            this._searchController.abort(true);
+         if (filter) {
+            this._searchController.setFilter(clone(filter));
+         }
+
+         if (_private.needUpdateSearchController(currentOptions, this._dataOptions) ||
+             _private.needUpdateSearchController(this._options, newOptions)) {
+            if (this._searchValue) {
+               this._searchController.abort(true);
+            }
             this._searchController = null;
             _private.setInputSearchValue(this, '');
-         } else if (filter) {
-            this._searchController.setFilter(clone(filter));
          }
 
          if (!isEqual(this._options.sorting, newOptions.sorting)) {
@@ -310,7 +307,14 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    },
 
    _search: function (event, value, force) {
-      _private.getSearchController(this).search(value, force);
+      if (this._options.source) {
+         const shouldSearch = this._isSearchControllerLoading() ? value !== this._inputSearchValue : true;
+         if (shouldSearch) {
+            _private.getSearchController(this).search(value, force);
+         }
+      } else {
+         Logger.error('search:Controller source is required for search', this);
+      }
       _private.setInputSearchValue(this, value);
    },
 
@@ -327,6 +331,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _misspellCaptionClick: function () {
       this._search(null, this._misspellValue);
       this._misspellValue = '';
+   },
+
+   _isSearchControllerLoading: function () {
+      return this._searchController && this._searchController.isLoading();
    }
 });
 

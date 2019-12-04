@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_lookup/SelectedCollection/SelectedCollectionStyles
- * @public
+ * @private
  * @author Капустин И.А.
  *
  * @css @color_SelectedCollection-item_accent Цвет элемента для стиля "accent".
@@ -28,7 +28,7 @@
  */
 /*
  * @mixin Controls/_lookup/SelectedCollection/SelectedCollectionStyles
- * @public
+ * @private
  * @author Kapustin I.A.
  *
  * @css @color_SelectedCollection-item_accent The element color for the "accent" style.

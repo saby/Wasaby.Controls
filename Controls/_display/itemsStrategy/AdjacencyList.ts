@@ -329,11 +329,13 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
             deletedInSource.push(source.getDisplayIndex(i));
         }
 
-        source.splice(start, deleteCount, added);
-
+        // Get state before source.splice() so that keep original TreeItem instances.
+        // When instance is deserialized that means _sourceItems is gone and should be recalculated.
         const items = this._getItems();
         let itemsOrder = this._getItemsOrder();
         const sourceItems = this._getSourceItems();
+
+        source.splice(start, deleteCount, added);
 
         // There is the one and only case to move items with two in turn splices
         if ((<ISplicedArray> added).hasBeenRemoved) {

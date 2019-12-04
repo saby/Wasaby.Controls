@@ -507,6 +507,15 @@ define([
             lv._afterMount();
             assert.isFalse(notifyCalled);
          });
+         it('should notify itemscontainer ready firstly', () => {
+            const lv = new lists.ListView();
+            const notifyList = [];
+            lv._notify = (eventName) => {
+               notifyList.push(eventName);
+            }
+            lv._afterMount();
+            assert.equal('itemsContainerReady', notifyList[0]);
+         });
       });
    });
 });

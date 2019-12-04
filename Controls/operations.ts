@@ -32,6 +32,7 @@ import MultiSelector from 'Controls/_operations/__MultiSelector';
 
 export {default as HierarchySelection} from 'Controls/_operations/MultiSelector/HierarchySelection';
 export {default as Selection} from 'Controls/_operations/MultiSelector/Selection';
+export {default as BaseSelectionStrategy, ISelectionStrategy, ISelectionStrategyOptions, IQueryParams} from 'Controls/_operations/MultiSelector/SelectionStrategy/Base';
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
 import DeepTreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree';
@@ -42,7 +43,8 @@ export {
    Controller,
    Container,
    selectionToRecord,
-   MultiSelector as SimpleMultiSelector
+   MultiSelector as SimpleMultiSelector,
+   BaseSelectionStrategy,
    FlatSelectionStrategy,
    TreeSelectionStrategy,
    DeepTreeSelectionStrategy

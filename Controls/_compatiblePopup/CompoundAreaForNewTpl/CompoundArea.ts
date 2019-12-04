@@ -12,10 +12,11 @@ import clone = require('Core/core-clone');
 import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
 import Vdom = require('Vdom/Vdom');
 import Deferred = require('Core/Deferred');
-import {IoC, constants} from 'Env/Env';
+import {constants} from 'Env/Env';
 import {StackStrategy} from 'Controls/popupTemplate';
 import {load} from 'Core/library';
 import 'css!theme?Controls/compatiblePopup';
+import {Logger} from 'UI/Utils';
 
 /**
  * Слой совместимости для открытия новых шаблонов в старых попапах
@@ -79,7 +80,7 @@ const moduleClass = CompoundControl.extend({
                this._options.template = this._options.innerComponentOptions._template;
             }
             this._saveTemplateOptions(this._options.innerComponentOptions);
-            IoC.resolve('ILogger').error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions');
+            Logger.error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions', this);
          }
 
          this._modifyInnerOptionsByHandlers();
@@ -244,6 +245,7 @@ const moduleClass = CompoundControl.extend({
          if (self._options._initCompoundArea) {
             self._notifyOnSizeChanged(self, self);
             self._options._initCompoundArea(self);
+            self._options._initCompoundArea = null;
          }
          self._finishPopupOpenedDeferred();
          self._isVDomTemplateMounted = true;

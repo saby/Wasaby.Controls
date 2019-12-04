@@ -1,5 +1,4 @@
 define('Controls/Utils/keysHandler', [], function() {
-
    'use strict';
 
    /**

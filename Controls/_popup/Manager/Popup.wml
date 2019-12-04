@@ -20,10 +20,10 @@
          on:maximized="_maximized()"
          on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
          on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
-         on:controlResize="_controlResize()"
+         on:controlResize="_controlResizeHandler()"
          on:showIndicator="_showIndicatorHandler()">
       </ws:partial>
    </Controls.event:Register>
-   <Controls.event:Listener event="controlResize" on:controlResize="_update()"/>
+   <Controls.event:Listener event="controlResize" on:controlResize="_controlResizeOuterHandler()"/>
    <Controls.event:Listener event="scroll" on:scroll="_scrollHandler()"/>
 </div>

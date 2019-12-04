@@ -238,6 +238,49 @@ define(
                assert.equal(model.displayValue, '12.34');
                assert.deepEqual(model.selection, getSelection(5));
             });
+            it('Remove "." use backspace.', function() {
+               model.options = cMerge(model.options, {
+                  integersLength: 3
+               });
+               model.handleInput({
+                  after: '45',
+                  before: '123',
+                  delete: '.',
+                  insert: ''
+               }, 'deleteBackward');
+
+               assert.equal(model.displayValue, '12.45');
+               assert.deepEqual(model.selection, getSelection(2));
+            });
+            it('Remove "." use delete.', function() {
+               model.options = cMerge(model.options, {
+                  integersLength: 3
+               });
+               model.handleInput({
+                  after: '45',
+                  before: '123',
+                  delete: '.',
+                  insert: ''
+               }, 'deleteForward');
+
+               assert.equal(model.displayValue, '123.5');
+               assert.deepEqual(model.selection, getSelection(4));
+            });
+            it('Remove and replace with zero.', function() {
+               model.options = cMerge(model.options, {
+                  precision: 2,
+                  useAdditionToMaxPrecision: true
+               });
+               model.handleInput({
+                  after: '5',
+                  before: '123.',
+                  delete: '4',
+                  insert: ''
+               }, 'deleteBackward');
+
+               assert.equal(model.displayValue, '123.05');
+               assert.deepEqual(model.selection, getSelection(4));
+            });
 
             it('Test1', function() {
                model.value = '123';
@@ -289,6 +332,10 @@ define(
                },
                value: 123456.3,
                displayValue: '123 456.30'
+            }, {
+               options: {},
+               value: 1e21,
+               displayValue: '1000000000000000000000'
             }].forEach(function(test) {
                it(`value: ${test.value}, displayValue: ${test.displayValue}, options: ${JSON.stringify(test.options)}`, function() {
                   const model = new ViewModel(test.options, null);

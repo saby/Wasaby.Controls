@@ -8,6 +8,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  *
  * @class Controls/_operations/Panel
  * @extends Core/Control
+ * @mixes Controls/_toolbars/IToolbarSource
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy

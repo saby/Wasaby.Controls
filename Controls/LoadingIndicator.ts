@@ -321,9 +321,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
      * show indicator (bypassing requests of indicator showing stack)
      */
     show(config, waitPromise) {
-        if (!config) {
-            return this._toggleIndicator(true, {});
-        }
         return this._show(config, waitPromise);
     },
 

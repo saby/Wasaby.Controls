@@ -1,41 +1,52 @@
-<ws:if data="{{itemActionsPosition === 'outside'}}">
-    <ws:partial template="{{itemActionsTemplate}}"
-                itemData="{{itemData}}"
-                highlightOnHover="{{highlightOnHover}}"/>
-</ws:if>
-<ws:else data="{{swipeConfig}}">
-<div class="controls-itemActionsV_swipe_animationContainer">
-    <div class="controls-Swipe
+<ws:template name="swipeTmpl">
+    <ws:if data="{{itemActionsPosition === 'outside'}}">
+        <ws:partial template="{{itemActionsTemplate}}"
+                    itemData="{{itemData}}"
+                    highlightOnHover="{{highlightOnHover}}"/>
+    </ws:if>
+    <ws:else data="{{swipeConfig}}">
+        <div class="controls-itemActionsV_swipe_animationContainer">
+            <div class="controls-Swipe
                 controls-Swipe_{{animationState}}"
-         on:animationend="_onAnimationEnd()">
-        <div class="controls-Swipe_{{swipeConfig.twoColumns ? 'columns' : actionAlignment}}">
+                 on:animationend="_onAnimationEnd()">
+                <div class="controls-Swipe_{{swipeConfig.twoColumns ? 'columns' : actionAlignment}}">
 
-            <ws:if data="{{swipeConfig.twoColumns}}">
-                <ws:partial
-                        template="wml!Controls/_list/Swipe/resources/SwipeTwoColumns"
-                        itemData="{{itemData}}"
-                        showedActions="{{swipeConfig.twoColumnsActions}}"
-                        swipeConfig="{{swipeConfig}}"
-                        actionAlignment="{{actionAlignment}}"
-                        actionCaptionPosition="{{actionCaptionPosition}}"
-                        needSeparator="{{needSeparator}}"
-                        needIcon="{{needIcon}}"
-                        needTitle="{{needTitle}}"/>
-            </ws:if>
-            <ws:else>
-                <ws:partial
-                        template="wml!Controls/_list/Swipe/resources/SwipeFor"
-                        itemData="{{itemData}}"
-                        showedActions="{{itemData.itemActions.showed}}"
-                        swipeConfig="{{swipeConfig}}"
-                        actionAlignment="{{actionAlignment}}"
-                        actionCaptionPosition="{{actionCaptionPosition}}"
-                        needSeparator="{{needSeparator}}"
-                        needIcon="{{needIcon}}"
-                        needTitle="{{needTitle}}"/>
-            </ws:else>
+                    <ws:if data="{{swipeConfig.twoColumns}}">
+                        <ws:partial
+                                template="wml!Controls/_list/Swipe/resources/SwipeTwoColumns"
+                                itemData="{{itemData}}"
+                                showedActions="{{swipeConfig.twoColumnsActions}}"
+                                swipeConfig="{{swipeConfig}}"
+                                actionAlignment="{{actionAlignment}}"
+                                actionCaptionPosition="{{actionCaptionPosition}}"
+                                needSeparator="{{needSeparator}}"
+                                needIcon="{{needIcon}}"
+                                needTitle="{{needTitle}}"/>
+                    </ws:if>
+                    <ws:else>
+                        <ws:partial
+                                template="wml!Controls/_list/Swipe/resources/SwipeFor"
+                                itemData="{{itemData}}"
+                                showedActions="{{itemData.itemActions.showed}}"
+                                swipeConfig="{{swipeConfig}}"
+                                actionAlignment="{{actionAlignment}}"
+                                actionCaptionPosition="{{actionCaptionPosition}}"
+                                needSeparator="{{needSeparator}}"
+                                needIcon="{{needIcon}}"
+                                needTitle="{{needTitle}}"/>
+                    </ws:else>
 
+                </div>
+            </div>
         </div>
+    </ws:else>
+</ws:template>
+<ws:if data="{{!!itemActionsContainerStyles}}">
+    <div class="controls-itemActionsV__container" style="{{itemActionsContainerStyles}}">
+        <ws:partial template="swipeTmpl"/>
     </div>
-</div>
+</ws:if>
+<ws:else>
+    <ws:partial template="swipeTmpl"/>
 </ws:else>
+

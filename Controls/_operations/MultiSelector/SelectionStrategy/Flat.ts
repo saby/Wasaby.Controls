@@ -1,83 +1,62 @@
+import { default as BaseSelectionStrategy, IQueryParams } from 'Controls/_operations/MultiSelector/SelectionStrategy/Base';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { getItems } from 'Controls/_operations/MultiSelector/SelectionHelper';
+import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
+import clone = require('Core/core-clone');
 
 import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { ISelectionStrategy } from 'Controls/interface';
 
 const ALL_SELECTION_VALUE = null;
 
-export default class FlatSelectionStrategy implements ISelectionStrategy {
-   public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
-      selectedKeys = selectedKeys.slice();
-      excludedKeys = excludedKeys.slice();
+/**
+ * Базовая стратегия выбора в плоском списке.
+ * @class Controls/_operations/MultiSelector/SelectionStrategy/Flat
+ * @extends Controls/_operations/MultiSelector/SelectionStrategy/Base
+ * @control
+ * @public
+ * @author Капустин И.А.
+ */
+export default class FlatSelectionStrategy extends BaseSelectionStrategy {
+   select(selection: ISelection, keys: TKeys): ISelection {
+      selection = clone(selection);
 
-      if (this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys)) {
-         ArraySimpleValuesUtil.removeSubArray(excludedKeys, keys);
+      if (this.isAllSelected(selection)) {
+         ArraySimpleValuesUtil.removeSubArray(selection.excluded, keys);
       } else {
-         ArraySimpleValuesUtil.addSubArray(selectedKeys, keys);
+         ArraySimpleValuesUtil.addSubArray(selection.selected, keys);
       }
 
-      return {
-         selected: selectedKeys,
-         excluded: excludedKeys
-      };
+      return selection;
    }
 
-   public unSelect(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
-      selectedKeys = selectedKeys.slice();
-      excludedKeys = excludedKeys.slice();
+   unSelect(selection: ISelection, keys: TKeys): ISelection {
+      selection = clone(selection);
 
-      if (this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys)) {
-         ArraySimpleValuesUtil.addSubArray(excludedKeys, keys);
+      if (this.isAllSelected(selection)) {
+         ArraySimpleValuesUtil.addSubArray(selection.excluded, keys);
       } else {
-         ArraySimpleValuesUtil.removeSubArray(selectedKeys, keys);
+         ArraySimpleValuesUtil.removeSubArray(selection.selected, keys);
       }
 
-      return {
-         selected: selectedKeys,
-         excluded: excludedKeys
-      };
+      return selection;
    }
 
-   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number): Promise {
-      let itemsSelectedCount: number|null = null;
-      let items: RecordSet|List = getItems(model);
-      let itemsCount: number = items.getCount();
-
-      if (this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys)) {
-         if (this._isAllItemsLoaded(items, limit) && (!limit || itemsCount <= limit)) {
-            itemsSelectedCount = itemsCount - excludedKeys.length;
-         } else if (limit) {
-            itemsSelectedCount = limit - excludedKeys.length;
-         } else {
-            // Зовем прикладной метод
-         }
-      } else {
-         itemsSelectedCount = selectedKeys.length;
-      }
-
-      return new Promise((resolve) => {
-         resolve(itemsSelectedCount);
-      });
-   }
-
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number, keyProperty: string): Map<TKey, boolean> {
+   getSelectionForModel(selection: ISelection, model: Collection|ListViewModel, limit: number, keyProperty: string): Map<TKey, boolean> {
       let
          selectionResult: Map<TKey, boolean> = new Map(),
          selectedItemsCount: number = 0,
-         isAllSelected: boolean = this.isAllSelected(ALL_SELECTION_VALUE, selectedKeys);
+         isAllSelected: boolean = this.isAllSelected(selection);
 
       if (limit > 0) {
-         limit -= excludedKeys.length;
+         limit -= selection.excluded.length;
       }
 
       getItems(model).forEach((item) => {
          let itemId: TKey = item.get(keyProperty);
          let isSelected: boolean = (!limit || selectedItemsCount < limit) &&
-            (selectedKeys.includes(itemId) || isAllSelected && !excludedKeys.includes(itemId));
+            (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
 
          if (isSelected) {
             selectedItemsCount++;
@@ -90,8 +69,27 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       return selectionResult;
    }
 
-   public isAllSelected(roodId: Tkey, selectedKeys: TKeys): boolean {
-      return selectedKeys.includes(roodId);
+   isAllSelected(selection: ISelection): boolean {
+      return selection.selected.includes(ALL_SELECTION_VALUE);
+   }
+
+   protected _getCount(selection: ISelection, model: Collection|ListViewModel, queryParams: IQueryParams): number|null {
+      let countItemsSelected: number|null = null;
+      let items: RecordSet|List = getItems(model);
+      let itemsCount: number = items.getCount();
+      let limit: number = queryParams.limit;
+
+      if (this.isAllSelected(selection)) {
+         if (this._isAllItemsLoaded(items, limit) && (!limit || itemsCount <= limit)) {
+            countItemsSelected = itemsCount - selection.excluded.length;
+         } else if (limit) {
+            countItemsSelected = limit - selection.excluded.length;
+         }
+      } else {
+         countItemsSelected = selection.selected.length;
+      }
+
+      return countItemsSelected;
    }
 
    private _isAllItemsLoaded(items: RecordSet|List, limit: number): boolean {

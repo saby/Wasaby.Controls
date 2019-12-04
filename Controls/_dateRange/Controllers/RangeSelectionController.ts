@@ -2,7 +2,7 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import coreClone = require('Core/core-clone');
 import RangeSelectrionControllerTmpl = require('wml!Controls/_dateRange/Controllers/RangeSelectionController');
-import IRangeSelectable from "./../interfaces/IInputSelectable";
+import IRangeSelectable from "./../interfaces/IRangeSelectable";
 
 var _private = {
 
@@ -108,7 +108,7 @@ var _private = {
  *
  * @class Controls/_dateRange/Controllers/RangeSelectionController
  * @extends Core/Control
- * @mixes Controls/_dateRange/interfaces/IInputSelectable
+ * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @author Красильников А.С.
  */
 var Component = BaseControl.extend({

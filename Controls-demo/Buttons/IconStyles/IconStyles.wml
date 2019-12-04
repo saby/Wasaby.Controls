@@ -24,7 +24,11 @@
         <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="info"></Controls.buttons:Button>
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=default</div>
+        <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=label</div>
         <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="label"></Controls.buttons:Button>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=default</div>
+        <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="default"></Controls.buttons:Button>
     </div>
 </div>

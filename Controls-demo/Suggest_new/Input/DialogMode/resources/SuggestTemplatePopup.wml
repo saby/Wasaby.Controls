@@ -1,0 +1,14 @@
+<Controls.suggestPopup:ListContainer attr:class="{{_options.classListWrapper}}">
+    <Controls.list:View displayProperty="title" keyProperty="id" attr:class="{{_options.demoClass + (_options.dialogMode ? ' demo-suggestSelector')}} {{_options.dialogMode}}">
+       <ws:itemTemplate>
+          <ws:partial template="Controls/list:ItemTemplate">
+              <ws:contentTemplate>
+               <ws:if data="{{_options.dialogMode}}">
+                  <img src="{{itemTemplate.itemData.item['photo']}}"/>
+               </ws:if>
+                <span class="controlsDemo__wrapper">{{itemTemplate.itemData.item.title}}</span>
+              </ws:contentTemplate>
+          </ws:partial>
+      </ws:itemTemplate>
+    </Controls.list:View>
+</Controls.suggestPopup:ListContainer>

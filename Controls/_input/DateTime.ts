@@ -4,7 +4,7 @@ import coreMerge = require('Core/core-merge');
 import {Date as WSDate, DateTime, Time} from 'Types/entity';
 import Model = require('Controls/_input/DateTime/Model');
 import {DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, getMaskType, TIME_MASK_TYPE} from './DateTime/Utils';
-import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
+import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/DateTime/DateTime');
 
@@ -138,11 +138,13 @@ var Component = Control.extend([], {
          this._model.setCurrentDate();
       }
       if (key === Env.constants.key.plus || key === Env.constants.key.minus) {
-      // on +/- buttons press date should be increased or decreased in field by one day
-         var delta = key === Env.constants.key.plus ? 1 : -1;
-         var localDate = new this._dateConstructor(this._model.value);
-         localDate.setDate(this._model.value.getDate() + delta);
-         this._model.value = localDate;
+      //on +/- buttons press date should be increased or decreased in field by one day if date is not empty
+         if (this._model.value) {
+            var delta = key === Env.constants.key.plus ? 1 : -1;
+            var localDate = new this._dateConstructor(this._model.value);
+            localDate.setDate(this._model.value.getDate() + delta);
+            this._model.value = localDate;
+         }
       }
    },
 

@@ -2,31 +2,63 @@ import {Control, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/grid/SourceControl/ChangesSource/ChangesSource"
 import {Memory} from "Types/source"
 import {getCountriesStats} from "../../DemoHelpers/DataCatalog"
+import Deferred = require('Core/Deferred');
 
 import 'css!Controls-demo/Controls-demo'
+
+class demoSource extends Memory {
+    queryNumber: number = 0;
+    pending: Promise<any>;
+    private query(query) {
+        const self = this;
+        // return this.pending.addCallback(() => {
+            return super.query.apply(this, arguments).addCallback((items) => {
+                const rawData = items.getRawData();
+                rawData.meta.more = this.queryNumber < 2;
+                items.setRawData(rawData);
+                this.queryNumber++;
+                return items;
+            });
+        // })
+
+    }
+}
 
 const data = [
     {
         id: 1,
-        load: 1
+        load: 1,
+        title: 'hello'
     }, {
         id: 2,
-        load: 2
+        load: 2,
+        title: 'hello'
+
     }, {
         id: 3,
-        load: 2
+        load: 2,
+        title: 'hello'
+
     }, {
         id: 4,
-        load: 2
+        load: 2,
+        title: 'hello'
+
     }, {
         id: 5,
-        load: 2
+        load: 2,
+        title: 'hello'
+
     }, {
         id: 6,
-        load: 2
+        load: 2,
+        title: 'hello'
+
     }, {
         id: 7,
-        load: 2
+        load: 2,
+        title: 'hello'
+
     }];
 
 export default class extends Control {
@@ -34,10 +66,8 @@ export default class extends Control {
     private _viewSource: Memory;
     private _viewSource2: Memory;
     private _columns = getCountriesStats().getColumnsForLoad();
-    private _loadCounter = 0;
-    private _pageSize = 4;
-    private _navigationMode = 'infinity';
-    private _dataLoad = this._dataLoadCallback.bind(this);
+    // private queryNumber = 0;
+    // private _dataLoadCallback = this._dataLoad.bind(this);
 
     protected _beforeMount() {
         const self = this;
@@ -49,74 +79,45 @@ export default class extends Control {
             source: 'page',
             view: 'infinity',
             sourceConfig: {
-                pageSize: 3,
+                pageSize: 5,
                 page: 0,
-                hasMore: false
             },
-            viewConfig: {
-                pagingMode: 'direct'
-            }
         };
-        this._viewSource2 = new Memory({
+        this._viewSource2 = new demoSource({
             keyProperty: 'id',
             data: data,
-            filter: (item) => {
-                return item.get('load') === self._loadCounter;
+            filter: function(item) {
+                return item.get('load') === this.queryNumber;
             }
         });
+        // window.testCounter = 0;
+        // const originalQuery = this._viewSource2.query;
+        // this._viewSource2.query = function() {
+        //     // self.queryNumber = 0;
+        //     return originalQuery.apply(this, arguments).addCallback(function(items) {
+        //         const rawData = items.getRawData();
+        //         rawData.meta.more = window.testCounter < 2;
+        //         items.setRawData(rawData);
+        //         window.testCounter++;
+        //         return items;
+        //     })
+        // }
+
+
+        // this._viewSource2.pending = new Deferred();
     }
 
+    // private onPending() {
+    //     this._viewSource2.pending.callback();
+    // }
+
     private _onChangeSource() {
-        const self = this;
+        this._viewSource2.queryNumber = 0;
         this._viewSource = this._viewSource2;
     }
 
-    private _dataLoadCallback() {
-        this._loadCounter++;
-    }
-
-    /*private _onChangeSource() {
-        this._viewSource.query().then(() => {
-            const all = getCountriesStats().getData();
-            switch (this.counter) {
-                case 0:
-                    this._viewSource = new Memory({
-                        keyProperty: 'id',
-                        data: []
-                    });
-                    this.counter++;
-                    break;
-                case 1:
-                    this._viewSource = new Memory({
-                        keyProperty: 'id',
-                        data: all.slice(0, 1)
-                    });
-                    this.counter++;
-                    break;
-                case 2:
-                    this._viewSource = new Memory({
-                        keyProperty: 'id',
-                        data: all
-                    });
-                    this.counter++;
-                    break;
-                default:
-                    break;
-            }
-        });
-    }*/
-
-    // private _onChangeSource2() {
-    //     this._viewSource = new Memory({
-    //         keyProperty: 'id',
-    //         data: getCountriesStats().getData().slice(0, 2)
-    //     });
+    // private _dataLoad() {
+    //     this._viewSource2.queryNumber++;
     // }
-    //
-    // private _onChangeSource3() {
-    //     this._viewSource = new Memory({
-    //         keyProperty: 'id',
-    //         data: getCountriesStats().getData()
-    //     });
-    // }
+
 }

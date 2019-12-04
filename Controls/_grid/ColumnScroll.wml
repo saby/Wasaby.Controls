@@ -10,7 +10,6 @@
 
            position="{{_scrollPosition}}"
            contentSize="{{_contentSizeForHScroll}}"
-           isNotGridSupport="{{_isNotGridSupport}}"
            topOffset="{{_offsetForHScroll}}"
            positionChangeHandler="{{_positionHandler}}"
            bind:scrollWidth="_scrollWidth"
@@ -19,6 +18,7 @@
 
            attr:class="controls-Grid_columnScroll"
            on:itemClick="_notifyHandler('itemClick')"
+           on:itemMouseDown="_notifyHandler('itemMouseDown')"
            on:checkboxClick="_notifyHandler('checkboxClick')"
            on:itemSwipe="_notifyHandler('itemSwipe')"
            on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"

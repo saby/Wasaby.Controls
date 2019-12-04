@@ -19,10 +19,10 @@ define([
             excludedKeys: [],
             keyProperty: ListData.KEY_PROPERTY,
             listModel: getListModel(),
-            selectionStrategy: new DeepTreeSelectionStrategy.default()
+            selectionStrategy: new DeepTreeSelectionStrategy.default({})
          }, config || {});
       }
-      
+
       function getListModel(recordSet) {
          return new treeGrid.ViewModel({columns: [], items: recordSet || allData});
       }
@@ -214,7 +214,7 @@ define([
                selectionInstance = new operations.HierarchySelection(cfg);
                selectionInstance.select([null]);
                flatData.setMetaData({ more: 3 });
-               
+
                assert.deepEqual([null], selectionInstance.selectedKeys);
                assert.deepEqual([], selectionInstance.excludedKeys);
                selectionInstance.getCount().then((itemsCount) => {
@@ -520,7 +520,7 @@ define([
                });
                selectionInstance = new operations.HierarchySelection(cfg);
                selectionInstance.updateSelectionForRender();
-               
+
                assert.deepEqual([1], selectionInstance.selectedKeys);
                assert.deepEqual([], selectionInstance.excludedKeys);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance._listModel._model._selectedKeys);
@@ -559,7 +559,7 @@ define([
             });
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance.updateSelectionForRender();
-            
+
             assert.deepEqual([1], selectionInstance.selectedKeys);
             assert.deepEqual([], selectionInstance.excludedKeys);
             assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance._listModel._model._selectedKeys);
@@ -594,13 +594,13 @@ define([
             });
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance.toggleAll();
-            
+
 
             assert.deepEqual([null], selectionInstance.selectedKeys);
             assert.deepEqual([null, 1, 6, 7], selectionInstance.excludedKeys);
 
             selectionInstance.toggleAll();
-            
+
 
             assert.deepEqual([1, 6, 7], selectionInstance.selectedKeys);
             assert.deepEqual([], selectionInstance.excludedKeys);
@@ -615,19 +615,52 @@ define([
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance._listModel._model.setRoot(2);
             selectionInstance.toggleAll();
-            
+
 
             // 2 выходит из исключений, а ее дочерний эл-т который был выбран, наоборот.
             assert.deepEqual([1, 6], selectionInstance.selectedKeys);
             assert.deepEqual([5, 4], selectionInstance.excludedKeys);
 
             selectionInstance.toggleAll();
-            
+
 
             // Вернулись к начальному
             assert.deepEqual([1, 6, 4], selectionInstance.selectedKeys);
             assert.deepEqual([5, 2], selectionInstance.excludedKeys);
          });*/
+
+         it('toggle all with id folder, which when cast to a boolean type, returns false', function() {
+            let items = [
+               {
+                  [ListData.KEY_PROPERTY]: 0,
+                  [ListData.PARENT_PROPERTY]: null,
+                  [ListData.NODE_PROPERTY]: true,
+                  [ListData.HAS_CHILDREN_PROPERTY]: true
+               }, {
+                  [ListData.KEY_PROPERTY]: 1,
+                  [ListData.PARENT_PROPERTY]: 0,
+                  [ListData.NODE_PROPERTY]: true,
+                  [ListData.HAS_CHILDREN_PROPERTY]: false
+               }
+            ];
+
+            cfg = getConfig({
+               selectedKeys: [1],
+               listModel: getListModel(new collection.RecordSet({
+                  rawData: items,
+                  keyProperty: ListData.KEY_PROPERTY
+               }))
+            });
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance._listModel._model.setRoot(0);
+            selectionInstance.toggleAll();
+            assert.deepEqual([0], selectionInstance.selectedKeys);
+            assert.deepEqual([0, 1], selectionInstance.excludedKeys);
+
+            selectionInstance.toggleAll();
+            assert.deepEqual([1], selectionInstance.selectedKeys);
+            assert.deepEqual([], selectionInstance.excludedKeys);
+         });
 
          it('selectAll and unselectAll in unselected folder', function(done) {
             // remove current root from data
@@ -639,7 +672,7 @@ define([
             assert.deepEqual([], selectionInstance.excludedKeys);
 
             selectionInstance.selectAll();
-            
+
 
             assert.deepEqual([1], selectionInstance.selectedKeys);
             assert.deepEqual([1], selectionInstance.excludedKeys);
@@ -666,7 +699,7 @@ define([
             assert.deepEqual([], selectionInstance.excludedKeys);
 
             selectionInstance.unselectAll();
-            
+
 
             assert.deepEqual([], selectionInstance.selectedKeys);
             assert.deepEqual([], selectionInstance.excludedKeys);

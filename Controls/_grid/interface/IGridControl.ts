@@ -103,25 +103,11 @@
  * </pre>
  */
 
-/**
- * @typedef {String} GridCellAlign
- * @variant left Выровнять содержимое ячейки по левому краю.
- * @variant center Выровнять содержимое ячейки по центру.
- * @variant right Выровнять содержимое ячейки по правому краю.
- */
-
 /*
  * @typedef {String} GridCellAlign
  * @variant left Align content to left side.
  * @variant center Align content to center.
  * @variant right Align content to right side.
- */
-
-/**
- * @typedef {String} GridCellVAlign
- * @variant top Выровнять содержимое ячейки по верхнему краю.
- * @variant center Выровнять содержимое ячейки по центру.
- * @variant bottom Выровнять содержимое ячейки по нижнему краю.
  */
 
 /*
@@ -140,10 +126,18 @@
 /**
  * @typedef {Object} HeaderCell
  * @property {String} caption Текст заголовка ячейки.
- * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
- * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
+ * @property {String} align Выравнивание содержимого ячейки по горизонтали.
+ * Доступные значения:
+ * * **left** — по левому краю.
+ * * **center** — по центру.
+ * * **right** — по правому краю.
+ * @property {String} valign Выравнивание содержимого ячейки по вертикали.
+ * Доступные значения:
+ * * **top** — по верхнему краю.
+ * * **center** — по центру.
+ * * **bottom** — по нижнему краю.
  * @property {String} [template=Controls/grid:HeaderContent] Шаблон заголовка ячейки.
- * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
+ * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/ документации}.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
  * В качестве значения принимает имя поля.
  * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки.
@@ -178,7 +172,7 @@
  * @property {Number} startColumn Порядковый номер колонки, на которой начинается ячейка.
  * @property {Number} endColumn Порядковый номер колонки, на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
- * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+ * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
 
 /*
@@ -253,7 +247,7 @@
 
 /*
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<Array.<HeaderCell>>} Describes grid's header.
+ * @cfg {Array.<HeaderCell>} Describes grid's header.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark
  * Base header content template for Controls/grid:View: "Controls/grid:HeaderContent".
@@ -265,38 +259,70 @@
  */
 
 /**
- * @typedef {String} TextOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
- * @variant ellipsis Текст обрезается, и в конец строки добавляется многоточие.
- * @variant none Стандартное поведение при незаданном свойстве.
- * @default none
- */
-
-/*
- * @typedef {String} TextOverflow Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
- * @variant ellipsis The text is clipped and an ellipsis is added to the end of the line.
- * @variant none Standard behavior, as if the property is not set.
- * @default none
- */
-
-/**
  * @typedef {Object} Column
  * @property {String} width Ширина колонки.
- * В качестве значения свойства можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
+ * В качестве значения свойства можно указать пиксели (px), проценты (%), доли (1fr), "auto", "minmax", "max-content" и "min-content".
  * В значении "auto" ширина колонки устанавливается автоматически исходя из типа и содержимого элемента.
  * В значении "minmax(,)" ширина колонки устанавливается автоматически в рамках заданного интервала. Например, "minmax(600px, 1fr)" означает, что минимальная ширина колонки 600px, а максимальная — 1fr.
+ * В значении "max-content" ширина колонки устанавливается автоматически в зависимости от самой большой ячейки. Например, если в первой строке ширина ячейки 100px, а во второй строке — 200px, тогда ширина колонки будет определена как 200px.
+ * В значении "min-content" для колонки устанавливается наименьшая возможная ширина, при которой не возникает переполнения ячейки. Например, если в первой строке ячейка содержит контент "Первая строка", а во второй — "Содержимое второй строки" и включен перенос по словам, то ширина рассчитается по наиболее широкому непереносимому слову, а это слово "Содержимое" из второй строки.
  * Для браузеров, которые не поддерживают технологию <a href="https://developer.mozilla.org/ru/docs/web/css/css_grid_layout">CSS Grid Layout</a>, не работает ширина колонки, указанная в долях, "auto" или "minmax". Для таких браузеров используйте свойство compatibleWidth.
  * @property {String} compatibleWidth Ширина колонки в браузерах, не поддерживающих "CSS Grid Layout".
  * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
- * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в колонке.
+ * @property {String} displayProperty Имя поля, данные которого отображаются в колонке.
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
  * О создании пользовательского шаблона читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">здесь</a>.
  * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
  * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
- * @property {GridCellAlign} [align=left] Выравнивание содержимого ячейки по горизонтали.
- * @property {GridCellVAlign} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
- * По умолчанию содержимое выравнивается по базовой линии (см. {@link align-items https://developer.mozilla.org/ru/docs/Web/CSS/align-items}).
+ * @property {String} [align=left] Выравнивание содержимого ячейки по горизонтали.
+ * Доступные значения:
+ * 
+ * * **left** — по левому краю.
+ * * **center** — по центру.
+ * * **right** — по правому краю.
+ * @property {String} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
+ * Доступные значения:
+ * 
+ * * **top** — по верхнему краю.
+ * * **center** — по центру.
+ * * **bottom** — по нижнему краю.
+ * * **baseline** — по базовой линии (см. {@link https://developer.mozilla.org/ru/docs/Web/CSS/align-items align-items}).
  * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
- * @property {TextOverflow} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * @property {String} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * Доступные значения:
+ * * * **ellipsis** — текст обрезается, и в конец строки добавляется многоточие.
+ * * **none** — стандартное поведение при незаданном свойстве.
+ * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+ * <pre>
+ * columns: [{
+ *    width: '1fr',
+ *    cellPadding: {
+ *        left: 'M', 
+ *        right: 'M' 
+ *    }
+ * },
+ * {
+ *    width: '1fr',
+ *    cellPadding: { 
+ *        left: 'S',
+ *        right: 'S' 
+ *    }
+ * }]
+ * </pre>
+ */
+
+/**
+ * @typedef {Object} CellPadding
+ * @property {HorizontalCellPaddingEnum} [left=null] Отступ от левой границы ячейки.
+ * @property {HorizontalCellPaddingEnum} [right=null] Отступ от правой границы ячейки.
+ */
+
+/**
+ * @typedef {Object} HorizontalCellPaddingEnum
+ * @variant S Небольшой отступ.
+ * @variant M Средний отступ.
+ * @variant null Нулевой отступ.
+ * @default null
  */
 
 /*
@@ -309,7 +335,10 @@
  * @property {GridCellAlign} [align] Horizontal cell content align.
  * @property {GridCellVAlign} [valign] Vertical cell content align.
  * @property {String} [stickyProperty] The name of the field used to sticking the column data.
- * @property {TextOverflow} [textOverflow] Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
+ * @property {String} [textOverflow=none] Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
+ * 
+ * * **ellipsis** — the text is clipped and an ellipsis is added to the end of the line.
+ * * **none** — standard behavior, as if the property is not set.
  */
 
 /**
@@ -456,7 +485,7 @@
 
  /**
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
- * @cfg {Function} Шаблон строки итогов.
+ * @cfg {Function} Устанавливает шаблон отображения строки итогов.
  * @default Controls/grid:ResultsTemplate
  * @remark
  * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
@@ -474,9 +503,17 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsPosition
- * @cfg {String} Положение строки итогов.
- * @variant top Вывести итоги над списком.
- * @variant bottom Вывести итоги под списком.
+ * @cfg {String} Устанавливает положение строки итогов.
+ * @remark
+ * Доступные значения:
+ * 
+ * * **top** — над списком.
+ * * **bottom** — под списком.
+ * * **undefined** — строка итогов скрыта.
+ * @default undefined
+ * @result
+ * @see resultsTemplate
+ * @see resultsVisibility
  */
 
 /*
@@ -488,10 +525,15 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsVisibility
- * @cfg {String} Режим отображения строки итогов.
- * @variant hasdata Строка итогов отображается при наличии более 1 записи в списке.
- * @variant visible Строка итогов отображается всегда, вне зависимости от количества данных в списке.
+ * @cfg {String} Устанавливает режим отображения строки итогов.
+ * @remark
+ * Доступные значения:
+ * 
+ * * **hasdata** — отображается при наличии более 1 записи в списке.
+ * * **visible** — отображается всегда, вне зависимости от количества записей в списке.
  * @default hasData
+ * @see resultsTemplate
+ * @see resultsPosition
  */
 
 /**
@@ -503,10 +545,13 @@
 /**
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
- * <a href="/materials/demo-ws4-edit-arrow">Example</a>
- * @remark Чтобы расположить кнопка отображалась в прикладном шаблоне колонки, следует встроить шаблон editArrowTemplate в нужное место
+ * @remark
+ * См. <a href="/materials/demo-ws4-edit-arrow">демо-пример</a>
+ * Чтобы кнопка отображалась в прикладном шаблоне колонки, следует самостоятельно встроить шаблон {@link Controls/grid:ColumnTemplate#editArrowTemplate} в нужное место.
  * @example
+ * <pre>
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
+ * </pre>
  */
 
 /*

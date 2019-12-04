@@ -1,63 +1,217 @@
 /**
- * Шаблон, который по умолчанию используется для отображения разделителя группы в контроле {@link Controls/grid:View}.
- * @interface Controls/grid:GroupTemplate
+ * Шаблон, который по умолчанию используется для отображения горизонтальной линии-разделителя {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/grouping/ группы} в {@link Controls/grid:View табличном представлении}.
+ * @class Controls/grid:GroupTemplate
  * @author Авраменко А.С.
  * @see Controls/grid:View#groupTemplate
- * @remark
- * Параметры шаблона описаны в следующей таблице:
- * 
- * <div>
- * <table class="tftable" border="1">
- *    <tr>
- *       <th>Имя</th>
- *       <th>Тип</th>
- *       <th>Значение по умолчанию</th>
- *       <th>Описание</th>
- *    </tr>
- *    <tr>
- *       <td>expanderAlign</td>
- *       <td>String</td>
- *       <td>left</td>
- *       <td>Расположение кнопки-экспандера. Доступные значения опции: hidden, right и left.</td>
- *    </tr>
- *    <tr>
- *       <td>expanderVisible</td>
- *       <td>Boolean</td>
- *       <td>true</td>
- *       <td>Видимость кнопки-экспандера.</td>
- *    </tr>
- *    <tr>
- *       <td>textAlign</td>
- *       <td>String</td>
- *       <td>по центру</td>
- *       <td>Горизонтальное выравнивание текста группы. Доступные значения опции: "left" и "right".</td>
- *    </tr>
- *    <tr>
- *       <td>rightTemplate</td>
- *       <td>Function|String</td>
- *       <td></td>
- *       <td>Шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</td>
- *    </tr>
- *    <tr>
- *       <td>columnAlignGroup</td>
- *       <td>Number</td>
- *       <td></td>
- *       <td>Номер колонки, относительно которой происходит горизонтальное выравнивание текста группы.</td>
- *    </tr>
- * </table>
- * </div>
- * 
- * В следующем примере показано, как для шаблона изменить параметр expanderVisible.
- * <pre>
+ * @example
+ * В следующем примере показано, как изменить параметры шаблона.
+ * <pre class="brush: html">
  *    <Controls.grid:View>
  *       <ws:groupTemplate>
- *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}" />
+ *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}">
+ *             <ws:contentTemplate>
+ *                <ws:if data="{{contentTemplate.itemData.item === 'tasks'}}">Задачи</ws:if>
+ *                <ws:if data="{{contentTemplate.itemData.item === 'error'}}">Ошибки</ws:if>
+ *             </ws:contentTemplate>
+ *          </ws:partial>
  *       </ws:groupTemplate>
  *    </Controls.grid:View>
  * </pre>
- * 
- * Подробнее о шаблоне:
- * 
- * * {@link https://wi.sbis.ru/materials/demo-ws4-grid-group Демо-пример}
- * * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/ Руководство разработчика}
+ * @remark
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/ здесь}.
  */
+
+/**
+ * @name Controls/grid:GroupTemplate#expanderAlign
+ * @cfg {String} Устанавливает расположение кнопки-экспандера относительно заголовка группы.
+ * @default left
+ * @remark
+ * Доступные значения:
+ * 
+ * * **right** — справа.
+ * * **left** — слева.
+ * 
+ * Кнопка-экспандер позволяет сворачивать/разворачивать группу.
+ * @see expanderVisible
+ */
+
+/**
+ * @name Controls/grid:GroupTemplate#expanderVisible
+ * @cfg {Boolean} Устанавливает видимость кнопки-экспандера.
+ * @default true
+ * @remark
+ * Доступные значения:
+ * 
+ * * **true** — отображается.
+ * * **false** — не отображается.
+ * 
+ * Кнопка-экспандер позволяет сворачивать/разворачивать группу.
+ * @see expanderAlign
+ */
+
+/**
+ * @name Controls/grid:GroupTemplate#textAlign
+ * @cfg {String} Устанавливает горизонтальное выравнивание заголовка группы.
+ * @default undefined
+ * @remark
+ * Доступные значения:
+ * 
+ * * **right** — по правому краю.
+ * * **left** — по левому краю.
+ * * **undefined** — по центру.
+ */
+
+/**
+ * @name Controls/grid:GroupTemplate#columnAlignGroup
+ * @cfg {Number} Устанавливает номер колонки, относительно которой происходит горизонтальное выравнивание заголовка группы.
+ * @default undefined
+ */
+
+/**
+ * @name Controls/grid:GroupTemplate#separatorVisibility
+ * @cfg {Boolean} Устанавливает видимость горизонтальной линии-разделителя.
+ * @default true
+ * @remark
+ * Доступные значение:
+ * 
+ * * **true** — отображается.
+ * * **false** — скрыта. 
+ */
+
+/**
+ * @name Controls/grid:GroupTemplate#rightTemplate
+ * @cfg {String|Function} Устанавливает пользовательский шаблон, выводимый на горизонтальной линии-разделителе в правой части.
+ * @default undefined
+ * @remark
+ * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
+ * 
+ * * {@link Types/entity:Record item} — результат того, что возвращено из функции {@link Controls/grid:View#groupingKeyCallback groupingKeyCallback}.
+ * * {@link Types/collection:RecordSet#metaData metaData} — метаданные рекордсета, который загружен для таблицы.
+ * @example
+ * **Пример 1.** Контрол и шаблон сконфигурированы в одном WML-файле.
+ * <pre class="brush: html">
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="Controls/grid:GroupTemplate">
+ *          <ws:rightTemplate>
+ *             {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
+ *          </ws:rightTemplate>
+ *       </ws:partial>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
+ * <pre class="brush: html">
+ * <!-- file1.wml -->
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="wml!file2" scope="{{groupTemplate}}"/>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre class="brush: html">
+ * <!-- file2.wml -->
+ * <ws:partial template="Controls/grid:GroupTemplate">
+ *    <ws:rightTemplate>
+ *       {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
+ *    </ws:rightTemplate>
+ * </ws:partial>
+ * </pre>
+ * 
+ * **Пример 3.** Шаблон rightTemplate сконфигурирован в отдельном WML-файле.
+ * 
+ * <pre class="brush: html">
+ * <!-- file1.wml -->
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="Controls/grid:GroupTemplate">
+ *          <ws:rightTemplate>
+ *             <ws:partial template="wml!file2" scope="{{rightTemplate}}"/>
+ *          </ws:rightTemplate>
+ *       </ws:partial>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre class="brush: html">
+ * <!-- file2.wml -->
+ * {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
+ * </pre>
+ */
+
+/**
+ * @name Controls/grid:GroupTemplate#contentTemplate
+ * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий заголовок группы.
+ * @remark
+ * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
+ * 
+ * * {@link Types/entity:Record item} — результат того, что возвращено из функции {@link Controls/grid:View#groupingKeyCallback groupingKeyCallback}.
+ * * {@link Types/collection:RecordSet#metaData metaData} — метаданные рекордсета, который загружен для таблицы.
+ * @example
+ * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
+ * 
+ * <pre class="brush: html">
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="Controls/grid:GroupTemplate">
+ *          <ws:contentTemplate>
+ *             <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+ *             <ws:if data="{{contentTemplate.itemData.item === 'works'}}">Работы</ws:if>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
+ * <pre class="brush: html">
+ * <!-- file1.wml -->
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="wml!file2" scope="{{groupTemplate}}"/>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre class="brush: html">
+ * <!-- file2.wml -->
+ * <ws:partial template="Controls/grid:GroupTemplate">
+ *    <ws:contentTemplate>
+ *       <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+ *       <ws:if data="{{contentTemplate.itemData.item === 'works'}}">Работы</ws:if>
+ *    </ws:contentTemplate>
+ * <ws:partial>
+ * </pre>
+ * 
+ * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
+ * 
+ * <pre class="brush: html">
+ * <!-- file1.wml -->
+ * <Controls.grid:View>
+ *    <ws:groupTemplate>
+ *       <ws:partial template="Controls/grid:GroupTemplate">
+ *          <ws:contentTemplate>
+ *             <ws:partial template="wml!file2" scope="{{contentTemplate}}"/>
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:groupTemplate>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * <pre class="brush: html">
+ * <!-- file2.wml -->
+ * <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+ * <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
+ * </pre>
+ * 
+ */
+
+export default interface IGroupTemplateOptions {
+   expanderAlign?: string;
+   expanderVisible?: boolean;
+   textAlign?: string;
+   columnAlignGroup?: number;
+   rightTemplate?: string;
+}

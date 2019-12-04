@@ -11,6 +11,7 @@
                     itemActionsClass="{{itemActionsClass}}"
                     itemData="{{itemData}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
+                    attr:class="controls-Grid__itemAction"
                     highlightOnHover="{{highlightOnHover}}"/>
     </ws:else>
 </ws:template>
@@ -77,7 +78,7 @@
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
               {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
               controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-       colspan="{{itemData.getColspanFor(colspan || colspanCurrentNode ? 'node')}}">
+       colspan="{{itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
        <div class="controls-TreeGridView__row-cell_innerWrapper">
            <ws:partial template="columnContentWrapper"
                        attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>

@@ -2,7 +2,7 @@
         stickyPosition="{{_options.stickyPosition}}"
         attr:class="controls-SelectedCollection__infobox_content">
    <div class="controls-SelectedCollection__header_wrapper">
-      <Controls.heading:Title caption="Выбрано" size="s" readOnly="{{true}}"/>
+      <Controls.heading:Title caption="{[Выбрано]}" size="s" readOnly="{{true}}"/>
    </div>
    <Controls.scroll:Container attr:class="controls-SelectedCollection__scroll">
       <Controls.lookup:Collection

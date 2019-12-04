@@ -9,6 +9,8 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
 
     protected _$animated: boolean;
 
+    protected _$canShowActions: boolean;
+
     getTileWidth(templateWidth?: number): number {
         return templateWidth || this._$owner.getTileWidth();
     }
@@ -32,7 +34,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     isScaled(): boolean {
         const scalingMode = this._$owner.getTileScalingMode();
         return (
-            (scalingMode !== 'none' || this.getDisplayProperty()) &&
+            (scalingMode !== 'none' || !!this.getDisplayProperty()) &&
             (this.isHovered() || this.isActive() || this.isSwiped())
         );
     }
@@ -90,12 +92,25 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
             this._notifyItemChangeToOwner('animated');
         }
     }
-
+    setCanShowActions(canShowActions: boolean, silent?: boolean): void {
+        if (this._$canShowActions === canShowActions) {
+            return;
+        }
+        this._$canShowActions = canShowActions;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('canShowActions');
+        }
+    }
+    canShowActions(): boolean {
+        return this._$canShowActions;
+    }
     isAnimated(): boolean {
         if (this._$animated && !this.isScaled()) {
             // FIXME This is bad, but there is no other obvious place to
             // reset the animation state. Should probably be in that same
             // animation manager
+            this.setCanShowActions(false, true);
             this.setAnimated(false, true);
             this.setFixedPositionStyle('', true);
         }
@@ -128,7 +143,10 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
             classes += ' controls-TileView__item_active';
         }
         if (this.isActive() || this.isHovered()) {
-            classes += ' controls-TileView__item_hovered controls-ListView__item_showActions';
+            classes += ' controls-TileView__item_hovered';
+        }
+        if (this.canShowActions()) {
+            classes += ' controls-ListView__item_showActions';
         }
         if (this.isScaled()) {
             classes += ' controls-TileView__item_scaled';
@@ -190,7 +208,8 @@ Object.assign(TileCollectionItem.prototype, {
     _moduleName: 'Controls/display:TileCollectionItem',
     _instancePrefix: 'tile-item-',
     _$fixedPosition: undefined,
-    _$animated: false
+    _$animated: false,
+    _$canShowActions: false,
 });
 
 register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate: false});

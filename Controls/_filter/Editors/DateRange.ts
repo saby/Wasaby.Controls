@@ -5,10 +5,12 @@ import DateRangeTemplate = require('wml!Controls/_filter/Editors/DateRange');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 /**
- * Контрол используют в качестве редактора для выбора периода дат на {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/base-settings/#step-3 панели фильтрации}.
+ * Контрол используют в качестве редактора для выбора периода дат на {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 панели фильтрации}.
  * @remark
- * Подробнее о настройке объединенного фильтра с выбором периода читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/period-selection/ здесь}.
+ * Подробнее о настройке объединенного фильтра с выбором периода читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/period-selection/ здесь}.
  * @class Controls/_filter/Editors/DateRange
+ * @mixes Controls/_dateRange/interfaces/ILinkView
+ * @extends Core/Control
  * @author Герасимов А.М.
  * @see Controls/filter:View
  */

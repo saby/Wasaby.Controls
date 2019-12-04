@@ -5,15 +5,40 @@ import CoreExtend = require('Core/core-extend');
 import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
-import chain = require('Types/chain');
 import entity = require('Types/entity');
 import Serializer = require('Core/Serializer');
+import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 var DEFAULT_FILTER = '{}';
 
 var _private = {
+   isOldPinned: function(data) {
+      return !JSON.parse(data, _private.getSerialize().desirialize).hasOwnProperty('linkText');
+   },
+
+   deleteOldPinned: function(self, history, query) {
+      let toDelete = [];
+      const hSource = _private.getSourceByMeta(self, {'$_pinned': true});
+      factory(history.pinned).each((pinItem) => {
+        if (!pinItem.get('ObjectData') || _private.isOldPinned(pinItem.get('ObjectData'))) {
+           toDelete.push(new Promise((resolve) => {
+              hSource.deleteItem(pinItem, {}).addCallback(() => {
+                 resolve();
+              });
+           }));
+        }
+      });
+
+      if (toDelete.length) {
+         Promise.all(toDelete).then(() => {
+            self.query(query);
+         });
+      }
+      return !toDelete.length;
+   },
+
    getSourceByMeta: function (self, meta) {
       for (var i in meta) {
          if (meta.hasOwnProperty(i)) {
@@ -35,15 +60,38 @@ var _private = {
          var pinned = rows.get('pinned');
          var recent = rows.get('recent');
          var frequent = rows.get('frequent');
+         var client = rows.get('client');
 
          self._history = {
             pinned: pinned,
-            frequent: frequent,
             recent: recent
          };
+         if (client) {
+            self._history.client = client;
+         } else if (frequent) {
+            self._history.frequent = frequent;
+         }
       } else {
          self._history = data;
       }
+   },
+
+    // TODO Delete with old favorite
+   getItemsWithOldFavorite: function(self, history, favorite) {
+      let id;
+      factory(favorite).each((favoriteItem) => {
+         id = favoriteItem.get('id');
+         if (!history.pinned.getRecordById(id) && !history.client.getRecordById(id)) {
+            let objectData = JSON.stringify(favoriteItem.get('data').getRawData(), _private.getSerialize().serialize);
+            let newFormatItem = _private.getRawHistoryItem(self, id, objectData);
+            if (objectData.globalParams) {
+               history.client.add(newFormatItem);
+            } else {
+               history.pinned.add(newFormatItem);
+            }
+         }
+      });
+      return _private.getItemsWithHistory(self, history);
    },
 
    getItemsWithHistory: function (self, history) {
@@ -55,7 +103,12 @@ var _private = {
       this.addProperty(this, items, 'ObjectId', 'string', '');
       this.addProperty(this, items, 'ObjectData', 'string', '');
       this.addProperty(this, items, 'pinned', 'boolean', false);
+      this.addProperty(this, items, 'client', 'boolean', false);
 
+      if (self._history.client) {
+         this.fillClient(self, history, items);
+         this.fillFavoritePinned(self, history, items);
+      }
       if (self.historySource._pinned !== false) {
          this.fillPinned(self, history, items);
       }
@@ -64,87 +117,77 @@ var _private = {
       return items;
    },
 
-   fillPinned: function (self, history, items) {
-      var config = {
-         adapter: new entity.adapter.Sbis()
+   getRawItem: function(item, format) {
+      const rawData = {
+         d: [
+            item.getId(),
+            item.get('ObjectData'),
+            item.get('HistoryId')
+         ],
+         s: [
+            { n: 'ObjectId', t: 'Строка' },
+            { n: 'ObjectData', t: 'Строка' },
+            { n: 'HistoryId', t: 'Строка' }
+         ]
       };
-      var item, rawData;
+      return new entity.Model({
+         rawData: rawData,
+         adapter: item.getAdapter(),
+         format: format
+      });
+   },
 
-      chain.factory(history.pinned).filter(function (element) {
-         return element.get('ObjectData') !== DEFAULT_FILTER;
-      }).value(collection.factory.recordSet, config).forEach(function (element) {
-         rawData = {
-            d: [
-               element.getId(),
-               element.get('ObjectData'),
-               element.get('HistoryId')
-            ],
-            s: [{
-                  n: 'ObjectId',
-                  t: 'Строка'
-               },
-               {
-                  n: 'ObjectData',
-                  t: 'Строка'
-               },
-               {
-                  n: 'HistoryId',
-                  t: 'Строка'
-               }
-            ]
-         };
-         item = new entity.Model({
-            rawData: rawData,
-            adapter: element.getAdapter(),
-            format: items.getFormat()
-         });
-
-         item.set('pinned', true);
+   fillItems: function(history, items, historyType, checkCallback) {
+      let item;
+      let filteredItems = factory(history).filter((element) => {
+         return !items.getRecordById(element.getId()) && checkCallback(element);
+      }).value();
+      filteredItems.forEach((element) => {
+         item = _private.getRawItem(element, items.getFormat());
+         if (historyType === 'pinned') {
+            item.set('pinned', true);
+         } else if (historyType === 'client') {
+            item.set('client', true);
+         }
          items.add(item);
       });
    },
 
-   fillRecent: function (self, history, items) {
-      var config = {
-         adapter: new entity.adapter.Sbis()
-      };
-      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
-      var maxLength = self.historySource._recent - pinnedCount - 1;
-      var currentCount = 0;
-      var item, rawData, isPinned;
+   fillFavoritePinned: function(self, history, items) {
+      let isClient;
+      _private.fillItems(history.pinned, items, 'pinned', (item) => {
+         isClient = history.client.getRecordById(item.getId());
 
-      chain.factory(history.recent).filter(function (element) {
-         isPinned = history.pinned.getRecordById(element.getId());
-         if (!isPinned && element.get('ObjectData') !== DEFAULT_FILTER) {
+         // TODO Delete item, that pinned before new favorite. Remove after https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+         let data = item.get('ObjectData');
+         return !isClient && !_private.isOldPinned(data) && data !== DEFAULT_FILTER;
+      });
+   },
+
+   fillPinned: function(self, history, items) {
+      _private.fillItems(history.pinned, items, 'pinned', (item) => {
+         return item.get('ObjectData') !== DEFAULT_FILTER;
+      });
+   },
+
+   fillClient: function(self, history, items) {
+      _private.fillItems(history.client, items, 'client', (item) => {
+         return item.get('ObjectData') !== DEFAULT_FILTER;
+      });
+   },
+
+   fillRecent: function(self, history, items) {
+      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
+      let maxLength = self.historySource._recent - pinnedCount - 1;
+      let currentCount = 0;
+      let isPinned;
+
+      _private.fillItems(history.recent, items, 'recent', (item) => {
+         isPinned = history.pinned.getRecordById(item.getId());
+         if (!isPinned && item.get('ObjectData') !== DEFAULT_FILTER) {
             currentCount++;
          }
-         return !isPinned && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
-      }).value(collection.factory.recordSet, config).forEach(function (element) {
-         rawData = {
-            d: [
-               element.getId(),
-               element.get('ObjectData'),
-               element.get('HistoryId')
-            ],
-            s: [{
-                  n: 'ObjectId',
-                  t: 'Строка'
-               },
-               {
-                  n: 'ObjectData',
-                  t: 'Строка'
-               },
-               {
-                  n: 'HistoryId',
-                  t: 'Строка'
-               }
-            ]
-         };
-         item = new entity.Model({
-            rawData: rawData,
-            adapter: element.getAdapter()
-         });
-         items.add(item);
+         return !isPinned && currentCount <= maxLength && item.get('ObjectData') !== DEFAULT_FILTER;
       });
    },
 
@@ -158,34 +201,75 @@ var _private = {
       }
    },
 
-   updatePinned: function (self, item) {
-      var pinned = self._history.pinned;
-      if (item.get('pinned')) {
-         item.set('pinned', false);
-         pinned.remove(pinned.getRecordById(item.getId()));
+   updateFavorite: function(self, data, meta) {
+      const hService = _private.getSourceByMeta(self, meta);
+      const metaPin = {
+         '$_pinned': true,
+         isClient: meta.isClient
+      };
+
+      if (self._history.client.getRecordById(data.getId()) && !meta.isClient) {
+         // Update the local history data so as not to query to the history service
+         _private.deleteClient(self, data);
+         _private.updatePinned(self, data, metaPin);
+
+         hService.deleteItem(data, { isClient: 1 });
       } else {
-         item.set('pinned', true);
+         _private.addClient(self, data);
+         hService.update(data, { $_pinned: false });
+      }
+
+      return hService.update(data, metaPin);
+   },
+
+   deleteClient: function(self, item) {
+      let client = self._history.client;
+      _private.deleteHistoryItem(client, item.getId());
+      _private.deleteHistoryItem(self._history.recent, item.getId());
+      _private.deleteHistoryItem(self._history.pinned, item.getId());
+
+      self.historySource.saveHistory(self._history);
+   },
+
+   addClient: function(self, item) {
+      if (!self._history.client.getRecordById(item.getId())) {
+         self._history.client.add(_private.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId')));
+      }
+   },
+
+   updatePinned: function (self, item, meta) {
+      const isPinned = !!meta['$_pinned'];
+      let pinned = self._history.pinned;
+      item.set('pinned', isPinned);
+
+      if (isPinned && !pinned.getRecordById(item.getId())) {
          pinned.add(this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId')));
+      } else if (!isPinned) {
+         pinned.remove(pinned.getRecordById(item.getId()));
       }
       self.historySource.saveHistory(self._history);
    },
 
+    deleteHistoryItem: function(history, id) {
+       const hItem = history.getRecordById(id);
+       if (hItem) {
+          history.remove(hItem);
+       }
+    },
+
    updateRecent: function (self, item) {
       var id = item.getId();
       var recent = self._history.recent;
-      var hItem = recent.getRecordById(id);
       var records;
 
-      if (hItem) {
-         recent.remove(hItem);
-      }
+      _private.deleteHistoryItem(recent, id);
 
       records = [this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId'))];
       recent.prepend(records);
       self.historySource.saveHistory(self._history);
    },
 
-   getRawHistoryItem: function (self, id, objectData, hId) {
+   getRawHistoryItem: function (self, id, objectData, hId?) {
       return new entity.Model({
          rawData: {
             d: [id, objectData, hId || self.historySource.getHistoryId()],
@@ -207,7 +291,7 @@ var _private = {
       });
    },
 
-   getHistoryItem: function (self, data) {
+   findHistoryItem: function (self, data) {
       var history = self._history;
 
       return this.findItem(self, history.pinned, data) || this.findItem(self, history.recent, data) || null;
@@ -240,6 +324,14 @@ var _private = {
    // Для этого всегда создаём новый инстанс Serializer'a
    getSerialize: function () {
       return new Serializer();
+   },
+
+   destroy(self, id: number|string): void {
+      const recent = self._history && self._history.recent;
+
+      if (recent) {
+         _private.deleteHistoryItem(recent, id);
+      }
    }
 };
 
@@ -336,20 +428,23 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       var serData, item;
 
       if (meta.hasOwnProperty('$_pinned')) {
-         _private.updatePinned(this, data);
+         _private.updatePinned(this, data, meta);
       }
       if (meta.hasOwnProperty('$_history')) {
          _private.updateRecent(this, data);
       }
+      if (meta.hasOwnProperty('$_favorite')) {
+         _private.updateFavorite(this, data, meta);
+      }
       if (meta.hasOwnProperty('$_addFromData')) {
-         item = _private.getHistoryItem(self, data);
+         item = _private.findHistoryItem(self, data);
          if (item) {
             meta = {
                '$_history': true
             };
             _private.updateRecent(this, item);
             _private.getSourceByMeta(this, meta).update(item, meta);
-            return;
+            return Deferred.success(item.getId());
          }
 
          serData = JSON.stringify(data, _private.getSerialize(this).serialize);
@@ -359,21 +454,30 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
                self,
                _private.getRawHistoryItem(self, dataSet.getRawData(), serData, item ? item.get('HistoryId') : self.historySource.getHistoryId())
             );
+            return dataSet.getRawData();
          });
       }
       return _private.getSourceByMeta(this, meta).update(data, meta);
    },
 
-   destroy(keys: number|string|Array<number|string>, meta?: object): Deferred<null> {
-      if (meta && meta.hasOwnProperty('$_history')) {
-         const recent = this._history && this._history.recent;
+   remove: function(data, meta) {
+      const hService = _private.getSourceByMeta(this, meta);
+      if (meta.isClient) {
+         _private.deleteClient(this, data);
+         hService.deleteItem(data, { isClient: 0 });
+      } else {
+         _private.updatePinned(this, data, meta);
+         _private.deleteHistoryItem(this._history.recent, data.getId());
+      }
+      hService.deleteItem(data, meta);
+   },
 
-         if (recent) {
-            recent.remove(recent.getRecordById(keys instanceof Array ? keys[0] : keys));
-         }
+   destroy(id: number|string, meta?: object): Deferred<null> {
+      if (meta && meta.hasOwnProperty('$_history')) {
+         _private.destroy(this, id);
       }
 
-      return _private.getSourceByMeta(this, meta).destroy(keys, meta);
+      return _private.getSourceByMeta(this, meta).destroy(id, meta);
    },
 
    query: function (query) {
@@ -382,15 +486,29 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       var newItems;
 
       if (where && where['$_history'] === true) {
-         return self.historySource.query().addCallback(function (data) {
-            _private.initHistory(self, data);
+         const prepareHistory = () => {
             newItems = _private.getItemsWithHistory(self, self._history);
             self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
-            return new sourceLib.DataSet({
-               rawData: newItems.getRawData(),
-               keyProperty: newItems.getKeyProperty()
-            });
+            self._loadDef.callback(
+                new sourceLib.DataSet({
+                   rawData: newItems.getRawData(),
+                   keyProperty: newItems.getKeyProperty()
+                })
+            );
+         };
+
+          self._loadDef = self._loadDef && !self._loadDef.isReady() ? self._loadDef : new Deferred();
+          self.historySource.query().addCallback(function (data) {
+              _private.initHistory(self, data);
+              if (self._history.client) {  // TODO Delete with old favorite
+                  if (_private.deleteOldPinned(self, self._history, query)) {
+                     prepareHistory();
+                  }
+              } else {
+                 prepareHistory();
+              }
          });
+          return self._loadDef;
       }
       return self.originSource.query(query);
    },
@@ -403,6 +521,11 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       return _private.getItemsWithHistory(this, this._history);
    },
 
+   // TODO: Delete with old favorite https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+   getItemsWithOldFavorite: function(oldFavoriteItems) {
+      return _private.getItemsWithOldFavorite(this, this._history, oldFavoriteItems);
+   },
+
    /**
     * Returns a set of recent items
     * @returns {RecordSet}
@@ -411,12 +534,16 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       return this._history.recent;
    },
 
+   getPinned() {
+      return this._history.pinned;
+   },
+
    /**
     * Returns a deserialized history object
     * @returns {Object}
     */
-   getDataObject: function (data) {
-      return _private.deserialize(this, data);
+   getDataObject: function(data) {
+      return _private.deserialize(this, data.get('ObjectData'));
    }
 });
 

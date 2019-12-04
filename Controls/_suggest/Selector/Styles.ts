@@ -4,7 +4,7 @@
  * @css @color-SelectorSuggest__separator-icon_style-secondary Цвет иконки разделителя.
  * @css @spacing_SelectorSuggest-between-arrow-rightBorder Интервал между иконкой разделителем и правой границей поля.
  * @css @size-SelectorSuggest__separator-icon Размер иконки разделителя.
- * @public
+ * @private
  * @author Герасимов А.М.
  */
 /*
@@ -13,6 +13,6 @@
  * @css @color-SelectorSuggest__separator-icon_style-secondary Цвет иконки разделителя.
  * @css @spacing_SelectorSuggest-between-arrow-rightBorder Интервал между иконкой разделителем и правой границей поля.
  * @css @size-SelectorSuggest__separator-icon Размер иконки разделителя.
- * @public
+ * @private
  * @author Gerasimov A.M.
  */

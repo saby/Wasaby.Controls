@@ -1,18 +1,12 @@
 /**
  * Библиотека контролов, которые реализуют плоский список. Список может строиться по данным, полученным из источника. Также можно организовать удаление и перемещение данных.
- * Работа с шаблонами библиотеки описана в руководстве разработчика:
- * <ul>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/">ItemTemplate (шаблон отображения элемента)</a></li>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/grouping/">GroupTemplate (шаблон группировки)</a></li>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/empty/">EmptyTemplate (шаблон пустого списка)</a></li>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/list/edit/">EditingTemplate (шаблон редактирования элемента)</a></li>
- * </ul>
  * @library Controls/list
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
- * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
- * @includes GroupTemplate wml!Controls/_list/GroupTemplate
- * @includes ItemTemplate wml!Controls/_list/ItemTemplateChooser
+ * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes GroupTemplate Controls/list:GroupTemplate
+ * @includes ItemTemplate Controls/list:ItemTemplate
+ * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
@@ -34,9 +28,10 @@
  * @library Controls/list
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
- * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
- * @includes GroupTemplate wml!Controls/_list/GroupTemplate
- * @includes ItemTemplate wml!Controls/_list/ItemTemplate
+ * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes GroupTemplate Controls/list:GroupTemplate
+ * @includes ItemTemplate Controls/list:ItemTemplate
+ * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
@@ -59,7 +54,6 @@ import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
-import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
 import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
@@ -90,6 +84,7 @@ import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
+import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 
 import {Paging} from 'Controls/paging';
 
@@ -103,7 +98,6 @@ export {
     Mover,
     Remover,
     Paging,
-    VirtualScroll,
     DataContainer,
     _forTemplate,
     _swipeActionTemplate,
@@ -132,5 +126,6 @@ export {
     ItemsView,
     ItemsViewModel,
     HotKeysContainer,
-    InertialScrolling
+    InertialScrolling,
+    IVirtualScrollConfig
 };

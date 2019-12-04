@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_grid/ScrollWrapperTemplate';
 import Scrollbar from 'Controls/_scroll/Scroll/Scrollbar';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {isFullGridSupport} from './utils/GridLayoutUtil';
 
 export interface IHorizontalScrollWrapperOptions extends IControlOptions {
     positionChangeHandler: (e: SyntheticEvent<null>, position: number) => void;
@@ -39,7 +40,7 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
     }
 
     private _getGridStyles(options: IHorizontalScrollWrapperOptions): string {
-        if (options.listModel.shouldUseTableLayout()) {
+        if (!isFullGridSupport()) {
             return '';
         }
         let style = '';
@@ -51,8 +52,8 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
         if (listModel.getMultiSelectVisibility() !== 'hidden') {
             offset += 1;
         }
-        style += `grid-column:${stickyColumnsCount + 1 + offset} / ${(maxEndColumn ? maxEndColumn : header.length + 1) + offset};`;
-        style += `top:${options.topOffset}px;`;
+        style += `grid-column: ${stickyColumnsCount + 1 + offset} / ${(maxEndColumn ? maxEndColumn : header.length + 1) + offset};`;
+        style += `top: ${options.topOffset}px;`;
         style += `width: ${options.scrollWidth}px`;
         return style;
     }

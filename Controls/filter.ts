@@ -13,6 +13,7 @@
  * @includes IPrefetch Controls/_filter/IPrefetch
  * @includes Prefetch Controls/_filter/Prefetch
  * @includes DateRangeEditor Controls/_filter/Editors/DateRange
+ * @includes mergeSource Controls/_filter/Utils/mergeSource
  * @public
  * @author Крайнов Д.О.
  */
@@ -31,6 +32,7 @@
  * @includes IPrefetch Controls/_filter/IPrefetch
  * @includes Prefetch Controls/_filter/Prefetch
  * @includes DateRangeEditor Controls/_filter/Editors/DateRange
+ * @includes mergeSource Controls/_filter/Utils/mergeSource
  * @public
  * @author Крайнов Д.О.
  */
@@ -42,11 +44,13 @@ import ViewItemTemplate = require('wml!Controls/_filter/View/ItemTemplate');
 import FastContainer = require('Controls/_filter/Fast/Container');
 import Controller = require('Controls/_filter/Controller');
 import HistoryUtils = require('Controls/_filter/HistoryUtils');
+import FilterUtils = require('Controls/_filter/resetFilterUtils');
 
 export {default as ButtonContainer} from './_filter/Button/Container';
 export {default as ViewContainer} from './_filter/View/Container';
 export {default as DateRangeEditor} from './_filter/Editors/DateRange';
 export {default as Prefetch} from 'Controls/_filter/Prefetch';
+export {default as mergeSource} from 'Controls/_filter/Utils/mergeSource';
 
 export {
    Selector,
@@ -55,5 +59,6 @@ export {
    ViewItemTemplate,
    FastContainer,
    Controller,
-   HistoryUtils
+   HistoryUtils,
+   FilterUtils
 };

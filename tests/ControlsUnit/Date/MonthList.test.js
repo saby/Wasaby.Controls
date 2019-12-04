@@ -97,7 +97,6 @@ define([
             assert.strictEqual(ml._displayedPosition, position);
             assert.equal(ml._startPositionId, '2018-01-01');
             assert.isEmpty(ml._displayedDates);
-            sinon.assert.called(ml._children.months.reload);
             sandbox.restore();
          });
 
@@ -115,6 +114,28 @@ define([
             ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
             assert.isNull(ml._positionToScroll);
             assert.strictEqual(ml._displayedPosition, position);
+            assert.equal(ml._startPositionId, '2017-01-01');
+            sinon.assert.notCalled(ml._children.months.reload);
+            sandbox.restore();
+         });
+
+         it('should not update the position before the list is updated', function () {
+            let
+               sandbox = sinon.createSandbox(),
+               position1 = new Date(2018, 0, 1),
+               position2 = new Date(2019, 0, 1),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
+
+            sandbox.stub(ml, '_canScroll').returns([true]);
+            sandbox.stub(ml, '_findElementByDate').returns([true]);
+            ml._children.months = { reload: sinon.fake() };
+            ml._container = {};
+
+            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position1 }));
+            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position2 }));
+            assert.isNull(ml._positionToScroll);
+            assert.strictEqual(ml._displayedPosition, position1);
+            assert.strictEqual(ml._lastPositionFromOptions, position2);
             assert.equal(ml._startPositionId, '2017-01-01');
             sinon.assert.notCalled(ml._children.months.reload);
             sandbox.restore();
@@ -172,6 +193,25 @@ define([
          });
       });
 
+      describe('_drawItemsHandler', function() {
+         it('should set the position if the _beforeUpdate function has been called several times', function() {
+            let
+               sandbox = sinon.createSandbox(),
+               position1 = new Date(2018, 0, 1),
+               position2 = new Date(2019, 0, 1),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
+            sandbox.stub(ml, '_canScroll').returns([true]);
+            ml._container = {};
+            sandbox.stub(ml, '_scrollToPosition');
+            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position1 }));
+            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position2 }));
+            ml._drawItemsHandler();
+            assert.strictEqual(ml._displayedPosition, position2);
+            sinon.assert.called(ml._scrollToPosition);
+            sandbox.restore();
+         });
+      });
+
       describe('_getMonth', function() {
          it('should return correct month', function() {
             let mv = calendarTestUtils.createComponent(calendar.MonthList, config);
@@ -224,6 +264,31 @@ define([
             }],
             options: { viewMode: 'month' },
             date: new Date(2019, 1)
+         }, {
+            title: 'Should generate an event when the 2 elements appeared on top and the next one is half visible. viewMode: "month"',
+            entries: [{
+               nativeEntry: {
+                  boundingClientRect: { top: 0, bottom: 30 },
+                  rootBounds: { top: 55 },
+                  target: { offsetHeight: 30 }
+               },
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.body
+               }
+            }, {
+               nativeEntry: {
+                  boundingClientRect: { top: 30, bottom: 50 },
+                  rootBounds: { top: 55 },
+                  target: { offsetHeight: 20 }
+               },
+               data: {
+                  date: new Date(2019, 1),
+                  type: ItemTypes.body
+               }
+            }],
+            options: { viewMode: 'month' },
+            date: new Date(2019, 2)
          }].forEach(function(test) {
             it(test.title, function() {
                const

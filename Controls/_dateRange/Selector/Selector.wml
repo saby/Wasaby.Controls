@@ -1,5 +1,6 @@
 <div class="controls-DateRangeSelector">
       <Controls._dateRange.LinkView
+         name="linkView"
          scope="{{_options}}"
          startValue="{{ _rangeModel.startValue }}"
          endValue="{{ _rangeModel.endValue }}"
@@ -11,6 +12,6 @@
       <Controls.popup:Sticky name="opener"
                                     closeOnOutsideClick="{{true}}"
                                     actionOnScroll="close"
-                                    _vdomOnOldPage="{{_isVdomDialog()}}">
+                                    _vodmOnOldPage="{{true}}">
       </Controls.popup:Sticky>
 </div>

@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import checkBoxTemplate = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {Logger} from 'UI/Utils';
 import {
    ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions,
    IIconSize, IIconSizeOptions, IIconStyle, IIconStyleOptions, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
@@ -9,8 +10,6 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
    triState?: boolean;
    value?: boolean | null;
 }
-
-import * as Env from 'Env/Env';
 
 /**
  * Контрол, позволяющий пользователю управлять параметром с двумя состояниями — включено и отключено.
@@ -257,21 +256,22 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITo
    // Удалено в 20.1100
    private _isTemplate(icon: TemplateFunction | string): boolean {
       if (typeof icon === 'function') {
-         Env.IoC.resolve('ILogger').error('Controls.toggle:Checkbox', 'Опция icon должна иметь тип string.');
+         Logger.error('Controls.toggle:Checkbox: Опция icon должна иметь тип string.', this);
          return true;
       }
 
       return false;
    }
 
-   static _theme: string[] = ['Controls/toggle'];
+   static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
 
    static getDefaultOptions(): object {
       return {
          value: false,
          triState: false,
          iconSize: 'default',
-         iconStyle: 'secondary'
+         iconStyle: 'secondary',
+         validationStatus: 'valid'
       };
    }
 
