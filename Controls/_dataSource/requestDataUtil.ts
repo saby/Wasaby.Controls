@@ -6,6 +6,7 @@
 
 import {Controller as SourceController} from 'Controls/source';
 import {Controller as FilterController} from 'Controls/filter';
+import PropStorageUtil = require('Controls/_list/resources/utils/PropStorageUtil');
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
@@ -29,6 +30,7 @@ export interface ISourceConfig {
    filter?: object;
    sorting?: object;
    historyItems?: HistoryItems;
+   propStorageId: string;
 }
 
 export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDataResult> {
@@ -36,22 +38,28 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       source: cfg.source,
       navigation: cfg.navigation
    });
+   let sorting = cfg.sorting;
 
-   if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
-      // Load filter, then load data
-      return FilterController.getCalculatedFilter(cfg).then((filterObject: IFilter) => {
-         return sourceController.load(filterObject.filter, cfg.sorting).then((data: RecordSet) => {
+   return PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']).then((loadedCfg) => {
+      if (loadedCfg && loadedCfg.sorting) {
+         sorting = loadedCfg.sorting;
+      }
+      if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
+         // Load filter, then load data
+         return FilterController.getCalculatedFilter(cfg).then((filterObject: IFilter) => {
+            return sourceController.load(filterObject.filter, sorting).then((data: RecordSet) => {
+               return {
+                  data,
+                  historyItems: filterObject.historyItems
+               };
+            });
+         });
+      } else {
+         return sourceController.load(cfg.filter, sorting).then((data: RecordSet) => {
             return {
-               data,
-               historyItems: filterObject.historyItems
+               data
             };
          });
-      });
-   } else {
-      return sourceController.load(cfg.filter, cfg.sorting).then((data: RecordSet) => {
-         return {
-            data
-         };
-      });
-   }
+      }
+   });
 }
