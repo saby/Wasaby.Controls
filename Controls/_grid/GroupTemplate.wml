@@ -1,7 +1,7 @@
 <ws:template name="groupContentTemplate">
    <div class="controls-ListView__groupContent {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}">
       <ws:if data="{{separatorVisibility !== false && (columnAlignGroup !== undefined || textAlign !== 'left')}}">
-         <div class="controls-ListView__groupSeparator-left">&nbsp;</div>
+         <div class="controls-ListView__groupSeparator-left">&#160;</div>
       </ws:if>
       <div class="controls-ListView__groupContent-text
          {{expanderVisible !== false ? ' controls-ListView__groupExpander' +
@@ -16,7 +16,7 @@
       </div>
       <ws:if data="{{columnAlignGroup === undefined}}">
          <ws:if data="{{separatorVisibility !== false && textAlign !== 'right'}}">
-            <div class="controls-ListView__groupSeparator-right">&nbsp;</div>
+            <div class="controls-ListView__groupSeparator-right">&#160;</div>
          </ws:if>
          <ws:if data="{{!!rightTemplate}}">
             <ws:partial template="{{rightTemplate}}" attr:class="controls-ListView__groupContent-rightTemplate" itemData="{{itemData}}"/>
@@ -26,7 +26,7 @@
 </ws:template>
 <ws:template name="groupRightTemplate">
    <div class="controls-ListView__groupContent">
-      <div class="controls-ListView__groupSeparator-right">&nbsp;</div>
+      <div class="controls-ListView__groupSeparator-right">&#160;</div>
       <ws:if data="{{!!rightTemplate}}">
          <ws:partial template="{{rightTemplate}}" attr:class="controls-ListView__groupContent-rightTemplate" itemData="{{itemData}}"/>
       </ws:if>

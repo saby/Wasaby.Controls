@@ -6,7 +6,7 @@
    </ws:if>
    <ws:else>
       <div>Потяните за левый или правый край.</div>
-      <div>&nbsp;</div>
+      <div>&#160;</div>
    </ws:else>
    <div style="height: 200px; width: {{_width}}px; background: red; position: relative;">
       <Controls.dragnDrop:ResizingLine attr:style="position:absolute; left: 0; height: 100%"

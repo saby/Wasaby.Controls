@@ -28,7 +28,7 @@
             attr:key="counter-{{ cnt.key }}"
             attr:class="counter-{{ cnt.key }} {{ cnt.updated ? 'counter-updated' }}"
             attr:style="margin: 0 14px; {{ cnt.updated ? 'color: red;' }}">
-            <span class="itemName">item {{ cnt.key }}</span> -&nbsp;
+            <span class="itemName">item {{ cnt.key }}</span> -&#160;
             <span class="counter">{{ cnt.count }}</span>
          </div>
       </ws:for>

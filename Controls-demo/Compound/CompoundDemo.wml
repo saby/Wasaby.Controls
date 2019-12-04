@@ -29,7 +29,7 @@
                                   bind:selectedKey="_rebuildType"/>
       </div>
       <div class="compound-demo__panel compound-demo__checkpoints">
-         <h3>Checkpoints&nbsp;
+         <h3>Checkpoints&#160;
             <Controls.buttons:Button
             attr:class="CompoundDemo-Checkpoints__resetCheckpointsButton"
             readOnly="{{ _destroyedTestValue }}"
@@ -41,7 +41,7 @@
          <div><span class="CompoundDemo-Checkpoints__lifecycle">lifecycle: {{ _lifecycleTestValue }}</span></div>
          <div>
             <span class="CompoundDemo-Checkpoints__compatible">compatible: {{ _compatibleTestValue }}</span>
-            &nbsp;
+            &#160;
             <Controls.buttons:Button attr:class="CompoundDemo-Checkpoints__compatibleButton"
                                      readOnly="{{ _destroyedTestValue }}"
                                      on:click="testCompatibilityHandler()"
@@ -50,7 +50,7 @@
          </div>
          <div>
             <span class="CompoundDemo-Checkpoints__enabled">enabled: {{ _enabledTestValue }}</span>
-            &nbsp;
+            &#160;
             <Controls.buttons:Button attr:class="CompoundDemo-Checkpoints__enabledButton"
                                      readOnly="{{ _destroyedTestValue }}"
                                      on:click="testEnabledHandler()"
@@ -59,7 +59,7 @@
          </div>
          <div>
             <span class="CompoundDemo-Checkpoints__command">command: {{ _commandTestValue }}</span>
-            &nbsp;
+            &#160;
             <Controls.buttons:Button attr:class="CompoundDemo-Checkpoints__commandButton"
                                      readOnly="{{ _destroyedTestValue }}"
                                      on:click="testCommandsHandler()"
@@ -67,7 +67,7 @@
          </div>
          <div>
             <span class="CompoundDemo-Checkpoints__rebuild">rebuild: {{ _rebuildTestValue }}</span>
-            &nbsp;
+            &#160;
             <Controls.buttons:Button attr:class="CompoundDemo-Checkpoints__rebuildButton"
                                      readOnly="{{ _destroyedTestValue }}"
                                      on:click="resetRebuildHandler()"
@@ -76,7 +76,7 @@
          </div>
          <div>
             <span class="CompoundDemo-Checkpoints__destroyed">destroyed: {{ _destroyedTestValue }}</span>
-            &nbsp;
+            &#160;
             <Controls.buttons:Button attr:class="CompoundDemo-Checkpoints__destroyButton"
                                      readOnly="{{ _destroyedTestValue }}"
                                      on:click="testDestroyHandler()"

@@ -12,7 +12,7 @@
     <ws:if data="{{contentTemplate}}">
         {{listModel.resetResultsColumns();}}
         <ws:if data="{{listModel.getMultiSelectVisibility() !== 'hidden'}}">
-            <td>&nbsp;</td>
+            <td>&#160;</td>
         </ws:if>
         <td class="{{listModel.getCurrentResultsColumn().cellClasses}}"
             colspan="{{listModel.getColspanFor('customResults')}}">

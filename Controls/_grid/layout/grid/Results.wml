@@ -22,7 +22,7 @@
 <ws:if data="{{contentTemplate}}">
     {{listModel.resetResultsColumns();}}
     <ws:if data="{{listModel.getMultiSelectVisibility() !== 'hidden'}}">
-        <div>&nbsp;</div>
+        <div>&#160;</div>
     </ws:if>
     <ws:if data="{{ listModel.isStickyHeader() }}">
         <Controls.scroll:StickyHeader

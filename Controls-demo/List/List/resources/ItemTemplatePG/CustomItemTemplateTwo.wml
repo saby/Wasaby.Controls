@@ -6,7 +6,7 @@
                 <span>{{itemData.item.get('title')}}</span>
                 <span style="color: #EF463A; font-size: 16px">Sale!</span>
             </div>
-            <div><s>999 &#8364;</s>&nbsp;&nbsp;&nbsp;<b>499 &#8364;</b></div>
+            <div><s>999 &#8364;</s>&#160;&#160;&#160;<b>499 &#8364;</b></div>
         </div>
     </ws:contentTemplate>
 </ws:partial>

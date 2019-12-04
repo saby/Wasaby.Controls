@@ -1,7 +1,7 @@
 <div class="example-BaseDemoInput ws-inline-flexbox ws-flex-column">
    <div class="example-Base__title">
       <ws:if data="{{_options.title}}">{{_options.title}}</ws:if>
-      <ws:else>&nbsp;</ws:else>
+      <ws:else>&#160;</ws:else>
       <div if="{{_options.blocker}}"
            class="icon-24 icon-primary action-hover {{_lock ? 'icon-Lock' : 'icon-Unlock'}}"
            on:click="_switchBlocker()"></div>

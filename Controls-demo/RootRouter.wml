@@ -2,7 +2,7 @@
    <a attr:class="ws-link" if="{{componentName !== 'Controls-demo/Index'}}"
                     attr:id="Back"
                     attr:style="width: 100px"
-                     on:click="backClickHdl()">&lt;&nbsp;Назад</a>
+                     on:click="backClickHdl()">&#60;&#160;Назад</a>
 
    <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
       <Router.router:Route mask="app/:app">
@@ -17,8 +17,8 @@
                </ws:else>
             </ws:if>
             <ws:else>
-               <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&nbsp;<a href='#' on:click="goHomeHandler()">разводящую</a></div>
-            </ws:else>
+               <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&#160;<a href='#' on:click="goHomeHandler()">разводящую</a></div>
+            </ws:else>/vdomSynchronizer.test.js
          </Controls-demo.RootTemplateWrapper>
       </Router.router:Route>
    </Controls.scroll:Container>

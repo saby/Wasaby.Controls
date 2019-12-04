@@ -8,7 +8,7 @@
          </ws:if>
       </div>
       <ws:if data="{{_options.required}}">
-         <div class="controls-Label__asterisk controls-Label__asterisk_theme-{{_options.theme}}">&nbsp;*</div>
+         <div class="controls-Label__asterisk controls-Label__asterisk_theme-{{_options.theme}}">&#160;*</div>
       </ws:if>
    </div>
 </div>
