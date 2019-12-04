@@ -231,8 +231,10 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
                                                                                         : newOptions.captions[0]) : '');
         this._stringCaption = typeof this._caption === 'string';
 
-        this._iconSize = this._icon ? ActualApi.iconSize(newOptions) : '';
-        this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions) : '';
+        const clonedOptions = {...newOptions};
+        clonedOptions.icon = this._icon;
+        this._iconSize = this._icon ? ActualApi.iconSize(newOptions.iconSize, this._icon) : '';
+        this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions.iconStyle, this._icon, newOptions.readOnly) : '';
 
         if (newOptions.viewMode === 'pushButton' || newOptions.viewMode === 'toolButton') {
             this._hoverIcon = !newOptions.value;

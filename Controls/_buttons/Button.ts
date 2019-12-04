@@ -50,8 +50,9 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
     this._stringCaption = typeof options.caption === 'string';
 
     this._icon = options.icon;
-    this._iconSize = options.icon ? ActualApi.iconSize(options) : '';
-    this._iconStyle = options.icon ? ActualApi.iconStyle(options) : '';
+    this._iconSize = options.icon ? ActualApi.iconSize(options.iconSize, this._icon) : '';
+    this._iconStyle = options.icon ?
+        ActualApi.iconStyle(options.iconStyle, this._icon, options.readOnly, options.buttonAdd) : '';
 }
 
 /**

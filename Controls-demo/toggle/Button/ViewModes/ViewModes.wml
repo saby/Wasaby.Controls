@@ -19,4 +19,14 @@
         <div class="controls-text-label_theme-{{_options.theme}}">viewMode=pushButton, contrastBackground=true</div>
         <Controls.toggle:Button bind:value="_buttonValue5" viewMode="pushButton" contrastBackground="{{true}}" icons="{{['icon-Italic']}}" inlineHeight="l" iconStyle="secondary" iconSize="m"></Controls.toggle:Button>
     </div>
+    <div>
+        <Controls.toggle:Button
+                bind:value="_buttonValue5"
+                size="s"
+                viewMode="pushButton"
+                icons="{{['icon-' + 'ArrangeList03' + ' icon-small']}}"
+                iconStyle="secondary"
+                tooltip="{{style.tooltip}}"
+                on:valueChanged="valueChangedHandler(style)"/>
+    </div>
 </div>

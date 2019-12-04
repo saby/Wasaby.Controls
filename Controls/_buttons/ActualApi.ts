@@ -204,11 +204,11 @@ const ActualApi = {
          }
       }
    },
-   iconSize(options: unknown): string {
-      if (options.iconSize) {
-         return options.iconSize;
+   iconSize(iconSize: string, icon: string): string {
+      if (iconSize) {
+         return iconSize;
       } else {
-         if (_iconRegExp.exec(options.icon)) {
+         if (_iconRegExp.exec(icon)) {
             switch (RegExp.$1) {
                case '16': return 's';
                case '24': return 'm';
@@ -223,16 +223,16 @@ const ActualApi = {
          }
       }
    },
-   iconStyle(options: unknown): string {
-      if (options.readOnly) {
+   iconStyle(iconStyle: string, icon: string, readonly: boolean, buttonAdd: boolean): string {
+      if (readonly) {
          return 'readonly';
-      } else if (options.buttonAdd) {
+      } else if (buttonAdd) {
          return 'default';
       } else {
-         if (options.iconStyle) {
-            return this.iconStyleTransformation(options.iconStyle, true);
+         if (iconStyle) {
+            return this.iconStyleTransformation(iconStyle, true);
          } else {
-            return this.iconStyleTransformation(this.iconColorFromOptIconToIconStyle(options.icon));
+            return this.iconStyleTransformation(this.iconColorFromOptIconToIconStyle(icon));
          }
       }
    },
