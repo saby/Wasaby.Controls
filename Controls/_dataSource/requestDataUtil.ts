@@ -6,7 +6,7 @@
 
 import {Controller as SourceController} from 'Controls/source';
 import {Controller as FilterController} from 'Controls/filter';
-import * as PropStorageUtil from 'Controls/_list/resources/utils/PropStorageUtil';
+import * as PropStorageUtil from 'Controls/Utils/PropStorageUtil';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
@@ -39,34 +39,30 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       navigation: cfg.navigation
    });
    let sorting = cfg.sorting;
+   let filter = cfg.filter;
 
-   const loadSortingPromise = PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']);
-
+   const getSortingPromise = PropStorageUtil.loadSavedConfig;
+   const getFilterPromise = FilterController.getCalculatedFilter;
    if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
-      // Load filter, then load data
-      return Promise.all([FilterController.getCalculatedFilter(cfg), loadSortingPromise]).then((resolvedData) => {
-         const filterObject = resolvedData[0];
-         const loadedCfg = resolvedData[1];
-         if (loadedCfg && loadedCfg.sorting) {
-            sorting = loadedCfg.sorting;
-         }
-         return sourceController.load(filterObject.filter, sorting).then((data: RecordSet) => {
-            return {
-               data,
-               historyItems: filterObject.historyItems
-            };
-         });
-      });
-   } else {
-      return loadSortingPromise.then((loadedCfg) => {
-         if (loadedCfg && loadedCfg.sorting) {
-            sorting = loadedCfg.sorting;
-         }
-         return sourceController.load(cfg.filter, sorting).then((data: RecordSet) => {
-            return {
-               data
-            };
-         });
-      });
+      getFilterPromise(cfg);
    }
+   if (cfg.propStorageId) {
+      getSortingPromise(cfg.propStorageId, ['sorting']);
+   }
+
+   return Promise.all([getFilterPromise, getSortingPromise]).then((resolvedData: Array) => {
+      let [filterObject, loadedCfg] = resolvedData;
+      if (loadedCfg && loadedCfg.sorting) {
+         sorting = loadedCfg.sorting;
+      }
+      if (filterObject) {
+         filter = filterObject.filter;
+      }
+      return sourceController.load(filter, sorting).then((data: RecordSet) => {
+         return {
+            data,
+            historyItems: filterObject.historyItems
+         };
+      });
+   });
 }

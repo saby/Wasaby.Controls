@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import ListControlTpl = require('wml!Controls/_list/ListControl/ListControl');
-import PropStorageUtil = require('Controls/_list/resources/utils/PropStorageUtil');
+import * as PropStorageUtil from 'Controls/Utils/PropStorageUtil';
 import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
 
