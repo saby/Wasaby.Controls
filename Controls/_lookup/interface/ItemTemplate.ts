@@ -1,32 +1,12 @@
 /**
  * Шаблон, который по умолчанию используется для отображения выбранных значений в контроле {@link Controls/lookup:Input}.
  * 
- * @interface Controls/lookup:ItemTemplate
+ * @class Controls/lookup:ItemTemplate
  * @author Капустин И.А.
+ * @see Controls/lookup
+ * @see Controls/lookup:Input
  * 
  * @remark
- * Шаблон поддерживает следующие параметры:
- * <ul>
- *    <li>contentTemplate {Function|String} — шаблон для отображения выбранной записи.</li>
- *    <li>crossTemplate {Function|String} — шаблон крестика удаления элемента.</li>
- *    <li>displayProperty {String} —  название поля, значение которого отображается при выборе элемента.</li>
- *    <li>clickable {Boolean} — позволяет установить кликабельность выбранного значения (допустим только в случае использования contentTemplate по умолчанию).</li>
- *    <li>size {Enum} — размер записей (допустим только в случае использования contentTemplate по умолчанию):</li>
- *    <ul>
- *       <li>m</li>
- *       <li>l</li>
- *       <li>xl</li>
- *       <li>2xl</li>
- *       <li>3xl</li>
- *    </ul>
- *    <li>style {Enum} — стиль записей (допустим только в случае использования contentTemplate по умолчанию).</li>
- *    <ul>
- *       <li>default</li>
- *       <li>bold</li>
- *       <li>accent</li>
- *       <li>primary</li>
- *    </ul>
- * </ul>
  *
  * Если вы переопределите contentTemplate/crossTemplate, вы не будете уведомлены о событиях itemClick/crossClick.
  * Для правильной работы необходимо пометить свой контент классами:
@@ -51,3 +31,54 @@
  *    </Controls.lookup:Selector>
  * </pre>
  */
+
+/**
+ * @name Controls/lookup:ItemTemplate#contentTemplate 
+ * @cfg {String|Function} Шаблон отображения выбранной записи.
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#crossTemplate 
+ * @cfg {String|Function} Шаблон крестика удаления элемента.
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#displayProperty 
+ * @cfg {String} Название поля, значение которого отображается при выборе элемента.
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#clickable 
+ * @cfg {Boolean} Позволяет установить кликабельность выбранного значения.
+ * 
+ * @remark
+ * Использование параметра допустимо только в случае применения contentTemplate по умолчанию.
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#size 
+ * @cfg {String} Размер записей.
+ * 
+ * @remark
+ * Использование параметра допустимо только в случае применения contentTemplate по умолчанию.
+ * Доступные значения: m, l, xl, 2xl, 3xl.
+ */
+
+/**
+ * @name Controls/lookup:ItemTemplate#style 
+ * @cfg {String} Cтиль записей.
+ * 
+ * @remark
+ * Использование параметра допустимо только в случае применения contentTemplate по умолчанию.
+ * Доступные значения: default, bold, accent, primary.
+ */ 
+
+export default interface IItemTemplateOptions {
+    contentTemplate?: string;
+    crossTemplate?: string;
+    displayProperty?: string;
+    clickable?: boolean;
+    size?: string;
+    style?: string;
+ }
+
