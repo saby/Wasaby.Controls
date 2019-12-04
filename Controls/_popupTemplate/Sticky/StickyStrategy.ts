@@ -44,7 +44,7 @@ interface IPosition {
                    _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction);
             } else {
                position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
-               if (!_private.isIOS13()) {
+               if (_private.isIOS12()) {
                   position[isHorizontal ? 'left' : 'top'] += targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
                }
             }
@@ -130,6 +130,9 @@ interface IPosition {
        isIOS13() {
          return this._isMobileIOS() && Env.detection.IOSVersion > 12;
       },
+      isIOS12() {
+         return this._isMobileIOS() && Env.detection.IOSVersion === 12;
+      },
 
        _isMobileIOS() {
           return Env.detection.isMobileIOS;
@@ -142,9 +145,9 @@ interface IPosition {
          let positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
          let isNegativePos = _private.isNegativePosition(popupCfg, position, targetCoords);
          if (positionOverflow > 0 || isNegativePos) {
-            if (popupCfg.fittingMode === 'fixed') {
+            if (popupCfg.fittingMode[direction] === 'fixed') {
                resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
-            } else if (popupCfg.fittingMode === 'overflow') {
+            } else if (popupCfg.fittingMode[direction] === 'overflow') {
                resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else {
                _private.invertPosition(popupCfg, direction);
@@ -168,6 +171,7 @@ interface IPosition {
          _private.fixPosition(resultPosition, targetCoords);
          return resultPosition;
       },
+
 
       restrictContainer: function(position, property, popupCfg, overflow) {
          position[property] = popupCfg.sizes[property] - overflow;

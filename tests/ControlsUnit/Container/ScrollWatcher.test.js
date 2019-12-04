@@ -24,6 +24,35 @@ define([
 
       it('sendCanScroll', function () {
          var ins = new scrollMod.Watcher(), clientHeight, scrollHeight;
+
+         var clientRect = {
+            test: 1
+         };
+         var afterMountSendCliendRect = false;
+         var originalSendCanScroll = scrollMod.Watcher._private.sendCanScroll;
+         scrollMod.Watcher._private.sendCanScroll = function(e, clientHeight, scrollHeight, rect) {
+            if (rect === clientRect) {
+               afterMountSendCliendRect = true;
+            }
+         };
+         ins._registrar = {
+            registry: {
+               test: 1
+            }
+         };
+         ins._container = {
+            get: function() {
+               return {
+                  getBoundingClientRect: function() {
+                     return clientRect;
+                  }
+               };
+            }
+         };
+         ins._afterMount({});
+         assert.isTrue(afterMountSendCliendRect);
+         scrollMod.Watcher._private.sendCanScroll = originalSendCanScroll;
+
          ins._registrar = registrarMock;
 
          clientHeight = 300;
@@ -163,6 +192,7 @@ define([
 
                   evType = [];
                   ins._scrollPositionCache = null;
+                  ins._scrollTopCache = 110;
                   scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
                   setTimeout(function() {
                      try {

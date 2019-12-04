@@ -13,6 +13,7 @@
                size="{{_options.editingConfig ? 's' : 'm'}}"
                template="{{ _itemActionsTemplate }}"
                itemPadding="{{_options.itemPadding}}"
+               getContainerPaddingClass="{{_getContainerPaddingClass}}"
                itemActionsPosition="{{_options.itemActionsPosition}}"
                actionMenuIsShown="{{_options.actionMenuIsShown}}"
                scope="{{itemActionsTemplate}}"/>

@@ -13,7 +13,7 @@ export default class extends Control {
    protected _beforeMount() {
       this._viewSource = new Memory({
          keyProperty: 'id',
-         data: VirtualScrollHasMore.getDataForVirtual();
+         data: VirtualScrollHasMore.getDataForVirtual()
       });
    }
 }

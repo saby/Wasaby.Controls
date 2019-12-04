@@ -5,10 +5,12 @@
  * @includes ItemTemplate Controls/grid:ItemTemplate
  * @includes ResultsTemplate Controls/grid:ResultsTemplate
  * @includes GroupTemplate Controls/grid:GroupTemplate
+ * @includes HeaderContent Controls/grid:HeaderContent
  * @includes LadderWrapper Controls/grid:LadderWrapper
  * @includes ColumnTemplate Controls/grid:ColumnTemplate
  * @includes RowEditor Controls/grid:RowEditor
  * @includes IGridControl Controls/_grid/interface/IGridControl
+ * @includes IColumn Controls/_grid/interface/IColumn
  * @public
  * @author Крайнов Д.О.
  */
@@ -42,3 +44,5 @@ export {
 
     RowEditor
 };
+
+export {default as IColumn} from './_grid/interface/IColumn';

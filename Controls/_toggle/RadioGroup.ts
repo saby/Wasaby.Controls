@@ -89,7 +89,8 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
 
    Radio.getDefaultOptions = function getDefaultOptions() {
       return {
-         direction: 'vertical'
+         direction: 'vertical',
+         validationStatus: 'valid'
       };
    };
 

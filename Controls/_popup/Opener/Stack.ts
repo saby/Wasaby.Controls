@@ -32,24 +32,14 @@ import {Logger} from 'UI/Utils';
  * @public
  */
 
- /**
- *@css @size_Stack-border-left   Thickness of left border
- *@css @color_Stack-border-left  Color of left border
- *@css @padding_Stack-shadow     Padding for shadow
- *@css @size_Stack-shadow        Size of shadow
- *@css @color_Stack-shadow       Color of shadow
- */
 
-const _private = {
-    getStackConfig(config) {
-        config = config || {};
-        // The stack is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
-        config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-        config._type = 'stack'; // TODO: Compatible for compoundArea
-        return config;
-    }
+const getStackConfig = (config) => {
+    config = config || {};
+    // The stack is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+    config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+    config._type = 'stack'; // TODO: Compatible for compoundArea
+    return config;
 };
-
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
 
 class Stack extends BaseOpener {
@@ -98,8 +88,29 @@ class Stack extends BaseOpener {
      * @param {PopupOptions} popupOptions Stack popup options.
      */
 
-    open(popupOptions) {
-        return super.open(_private.getStackConfig(popupOptions), POPUP_CONTROLLER);
+    open(popupOptions): Promise<string | undefined> {
+        return super.open(this._getStackConfig(popupOptions), POPUP_CONTROLLER);
+    }
+
+    private _getStackConfig(popupOptions) {
+        return getStackConfig(popupOptions);
+    }
+
+    static openPopup(config: object): Promise<string> {
+        return new Promise((resolve) => {
+            const newCfg = getStackConfig(config);
+            if (!newCfg.hasOwnProperty('opener')) {
+                Logger.error('Controls/popup:Stack: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+            }
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
+                    resolve(popupId);
+                });
+            });
+        });
+    }
+    static closePopup(popupId: string): void {
+        BaseOpener.closeDialog(popupId);
     }
 }
 
@@ -144,19 +155,6 @@ class Stack extends BaseOpener {
  * @static
  * @see closePopup
  */
-Stack.openPopup = (config: object): Promise<string> => {
-    return new Promise((resolve) => {
-        const newCfg = _private.getStackConfig(config);
-        if (!newCfg.hasOwnProperty('opener')) {
-            Logger.error(Stack.prototype._moduleName + ': Для открытия окна через статический метод, обязательно нужно указать опцию opener');
-        }
-        BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-            BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
-                resolve(popupId);
-            });
-        });
-    });
-};
 
 /**
  * Статический метод для закрытия окна по идентификатору.
@@ -196,13 +194,7 @@ Stack.openPopup = (config: object): Promise<string> => {
  * @see openPopup
  */
 
-Stack.closePopup = (popupId: string): void => {
-    BaseOpener.closeDialog(popupId);
-};
-
-Stack._private = _private;
-
-export = Stack;
+export default Stack;
 
 /**
  * @typedef {Object} PopupOptions
@@ -219,7 +211,6 @@ export = Stack;
  * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
  * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события стековой панели.
  */
-
 
 /*
  * @typedef {Object} PopupOptions

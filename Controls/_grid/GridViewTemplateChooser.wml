@@ -1,15 +1,20 @@
 <ws:template name="gridTemplate">
    <ws:partial template="{{_gridTemplate}}"
                _listModel="{{_listModel}}"
+               _isFullGridSupport="{{_listModel.isFullGridSupport()}}"
+               _gridViewClasses="{{_getGridViewClasses()}}"
+               _gridViewStyles="{{_getGridViewStyles()}}"
+               _baseHeaderTemplate="{{_baseHeaderTemplate}}"
+               _resultsTemplate="{{_resultsTemplate}}"
+               _baseResultsTemplate="{{_baseResultsTemplate}}"
                _headerContentTemplate="{{_headerContentTemplate}}"
                _itemOutputWrapper="{{_itemOutputWrapper}}"
                _itemTemplate="{{_itemTemplate}}"
                _groupTemplate="{{_groupTemplate}}"
-               _getGridTemplateColumns="{{ _getGridTemplateColumns }}"
                _calcFooterPaddingClass="{{_calcFooterPaddingClass}}"
-               _resultsTemplate="{{_resultsTemplate}}"
                _options="{{_options}}"/>
 </ws:template>
+
 <ws:if data="{{_options.columnScroll}}">
    <Controls._grid.ColumnScroll scope="{{_options}}" name="columnScroll">
       <ws:partial template="gridTemplate"/>

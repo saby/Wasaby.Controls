@@ -15,6 +15,7 @@
                     sorting="{{_options.sorting}}"
                     searchParam="{{_options.searchParam}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
+                    layerName="{{_options.layerName}}"
                     searchDelay="{{_searchDelay}}"
                     tabsSelectedKeyChangedCallback="{{_tabsSelectedKeyChanged}}"
                     name="suggestListWrapper"
@@ -30,7 +31,7 @@
             </ws:partial>
         </ws:if>
 
-        <Controls.LoadingIndicator attr:class="controls-Suggest__indicator" isGlobal="{{false}}" useSpinner="{{true}}" overlay="dark" name="indicator">
+        <Controls.LoadingIndicator attr:class="controls-Suggest__indicator" isGlobal="{{false}}" useSpinner="{{true}}" name="indicator">
             <Controls.event:Register name="inputKeydown" register="inputKeydown">
                 <ws:partial template="suggestTpl" attr:style="width:{{content.suggestWidth}}px"/>
             </Controls.event:Register>

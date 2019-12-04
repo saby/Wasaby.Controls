@@ -5,6 +5,11 @@
                           style="{{ _options.backButtonStyle }}"
                           theme="{{ _options.theme}}"
                           on:click="_onBackButtonClick()"/>
+
+   <ws:if data="{{ _options.afterBackButtonTemplate }}">
+      <ws:partial template="{{ _options.afterBackButtonTemplate }}"/>
+   </ws:if>
+
    <ws:if data="{{ _options.counterCaption }}">
       <Controls.heading:Counter attr:class="controls-BreadCrumbsPath__counter"
                                 caption="{{ _options.counterCaption }}"

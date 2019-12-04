@@ -1,7 +1,7 @@
 /**
  * @author Золотова Элина
  * @mixin Controls/_filterPopup/Panel/AdditionalParams/Styles
- * @public
+ * @private
  *
  * @css @color_AdditionalParams-item Text color of item.
  * @css @height_AdditionalParams-item Item height.

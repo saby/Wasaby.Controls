@@ -196,6 +196,28 @@ define([
          assert.deepEqual(data[1].test, listViewModel._actions[1].all);
       });
 
+      describe('getContainerPaddingClass', function() {
+         var bottomRight = 'controls-itemActionsV_position_bottomRight',
+            topRight = 'controls-itemActionsV_position_topRight';
+         var getPadding = lists.ItemActionsControl._private.getContainerPaddingClass;
+         it('bottomRight, itemPadding is null', function() {
+            assert.equal(getPadding(bottomRight, {bottom: 'null'}), ' controls-itemActionsV_padding-bottom_null ');
+         });
+         it('bottomRight, itemPadding is not null', function() {
+            assert.equal(getPadding(bottomRight, {bottom: 's'}), ' controls-itemActionsV_padding-bottom_default ');
+            assert.equal(getPadding(bottomRight), ' controls-itemActionsV_padding-bottom_default ');
+         });
+         it('toRight, itemPadding is null', function() {
+            assert.equal(getPadding(topRight, {top: 'null'}), ' controls-itemActionsV_padding-top_null ');
+         });
+         it('topRight, itemPadding is not null', function() {
+            assert.equal(getPadding(topRight, {top: 's'}), ' controls-itemActionsV_padding-top_default ');
+            assert.equal(getPadding(topRight), ' controls-itemActionsV_padding-top_default ');
+         });
+         it('something else, itemPadding is not important', function() {
+            assert.equal(getPadding('some_class'), ' ');
+         });
+      });
 
       it('getChildren', function() {
          const
@@ -273,49 +295,20 @@ define([
            assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
            assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
            assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
-       });
 
-      it('_onItemActionClick in partialGridSupport', function() {
-           var cfg = {
-               listModel: listViewModel,
-               itemActions: actions,
-               fix1177894367: true
-           };
-           var instance = new lists.ItemActionsControl(cfg);
-           instance.saveOptions(cfg);
-           listViewModel.isPartialGridSupport = () => true;
-           var item = {};
-           var fakeItemData = {
-               actionsItem: item,
-               item: item,
-               index: 0,
-               key: 2,
-               columnIndex: 1
-           };
-           var fakeHTMLElement = {
-               className: 'controls-ListView__itemV'
-           };
-           instance._container = {
-               querySelectorAll: function(selector) {
-                   if (selector === '.controls-Grid__row-cell[data-r="0"]') {
-                       return [
-                           fakeHTMLElement
-                       ];
-                   }
-               }
-           };
-           const fakeEvent = {
-               stopPropagation: function() {}
-           };
-           const action = {
-               handler: sandbox.stub()
-           };
-           const notifyStub = sandbox.stub(instance, '_notify');
-
+           var setMarkedKeyCalled = false;
+           var listModel = {
+              setMarkedKey: function() {
+                 setMarkedKeyCalled = true;
+              },
+              getStartIndex: function() {
+                 return 0;
+              }
+           }
+           instance._options.listModel = listModel;
+           instance._destroyed = true;
            instance._onItemActionsClick(fakeEvent, action, fakeItemData);
-           assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
-           assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
-           assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
+           assert.isFalse(setMarkedKeyCalled);
        });
 
       it('should update itemActions on click', function () {
@@ -452,7 +445,37 @@ define([
 
          assert.strictEqual(listViewModel._prefixItemVersion, prefixItemVersion);
       });
+      it('updateItemActions should not call listModel.setItemActions if control is destroyed', function() {
+         var setItemActionsCalled = false;
+         var lm = {
+            setItemActios: function () {
+               setItemActionsCalled = true;
+            },
+            nextModelVersion: function() {}
+         };
+         var
+            cfg = {
+               listModel: lm,
+               itemActions: [{
+                     id: 0,
+                     title: 'first',
+                     showType: tUtil.showType.MENU
+                  },
+                  {
+                     id: 1,
+                     title: 'second',
+                     showType: tUtil.showType.TOOLBAR
+                  }],
+               itemActionsPosition: 'outside'
+            },
+            ctrl = new lists.ItemActionsControl(cfg);
+         ctrl.saveOptions(cfg);
 
+         ctrl._destroyed = true;
+         ctrl.updateItemActions(listViewModel.getCurrent().item);
+
+         assert.isFalse(setItemActionsCalled);
+      });
       describe('beforeUpdate updates model', function() {
          var visibilityCallback = function() {
             return true;

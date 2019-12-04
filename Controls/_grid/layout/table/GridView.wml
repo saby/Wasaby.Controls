@@ -1,24 +1,32 @@
-<table class="controls-Grid controls-Grid_{{_options.style}}_theme-{{_options.theme}} controls-Grid_table-layout
-              controls-Grid_table-layout_{{_listModel._isFixedLayout() ? 'fixed' : 'auto'}}">
-    <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{_listModel}}"/>
-    <ws:if data="{{_listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList()}}">
-        <ws:partial template="wml!Controls/_grid/layout/table/Header" listModel="{{_listModel}}"  attr:name="header" defaultHeaderContent="{{_headerContentTemplate}}"/>
+<table attr:class="{{ _gridViewClasses }}" attr:style="{{ _gridViewStyles }}">
+    <!-- Настройка ширин колонок для табличной вёрстки -->
+    <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{ _listModel }}"/>
+
+    <!-- Заголовок таблицы -->
+    <ws:if data="{{ _listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList() }}">
+        <ws:partial template="{{ _baseHeaderTemplate }}" attr:name="header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
     </ws:if>
-    <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
-        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}" attr:name="results"/>
+
+    <!-- Результаты сверху -->
+    <ws:if data="{{ _listModel.getResultsPosition() === 'top' }}">
+        <ws:partial template="{{ _resultsTemplate }}" attr:name="results" listModel="{{_listModel}}" baseResultsTemplate="{{ _baseResultsTemplate }}"/>
     </ws:if>
+
+    <!-- Скроллбар горизонтального скролла -->
     <ws:if data="{{isHorizontalScrollVisible}}">
         <Controls._grid.ScrollWrapper
                 name="horizontalScrollWrapper"
-                position="{{position}}"
-                contentSize="{{contentSize}}"
+                position="{{ position }}"
+                contentSize="{{ contentSize }}"
+                topOffset="{{ topOffset }}"
                 gridSupport="no"
-                scrollWidth="{{scrollWidth}}"
-                listModel="{{_listModel}}"
-                positionChangeHandler="{{positionChangeHandler}}">
+                scrollWidth="{{ scrollWidth }}"
+                listModel="{{ _listModel }}"
+                positionChangeHandler="{{ positionChangeHandler }}">
         </Controls._grid.ScrollWrapper>
     </ws:if>
-    <tbody name="itemsContainer">
+
+    <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
         <ws:partial template="wml!Controls/_list/resources/For"
                     listModel="{{_listModel}}"
                     itemTemplate="{{_itemTemplate}}"
@@ -34,33 +42,37 @@
                 <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>
             </ws:editArrowTemplate>
         </ws:partial>
-        <ws:if data="{{_options._needBottomPadding}}">
-            <tr>
-                <td class="controls-itemActionsV_outside-spacing"
-                    colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">
-                </td>
-            </tr>
-        </ws:if>
-        <ws:if data="{{_options.emptyTemplate}}">
-            <tr>
-                <td colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">
-                    <ws:if data="{{_options.columnScroll}}">
-                        <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{containerSize ? 'max-width: ' + containerSize + 'px;' : 'visibility: hidden;'}}"/>
-                    </ws:if>
-                    <ws:else>
-                        <ws:partial template="{{_options.emptyTemplate}}"/>
-                    </ws:else>
-                </td>
-            </tr>
-        </ws:if>
     </tbody>
-    <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
-        <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}" attr:name="results"/>
+
+    <!-- Отступ под последней записью вслучае, если в таблице есть операции над записью "вне строки" -->
+    <ws:if data="{{_options._needBottomPadding}}">
+        <tr>
+            <td class="controls-itemActionsV_outside-spacing" colspan="{{ getColspanFor('bottomPadding') }}"></td>
+        </tr>
     </ws:if>
+
+    <!-- Шаблон пустой таблицы -->
+    <ws:if data="{{_options.emptyTemplate}}">
+        <ws:partial template="wml!Controls/_grid/EmptyTemplate"
+                    emptyTemplate="{{ _options.emptyTemplate }}"
+                    listModel="{{ _listModel }}"
+                    isFullGridSupport="{{ _isFullGridSupport }}"
+                    containerSize="{{ containerSize }}"
+                    hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
+                    hasColumnScroll="{{ _options.columnScroll }}"/>
+    </ws:if>
+
+    <!-- Результаты снизу -->
+    <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
+        <ws:partial template="{{_resultsTemplate}}" attr:name="results" listModel="{{_listModel}}" baseResultsTemplate="{{ _baseResultsTemplate }}"/>
+    </ws:if>
+
+    <!-- Подвал таблицы -->
     <tr>
-        <td class="{{_calcFooterPaddingClass(_options)}}"
-            colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">
-            <ws:partial template="{{_options.footerTemplate}}"/>
+        <td colspan="{{_listModel.getColspanFor('footer')}}">
+            <div class="{{_calcFooterPaddingClass()}}" style="{{_listModel.getFooterStyles()}}">
+                <ws:partial template="{{_options.footerTemplate}}"/>
+            </div>
         </td>
     </tr>
 </table>

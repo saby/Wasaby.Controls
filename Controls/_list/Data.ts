@@ -22,7 +22,7 @@ type GetSourceResult = {
        *<a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
        *
        * @class Controls/_list/Data
-       * @mixes Controls/interface/IFilter
+       * @mixes Controls/_interface/IFilter
        * @mixes Controls/interface/INavigation
        * @extends Core/Control
        * @control
@@ -36,7 +36,7 @@ type GetSourceResult = {
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
        *
        * @class Controls/_list/Data
-       * @mixes Controls/interface/IFilter
+       * @mixes Controls/_interface/IFilter
        * @mixes Controls/interface/INavigation
        * @extends Core/Control
        * @control
@@ -70,6 +70,7 @@ type GetSourceResult = {
          isEqualItems: function(oldList:RecordSet, newList:RecordSet):boolean {
             return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
                (newList.getModel() === oldList.getModel()) &&
+               (newList.getKeyProperty() === oldList.getKeyProperty()) &&
                (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
          },

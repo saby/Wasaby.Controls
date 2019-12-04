@@ -11,7 +11,7 @@ import Merge = require('Core/core-merge');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
-import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
+import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
 
 /**
        * Контрол "Быстрый фильтр".
@@ -122,6 +122,7 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
                   self._configs[index]._sourceController = null;
                }
                self._configs[index]._source = null;
+               self._configs[index].popupItems = null;
                return _private.loadItemsFromSource(self._configs[index], properties);
             }
          },
@@ -164,8 +165,8 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
          },
 
          setValue: function(self, selectedKeys) {
-            if (!selectedKeys.length) {
-               var resetValue = getPropValue(self._items.at(self.lastOpenIndex), 'resetValue');
+            const resetValue = getPropValue(self._items.at(self.lastOpenIndex), 'resetValue');
+            if (!selectedKeys.length || isEqual(selectedKeys, resetValue)) {
                setPropValue(self._items.at(self.lastOpenIndex), 'value', resetValue);
             } else if (self._configs[self.lastOpenIndex].multiSelect) {
                setPropValue(self._items.at(self.lastOpenIndex), 'value', selectedKeys);
@@ -181,7 +182,9 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
             // Get keys of selected items
             chain.factory(items).each(function(item) {
                var key = getPropValue(item, self._configs[self.lastOpenIndex].keyProperty);
-               if (key !== getPropValue(self._items.at(self.lastOpenIndex), 'resetValue')) {
+               if (key !== getPropValue(self._items.at(self.lastOpenIndex), 'resetValue') &&
+                   // select empty item
+                   !(self._configs[self.lastOpenIndex].emptyText && key === null)) {
                   selectedKeys.push(key);
                }
             });
@@ -216,15 +219,13 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
 
          onSelectorResult: function (curConfig, selectedItems) {
             var newItems = _private.getNewItems(curConfig, selectedItems);
+            _private.updateHistory(curConfig, chain.factory(selectedItems).toArray());
+            _private.setItems(curConfig, newItems);
 
             // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
-            if (historyUtils.isHistorySource(curConfig._source)) {
-               if (newItems.length) {
-                  curConfig._sourceController = null;
-               }
-               _private.updateHistory(curConfig, chain.factory(selectedItems).toArray());
+            if (historyUtils.isHistorySource(curConfig._source) && newItems.length) {
+               curConfig._sourceController = null;
             }
-            curConfig._items.prepend(newItems);
          },
 
          onResult: function(event, result) {
@@ -294,6 +295,12 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
             return result;
          },
 
+         setItems: function(config, newItems) {
+            config.popupItems = getItemsWithHistory(config.popupItems || config._items, newItems,
+                config._sourceController, config._source, config.keyProperty);
+            config._items = getUniqItems(config._items, newItems, config.keyProperty);
+         },
+
          loadNewItems: function(self, items, configs) {
             let pDef = new pDeferred();
             chain.factory(items).each(function(item, index) {
@@ -304,7 +311,7 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
                   properties.filter = itemProperties.filter || {};
                   properties.filter[itemProperties.keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
-                     configs[index]._items = getItemsWithHistory(configs[index]._items, items, configs[index]._sourceController, configs[index]._source, configs[index].keyProperty);
+                     _private.setItems(configs[index], items);
                   });
                   pDef.push(result);
                } else {
@@ -405,7 +412,7 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
 
             var selectedKeys = getPropValue(this._items.at(index), 'value');
             var templateOptions = {
-               items: this._configs[index]._items,
+               items: this._configs[index].popupItems || this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),
@@ -416,7 +423,10 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
                className: (this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup') + '_theme_' + this._options.theme,
-               fittingMode: 'overflow',
+               fittingMode: {
+                  horizontal: 'overflow',
+                  vertical: 'adaptive'
+               },
 
                // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                target: (this._container[0] || this._container).children[index]
@@ -454,7 +464,7 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
                if (!(sKey instanceof Array)) {
                   sKey = [sKey];
                }
-               if (sKey[0] === null && config.emptyText) {
+               if ((sKey[0] === null || !sKey.length) && config.emptyText) {
                   text.push(config.emptyText);
                } else {
                   chain.factory(config._items).each(function(item) {

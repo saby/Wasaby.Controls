@@ -38,7 +38,7 @@ define([
             assert.strictEqual(component._state, component._STATES.year);
             assert.strictEqual(component._yearRangeSelectionType, 'range');
             assert.strictEqual(component._headerType, 'link');
-            assert(dateUtils.isDatesEqual(component._displayedDate, now));
+            assert(dateUtils.isDatesEqual(component._displayedDate, dateUtils.getStartOfYear(now)));
 
             clock.restore();
          });
@@ -49,9 +49,19 @@ define([
                clock = sinon.useFakeTimers(now.getTime(), 'Date'),
                component = calendarTestUtils.createComponent(PeriodDialog, {});
 
-            assert(dateUtils.isDatesEqual(component._displayedDate, now));
+            assert(dateUtils.isDatesEqual(component._displayedDate, dateUtils.getStartOfYear(now)));
 
             clock.restore();
+         });
+
+         it('should initialize _displayedDate as start of year if dialog opens in year mode.', function() {
+            const
+               start = new Date(2018, 3, 1),
+               end = new Date(2018, 4, 0),
+               component = calendarTestUtils.createComponent(PeriodDialog, { startValue: start, endValue: end });
+
+            assert(dateUtils.isDatesEqual(component._displayedDate, dateUtils.getStartOfYear(start)));
+
          });
 
          it('should create the correct range models when empty range passed.', function() {

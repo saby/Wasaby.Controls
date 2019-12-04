@@ -1,36 +1,53 @@
 /**
- * @typedef {Object} IFieldData
- * @property {Number} position Положение каретки.
- * @property {String} displayValue Значение, которое будет отображено в поле.
+ * @interface Controls/_input/interface/IFieldData
+ * @author Красильников А.С.
+ * @public
  */
 export interface IFieldData {
+    /**
+     * Положение каретки.
+     */
     position: number;
+    /**
+     * Значение, которое будет отображено в поле.
+     */
     displayValue: string;
 }
 
 /**
- * @typedef {Object} IFieldData
- * @property {String} value Значение поля ввода.
- * @property {Number} position Положение каретки.
- * @property {String} displayValue Значение, которое будет отображено в поле.
+ * @interface Controls/_input/interface/ICallbackData
+ * @author Красильников А.С.
+ * @public
+ *
+ * @param T Тип значения поля ввода.
  */
 export interface ICallbackData<T> extends IFieldData {
+    /**
+     * Значение поля ввода.
+     */
     value: T;
 }
 
+/**
+ * Определяет функцию обратного вызова, изменяющую обработку ввода.
+ * @param T Тип значения поля ввода.
+ * @param data данные основного процесса обработки ввода.
+ * @return измененные данные.
+ */
 export type ICallback<T> = (data: ICallbackData<T>) => IFieldData;
 
 /**
  * Интерфейс управления значением поля ввода.
  *
  * @interface Controls/_input/interface/IValue
- * @author Журавлёв М.С.
+ * @author Красильников А.С.
  * @public
+ *
+ * @param T Тип значения поля ввода.
  */
 export interface IValueOptions<T> {
     /**
-     * @name Controls/_input/interface/IValue#value
-     * @cfg {String | null} Значение поля ввода.
+     * Значение поля ввода.
      * @remark
      * При установке опции value в контроле ввода, отображаемое значение всегда будет соответствовать её значению. В этом случае родительский контрол управляет отображаемым значением. Например, вы можете менять значение по событию {@link valueChanged}:
      * <pre>
@@ -113,11 +130,7 @@ export interface IValueOptions<T> {
     value: T | null;
 
     /**
-     * @name Controls/_input/interface/IValue#inputCallback
-     * @function
-     * @description Функция обратного вызова, вызывается после основного процесса обработки входных данных.
-     * @param {ICallbackData} data Данные полученные в результате основного процесса обработки.
-     * @return {IFieldData} Новые данные процесса обработки.
+     * Функция обратного вызова, вызывается после основного процесса обработки входных данных.
      * @remark
      * Метод используется, когда требуется измененить поведение обработки ввода.
      * @demo Controls-demo/Input/InputCallback/Index
@@ -128,6 +141,7 @@ export interface IValueOptions<T> {
 /**
  * @name Controls/_input/interface/IValue#valueChanged 
  * @event Происходит при изменении отображаемого значения контрола ввода.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {String} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark

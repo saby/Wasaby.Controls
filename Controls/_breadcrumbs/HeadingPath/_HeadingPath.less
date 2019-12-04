@@ -4,7 +4,7 @@
 }
 
 .controls-BreadCrumbsPath__twoRows {
-   margin-left: @spacing_Path-between-home-and-leftEdge;
+   padding-left: @spacing_Path-between-home-and-leftEdge;
 }
 
 .controls-BreadCrumbsPath__wrapper {
@@ -88,11 +88,14 @@
    padding-left: @spacing_Path-between-home-and-crumbs;
 }
 
-.controls-BreadCrumbsPath__homeContainer {
-   .baseline-fix();
+.controls-BreadCrumbsPath__homeContainer_withBackButton {
 
    // sets line-height === content's fontSize for correctly padding rounded border on drag&drop
    line-height: 1;
+}
+.controls-BreadCrumbsPath__homeContainer {
+   .baseline-fix();
+
    position: relative;
    display: inline-flex;
    align-items: baseline;

@@ -82,7 +82,7 @@ class ModuleClass {
 
         periodType = getPeriodType(updatedRange[0], updatedRange[1]);
 
-        if (periodType === periodTypes.day || periodType === periodTypes.days) {
+        if (this._periodTypeIsDay(periodType)) {
             this._relationMode = 'byCapacity';
         }
 
@@ -176,6 +176,10 @@ class ModuleClass {
         return ranges;
     }
 
+    private _periodTypeIsDay(periodType) {
+        return (periodType === periodTypes.day || periodType === periodTypes.days);
+    }
+
     private _getUpdatedRanges(ranges, rangeIndex, newRange, relationMode, steps) {
         let selectionType = 'months',
             start = newRange[0],
@@ -196,7 +200,7 @@ class ModuleClass {
             // and the month of the periods differ or step is not aligned to the new capacity,
             // then we also set adjacent periods.
             if (relationMode === 'byCapacity' ||
-                    (capacityChanged && steps[number] % 12 !== 0 &&
+                    (capacityChanged && steps[number] % 12 !== 0 && periodLength > oldPeriodLength &&
                         (start.getMonth() !== oldStart.getMonth() || steps[number] % periodLength !== 0))) {
                 s = periodLength;
             } else {
@@ -216,15 +220,20 @@ class ModuleClass {
         periodType = getPeriodType(start, end);
         oldPeriodType = (oldStart && oldEnd) ? getPeriodType(oldStart, oldEnd) : null;
 
-        if (periodType === periodTypes.day || periodType === periodTypes.days) {
+        if (this._periodTypeIsDay(oldPeriodType)) {
+            oldPeriodLength = dateRangeUtil.gePeriodLengthInDays(oldStart, oldEnd);
+        } else {
+            oldPeriodLength = oldPeriodType ? dateRangeUtil.getPeriodLengthInMonths(oldStart, oldEnd) : null;
+        }
+
+        if (this._periodTypeIsDay(periodType)) {
             selectionType = 'days';
             periodLength = dateRangeUtil.gePeriodLengthInDays(start, end);
         } else {
             periodLength = periodType ? dateRangeUtil.getPeriodLengthInMonths(start, end) : null;
         }
 
-        if ((periodType === periodTypes.days || periodType === periodTypes.day) &&
-            (oldPeriodType === periodTypes.days || oldPeriodType === periodTypes.day)) {
+        if (this._periodTypeIsDay(periodType) && this._periodTypeIsDay(oldPeriodType)) {
             capacityChanged = periodLength !== dateRangeUtil.gePeriodLengthInDays(oldStart, oldEnd);
         } else {
             capacityChanged = periodType !== oldPeriodType;
@@ -243,7 +252,7 @@ class ModuleClass {
                     //In variable control there is old start and end values,
                     // we send them to check if year has been changed
                     this._slideStartDate(control[0], start, -step, selectionType),
-                    this._slideEndDate(control[1], start, -step + periodLength - 1, selectionType)
+                    this._slideEndDate(control[1], start, -step + periodLength - 1, selectionType, periodLength)
                 ];
             }
             lastDate = control[0];
@@ -264,7 +273,7 @@ class ModuleClass {
                     //In variable control there is old start and end values,
                     // we send them to check if year has been changed
                     this._slideStartDate(control[0], start, step, selectionType),
-                    this._slideEndDate(control[1], start, step + periodLength - 1, selectionType)
+                    this._slideEndDate(control[1], start, step + periodLength - 1, selectionType, periodLength)
                 ];
             }
             lastDate = control[1];
@@ -287,10 +296,10 @@ class ModuleClass {
         return new Date(date.getFullYear(), date.getMonth() + delta, 1);
     }
 
-    private _slideEndDate(lastDate, date, delta, selectionType) {
+    private _slideEndDate(lastDate, date, delta, selectionType, periodLength) {
         if (selectionType === 'days') {
             if (lastDate.getFullYear() !== date.getFullYear()) {
-                return new Date(lastDate.getFullYear(), date.getMonth(), date.getDate() - delta - 1);
+                return new Date(lastDate.getFullYear(), date.getMonth(), date.getDate() + periodLength - 1);
             } else {
                 return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
             }

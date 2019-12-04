@@ -3,7 +3,7 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor, Date as WSDate} from 'Types/entity';
 import {dateMaskConstants} from 'Controls/interface';
-import IRangeSelectable from './_datePopup/IRangeSelectable';
+import {IRangeSelectable} from 'Controls/dateRange';
 import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
 import MonthsRange from './_datePopup/MonthsRange';
@@ -311,6 +311,9 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._yearStateEnabled = periodDialogUtils.isYearStateEnabled(options);
 
         this._state = _private.getViewState(options, this._monthStateEnabled, this._yearStateEnabled);
+        if (this._state === STATES.year) {
+            this._displayedDate = dateUtils.getStartOfYear(this._displayedDate);
+        }
 
         this._yearRangeSelectionType = options.selectionType;
         this._yearRangeQuantum = {};

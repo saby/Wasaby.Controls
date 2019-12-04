@@ -1,20 +1,20 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
-import {SearchGridViewModel, ViewModel as TreeGridViewModel, TreeGridView, SearchView} from 'Controls/treeGrid';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
-import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import {constants} from 'Env/Env';
-import {Logger} from 'UI/Utils';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
+import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
+import {factory} from 'Types/chain';
+import {constants} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 import 'css!theme?Controls/explorer';
 import 'css!theme?Controls/tile';
 import 'Types/entity';
 
 
-   var
+var
       HOT_KEYS = {
          backByPath: constants.key.backspace
       };
@@ -208,6 +208,9 @@ import 'Types/entity';
                   Logger.error('Controls/_explorer/View: ' + err.message, self, err);
                });
             });
+         },
+         canStartDragNDrop(self): boolean {
+            return self._viewMode !== 'search';
          }
       };
 
@@ -231,7 +234,7 @@ import 'Types/entity';
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/interface/INavigation
-    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/IHierarchy
@@ -263,7 +266,7 @@ import 'Types/entity';
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/interface/INavigation
-    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/ISorting
@@ -322,6 +325,7 @@ import 'Types/entity';
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
+         this._canStartDragNDrop = _private.canStartDragNDrop.bind(null, this);
 
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          //process items from options to create a path
@@ -341,6 +345,12 @@ import 'Types/entity';
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
+
+         //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
+         if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
+            this._isGoingFront = false;
+         }
+
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode, cfg);
             if (cfg.searchNavigationMode !== 'expand') {

@@ -12,6 +12,7 @@ export interface INotificationSimpleOptions extends IControlOptions, INotificati
  *
  * @class Controls/_popupTemplate/Notification/Simple
  * @extends Core/Control
+ * @mixes Controls/_popupTemplate/Notification/interface/INotification
  * @control
  * @public
  * @category popup
@@ -21,7 +22,7 @@ export interface INotificationSimpleOptions extends IControlOptions, INotificati
 
 /**
  * @name Controls/_popupTemplate/Notification/Simple#icon
- * @cfg {Object} Устанавливает значок сообщения окна уведомления.
+ * @cfg {String} Устанавливает значок сообщения окна уведомления.
  */
 
 /**
@@ -63,7 +64,7 @@ class NotificationSimple extends Control<INotificationSimpleOptions> implements 
         };
     }
 
-    static _theme: string[] = ['Controls/popupTemplate'];
+    static _theme: string[] = ['Controls/popupTemplate', 'Controls/Classes'];
 }
 
 export default NotificationSimple;

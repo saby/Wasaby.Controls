@@ -1,3 +1,6 @@
+@import "_aliases";
+@import "_notAliasesToDelete";
+
 @tensorFontForIE:                         '1.0.3';
 @tensorFontVer:                           '1.0.3';
 @emojiFontVer:                            '1.0.1';
@@ -101,7 +104,6 @@
 
 // icon urls
 @sortIconSvg-trendUp:                url('img/sortButtonTrendUp.svg');
-@sortIconSvg-trendDown:              url('img/sortButtonTrendDown.svg');
 @closeIconSvg-toolButton:            url('img/DefaultCloseIcon.svg');
 @closeIconSvg-toolButton-hovered:    url('img/CloseIconHovered.svg');
 @closeIconSvg-link:                  url('img/LightCloseIcon.svg');
@@ -169,7 +171,7 @@
 @spacing_ListView-between-content-checkbox_val:                   0;
 @spacing_ListView-empty-between-content-borderTop_xs_val:         0;
 
-@box-shadow_List-masterList-item_selected_val:                    4px 0 8px rgba(0, 0, 0, .15);
+@box-shadow_List-masterList-item_selected_val:                    6px 0 6px rgba(0, 0, 0, .15);
 @border-color_List-masterList-item_selected_val:                  #C2D0DE transparent #9CB3CA transparent;
 @background-color_ListView-item_active_val:                       #F0F5FB;
 @background-color_ListView-item_hover_val:                        #F0F5FB;
@@ -220,9 +222,6 @@
 // PeriodDialog
 @thickness_PeriodDialog-header-dash_val:                          1px;
 
-// Previewer
-@animation-duration_Previewer:                                    200ms;
-
 // FilterLink
 @color_FilterLink:                                                #313e78;
 
@@ -243,6 +242,7 @@
 // Suggest
 @box-shadow-size_Suggest-popup-verticalAlign_top_val:             0 -4px 6px;
 @box-shadow-size_Suggest-popup-verticalAlign_bottom_val:          0 4px 6px;
+@margin-top_Suggest__tabs-contentLayer_val:                       0;
 
 // Switch
 @width_Switch_val:                                                46px;
@@ -304,7 +304,7 @@
 @height_Grid-results-cell_val:                                            20px;
 @spacing_Grid-row-between-content-borderLeft_xs_val:                      0;
 @spacing_Grid-row-between-content-borderRight_xs_val:                     0;
-@box-shadow_Grid-masterList-item_selected_val:                            8px 0 8px @color_shadow_light;
+@box-shadow_Grid-masterList-item_selected_val:                            6px 0 6px @color_shadow_light;
 @background-color_Grid-row_hover_val:                                     #F0F5FB;
 @background-color_Grid-row_hover-transparent_val:                         rgba(240,245,251,0);
 @border-color_Grid-row-separator_val:                                     #F5F5F5;
@@ -355,7 +355,7 @@
 @padding-horizontal_CheckBox-caption_val:                                 3px;
 @top_CheckBox__iconSuccessful_val:                                        3px;
 @color_CheckBox__iconBox_val:                                             #CCC;
-@height_CheckBox:                                                         @height_m;
+@height_CheckBox:                                                         @inline_height_m;
 @width_CheckBox:                                                          20px;
 
 // FilterButton
@@ -485,7 +485,7 @@
 @color_BigSeparator-icon_hovered:                       #313E78;
 
 //Label
-@height_Label:                                          @height_m;
+@height_Label:                                          @inline_height_m;
 @padding_Label:                                         0 8px 0 0;
 
 //Popup

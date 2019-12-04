@@ -151,6 +151,7 @@ var ListView = BaseControl.extend(
         },
 
         _afterMount: function() {
+            this._notify('itemsContainerReady', [this.getItemsContainer()]);
             /* TODO это временное решение для ускорения списка с вложенными плитками
               суть - в том что когда у плитки случается afterMount - у внешнего списка уже все пересчитал с актуальными
               размерами вложенных плиток. Поэтому нет вариантов, что afterMount плитки может поресайзить внешний список

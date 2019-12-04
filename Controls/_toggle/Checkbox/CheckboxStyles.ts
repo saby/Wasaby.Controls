@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/_toggle/Checkbox/CheckboxStyles
- * @public
+ * @private
  * @author Красильников А.С.
  *
  * @css @font-size_CheckBox Checkbox font-size.

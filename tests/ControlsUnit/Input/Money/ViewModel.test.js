@@ -52,6 +52,18 @@ define(
                assert.equal(model.value, '123456');
                assert.equal(model.displayValue, '123 456.00');
             });
+            it('1e21', function() {
+               model.value = 1e21;
+
+               assert.equal(model.value, 1e21);
+               assert.equal(model.displayValue, '1 000 000 000 000 000 000 000.00');
+            });
+            it('Type number', function() {
+               model.value = 123456;
+
+               assert.equal(model.value, '123456');
+               assert.equal(model.displayValue, '123 456.00');
+            });
          });
          describe('Change the display value.', function() {
             it('0.00', function() {
@@ -76,6 +88,13 @@ define(
                model.displayValue = '123 456.00';
 
                assert.equal(model.value, '123456');
+               assert.equal(model.displayValue, '123 456.00');
+            });
+            it('Type number', function() {
+               model.value = 0;
+               model.displayValue = '123 456.00';
+
+               assert.equal(model.value, 123456);
                assert.equal(model.displayValue, '123 456.00');
             });
          });

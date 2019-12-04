@@ -9,11 +9,9 @@ define('Controls-demo/List/Grid/Base', [
    'wml!Controls-demo/List/Grid/DemoCostPrice',
    'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
    'wml!Controls-demo/List/Grid/DemoName',
-   'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
    'Controls/scroll',
    'Controls/grid',
-   'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/resources/Base/Base'
 ], function(Env, BaseControl, GridData, template, source) {
    'use strict';

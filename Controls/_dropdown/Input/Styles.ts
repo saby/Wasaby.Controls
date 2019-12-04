@@ -2,7 +2,7 @@
 /**
     * @author Герасимов А.М.
     * @mixin Controls/_dropdown/Input/Styles
-    * @public
+    * @private
     *
     * @css @height_Dropdown Dropdown height.
     *

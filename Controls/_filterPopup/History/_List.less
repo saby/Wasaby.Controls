@@ -37,9 +37,9 @@
 
 .controls-HistoryList_horizontal__item {
 	color: @color_HistoryList_horizontal-item;
-	max-height: @inline_height_l;
-	margin-top: @spacing_default_m;
-	margin-bottom: @spacing_default_m;
+	max-height: @max-height_HistoryList_horizontal-item;
+	margin-top: @spacing_HistoryList_horizontal-between-history-items;
+	margin-bottom: @spacing_HistoryList_horizontal-between-history-items;
 }
 
 .ws-is-chrome {
@@ -48,7 +48,7 @@
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
-		line-height: @font-size_m;
+		line-height: @line-height_HistoryList_horizontal-item;
 	}
 
 	.controls-HistoryList_horizontal__itemWrapper {

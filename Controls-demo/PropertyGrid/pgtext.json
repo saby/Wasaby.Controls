@@ -1393,61 +1393,6 @@
       }
     }
   },
-  "Controls/tabs:Buttons": {
-    "name": "Controls/tabs:Buttons",
-    "title": "Buttons for tab switching.",
-    "className": "Controls/tabs:Buttons",
-    "kind": "control",
-    "isPublic": true,
-    "fullname": "Controls/tabs:Buttons",
-    "properties": {
-      "ws-config": {
-        "title": "Базовая конфигурация",
-        "options": {
-          "style": {
-            "type": "enum",
-            "title": "Tabs buttons display style.",
-            "enum": {
-              "secondary": "RadioGroup is a row of RadioButton.",
-              "primary": "RadioGroup is a column of RadioButton."
-            }
-          },
-          "selectedKey": {
-            "type": "Number",
-            "title": "Identifier of selected item."
-          },
-          "source": {
-            "title": "Object that implements ISource interface for data access."
-          },
-          "itemTemplate": {
-            "type": "function",
-            "title": "Template for item render."
-          },
-          "keyProperty": {
-            "type": "String",
-            "title": "Name of the item property that uniquely identifies collection item."
-          },
-          "itemTemplateProperty": {
-            "type": "String",
-            "title": "Name of the item property that contains template for item render"
-          },
-          "readOnly": {
-            "type": "Boolean",
-            "title": "Indicates whether control will react to user actions."
-          },
-          "name": {
-            "title": "Имя контрола",
-            "type": "String",
-            "default": ""
-          },
-          "tabSpaceTemplate": {
-            "type": "function",
-            "title": "Contents of the area near the tabs."
-          }
-        }
-      }
-    }
-  },
   "Controls/toggle:RadioGroup": {
     "name": "Controls/Toggle/Radio",
     "title": "Radio button switch.",

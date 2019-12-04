@@ -2,11 +2,10 @@ define('Controls/Container/Input/Search',
    [
       'Core/Control',
       'wml!Controls/Container/Input/Search/Search',
-      'Env/Env',
       'UI/Utils'
    ],
 
-   function(Control, template, Env, UIUtils) {
+   function(Control, template, UIUtils) {
       'use strict';
 
       var SearchContainer = Control.extend({

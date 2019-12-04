@@ -13,17 +13,17 @@ export interface INotificationBaseOptions extends IControlOptions, INotification
 *
 * @class Controls/_popupTemplate/Notification/Base
 * @extends Core/Control
+* @mixes Controls/_popupTemplate/Notification/interface/INotification
 * @control
 * @public
 * @category popup
 * @author Красильников А.С.
-* @mixes Controls/_popupTemplate/Notification/NotificationStyles
 * @demo Controls-demo/NotificationDemo/NotificationTemplate
 */
 
 /**
  * @name Controls/_popupTemplate/Notification/Base#bodyContentTemplate
- * @cfg {function|String} Определяет основной контент окна уведомления.
+ * @cfg {Function|String} Определяет основной контент окна уведомления.
  */
 
 
@@ -52,7 +52,9 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
         this._borderStyle = this._prepareBorderStyle(options);
     }
 
-    private _closeClick(): void {
+    private _closeClick(ev: Event): void {
+        // Клик по крестику закрытия не должен всплывать выше и обрабатываться событием click на контейнере
+        ev.stopPropagation();
         this._notify('close', []);
     }
 

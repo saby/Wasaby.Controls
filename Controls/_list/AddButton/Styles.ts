@@ -1,7 +1,7 @@
 /**
  * @author Авраменко А.С.
  * @mixin Controls/_list/AddButton/Styles
- * @public
+ * @private
  *
  *
  * @css @color_listAddButton_enabled text color of button "Add" in List

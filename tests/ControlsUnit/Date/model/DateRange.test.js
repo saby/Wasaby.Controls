@@ -202,7 +202,7 @@ define([
          });
       });
 
-      describe('.slideStartDate', function () {
+      describe('.slideEndDate', function () {
          it('should return correct end value', function () {
             const model = new dateRange.RelationController(),
                options = {
@@ -221,7 +221,7 @@ define([
                expectedResult: new Date(2018, 5, 20),
                lastDate: new Date(2018, 4, 1),
                date: new Date(2019, 5, 16),
-               delta: -5,
+               periodLength: 5,
                bindType: 'days'
             }, {
                expectedResult: new Date(2019, 5, 15),
@@ -231,7 +231,7 @@ define([
                bindType: 'days'
             }
             ].forEach(function(test) {
-               let result = model._model._slideEndDate(test.lastDate, test.date, test.delta, test.bindType);
+               let result = model._model._slideEndDate(test.lastDate, test.date, test.delta, test.bindType, test.periodLength);
                assert.equal(result.getFullYear(), test.expectedResult.getFullYear());
                assert.equal(result.getMonth(), test.expectedResult.getMonth());
                assert.equal(result.getDate(), test.expectedResult.getDate());

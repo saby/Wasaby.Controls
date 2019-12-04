@@ -2,7 +2,12 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
 
 /**
  * @interface Controls/_interface/IApplication
-*/
+ * @private
+ * 
+ */
+export default interface IApplication extends IHTML {
+    readonly '[Controls/_interface/IApplication]': boolean
+};
 
 /**
  * @name Controls/_interface/IApplication#scripts
@@ -74,10 +79,6 @@ import {IHTMLOptions, IHTML} from 'UI/Base';
  * @cfg {String} title of the tab
 */
 
-export default interface IApplication extends IHTML {
-    readonly '[Controls/_interface/IApplication]': boolean
-};
-
 export interface IAttributes {
     [index: string]: string | undefined
 }
@@ -85,8 +86,9 @@ export interface IAttributes {
 export type HeadJson = [string, Record<string, string>][];
 
 export interface IApplicationOptions extends IHTMLOptions {
-    scripts?: Array<IAttributes>,
-    links?: Array<IAttributes>,
-    meta?: Array<IAttributes>,
-    headJson?: HeadJson
+    scripts?: Array<IAttributes>;
+    links?: Array<IAttributes>;
+    meta?: Array<IAttributes>;
+    headJson?: HeadJson;
+    title?: string;
 }

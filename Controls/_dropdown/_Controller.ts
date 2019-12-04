@@ -232,7 +232,7 @@ var _private = {
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -253,7 +253,7 @@ var _private = {
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable

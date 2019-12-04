@@ -73,6 +73,7 @@ define('Controls-demo/FilterView/FilterView',
          _fastButtonItems: null,
          _fastButtonItems2: null,
          _oneFastItems: null,
+         _oneFastItems2: null,
          _customTemplateItems: null,
          _scrollFastItems: null,
          _historyFastItems: null,
@@ -527,6 +528,24 @@ define('Controls-demo/FilterView/FilterView',
                {name: 'tagging', value: false, resetValue: false, textValue: 'Marks', viewMode: 'extended', visibility: false}
             ].concat(this._buttonItems);
             this._fastButtonItems2 = Clone(this._fastButtonItems);
+            this._fastButtonItems2.push({
+               name: 'detailingPeriod',
+               value: [1],
+               resetValue: [1],
+               textValue: '',
+               viewMode: 'extended',
+               visibility: false,
+               source: new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: [
+                     { key: 1, title: 'On documents', 'parent@': false, parent: null },
+                     { key: 2, title: 'Summary', 'parent@': true, parent: null },
+                     { key: 3, title: 'Day', text: 'Summary by day', parent: 2, 'parent@': false },
+                     { key: 4, title: 'Month', text: 'Summary by monthly', parent: 2, 'parent@': false },
+                     { key: 5, title: 'Year', text: 'Summary by year', parent: 2, 'parent@': false }
+                  ]
+               })
+            });
             this._oneFastItems = [
                { name: 'acting',
                   value: '1',
@@ -535,6 +554,20 @@ define('Controls-demo/FilterView/FilterView',
                      source: new sourceLib.Memory({
                         idProperty: 'id',
                         data: [{ id: '1', title: 'Acting'}, {id: '2', title: 'All'}]
+                     }),
+                     displayProperty: 'title',
+                     keyProperty: 'id'
+                  },
+                  viewMode: 'frequent'
+               }
+            ];
+            this._oneFastItems2 = [
+               { name: 'type',
+                  value: '1',
+                  editorOptions: {
+                     source: new sourceLib.Memory({
+                        idProperty: 'id',
+                        data: [{ id: '1', title: 'EDO'}, {id: '2', title: 'EDI'}]
                      }),
                      displayProperty: 'title',
                      keyProperty: 'id'
@@ -595,14 +628,6 @@ define('Controls-demo/FilterView/FilterView',
 
          _itemsChanged: function(event, items) {
             this._hierarchyItems = Clone(items);
-         },
-
-         _itemsMoreChanged: function(event, items) {
-            this._itemsMore = Clone(items);
-            this._itemsMore[0].editorOptions.source = new sourceLib.Memory({
-               idProperty: 'id',
-               data: this._itemsMultiSelect
-            });
          }
       });
 

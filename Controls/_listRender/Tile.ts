@@ -118,7 +118,7 @@ export default class TileRender extends BaseRender {
 
         const viewContainer = this._options.tileScalingMode === 'inside'
             ? this.getItemsContainer()
-            : document.documentElement;
+            : document && document.documentElement;
         const viewContainerRect = viewContainer.getBoundingClientRect();
 
         const targetItemSize = this._options.listModel.getItemContainerSize(itemContainer);
@@ -128,7 +128,7 @@ export default class TileRender extends BaseRender {
             viewContainerRect
         );
 
-        const documentRect = document.documentElement.getBoundingClientRect();
+        const documentRect = document && document.documentElement.getBoundingClientRect();
         const targetItemPositionInDocument = this._options.listModel.getItemContainerPositionInDocument(
             targetItemPosition,
             viewContainerRect,
@@ -168,7 +168,10 @@ export default class TileRender extends BaseRender {
         // causing version change. But version should only change when
         // the state actually changes, so probably managers should
         // keep track of the version and not the collection itself.
-        if (this._options.listModel.getHoveredItem() !== item) {
+        if (
+            this._options.listModel && !this._options.listModel.destroyed &&
+            this._options.listModel.getHoveredItem() !== item
+        ) {
             this._options.listModel.setHoveredItem(item);
         }
     }

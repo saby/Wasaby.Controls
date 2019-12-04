@@ -30,6 +30,26 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
          });
 
+         it('getCurrent with ladder', function () {
+            var items = new collection.RecordSet({
+               rawData: [{id: 1, title: 'test', type: true, parent: null}],
+               keyProperty: 'id'
+            });
+            var model = new treeGrid.SearchGridViewModel({
+               items: items,
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               searchValue: 'tes',
+               columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
+               ladderProperties: ['title'],
+               multiSelectVisibility: 'hidden'
+            });
+            model._curIndex = 0;
+            assert.isTrue(model.getCurrent().breadCrumbs);
+            assert.deepEqual(model._ladder, {});
+         });
+
          it('isFirstInGroup with breadCrumb', function() {
             var items = new collection.RecordSet({
                rawData: [{id: 1, title: 'test', node: null, parent: null}],

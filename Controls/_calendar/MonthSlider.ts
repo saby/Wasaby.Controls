@@ -29,7 +29,7 @@ var _private = {
  * @class Controls/_calendar/MonthSlider
  * @extends Core/Control
  * @mixes Controls/_calendar/interface/IMonth
- * @mixes Controls/Date/interface/IRangeSelectable
+ * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @control
  * @public
@@ -45,7 +45,7 @@ var _private = {
  * @class Controls/_calendar/MonthSlider
  * @extends Core/Control
  * @mixes Controls/_calendar/interface/IMonth
- * @mixes Controls/Date/interface/IRangeSelectable
+ * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @control
  * @public

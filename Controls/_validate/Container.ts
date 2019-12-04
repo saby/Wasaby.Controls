@@ -212,8 +212,8 @@ class ValidateContainer extends Control {
     validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
-            this.setValidationResult(undefined, validateConfig);
-            this._callValidators(validators).then(resolve);
+            this.setValidationResult(undefined);
+            this._callValidators(validators, validateConfig).then(resolve);
         });
 
     }
@@ -335,6 +335,7 @@ class ValidateContainer extends Control {
     _isValidResult(): boolean {
         return this._validationResult && !(this._validationResult instanceof Promise);
     }
+
 }
 
 export default ValidateContainer;

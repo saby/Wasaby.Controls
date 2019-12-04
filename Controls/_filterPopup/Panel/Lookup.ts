@@ -3,7 +3,6 @@ import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {Logger} from 'UI/Utils';
 import 'Controls/lookup';
-import 'css!theme?Controls/filterPopup';
 
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
@@ -20,7 +19,7 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
@@ -53,7 +52,7 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
@@ -186,6 +185,7 @@ var Lookup = Control.extend({
 });
 
 Lookup._private = _private;
+Lookup._theme = ['Controls/filterPopup'];
 Lookup.getDefaultOptions = function() {
    return {
       lookupTemplateName: 'Controls/lookup:Input'

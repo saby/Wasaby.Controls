@@ -291,7 +291,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
@@ -305,7 +305,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
@@ -483,6 +483,8 @@ var SuggestLayout = Control.extend({
 
    _searchStart: function() {
       this._loading = true;
+      // Обновим таймер, т.к. могут прерывать поиск новыми запросами
+      this._children.indicator.hide();
       this._children.indicator.show();
       if (this._options.searchStartCallback) {
          this._options.searchStartCallback();

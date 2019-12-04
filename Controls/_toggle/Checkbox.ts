@@ -263,14 +263,15 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITo
       return false;
    }
 
-   static _theme: string[] = ['Controls/toggle'];
+   static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
 
    static getDefaultOptions(): object {
       return {
          value: false,
          triState: false,
          iconSize: 'default',
-         iconStyle: 'secondary'
+         iconStyle: 'secondary',
+         validationStatus: 'valid'
       };
    }
 

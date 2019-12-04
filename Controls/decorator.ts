@@ -37,11 +37,11 @@
  */
 
 import {default as Markup} from './_decorator/Markup';
-import Money = require('Controls/_decorator/Money');
 import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 
 export {default as Phone} from 'Controls/_decorator/Phone';
+export {default as Money, IMoneyOptions} from 'Controls/_decorator/Money';
 import {default as WrapURLs, IWrapURLsOptions} from 'Controls/_decorator/WrapURLs';
 import {Highlight, SearchMode, IHighlightOptions} from 'Controls/_decorator/Highlight';
 
@@ -57,7 +57,6 @@ export {
     SearchMode,
     IHighlightOptions,
     Markup,
-    Money,
     Number,
     PhoneNumber,
     WrapURLs,

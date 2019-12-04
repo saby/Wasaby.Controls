@@ -61,12 +61,17 @@ define(
                targetPoint,
                direction
             };
+            let fittingMode = {
+               vertical: 'adaptive',
+               horizontal: 'overflow'
+            };
             PWInstance.saveOptions(options);
 
             let config = PWInstance._private.getCfg(PWInstance);
             assert.equal(config.targetPoint, targetPoint);
             assert.equal(config.direction, direction);
             assert.equal(config.isCompoundTemplate, true);
+            assert.deepEqual(config.fittingMode, fittingMode);
 
             PWInstance.saveOptions({});
             config = PWInstance._private.getCfg(PWInstance);

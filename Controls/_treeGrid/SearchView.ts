@@ -4,8 +4,8 @@ import SearchItemTpl = require('wml!Controls/_treeGrid/SearchView/Item');
 import 'Controls/decorator';
 import 'wml!Controls/_treeGrid/SearchView/SearchBreadCrumbsContent';
 import * as GridItemTemplate from 'wml!Controls/_treeGrid/TreeGridView/layout/grid/Item';
-import * as PartialGridItemTemplate from 'wml!Controls/_treeGrid/TreeGridView/layout/partialGrid/Item';
 import * as TableItemTemplate from 'wml!Controls/_treeGrid/TreeGridView/layout/table/Item';
+import {isFullGridSupport} from './../_grid/utils/GridLayoutUtil';
 
 var
     SearchView = GridView.extend({
@@ -13,21 +13,15 @@ var
            return SearchItemTpl;
         },
         _resolveBaseItemTemplate(): TemplateFunction {
-            if (this._isFullGridSupport) {
-                return GridItemTemplate;
-            } else if (this._shouldUseTableLayout) {
-                return TableItemTemplate;
-            } else {
-                return PartialGridItemTemplate;
-            }
+            return isFullGridSupport() ? GridItemTemplate : TableItemTemplate;
         },
-        _onSearchItemClick: function (e) {
+        _onSearchItemClick(e): void {
             e.stopPropagation();
         },
-        _onSearchPathClick: function (e, item) {
+        _onSearchPathClick(e, item): void {
            this._notify('itemClick', [item, e], {bubbling: true});
         },
-        getDefaultOptions: function () {
+        getDefaultOptions() {
             return {
                 leftPadding: 'S'
             };
