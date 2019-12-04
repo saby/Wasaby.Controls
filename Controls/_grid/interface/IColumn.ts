@@ -159,5 +159,5 @@ export default interface IColumn {
     valign?: 'top' | 'center' | 'bottom' | 'baseline';
     stickyProperty?: string;
     textOverflow?: 'ellipsis' | 'none';
-    cellPadding: ICellPadding;
+    cellPadding?: ICellPadding;
 }
