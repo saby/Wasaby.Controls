@@ -152,7 +152,7 @@ interface ICellPadding {
 export default interface IColumn {
     width: string;
     compatibleWidth?: string;
-    displayProperty: string;
+    displayProperty?: string;
     template?: TemplateFunction;
     resultTemplate?: TemplateFunction;
     align?: 'left' | 'center' | 'right';
