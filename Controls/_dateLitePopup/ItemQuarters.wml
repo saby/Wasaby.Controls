@@ -1,15 +1,16 @@
-<div class="controls-PeriodLiteDialog__vLayout controls-PeriodLiteDialog__text-align-center">
-   <ws:for data="halfYearIndex as halfYear in _months">
-      <ws:for data="quarterIndex as quarter in halfYear.quarters">
+<div>
+    <div class="controls-PeriodLiteDialog__item-background-hovered border-top-hidden{{ !(_options._yearHovered === _currentYear) ? ' ws-hidden'}}"></div>
+    <ws:for data="halfYearIndex as halfYear in _yearModel">
+        <ws:for data="quarterIndex as quarter in halfYear.quarters">
             <div class="controls-PeriodLiteDialog__vLayoutItem controls-PeriodLiteDialog__vLayoutItem-clickable"
-               on:click="_onQuarterClick(halfYearIndex*2 + quarterIndex)"
-               on:mouseenter="_onQuarterMouseEnter(halfYearIndex*2 + quarterIndex)"
-               on:mouseleave="_onQuarterMouseLeave()"
+                 on:click="_onQuarterClick(quarter.number,  _currentYear)"
+                 on:mouseenter="_onQuarterMouseEnter(quarter.number)"
+                 on:mouseleave="_onQuarterMouseLeave(quarter.number)"
             >
                 <div class="controls-PeriodLiteDialog__vLayoutItem-caption" title="{{ quarter.tooltip }}">
                     {{ quarter.fullName }}
                 </div>
             </div>
-      </ws:for>
-   </ws:for>
+        </ws:for>
+    </ws:for>
 </div>

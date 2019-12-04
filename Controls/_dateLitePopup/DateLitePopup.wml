@@ -2,76 +2,68 @@
    <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__currentValue" on:click="_onHeaderClick()">{{_caption}}</div>
       <div class="controls-PeriodLiteDialog__bodyWrapper">
-         <div class="controls-PeriodLiteDialog__item-background-hovered{{ !_yearHovered ? ' ws-hidden'}}"></div>
-         <div class="controls-PeriodLiteDialog__yearWrapper{{ _yearHovered ? ' controls-PeriodLiteDialog__background-transparent'}}"
-              title="{[Выбрать год]}">
-            <div class="controls-PeriodLiteDialog__year-prev"
-                 title="{[Предыдущий год]}"
-                 on:click="_onPrevYearBtnClick()"></div>
-            <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}"
-                 title="{[Поставить текущий период]}">
+         <div class="controls-PeriodLiteDialog__yearWrapper {{_getYearWrapperCssClasses()}} {{(_yearHovered === _position.getFullYear())? ' controls-PeriodLiteDialog__yearHeader-background-hovered'}}"  title="{[Выбрать год]}">
+            <div class="controls-PeriodLiteDialog__year-prev" title="{[Предыдущий год]}" on:click="_onPrevYearBtnClick()"></div>
+            <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}" title="{[Поставить текущий период]}">
                <Controls.buttons:Button
-                  class="controls-PeriodLiteDialog__homeButton"
-                  fontColorStyle="link"
-                  viewMode="link"
-                  icon="icon-Home3"
-                  iconSize="s"
-                  on:click="_onHomeClick()"
+                       class="controls-PeriodLiteDialog__homeButton"
+                       fontColorStyle="link"
+                       viewMode="link"
+                       icon="icon-Home3"
+                       iconSize="s"
+                       on:click="_onHomeClick()"
                />
             </div>
             <div
-               class="controls-PeriodLiteDialog__year {{ _getYearCssClasses() }}"
-               on:mouseenter="_onYearMouseEnter()"
-               on:mouseleave="_onYearMouseLeave()"
-               on:click="_onYearClick(_year)"
+                    class="controls-PeriodLiteDialog__year {{ _getYearCssClasses() }}"
+                    on:mouseenter="_onYearMouseEnter(_position.getFullYear())"
+                    on:mouseleave="_onYearMouseLeave()"
+                    on:click="_onYearClick(_position.getFullYear())"
             >
-               {{ _year }}
+               {{ _position.getFullYear() }}
             </div>
-            <div class="controls-PeriodLiteDialog__year-next"
-                 on:click="_onNextYearBtnClick()"
-                 title="{[Следующий год]}"></div>
+            <div class="controls-PeriodLiteDialog__year-next" on:click="_onNextYearBtnClick()" title="{[Следующий год]}"></div>
          </div>
          <ws:partial
-               class="controls-PeriodLiteDialog__body"
-               template="{{_options.itemTemplate}}"
-               monthCaptionTemplate="{{_monthCaptionTemplate}}"
-               on:wheel="_onWheel()">
-            <ws:defaultTemplate>
-               <ws:partial
-                  template="{{_defaultItemTemplate}}"
-                  monthCaptionTemplate="{{defaultTemplate.monthCaptionTemplate}}"
-                  _itemTmplByType="{{_itemTmplByType}}"
-                  _options="{{_options}}"
-                  _year="{{_year}}"
-                  _months="{{_months}}"
-                  _yearHovered="{{_yearHovered}}"
-                  _quarterHovered="{{_quarterHovered}}"
-                  _halfyearHovered="{{_halfyearHovered}}"
-                  _onMonthClick="{{_onMonthClick}}"
-                  checkedStart="{{_options.checkedStart}}"
-                  checkedEnd="{{_options.checkedEnd}}"
-                  formatDate="{{_formatDate}}"
-               />
-            </ws:defaultTemplate>
-         </ws:partial>
+                 class="controls-PeriodLiteDialog__body {{_getListCssClasses()}}"
+                 _dateToDataString="{{_dateToDataString}}"
+                 template="{{_defaultListTemplate}}"
+                 _options="{{_options}}"
+                 _range="{{_range}}"
+                 _position="{{_position}}"
+                 _yearHovered="{{_yearHovered}}"
+                 checkedStart="{{_options.checkedStart}}"
+                 checkedEnd="{{_options.checkedEnd}}"
+                 formatDate="{{_formatDate}}"
+         />
       </div>
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__years-next" on:click="_onNextYearBtnClick()"></div>
-      <div class="controls-PeriodLiteDialog__body controls-PeriodLiteDialog__text-align-center"
-         on:wheel="_onWheel()"
-      >
-         <ws:for data="value in [0, 1, 2, 3, 4]">
-            <div  class="controls-PeriodLiteDialog-item-years
-                           controls-PeriodLiteDialog__vLayoutItem
-                           {{_getYearItemCssClasses(_year - value)}}"
-               on:click="_onYearClick(_year - value)">
-               <div class="controls-PeriodLiteDialog__vLayoutItem-caption">
-                  {{ _year - value }}
-               </div>
-            </div>
-         </ws:for>
-      </div>
+      <Controls.calendar:MonthList
+              order="desc"
+              virtualPageSize="{{24}}"
+              bind:position="_position"
+         class="controls-PeriodLiteDialog__year-list">
+         <ws:yearTemplate>
+            <ws:partial template="Controls/calendar:MonthListYearTemplate">
+               <ws:headerTemplate>
+                  <invisible-node />
+               </ws:headerTemplate>
+               <ws:bodyTemplate>
+                  <div class="controls-PeriodLiteDialog__body controls-PeriodLiteDialog__text-align-center">
+                        <div  class="controls-PeriodLiteDialog-item-yearList-years"
+                              on:click="_onYearClick(yearTemplate.date.getFullYear())">
+                           <div class="controls-PeriodLiteDialog__vLayoutItem-caption {{_getYearItemCssClasses(yearTemplate.date.getFullYear())}}
+                                 controls-PeriodLiteDialog__yearList-year">
+                              {{ yearTemplate.date.getFullYear() }}
+                           </div>
+                        </div>
+                  </div>
+               </ws:bodyTemplate>
+            </ws:partial>
+         </ws:yearTemplate>
+      </Controls.calendar:MonthList>
       <div class="controls-PeriodLiteDialog__years-prev" on:click="_onPrevYearBtnClick()"></div>
       <div class="controls-PeriodLiteDialog__years-home" title="{[Поставить текущий диапазон]}">
          <Controls.buttons:Button

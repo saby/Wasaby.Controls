@@ -8,7 +8,8 @@ define([
    'Types/formatter',
    'wml!Controls/_dateLitePopup/ItemFull',
    'wml!Controls/_dateLitePopup/ItemMonths',
-   'wml!Controls/_dateLitePopup/ItemQuarters'
+   'wml!Controls/_dateLitePopup/ItemQuarters',
+   'Controls/_dateLitePopup/bodyItem'
 ], function(
    coreMerge,
    PeriodLiteDialog,
@@ -18,7 +19,8 @@ define([
    formatDate,
    itemTmpl,
    itemTmplMonths,
-   itemTmplQuarters
+   itemTmplQuarters,
+   bodyItem
 ) {
    'use strict';
 
@@ -30,89 +32,89 @@ define([
             chooseHalfyears: false, chooseQuarters: false, chooseMonths: true, tmpl: itemTmplMonths
          }, {
             chooseHalfyears: false, chooseQuarters: true, chooseMonths: false, tmpl: itemTmplQuarters
-         }, {
-            chooseHalfyears: false, chooseQuarters: false, chooseMonths: false, tmpl: null
          }].forEach(function(test) {
             it(`should choose correct item template for options chooseHalfyears: ${test.chooseHalfyears}, ` +
                `chooseQuarters: ${test.chooseQuarters}, chooseMonths: ${test.chooseMonths}`, function() {
-               const component = calendarTestUtils.createComponent(PeriodLiteDialog, {
+               const component = calendarTestUtils.createComponent(bodyItem, {
                   chooseHalfyears: test.chooseHalfyears,
                   chooseQuarters: test.chooseQuarters,
                   chooseMonths: test.chooseMonths
                });
 
-               assert.strictEqual(component._itemTmplByType, test.tmpl);
+               assert.strictEqual(component._template, test.tmpl);
             });
          });
 
          it('should create correct month model', function() {
-            const component = calendarTestUtils.createComponent(PeriodLiteDialog, {}),
+            const component = calendarTestUtils.createComponent(bodyItem, {}),
                year = (new Date()).getFullYear(),
                data = [{
                   name: 'I',
-                  tooltip: formatDate.date(new component._options.dateConstructor(year, 0, 1), formatDate.date.FULL_HALF_YEAR),
+                  number: 0,
+                  tooltip: formatDate.date(new Date(year, 0, 1), formatDate.date.FULL_HALF_YEAR),
                   quarters: [{
                      name: 'I',
-                     fullName: formatDate.date(new component._options.dateConstructor(year, 0, 1), 'QQQQr'),
-                     tooltip: formatDate.date(new component._options.dateConstructor(year, 0, 1), formatDate.date.FULL_QUATER),
+                     fullName: formatDate.date(new Date(year, 0, 1), 'QQQQr'),
+                     tooltip: formatDate.date(new Date(year, 0, 1), formatDate.date.FULL_QUATER),
                      months: [{
-                        name: new component._options.dateConstructor(year, 0, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 0, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 0, 1),
+                        tooltip: formatDate.date(new Date(year, 0, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new component._options.dateConstructor(year, 1, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 1, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 1, 1),
+                        tooltip: formatDate.date(new Date(year, 1, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new component._options.dateConstructor(year, 2, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 2, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 2, 1),
+                        tooltip: formatDate.date(new Date(year, 2, 1), formatDate.date.FULL_MONTH)
                      }],
                      number: 0
                   }, {
                      name: 'II',
-                     fullName: formatDate.date(new component._options.dateConstructor(year, 3, 1), 'QQQQr'),
-                     tooltip: formatDate.date(new component._options.dateConstructor(year, 3, 1), formatDate.date.FULL_QUATER),
+                     fullName: formatDate.date(new Date(year, 3, 1), 'QQQQr'),
+                     tooltip: formatDate.date(new Date(year, 3, 1), formatDate.date.FULL_QUATER),
                      months: [{
-                        name: new component._options.dateConstructor(year, 3, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 3, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 3, 1),
+                        tooltip: formatDate.date(new Date(year, 3, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new component._options.dateConstructor(year, 4, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 4, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 4, 1),
+                        tooltip: formatDate.date(new Date(year, 4, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new component._options.dateConstructor(year, 5, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 5, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 5, 1),
+                        tooltip: formatDate.date(new Date(year, 5, 1), formatDate.date.FULL_MONTH)
                      }],
                      number: 1
                   }]
                }, {
                   name: 'II',
-                  tooltip: formatDate.date(new component._options.dateConstructor(year, 6, 1), formatDate.date.FULL_HALF_YEAR),
+                  number: 1,
+                  tooltip: formatDate.date(new Date(year, 6, 1), formatDate.date.FULL_HALF_YEAR),
                   quarters: [{
                      name: 'III',
-                     fullName: formatDate.date(new component._options.dateConstructor(year, 6, 1), 'QQQQr'),
-                     tooltip: formatDate.date(new component._options.dateConstructor(year, 6, 1), formatDate.date.FULL_QUATER),
+                     fullName: formatDate.date(new Date(year, 6, 1), 'QQQQr'),
+                     tooltip: formatDate.date(new Date(year, 6, 1), formatDate.date.FULL_QUATER),
                      months: [{
-                        name: new component._options.dateConstructor(year, 6, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 6, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 6, 1),
+                        tooltip: formatDate.date(new Date(year, 6, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new component._options.dateConstructor(year, 7, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 7, 1), formatDate.FULL_MONTH)
+                        name: new Date(year, 7, 1),
+                        tooltip: formatDate.date(new Date(year, 7, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new component._options.dateConstructor(year, 8, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 8, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 8, 1),
+                        tooltip: formatDate.date(new Date(year, 8, 1), formatDate.date.FULL_MONTH)
                      }],
                      number: 2
                   }, {
                      name: 'IV',
-                     fullName: formatDate.date(new component._options.dateConstructor(year, 9, 1), 'QQQQr'),
-                     tooltip: formatDate.date(new component._options.dateConstructor(year, 9, 1), formatDate.date.FULL_QUATER),
+                     fullName: formatDate.date(new Date(year, 9, 1), 'QQQQr'),
+                     tooltip: formatDate.date(new Date(year, 9, 1), formatDate.date.FULL_QUATER),
                      months: [{
-                        name: new component._options.dateConstructor(year, 9, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 9, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 9, 1),
+                        tooltip: formatDate.date(new Date(year, 9, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new component._options.dateConstructor(year, 10, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 10, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 10, 1),
+                        tooltip: formatDate.date(new Date(year, 10, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new component._options.dateConstructor(year, 11, 1),
-                        tooltip: formatDate.date(new component._options.dateConstructor(year, 11, 1), formatDate.date.FULL_MONTH)
+                        name: new Date(year, 11, 1),
+                        tooltip: formatDate.date(new Date(year, 11, 1), formatDate.date.FULL_MONTH)
                      }],
                      number: 3
                   }]
@@ -120,7 +122,7 @@ define([
 
             // Compare all but months.
             assert.deepEqual(
-               coreMerge({}, component._months, { ignoreRegExp: /^months$/, clone: true }),
+               coreMerge({}, component._getYearModel(year), { ignoreRegExp: /^months$/, clone: true }),
                coreMerge({}, data, { ignoreRegExp: /^months$/, clone: true })
             );
 
@@ -130,7 +132,7 @@ define([
                   for (let [monthIndex, month] of quarter.months.entries()) {
                      assert(
                         DateUtils.isDatesEqual(
-                           component._months[halfyearIndex].quarters[quarterIndex].months[monthIndex].name, month.name
+                            component._getYearModel(year)[halfyearIndex].quarters[quarterIndex].months[monthIndex].name, month.name
                         )
                      );
                   }
@@ -188,24 +190,24 @@ define([
       });
 
       describe('_onYearMouseEnter', function() {
-         it('should set _yearHovered to true', function() {
+         it('should set year to _yearHovered', function() {
             const component = calendarTestUtils.createComponent(PeriodLiteDialog, {});
-            component._onYearMouseEnter();
-            assert.isTrue(component._yearHovered);
+            component._onYearMouseEnter(null,2019);
+            assert.deepEqual(component._yearHovered, 2019);
          });
-         it('should not set _yearHovered to true', function() {
+         it('should not set year to _yearHovered', function() {
             const component = calendarTestUtils.createComponent(PeriodLiteDialog, {chooseYears: false});
             component._onYearMouseEnter();
-            assert.isFalse(component._yearHovered);
+            assert.deepEqual(component._yearHovered, null);
          });
       });
 
       describe('_onHalfYearClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(PeriodLiteDialog, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
             sandbox.stub(component, '_notify');
-            component._onHalfYearClick(null, 0);
+            component._onHalfYearClick(null, 0, 2000);
 
             sinon.assert.calledWith(
                component._notify, 'sendResult', [new Date(2000, 0, 1), new Date(2000, 5, 30)], { bubbling: true });
@@ -216,9 +218,9 @@ define([
       describe('_onQuarterClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(PeriodLiteDialog, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
             sandbox.stub(component, '_notify');
-            component._onQuarterClick(null, 0);
+            component._onQuarterClick(null, 0, 2000);
 
             sinon.assert.calledWith(
                component._notify, 'sendResult', [new Date(2000, 0, 1), new Date(2000, 2, 31)], { bubbling: true });
@@ -229,7 +231,7 @@ define([
       describe('_onMonthClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(PeriodLiteDialog, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
             sandbox.stub(component, '_notify');
             component._onMonthClick(null, new Date(2000, 0, 1));
 
@@ -246,7 +248,7 @@ define([
             sandbox.stub(component, '_notify');
             component._onPrevYearBtnClick(null, 0);
 
-            assert.equal(component._year, 1999);
+            assert.equal(component._position.getFullYear(), 1999);
             sinon.assert.calledWith(component._notify, 'yearChanged', [1999]);
             sandbox.restore();
          });
@@ -259,13 +261,13 @@ define([
             sandbox.stub(component, '_notify');
             component._onNextYearBtnClick(null, 0);
 
-            assert.equal(component._year, 2001);
+            assert.equal(component._position.getFullYear(), 2001);
             sinon.assert.calledWith(component._notify, 'yearChanged', [2001]);
             sandbox.restore();
          });
       });
 
-      describe('_getDefaultYear', function() {
+      describe('_getYearListPosition', function() {
          const currentYear = (new Date).getFullYear();
          [
             [currentYear - 6, currentYear - 2],
@@ -279,11 +281,9 @@ define([
             [currentYear + 2, currentYear + 2],
             [currentYear + 3, currentYear + 3]
          ].forEach(function(test) {
-            it(`should return ${test[1]} for ${test[0]}} year`, function() {
-               assert.equal(
-                  PeriodLiteDialog._private._getDefaultYear({ startValue: new Date(test[0], 0, 1), chooseYears: true }, Date),
-                  test[1]
-               );
+            it(`should return ${test[1]} for ${test[0]} year`, function() {
+               let result = PeriodLiteDialog._private._getYearListPosition({ startValue: new Date(test[0], 0, 1) }, Date).getFullYear();
+               assert.equal(result, test[1]);
             });
          });
       });
@@ -308,42 +308,6 @@ define([
                   component._getYearItemCssClasses(test.year),
                   test.css
                );
-            });
-         });
-      });
-
-      describe('_onWheel', function() {
-         const currentYear = (new Date).getFullYear(),
-            event = {
-               preventDefault: function() {}
-            },
-            yearOnlyOptions = {
-               chooseQuarters: false,
-               chooseHalfyears: false,
-               chooseMonths: false
-            };
-
-         [{
-            wheelDelta: 1,
-            options: {},
-            year: currentYear + 1
-         }, {
-            wheelDelta: -1,
-            options: {},
-            year: currentYear - 1
-         }, {
-            wheelDelta: 1,
-            options: yearOnlyOptions,
-            year: currentYear - 1
-         }, {
-            wheelDelta: -1,
-            options: yearOnlyOptions,
-            year: currentYear + 1
-         }].forEach(function(test) {
-            it(`should set year to ${test.year} if options and wheelDelta is equals ${test.options} and ${test.wheelDelta}`, function() {
-               const component = calendarTestUtils.createComponent(PeriodLiteDialog, test.options);
-               component._onWheel(coreMerge({ nativeEvent: { deltaY: test.wheelDelta } }, event));
-               assert.equal(component._year, test.year);
             });
          });
       });

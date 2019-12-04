@@ -75,6 +75,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
                selectionType: 'single',
                headerType: 'input',
                closeButtonEnabled: true,
+               range: this._options.range
             }
          };
          if (!this._isVdomDialog()) {
