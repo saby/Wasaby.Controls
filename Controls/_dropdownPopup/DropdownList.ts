@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import Control = require('Core/Control');
 import {Logger} from 'UI/Utils';
 import {isEqual} from 'Types/object';

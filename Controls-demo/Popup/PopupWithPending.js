@@ -3,9 +3,10 @@ define('Controls-demo/Popup/PopupWithPending',
       'Core/Control',
       'wml!Controls-demo/Popup/PopupWithPending',
       'Types/entity',
-      'Core/Deferred'
+      'Core/Deferred',
+      'i18n!Controls-demo/localization'
    ],
-   function (Control, template, entity, Deferred) {
+   function (Control, template, entity, Deferred, rk) {
       'use strict';
 
       var TestDialog = Control.extend({

@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import * as buttonsTemplate from 'wml!Controls/_search/Input/Buttons';
 import {Base, TextViewModel as ViewModel} from 'Controls/input';
 import {throttle} from 'Types/function';

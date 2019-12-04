@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
 import CoreClone = require('Core/core-clone');

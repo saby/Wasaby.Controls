@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {factory} from 'Types/chain';
 import {Memory} from 'Types/source';

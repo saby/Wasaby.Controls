@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction, ShowType } from './interface/IItemAction';
 import { ISwipeConfig, ItemActionsSize } from './interface/ISwipeConfig';

@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/Fast/Fast');
 import chain = require('Types/chain');

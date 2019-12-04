@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');

@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import Control = require('Core/Control');
 import tmpl = require('wml!Controls/_form/Crud/Crud');
 import {Logger} from 'UI/Utils';

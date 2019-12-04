@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/Input/Input');
 import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');

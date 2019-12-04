@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls/localization');
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {date as formatDate} from 'Types/formatter';
