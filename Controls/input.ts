@@ -21,6 +21,9 @@
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
+ * @includes InputCallback Controls/input/InputCallback
+ * @includes IFieldData Controls/_input/interface/IFieldData
+ * @includes ICallbackData Controls/_input/interface/ICallbackData
  *
  * @public
  * @author Крайнов Д.О.
@@ -48,6 +51,8 @@
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
+ * @includes IFieldData Controls/_input/interface/IFieldData
+ * @includes ICallbackData Controls/_input/interface/ICallbackData
  *
  * @public
  * @author Крайнов Д.О.
@@ -77,6 +82,7 @@ import MaskFormatter = require('Controls/_input/Mask/Formatter');
 import PhoneMaskBuilder = require('Controls/_input/Phone/MaskBuilder');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
 
+import hoursFormat from  'Controls/_input/InputCallback/hoursFormat'
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
@@ -88,7 +94,15 @@ export {default as INumberLength, INumberLengthOptions} from 'Controls/_input/in
 export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
 export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 
+/**
+ * Объект с набором методов для опции {@link Controls/_input/interface/IValue#inputCallback}
+ * @class Controls/input/InputCallback
+ * @public
+ * @mixes Controls/_input/InputCallback/hoursFormat
+ * @mixes Controls/_input/InputCallback/lengthConstraint
+ */
 const InputCallback = {
+    hoursFormat,
     lengthConstraint
 };
 

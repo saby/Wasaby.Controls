@@ -8,7 +8,7 @@
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">readonly=true</div>
-        <Controls.search:Input readonly="{{true}}" attr:class="controlsDemo__searchBase_field"></Controls.search:Input>
+        <Controls.search:Input readOnly="{{true}}" attr:class="controlsDemo__searchBase_field"></Controls.search:Input>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">searchButtonVisible=false</div>

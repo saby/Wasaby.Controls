@@ -32,7 +32,9 @@ define([
             excludedKeys: [],
             items: rs,
             keyProperty: ListData.KEY_PROPERTY,
-            selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
+            selectionStrategy: {
+               name: 'Controls/operations:FlatSelectionStrategy'
+            },
             listModel: new list.ListViewModel({items: rs})
          };
          instance = new SelectionController();

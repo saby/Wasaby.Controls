@@ -1612,6 +1612,105 @@ define([
          });
       });
 
+      describe('editing list in popup', function () {
+         it('dont close popup if validation failed', function () {
+            let
+                isPendingStarted = false,
+                isPendingCanceled = false;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip._notify = (eName, args, params) => {
+               if (eName === 'registerPending') {
+                  assert.isTrue(params.bubbling);
+                  assert.equal(args[0], eip._pendingDeferred);
+                  isPendingStarted = true;
+               }
+               if (eName === 'cancelFinishingPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingCanceled = true;
+               }
+            };
+
+            assert.isNull(eip._pendingDeferred);
+
+            eip.beginAdd({
+               item: newItem
+            });
+
+            assert.isTrue(eip._pendingDeferred instanceof Deferred);
+
+            eip._children = {
+               formController: {
+                  submit: function() {
+                     return Deferred.success({
+                        0: [{
+                           0: 'Поле обязательно для заполнения'
+                        }]
+                     });
+                  }
+               }
+            };
+
+            // Emulate closing popup. It will call _onPendingFail;
+            let result = new Deferred();
+            eip._onPendingFail(undefined, result);
+
+            assert.isTrue(isPendingStarted);
+            assert.isFalse(result.isReady());
+            assert.isTrue(isPendingCanceled);
+         });
+         it('commit changes and close popup if validation passed', function () {
+            let
+                isPendingStarted = false,
+                isPendingCanceled = false;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip._notify = (eName, args, params) => {
+               if (eName === 'registerPending') {
+                  assert.isTrue(params.bubbling);
+                  assert.equal(args[0], eip._pendingDeferred);
+                  isPendingStarted = true;
+               }
+               if (eName === 'cancelFinishingPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingCanceled = true;
+               }
+            };
+
+            assert.isNull(eip._pendingDeferred);
+
+            eip.beginAdd({
+               item: newItem
+            });
+
+            assert.isTrue(eip._pendingDeferred instanceof Deferred);
+
+            eip._children = {
+               formController: {
+                  submit: function() {
+                     return Deferred.success({});
+                  }
+               }
+            };
+
+            // Emulate closing popup. It will call _onPendingFail;
+            let result = new Deferred();
+            eip._onPendingFail(undefined, result);
+
+            assert.isTrue(eip._pendingDeferred instanceof Deferred);
+            assert.isTrue(isPendingStarted);
+            assert.isTrue(!!listModel.getItemById(4));
+            assert.isTrue(result.isReady());
+            assert.isFalse(isPendingCanceled);
+         });
+      });
+
       describe('_beforeUpdate', function() {
          it('editingConfig has sequential editing', function() {
             eip._beforeUpdate({

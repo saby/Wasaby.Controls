@@ -130,7 +130,7 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  */
 var _private = {
    isVisibleResetButton: function() {
-      return !!this._options.value && !this._options.readOnly;
+      return !!this._viewModel.displayValue && !this._options.readOnly;
    },
 
    calculateStateButton: function() {
@@ -259,7 +259,6 @@ Search.getOptionTypes = function getOptionsTypes() {
 Search.getDefaultOptions = function getDefaultOptions() {
    var defaultOptions = Base.getDefaultOptions();
 
-   defaultOptions.value = '';
    defaultOptions.trim = false;
    defaultOptions.placeholder = rk('Найти') + '...';
    defaultOptions.searchButtonVisible = true;

@@ -1,6 +1,6 @@
+import {SbisService, DataSet, ICrud} from 'Types/source';
+import {OptionsToPropertyMixin, SerializableMixin} from 'Types/entity';
 import CoreExtend = require('Core/core-extend');
-import entity = require('Types/entity');
-import source = require('Types/source');
 import Constants = require('Controls/_history/Constants');
 import Deferred = require('Core/Deferred');
 import coreClone = require('Core/core-clone');
@@ -13,7 +13,7 @@ var STORAGES_DATA_LOAD = {};
 var _private = {
    getHistoryDataSource: function (self) {
       if (!self._historyDataSource) {
-         self._historyDataSource = new source.SbisService({
+         self._historyDataSource = new SbisService({
             endpoint: {
                address: '/input-history/service/',
                contract: 'InputHistory'
@@ -23,26 +23,73 @@ var _private = {
       return self._historyDataSource;
    },
 
+   callQuery: function(self, method, params) {
+      return _private.getHistoryDataSource(self).call(method, params);
+   },
+
+   load: function(self) {
+      let resultDef;
+      if (self._favorite) {
+         resultDef = _private.callQuery(self, 'ClientAndUserHistoryList', {
+            params: {
+               historyId: self._historyId,
+               client: { count: Constants.MAX_HISTORY_REPORTS },
+               pinned: { count: Constants.MAX_HISTORY_REPORTS },
+               recent: { count: Constants.MAX_HISTORY_REPORTS },
+               getObjectData: true
+            }
+         });
+      } else {
+         resultDef = _private.callQuery(self, 'UnionMultiHistoryIndexesList', {
+            params: {
+               historyIds: self._historyId ? [self._historyId] : self._historyIds,
+               pinned: {count: self._pinned ? Constants.MAX_HISTORY : 0},
+               frequent: {count: self._frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0},
+               recent: {count: self._recent || Constants.MAX_HISTORY},
+               getObjectData: self._dataLoaded
+            }
+         });
+      }
+      return resultDef;
+   },
+
    getMethodNameByIdType: function (stringMethod, intMethod, id) {
       return typeof id === 'number' ? intMethod : stringMethod;
    },
 
-   updateHistory: function (self, data, meta) {
+   updateFavoriteData: function(self, data, meta) {
+      _private.getHistoryDataSource(self).call('UpdateData', {
+         history_id: self._historyId || data.get('HistoryId'),
+         object_id: data.getId(),
+         data: data.get('ObjectData'),
+         history_type: Number(meta.isClient)
+      });
+   },
+
+    deleteItem: function(self, data, meta) {
+        return _private.callQuery(self, 'Delete', {
+            history_id: self._historyId,
+            object_id: data.getId(),
+            history_type: Number(meta.isClient)
+        });
+    },
+
+    updateHistory: function (self, data, meta) {
       if (meta.parentKey) {
-         _private.getHistoryDataSource(self).call('AddHierarchy', {
+         _private.callQuery(self, 'AddHierarchy', {
             history_id: self._historyId,
             parent1: meta.parentKey,
             id: data.id
          });
       } else if (data.ids) {
-         _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
+         _private.callQuery(self, _private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
             history_id: self._historyId,
             ids: data.ids,
             history_context: null
          });
       } else {
          var id = data.getId();
-         _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('Add', 'AddInt', id), {
+         _private.callQuery(self, _private.getMethodNameByIdType('Add', 'AddInt', id), {
             history_id: data.get('HistoryId') || self._historyId,
             id: id,
             history_context: null
@@ -58,13 +105,22 @@ var _private = {
    },
 
    updatePinned: function (self, data, meta) {
-      var id = data.getId();
-      _private.getHistoryDataSource(this).call(_private.getMethodNameByIdType('SetPin', 'SetIntPin', id), {
-         history_id: data.get('HistoryId') || self._historyId,
-         id: id,
-         history_context: null,
-         pin: !!meta['$_pinned']
-      });
+      const id = data.getId();
+      const historyId = data.get('HistoryId') || self._historyId;
+      if (meta.isClient) {
+         _private.callQuery(self, 'PinForClient', {
+            history_id: historyId,
+            object_id: id,
+            data: data.get('ObjectData')
+         });
+      } else {
+         _private.callQuery(self, _private.getMethodNameByIdType('SetPin', 'SetIntPin', id), {
+            history_id: historyId,
+            id: id,
+            history_context: null,
+            pin: !!meta['$_pinned']
+         });
+      }
    },
 
    incrementUsage: function (self) {
@@ -198,9 +254,9 @@ var _private = {
  * @remark
  * true - BL return items with data
  * false - BL return items without data
- */ 
+ */
 
-var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
+var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin, SerializableMixin], {
    _historyDataSource: null,
    _historyId: null,
    _historyIds: null,
@@ -217,6 +273,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       this._pinned = cfg.pinned;
       this._frequent = cfg.frequent;
       this._recent = cfg.recent;
+      this._favorite = cfg.favorite;
       this._dataLoaded = cfg.dataLoaded;
    },
 
@@ -230,11 +287,18 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       if (meta.hasOwnProperty('$_history')) {
          _private.updateHistory(this, data, meta);
       }
+      if (meta.hasOwnProperty('$_favorite')) {
+         _private.updateFavoriteData(this, data, meta);
+      }
 
       return {};
    },
 
-   query(): Deferred<source.DataSet> {
+   deleteItem: function(data, meta) {
+      return _private.deleteItem(this, data, meta);
+   },
+
+   query(): Deferred<DataSet> {
       const self = this;
       const historyId = self._historyId;
 
@@ -247,21 +311,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
             resultDef.callback(self.getHistory(historyId));
          });
       } else if (!STORAGES[historyId] || Env.constants.isServerSide) {
-         resultDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
-            params: {
-               historyIds: historyId ? [historyId] : this._historyIds,
-               pinned: {
-                  count: this._pinned ? Constants.MAX_HISTORY : 0
-               },
-               frequent: {
-                  count: this._frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0
-               },
-               recent: {
-                  count: this._recent || Constants.MAX_HISTORY
-               },
-               getObjectData: this._dataLoaded
-            }
-         });
+         resultDef = _private.load(this);
 
          // необходимо кэшировать запрос только на клиенте
          // на сервере возможны проблемы (утечки) при посторении страниц, т.к. объект глобальный,
@@ -276,7 +326,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
             return res;
          });
       } else {
-         resultDef = Deferred.success(new source.DataSet({
+         resultDef = Deferred.success(new DataSet({
             rawData: self.getHistory(historyId)
          }));
       }
@@ -284,14 +334,13 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       return resultDef;
    },
 
-   destroy(keys: number|string|Array<number|string>): Deferred<null> {
+   destroy(id: number|string): Deferred<null> {
       let  result;
 
-      if (keys) {
-         const key = keys instanceof Array ? keys[0] : keys;
-         result = _private.getHistoryDataSource(this).call('Delete', {
+      if (id) {
+         result = _private.callQuery(this, 'Delete', {
                history_id: this._historyId,
-               object_id: key
+               object_id: id
          });
       } else {
          result = Deferred.success(null);
