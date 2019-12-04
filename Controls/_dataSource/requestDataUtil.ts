@@ -12,6 +12,9 @@ import {SbisService} from 'Types/source';
 
 type HistoryItems = object[];
 
+interface ISorting {
+   sorting: Array<Object>;
+}
 interface IFilter {
    filter: Record<string, unknown>;
    historyItems: HistoryItems;
@@ -38,9 +41,6 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       source: cfg.source,
       navigation: cfg.navigation
    });
-   let sorting = cfg.sorting;
-   let filter = cfg.filter;
-
    let sortingPromise;
    let filterPromise;
    if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
@@ -50,15 +50,8 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       sortingPromise = PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']);
    }
 
-   return Promise.all([filterPromise, sortingPromise]).then((resolvedData: Array) => {
-      let [filterObject, loadedCfg] = resolvedData;
-      if (loadedCfg && loadedCfg.sorting) {
-         sorting = loadedCfg.sorting;
-      }
-      if (filterObject) {
-         filter = filterObject.filter;
-      }
-      return sourceController.load(filter, sorting).then((data: RecordSet) => {
+   return Promise.all([filterPromise, sortingPromise]).then(([filterObject, sortingObject]: [IFilter, ISorting]) => {
+      return sourceController.load(filterObject ? filterObject.filter : cfg.filter, sortingObject ? sortingObject.sorting : cfg.sorting).then((data: RecordSet) => {
          let result = {data};
          if (filterObject) {
             result.historyItems = filterObject.historyItems;
