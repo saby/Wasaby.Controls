@@ -40,26 +40,33 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    });
    let sorting = cfg.sorting;
 
-   return PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']).then((loadedCfg) => {
-      if (loadedCfg && loadedCfg.sorting) {
-         sorting = loadedCfg.sorting;
-      }
-      if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
-         // Load filter, then load data
-         return FilterController.getCalculatedFilter(cfg).then((filterObject: IFilter) => {
-            return sourceController.load(filterObject.filter, sorting).then((data: RecordSet) => {
-               return {
-                  data,
-                  historyItems: filterObject.historyItems
-               };
-            });
+   const loadSortingPromise = PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']);
+
+   if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
+      // Load filter, then load data
+      return Promise.all([FilterController.getCalculatedFilter(cfg), loadSortingPromise]).then((resolvedData) => {
+         const filterObject = resolvedData[0];
+         const loadedCfg = resolvedData[1];
+         if (loadedCfg && loadedCfg.sorting) {
+            sorting = loadedCfg.sorting;
+         }
+         return sourceController.load(filterObject.filter, sorting).then((data: RecordSet) => {
+            return {
+               data,
+               historyItems: filterObject.historyItems
+            };
          });
-      } else {
+      });
+   } else {
+      return loadSortingPromise.then((loadedCfg) => {
+         if (loadedCfg && loadedCfg.sorting) {
+            sorting = loadedCfg.sorting;
+         }
          return sourceController.load(cfg.filter, sorting).then((data: RecordSet) => {
             return {
                data
             };
          });
-      }
-   });
+      });
+   }
 }
