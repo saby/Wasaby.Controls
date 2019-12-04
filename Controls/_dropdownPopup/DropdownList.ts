@@ -1,5 +1,6 @@
 import Control = require('Core/Control');
 import {Logger} from 'UI/Utils';
+import {isEqual} from 'Types/object';
 import MenuItemsTpl = require('wml!Controls/_dropdownPopup/DropdownList');
 import DropdownViewModel = require('Controls/_dropdownPopup/DropdownViewModel');
 import groupTemplate = require('wml!Controls/_dropdownPopup/defaultGroupTemplate');
@@ -123,10 +124,11 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          },
 
          isNeedUpdateSelectedKeys: function(self, target, item) {
-            var clickOnEmptyItem = item.get(self._options.keyProperty) === null,
+            const clickOnEmptyItem = item.get(self._options.keyProperty) === null,
                clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
-               hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null;
-            return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
+               hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null,
+               needToSelect = !isEqual(self._listModel.getSelectedKeys(), self._options.selectedKeys);
+            return self._options.multiSelect && !clickOnEmptyItem && (hasSelection && needToSelect || clickOnCheckBox);
          },
 
          getRootKey: function(key) {

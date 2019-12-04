@@ -42,7 +42,6 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
             searchViewModel,
             superclassGetItemDataByItem = SearchViewModel.superclass.getItemDataByItem,
             treeView = new TreeGridView({});
-         treeView._isFullGridSupport = true;
          SearchViewModel.superclass.getItemDataByItem = function(breadCrumbs) {
             const itemData = {
                item: {},
@@ -226,6 +225,21 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          // does not fail when hover is removed
          model.setHoveredItem(null);
          assert.isNull(model.getHoveredItem());
+      });
+
+      it('_getDisplayItemCacheKey works for breadcrumbs', function() {
+         const model = new SearchViewModel({
+            root: 'myTestRoot',
+            keyProperty: 'id',
+            items: []
+         });
+
+         // emulate breadcrumbs
+         const crumbsDisplay = { getContents: () => [{}, {}, { id: 456 }] };
+         assert.strictEqual(
+            model._getDisplayItemCacheKey(crumbsDisplay),
+            '456_breadcrumbs'
+         );
       });
    });
 });

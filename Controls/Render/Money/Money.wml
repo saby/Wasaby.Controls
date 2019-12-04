@@ -1,5 +1,0 @@
-<div class="controls-money">
-    <span class="moneyControl" title="{{getModel().title}}">
-        <span class="moneyControl__integer_{{getModel().type}}">{{getModel().integer}}</span><span class = "moneyControl__fraction">.{{getModel().fraction}}</span>
-    </span>
-</div>

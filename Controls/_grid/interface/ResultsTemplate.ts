@@ -7,7 +7,7 @@
  * @remark
  * Дополнительно работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:resultsTemplate>
  *       <ws:partial template="Controls/grid:ResultsTemplate">

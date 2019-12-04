@@ -7,6 +7,7 @@ import {StringValueConverter} from 'Controls/input';
 import {IDateTimeMask} from 'Controls/input';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_dateRange/Input/Input');
+import getOptions from 'Controls/Utils/datePopupUtils';
 
 /**
  * Поле ввода периода дат.
@@ -83,27 +84,17 @@ var Component = Control.extend([], {
 
     _openDialog: function (event) {
         var cfg = {
-            opener: this,
+            ...getOptions.getCommonOptions(this),
             target: this._container,
             template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker',
-            direction: {horizontal: 'right'},
-            targetPoint: { horizontal: 'left' },
-            fittingMode: 'overflow',
-            eventHandlers: {
-               onResult: this._onResult.bind(this)
-            },
             templateOptions: {
-               startValue: this._rangeModel.startValue,
-               endValue: this._rangeModel.endValue,
-               mask: this._options.mask,
+               ...getOptions.getTemplateOptions(this),
                selectionType: this._options.selectionType,
                quantum: this._options.quantum,
                headerType: 'input',
                closeButtonEnabled: true,
                rangeselect: true,
-               dateConstructor: this._options.dateConstructor,
-               readOnly: this._options.readOnly
             }
         };
         if (!this._isVdomDialog()) {
@@ -123,8 +114,7 @@ var Component = Control.extend([], {
     },
 
     _onResult: function (startValue, endValue) {
-        this._rangeModel.startValue = startValue;
-        this._rangeModel.endValue = endValue;
+        this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
         this._notifyInputCompleted();
     },

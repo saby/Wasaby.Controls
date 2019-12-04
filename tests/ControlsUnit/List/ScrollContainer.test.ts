@@ -205,6 +205,9 @@ describe('Controls/_list/ScrollContainer', () => {
                 this.resetCalled = true;
             }
         };
+        instance.viewModel = {
+            getIndexByKey() {}
+        };
         it('reset correctly', () => {
             instance.reset(5);
             assert.equal(instance.virtualScroll.itemsCount, 5);
@@ -218,7 +221,8 @@ describe('Controls/_list/ScrollContainer', () => {
             recalcRangeToDirection(direction) {
                 this.recalcDirection = direction;
             },
-            triggerVisibility: {}
+            triggerVisibility: {},
+            isLoaded: () => true
         };
         instance._options = {
             virtualScrolling: true

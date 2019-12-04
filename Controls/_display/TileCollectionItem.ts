@@ -34,7 +34,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     isScaled(): boolean {
         const scalingMode = this._$owner.getTileScalingMode();
         return (
-            (scalingMode !== 'none' || this.getDisplayProperty()) &&
+            (scalingMode !== 'none' || !!this.getDisplayProperty()) &&
             (this.isHovered() || this.isActive() || this.isSwiped())
         );
     }
@@ -110,7 +110,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
             // FIXME This is bad, but there is no other obvious place to
             // reset the animation state. Should probably be in that same
             // animation manager
-            this.setCanShowActions(false);
+            this.setCanShowActions(false, true);
             this.setAnimated(false, true);
             this.setFixedPositionStyle('', true);
         }

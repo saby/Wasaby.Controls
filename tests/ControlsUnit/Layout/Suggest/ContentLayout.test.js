@@ -85,7 +85,7 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          var suggestHeight = 200;
 
          self._container = getContainer({
-            top: 0,
+            top: 100,
             bottom: 0,
             get height() {
                return suggestHeight;
@@ -97,7 +97,7 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          });
          self._height = 'auto';
          assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), 'auto');
-         assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(400)), '76px');
+         assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(400)), '300px');
          self._height = '76px';
          assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), 'auto');
       });

@@ -4,19 +4,17 @@
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
 import Utils = require('Types/util');
+import Serializer = require('Core/Serializer');
+import * as Merge from 'Core/core-merge';
+import * as Clone from 'Core/core-clone';
 import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import {factory} from 'Types/chain';
 import {Constants} from 'Controls/history';
-import {convertToFilterStructure, convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
+import {convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
 import 'css!theme?Controls/filterPopup';
 
 var MAX_NUMBER_ITEMS = 5;
-
-   const FILTER_STATUS = {
-      FOR_ME: 0,
-      FOR_ALL: 1
-   };
 
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -33,6 +31,10 @@ var MAX_NUMBER_ITEMS = 5;
             id = getPropValue(item, 'name');
          }
          return id;
+      },
+
+      setObjectData: function(editItem, data) {
+         editItem.set('ObjectData', JSON.stringify(data, new Serializer().serialize));
       },
 
       getStringHistoryFromItems: function(items, resetValues) {
@@ -77,93 +79,95 @@ var MAX_NUMBER_ITEMS = 5;
          }
       },
 
-      removeRecord: function(self, item, needSave?) {
+       // TODO: Delete with old favorite
+       removeRecordFromOldFavorite: function(self, itemData, item) {
          let storage = self._historyStorage;
-         if (item.get('data') && item.get('data').get('globalParams')) {
+         if (itemData.globalParams || itemData.isClient) {
             storage = self._historyGlobalStorage;
          }
-         let recordIndex = storage.getIndexByValue('id', item.get('id'));
+         let recordIndex = storage.getIndexByValue('id', item.get('ObjectId'));
          if (recordIndex !== -1) {
-            storage.removeAt(recordIndex, needSave);
+            storage.removeAt(recordIndex);
          }
+         return recordIndex;
       },
 
       minimizeHistoryItems: function(record) {
          let historyItems = [];
-         factory(record.get('filterPanelItems')).each((item) => {
+         factory(record.get('items')).each((item) => {
             delete item.caption;
             historyItems.push(item);
          });
-         record.set('filterPanelItems', historyItems);
+         record.set('items', historyItems);
       },
 
       getEditDialogOptions: function(self, item, historyId, savedTextValue) {
-         let favoriteItem = item.get('data');
-         let items;
-         if (favoriteItem) {
-            items = item.get('data').get('filterPanelItems');
-         } else {
-            let history = _private.getSource(historyId).getDataObject(item.get('ObjectData'));
-            items = history.items || history;
-         }
+         const history = _private.getSource(historyId).getDataObject(item);
+         let items = history.items || history;
+
          let captionsObject = _private.mapByField(self._options.filterItems, 'caption');
          items = factory(items).map((historyItem) => {
             historyItem.caption = captionsObject[historyItem.id];
             return historyItem;
          }).value();
+
          return {
-            items: items,
+            items,
             editedTextValue: savedTextValue || '',
-            globalParams: item.get('data') && item.get('data').get('globalParams') ? FILTER_STATUS.FOR_ALL : FILTER_STATUS.FOR_ME,
-            isFavorite: !!favoriteItem
+            isClient: history.globalParams === undefined ? !!history.isClient : !!history.globalParams,
+            isFavorite: item.get('pinned') || item.get('client')
          };
       },
 
-      deleteFavorite: function(self) {
-         _private.removeRecord(self, self._editItem);
-         _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage, self._options.filterItems);
+      deleteFavorite: function(self, data) {
+         _private.getSource(self._options.historyId).remove(self._editItem, {
+            $_favorite: true, isClient: data.isClient
+         });
+
+         // TODO: Delete with old favorite
+         let editItemData = _private.getSource(self._options.historyId).getDataObject(self._editItem);
+         _private.removeRecordFromOldFavorite(self, editItemData, self._editItem);
+         _private.updateOldFavoriteList(self);
+
          self._children.stickyOpener.close();
          self._notify('historyChanged');
       },
 
       saveFavorite: function(self, record) {
-         let editItemData = self._editItem.get('data');
-         if (self._editItem.has('pinned')) {
-            _private.getSource(self._options.historyId).update(self._editItem, {
-               $_pinned: true
-            });
-         }
+         let editItemData = _private.getSource(self._options.historyId).getDataObject(self._editItem);
+         let ObjectData = Merge(Clone(editItemData), record.getRawData());
+         _private.setObjectData(self._editItem, ObjectData);
 
          _private.minimizeHistoryItems(record);
 
-         if (!record.get('linkText')) {
-            let linkText = _private.getStringHistoryFromItems(record.get('filterPanelItems'), {});
-            record.set('linkText', linkText);
-         }
-
-         // TODO Remove after https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
-         // convert items to old structure
-         const filterPanelItems = record.get('filterPanelItems');
-         record.set('filter', convertToFilterStructure(filterPanelItems));
-         record.set('viewFilter', _private.mapByField(filterPanelItems, 'value'));
-
-         record.removeField('filterPanelItems');
-         _private.removeRecord(self, self._editItem, record, editItemData && record.get('globalParams') !== editItemData.get('globalParams'));
-
-         if (record.get('globalParams')) {
-            self._historyGlobalStorage.prepend(record);
+         // TODO: Delete with old favorite, leave the branch 'else'
+         // Удаляем запись из старых списков, ниже добавим в новые, если ее нет
+         const index = _private.removeRecordFromOldFavorite(self, editItemData, self._editItem);
+         _private.updateOldFavoriteList(self);
+         if (index !== -1) {
+            // add to history and set pin
+            _private.getSource(self._options.historyId).update(record.getRawData(), { $_addFromData: true }).addCallback((ObjectId) => {
+               self._editItem.set('ObjectId', ObjectId);
+               _private.getSource(self._options.historyId).update(self._editItem, {
+                  $_pinned: true,
+                  isClient: record.get('isClient')
+               });
+            });
          } else {
-            self._historyStorage.prepend(record);
+            // for new favorite
+            _private.getSource(self._options.historyId).update(self._editItem, {
+               $_favorite: true,
+               isClient: record.get('isClient')
+            });
          }
-         _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage, self._options.filterItems);
-         record.acceptChanges();
          self._notify('historyChanged');
       },
 
-      updateFavoriteList: function(favoriteList, localStorage, globalStorage, filterItems) {
-         favoriteList.assign(localStorage.getHistory());
-         favoriteList.prepend(globalStorage.getHistory());
-         _private.convertToItems(favoriteList, filterItems);
+       // TODO: Delete with old favorite
+       updateOldFavoriteList: function(self) {
+         self._oldFavoriteList.assign(self._historyStorage.getHistory());
+         self._oldFavoriteList.prepend(self._historyGlobalStorage.getHistory());
+         _private.convertToNewFormat(self, self._oldFavoriteList, self._options.filterItems);
       },
 
       updateFavorite(self, item, text, target): void {
@@ -183,10 +187,13 @@ var MAX_NUMBER_ITEMS = 5;
          self._children.stickyOpener.open(popupOptions);
       },
 
-      convertToItems: function(favoriteList, items) {
+       // TODO: Delete with old favorite
+       convertToNewFormat: function(self, favoriteList, filterItems) {
          factory(favoriteList).each((favoriteItem) => {
-            favoriteItem.get('data').set('filterPanelItems', convertToSourceDataArray(favoriteItem.get('data').get('filter'),
-                _private.mapByField(items, 'visibility')));
+            let data = favoriteItem.get('data');
+            favoriteItem.get('data').set('items', convertToSourceDataArray(data.get('filter'),  _private.mapByField(filterItems, 'visibility')));
+            data.removeField('filter');
+            data.removeField('viewFilter');
          });
       }
    };
@@ -199,33 +206,29 @@ var MAX_NUMBER_ITEMS = 5;
       _historyStorage: null,
       _historyGlobalStorage: null,
       _editItem: null,
-      _historyCount: Constants.MAX_HISTORY,
-
-      // old "favorite" allows to save 10 records. We should show only 7 records, other records are not displayed
-      // TODO https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
       _favoriteCount: Constants.MAX_HISTORY_REPORTS,
 
       _beforeMount: function(options) {
          if (options.items) {
             this._items = options.items.clone();
-            this._itemsText = this._getText(options.items, options.filterItems, _private.getSource(options.historyId));
          }
          if (options.saveMode === 'favorite') {
-             this._favoriteList = options.favoriteItems;
+             this._oldFavoriteList = options.favoriteItems;
              this._historyStorage = options.historyStorage;
              this._historyGlobalStorage = options.historyGlobalStorage;
-             _private.convertToItems(this._favoriteList, options.filterItems);
-             this._historyCount = Constants.MAX_HISTORY_REPORTS - this._favoriteList.getCount();
+             _private.convertToNewFormat(this, this._oldFavoriteList, options.filterItems);
+             this._items = _private.getSource(options.historyId).getItemsWithOldFavorite(this._oldFavoriteList);
          }
+         this._itemsText = this._getText(this._items, options.filterItems, _private.getSource(options.historyId));
       },
 
       _beforeUpdate: function(newOptions) {
          if (!isEqual(this._options.items, newOptions.items)) {
             this._items = newOptions.items.clone();
+            if (newOptions.saveMode === 'favorite') {
+               this._items = _private.getSource(newOptions.historyId).getItemsWithOldFavorite(this._oldFavoriteList);
+            }
             this._itemsText = this._getText(newOptions.items, newOptions.filterItems, _private.getSource(newOptions.historyId));
-         }
-         if (newOptions.saveMode === 'favorite') {
-            this._historyCount = Constants.MAX_HISTORY_REPORTS - this._favoriteList.getCount();
          }
       },
 
@@ -245,17 +248,12 @@ var MAX_NUMBER_ITEMS = 5;
          if (data.action === 'save') {
             _private.saveFavorite(this, data.record);
          } else if (data.action === 'delete') {
-            _private.deleteFavorite(this);
+            _private.deleteFavorite(this, data);
          }
       },
 
-      _clickHandler: function(event, item, isFavorite) {
-         let history;
-         if (isFavorite) {
-             history = item.get('data').get('filterPanelItems');
-         } else {
-             history = _private.getSource(this._options.historyId).getDataObject(item.get('ObjectData'));
-         }
+      _clickHandler: function(event, item) {
+         const history = _private.getSource(this._options.historyId).getDataObject(item);
          this._notify('applyHistoryFilter', [history]);
       },
 
@@ -274,10 +272,10 @@ var MAX_NUMBER_ITEMS = 5;
 
          factory(items).each((item, index) => {
             let text = '';
-            const history = historySource.getDataObject(item.get('ObjectData'));
+            const history = historySource.getDataObject(item);
 
             if (history) {
-               text = _private.getStringHistoryFromItems(history.items || history, resetValues);
+               text = history.linkText || _private.getStringHistoryFromItems(history.items || history, resetValues);
             }
             itemsText[index] = text;
          });

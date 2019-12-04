@@ -24,11 +24,6 @@
   "output": "controls-container.package.js"
 }, {
   "include": [
-    "Controls/Render/*"
-  ],
-  "output": "controls-render.package.js"
-}, {
-  "include": [
     "Controls/Utils/*"
   ],
   "exclude": [

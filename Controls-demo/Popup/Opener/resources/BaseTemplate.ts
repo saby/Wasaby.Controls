@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls-demo/Popup/Opener/resources/BaseTemplate');
+import 'css!Controls-demo/Popup/Opener/resources/StackHeader';
 class BaseTemplate extends Control<IControlOptions> {
 
     protected _template: TemplateFunction = template;

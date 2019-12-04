@@ -5,7 +5,7 @@ export interface IFilterOptions {
 }
 
 /**
- * Интерфейс для контролов, которые фильтрацию данных.
+ * Интерфейс для контролов, которые поддерживают фильтрацию данных.
  *
  * @interface Controls/_interface/IFilter
  * @public

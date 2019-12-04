@@ -354,18 +354,13 @@ export default class CollectionItem<T> extends mixin<
         this._$rendered = state;
     }
 
-    getWrapperClasses(): string {
-        let classes = `controls-ListView__itemV
-            controls-ListView__item_highlightOnHover_default_theme_default
+    getWrapperClasses(templateHighlightOnHover: boolean = true): string {
+        return `controls-ListView__itemV
             controls-ListView__item_default
             controls-ListView__item_showActions
-            js-controls-SwipeControl__actionsContainer`;
-
-        if (this.isEditing()) {
-            classes += ' controls-ListView__item_editing';
-        }
-
-        return classes;
+            js-controls-SwipeControl__actionsContainer
+            ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
+            ${this.isEditing() ? 'controls-ListView__item_editing' : ''}`;
     }
 
     getContentClasses(): string {

@@ -35,7 +35,9 @@ define([
             items: rs,
             parentProperty: ListData.PARENT_PROPERTY,
             nodeProperty: ListData.NODE_PROPERTY,
-            selectionStrategy: 'Controls/operations:DeepTreeSelectionStrategy',
+            selectionStrategy: {
+               name: 'Controls/operations:DeepTreeSelectionStrategy'
+            },
             keyProperty: ListData.KEY_PROPERTY,
             listModel: new treeGrid.ViewModel({columns: [], items: rs})
          };
@@ -52,7 +54,9 @@ define([
             selectedKeys: [],
             excludedKeys: [],
             keyProperty: 'id',
-            selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
+            selectionStrategy: {
+               name: 'Controls/operations:FlatSelectionStrategy'
+            },
             listModel: new list.ListViewModel({items: rs})
          };
          var inst = new SelectionController();

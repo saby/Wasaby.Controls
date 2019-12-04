@@ -300,6 +300,32 @@ define([
          sandbox.restore();
       });
 
+      it('_private::loadToDirectionIfNeed', () => {
+         const self = {
+            _sourceController: {
+               hasMoreData: () => true,
+               isLoading: () => false
+            },
+            _loadedItems: new collection.RecordSet(),
+            _options: {
+               navigation: {}
+            }
+         };
+         const sandbox = sinon.createSandbox();
+         let isLoadStarted;
+
+         // navigation.view !== 'infinity'
+         sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+         sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+         sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+            isLoadStarted = true;
+         });
+
+         lists.BaseControl._private.loadToDirectionIfNeed(self);
+         assert.isTrue(isLoadStarted);
+         sandbox.restore();
+      });
+
       it('setHasMoreData', async function() {
          var gridColumns = [
             {
@@ -465,6 +491,44 @@ define([
 
          assert.isTrue(afterReloadCallbackCalled, 'afterReloadCallbackCalled is not called.');
          assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called.');
+      });
+
+      it('save loaded items into the controls\' state', async function () {
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                source: new sourceLib.Memory({}),
+                viewModelConstructor: lists.ListViewModel,
+             },
+             loadedItems = new collection.RecordSet({
+                keyProperty: 'id',
+                rawData: [
+                   {
+                      id: 1,
+                      title: 'qwe'
+                   }
+                ]
+             }),
+             ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         // Empty list
+         assert.isUndefined(ctrl._loadedItems);
+
+         ctrl._sourceController.load = () => ({
+            addCallback(fn) {
+               fn(loadedItems);
+               return {
+                  addErrback: () => {}
+               };
+            }
+         });
+
+         await ctrl.reload();
+
+         assert.deepEqual(ctrl._loadedItems, loadedItems);
       });
 
       it('_needScrollCalculation', function(done) {
@@ -4091,17 +4155,19 @@ define([
                   return 1;
                }
             },
-            _notify: () => {
-            },
-            _isMounted: true
+            _notify: () => {},
+            _isMounted: true,
+         };
+         const navigation = {
+            view: 'maxCount'
          };
          var emptyList = new collection.List();
          var list = new collection.List({ items: [{ test: 'testValue' }] });
 
-         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList, navigation);
          assert.equal(baseControlMock._loadingState, 'down');
 
-         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list, navigation);
          assert.isNull(baseControlMock._loadingState);
 
       });
@@ -4594,6 +4660,7 @@ define([
                up: false,
                down: true
             };
+            ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             ctrl._afterMount(cfg);
@@ -4643,6 +4710,7 @@ define([
             await lists.BaseControl._private.reload(ctrl, cfgClone);
 
             assert.equal(2, queryCallsCount);
+            assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);
          });
          it('Navigation position', function() {
             return new Promise(function(resolve, reject) {
