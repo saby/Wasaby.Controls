@@ -1,8 +1,7 @@
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import cClone = require('Core/core-clone');
 
-var PropStorageUtil = {
-
+export default {
     loadSavedConfig(propStorageId: string, propNames: string[]): Promise {
         return new Promise((resolve) => {
             if (propStorageId) {
@@ -26,6 +25,7 @@ var PropStorageUtil = {
             }
         });
     },
+
     saveConfig(propStorageId: string, propNames: string[], cfg): void {
         if (propStorageId) {
             let configToSave = {};
@@ -39,5 +39,4 @@ var PropStorageUtil = {
             }
         }
     }
-};
-export = PropStorageUtil;
+}

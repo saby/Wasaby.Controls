@@ -6,12 +6,12 @@
 
 import {Controller as SourceController} from 'Controls/source';
 import {Controller as FilterController} from 'Controls/filter';
-import PropStorageUtil = require('Controls/_list/resources/utils/PropStorageUtil');
+import * as PropStorageUtil from 'Controls/_list/resources/utils/PropStorageUtil';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
 type HistoryItems = object[];
-
+}
 interface IFilter {
    filter: Record<string, unknown>;
    historyItems: HistoryItems;
