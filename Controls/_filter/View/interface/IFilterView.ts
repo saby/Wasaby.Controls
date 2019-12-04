@@ -66,11 +66,12 @@
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
  * @property {EditorOptions} editorOptions Опции для редактора.
  * @property {FilterViewMode} viewMode Режим отображения фильтра.
+ * @property {Boolean} doNotSaveToHistory Флаг для отмены сохранения фильтра в истории.
  * @property {Boolean} visibility Отображение параметра фильтрации в блоке "Еще можно отобрать".
  * @property {String} type Тип значения в поле фильтра.
  * Если тип поля не указан, он будет автоматически определяться по значению фильтра.
  * Для каждого типа будет построен соответствующий редактор этого типа.
- * 
+ *
  * В настоящей версии фреймворка поддерживается только 1 значение — dataRange.
  * При его установке будет построен контрол выбора периода в строке фильтра.
  */
@@ -83,6 +84,7 @@
  * @property {String} textValue Text value of filter field.  Used to display a textual representation of the filter
  * @property {EditorOptions} editorOptions Options for editor
  * @property {FilterViewMode} viewMode Filter view mode
+ * @property {Boolean} doNotSaveToHistory Flag to cancel saving filter in history
  */
 
 /**
@@ -92,7 +94,7 @@
  * Свойство "value" из каждого элемента будет вставлено в фильтр по имени этого элемента.
  * @example
  * Пример настройки опции "filterSource" для двух фильтров.
- * Первый фильтр отобразится в главном блоке "Отбираются".
+ * Первый фильтр отобразится в главном блоке "Отбираются" и не будет сохранен в истории.
  * Второй фильтр будет отображаться в блоке "Еще можно отобрать", так как для него установлено свойство visibility = false.
  * TMPL:
  * <pre>
@@ -113,7 +115,7 @@
  * JS:
  * <pre>
  *    this._source = [
- *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent',
+ *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent', doNotSaveToHistory: true,
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
  *                    keyProperty: 'id',

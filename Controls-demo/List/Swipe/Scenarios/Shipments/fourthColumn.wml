@@ -1,7 +1,7 @@
 <ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}">
    <ws:contentTemplate>
       <ws:if data="{{itemData.item.sum}}">
-         <Controls.decorator:Money number="{{itemData.item.sum}}"
+         <Controls.decorator:Money value="{{itemData.item.sum}}"
                                    style="noAccentRegistry" />
       </ws:if>
    </ws:contentTemplate>

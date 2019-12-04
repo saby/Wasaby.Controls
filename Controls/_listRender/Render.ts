@@ -59,6 +59,10 @@ export default class Render extends Control<IRenderOptions> {
         this._unsubscribeFromModelChanges(this._options.listModel);
     }
 
+    protected _afterMount(): void {
+        this._notify('itemsContainerReady', [this.getItemsContainer()]);
+    }
+
     getItemsContainer(): HTMLDivElement {
         return this._children.itemsContainer;
     }

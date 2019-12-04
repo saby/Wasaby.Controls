@@ -28,6 +28,8 @@ const _private = {
     remove(self, id) {
         const item = _private.find(id);
         if (item) {
+            // TODO: https://online.sbis.ru/opendoc.html?guid=7a963eb8-1566-494f-903d-f2228b98f25c
+            item.startRemove = true;
             return new Promise((resolve) => {
                 _private.closeChilds(self, item).then(() => {
                     _private.finishPendings(id, null, null, () => {
@@ -539,12 +541,13 @@ const Manager = Control.extend({
         }
         const item = this._createItemConfig(options, controller);
         const defaultConfigResult = controller.getDefaultConfig(item);
-        _private.addElement(item);
         if (defaultConfigResult instanceof Promise) {
             defaultConfigResult.then(() => {
+                _private.addElement(item);
                 _private.redrawItems();
             });
         } else {
+            _private.addElement(item);
             _private.redrawItems();
         }
         return item.id;

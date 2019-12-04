@@ -1,0 +1,98 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Suggest_new/SearchInput/SearchDelay/SearchDelay' }}">
+            <a href="{{content.href}}">Задержка поискового запроса.</a>
+        </Router.router:Reference>
+        <Controls-demo.Suggest_new.SearchInput.SearchDelay.SearchDelay/>
+    </div>
+    <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/EmptyTemplate/EmptyTemplate' }}">
+           <a href="{{content.href}}">Шаблон отображения пустого списка.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.EmptyTemplate.EmptyTemplate/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/FooterTemplate/FooterTemplate' }}">
+           <a href="{{content.href}}">Шаблон Подвала.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.FooterTemplate.FooterTemplate/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/MinSearchLength/MinSearchLength' }}">
+           <a href="{{content.href}}">Минимальное количество символов для поиска.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.MinSearchLength.MinSearchLength/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/SuggestTemplate/SuggestTemplate' }}">
+           <a href="{{content.href}}">Щаблон автодополнения со списками.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.SuggestTemplate.SuggestTemplate/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/Navigation/Navigation' }}">
+           <a href="{{content.href}}">Навигация.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.Navigation.Navigation/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown' }}">
+           <a href="{{content.href}}">Открытие автодополнения при получении фокуса.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.AutoDropDown.AutoDropDown/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/DisplayProperty/DisplayProperty' }}">
+           <a href="{{content.href}}">Имя свойства, которое отобразится в поле ввода.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.DisplayProperty.DisplayProperty/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/SuggestTemplateWithTabs/SuggestTemplateWithTabs' }}">
+           <a href="{{content.href}}">Шаблон автодополнения с вкладками.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.SuggestTemplateWithTabs.SuggestTemplateWithTabs/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/ItemActions/ItemActions' }}">
+           <a href="{{content.href}}">Шаблон автодополнения с пользовательскими операциями.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.ItemActions.ItemActions/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/LayoutLanguage/LayoutLanguage' }}">
+           <a href="{{content.href}}">Автоисправление при вводе с непраивльной раскладкой.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.LayoutLanguage.LayoutLanguage/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/SearchInput/DialogMode/DialogMode' }}">
+           <a href="{{content.href}}">Отдельный шаблон для всплывающего окна.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.SearchInput.DialogMode.DialogMode/>
+   </div>
+</div>

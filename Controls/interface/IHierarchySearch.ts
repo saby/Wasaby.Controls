@@ -44,7 +44,7 @@ interface IHierarchySearch {
          */
         startingWith: string;
         /**
-         * @name Controls/_search/interface/ISearchController#searchNavigationMode
+         * @name Controls/_search/interface/IHierarchySearch#searchNavigationMode
          * @cfg {String} Режим навигации при поиске в иерархическом списке.
          * @variant open В режиме поиска при клике на узел (хлебную крошку) происходит проваливание в данный узел.
          * @variant expand В режиме поиска при клике на узел (хлебную крошку) данные отображаются от корня, путь до узла разворачивается.

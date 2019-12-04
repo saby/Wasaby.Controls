@@ -1,8 +1,8 @@
 <div class="ControlsDemo-Page ws-flexbox ws-flex-column">
-   <Controls.buttons:Button if="{{componentName !== 'Controls-demo/Index'}}"
-                    attr:id="Back" caption="Назад"
+   <a attr:class="ws-link" if="{{componentName !== 'Controls-demo/Index'}}"
+                    attr:id="Back"
                     attr:style="width: 100px"
-                    viewMode="link" fontColorStyle="link" iconSize="s" iconStyle="secondary" icon="icon-DayBackward" on:click="backClickHdl()" />
+                     on:click="backClickHdl()">&lt;&nbsp;Назад</a>
 
    <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
       <Router.router:Route mask="app/:app">

@@ -11,8 +11,7 @@ define('Controls-demo/Suggest/Suggest', [
    'Controls-demo/Search/SearchMemory',
    'Controls-demo/Utils/MemorySourceFilter',
    'Controls-demo/Utils/MemorySourceData',
-   'css!Controls-demo/Suggest/Suggest',
-   'css!Controls-demo/Controls-demo'
+   'css!Controls-demo/Suggest/Suggest'
 ], function(Control, template, source, SearchMemory, memorySourceFilter, MemorySourceData) {
    'use strict';
 
@@ -37,16 +36,6 @@ define('Controls-demo/Suggest/Suggest', [
 
       constructor: function() {
          VDomSuggest.superclass.constructor.apply(this, arguments);
-
-         this._defaultNavigation = {
-            source: 'page',
-            view: 'page',
-            sourceConfig: {
-               pageSize: 2,
-               page: 0,
-               hasMore: false
-            }
-         };
 
          this._companiesData = MemorySourceData.companies.slice();
          this._departmentsData = MemorySourceData.departments.concat([

@@ -64,7 +64,7 @@ class NotificationSimple extends Control<INotificationSimpleOptions> implements 
         };
     }
 
-    static _theme: string[] = ['Controls/popupTemplate'];
+    static _theme: string[] = ['Controls/popupTemplate', 'Controls/Classes'];
 }
 
 export default NotificationSimple;

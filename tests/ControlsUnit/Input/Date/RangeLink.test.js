@@ -194,28 +194,6 @@ define([
          });
       });
 
-      describe('_onResultWS3', function() {
-         it('should generate valueChangedEvent and close opener', function() {
-            const
-               sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRange.Selector, options),
-               startValue = new Date(2018, 11, 10),
-               endValue = new Date(2018, 11, 13);
-
-            component._children.opener = {
-               close: sinon.fake()
-            };
-            sandbox.stub(component, '_notify');
-
-            component._onResultWS3(null, startValue, endValue);
-
-            sinon.assert.calledWith(component._notify, 'startValueChanged');
-            sinon.assert.calledWith(component._notify, 'endValueChanged');
-            sinon.assert.called(component._children.opener.close);
-            sandbox.restore();
-         });
-      });
-
       describe('_rangeChangedHandler', function() {
          it('should set range on model', function() {
             const
@@ -226,7 +204,7 @@ define([
 
             sandbox.stub(component, '_notify');
 
-            component._rangeChangedHandler(null, startValue, endValue);
+            component._rangeChangedHandler(startValue, endValue);
 
             sinon.assert.calledWith(component._notify, 'startValueChanged');
             sinon.assert.calledWith(component._notify, 'endValueChanged');

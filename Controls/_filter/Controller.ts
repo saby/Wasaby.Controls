@@ -65,6 +65,11 @@ const _private = {
             } else {
                historyItems = _private.cloneItems(filterButtonItems || fastFilterItems);
             }
+
+            historyItems = historyItems.filter(item => {
+               return !item.doNotSaveToHistory;
+            });
+
             return _private.minimizeFilterItems(historyItems);
          },
 
@@ -135,7 +140,7 @@ const _private = {
                      recent = source.getRecent();
                      if (recent.getCount()) {
                         lastFilter = recent.at(ACTIVE_HISTORY_FILTER_INDEX);
-                        result.callback(source.getDataObject(lastFilter.get('ObjectData')));
+                        result.callback(source.getDataObject(lastFilter));
                      } else {
                         result.callback([]);
                      }
@@ -186,7 +191,7 @@ const _private = {
                  if (hItems && hItems.getCount()) {
                      hItems.each((item, index) => {
                          if (!result) {
-                             historyData = historySource.getDataObject(item.get('ObjectData'));
+                             historyData = historySource.getDataObject(item);
 
                              if (historyData) {
                                  minimizedItemFromOption = _private.minimizeFilterItems(items);
@@ -725,17 +730,20 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
          },
 
         resetPrefetch(): void {
-             const filter = clone(this._filter);
-             const historyId = this._options.historyId;
-             const history = _private.getHistoryByItems(historyId, this._filterButtonItems);
+            const filter = clone(this._filter);
+            const historyId = this._options.historyId;
 
-             if (history) {
-                 _private.deleteFromHistory(history.item, historyId);
-             }
+            return _private.getHistoryItems(this, historyId).then(() => {
+                const history = _private.getHistoryByItems(historyId, this._filterButtonItems);
 
-             this._isFilterChanged = true;
-             _private.setFilter(this, Prefetch.clearPrefetchSession(filter));
-             _private.notifyFilterChanged(this);
+                if (history) {
+                    _private.deleteFromHistory(history.item, historyId);
+                }
+
+                this._isFilterChanged = true;
+                _private.setFilter(this, Prefetch.clearPrefetchSession(filter));
+                _private.notifyFilterChanged(this);
+            });
         },
 
         _beforeMount: function(options, context, receivedState): Promise<IFilterHistoryData|{}> {
@@ -748,6 +756,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             if (receivedState) {
                 _private.setFilterItems(this, options.filterButtonSource, options.fastFilterSource, receivedState);
                 _private.itemsReady(this, filter, receivedState);
+
+                if (options.prefetchParams) {
+                    this._isFilterChanged = true;
+                }
             } else {
                 return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((history) => {
                     _private.itemsReady(this, filter, history);

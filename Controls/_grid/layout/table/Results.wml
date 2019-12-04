@@ -1,6 +1,6 @@
 <ws:template name="cell">
     <td class="{{currentResultsColumn.cellClasses}}">
-        <ws:if data="{{!!currentResultsColumn.column.resultTemplate && (multiSelectVisibility === 'hidden' || currentResultsColumn.index !== 0)}}">
+        <ws:if data="{{!!currentResultsColumn.column.resultTemplate && (!hasMultiSelect || currentResultsColumn.index !== 0)}}">
             <ws:partial template="{{currentResultsColumn.column.resultTemplate}}"
                         listModel="{{listModel}}"
                         column="{{currentResultsColumn.column}}" />
@@ -23,8 +23,8 @@
         <ws:for data="listModel.resetResultsColumns(); listModel.isEndResultsColumn(); listModel.goToNextResultsColumn();">
             <ws:partial template="cell"
                         listModel="{{ listModel }}"
-                        multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
-                        currentResultsColumn="{{listModel.getCurrentResultsColumn()}}"/>
+                        hasMultiSelect="{{ listModel.getMultiSelectVisibility() !== 'hidden' }}"
+                        currentResultsColumn="{{ listModel.getCurrentResultsColumn() }}"/>
         </ws:for>
     </ws:else>
 </tr>

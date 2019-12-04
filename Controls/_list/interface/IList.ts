@@ -475,42 +475,46 @@
 
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
- * @cfg {Function} Функция обратного вызова, которая будет вызываться, когда экземпляр данных списка готов.
+ * @cfg {Function} Устанавливает функцию, которая вызывается, когда экземпляр данных получен из источника и подготовлен к дальнейшей обработке контролом.
+ * Функция вызывается единожды в рамках {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.
  * @remark
- * ARGUMENTS:
- * <ul>
- * <li>items {@link Types/collection:RecordSet RecordSet} с загруженными данными</li>
- * </ul>
- * На этом этапе можно сохранить ссылку на items, чтобы была возможноть потом менять их по ней
+ * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.
  * @example
+ * В качестве примера используем функцию для того, чтобы сохранить ссылку на items, чтобы иметь возможноcть изменять items далее.
+ * <pre class="brush:html">
+ * <Controls.list:View itemsReadyCallback="{{_myItemsReadyCallback}}" />
+ * </pre>
  * <pre class="brush:js">
  * _myItemsReadyCallback = function(items) {
  *    this._myItems = items;
  * }
- * ...
+ * </pre>
+ * <pre class="brush:js">
  * deleteButtonClickHandler: function{
  *    this._myItems.removeAt(0);
  * }
  * </pre>
+ * @see Controls/list:IList#dataLoadCallback
  */
 
 /**
  * @name Controls/_list/interface/IList#dataLoadCallback
- * @cfg {Function} Функция обратного вызова, которая будет вызываться, когда данные загружены источником.
+ * @cfg {Function} Устанавливает функцию, которая вызывается каждый раз непосредственно после загрузки данных из источника контрола.
+ * Функцию можно использовать для изменения данных еще до того, как они будут отображены в контроле.
  * @remark
- * ARGUMENTS:
- * <ul>
- * <li>items {@link Types/collection:RecordSet RecordSet} с загруженными данными</li>
- * </ul>
- * dataLoadCallback может использоваться для изменения данных еще до того, как он будут отображены.
+ * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.
  * @example
+ * <pre class="brush:html">
+ * <Controls.list:View dataLoadCallback="{{_myDataLoadCallback}}" />
+ * </pre>
  * <pre class="brush:js">
  * _myDataLoadCallback = function(items) {
- *    items.each(function(item){
+ *    items.each(function(item) {
  *       item.set(field, value);
  *    });
  * }
  * </pre>
+ * @see Controls/list:IList#itemsReadyCallback
  */
 
 /**
@@ -540,7 +544,9 @@
  */
 
 /**
- * Перезагружает данные из источника данных.
+ * Перезагружает данные из источника данных. 
+ * При перезагрузке в фильтр уходит список развернутых узлов (с целью восстановить пользователю структуру, которая была до перезагрузки). 
+ * В дальнейшем также планируется передавать навигацию, в настоящее время этот функционал в разработке.
  * @function 
  * @name Controls/_list/interface/IList#reload
  */
@@ -676,6 +682,15 @@
  * @param {HTMLElement} itemContainer Контейнер элемента.
  */
 
+/**
+ * @event Controls/_list/interface/IList#activeElementChanged Происходит при смене активного элемента в процессе скроллирования
+ * @param {Vdom/Vdom:SyntheticEvent<Event>} event Дескриптор события
+ * @param {string} key Ключ активного элемента
+ * @remark Активным элементом считается последний элемент, который находится выше середины вьюпорта.
+ * Для высчитывания активного элемента в списочном контроле должен быть включен виртуальный скроллинг.
+ * @see shouldCheckActiveElement
+ */
+
 /*
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
@@ -774,3 +789,16 @@
  * @name Controls/_list/interface/IList#itemPadding
  */
 
+/**
+ * @typedef {Object} SelectionStrategy
+ * @property {String} name Класс со стратегией выбора.
+ * @property {Object} options Опции для стратегии выбора.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#selectionStrategy
+ * @cfg {SelectionStrategy} Стратегия выбора задает логику поведения при отметке записей в режиме множественого выбора.
+ * @remark Опция актуальна только при multiSelectVisibility: true.
+ * @default Controls/operations:FlatSelectionStrategy
+ * @see Controls/operations:TreeSelectionStrategy
+ */

@@ -24,6 +24,9 @@
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+                        <ws:itemTemplate>
+                            <ws:partial template="Controls/lookup:ItemTemplate" displayProperty="title"></ws:partial>
+                        </ws:itemTemplate>
                     </Controls.lookup:Input>
                 </div>
             </div>

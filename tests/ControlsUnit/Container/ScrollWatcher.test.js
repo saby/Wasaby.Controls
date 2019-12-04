@@ -192,6 +192,7 @@ define([
 
                   evType = [];
                   ins._scrollPositionCache = null;
+                  ins._scrollTopCache = 110;
                   scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
                   setTimeout(function() {
                      try {

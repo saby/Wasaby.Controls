@@ -6,6 +6,7 @@ import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {debounce} from 'Types/function';
+import {isFullGridSupport} from './utils/GridLayoutUtil';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -39,11 +40,13 @@ const
           }
       },
       updateSizes(self) {
+          // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
+         _private.setDispalyNoneForScroll(self._children.content);
          _private.drawTransform(self, 0);
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
             newContentContainerSize = null;
-         if (!self._isFullGridSupport) {
+         if (!isFullGridSupport()) {
             newContentContainerSize = self._children.content.offsetWidth;
          } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
@@ -70,6 +73,8 @@ const
          self._setOffsetForHScroll();
          self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
          _private.drawTransform(self, self._scrollPosition);
+         // после расчетов убираем display: none
+         _private.removeDisplayFromScroll(self._children.content);
       },
       updateFixedColumnWidth(self) {
          self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
@@ -78,10 +83,9 @@ const
             self._options.stickyColumnsCount,
             self._options.header[0]
          );
-         self._scrollWidth = self._options.listModel.isFullGridSupport() ?
+         self._scrollWidth = isFullGridSupport() ?
               self._children.content.offsetWidth - self._fixedColumnsWidth :
               self._children.content.offsetWidth;
-
       },
       calculateShadowState(scrollPosition, containerSize, contentSize) {
          let
@@ -169,7 +173,7 @@ const
       },
 
       prepareDebouncedUpdateSizes: function() {
-          return debounce(_private.updateSizes, DELAY_UPDATE_SIZES);
+          return debounce(_private.updateSizes, DELAY_UPDATE_SIZES, true);
       }
    },
    ColumnScroll = Control.extend({
@@ -184,10 +188,8 @@ const
       _transformSelector: '',
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
-      _isNotGridSupport: false,
       _contentSizeForHScroll: 0,
       _scrollWidth: 0,
-      _isFullGridSupport: true,
 
       _beforeMount(opt) {
           /* В 19.710 сделаны правки по compound-слою, без которых событие resize не продывалось вообще.
@@ -197,8 +199,6 @@ const
              https://online.sbis.ru/opendoc.html?guid=43ba1e3f-1366-4b36-8713-5e8a30c7bc13 */
          this._debouncedUpdateSizes = _private.prepareDebouncedUpdateSizes();
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
-         this._isNotGridSupport = opt.listModel.isNoGridSupport();
-         this._isFullGridSupport = opt.listModel.isFullGridSupport();
          this._positionHandler = this._positionChangedHandler.bind(this);
       },
 
@@ -207,7 +207,7 @@ const
          if (this._options.columnScrollStartPosition === 'end' && this._isColumnScrollVisible()) {
             this._positionChangedHandler(null, this._contentSize - this._contentContainerSize);
          }
-         if (!this._isFullGridSupport) {
+         if (!isFullGridSupport()) {
             this._contentSizeForHScroll = this._contentSize;
          }
       },
@@ -221,10 +221,7 @@ const
              !isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })
              || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
          ) {
-            // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл, что-бы он не распирал таблицу при изменении ширины
-            _private.setDispalyNoneForScroll(this._children.content);
             this._debouncedUpdateSizes(this);
-            _private.removeDisplayFromScroll(this._children.content);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
             _private.updateFixedColumnWidth(this);
@@ -257,7 +254,7 @@ const
       },
 
       _setOffsetForHScroll() {
-         if (this._isFullGridSupport) {
+         if (isFullGridSupport()) {
             _private.setOffsetForHScroll(this);
          }
       },
