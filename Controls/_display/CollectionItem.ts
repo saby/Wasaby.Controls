@@ -91,6 +91,8 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$hovered: boolean;
 
+    protected _$rendered: boolean;
+
     protected _instancePrefix: string;
 
     /**
@@ -344,18 +346,21 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
-    getWrapperClasses(): string {
-        let classes = `controls-ListView__itemV
-            controls-ListView__item_highlightOnHover_default_theme_default
+    isRendered(): boolean {
+        return this._$rendered;
+    }
+
+    setRendered(state: boolean): void {
+        this._$rendered = state;
+    }
+
+    getWrapperClasses(templateHighlightOnHover: boolean = true): string {
+        return `controls-ListView__itemV
             controls-ListView__item_default
             controls-ListView__item_showActions
-            js-controls-SwipeControl__actionsContainer`;
-
-        if (this.isEditing()) {
-            classes += ' controls-ListView__item_editing';
-        }
-
-        return classes;
+            js-controls-SwipeControl__actionsContainer
+            ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
+            ${this.isEditing() ? 'controls-ListView__item_editing' : ''}`;
     }
 
     getContentClasses(): string {

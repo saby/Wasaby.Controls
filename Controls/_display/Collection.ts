@@ -34,12 +34,18 @@ import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
+import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
+import {IVirtualScrollConfig} from 'Controls/list';
 import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
+const VIRTUAL_SCROLL_MODE = {
+    HIDE: 'hide',
+    REMOVE: 'remove'
+};
 
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
@@ -99,6 +105,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     editingConfig: any;
     unique?: boolean;
     importantItemProperties?: string[];
+    virtualScrollConfig: IVirtualScrollConfig;
 }
 
 export interface ICollectionCounters {
@@ -185,6 +192,7 @@ function onCollectionChange<T>(
             this._reFilter();
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
+            this._nextVersion();
             return;
     }
 
@@ -623,7 +631,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _markerManager: MarkerManager;
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
-    protected _virtualScrollManager: VirtualScrollManager;
+    protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
+    protected _$virtualScrollMode: IVirtualScrollMode;
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
     protected _selectionManager: SelectionManager;
@@ -673,12 +682,21 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
         }
 
+        if (options.itemPadding) {
+            this.setItemsSpacings(options.itemPadding);
+        }
+
         this._stopIndex = this.getCount();
+
+        const virtualScrollConfig = options.virtualScrollConfig || {mode: options.virtualScrollMode};
+
+        this._$virtualScrollMode = virtualScrollConfig.mode;
 
         this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
-        this._virtualScrollManager = new VirtualScrollManager(this);
+        this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
+            new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
         this._selectionManager = new SelectionManager(this);
@@ -1883,7 +1901,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._notifyAfterCollectionChange();
 
         // FIXME Make a list of properties that lead to version update
-        if (properties as String === 'editingContents' || properties as String === 'animated') {
+        if (properties as String === 'editingContents' || properties as String === 'animated' || properties as String === 'canShowActions') {
             this._nextVersion();
         }
     }
@@ -2011,6 +2029,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
+    setItemsSpacings(itemPadding: {top: string, left: string, right: string}): void {
+        this._$rowSpacing = itemPadding.top;
+        this._$leftSpacing = itemPadding.left;
+        this._$rightSpacing = itemPadding.right;
+    }
+
     getRowSpacing(): string {
         return this._$rowSpacing;
     }
@@ -2081,6 +2105,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (newStart !== this._startIndex || newStop !== this._stopIndex) {
             this._startIndex = newStart;
             this._stopIndex = newStop;
+
+            if (this._$virtualScrollMode === VIRTUAL_SCROLL_MODE.HIDE) {
+                this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
+            }
+
             this._nextVersion();
             return true;
         }
@@ -2112,7 +2141,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     getViewIterator(): {
-        each: (callback: EnumeratorCallback<unknown>, context?: object) => void
+        each: (callback: EnumeratorCallback<unknown>, context?: object) => void;
+        isItemVisible: (index: number) => boolean;
     } {
         if (this._$virtualScrolling) {
             return this._virtualScrollManager;
@@ -2131,6 +2161,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setCompatibleReset(compatible: boolean): void {
         this._$compatibleReset = compatible;
+    }
+
+    isItemVisible = (index: number) => true;
+
+    isItemHidden(index: number): boolean {
+        return !this.getViewIterator().isItemVisible(index);
     }
 
     // region SerializableMixin
@@ -3217,6 +3253,7 @@ Object.assign(Collection.prototype, {
     _$editingConfig: null,
     _$unique: false,
     _$importantItemProperties: null,
+    _$virtualScrollMode: VIRTUAL_SCROLL_MODE.REMOVE,
     _$virtualScrolling: false,
     _$hasMoreData: false,
     _$compatibleReset: false,

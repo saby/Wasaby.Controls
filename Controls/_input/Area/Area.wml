@@ -32,6 +32,7 @@
                      fieldName="{{_fieldName}}"
                      heightLine="{{_heightLine}}"
                      template="{{_field.template}}"
+                     wasActionUser="{{_wasActionUser}}"
                      value="{{_viewModel.displayValue}}"
                      selection="{{_viewModel.selection}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"

@@ -1,7 +1,7 @@
 /**
  * @author Герасимов А.М.
  * @mixin Controls/_grid/SortButtonStyles
- * @public
+ * @private
  *
  * @css @font-size_SortButton-icon Font-size of the button icon.
  * @css @color_SortButton-icon Color of the button icon.

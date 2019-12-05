@@ -4,39 +4,30 @@
 </ws:template>
 
 <ws:template name="favorite">
-   <span class="{{isFavorite ? 'icon-Favorite controls-HistoryList__iconPin-active' : 'icon-Unfavorite controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin "
-         on:click="_onFavoriteClick(item, text, isFavorite)"></span>
+   <span class="{{item.get('pinned') || item.get('client') ? 'icon-Favorite controls-HistoryList__iconPin-active' : 'icon-Unfavorite controls-HistoryList__iconPin-default'}} controls-HistoryList__iconPin "
+         on:click="_onFavoriteClick(item, text)"></span>
 </ws:template>
 
 <ws:template name="itemContent">
    <div class="controls-HistoryList__itemWrapper controls-HistoryList_{{_options.orientation}}__itemWrapper">
-      <div class="controls-HistoryList__item controls-HistoryList_{{_options.orientation}}__item {{isFavorite || item.get('pinned') ? 'controls-HistoryList__item_pinned'}}"
-           on:click="_clickHandler(item, isFavorite)" title="{{text}}">{{text}}</div>
-      <ws:partial template="{{iconTemplate}}" item="{{item}}" text="{{text}}" isFavorite="{{isFavorite}}"/>
+      <div class="controls-HistoryList__item controls-HistoryList_{{_options.orientation}}__item {{item.get('pinned') || item.get('client') ? 'controls-HistoryList__item_pinned'}}"
+           on:click="_clickHandler(item)" title="{{text}}">{{text}}</div>
+      <ws:partial template="{{iconTemplate}}" item="{{item}}" text="{{text}}"/>
    </div>
 </ws:template>
 
 <div class="controls-HistoryList">
-<div class="controls-FilterPanel__caption">{[Ранее отбирались]}</div>
-<div class="controls-HistoryList__content {{_isMaxHeight && _options.orientation === 'vertical' ? 'controls-FilterPanel_block-maxHeight'}}">
-   <ws:for data="index, item in _favoriteList">
-      <ws:if data="{{index < _favoriteCount}}">
-         <ws:partial template="itemContent"
-                     item="{{item}}"
-                     text="{{item.get('data').linkText}}"
-                     iconTemplate="favorite"
-                     isFavorite="{{true}}"/>
-      </ws:if>
-   </ws:for>
-   <ws:for data="index, item in _items">
-      <ws:if data="{{index < _historyCount}}">
-         <ws:partial template="itemContent"
-                     item="{{item}}"
-                     text="{{_itemsText[index]}}"
-                     iconTemplate="{{_options.saveMode === 'favorite' ? 'favorite' : 'pinned'}}"/>
-      </ws:if>
-   </ws:for>
-</div>
+   <div class="controls-FilterPanel__caption">{[Ранее отбирались]}</div>
+   <div class="controls-HistoryList__content {{_isMaxHeight && _options.orientation === 'vertical' ? 'controls-FilterPanel_block-maxHeight'}}">
+      <ws:for data="index, item in _items">
+         <ws:if data="{{index < _favoriteCount}}">
+            <ws:partial template="itemContent"
+                        item="{{item}}"
+                        text="{{_itemsText[index]}}"
+                        iconTemplate="{{_options.saveMode === 'favorite' ? 'favorite' : 'pinned'}}"/>
+         </ws:if>
+      </ws:for>
+   </div>
    <ws:if data="{{_arrowVisible}}">
       <div class="controls-FilterPanel__separator">
          <Controls.toggle:BigSeparator

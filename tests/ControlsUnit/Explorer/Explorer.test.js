@@ -94,6 +94,16 @@ define([
          assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
       });
 
+      it('_private.canStartDragNDrop', function() {
+         var
+            explorer = new explorerMod.View({});
+
+         explorer._viewMode = 'table';
+         assert.isTrue(explorerMod.View._private.canStartDragNDrop(explorer));
+         explorer._viewMode = 'search';
+         assert.isFalse(explorerMod.View._private.canStartDragNDrop(explorer));
+      });
+
       it('_private.getRoot', function() {
          var
             cfg = {
@@ -301,8 +311,8 @@ define([
       });
 
       it('_beforeUpdate', function() {
-         const cfg = { viewMode: 'tree' };
-         const cfg2 = { viewMode: 'search' };
+         const cfg = { viewMode: 'tree', root: null };
+         const cfg2 = { viewMode: 'search' , root: null };
          const instance = new explorerMod.View(cfg);
          let resetExpandedItemsCalled = false;
          instance._children = {
@@ -321,6 +331,11 @@ define([
 
          instance._beforeUpdate(cfg2);
          assert.isFalse(resetExpandedItemsCalled);
+
+         instance._isGoingFront = true;
+         instance.saveOptions(cfg);
+         instance._beforeUpdate(cfg2);
+         assert.isFalse(instance._isGoingFront);
       });
 
       it('_onBreadCrumbsClick', function() {
@@ -484,6 +499,7 @@ define([
             var
                explorer = new explorerMod.View({}),
                isEventResultReturns = false,
+               cancelEditCalled = false,
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
@@ -497,6 +513,9 @@ define([
                treeControl: {
                   _children: {
 
+                  },
+                  cancelEdit: function() {
+                     cancelEditCalled = true;
                   }
                }
             };
@@ -523,6 +542,7 @@ define([
                nativeEvent: 123
             });
             assert.isTrue(isEventResultReturns);
+            assert.isTrue(cancelEditCalled);
             assert.deepEqual({
                ...explorer._restoredMarkedKeys,
                itemId: {

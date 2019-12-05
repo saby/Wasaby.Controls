@@ -7,6 +7,7 @@ import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import 'Controls/decorator';
+import {Logger} from 'UI/Utils';
 
 
       /**
@@ -187,27 +188,27 @@ import 'Controls/decorator';
             }
          },
 
-         validateLines: function(min, max) {
+         validateLines: function(min, max, self) {
             var validated = true;
 
             if (min > max) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines and maxLines options are not set correctly. The minLines more than the maxLines.');
+               Logger.error('Controls/_input/Area: The minLines and maxLines options are not set correctly. The minLines more than the maxLines.', self);
             }
 
             if (min < 1) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines options are not set correctly. The minLines less than one.');
+               Logger.error('Controls/_input/Area: The minLines options are not set correctly. The minLines less than one.', self);
             }
 
             if (max < 1) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
+               Logger.error('Controls/_input/Area: The maxLines options are not set correctly. The maxLines less than one.', self);
             }
 
             if (min > 10 || max > 10) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines and maxLines options are not set correctly. Values greater than 10 are not supported.');
+                Logger.error('Controls/_input/Area: The minLines and maxLines options are not set correctly. Values greater than 10 are not supported.', self);
             }
 
             return validated;
@@ -232,6 +233,18 @@ import 'Controls/decorator';
                   event.stopPropagation();
                }
             }
+         },
+         fixSyncFakeArea: function(self) {
+            /**
+             * 1) На MacOS иногда между выпонением обработчика и перерестроением успевает перерисоваться страница. Из-за этого происходят скачки.
+             * 2) В chrome иногда, когда происходит увеличение количества строк, при вставке, не происходит отрисовки текста на новых строках.
+             * Значение в textarea меняется в обработчике события input, а значение в fakeField в шаблоне на момент перестроения.
+             * Так как размеры textarea зависят от fakeField, поэтому их значения на момент перерисовки страници должны быть одинаковыми. Иначе
+             * возникают проблемы 1-2. Чтобы избежать проблем меняем значение fakeField в обработчике.
+             */
+            if (Env.detection.isMacOSDesktop || Env.detection.chrome) {
+               self._children.fakeField.innerText = self._viewModel.displayValue + self._field.scope.emptySymbol;
+            }
          }
       };
 
@@ -243,7 +256,7 @@ import 'Controls/decorator';
          _beforeMount: function(options) {
             Area.superclass._beforeMount.apply(this, arguments);
 
-            _private.validateLines(options.minLines, options.maxLines);
+            _private.validateLines(options.minLines, options.maxLines, this);
             this._heightLine = ActualAPI.heightLine(options.size, options.fontSize);
          },
 
@@ -259,18 +272,14 @@ import 'Controls/decorator';
          _inputHandler: function() {
             Area.superclass._inputHandler.apply(this, arguments);
 
-            /**
-             * 1) На MacOS иногда между выпонением обработчика и перерестроением успевает перерисоваться страница. Из-за этого происходят скачки.
-             * 2) В chrome иногда, когда происходит увеличение количисетва строк, при вставке, не происходит отрисовки текста на новых строках.
-             * Значение в textarea меняется в обработчике события input, а значение в fakeField в шаблоне на момент перестроения.
-             * Так как размеры textarea зависят от fakeField, поэтому их значения на момент перерисовки страници должны быть одинаковыми. Иначе
-             * возникают проблемы 1-2. Чтобы избежать проблем меняем значение fakeField в обработчике.
-             */
-            if (Env.detection.isMacOSDesktop || Env.detection.chrome) {
-               this._children.fakeField.innerText = this._viewModel.displayValue + this._field.scope.emptySymbol;
-            }
+            _private.fixSyncFakeArea(this);
 
             this._recalculateLocationVisibleArea(this._getField(), this._viewModel.displayValue, this._viewModel.selection);
+         },
+
+         _updateFieldInTemplate: function () {
+            Area.superclass._updateFieldInTemplate.apply(this, arguments);
+            _private.fixSyncFakeArea(this);
          },
 
          _keyDownHandler: function(event) {

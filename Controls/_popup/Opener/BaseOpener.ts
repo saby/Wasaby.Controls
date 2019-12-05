@@ -4,7 +4,8 @@ import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import { DefaultOpenerFinder } from 'UI/Focus';
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
+import randomId = require('Core/helpers/Number/randomId');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
@@ -47,6 +48,10 @@ class BaseOpener extends Control<IControlOptions> {
         this._notify('unregisterOpenerUpdateCallback', [this._openerUpdateCallback], {bubbling: true});
         this._toggleIndicator(false);
         if (this._options.closePopupBeforeUnmount) {
+            if (this._openPopupTimerId) {
+                clearTimeout(this._openPopupTimerId);
+                this._openPopupTimerId = null;
+            }
             if (this._useVDOM()) {
                 ManagerController.remove(this._popupId);
             } else if (this._action) { // todo Compatible
@@ -58,12 +63,22 @@ class BaseOpener extends Control<IControlOptions> {
     open(popupOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             const cfg = this._getConfig(popupOptions || {});
-            this._clearPopupIds();
             this._toggleIndicator(true);
-            if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
-                this._compatibleOpen(cfg, controller).then((popupId) => resolve(popupId));
+            let resultPromise: Promise<string>;
+            // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
+            if (cfg.isCompoundTemplate) {
+                resultPromise = this._compatibleOpen(cfg, controller);
             } else {
-                this._openPopup(cfg, controller).then((popupId) => resolve(popupId));
+                resultPromise = this._openPopup(cfg, controller);
+            }
+
+            // Удалить resultPromise после перевода страниц на application
+            // Сейчас эта ветка нужно, чтобы запомнить ws3Action, который откроет окно на старой странице
+            // На вдоме отдаем id сразу
+            if (!this._useVDOM()) {
+                resultPromise.then((popupId) => resolve(popupId));
+            } else {
+                resolve(cfg.id);
             }
         }));
     }
@@ -74,7 +89,7 @@ class BaseOpener extends Control<IControlOptions> {
      */
     close(): void {
         const popupId: string = this._getCurrentPopupId();
-        if (popupId) {
+        if (!this._action && popupId) {
             BaseOpener.closeDialog(popupId).addCallback(() => {
                 this._popupId = null;
             });
@@ -127,7 +142,6 @@ class BaseOpener extends Control<IControlOptions> {
     private _openPopup(cfg, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             this._requireModules(cfg, controller).addCallback((result) => {
-                this._clearPopupIds();
                 const popupId = this._getCurrentPopupId();
                 this._showDialog(result.template, cfg, result.controller, popupId, resolve);
             }).addErrback(() => {
@@ -164,6 +178,17 @@ class BaseOpener extends Control<IControlOptions> {
         if (baseConfig.actionOnScroll) {
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
+
+        this._vdomOnOldPage = baseConfig._vdomOnOldPage;
+
+        if (this._isPopupDestroyed()) {
+            this._popupId = null;
+        }
+        if (!this._popupId) {
+            this._popupId = randomId('popup-');
+        }
+        baseConfig.id = this._popupId;
+
         this._prepareNotifyConfig(baseConfig);
         return baseConfig;
     }
@@ -235,13 +260,17 @@ class BaseOpener extends Control<IControlOptions> {
     }
 
     private _useVDOM(): boolean {
-        return BaseOpener.isNewEnvironment() || this._options._vdomOnOldPage;
+        return BaseOpener.isNewEnvironment() || this._vdomOnOldPage;
     }
-    private _clearPopupIds(): void {
-        if (!this.isOpened()) {
-            this._popupId = null;
-        }
+
+    private _isPopupDestroyed(): boolean {
+        const popupItem = ManagerController.find(this._getCurrentPopupId());
+        return popupItem &&
+            (popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYING ||
+             popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYED ||
+             popupItem.startRemove === true);
     }
+
     private _compatibleOpen(cfg, controller): Promise<string | undefined> {
         return new Promise((resolve) => {
             requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (Layer) => {
@@ -252,9 +281,8 @@ class BaseOpener extends Control<IControlOptions> {
         });
     }
 
-    static showDialog(rootTpl: TemplateFunction, cfg, controller: string, popupId: string, opener: BaseOpener) {
+    static showDialog(rootTpl: TemplateFunction, cfg, controller: string, popupId?: string, opener?: BaseOpener) {
         const def = new Deferred();
-
         if (BaseOpener.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!BaseOpener.isNewEnvironment()) {
                 BaseOpener.getManager().then(() => {
@@ -276,7 +304,9 @@ class BaseOpener extends Control<IControlOptions> {
                     });
                 });
             } else if (BaseOpener.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-                BaseOpener._openPopup(popupId, cfg, controller, def);
+                BaseOpener.getManager().then(() => {
+                    BaseOpener._openPopup(popupId, cfg, controller, def);
+                });
             } else {
                 requirejs(['Controls/compatiblePopup'], function(compatiblePopup) {
                     compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl);
@@ -387,7 +417,7 @@ class BaseOpener extends Control<IControlOptions> {
                     }
                     def.callback(action);
                 } catch (err) {
-                    IoC.resolve('ILogger').error(BaseOpener.prototype._moduleName, 'Ошибка при открытии окна: ' + err.message);
+                    Logger.error(BaseOpener.prototype._moduleName + ': Ошибка при открытии окна: ' + err.message);
                 }
 
             });
@@ -417,7 +447,7 @@ class BaseOpener extends Control<IControlOptions> {
             BaseOpener.requireModule(config.template),
             BaseOpener.requireModule(controller)
         ]).catch((error: Error) => {
-            IoC.resolve('ILogger').error(this._moduleName, error.message);
+            Logger.error(this._moduleName + ': ' + error.message, undefined, error);
             return error;
         });
     }
@@ -530,7 +560,7 @@ class BaseOpener extends Control<IControlOptions> {
         }
 
         if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
-            IoC.resolve('ILogger').warn(BaseOpener.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
+            Logger.warn(BaseOpener.prototype._moduleName + ': Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
         }
 
         return baseCfg;
@@ -549,17 +579,12 @@ class BaseOpener extends Control<IControlOptions> {
     }
 
     static _openPopup(popupId, cfg, controller, def) {
-        if (popupId) {
-            if (ManagerController.isPopupCreating(popupId)) {
-                ManagerController.updateOptionsAfterInitializing(popupId, cfg);
-            } else {
-                popupId = ManagerController.update(popupId, cfg);
-            }
-            def.callback(popupId);
-        } else {
+        if (!ManagerController.isPopupCreating(popupId)) {
             popupId = ManagerController.show(cfg, controller);
-            def.callback(popupId);
+        } else {
+            ManagerController.updateOptionsAfterInitializing(popupId, cfg);
         }
+        def.callback(popupId);
     }
 
     static getDefaultOptions() {
@@ -583,15 +608,32 @@ class BaseOpener extends Control<IControlOptions> {
     // TODO Compatible
     static getManager() {
         if (!ManagerWrapperCreatingPromise) {
-            const managerContainer = document.createElement('div');
-            managerContainer.classList.add('controls-PopupContainer');
-            document.body.insertBefore(managerContainer, document.body.firstChild);
+            if (!isNewEnvironment()) {
+                const managerContainer = document.createElement('div');
+                managerContainer.classList.add('controls-PopupContainer');
+                document.body.insertBefore(managerContainer, document.body.firstChild);
 
-            ManagerWrapperCreatingPromise = new Promise((resolve) => {
-                require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
-                    Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
+                ManagerWrapperCreatingPromise = new Promise((resolve) => {
+                    require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
+                        Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
+                    });
                 });
-            });
+            } else {
+                // Защита от случаев, когда позвали открытие окна до полного построения страницы
+                if (ManagerController.getManager()) {
+                    return Promise.resolve();
+                } else {
+                    ManagerWrapperCreatingPromise = new Promise((resolve) => {
+                        const intervalDelay: number = 20;
+                        const intervalId: number = setInterval(() => {
+                            if (ManagerController.getManager()) {
+                                clearInterval(intervalId);
+                                resolve();
+                            }
+                        }, intervalDelay);
+                    });
+                }
+            }
         }
 
         return ManagerWrapperCreatingPromise;

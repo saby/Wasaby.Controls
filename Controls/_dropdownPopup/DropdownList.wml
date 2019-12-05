@@ -9,6 +9,7 @@
       <ws:partial template="{{_options.headTemplate || _options.headerTemplate || _defaultHeadTemplate}}"
                   duplicateHeadClassName="{{_duplicateHeadClassName}}"
                   on:click="_headerClick()"
+                  on:mouseenter="_closeSubMenu()"
                   scope="{{_headConfig}}"/>
    </ws:if>
    <Controls.scroll:Container attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll theme_{{_options.theme}}"
@@ -27,7 +28,7 @@
                      iconPadding="{{_options.iconPadding}}"
                      resultHandler="{{resultHandler}}"></ws:partial>
          <ws:if data="{{_hasAdditional}}">
-            <div class="controls-DropdownList__additional theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
+            <div class="controls-DropdownList__additional theme_{{_options.theme}}" on:mouseenter="_closeSubMenu()">
                <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
                   <ws:partial template="{{content.resolvedTemplate}}"
                               bind:value="_expanded"
@@ -42,7 +43,7 @@
       <Controls.popupTemplate:CloseButton class="controls-DropdownList-cross theme_{{_options.theme}}" viewMode="link" on:click="_closeClick()"/>
    </ws:if>
    <ws:if data="{{_options.footerTemplate || _needShowApplyButton || (_options.hasMoreButton && _options.selectorTemplate)}}">
-      <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
+      <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_closeSubMenu()">
          <ws:if data="{{_options.footerTemplate}}">
             <ws:partial template="{{_options.footerTemplate}}" attr:class="controls-DropdownList__footer-content_theme_{{_options.theme}}"
                         itemData="{{_options.footerItemData}}" on:click="_footerClick()"/>

@@ -75,17 +75,17 @@ var __PopupLayer = Control.extend({
    _onResult: function(position) {
       // fix suggest position after show
       this._popupOptions.direction = {
-         vertical: position.verticalAlign.side,
-         horizontal: position.horizontalAlign.side
+         vertical: position.direction.vertical,
+         horizontal: position.direction.horizontal
       };
       this._popupOptions.offset = {
-         vertical: position.verticalAlign.offset,
-         horizontal: position.horizontalAlign.offset
+         vertical: position.offset.vertical,
+         horizontal: position.offset.horizontal
       };
 
       // position.corner fixed by https://online.sbis.ru/opendoc.html?guid=b7a05d49-4a68-423f-81d0-70374f875a22
       this._popupOptions.targetPoint = position.targetPoint;
-      this._popupOptions.className = _private.getPopupClassName(position.verticalAlign.side);
+      this._popupOptions.className = _private.getPopupClassName(position.direction.vertical);
       this._popupOptions.fittingMode = 'fixed';
 
       // update popup's options

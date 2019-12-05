@@ -1,11 +1,11 @@
 define(
    [
       'Core/core-merge',
-      'Env/Env',
+      'UI/Utils',
       'Controls/input',
       'ControlsUnit/Calendar/Utils'
    ],
-   function(coreMerge, Env, input, testUtils) {
+   function(coreMerge, UIUtils, input, testUtils) {
 
       'use strict';
 
@@ -37,10 +37,10 @@ define(
 
          it('validateReplacer', function() {
             var message = '';
-            var error = Env.IoC.resolve('ILogger').error;
+            var error = UIUtils.Logger.error;
             var validateReplacer = input.Mask._private.validateReplacer;
 
-            Env.IoC.resolve('ILogger').error = function(arg1, arg2) {
+            UIUtils.Logger.error = function(arg1, arg2) {
                message = arg1 + ': ' + arg2;
             };
 
@@ -53,7 +53,7 @@ define(
             assert.equal(validateReplacer(' ', 'd\\*'), false);
             assert.equal(message, 'Mask: Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/_input/Mask/options/replacer/');
 
-            Env.IoC.resolve('ILogger').error = error;
+            UIUtils.Logger.error = error;
          });
 
          it('calcReplacer', function() {

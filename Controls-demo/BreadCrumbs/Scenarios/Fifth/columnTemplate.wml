@@ -2,7 +2,7 @@
             attr:class="controls-Grid__row-cell__content_baseline_L"
             itemData="{{itemData}}">
    <ws:contentTemplate>
-      <Controls.decorator:Money number="{{itemData.item[itemData.column.displayProperty]}}"
+      <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
                                 delimiters="{{true}}"/>
    </ws:contentTemplate>
 </ws:partial>

@@ -19,7 +19,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/interface/IEditableList
@@ -54,7 +54,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_interface/ISorting
@@ -109,8 +109,8 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
         return listControl.reloadItem.apply(listControl, arguments);
     },
 
-    scrollToItem(key: string|number, toBottom: boolean): void {
-        this._children.listControl.scrollToItem(key, toBottom);
+    scrollToItem(key: string|number, toBottom: boolean): Promise<void> {
+        return this._children.listControl.scrollToItem(key, toBottom);
     },
 
     beginEdit: function(options) {

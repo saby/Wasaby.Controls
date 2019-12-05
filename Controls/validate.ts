@@ -9,6 +9,7 @@
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
  * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes SelectionContainer Controls/_validate/SelectionContainer
  * @public
  * @author Красильников А.С.
  */
@@ -22,7 +23,8 @@
  * @includes isRequired Controls/_validate/Validators/IsRequired
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
- * includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
+ * @includes SelectionContainer Controls/_validate/SelectionContainer
  * @public
  * @author Красильников А.С.
  */
@@ -31,6 +33,7 @@ import isEmail = require('Controls/_validate/Validators/IsEmail');
 import isRequired = require('Controls/_validate/Validators/IsRequired');
 import isValidDate = require('Controls/_validate/Validators/IsValidDate');
 import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
+import Highlighter = require('wml!Controls/_validate/Highlighter');
 
 export {default as Controller} from 'Controls/_validate/Controller';
 export {default as Container} from 'Controls/_validate/Container';
@@ -42,5 +45,6 @@ export {
     isEmail,
     isRequired,
     isValidDate,
-    isValidDateRange
+    isValidDateRange,
+    Highlighter
 }

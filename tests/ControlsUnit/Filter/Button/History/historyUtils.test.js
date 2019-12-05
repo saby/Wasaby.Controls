@@ -12,11 +12,13 @@ define(
          var historyId = 'TEST_HISTORY_ID_UTILS';
 
          it('getHistorySource', function() {
-            if (Env.constants.isServerSide) { return; }
+            var isServerSide = Env.constants.isServerSide;
+            Env.constants.isServerSide = false;
             var hSource = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource instanceof history.FilterSource);
             var hSource2 = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource === hSource2);
+            Env.constants.isServerSide = isServerSide;
          });
 
          it('getHistorySource isServerSide', function() {
@@ -65,8 +67,8 @@ define(
             resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key');
             assert.equal(resultItems.getCount(), 4);
             assert.equal(resultItems.at(0).getId(), 20);
-            assert.equal(resultItems.at(1).getId(), 1);
-            assert.equal(resultItems.at(2).getId(), 0);
+            assert.equal(resultItems.at(1).getId(), 0);
+            assert.equal(resultItems.at(2).getId(), 1);
             assert.equal(resultItems.at(3).getId(), 2);
          });
 

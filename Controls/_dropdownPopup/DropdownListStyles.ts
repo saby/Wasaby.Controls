@@ -1,6 +1,6 @@
 /**
     * @mixin Controls/_dropdownPopup/DropdownListStyles
-    * @public
+    * @private
     *
     * @css @max-width_DropdownList Max width dropdown list.
     * @css @background_DropdownList Background color of dropdown list.
@@ -34,6 +34,8 @@
     * @css @color_DropdownList-icon-iconStyle_danger Danger icon color.
     * @css @color_DropdownList-icon-iconStyle_success Success icon color.
     * @css @color_DropdownList-icon-iconStyle_info Info icon color.
+    * @css @font-size_DropdownList-row-additionalText-content Font size of item's footer content
+    * @css @color_DropdownList-row-additionalText-content Color of item's footer content
     * @css @background_DropdownList-marker Color of marker selected item.
     * @css @width_DropdownList-marker Width marker selected item.
     * @css @height_DropdownList-marker Height marker selected item.

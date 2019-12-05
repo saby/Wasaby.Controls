@@ -1,11 +1,10 @@
-import BaseControl = require('Core/Control');
+import BaseSelector from './BaseSelector';
 import coreMerge = require('Core/core-merge');
 import {Date as WSDate} from 'Types/entity';
 import ILinkView from './interfaces/ILinkView';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
-import DateRangeModel from './DateRangeModel';
-import CalendarControlsUtils from './Utils';
 import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelector');
+import getOptions from 'Controls/Utils/datePopupUtils';
 
 /**
  * Кнопка-ссылка для отображения периода. Поддерживает смену периодов на смежные.
@@ -38,32 +37,12 @@ import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelecto
  *
  */
 
-var Component = BaseControl.extend({
+var Component = BaseSelector.extend({
     _template: componentTmpl,
 
-    _rangeModel: null,
-    _isMinWidth: null,
-
-    _beforeMount: function (options) {
-        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
-        CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
-        this._rangeModel.update(options);
-
-        // when adding control arrows, set the minimum width of the block,
-        // so that the arrows are always fixed and not shifted.
-        // https://online.sbis.ru/opendoc.html?guid=ae195d05-0e33-4532-a77a-7bd8c9783ef1
-        if ((options.prevArrowVisibility && options.prevArrowVisibility) || (options.showPrevArrow && options.showNextArrow)) {
-            return this._isMinWidth = true;
-        }
-    },
-
-    _beforeUpdate: function (options) {
-        this._rangeModel.update(options);
-    },
-
-    openDialog: function (event) {
+    _getPopupOptions: function() {
         var className;
-
+        const container = this._children.linkView.getDialogTarget();
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
             className = 'controls-DateRangeSelectorLite__picker-years-only';
         } else {
@@ -73,11 +52,14 @@ var Component = BaseControl.extend({
             }
         }
 
-        this._children.opener.open({
+        return {
             opener: this,
-            target: this._container,
+            target: container,
             className: className,
             fittingMode: 'overflow',
+            eventHandlers: {
+                onResult: this._onResult.bind(this)
+            },
             templateOptions: {
                 startValue: this._rangeModel.startValue,
                 endValue: this._rangeModel.endValue,
@@ -96,20 +78,7 @@ var Component = BaseControl.extend({
                 captionFormatter: this._options.captionFormatter,
                 dateConstructor: this._options.dateConstructor
             }
-        });
-    },
-
-    _onResult: function (event, startValue, endValue) {
-        this._rangeModel.setRange(startValue, endValue);
-        this._children.opener.close();
-    },
-
-    _rangeChangedHandler: function(event, startValue, endValue) {
-        this._rangeModel.setRange(startValue, endValue);
-    },
-
-    _beforeUnmount: function () {
-        this._rangeModel.destroy();
+        };
     }
 });
 

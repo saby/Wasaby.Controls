@@ -3,7 +3,7 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {default as IAdditionalQueryParams, Direction, DirectionCfg} from './interface/IAdditionalQueryParams';
 import {default as More} from './More';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 interface IPositionHasMore {
    before: boolean;
@@ -21,7 +21,7 @@ interface IPositionBoth {
 }
 
 declare type PositionBoth = Position | IPositionBoth;
-declare type HasMore = boolean | IPositionHasMore;
+declare type HasMore = boolean | IPositionHasMore | RecordSet;
 
 // TODO use type from Types
 interface IListMetaForPositionNavigation {
@@ -44,7 +44,6 @@ class PositionNavigation {
    protected _beforePosition: Position = null;
    protected _afterPosition: Position = null;
    protected _options: IPositionNavigationOptions;
-   protected _savedMeta: IListMetaForPositionNavigation;
 
    // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
    protected _positionByMeta: boolean = null;
@@ -66,10 +65,7 @@ class PositionNavigation {
       }
 
       this._more = new More({
-         moreMeta: {
-            before: false,
-            after: false
-         }
+         moreMeta: this._getDefaultMoreMeta()
       });
    }
 
@@ -101,6 +97,49 @@ class PositionNavigation {
          navPosition.push(fieldValue);
       }
       return navPosition;
+   }
+
+   private _getDefaultMoreMeta(): IPositionHasMore {
+      return {
+         before: false,
+         after: false
+      };
+   }
+
+   private _processMoreByType(navResult: HasMore, loadDirection: Direction): void {
+      let navDirection: DirectionCfg;
+
+      const process = (more, key?) => {
+         if (typeof more === 'boolean') {
+            if (loadDirection || this._options.direction !== 'both') {
+               navDirection = this._resolveDirection(loadDirection, this._options.direction);
+               let newMore = this._more.getMoreMeta(key);
+
+               if (!newMore) {
+                  newMore = this._getDefaultMoreMeta();
+               }
+
+               newMore[navDirection] = more;
+               this._more.setMoreMeta(newMore, key);
+            } else {
+                Logger.error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
+            }
+         } else if (more instanceof Object) {
+            if (!loadDirection &&  this._options.direction === 'both') {
+               this._more.setMoreMeta({...more}, key);
+            } else {
+                Logger.error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
+            }
+         }
+      };
+
+      if (navResult && navResult.each) {
+         navResult.each((navRec) => {
+            process(navRec.get('nav_result'), navRec.get('id'));
+         });
+      } else {
+         process(navResult);
+      }
    }
 
    prepareQueryParams(loadDirection: Direction): IAdditionalQueryParams {
@@ -162,30 +201,13 @@ class PositionNavigation {
    calculateState(list: RecordSet, loadDirection: Direction): void {
       let metaNextPosition: PositionBoth;
       let more: HasMore;
-      let navDirection: DirectionCfg;
 
       let edgeElem: Record;
-      this._savedMeta = list.getMetaData();
-      more = this._savedMeta.more;
-      metaNextPosition = this._savedMeta.nextPosition;
-      if (typeof more === 'boolean') {
-         if (loadDirection || this._options.direction !== 'both') {
-            navDirection = this._resolveDirection(loadDirection, this._options.direction);
-            const newMore = this._more.getMoreMeta();
-            newMore[navDirection] = more;
-            this._more.setMoreMeta(newMore);
-         } else {
-            IoC.resolve('ILogger')
-               .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
-         }
-      } else if (more instanceof Object) {
-         if (!loadDirection &&  this._options.direction === 'both') {
-            this._more.setMoreMeta({...more});
-         } else {
-            IoC.resolve('ILogger')
-                .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
-         }
-      }
+      const meta = list.getMetaData();
+      more = meta.more;
+      metaNextPosition = meta.nextPosition;
+
+      this._processMoreByType(more, loadDirection);
 
       // if we have "nextPosition" in meta we must set this position for next query
       // else we set this positions from records
@@ -201,8 +223,7 @@ class PositionNavigation {
                   this._positionByMeta = true;
                }
             } else {
-               IoC.resolve('ILogger')
-                  .error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
+                Logger.error('QueryParamsController/Position: Wrong type of \"nextPosition\" value. Must be object');
             }
          } else {
             if (!loadDirection && this._options.direction === 'both') {
@@ -212,14 +233,12 @@ class PositionNavigation {
                   this._afterPosition = metaNextPosition.after;
                   this._positionByMeta = true;
                } else {
-                  IoC.resolve('ILogger')
-                     .error('QueryParamsController/Position',
+                   Logger.error('QueryParamsController/Position: ' +
                         'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties.' +
                         'Each properties must be Arrays');
                }
             } else {
-               IoC.resolve('ILogger')
-                  .error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Array');
+                Logger.error('QueryParamsController/Position: Wrong type of \"nextPosition\" value. Must be Array');
             }
          }
 

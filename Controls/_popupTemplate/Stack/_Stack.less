@@ -19,8 +19,9 @@
 }
 
 .controls-StackTemplate-shadow_theme_@{themeName} {
-   width: @padding_Stack-shadow;
-   left: -@padding_Stack-shadow;
+   //TODO: will be fixed https://online.sbis.ru/opendoc.html?guid=36dbe124-a479-4d61-a624-967e5705d72d
+   width: @box-shadow-container_width;
+   left: -@box-shadow-container_width;
 }
 
 .controls-StackTemplate-shadow__content {
@@ -32,14 +33,20 @@
 }
 
 .controls-StackTemplate-shadow__content_theme_@{themeName} {
-  width: @size_Stack-border-left;
-  background: @color_Stack-border-left;
-  box-shadow: @size_Stack-shadow @color_Stack-shadow;
+  width: @border-thickness_stack;
+  background: @border-color_stack;
+  box-shadow: @box-shadow_stack;
 }
 
 .controls-StackTemplate__top-area_theme_@{themeName} {
    min-height: @header_min-height_stack;
+}
+
+.controls-StackTemplate__top-area-background_theme_@{themeName} {
    background: @header_background-color_stack;
+}
+
+.controls-StackTemplate__top-area-border_theme_@{themeName} {
    border-bottom: @header_bottom-border-thickness_stack solid @header_bottom-border-color_stack;
 }
 
@@ -66,7 +73,6 @@
    flex-shrink: 1;
    display: flex;
    align-items: center;
-   overflow: hidden;
    justify-content: space-between;
 }
 
@@ -85,8 +91,7 @@
    justify-content: flex-end;
    flex-grow: 1;
    flex-shrink: 1;
-   width: auto;
-   overflow: hidden;
+   min-width: 0;
    height: 100%;
    align-items: center;
 }

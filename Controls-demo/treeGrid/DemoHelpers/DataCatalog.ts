@@ -1241,7 +1241,7 @@ export const VirtualScrollHasMore = {
             parent: null,
             type: null,
         },
-    ];
+    ]
 
 };
 

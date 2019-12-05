@@ -25,7 +25,7 @@ define('Controls/Application/Core',
       UIBase,
       HeadData) {
       'use strict';
-
+      /* eslint-disable */
       var AppCore = Control.extend({
          _template: template,
          ctxData: null,
@@ -67,7 +67,7 @@ define('Controls/Application/Core',
             }
 
             var headData = new HeadData([], true);
-            
+
             // Временно положим это в HeadData, потом это переедет в константы реквеста
             // Если запуск страницы начинается с Controls/Application/Core, значит мы находимся в новом окружении
             headData.isNewEnvironment = true;
@@ -104,6 +104,7 @@ define('Controls/Application/Core',
          }
 
       });
+      /* eslint-enable */
 
       return AppCore;
    });

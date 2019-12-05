@@ -23,7 +23,7 @@
  * Для задания элемента в качестве заголовка используйте шаблон Controls:filterPopup:SimplePanelEmptyItemTemplate.
  * @property {String} itemTemplateProperty Имя свойства, содержащего шаблон для рендеринга элементов. Подробнее - {@link Controls/interface/IDropdown#itemTemplateProperty}
  * Для задания элемента в качестве заголовка используйте шаблон Controls:filterPopup:SimplePanelEmptyItemTemplate.
- * @property {Object} filter Конфигурация фильтра-объект с именами полей и их значениями. {@link Controls/interface/IFilter}
+ * @property {Object} filter Конфигурация фильтра-объект с именами полей и их значениями. {@link Controls/_interface/IFilter}
  * @property {Object} navigation Конфигурация навигации по списку. Настройка навигации источника данных (страницы, смещение, положение) и представления навигации (страницы, бесконечная прокрутка и т. д.) {@link Controls/interface/INavigation}
  * @property {Types/collection:IList} items Специальная структура для визуального представления фильтра. {@link Types/collection:IList}.
  */
@@ -37,7 +37,7 @@
  * @property {Controls/interface/ISelectorDialog} selectorTemplate Items selection panel template.
  * @property {Function} itemTemplate Template for item render. For more information, see {@link Controls/interface/IDropdown#itemTemplate}
  * @property {String} itemTemplateProperty Name of the item property that contains template for item render. For more information, see {@link Controls/interface/IDropdown#itemTemplateProperty}
- * @property {Object} filter Filter configuration - object with field names and their values. {@link Controls/interface/IFilter}
+ * @property {Object} filter Filter configuration - object with field names and their values. {@link Controls/_interface/IFilter}
  * @property {Object} navigation List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.) {@link Controls/interface/INavigation}
  * @property {Types/collection:IList} items Special structure for the visual representation of the filter. {@link Types/collection:IList}.
  */
@@ -66,11 +66,12 @@
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
  * @property {EditorOptions} editorOptions Опции для редактора.
  * @property {FilterViewMode} viewMode Режим отображения фильтра.
+ * @property {Boolean} doNotSaveToHistory Флаг для отмены сохранения фильтра в истории.
  * @property {Boolean} visibility Отображение параметра фильтрации в блоке "Еще можно отобрать".
  * @property {String} type Тип значения в поле фильтра.
  * Если тип поля не указан, он будет автоматически определяться по значению фильтра.
  * Для каждого типа будет построен соответствующий редактор этого типа.
- * 
+ *
  * В настоящей версии фреймворка поддерживается только 1 значение — dataRange.
  * При его установке будет построен контрол выбора периода в строке фильтра.
  */
@@ -83,6 +84,7 @@
  * @property {String} textValue Text value of filter field.  Used to display a textual representation of the filter
  * @property {EditorOptions} editorOptions Options for editor
  * @property {FilterViewMode} viewMode Filter view mode
+ * @property {Boolean} doNotSaveToHistory Flag to cancel saving filter in history
  */
 
 /**
@@ -92,7 +94,7 @@
  * Свойство "value" из каждого элемента будет вставлено в фильтр по имени этого элемента.
  * @example
  * Пример настройки опции "filterSource" для двух фильтров.
- * Первый фильтр отобразится в главном блоке "Отбираются".
+ * Первый фильтр отобразится в главном блоке "Отбираются" и не будет сохранен в истории.
  * Второй фильтр будет отображаться в блоке "Еще можно отобрать", так как для него установлено свойство visibility = false.
  * TMPL:
  * <pre>
@@ -113,7 +115,7 @@
  * JS:
  * <pre>
  *    this._source = [
- *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent',
+ *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent', doNotSaveToHistory: true,
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
  *                    keyProperty: 'id',
@@ -384,9 +386,10 @@
  * @name Controls/_filter/View/interface/IFilterView#alignment
  * @cfg {String} Задаёт выравнивание элементов объединённого фильтра.
  * @remark
- * В значении "right" кнопка-иконка прикрепляется к правому краю. При этом панель фильтрации, быстрые фильтры и выбранные параметры фильтрации будут открываться/отображаться слева от кнопки-иконки.
+ * Варианты значений:
  * 
- * В значении "left" кнопка-иконка прикрепляется к левому краю, а поэтому отображение остальных элементов контрола будет справа.
+ * * **right**: Кнопка прикреплена к правому краю. Всплывающая панель открывается влево. Строка выбранных фильтров отображается слева от кнопки.
+ * * **left**: Кнопка прикреплена к левому краю. Всплывающая панель открывается вправо. Строка выбранных фильтров отображается справа от кнопки.
  * @default right
  * @example
  * Пример открытия панели фильтров справа:
@@ -445,6 +448,20 @@
  */
 
 /**
+ * @name Controls/_filter/View/interface/IFilterView#historyId
+ * @cfg {String} Уникальный идентификатор для сохранения истории фильтров.
+ * В истории будут храниться последние 10 применённых фильров.
+ * @remark
+ * {@link Controls/_filter/View Controls/filter:View} занимается только отображением истории последних применённых фильтров,
+ * чтобы работало сохранение в историю, контрол должен быть обёрнут в {@link Controls/_filter/Controller Controller}.
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.filter:View detailTemplateName="EDO.MyPanelTemplate" historyId="myHistoryId"/>
+ * </pre>
+ */
+
+/**
  * @event Controls/_filter/View/interface/IFilterView#filterChanged Происходит при изменении фильтра.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} filter Новый фильтр.
@@ -457,13 +474,13 @@
  */
 
 /**
- * @event Controls/_filter/View/interface/IFilterView#itemsChanged Происходит при изменении опции items.
+ * @event Controls/_filter/View/interface/IFilterView#sourceChanged Происходит при изменении опции source.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<FilterItem>} items Новая структура фильтра.
  */
 
 /*
- * @event Controls/_filter/View/interface/IFilterView#itemsChanged Happens when items changed.
+ * @event Controls/_filter/View/interface/IFilterView#sourceChanged Happens when source changed.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} items New items.
  */

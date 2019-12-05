@@ -89,8 +89,9 @@
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.buttons:Button caption="Выбрать адрес" fontColorStyle="link" viewMode="link" fontSize="m"
-                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                        <Controls.validate:Highlighter>
+                           <Controls.buttons:Button readOnly="{{false}}" caption="Выбрать адрес" fontColorStyle="link" viewMode="link" fontSize="m"/>
+                        </Controls.validate:Highlighter>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
@@ -98,9 +99,9 @@
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.buttons:Button icon="icon-Send" iconSize="s" caption="Отправить" fontColorStyle="link"
-                                                 viewMode="link" fontSize="m"
-                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                        <Controls.validate:Highlighter>
+                           <Controls.buttons:Button readOnly="{{false}}" icon="icon-Send" iconSize="s" iconStyle="secondary" caption="Отправить" fontColorStyle="link" viewMode="link" fontSize="m"/>
+                        </Controls.validate:Highlighter>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
@@ -108,8 +109,9 @@
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.list:AddButton readOnly="{{false}}" caption="Наименование"
-                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                        <Controls.validate:Highlighter>
+                           <Controls.list:AddButton readOnly="{{false}}" caption="Наименование"/>
+                        </Controls.validate:Highlighter>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
@@ -117,8 +119,9 @@
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.buttons:Button iconSize="m" icon="icon-Save" fontColorStyle="link" viewMode="link" fontSize="m"
-                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                        <Controls.validate:Highlighter>
+                           <Controls.buttons:Button readOnly="{{false}}" iconSize="m" icon="icon-Save" fontColorStyle="link" viewMode="link" fontSize="m"/>
+                        </Controls.validate:Highlighter>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.buttons:Button caption="Проверить данные" attr:style="margin: 10px 0 0 16px;" name="updateButton" on:click="_clickHandler()"

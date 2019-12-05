@@ -12,7 +12,7 @@ import Deferred = require('Core/Deferred');
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_interface/ISorting
@@ -49,7 +49,7 @@ var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype
     },
 
     scrollToItem(key: string|number, toBottom: boolean): void {
-        this._children.baseControl.scrollToItem(key, toBottom);
+        return this._children.baseControl.scrollToItem(key, toBottom);
     },
 });
 

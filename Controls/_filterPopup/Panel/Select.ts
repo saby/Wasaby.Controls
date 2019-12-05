@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
-import Utils = require('Types/util');
 import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
+import {object} from 'Types/util';
 /**
     * Контрол, отображающий заданный набор элементов через разделитель.
     *
@@ -60,21 +60,43 @@ import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
     * @default title
     */
 
-
+   /**
+    * @name Contorls/_filterPopup/Panel/Select#textValueProperty
+    * @cfg {String} Имя поля, значение которого отображается в строке примененных фильтров и в истории.
+    * Используется, если фильтр имеет разное текстовое представление для блоков "Отбираются" и "Еще можно отобрать"
+    * @default textValue
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.filterPopup:Select items="{{_items}}" textValueProperty="text" keyProperty="id"/>
+    * </pre>
+    *
+    * JS:
+    * <pre>
+    *     _beforeMount() {
+    *         this._items = [
+    *             {id: 1, title: 'For sale', text: 'For sale'},
+    *             {id: 2, title: 'No', text: 'Not for sale'}
+    *         ];
+    *     }
+    * </pre>
+    */
 
    var FilterSelect = Control.extend({
       _template: template,
 
       _clickHandler: function(event, item) {
-         this._notify('textValueChanged', [Utils.object.getPropertyValue(item, this._options.displayProperty)]);
-         this._notify('selectedKeysChanged', [[Utils.object.getPropertyValue(item, this._options.keyProperty)]]);
+         const textValue = object.getPropertyValue(item, this._options.textValueProperty) || object.getPropertyValue(item, this._options.displayProperty);
+         this._notify('textValueChanged', [textValue]);
+         this._notify('selectedKeysChanged', [[object.getPropertyValue(item, this._options.keyProperty)]]);
       }
 
    });
 
    FilterSelect.getDefaultOptions = function() {
       return {
-         displayProperty: 'title'
+         displayProperty: 'title',
+         textValueProperty: 'textValue'
       };
    };
 

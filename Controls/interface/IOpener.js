@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IOpener', [], function() {
 
    /**
@@ -111,7 +112,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#opener
-    * @cfg {Node} opener Логический инициатор открытия всплывающего окна
+    * @cfg {Node} Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
     */
 
 
@@ -255,5 +256,17 @@ define('Controls/interface/IOpener', [], function() {
     *       ...
     *    });
     * </pre>
+    */
+
+   /**
+    * @typedef {Object} EventHandlers
+    * @description Функции обратного вызова позволяют подписаться на события всплывающего окна, открытого через статические методы.
+    * Когда {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/ открывающий контрол} добавлен в шаблон, можно задать декларативную подписку на события.
+    * @property {Function} onOpen Функция обратного вызова, которая вызывается при открытии всплывающего окна.
+    * Пример декларативной подписки на событие доступен {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#event-open-window здесь}.
+    * @property {Function} onClose Функция обратного вызова, которая вызывается при закрытии всплывающего окна.
+    * Пример декларативной подписки на событие доступен {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#event-close-window здесь}.
+    * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне всплывающего окна.
+    * Пример декларативной подписки на событие доступен {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#event-result здесь}.
     */
 });

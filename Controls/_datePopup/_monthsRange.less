@@ -11,7 +11,7 @@
    font-size: @font-size_PeriodDialog-monthRange-header;
    font-weight: bold;
    border-top: (@border-width_PeriodDialog-monthRange-additional - @border-width_PeriodDialog-monthRange) solid @border-color_PeriodDialog-monthRange;
-   border-bottom: @border-width_PeriodDialog-monthRange-additional solid @border-color_PeriodDialog-monthRange;
+   border-bottom: (@border-width_PeriodDialog-monthRange-additional - @outline_PeriodDialog-monthRange-month - @border-width_PeriodDialog-monthRange) solid @border-color_PeriodDialog-monthRange;
 }
 
 .controls-PeriodDialog-MonthsRange__body {
@@ -19,6 +19,7 @@
 }
 
 .controls-PeriodDialog-MonthsRange__halfYears {
+   border-top: (@outline_PeriodDialog-monthRange-month +  @border-width_PeriodDialog-monthRange) solid @border-color_PeriodDialog-monthRange;
    flex-grow: 1;
 }
 
@@ -70,7 +71,7 @@
 }
 
 .controls-PeriodDialog-MonthsRange__hovered {
-   outline: @border-color_DateRangeBigChoose-range-unselected-hover solid 1px;
+   outline: @border-color_DateRangeBigChoose-range-unselected-hover solid @outline_PeriodDialog-monthRange-month;
    background-color: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
 }
 
@@ -100,7 +101,7 @@
 .controls-PeriodDialog-MonthsRange__item-selected {
    width: @width_PeriodDialog-monthRange-monthWrapper;
    margin-right: @border-width_PeriodDialog-monthRange;
-   height: @height_PeriodDialog-monthRange-monthWrapper - @border-width_PeriodDialog-monthRange;
+   height: @height_PeriodDialog-monthRange-monthWrapper;
    margin-bottom: @border-width_PeriodDialog-monthRange;
 }
 
@@ -181,6 +182,7 @@
    .controls-MonthViewVDOM__tableRow {
       flex-basis: @height_PeriodDialog-monthRange-month-date;
       flex-grow: 0;
+      justify-content: center;
    }
 
    .controls-MonthViewVDOM__item-today-background {
@@ -191,8 +193,15 @@
    }
 
    .controls-MonthViewVDOM__item {
+      flex-basis: @height_PeriodDialog-monthRange-month-date;
+      flex-shrink: 0;
+      flex-grow: 0;
       font-size: @font-size_PeriodDialog-monthRange-month-date;
       margin: 0;
+   }
+
+   .controls-MonthViewVDOM__item-selectedStartEnd {
+      outline: @border-color_RangeSelection-selected-startEnd-edgeBorder solid @outline_PeriodDialog-dateRange;
    }
 
    .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected,

@@ -2,6 +2,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
    'use strict';
 
+   ColumnScroll._private.prepareDebouncedUpdateSizes = function() {
+      return ColumnScroll._private.updateSizes;
+   };
+
    describe('Controls.ColumnScroll', function() {
       var
          cfg = {
@@ -45,6 +49,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                         },
                         offsetWidth: 76
                      };
+                  },
+                  style: {
+                     removeProperty: () => true
                   }
                }]
             }
@@ -58,8 +65,6 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             return '1234567890';
          };
          cfg.listModel.isFullGridSupport = () => true;
-         cfg.listModel.isNoGridSupport = () => false;
-         cfg.listModel.shouldUseTableLayout = () => false;
          columnScroll._beforeMount(cfg);
          Entity.Guid.create = baseCreateGuid;
          assert.equal(columnScroll._transformSelector, 'controls-ColumnScroll__transform-1234567890');
@@ -104,12 +109,16 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 26
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
             }
          };
          sccColumnScroll.saveOptions(changedCfg);
+         sccColumnScroll._beforeMount(changedCfg);
          sccColumnScroll._afterMount(changedCfg);
          assert.strictEqual(sccColumnScroll._contentSize, 600);
          assert.strictEqual(sccColumnScroll._contentContainerSize, 400);
@@ -176,6 +185,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -186,6 +198,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          endColumnScroll._options.listModel.getItems = () => ({
             getCount: () => 3
          });
+         endColumnScroll._beforeMount(cfg);
          endColumnScroll._afterMount(cfg);
          assert.strictEqual(endColumnScroll._contentSize, 500);
          assert.strictEqual(endColumnScroll._contentContainerSize, 250);
@@ -224,13 +237,17 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                                },
                                offsetWidth: 76
                             };
-                         }
+                         },
+                     style: {
+                        removeProperty: () => true
+                     }
                   }]
                }
             }
          };
 
          clearColumnScroll.saveOptions(cfg);
+         clearColumnScroll._beforeMount(cfg);
          clearColumnScroll._afterMount(cfg);
 
          assert.equal(clearColumnScroll._contentSize, 500);
@@ -327,7 +344,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                                },
                                offsetWidth: 76
                             };
-                         }
+                         },
                   }]
                }
             },
@@ -379,12 +396,13 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                                },
                                offsetWidth: 76
                             };
-                         }
+                         },
                   }]
                }
             }
          };
          clearColumnScroll.saveOptions({...cfg, stickyColumnsCount: undefined});
+         clearColumnScroll._beforeMount({...cfg, stickyColumnsCount: undefined});
          clearColumnScroll._afterMount({...cfg, stickyColumnsCount: undefined});
          assert.equal(clearColumnScroll._contentSize, 500);
          assert.equal(clearColumnScroll._contentContainerSize, 250);
@@ -412,12 +430,16 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
                         function () {
                            return null;
-                        }
+                        },
+                     style: {
+                        removeProperty: () => true
+                     }
                   }]
                }
             }
          };
          clearColumnScroll.saveOptions({...cfg, stickyColumnsCount: undefined});
+         clearColumnScroll._beforeMount({...cfg, stickyColumnsCount: undefined});
          clearColumnScroll._afterMount({...cfg, stickyColumnsCount: undefined});
          assert.equal(clearColumnScroll._contentSize, 250);
          assert.equal(clearColumnScroll._contentContainerSize, 250);
@@ -493,6 +515,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -556,12 +581,16 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
             }
          };
          newColumnScroll.saveOptions(newCfg);
+         newColumnScroll._beforeMount(newCfg);
          newColumnScroll._afterMount(newCfg);
 
          assert.equal(450, newColumnScroll._contentSize);
@@ -589,6 +618,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -622,6 +654,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -653,6 +688,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -704,12 +742,16 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
             }
          };
          newColumnScroll.saveOptions(newCfg);
+         newColumnScroll._beforeMount(newCfg);
          newColumnScroll._afterMount(newCfg);
 
          assert.equal(450, newColumnScroll._contentSize);
@@ -737,6 +779,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                            },
                            offsetWidth: 76
                         };
+                     },
+                     style: {
+                        removeProperty: () => true
                      }
                   }]
                }
@@ -864,13 +909,6 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          columnScroll._leftOffsetForHScroll = 0;
          columnScroll._offsetForHScroll = 0;
-
-         columnScroll._isFullGridSupport = false;
-         columnScroll._setOffsetForHScroll();
-         assert.equal(columnScroll._leftOffsetForHScroll, 0);
-         assert.equal(columnScroll._offsetForHScroll, 0);
-
-
       });
    });
 });

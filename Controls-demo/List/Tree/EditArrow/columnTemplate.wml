@@ -4,7 +4,7 @@
 >
    <ws:contentTemplate>
       <ws:if data="{{itemData.columnIndex > 0}}">
-         <Controls.decorator:Money number="{{itemData.item[itemData.column.displayProperty]}}"
+         <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
                                    delimiters="{{true}}"/>
          <span if="{{itemData.columnIndex === 2}}">шт</span>
       </ws:if>

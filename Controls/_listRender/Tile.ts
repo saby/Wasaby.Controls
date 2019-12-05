@@ -43,6 +43,13 @@ export default class TileRender extends BaseRender {
         this._notify('register', ['scroll', this, this._resetHoverState], { bubbling: true });
     }
 
+    protected _beforeUpdate(newOptions: ITileRenderOptions): void {
+        super._beforeUpdate(newOptions);
+        if (newOptions.listModel !== this._options.listModel) {
+            this._animatedItem = null;
+        }
+    }
+
     protected _afterUpdate(): void {
         super._afterUpdate();
         if (this._animatedItem) {
@@ -51,6 +58,7 @@ export default class TileRender extends BaseRender {
             } else if (this._animatedItem.isFixed() && !this._animatedItem.isAnimated()) {
                 this._animatedItem.setAnimated(true);
                 this._animatedItem.setFixedPositionStyle(this._animatedItemTargetPosition);
+                this._animatedItem.setCanShowActions(true);
                 this._animatedItem = null;
             }
         }
@@ -110,7 +118,7 @@ export default class TileRender extends BaseRender {
 
         const viewContainer = this._options.tileScalingMode === 'inside'
             ? this.getItemsContainer()
-            : document.documentElement;
+            : document && document.documentElement;
         const viewContainerRect = viewContainer.getBoundingClientRect();
 
         const targetItemSize = this._options.listModel.getItemContainerSize(itemContainer);
@@ -120,7 +128,7 @@ export default class TileRender extends BaseRender {
             viewContainerRect
         );
 
-        const documentRect = document.documentElement.getBoundingClientRect();
+        const documentRect = document && document.documentElement.getBoundingClientRect();
         const targetItemPositionInDocument = this._options.listModel.getItemContainerPositionInDocument(
             targetItemPosition,
             viewContainerRect,
@@ -140,6 +148,7 @@ export default class TileRender extends BaseRender {
                 this._animatedItemTargetPosition = targetPositionStyle;
             } else {
                 item.setFixedPositionStyle(targetPositionStyle);
+                item.setCanShowActions(true);
             }
         }
     }
@@ -159,7 +168,10 @@ export default class TileRender extends BaseRender {
         // causing version change. But version should only change when
         // the state actually changes, so probably managers should
         // keep track of the version and not the collection itself.
-        if (this._options.listModel.getHoveredItem() !== item) {
+        if (
+            this._options.listModel && !this._options.listModel.destroyed &&
+            this._options.listModel.getHoveredItem() !== item
+        ) {
             this._options.listModel.setHoveredItem(item);
         }
     }

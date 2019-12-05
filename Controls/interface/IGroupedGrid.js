@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IGroupedGrid', [
 ], function() {
 
@@ -43,7 +44,7 @@ define('Controls/interface/IGroupedGrid', [
    /**
     * @name Controls/interface/IGroupedGrid#groupTemplate
     * @cfg {Function} Шаблон группировки списка.
-    * @default Controls/grid:GroupTemplate
+    * @default {@link Controls/grid:GroupTemplate}
     * @remark
     * См. <a href="/materials/demo-ws4-grid-group">демо-пример</a>.
     * Подробнее о параметрах шаблона читайте {@link Controls/grid:GroupTemplate здесь}.

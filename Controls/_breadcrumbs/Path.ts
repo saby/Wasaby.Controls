@@ -58,16 +58,19 @@ var BreadCrumbs = Control.extend({
             BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newItems, this._container.clientWidth);
             this._viewUpdated = true;
         }
-    }
+    },
 
     _afterUpdate: function() {
         if (this._viewUpdated) {
             this._viewUpdated = false;
             this._notify('controlResize', [], {bubbling: true});
         }
-    }
+    },
     _notifyHandler: tmplNotify,
-
+    _itemClickHandler: function(e, item) {
+        e.stopPropagation();
+        this._notify('itemClick', [item])
+    },
     _onResize: function() {
         this._redrawIfNeed(this._options.items, this._options.items);
     },

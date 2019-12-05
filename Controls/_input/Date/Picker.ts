@@ -2,10 +2,11 @@ import {detection} from 'Env/Env';
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
-import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
+import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_input/Date/Picker/Picker');
 import 'css!theme?Controls/input';
+import getOptions from 'Controls/Utils/datePopupUtils';
 
    /**
     * Поле ввода даты. Поддерживает выбор даты из всплывающего календаря.
@@ -65,25 +66,15 @@ import 'css!theme?Controls/input';
 
       _openDialog: function(event) {
           var cfg = {
-            opener: this,
+            ...getOptions.getCommonOptions(this),
             target: this._container,
             template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker',
-            horizontalAlign: { side: 'right' },
-            targetPoint: { horizontal: 'left' },
-            fittingMode: 'overflow',
-            eventHandlers: {
-               onResult: this._onResult.bind(this)
-            },
             templateOptions: {
-               startValue: this._options.value,
-               endValue: this._options.value,
-               mask: this._options.mask,
+               ...getOptions.getTemplateOptions(this),
                selectionType: 'single',
                headerType: 'input',
                closeButtonEnabled: true,
-               dateConstructor: this._options.dateConstructor,
-               readOnly: this._options.readOnly
             }
          };
          if (!this._isVdomDialog()) {

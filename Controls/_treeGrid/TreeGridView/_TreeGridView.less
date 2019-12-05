@@ -177,7 +177,7 @@
 // For right vertiacal align of items inside block with display: table-cell.
 .controls-Grid_table-layout .controls-TreeGridView__row-cell_innerWrapper {
    display: flex;
-   height: 100%;
+   min-height: 100%;
 }
 
 // Master list sets ::before on selected item, witch overflows expander. It has z-index: 2 and pointer-events: none, but
@@ -190,7 +190,7 @@
    overflow-x: hidden;
 }
 
-.ws-is-hover {
+.ws-is-hover .controls-BaseControl_showActions {
    .controls-Grid__row:hover > .controls-TreeGrid__row-cell_theme-@{themeName} > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {
       display: inline-block;
    }

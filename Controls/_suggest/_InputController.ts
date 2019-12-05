@@ -9,6 +9,7 @@ import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import LoadService from './LoadService';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/suggest';
 
 
@@ -290,7 +291,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
@@ -304,7 +305,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
@@ -405,7 +406,8 @@ var SuggestLayout = Control.extend({
    // </editor-fold>
    // <editor-fold desc="handlers">
 
-   _close: function() {
+   _close(event: SyntheticEvent<'close'>): void {
+      event.stopPropagation();
       _private.close(this);
    },
    _changeValueHandler: function(event, value) {
@@ -481,6 +483,8 @@ var SuggestLayout = Control.extend({
 
    _searchStart: function() {
       this._loading = true;
+      // Обновим таймер, т.к. могут прерывать поиск новыми запросами
+      this._children.indicator.hide();
       this._children.indicator.show();
       if (this._options.searchStartCallback) {
          this._options.searchStartCallback();

@@ -76,14 +76,21 @@ var MonthView = BaseControl.extend({
       return {};
    },
 
-   _dayClickHandler: function(event, item) {
-      if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable && !this._options.readOnly) {
+    _isDayInteractionAllowed: function (mode, isCurrentMonth) {
+        return (mode === 'extended' || isCurrentMonth);
+    },
+
+   _dayClickHandler: function(event, item, mode, isCurrentMonth) {
+      if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable && !this._options.readOnly &&
+          this._isDayInteractionAllowed(mode, isCurrentMonth)) {
          this._notify('itemClick', [item]);
       }
    },
 
-   _mouseEnterHandler: function(event, item) {
-      this._notify('itemMouseEnter', [item]);
+   _mouseEnterHandler: function(event, item, mode, isCurrentMonth) {
+      if (this._isDayInteractionAllowed(mode, isCurrentMonth)) {
+         this._notify('itemMouseEnter', [item]);
+      }
    }
 
    // cancelSelection: function () {

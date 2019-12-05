@@ -12,7 +12,7 @@
             </ws:if>
             <ws:else>
                <div class="controls-EditingTemplateText controls-EditingTemplateText_enabled controls-EditingTemplateText_size_default{{itemData.isActive ? ' controls-EditingTemplateText_active'}}">
-                  <Controls.decorator:Money attr:class="ControlsDemo-EipScenarios__money" number="{{itemData.item[itemData.column.displayProperty]}}"/>
+                  <Controls.decorator:Money attr:class="ControlsDemo-EipScenarios__money" value="{{itemData.item[itemData.column.displayProperty]}}"/>
                </div>
             </ws:else>
          </div>

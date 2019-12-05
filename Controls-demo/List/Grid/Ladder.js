@@ -8,7 +8,6 @@ define('Controls-demo/List/Grid/Ladder', [
 
    'Controls/scroll',
    'Controls/grid',
-   'Controls/Render/Money/Money',
 
    'Controls/list',
    'Controls/operations',

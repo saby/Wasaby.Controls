@@ -135,13 +135,11 @@ define(
             };
             const favoriteItem = new entity.Model({
                rawData: {
-                  id: 'testId',
-                  data: new entity.Model({
-                     rawData: {
-                        linkText: 'testLinkText',
-                        filterPanelItems: items1,
-                        globalParams: 0
-                     }
+                  ObjectId: 'testId',
+                  ObjectData: JSON.stringify({
+                     linkText: 'testLinkText',
+                     items: items1,
+                     globalParams: 0
                   })
                }
             });
@@ -171,6 +169,8 @@ define(
             let closed = false;
             const sandBox = sinon.createSandbox();
             const self = {
+               _editItem: {get: () => {}},
+               _options: { historyId: '1231123' },
                _children: {
                   stickyOpener: {
                      close: () => closed = true
@@ -179,13 +179,19 @@ define(
                _notify: () => {}
             };
 
-            sandBox.stub(List._private, 'removeRecord');
-            sandBox.stub(List._private, 'updateFavoriteList');
+            sandBox.stub(List._private, 'removeRecordFromOldFavorite');
+            sandBox.stub(List._private, 'updateOldFavoriteList');
+            sandBox.replace(List._private, 'getSource',() => {
+               return {
+                  remove: () => {},
+                  getDataObject: () => {}
+               };
+            });
 
-            List._private.deleteFavorite(self);
+            List._private.deleteFavorite(self, {});
             assert.isTrue(closed);
-            sinon.assert.calledOnce(List._private.removeRecord);
-            sinon.assert.calledOnce(List._private.updateFavoriteList);
+            sinon.assert.calledOnce(List._private.removeRecordFromOldFavorite);
+            sinon.assert.calledOnce(List._private.updateOldFavoriteList);
             sandBox.restore();
          });
 
@@ -253,13 +259,11 @@ define(
          it('_private::getEditDialogOptions', function() {
             var favoriteItem = new entity.Model({
                rawData: {
-                  id: 'testId',
-                  data: new entity.Model({
-                     rawData: {
-                        linkText: 'testLinkText',
-                        filterPanelItems: items1,
-                        globalParams: 0
-                     }
+                  ObjectId: 'testId',
+                  ObjectData: JSON.stringify({
+                     linkText: 'testLinkText',
+                     items: items1,
+                     globalParams: 0
                   })
                }
             });

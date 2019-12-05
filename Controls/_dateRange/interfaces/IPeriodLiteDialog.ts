@@ -2,7 +2,7 @@ import {descriptor} from 'Types/entity';
 import dateControlsUtils from './../Utils';
 
 /**
- * mixin Controls/_dateRange/interfaces/IPeriodLiteDialog
+ * @mixin Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @public
  */
 

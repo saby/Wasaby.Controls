@@ -429,6 +429,20 @@ var
             return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
         },
 
+        getItemType(dispItem) {
+            const contents = dispItem && dispItem.getContents();
+            if (contents && contents.get) {
+                const itemType = contents.get(this._options.nodeProperty);
+                if (itemType === false) {
+                    return 'hiddenNode';
+                }
+                if (itemType === true) {
+                    return 'node';
+                }
+            }
+            return 'leaf';
+        },
+
         isExpanded: function(dispItem) {
             var
                 itemId = dispItem.getContents().getId();
@@ -726,8 +740,8 @@ var
                 this._options.hasChildrenProperty = hasChildrenProperty;
             }
         },
-        getChildren: function(rootId) {
-            return this._hierarchyRelation.getChildren(rootId, this._items);
+        getChildren: function(rootId, items) {
+            return this._hierarchyRelation.getChildren(rootId, items || this._items);
         }
     });
 

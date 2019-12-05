@@ -35,15 +35,4 @@ export {
    Dialog
 };
 
-/**
- * Шаблон, используемый по умолчанию для построения подвала автодополнения.
- * Шаблон имеет два параметра: 
- * <ul>
- *  <li>showSelectorButtonTemplate - шаблон кнопки "Показать всё"</li>
- *  <li>showMoreButtonTemplate - шаблон кнопки "Ещё"</li>
- * </ul> 
- * 
- * @class Controls/suggestPopup:FooterTemplate
- * @author Герасимов А.М.
- */
 

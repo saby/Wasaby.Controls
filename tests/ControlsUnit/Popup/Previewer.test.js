@@ -1,10 +1,11 @@
 define(
    [
       'Controls/popup',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'Vdom/Vdom'
    ],
-   (popup, SyntheticEvent) => {
+   (popup, Vdom) => {
       'use strict';
+      var SyntheticEvent = Vdom.SyntheticEvent;
       describe('Controls/_popup/Previewer', () => {
          it('previewerClickHandler', () => {
             let PWInstance = new popup.PreviewerTarget();
@@ -52,25 +53,26 @@ define(
             let targetPoint = {
                vertical: 'top'
             };
-            let horizontalAlign = {
-               side: 'left'
-            };
-            let verticalAlign = {
-               side: 'top'
+            let direction = {
+               horizontal: 'left',
+               vertical: 'top'
             };
             let options = {
                isCompoundTemplate: true,
                targetPoint,
-               horizontalAlign,
-               verticalAlign
+               direction
+            };
+            let fittingMode = {
+               vertical: 'adaptive',
+               horizontal: 'overflow'
             };
             PWInstance.saveOptions(options);
 
             let config = PWInstance._private.getCfg(PWInstance);
             assert.equal(config.targetPoint, targetPoint);
-            assert.equal(config.verticalAlign, verticalAlign);
-            assert.equal(config.horizontalAlign, horizontalAlign);
+            assert.equal(config.direction, direction);
             assert.equal(config.isCompoundTemplate, true);
+            assert.deepEqual(config.fittingMode, fittingMode);
 
             PWInstance.saveOptions({});
             config = PWInstance._private.getCfg(PWInstance);

@@ -35,7 +35,9 @@ define([
             items: rs,
             parentProperty: ListData.PARENT_PROPERTY,
             nodeProperty: ListData.NODE_PROPERTY,
-            selectionStrategy: 'Controls/operations:DeepTreeSelectionStrategy',
+            selectionStrategy: {
+               name: 'Controls/operations:DeepTreeSelectionStrategy'
+            },
             keyProperty: ListData.KEY_PROPERTY,
             listModel: new treeGrid.ViewModel({columns: [], items: rs})
          };
@@ -52,7 +54,9 @@ define([
             selectedKeys: [],
             excludedKeys: [],
             keyProperty: 'id',
-            selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
+            selectionStrategy: {
+               name: 'Controls/operations:FlatSelectionStrategy'
+            },
             listModel: new list.ListViewModel({items: rs})
          };
          var inst = new SelectionController();
@@ -114,6 +118,26 @@ define([
             instance._beforeUpdate(newCfg);
 
             assert.isTrue(newCfg.listModel.updateSelection.withArgs({'1': null, '2': null, '3': true, '4': true}).calledOnce);
+         });
+
+         it('change items and model', async function () {
+            let newItems = new collection.RecordSet({
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
+            });
+            let newCfg = Object.assign({}, cfg);
+            await instance._beforeMount(cfg);
+            instance._afterMount();
+            let initialListModel = instance._options.listModel;
+
+            newCfg.items = newItems;
+            newCfg.listModel = new treeGrid.ViewModel({columns: [], items: rs});
+            newCfg.listModel.updateSelection = sandbox.stub();
+            initialListModel.updateSelection = sandbox.stub();
+            instance._beforeUpdate(newCfg);
+
+            assert.isFalse(initialListModel.updateSelection.called);
+            assert.isTrue(newCfg.listModel.updateSelection.withArgs({}).calledOnce);
          });
       });
 

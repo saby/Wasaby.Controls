@@ -1,14 +1,15 @@
+/* eslint-disable */
 define('Controls/interface/IEditableList', [
 ], function() {
 
    /**
-    * Интерфейс для списков с возможностью редактирования по месту. 
+    * Интерфейс для списков с возможностью редактирования по месту.
     *
     * @interface Controls/interface/IEditableList
     * @public
     * @author Авраменко А.С.
     * @see Controls/View
-    * @remark 
+    * @remark
     * Разница между этим интерфейсом и {@link Controls/View Controls/editableArea:View} заключается в том, что первый используется в списках, а второй-вне их (например, на вкладках).
     */
 
@@ -55,46 +56,46 @@ define('Controls/interface/IEditableList', [
     * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
     * Такая запись должна присутствовать в {@link Types/source:DataSet}, который получен от источника данных и отрисован контролом.
     * Когда выполнено это условие, после редактирования такой записи она удачно сохраняется в источнике данных.
-    * 
+    *
     * Создание записи выполняют по следующему алгоритму:
-    * 
+    *
     * 1. В хуке <a href="/doc/platform/developmentapl/interface-development/ui-library/control/#phase-before-mount">_beforeMount()</a> опишите {@link Types/source:SbisService источник данных бизнес-логики} (далее SbisService).
     * 2. Из этого источника запросите набор данных (далее DataSet). Полученный DataSet будет передан в контрол для отрисовки.
     * 3. В {@link Core/Deferred#addCallback обработчике} запроса создайте источник данных {@link Types/source:PrefetchProxy}, в который передайте SbisService и DataSet.
     * 4. Создайте редактируемую запись и добавьте её в DataSet.
     *     * Примечание: создание редактируемой записи можно выполнять по некоторому условию (см. пример ниже).
     * 5. Передайте редактируемую запись в опцию {@link editingConfig}.
-    * 
+    *
     * Далее показан пример создания редактируемой записи.
-    * 
+    *
     * * JavaScript
     * <pre class="brush: js">
     * _BLsource: null,
     * _editRecord: null,
     * _source: null,
-    * 
+    *
     * // Хук отрабатывает до отрисовки контрола.
     * _beforeMount: function(options) {
-    *    
+    *
     *    // Создаём экземпляр источника данных.
     *    this._BLsource = new source.SbisService({ ... });
-    *    
+    *
     *    // Асинхронно получаем набор данных, который отрисует контрол.
     *    return this._BLsource.query(query).addCallback(function (DataSet) {
     *       var recordSet = DataSet.getAll();
     *       self._source = new source.PrefetchProxy({
     *          data: {
-    *             
+    *
     *             // Это набор данных, который отрисует контрол.
     *             query: DataSet
     *          },
-    *          
+    *
     *          // Это целевой источник бизнес-логика.
     *          target: self._BLsource
     *       });
-    *       
+    *
     *       // Здесь создано прикладное условие.
-    *       // В DataSet добавляется та самая запись, которая 
+    *       // В DataSet добавляется та самая запись, которая
     *       // запускается на редактирование при первой отрисовке контрола.
     *       if (recordSet.getCount() === 0 && !options.readOnly) {
     *          return self._BLsource.create().addCallback(function (record){
@@ -414,7 +415,7 @@ define('Controls/interface/IEditableList', [
     * @param {Types/entity:Record} item Редактируемая запись.
     * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
     * @remark
-    * Подпишитесь на событие, если необходимо что-либо сделать после завершения редактирования (например, показать кнопку "Добавить"). 
+    * Подпишитесь на событие, если необходимо что-либо сделать после завершения редактирования (например, показать кнопку "Добавить").
     * Событие запускается, когда редактирование успешно завершено и возможно безопасно обновить пользовательский интерфейс.
     * @example
     * В следующем примере показано, как отобразить кнопку "Добавить" после окончания редактирования\добавления.
@@ -488,7 +489,7 @@ define('Controls/interface/IEditableList', [
     *       <ws:editingConfig editOnClick="{{true}}" showToolbar="{{true}}" />
     *    </Controls.list:View>
     * </pre>
-    */    
+    */
 
    /**
     * Начинает редактирование по месту.
@@ -595,7 +596,7 @@ define('Controls/interface/IEditableList', [
     * @function Controls/interface/IEditableList#commitEdit
     * @returns {Core/Deferred}
     * @remark
-    * Используйте этот метод, когда вы хотите завершить редактирование в ответ на действие пользователя, 
+    * Используйте этот метод, когда вы хотите завершить редактирование в ответ на действие пользователя,
     * например, когда пользователь пытается закрыть диалоговое окно, используйте этот метод для сохранения изменений.
     * @example
     * В следующем примере показано, как завершить редактирование и зафиксировать изменения.
