@@ -213,6 +213,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         it('itemsAddedHandler', () => {
             const instance = new VirtualScroll(defaultOptions);
             instance._options.viewModel.getStartIndex = () => instance.startIndex;
+            instance.triggerVisibility = { up: true , down: true };
             instance.itemsCount = 20;
             instance.reset();
             instance.itemsContainer = itemsContainer;
@@ -237,7 +238,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.actualizeSavedIndexes();
             instance.itemsCount = 40;
             instance.recalcItemsHeights();
-            instance.triggerVisibility = { up: true, down: true };
+            instance.triggerVisibility = { up: false, down: false };
             affectingInstance.startIndex = 0;
             affectingInstance.stopIndex = 20;
             instance.itemsAddedHandler(0, {length: 20} as object[]);
