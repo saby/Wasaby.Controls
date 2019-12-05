@@ -232,6 +232,17 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.equal(40, affectingInstance.stopIndex);
             assert.equal(20, instance.savedStartIndex);
             assert.equal(40, instance.savedStopIndex);
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.actualizeSavedIndexes();
+            instance.itemsCount = 40;
+            instance.recalcItemsHeights();
+            instance.triggerVisibility = { up: true, down: true };
+            affectingInstance.startIndex = 0;
+            affectingInstance.stopIndex = 20;
+            instance.itemsAddedHandler(0, {length: 20} as object[]);
+            assert.equal(0, affectingInstance.startIndex);
+            assert.equal(20, affectingInstance.stopIndex);
         });
         it('itemsRemovedHandler', () => {
             const instance = new VirtualScroll(defaultOptions);

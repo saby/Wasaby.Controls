@@ -59,7 +59,6 @@ export default class VirtualScrollController {
 
     set itemsContainer(container: HTMLElement) {
         this._itemsContainer = container;
-        this.itemsContainerHeight = container.offsetHeight;
         this.recalcItemsHeights();
     }
 
@@ -188,6 +187,7 @@ export default class VirtualScrollController {
         const updateLength = Math.min(this.stopIndex - startIndex, items.length);
 
         this.updateItemsHeights(startIndex, updateLength);
+        this.itemsContainerHeight = this._itemsContainer.offsetHeight;
     }
 
     actualizeSavedIndexes(): void {
@@ -208,7 +208,7 @@ export default class VirtualScrollController {
     canScrollToItem(index: number): boolean {
         let canScroll = false;
 
-        if (this.startIndex <= index && this.stopIndex >= index) {
+        if (this.startIndex <= index && this.stopIndex > index) {
             if (this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index] ||
                 this.itemsCount - 1 === index) {
                 canScroll = true;
@@ -410,15 +410,17 @@ export default class VirtualScrollController {
         if (this.itemsContainer) {
             const direction = newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
 
-            if (direction === 'up' && this.itemsFromLoadToDirection) {
-                this.savedStopIndex += newItems.length;
-                this.savedStartIndex += newItems.length;
-                this.setStartIndex(this.startIndex + newItems.length);
+            if (this.triggerVisibility[direction]) {
+                if (direction === 'up' && this.itemsFromLoadToDirection) {
+                    this.savedStopIndex += newItems.length;
+                    this.savedStartIndex += newItems.length;
+                    this.setStartIndex(this.startIndex + newItems.length);
+                }
+
+                this.recalcRangeToDirection(direction, false);
+
+                this._options.saveScrollPositionCallback(direction);
             }
-
-            this.recalcRangeToDirection(direction, false);
-
-            this._options.saveScrollPositionCallback(direction);
         }
     }
 
