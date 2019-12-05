@@ -508,6 +508,17 @@ var
             this._onCollectionChangeFn = function(event, action) {
                 this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
+                // When item is added to or removed from the grid with ladder support, we have to recalculate
+                // ladder styles for every cell, so we need to update prefix version
+                if (
+                    this._isSupportLadder(this._options.ladderProperties) &&
+                    (
+                        action === collection.IObservable.ACTION_ADD ||
+                        action === collection.IObservable.ACTION_REMOVE
+                    )
+                ) {
+                    event.setResult('updatePrefix');
+                }
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e

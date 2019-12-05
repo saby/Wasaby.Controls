@@ -118,7 +118,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             });
          });
 
-         it('_mouseenterHandler', function() {
+         it('_closeSubMenu', function() {
             let dropDownConfig = getDropDownConfig();
             let dropDownList = getDropDownListWithConfig(dropDownConfig),
                closed = false,
@@ -126,11 +126,11 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   closed = true;
                };
             dropDownList._children = {subDropdownOpener: { close: closeHandler } };
-            dropDownList._mouseenterHandler();
+            dropDownList._closeSubMenu();
             assert.isFalse(closed);
 
             dropDownList._hasHierarchy = true;
-            dropDownList._mouseenterHandler();
+            dropDownList._closeSubMenu();
             assert.isTrue(closed);
          });
 
