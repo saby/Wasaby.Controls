@@ -91,24 +91,22 @@ var
             }
          },
          getRoot: function(self, newRoot) {
-            return typeof newRoot !== "undefined" ? newRoot : self._root;
+            return typeof newRoot !== 'undefined' ? newRoot : self._root;
          },
+         getPath(data) {
+             const path = data && data.getMetaData().path;
+             let breadCrumbs;
 
-         getPath: function(data) {
-            let path = data.getMetaData().path;
-            let breadCrumbs;
-
-            if (path && path.getCount() > 0) {
-               breadCrumbs = factory(path).toArray();
-            } else {
-               breadCrumbs = null;
-            }
-
-            return breadCrumbs;
+             if (path && path.getCount() > 0) {
+                 breadCrumbs = factory(path).toArray();
+             } else {
+                 breadCrumbs = null;
+             }
+             return breadCrumbs;
          },
-         serviceDataLoadCallback: function(self, data) {
-             self._breadCrumbsItems = _private.getPath(data);
-             self._forceUpdate();
+         serviceDataLoadCallback: function(self, oldData, newData) {
+            self._breadCrumbsItems = _private.getPath(newData);
+            _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
@@ -211,6 +209,20 @@ var
          },
          canStartDragNDrop(self): boolean {
             return self._viewMode !== 'search';
+         },
+         updateSubscriptionOnBreadcrumbs(oldItems, newItems, updateHeadingPathCallback): void {
+            const getPathRecordSet = (items) => items && items.getMetaData() && items.getMetaData().path;
+            const oldPath = getPathRecordSet(oldItems);
+            const newPath = getPathRecordSet(newItems);
+
+            if (oldItems !== newItems || oldPath !== newPath) {
+               if (oldPath && oldPath.getCount) {
+                  oldPath.unsubscribe('onCollectionItemChange', updateHeadingPathCallback);
+               }
+               if (newPath && newPath.getCount) {
+                  newPath.subscribe('onCollectionItemChange', updateHeadingPathCallback);
+               }
+            }
          }
       };
 
@@ -326,13 +338,8 @@ var
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
          this._canStartDragNDrop = _private.canStartDragNDrop.bind(null, this);
-
+         this._updateHeadingPath = this._updateHeadingPath.bind(this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
-         //process items from options to create a path
-         //will be refactor after new scheme of a data receiving
-         if (cfg.items) {
-            this._breadCrumbsItems = _private.getPath(cfg.items);
-         }
 
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
@@ -415,6 +422,9 @@ var
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
+      },
+      _updateHeadingPath() {
+          this._breadCrumbsItems = _private.getPath(this._items);
       },
       scrollToItem(key: string|number, toBottom: boolean): void {
          this._children.treeControl.scrollToItem(key, toBottom);

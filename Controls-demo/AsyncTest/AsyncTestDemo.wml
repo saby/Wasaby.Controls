@@ -2,66 +2,722 @@
     <Controls.heading:Title caption="Тест асинхронной генерации контролов" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
     <div class="asyncDemo__column">
         <Controls.heading:Title caption="Кейс № 1" readOnly="{{true}}" fontColorStyle="primary" fontSize="3xl"/>
-        <Controls.heading:Title caption="Тест направлен на воспроизведение ошибки неправильного вертикального порядка построения контролов" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <Controls.heading:Title caption="Тесты на отсутствие ошибок неправильной последовательности построения простых контролов" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
         <Controls.heading:Title caption="Примеры ошибок" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
         <div class="asyncDemo__row">
             <Controls.buttons:Button href="{{'https://online.sbis.ru/doc/8cf98f50-73b0-411c-8e9a-3eb365c7362b'}}" readOnly="{{false}}" fontSize="s" inlineHeight="s"  caption="SMOKE автотесты ..." attr:class="asyncDemo__navigationButton"/>
             <Controls.buttons:Button href="{{'https://online.sbis.ru/doc/a7c9d29f-6f93-445c-a125-bc4c3b17deb3'}}" readOnly="{{false}}" fontSize="s" inlineHeight="s"  caption="Пункт С компьютера ..." attr:class="asyncDemo__navigationButton"/>
         </div>
+        <Controls.heading:Title caption="Цель тестирования" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <div class="asyncDemo__row">
+            При одновременном построении синхронных и асинхронных контролов была проблема их правильного позиционирования в dom-дереве: синхронные контролы встраивались после асинхронных.
+        </div>
         <Controls.heading:Title caption="Перейти к тестам" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FAscend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FAscendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FDescend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FDescendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FRandom'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #5" attr:class="asyncDemo__navigationButton"/>
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+            <Controls.heading:Title caption="Тест #1" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>простой контрол с Promise в _beforeMount c setTimeout 0, 200, 400, 600, 800</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>дочерние асинхронные контролы вызываются из цикла в родительском контрол</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FAscend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
 
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FAscend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #6" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FAscendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #7" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FDescend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #8" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FDescendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #9" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FRandom'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #10" attr:class="asyncDemo__navigationButton"/>
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #2" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>простой контрол с Promise в _beforeMount c setTimeout 100, 300, 500, 800, 900</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>дочерние асинхронные контролы вызываются вручную из родительского контрола</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FAscendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
 
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FContainerAsync%252FWithoutAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #11" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FContainerAsync%252FWithAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #12" attr:class="asyncDemo__navigationButton"/>
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #3" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>простой контрол с Promise в _beforeMount c setTimeout 1000, 800, 600, 400, 200</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>дочерние асинхронные контролы вызываются из цикла в родительском контроле</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FDescend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
 
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FTemplate%252FWsPartial'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #13" attr:class="asyncDemo__navigationButton"/>
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #4" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>простой контрол в Promise в _beforeMount c setTimeout 2100, 1900, 1500, 1200, 1000</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>дочерние асинхронные контролы вызываются вручную из родительского контрола</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FDescendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
 
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #5" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>простой контрол с Promise в _beforeMount c setTimeout 2100, 300, 1800, 700, 1500</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>дочерние асинхронные контролы вызываются вручную из родительского контрола</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FPromise%252FRandom'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #5" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #6" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>верстка строится синхронно, значения генерируются в 2-х вложенных циклах</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FContainerAsync%252FWithoutAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #6" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #7" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title, простой контрол с Promise в _beforeMount c setTimeout 1000, 1000, 1000</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>верстка строится асинхронно с помощью Controls.Container.Async, значения генерируются в 2-х вложенных циклах, второй цикл содержит асинхронный вызов дочернего контрола</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FContainerAsync%252FWithAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #7" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #8" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>комбинированный</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>комбинированный</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) вызывается построение дерева с помощью ws:partial temlate=!wml...</div>
+                        <div>2) первый шаблон содержит асинхронный вызов контролов через Controls/heading:Title</div>
+                        <div>3) второй шаблон содержит синхронный вызов контролов</div>
+                        <div>4) третий шаблон содержит асинхронный и асинхронный вызов контролов через Controls/heading:Title</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FTemplate%252FWsPartial'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #8" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
     </div>
 
     <div class="asyncDemo__column">
         <Controls.heading:Title caption="Кейс № 2" readOnly="{{true}}" fontColorStyle="primary" fontSize="3xl"/>
-        <Controls.heading:Title caption="Тест направлен на воспроизведение ошибки неправильного порядка глубины построения контролов" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <Controls.heading:Title caption="Тесты на отсутствие ошибок неправильного порядка глубины построения контролов" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
         <Controls.heading:Title caption="Примеры" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
         <div class="asyncDemo__row">
             <Controls.buttons:Button href="{{'https://online.sbis.ru/doc/cd3c186d-9291-4912-8464-18b9a875ab16'}}" readOnly="{{false}}" fontSize="s" inlineHeight="s"  caption="(layout-chrome) 19.610 schemeeditor" attr:class="asyncDemo__navigationButton"/>
         </div>
 
+        <Controls.heading:Title caption="Цель тестирования" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <div class="asyncDemo__row">
+            Когда часть контролов находились внутри Controls.dragnDrop:Container, последовательное изменение свойств влияющих на дочерние контролов и контролы вне контейнера приводили к их "перекрытию" контролами вне контейнера.
+        </div>
+        <div class="asyncDemo__row">
+            Все тесты можно разделить на 2 подтеста.
+        </div>
+        <div class="asyncDemo__row">
+            В первом, контенером выступает - Controls.dragnDrop:Container
+        </div>
+        <div class="asyncDemo__row">
+            Во втором, контейнером выступает - Controls.scroll:Container
+        </div>
+        <div class="asyncDemo__row">
+            В тестах всегда используется 3 слоя
+        </div>
+        <div class="asyncDemo__row">
+            1 слой - фон - ВНЕ контейнера
+        </div>
+        <div class="asyncDemo__row">
+            2 слой - "сетка" - ВНЕ контейнера
+        </div>
+        <div class="asyncDemo__row">
+            3 слой - "элемент" - В контейнере
+        </div>
+        <div class="asyncDemo__row">
+            "Step 2" вызывает изменения свойства, влияющего  3 слой (условно - 4 слой)
+        </div>
+
         <Controls.heading:Title caption="Перейти к тестам" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest1'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest2'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest3'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest4'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest5'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #5" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest6'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #6" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest7'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #7" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest8'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #8" attr:class="asyncDemo__navigationButton"/>
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #1" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>1 слой, 2 слой, 3 слой, 4 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствуют</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest1'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
 
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #2" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>1 слой, 2 слой, 3 слой, 4 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>асинхронный вызов без задержки</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest2'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #3" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>1 слой, 2 слой, 3 слой, 4 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>Задержка асинхронного вызова:</div>
+                        <div>1 слой - 1000</div>
+                        <div>2 слой - 400</div>
+                        <div>3 слой - 2000</div>
+                        <div>4 слой - 200</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest3'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #4" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>1 слой, 2 слой, 3 слой, 4 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>Задержка асинхронного вызова:</div>
+                        <div>1 слой - 100</div>
+                        <div>2 слой - 500</div>
+                        <div>3 слой - 50</div>
+                        <div>4 слой - 800</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest4'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #5" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>1 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>2 слой, 3 слой, 4 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>Задержка асинхронного вызова:</div>
+                        <div>2 слой - 300</div>
+                        <div>3 слой - 50</div>
+                        <div>4 слой - 800</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest5'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #5" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #6" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>1 слой, 2 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>3 слой, 4 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>Задержка асинхронного вызова:</div>
+                        <div>3 слой - 500</div>
+                        <div>4 слой - 300</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest6'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #6" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #7" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>1 слой, 2 слой, 4 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>3 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>Задержка асинхронного вызова:</div>
+                        <div>3 слой - 500</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest7'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #7" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #8" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>1 слой, 2 слой, 3 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>4 слой</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>Задержка асинхронного вызова:</div>
+                        <div>4 слой - 500</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FDepthAsync%252FTest8'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #8" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
     </div>
-
 
     <div class="asyncDemo__column">
         <Controls.heading:Title caption="Кейс № 3" readOnly="{{true}}" fontColorStyle="primary" fontSize="3xl"/>
-        <Controls.heading:Title caption="Тест направлен на воспроизведение ошибки неправильного порядка горизонтального построения контролов" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+        <Controls.heading:Title caption="Тесты на отсутствие ошибок неправильной последовательности построения контролов, вложенных в другие контролы" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
         <Controls.heading:Title caption="Примеры" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
         <div class="asyncDemo__row">
             <Controls.buttons:Button href="{{'https://online.sbis.ru/doc/f8d272ff-d8c0-447f-8bec-fd3a021fd3b0'}}" readOnly="{{false}}" fontSize="s" inlineHeight="s"  caption="ПРИЕМОЧНЫЕ автотесты ..." attr:class="asyncDemo__navigationButton"/>
         </div>
+        <Controls.heading:Title caption="Цель тестирования" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
+        <div class="asyncDemo__row">
+            При синхронном и асинхронном построении контролов, вложенных в другие контролы (обертки), порядок построения не соблюдался.
+        </div>
+        <div class="asyncDemo__row">
+            Во тестах 6-9 вызывается Controls.heading:Title со значения
+        </div>
+        <div class="asyncDemo__row">
+            _isSearch, _isButton, _isFilterWrapper - эталонный порядок
+        </div>
+        <div class="asyncDemo__row">
+            Важно! _isFilterWrapper, находится внутри "обертки"
+        </div>
         <Controls.heading:Title caption="Перейти к тестам" readOnly="{{true}}" fontColorStyle="primary" fontSize="xl"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FNotAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FDecreaseAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FIncreaseAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
-        <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FRandomAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #1" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>составной контрол с Promise в _beforeMount c setTimeout 0, 200, 400, 600, 800</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) дочерние асинхронные контролы вызываются из цикла в родительском контроле.</div>
+                        <div>2) дочерние контролы содержат в себе другие контролы, в которых вызывается один синхронный Controls/heading:Title и асинхронные простые контролы с различной задержкой</div>
+                        <div>3) задержки для дочерних контролов относительно задержки родительских</div>
+                        <div>0 - 0, 1050, 400</div>
+                        <div>200 - 0, 1000, 450</div>
+                        <div>400 - 0, 950, 500</div>
+                        <div>600 - 0, 900, 550</div>
+                        <div>800 - 0, 850, 600</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FAscend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #1" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
 
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #2" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>составной контрол с Promise в _beforeMount c setTimeout 100, 300, 500, 800, 900</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) дочерние асинхронные контролы вызываются вручную из родительского контрола</div>
+                        <div>2) дочерние контролы содержат в себе другие контролы, в которых вызывается один синхронный Controls/heading:Title и асинхронные простые контролы с различной задержкой</div>
+                        <div>3) задержки для дочерних контролов относительно задержки родительских</div>
+                        <div>100 - 0, 1050, 400</div>
+                        <div>300 - 0, 1000, 450</div>
+                        <div>500 - 0, 950, 500</div>
+                        <div>800 - 0, 900, 550</div>
+                        <div>900 - 0, 850, 600</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FAscendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #2" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #3" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>составной контрол с Promise в _beforeMount c setTimeout 1000, 800, 600, 400, 200</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) дочерние асинхронные контролы вызываются из цикла в родительском контроле</div>
+                        <div>2) дочерние контролы содержат в себе другие контролы, в которых вызывается один синхронный Controls/heading:Title и асинхронные простые контролы с различной задержкой</div>
+                        <div>3) задержки для дочерних контролов относительно задержки родительских</div>
+                        <div>1000 - 0, 1050, 400</div>
+                        <div>800 - 0, 1000, 450</div>
+                        <div>600 - 0, 950, 500</div>
+                        <div>400 - 0, 900, 550</div>
+                        <div>200 - 0, 850, 600</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FDescend'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #3" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #4" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>составной контрол в Promise в _beforeMount c setTimeout 2100, 1900, 1500, 1200, 1000</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) дочерние асинхронные контролы вызываются вручную из родительского контрола</div>
+                        <div>2) дочерние контролы содержат в себе другие контролы, в которых вызывается один синхронный Controls/heading:Title и асинхронные простые контролы с различной задержкой</div>
+                        <div>3) задержки для дочерних контролов относительно задержки родительских</div>
+                        <div>2100 - 0, 1050, 400</div>
+                        <div>1900 - 0, 1000, 450</div>
+                        <div>1500 - 0, 950, 500</div>
+                        <div>1200 - 0, 900, 550</div>
+                        <div>1000 - 0, 850, 600</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FDescendManual'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #4" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #5" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>Controls/heading:Title</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>составной контрол с Promise в _beforeMount c setTimeout 2100, 300, 1800, 700, 1500</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) дочерние асинхронные контролы вызываются вручную из родительского контрола</div>
+                        <div>2) дочерние контролы содержат в себе другие контролы, в которых вызывается один синхронный Controls/heading:Title и асинхронные простые контролы с различной задержкой</div>
+                        <div>3) задержки для дочерних контролов относительно задержки родительских</div>
+                        <div>2100 - 0, 1050, 400</div>
+                        <div>300 - 0, 1000, 450</div>
+                        <div>1800 - 0, 950, 500</div>
+                        <div>700 - 0, 900, 550</div>
+                        <div>1500 - 0, 850, 600</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FColumnAsync%252FDelay%252FNested%252FRandom'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #5" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #6" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>_isSearch, _isButton, _isFilterWrapper</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствуют</div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FNotAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #6" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #7" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>_isSearch, _isButton, _isFilterWrapper</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) дочерние контролы с Promise в _beforeMount, в которых вызывается Controls.heading:Title</div>
+                        <div>2) задержка вызова</div>
+                        <div>_isSearch - 2000</div>
+                        <div>_isButton - 1000</div>
+                        <div>_isFilterWrapper - 500</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FDecreaseAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #7" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #8" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>_isSearch, _isButton, _isFilterWrapper</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) дочерние контролы с Promise в _beforeMount, в которых вызывается Controls.heading:Title</div>
+                        <div>2) задержка вызова</div>
+                        <div>_isSearch - 400</div>
+                        <div>_isButton - 1200</div>
+                        <div>_isFilterWrapper - 2500</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FIncreaseAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #8" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="asyncDemo__row">
+            <div class="asyncDemo__column">
+                <Controls.heading:Title caption="Тест #9" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Синхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>отсутствует</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Асинхронный вызов:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div>_isSearch, _isButton, _isFilterWrapper</div>
+                </div>
+                <div class="asyncDemo__rowLimited">
+                    <Controls.heading:Title caption="Особенность:" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l" attr:class="asyncDemo__rowHeading"/>
+                    <div class="asyncDemo__column">
+                        <div>1) дочерние контролы с Promise в _beforeMount, в которых вызывается Controls.heading:Title</div>
+                        <div>2) задержка вызова</div>
+                        <div>_isSearch - 900</div>
+                        <div>_isButton - 2000</div>
+                        <div>_isFilterWrapper - 600</div>
+                    </div>
+                </div>
+            </div>
+            <div class="asyncDemo__buttonContainer">
+                <Controls.buttons:Button href="{{'/Controls-demo/app/Controls-demo%252FAsyncTest%252FRowAsync%252FRandomAsync'}}" readOnly="{{false}}" fontSize="xl" inlineHeight="2xl" caption="Перейти к тесту #9" attr:class="asyncDemo__navigationButton"/>
+            </div>
+        </div>
+        <hr/>
     </div>
-
 </div>
+
