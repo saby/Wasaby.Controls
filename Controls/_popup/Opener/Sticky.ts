@@ -381,7 +381,7 @@ export default Sticky;
 
 /**
  * @typedef {Object} fittingMode
- * @description Опция {@link Controls/_popup/Opener/Sticky Sticky}, определеяющая поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+ * @description Тип опции fittingMode, определеяющей поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
  * @property {fittingModeValue} vertical
  * @property {fittingModeValue} horizontal
  */
