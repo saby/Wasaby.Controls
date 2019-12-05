@@ -3,9 +3,10 @@ define(
       'Controls/list',
       'Types/source',
       'Controls/context',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Types/collection'
    ],
-   function(lists, sourceLib, contexts, Deferred) {
+   function(lists, sourceLib, contexts, Deferred, collection) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -373,5 +374,42 @@ define(
             assert.deepEqual(self._filter, {testParentProperty: 'test'});
 
          });
+         it('_private.isEqualItems', function() {
+
+            var collectionData = [{
+               'id': 1,
+               'title': 'Отдел',
+               'parent': null,
+               'parent@': true,
+               'group': '1'
+            }, {
+               'id': 2,
+               'title': 'Компания',
+               'parent': null,
+               'parent@': null,
+               'group': '1'
+            }];
+
+            var source1 = new collection.RecordSet({
+               rawData: collectionData,
+               keyProperty: 'id'
+            });
+
+            var source2 = new collection.RecordSet({
+               rawData: collectionData,
+               keyProperty: 'id'
+            });
+
+            var source3 = new collection.RecordSet({
+               rawData: collectionData,
+               keyProperty: 'objectId'
+            });
+
+            assert.equal(lists.DataContainer._private.isEqualItems(source1, source2), true);
+
+            assert.equal(lists.DataContainer._private.isEqualItems(source1, source3), false);
+
+         });
+
       });
    });
