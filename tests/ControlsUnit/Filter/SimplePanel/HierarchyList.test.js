@@ -107,9 +107,11 @@ define(
 
             // item click without selection
             list._itemClickHandler({}, '0', ['1']);
-            assert.deepStrictEqual(itemClickResult, {'0': ['1'], '-1': []});
+            assert.deepStrictEqual(itemClickResult, {'0': ['1']});
 
             //checkbox click
+            list._selectionChanged = true;
+            list._selectedKeys = {'0': ['1'], '-1': []};
             list._itemClickHandler({}, '-1', ['5']);
             assert.deepStrictEqual(checkBoxClickResult, {'0': ['1'], '-1': ['5']});
 

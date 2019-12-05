@@ -22,6 +22,7 @@
               items="{{_nodeItems[index]}}"
               selectorItems="{{_options.selectorItems}}"
               selectorSelectedKeys="{{_flatSelectedKeys}}"
+              selectionChanged="{{_selectionChanged}}"
               showSeparator="{{false}}"
               on:itemClick="_itemClickHandler(index)"
               on:checkBoxClick="_checkBoxClickHandler(index)"

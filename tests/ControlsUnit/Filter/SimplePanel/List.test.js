@@ -90,6 +90,7 @@ define(
             // item click with selection
             let newConfig = {...defaultConfig, selectedKeys: ['1', '3']};
             list._beforeUpdate(newConfig);
+            list._selectionChanged = true;
             list._itemClickHandler(event, defaultItems.at(2)); // click on '3'
             assert.deepStrictEqual(checkBoxClickResult, ['1']);
 
