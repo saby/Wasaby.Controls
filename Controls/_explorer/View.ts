@@ -217,10 +217,10 @@ var
 
             if (oldItems !== newItems || oldPath !== newPath) {
                if (oldPath && oldPath.getCount) {
-                  oldPath.unsubscribe('onCollectionChange', updateHeadingPathCallback);
+                  oldPath.unsubscribe('onCollectionItemChange', updateHeadingPathCallback);
                }
                if (newPath && newPath.getCount) {
-                  newPath.subscribe('onCollectionChange', updateHeadingPathCallback);
+                  newPath.subscribe('onCollectionItemChange', updateHeadingPathCallback);
                }
             }
          }
