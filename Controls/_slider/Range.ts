@@ -2,9 +2,11 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ISlider, ISliderOptions} from './interface/ISlider';
+import Slider from './Slider';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import { SyntheticEvent } from 'Vdom/Vdom';
+import coreMerge = require('Core/core-merge');
 
 export interface ISliderRangeOptions extends IControlOptions, ISliderOptions {
    startValue: number;
@@ -86,7 +88,7 @@ const maxPercentValue = 100;
  */
 
 
-class Range extends Control<ISliderRangeOptions> implements ISlider {
+class Range extends Slider implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
@@ -126,13 +128,6 @@ class Range extends Control<ISliderRangeOptions> implements ISlider {
       if (opts.startValue > opts.endValue) {
           Logger.error('Slider', 'startValue must be less than or equal to endValue.', this);
       }
-   }
-
-   private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-      const targetX = Utils.getNativeEventPageX(event);
-      const box = this._children.area.getBoundingClientRect();
-      const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
-      return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
    }
 
    private _needUpdate(oldOpts: ISliderRangeOptions, newOpts: ISliderRangeOptions): boolean {
@@ -202,27 +197,6 @@ class Range extends Control<ISliderRangeOptions> implements ISlider {
       }
    }
 
-   private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
-      if (!this._options.readOnly) {
-         this._tooltipPosition = this._getValue(event);
-         this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
-            : this._tooltipPosition;
-      }
-   }
-
-   private _onMouseLeave(event: SyntheticEvent<MouseEvent>): void {
-      if (!this._options.readOnly) {
-         this._tooltipValue = null;
-         this._tooltipPosition = null;
-      }
-   }
-
-   private _onMouseUp(event: SyntheticEvent<MouseEvent>): void  {
-      if (!this._options.readOnly) {
-         this._isDrag = false;
-      }
-   }
-
    private _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
@@ -239,34 +213,20 @@ class Range extends Control<ISliderRangeOptions> implements ISlider {
 
    static _theme: string[] = ['Controls/slider'];
 
-   static getDefaultOptions(): object {
-      return {
+   static getDefaultOptions() {
+      return coreMerge({
          theme: 'default',
-         size: 'm',
-         borderVisible: false,
-         minValue: undefined,
-         maxValue: undefined,
-         scaleStep: undefined,
          startValue: undefined,
          endValue: undefined,
-         precision: 0
-      };
-   }
+      }, Slider.getDefaultOptions());
 
-   static getOptionTypes(): object {
-      return {
-         size: EntityDescriptor(String).oneOf([
-            's',
-            'm'
-         ]),
-         borderVisible: EntityDescriptor(Boolean),
-         minValue: EntityDescriptor(Number).required,
-         maxValue: EntityDescriptor(Number).required,
-         scaleStep: EntityDescriptor(Number),
+   }
+   static getOptionTypes()  {
+      return coreMerge({
          startValue: EntityDescriptor(Number),
          endValue: EntityDescriptor(Number),
-         precision: EntityDescriptor(Number)
-      };
+      }, Slider.getOptionTypes());
+
    }
 }
 export default Range;
