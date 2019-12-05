@@ -109,13 +109,13 @@ define([
              isUnSubscribed = false,
              _updateHeadingPath = () => {},
              subscribe = (eName, fn) => {
-                if (eName === 'onCollectionChange') {
+                if (eName === 'onCollectionItemChange') {
                    isSubscribed = true;
                    assert.equal(fn, _updateHeadingPath);
                 }
              },
              unsubscribe = (eName, fn) => {
-                if (eName === 'onCollectionChange') {
+                if (eName === 'onCollectionItemChange') {
                    isUnSubscribed = true;
                    assert.equal(fn, _updateHeadingPath);
                 }
