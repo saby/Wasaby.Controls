@@ -66,15 +66,9 @@ define([
                sandbox = sinon.createSandbox(),
                control = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
-            control._children = {
-               scroll: {
-                  setShadowMode: sinon.fake()
-               }
-            };
             sandbox.stub(control, '_canScroll').returns([true]);
             sandbox.stub(control, '_scrollToDate');
             control._afterMount();
-            sinon.assert.called(control._children.scroll.setShadowMode);
             sinon.assert.called(control._scrollToDate);
             sandbox.restore();
          });
@@ -126,20 +120,43 @@ define([
                position2 = new Date(2019, 0, 1),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
-            sandbox.stub(ml, '_canScroll').returns([true]);
-            sandbox.stub(ml, '_findElementByDate').returns([true]);
+            sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_findElementByDate').returns(null);
             ml._children.months = { reload: sinon.fake() };
             ml._container = {};
 
             ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position1 }));
             ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position2 }));
-            assert.isNull(ml._positionToScroll);
+            assert.strictEqual(+ml._positionToScroll, +position1);
+            assert.strictEqual(ml._displayedPosition, position1);
+            assert.strictEqual(ml._lastPositionFromOptions, position2);
+            assert.equal(ml._startPositionId, '2018-01-01');
+            sinon.assert.notCalled(ml._children.months.reload);
+            sandbox.restore();
+         });
+
+         it('should scroll to position immediately without changing position if item already rendered', function () {
+            let
+               sandbox = sinon.createSandbox(),
+               position1 = new Date(2018, 0, 1),
+               position2 = new Date(2019, 0, 1),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
+
+            sandbox.stub(ml, '_canScroll').returns(true);
+            sandbox.stub(ml, '_findElementByDate').returns(null);
+            ml._children.months = { reload: sinon.fake() };
+            ml._container = {};
+
+            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position1 }));
+            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position2 }));
+            assert.strictEqual(+ml._positionToScroll, +position1);
             assert.strictEqual(ml._displayedPosition, position1);
             assert.strictEqual(ml._lastPositionFromOptions, position2);
             assert.equal(ml._startPositionId, '2017-01-01');
             sinon.assert.notCalled(ml._children.months.reload);
             sandbox.restore();
          });
+
       });
 
       describe('_afterUpdate', function() {

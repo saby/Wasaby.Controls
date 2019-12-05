@@ -302,7 +302,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
             }
          },
 
-         _mouseenterHandler: function() {
+         _closeSubMenu: function() {
             if (this._hasHierarchy) {
                this._children.subDropdownOpener.close();
             }

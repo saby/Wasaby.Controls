@@ -146,9 +146,11 @@ var MAX_NUMBER_ITEMS = 5;
          _private.updateOldFavoriteList(self);
          if (index !== -1) {
             // add to history and set pin
-            _private.getSource(self._options.historyId).update(record.getRawData(), { $_addFromData: true }).addCallback((ObjectId) => {
+            const hSource = _private.getSource(self._options.historyId);
+            hSource.update(self._editItem, { $_pinned: !self._editItem.get('pinned') }); // unpin for local history data
+            hSource.update(record.getRawData(), { $_addFromData: true }).addCallback((ObjectId) => {
                self._editItem.set('ObjectId', ObjectId);
-               _private.getSource(self._options.historyId).update(self._editItem, {
+               hSource.update(self._editItem, {
                   $_pinned: true,
                   isClient: record.get('isClient')
                });
