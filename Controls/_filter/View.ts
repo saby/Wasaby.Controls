@@ -35,7 +35,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * 
  * @see Controls/filterPopup:SimplePanel
  * @see Controls/filterPopup:DetailPanel
- * @see Controls/filter:FastContainer
+ * @see Controls/filter:ViewContainer
  */
 
 /*
