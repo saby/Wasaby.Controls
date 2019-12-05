@@ -1,8 +1,7 @@
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import cClone = require('Core/core-clone');
 
-export default {
-    loadSavedConfig(propStorageId: string, propNames: string[]): Promise {
+export function loadSavedConfig(propStorageId: string, propNames: string[]): Promise {
         return new Promise((resolve) => {
             let loadedCfg = {};
             getSettings([propStorageId]).then((storage) => {
@@ -20,9 +19,9 @@ export default {
                 resolve(loadedCfg);
             });
         });
-    },
+    }
 
-    saveConfig(propStorageId: string, propNames: string[], cfg): void {
+export function saveConfig(propStorageId: string, propNames: string[], cfg): void {
         if (propStorageId) {
             let configToSave = {};
             if (propNames) {
@@ -35,4 +34,3 @@ export default {
             }
         }
     }
-};

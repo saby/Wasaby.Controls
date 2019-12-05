@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import ListControlTpl = require('wml!Controls/_list/ListControl/ListControl');
-import * as PropStorageUtil from 'Controls/Utils/PropStorageUtil';
+import {saveConfig} from 'Controls/Utils/PropStorageUtil';
 import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
 
@@ -28,8 +28,8 @@ import {isEqual} from 'Types/object';
 var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype */{
     _template: ListControlTpl,
     _beforeUpdate(cfg) {
-        if (!isEqual(cfg.sorting, this._options.sorting)) {
-            PropStorageUtil.saveConfig(cfg.propStorageId, ['sorting'], cfg);
+        if (cfg.propStorageId && !isEqual(cfg.sorting, this._options.sorting)) {
+            saveConfig(cfg.propStorageId, ['sorting'], cfg);
         }
     },
     reload: function () {

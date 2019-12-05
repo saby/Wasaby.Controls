@@ -1,11 +1,10 @@
 define([
    'Controls/Utils/PropStorageUtil',
    'Controls/Application/SettingsController'
-], function (PropStorageUtil_, SettingsController) {
+], function (PropStorageUtil, SettingsController) {
    'use strict';
 
    describe('PropStorageUtil', function() {
-      var PropStorageUtil = PropStorageUtil_.default;
       var origSettingsController = {...SettingsController};
       var mockedSettingsController = {
          storage: {
