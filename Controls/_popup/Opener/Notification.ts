@@ -1,6 +1,7 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
+import coreMerge = require('Core/core-merge');
 
 /**
  * Контрол, открывающий окно, которое позиционируется в правом нижнем углу окна браузера. Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
@@ -157,49 +158,39 @@ const BASE_OPTIONS = {
     autoClose: true
 };
 
+const clearPopupIds = (self) : void => {
+    if (!self.isOpened()) {
+        self._notificationId = null;
+    }
+};
+
+const compatibleOpen = (popupOptions): Promise<string> => {
+    const config = BaseOpener.getConfig({}, popupOptions);
+    delete config.id;
+    return new Promise((resolve) => {
+        Promise.all([
+            BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
+            BaseOpener.requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
+            BaseOpener.requireModule('Controls/compatiblePopup:OldNotification'),
+            BaseOpener.requireModule(config.template)
+        ]).then((results) => {
+            const BaseOpenerCompat = results[0], InformationPopupManager = results[1];
+            config.template = results[3];
+            const compatibleConfig = getCompatibleConfig(BaseOpenerCompat, config);
+            const popupId = InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide);
+            resolve(popupId);
+        });
+    });
+};
+
+const getCompatibleConfig = (BaseOpenerCompat, config) => {
+    const cfg = BaseOpenerCompat.prepareNotificationConfig(config);
+    cfg.notHide = !cfg.autoClose;
+    return cfg;
+};
+
 class Notification extends BaseOpener {
     _notificationId: string = '';
-
-    private _clearPopupIds(self) : void {
-        if (!self.isOpened()) {
-            self._notificationId = null;
-        }
-    }
-
-    private static _compatibleNotificationOpen(popupOptions): Promise<string> {
-        const config = BaseOpener.getConfig({}, popupOptions);
-        delete config.id;
-        return new Promise((resolve) => {
-            Promise.all([
-                BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
-                BaseOpener.requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
-                BaseOpener.requireModule('Controls/compatiblePopup:OldNotification'),
-                BaseOpener.requireModule(config.template)
-            ]).then((results) => {
-                const BaseOpenerCompat = results[0], InformationPopupManager = results[1];
-                config.template = results[3];
-                const compatibleConfig = Notification._getCompatibleConfig(BaseOpenerCompat, config);
-                const popupId = InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide);
-                resolve(popupId);
-            });
-        });
-    }
-
-    static _getCompatibleConfig(BaseOpenerCompat, config) {
-        const cfg = BaseOpenerCompat.prepareNotificationConfig(config);
-        cfg.notHide = !cfg.autoClose;
-        return cfg;
-    }
-
-    private _compatibleClose(self) : void {
-        // Close popup on old page
-        if (!isNewEnvironment()) {
-            if (self._notificationId && self._notificationId.close) {
-                self._notificationId.close();
-            }
-            self._notificationId = null;
-        }
-    }
 
     isOpened(): boolean {
         return !!ManagerController.find(this._notificationId);
@@ -207,7 +198,7 @@ class Notification extends BaseOpener {
 
     open(popupOptions) {
         const config = {...this._options, ...popupOptions};
-        this._clearPopupIds(this);
+        clearPopupIds(this);
         config.id = this._notificationId;
         return Notification.openPopup(config, this._notificationId).then((popupId) => {
             this._notificationId = popupId;
@@ -232,9 +223,8 @@ class Notification extends BaseOpener {
                         resolve(popupId);
                     });
                 });
-
             } else {
-                Notification._compatibleNotificationOpen(newConfig).then((popupId: string) => {
+                compatibleOpen(newConfig).then((popupId: string) => {
                     resolve(popupId);
                 });
             }
@@ -245,9 +235,22 @@ class Notification extends BaseOpener {
         BaseOpener.closeDialog(popupId);
     }
 
-     static getDefaultOptions() : object {
-        const baseOpenerOptions = BaseOpener.getDefaultOptions();
-        return {...baseOpenerOptions, ...BASE_OPTIONS};
+    static getDefaultOptions() {
+         return coreMerge(BaseOpener.getDefaultOptions(), BASE_OPTIONS);
+    }
+
+    private _compatibleClose(self) : void {
+        // Close popup on old page
+        if (!isNewEnvironment()) {
+            if (self._notificationId && self._notificationId.close) {
+                self._notificationId.close();
+            }
+            self._notificationId = null;
+        }
+    }
+
+    private _getCompatibleConfig(BaseOpenerCompat, config) {
+        return getCompatibleConfig(BaseOpenerCompat, config);
     }
 }
 

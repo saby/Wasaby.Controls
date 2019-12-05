@@ -128,14 +128,14 @@ define(
                autoClose: true
             };
 
-            popup.Notification._getCompatibleConfig({
+            popup.Notification.prototype._getCompatibleConfig({
                prepareNotificationConfig: function(config) {
                   return config;
                }
             }, cfg);
             assert.equal(cfg.notHide, false);
             cfg.autoClose = false;
-            popup.Notification._getCompatibleConfig({
+            popup.Notification.prototype._getCompatibleConfig({
                prepareNotificationConfig: function(config) {
                   return config;
                }
