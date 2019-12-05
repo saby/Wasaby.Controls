@@ -26,7 +26,7 @@ export default class extends Control {
 
     private _itemsReady(items) {
         this._items = items;
-    },
+    }
 
     private _dragStart(_, items) {
         let hasBadItems = false;
@@ -43,7 +43,7 @@ export default class extends Control {
             image: firstItem.get('image'),
             additionalText: firstItem.get('additional')
         });
-    },
+    }
 
     private _dragEnd(_, entity, target, position) {
         this._children.listMover.moveItems(entity.getItems(), target, position);
