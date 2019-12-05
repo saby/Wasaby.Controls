@@ -16,6 +16,7 @@
             <div class="demo-MonthList__content-block-header">Custom templates and source, viewMode: year</div>
             <div class="demo-MonthList__monthList-header">{{_yearHeader}}</div>
             <Controls.calendar:MonthList
+               displayedRanges="{{_displayedRanges2}}"
                name="yearsMonthList"
                bind:position="_year"
                source="{{_source}}"
