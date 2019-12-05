@@ -270,7 +270,7 @@ var _private = {
         return options.hasOwnProperty('selectedKeysCount');
     },
 
-    resolveIndicatorStateAfterReload: function(self, list, navigation):void {
+    resolveIndicatorStateAfterReload: function(self, list, navigation, direction: 'down' | 'up' | 'all' = 'all'):void {
         if (!self._isMounted) {
             return;
         }
@@ -282,7 +282,8 @@ var _private = {
             const needShowIndicatorByNavigation =
                 (navigation && navigation.view === 'maxCount') ||
                 self._needScrollCalculation;
-            const needShowIndicatorByMeta = hasMoreDataDown || hasMoreDataUp;
+            const hasDataToDirection = direction === 'down' && hasMoreDataDown || direction === 'up' && hasMoreDataUp;
+            const needShowIndicatorByMeta = direction === 'all' ? hasMoreDataDown || hasMoreDataUp : hasDataToDirection;
 
             // because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             // otherwise empty template will shown
@@ -449,7 +450,7 @@ var _private = {
             if (userCallback && userCallback instanceof Function) {
                 userCallback(addedItems, direction);
             }
-            _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
+            _private.resolveIndicatorStateAfterReload(self, addedItems, navigation, direction);
 
             if (self._options.virtualScrolling && self._isMounted) {
                 self._children.scrollController.itemsFromLoadToDirection = true;
