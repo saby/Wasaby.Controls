@@ -5,9 +5,9 @@ import {constants} from 'Env/Env'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksPhoto'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksDescription'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksReceived'
-import * as Images 'Controls-demo/DragNDrop/Images';
-import * as itemTpl 'wml!Controls-demo/grid/_resources/CellTemplates/CellWithBgc';
-import * as itemCountr 'wml!Controls-demo/grid/_resources/CellTemplates/CountryTemp';
+import * as Images from 'Controls-demo/DragNDrop/Images';
+import * as itemTpl from 'wml!Controls-demo/grid/_resources/CellTemplates/CellWithBgc';
+import * as itemCountr from 'wml!Controls-demo/grid/_resources/CellTemplates/CountryTemp';
 
 
 
