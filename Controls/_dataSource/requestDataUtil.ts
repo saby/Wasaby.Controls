@@ -13,7 +13,7 @@ import {SbisService} from 'Types/source';
 type HistoryItems = object[];
 
 interface ISorting {
-   sorting: Array<Object>;
+   sorting: object[];
 }
 interface IFilter {
    filter: Record<string, unknown>;
