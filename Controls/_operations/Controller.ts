@@ -30,7 +30,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
  * @public
  */
 
-export = class MultiSelector extends Control {
+export default class MultiSelector extends Control {
    protected _template: TemplateFunction = template;
    protected _selectedKeysCount: number|null;
    private _notifyHandler: Function = tmplNotify;
