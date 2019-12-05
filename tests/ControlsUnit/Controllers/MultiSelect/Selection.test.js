@@ -22,7 +22,7 @@ define([
             items: items,
             keyProperty: 'id',
             listModel: new list.ListViewModel({items: config && config.items || items}),
-            selectionStrategy: new operations.FlatSelectionStrategy()
+            selectionStrategy: new operations.FlatSelectionStrategy({})
          }, config || {});
       }
 
@@ -299,7 +299,7 @@ define([
          cfg = getConfig({
             selectedKeys: [1],
             listModel: new treeGrid.ViewModel({columns: [], items: items}),
-            selectionStrategy: new operations.DeepTreeSelectionStrategy()
+            selectionStrategy: new operations.DeepTreeSelectionStrategy({})
          });
          selectionInstance = new operations.Selection(cfg);
          selectionInstance.updateSelectionForRender();

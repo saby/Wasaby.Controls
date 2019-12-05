@@ -259,91 +259,8 @@
  */
 
 /**
- * @typedef {Object} Column
- * @property {String} width Ширина колонки.
- * В качестве значения свойства можно указать пиксели (px), проценты (%), доли (1fr), "auto", "minmax", "max-content" и "min-content".
- * В значении "auto" ширина колонки устанавливается автоматически исходя из типа и содержимого элемента.
- * В значении "minmax(,)" ширина колонки устанавливается автоматически в рамках заданного интервала. Например, "minmax(600px, 1fr)" означает, что минимальная ширина колонки 600px, а максимальная — 1fr.
- * В значении "max-content" ширина колонки устанавливается автоматически в зависимости от самой большой ячейки. Например, если в первой строке ширина ячейки 100px, а во второй строке — 200px, тогда ширина колонки будет определена как 200px.
- * В значении "min-content" ширина колонки устанавливается автоматически в зависимости от самого маленького ячейки. Например, если в первой строке ширина ячейки 100px, а во второй строке — 200px, тогда ширина колонки будет определена как 100px.
- * Для браузеров, которые не поддерживают технологию <a href="https://developer.mozilla.org/ru/docs/web/css/css_grid_layout">CSS Grid Layout</a>, не работает ширина колонки, указанная в долях, "auto" или "minmax". Для таких браузеров используйте свойство compatibleWidth.
- * @property {String} compatibleWidth Ширина колонки в браузерах, не поддерживающих "CSS Grid Layout".
- * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
- * @property {String} displayProperty Имя поля, данные которого отображаются в колонке.
- * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
- * О создании пользовательского шаблона читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">здесь</a>.
- * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
- * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
- * @property {String} [align=left] Выравнивание содержимого ячейки по горизонтали.
- * Доступные значения:
- * 
- * * **left** — по левому краю.
- * * **center** — по центру.
- * * **right** — по правому краю.
- * @property {String} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
- * Доступные значения:
- * 
- * * **top** — по верхнему краю.
- * * **center** — по центру.
- * * **bottom** — по нижнему краю.
- * * **baseline** — по базовой линии (см. {@link https://developer.mozilla.org/ru/docs/Web/CSS/align-items align-items}).
- * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
- * @property {String} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
- * Доступные значения:
- * * * **ellipsis** — текст обрезается, и в конец строки добавляется многоточие.
- * * **none** — стандартное поведение при незаданном свойстве.
- * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
- * <pre>
- * columns: [{
- *    width: '1fr',
- *    cellPadding: {
- *        left: 'M', 
- *        right: 'M' 
- *    }
- * },
- * {
- *    width: '1fr',
- *    cellPadding: { 
- *        left: 'S',
- *        right: 'S' 
- *    }
- * }]
- * </pre>
- */
-
-/**
- * @typedef {Object} CellPadding
- * @property {HorizontalCellPaddingEnum} [left=null] Отступ от левой границы ячейки.
- * @property {HorizontalCellPaddingEnum} [right=null] Отступ от правой границы ячейки.
- */
-
-/**
- * @typedef {Object} HorizontalCellPaddingEnum
- * @variant S Небольшой отступ.
- * @variant M Средний отступ.
- * @variant null Нулевой отступ.
- * @default null
- */
-
-/*
- * @typedef {Object} Column
- * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) or fraction (for example 1fr) and the value “auto”. The width specified in fr, "auto" and "minmax" will not be applied in browsers that do not support "CSS Grid Layout", in this case use the compatibleWidth option.
- * @property {String} [compatibleWidth] Column width in browsers that do not support CSS Grid Layout. Only pixels (px), percent (%) can be specified as the option value. If not set, the value "auto" is used.
- * @property {String} [displayProperty] Name of the field that will shown in the column by default.
- * @property {String} [template] Template for cell rendering.
- * @property {String} [resultTemplate] Template for cell rendering in results row. CSS class controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields.
- * @property {GridCellAlign} [align] Horizontal cell content align.
- * @property {GridCellVAlign} [valign] Vertical cell content align.
- * @property {String} [stickyProperty] The name of the field used to sticking the column data.
- * @property {String} [textOverflow=none] Defines the visibility parameters of the text in the block, if the entire text does not fit in the specified area.
- * 
- * * **ellipsis** — the text is clipped and an ellipsis is added to the end of the line.
- * * **none** — standard behavior, as if the property is not set.
- */
-
-/**
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {Array.<Column>} Описывает колонки таблицы.
+ * @cfg {Array.<Controls/_grid/interface/IColumn>} Описывает колонки таблицы. Колонки объекты реализующие интерфейс {@link Controls/_grid/interface/IColumn IColumn}
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark Перед отрисовкой убедитесь, что {@link Types/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example
@@ -506,7 +423,7 @@
  * @cfg {String} Устанавливает положение строки итогов.
  * @remark
  * Доступные значения:
- * 
+ *
  * * **top** — над списком.
  * * **bottom** — под списком.
  * * **undefined** — строка итогов скрыта.
@@ -528,7 +445,7 @@
  * @cfg {String} Устанавливает режим отображения строки итогов.
  * @remark
  * Доступные значения:
- * 
+ *
  * * **hasdata** — отображается при наличии более 1 записи в списке.
  * * **visible** — отображается всегда, вне зависимости от количества записей в списке.
  * @default hasData

@@ -118,7 +118,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             });
          });
 
-         it('_mouseenterHandler', function() {
+         it('_closeSubMenu', function() {
             let dropDownConfig = getDropDownConfig();
             let dropDownList = getDropDownListWithConfig(dropDownConfig),
                closed = false,
@@ -126,11 +126,11 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   closed = true;
                };
             dropDownList._children = {subDropdownOpener: { close: closeHandler } };
-            dropDownList._mouseenterHandler();
+            dropDownList._closeSubMenu();
             assert.isFalse(closed);
 
             dropDownList._hasHierarchy = true;
-            dropDownList._mouseenterHandler();
+            dropDownList._closeSubMenu();
             assert.isTrue(closed);
          });
 
@@ -450,11 +450,23 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropdownList._beforeMount(config);
             assert.isFalse(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
-            // multiSelect = true && has selected items
+            // multiSelect = true && has selected items  && click on unselected item
             config.multiSelect = true;
             config.selectedKeys = [3];
             dropdownList._beforeMount(config);
-            assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+            assert.isTrue(!dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+
+            // multiSelect = true && has selected items && click on checkbox
+            isCheckBox = true;
+            config.selectedKeys = [2, 3];
+            dropdownList._beforeMount(config);
+            assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(4)));
+
+            // multiSelect = true && has selected items && click on checkbox
+            isCheckBox = true;
+            config.selectedKeys = [2, 3];
+            dropdownList._beforeMount(config);
+            assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(2)));
 
             // multiSelect = true && click on checkbox
             isCheckBox = true;
@@ -501,7 +513,8 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropdownList._beforeMount(config);
             let resizeEventFired = false;
             let result,
-               event = { target: { closest: () => { return false; } } };
+               event1 = { target: { closest: () => { return false; } } },
+               event2 = { target: { closest: () => { return true; } } };
             dropdownList._notify = function(e, d) {
                if (e === 'sendResult') {
                   result = d[0];
@@ -512,13 +525,20 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                }
             };
             let expectedResult = {
-               event:  event,
+               event:  event1,
                action: 'itemClick',
                data: [items.at(1)]
             };
-            dropdownList._itemClickHandler(event, items.at(1));
+            dropdownList._itemClickHandler(event1, items.at(1));
+            assert.deepEqual(dropdownList._listModel.getSelectedKeys(), [3]);
+
+            dropdownList._itemClickHandler(event2, items.at(1));
             assert.deepEqual(dropdownList._listModel.getSelectedKeys(), [3, 2]);
             assert.isTrue(dropdownList._needShowApplyButton);
+
+            config.selectedKeys = [2, 3];
+            dropdownList._itemClickHandler(event2, items.at(1));
+            assert.deepEqual(result, expectedResult);
 
             //resize event fired after control update
             dropdownList._beforeUpdate(config);
@@ -527,13 +547,13 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
             config.selectedKeys = [];
             dropdownList._beforeMount(config);
-            dropdownList._itemClickHandler(event, items.at(1));
+            dropdownList._itemClickHandler(event1, items.at(1));
             assert.deepEqual(result, expectedResult);
 
             config.selectedKeys = undefined;
             dropdownList._needShowApplyButton = undefined;
             dropdownList._beforeMount(config);
-            dropdownList._itemClickHandler(event, items.at(1));
+            dropdownList._itemClickHandler(event1, items.at(1));
             assert.deepEqual(result, expectedResult);
             assert.isUndefined(dropdownList._needShowApplyButton);
          });

@@ -22,12 +22,12 @@ function destroyHistorySource(historyId) {
 function createHistorySource(cfg) {
    var historySourceData = {
       historyId: cfg.historyId,
-      pinned: cfg.pinned !== undefined ? cfg.pinned : true,
+      pinned: true,
 
       /* A record about resets filters is stored in the history, but it is not necessary to display it in the history list.
          We request one more record, so that the number of records remains equal to 10 */
       recent: (Constants[cfg.recent] || Constants.MAX_HISTORY) + 1,
-
+      favorite: cfg.favorite,
       dataLoaded: true
    };
    return new HistorySource({

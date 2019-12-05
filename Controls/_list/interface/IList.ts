@@ -544,7 +544,9 @@
  */
 
 /**
- * Перезагружает данные из источника данных.
+ * Перезагружает данные из источника данных. 
+ * При перезагрузке в фильтр уходит список развернутых узлов (с целью восстановить пользователю структуру, которая была до перезагрузки). 
+ * В дальнейшем также планируется передавать навигацию, в настоящее время этот функционал в разработке.
  * @function 
  * @name Controls/_list/interface/IList#reload
  */
@@ -787,3 +789,16 @@
  * @name Controls/_list/interface/IList#itemPadding
  */
 
+/**
+ * @typedef {Object} SelectionStrategy
+ * @property {String} name Класс со стратегией выбора.
+ * @property {Object} options Опции для стратегии выбора.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#selectionStrategy
+ * @cfg {SelectionStrategy} Стратегия выбора задает логику поведения при отметке записей в режиме множественого выбора.
+ * @remark Опция актуальна только при multiSelectVisibility: true.
+ * @default Controls/operations:FlatSelectionStrategy
+ * @see Controls/operations:TreeSelectionStrategy
+ */

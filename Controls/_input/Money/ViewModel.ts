@@ -1,6 +1,7 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import NumberViewModel = require('Controls/_input/Number/ViewModel');
 
+import toString from 'Controls/Utils/Formatting/toString';
 import {parse} from 'Controls/_input/Number/parse';
 import {format} from 'Controls/_input/Number/format';
 import {decimalSplitter} from 'Controls/_input/Number/constant';
@@ -19,7 +20,7 @@ class ViewModel extends BaseViewModel {
     }
 
     protected _convertToDisplayValue(value: string | number): string {
-        const displayValue = super._convertToDisplayValue(value).toString();
+        const displayValue = toString(value);
 
         return format(parse(displayValue), this._options, displayValue.length).value;
     }

@@ -1,4 +1,19 @@
 export type IDirection = 'up' | 'down';
+export interface IVirtualScrollConfig {
+    pageSize: number;
+    segmentSize: number;
+    itemHeightProperty: string;
+    viewportHeight: string;
+}
+
+/**
+ * @typedef {object} IVirtualScrollMode
+ * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
+ * @property{IVirtualScrollMode} mode Режим скрытия записей в виртуальном скроллинге
+ * @property {number} viewportHeight Высота вьюпорта контейнера в котором лежит список
+ * @property {number}segmentSize Количество подгружаемых элементов при скроллировании
+ * @property {string} itemHeightProperty Поле в элементе, которое содержит его высоту для оптимистичного рендеринга
+ */
 
 /**
  * Интерфейс для поддержки виртуального скроллирования в списках.
@@ -31,6 +46,7 @@ export type IDirection = 'up' | 'down';
  */ 
 
 /**
+ * @deprecated
  * @name Controls/_list/interface/IVirtualScroll#virtualPageSize
  * @cfg {Number} Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
  * @default 100
@@ -57,6 +73,7 @@ export type IDirection = 'up' | 'down';
  */
 
 /**
+ * @deprecated
  * @name Controls/_list/interface/IVirtualScroll#virtualSegmentSize
  * @cfg {number} Количество подгружаемых элементов при скроллировании
  * @remark Если опция не задана, то virtualSegmentSize высчитывается по формуле virtualPageSize / 4.
@@ -70,7 +87,13 @@ export type IDirection = 'up' | 'down';
 export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
+ * @deprecated
  * @name Controls/_list/interface/IVirtualScroll#virtualScrollMode
  * @cfg {IVirtualScrollMode} Режим скрытия записей в виртуальном скроллинге
  * @default remove
+ */
+
+/**
+ * @name Controls/_list/interface/IVirtualScroll#virtualScrollConfig
+ * @cfg {IVirtualScrollConfig} Конфигурация виртуального скроллинга
  */

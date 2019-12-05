@@ -8,12 +8,10 @@ define('Controls-demo/List/Grid/MultyHeader', [
   'wml!Controls-demo/List/Grid/DemoCostPrice',
   'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
   'wml!Controls-demo/List/Grid/DemoName',
-  'Controls/Render/Money/Money',
   'css!Controls-demo/List/Grid/Grid',
   'Controls/scroll',
   'Controls/grid',
   'wml!Controls-demo/List/Grid/Results',
-  'Controls/Render/Money/Money'
 ], function(BaseControl, GridData, template, source) {
   'use strict';
   var
