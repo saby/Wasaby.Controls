@@ -2,10 +2,12 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
    [
       'Core/Control',
       'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
-      'Core/tmpl/tmplstr',
+      'View/Builder/Tmpl',
+      'View/config',
+      'View/Executor/TClosure',
       'css!Controls-demo/Input/resources/VdomInputs',
    ],
-   function(Control, template, tmplstr) {
+   function(Control, template, tmpl, config, tClosure) {
       'use strict';
 
       var stringTmpl = Control.extend({
@@ -21,7 +23,7 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
             this._valueChangedNotify();
          },
          _valueChangedNotify: function() {
-            this._notify('valueChanged', [tmplstr.getFunction(this._value)]);
+            this._notify('valueChanged', [tmpl.getFunction(this._value, config, tClosure)]);
          },
          _checkBoxValueChanged: function() {
             this._valueChangedNotify();
