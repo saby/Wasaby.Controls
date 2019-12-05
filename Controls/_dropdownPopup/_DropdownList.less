@@ -92,8 +92,8 @@
    padding-left: @padding-horizontal_inputText;
 }
 
-.controls-DropdownList__emptyItem-leftPadding_multiSelect.theme_@{themeName} {
-   padding-left: @width_CheckBox__clickArea + @border-width_DropdownList;
+.controls-DropdownList__item-leftPadding_multiSelect.theme_@{themeName} {
+   padding-left: @width_CheckBox__clickArea;
 }
 
 .controls-DropdownList__item-rightPadding_default.theme_@{themeName} {
@@ -383,13 +383,20 @@
    align-items: center;
 }
 
+.controls-DropdownList__row-checkbox {
+   position: absolute;
+   top: @spacing_DropdownList-row-between-checkbox-topBorder;
+}
+
 .controls-DropdownList__row-checkbox_active_theme_@{themeName} {
    visibility: visible;
 }
 
+.controls-DropdownList__row-checkbox-left_theme_@{themeName} {
+   left: @spacing_DropdownList-row-between-checkbox-leftBorder;
+}
+
 .controls-DropdownList__row-checkbox-right_theme_@{themeName} {
-   position: absolute;
-   top: @spacing_DropdownList-row-between-checkbox-topBorder;
    right: @spacing_DropdownList-row-between-checkbox-rightBorder;
 }
 

@@ -335,7 +335,7 @@ define(
 
          it('_private.getSpacingClassList', () => {
             let itemPadding = {}, multiSelect = true, itemData = { emptyText: 'test' }, hasHierarchy = false;
-            let expectedClassList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect controls-DropdownList__item-rightPadding_default';
+            let expectedClassList = 'controls-DropdownList__item-leftPadding_multiSelect controls-DropdownList__item-rightPadding_default';
             let classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData, hasHierarchy);
             assert.equal(classList, expectedClassList);
 
@@ -492,12 +492,12 @@ define(
             assert.equal(emptyItem.spacingClassList, expectedClassList);
 
             emptyConfig.multiSelect = true;
-            expectedClassList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect controls-DropdownList__item-rightPadding_default';
+            expectedClassList = 'controls-DropdownList__item-leftPadding_multiSelect controls-DropdownList__item-rightPadding_default';
             emptyItem = getEmpty(emptyConfig);
             assert.equal(emptyItem.spacingClassList, expectedClassList);
 
             emptyConfig.hasClose = true;
-            expectedClassList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect controls-DropdownList__item-rightPadding_close';
+            expectedClassList = 'controls-DropdownList__item-leftPadding_multiSelect controls-DropdownList__item-rightPadding_close';
             emptyItem = getEmpty(emptyConfig);
             assert.equal(emptyItem.spacingClassList, expectedClassList);
          });

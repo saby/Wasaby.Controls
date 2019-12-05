@@ -73,9 +73,9 @@ var _private = {
          getSpacingClassList: function(itemPadding, multiSelect, itemData, hasHierarchy, hasApplyButton?) {
             const paddings = itemPadding || {};
             let classList = '';
-            if (multiSelect && itemData.emptyText) {
-               classList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect';
-            } else if (!multiSelect) {
+            if (multiSelect) {
+               classList = 'controls-DropdownList__item-leftPadding_multiSelect';
+            } else {
                classList = 'controls-DropdownList__item-leftPadding_' + (paddings.left || 'default');
             }
             classList += ' controls-DropdownList__item-rightPadding_' + _private.getRightPadding(paddings.right, itemData, hasHierarchy, hasApplyButton);
