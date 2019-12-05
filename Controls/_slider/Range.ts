@@ -7,9 +7,6 @@ import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
 export interface ISliderRangeOptions extends IControlOptions, ISliderOptions {
-   size?: string;
-   minValue: number;
-   maxValue: number;
    startValue: number;
    endValue: number;
 }
@@ -38,77 +35,6 @@ const maxPercentValue = 100;
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Range/SliderRangeDemo
- */
-
-/**
- * @name Controls/_slider/Range#size
- * @cfg {Boolean} Устанавливает размер ползунка слайдера.
- * @variant m
- * @variant s
- * @default m
- * @example
- * Слайдер с диаметром ползунка = 12px
- * <pre class="brush:html">
- *   <Controls.slider:Base size="s"/>
- * </pre>
- */
-
-/*
- * @name Controls/_slider/Range#size
- * @cfg {Boolean} sets the size of slider point
- * @example
- * Slider with diameter of point = 12px
- * <pre class="brush:html">
- *   <Controls.slider:Base size="s"/>
- * </pre>
- */
-
-/**
- * @name Controls/_slider/Range#minValue
- * @cfg {Number} Устанавливает минимальное значение слайдера. Обязательная к конфигурации опция.
- * @remark Должно быть меньше, чем {@link maxValue}.
- * @example
- * Слайдер с границей:
- * <pre class="brush:html">
- *   <Controls.slider:Base minValue="{{10}}"/>
- * </pre>
- * @see maxValue
- */
-
-/*
- * @name Controls/_slider/Range#minValue
- * @cfg {Number} sets the minimum value of slider
- * @remark must be less than maxValue
- * @example
- * Slider with border
- * <pre class="brush:html">
- *   <Controls.slider:Base minValue="{{10}}"/>
- * </pre>
- * @see maxValue
- */
-
-/**
- * @name Controls/_slider/Range#maxValue
- * @cfg {Number} Устанавливает максимальное значение слайдера. Обязательная к конфигурации опция.
- * @remark Должно быть больше, чем {@link minValue}.
- * @example
- * Слайдер с границей:
- * <pre class="brush:html">
- *   <Controls.slider:Base maxValue="{{100}}"/>
- * </pre>
- * @see minValue
- */
-
-/*
- * @name Controls/_slider/Range#maxValue
- * @cfg {Number} sets the maximum value of slider
- * @remark must be greater than minValue
- * @example
- * Slider with border
- * <pre class="brush:html">
- *   <Controls.slider:Base maxValue="{{100}}"/>
- * </pre>
- * @see minValue
  */
 
 /**

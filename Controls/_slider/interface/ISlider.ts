@@ -3,6 +3,9 @@ export interface ISliderOptions {
     scaleStep?: number;
     precision: number;
     tooltipFormatter?: Function;
+    size?: string;
+    minValue: number;
+    maxValue: number;
 }
 /**
  * Интерфейс для контрола Слайдер.
@@ -108,3 +111,73 @@ export interface ISlider {
  * </ul>
  */
 
+/**
+ * @name Controls/_slider/interface/ISlider#size
+ * @cfg {String} Устанавливает размер ползунка слайдера.
+ * @variant s
+ * @variant m
+ * @default m
+ * @example
+ * Слайдер с диаметром ползунка = 12px
+ * <pre class="brush:html">
+ *   <Controls.slider:Base size="s"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_slider/interface/ISlider#size
+ * @cfg {String} sets the size of slider point
+ * @example
+ * Slider with diameter of point = 12px
+ * <pre class="brush:html">
+ *   <Controls.slider:Base size="s"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/interface/ISlider#minValue
+ * @cfg {Number} Устанавливает минимальное значение слайдера.
+ * @remark Должно быть меньше, чем {@link maxValue}.
+ * @example
+ * Слайдер с границей:
+ * <pre class="brush:html">
+ *   <Controls.slider:Base minValue="{{10}}"/>
+ * </pre>
+ * @see maxValue
+ */
+
+/*
+ * @name Controls/_slider/interface/ISlider#minValue
+ * @cfg {Number} sets the minimum value of slider
+ * @remark must be less than maxValue
+ * @example
+ * Slider with border
+ * <pre class="brush:html">
+ *   <Controls.slider:Base minValue="{{10}}"/>
+ * </pre>
+ * @see maxValue
+ */
+
+/**
+ * @name Controls/_slider/interface/ISlider#maxValue
+ * @cfg {Number} Устанавливает максимальное значение слайдера.
+ * @remark Должно быть больше, чем {@link minValue}.
+ * @example
+ * Слайдер с границей:
+ * <pre class="brush:html">
+ *   <Controls.slider:Base maxValue="{{100}}"/>
+ * </pre>
+ * @see minValue
+ */
+
+/*
+ * @name Controls/_slider/interface/ISlider#maxValue
+ * @cfg {Number} sets the maximum value of slider
+ * @remark must be greater than minValue
+ * @example
+ * Slider with border
+ * <pre class="brush:html">
+ *   <Controls.slider:Base maxValue="{{100}}"/>
+ * </pre>
+ * @see minValue
+ */
