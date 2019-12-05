@@ -219,6 +219,15 @@ function getCountriesStats() {
                 displayProperty: 'populationDensity',
             }
         ],
+        getColumnsForLoad: () => [
+            {
+                displayProperty: 'id',
+            },
+            {
+                displayProperty: 'load',
+            },
+
+        ],
         getColumnsWithFixedWidths: () => [
             {
                 displayProperty: 'number',
