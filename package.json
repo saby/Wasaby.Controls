@@ -19,7 +19,7 @@
       "compile": "saby-typescript --compiler",
       "start": "node app --applicationRoot=application",
       "start:units": "node node_modules/saby-units/cli/server",
-      "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
+      "test": "saby-units --isolated",
       "test:node": "saby-units --isolated --report",
       "test:node-coverage": "saby-units --isolated --report --coverage",
       "test:browser": "saby-units --browser --report",
@@ -31,8 +31,7 @@
       "moduleType": "amd",
       "root": "application",
       "tests": [
-         "ControlsUnit",
-         "SBIS3CONTROLSUnit"
+         "ControlsUnit"
       ],
       "patchedRequire": true,
       "report": "./application/artifacts/xunit-report.xml",

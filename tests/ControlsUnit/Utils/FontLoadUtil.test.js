@@ -2,12 +2,6 @@ define(['Controls/Utils/FontLoadUtil'], function(FontLoadUtil) {
 
    describe('Controls/Utils/FontLoadUtil', function() {
 
-      beforeEach(function() {
-         if (typeof window === 'undefined') {
-            this.skip();
-         }
-      });
-
       it('waitForFontLoad should load font once', function() {
          const sandBox = sinon.createSandbox();
 
