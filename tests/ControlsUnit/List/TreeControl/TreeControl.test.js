@@ -7,7 +7,7 @@ define([
    'Env/Env',
    'Types/collection',
    'Types/source',
-   'Controls/Utils/PropStorageUtil'
+   'Controls/Application/SettingsController'
 ], function(
    treeGrid,
    listMod,
@@ -17,7 +17,7 @@ define([
    Env,
    collection,
    sourceLib,
-   PropStorageUtil
+   SettingsController
 ) {
    function correctCreateTreeControl(cfg) {
       var
@@ -1002,13 +1002,13 @@ define([
          assert.equal(treeGridViewModel._model._options.hasChildrenProperty, 'hasChildren');
       });
       describe('propStorageId', function() {
-         let origSaveConfig = PropStorageUtil.saveConfig;
+         let origSaveConfig = SettingsController.saveConfig;
          afterEach(() => {
-            PropStorageUtil.saveConfig = origSaveConfig;
+            SettingsController.saveConfig = origSaveConfig;
          });
          it('saving sorting', function() {
             var saveConfigCalled = false;
-            PropStorageUtil.saveConfig = function() {
+            SettingsController.saveConfig = function() {
                saveConfigCalled = true;
             };
             var source = new sourceLib.Memory({

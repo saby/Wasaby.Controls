@@ -6,7 +6,7 @@
 
 import {Controller as SourceController} from 'Controls/source';
 import {Controller as FilterController} from 'Controls/filter';
-import * as PropStorageUtil from 'Controls/Utils/PropStorageUtil';
+import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
@@ -47,7 +47,7 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       filterPromise = FilterController.getCalculatedFilter(cfg);
    }
    if (cfg.propStorageId) {
-      sortingPromise = PropStorageUtil.loadSavedConfig(cfg.propStorageId, ['sorting']);
+      sortingPromise = loadSavedConfig(cfg.propStorageId, ['sorting']);
    }
 
    return Promise.all([filterPromise, sortingPromise]).then(([filterObject, sortingObject]: [IFilter, ISorting]) => {

@@ -2,22 +2,22 @@ define([
    'Controls/list',
    'Core/Deferred',
    'Core/core-instance',
-   'Controls/Utils/PropStorageUtil'
+   'Controls/Application/SettingsController'
 ], function(
    lists,
    Deferred,
    cInstance,
-   PropStorageUtil
+   SettingsController
 ) {
    describe('Controls.List.ListControl', function() {
       describe('propStorageId', function() {
-         let origSaveConfig = PropStorageUtil.saveConfig;
+         let origSaveConfig = SettingsController.saveConfig;
          afterEach(() => {
-            PropStorageUtil.saveConfig = origSaveConfig;
+            SettingsController.saveConfig = origSaveConfig;
          });
          it('saving sorting', function() {
             var saveConfigCalled = false;
-            PropStorageUtil.saveConfig = function() {
+            SettingsController.saveConfig = function() {
                saveConfigCalled = true;
             };
             var cfg = {sorting: [1]};

@@ -1,11 +1,9 @@
 define([
-   'Controls/Utils/PropStorageUtil',
    'Controls/Application/SettingsController'
-], function (PropStorageUtil, SettingsController) {
+], function (SettingsController) {
    'use strict';
 
    describe('PropStorageUtil', function() {
-      var origSettingsController = {...SettingsController};
       var mockedSettingsController = {
          storage: {
             '1': {
@@ -41,22 +39,17 @@ define([
          }
       };
       beforeEach(() => {
-         SettingsController.getSettings = mockedSettingsController.getSettings.bind(mockedSettingsController);
-         SettingsController.setSettings = mockedSettingsController.setSettings.bind(mockedSettingsController);
-      });
-      afterEach(() => {
-         SettingsController.getSettings = origSettingsController.getSettings;
-         SettingsController.setSettings = origSettingsController.setSettings;
+         SettingsController.setController(mockedSettingsController);
       });
       describe('check loaded data format', function() {
          it('one value', function(done) {
-            PropStorageUtil.loadSavedConfig('1', ['firstProp']).then((result) => {
+            SettingsController.loadSavedConfig('1', ['firstProp']).then((result) => {
                assert.deepEqual(result, {firstProp: 1});
                done();
             });
          });
          it('many values', function(done) {
-            PropStorageUtil.loadSavedConfig('1', ['firstProp', 'thirdProp']).then((result) => {
+            SettingsController.loadSavedConfig('1', ['firstProp', 'thirdProp']).then((result) => {
                assert.deepEqual(result, {firstProp: 1, thirdProp: 3});
                done();
             });
@@ -64,15 +57,15 @@ define([
       });
       describe('saving data', function() {
          it('one value', function(done) {
-            PropStorageUtil.saveConfig('2', ['fourthProp'], {fourthProp: 4});
-            PropStorageUtil.loadSavedConfig('2', ['fourthProp']).then((result) => {
+            SettingsController.saveConfig('2', ['fourthProp'], {fourthProp: 4});
+            SettingsController.loadSavedConfig('2', ['fourthProp']).then((result) => {
                assert.deepEqual(result, {fourthProp: 4});
                done();
             });
          });
          it('many values', function(done) {
-            PropStorageUtil.saveConfig('2', ['firstProp', 'fourthProp'], {firstProp: 10, fourthProp: 40});
-            PropStorageUtil.loadSavedConfig('2').then((result) => {
+            SettingsController.saveConfig('2', ['firstProp', 'fourthProp'], {firstProp: 10, fourthProp: 40});
+            SettingsController.loadSavedConfig('2').then((result) => {
                assert.deepEqual(result, {
                   firstProp: 10,
                   secondProp: 2,
