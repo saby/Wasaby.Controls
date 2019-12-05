@@ -3,7 +3,7 @@ import { ViewConfig } from "./Handler";
 /**
  * Объект конфигурации {@link Controls/_dataSource/_error/IContainer IContainer}
  * @interface Controls/_dataSource/_error/IContainerConfig
- * @public
+ * @private
  * @author Заляев А.В
  */
 export interface IContainerConfig {
@@ -37,7 +37,7 @@ export default interface IContainer {
 /**
  * Интерефейс конструктора {@link Controls/_dataSource/_error/IContainer IContainer}
  * @interface Controls/_dataSource/_error/IContainerConstructor
- * @public
+ * @private
  * @author Заляев А.В
  */
 export interface IContainerConstructor {

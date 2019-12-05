@@ -1,8 +1,7 @@
 [{
   "include": [
     "Controls/Application",
-    "Controls/Application/*",
-    "Core/Themes/ThemesControllerNew"
+    "Controls/Application/*"
   ],
   "exclude": [
     "wml!Controls/Application/CompatibleScripts",
@@ -23,11 +22,6 @@
     "wml!Controls/Container/Input/Search/Search"
   ],
   "output": "controls-container.package.js"
-}, {
-  "include": [
-    "Controls/Render/*"
-  ],
-  "output": "controls-render.package.js"
 }, {
   "include": [
     "Controls/Utils/*"

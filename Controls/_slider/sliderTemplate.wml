@@ -17,9 +17,7 @@
                     name="{{point.name}}"
                     style="left:{{point.position}}%;">
                   <ws:if data="{{point.name=='tooltip' && !_options.readOnly && (_tooltipValue || _tooltipValue==0)}}">
-                     <div class="controls-Slider__tooltipContainer">
-                        <div class="controls-Slider__tooltipValue controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue">{{_tooltipValue}}</div>
-                     </div>
+                     <div class="controls-Slider__tooltipValue controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue">{{_tooltipValue}}</div>
                   </ws:if>
                </div>
             </ws:if>

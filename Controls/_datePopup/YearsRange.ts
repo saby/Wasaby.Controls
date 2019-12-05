@@ -12,7 +12,7 @@ import 'css!theme?Controls/datePopup';
  * @extends Core/Control
  * @control
  * @author Красильников А.С.
- *
+ * @private
  */
 
 const BUTTONS_COUNT = 6;

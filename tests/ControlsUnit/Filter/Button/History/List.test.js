@@ -5,9 +5,10 @@ define(
       'Types/chain',
       'ControlsUnit/Filter/Button/History/testHistorySource',
       'Controls/filter',
-      'Types/entity'
+      'Types/entity', 
+      'Env/Env'
    ],
-   function(List, Serializer, chain, HistorySourceDemo, filter, entity) {
+   function(List, Serializer, chain, HistorySourceDemo, filter, entity, Env) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
@@ -118,12 +119,80 @@ define(
          });
 
          it('pin click', function() {
+            // ! unit-тест без assert
+            if (Env.constants.isServerSide) { return; }
             var savedList = list;
             chain.factory(list._options.items).each(function(item) {
                if (item) {
                   savedList._onPinClick('click', item);
                }
             });
+         });
+
+         it('_onFavoriteClick', () => {
+            const event = {
+               target: 'testTarget'
+            };
+            const favoriteItem = new entity.Model({
+               rawData: {
+                  ObjectId: 'testId',
+                  ObjectData: JSON.stringify({
+                     linkText: 'testLinkText',
+                     items: items1,
+                     globalParams: 0
+                  })
+               }
+            });
+            const text = 'savedText';
+
+            let openConfig;
+
+            list._children = {
+               stickyOpener: {
+                  open: (cfg) => {
+                     openConfig = cfg;
+                  }
+               }
+            };
+            list._onFavoriteClick(event, favoriteItem, text);
+            assert.equal(openConfig.target, 'testTarget');
+            assert.deepEqual(openConfig.targetPoint, {
+               vertical: 'bottom',
+               horizontal: 'left'
+            });
+            assert.deepEqual(openConfig.direction, {
+               horizontal: 'left'
+            });
+         });
+
+         it('_private::deleteFavorite', () => {
+            let closed = false;
+            const sandBox = sinon.createSandbox();
+            const self = {
+               _editItem: {get: () => {}},
+               _options: { historyId: '1231123' },
+               _children: {
+                  stickyOpener: {
+                     close: () => closed = true
+                  }
+               },
+               _notify: () => {}
+            };
+
+            sandBox.stub(List._private, 'removeRecordFromOldFavorite');
+            sandBox.stub(List._private, 'updateOldFavoriteList');
+            sandBox.replace(List._private, 'getSource',() => {
+               return {
+                  remove: () => {},
+                  getDataObject: () => {}
+               };
+            });
+
+            List._private.deleteFavorite(self, {});
+            assert.isTrue(closed);
+            sinon.assert.calledOnce(List._private.removeRecordFromOldFavorite);
+            sinon.assert.calledOnce(List._private.updateOldFavoriteList);
+            sandBox.restore();
          });
 
          describe('_private::mapByField', function() {
@@ -190,13 +259,11 @@ define(
          it('_private::getEditDialogOptions', function() {
             var favoriteItem = new entity.Model({
                rawData: {
-                  id: 'testId',
-                  data: new entity.Model({
-                     rawData: {
-                        linkText: 'testLinkText',
-                        filterPanelItems: items1,
-                        globalParams: 0
-                     }
+                  ObjectId: 'testId',
+                  ObjectData: JSON.stringify({
+                     linkText: 'testLinkText',
+                     items: items1,
+                     globalParams: 0
                   })
                }
             });

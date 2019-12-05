@@ -39,6 +39,7 @@ define([
       567 (лист)
    */
    var
+      theme = 'default',
       treeData = [
          {
             'id': '123',
@@ -334,17 +335,17 @@ define([
          });
          it('getExpanderPaddingClasses', function() {
             let expectation = [
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_default',
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_s',
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_m',
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_l',
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_xl',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_default_theme-default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_s_theme-default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_m_theme-default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_l_theme-default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_xl_theme-default',
             ];
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses(), expectation[0]);
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('s'), expectation[1]);
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('m'), expectation[2]);
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('l'), expectation[3]);
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('xl'), expectation[4]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses(undefined, theme), expectation[0]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('s', theme), expectation[1]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('m', theme), expectation[2]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('l', theme), expectation[3]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('xl', theme), expectation[4]);
          });
          it('prepareExpanderClasses', function() {
             var
@@ -402,15 +403,15 @@ define([
                   expanderIcon: 'hiddenNode'
                }],
                testsResultPrepareExpanderClasses = [
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed'
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
                ];
             testsPrepareExpanderClasses.forEach(function(item, i) {
-               assert.equal(treeGrid.TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon),
+               assert.equal(treeGrid.TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon, undefined, theme),
                   testsResultPrepareExpanderClasses[i],
                   'Invalid value "prepareExpanderClasses(...)" for step ' + i + '.');
             });
@@ -540,87 +541,26 @@ define([
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123'), false);
             assert.deepEqual(treeViewModel._collapsedItems, ['123']);
          });
-         it('Node footer params', function() {
-            var
-               treeViewModel = new treeGrid.TreeViewModel(cMerge({
-                  expandedItems: [null],
-                  nodeFooterTemplate: "footer"
-               }, cfg));
-            treeViewModel.setHasMoreStorage({
-               123: true,
-               234: true
-            });
-            let getExpanderPaddingClasses = treeGrid.TreeViewModel._private.getExpanderPaddingClasses;
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[0].');
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter, {
-               dispItem: treeViewModel._display.at(0),
-               hasMoreStorage: true,
-               item: treeViewModel._items.at(0),
-               key: treeViewModel._items.at(0).getId(),
-               template: "footer",
-               getExpanderPaddingClasses: getExpanderPaddingClasses,
-               level: 1,
-               multiSelectVisibility: cfg.multiSelectVisibility
-            }, 'Incorrect nodeFooter for displayItem[1].');
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[2].');
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooter, {
-               dispItem: treeViewModel._display.at(1),
-               hasMoreStorage: true,
-               item: treeViewModel._items.at(1),
-               template: "footer",
-               key: treeViewModel._items.at(1).getId(),
-               getExpanderPaddingClasses: getExpanderPaddingClasses,
-               level: 2,
-               multiSelectVisibility: cfg.multiSelectVisibility
-            }, 'Incorrect nodeFooter for displayItem[4].');
-            assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter, {
-               dispItem: treeViewModel._display.at(5),
-               item: treeViewModel._items.at(5),
-               template: "footer",
-               key: treeViewModel._items.at(5).getId(),
-               getExpanderPaddingClasses: getExpanderPaddingClasses,
-               level: 1,
-               multiSelectVisibility: cfg.multiSelectVisibility
-            }, 'Incorrect nodeFooter for displayItem[5].');
-         });
 
          it('nodeFooterVisibilityCallback', function() {
             var
                treeViewModel = new treeGrid.TreeViewModel(cMerge({
-                  expandedItems: [null],
                   nodeFooterTemplate: 'footer',
                   nodeFooterVisibilityCallback: function(item) {
                      return item.getId() !== '345';
                   }
                }, cfg));
+            treeViewModel.setExpandedItems([null]);
             treeViewModel.setHasMoreStorage({
                123: true,
                234: true
             });
-            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter);
-            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter);
-            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter);
-            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(3)).nodeFooter);
-            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooter);
-            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter);
-            treeViewModel = new treeGrid.TreeViewModel(cMerge({
-               expandedItems: [null],
-               nodeFooterTemplate: 'footer',
-               task1177672941: true,
-               nodeFooterVisibilityCallback: function(item) {
-                  return item.getId() !== '345';
-               }
-            }, cfg));
-            treeViewModel.setHasMoreStorage({
-               123: true,
-               234: true
-            });
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter.length, 0);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter.length, 0);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooter.length, 0);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(3)).nodeFooter.length, 0);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooter.length, 3);
-            assert.equal(treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooter.length, 0);
+            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooters.length);
+            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooters.length);
+            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(2)).nodeFooters.length);
+            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(3)).nodeFooters.length);
+            assert.isTrue(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(4)).nodeFooters.length);
+            assert.isFalse(!!treeViewModel.getItemDataByItem(treeViewModel._display.at(5)).nodeFooters.length);
          });
 
          it('getFirstItem and getLastItem', function() {

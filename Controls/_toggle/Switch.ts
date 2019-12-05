@@ -2,9 +2,9 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
-import {ITooltip, ITooltipOptions} from 'Controls/interface';
+import {ITooltip, ITooltipOptions, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
 
-export interface ISwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions {
+export interface ISwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IValidationStatusOptions {
    caption: string;
    captionPosition: string;
 }
@@ -70,9 +70,10 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @variant right Toggle before caption. It is default value.
  */
 
-class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable {
+class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IValidationStatus {
    '[Controls/_interface/ITooltip]': true;
    '[Controls/_toggle/interface/ICheckable]': true;
+   '[Controls/_interface/IValidationStatus]': true;
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = SwitchTemplate;
@@ -88,7 +89,8 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable {
    static getDefaultOptions(): object {
       return {
          value: false,
-         captionPosition: 'right'
+         captionPosition: 'right',
+         validationStatus: 'valid'
       };
    }
    static getOptionTypes(): object {

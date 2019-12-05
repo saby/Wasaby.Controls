@@ -66,7 +66,6 @@
             <ws:headConfig caption="Add" menuStyle="titleHead"/>
          </Controls.dropdown:Button>
       </div>
-
       <div class="ControlsDemo-ButtonsMenu__wrapper">
          <h4>Without icons</h4>
          <Controls.dropdown:Button
@@ -91,7 +90,7 @@
                  style="secondary"
                  viewMode="button"
                  source="{{_createMemory(_simpleAdd)}}"
-                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText"
+                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText demo-ButtonsMenu__addText1"
                  tooltip="Add">
             <ws:headConfig caption="Add" menuStyle="titleHead"/>
          </Controls.dropdown:Button>
@@ -102,7 +101,7 @@
                  style="secondary"
                  viewMode="button"
                  source="{{_createMemory(_simpleAdd2)}}"
-                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText"
+                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText demo-ButtonsMenu__addText2"
                  tooltip="Add">
             <ws:headerTemplate>
                <ws:partial template="Controls/dropdownPopup:Template" caption="Add" />
@@ -115,7 +114,7 @@
                  style="secondary"
                  viewMode="button"
                  source="{{_createMemory(_simpleAdd3)}}"
-                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText"
+                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText demo-ButtonsMenu__addText3"
                  tooltip="Add">
          </Controls.dropdown:Button>
       </div>
@@ -124,7 +123,7 @@
          <h4>Icon with text displayed in the header</h4>
          <Controls.dropdown:Button
                  keyProperty="id"
-                 size="s"
+                 inlineHeight="m"
                  icon="icon-AddButtonNew"
                  iconSize="s"
                  viewMode="toolButton"
@@ -140,7 +139,7 @@
                  viewMode="toolButton"
                  style="secondary"
                  iconSize="m"
-                 size="m"
+                 inlineHeight="l"
                  source="{{_createMemory(_iconAddMedium)}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeaderBig"
                  tooltip="Add">
@@ -351,6 +350,23 @@
                  source="{{_createMemory(_scrollItems)}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__scrollBig"
                  tooltip="Subtask">
+         </Controls.dropdown:Button>
+      </div>
+      <div class="ControlsDemo-ButtonsMenu__wrapper">
+         <h4 id="noItems">No items with footer</h4>
+         <Controls.dropdown:Button
+                 keyProperty="id"
+                 style="secondary"
+                 viewMode="link"
+                 caption="Add"
+                 source="{{_createMemory([])}}"
+                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo-ButtonsMenu__noItems">
+            <ws:footerTemplate>
+               <Controls.buttons:Button
+                       viewMode="link"
+                       caption="+ Add"
+                       attr:class="ControlsDemo-ButtonsMenu-footerTpl"/>
+            </ws:footerTemplate>
          </Controls.dropdown:Button>
       </div>
    </div>

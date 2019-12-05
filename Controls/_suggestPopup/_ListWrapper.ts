@@ -11,6 +11,7 @@ import 'Controls/Container/Async';
        * @class Controls/_suggestPopup/_ListWrapper
        * @extends Core/Control
        * @control
+       * @private
        */
 
       export = Control.extend({

@@ -1,1 +1,1 @@
-<div class="controls-Tabs__item_overflow">{{item.get(displayProperty || 'title')}}</div>
+<div class="controls-Tabs__item_overflow controls-Tabs__itemClickableArea_theme_{{_options.theme}}">{{item.get(displayProperty || 'title')}}</div>

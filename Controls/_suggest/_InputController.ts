@@ -9,6 +9,7 @@ import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import LoadService from './LoadService';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/suggest';
 
 
@@ -158,9 +159,7 @@ var _private = {
       /* do not suggest if:
        * 1) loaded list is empty and empty template option is doesn't set
        * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
-      return hasItems ||
-         hasItems && self._options.historyId && !self._searchValue ||
-         (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
+      return hasItems || (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
    },
    processResultData: function(self, resultData) {
       self._searchResult = resultData;
@@ -292,10 +291,11 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
+ * @private
  */
 
 /*
@@ -305,10 +305,11 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
+ * @private
  */
 var SuggestLayout = Control.extend({
    _template: template,
@@ -405,7 +406,8 @@ var SuggestLayout = Control.extend({
    // </editor-fold>
    // <editor-fold desc="handlers">
 
-   _close: function() {
+   _close(event: SyntheticEvent<'close'>): void {
+      event.stopPropagation();
       _private.close(this);
    },
    _changeValueHandler: function(event, value) {
@@ -481,13 +483,15 @@ var SuggestLayout = Control.extend({
 
    _searchStart: function() {
       this._loading = true;
+      // Обновим таймер, т.к. могут прерывать поиск новыми запросами
+      this._children.indicator.hide();
       this._children.indicator.show();
       if (this._options.searchStartCallback) {
          this._options.searchStartCallback();
       }
    },
    _searchEnd: function(result) {
-      if (this._options.suggestState) {
+      if (this._options.suggestState && this._loading) {
          this._loading = false;
 
          // _searchEnd may be called synchronously, for example, if local source is used,

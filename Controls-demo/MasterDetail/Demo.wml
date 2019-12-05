@@ -17,6 +17,7 @@
                      parentProperty="Раздел"
                      style="master"
                      nodeProperty="Раздел@"
+                     markerVisibility="visible"
                      itemActions="{{_itemActions}}"
                      columns="{{gridColumns}}"
                   >
@@ -35,7 +36,7 @@
                   keyProperty="id"
                   source="{{_detailSource}}"
                >
-                  <ws:filter myOpt="{{detail.selectedMasterValue}}">
+                  <ws:filter myOpt="{{detail.selectedMasterValue || '0'}}">
                   </ws:filter>
                   <ws:itemTemplate>
                      <ws:partial template="Controls/list:ItemTemplate">
@@ -71,7 +72,7 @@
                      <ws:itemTemplate>
                         <ws:partial template="Controls/list:ItemTemplate">
                            <ws:contentTemplate>
-                              <div>{{itemTemplate.itemData.item.name}}</div>
+                              <div class="controls-demo_MasterDetail-item-list">{{itemTemplate.itemData.item.name}}</div>
                            </ws:contentTemplate>
                         </ws:partial>
                      </ws:itemTemplate>
@@ -89,7 +90,7 @@
                <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}">
-                  <ws:filter myOpt="{{detail.selectedMasterValue}}">
+                  <ws:filter myOpt="{{detail.selectedMasterValue || '0'}}">
                   </ws:filter>
                   <ws:itemTemplate>
                      <ws:partial template="Controls/list:ItemTemplate">
@@ -111,7 +112,7 @@
       <ws:master>
 
          <div>
-            <div class="ws-flexbox controls-demo_MasterDetail_master_search">
+            <div class="controls-demo_MasterDetail_master_search">
                <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
@@ -123,6 +124,7 @@
                      parentProperty="Раздел"
                      style="master"
                      nodeProperty="Раздел@"
+                     markerVisibility="visible"
                      itemActions="{{_itemActions}}"
                      columns="{{gridColumns}}"
                   >
@@ -140,7 +142,7 @@
                <Controls.list:View
                   keyProperty="id"
                   source="{{_detailSource}}">
-                  <ws:filter myOpt="{{detail.selectedMasterValue}}">
+                  <ws:filter myOpt="{{detail.selectedMasterValue || '0'}}">
                   </ws:filter>
                   <ws:itemTemplate>
                      <ws:partial template="Controls/list:ItemTemplate">

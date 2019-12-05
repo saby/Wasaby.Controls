@@ -1,9 +1,11 @@
 <ws:template name="loadingIndicator">
-    <div class="{{ _getLoadingIndicatorClasses() }}"
-         style="{{_loadingIndicatorState === 'all' && _loadingIndicatorContainerHeight ? 'min-height: ' + _loadingIndicatorContainerHeight + 'px;'}}">
+    <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}" style="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}" name="{{indicatorName}}LoadingIndicator">
         <ws:if data="{{_showLoadingIndicatorImage}}">
             <div class="controls-BaseControl__loadingIndicatorImg-wrapper">
                 <div class="controls-BaseControl__loadingIndicatorImg"></div>
+                <ws:if data="{{_options.searchValue}}">
+                    <div class="controls-BaseControl__abortSearch" on:click="_abortSearch()">{[Прервать поиск]}</div>
+                </ws:if>
             </div>
         </ws:if>
     </div>
@@ -13,7 +15,14 @@
     <ws:if data="{{_loadingIndicatorState && _loadingIndicatorState !== 'up'}}">
         <ws:partial template="loadingIndicator"/>
     </ws:if>
-
+    <ws:if data="{{_showContinueSearchButton}}">
+        <div class="controls-BaseControl__continueSearch" on:click="_continueSearch()">
+            <div class="controls-BaseControl__continueSearch_caption">
+                <div class="controls-BaseControl__continueSearch_icon controls-icon icon-Search2 controls-icon_size-m_theme-{{_options.theme}}"></div>
+                {[Продолжить поиск]}
+            </div>
+        </div>
+    </ws:if>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content">
             <ws:partial template="{{_options.footerTemplate}}"/>
@@ -23,10 +32,21 @@
         <div class="controls-BaseControl__footerPaging_wrapper">
             <ws:if data="{{_pagingLabelData}}">
                 <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
-                    <div class="controls-BaseControl_paging-label">{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} из {{_pagingLabelData.totalItemsCount}}, по {{_pagingLabelData.pageSize}}</div>
+                    <div class="controls-BaseControl_paging-label"><div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
+                    <Controls.dropdown:Button
+                            attr:class="controls-BaseControl_paging-pageSizeChooser"
+                            keyProperty="id"
+                            style="secondary"
+                            viewMode="link"
+                            fontSize="s"
+                            on:menuItemActivate="_changePageSize()"
+                            caption="{{_pagingLabelData.pageSize}}"
+                            source="{{_pageSizeSource}}">
+                    </Controls.dropdown:Button>
+                    </div>
                 </ws:if>
                 <ws:else>
-                    <div class="controls-BaseControl_paging-label">Всего {{_pagingLabelData.totalItemsCount}}</div>
+                    <div class="controls-BaseControl_paging-label">{{rk('Всего')}} {{_pagingLabelData.totalItemsCount}}</div>
                 </ws:else>
             </ws:if>
             <Controls.paging:Paging attr:class="controls-BaseControl__footerPaging"
@@ -69,54 +89,73 @@
     </Controls.dragnDrop:Container>
 </ws:template>
 <ws:template name="viewTpl">
-    <ws:partial
-        name="{{name}}"
-        template="{{ _options.content }}"
-        scope="{{_options}}"
-        loadingState="{{_loadingState}}"
-        _pagingVisible="{{_pagingVisible}}"
-        _needBottomPadding="{{_needBottomPadding}}"
-        multiSelectReady="{{_multiSelectReady}}"
-        listModel="{{_listViewModel}}"
-        on:animationend="_onAnimationEnd()"
-        on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
-        on:itemClick="_onItemClick()"
-        on:groupClick="_onGroupClick()"
-        on:editArrowClick="_notifyHandler('editArrowClick')"
-        on:itemContextMenu="_onItemContextMenu()"
-        on:itemMouseDown="_itemMouseDown()"
-        on:itemMouseEnter="_itemMouseEnter()"
-        on:itemMouseMove="_itemMouseMove()"
-        on:itemMouseLeave="_itemMouseLeave()"
-        on:hoveredItemChanged="_onHoveredItemChanged()"
-        on:itemSwipe="_listSwipe()"
-    >
-        <ws:viewTemplate>
-            <ws:partial template="{{_options.viewName}}"
-                on:activated="_onActivated()"
-                on:deactivated="_onDeactivated()"/>
-        </ws:viewTemplate>
-        <ws:footerTemplate>
-            <ws:partial template="footerTemplateIf"/>
-        </ws:footerTemplate>
-        <ws:multiSelectTpl>
-            <ws:partial template="multiSelectTplIf"/>
-        </ws:multiSelectTpl>
-        <ws:emptyTemplate>
-            <ws:partial template="emptyTemplateIf"/>
-        </ws:emptyTemplate>
-    </ws:partial>
+    <Controls._list.ScrollContainer
+            name="scrollController"
+            on:scrollMoveSync="scrollMoveSyncHandler()"
+            on:scrollMove="scrollMoveHandler()"
+            on:loadMore="loadMore()"
+            on:viewportResize="viewportResizeHandler()"
+            on:canScroll="canScrollHandler()"
+            on:cantScroll="cantScrollHandler()"
+            on:scrollResize="scrollResizeHandler()"
+            on:updateShadowMode="updateShadowModeHandler()"
+            on:triggerVisibilityChanged="triggerVisibilityChangedHandler()"
+            on:triggerOffsetChanged="triggerOffsetChangedHandler()"
+            on:activeElementChanged="_notifyHandler('activeElementChanged')"
+            on:viewResize="_viewResize()"
+            on:changeIndicatorState="changeIndicatorStateHandler()"
+            viewModel="{{_listViewModel}}"
+            observeScroll="{{_needScrollCalculation}}"
+            scope="{{_options}}">
+        <ws:partial
+                name="{{name}}"
+                template="{{ _options.content }}"
+                scope="{{_options}}"
+                loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
+                _pagingVisible="{{_pagingVisible}}"
+                _needBottomPadding="{{_needBottomPadding}}"
+                multiSelectReady="{{_multiSelectReady}}"
+                listModel="{{_listViewModel}}"
+                on:animationend="_onAnimationEnd()"
+                on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                on:itemClick="_onItemClick()"
+                on:groupClick="_onGroupClick()"
+                on:editArrowClick="_notifyHandler('editArrowClick')"
+                on:itemContextMenu="_onItemContextMenu()"
+                on:itemMouseDown="_itemMouseDown()"
+                on:itemMouseEnter="_itemMouseEnter()"
+                on:itemMouseMove="_itemMouseMove()"
+                on:itemMouseLeave="_itemMouseLeave()"
+                on:hoveredItemChanged="_onHoveredItemChanged()"
+                on:itemSwipe="_listSwipe()"
+        >
+            <ws:viewTemplate>
+                <ws:partial template="{{_options.viewName}}"
+                            on:activated="_onActivated()"
+                            on:deactivated="_onDeactivated()"/>
+            </ws:viewTemplate>
+            <ws:footerTemplate>
+                <ws:partial template="footerTemplateIf"/>
+            </ws:footerTemplate>
+            <ws:multiSelectTpl>
+                <ws:partial template="multiSelectTplIf"/>
+            </ws:multiSelectTpl>
+            <ws:emptyTemplate>
+                <ws:partial template="emptyTemplateIf"/>
+            </ws:emptyTemplate>
+        </ws:partial>
+    </Controls._list.ScrollContainer>
 </ws:template>
 <ws:template name="fullView">
     <ws:if data="{{_options.itemsDragNDrop}}">
         <ws:partial template="withDragNDrop">
             <ws:viewContent>
-                <ws:partial template="viewTpl"  name="{{name}}" on:controlResize="_viewResize()"/>
+                <ws:partial template="viewTpl"  name="{{name}}"/>
             </ws:viewContent>
         </ws:partial>
     </ws:if>
     <ws:else>
-        <ws:partial template="viewTpl" name="{{name}}" on:controlResize="_viewResize()"/>
+        <ws:partial template="viewTpl" name="{{name}}"/>
     </ws:else>
 </ws:template>
 
@@ -125,12 +164,8 @@
     viewConfig="{{ __error }}"
     on:keyDown="_onViewKeyDown()"
 >
-    <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()">
+    <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:mouseenter="_initItemActions()" on:touchstart="_initItemActions()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
-        <ws:if data="{{_needScrollCalculation}}">
-            <div class="controls-BaseControl__trigger controls-BaseControl__loadTrigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="top: {{ _loadOffset.top * 1.3 }}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__topPlaceholder controls-BaseControl__topVirtualScrollTrigger" name="topVirtualScrollTrigger" style="top: {{_loadOffset.top}}px;"></div>
-        </ws:if>
 
         <ws:if data="{{_listViewModel}}">
 
@@ -138,7 +173,9 @@
                 <ws:partial template="loadingIndicator"/>
             </ws:if>
 
-            <ws:partial template="fullView" name="listView"/>
+            <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
+
+            <ws:partial template="fullView" name="listView" attr:class="{{_showActions ? 'controls-BaseControl_showActions'}}"/>
 
             <Controls._list.EditInPlace
                 ws:content="listView"
@@ -167,6 +204,7 @@
                 menuIsShown="{{_menuIsShown}}"
                 fix1177894367="{{_options.fix1177894367}}"
                 actionMenuIsShown="{{_actionMenuIsShown}}"
+                itemPadding="{{_options.itemPadding}}"
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
                 itemActionsProperty="{{_options.itemActionsProperty}}"
@@ -176,6 +214,8 @@
                 ws:content="listView"
                 on:menuActionsClick="_showActionsMenu()"
                 on:closeSwipe="_closeSwipe()"
+                showEditArrow="{{_options.showEditArrow}}"
+                editArrowVisibilityCallback="{{_options.editArrowVisibilityCallback}}"
                 actionAlignment="{{_options.actionAlignment}}"
                 actionCaptionPosition="{{_options.actionCaptionPosition}}"
                 viewName="{{ _options.viewName }}"
@@ -183,15 +223,7 @@
                 itemActions="{{_options.itemActions}}"
                 name="swipeControl"
                 useNewModel="{{ _options.useNewModel }}"/>
-        </ws:if>
-
-        <ws:if data="{{_needScrollCalculation}}">
-            <div class="controls-BaseControl__trigger controls-BaseControl__bottomPlaceholder controls-BaseControl__bottomVirtualScrollTrigger" name="bottomVirtualScrollTrigger" style="bottom: {{_loadOffset.bottom}}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__loadTrigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="bottom: {{ _loadOffset.bottom * 1.3 }}px;"></div>
-        </ws:if>
-
-        <ws:if data="{{_needScrollCalculation}}">
-            <Controls._list.BaseControl.Scroll.Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
+            <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
 
         <ws:if data="{{_pagingVisible}}">
@@ -215,9 +247,13 @@
                 parentProperty="{{ _options.parentProperty }}"
                 items="{{ _items }}"
                 nodeProperty="{{ _options.nodeProperty }}"
+                hasChildrenProperty="{{ _options.hasChildrenProperty }}"
                 selectedKeys="{{ _options.selectedKeys }}"
                 excludedKeys="{{ _options.excludedKeys }}"
                 listModel="{{ _listViewModel }}"
+                filter="{{ _options.filter }}"
+                source="{{ _options.source }}"
+                selectionStrategy="{{_options.selectionStrategy}}"
                 on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                 on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
             />

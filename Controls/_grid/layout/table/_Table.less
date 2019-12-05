@@ -22,7 +22,7 @@
     display: table-column;
   }
 
-  .controls-Grid__colgroup-columnMultiSelect {
+  .controls-Grid__colgroup-columnMultiSelect_theme-@{themeName} {
     width: @width_Grid-cell-checkbox;
   }
 
@@ -55,12 +55,12 @@
     vertical-align: bottom;
   }
 
-  .controls-Grid__multi-header-cell_min-height {
+  .controls-Grid__multi-header-cell_min-height_theme-@{themeName} {
     // В таблицах функцию min-height выполняет height
-    height: @min-height_Grid-multy-header;
+    height: @min-height_Grid-multi-header;
   }
 
-  .controls-Grid__header-cell_min-height {
+  .controls-Grid__header-cell_min-height_theme-@{themeName} {
     // В таблицах функцию min-height выполняет height
     height: @min-height_Grid-header;
   }
@@ -88,17 +88,17 @@
     position: relative;
   }
 
-  .controls-Grid__row-cell_withoutRowSeparator {
+  .controls-Grid__row-cell_withoutRowSeparator_theme-@{themeName} {
     // В таблицах функцию min-height выполняет height
     height: @min-height_Grid-row;
   }
 
-  .controls-Grid__row-cell_withRowSeparator_notLastRow {
+  .controls-Grid__row-cell_withRowSeparator_notLastRow_theme-@{themeName} {
     // В таблицах функцию min-height выполняет height
     height: @min-height_Grid-row;
   }
 
-  .controls-Grid__row-cell_withRowSeparator_lastRow {
+  .controls-Grid__row-cell_withRowSeparator_lastRow_theme-@{themeName} {
     // В таблицах функцию min-height выполняет height
     height: @min-height_Grid-row + @height_Grid-row-separator;
   }
@@ -113,21 +113,21 @@
     white-space: normal;
   }
 
-  .controls-Grid__row-cell-checkbox {
+  .controls-Grid__row-cell-checkbox_theme-@{themeName} {
     width: @width_Grid-cell-checkbox;
   }
 
-  .controls-Grid__row-cell_selected__first {
+  .controls-Grid__row-cell_selected__first_theme-@{themeName} {
     // Не понятно для чего этот стиль, если понядобится, то нужен коментарий
     // Отключил, потому что во всех браузерах появляется рыжая обводка у строки
     //box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
   }
 
-  .controls-Grid__row-cell_selected-master::before {
+  .controls-Grid__row-cell_selected-master_theme-@{themeName}::before {
     display: none;
   }
 
-  .controls-Grid__row-cell_selected__last-master:after {
+  .controls-Grid__row-cell_selected__last-master_theme-@{themeName}:after {
     display: none;
   }
 
@@ -135,12 +135,16 @@
     border-top-width: 0;
   }
 
-  .controls-Grid__row-cell_selected-master {
+  .controls-Grid__row-cell_selected-master_theme-@{themeName} {
     box-shadow: inset 0 @border-width_List-masterList-item-top 0 0 @border-color_List-masterList-item_selected-top, inset 0 -@border-width_List-masterList-item-bottom 0 0 @border-color_List-masterList-item_selected-bottom;
   }
 
-  .controls-Grid__row-cell_selected__first-master {
+  .controls-Grid__row-cell_selected__first-master_theme-@{themeName} {
     box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker, inset 0 @border-width_List-masterList-item-top 0 0 @border-color_List-masterList-item_selected-top, inset 0 -@border-width_List-masterList-item-bottom 0 0 @border-color_List-masterList-item_selected-bottom;
+  }
+
+  .controls-Grid__header-cell__content__innerWrapper {
+    max-width: 100%;
   }
 }
 
@@ -150,8 +154,8 @@
 
 
 .ws-is-not-full-grid-support,
-.controls-Grid_partial-support {
-  .controls-itemActionsV_style_master {
+.controls-Grid_partial-support_theme-@{themeName} {
+  .controls-itemActionsV_style_master_theme-@{themeName} {
     //because of selected item border in Grid is realized by box-shadow, itemAction overlaps bottom shadow by z-index
     //best solution is to increase bottom position of itemAction by border bottom width in old grid master
     bottom: @border-width_List-masterList-item-bottom;

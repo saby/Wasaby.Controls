@@ -7,11 +7,11 @@ import find = require('Core/helpers/Object/find');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
-import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
 import {factory, List} from 'Types/collection';
-import {HistoryUtils} from 'Controls/filter';
+import {HistoryUtils, FilterUtils} from 'Controls/filter';
 import 'Controls/form';
+import {Logger} from 'UI/Utils';
 /**
     * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
     * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
@@ -26,9 +26,10 @@ import 'Controls/form';
     * @public
     * @author Золотова Э.Е.
     *
-    * @cssModifier controls-FilterPanel__width-m Medium panel width.
-    * @cssModifier controls-FilterPanel__width-l Large panel width.
-    * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
+    * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
+    * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
+    * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
+    * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
     *
     * @cssModifier controls-FilterPanel__DateRange Кастомизирует контрол DateRange для отображения на панели фильтров.
     * Необходимо навесить на шаблон фильтра DateRange.
@@ -48,9 +49,10 @@ import 'Controls/form';
     * @public
     * @author Золотова Э.Е.
     *
-    * @cssModifier controls-FilterPanel__width-m Medium panel width.
-    * @cssModifier controls-FilterPanel__width-l Large panel width.
-    * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
+    * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
+    * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
+    * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
+    * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
     */
 
    /**
@@ -77,7 +79,7 @@ import 'Controls/form';
             self._items = this.cloneItems(options.items);
          } else if (self._contextOptions) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
-            Env.IoC.resolve('ILogger').error('Controls/filterPopup:Panel:', 'You must pass the items option for the panel.');
+            Logger.error('Controls/filterPopup:Panel: You must pass the items option for the panel.', self);
          } else {
             throw new Error('Controls/filterPopup:Panel::items option is required');
          }
@@ -88,10 +90,11 @@ import 'Controls/form';
             self._historyId = options.historyId;
          } else if (context && context.historyId) {
             self._historyId = context.historyId;
-            Env.IoC.resolve('ILogger').error('Controls/filterPopup:Panel:', 'You must pass the historyId option for the panel.');
+            Logger.error('Controls/filterPopup:Panel:', 'You must pass the historyId option for the panel.', self);
          }
       },
 
+      //TODO: Delete with old favorite
       loadFavoriteItems: function(self, historyId) {
          let loadDef = new Deferred();
          require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {
@@ -106,6 +109,7 @@ import 'Controls/form';
             });
             pDef.push(self._historyStorage.getHistory(true));
             pDef.push(self._historyGlobalStorage.getHistory(true));
+
             return pDef.done().getResult().addCallback((items) => {
                self._favoriteList = items[0].clone();
                self._favoriteList.prepend(items[1]);
@@ -117,24 +121,37 @@ import 'Controls/form';
 
       loadHistoryItems: function(self, historyId, isReportPanel) {
          if (historyId) {
-            let pDef = new ParallelDeferred();
+            const pDef = new ParallelDeferred();
+            const config = {
+                historyId,
+                recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY',
+                favorite: true
+            };
+            const historyLoad = HistoryUtils.loadHistoryItems(config)
+                .addCallback((items) => {
+                   const historySource = HistoryUtils.getHistorySource(config);
+                   let historyItems;
+
+                   if (isReportPanel) {
+                       // Поправится, как будем хранить избранное на сервисе истории
+                       // https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+                      historySource.historySource._pinned = false;
+                      historyItems = historySource.getItems();
+                   } else {
+                      historyItems = items;
+                   }
+                   self._historyItems = _private.filterHistoryItems(self, historyItems);
+                   return self._historyItems;
+                })
+                .addErrback(() => {
+                   self._historyItems = new List({ items: [] });
+                });
+
+            pDef.push(historyLoad);
+
             if (isReportPanel) {
                pDef.push(_private.loadFavoriteItems(self, historyId));
             }
-            let config = {
-               historyId: historyId,
-
-                // the report filters panel uses favorite history, for it we don't request pinned items from the history service
-                pinned: !isReportPanel,
-               recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
-            };
-            let historyLoad = HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
-               self._historyItems = _private.filterHistoryItems(self, items);
-               return self._historyItems;
-            }).addErrback(function() {
-               self._historyItems = new List({ items: [] });
-            });
-            pDef.push(historyLoad);
             return pDef.done().getResult().addCallback(() => {
                return self._historyItems;
             });
@@ -164,7 +181,8 @@ import 'Controls/form';
                      const textValue = getPropValue(history[i], 'textValue');
                      const value = getPropValue(history[i], 'value');
 
-                     if (textValue !== '' && textValue !== undefined) {
+                     // 0 and false is valid
+                     if (textValue !== '' && textValue !== undefined && textValue !== null) {
                         originalItem = getOriginalItem(self, history[i]);
                         hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
 
@@ -343,21 +361,9 @@ import 'Controls/form';
 
       _resetFilter: function(): void {
          this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
-         chain.factory(this._items).each((item) => {
-            const resetValue = getPropValue(item, 'resetValue');
-            const textValue = getPropValue(item, 'textValue');
-
-            if (getPropValue(item, 'visibility') !== undefined) {
-               setPropValue(item, 'visibility', false);
-            }
-            if (resetValue !== undefined) {
-               setPropValue(item, 'value', resetValue);
-            }
-            if (textValue !== undefined) {
-               setPropValue(item, 'textValue', textValue === null ? textValue : '');
-            }
-         });
+         FilterUtils.resetFilter(this._items);
          this._isChanged = false;
+         this._notify('itemsChanged', [this._items]);
       }
    });
 

@@ -13,7 +13,7 @@
  * @includes IContainerConfig Controls/_dataSource/_error/IContainer.IContainerConfig
  * @includes IContainerConstructor Controls/_dataSource/_error/IContainer.IContainerConstructor
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  */
 
 export {

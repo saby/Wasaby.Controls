@@ -1,7 +1,7 @@
 /**
  * @author Авраменко А.С.
  * @mixin Controls/_paging/DigitButtonsStyles
- * @public
+ * @private
  *
  *
  * @css @width_Paging-digitButton-ellipsis width of button '...', which appears when there are many pages in the list

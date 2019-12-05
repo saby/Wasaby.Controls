@@ -32,6 +32,7 @@ define(
             resetValue: ['2'],
             id: 'text',
             items: defaultItems.clone(),
+            selectorItems: defaultItems.clone(),
             selectedKeys: [],
             multiSelect: true
          };
@@ -84,7 +85,7 @@ define(
                emptyKey: defaultConfig.emptyKey,
                hasApplyButton: defaultConfig.hasApplyButton
             });
-            let config = {...defaultConfig, items: sbisItems};
+            let config = {...defaultConfig, items: sbisItems, selectorItems: sbisItems};
             let list = getHierarchyList(config);
             list._beforeMount(config);
             assert.deepStrictEqual(list._listModel._options, expectedListModel._options);
@@ -150,6 +151,11 @@ define(
             assert.deepStrictEqual(checkBoxClickResult, {'0': ['1'], '-1': ['-1']});
 
             // folder 2 and item from folder 1 was selected, click on folder 1
+            list._checkBoxClickHandler({}, '0', ['0']);
+            assert.deepStrictEqual(itemClickResult, {'0': ['0'], '-1': []});
+
+            // item from folder 2 was selected, click on folder 1
+            list._selectedKeys = {'0': [], '-1': ['5']};
             list._checkBoxClickHandler({}, '0', ['0']);
             assert.deepStrictEqual(itemClickResult, {'0': ['0'], '-1': []});
 

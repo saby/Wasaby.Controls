@@ -8,6 +8,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  *
  * @class Controls/_operations/Panel
  * @extends Core/Control
+ * @mixes Controls/_toolbars/IToolbarSource
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
@@ -72,7 +73,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * </pre>
  * JS:
  * <pre>
- *    onPanelItemClick: function(e, selection) {
+ *    onPanelItemClick: function(e, item) {
     *       var itemId = item.get('id');
     *       switch (itemId) {
     *          case 'remove':
@@ -97,7 +98,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * </pre>
  * JS:
  * <pre>
- *    onPanelItemClick: function(e, selection) {
+ *    onPanelItemClick: function(e, item) {
  *       var itemId = item.get('id');
  *       switch (itemId) {
  *          case 'remove':

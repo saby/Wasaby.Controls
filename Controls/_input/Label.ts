@@ -1,4 +1,3 @@
-import {IoC} from 'Env/Env';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICaption, ICaptionOptions} from 'Controls/interface';
@@ -90,7 +89,8 @@ class Label extends Control<ILabelOptions> implements ICaption {
    static getOptionTypes(): object {
       return {
          href: EntityDescriptor(String),
-         caption: EntityDescriptor(String).required(),
+         //Caption задается текстом, либо шаблоном. Шаблон приходит в виде объекта
+         caption: EntityDescriptor(Object, String).required(),
          underline: EntityDescriptor(String).oneOf([
             'none',
             'fixed',

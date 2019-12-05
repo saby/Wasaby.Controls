@@ -50,6 +50,7 @@ var TreeTileViewModel = TreeViewModel.extend({
                 current.isFixed = true;
                 current.position = hoveredItem.position;
             }
+            current.canShowActions = hoveredItem.canShowActions;
             current.isAnimated = hoveredItem.isAnimated;
             current.zoomCoefficient = hoveredItem.zoomCoefficient;
         }

@@ -1,7 +1,7 @@
 /**
  *
  * @mixin Controls/_toggle/Separator/SeparatorStyles
- * @public
+ * @private
  * @author Красильников А.С.
  *
  * @css @size-Separator__icon Icon size.

@@ -124,6 +124,34 @@ define([
             assert.equal(element.parentElement.scrollTop, 55);
          });
 
+         it('to bottom with fractional coords', function() {
+            mockDOM();
+            var element = {
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 110,
+                  clientHeight: 100,
+                  top: 10.6,
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 0,
+                  className: ''
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 15,
+                     height: 150
+                  };
+               }
+            };
+            scrollToElement(element, true);
+            assert.equal(element.parentElement.scrollTop, 55);
+         });
+
          describe('scroll body', function() {
             it('to top', function() {
                mockDOM(10, 100);
@@ -148,6 +176,22 @@ define([
                   getBoundingClientRect: function() {
                      return {
                         top: 15,
+                        height: 150
+                     };
+                  },
+                  className: ''
+               };
+               scrollToElement(element, true);
+               assert.equal(element.parentElement.scrollTop, 75);
+            });
+
+            it('to bottom with fractional coords', function() {
+               mockDOM(10, 100);
+               var element = {
+                  parentElement: document.body,
+                  getBoundingClientRect: function() {
+                     return {
+                        top: 14.6,
                         height: 150
                      };
                   },

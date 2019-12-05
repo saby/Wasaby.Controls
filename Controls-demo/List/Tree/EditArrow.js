@@ -19,6 +19,11 @@ define('Controls-demo/List/Tree/EditArrow', [
          _header: null,
          _customColumns: null,
          _editArrowClickSurfaced: false,
+         _editArrowVisibilityCallback: function(item) {
+            if (item.get('parent@')) {
+               return true;
+            }
+         },
          _beforeMount: function() {
             this._header = [{
                title: ''

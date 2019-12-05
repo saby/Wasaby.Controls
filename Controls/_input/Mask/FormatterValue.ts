@@ -1,5 +1,5 @@
-import * as Formatter 'Controls/_input/Mask/Formatter';
-import * as FormatBuilder 'Controls/_input/Mask/FormatBuilder';
+import * as Formatter from 'Controls/_input/Mask/Formatter';
+import * as FormatBuilder from 'Controls/_input/Mask/FormatBuilder';
 
 export interface IOptions {
     mask: string;

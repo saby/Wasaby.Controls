@@ -75,6 +75,32 @@ define([
          assert.equal(mover._moveDialogTemplate, 'testTemplate');
       });
 
+      it('_beforeUpdate', function() {
+         mover._beforeUpdate({
+            moveDialogTemplate: {
+               templateOptions: {
+                  testOptions: 'testValueOfOption1'
+               }
+            }
+         }, {
+            dataOptions: {}
+         });
+
+         assert.deepEqual(mover._moveDialogOptions, { testOptions: 'testValueOfOption1'});
+
+         mover._beforeUpdate({
+            moveDialogTemplate: {
+               templateOptions: {
+                  testOptions: 'testValueOfOption2'
+               }
+            }
+         }, {
+            dataOptions: {}
+         });
+
+         assert.deepEqual(mover._moveDialogOptions, {testOptions: 'testValueOfOption2'});
+      });
+
       it('moveItemsWithDialog', function(done) {
          var items = [1, 2, 3];
 

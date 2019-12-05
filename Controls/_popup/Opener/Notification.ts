@@ -4,11 +4,10 @@ import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import {parse as load} from 'Core/library';
 
 /**
- *  Контрол, открывающий окно, которое позиционируется в правом нижнем углу окна браузера.
- *  Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
- *
- * <a href="/materials/demo-ws4-notification">Демо-пример</a>.
+ * Контрол, открывающий окно, которое позиционируется в правом нижнем углу окна браузера. Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
+ * @remark
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ здесь}.
+ * См. <a href="/materials/demo-ws4-notification">демо-пример</a>.
  * @class Controls/_popup/Opener/Notification
  * @control
  * @public
@@ -34,7 +33,7 @@ import {parse as load} from 'Core/library';
 
 /**
  * @name Controls/_popup/Opener/Notification#templateOptions
- * @cfg {String|Function} Опции для котнрола, переданного в {@link template}
+ * @cfg {String|Function} Опции для контрола, переданного в {@link template}
  */
 const POPUP_CONTROLLER = 'Controls/popupTemplate:NotificationController';
 
@@ -50,7 +49,8 @@ const _private = {
         }
     },
     compatibleOpen(self, popupOptions): Promise<string> {
-        const config = BaseOpener.getConfig({}, {}, popupOptions);
+        const config = BaseOpener.getConfig({}, popupOptions);
+        delete config.id;
         return new Promise((resolve) => {
             Promise.all([
                 BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
@@ -142,6 +142,7 @@ class Notification extends BaseOpener {
     open(popupOptions) {
         const config = {...this._options, ...popupOptions};
         _private.clearPopupIds(this);
+        config.id = this._notificationId;
         return Notification.openPopup(config, this._notificationId).then((popupId) => {
             this._notificationId = popupId;
             return popupId;
@@ -193,7 +194,7 @@ class Notification extends BaseOpener {
 
 Notification.openPopup = (config: object, id: string): Promise<string> => {
     return new Promise((resolve) => {
-        const newConfig = BaseOpener.getConfig({}, BASE_OPTIONS, config);
+        const newConfig = BaseOpener.getConfig(BASE_OPTIONS, config);
         if (isNewEnvironment()) {
             if (!newConfig.hasOwnProperty('opener')) {
                 newConfig.opener = null;
@@ -267,7 +268,7 @@ export = Notification;
  * @property {} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @property {} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
  * @property {} template Шаблон всплывающего окна
- * @property {} templateOptions Опции для котнрола, переданного в {@link template}
+ * @property {} templateOptions Опции для контрола, переданного в {@link template}
  */
 
 /**

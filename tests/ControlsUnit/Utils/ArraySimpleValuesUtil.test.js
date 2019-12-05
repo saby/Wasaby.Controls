@@ -14,6 +14,14 @@ define([
          var arr = ['1', '2', '3'];
          assert.equal(0, Util.invertTypeIndexOf(arr, 1), 'invertTypeIndexOf: incorrect result');
 
+         var toStringCalled = false;
+         var obj = {
+            toString: () => {
+               toStringCalled = true;
+            }
+         };
+         assert.equal(Util.invertTypeIndexOf(arr, obj), -1);
+         assert.isFalse(toStringCalled);
       });
 
       it('hasInArray', function () {

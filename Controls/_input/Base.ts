@@ -373,7 +373,7 @@ var _private = {
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_input/interface/IValue
- * @mixes Controls/_input/interface/IValidationStatus
+ * @mixes Controls/_interface/IValidationStatus
  *
  * @public
  * @demo Controls-demo/Input/SizesAndHeights/Index
@@ -698,7 +698,7 @@ var Base = Control.extend({
         this._notify('mouseenter', [event]);
     },
 
-    _keyDownHandler: function (e) {
+    _keyDownHandler: function (event) {
         const processedKeys: number[] = [
             Env.constants.key.end,
             Env.constants.key.home,
@@ -706,16 +706,21 @@ var Base = Control.extend({
             Env.constants.key.right
         ];
 
-        /*
-         The keys processed by the input field should not handle the controls above.
-         To do this, stop the bubbling of the event.
+        /**
+         * The keys processed by the input field should not handle the controls above.
+         * To do this, stop the bubbling of the event.
          */
         /**
          * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
          * Для этого останавливаем всплытие события.
          */
-        if (processedKeys.includes(e.nativeEvent.keyCode)) {
-            e.stopPropagation();
+        if (processedKeys.includes(event.nativeEvent.keyCode)) {
+            event.stopPropagation();
+        }
+
+        const keyCode = event.nativeEvent.keyCode;
+        if (keyCode === Env.constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
+            _private.callChangeHandler(this);
         }
     },
     /**
@@ -724,17 +729,13 @@ var Base = Control.extend({
      * @private
      */
     _keyUpHandler: function (event) {
-        var keyCode = event.nativeEvent.keyCode;
+        const keyCode = event.nativeEvent.keyCode;
 
         /**
          * Clicking the arrows and keys home, end moves the cursor.
          */
         if (keyCode >= Env.constants.key.end && keyCode <= Env.constants.key.down) {
             _private.saveSelection(this);
-        }
-
-        if (keyCode === Env.constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
-            _private.callChangeHandler(this);
         }
     },
 
@@ -862,11 +863,14 @@ var Base = Control.extend({
     },
 
     _focusInHandler: function (event) {
+        let firstFocusByTab = this._firstFocus;
+
         if (this._options.selectOnClick) {
             this._viewModel.select();
         }
 
         if (this._focusByMouseDown) {
+            firstFocusByTab = false;
             this._firstClick = true;
         }
 
@@ -877,9 +881,9 @@ var Base = Control.extend({
 
         /**
          * When a filled field was mounted, its carriage is placed at the beginning of the text. For example, in chrome, firefox,
-         * IE10-11, can still where. The carriage needs to have a position in accordance with the model. So we change it to first focus.
+         * IE10-11, can still where. The carriage needs to have a position in accordance with the model. So we change it to first focus and tab.
          */
-        if (this._firstFocus) {
+        if (firstFocusByTab) {
             this._firstFocus = false;
             this._updateSelection(this._viewModel.selection);
         }
@@ -1004,11 +1008,11 @@ var Base = Control.extend({
     },
 
     _calculateValueForTemplate: function () {
-        var model = this._viewModel;
-        var field = this._getField();
+        const model = this._viewModel;
+        const field = this._getField();
 
         if (model.shouldBeChanged && field) {
-            _private.updateField(this, model.displayValue, model.selection);
+            this._updateFieldInTemplate();
             model.changesHaveBeenApplied();
 
             if (_private.isFieldFocused(this) && !field.readOnly) {
@@ -1017,6 +1021,11 @@ var Base = Control.extend({
         }
 
         return model.displayValue;
+    },
+
+    _updateFieldInTemplate: function() {
+        const model = this._viewModel;
+        _private.updateField(this, model.displayValue, model.selection);
     },
 
     _recalculateLocationVisibleArea: function (field, displayValue, selection) {

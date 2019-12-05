@@ -4,4 +4,5 @@
             source="{{_options.filterButtonItems}}"
             historyId="{{_options.historyId}}"
             on:itemsChanged="_itemsChanged()"
+            on:filterChanged="_filterChanged()"
             on:historyApply="_historyApply()"/>

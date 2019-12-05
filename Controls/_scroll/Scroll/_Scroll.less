@@ -19,6 +19,13 @@
    -webkit-overflow-scrolling: auto;
 }
 
+.controls-Scroll__content-overflowScrolling {
+   // to fix flickering on IOS after opening popup's
+   // for example: https://online.sbis.ru/opendoc.html?guid=12dcb776-5968-4495-b800-34e153d90284
+   perspective: 1000;
+   backface-visibility: hidden;
+}
+
 // Use momentum-based scrolling, where the content continues to scroll for a while after finishing the scroll gesture and removing your finger from the touchscreen.
 .controls-Scroll_webkitOverflowScrollingTouch .controls-Scroll .controls-Scroll__content-overflowScrolling {
    -webkit-overflow-scrolling: touch;
@@ -88,6 +95,9 @@
 
 .controls-Scroll__content_hideNativeScrollbar::-webkit-scrollbar {
    width: 0px;
+   // It's Magic. Only these two styles together allows to hide the scroll on the iPad.
+   -webkit-appearance: none;
+   display: none;
 }
 
 .controls-Scroll__content_scroll {
@@ -105,14 +115,6 @@
 
 .controls-Scroll__content_hidden {
    overflow: hidden;
-}
-
-.controls-Scroll__measuredBlock {
-   position: absolute;
-   width: 100px;
-   height: 100px;
-   overflow: scroll;
-   top: -9999px;
 }
 
 .controls-Scroll__paging {

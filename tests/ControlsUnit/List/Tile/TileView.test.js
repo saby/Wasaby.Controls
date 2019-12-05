@@ -355,6 +355,7 @@ define(['Controls/_tile/TileView/TileView',
 
          hoveredItem = tileView._listModel.getHoveredItem();
          assert.equal(hoveredItem.zoomCoefficient, 1.5);
+         assert.isFalse(hoveredItem.canShowActions);
          assert.equal(hoveredItem.position, 'left: 10px; right: 10px; top: 10px; bottom: 10px; ');
          assert.equal(hoveredItem.endPosition, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
@@ -373,6 +374,26 @@ define(['Controls/_tile/TileView/TileView',
 
          hoveredItem = tileView._listModel.getHoveredItem();
          assert.equal(hoveredItem.zoomCoefficient, 1);
+         assert.isFalse(hoveredItem.canShowActions);
+         assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
+         assert.equal(hoveredItem.key, 'itemKey1');
+
+
+         cfg.tileScalingMode = 'overlap';
+         tileView.saveOptions(cfg);
+
+         tileView._setHoveredItem({
+            key: 'itemKey1'
+         }, {
+            left: 5,
+            right: 5,
+            top: 5,
+            bottom: 5
+         });
+
+         hoveredItem = tileView._listModel.getHoveredItem();
+         assert.equal(hoveredItem.zoomCoefficient, 1);
+         assert.isTrue(hoveredItem.canShowActions);
          assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
 
@@ -381,6 +402,7 @@ define(['Controls/_tile/TileView/TileView',
          });
 
          hoveredItem = tileView._listModel.getHoveredItem();
+         assert.isTrue(hoveredItem.canShowActions);
          assert.equal(hoveredItem.position, '');
          assert.equal(hoveredItem.key, 'itemKey2');
       });
@@ -418,6 +440,7 @@ define(['Controls/_tile/TileView/TileView',
          hoveredItem = tileView._listModel.getHoveredItem();
 
          assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
+         assert.isTrue(hoveredItem.canShowActions);
          assert.equal(hoveredItem.key, 'itemKey1');
          assert.isOk(hoveredItem.isAnimated, 'startPosition does not match endPosition, hoveredItem should be animated');
          assert.isFalse(controlResizeFired, 'Invalid fire "controlResize" event from afterUpdate.');

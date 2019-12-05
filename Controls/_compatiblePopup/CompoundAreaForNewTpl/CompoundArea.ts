@@ -12,15 +12,16 @@ import clone = require('Core/core-clone');
 import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
 import Vdom = require('Vdom/Vdom');
 import Deferred = require('Core/Deferred');
-import {IoC, constants} from 'Env/Env';
+import {constants} from 'Env/Env';
 import {StackStrategy} from 'Controls/popupTemplate';
 import {load} from 'Core/library';
 import 'css!theme?Controls/compatiblePopup';
+import {Logger} from 'UI/Utils';
 
 /**
  * Слой совместимости для открытия новых шаблонов в старых попапах
  * */
-var moduleClass = CompoundControl.extend({
+const moduleClass = CompoundControl.extend({
    _dotTplFn: template,
    $protected: {
       _isVDomTemplateMounted: false,
@@ -29,9 +30,8 @@ var moduleClass = CompoundControl.extend({
       },
       _closeTimerId: null
    },
-   init: function() {
+   init(): void {
       moduleClass.superclass.init.apply(this, arguments);
-      var self = this;
       this._listeners = [];
       this._onCloseHandler = this._onCloseHandler.bind(this);
       this._keydownHandler = this._keydownHandler.bind(this);
@@ -67,20 +67,25 @@ var moduleClass = CompoundControl.extend({
       // фокус уходит, нужно попробовать закрыть ненужные панели
       this.subscribe('onFocusOut', this._onFocusOutHandler.bind(this));
 
+      // Здесь заранее можно построить ManagerWrapper, т.к. либа popupTemplate уже точно загружена и новые зависимости не прилетят
+      import('Controls/popup').then((PopupLib) => {
+         PopupLib.BaseOpener.getManager();
+      });
+
       this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
-         var def = new Deferred();
+         const def = new Deferred();
 
          if (this._options.innerComponentOptions) {
             if (this._options.innerComponentOptions._template) {
                this._options.template = this._options.innerComponentOptions._template;
             }
             this._saveTemplateOptions(this._options.innerComponentOptions);
-            IoC.resolve('ILogger').error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions');
+            Logger.error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions', this);
          }
 
          this._modifyInnerOptionsByHandlers();
 
-         let deps = [
+         const deps = [
             this._loadTemplate(this._options.template),
             import('Vdom/Vdom')
          ];
@@ -115,7 +120,7 @@ var moduleClass = CompoundControl.extend({
       }
       const wrapper = $('.vDomWrapper', this.getContainer());
       if (wrapper.length) {
-         let wrapperOptions = {
+         const wrapperOptions = {
             template: this._options.template,
             templateOptions: this._options.templateOptions,
 
@@ -172,14 +177,14 @@ var moduleClass = CompoundControl.extend({
       return Promise.resolve(tpl);
    },
 
-   _keydownHandler: function(e) {
+   _keydownHandler(e) {
       if (!e.shiftKey && e.which === constants.key.esc) {
          e.stopPropagation();
          this._onCloseHandler();
       }
    },
 
-   _createEventProperty: function(handler) {
+   _createEventProperty(handler) {
       return {
          fn: this._createFnForEvents(handler),
          args: []
@@ -187,8 +192,8 @@ var moduleClass = CompoundControl.extend({
    },
 
    // Создаем обработчик события, который положим в eventProperties узла
-   _createFnForEvents: function(callback) {
-      var fn = callback;
+   _createFnForEvents(callback) {
+      const fn = callback;
 
       // Нужно для событийного канала vdom'a.
       // У fn.control позовется forceUpdate. На compoundArea его нет, поэтому ставим заглушку
@@ -198,7 +203,7 @@ var moduleClass = CompoundControl.extend({
       return fn;
    },
 
-   _beforeCloseHandler: function(event) {
+   _beforeCloseHandler(event) {
       // Если позвали закрытие панели до того, как построился VDOM компонент - дожидаемся когда он построится
       // Только после этого закрываем панель
       if (!this._isVDomTemplateMounted) {
@@ -213,11 +218,11 @@ var moduleClass = CompoundControl.extend({
       }
    },
 
-   popupBeforeDestroyed: function() {
+   popupBeforeDestroyed() {
       // Эмулируем событие вдомного попапа managerPopupBeforeDestroyed для floatArea
-      var ManagerWrapper = ManagerWrapperController.getManagerWrapper();
+      const ManagerWrapper = ManagerWrapperController.getManagerWrapper();
       if (ManagerWrapper) {
-         var container = this._container[0] ? this._container[0] : this._container;
+         const container = this._container[0] ? this._container[0] : this._container;
          ManagerWrapper._beforePopupDestroyedHandler(null, {}, [], container);
       }
    },
@@ -230,8 +235,8 @@ var moduleClass = CompoundControl.extend({
    },
 
    // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент добавился в dom нет.
-   _afterMountHandler: function() {
-      var self = this;
+   _afterMountHandler() {
+      const self = this;
       self._baseAfterMount = self._vDomTemplate._afterMount;
       self._vDomTemplate._afterMount = function() {
          self._options.onOpenHandlerEvent && self._options.onOpenHandlerEvent('onOpen');
@@ -240,6 +245,7 @@ var moduleClass = CompoundControl.extend({
          if (self._options._initCompoundArea) {
             self._notifyOnSizeChanged(self, self);
             self._options._initCompoundArea(self);
+            self._options._initCompoundArea = null;
          }
          self._finishPopupOpenedDeferred();
          self._isVDomTemplateMounted = true;
@@ -253,8 +259,8 @@ var moduleClass = CompoundControl.extend({
    },
 
    // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент обновился - нет.
-   _afterUpdateHandler: function() {
-      var self = this;
+   _afterUpdateHandler() {
+      const self = this;
       self._baseAfterUpdate = self._vDomTemplate._afterUpdate;
       self._vDomTemplate._afterUpdate = function() {
          self._baseAfterUpdate.apply(this, arguments);
@@ -268,8 +274,8 @@ var moduleClass = CompoundControl.extend({
          }
       };
    },
-   _modifyInnerOptionsByHandlers: function() {
-      var innerOptions = this._options.templateOptions;
+   _modifyInnerOptionsByHandlers() {
+      const innerOptions = this._options.templateOptions;
       innerOptions._onCloseHandler = this._onCloseHandler;
       innerOptions._onResultHandler = this._onResultHandler;
       innerOptions._onResizeHandler = this._onResizeHandler;
@@ -277,7 +283,7 @@ var moduleClass = CompoundControl.extend({
       innerOptions._onMaximizedHandler = this._onMaximizedHandler;
       innerOptions._onResizingLineHandler = this._onResizingLineHandler;
    },
-   _onResizeHandler: function() {
+   _onResizeHandler() {
       this._notifyOnSizeChanged();
       ManagerWrapperController.startResizeEmitter();
    },
@@ -300,11 +306,11 @@ var moduleClass = CompoundControl.extend({
          this._result = null;
       });
    },
-   _callCloseHandler: function() {
+   _callCloseHandler() {
       this._options.onCloseHandler && this._options.onCloseHandler(this._result);
       this._options.onCloseHandlerEvent && this._options.onCloseHandlerEvent('onClose', [this._result]);
    },
-   _onFocusOutHandler: function(event, destroyed, focusedControl) {
+   _onFocusOutHandler(event, destroyed, focusedControl) {
       // если фокус уходит со старой панели на новый контрол, старых механизм не будет вызван, нужно вручную звать onaActivateWindow
       if (focusedControl) {
          if (focusedControl._template) {
@@ -317,20 +323,20 @@ var moduleClass = CompoundControl.extend({
          }
       }
    },
-   _onResultHandler: function() {
+   _onResultHandler() {
       this._result = Array.prototype.slice.call(arguments, 1); // first arg - event;
 
       this._options.onResultHandler && this._options.onResultHandler.apply(this, this._result);
       this._options.onResultHandlerEvent && this._options.onResultHandlerEvent('onResult', this._result);
    },
-   _onRegisterHandler: function(event, eventName, emitter, handler) {
+   _onRegisterHandler(event, eventName, emitter, handler) {
       // Пробрасываю событие о регистрации listener'ов до регистраторов, которые лежат в managerWrapper и физически
       // не могут отловить событие
       if (handler) {
          this._listeners.push({
-            event: event,
-            eventName: eventName,
-            emitter: emitter
+            event,
+            eventName,
+            emitter
          });
          ManagerWrapperController.registerListener(event, eventName, emitter, handler);
       } else {
@@ -338,7 +344,7 @@ var moduleClass = CompoundControl.extend({
       }
    },
 
-   onBringToFront: function() {
+   onBringToFront() {
       this._vDomTemplate && this._vDomTemplate.activate();
    },
 
@@ -380,8 +386,8 @@ var moduleClass = CompoundControl.extend({
       }
 
       this._maximized = !this._maximized;
-      var coords = this._getFloatAreaStackRootCoords();
-      var item = {
+      const coords = this._getFloatAreaStackRootCoords();
+      const item = {
          popupOptions: {
             maximized: this._maximized,
             minWidth: this._options._popupOptions.minWidth,
@@ -416,12 +422,12 @@ var moduleClass = CompoundControl.extend({
         }
     },
 
-   _getRootContainer: function() {
-      var container = this._vDomTemplate.getContainer();
+   _getRootContainer() {
+      const container = this._vDomTemplate.getContainer();
       return container.get ? container.get(0) : container;
    },
 
-   destroy: function() {
+   destroy() {
       this._container[0].eventProperties = null;
       this.unsubscribe('activated', this._activatedHandler);
       this.unsubscribe('deactivated', this._deactivatedHandler);
@@ -432,15 +438,15 @@ var moduleClass = CompoundControl.extend({
       }
 
       // Очищаем список лисенеров в контроллерах.
-      for (var i = 0; i < this._listeners.length; i++) {
-         var listener = this._listeners[i];
+      for (let i = 0; i < this._listeners.length; i++) {
+         const listener = this._listeners[i];
          ManagerWrapperController.unregisterListener(listener.event, listener.eventName, listener.emitter);
       }
       moduleClass.superclass.destroy.apply(this, arguments);
       this._isVDomTemplateMounted = true;
       this.getContainer().unbind('keydown', this._keydownHandler);
       if (this._vDomTemplate) {
-         var
+         const
             self = this,
             Sync = Vdom.Synchronizer;
 
@@ -466,11 +472,11 @@ var moduleClass = CompoundControl.extend({
          }, 3000);
       }
    },
-   _clearVdomProperties: function(container) {
-      var children = (container[0] || container).getElementsByTagName('*');
+   _clearVdomProperties(container) {
+      const children = (container[0] || container).getElementsByTagName('*');
 
-      for (var i = 0; i < children.length; i++) {
-         var c = children[i];
+      for (let i = 0; i < children.length; i++) {
+         const c = children[i];
 
          delete c.controlNodes;
          delete c.eventProperties;
@@ -486,14 +492,14 @@ var moduleClass = CompoundControl.extend({
       delete container.$V;
    },
 
-   _forceUpdate: function() {
+   _forceUpdate() {
       // Заглушка для ForceUpdate которого на compoundControl нет
    },
-   canAcceptFocus: function(){
+   canAcceptFocus() {
       return this.isVisible();
    },
 
-   setTemplateOptions: function(newOptions) {
+   setTemplateOptions(newOptions) {
       // Могут позвать перерисоку до того, как компонент создался
       // Если компонент еще не создался а его уже перерисовали, то создаться должент с новыми опциями
       this._saveTemplateOptions(newOptions);
@@ -511,23 +517,23 @@ var moduleClass = CompoundControl.extend({
       }
    },
 
-   _saveTemplateOptions: function(newOptions) {
+   _saveTemplateOptions(newOptions) {
       this._options.templateOptions = newOptions;
       this._maximized = !!this._options.templateOptions.maximized;
    },
 
-   _updateVDOMTemplate: function(templateOptions) {
+   _updateVDOMTemplate(templateOptions) {
       this._vDomTemplate.setTemplateOptions(templateOptions);
       this._vDomTemplate._forceUpdate();
    },
 
-   _activatedHandler: function(event, args) {
+   _activatedHandler(event, args) {
       if (!this.isActive()) {
-         var activationTarget = args[0];
-         var curContainer = this._container.length
+         const activationTarget = args[0];
+         const curContainer = this._container.length
             ? this._container[0]
             : this._container;
-         var toContainer = activationTarget._$to._container.length
+         const toContainer = activationTarget._$to._container.length
             ? activationTarget._$to._container[0]
             : activationTarget._$to._container;
 
@@ -542,9 +548,9 @@ var moduleClass = CompoundControl.extend({
       }
    },
 
-   _deactivatedHandler: function(event, args) {
+   _deactivatedHandler(event, args) {
       if (this.isActive()) {
-         var activationTarget = args[0];
+         const activationTarget = args[0];
          this.setActive(false, activationTarget.isShiftKey, true);
       }
    }

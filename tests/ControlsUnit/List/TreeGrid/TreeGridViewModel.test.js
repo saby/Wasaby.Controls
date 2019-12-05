@@ -3,7 +3,8 @@ define(['Controls/treeGrid',
 
    describe('Controls.List.TreeGrid.TreeGridViewModel', function() {
       var
-         treeGridViewModel = new treeGrid.ViewModel({columns:[]});
+         theme = 'default',
+         treeGridViewModel = new treeGrid.ViewModel({theme: theme, columns:[]});
       it('_createModel', function() {
          var
             createdModel = treeGridViewModel._createModel({});
@@ -106,7 +107,7 @@ define(['Controls/treeGrid',
          assert.isTrue(!!itemData.getCurrentColumn);
          var
             currentColumn = itemData.getCurrentColumn();
-         assert.equal(currentColumn.cellClasses, ' controls-TreeGrid__row-cell controls-TreeGrid__row-cell__item');
+         assert.equal(currentColumn.cellClasses, ' controls-TreeGrid__row-cell_theme-default controls-TreeGrid__row-cell__item_theme-default');
          treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
       });
 
@@ -119,21 +120,21 @@ define(['Controls/treeGrid',
          };
 
          function checkCellClasses(classes, itemType) {
-            assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell') !== -1);
+            assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell_theme-default') !== -1);
             if (itemType === itemTypes.node) {
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node') !== -1);
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode') === -1);
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node_theme-default') !== -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode_theme-default') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item_theme-default') === -1);
             }
             if (itemType === itemTypes.hiddenNode) {
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node') === -1);
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode') !== -1);
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node_theme-default') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode_theme-default') !== -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item_theme-default') === -1);
             }
             if (itemType === itemTypes.item) {
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node') === -1);
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode') === -1);
-               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item') !== -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node_theme-default') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode_theme-default') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item_theme-default') !== -1);
             }
          }
 
@@ -143,6 +144,7 @@ define(['Controls/treeGrid',
                 displayProperty: 'title'
              }],
              model = new treeGrid.ViewModel({
+                theme: theme,
                 items: new collection.RecordSet({
                    keyProperty: 'id',
                    rawData: [
@@ -156,7 +158,6 @@ define(['Controls/treeGrid',
                 parentProperty: 'parent',
                 columns: initialColumns
              });
-
          current = model.getCurrent();
          checkCellClasses(current.getCurrentColumn().cellClasses, itemTypes.node);
          model.goToNext();
@@ -177,6 +178,7 @@ define(['Controls/treeGrid',
                 displayProperty: 'title'
              }],
              model = new treeGrid.ViewModel({
+                theme: theme,
                 items: new collection.RecordSet({
                    keyProperty: 'id',
                    rawData: [
@@ -192,13 +194,13 @@ define(['Controls/treeGrid',
              }),
              current = model.getCurrent(),
              expected = {
-                defaultOrNull: 'controls-TreeGrid__row-levelPadding_size_default',
-                onlyExpander_xs: 'controls-TreeGrid__row-levelPadding_size_xs',
-                onlyExpander_xl: 'controls-TreeGrid__row-levelPadding_size_xl',
-                onlyIndent_xxs: 'controls-TreeGrid__row-levelPadding_size_xxs',
-                onlyIndent_m: 'controls-TreeGrid__row-levelPadding_size_m',
-                s_m: 'controls-TreeGrid__row-levelPadding_size_m',
-                l_xl: 'controls-TreeGrid__row-levelPadding_size_xl'
+                defaultOrNull: 'controls-TreeGrid__row-levelPadding_size_default_theme-default',
+                onlyExpander_xs: 'controls-TreeGrid__row-levelPadding_size_xs_theme-default',
+                onlyExpander_xl: 'controls-TreeGrid__row-levelPadding_size_xl_theme-default',
+                onlyIndent_xxs: 'controls-TreeGrid__row-levelPadding_size_xxs_theme-default',
+                onlyIndent_m: 'controls-TreeGrid__row-levelPadding_size_m_theme-default',
+                s_m: 'controls-TreeGrid__row-levelPadding_size_m_theme-default',
+                l_xl: 'controls-TreeGrid__row-levelPadding_size_xl_theme-default'
              };
 
          assert.equal(expected.defaultOrNull, current.getLevelIndentClasses(null, null));
@@ -274,7 +276,7 @@ define(['Controls/treeGrid',
             return {
                item: {},
                columns: initialColumns,
-               nodeFooter: {},
+               nodeFooters: [{}],
                rowIndex: 1,
                getCurrentColumn: function() {
                   return {
@@ -285,7 +287,7 @@ define(['Controls/treeGrid',
             };
          };
 
-         let nodeFooter = model.getItemDataByItem.call(model).nodeFooter;
+         let nodeFooter = model.getItemDataByItem.call(model).nodeFooters[0];
          assert.equal(nodeFooter.rowIndex, 2);
          assert.equal(nodeFooter.colspanStyles, 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 3; grid-row-end: 4;');
 
@@ -316,33 +318,6 @@ define(['Controls/treeGrid',
 
          assert.equal(model._calcRowIndex(current), 0);
 
-      });
-
-      it('prepareGroupGridStyles', function () {
-         var
-             initialColumns = [{
-                width: '1fr',
-                displayProperty: 'title'
-             }],
-             model = new treeGrid.ViewModel({
-                items: new collection.RecordSet({
-                   keyProperty: 'id',
-                   rawData: [
-                      {id: 0, title: 'i0', parent: null, type: true},
-                      {id: 1, title: 'i1', parent: null, type: false},
-                      {id: 2, title: 'i2', parent: null, type: null}
-                   ]
-                }),
-                keyProperty: 'id',
-                nodeProperty: 'type',
-                parentProperty: 'parent',
-                columns: initialColumns
-             }),
-             current = model.getCurrent();
-
-         treeGrid.ViewModel._private.prepareGroupGridStyles(model, current);
-
-         assert.equal(current.gridGroupStyles, 'grid-row: 1; -ms-grid-row: 1;');
       });
 
       it('setExpandedItems', function() {
@@ -384,7 +359,11 @@ define(['Controls/treeGrid',
                 columns: [{}]
              });
 
-         treeGrid.ViewModel._private.getExpandedItems(model.getDisplay(), model._model.getExpandedItems(), model._options.nodeProperty);
+         // Return origin if has no display
+         assert.deepEqual(
+             model._model.getExpandedItems(),
+             treeGrid.ViewModel._private.getExpandedItems(null, model._model.getExpandedItems(), model._options.nodeProperty)
+         );
 
          assert.deepEqual(
              [0, 1],
@@ -428,22 +407,22 @@ define(['Controls/treeGrid',
 
          let
             ladderViewModel = new treeGrid.ViewModel({
-            items: new collection.RecordSet({
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
+                     { id: 1, title: 'i1', date: '03 янв', parent: 0, type: null },
+                     { id: 2, title: 'i2', date: '03 янв', parent: 0, type: null },
+                     { id: 3, title: 'i3', date: '03 янв', parent: 0, type: null },
+                     { id: 4, title: 'i4', date: '01 янв', parent: null, type: true },
+                  ]
+               }),
                keyProperty: 'id',
-               rawData: [
-                  { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
-                  { id: 1, title: 'i1', date: '03 янв', parent: 0, type: null },
-                  { id: 2, title: 'i2', date: '03 янв', parent: 0, type: null },
-                  { id: 3, title: 'i3', date: '03 янв', parent: 0, type: null },
-                  { id: 4, title: 'i4', date: '01 янв', parent: null, type: true },
-               ]
-            }),
-            keyProperty: 'id',
-            nodeProperty: 'type',
-            parentProperty: 'parent',
-            columns: initialColumns,
-            ladderProperties: ['date']
-         });
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               columns: initialColumns,
+               ladderProperties: ['date']
+            });
 
 
          ladderViewModel.getItems = () => ladderViewModel._model.getItems();
@@ -451,12 +430,14 @@ define(['Controls/treeGrid',
             getRoot: () => ({
                getContents: () => null
             })
-         })
-         assert.isTrue(ladderViewModel.isDrawResults())
+         });
+         assert.isTrue(ladderViewModel.isDrawResults());
          ladderViewModel.getItems().removeAt(4);
-         assert.isFalse(ladderViewModel.isDrawResults())
+         assert.isFalse(ladderViewModel.isDrawResults());
          ladderViewModel.getDisplay = () => null;
-         assert.equal(undefined, ladderViewModel.isDrawResults())
+         assert.equal(undefined, ladderViewModel.isDrawResults());
+         ladderViewModel._options.resultsVisibility = 'visible';
+         assert.isTrue(ladderViewModel.isDrawResults());
       });
    });
    function MockedDisplayItem(cfg) {

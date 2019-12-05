@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IGroupedGrid', [
 ], function() {
 
@@ -33,54 +34,72 @@ define('Controls/interface/IGroupedGrid', [
     * <pre>
     *    groupingKeyCallback ="{{_groupByBrand}}",
     * </pre>
+    * @see groupTemplate
+    * @see collapsedGroups
+    * @see groupHistoryId
+    * @see groupExpanded
+    * @see groupCollapsed
     */
 
    /**
     * @name Controls/interface/IGroupedGrid#groupTemplate
     * @cfg {Function} Шаблон группировки списка.
-    * <a href="/materials/demo-ws4-grid-group">Example</a>.
+    * @default {@link Controls/grid:GroupTemplate}
     * @remark
-    * Базовый шаблон для контрола {@link Controls/Grid:View}: "Controls/grid:GroupTemplate".
-    * Шаблон поддерживает следующие параметры:
-    * <ul>
-    *    <li>expanderAlign {enum('hidden'|'right'|'left')} — расположение кнопки-экспандера. Стандартное расположение - слева.</li>
-    *    <li>expanderVisible {Boolean} — видимость кнопки-экспандера.</li>
-    *    <li>textAlign {String} — горизонтальное выравнивание текста группы. Доступные значения опции: "left" и "right". По умолчанию используется выравнивание текста по центру.</li>
-    *    <li>rightTemplate {Function} — шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</li>
-    *    <li>columnAlignGroup (тип Number) — номер колонки, относительно которой происходит горизонтальное выравнивание текста группы.</li>
-    * </ul>
-    * @example
-    * Использование пользовательских параметров для группового рендеринга в Controls/grid:View просмотр без расширителя и с выравниванием текста по левому краю:
-    * <pre>
-    *    <Controls.grid:View>
-    *       <ws:groupTemplate>
-    *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}" textAlign="left" />
-    *       </ws:groupTemplate>
-    *    </Controls.grid:View>
-    * </pre>
+    * См. <a href="/materials/demo-ws4-grid-group">демо-пример</a>.
+    * Подробнее о параметрах шаблона читайте {@link Controls/grid:GroupTemplate здесь}.
+    * Подробнее работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/ здесь}.
+    * @see groupHistoryId
+    * @see collapsedGroups
+    * @see groupExpanded
+    * @see groupCollapsed
+    * @see groupingKeyCallback
     */
 
    /**
     * @name Controls/interface/IGroupedGrid#collapsedGroups
     * @cfg {Array} Список идентификаторов свернутых групп. Идентификаторы групп получаются в результате вызова {@link groupingKeyCallback}.
-    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    * @remark
+    * См. <a href="/materials/demo-ws4-grid-group">демо-пример</a>.
+    * @see groupTemplate
+    * @see groupHistoryId
+    * @see groupExpanded
+    * @see groupCollapsed
+    * @see groupingKeyCallback
     */
 
    /**
     * @name Controls/interface/IGroupedGrid#groupHistoryId
     * @cfg {String} Идентификатор для сохранения в истории списка идентификаторов свернутых групп.
+    * @see groupTemplate
+    * @see collapsedGroups
+    * @see groupExpanded
+    * @see groupCollapsed
+    * @see groupingKeyCallback
     */
 
    /**
     * @event Controls/interface/IGroupedGrid#groupExpanded Происходит при развертывании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    * @remark
+    * См. <a href="/materials/demo-ws4-grid-group">демо-пример</a>.
+    * @see groupTemplate
+    * @see collapsedGroups
+    * @see groupHistoryId
+    * @see groupCollapsed
+    * @see groupingKeyCallback
     */
 
    /**
     * @event Controls/interface/IGroupedGrid#groupCollapsed Происходит при сворачивании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    * @remark
+    * См. <a href="/materials/demo-ws4-grid-group">демо-пример</a>.
+    * @see groupTemplate
+    * @see collapsedGroups
+    * @see groupHistoryId
+    * @see groupExpanded
+    * @see groupingKeyCallback
     */
 
 });

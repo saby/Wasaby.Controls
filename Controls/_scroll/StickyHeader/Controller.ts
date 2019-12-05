@@ -42,7 +42,9 @@ class Component extends Control {
             header = this._headers[headerId];
             // If the header is "replaceable", we take into account the last one after all "stackable" headers.
             if (header.mode === 'stackable') {
-                height += header.inst.height;
+                if (header.fixedInitially) {
+                    height += header.inst.height;
+                }
                 replaceableHeight = 0;
             } else if (header.mode === 'replaceable') {
                 replaceableHeight = header.inst.height;
@@ -51,9 +53,12 @@ class Component extends Control {
         return height + replaceableHeight;
     }
 
-    _stickyRegisterHandler(event, data: object, register: boolean) {
+    _stickyRegisterHandler(event, data: object, register: boolean): void {
         if (register) {
-            this._headers[data.id] = data;
+            this._headers[data.id] = {
+                ...data,
+                fixedInitially: false
+            };
             this._addToHeadersStack(data.id, data.position);
         } else {
             delete this._headers[data.id];
@@ -107,15 +112,26 @@ class Component extends Control {
         }
         //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
         const container = (this._container && this._container.get) ? this._container.get(0) : this._container,
-            headersStack = this._headersStack[position];
+            headersStack = this._headersStack[position],
+            offset = this._headers[id].inst.getOffset(container, position);
+
+        let headersHeigth = 0;
 
         // We are looking for the position of the first element whose offset is greater than the current one.
         // Insert a new header at this position.
         let index = headersStack.findIndex((headerId) => {
-            return this._headers[headerId].inst.getOffset(container, position) > this._headers[id].inst.getOffset(container, position);
+            const headerInst = this._headers[headerId].inst;
+            headersHeigth += headerInst.height;
+            return headerInst.getOffset(container, position) > offset;
         });
         index = index === -1 ? headersStack.length : index;
         headersStack.splice(index, 0, id);
+
+        if (((position === 'top' && !container.scrollTop) ||
+            (position === 'bottom' && container.scrollTop + container.clientHeight >= container.scrollHeight))
+                && headersHeigth === offset) {
+            this._headers[id].fixedInitially = true;
+        }
 
         this._updateTopBottom();
     }

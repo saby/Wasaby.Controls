@@ -2,11 +2,11 @@ import Deferred = require('Core/Deferred');
 import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
 import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/resources/themeConstantsGetter');
 import cMerge = require('Core/core-merge');
-import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/_popupTemplate/BaseController';
+import * as ThemesController from 'Core/Themes/ThemesControllerNew';
+
 import collection = require('Types/collection');
-import 'css!theme?Controls/popupTemplate';
 
 interface IInfoBoxThemeConstants {
     ARROW_WIDTH?: number;
@@ -36,12 +36,19 @@ function getConstants() {
 
 // todo: https://online.sbis.ru/opendoc.html?guid=b385bef8-31dd-4601-9716-f3593dfc9d41
 let constants: IInfoBoxThemeConstants = {};
+
+function initConstants(): Promise<any> {
+    return ThemesController.getInstance().loadCssWithAppTheme('Controls/popupTemplate').then(() => {
+        constants = getConstants();
+    });
+}
+
 if (document) {
     if (document.body) {
-        constants = getConstants();
+        initConstants();
     } else {
         document.addEventListener('DOMContentLoaded', () => {
-            constants = getConstants();
+            initConstants();
         });
     }
 }
@@ -92,7 +99,7 @@ class InfoBoxController extends StickyController.constructor {
         return true;
     }
 
-    popupResize(item: IPopupItem, container: HTMLDivElement): boolean {
+    resizeInner(item: IPopupItem, container: HTMLDivElement): boolean {
         return super.elementUpdated.call(this, item, container);
     }
 
@@ -120,7 +127,7 @@ class InfoBoxController extends StickyController.constructor {
             // It is impossible to count both the size and the position at the same time, because the position is related to the size.
             cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
             const sizes: IPopupSizes = {width: constants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
-            const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
+            const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), this._getTargetCoords(item));
             this.prepareConfig(item, sizes);
             item.position.maxWidth = position.width;
         }
@@ -175,14 +182,10 @@ class InfoBoxController extends StickyController.constructor {
         const topOrBottomSide: boolean = side === 't' || side === 'b';
 
         const config = {
-            verticalAlign: {
-                side: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide]
+            direction: {
+                horizontal: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side],
+                vertical: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide]
             },
-
-            horizontalAlign: {
-                side: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side]
-            },
-
             targetPoint: {
                 vertical: topOrBottomSide ? SIDES[side] : SIDES[alignSide],
                 horizontal: topOrBottomSide ? SIDES[alignSide] : SIDES[side]
@@ -193,11 +196,13 @@ class InfoBoxController extends StickyController.constructor {
         const horizontalOffset: number = this._getHorizontalOffset(target, topOrBottomSide, alignSide);
 
         if (verticalOffset) {
-            config.verticalAlign.offset = verticalOffset;
+            config.offset = config.offset || {};
+            config.offset.vertical = verticalOffset;
         }
 
         if (horizontalOffset) {
-            config.horizontalAlign.offset = horizontalOffset;
+            config.offset = config.offset || {};
+            config.offset.horizontal = horizontalOffset;
         }
 
         return config;

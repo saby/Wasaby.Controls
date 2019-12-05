@@ -12,4 +12,15 @@
                 header="{{_header}}"
                 nodeProperty="type"/>
     </Controls.scroll:Container>
+    <Controls.scroll:Container>
+        <Controls.treeGrid:View
+            useTableInOldBrowsers="{{true}}"
+                keyProperty="id"
+            theme="custom"
+                source="{{_viewSource}}"
+                columns="{{_columns}}"
+                parentProperty="parent"
+                header="{{_header}}"
+                nodeProperty="type"/>
+    </Controls.scroll:Container>
 </div>

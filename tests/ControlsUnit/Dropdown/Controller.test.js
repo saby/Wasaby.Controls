@@ -96,10 +96,29 @@ define(
                loadedItems;
             newConfig.dataLoadCallback = (items) => {loadedItems = items;};
             let dropdownController = getDropdownController(newConfig);
-            dropdownController._beforeMount(newConfig).addCallback(function(items) {
-               assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
+            dropdownController._beforeMount(newConfig).then((beforeMountResult) => {
+               assert.deepEqual(beforeMountResult.items.getRawData(), itemsRecords.getRawData());
                assert.deepEqual(loadedItems.getRawData(), itemsRecords.getRawData());
-               done();
+
+               newConfig.historyId = 'TEST_HISTORY_ID';
+               dropdownController._beforeMount(newConfig).then((res) => {
+                  assert.isTrue(res.hasOwnProperty('history'));
+
+                  newConfig.selectedKeys = [];
+                  let history = {
+                     frequent: [],
+                     pinned: [],
+                     recent: []
+                  };
+                  dropdownController._beforeMount(newConfig, {}, { history: history, items: itemsRecords }).then((historyRes) => {
+                     assert.deepEqual(dropdownController._source._oldItems.getRawData(), itemsRecords.getRawData());
+                     assert.deepEqual(dropdownController._source.getHistory(), history);
+                     done();
+                     return historyRes;
+                  });
+
+                  return res;
+               });
             });
          });
 
@@ -111,8 +130,8 @@ define(
             newConfig.selectedKeys = ['2'];
             newConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 1, page: 0, hasMore: false}};
             let dropdownController = getDropdownController(newConfig);
-            dropdownController._beforeMount(newConfig).addCallback(function(items) {
-               assert.deepEqual(items.getRawData(), itemsRecords.getRawData());
+            dropdownController._beforeMount(newConfig).addCallback(function(beforeMountResult) {
+               assert.deepEqual(beforeMountResult.items.getRawData(), itemsRecords.getRawData());
                assert.deepEqual(selectedItems[0].getRawData(), itemsRecords.at(1).getRawData());
                done();
             });
@@ -122,8 +141,8 @@ define(
             let navigationConfig = Clone(config);
             navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
             let dropdownController = getDropdownController(navigationConfig);
-            dropdownController._beforeMount(navigationConfig).addCallback(function(items) {
-               assert.deepEqual(items.getCount(), 2);
+            dropdownController._beforeMount(navigationConfig).addCallback(function(beforeMountResult) {
+               assert.deepEqual(beforeMountResult.items.getCount(), 2);
                done();
             });
          });
@@ -171,15 +190,15 @@ define(
             let filterConfig = Clone(config);
             filterConfig.filter = {id: ['3', '4']};
             let dropdownController = getDropdownController(filterConfig);
-            dropdownController._beforeMount(filterConfig).addCallback(function(items) {
-               assert.deepEqual(items.getCount(), 2);
+            dropdownController._beforeMount(filterConfig).addCallback(function(beforeMountResult) {
+               assert.deepEqual(beforeMountResult.items.getCount(), 2);
                done();
             });
          });
 
          it('check received state', () => {
             let dropdownController = getDropdownController(config);
-            dropdownController._beforeMount(config, null, itemsRecords);
+            dropdownController._beforeMount(config, null, {items: itemsRecords});
             assert.deepEqual(dropdownController._items.getRawData(), itemsRecords.getRawData());
          });
 
@@ -829,6 +848,19 @@ define(
                   openConfig = cfg;
                }
             };
+
+            dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
+
+            dropdownController._items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: [{
+                  id: 1,
+                  title: 'testTitle'
+               }]
+            });
+            openConfig = null;
+            dropdownController._options.footerTemplate = {};
 
             dropdownController.openMenu({ testOption: 'testValue' });
             assert.equal(openConfig.testOption, 'testValue');

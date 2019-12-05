@@ -1,7 +1,7 @@
 /**
  *
  * @mixin Controls/_toggle/Switch/SwitchStyles
- * @public
+ * @private
  * @author Красильников А.С.
  *
  * @css @color_DoubleSwitch-text_enabled_selected Selected text color of enabled double switch.

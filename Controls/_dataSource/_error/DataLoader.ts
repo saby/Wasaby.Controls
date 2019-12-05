@@ -27,6 +27,7 @@ const ERROR_ON_TIMEOUT = 504;
  * данных, будет выведена соответствующая ошибка.
  * @class Controls/_dataSource/_error/DataLoader
  * @extends UI/Base:Control
+ * @implements Controls/_interface/IErrorController
  * @control
  * @public
  * @author Сухоручкин А.С
@@ -42,6 +43,7 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
                           ctx?: unknown,
                           receivedState?: IErrorContainerReceivedState): Promise<IErrorContainerReceivedState> | void {
       if (receivedState) {
+         this._sources = sources;
          this._errorViewConfig = receivedState.errorViewConfig;
       } else {
          return DataLoader.load(sources, requestTimeout).then(({sources, errors}) => {
@@ -113,7 +115,10 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
       const result = {...sourceConfig};
 
       result.source = new PrefetchProxy({
-         target: sourceConfig.source,
+         // Не делаем вложенность PrefetchProxy в PrefetchProxy, иначе прикладным программистам сложно получиить
+         // оригинальный SbisService, а он им необходим для подписки на onBeforeProviderCall, который не стреляет
+         // у PrefetchProxy.
+         target: sourceConfig.source instanceof PrefetchProxy ? sourceConfig.source.getOriginal() : sourceConfig.source,
          data: {
             query: loadDataResult.data
          }

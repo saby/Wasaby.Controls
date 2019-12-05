@@ -7,7 +7,7 @@ import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
-import { Object as EventObject } from 'Env/Event';
+import { constants } from 'Env/Env';
 import 'css!theme?Controls/list';
 import { CollectionItem } from 'Controls/display';
 
@@ -15,6 +15,10 @@ import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/I
 
 const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
+const POSITION_CLASSES = {
+    bottomRight: 'controls-itemActionsV_position_bottomRight',
+    topRight: 'controls-itemActionsV_position_topRight'
+}
 
 var _private = {
     fillItemAllActions: function(item, options) {
@@ -37,6 +41,9 @@ var _private = {
     },
 
     updateItemActions: function(self, item, options) {
+        if (constants.isNodePlatform && !ItemActionsControl._isUnitTesting) {
+            return;
+        }
         // TODO Remove this, compatibility between management controls
         if (options.useNewModel && !item.getContents) {
             item = options.listModel.getItemBySourceId(item.get(options.listModel.getKeyProperty()));
@@ -63,15 +70,19 @@ var _private = {
                 _isMenu: true
             });
         }
-
-        options.listModel.setItemActions(item, {
-            all,
-            showed
-        });
+        if (!self._destroyed) {
+            options.listModel.setItemActions(item, {
+                all,
+                showed
+            });
+        }
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
-        if (options.itemActionsProperty || options.itemActions && options.itemActions.length) {
+        if (constants.isNodePlatform && !ItemActionsControl._isUnitTesting) {
+            return;
+        }
+        if (options.itemActionsProperty || options.itemActions) {
             if (options.useNewModel) {
                 options.listModel.setEventRaising(false, true);
                 options.listModel.each((collectionItem: CollectionItem<unknown>) => {
@@ -129,13 +140,23 @@ var _private = {
        });
 
        return children;
-   }
+    },
+    getContainerPaddingClass(classes: string, itemPadding: object):string {
+       let paddingClass = ' ';
+       if (classes.indexOf(POSITION_CLASSES.topRight) !== -1) {
+           paddingClass += 'controls-itemActionsV_padding-top_' + (itemPadding && itemPadding.top === 'null' ? 'null ' : 'default ');
+       } else  if (classes.indexOf(POSITION_CLASSES.bottomRight) !== -1) {
+           paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ');
+       }
+       return paddingClass;
+    }
 };
 
 var ItemActionsControl = Control.extend({
 
     _template: template,
     _itemActionsTemplate: itemActionsTemplate,
+    _getContainerPaddingClass: null,
 
     constructor: function() {
         ItemActionsControl.superclass.constructor.apply(this, arguments);
@@ -151,6 +172,7 @@ var ItemActionsControl = Control.extend({
             this.serverSide = true;
             return;
         }
+        this._getContainerPaddingClass = _private.getContainerPaddingClass.bind(this);
         if (newOptions.useNewModel) {
             return import('Controls/listRender').then((listRender) => {
                 this._itemActionsTemplate = listRender.itemActionsTemplate;
@@ -162,6 +184,7 @@ var ItemActionsControl = Control.extend({
         var args = [this, newOptions];
 
         if (
+            this._options.readOnly !== newOptions.readOnly ||
             this._options.listModel !== newOptions.listModel ||
             this._options.itemActions !== newOptions.itemActions ||
             this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback ||
@@ -174,12 +197,14 @@ var ItemActionsControl = Control.extend({
 
     _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel);
-        if (this._options.useNewModel) {
-            this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
-            this._options.listModel.setMarkedItem(itemData);
-        } else {
-            this.updateItemActions(itemData.actionsItem);
-            this._options.listModel.setMarkedKey(itemData.key);
+        if (!this._destroyed) {
+            if (this._options.useNewModel) {
+                this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
+                this._options.listModel.setMarkedItem(itemData);
+            } else {
+                this.updateItemActions(itemData.actionsItem);
+                this._options.listModel.setMarkedKey(itemData.key);
+            }
         }
     },
 
@@ -194,13 +219,13 @@ var ItemActionsControl = Control.extend({
     updateItemActions: function(item) {
         _private.updateItemActions(this, item, this._options);
         if (!this._options.useNewModel) {
-            this._options.listModel.nextModelVersion(false, ACTION_TYPE);
+            this._options.listModel.nextModelVersion(true, ACTION_TYPE);
         }
     },
 
     updateActions(): void {
         _private.updateActions(this, this._options);
-    }
+    },
    getChildren(
       action: object,
       actions: object[]
@@ -225,5 +250,6 @@ ItemActionsControl.getDefaultOptions = function() {
     };
 };
 ItemActionsControl._private = _private;
+ItemActionsControl._isUnitTesting = false;
 
 export = ItemActionsControl;

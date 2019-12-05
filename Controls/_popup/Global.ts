@@ -7,6 +7,7 @@ import { goUpByControlTree } from 'UI/Focus';
 
 /**
  * @class Controls/_popup/Global
+ * @private
  */
 
 let _private = {
@@ -74,19 +75,21 @@ const Global = Control.extend({
    },
    _openPreviewerHandler(event, config, type) {
       this._activePreviewer = event.target;
-      Previewer.openPopup(config, type);
+      return Previewer.openPopup(config, type).then((id: string) => {
+         this._previewerId = id;
+      });
    },
 
    _closePreviewerHandler(event, type) {
-      Previewer.closePopup(type);
+      Previewer.closePopup(this._previewerId, type);
    },
 
    _cancelPreviewerHandler(event, action) {
-      Previewer.cancelPopup(action);
+      Previewer.cancelPopup(this._previewerId, action);
    },
    _isPreviewerOpenedHandler(event) {
-      if (this._activePreviewer === event.target) {
-         return Previewer.isOpenedPopup();
+      if (this._activePreviewer === event.target && this._previewerId) {
+         return Previewer.isOpenedPopup(this._previewerId);
       }
       return false;
    },
@@ -125,6 +128,7 @@ const Global = Control.extend({
       Dialog.openPopup({
          template,
          templateOptions,
+         opener: null,
          eventHandlers: {
             onClose: () => {
                this._onDialogClosed();

@@ -1,4 +1,6 @@
+
 define('Controls/Utils/IntersectionObserver',
+   /* eslint-disable */
    ['Env/Env'],
    function(Env) {
 
@@ -781,4 +783,5 @@ define('Controls/Utils/IntersectionObserver',
 
       return IntersectionObserver;
    }
+   /* eslint-enable */
 );

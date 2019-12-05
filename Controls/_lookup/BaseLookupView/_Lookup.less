@@ -37,13 +37,39 @@
   border-right: @spacing_Lookup-between-input-afterFieldWrapper solid transparent;
 }
 
-.controls-Lookup__fieldWrapper-left-spacing {
-  border-left: @spacing_Lookup-between-input-beforeFieldWrapper solid transparent;
+.controls-Lookup__fieldWrapper-size-default {
+   height: @height_Lookup-input-wrapper_default;
+   line-height: @line-height_Lookup-input-wrapper_default;
 }
 
-.controls-Lookup__fieldWrapper {
-  height: @height_Lookup-input-wrapper;
-  line-height: @line-height_Lookup-input-wrapper;
+.controls-Lookup__fieldWrapper-size-m {
+   height: @height_Lookup-input-wrapper_default;
+   line-height: @line-height_Lookup-input-wrapper_default;
+}
+
+.controls-Lookup__fieldWrapper-size-xs {
+  height: @height_Lookup-input-wrapper_xs;
+  line-height: @line-height_Lookup-input-wrapper_xs;
+}
+
+.controls-Lookup__fieldWrapper-size-s {
+  height: @height_Lookup-input-wrapper_s;
+  line-height: @line-height_Lookup-input-wrapper_s;
+}
+
+.controls-Lookup__fieldWrapper-size-l {
+   height: @height_Lookup-input-wrapper_l;
+   line-height: @line-height_Lookup-input-wrapper_l;
+}
+
+.controls-Lookup__fieldWrapper-size-xl {
+   height: @height_Lookup-input-wrapper_xl;
+   line-height: @line-height_Lookup-input-wrapper_xl;
+}
+
+.controls-Lookup__fieldWrapper-size-2xl {
+   height: @height_Lookup-input-wrapper_2xl;
+   line-height: @line-height_Lookup-input-wrapper_2xl;
 }
 
 .controls-Lookup__fieldWrapper_content_width_custom {
@@ -62,10 +88,6 @@
 
 .controls-Lookup__fieldWrapper_content_width_default {
   width: auto;
-}
-
-.controls-Lookup__fieldWrapper_hidden {
-  display: none;
 }
 
 .controls-Lookup__fieldWrapper_for_comment {
@@ -161,4 +183,9 @@
 
 .controls-Lookup__counter {
   height: @height_Lookup-counter;
+}
+
+// Метка внутри поля связи должна быть инлайновой, иначе она не троиточиться
+.ws-is-windows-xp .controls-Lookup .controls-Lookup__link {
+  display: inline;
 }

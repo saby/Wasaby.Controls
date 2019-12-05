@@ -317,6 +317,22 @@ define(
             assert.isFalse(viewModel.isGroupNext());
          });
 
+         it('getCurrent', function() {
+            let curConfig = clone(config);
+            curConfig.hasIconPin = true;
+
+            const getItem = () => {
+               let ddlViewModel = new DropdownViewModel(curConfig);
+               return ddlViewModel.getCurrent();
+            };
+            let item = getItem();
+            assert.isFalse(item.hasPinned);
+
+            curConfig.items.at(0).set('pinned', false);
+            item = getItem();
+            assert.isTrue(item.hasPinned);
+         });
+
          it('_private.getSpacingClassList', () => {
             let itemPadding = {}, multiSelect = true, itemData = { emptyText: 'test' }, hasHierarchy = false;
             let expectedClassList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect controls-DropdownList__item-rightPadding_default';
@@ -444,31 +460,46 @@ define(
          });
 
          it('getEmptyItem', function() {
+            const getEmpty = (empConfig) => {
+               viewModel = new DropdownViewModel(empConfig);
+               return viewModel.getEmptyItem();
+            };
+
             let emptyConfig = clone(config);
             emptyConfig.emptyText = 'Не выбрано';
             emptyConfig.displayProperty = 'title';
-            let viewModel = new DropdownViewModel(emptyConfig);
-            let emptyItem = viewModel.getEmptyItem();
+            let emptyItem = getEmpty(emptyConfig);
             assert.isFalse(emptyItem.isSelected);
             assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
 
             emptyConfig.selectedKeys = [];
-            viewModel = new DropdownViewModel(emptyConfig);
-            emptyItem = viewModel.getEmptyItem();
+            emptyItem = getEmpty(emptyConfig);
             assert.isTrue(emptyItem.isSelected);
             assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
 
             emptyConfig.selectedKeys = ['100'];
             emptyConfig.emptyKey = '100';
-            viewModel = new DropdownViewModel(emptyConfig);
-            emptyItem = viewModel.getEmptyItem();
+            emptyItem = getEmpty(emptyConfig);
             assert.isTrue(emptyItem.isSelected);
             assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
 
             emptyConfig.emptyKey = 0;
-            viewModel = new DropdownViewModel(emptyConfig);
-            emptyItem = viewModel.getEmptyItem();
+            emptyItem = getEmpty(emptyConfig);
             assert.equal(emptyItem.item.get('id'), 0);
+
+            // spacingClassList
+            let expectedClassList = 'controls-DropdownList__item-leftPadding_default controls-DropdownList__item-rightPadding_default';
+            assert.equal(emptyItem.spacingClassList, expectedClassList);
+
+            emptyConfig.multiSelect = true;
+            expectedClassList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect controls-DropdownList__item-rightPadding_default';
+            emptyItem = getEmpty(emptyConfig);
+            assert.equal(emptyItem.spacingClassList, expectedClassList);
+
+            emptyConfig.hasClose = true;
+            expectedClassList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect controls-DropdownList__item-rightPadding_close';
+            emptyItem = getEmpty(emptyConfig);
+            assert.equal(emptyItem.spacingClassList, expectedClassList);
          });
       })
    });

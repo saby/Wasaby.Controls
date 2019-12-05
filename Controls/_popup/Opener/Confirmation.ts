@@ -13,12 +13,10 @@ export interface IPopupOptions {
 }
 
 /**
- * Контрол, открывающий диалог подтверждения.
- * Окно блокирует работу пользователя с родительским приложением.
- * Позиционируется в центре экрана.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ Подробнее}
- * <a href="/materials/demo-ws4-confirmation">Демо-пример</a>.
- *
+ * Контрол, открывающий диалог подтверждения. Диалог позиционируется в центре экрана, а также блокирует работу пользователя с родительским приложением.
+ * @remark
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ здесь}.
+ * См. <a href="/materials/demo-ws4-confirmation">демо-пример</a>.
  * @class Controls/_popup/Opener/Confirmation
  * @extends Controls/_popup/Opener/BaseOpener
  * @control

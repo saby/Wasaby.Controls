@@ -232,7 +232,7 @@ var _private = {
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -253,7 +253,7 @@ var _private = {
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -318,23 +318,44 @@ var _Controller = Control.extend({
    _depsDeferred: null,
 
    _beforeMount: function (options, context, receivedState) {
+      let result;
+
       this._onResult = _private.onResult.bind(this);
       _private.setHandlers(this, options);
       if (!options.lazyItemsLoading) {
          if (receivedState) {
-            let self = this;
-            this._setItems(receivedState);
-            _private.getSourceController(this, options).addCallback((sourceController) => {
-                sourceController.calculateState(self._items);
+            this._setItems(receivedState.items);
+            result = _private.getSourceController(this, options).addCallback((sourceController) => {
+               sourceController.calculateState(this._items);
+
+               if (receivedState.history) {
+                  this._source.setHistory(receivedState.history);
+                  this._setItems(this._source.prepareItems(this._items));
+               }
+
+               return sourceController;
             });
             _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
             if (options.dataLoadCallback) {
-               options.dataLoadCallback(self._items);
+               options.dataLoadCallback(this._items);
             }
          } else if (options.source) {
-            return _private.loadItems(this, options);
+            result = _private.loadItems(this, options).addCallback((items) => {
+               const beforeMountResult = {};
+
+               if (historyUtils.isHistorySource(this._source)) {
+                  beforeMountResult.history = this._source.getHistory();
+                  beforeMountResult.items = this._source.getItems(false);
+               } else {
+                  beforeMountResult.items = items;
+               }
+
+               return beforeMountResult;
+            });
          }
       }
+
+      return result;
    },
 
    _beforeUpdate: function (newOptions) {
@@ -406,9 +427,11 @@ var _Controller = Control.extend({
       };
 
       const itemsLoadCallback = (items: RecordSet): void => {
-         if (items.getCount() > 1 || items.getCount() === 1 && this._options.emptyText) {
+         const count = items.getCount();
+
+         if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
             open();
-         } else if (items.getCount() === 1) {
+         } else if (count === 1) {
             this._notify('selectedItemsChanged', [
                [items.at(0)]
             ]);
@@ -451,6 +474,7 @@ var _Controller = Control.extend({
          this._sourceController.cancelLoading();
          this._sourceController = null;
       }
+      this._setItems(null);
    },
 
    _getEmptyText: function () {

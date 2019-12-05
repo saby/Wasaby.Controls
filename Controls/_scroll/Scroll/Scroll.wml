@@ -28,6 +28,7 @@
                            on:selectedKeysChanged="selectedKeysChanged()"
                            on:excludedKeysChanged="excludedKeysChanged()"
                            on:itemClick="itemClick()"
+                           on:itemMouseDown="_tmplNotify('itemMouseDown')"
                            on:rootChanged="_tmplNotify('rootChanged')"
                            on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
                            on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
@@ -56,8 +57,10 @@
          on:draggingChanged="_draggingChangedHandler()"
          attr:style="{{_scrollbarStyles}}"/>
    </ws:if>
-   <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
+   <ws:if data="{{_displayState.shadowEnable.top}}">
       <div class="controls-Scroll__shadow controls-Scroll__shadow_top {{!_shadowVisible('top') ? ' ws-invisible'}}"></div>
+   </ws:if>
+   <ws:if data="{{_displayState.shadowEnable.bottom}}">
       <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom {{!_shadowVisible('bottom') ? ' ws-invisible'}}"></div>
    </ws:if>
    <ws:if data="{{_pagingState.visible}}">

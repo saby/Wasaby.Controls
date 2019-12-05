@@ -30,20 +30,21 @@
       </ws:if>
    </ws:placeholder>
    <ws:content>
-      <!--Always keep input field in layout https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629-->
-      <ws:partial type="{{_type}}"
-                  options="{{_options}}"
-                  scope="{{_field.scope}}"
-                  fieldName="{{_fieldName}}"
-                  template="{{_field.template}}"
-                  value="{{_viewModel.displayValue}}"
-                  hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
-                  isEdge="{{_isEdge}}"
-                  attr:class="controls-Lookup__fieldWrapper
+      <ws:if data="{{ _options.isInputVisible }}">
+         <ws:partial type="{{_type}}"
+                     options="{{_options}}"
+                     scope="{{_field.scope}}"
+                     fieldName="{{_fieldName}}"
+                     template="{{_field.template}}"
+                     value="{{_viewModel.displayValue}}"
+                     hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+                     isEdge="{{_isEdge}}"
+                     attr:class="controls-Lookup__fieldWrapper
+                     controls-Lookup__fieldWrapper-size-{{_options.size}}
                      controls-Lookup__fieldWrapper_content_width_{{_options.multiline && _options.inputWidth ? 'custom' : 'default'}}
-                     {{!_options.isInputVisible ? 'controls-Lookup__fieldWrapper_hidden'}} {{_options.spacingLeftInput ? 'controls-Lookup__fieldWrapper-left-spacing'}}
                      {{_options.forComment ? 'controls-Lookup__fieldWrapper_for_comment'}}"
-                  attr:style="width: {{_options.inputWidth}}px;"
-                  on:keyDown="_keyDownInput()"/>
+                     attr:style="width: {{_options.inputWidth}}px;"
+                     on:keyDown="_keyDownInput()"/>
+      </ws:if>
    </ws:content>
 </Controls.input:Render>

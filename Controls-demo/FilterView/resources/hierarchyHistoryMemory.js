@@ -95,6 +95,10 @@ define('Controls-demo/FilterView/resources/hierarchyHistoryMemory', [
             });
 
             return resultDeferred;
+         },
+
+         getModel: function() {
+            return this.originSource.getModel();
          }
 
       });

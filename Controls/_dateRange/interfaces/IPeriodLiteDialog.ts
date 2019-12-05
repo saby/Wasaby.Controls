@@ -2,7 +2,7 @@ import {descriptor} from 'Types/entity';
 import dateControlsUtils from './../Utils';
 
 /**
- * mixin Controls/_dateRange/interfaces/IPeriodLiteDialog
+ * @mixin Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @public
  */
 
@@ -20,17 +20,6 @@ var EMPTY_CAPTIONS = {
 export default {
     getDefaultOptions: function () {
         return {
-
-            /**
-             * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#year
-             * @cfg {Date} Отображает период.
-             */
-
-            /*
-             * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#year
-             * @cfg {Date} Displayed period
-             */
-            year: undefined,
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseMonths

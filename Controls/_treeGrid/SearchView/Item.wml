@@ -4,6 +4,7 @@
                colspan="{{true}}"
                expanderIcon="none"
                marker="{{false}}"
+               attr:key="{{ itemData.key }}__breadcrumbs"
                on:click="_onSearchItemClick(itemData.dispItem)">
       <ws:colspanTemplate>
          <Controls.Container.Async templateName="Controls/breadcrumbs:Path">

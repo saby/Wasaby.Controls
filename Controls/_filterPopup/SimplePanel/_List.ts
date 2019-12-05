@@ -9,7 +9,8 @@ var _private = {
     isNeedUpdateSelectedKeys: function(self, target, item) {
         var clickOnEmptyItem = item.get(self._options.keyProperty) === self._options.emptyKey,
             clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
-            hasSelection = self._listModel.getSelectedKeys().length && !isEqual(self._listModel.getSelectedKeys(), self._options.resetValue),
+            selectedKeys = self._listModel.getSelectedKeys(),
+            hasSelection = selectedKeys.length && !isEqual(selectedKeys, self._options.resetValue) && !isEqual(selectedKeys[0], self._options.emptyKey),
             clickOnFolder = item.get(self._options.nodeProperty);
         return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox) && !clickOnFolder;
     },
@@ -21,7 +22,7 @@ var _private = {
             updatedSelectedKeys.splice(index, 1);
 
             if (!updatedSelectedKeys.length) {
-                updatedSelectedKeys = resetValue;
+                updatedSelectedKeys = [];
             }
         } else {
             if (isEqual(updatedSelectedKeys, resetValue)) {

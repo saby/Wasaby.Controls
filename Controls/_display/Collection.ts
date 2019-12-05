@@ -33,11 +33,19 @@ import EditInPlaceManager from './utils/EditInPlaceManager';
 import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
+import SwipeManager from './utils/SwipeManager';
+import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
+import {IVirtualScrollConfig} from 'Controls/list';
+import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
+const VIRTUAL_SCROLL_MODE = {
+    HIDE: 'hide',
+    REMOVE: 'remove'
+};
 
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
@@ -97,6 +105,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     editingConfig: any;
     unique?: boolean;
     importantItemProperties?: string[];
+    virtualScrollConfig: IVirtualScrollConfig;
 }
 
 export interface ICollectionCounters {
@@ -148,7 +157,20 @@ function onCollectionChange<T>(
         case IObservable.ACTION_RESET:
             const projectionOldItems = toArray(this);
             let projectionNewItems;
-            this._reBuild(true);
+            // TODO Здесь был вызов _reBuild(true), который полностью пересоздает все
+            // CollectionItem'ы, из-за чего мы теряли их состояние. ACTION_RESET происходит
+            // не только при полном пересоздании рекордсета, но и например при наборе
+            // "критической массы" изменений при выключенном режиме обработки событий.
+            // https://online.sbis.ru/opendoc.html?guid=573aed02-3c97-4432-9d39-19e53bda8bc0
+            // По идее, нам это не нужно, потому что в случае реального пересоздания рекордсета,
+            // нам передадут его новый инстанс, и мы пересоздадим всю коллекцию сами.
+            // Но на случай, если такой кейс все таки имеет право на жизнь, выписал
+            // задачу в этом разобраться.
+            // https://online.sbis.ru/opendoc.html?guid=bd17a1fb-5d00-4f90-82d3-cb733fe7ab27
+            // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
+            // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
+            // виртуального скролла.
+            this._reBuild(this._$compatibleReset);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -170,6 +192,7 @@ function onCollectionChange<T>(
             this._reFilter();
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
+            this._nextVersion();
             return;
     }
 
@@ -509,6 +532,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$hasMoreData: boolean;
 
+    protected _$compatibleReset: boolean;
+
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
@@ -606,8 +631,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _markerManager: MarkerManager;
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
-    protected _virtualScrollManager: VirtualScrollManager;
+    protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
+    protected _$virtualScrollMode: IVirtualScrollMode;
     protected _hoverManager: HoverManager;
+    protected _swipeManager: SwipeManager;
+    protected _selectionManager: SelectionManager;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -654,13 +682,24 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
         }
 
+        if (options.itemPadding) {
+            this.setItemsSpacings(options.itemPadding);
+        }
+
         this._stopIndex = this.getCount();
+
+        const virtualScrollConfig = options.virtualScrollConfig || {mode: options.virtualScrollMode};
+
+        this._$virtualScrollMode = virtualScrollConfig.mode;
 
         this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
-        this._virtualScrollManager = new VirtualScrollManager(this);
+        this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
+            new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
         this._hoverManager = new HoverManager(this);
+        this._swipeManager = new SwipeManager(this);
+        this._selectionManager = new SelectionManager(this);
     }
 
     destroy(): void {
@@ -1862,7 +1901,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._notifyAfterCollectionChange();
 
         // FIXME Make a list of properties that lead to version update
-        if (properties as String === 'editingContents' || properties as String === 'animated') {
+        if (properties as String === 'editingContents' || properties as String === 'animated' || properties as String === 'canShowActions') {
             this._nextVersion();
         }
     }
@@ -1920,6 +1959,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._setSelectedItems(this._getItems(), selected);
     }
 
+    setSelection(selection: ISelectionMap): void {
+        this._selectionManager.setSelection(selection);
+    }
+
     /**
      * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и
      * группировки).
@@ -1941,6 +1984,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     // endregion
+
+    // FIXME Will be removed, managers will be created from the outside of
+    // the model in Stage 2. For now we have to create them here and access
+    // them from the model to stay compatible with BaseControl.
+    getItemActionsManager(): ItemActionsManager {
+        return this._itemActionsManager;
+    }
 
     getDisplayProperty(): string {
         return this._$displayProperty;
@@ -1977,6 +2027,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         this._$multiSelectVisibility = visibility;
         this._nextVersion();
+    }
+
+    setItemsSpacings(itemPadding: {top: string, left: string, right: string}): void {
+        this._$rowSpacing = itemPadding.top;
+        this._$leftSpacing = itemPadding.left;
+        this._$rightSpacing = itemPadding.right;
     }
 
     getRowSpacing(): string {
@@ -2018,6 +2074,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
+    setSwipeItem(item: CollectionItem<S>): void {
+        this._swipeManager.setSwipeItem(item);
+        this._nextVersion();
+    }
+
+    getSwipeItem(): CollectionItem<S> {
+        return this._swipeManager.getSwipeItem() as CollectionItem<S>;
+    }
+
     getActiveItem(): CollectionItem<S> {
         return this._itemActionsManager.getActiveItem() as CollectionItem<S>;
     }
@@ -2040,6 +2105,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (newStart !== this._startIndex || newStop !== this._stopIndex) {
             this._startIndex = newStart;
             this._stopIndex = newStop;
+
+            if (this._$virtualScrollMode === VIRTUAL_SCROLL_MODE.HIDE) {
+                this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
+            }
+
             this._nextVersion();
             return true;
         }
@@ -2071,7 +2141,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     getViewIterator(): {
-        each: (callback: EnumeratorCallback<unknown>, context?: object) => void
+        each: (callback: EnumeratorCallback<unknown>, context?: object) => void;
+        isItemVisible: (index: number) => boolean;
     } {
         if (this._$virtualScrolling) {
             return this._virtualScrollManager;
@@ -2088,13 +2159,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$hasMoreData = hasMoreData;
     }
 
-    setHoveredItem(item: CollectionItem<S>): void {
-        this._hoverManager.setHoveredItem(item);
-        this._nextVersion();
+    setCompatibleReset(compatible: boolean): void {
+        this._$compatibleReset = compatible;
     }
 
-    getHoveredItem(): CollectionItem<S> {
-        return this._hoverManager.getHoveredItem() as CollectionItem<S>;
+    isItemVisible = (index: number) => true;
+
+    isItemHidden(index: number): boolean {
+        return !this.getViewIterator().isItemVisible(index);
     }
 
     // region SerializableMixin
@@ -3181,8 +3253,10 @@ Object.assign(Collection.prototype, {
     _$editingConfig: null,
     _$unique: false,
     _$importantItemProperties: null,
+    _$virtualScrollMode: VIRTUAL_SCROLL_MODE.REMOVE,
     _$virtualScrolling: false,
     _$hasMoreData: false,
+    _$compatibleReset: false,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
@@ -3198,6 +3272,8 @@ Object.assign(Collection.prototype, {
     _editInPlaceManager: null,
     _itemActionsManager: null,
     _virtualScrollManager: null,
+    _hoverManager: null,
+    _swipeManager: null,
     _startIndex: 0,
     _stopIndex: 0,
     getIdProperty: Collection.prototype.getKeyProperty

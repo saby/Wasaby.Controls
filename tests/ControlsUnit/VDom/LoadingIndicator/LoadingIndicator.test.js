@@ -143,8 +143,11 @@ define([
             delay: 1
          };
          Loading._show(config);
+         const delayTimerId = Loading.delayTimeout;
          Loading._show(config);
          Loading._show(config);
+         assert.equal(delayTimerId, Loading.delayTimeout);
+         assert.equal(false, Loading._isMessageVisible);
          Loading.hide();
          assert.equal(Loading._stack.getCount(), 0);
       });

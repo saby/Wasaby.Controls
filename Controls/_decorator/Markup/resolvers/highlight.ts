@@ -16,14 +16,47 @@
 
    /**
     *
+    * Модуль с функцией подсветки искомой строки.
+    *
+    * @class Controls/_decorator/Markup/resolvers/highlight
+    * @public
+    * @author Кондаков Р.Н.
+    * @remark
+    * JS:
+    * <pre>
+    *  define("MyControl", ["UI/Base",  "wml!Template", "Controls/decorator"], function(Base, template, decorator) {
+    *    var ModuleClass = Base.Control.extend({
+    *        _template: template,
+    *        json: [["p", "моя строка"]],
+    *        tagResolver: decorator._highlightResolver,
+    *        resolverParams: { "textToHighlight": "моя" }
+    *    });
+    *    return ModuleClass;
+    *  });
+    * </pre>
+    * 
+    * WML:
+    * <pre>
+    *  <Controls.decorator:Markup
+    *    value="{{ json }}"
+    *    tagResolver="{{ tagResolver }}"
+    *    resolverParams="{{ resolverParams }}" />
+    * </pre>
+    * 
+    * В результате выполнения кода слово "моя" будет подсвечено. 
+    * 
+    */
+
+   /*
+    *
     * Module with a function to highlight searched string.
-    * Takes textToHighlight from resolverParams {@link Controls/decorator:Markup#resolverParams}.
+    * Takes textToHighlight from {@link Controls/decorator:Markup#resolverParams}.
     * Tag resolver for {@link Controls/decorator:Markup}.
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
     * @public
     * @author Кондаков Р.Н.
-    */
+    */    
    export default function highlight(value, parent, resolverParams) {
       // Resolve only strings and only if text to highlight exists and not empty.
       if ((typeof value !== 'string' && !(value instanceof String)) || !resolverParams.textToHighlight) {

@@ -6,12 +6,12 @@
          <Controls.search:Controller searchParam="title" minSearchLength="{{3}}" searchStartingWith="{{_searchStartingWith}}">
             <div class="ws-fragment">
                <Controls.search:InputContainer>
-                  <Controls.search:Input/>
+                  <Controls.search:Input
+                    attr:class="demo-Search__searchinput"/>
                </Controls.search:InputContainer>
                <Controls.list:Container>
                   <Controls.operations:Container>
                      <Controls.explorer:View
-                             readOnly="{{true}}"
                         attr:class="demo-Explorer"
                         multiSelectVisibility="{{_multiselectVisibility}}"
                         displayProperty="title"
@@ -34,11 +34,19 @@
    <div class="demo-Explorer__options">
       <div>
          <div>searchStartingWith:</div>
-         <Controls.toggle:RadioGroup bind:selectedKey="_searchStartingWith" source="{{_searchStartingWithSource}}" keyProperty="id"/>
+         <Controls.toggle:RadioGroup
+             bind:selectedKey="_searchStartingWith"
+             source="{{_searchStartingWithSource}}"
+             keyProperty="id"
+             attr:class="demo-Search__searchStartingWith"/>
       </div>
       <div>
          <div>multiselectVisibility:</div>
-         <Controls.toggle:RadioGroup bind:selectedKey="_multiselectVisibility" source="{{_multiselectVisibilitySource}}" keyProperty="id"/>
+         <Controls.toggle:RadioGroup
+         bind:selectedKey="_multiselectVisibility"
+         source="{{_multiselectVisibilitySource}}"
+         keyProperty="id"
+         attr:class="demo-Search__multiselectVisibility"/>
       </div>
    </div>
 </div>

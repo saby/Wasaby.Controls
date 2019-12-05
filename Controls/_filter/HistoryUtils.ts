@@ -2,6 +2,7 @@ import {Service as HistoryService, FilterSource as HistorySource, Constants} fro
 import {factory} from 'Types/chain';
 
 import {Controller as SourceController} from 'Controls/source';
+import {factory as CollectionFactory} from 'Types/collection';
 import entity = require('Types/entity');
 import collection = require('Types/collection');
 import sourceLib = require('Types/source');
@@ -21,12 +22,12 @@ function destroyHistorySource(historyId) {
 function createHistorySource(cfg) {
    var historySourceData = {
       historyId: cfg.historyId,
-      pinned: cfg.pinned !== undefined ? cfg.pinned : true,
+      pinned: true,
 
       /* A record about resets filters is stored in the history, but it is not necessary to display it in the history list.
          We request one more record, so that the number of records remains equal to 10 */
       recent: (Constants[cfg.recent] || Constants.MAX_HISTORY) + 1,
-
+      favorite: cfg.favorite,
       dataLoaded: true
    };
    return new HistorySource({
@@ -40,7 +41,7 @@ function createHistorySource(cfg) {
 }
 
 function getHistorySource(cfg) {
-   if (Env.constants.isBuildOnServer) {
+   if (Env.constants.isServerSide) {
       return createHistorySource(cfg);
    } else {
       HISTORY_SOURCE[cfg.historyId] = HISTORY_SOURCE[cfg.historyId] || createHistorySource(cfg);
@@ -67,33 +68,39 @@ function isHistorySource(source) {
    return coreInstance.instanceOfModule(source, 'Controls/history:Source');
 }
 
-function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
-   let getUniqItems = (items) => {
-      let uniqItems = factory(items).filter((item) => {
-         if (!newItems.getRecordById(item.get(keyProperty))) {
-            return item;
-         }
-      }).value();
-      newItems.append(uniqItems);
-   };
+function getUniqItems(items1, items2, keyProperty) {
+   const uniqItems = factory(items2).filter((item) => {
+      if (!items1.getRecordById(item.get(keyProperty))) {
+         return item;
+      }
+   }).value();
+   const resultItems = items1.clone();
+   resultItems.prepend(uniqItems);
+   return resultItems;
+}
 
-   if (sourceController.hasMoreData('down')) {
-      const allCount = oldItems.getCount();
-      const firstItems = factory(oldItems).first(allCount - newItems.getCount()).value();
-      getUniqItems(firstItems);
-   } else {
-      getUniqItems(oldItems);
+function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
+   const allCount = oldItems.getCount();
+   const uniqItems = getUniqItems(oldItems, newItems, keyProperty);
+
+   if (sourceController && sourceController.hasMoreData('down')) {
+      uniqItems = factory(uniqItems).first(allCount).value(CollectionFactory.recordSet, {
+         adapter: oldItems.getAdapter(),
+         keyProperty: oldItems.getKeyProperty(),
+         format: oldItems.getFormat()
+      });
    }
-   newItems.setMetaData(oldItems.getMetaData());
+   uniqItems.setMetaData(oldItems.getMetaData());
+   return uniqItems;
 }
 
 function getItemsWithHistory(oldItems, newItems, sourceController, source, keyProperty) {
    let itemsWithHistory;
-   prependNewItems(oldItems, newItems, sourceController, keyProperty);
+   const resultItems = prependNewItems(oldItems, newItems, sourceController, keyProperty);
    if (isHistorySource(source)) {
-      itemsWithHistory = source.prepareItems(newItems);
+      itemsWithHistory = source.prepareItems(resultItems);
    } else {
-      itemsWithHistory = newItems;
+      itemsWithHistory = resultItems;
    }
    return itemsWithHistory;
 }
@@ -103,5 +110,6 @@ export {
    getHistorySource,
    destroyHistorySource,
    isHistorySource,
-   getItemsWithHistory
+   getItemsWithHistory,
+   getUniqItems
 };

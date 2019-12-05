@@ -91,6 +91,8 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$hovered: boolean;
 
+    protected _$rendered: boolean;
+
     protected _instancePrefix: string;
 
     /**
@@ -221,7 +223,7 @@ export default class CollectionItem<T> extends mixin<
      * @param selected Элемент выбран
      * @param [silent=false] Не уведомлять владельца об изменении признака выбранности
      */
-    setSelected(selected: boolean, silent?: boolean): void {
+    setSelected(selected: boolean|null, silent?: boolean): void {
         if (this._$selected === selected) {
             return;
         }
@@ -344,33 +346,21 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
-    isHovered(): boolean {
-        return this._$hovered;
+    isRendered(): boolean {
+        return this._$rendered;
     }
 
-    setHovered(hovered: boolean, silent?: boolean): void {
-        if (this._$hovered === hovered) {
-            return;
-        }
-        this._$hovered = hovered;
-        this._nextVersion();
-        if (!silent) {
-            this._notifyItemChangeToOwner('hovered');
-        }
+    setRendered(state: boolean): void {
+        this._$rendered = state;
     }
 
-    getWrapperClasses(): string {
-        let classes = `controls-ListView__itemV
-            controls-ListView__item_highlightOnHover_default_theme_default
+    getWrapperClasses(templateHighlightOnHover: boolean = true): string {
+        return `controls-ListView__itemV
             controls-ListView__item_default
             controls-ListView__item_showActions
-            js-controls-SwipeControl__actionsContainer`;
-
-        if (this.isEditing()) {
-            classes += ' controls-ListView__item_editing';
-        }
-
-        return classes;
+            js-controls-SwipeControl__actionsContainer
+            ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
+            ${this.isEditing() ? 'controls-ListView__item_editing' : ''}`;
     }
 
     getContentClasses(): string {

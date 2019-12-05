@@ -12,19 +12,20 @@ define(
          var historyId = 'TEST_HISTORY_ID_UTILS';
 
          it('getHistorySource', function() {
+            if (Env.constants.isServerSide) { return; }
             var hSource = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource instanceof history.FilterSource);
             var hSource2 = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource === hSource2);
          });
 
-         it('getHistorySource isBuildOnServer', function() {
-            var isBuildOnServer = Env.constants.isBuildOnServer;
-            Env.constants.isBuildOnServer = true;
+         it('getHistorySource isServerSide', function() {
+            var isServerSide = Env.constants.isServerSide;
+            Env.constants.isServerSide = true;
             var hSource = filter.HistoryUtils.getHistorySource({historyId: historyId});
             var hSource2 = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource !== hSource2);
-            Env.constants.isBuildOnServer = isBuildOnServer;
+            Env.constants.isServerSide = isServerSide;
          });
 
 
@@ -61,10 +62,12 @@ define(
                keyProperty: 'key',
                rawData: [{ key: 20, title: '20 record' }, {key: 1, title: 'Россия'}]
             });
-            expectedItems = [{ key: 20, title: '20 record' }, {key: 1, title: 'Россия'}].concat(initItems.slice(0, 1));
             resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key');
-            assert.equal(resultItems.getCount(), 3);
-            assert.deepStrictEqual(resultItems.getRawData(), expectedItems);
+            assert.equal(resultItems.getCount(), 4);
+            assert.equal(resultItems.at(0).getId(), 20);
+            assert.equal(resultItems.at(1).getId(), 0);
+            assert.equal(resultItems.at(2).getId(), 1);
+            assert.equal(resultItems.at(3).getId(), 2);
          });
 
          it('isHistorySource', function() {

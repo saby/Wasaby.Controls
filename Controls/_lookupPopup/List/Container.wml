@@ -1,0 +1,8 @@
+<ws:partial template="{{_options.content}}"
+            scope="{{_options}}"
+            bind:markedKey="_markedKey"
+            on:itemClick="_itemClick()"
+            on:actionClick="_itemActionsClick()"
+            itemActions="{{_itemActions}}"
+            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+/>

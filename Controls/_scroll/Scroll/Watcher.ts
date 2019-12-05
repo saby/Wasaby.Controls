@@ -35,7 +35,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
             return scrollHeight - clientHeight > 1;
          },
 
-          sendCanScroll: function (self, clientHeight, scrollHeight) {
+          sendCanScroll: function (self, clientHeight, scrollHeight, viewPortRect) {
               let eventName;
               let params = {};
 
@@ -45,7 +45,8 @@ import {SyntheticEvent} from "Vdom/Vdom"
                       eventName = 'canScroll';
                       params = {
                           clientHeight,
-                          scrollHeight
+                          scrollHeight,
+                          viewPortRect
                       };
                   }
               } else {
@@ -121,12 +122,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
             _private.calcSizeCache(self, container);
             sizeCache = _private.getSizeCache(self, container);
-            _private.sendCanScroll(self, sizeCache.clientHeight, sizeCache.scrollHeight);
+            _private.sendCanScroll(self, sizeCache.clientHeight, sizeCache.scrollHeight, container.getBoundingClientRect());
             if (!withObserver) {
                _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
             }
             if (oldClientHeight !== sizeCache.clientHeight) {
-                _private.sendByRegistrar(self, 'viewPortResize', [sizeCache.clientHeight]);
+                _private.sendByRegistrar(self, 'viewPortResize', [sizeCache.clientHeight, container.getBoundingClientRect()]);
             }
             if ((oldClientHeight !== sizeCache.clientHeight) || (oldScrollHeight !== sizeCache.scrollHeight)) {
                 _private.sendByRegistrar(self, 'scrollResize', {...sizeCache});
@@ -136,7 +137,14 @@ import {SyntheticEvent} from "Vdom/Vdom"
          onScrollContainer: function(self, container, withObserver) {
             var curPosition;
             var sizeCache = _private.getSizeCache(self, container);
-            self._scrollTopCache = container.scrollTop;
+
+             const newScrollTop = container.scrollTop;
+
+             if (newScrollTop === self._scrollTopCache) {
+                 return;
+             }
+
+             self._scrollTopCache = container.scrollTop;
             if (!sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
                sizeCache = _private.getSizeCache(self, container);
@@ -169,7 +177,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
                   }
                }, 0);
                self._scrollPositionCache = curPosition;
-               self._scrollTopTimer = null;
+
+               // если не почисчтить таймер, то может выполняться таймер из ветки ниже, т.к. он с паузой 100
+               if (self._scrollTopTimer) {
+                   clearTimeout(self._scrollTopTimer);
+                   self._scrollTopTimer = null;
+               }
             } else {
                if (!self._scrollTopTimer) {
                   self._scrollTopTimer = setTimeout(function() {
@@ -183,6 +196,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                         if (!withObserver) {
                            _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                         }
+                        clearTimeout(self._scrollTopTimer);
                         self._scrollTopTimer = null;
                      }
                   }, 100);
@@ -265,12 +279,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
                sizeCache = _private.getSizeCache(self, container);
             }
             if (_private.isCanScroll(sizeCache.clientHeight, sizeCache.scrollHeight)) {
-               self._registrar.startOnceTarget(component, 'canScroll', {...sizeCache});
+               self._registrar.startOnceTarget(component, 'canScroll', {...sizeCache, viewPortRect: container.getBoundingClientRect()});
             } else {
                self._registrar.startOnceTarget(component, 'cantScroll');
             }
 
-            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight]);
+            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight, container.getBoundingClientRect()]);
 
             if (!withObserver) {
                //TODO надо кидать не всем компонентам, а адресно одному
@@ -340,7 +354,9 @@ import {SyntheticEvent} from "Vdom/Vdom"
          _afterMount: function() {
             if (!isEmpty(this._registrar._registry)) {
                _private.calcSizeCache(this, _private.getDOMContainer(this._container));
-               _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
+               const container = _private.getDOMContainer(this._container);
+               _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight,
+                   container.getBoundingClientRect());
             }
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },
@@ -385,10 +401,10 @@ import {SyntheticEvent} from "Vdom/Vdom"
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
          },
 
-         setScrollTop(scrollTop: number): void {
+         setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
             var self = this;
             const container = _private.getDOMContainer(self._container);
-            if (self._isVirtualPlaceholderMode()) {
+            if (self._isVirtualPlaceholderMode() && !withoutPlaceholder) {
                const cachedScrollTop = scrollTop;
                const sizeCache = _private.getSizeCache(self, container);
                const realScrollTop = scrollTop - this._topPlaceholderSize;
@@ -409,6 +425,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                }
             } else {
                container.scrollTop = scrollTop;
+                _private.onScrollContainer(this, _private.getDOMContainer(this._container), false);
             }
          },
 

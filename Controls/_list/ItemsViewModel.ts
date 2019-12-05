@@ -5,7 +5,7 @@ import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import ControlsConstants = require('Controls/Constants');
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
 
 /**
@@ -15,31 +15,28 @@ import collection = require('Types/collection');
  */
 
 var _private = {
-
+    isFullCacheResetAction: function(action) {
+        return action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_ADD;
+    },
     checkDeprecated: function(cfg) {
-
         if (cfg.leftSpacing && !this.leftSpacing) {
             this.leftSpacing = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+            Logger.warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
         }
         if (cfg.leftPadding && !this.leftPadding) {
             this.leftPadding = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+            Logger.warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
         }
         if (cfg.rightSpacing && !this.rightSpacing) {
             this.rightSpacing = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+            Logger.warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
         }
         if (cfg.rightPadding && !this.rightPadding) {
             this.rightPadding = true;
-            Env.IoC.resolve('ILogger')
-                .warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+            Logger.warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
         }
         if (cfg.groupMethod) {
-            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+            Logger.warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
         }
 
     },
@@ -191,7 +188,7 @@ var ItemsViewModel = BaseViewModel.extend({
         }
         this._nextVersion();
 
-        if (notUpdatePrefixItemVersion) {
+        if (notUpdatePrefixItemVersion && !_private.isFullCacheResetAction(action)) {
             if (Array.isArray(newItems) && newItems.length > 0) {
                 changedItems = changedItems.concat(newItems);
             }
@@ -208,16 +205,18 @@ var ItemsViewModel = BaseViewModel.extend({
         this._nextModelVersion(notUpdatePrefixItemVersion, changesType);
     },
 
+    _getItemVersion(item) {
+        // records have defined method getVersion, groups haven't
+        if (item.getVersion) {
+            return '' + item.getVersion();
+        }
+        return '' + item;
+    },
+
     _calcItemVersion: function(item) {
         var
             version = '' + this._prefixItemVersion;
-
-        // records have defined method getVersion, groups haven't
-        if (item.getVersion) {
-            version += item.getVersion();
-        } else {
-            version += item;
-        }
+        version += this._getItemVersion(item);
         return version;
     },
 

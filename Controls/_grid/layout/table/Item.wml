@@ -11,6 +11,7 @@
                     itemActionsClass="{{itemActionsClass}}"
                     itemData="{{itemData}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
+                    attr:class="controls-Grid__itemAction"
                     highlightOnHover="{{highlightOnHover}}"/>
     </ws:else>
 </ws:template>
@@ -42,7 +43,7 @@
 
 <ws:template name="columnContentWrapper">
     <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
-        <div class="controls-GridView__itemV_marker {{itemData.rowSeparatorVisibility ? 'controls-GridView-with-rowSeparator_item_marker' : 'controls-GridView-without-rowSeparator_item_marker'}}"></div>
+        <div attr:class="{{itemData.getMarkerClasses(itemData.rowSeparatorVisibility)}}"></div>
     </ws:if>
     <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
@@ -69,16 +70,16 @@
     </ws:else>
 </ws:template>
 
-<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}
-           {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}">
+<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
+           {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
     <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
         <ws:partial template="colTpl"
                     currentColumn="{{itemData.getCurrentColumn()}}"
                     attr:class="{{itemData.getCurrentColumn().cellClasses}} js-controls-SwipeControl__actionsContainer
                         {{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
-                        {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}
+                        {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                         {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
-                        {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first'}}
+                        {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
                         {{className || ''}}"/>
     </ws:for>
 </tr>

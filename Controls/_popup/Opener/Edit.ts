@@ -9,12 +9,14 @@ import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
       /**
        * Контрол, который открывает всплывающее окно с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
+       * @remark
        * В зависимости от значения опции 'mode':
        * * 'stack' — используйте опции {@link Controls/popup:Stack}
        * * 'dialog' — используйте опции {@link Controls/popup:Dialog}
        * * 'sticky' — используйте опции {@link Controls/popup:Sticky}
        * <a href="/materials/demo-ws4-popup-edit">Демо-пример</a>
        * @class Controls/_popup/Opener/Edit
+       * @mixes Controls/interface/IOpener
        * @control
        * @public
        * @author Красильников А.С.
@@ -199,7 +201,8 @@ import Deferred = require('Core/Deferred');
 
          /**
           * Закрывает всплывающее окно диалога редактирования.
-          * @function Controls/_popup/Opener/Edit#close
+          * @function
+          * @name Controls/_popup/Opener/Edit#close
           */
          /*
           * Close popup
@@ -207,11 +210,13 @@ import Deferred = require('Core/Deferred');
           */
          close: function() {
             this._children.Opener.close();
+            this._resultHandler = null;
          },
 
          /**
           * Возвращает информацию о том, открыто ли всплывающее окно.
-          * @function Controls/_popup/Opener/Edit#isOpened
+          * @function 
+          * @name Controls/_popup/Opener/Edit#isOpened
           */
          /*
           * Popup opened status
@@ -229,7 +234,8 @@ import Deferred = require('Core/Deferred');
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
                /**
-                * @event Controls/_popup/Opener/Edit#beforeItemEndEdit The event is called before the synchronization with the recordset.
+                * @event The event is called before the synchronization with the recordset.
+                * @name Controls/_popup/Opener/Edit#beforeItemEndEdit
                 * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
                 * @param {String} formControllerEvent Name of event from formController(update, create, delete)
                 * @param {Object} record Data from formController

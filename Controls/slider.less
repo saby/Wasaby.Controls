@@ -62,7 +62,6 @@
 
 .controls-Slider__line_theme-@{themeName} {
   position: absolute;
-  display: inline-block;
   height: @Slider-line-height;
   width: 100%;
 }
@@ -172,10 +171,6 @@
   left: -@Slider-segment-after-width;
 }
 
-.controls-Slider__tooltipContainer {
-  display: flex;
-  justify-content: center;
-}
 .controls-Slider__tooltipValue {
   padding-top: @Slider-tooltip-padding-top-bottom;
   padding-right: @Slider-tooltip-padding-left-right;
@@ -186,6 +181,8 @@
   box-shadow: @Slider-tooltip-box-shadow;
   font-size: @Slider-tooltip-font-size;
   position: absolute;
+  left: 50%;
+  transform: translate(-50%);
 }
 .controls-Slider__point_big_tooltipValue {
   bottom: @Slider-big_point-size + @Slider-tooltip-interval;

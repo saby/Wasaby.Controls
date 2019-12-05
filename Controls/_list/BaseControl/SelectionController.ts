@@ -1,9 +1,12 @@
 import Control = require('Core/Control');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import collection = require('Types/collection');
-import {isEqual} from 'Types/object';
 import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_list/BaseControl/SelectionController');
+import {isEqual} from 'Types/object';
+import { load } from 'Core/library';
+import merge = require('Core/core-merge');
+import { ISelectionStrategy } from 'Controls/operations';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -13,19 +16,24 @@ import template = require('wml!Controls/_list/BaseControl/SelectionController');
  * @private
  */
 
+type TChangeSelectionType = 'selectAll'|'unselectAll'|'toggleAll';
+
 var _private = {
-    notifyAndUpdateSelection: function (self, oldSelectedKeys, oldExcludedKeys) {
-        var
-            newSelection = self._multiselection.getSelection(),
-            selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelection.selected),
-            excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newSelection.excluded);
+    notifyAndUpdateSelection: function(self, options) {
+        let
+            oldSelectedKeys = self._options.selectedKeys,
+            oldExcludedKeys = self._options.excludedKeys,
+            newSelectedKeys = self._multiselection.selectedKeys,
+            newExcludedKeys = self._multiselection.excludedKeys,
+            selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
+            excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
 
         if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
-            self._notify('selectedKeysChanged', [newSelection.selected, selectedKeysDiff.added, selectedKeysDiff.removed]);
+            self._notify('selectedKeysChanged', [newSelectedKeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
         }
 
         if (excludedKeysDiff.added.length || excludedKeysDiff.removed.length) {
-            self._notify('excludedKeysChanged', [newSelection.excluded, excludedKeysDiff.added, excludedKeysDiff.removed]);
+            self._notify('excludedKeysChanged', [newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed]);
         }
 
         /*
@@ -48,9 +56,11 @@ var _private = {
          4) Прокидывать событие в Container/Scroll.
          Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
          */
-        self._notify('listSelectedKeysCountChanged', [self._multiselection.getCount()], {bubbling: true});
+       self._multiselection.getCount(options.source, options.filter).then((selectedItemsCount: number|null) => {
+          self._notify('listSelectedKeysCountChanged', [selectedItemsCount], {bubbling: true});
+       });
+       self._multiselection.updateSelectionForRender();
 
-        self._options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
     },
 
     getItemsKeys: function (items) {
@@ -62,43 +72,59 @@ var _private = {
     },
 
     onCollectionChange: function (event, action, newItems, newItemsIndex, removedItems) {
-        if (action === collection.IObservable.ACTION_REMOVE) {
-            this._multiselection.remove(_private.getItemsKeys(removedItems));
+        // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
+        // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
+        if (this._options.listModel.getItems()) {
+            if (action === collection.IObservable.ACTION_REMOVE) {
+                this._multiselection.remove(_private.getItemsKeys(removedItems));
+            }
+            _private.notifyAndUpdateSelection(this, this._options);
         }
-        _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
     },
 
-    selectedTypeChangedHandler: function (typeName, limit) {
-        this._multiselection.setLimit(limit);
-        this._multiselection[typeName]();
-        _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+    selectedTypeChangedHandler(typeName: TChangeSelectionType, limit?: number|void): void {
+        const selectedKeys = this._options.selectedKeys;
+        const excludedKeys = this._options.excludedKeys;
+        const items = this._options.items;
+        let needChangeSelection = true;
+
+        if (typeName === 'selectAll' && !selectedKeys.length && !excludedKeys.length && !items.getCount()) {
+            needChangeSelection = false;
+        }
+
+        if (needChangeSelection) {
+            this._multiselection.setLimit(limit);
+            this._multiselection[typeName]();
+            _private.notifyAndUpdateSelection(this, this._options);
+        }
     },
 
-    getMultiselection: function (options) {
-        var def = new Deferred();
-        if (options.parentProperty) {
-            require(['Controls/operations'], function (operations) {
-                def.callback(new operations.HierarchySelection({
+    getMultiselection: function(options): Promise {
+        return Promise.all([load('Controls/operations'), load(options.selectionStrategy.name)]).then((dependencies) => {
+            let operations = dependencies[0];
+            let SelectionStrategy: ISelectionStrategy = dependencies[1];
+
+            if (options.parentProperty) {
+                return new operations.HierarchySelection({
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
-                    items: options.items,
                     keyProperty: options.keyProperty,
                     parentProperty: options.parentProperty,
                     nodeProperty: options.nodeProperty,
-                    listModel: options.listModel
-                }));
-            });
-        } else {
-            require(['Controls/operations'], function (operations) {
-                def.callback(new operations.Selection({
+                    hasChildrenProperty: options.hasChildrenProperty,
+                    listModel: options.listModel,
+                    selectionStrategy: new SelectionStrategy(options.selectionStrategy.options || {})
+                });
+            } else {
+               return new operations.Selection({
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
-                    items: options.items,
-                    keyProperty: options.keyProperty
-                }));
-            });
-        }
-        return def;
+                    keyProperty: options.keyProperty,
+                    listModel: options.listModel,
+                    selectionStrategy: new SelectionStrategy(options.selectionStrategy.options || {})
+                });
+            }
+        });
     }
 };
 
@@ -113,45 +139,46 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
         if (options.multiSelectReadyCallback) {
             options.multiSelectReadyCallback(multiSelectReady);
         }
-        var self = this;
-        return _private.getMultiselection(options).addCallback(function (multiselectionInstance) {
-            self._multiselection = multiselectionInstance;
-            options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
+
+        return _private.getMultiselection(options).then((multiselectionInstance) => {
+            this._multiselection = multiselectionInstance;
+            this._multiselection.updateSelectionForRender();
             multiSelectReady.callback();
         });
     },
 
     _afterMount: function () {
-        this._notify('listSelectedKeysCountChanged', [this._multiselection.getCount()], {bubbling: true});
         this._notify('register', ['selectedTypeChanged', this, _private.selectedTypeChangedHandler], {bubbling: true});
+        this._multiselection.getCount().then((selectedItemsCount: number|null) => {
+           this._notify('listSelectedKeysCountChanged', [selectedItemsCount], {bubbling: true});
+        });
+
         this._onCollectionChangeHandler = _private.onCollectionChange.bind(this);
         this._options.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
     },
 
     _beforeUpdate: function (newOptions) {
-        var
-            oldSelection = this._multiselection.getSelection(),
-            selectionChanged = !isEqual(newOptions.selectedKeys, oldSelection.selected) || !isEqual(newOptions.excludedKeys, oldSelection.excluded);
+        let
+           itemsIsChanged = newOptions.items !== this._options.items,
+           modelIsChanged = this._options.listModel !== newOptions.listModel,
+           selectionChanged = !isEqual(newOptions.selectedKeys, this._multiselection.selectedKeys) ||
+              !isEqual(newOptions.excludedKeys, this._multiselection.excludedKeys);
 
-        if (newOptions.items !== this._options.items) {
+        if (modelIsChanged) {
+            this._multiselection.setListModel(newOptions.listModel);
+        }
+
+        if (itemsIsChanged) {
             this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
             newOptions.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
-            this._multiselection.setItems(newOptions.items);
-            this._options.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
         }
 
         if (selectionChanged) {
-            this._multiselection._selectedKeys = newOptions.selectedKeys;
-            this._multiselection._excludedKeys = newOptions.excludedKeys;
-            _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
-        }
-
-        if (this._options.listModel !== newOptions.listModel) {
-            newOptions.listModel.updateSelection(this._multiselection.getSelectedKeysForRender());
-
-            if (this._multiselection) {
-                this._multiselection.setListModel(newOptions.listModel);
-            }
+            this._multiselection.selectedKeys = newOptions.selectedKeys;
+            this._multiselection.excludedKeys = newOptions.excludedKeys;
+            _private.notifyAndUpdateSelection(this, newOptions);
+        } else if (itemsIsChanged || modelIsChanged) {
+           this._multiselection.updateSelectionForRender();
         }
     },
 
@@ -161,7 +188,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
         } else {
             this._multiselection.select([key]);
         }
-        _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+        _private.notifyAndUpdateSelection(this, this._options);
     },
 
     _beforeUnmount: function () {

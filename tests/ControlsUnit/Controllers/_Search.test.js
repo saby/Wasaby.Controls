@@ -115,20 +115,20 @@ define(
             });
          });
 
-         it('.search forced', function(done) {
+         it('.search forced', function() {
+            var searchStarted = false;
             var search = new searchLib._Search({
                source: source,
                searchDelay: 1000,
-               navigation: navigation
+               navigation: navigation,
+               searchStartCallback: () => {
+                  searchStarted = true;
+               }
             });
-            var now = +new Date();
 
-            search.search({}, true).addCallback(function(result) {
-               let curDate = (+new Date());
-               assert.isTrue((now - curDate) > -50);
-               done();
-               return result;
-            });
+
+            search.search({}, true);
+            assert.isTrue(searchStarted);
          });
 
          it('abort Search', function() {

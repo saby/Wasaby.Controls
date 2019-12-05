@@ -13,7 +13,7 @@ import { IVersionable } from 'Types/entity';
  * @property {Controls/_dataSource/_error/Mode} [mode]
  * @extends Types/entity:IVersionable
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  */
 export interface ViewConfig<TOptions = object> extends ParkingViewConfig<TOptions>, IVersionable {
     mode?: Mode;
@@ -25,7 +25,7 @@ export interface ViewConfig<TOptions = object> extends ParkingViewConfig<TOption
  * @property {Controls/_dataSource/_error/Mode} mode Способ отображения ошибки (на всё окно / диалог / внутри компонента)
  * @property {Error} Обрабатываемая ошибка
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  */
 export interface HandlerConfig<T extends Error = Error> {
     error: T | Error;
@@ -38,7 +38,7 @@ export interface HandlerConfig<T extends Error = Error> {
  * @param {HandlerConfig} объект с параметрами
  * @return {void | Controls/_dataSource/_error/ViewConfig}
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  */
 export type Handler<
     TError extends Error = Error,

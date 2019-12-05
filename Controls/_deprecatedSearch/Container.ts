@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_deprecatedSearch/Container');
 import {SearchContextField} from 'Controls/context';
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 var Search = Control.extend({
 
@@ -9,7 +9,7 @@ var Search = Control.extend({
    _template: template,
 
    constructor: function() {
-      IoC.resolve('ILogger').error('Controls/deprecatedSearch:Container', 'Component is deprecated and will be deleted in 3.18.600, use Controls/search:Controller instead.');
+      Logger.error('Controls/deprecatedSearch:Container', 'Component is deprecated and will be deleted in 3.18.600, use Controls/search:Controller instead.', this);
       Search.superclass.constructor.apply(this, arguments);
    },
 

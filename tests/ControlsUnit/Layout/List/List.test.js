@@ -117,14 +117,15 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          recordSet.setMetaData({ more: 123 });
 
          it('list is not reverse', function() {
-            deprecatedList.Container._private.updateSource(listLayout, recordSet);
+            listLayout._data = recordSet;
+            deprecatedList.Container._private.updateSource(listLayout, false);
             assert.deepEqual(recordSet.getRawData(), listLayout._source._$data.query.getRawData());
             assert.deepEqual(listLayout._source._$data.query.getMetaData(), { more: 123 });
          });
 
          it('list is reverse', function() {
-            listLayout._options.reverseList = true;
-            deprecatedList.Container._private.updateSource(listLayout, recordSet);
+            listLayout._data = recordSet;
+            deprecatedList.Container._private.updateSource(listLayout, true);
             assert.deepEqual(recordSet.getRawData().reverse(), listLayout._source._$data.query.getRawData());
          });
       });
@@ -294,8 +295,9 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          /* emulate _beforeMount */
          listLayout.saveOptions(listOptions);
          deprecatedList.Container._private.resolveOptions(listLayout, listOptions);
-         listLayout._source = listOptions.source;
-
+         listLayout._data =  new collection.RecordSet({
+            rawData: listSourceData
+         });
          listLayout._beforeUpdate(listOptions, context);
 
          /* Nothing changes */
@@ -306,14 +308,14 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          var reversedData = clone(listSourceData).reverse();
          newOpts.reverseList = true;
          listLayout._beforeUpdate(newOpts, context);
-         assert.deepEqual(listLayout._source._$target._$data, reversedData);
+         assert.deepEqual(listLayout._source._$data.query.getAll().getRawData(), reversedData);
 
          // reverseList changed with not origin source
          listLayout._source = new sourceLib.PrefetchProxy({
             target: listOptions.source
          });
          listLayout._beforeUpdate(newOpts, context);
-         assert.deepEqual(listLayout._source._$target._$data, reversedData);
+         assert.deepEqual(listLayout._source._$data.query.getAll().getRawData(), reversedData);
 
          listLayout._source = listOptions.source;
          newOpts.reverseList = false;
@@ -377,15 +379,18 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
 
                listLayout._searchMode = true;
                context.filterLayoutField.filter = {test: 'testFilter'};
+               let listLayoutSource = listLayout._source;
                listLayout._beforeUpdate(newOpts, context);
 
                assert.deepEqual(listLayout._searchController._options.navigation, newNavigation);
                assert.deepEqual(listLayout._searchController._options.filter, {test: 'testFilter'});
                assert.isTrue(listLayout._source !== newOpts.source);
+               assert.isTrue(listLayout._source === listLayoutSource);
 
                listLayout._filter = {scTest: 'scTest'};
                listLayout._beforeUpdate(newOpts, context);
                assert.deepEqual(listLayout._searchController.getFilter(), {test: 'testFilter'});
+               assert.isTrue(listLayout._source === listLayoutSource);
 
                done();
             }, 50);
@@ -396,15 +401,18 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          let
             isReverseData = false,
             newOpts = clone(listOptions),
-            listLayout = new deprecatedList.Container(listOptions);
+            listLayout = new deprecatedList.Container(listOptions),
+            defaultUpdateSource = deprecatedList.Container._private.updateSource;
 
-         deprecatedList.Container._private.reverseSourceData = function() {
+         deprecatedList.Container._private.updateSource = function() {
             isReverseData = true;
          };
 
          newOpts.reverseList = true;
+         listLayout._data = [];
          listLayout._beforeUpdate(newOpts);
          assert.isTrue(isReverseData);
+         deprecatedList.Container._private.updateSource = defaultUpdateSource;
       });
 
       it('Container/List::_private.isFilterChanged', function() {

@@ -14,7 +14,7 @@ import 'css!theme?Controls/filter';
  * Контрол для поддержки фильтрации данных. Состоит из иконки-кнопки и строкового представления выбранного фильтра.
  * Клик по иконке-кнопке или строке открывает панель фильтрации. {@link Controls/filterPopup:DetailPanel}
  * Поддерживает вставку пользовательского шаблона между кнопкой и строкой фильтра.
- * Подробное описание и инструкцию по настройке контрола смотрите <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>здесь</a>.
+ * Подробное описание и инструкцию по настройке контрола смотрите <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
  * <a href="/materials/demo-ws4-filter-button">Демо-пример</a>.
  *
  * Инструкцию по настройке фильтрации в списке с помощью контрола "Filter Button" читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
@@ -123,8 +123,8 @@ var _private = {
             vertical: 'top',
             horizontal: 'right'
          };
-         self._popupOptions.horizontalAlign = {
-            side: 'left'
+         self._popupOptions.direction = {
+            horizontal: 'left'
          };
       }
    },
@@ -249,12 +249,11 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
 
    _onFilterChanged: function(event, data) {
       this._notify('filterChanged', [data.filter]);
-      // The format of the items from the history is different from the items in filter button, so a flag is added to the event
-      this._notify('itemsChanged', [data.items, !!data.history]);
-
       if (data.history) {
          this._notify('historyApply', [data.history,  {bubbling: true}]);
       }
+      // The format of the items from the history is different from the items in filter button, so a flag is added to the event
+      this._notify('itemsChanged', [data.items, !!data.history]);
    }
 });
 

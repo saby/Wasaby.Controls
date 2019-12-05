@@ -77,6 +77,16 @@
     * https://jsfiddle.net/hr9mvn2o/
     */
    min-width: 0;
+
+   /**
+    * Баг IE11:
+    * Текст должен не помещаться в поле, чтобы была возможность прокрутки по горизонтали.
+    * Наводим мышь на текст. Начинаем горизонатальную прокрутку, перемещая курсор в направлении одной из границ.
+    * Двигаем мышь, она должна остаться над текстом. Курсор будет изменен с 'text' на 'pointer'.
+    * https://jsfiddle.net/621ceqg5/
+    * Решение: явно прописать курсор на нативном поле.
+    */
+   cursor: text;
 }
 
 .controls-InputBase__nativeField_theme_@{themeName}_caretEmpty {
@@ -140,17 +150,23 @@
 /**
  * Элемент <input> с шириной по stretcher`у может быть прокручен по горизонтали.
  * Предположительно, <input> имеет болшую ширину из-за курсора в поле. Расстояние от текста до курсора равно
- * 1px, и ширина самого курсора тоже 1px. В качестве решения нужно увеличить ширину на 2px. Так как поле визуально
+ * 1px, и ширина самого курсора тоже 1px. В качестве решения нужно увеличить ширину на 2px.
+ * В edge ширину нужно увеличить на 4px. Откуда берутся ещё 2px не понятно, какой-то баг. Так как поле визуально
  * увеличится, то нужно уменьшить отступ от текста до границы поля на это же значение.
  * https://jsfiddle.net/kz0awcu6/
  */
 & {
-   @expansion: 2px;
-   .controls-InputBase__field_autoWidth.controls-InputBase__field_theme_@{themeName}_margin {
-      margin: 0 @padding-horizontal_inputText - @expansion 0 @padding-horizontal_inputText;
+   .expansionFix(@value) {
+      .controls-InputBase__field_autoWidth.controls-InputBase__field_theme_@{themeName}_margin {
+         margin: 0 @padding-horizontal_inputText - @value 0 @padding-horizontal_inputText;
+      }
+      .controls-InputBase__stretcher-block {
+         padding-right: @value;
+      }
    }
-   .controls-InputBase__stretcher-block {
-      padding-right: @expansion;
+   .expansionFix(2px);
+   .ws-is-ie12 {
+      .expansionFix(4px);
    }
 }
 

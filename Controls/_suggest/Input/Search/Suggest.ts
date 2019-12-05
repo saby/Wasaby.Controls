@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Input/Search/Suggest');
-import {descriptor} from 'Types/entity';
+import {getOptionTypes} from 'Controls/_suggest/Utils';
 import 'Controls/search';
 
 
@@ -15,7 +15,7 @@ import 'Controls/search';
  * @extends Controls/_input/Text
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
@@ -32,7 +32,7 @@ import 'Controls/search';
  * @extends Controls/_input/Text
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
@@ -121,14 +121,7 @@ var Suggest = Control.extend({
 
 });
 
-Suggest.getOptionTypes = function() {
-   return {
-      displayProperty: descriptor(String).required(),
-      suggestTemplate: descriptor(Object).required(),
-      searchParam: descriptor(String).required()
-   };
-};
-
+Suggest.getOptionTypes = getOptionTypes;
 Suggest.getDefaultOptions = function() {
    return {
       minSearchLength: 3,

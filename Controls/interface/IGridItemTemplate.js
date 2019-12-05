@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/interface/IGridItemTemplate', [
 ], function() {
 
@@ -18,31 +19,12 @@ define('Controls/interface/IGridItemTemplate', [
    /**
     * @name Controls/interface/IGridItemTemplate#itemTemplate
     * @cfg {Function} Шаблон отображения элемента таблицы.
-    * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
+    * См. <a href="/materials/demo-ws4-grid-item-template">демо-пример</a>.
+    * @default Controls/grid:ItemTemplate
     * @remark
-    * Для контрола {@link Controls/grid:View} в качестве базового шаблона применяется "Controls/grid:ItemTemplate".
-    * В его области видимости доступен объект itemData, через который можно получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
-    * Базовый шаблон itemTemplate поддерживает следующие параметры:
-    * <ul>
-    *    <li>highlightOnHover {Boolean} — включить выделение элемента при наведении курсора.</li>
-    *    <li>
-    *       clickable {Boolean} - Тип курсора (default или pointer).
-    *       <ul>
-    *          <li>true - курсор pointer</li>
-    *          <li>false - курсор default</li>
-    *       </ul>
-    *       По умолчанию: <b>true</b>
-    *    </li>
-    * </ul>
-    * @example
-    * Использование пользовательского шаблона для рендеринга:
-    * <pre>
-    *    <Controls.grid:View>
-    *       <ws:itemTemplate>
-    *          <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}"/>
-    *       </ws:itemTemplate>
-    *    </Controls.grid:View>
-    * </pre>
+    * Подробнее о параметрах шаблона читайте {@link Controls/grid:ItemTemplate здесь}.
+    * Подробнее работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
+    * @see itemTemplateProperty
     */
 
    /*
@@ -79,6 +61,7 @@ define('Controls/interface/IGridItemTemplate', [
     * @name Controls/interface/IGridItemTemplate#itemTemplateProperty
     * @cfg {String} Имя свойства элемента, содержащего шаблон для рендеринга. Если не задано, используется itemTemplate.
     * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
+    * @see itemTemplate
     */
 
    /*

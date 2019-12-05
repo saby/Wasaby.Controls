@@ -94,6 +94,14 @@ define([
          model.clearReloadedMarks();
          version = model._calcItemVersion(item, item.key);
          assert.notInclude(version, 'RELOADED');
+
+         model.setSwipeItem(item);
+         version = model._calcItemVersion(item, item.key);
+         assert.include(version, 'SWIPE');
+
+         model.setSwipeItem(null);
+         version = model._calcItemVersion(item, item.key);
+         assert.notInclude(version, 'SWIPE');
       });
 
       it('getCurrent', function() {
@@ -729,12 +737,14 @@ define([
             nextVersionCalled = false;
 
          var lv = new lists.ListViewModel(cfg);
+         var prefixItemVersion = lv._prefixItemVersion;
          lv._nextVersion = function() {
             nextVersionCalled = true;
          };
          lv.setSwipeItem(itemData);
          assert.equal(lv._swipeItem, itemData);
          assert.isTrue(nextVersionCalled, 'setSwipeItem should change version of the model');
+         assert.strictEqual(lv._prefixItemVersion, prefixItemVersion, 'setSwipeItem should not change prefix item version');
       });
 
       it('setSwipeItem should only change version once if called with the same item multiple times in a row', function() {

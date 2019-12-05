@@ -1,10 +1,25 @@
-import cExtend = require('Core/core-simpleExtend');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
+import { Collection } from 'Controls/display';
+
+import { Rpc, PrefetchProxy } from 'Types/source';
+import { ListViewModel } from 'Controls/list';
+import { RecordSet, List } from 'Types/collection';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
+
+export interface IOptions {
+   listModel: Collection|ListViewModel,
+   keyProperty: string,
+   selectedKeys?: TKeys,
+   excludedKeys?: TKeys,
+   selectionStrategy: FlatSelectionStrategy
+};
 
 /**
  * @class Controls/_operations/MultiSelector/Selection
  * @extends Core/core-simpleExtend
  * @author Авраменко А.С.
+ * @deprecated Модуль устарел и будет удалён в версию 20.ххх. Используйте Controls/operations:FlatSelectionStrategy
  * @private
  */
 
@@ -25,119 +40,164 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
  * @cfg {String|Number} Name of the item property that uniquely identifies collection item.
  */
 
-var
-   ALLSELECTION_VALUE = [null],
-   SELECTION_STATUS = {
-      NOT_SELECTED: false,
-      SELECTED: true
-   };
+const ALL_SELECTION_VALUE = null;
 
-var Selection = cExtend.extend({
-   _selectedKeys: null,
-   _excludedKeys: null,
-   _items: null,
-   _limit: 0,
+export default class Selection {
+   protected _selectionStrategy: FlatSelectionStrategy;
+   protected _listModel: Collection|ListViewModel;
+   protected _keyProperty: string;
+   protected _selectedKeys: TKeys = [];
+   protected _excludedKeys: TKeys = [];
+   protected _limit: number = 0;
 
-   constructor: function(options) {
-      this._options = options;
-      this._selectedKeys = options.selectedKeys;
-      this._excludedKeys = options.excludedKeys;
+   get selectedKeys(): TKeys {
+      return this._selectedKeys;
+   }
 
-      this._items = options.items;
+   set selectedKeys(keys: TKeys): void {
+      this._selectedKeys = keys;
+   }
 
-      Selection.superclass.constructor.apply(this, arguments);
-   },
+   get excludedKeys(): TKeys {
+      return this._excludedKeys;
+   }
+
+   set excludedKeys(keys: TKeys): void {
+      this._excludedKeys = keys;
+   }
+
+   constructor(options: IOptions): void {
+      this._listModel = options.listModel;
+      this._keyProperty = options.keyProperty;
+      this._selectedKeys = options.selectedKeys.slice();
+      this._excludedKeys = options.excludedKeys.slice();
+      this._selectionStrategy = options.selectionStrategy;
+   }
 
    /**
     * Add keys to selection.
     * @param {Array} keys Keys to add to selection.
     */
-   select: function(keys) {
-      this._selectedKeys = this._selectedKeys.slice();
-      this._excludedKeys = this._excludedKeys.slice();
+   select(keys: TKeys): void {
       if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
-         this._increaseLimit(keys);
+         this._increaseLimit(keys.slice());
       }
-      if (this._isAllSelection(this._getParams())) {
-         ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-      } else {
-         ArraySimpleValuesUtil.addSubArray(this._selectedKeys, keys);
-      }
-   },
+
+      let selection: ISelection = this._selectionStrategy.select(this.getSelection(), keys, this._listModel);
+
+      this._selectedKeys = selection.selected;
+      this._excludedKeys = selection.excluded;
+   }
 
    /**
     * Remove keys from selection.
     * @param {Array} keys Keys to remove from selection.
     */
-   unselect: function(keys) {
-      this._selectedKeys = this._selectedKeys.slice();
-      this._excludedKeys = this._excludedKeys.slice();
+   unselect(keys: TKeys): void {
+      let selection: ISelection = this._selectionStrategy.unSelect(this.getSelection(), keys, this._listModel);
 
-      if (this._isAllSelection(this._getParams())) {
-         ArraySimpleValuesUtil.addSubArray(this._excludedKeys, keys);
-      } else {
-         ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
-      }
-   },
+      this._selectedKeys = selection.selected;
+      this._excludedKeys = selection.excluded;
+   }
 
    /**
     * Delete keys from anywhere.
     * @param {Array} keys Keys to remove.
     */
-   remove: function(keys) {
-      this._selectedKeys = this._selectedKeys.slice();
-      this._excludedKeys = this._excludedKeys.slice();
-
-      ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-      ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
-   },
+   remove(keys: TKeys): void {
+      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
+      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
+   }
 
    /**
     * Select all items.
     * @remark Sets selectedKeys to [null].
     */
-   selectAll: function() {
-      this._selectedKeys = ALLSELECTION_VALUE;
+   selectAll(): void {
+      this._selectedKeys = [ALL_SELECTION_VALUE];
 
       // При выборе "Отметить все" лимит не передается, а предыдущий установленный сбрасывается раньше вызова selectAll,
       // в этом случае массив с исключениями всегда будут очищаться.
       if (!this._limit) {
          this._excludedKeys = [];
       }
-   },
+   }
 
    /**
     * Remove selection from all items.
     */
-   unselectAll: function() {
+   unselectAll(): void {
       this._selectedKeys = [];
       this._excludedKeys = [];
-   },
+   }
 
    /**
     * Invert selection.
     */
-   toggleAll: function() {
-      var swap;
-
-      if (this._isAllSelection(this._getParams())) {
-         swap = this._excludedKeys;
+   toggleAll(): void {
+      if (this._selectionStrategy.isAllSelected(this.getSelection(), ALL_SELECTION_VALUE)) {
+         let excludedKeys: TKeys = this._excludedKeys.slice();
          this.unselectAll();
-         this.select(swap);
+         this.select(excludedKeys);
       } else {
-         swap = this._selectedKeys;
+         let selectedKeys: TKeys = this._selectedKeys.slice();
          this.selectAll();
-         this.unselect(swap);
+         this.unselect(selectedKeys);
       }
-   },
+   }
 
    /**
     * Sets limit.
     * @param {Number} value
     */
-   setLimit: function(value: Number): void {
+   setLimit(value: number): void {
       this._limit = value;
-   },
+   }
+
+   /**
+    * Returns the number of selected items.
+    * @returns {number}
+    */
+   getCount(source: Rpc|PrefetchProxy, filter: Object): Promise<number|null> {
+      return this._selectionStrategy.getCount(this.getSelection(), this._listModel, {
+         limit: this._limit,
+         filter: filter,
+         source: source
+      });
+   }
+
+   /**
+    * Transforms selection to single array of selectedKeys and set it to model. Used for rendering checkboxes in lists.
+    */
+   updateSelectionForRender(): void {
+      let selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();
+
+      if (this._listModel instanceof Collection) {
+         this._listModel.setSelection(selectionForModel);
+      } else {
+         let selectionForOldModel: Object = {};
+
+         selectionForModel.forEach((stateSelection, itemId) => {
+            selectionForOldModel[itemId] = stateSelection;
+         });
+         this._listModel.updateSelection(selectionForOldModel);
+      }
+   }
+
+   setListModel(listModel: Collection|ListViewModel): void {
+      this._listModel = listModel;
+   }
+
+   getSelection(): ISelection {
+      return {
+         selected: this._selectedKeys,
+         excluded: this._excludedKeys
+      }
+   }
+
+   protected _getSelectionForModel(): Map<TKey, boolean> {
+      return this._selectionStrategy.getSelectionForModel(this.getSelection(), this._listModel, this._limit, this._keyProperty);
+   }
 
    /**
     * Increases the limit on the number of selected items, placing all other unselected in excluded list
@@ -145,125 +205,36 @@ var Selection = cExtend.extend({
     * @param {Array} keys
     * @private
     */
-   _increaseLimit: function(keys: any[]): void {
-      const self = this;
-      const limit = self._limit ? self._limit - this._excludedKeys.length : 0;
-      let count = 0;
-      const slicedKeys: any[] = keys.slice();
-      this._items.forEach((item) => {
-         const status = self._getSelectionStatus(item);
-         const key = item.get(self._options.keyProperty);
-         if (status !== false && count < limit) {
-            count++;
-         } else if (count >= limit && slicedKeys.length) {
-            count++;
-            self._limit++;
-            if (slicedKeys.includes(key)) {
-               slicedKeys.splice(slicedKeys.indexOf(key), 1)
+   protected _increaseLimit(keys: TKeys): void {
+      let
+         selectedItemsCount: number = 0,
+         limit: number = this._limit ? this._limit - this._excludedKeys.length : 0,
+         selectionForModel: Map<TKey, boolean> = this._selectionStrategy.getSelectionForModel(
+            this.getSelection(), this._listModel, this._limit, this._keyProperty);
+
+      this._getItems().forEach((item) => {
+         let key: TKey = item.get(this._keyProperty);
+
+         if (selectedItemsCount < limit && selectionForModel.get(key) !== false) {
+            selectedItemsCount++;
+         } else if (selectedItemsCount >= limit && keys.length) {
+            selectedItemsCount++;
+            this._limit++;
+
+            if (keys.includes(key)) {
+               keys.splice(keys.indexOf(key), 1);
             } else {
-               self._excludedKeys.push(key);
+               this._excludedKeys.push(key);
             }
          }
       });
-   },
-
-   /**
-    * Returns selection.
-    * @returns {{selected: Array, excluded: Array}}
-    */
-   getSelection: function() {
-      return {
-         selected: this._selectedKeys,
-         excluded: this._excludedKeys
-      };
-   },
-
-   /**
-    * Set items which will be used to calculate selectedKeys for render.
-    * @param {Types/collection:RecordSet} items
-    */
-   setItems: function(items) {
-      this._items = items;
-   },
-
-   /**
-    * Returns the number of selected items.
-    * @returns {number}
-    */
-   getCount: function() {
-      let itemsCount = null;
-
-      if (this._isAllSelection(this._getParams())) {
-         if (this._limit) {
-            itemsCount = this._limit - this._excludedKeys.length;
-         }
-         if (this._isAllItemsLoaded() && (!this._limit || this._items.getCount() <= this._limit)) {
-            itemsCount = this._items.getCount() - this._excludedKeys.length;
-         }
-      } else {
-         itemsCount = this._selectedKeys.length;
-      }
-
-      return itemsCount;
-   },
-
-   /**
-    * Transforms selection to single array of selectedKeys and returns it. Used for rendering checkboxes in lists.
-    * @returns {Object}
-    */
-   getSelectedKeysForRender: function() {
-      const res = {};
-      const self = this;
-      const limit = self._limit ? self._limit - this._excludedKeys.length : 0;
-      let status;
-      let count = 0;
-
-      this._items.forEach((item) => {
-         status = self._getSelectionStatus(item);
-         if (status !== false && (!limit || count < limit)) {
-            count++;
-            res[item.get(self._options.keyProperty)] = status;
-         }
-      });
-
-      return res;
-   },
-
-   setListModel: function(listModel) {
-      this._options.listModel = listModel;
-   },
-
-
-   _getSelectionStatus: function(item) {
-      var itemId = item.get(this._options.keyProperty);
-      return this._selectedKeys[0] === null && this._excludedKeys.indexOf(itemId) === -1 || this._selectedKeys.indexOf(itemId) !== -1;
-   },
-
-   _getParams: function() {
-      return {
-         selectedKeys: this._selectedKeys,
-         excludedKeys: this._excludedKeys,
-         items: this._items
-      };
-   },
-
-   _isAllSelection: function(options) {
-      var
-         selectedKeys = options.selectedKeys;
-
-      return selectedKeys[0] === null;
-   },
-
-   _isAllItemsLoaded: function() {
-      let
-         itemsCount = this._items.getCount(),
-         more = this._items.getMetaData().more,
-         hasMore = typeof more === 'number' ? more > itemsCount : more;
-
-      return !hasMore || (this._limit && itemsCount >= this._limit);
    }
-});
 
-Selection.SELECTION_STATUS = SELECTION_STATUS;
-
-export default Selection;
+   private _getItems(): RecordSet|List {
+      if (this._listModel instanceof Collection) {
+         return this._listModel.getCollection();
+      } else {
+         return this._listModel.getItems();
+      }
+   }
+}

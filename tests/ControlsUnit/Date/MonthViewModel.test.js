@@ -1,7 +1,7 @@
 define([
    'Core/core-merge',
    'Controls/calendar',
-   'SBIS3.CONTROLS/Utils/DateUtil',
+   'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils'
 ], function(
    coreMerge,
@@ -48,6 +48,22 @@ define([
             );
 
             assert.equal(dayObj.extData, extData);
+         });
+
+         it('should create correct lastDayOfMonth and firstDayOfMonth', function () {
+            let mvm = new calendar.MonthViewModel(config);
+            let lastDay = mvm._getDayObject(new Date(2019, 0, 31)),
+               firstDay = mvm._getDayObject(new Date(2019, 0, 1)),
+               middleDay = mvm._getDayObject(new Date(2019, 0, 10));
+
+            assert.equal(lastDay.lastDayOfMonth, true);
+            assert.equal(lastDay.firstDayOfMonth, false);
+
+            assert.equal(firstDay.lastDayOfMonth, false);
+            assert.equal(firstDay.firstDayOfMonth, true);
+
+            assert.equal(middleDay.lastDayOfMonth, false);
+            assert.equal(middleDay.firstDayOfMonth, false);
          });
 
       });

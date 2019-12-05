@@ -11,14 +11,7 @@
  * @includes Dropdown Controls/_filterPopup/Panel/Dropdown
  * @includes Text Controls/_filterPopup/Panel/Text
  * @includes Lookup Controls/_filterPopup/Panel/Lookup
- * @includes HistoryStyles Controls/_filterPopup/Button/History/Styles
- * @includes LinkStyles Controls/_filter/Button/Panel/Link/Styles
- * @includes PropertyGridStyles Controls/_filter/Button/Panel/PropertyGrid/Styles
- * @includes PanelStyles Controls/_filter/Button/Panel/Styles
- * @includes TextStyles Controls/_filter/Button/Panel/Text/Styles
- * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
- * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
- * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @includes HierarchyLookup Controls/_filterPopup/Panel/HierarchyLookup
  * @public
  * @author Крайнов Д.О.
  */
@@ -35,14 +28,7 @@
  * @includes Dropdown Controls/_filterPopup/Panel/Dropdown
  * @includes Text Controls/_filterPopup/Panel/Text
  * @includes Lookup Controls/_filterPopup/Panel/Lookup
- * @includes HistoryStyles Controls/_filterPopup/Button/History/Styles
- * @includes LinkStyles Controls/_filter/Button/Panel/Link/Styles
- * @includes PropertyGridStyles Controls/_filter/Button/Panel/PropertyGrid/Styles
- * @includes PanelStyles Controls/_filter/Button/Panel/Styles
- * @includes TextStyles Controls/_filter/Button/Panel/Text/Styles
- * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
- * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
- * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @includes HierarchyLookup Controls/_filterPopup/Panel/HierarchyLookup
  * @public
  * @author Крайнов Д.О.
  */
@@ -63,6 +49,7 @@ import _HierarchyList = require('Controls/_filterPopup/SimplePanel/_HierarchyLis
 
 import _FilterPanelWrapper = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper');
 
+export {default as HierarchyLookup} from 'Controls/_filterPopup/Panel/HierarchyLookup';
 export {default as _EditDialog} from 'Controls/_filterPopup/History/_EditDialog';
 
 export {

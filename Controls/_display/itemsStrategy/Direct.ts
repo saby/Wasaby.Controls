@@ -25,6 +25,7 @@ interface ISerializableState<T> extends IDefaultSerializableState<T> {
  * @class Controls/_display/ItemsStrategy/Direct
  * @extends Controls/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
+ * @private
  */
 export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> extends AbstractStrategy<S, T> {
     protected _options: IOptions<S, T>;

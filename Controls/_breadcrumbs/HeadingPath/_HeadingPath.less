@@ -1,5 +1,10 @@
+.controls-BreadCrumbsPath {
+   width: 100%;
+   box-sizing: border-box;
+}
+
 .controls-BreadCrumbsPath__twoRows {
-   margin-left: @spacing_Path-between-home-and-leftEdge;
+   padding-left: @spacing_Path-between-home-and-leftEdge;
 }
 
 .controls-BreadCrumbsPath__wrapper {
@@ -49,6 +54,7 @@
    align-self: baseline;
    align-items: baseline;
    right: 0;
+   bottom: 0;
    background-color: @background-color_Path-backButtonArrow;
    &:before {
       font-size:@font-size_BreadCrumbs-baseline;
@@ -82,11 +88,14 @@
    padding-left: @spacing_Path-between-home-and-crumbs;
 }
 
-.controls-BreadCrumbsPath__homeContainer {
-   .baseline-fix();
+.controls-BreadCrumbsPath__homeContainer_withBackButton {
 
    // sets line-height === content's fontSize for correctly padding rounded border on drag&drop
    line-height: 1;
+}
+.controls-BreadCrumbsPath__homeContainer {
+   .baseline-fix();
+
    position: relative;
    display: inline-flex;
    align-items: baseline;
@@ -142,13 +151,4 @@
 
 .controls-BreadCrumbsPath__backButton_zeroWidth {
    width: 0;
-}
-
-.ws-is-ie {
-   .controls-BreadCrumbsPath__backButtonArrow {
-      //IE can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
-      top: 50%;
-      bottom: 50%;
-      transform: translateY(-50%);
-   }
 }

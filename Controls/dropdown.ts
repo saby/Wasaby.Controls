@@ -7,11 +7,10 @@
  * @includes Opener Controls/_dropdown/Opener
  * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/_dropdown/itemTemplate
+ * @includes IDropdownSource Controls/_dropdown/interface/IDropdownSource
  * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
  * @includes IGrouped Controls/_dropdown/interface/IGrouped
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
- * @includes MenuStyles Controls/_dropdown/Button/MenuStyles
- * @includes Styles Controls/_dropdown/Input/Styles
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
  * @public
  * @author Крайнов Д.О.
@@ -26,11 +25,10 @@
  * @includes Opener Controls/_dropdown/Opener
  * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/_dropdown/itemTemplate
+ * @includes IDropdownSource Controls/_dropdown/interface/IDropdownSource
  * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
  * @includes IGrouped Controls/_dropdown/interface/IGrouped
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
- * @includes MenuStyles Controls/_dropdown/Button/MenuStyles
- * @includes Styles Controls/_dropdown/Input/Styles
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
  * @public
  * @author Крайнов Д.О.

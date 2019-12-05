@@ -45,9 +45,23 @@ define(['Controls/_list/EditInPlace/EditingRow'], function(EditingRow) {
                   stopPropagation: function() {
                      this.isStopped = true;
                   }
+               },
+               {
+                  isStopped: false,
+                  nativeEvent: {
+                     keyCode: 27
+                  },
+                  target: {
+                     closest: function() {
+                        return false;
+                     }
+                  },
+                  stopPropagation: function() {
+                     this.isStopped = true;
+                  }
                }
             ],
-            testResults = [true, false, false];
+            testResults = [true, false, false, true];
          testEvents.forEach(function(testEvent, index) {
             editingRow._onKeyDown(testEvent);
             assert.equal(testEvent.isStopped, testResults[index], 'Invalid call stopPropagation on step #' + index);

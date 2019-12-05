@@ -243,7 +243,10 @@ var Component = BaseControl.extend({
         }
         period = getCurrentPeriod(periodType);
         this.setYear((new Date()).getFullYear());
-        this._notify('sendResult', period, {bubbling: true});
+        this._notify(
+            'sendResult',
+            [new this._options.dateConstructor(period[0]), new this._options.dateConstructor(period[1])],
+            {bubbling: true});
     },
 
     _onWheel: function (event) {

@@ -1,57 +1,56 @@
-<ws:template name="textTemplate">
-   <div class="controls-FilterView__block controls-FilterView__block_theme_{{_options.theme}}
-   {{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme_' + _options.theme}}">
-      <div class="icon-DayForward controls-FilterView__iconArrow_theme_{{_options.theme}} controls-FilterView-{{_options.alignment}}__iconArrow_theme_{{_options.theme}}
-               controls-FilterView__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}} "></div>
-      <div name="{{name}}" class="controls-FilterView__text-wrapper_theme_{{_options.theme}} controls-FilterView__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}"
-           title="{{title}}">
-         <div class="controls-FilterView__text_theme_{{_options.theme}}">{{text}}</div>
-         <span if="{{hasMoreText}}" class="controls-FilterView__hasMoreText_theme_{{_options.theme}}">{{hasMoreText}}</span>
-      </div>
-   </div>
-</ws:template>
-
 <ws:template name="cross">
-   <ws:if data="{{!_options.readOnly}}">
-      <span class="controls-FilterView__iconReset_theme_{{_options.theme}} icon-CloseNew" ws-no-focus="{{true}}"></span>
+   <ws:if data="{{!_options.readOnly && (!item || item.hasOwnProperty('resetValue'))}}">
+      <span class="controls-FilterView__iconReset_theme-{{_options.theme}} icon-CloseNew" ws-no-focus="{{true}}"></span>
    </ws:if>
 </ws:template>
 
-<div class="controls-FilterView_theme_{{_options.theme}}">
-   <div class="controls-FilterView__wrapper_theme_{{_options.theme}}">
+<ws:template name="itemTemplate">
+   <ws:partial template="{{_options.itemTemplate}}"
+               text="{{text}}"
+               title="{{title}}"
+               moreText="{{moreText}}"
+               item="{{item}}"
+               itemName="{{itemName}}"
+               attr:class="{{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme-' + _options.theme}}"/>
+</ws:template>
+
+<div class="controls-FilterView_theme-{{_options.theme}}">
+   <div class="controls-FilterView__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{_dateRangeItem}}">
          <ws:partial template="Controls/_filter/Editors/DateRange" scope="{{_dateRangeItem.editorOptions}}" value="{{_dateRangeItem.value}}" on:rangeChanged="_rangeChangedHandler()"/>
       </ws:if>
-      <ws:if data="{{_isFastReseted() && _options.detailPanelTemplateName && _options.panelTemplateName}}">
-            <ws:partial template="textTemplate"
-                        name="all_frequent"
-                        text="{[Все]}"
-                        on:click="_openPanel('all_frequent')"/>
+      <ws:if data="{{_needShowFastFilter(_source) && _isFastReseted() && _options.detailPanelTemplateName}}">
+         <ws:partial template="itemTemplate"
+                     itemName="all_frequent"
+                     text="{[Все]}"
+                     on:click="_openPanel('all_frequent')"/>
       </ws:if>
       <ws:for data="index, item in _source">
          <ws:if data="{{_configs[item.name].items && _configs[item.name].items.getCount() && _displayText[item.name].text !== undefined}}">
-               <ws:partial template="textTemplate"
-                           text="{{_displayText[item.name].text}}"
-                           title="{{_displayText[item.name].title}}"
-                           hasMoreText="{{_displayText[item.name].hasMoreText}}"
-                           on:click="_openPanel(item.name)"
-                           name="{{item.name}}"/>
-               <ws:partial template="cross" on:click="_reset(item)" />
+            <ws:partial template="itemTemplate"
+                        text="{{_displayText[item.name].text}}"
+                        title="{{_displayText[item.name].title}}"
+                        moreText="{{_displayText[item.name].hasMoreText}}"
+                        on:click="_openPanel(item.name)"
+                        item="{{item}}"
+                        itemName="{{item.name}}" />
+               <ws:partial template="cross" on:click="_reset(item)" item="{{item}}"/>
          </ws:if>
       </ws:for>
       <ws:if data="{{_filterText}}">
-            <ws:partial template="textTemplate"
-                        text="{{_filterText}}"
-                        title="{{_filterText}}"
-                        on:click="openDetailPanel()"/>
+         <ws:partial template="itemTemplate"
+                     text="{{_filterText}}"
+                     title="{{_filterText}}"
+                     on:click="openDetailPanel()"
+                     attr:class="controls-FilterView__filterTextLine"/>
             <ws:partial template="cross" on:click="_resetFilterText()" />
       </ws:if>
    </div>
    <ws:if data="{{(_options.detailPanelTemplateName || _isFastReseted()) && !_options.readOnly}}">
       <div name="detailPanelTarget" class="controls-FilterView__icon
-                                           controls-FilterView__icon_theme_{{_options.theme}}
-                                           controls-FilterView-button-{{_options.alignment}}_theme_{{_options.theme}}
-                                           controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme_{{_options.theme}}
+                                           controls-FilterView__icon_theme-{{_options.theme}}
+                                           controls-FilterView-button-{{_options.alignment}}_theme-{{_options.theme}}
+                                           controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme-{{_options.theme}}
                                            icon-FilterBig"
            on:click="openDetailPanel()">
       </div>

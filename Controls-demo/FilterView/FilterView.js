@@ -73,6 +73,7 @@ define('Controls-demo/FilterView/FilterView',
          _fastButtonItems: null,
          _fastButtonItems2: null,
          _oneFastItems: null,
+         _oneFastItems2: null,
          _customTemplateItems: null,
          _scrollFastItems: null,
          _historyFastItems: null,
@@ -93,33 +94,33 @@ define('Controls-demo/FilterView/FilterView',
             this._hierarchyDataSource = [
                {id: 'Приход', title: 'Coming', parent: null, '@parent': true},
                {id: 'Расход', title: 'Consumption', parent: null, '@parent': true},
-               {id: '11', title: 'The provider returns the prepayment', parent: 'Приход', '@parent': false},
-               {id: '12', title: 'Payment from the buyer', parent: 'Приход', '@parent': false},
-               {id: '21', title: 'Return of prepayment to the buyer', parent: 'Расход', '@parent': false},
-               {id: '22', title: 'Payment to the supplier', parent: 'Расход', '@parent': false},
-               {id: '23', title: 'Payment to the supplier 3', parent: 'Расход', '@parent': false},
-               {id: '24', title: '1Payment to the supplier 3', parent: 'Расход', '@parent': false},
-               {id: '13', title: '2Payment to the supplier 3', parent: 'Приход', '@parent': false},
-               {id: '14', title: '3Payment to the supplier 3', parent: 'Приход', '@parent': false},
-               {id: '15', title: '4Payment to the supplier 3', parent: 'Приход', '@parent': false},
-               {id: '16', title: '5Payment to the supplier 3', parent: 'Приход', '@parent': false},
-               {id: '17', title: '6Payment to the supplier 3', parent: 'Приход', '@parent': false},
-               {id: '18', title: '7Payment to the supplier 3', parent: 'Приход', '@parent': false}
+               {id: '11', title: 'The provider returns the prepayment', parent: 'Приход', '@parent': null},
+               {id: '12', title: 'Payment from the buyer', parent: 'Приход', '@parent': null},
+               {id: '21', title: 'Return of prepayment to the buyer', parent: 'Расход', '@parent': null},
+               {id: '22', title: 'Payment to the supplier', parent: 'Расход', '@parent': null},
+               {id: '23', title: 'Payment to the supplier 3', parent: 'Расход', '@parent': null},
+               {id: '24', title: '1Payment to the supplier 3', parent: 'Расход', '@parent': null},
+               {id: '13', title: '2Payment to the supplier 3', parent: 'Приход', '@parent': null},
+               {id: '14', title: '3Payment to the supplier 3', parent: 'Приход', '@parent': null},
+               {id: '15', title: '4Payment to the supplier 3', parent: 'Приход', '@parent': null},
+               {id: '16', title: '5Payment to the supplier 3', parent: 'Приход', '@parent': null},
+               {id: '17', title: '6Payment to the supplier 3', parent: 'Приход', '@parent': null},
+               {id: '18', title: '7Payment to the supplier 3', parent: 'Приход', '@parent': null}
 
             ];
             this._hierarchyDataSource2 = [
                {id: 'Список1', title: 'Список 1', parent: null, '@parent': true},
                {id: 'Список2', title: 'Список 2', parent: null, '@parent': true},
-               {id: '11', title: 'Ребенок 1', parent: 'Список1', '@parent': false},
-               {id: '12', title: 'Ребенок 2', parent: 'Список1', '@parent': false},
-               {id: '21', title: 'Ребенок 1', parent: 'Список2', '@parent': false},
-               {id: '22', title: 'Ребенок 2', parent: 'Список2', '@parent': false},
-               {id: '23', title: 'Ребенок 3', parent: 'Список2', '@parent': false}
+               {id: '11', title: 'Ребенок 1', parent: 'Список1', '@parent': null},
+               {id: '12', title: 'Ребенок 2', parent: 'Список1', '@parent': null},
+               {id: '21', title: 'Ребенок 1', parent: 'Список2', '@parent': null},
+               {id: '22', title: 'Ребенок 2', parent: 'Список2', '@parent': null},
+               {id: '23', title: 'Ребенок 3', parent: 'Список2', '@parent': null}
             ];
             this._hierarchyItems = [{
-               name: 'operations',
-               value: [],
-               resetValue: [],
+               name: 'hierarchyOperations',
+               value: {},
+               resetValue: {},
                emptyText: 'All operations',
                editorOptions: {
                   displayProperty: 'title',
@@ -128,7 +129,7 @@ define('Controls-demo/FilterView/FilterView',
                   nodeProperty: '@parent',
                   source: new hierarchyHistoryMemory({
                      originSource: new sourceLib.Memory({
-                        idProperty: 'id',
+                        keyProperty: 'id',
                         data: this._hierarchyDataSource
                      }),
                      historySource: new history.Service({
@@ -137,8 +138,14 @@ define('Controls-demo/FilterView/FilterView',
                   }),
                   filter: {$_history: true},
                   selectorTemplate: { templateName: 'Controls-demo/Dropdown/TreeStackTemplate', templateOptions: {items: this._hierarchyDataSource,
-                        nodeProperty: '@parent', parentProperty: 'parent', multiSelect: true}, popupOptions: {width: 300} },
+                        nodeProperty: '@parent', parentProperty: 'parent', multiSelect: true} },
                   navigation: {source: 'page', view: 'page', sourceConfig: {pageSize: 8, page: 0}},
+                  selectorTemplateName: 'Controls-demo/Dropdown/TreeStackTemplate',
+                  suggestTemplateName: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
+                  className: 'controls-demo-FilterView__lookupTemplate',
+                  caption: 'Our company',
+                  placeholder: 'Enter company name',
+                  searchParam: 'title',
                   multiSelect: true
                },
                viewMode: 'frequent'
@@ -162,7 +169,15 @@ define('Controls-demo/FilterView/FilterView',
                      })
                   }),
                   filter: {$_history: true},
+                  selectorTemplate: { templateName: 'Controls-demo/Dropdown/TreeStackTemplate', templateOptions: {items: this._hierarchyDataSource2,
+                        nodeProperty: '@parent', parentProperty: 'parent', multiSelect: true} },
                   navigation: {source: 'page', view: 'page', sourceConfig: {pageSize: 8, page: 0}},
+                  selectorTemplateName: 'Controls-demo/Dropdown/TreeStackTemplate',
+                  suggestTemplateName: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
+                  className: 'controls-demo-FilterView__lookupTemplate',
+                  caption: 'Lists',
+                  placeholder: 'Enter name',
+                  searchParam: 'title',
                   multiSelect: true
                },
                viewMode: 'frequent'
@@ -356,7 +371,7 @@ define('Controls-demo/FilterView/FilterView',
             ];
             this._buttonItems = [
                {name: 'unread', value: true, resetValue: false, textValue: 'Unread', viewMode: 'extended', visibility: false},
-               {name: 'limit', value: [1], resetValue: [null], textValue: 'Due date', viewMode: 'extended', visibility: false, source: new sourceLib.Memory({
+               {name: 'limit', value: [null], resetValue: [null], textValue: 'Due date', viewMode: 'extended', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: [
                      {id: 1, title: 'Due date'},
@@ -513,6 +528,24 @@ define('Controls-demo/FilterView/FilterView',
                {name: 'tagging', value: false, resetValue: false, textValue: 'Marks', viewMode: 'extended', visibility: false}
             ].concat(this._buttonItems);
             this._fastButtonItems2 = Clone(this._fastButtonItems);
+            this._fastButtonItems2.push({
+               name: 'detailingPeriod',
+               value: [1],
+               resetValue: [1],
+               textValue: '',
+               viewMode: 'extended',
+               visibility: false,
+               source: new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: [
+                     { key: 1, title: 'On documents', 'parent@': false, parent: null },
+                     { key: 2, title: 'Summary', 'parent@': true, parent: null },
+                     { key: 3, title: 'Day', text: 'Summary by day', parent: 2, 'parent@': false },
+                     { key: 4, title: 'Month', text: 'Summary by monthly', parent: 2, 'parent@': false },
+                     { key: 5, title: 'Year', text: 'Summary by year', parent: 2, 'parent@': false }
+                  ]
+               })
+            });
             this._oneFastItems = [
                { name: 'acting',
                   value: '1',
@@ -521,6 +554,20 @@ define('Controls-demo/FilterView/FilterView',
                      source: new sourceLib.Memory({
                         idProperty: 'id',
                         data: [{ id: '1', title: 'Acting'}, {id: '2', title: 'All'}]
+                     }),
+                     displayProperty: 'title',
+                     keyProperty: 'id'
+                  },
+                  viewMode: 'frequent'
+               }
+            ];
+            this._oneFastItems2 = [
+               { name: 'type',
+                  value: '1',
+                  editorOptions: {
+                     source: new sourceLib.Memory({
+                        idProperty: 'id',
+                        data: [{ id: '1', title: 'EDO'}, {id: '2', title: 'EDI'}]
                      }),
                      displayProperty: 'title',
                      keyProperty: 'id'
@@ -581,14 +628,6 @@ define('Controls-demo/FilterView/FilterView',
 
          _itemsChanged: function(event, items) {
             this._hierarchyItems = Clone(items);
-         },
-
-         _itemsMoreChanged: function(event, items) {
-            this._itemsMore = Clone(items);
-            this._itemsMore[0].editorOptions.source = new sourceLib.Memory({
-               idProperty: 'id',
-               data: this._itemsMultiSelect
-            });
          }
       });
 

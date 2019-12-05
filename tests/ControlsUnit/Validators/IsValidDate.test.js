@@ -1,7 +1,9 @@
 define([
-   'Controls/_validate/Validators/IsValidDate'
+   'Controls/_validate/Validators/IsValidDate',
+   'Types/entity'
 ], function (
-   isValidDate
+   isValidDate,
+   entity
 ) {
    'use strict';
 
@@ -10,11 +12,17 @@ define([
          value: null,
          resp: true
       }, {
-         value: new Date(2019, 0, 1),
+         value: new entity.Date(2019, 0, 1),
          resp: true
       }, {
-         value: new Date('InvalidDate'),
-         resp: 'Дата или время заполнены некорректно.'
+         value: new entity.Date('Invalid'),
+         resp: 'Дата заполнена некорректно'
+      }, {
+         value: new entity.Time('Invalid'),
+         resp: 'Время заполнено некорректно'
+      }, {
+         value: new entity.DateTime('Invalid'),
+         resp: 'Дата или время заполнены некорректно'
       }].forEach(function(test) {
          it(`should return ${test.resp} for ${test.value}`, function () {
             assert.equal(isValidDate({

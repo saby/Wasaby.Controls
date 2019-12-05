@@ -4,14 +4,17 @@
                   itemData="{{itemData}}"
                   itemActionsTemplate="{{itemActionsTemplate}}"
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                  highlightOnHover="{{highlightOnHover}}"/>
+                  highlightOnHover="{{highlightOnHover}}"
+                  attr:key="{{itemData.getCurrentColumnKey()}}__actions"/>
    </ws:if>
    <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
       <ws:partial template="{{itemActionsTemplate}}"
                   itemActionsClass="{{itemActionsClass}}"
                   itemData="{{itemData}}"
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                  highlightOnHover="{{highlightOnHover}}"/>
+                  highlightOnHover="{{highlightOnHover}}"
+                  attr:class="controls-Grid__itemAction"
+                  attr:key="{{itemData.getCurrentColumnKey()}}__actions"/>
    </ws:else>
 </ws:template>
 <ws:template name="columnContent">
@@ -40,25 +43,25 @@
 </ws:template>
 <ws:template name="columnContentWrapper">
    <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
-      <div attr:class="controls-GridView__itemV_marker {{itemData.rowSeparatorVisibility ? 'controls-GridView-with-rowSeparator_item_marker' : 'controls-GridView-without-rowSeparator_item_marker'}}"></div>
+      <div attr:class="{{itemData.getMarkerClasses(itemData.rowSeparatorVisibility)}}"></div>
    </ws:if>
    <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
 <ws:template name="colTpl">
    <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
-      <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}"/>
+      <ws:partial template="itemActionsTemplateChooser"/>
    </ws:if>
 
    <ws:if data="{{itemData.columnScroll && colspan}}">
-      <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+      <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
            attr:style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false)}} {{itemData.getColspanForColumnScroll().fixedColumns}}">
          <ws:partial template="columnContentWrapper"/>
       </div>
-      <div attr:class="{{currentColumn.cellClasses}} {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}} {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+      <div attr:class="{{currentColumn.cellClasses}} {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}} {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
            attr:style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false)}} {{itemData.getColspanForColumnScroll().scrollableColumns}}"></div>
    </ws:if>
    <ws:else>
-      <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+      <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
            attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
          <ws:partial template="columnContentWrapper"/>
       </div>
@@ -66,12 +69,12 @@
 
 </ws:template>
 <ws:template name="stickyCell">
-   <ws:if data="{{!itemData.isNoGridSupport() && itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+   <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{itemData.gridCellStyles}}"/>
    </ws:if>
    <Controls.scroll:StickyHeader position="topbottom"
                           attr:class="{{currentColumn.cellClasses}}
-                                      {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}
+                                      {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                       js-controls-SwipeControl__actionsContainer"
                           attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
@@ -81,7 +84,8 @@
 
 
    <ws:if data="{{itemData.styleLadderHeading}}">
-      <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+      {{itemData.resetColumnIndex()}}
+      <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData, _options.theme)}}{{!!itemData.isActive ? ' controls-GridView__item_active_theme-' + _options.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
            attr:key="{{itemData.item.key + '_ladder'}}"
            attr:style="{{itemData.styleLadderHeading}}">
          <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="controls-Grid__row-ladder-cell__content"/>
@@ -89,7 +93,7 @@
    </ws:if>
    <ws:if data="{{itemData.isSticky}}">
       <Controls.scroll:Group>
-         <div attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+         <div attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}">
             <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
             <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
             {{itemData.resetColumnIndex()}}
@@ -100,7 +104,7 @@
       </Controls.scroll:Group>
    </ws:if>
    <ws:else>
-      <div attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+      <div attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}">
          <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
             <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{className}}"/>
          </ws:for>

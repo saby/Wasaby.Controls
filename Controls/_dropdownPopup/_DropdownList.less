@@ -80,6 +80,7 @@
 }
 
 .controls-DropdownList_singleSelect__emptyItem.theme_@{themeName} {
+   height: @height_DropdownList-row;
    color: @color_DropdownList-emptyItem;
 }
 
@@ -157,7 +158,26 @@
 }
 
 .controls-DropdownList__content_singleLine.theme_@{themeName} {
+   display: flex;
+   align-items: center;
    .text-overflow();
+}
+
+.controls-DropdownList__content-wrapper {
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.controls-DropdownList__row-additionalText_theme-@{themeName} {
+   font-size: @font-size_DropdownList-row-additionalText-content;
+   color: @color_DropdownList-row-additionalText-content;
+   white-space: normal;
+}
+
+.controls-DropdownList__content_padding.theme_@{themeName} {
+   display: flex;
+   padding-top: @spacing_DropdownList-item-between-topBorder-text;
+   padding-bottom: @spacing_DropdownList-item-between-bottomBorder-text;
 }
 
 .controls-DropdownList__selected.theme_@{themeName} {
@@ -173,8 +193,15 @@
 }
 
 .controls-DropdownList__icon.theme_@{themeName} {
-   margin-right: @spacing_DropdownList-item-between-icon-text;
    .flex-shrink(0);
+}
+
+.controls-DropdownList__icon-left_theme-@{themeName} {
+   margin-right: @spacing_DropdownList-item-between-icon-text;
+}
+
+.controls-DropdownList__icon-right_theme-@{themeName} {
+   margin-left: @spacing_DropdownList-item-between-icon-text;
 }
 
 .controls-DropdownList__head.theme_@{themeName} {
@@ -288,6 +315,10 @@
    color: @color_DropdownList-icon-iconStyle_info;
 }
 
+.controls-DropdownList__icon_style_label.theme_@{themeName} {
+   color: @label_text-color;
+}
+
 .controls-DropdownList__group_separator.theme_@{themeName} {
    border-bottom: @thickness_DropdownList-group-separator solid @color_DropdownList-group-separator;
    margin-top: @spacing_DropdownList-group-between-content-topBorder;
@@ -330,14 +361,11 @@
    padding-bottom: @spacing_DropdownList-between-footer-bottomBorder;
 }
 
-.controls-DropdownList__footer-content_theme_@{themeName} {
-   min-height: @min-height_DropdownList-footer;
-}
-
 .controls-DropdownList__footer-buttons_theme_@{themeName} {
    width: 100%;
    display: flex;
    align-items: center;
+   height: @min-height_DropdownList-footer;
 }
 
 .controls-DropdownList__hasMoreButton_theme_@{themeName} {
@@ -373,14 +401,4 @@
 // чиню сглаживание через translateZ(0)
 .ws-is-mobile-safari .controls-DropdownList__popup{
    transform: translateZ(0);
-}
-
-// align-item:center with min-height problem
-// https://stackoverflow.com/questions/19371626/flexbox-not-centering-vertically-in-ie
-.ws-is-ie11 {
-   .controls-DropdownList__footer:after {
-      content: '';
-      min-height: inherit;
-      font-size: 0;
-   }
 }

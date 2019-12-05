@@ -1,10 +1,10 @@
 import Deferred = require('Core/Deferred');
 import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
 import {IPopupItem} from 'Controls/_popupTemplate/BaseController';
-import 'css!theme?Controls/popupTemplate';
 
 class PreviewerController extends StickyController.constructor {
-    _openedPopupId: string|null = null;
+    _openedPopupIds: string[] = [];
+    static _theme: string[] = ['Controls/popupTemplate'];
     _destroyDeferred: object = {};
     TYPE: string = 'Previewer';
 
@@ -12,16 +12,17 @@ class PreviewerController extends StickyController.constructor {
         /**
          * Only one window can be opened.
          */
-        if (this._openedPopupId) {
-            require('Controls/popup').Controller.remove(this._openedPopupId);
+        if (!this._isLinkedPopup(item)) {
+            require('Controls/popup').Controller.remove(this._openedPopupIds[0]);
         }
-        this._openedPopupId = id;
+        this._openedPopupIds.push(id);
         return super.elementCreated.apply(this, arguments);
     }
 
     elementDestroyed(item: IPopupItem): boolean {
-        if (item.id === this._openedPopupId) {
-            this._openedPopupId = null;
+        const itemIndex: number = this._openedPopupIds.indexOf(item.id);
+        if (itemIndex > -1) {
+            this._openedPopupIds.splice(itemIndex, 1);
         }
 
         this._destroyDeferred[item.id] = new Deferred();
@@ -40,6 +41,15 @@ class PreviewerController extends StickyController.constructor {
 
     needRestoreFocus(isActive: boolean): boolean {
         return isActive;
+    }
+
+    private _isLinkedPopup(item: IPopupItem): boolean {
+        for (let i = 0; i < this._openedPopupIds.length; i++) {
+            if (this._openedPopupIds[i] === item.parentId) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

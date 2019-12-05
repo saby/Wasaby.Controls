@@ -5,7 +5,7 @@
             controls-itemActionsV_{{itemActionsPosition}}
             {{item.isEditing() ? 'controls-itemActionsV_editing'}}
             {{item.isEditing() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
-            {{itemData.isActive && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
+            {{item.isActive() && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
             {{item.isSwiped() ? 'controls-itemActionsV_swiped'}}">
         <div attr:class="controls-itemActionsV__wrapper">
             <ws:partial

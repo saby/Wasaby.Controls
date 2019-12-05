@@ -36,14 +36,27 @@
    }
 }
 
+/**
+ * В панелях с возможностью изменения размеров с помощью контрола ResizingLine
+ * нужно, чтобы свойство overflow быдо в значении visible. Так регламентирует сам контрол.
+ * Так как это старые панели, мы перебиваем все каскадом, чтобы локализовать правки.
+ */
+.controls-compoundAreaNew__floatArea_resizingLine {
+   .ws-sticky-header__scrollable-container.ws-float-area-stack-scroll-wrapper-notouch {
+      overflow-y: visible;
+      overflow-x: visible;
+   }
+   .ws-float-area-stack-panel-shadow {
+      overflow-y: visible;
+      overflow-x: visible;
+      box-shadow: none
+   }
+}
+
 //В старой панели высота контента не должна быть больше высоты экрана
 .controls-DropdownList__subMenu .ws-float-area-nostack-panel-shadow {
    max-height: 100vh;
    overflow: hidden;
    box-sizing: border-box;
    border: none;
-}
-
-.controls-Popup-corner-vertical-bottom .controls-DropdownList__popup {
-   flex-direction: column-reverse;
 }

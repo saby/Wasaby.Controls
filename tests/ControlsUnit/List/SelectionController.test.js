@@ -2,48 +2,23 @@ define([
    'Controls/_list/BaseControl/SelectionController',
    'Types/collection',
    'Types/entity',
-   'Controls/operations'
+   'Controls/operations',
+   'Controls/list',
+   'Controls/treeGrid',
+   'ControlsUnit/ListData'
 ], function(
    SelectionController,
    collection,
    entity,
-   operations
+   operations,
+   list,
+   treeGrid,
+   ListData
 ) {
    'use strict';
    describe('Controls.List.BaseControl.SelectionController', function() {
       var
          instance,
-         items = [
-            {
-               'id': 1,
-               'Раздел': null,
-               'Раздел@': true
-            }, {
-               'id': 2,
-               'Раздел': 1,
-               'Раздел@': true
-            }, {
-               'id': 3,
-               'Раздел': 2,
-               'Раздел@': false
-            }, {
-               'id': 4,
-               'Раздел': 2,
-               'Раздел@': false
-            }, {
-               'id': 5,
-               'Раздел': 1,
-               'Раздел@': false
-            }, {
-               'id': 6,
-               'Раздел': null,
-               'Раздел@': true
-            }, {
-               'id': 7,
-               'Раздел': null,
-               'Раздел@': false
-            }
-         ],
          rs,
          cfg,
          sandbox;
@@ -51,29 +26,20 @@ define([
       beforeEach(function() {
          sandbox = sinon.createSandbox();
          rs = new collection.RecordSet({
-            keyProperty: 'id',
-            rawData: items
+            keyProperty: ListData.KEY_PROPERTY,
+            rawData: ListData.getItems()
          });
          cfg = {
             selectedKeys: [],
             excludedKeys: [],
             items: rs,
-            parentProperty: 'Раздел',
-            nodeProperty: 'Раздел@',
-            keyProperty: 'id',
-            listModel: {
-               updateSelection: sandbox.stub(),
-               getRoot: function() {
-                  return {
-                     getContents: function() {
-                        return null;
-                     }
-                  }
-               },
-               getExpandedItems: function() {
-                  return [1, 2, 3, 4, 5, 6, 7];
-               }
-            }
+            parentProperty: ListData.PARENT_PROPERTY,
+            nodeProperty: ListData.NODE_PROPERTY,
+            selectionStrategy: {
+               name: 'Controls/operations:DeepTreeSelectionStrategy'
+            },
+            keyProperty: ListData.KEY_PROPERTY,
+            listModel: new treeGrid.ViewModel({columns: [], items: rs})
          };
          instance = new SelectionController();
          instance.saveOptions(cfg);
@@ -87,11 +53,11 @@ define([
          var flatListCfg = {
             selectedKeys: [],
             excludedKeys: [],
-            items: rs,
             keyProperty: 'id',
-            listModel: {
-               updateSelection: sandbox.stub()
-            }
+            selectionStrategy: {
+               name: 'Controls/operations:FlatSelectionStrategy'
+            },
+            listModel: new list.ListViewModel({items: rs})
          };
          var inst = new SelectionController();
          await inst._beforeMount(flatListCfg);
@@ -102,9 +68,11 @@ define([
          await instance._beforeMount(cfg);
          const stubNotify = sandbox.stub(instance, '_notify');
          instance._afterMount();
-         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], {bubbling: true}).calledOnce);
          assert.isTrue(stubNotify.withArgs('register', ['selectedTypeChanged', instance, SelectionController._private.selectedTypeChangedHandler], {bubbling: true}).calledOnce);
          assert.isTrue(instance._options.items.hasEventHandlers('onCollectionChange'));
+         return instance._multiselection.getCount().then(() => {
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).calledOnce);
+         });
       });
 
       describe('_beforeUpdate', function() {
@@ -112,22 +80,18 @@ define([
             await instance._beforeMount(cfg);
             instance._afterMount();
             var newItems = new collection.RecordSet({
-               keyProperty: 'id',
-               rawData: items.slice(0)
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
             });
             var newCfg = Object.assign({}, cfg);
             newCfg.items = newItems;
             const stubNotify = sandbox.stub(instance, '_notify');
-            const stubSetItems = sandbox.stub(instance._multiselection, 'setItems');
             instance._beforeUpdate(newCfg);
-            assert.isTrue(stubSetItems.withArgs(newItems).calledOnce);
             assert.isFalse(stubNotify.called);
          });
 
          it('change selectedKeys', async function() {
-            var
-               selection,
-               newCfg = Object.assign({}, cfg);
+            var newCfg = Object.assign({}, cfg);
 
             await instance._beforeMount(cfg);
             instance._afterMount();
@@ -135,11 +99,12 @@ define([
 
             newCfg.selectedKeys = [3, 4];
             instance._beforeUpdate(newCfg);
-            selection = instance._multiselection.getSelection();
-            assert.deepEqual(selection.selected, newCfg.selectedKeys);
-            assert.deepEqual(selection.excluded, newCfg.excludedKeys);
+            assert.deepEqual(instance._multiselection.selectedKeys, newCfg.selectedKeys);
+            assert.deepEqual(instance._multiselection.excludedKeys, newCfg.excludedKeys);
             assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[3, 4], [3, 4], []]).calledOnce);
-            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [2], { bubbling: true }).calledOnce);
+            return instance._multiselection.getCount().then(() => {
+               assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [2], { bubbling: true }).calledOnce);
+            });
          });
 
          it('change list model', async function() {
@@ -147,16 +112,32 @@ define([
             await instance._beforeMount(cfg);
             instance._afterMount();
 
-            newCfg.listModel = {
-               updateSelection: sandbox.stub()
-            };
-
+            newCfg.listModel.updateSelection = sandbox.stub();
             newCfg.selectedKeys = [3, 4];
             instance._multiselection.setListModel = sandbox.stub();
             instance._beforeUpdate(newCfg);
 
             assert.isTrue(newCfg.listModel.updateSelection.withArgs({'1': null, '2': null, '3': true, '4': true}).calledOnce);
-            assert.isTrue(instance._multiselection.setListModel.calledOnce);
+         });
+
+         it('change items and model', async function () {
+            let newItems = new collection.RecordSet({
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
+            });
+            let newCfg = Object.assign({}, cfg);
+            await instance._beforeMount(cfg);
+            instance._afterMount();
+            let initialListModel = instance._options.listModel;
+
+            newCfg.items = newItems;
+            newCfg.listModel = new treeGrid.ViewModel({columns: [], items: rs});
+            newCfg.listModel.updateSelection = sandbox.stub();
+            initialListModel.updateSelection = sandbox.stub();
+            instance._beforeUpdate(newCfg);
+
+            assert.isFalse(initialListModel.updateSelection.called);
+            assert.isTrue(newCfg.listModel.updateSelection.withArgs({}).calledOnce);
          });
       });
 
@@ -191,7 +172,9 @@ define([
             assert.isTrue(selectCalled);
             assert.isFalse(unselectCalled);
             assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
-            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [5], { bubbling: true }).calledOnce);
+            return instance._multiselection.getCount().then(() => {
+               assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [5], { bubbling: true }).calledOnce);
+            });
          });
 
          it('unselect item', async function() {
@@ -205,7 +188,9 @@ define([
             assert.isFalse(selectCalled);
             assert.isTrue(unselectCalled);
             assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[], [], [1]]).calledOnce);
-            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).calledOnce);
+            return instance._multiselection.getCount().then(() => {
+               assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).calledOnce);
+            });
          });
 
          it('unselect nested item when parent is selected', async function() {
@@ -219,19 +204,23 @@ define([
             assert.isFalse(selectCalled);
             assert.isTrue(unselectCalled);
             assert.isTrue(stubNotify.withArgs('excludedKeysChanged', [[2], [2], []]).calledOnce);
-            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [2], { bubbling: true }).calledOnce);
+            return instance._multiselection.getCount().then(() => {
+               assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [2], { bubbling: true }).calledOnce);
+            });
          });
       });
 
       it('_beforeUnmount', async function() {
+         const numHandlersCollectionChange = cfg.items.getEventHandlers('onCollectionChange').length;
          await instance._beforeMount(cfg);
          instance._afterMount();
          const stubNotify = sandbox.stub(instance, '_notify');
          instance._options.listModel.updateSelection = sandbox.stub();
+         assert.notEqual(numHandlersCollectionChange, cfg.items.getEventHandlers('onCollectionChange').length);
          instance._beforeUnmount();
          assert.isTrue(instance._options.listModel.updateSelection.withArgs({}).calledOnce);
          assert.isNull(instance._multiselection);
-         assert.isFalse(instance._options.items.hasEventHandlers('onCollectionChange'));
+         assert.equal(numHandlersCollectionChange, cfg.items.getEventHandlers('onCollectionChange').length);
          assert.isNull(instance._onCollectionChangeHandler);
          assert.isTrue(stubNotify.withArgs('unregister', ['selectedTypeChanged', instance], { bubbling: true }).calledOnce);
       });
@@ -247,6 +236,11 @@ define([
          instance._multiselection.unselectAll = sandbox.stub();
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'unselectAll');
          assert.isTrue(instance._multiselection.unselectAll.calledOnce);
+
+         cfg.items = cfg.items.clone();
+         cfg.items.clear();
+         SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll');
+         assert.isTrue(instance._multiselection.selectAll.calledOnce);
       });
 
       describe('_onCollectionChange', function() {
@@ -270,6 +264,19 @@ define([
                }
             }));
             assert.isFalse(instance._multiselection.unselect.called);
+         });
+      });
+
+      it('onCollectionChange handler', async function() {
+         await instance._beforeMount(cfg);
+         instance._afterMount();
+         const stubNotify = sandbox.stub(instance, '_notify');
+
+         instance._options.listModel.updateSelection = sandbox.stub();
+         instance._onCollectionChangeHandler();
+         assert.isTrue(instance._options.listModel.updateSelection.withArgs({}).calledOnce);
+         return instance._multiselection.getCount().then(() => {
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).called);
          });
       });
    });

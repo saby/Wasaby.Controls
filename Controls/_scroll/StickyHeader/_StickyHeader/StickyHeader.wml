@@ -16,5 +16,6 @@
    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom" style="{{_getObserverStyle('bottom')}}"></div>
    <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
    <div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom
-               {{ !_isShadowVisible('bottom') ? ' ws-invisible' }}"></div>
+               {{ !_isShadowVisible('bottom') ? ' ws-invisible' }}"
+       style="{{_bottomShadowStyle}}"></div>
 </div>

@@ -3,8 +3,6 @@
  * @library Controls/tile
  * @includes View Controls/_tile/View
  * @includes ItemTemplate wml!Controls/_tile/ItemTemplateChooser
- * @includes TileStyles Controls/_tile/Tile/Styles
- * @includes TreeTileViewStyles Controls/_tile/TreeTileView/Styles
  * @includes ITile Controls/_tile/interface/ITile
  * @includes IDraggable Controls/interface/IDraggable
  * @public
@@ -16,8 +14,6 @@
  * @library Controls/tile
  * @includes View Controls/_tile/View
  * @includes ItemTemplate wml!Controls/_tile/ItemTemplateChooser
- * @includes TileStyles Controls/_tile/Tile/Styles
- * @includes TreeTileViewStyles Controls/_tile/TreeTileView/Styles
  * @includes ITile Controls/_tile/interface/ITile
  * @includes IDraggable Controls/interface/IDraggable
  * @public

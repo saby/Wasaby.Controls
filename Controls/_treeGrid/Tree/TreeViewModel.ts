@@ -2,8 +2,8 @@ import {ListViewModel, ItemsUtil, TreeItemsUtil} from 'Controls/list';
 import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
-import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import {isEqual} from 'Types/object';
+import {TemplateFunction} from 'UI/Base';
 
 var
     _private = {
@@ -155,18 +155,18 @@ var
                 return !expanderSize && expanderIcon !== 'none';
             }
         },
-        getExpanderPaddingClasses: function(expanderSize) {
-            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding';
-            expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default');
+        getExpanderPaddingClasses: function(expanderSize, theme) {
+            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding' + `_theme-${theme}`;
+            expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             return expanderPaddingClasses;
         },
-        prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
+        prepareExpanderClasses: function(itemData, expanderIcon, expanderSize, theme) {
             var
                 itemType = itemData.item.get(itemData.nodeProperty),
-                expanderClasses = 'controls-TreeGrid__row-expander',
+                expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`,
                 expanderIconClass;
 
-            expanderClasses += ' controls-TreeGrid__row-expander_size_' + (expanderSize || 'default');
+            expanderClasses += ' controls-TreeGrid__row-expander_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             expanderClasses += ' js-controls-ListView__notEditable';
 
             if (expanderIcon) {
@@ -181,12 +181,12 @@ var
                 + (itemData.style === 'master' ? 'master' : 'default');
             }
 
-            expanderClasses += expanderIconClass;
+            expanderClasses += expanderIconClass + `_theme-${theme}`;
 
             // добавляем класс свертнутости развернутости для тестов
             expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed');
             // добавляем класс свертнутости развернутости стилевой
-            expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed');
+            expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed') + `_theme-${theme}`;
 
             return expanderClasses;
         },
@@ -262,114 +262,118 @@ var
             return nodeFooterVisibility;
         },
 
-        setNodeFooterWithTask1177672941(self, current) {
-            current.nodeFooter = [];
-            if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
-                current.hasChildren = self._display.getChildren(current.dispItem).getCount() || (self._editingItemData && self._editingItemData.item.get(current.parentProperty) === current.key);
-                if (current.item.get(current.nodeProperty) && !current.hasChildren && _private.isDrawNodeFooterTemplate(self, current.item)) {
-                    current.nodeFooter.push({
+        setNodeFooterIfNeed(self, current) {
+            current.nodeFooters = [];
+
+            // Flat TileView uses TreeViewModel, but may has no hierarchy.
+            if (!current.nodeProperty || !current.parentProperty) {
+                return;
+            }
+            const isRootChild = (item) => item.get(current.parentProperty) === null;
+            const getChildCount = (dispItem) => self._display.getChildren(dispItem).getCount();
+            const hasChildren = (dispItem) => !!getChildCount(dispItem);
+            const hasEditingInCurrent = (itemData) => !!self._editingItemData && self._editingItemData.item.get(itemData.parentProperty) === itemData.key;
+            const isNotLeaf = (item) => !!item && item.get && item.get(current.nodeProperty) !== null;
+
+            const fillNodeFooter = (params: {
+                key: string | number | null,
+                dispItem: unknown,
+                template?: TemplateFunction,
+                hasMoreStorage?: boolean
+            }) => {
+                current.nodeFooters.push({
+                    key: params.key,
+                    item: params.dispItem.getContents(),
+                    dispItem: params.dispItem,
+                    level: params.dispItem.getLevel(),
+                    getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
+                    multiSelectVisibility: current.multiSelectVisibility,
+                    template: params.template,
+                    hasMoreStorage: !!params.hasMoreStorage
+                });
+            };
+
+            // Сначала проверим данный узел. В нем мы можем отрисовать только nodeFooter, при условии,
+            // что в нем нет детей, потому что если есть, то все подвалы  будут рисоваться у его последнего ребенка.
+            if (isNotLeaf(current.item) && current.isExpanded) {
+                current.hasChildren = hasChildren(current.dispItem) || hasEditingInCurrent(current);
+                if (!current.hasChildren && _private.isDrawNodeFooterTemplate(self, current.item)) {
+                    fillNodeFooter({
                         key: current.key,
-                        task1177672941: true,
-                        item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
-                        multiSelectVisibility: current.multiSelectVisibility,
-                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
-                        level: current.dispItem.getLevel(),
                         template: self._options.nodeFooterTemplate
                     });
                 }
             }
-            var itemParent = current.dispItem.getParent();
-            var itemParentKey = current.item.get(current.parentProperty);
-            if (itemParentKey !== self._display.getRoot().getContents() && (_private.isDrawNodeFooterTemplate(self, current.item) || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
-                var itemParentChilds = self._hierarchyRelation.getChildren(itemParentKey, self._items);
-                if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
-                    if ((self._hasMoreStorage && self._hasMoreStorage[itemParentKey] &&
-                       (!current.isExpanded || self._hierarchyRelation.getChildren(current.key, self._items).length === 0))) {
-                        let idx = current.nodeFooter.push({
-                            key: itemParentKey,
-                            item: itemParent.getContents(),
-                            dispItem: itemParent,
-                            task1177672941: true,
-                            multiSelectVisibility: current.multiSelectVisibility,
-                            getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
-                            level: itemParent.getLevel()
-                        }) - 1;
-                        if (_private.isDrawNodeFooterTemplate(self, current.item)) {
-                            current.nodeFooter[idx].template = self._options.nodeFooterTemplate;
-                        }
-                        if (self._hasMoreStorage && self._hasMoreStorage[itemParentKey]) {
-                            current.nodeFooter[idx].hasMoreStorage = self._hasMoreStorage[itemParentKey];
-                        }
-                    }
-                }
-                if (
-                    itemParent.getParent() && itemParent.getParent().getContents &&
-                    itemParent.getParent().getContents() !== self._display.getRoot().getContents() &&
-                    itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key
-                ) {
-                    const dadDispItem = itemParent.getParent();
-                    const dadId = itemParent.getParent().getContents().getId();
-                    const dadChildren = self._hierarchyRelation.getChildren(dadId, self._items);
-                    if (dadChildren && dadChildren[dadChildren.length - 1].getId() === itemParentKey &&
-                       _private.isDrawNodeFooterTemplate(self, dadDispItem.getContents()) || self._hasMoreStorage && self._hasMoreStorage[dadId]) {
-                        let idx = current.nodeFooter.push({
-                            key: dadId,
-                            task1177672941: true,
-                            item: dadDispItem.getContents(),
-                            dispItem: dadDispItem,
-                            multiSelectVisibility: current.multiSelectVisibility,
-                            getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
-                            level: dadDispItem.getLevel()
-                        }) - 1;
-                        if (_private.isDrawNodeFooterTemplate(self, dadDispItem.getContents())) {
-                            current.nodeFooter[idx].template = self._options.nodeFooterTemplate;
-                        }
-                        if (self._hasMoreStorage && self._hasMoreStorage[dadId]) {
-                            current.nodeFooter[idx].hasMoreStorage = self._hasMoreStorage[dadId];
-                        }
-                    }
-                }
-            }
-        },
 
-        setNodeFooterIfNeed(self, current) {
-            if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
-                current.hasChildren = self._display.getChildren(current.dispItem).getCount() || (self._editingItemData && self._editingItemData.item.get(current.parentProperty) === current.key);
-                if (current.item.get(current.nodeProperty) && !current.hasChildren && _private.isDrawNodeFooterTemplate(self, current.item)) {
-                    current.nodeFooter = {
-                        key: current.key,
-                        item: current.dispItem.getContents(),
-                        dispItem: current.dispItem,
-                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
-                        multiSelectVisibility: current.multiSelectVisibility,
-                        level: current.dispItem.getLevel(),
+            // Теперь рекурсивно заполняем подвалы пока не доберемся
+            // 1) до корня
+            // 2) или до узла, в котором данный узел не последний ребенок
+            // 3) или до родителя который является листом.
+
+            const isLastChild = (parent, child) => {
+                const isLastInParent = (dispItem) => {
+                    const _parentItem = dispItem.getParent().getContents();
+                    const _parentKey = _parentItem && _parentItem.getId();
+                    const _parentChildren = self._hierarchyRelation.getChildren(_parentKey, self._items);
+                    return _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
+                };
+
+                let result = true;
+                let currParent = child.getParent();
+                let currentChild = child;
+
+                // от переданного ребенка к переданному родителю.
+                if (currParent === parent) {
+                    result = isLastInParent(currentChild);
+                } else {
+                    do {
+                        // У корня ключ null, берем его
+                        const parentKey = currParent.getContents() && currParent.getContents().getId();
+                        const parentChilds = self._hierarchyRelation.getChildren(parentKey, self._items);
+                        if (parentChilds[parentChilds.length - 1].getId() === currentChild.getContents().getId()) {
+                            currentChild = currParent;
+                            currParent = currParent.getParent();
+                        } else {
+                            result = false;
+                            break;
+                        }
+                    } while (currParent !== parent);
+                }
+
+                return result;
+            };
+
+            let curNodeForDispItem = current.dispItem;
+            let curNodeForItem = curNodeForDispItem.getContents();
+            let dispParent = curNodeForDispItem.getParent();
+
+            while (
+                dispParent &&
+                curNodeForItem !== null &&
+                !isRootChild(curNodeForItem) &&
+                isNotLeaf(dispParent.getContents()) &&
+                isLastChild(dispParent, curNodeForDispItem) &&
+                !(current.isExpanded && current.hasChildren)
+                ) {
+                const parentItem = dispParent.getContents();
+                const parentId = parentItem.getId();
+                if (self._hasMoreStorage && self._hasMoreStorage[parentId]) {
+                    fillNodeFooter({
+                        key: parentId,
+                        dispItem: dispParent,
+                        hasMoreStorage: true
+                    });
+                } else if (_private.isDrawNodeFooterTemplate(self, parentItem)) {
+                    fillNodeFooter({
+                        key: parentId,
+                        dispItem: dispParent,
                         template: self._options.nodeFooterTemplate
-                    };
+                    });
                 }
-            }
-            var itemParent = current.dispItem.getParent();
-            var itemParentKey = current.item.get(current.parentProperty);
-            // Запись не в корне и есть nodeFooterTemplate или hasMore
-            // вот тут добавить вызов каллбека после проверки на hasMoreStorage
-            if (itemParentKey !== self._display.getRoot().getContents() && (itemParent && _private.isDrawNodeFooterTemplate(self, itemParent.getContents()) || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
-                var itemParentChilds = self._hierarchyRelation.getChildren(itemParentKey, self._items);
-                if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
-                    current.nodeFooter = {
-                        key: itemParentKey,
-                        item: itemParent.getContents(),
-                        dispItem: itemParent,
-                        multiSelectVisibility: current.multiSelectVisibility,
-                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
-                        level: itemParent.getLevel()
-                    };
-                    if (_private.isDrawNodeFooterTemplate(self, itemParent.getContents())) {
-                        current.nodeFooter.template = self._options.nodeFooterTemplate;
-                    }
-                    if (self._hasMoreStorage && self._hasMoreStorage[itemParentKey]) {
-                        current.nodeFooter.hasMoreStorage = self._hasMoreStorage[itemParentKey];
-                    }
-                }
+                curNodeForDispItem = dispParent;
+                curNodeForItem = parentItem;
+                dispParent = curNodeForDispItem.getParent();
             }
         }
 
@@ -423,6 +427,20 @@ var
 
         _prepareDisplay: function(items, cfg) {
             return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
+        },
+
+        getItemType(dispItem) {
+            const contents = dispItem && dispItem.getContents();
+            if (contents && contents.get) {
+                const itemType = contents.get(this._options.nodeProperty);
+                if (itemType === false) {
+                    return 'hiddenNode';
+                }
+                if (itemType === true) {
+                    return 'node';
+                }
+            }
+            return 'leaf';
         },
 
         isExpanded: function(dispItem) {
@@ -557,11 +575,7 @@ var
             }
 
            if (current.item.get) {
-               if (this._options.task1177672941) {
-                   _private.setNodeFooterWithTask1177672941(this, current);
-               } else {
-                   _private.setNodeFooterIfNeed(this, current);
-               }
+               _private.setNodeFooterIfNeed(this, current);
            }
             return current;
         },
@@ -726,8 +740,8 @@ var
                 this._options.hasChildrenProperty = hasChildrenProperty;
             }
         },
-        getChildren: function(rootId) {
-            return this._hierarchyRelation.getChildren(rootId, this._items);
+        getChildren: function(rootId, items) {
+            return this._hierarchyRelation.getChildren(rootId, items || this._items);
         }
     });
 

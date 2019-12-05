@@ -79,6 +79,10 @@ define(
                   keyProperty: 'id',
                   rawData: [
                      {
+                        id: 0,
+                        nav_result: true
+                     },
+                     {
                         id: 1,
                         nav_result: true
                      },
@@ -94,6 +98,10 @@ define(
                assert.isTrue(pNav._more.getMoreMeta(), 'State more is incorrect after reload');
                assert.isTrue(pNav._more.getMoreMeta(1), 'State more is incorrect after reload');
                assert.isFalse(pNav._more.getMoreMeta(2), 'State more is incorrect after reload');
+               assert.isTrue(pNav.hasMoreData('down', 0), 'Method hasMoreData returns incorrect value for root "0" after reload');
+               assert.isTrue(pNav.hasMoreData('down', 1), 'Method hasMoreData returns incorrect value for root "1" after reload');
+               assert.isFalse(pNav.hasMoreData('down', 2), 'Method hasMoreData returns incorrect value for root "2" after reload');
+               assert.isTrue(pNav.hasMoreData('down', 1234) === undefined, 'Method hasMoreData returns incorrect value for root "1234" after reload');
 
             });
 
@@ -186,12 +194,21 @@ define(
                      {
                         id: 2,
                         nav_result: false
+                     },
+                     {
+                        id: 3,
+                        nav_result: true
                      }
                   ]
                });
                dataRs.setMetaData({more: moreDataRs});
                pNav.calculateState(dataRs);
                assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: false}, pNav._more.getMoreMeta(2), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(3), 'Calculate state: wrong _more value');
+               assert.isTrue(pNav.hasMoreData('down'), 'Method hasMoreData returns incorrect value after reload');
+               assert.isTrue(pNav.hasMoreData('down', 1), 'Method hasMoreData returns incorrect value for root "1" after reload');
+               assert.isFalse(pNav.hasMoreData('down', 2), 'Method hasMoreData returns incorrect value for root "2" after reload');
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([2], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 

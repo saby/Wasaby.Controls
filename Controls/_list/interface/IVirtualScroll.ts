@@ -1,3 +1,20 @@
+export type IDirection = 'up' | 'down';
+export interface IVirtualScrollConfig {
+    pageSize: number;
+    segmentSize: number;
+    itemHeightProperty: string;
+    viewportHeight: string;
+}
+
+/**
+ * @typedef {object} IVirtualScrollMode
+ * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
+ * @property{IVirtualScrollMode} mode Режим скрытия записей в виртуальном скроллинге
+ * @property {number} viewportHeight Высота вьюпорта контейнера в котором лежит список
+ * @property {number}segmentSize Количество подгружаемых элементов при скроллировании
+ * @property {string} itemHeightProperty Поле в элементе, которое содержит его высоту для оптимистичного рендеринга
+ */
+
 /**
  * Интерфейс для поддержки виртуального скроллирования в списках.
  *
@@ -29,6 +46,7 @@
  */ 
 
 /**
+ * @deprecated
  * @name Controls/_list/interface/IVirtualScroll#virtualPageSize
  * @cfg {Number} Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
  * @default 100
@@ -52,4 +70,30 @@
  *     <li>S - number of items that will be inserted/removed on reaching the end of displayed items.</li>
  * </ul>
  * <b>Note for Controls/Grid:View and Controls/TreeGrid:View</b>: the value of the virtualPageSize should be less then 1000/total columns count in grid.
+ */
+
+/**
+ * @deprecated
+ * @name Controls/_list/interface/IVirtualScroll#virtualSegmentSize
+ * @cfg {number} Количество подгружаемых элементов при скроллировании
+ * @remark Если опция не задана, то virtualSegmentSize высчитывается по формуле virtualPageSize / 4.
+ */
+
+/**
+ * @typedef {string} IVirtualScrollMode
+ * @variant remove Скрытые записи удаляются из DOM
+ * @variant hide Скрытые записи скрываются из DOM с помощью ws-hidden
+ */
+export type IVirtualScrollMode = 'remove' | 'hide';
+
+/**
+ * @deprecated
+ * @name Controls/_list/interface/IVirtualScroll#virtualScrollMode
+ * @cfg {IVirtualScrollMode} Режим скрытия записей в виртуальном скроллинге
+ * @default remove
+ */
+
+/**
+ * @name Controls/_list/interface/IVirtualScroll#virtualScrollConfig
+ * @cfg {IVirtualScrollConfig} Конфигурация виртуального скроллинга
  */

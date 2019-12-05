@@ -42,7 +42,6 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
             searchViewModel,
             superclassGetItemDataByItem = SearchViewModel.superclass.getItemDataByItem,
             treeView = new TreeGridView({});
-         treeView._isFullGridSupport = true;
          SearchViewModel.superclass.getItemDataByItem = function(breadCrumbs) {
             const itemData = {
                item: {},
@@ -104,8 +103,32 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          assert.deepEqual(searchViewModel.getItemActions(item2), [{ id: 'action_for_leaf' }]);
       });
 
-
-
+      it('_getItemVersion', function() {
+         var
+            searchViewModel = new SearchViewModel({
+               items: new Collection.RecordSet({
+                  rawData: [{
+                     id: 1,
+                     type: true,
+                     parent: null
+                  }, {
+                     id: 2,
+                     type: true,
+                     parent: 1
+                  }, {
+                     id: 3,
+                     type: null,
+                     parent: 2
+                  }],
+                  keyProperty: 'id'
+               }),
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               keyProperty: 'id'
+            });
+         assert.equal(searchViewModel._getItemVersion(searchViewModel._display.at(0).getContents()), '0_0');
+         assert.equal(searchViewModel._getItemVersion(searchViewModel._display.at(1).getContents()), '0');
+      });
 
       it('isGroup', function() {
          let searchViewModel = new SearchViewModel({
@@ -202,6 +225,21 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          // does not fail when hover is removed
          model.setHoveredItem(null);
          assert.isNull(model.getHoveredItem());
+      });
+
+      it('_getDisplayItemCacheKey works for breadcrumbs', function() {
+         const model = new SearchViewModel({
+            root: 'myTestRoot',
+            keyProperty: 'id',
+            items: []
+         });
+
+         // emulate breadcrumbs
+         const crumbsDisplay = { getContents: () => [{}, {}, { id: 456 }] };
+         assert.strictEqual(
+            model._getDisplayItemCacheKey(crumbsDisplay),
+            '456_breadcrumbs'
+         );
       });
    });
 });

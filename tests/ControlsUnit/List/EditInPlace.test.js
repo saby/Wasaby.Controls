@@ -695,10 +695,6 @@ define([
          describe('beforeEndEdit', function() {
             it('Defered', function(done) {
                var
-                   source = new sourceLib.Memory({
-                      keyProperty: 'id',
-                      data: data
-                   }),
                    isIndicatorHasBeenShown = false,
                    isIndicatorHasBeenHiden = false,
                    isAfterEndEditHasBeenNotified = false;
@@ -735,10 +731,6 @@ define([
 
             it('Defered with cancel', function (done) {
                var
-                   source = new sourceLib.Memory({
-                      keyProperty: 'id',
-                      data: data
-                   }),
                    isIndicatorHasBeenShown = false,
                    isIndicatorHasBeenHiden = false,
                    isAfterEndEditHasBeenNotified = false;
@@ -768,6 +760,43 @@ define([
                   assert.isTrue(isIndicatorHasBeenShown);
                   assert.isTrue(isIndicatorHasBeenHiden);
                   assert.isFalse(isAfterEndEditHasBeenNotified);
+                  done();
+               });
+
+            });
+
+            it('Defered with errback', (done) => {
+               let
+                   isIndicatorHasBeenShown = false,
+                   isIndicatorHasBeenHidden = false,
+                   isAfterEndEditHasBeenNotified = false;
+
+               eip._notify = (e) => {
+                  if (e === 'beforeEndEdit') {
+                     return Deferred.success().addCallback(() => {
+                        return (new Deferred()).errback();
+                     });
+                  } else if (e === 'afterEndEdit') {
+                     isAfterEndEditHasBeenNotified = true;
+                  } else if (e === 'showIndicator') {
+                     isIndicatorHasBeenShown = true;
+                  } else if (e === 'hideIndicator') {
+                     isIndicatorHasBeenHidden = true;
+                  }
+               };
+
+               eip.saveOptions({
+                  listModel: listModel
+               });
+
+               eip.beginEdit({
+                  item: listModel.at(0).getContents()
+               });
+
+               eip.cancelEdit().addErrback(function () {
+                  assert.isTrue(isIndicatorHasBeenShown);
+                  assert.isTrue(isIndicatorHasBeenHidden);
+                  assert.isTrue(isAfterEndEditHasBeenNotified);
                   done();
                });
 
@@ -1583,6 +1612,105 @@ define([
          });
       });
 
+      describe('editing list in popup', function () {
+         it('dont close popup if validation failed', function () {
+            let
+                isPendingStarted = false,
+                isPendingCanceled = false;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip._notify = (eName, args, params) => {
+               if (eName === 'registerPending') {
+                  assert.isTrue(params.bubbling);
+                  assert.equal(args[0], eip._pendingDeferred);
+                  isPendingStarted = true;
+               }
+               if (eName === 'cancelFinishingPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingCanceled = true;
+               }
+            };
+
+            assert.isNull(eip._pendingDeferred);
+
+            eip.beginAdd({
+               item: newItem
+            });
+
+            assert.isTrue(eip._pendingDeferred instanceof Deferred);
+
+            eip._children = {
+               formController: {
+                  submit: function() {
+                     return Deferred.success({
+                        0: [{
+                           0: 'Поле обязательно для заполнения'
+                        }]
+                     });
+                  }
+               }
+            };
+
+            // Emulate closing popup. It will call _onPendingFail;
+            let result = new Deferred();
+            eip._onPendingFail(undefined, result);
+
+            assert.isTrue(isPendingStarted);
+            assert.isFalse(result.isReady());
+            assert.isTrue(isPendingCanceled);
+         });
+         it('commit changes and close popup if validation passed', function () {
+            let
+                isPendingStarted = false,
+                isPendingCanceled = false;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip._notify = (eName, args, params) => {
+               if (eName === 'registerPending') {
+                  assert.isTrue(params.bubbling);
+                  assert.equal(args[0], eip._pendingDeferred);
+                  isPendingStarted = true;
+               }
+               if (eName === 'cancelFinishingPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingCanceled = true;
+               }
+            };
+
+            assert.isNull(eip._pendingDeferred);
+
+            eip.beginAdd({
+               item: newItem
+            });
+
+            assert.isTrue(eip._pendingDeferred instanceof Deferred);
+
+            eip._children = {
+               formController: {
+                  submit: function() {
+                     return Deferred.success({});
+                  }
+               }
+            };
+
+            // Emulate closing popup. It will call _onPendingFail;
+            let result = new Deferred();
+            eip._onPendingFail(undefined, result);
+
+            assert.isTrue(eip._pendingDeferred instanceof Deferred);
+            assert.isTrue(isPendingStarted);
+            assert.isTrue(!!listModel.getItemById(4));
+            assert.isTrue(result.isReady());
+            assert.isFalse(isPendingCanceled);
+         });
+      });
+
       describe('_beforeUpdate', function() {
          it('editingConfig has sequential editing', function() {
             eip._beforeUpdate({
@@ -1622,7 +1750,7 @@ define([
                 });
 
             eip.saveOptions({
-               listModel: treeModel,
+               listModel: listModel,
                source: source
             });
 
@@ -1634,7 +1762,7 @@ define([
                assert.equal(options.multiSelectVisibility, 'visible');
             };
 
-            eip._beforeUpdate({multiSelectVisibility: 'visible', listModel: treeModel});
+            eip._beforeUpdate({multiSelectVisibility: 'visible', listModel: listModel});
             assert.isTrue(isItemDataRegenerated);
          });
       });

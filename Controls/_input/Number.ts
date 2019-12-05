@@ -1,4 +1,4 @@
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Number/ViewModel');
@@ -36,6 +36,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @mixes Controls/interface/IOnlyPositive
  * @mixes Controls/interface/IInputNumber
  * @mixes Controls/_interface/INumberFormat
+ * @mixes Controls/_input/interface/INumberLength
  *
  * @public
  * @demo Controls-demo/Input/Number/NumberPG
@@ -43,60 +44,10 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @author Красильников А.С.
  */
 
-/**
- * @name Controls/_input/Number#precision
- * @cfg {Number} Количество знаков в дробной части.
- * @remark
- * Если дробная часть заполнена не полностью, недостающие знаки будут заменены на 0.
- * Если значение не задано, количество знаков не ограничено.
- * @example
- * В этом примере _inputValue будет хранить число с дробной частью, равной 2 знакам.
- * <pre>
- *    <Controls.input:Number bind:value="_inputValue" precision="{{2}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_input/Number#precision
- * @cfg {Number} Number of characters in decimal part.
- * @remark
- * If the fractional part is not fully filled, the missing signs will be replaced by 0.
- * When the value is not set, the number of signs is unlimited.
- * @example
- * In this example you the _inputValue state of the control will store a number with a fractional part of equal 2 signs.
- * <pre>
- *    <Controls.input:Number bind:value="_inputValue" precision="{{2}}"/>
- * </pre>
- */
-
-/**
- * @name Controls/_input/Number#integersLength
- * @cfg {Number} Максимальная длина целой части.
- * @remark
- * Если значение не задано, длина целой части не ограничена.
- * @example
- * В этом примере _inputValue будет хранить число с дробной частью не более 10 знаков.
- * <pre>
- *    <Controls.input:Number bind:value="_inputValue" integersLength="{{10}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_input/Number#integersLength
- * @cfg {Number} Maximum integer part length.
- * @remark
- * When the value is not set, the integer part length is unlimited.
- * @example
- * In this example you the _inputValue in the control state will store a number with a integer part of no more than 10 signs.
- * <pre>
- *    <Controls.input:Number bind:value="_inputValue" integersLength="{{10}}"/>
- * </pre>
- */
-
 var _private = {
     validateOptions: function (options) {
         if (options.integersLength <= 0) {
-            Env.IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
+            Logger.error('Number: Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
         }
     },
     convertToNumber: function (value) {
@@ -164,4 +115,4 @@ NumberInput.getOptionTypes = function () {
 };
 
 export = NumberInput;
-   
+

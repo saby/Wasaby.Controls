@@ -1,24 +1,35 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_search/FilterController');
-import clone = require('Core/core-clone');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import * as template from 'wml!Controls/_search/FilterController';
+import * as clone from 'Core/core-clone';
+import {isEqual} from 'Types/object';
 
-export = Control.extend({
-   _template: template,
-   _filter: null,
+export interface ISearchFilterController extends IControlOptions {
+   searchValue: string;
+   searchParam: string;
+   filter: object;
+}
 
-   _beforeMount: function(options) {
-      let filter = clone(options.filter) || {};
+export default class SearchFilterController extends Control<ISearchFilterController> {
+   protected _template: TemplateFunction = template;
+   protected _filter: object = null;
 
-      if (options.searchValue) {
-         filter[options.searchParam] = options.searchValue;
-      }
+   protected _beforeMount(options: ISearchFilterController): void {
+      this._filter = SearchFilterController.prepareFilter(options.filter, options.searchValue, options.searchParam);
+   }
 
-      this._filter = filter;
-   },
-
-   _beforeUpdate: function(newOptions) {
-      if (this._options.filter !== newOptions.filter) {
+   protected _beforeUpdate(newOptions: ISearchFilterController): void {
+      if (!isEqual(this._options.filter, newOptions.filter)) {
          this._filter = newOptions.filter;
       }
    }
-});
+
+   private static prepareFilter(filter: object, searchValue?: string, searchParam?: string): object {
+      const preparedFilter = clone(filter) || {};
+
+      if (searchValue && searchParam) {
+         preparedFilter[searchParam] = searchValue;
+      }
+
+      return preparedFilter;
+   }
+}

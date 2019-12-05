@@ -1,7 +1,7 @@
 <div class="controlsDemo-dateRange-RelationController">
    <h1>Controls.dateRange.RelationController</h1>
 
-   <div class="controlsDemo-dateRange-RelationController__row">
+   <div class="controlsDemo-dateRange-RelationController__row demo-dateRange-RelationController__row1">
       <Controls.buttons:Button
          iconSize="m" icon="icon-MarkLeftBold" iconStyle="secondary"
          on:click="dateRelation.shiftBackward()"/>
@@ -17,18 +17,18 @@
             <Controls.dateRange:RelationWrapper
                   number="{{0}}"
                   ranges="{{content.ranges}}">
-               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector1"/>
             </Controls.dateRange:RelationWrapper>
             <Controls.dateRange:RelationWrapper
                   number="{{1}}"
                   ranges="{{content.ranges}}"
                   >
-               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector2"/>
             </Controls.dateRange:RelationWrapper>
             <Controls.dateRange:RelationWrapper
                   number="{{2}}"
                   ranges="{{content.ranges}}">
-               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+               <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector3"/>
             </Controls.dateRange:RelationWrapper>
             <Controls.dateRange:RelationButton
                attr:class="controlsDemo-dateRange-RelationController__relationButton"
@@ -48,20 +48,22 @@
          bind:startValue1="_startValue2_1"
          bind:endValue1="_endValue2_1"
          bind:bindType="_bindType2">
-      <div class="controlsDemo-dateRange-RelationController__row">
+      <div class="controlsDemo-dateRange-RelationController__row demo-dateRange-RelationController__row2">
          <Controls.buttons:Button
             iconSize="m" icon="icon-MarkLeftBold" iconStyle="secondary"
             on:click="dateRelation2.shiftBackward()"/>
          <Controls.dateRange:RelationWrapper
                number="{{0}}"
                ranges="{{content.ranges}}">
-            <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector1"/>
          </Controls.dateRange:RelationWrapper>
-         <Controls.dateRange:RelationButton bind:value="_bindType2"/>
+         <Controls.dateRange:RelationButton 
+               attr:class="controlsDemo-dateRange-RelationController__relationButton demo-dateRange-RelationController__{{_bindType2}}"
+               bind:value="_bindType2"/>
          <Controls.dateRange:RelationWrapper
                number="{{1}}"
                ranges="{{content.ranges}}">
-            <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector2"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.buttons:Button
             iconSize="m" icon="icon-MarkRightBold" iconStyle="secondary"
@@ -75,7 +77,7 @@
          bind:endValue0="_endValue3_0"
          bind:startValue1="_startValue3_1"
          bind:endValue1="_endValue3_1">
-      <div class="controlsDemo-dateRange-RelationController__row">
+      <div class="controlsDemo-dateRange-RelationController__row demo-dateRange-RelationController__row3">
          <Controls.buttons:Button
             iconSize="m" icon="icon-MarkLeftBold" iconStyle="secondary"
             on:click="dateRelation3.shiftBackward()"/>
@@ -83,13 +85,13 @@
                number="{{0}}"
                ranges="{{content.ranges}}"
                relationMode="byCapacity">
-            <Controls.dateRange:LiteSelector styleMode="info" attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            <Controls.dateRange:LiteSelector styleMode="info" attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector1"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.dateRange:RelationWrapper
                number="{{1}}"
                ranges="{{content.ranges}}"
                relationMode="normal">
-            <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
+            <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector2"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.buttons:Button
             iconSize="m" icon="icon-MarkRightBold" iconStyle="secondary"

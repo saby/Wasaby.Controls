@@ -36,6 +36,7 @@
                         bind:root="_root"
                         itemsFilterMethod="{{_itemsFilterMethod}}"
                         expanderDisplayMode="adaptive"
+                        expanderVisibility="{{_options.expanderVisibility}}"
                         emptyTemplate="{{_options.emptyTemplate}}"
                         columns="{{_columns}}"/>
                   </Controls.list:Container>

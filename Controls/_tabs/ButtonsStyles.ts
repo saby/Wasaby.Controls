@@ -1,7 +1,7 @@
 /**
  * @author Красильников А.С.
  * @mixin Controls/_tabs/ButtonsStyles
- * @public
+ * @private
  *
  * @css @spacing_Tabs-between-separator-top-border Spacing between top or bottom borders of tab control and separator.
  * @css @height_Tabs-separator Height of separator between tabs items.

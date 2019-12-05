@@ -5,12 +5,12 @@ import TreeGridView = require('Controls/_treeGrid/TreeGridView/TreeGridView');
 import TreeControl = require('Controls/_treeGrid/TreeControl');
 
 
-   /**
+/**
     * Контрол "Дерево".
-    * @description
-    * Вспомогательные материалы:
+    * @remark
+    * Дополнительно о контроле:
     * * <a href="/doc/platform/developmentapl/interface-development/controls/list/tree/">Руководство разработчика</a>
-    * * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация контрола</a>
+    * * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация Axure</a>
     * * <a href="/materials/demo-ws4-tree-singleexpand">Демо-пример</a> с множественным выбором элементов и с единичным раскрытием содержимого папок
     * * <a href="/materials/demo-ws4-tree-grid-item-template">Демо-пример</a> с пользовательским шаблоном элемента списка
     * * <a href="/materials/demo-ws4-tree-with-photo">Демо-пример</a> с пользовательским шаблоном элемента списка с фото
@@ -21,7 +21,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/interface/INavigation
-    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/IHierarchy
@@ -67,7 +67,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/interface/INavigation
-    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/ISorting
@@ -101,6 +101,8 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
       _viewName: TreeGridView,
       _viewTemplate: TreeControl,
+
+
       _getModelConstructor: function() {
          return TreeGridViewModel;
       },

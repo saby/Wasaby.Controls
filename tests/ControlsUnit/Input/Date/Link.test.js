@@ -20,8 +20,13 @@ define([
       describe('_openDialog', function() {
          it('should open opener', function() {
             const component = calendarTestUtils.createComponent(dateRange.Link, options);
-            component._children.opener = {
-               open: sinon.fake()
+            component._children = {
+               opener: {
+                  open: sinon.fake()
+               },
+               linkView: {
+                  getDialogTarget: sinon.stub().returns()
+               }
             };
             component._openDialog();
             sinon.assert.called(component._children.opener.open);

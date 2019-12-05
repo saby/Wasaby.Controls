@@ -14,6 +14,7 @@ interface IState<S, T> extends ISerializableState {
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
+ * @private
  */
 export default class Composer<S, T> extends mixin<
     DestroyableMixin,

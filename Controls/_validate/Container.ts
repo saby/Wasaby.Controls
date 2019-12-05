@@ -1,6 +1,5 @@
-import Base = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Container');
-import Env = require('Env/Env');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
@@ -8,6 +7,12 @@ import getZIndex = require('Controls/Utils/getZIndex');
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
+import {ValidationStatus} from "Controls/interface";
+import {Logger} from 'UI/Utils';
+
+export interface IValidateConfig {
+    hideInfoBox?: boolean;
+}
 
 /**
  * Контрол, регулирующий валидацию своего контента.
@@ -19,13 +24,12 @@ import 'css!theme?Controls/validate';
  * @author Красильников А.С.
  */
 
-let _private = {
+const _private = {
 
-    
     openInfoBox(self) {
         if (self._validationResult && self._validationResult.length && !self._isOpened) {
             self._isOpened = true;
-            let cfg = {
+            const cfg = {
                 target: self._container,
                 style: 'danger',
                 styleType: 'outline',
@@ -53,9 +57,9 @@ let _private = {
             // В том числе инфобоксы.
             requirejs(['Controls/popup'], (popup) => {
                 popup.BaseOpener.getManager().then(() => {
-                    let GlobalPopup = _private.getGlobalPopup();
+                    const GlobalPopup = _private.getGlobalPopup();
                     if (GlobalPopup) {
-                        let event = {
+                        const event = {
                             target: self._container
                         };
                         GlobalPopup._openInfoBoxHandler(event, cfg);
@@ -67,67 +71,76 @@ let _private = {
     getGlobalPopup() {
         // Получаем обработчик глобальных событий по открытию окон, который на вдом
         // Лежит в application
-        let ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+        const ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
         if (requirejs.defined(ManagerWrapperControllerModule)) {
             return requirejs(ManagerWrapperControllerModule).default.getGlobalPopup();
         }
     },
 
-    
     closeInfoBox(self) {
         self._closeId = setTimeout(function() {
             _private.forceCloseInfoBox(self);
-            self._isOpened = false;
         }, 300);
     },
 
     forceCloseInfoBox(self) {
-        let delay = 0;
+        const delay = 0;
         if (self._isNewEnvironment) {
             self._notify('closeInfoBox', [delay], {bubbling: true});
         } else {
             // Аналог self._notify('closeInfoBox', [delay], { bubbling: true });, только обработчик
             // Вызывается напрямую, так как события через compoundControl не летят
-            let GlobalPopup = _private.getGlobalPopup();
+            const GlobalPopup = _private.getGlobalPopup();
             if (GlobalPopup) {
-                let event = {
+                const event = {
                     target: self._container
                 };
                 GlobalPopup._closeInfoBoxHandler(event, delay);
             }
         }
+        self._isOpened = false;
     }
 
 };
-let Validate = Base.extend({
-    _template: template,
-    _isOpened: false,
-    _currentValue: undefined,
-    _beforeMount() {
+
+type ValidResult = boolean|null|Promise<boolean>|String;
+class ValidateContainer extends Control {
+    _template: TemplateFunction = template;
+    _isOpened: boolean = false;
+    _contentActive: boolean = false;
+    _currentValue: any;
+    _validationResult: ValidResult;
+    _isNewEnvironment: boolean;
+    _closeId: number;
+
+    _private: any = _private;
+
+    protected _beforeMount(): void {
         this._isNewEnvironment = isNewEnvironment();
-    },
-    _afterMount() {
-        //Use listener without template.
-        //Some people can add style to the container of validation, and some people can add style to the content.
+    }
+
+    protected _afterMount(): void {
+        // Use listener without template.
+        // Some people can add style to the container of validation, and some people can add style to the content.
         RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
         this._notify('validateCreated', [this], {bubbling: true});
-    },
-    _beforeUnmount() {
+    }
+
+    protected _beforeUnmount(): void {
         UnregisterUtil(this, 'scroll');
         this._notify('validateDestroyed', [this], {bubbling: true});
         if (this._isOpened) {
             _private.forceCloseInfoBox(this);
         }
-    },
-    _validationResult: undefined,
+    }
 
-    _callValidators: function callValidators(validators) {
+    _callValidators(validators: Function[], validateConfig?: IValidateConfig) {
         let validationResult = null,
             errors = [],
             validatorResult, validator, resultDeferred, index;
 
-        let parallelDeferred = new ParallelDeferred();
-        let validatorsForCheck = [].concat(validators);
+        const parallelDeferred = new ParallelDeferred();
+        const validatorsForCheck = [].concat(validators);
 
         // провалидируем по собственным валидаторам
         for (index in validatorsForCheck) {
@@ -161,13 +174,12 @@ let Validate = Base.extend({
         }
 
         resultDeferred = new Deferred();
-        this.setValidationResult(resultDeferred);
 
         // далее, смотрим что возвращают результаты-деферреды
-        parallelDeferred.done().getResult().addCallback(function(results) {
+        parallelDeferred.done().getResult().addCallback((results) => {
             let validationResult = null;
             if (typeof results === 'object') {
-                for (let resultIndex in results) {
+                for (const resultIndex in results) {
                     // плохие результаты запоминаем в массиве с ошибками
                     if (results.hasOwnProperty(resultIndex)) {
                         let result = results[resultIndex];
@@ -188,89 +200,111 @@ let Validate = Base.extend({
                 validationResult = errors;
             }
 
-            this.setValidationResult(validationResult);
+            this.setValidationResult(validationResult, validateConfig);
             resultDeferred.callback(validationResult);
-        }.bind(this)).addErrback(function(e) {
-            Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
+        }).addErrback((e) => {
+            Logger.error('Validate: Validation error', this, e);
         });
 
         return resultDeferred;
-    },
+    }
 
-    /**
-     * @name Controls/_validate/Container#validate
-     * @description Запуск валидации.
-     * @returns {Deferred}
-     */
-    /*
-     * @name Controls/_validate/Container#validate
-     * @description Start the validation.
-     * @returns {Deferred}
-     */
-    validate: function validate() {
-        let validators = this._options.validators || [];
-        this.setValidationResult(undefined);
-        return this._callValidators(validators);
-    },
+    validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
+        return new Promise((resolve) => {
+            const validators = this._options.validators || [];
+            this.setValidationResult(undefined);
+            this._callValidators(validators, validateConfig).then(resolve);
+        });
+
+    }
 
     /**
      * @name Controls/_validate/Container#setValidationResult
      * @description Устанавливает значение validationResult.
      * @param validationResult
      */
+
     /*
      * @name Controls/_validate/Container#setValidationResult
      * @description Set the validationResult from the outside
      * @param validationResult
      */
-    setValidationResult(validationResult) {
+    setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
         this._validationResult = validationResult;
         if (!(validationResult instanceof Promise)) {
             this._forceUpdate();
         }
-        if (validationResult) {
+        if (validationResult && !config.hideInfoBox) {
             _private.openInfoBox(this);
         } else if (this._isOpened && validationResult === null) {
             _private.closeInfoBox(this);
         }
-    },
+    }
+
+    /**
+     * @name Controls/_validate/Container#isValid
+     * @description Получает значение validationResult.
+     * @returns {undefined|Array}
+     */
+
+    /*
+     * @name Controls/_validate/Container#isValid
+     * @description Get the validationResult
+     * @returns {undefined|Array}
+     */
+    isValid(): ValidResult {
+        return this._validationResult;
+    }
+
     _hoverHandler() {
         clearTimeout(this._closeId);
         if (!this._isOpened) {
             _private.openInfoBox(this);
         }
-    },
+    }
+
     _scrollHandler() {
         if (this._isOpened) {
             _private.forceCloseInfoBox(this);
         }
-    },
-    _focusInHandler() {
+    }
+
+    _focusInHandler(): void {
+        this._contentActive = true;
         if (!this._isOpened) {
             _private.openInfoBox(this);
         }
-    },
-    _mouseInfoboxHandler(event) {
+    }
+
+    _focusOutHandler(): void {
+        this._contentActive = false;
+    }
+
+    _mouseInfoboxHandler(event: Event): void {
         if (event.type === 'mouseenter') {
-            this._hoverInfoboxHandler(this);
+            this._hoverInfoboxHandler();
         } else if (event.type === 'mouseleave') {
-            this._mouseLeaveHandler(this);
+            this._mouseLeaveHandler();
         } else if (event.type === 'close') {
             this._isOpened = false;
         }
-    },
-    _closeHandler() {
+    }
+
+    _closeHandler(): void {
         this._isOpened = false;
-    },
-    _mouseLeaveHandler() {
+    }
+
+    _mouseLeaveHandler(): void {
         if (this.isValid()) {
             _private.closeInfoBox(this);
         }
-    },
+    }
+
     _hoverInfoboxHandler() {
         clearTimeout(this._closeId);
-    },
-    _valueChangedHandler(event, value) {
+    }
+
+    _valueChangedHandler(event: Event, value: any): void {
         // We clean validation, if the value has changed.
         // But some controls notify valueChanged if the additional data has changed.
         // For example, input fields notify 'valueChanged' , when displayValue has changed, but value hasn't changed.
@@ -279,34 +313,32 @@ let Validate = Base.extend({
             this._notify('valueChanged', [value]);
             this._cleanValid();
         }
-    },
-    _cleanValid() {
+    }
+
+    _cleanValid(): void {
         if (this._validationResult) {
             this.setValidationResult(null);
         }
-    },
+    }
 
-    /**
-     * @name Controls/_validate/Container#isValid
-     * @description Получает значение validationResult.
-     * @returns {undefined|Array}
-     */
-    /*
-     * @name Controls/_validate/Container#isValid
-     * @description Get the validationResult
-     * @returns {undefined|Array}
-     */
-    isValid() {
-        return this._validationResult;
-    },
+    private _getValidStatus(contentActive): ValidationStatus {
+        //ie is not support focus-within
+        if (this._isValidResult()) {
+            return contentActive ? 'invalidAccent' : 'invalid';
+        }
+        return 'valid';
+    }
 
-    // todo это временный фикс, этот код должен уйти в контрол поля ввода, валидация уже отдает туда результат валидации, контролу нужно использовать эти данные
-    _isValidResult() {
+
+    // todo это временный фикс, этот код должен уйти в контрол поля ввода,
+    //  валидация уже отдает туда результат валидации, контролу нужно использовать эти данные
+    _isValidResult(): boolean {
         return this._validationResult && !(this._validationResult instanceof Promise);
-    },
-    _private
-});
-export = Validate;
+    }
+
+}
+
+export default ValidateContainer;
 
 /**
  * @name Controls/_validate/Container#content

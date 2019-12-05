@@ -2,7 +2,8 @@ import {detection} from 'Env/Env';
 
 const FULL_GRID_IOS_VERSION = 12;
 const OLD_IE_LAST_VERSION = 11;
-const DEFAULT_COLUMN_WIDTH = '1fr';
+const DEFAULT_GRID_COLUMN_WIDTH = '1fr';
+const DEFAULT_TABLE_COLUMN_WIDTH = 'auto';
 
 const RegExps = {
     pxValue: new RegExp('^[0-9]+px$'),
@@ -41,24 +42,16 @@ function isFullGridSupport(): boolean {
     return (!detection.isWinXP || detection.yandex) && (!detection.isNotFullGridSupport || _isFullGridSafari());
 }
 
-function isPartialGridSupport(): boolean {
-    const isOldIEBrowser = detection.isIE && !detection.isModernIE;
-    const noGridSupport = (detection.isWinXP && !detection.yandex) || isOldIEBrowser;
-    const fullGridSupport = _isFullGridSafari();
-
-    return detection.isNotFullGridSupport && !(noGridSupport || fullGridSupport);
-}
-
-function isNoGridSupport(): boolean {
-    return !isFullGridSupport() && !isPartialGridSupport();
-}
-
 function isOldIE(): boolean {
     return detection.isIE && detection.IEVersion <= OLD_IE_LAST_VERSION;
 }
 
 function isCompatibleWidth(width: string | number): boolean {
     return !!width && !!(`${width}`.match(RegExps.percentValue) || `${width}`.match(RegExps.pxValue));
+}
+
+function getDefaultColumnWidth(): string {
+    return isFullGridSupport() ? DEFAULT_GRID_COLUMN_WIDTH : DEFAULT_TABLE_COLUMN_WIDTH;
 }
 
 function getColumnStyles(cfg: IColumnOptions): string {
@@ -91,7 +84,7 @@ function getCellStyles(cfg: IColumnOptions & IRowOptions): string {
     return getColumnStyles(cfg) + ' ' + getRowStyles(cfg);
 }
 
-function getMultyHeaderStyles(columnStart: number, columnEnd: number, rowStart: number, rowEnd: number, additionalColumn: number): string {
+function getMultiHeaderStyles(columnStart: number, columnEnd: number, rowStart: number, rowEnd: number, additionalColumn: number): string {
     return getCellStyles({
         columnStart: columnStart + additionalColumn - 1,
         columnEnd: columnEnd + additionalColumn - 1,
@@ -128,12 +121,10 @@ function toCssString(cssRules: ICssRule[]): string {
 
 export {
     isCompatibleWidth,
-    DEFAULT_COLUMN_WIDTH,
+    getDefaultColumnWidth,
     RegExps,
 
     isFullGridSupport,
-    isPartialGridSupport,
-    isNoGridSupport,
     isOldIE,
 
     getColumnStyles,
@@ -142,5 +133,5 @@ export {
     getTemplateColumnsStyle,
     getGridLayoutStyles,
     toCssString,
-    getMultyHeaderStyles
+    getMultiHeaderStyles
 };

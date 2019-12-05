@@ -94,6 +94,16 @@ define([
          assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
       });
 
+      it('_private.canStartDragNDrop', function() {
+         var
+            explorer = new explorerMod.View({});
+
+         explorer._viewMode = 'table';
+         assert.isTrue(explorerMod.View._private.canStartDragNDrop(explorer));
+         explorer._viewMode = 'search';
+         assert.isFalse(explorerMod.View._private.canStartDragNDrop(explorer));
+      });
+
       it('_private.getRoot', function() {
          var
             cfg = {
@@ -199,60 +209,62 @@ define([
          };
          var instance = new explorerMod.View(cfg);
          var rootChanged = false;
-         var resetExpandedItemsCalled = false;
-         instance._children = {
-            treeControl: {
-               resetExpandedItems: function() {
-                  resetExpandedItemsCalled = true;
-               }
-            }
-         };
 
          instance.saveOptions(cfg);
-         instance._beforeMount(cfg);
-         instance._notify = function(eventName) {
-            if (eventName === 'rootChanged') {
-               rootChanged = true;
-            }
-         };
 
-         assert.equal(instance._viewMode, 'tree');
-         assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tree);
-         assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
-         assert.isFalse(rootChanged);
-         assert.isTrue(instance._virtualScrolling);
+         return instance._beforeMount(cfg)
+            .then(() => {
+               assert.equal(instance._viewMode, 'tree');
+               assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tree);
+               assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
+               assert.isFalse(rootChanged);
+               assert.isTrue(instance._virtualScrolling);
 
-         resetExpandedItemsCalled = false;
-         instance._beforeUpdate(newCfg);
-         assert.equal(instance._viewMode, 'search');
-         assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
-         assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
-         assert.isFalse(rootChanged);
-         assert.isTrue(resetExpandedItemsCalled);
-         assert.isTrue(instance._virtualScrolling);
+               instance._notify = function(eventName) {
+                  if (eventName === 'rootChanged') {
+                     rootChanged = true;
+                  }
+               };
+               return explorerMod.View._private.setViewMode(instance, newCfg.viewMode, newCfg);
+            })
+            .then(() => {
+               assert.equal(instance._viewMode, 'search');
+               assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
+               assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
+               assert.isFalse(rootChanged);
+               assert.isTrue(instance._virtualScrolling);
 
-         instance._breadCrumbsItems = new collection.RecordSet({
-            rawData: [
-               { id: 1, title: 'item1' }
-            ],
-            keyProperty: 'id'
-         });
-         instance._options.searchStartingWith = 'root';
-         instance._options.root = 'test';
-         instance._options.parentProperty = 'id';
-         instance._viewMode = 'tree';
-         instance._beforeUpdate(newCfg);
-         assert.isFalse(rootChanged);
-         assert.isTrue(instance._virtualScrolling);
+               instance._breadCrumbsItems = new collection.RecordSet({
+                  rawData: [
+                     { id: 1, title: 'item1' }
+                  ],
+                  keyProperty: 'id'
+               });
+               instance.saveOptions(Object.assign(
+                  {},
+                  instance._options,
+                  {
+                     searchStartingWith: 'root',
+                     root: 'test',
+                     parentProperty: 'id'
+                  }
+               ));
+               instance._viewMode = 'tree';
+               return explorerMod.View._private.setViewMode(instance, newCfg.viewMode, newCfg);
+            })
+            .then(() => {
+               assert.isFalse(rootChanged);
+               assert.isTrue(instance._virtualScrolling);
 
-         resetExpandedItemsCalled = false;
-         instance._beforeUpdate(newCfg2);
-         assert.equal(instance._viewMode, 'tile');
-         assert.isNull(explorerMod.View._constants.VIEW_NAMES.tile);
-         assert.isNull(explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
-         assert.isFalse(rootChanged);
-         assert.isTrue(resetExpandedItemsCalled);
-         assert.isFalse(instance._virtualScrolling);
+               return explorerMod.View._private.setViewMode(instance, newCfg2.viewMode, newCfg2);
+            })
+            .then(() => {
+               assert.equal(instance._viewMode, 'tile');
+               assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tile);
+               assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
+               assert.isFalse(rootChanged);
+               assert.isFalse(instance._virtualScrolling);
+            });
       });
 
       it('toggleExpanded', function() {
@@ -296,6 +308,34 @@ define([
          path.clear();
          instance._beforeMount(cfg);
          assert.equal(instance._breadCrumbsItems, null);
+      });
+
+      it('_beforeUpdate', function() {
+         const cfg = { viewMode: 'tree', root: null };
+         const cfg2 = { viewMode: 'search' , root: null };
+         const instance = new explorerMod.View(cfg);
+         let resetExpandedItemsCalled = false;
+         instance._children = {
+            treeControl: {
+               resetExpandedItems: () => resetExpandedItemsCalled = true
+            }
+         };
+
+         instance._viewMode = cfg.viewMode;
+
+         instance._beforeUpdate(cfg2);
+         assert.isTrue(resetExpandedItemsCalled);
+
+         resetExpandedItemsCalled = false;
+         instance._viewMode = cfg2.viewMode;
+
+         instance._beforeUpdate(cfg2);
+         assert.isFalse(resetExpandedItemsCalled);
+
+         instance._isGoingFront = true;
+         instance.saveOptions(cfg);
+         instance._beforeUpdate(cfg2);
+         assert.isFalse(instance._isGoingFront);
       });
 
       it('_onBreadCrumbsClick', function() {
@@ -459,6 +499,7 @@ define([
             var
                explorer = new explorerMod.View({}),
                isEventResultReturns = false,
+               cancelEditCalled = false,
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
@@ -472,6 +513,9 @@ define([
                treeControl: {
                   _children: {
 
+                  },
+                  cancelEdit: function() {
+                     cancelEditCalled = true;
                   }
                }
             };
@@ -498,6 +542,7 @@ define([
                nativeEvent: 123
             });
             assert.isTrue(isEventResultReturns);
+            assert.isTrue(cancelEditCalled);
             assert.deepEqual({
                ...explorer._restoredMarkedKeys,
                itemId: {

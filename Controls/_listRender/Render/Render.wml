@@ -1,6 +1,6 @@
 <div attr:class="controls-ListViewV controls-ListView_default">
    <ws:if data="{{ _options.listModel }}">
-      <div attr:class="controls-ListViewV__itemsContainer" name="itemsContainer">
+      <div attr:class="controls-ListViewV__itemsContainer controls-ListViewV__itemsContainer--newRender" name="itemsContainer">
          <ws:partial
             template="wml!Controls/_listRender/Render/resources/For"
             collection="{{ _options.listModel }}"

@@ -2,238 +2,238 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Previewer/Previewer');
 import {debounce} from 'Types/function';
 import PreviewerOpener from './Opener/Previewer';
-import Env = require('Env/Env');
+import { goUpByControlTree } from 'UI/Focus';
 import 'css!theme?Controls/popup';
 
+/**
+ * @class Controls/_popup/Previewer
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Красильников А.С.
+ */
 
-      /**
-       * @class Controls/_popup/Previewer
-       * @extends Core/Control
-       * @control
-       * @public
-       * @author Красильников А.С.
-       */
+let CALM_DELAY = 300; // During what time should not move the mouse to start opening the popup.
 
-      var CALM_DELAY = 300; // During what time should not move the mouse to start opening the popup.
-
-      var _private = {
-         getType: function(eventType) {
-            if (eventType === 'mousemove' || eventType === 'mouseleave') {
-               return 'hover';
+let _private = {
+    getType(eventType) {
+        if (eventType === 'mousemove' || eventType === 'mouseleave') {
+            return 'hover';
+        }
+        return 'click';
+    },
+    getCfg(self) {
+        let config = {
+            fittingMode: {
+                vertical: 'adaptive',
+                horizontal: 'overflow'
+            },
+            autofocus: false,
+            opener: self,
+            target: self._container,
+            template: 'Controls/popup:PreviewerTemplate',
+            targetPoint: {
+                vertical: 'bottom',
+                horizontal: 'right'
+            },
+            isCompoundTemplate: self._options.isCompoundTemplate,
+            eventHandlers: {
+                onResult: self._resultHandler,
+                onClose: self._closeHandler
+            },
+            templateOptions: {
+                template: self._options.template,
+                templateOptions: self._options.templateOptions
             }
-            return 'click';
-         },
-         getCfg: function(self) {
-            var config = {
-               autofocus: false,
-               opener: self,
-               target: self._container,
-               template: 'Controls/popup:PreviewerTemplate',
-               targetPoint: {
-                  vertical: 'bottom',
-                  horizontal: 'right'
-               },
-               isCompoundTemplate: self._options.isCompoundTemplate,
-               eventHandlers: {
-                  onResult: self._resultHandler,
-                  onClose: self._closeHandler
-               },
-               templateOptions: {
-                  template: self._options.template,
-                  templateOptions: self._options.templateOptions
-               }
-            };
+        };
 
-            if (self._options.targetPoint) {
-               config.targetPoint = self._options.targetPoint;
-            }
-            if (self._options.verticalAlign) {
-               config.verticalAlign = self._options.verticalAlign;
-            }
-            if (self._options.horizontalAlign) {
-               config.horizontalAlign = self._options.horizontalAlign;
-            }
-            return config;
-         },
-         open: function(self, event, type) {
-            if (!self._isPopupOpened()) {
-               if (self._isNewEnvironment()) { // TODO: COMPATIBLE
-                  self._close(event); // close opened popup to avoid jerking the content for repositioning
-                  self._notify('openPreviewer', [_private.getCfg(self), type], { bubbling: true });
-               } else {
-                  self._children.openerPreviewer.open(_private.getCfg(self), type);
-               }
-               self._isOpened = true;
-            }
-         },
-         close: function(self, type) {
-            if (self._isNewEnvironment()) { // TODO: COMPATIBLE
-               self._notify('closePreviewer', [type], { bubbling: true });
-            } else {
-               self._children.openerPreviewer.close(type);
-            }
-         }
-      };
+        if (self._options.targetPoint) {
+            config.targetPoint = self._options.targetPoint;
+        }
+        if (self._options.direction) {
+            config.direction = self._options.direction;
+        }
+        if (self._options.offset) {
+            config.offset = self._options.offset;
+        }
+        return config;
+    },
+    open(self, event, type) {
+        if (!self._isPopupOpened()) {
+            const newConfig = _private.getCfg(self);
+            self._isOpened = true;
+            return PreviewerOpener.openPopup(newConfig, type).then((id) => {
+                self._previewerId = id;
+            });
+        }
+    },
+    close(self, type) {
+        PreviewerOpener.closePopup(self._previewerId, type);
+    }
+};
 
-      var Previewer = Control.extend({
-         _template: template,
-         _isOpened: false,
+let Previewer = Control.extend({
+    _template: template,
+    _previewerId: null,
+    _isOpened: false,
 
-         _isNewEnvironment: PreviewerOpener.isNewEnvironment,
+    _beforeMount(options) {
+        this._resultHandler = this._resultHandler.bind(this);
+        this._closeHandler = this._closeHandler.bind(this);
+        this._debouncedAction = debounce(this._debouncedAction, 10);
+        this._enableClose = true;
+    },
+    _beforeUnmount() {
+        this._clearWaitTimer();
+    },
 
-         _beforeMount: function(options) {
-            this._resultHandler = this._resultHandler.bind(this);
-            this._closeHandler = this._closeHandler.bind(this);
-            this._debouncedAction = debounce(this._debouncedAction, 10);
-            this._enableClose = true;
-         },
-         _beforeUnmount: function() {
+    /**
+     * @param type
+     * @variant hover
+     * @variant click
+     */
+    open(type) {
+        _private.open(this, {}, type);
+    },
+
+    /**
+     * @param type
+     * @variant hover
+     * @variant click
+     */
+    close(type) {
+        _private.close(this, type);
+    },
+
+    _open(event) {
+        let type = _private.getType(event.type);
+
+        _private.open(this, event, type);
+    },
+
+    _close(event) {
+        let type = _private.getType(event.type);
+
+        _private.close(this, type);
+    },
+
+    _isPopupOpened() {
+        return PreviewerOpener.isOpenedPopup(this._previewerId);
+    },
+    _scrollHandler(event) {
+        this._close(event);
+    },
+    // Pointer action on hover with content and popup are executed sequentially.
+    // Collect in package and process the latest challenge
+    _debouncedAction(method, args) {
+        this[method].apply(this, args);
+    },
+
+    _cancel(event, action) {
+        PreviewerOpener.cancelPopup(this._previewerId, action);
+    },
+
+    _contentMouseenterHandler(event) {
+        if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
+            // We will cancel closing of the popup, if it is already open
+            if (this._isOpened) {
+                this._cancel(event, 'closing');
+            }
+        }
+    },
+
+    _contentMouseleaveHandler(event) {
+        if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
             this._clearWaitTimer();
-         },
-
-         /**
-          * @param type
-          * @variant hover
-          * @variant click
-          */
-         open: function(type) {
-            _private.open(this, {}, type);
-         },
-
-         /**
-          * @param type
-          * @variant hover
-          * @variant click
-          */
-         close: function(type) {
-            _private.close(this, type);
-         },
-
-         _open: function(event) {
-            var type = _private.getType(event.type);
-
-            _private.open(this, event, type);
-         },
-
-         _close: function(event) {
-            var type = _private.getType(event.type);
-
-            _private.close(this, type);
-         },
-
-         _isPopupOpened: function() {
-            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
-               return this._notify('isPreviewerOpened', [], { bubbling: true });
-            }
-            //todo: https://online.sbis.ru/opendoc.html?guid=f0801603-d282-4694-bb5b-370999015888
-            return this._destroyed || this._children.openerPreviewer.isOpened();
-         },
-         _scrollHandler: function(event) {
-            this._close(event);
-         },
-         // Pointer action on hover with content and popup are executed sequentially.
-         // Collect in package and process the latest challenge
-         _debouncedAction: function(method, args) {
-            this[method].apply(this, args);
-         },
-
-         _cancel: function(event, action) {
-            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
-               this._notify('cancelPreviewer', [action], { bubbling: true });
+            if (this._isPopupOpened()) {
+                this._debouncedAction('_close', [event]);
             } else {
-               this._children.openerPreviewer.cancel(action);
+                this._cancel(event, 'opening');
             }
-         },
+        }
+    },
 
-         _contentMouseenterHandler: function(event) {
-            if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
-               //We will cancel closing of the popup, if it is already open
-               if (this._isOpened) {
-                  this._cancel(event, 'closing');
-               }
+    _contentMousemoveHandler(event) {
+        if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
+            // wait, until user stop mouse on target.
+            // Don't open popup, if mouse moves through the target
+            this._clearWaitTimer();
+            this._waitTimer = setTimeout(() => {
+                this._waitTimer = null;
+                if (!this._isPopupOpened()) {
+                    this._debouncedAction('_open', [event]);
+                }
+            }, CALM_DELAY);
+        }
+    },
+
+    _clearWaitTimer() {
+        if (this._waitTimer) {
+            clearTimeout(this._waitTimer);
+        }
+    },
+
+    _previewerClickHandler(event) {
+        if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
+            /**
+             * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
+             */
+            if (!this._isPopupOpened()) {
+                this._debouncedAction('_open', [event]);
             }
-         },
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    },
 
-         _contentMouseleaveHandler: function(event) {
-            if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
-               this._clearWaitTimer();
-               if (this._isPopupOpened()) {
-                  this._debouncedAction('_close', [event]);
-               } else {
-                  this._cancel(event, 'opening');
-               }
+    _resultHandler(event) {
+        switch (event.type) {
+            case 'menuclosed':
+                this._enableClose = true;
+                event.stopPropagation();
+                break;
+            case 'menuopened':
+                this._enableClose = false;
+                event.stopPropagation();
+                break;
+            case 'mouseenter':
+                this._debouncedAction('_cancel', [event, 'closing']);
+                break;
+            case 'mouseleave':
+                const isHoverType = this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick';
+                if (isHoverType && this._enableClose && !this._isLinkedPreviewer(event)) {
+                    this._debouncedAction('_close', [event]);
+                }
+                break;
+            case 'mousedown':
+                event.stopPropagation();
+                break;
+        }
+    },
+
+    _isLinkedPreviewer(event: Event): boolean {
+        const parentControls = goUpByControlTree(event.nativeEvent.relatedTarget);
+        for (let i = 0; i < parentControls.length; i++) {
+            if (parentControls[i] === this) {
+                return true;
             }
-         },
+        }
+        return false;
+    },
 
-         _contentMousemoveHandler: function(event) {
-            if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
-               // wait, until user stop mouse on target.
-               // Don't open popup, if mouse moves through the target
-               this._clearWaitTimer();
-               this._waitTimer = setTimeout(() => {
-                  this._waitTimer = null;
-                  if (!this._isPopupOpened()) {
-                     this._debouncedAction('_open', [event]);
-                  }
-               }, CALM_DELAY);
-            }
-         },
+    _closeHandler() {
+        this._isOpened = false;
+    },
+    _private
+});
 
-         _clearWaitTimer() {
-            if (this._waitTimer) {
-               clearTimeout(this._waitTimer);
-            }
-         },
+Previewer.getDefaultOptions = function() {
+    return {
+        trigger: 'hoverAndClick'
+    };
+};
 
-         _previewerClickHandler: function(event) {
-            if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
-               /**
-                * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
-                */
-               if (!this._isPopupOpened()) {
-                  this._debouncedAction('_open', [event]);
-               }
-               event.preventDefault();
-               event.stopPropagation();
-            }
-         },
-
-         _resultHandler: function(event) {
-            switch (event.type) {
-               case 'menuclosed':
-                  this._enableClose = true;
-                  event.stopPropagation();
-                  break;
-               case 'menuopened':
-                  this._enableClose = false;
-                  event.stopPropagation();
-                  break;
-               case 'mouseenter':
-                  this._debouncedAction('_cancel', [event, 'closing']);
-                  break;
-               case 'mouseleave':
-                  if (this._enableClose && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
-                     this._debouncedAction('_close', [event]);
-                  }
-                  break;
-               case 'mousedown':
-                  event.stopPropagation();
-                  break;
-            }
-         },
-         _closeHandler: function(){
-            this._isOpened = false;
-         },
-         _private: _private
-      });
-
-      Previewer.getDefaultOptions = function() {
-         return {
-            trigger: 'hoverAndClick'
-         };
-      };
-
-      export = Previewer;
+export = Previewer;
 
 /**
  * @name Controls/_popup/Previewer#content

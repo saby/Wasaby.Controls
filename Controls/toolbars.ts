@@ -3,6 +3,7 @@
  * @library Controls/toolbars
  * @includes View Controls/_toolbars/View
  * @includes ItemTemplate wml!Controls/_toolbars/ItemTemplate
+ * @includes IToolbarSource Controls/_toolbars/IToolbarSource
  * @public
  * @author Красильников А.С.
  */

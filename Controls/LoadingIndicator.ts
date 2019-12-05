@@ -321,23 +321,19 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
      * show indicator (bypassing requests of indicator showing stack)
      */
     show(config, waitPromise) {
-        if (!config) {
-            return this._toggleIndicator(true, {});
-        }
         return this._show(config, waitPromise);
     },
 
     _show(config, waitPromise) {
-        let isUpdate = false;
-        if (this._isOpened(config)) {
-            isUpdate = true;
-            this._removeItem(config.id);
+        const newCfg = this._prepareConfig(config, waitPromise);
+        const isOpened = this._getItemIndex(newCfg.id) > -1;
+        if (isOpened) {
+            this._replaceItem(newCfg.id, newCfg);
+        } else {
+            this._stack.add(newCfg);
+            this._toggleIndicator(true, newCfg);
         }
-        config = this._prepareConfig(config, waitPromise);
-        this._stack.add(config);
-        this._toggleIndicator(true, config, isUpdate);
-
-        return config.id;
+        return newCfg.id;
     },
 
     /**
@@ -394,7 +390,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         if (!config.hasOwnProperty('overlay')) {
             config.overlay = 'default';
         }
-        if (!config.hasOwnProperty('id')) {
+        if (!config.id) {
             config.id = randomId();
         }
         if (!config.hasOwnProperty('delay')) {
@@ -414,6 +410,11 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         if (index > -1) {
             this._stack.removeAt(index);
         }
+    },
+
+    _replaceItem(id, config) {
+        this._removeItem(id);
+        this._stack.add(config);
     },
 
     _getItemIndex(id) {
@@ -443,8 +444,11 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
                 // if we have indicator in stack, then don't hide overlay
                 this._toggleIndicatorVisible(this._stack.getCount() > 1 && this._isOverlayVisible, config);
                 this.delayTimeout = setTimeout(() => {
-                    this._toggleIndicatorVisible(true, config);
-                    this._forceUpdate();
+                    const lastIndex = this._stack.getCount() - 1;
+                    if (lastIndex > -1) {
+                        this._toggleIndicatorVisible(true, this._stack.at(lastIndex));
+                        this._forceUpdate();
+                    }
                 }, this._getDelay(config));
             }
         } else {

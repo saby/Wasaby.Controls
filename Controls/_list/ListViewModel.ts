@@ -22,14 +22,11 @@ var _private = {
         self._stopIndex = stopIndex;
     },
     getItemPadding: function(cfg) {
-        if (cfg.itemPadding) {
-            return cfg.itemPadding;
-        }
-        return {
-            left: cfg.leftSpacing || cfg.leftPadding,
-            right: cfg.rightSpacing || cfg.rightPadding,
-            top: cfg.rowSpacing,
-            bottom: cfg.rowSpacing
+        return cfg.itemPadding || {
+            left: 'default',
+            right: 'default',
+            top: 'default',
+            bottom: 'default'
         };
     },
     getSpacingClassList: function(cfg) {
@@ -127,26 +124,6 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._options.itemPadding = itemPadding;
         this._nextModelVersion();
     },
-    setLeftPadding: function(leftPadding) {
-        this._options.leftPadding = leftPadding;
-        this._nextModelVersion();
-    },
-    setRightPadding: function(rightPadding) {
-        this._options.rightPadding = rightPadding;
-        this._nextModelVersion();
-    },
-    setLeftSpacing: function(leftSpacing) {
-        this._options.leftSpacing = leftSpacing;
-        this._nextModelVersion();
-    },
-    setRightSpacing: function(rightSpacing) {
-        this._options.rightSpacing = rightSpacing;
-        this._nextModelVersion();
-    },
-    setRowSpacing: function(rowSpacing) {
-        this._options.rowSpacing = rowSpacing;
-        this._nextModelVersion();
-    },
     getItemPadding: function() {
         return _private.getItemPadding(this._options);
     },
@@ -190,6 +167,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
             const canDrawMarker = marker !== false && itemsModelCurrent.markerVisibility !== 'hidden';
             return canDrawMarker && (itemsModelCurrent.isAdd ? true : _private.isSelected(self, itemsModelCurrent));
+        };
+
+        itemsModelCurrent.getMarkerClasses = (): string => {
+            return 'controls-ListView__itemV_marker ';
         };
 
         if (itemsModelCurrent.itemActions) {
@@ -257,6 +238,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         if (this._editingItemData && this._editingItemData.key === key) {
             version = 'EDITING_' + version;
+        }
+        if (this._swipeItem && this._swipeItem.key === key) {
+            version = 'SWIPE_' + version;
         }
 
         return version;
@@ -443,7 +427,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setSwipeItem: function(itemData) {
         if (!this._swipeItem || !itemData || itemData.item !== this._swipeItem.item) {
            this._swipeItem = itemData;
-           this._nextModelVersion();
+           this._nextModelVersion(true);
         }
     },
 

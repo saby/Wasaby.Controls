@@ -61,7 +61,7 @@ let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): Han
  * Модуль для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
  * @class Controls/_dataSource/_error/Controller
  * @public
- * @author Заляев А.В.
+ * @author Санников К.А.
  * @example
  * <pre>
  *     let handler = ({ error, mode }) => {
@@ -155,11 +155,10 @@ export default class ErrorController {
 
     private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
         const message = config.error.message;
-        const details = config.error.details;
         const style = 'danger';
         const type = 'ok';
         // @ts-ignore
-        import('Controls/popup').then((popup) => { popup.Confirmation.openPopup({ type, style, message, details }); });
+        import('Controls/popup').then((popup) => { popup.Confirmation.openPopup({ type, style, message }); });
     }
 
 }

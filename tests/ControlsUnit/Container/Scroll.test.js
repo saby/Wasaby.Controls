@@ -2,9 +2,10 @@ define(
    [
       'Env/Env',
       'Controls/scroll',
+      'ControlsUnit/Calendar/Utils',
       'wml!ControlsUnit/Container/resources/Content'
    ],
-   function(Env, scrollMod, Content) {
+   function(Env, scrollMod, utils, Content) {
 
       'use strict';
 
@@ -44,12 +45,16 @@ define(
                scrollTop: 10
             };
             scroll._displayState = {
-               contentHeight: 0
-            }
-            scroll._shadowVisiblityMode = {
+               contentHeight: 0,
+               shadowVisible: {
+                  top: false,
+                  bottom: false
+               }
+            };
+            scroll._shadowVisibilityByInnerComponents = {
                top: 'auto',
                bottom: 'auto'
-            }
+            };
          });
 
          describe('_shadowVisible', function() {
@@ -58,21 +63,10 @@ define(
                shadowPosition: 'top',
                hasFixed: true,
                result: false
-            }, {
-               title: 'should display shadow if shadowVisibilityMode is equal "visible"',
-               shadowVisibilityMode: 'visible',
-               result: true
-            }, {
-               title: 'shouldn\'t display shadow if shadowVisibilityMode is equal "auto" and shadowPosition is equal ""',
-               result: false
-            }, {
-               title: 'shouldn display shadow if shadowVisibilityMode is equal "auto" and shadowPosition is equal "top"',
-               shadowPosition: 'top',
-               result: true
             }].forEach(function(test) {
                it(test.title, function () {
                   scroll._displayState.shadowPosition = test.shadowPosition || '';
-                  scroll._shadowVisiblityMode.top = test.shadowVisibilityMode;
+                  scroll._shadowVisibilityByInnerComponents.top = test.shadowVisibilityByInnerComponents;
                   scroll._children.stickyController = {
                      hasFixed: function () {
                         return Boolean(test.hasFixed);
@@ -104,7 +98,7 @@ define(
                });
 
                it('should display top shadow if scrollTop > 0.', function () {
-                  scroll._displayState.shadowPosition = 'top';
+                  scroll._displayState.shadowVisible.top = true;
                   scroll._children.stickyController = {
                      hasFixed: function () {
                         return false;
@@ -115,7 +109,7 @@ define(
                });
 
                it('should not display top shadow if scrollTop < 0.', function () {
-                  scroll._displayState.shadowPosition = 'top';
+                  scroll._displayState.shadowVisible.top = true;
                   scroll._children.content.scrollTop = -10;
                   scroll._children.stickyController = {
                      hasFixed: function () {
@@ -130,25 +124,23 @@ define(
 
          describe('_updateStickyHeaderContext', function() {
             [{
-               title: 'should display shadow if shadowVisibilityMode is "visible"',
-               shadowVisible: true,
-               shadowVisibilityMode: { top: 'visible', bottom: 'visible' },
+               title: 'should display shadow on headers if shadow is visible',
+               shadowVisible: { top: true, bottom: true },
                resultShadowPosition: 'topbottom'
             }, {
-               title: 'shouldn\'t display shadow if shadowVisibilityMode is "auto" and shadowPosition is ""',
-               shadowVisible: true,
-               shadowVisibilityMode: { top: 'auto', bottom: 'auto' },
+               title: 'shouldn\'t display shadow on headers if shadow is hidden',
+               shadowVisible: { top: false, bottom: false },
                resultShadowPosition: ''
             }].forEach(function (test) {
                it(test.title, function () {
                   scroll._displayState.shadowPosition = test.shadowPosition || '';
-                  scroll._displayState.hasScroll = true;
-                  scroll._shadowVisiblityMode = test.shadowVisibilityMode;
+                  scroll._displayState.canScroll = true;
+                  scroll._displayState.shadowVisible = test.shadowVisible;
                   scroll._stickyHeaderContext = {
                      updateConsumers: function() { }
                   };
 
-                  scroll._updateStickyHeaderContext(test.shadowVisible);
+                  scroll._updateStickyHeaderContext();
                   assert.strictEqual(scroll._stickyHeaderContext.shadowPosition, test.resultShadowPosition);
                });
             });
@@ -220,7 +212,7 @@ define(
          describe('_scrollbarTaken', function() {
             it('Should generate scrollbarTaken event if scrollbar displayed', function() {
                const sandbox = sinon.sandbox.create();
-               scroll._displayState = { hasScroll: true };
+               scroll._displayState = { canScroll: true };
                sandbox.stub(scroll, '_notify');
                scroll._scrollbarTaken();
                sinon.assert.calledWith(scroll._notify, 'scrollbarTaken');
@@ -228,7 +220,7 @@ define(
             });
             it('Should not generate scrollbarTaken event if scrollbar not displayed', function() {
                const sandbox = sinon.sandbox.create();
-               scroll._displayState = { hasScroll: false };
+               scroll._displayState = { canScroll: false };
                sandbox.stub(scroll, '_notify');
                scroll._scrollbarTaken();
                sinon.assert.notCalled(scroll._notify);
@@ -239,7 +231,7 @@ define(
          describe('_mouseenterHandler', function() {
             it('Should show scrollbar and generate scrollbarTaken event on mouseenter', function() {
                const sandbox = sinon.sandbox.create();
-               scroll._displayState = { hasScroll: true };
+               scroll._displayState = { canScroll: true };
                scroll._options.scrollbarVisible = true;
                sandbox.stub(scroll, '_notify');
                scroll._mouseenterHandler();
@@ -249,7 +241,7 @@ define(
             });
             it('Should hide scrollbar and generate scrollbarReleased event on mouseleave', function() {
                const sandbox = sinon.sandbox.create();
-               scroll._displayState = { hasScroll: false };
+               scroll._displayState = { canScroll: false };
                sandbox.stub(scroll, '_notify');
                scroll._mouseenterHandler();
                scroll._mouseleaveHandler();
@@ -349,164 +341,310 @@ define(
                const
                   addedHeight = 100,
                   oldScrollTop = scroll._children.content.scrollTop;
+               scroll._children.scrollWatcher = {
+                  setScrollTop(value) {
+                     scroll._children.content.scrollTop = value;
+                  }
+               };
                scroll._saveScrollPosition({stopPropagation: function(){}});
                scroll._children.content.scrollHeight += addedHeight;
-               scroll._restoreScrollPosition({stopPropagation: function(){}}, 0, 'up');
-               assert.equal(scroll._children.content.scrollTop, oldScrollTop + addedHeight);
+               scroll._restoreScrollPosition({stopPropagation: function(){}}, 0);
+               assert.equal(scroll._children.content.scrollTop, 0);
             });
          });
-      });
 
-      describe('selectedKeysChanged', function() {
-         var instance;
-         beforeEach(function() {
-            instance = new scrollMod.Container();
-         })
-         it('should forward event', function() {
-            var
-               notifyCalled = false,
-               event = {
-                  propagating: function() {
-                     return false;
-                  }
+
+         describe('selectedKeysChanged', function() {
+            var instance;
+            beforeEach(function() {
+               instance = new scrollMod.Container();
+            })
+            it('should forward event', function() {
+               var
+                  notifyCalled = false,
+                  event = {
+                     propagating: function() {
+                        return false;
+                     }
+                  };
+               instance._notify = function(eventName, eventArgs) {
+                  assert.equal(eventName, 'selectedKeysChanged');
+                  assert.deepEqual(eventArgs, ['1', '2', '3']);
+                  notifyCalled = true;
                };
-            instance._notify = function(eventName, eventArgs) {
-               assert.equal(eventName, 'selectedKeysChanged');
-               assert.deepEqual(eventArgs, ['1', '2', '3']);
-               notifyCalled = true;
-            };
-            instance.selectedKeysChanged(event, '1', '2', '3');
-            assert.isTrue(notifyCalled);
+               instance.selectedKeysChanged(event, '1', '2', '3');
+               assert.isTrue(notifyCalled);
+            });
+
+            it('should not forward event', function() {
+               var
+                  notifyCalled = false,
+                  event = {
+                     propagating: function() {
+                        return true;
+                     }
+                  };
+               instance._notify = function() {
+                  notifyCalled = true;
+               };
+               instance.selectedKeysChanged(event, '1', '2', '3');
+               assert.isFalse(notifyCalled);
+            });
          });
 
-         it('should not forward event', function() {
-            var
-               notifyCalled = false,
-               event = {
-                  propagating: function() {
-                     return true;
-                  }
+         describe('excludedKeysChanged', function() {
+            var instance;
+            beforeEach(function() {
+               instance = new scrollMod.Container();
+            })
+            it('should forward event', function() {
+               var
+                  notifyCalled = false,
+                  event = {
+                     propagating: function() {
+                        return false;
+                     }
+                  };
+               instance._notify = function(eventName, eventArgs) {
+                  assert.equal(eventName, 'excludedKeysChanged');
+                  assert.deepEqual(eventArgs, ['1', '2', '3']);
+                  notifyCalled = true;
                };
-            instance._notify = function() {
-               notifyCalled = true;
-            };
-            instance.selectedKeysChanged(event, '1', '2', '3');
-            assert.isFalse(notifyCalled);
-         });
-      });
+               instance.excludedKeysChanged(event, '1', '2', '3');
+               assert.isTrue(notifyCalled);
+            });
 
-      describe('excludedKeysChanged', function() {
-         var instance;
-         beforeEach(function() {
-            instance = new scrollMod.Container();
-         })
-         it('should forward event', function() {
-            var
-               notifyCalled = false,
-               event = {
-                  propagating: function() {
-                     return false;
-                  }
+            it('should not forward event', function() {
+               var
+                  notifyCalled = false,
+                  event = {
+                     propagating: function() {
+                        return true;
+                     }
+                  };
+               instance._notify = function() {
+                  notifyCalled = true;
                };
-            instance._notify = function(eventName, eventArgs) {
-               assert.equal(eventName, 'excludedKeysChanged');
-               assert.deepEqual(eventArgs, ['1', '2', '3']);
-               notifyCalled = true;
-            };
-            instance.excludedKeysChanged(event, '1', '2', '3');
-            assert.isTrue(notifyCalled);
+               instance.excludedKeysChanged(event, '1', '2', '3');
+               assert.isFalse(notifyCalled);
+            });
          });
 
-         it('should not forward event', function() {
-            var
-               notifyCalled = false,
-               event = {
-                  propagating: function() {
-                     return true;
+         describe('_scrollHandler', function() {
+            let scrollContainer = new scrollMod.Container({});
+            scrollContainer._children = {
+               content: {
+                  scrollHeight: 200,
+                  offsetHeight: 100,
+                  scrollTop: 0
+               },
+               scrollDetect: {
+                  start: function(e, scrollTop) {
+                     assert.equal(scrollTop, scrollContainer.__desiredScrollTop)
                   }
-               };
-            instance._notify = function() {
-               notifyCalled = true;
+               },
+               __desiredScrollTop: 0
             };
-            instance.excludedKeysChanged(event, '1', '2', '3');
-            assert.isFalse(notifyCalled);
-         });
-      });
-
-      describe('_scrollHandler', function() {
-         let scrollContainer = new scrollMod.Container({});
-         scrollContainer._children = {
-            content: {
-               scrollHeight: 200,
-               offsetHeight: 100,
-               scrollTop: 0
-            },
-            scrollDetect: {
-               start: function(e, scrollTop) {
-                  assert.equal(scrollTop, scrollContainer.__desiredScrollTop)
+            scrollContainer._scrollTop = 0;
+            scrollContainer.__desiredScrollTop = 0;
+            let scrollEventCallCount = 0;
+            scrollContainer._notify = function(event, args) {
+               if (event === 'scroll') {
+                  scrollEventCallCount++;
                }
-            },
-            __desiredScrollTop: 0
-         };
-         scrollContainer._scrollTop = 0;
-         scrollContainer.__desiredScrollTop = 0;
-         let scrollEventCallCount = 0;
-         scrollContainer._notify = function(event, args) {
-            if (event === 'scroll') {
-               scrollEventCallCount++;
-            }
-         };
-         it('scrollTop has not changed. scroll should not fire', function() {
-            scrollContainer._scrollHandler({});
-            assert.equal(scrollEventCallCount, 0);
+            };
+            it('scrollTop has not changed. scroll should not fire', function() {
+               scrollContainer._scrollHandler({});
+               assert.equal(scrollEventCallCount, 0);
+            });
+            it('scrollTop has changed. scroll should fire', function() {
+               scrollContainer._children.content.scrollTop = 10;
+               scrollContainer.__desiredScrollTop = 10;
+               scrollContainer._scrollHandler({});
+               assert.equal(scrollEventCallCount, 1);
+            });
          });
-         it('scrollTop has changed. scroll should fire', function() {
-            scrollContainer._children.content.scrollTop = 10;
-            scrollContainer.__desiredScrollTop = 10;
-            scrollContainer._scrollHandler({});
-            assert.equal(scrollEventCallCount, 1);
-         });
-      });
 
-      describe('Controls.Container.Shadow', function() {
-         var result;
-         describe('calcShadowPosition', function() {
-            it('Тень сверху', function() {
-               result = scrollMod.Container._private.calcShadowPosition(100, 100, 200);
-               assert.equal(result, 'top');
-            });
-            it('Тень снизу', function() {
-               result = scrollMod.Container._private.calcShadowPosition(0, 100, 200);
-               assert.equal(result, 'bottom');
-            });
-            it('Should hide bottom shadow if there is less than 1 pixel to the bottom.', function() {
-               // Prevent rounding errors in the scale do not equal 100%
-               result = scrollMod.Container._private.calcShadowPosition(99.234, 100, 200);
-               assert.notInclude(result, 'bottom');
-            });
-            it('Тень сверху и снизу', function() {
-               result = scrollMod.Container._private.calcShadowPosition(50, 100, 200);
-               assert.equal(result, 'topbottom');
-            });
-         });
-         describe('getSizes', function() {
-            var container = {
-               scrollHeight: 200,
-               offsetHeight: 100,
-               scrollTop: 0
+         it('restores scroll after scrollbar drag end', () => {
+            let scrollContainer = new scrollMod.Container({});
+            scrollContainer._children = {
+               content: {
+                  scrollHeight: 200,
+                  offsetHeight: 100,
+                  scrollTop: 100
+               },
+               scrollDetect: {
+                  start: () => null
+               }
             };
 
-            it('getScrollHeight', function() {
-               result = scrollMod.Container._private.getScrollHeight(container);
-               assert.equal(result, 200);
+            // Dragging scrollbar to 0
+            scrollContainer._dragging = true;
+            scrollContainer._children.content.scrollTop = 0;
+            scrollContainer._scrollTop = 0;
+            scrollContainer._scrollHandler({});
+
+            // Scroll position is restored from outside
+            scrollContainer._children.content.scrollTop = 50;
+            scrollContainer._scrollHandler({});
+
+            assert.strictEqual(scrollContainer._scrollTop, 0,
+               'scroll top should not change because scroll bar is being dragged');
+
+            // Dragging stops
+            scrollContainer._draggingChangedHandler({}, false);
+
+            assert.strictEqual(scrollContainer._scrollTop, 50,
+               'restored scroll top value should be applied after drag end');
+         });
+
+         it('does not restore scroll after drag end if it was cancelled by dragging', () => {
+            let scrollContainer = new scrollMod.Container({});
+            scrollContainer._children = {
+               content: {
+                  scrollHeight: 200,
+                  offsetHeight: 100,
+                  scrollTop: 100
+               },
+               scrollDetect: {
+                  start: () => null
+               }
+            };
+
+            // Dragging scrollbar to 0
+            scrollContainer._dragging = true;
+            scrollContainer._children.content.scrollTop = 0;
+            scrollContainer._scrollTop = 0;
+            scrollContainer._scrollHandler({});
+
+            // Scroll position is restored from outside
+            scrollContainer._children.content.scrollTop = 50;
+            scrollContainer._scrollHandler({});
+
+            assert.strictEqual(scrollContainer._scrollTop, 0,
+               'scroll top should not change because scroll bar is being dragged');
+
+            // Dragging scrollbar to 100
+            scrollContainer._children.content.scrollTop = 100;
+            scrollContainer._scrollHandler({});
+            scrollContainer._scrollTop = 100;
+
+            // Dragging stops
+            scrollContainer._draggingChangedHandler({}, false);
+
+            assert.strictEqual(scrollContainer._scrollTop, 100,
+               'restored scroll top value should not be applied after drag end, because it was changed by dragging');
+         });
+
+         describe('Controls.Container.Shadow', function() {
+            var result;
+            describe('calcShadowPosition', function() {
+               it('Тень сверху', function() {
+                  result = scrollMod.Container._private.calcShadowPosition(100, 100, 200);
+                  assert.equal(result, 'top');
+               });
+               it('Тень снизу', function() {
+                  result = scrollMod.Container._private.calcShadowPosition(0, 100, 200);
+                  assert.equal(result, 'bottom');
+               });
+               it('Should hide bottom shadow if there is less than 1 pixel to the bottom.', function() {
+                  // Prevent rounding errors in the scale do not equal 100%
+                  result = scrollMod.Container._private.calcShadowPosition(99.234, 100, 200);
+                  assert.notInclude(result, 'bottom');
+               });
+               it('Тень сверху и снизу', function() {
+                  result = scrollMod.Container._private.calcShadowPosition(50, 100, 200);
+                  assert.equal(result, 'topbottom');
+               });
             });
-            it('getContainerHeight', function() {
-               result = scrollMod.Container._private.getContainerHeight(container);
-               assert.equal(result, 100);
+            describe('getSizes', function() {
+               var container = {
+                  scrollHeight: 200,
+                  offsetHeight: 100,
+                  scrollTop: 0
+               };
+
+               it('getScrollHeight', function() {
+                  result = scrollMod.Container._private.getScrollHeight(container);
+                  assert.equal(result, 200);
+               });
+               it('getContainerHeight', function() {
+                  result = scrollMod.Container._private.getContainerHeight(container);
+                  assert.equal(result, 100);
+               });
+               it('getScrollTop', function() {
+                  result = scrollMod.Container._private.getScrollTop({ _topPlaceholderSize: 0 }, container);
+                  assert.equal(result, 0);
+               });
             });
-            it('getScrollTop', function() {
-               result = scrollMod.Container._private.getScrollTop({ _topPlaceholderSize: 0 }, container);
-               assert.equal(result, 0);
+            describe('isShadowEnable', function() {
+               [{
+                  options: { shadowVisible: false },
+                  position: 'top',
+                  result: false
+               }, {
+                  options: { shadowVisible: false },
+                  position: 'bottom',
+                  result: false
+               }, {
+                  options: { topShadowVisibility: 'visible', bottomShadowVisibility: 'hidden' },
+                  position: 'top',
+                  result: true
+               }, {
+                  options: { topShadowVisibility: 'visible', bottomShadowVisibility: 'hidden' },
+                  position: 'bottom',
+                  result: false
+               }, {
+                  options: { topShadowVisibility: 'auto', bottomShadowVisibility: 'hidden' },
+                  position: 'top',
+                  result: true
+               }, {
+                  options: { topShadowVisibility: 'hidden', bottomShadowVisibility: 'auto' },
+                  position: 'top',
+                  result: false
+               }].forEach(function(test) {
+                  it(`should return ${test.result} if options is equal ${JSON.stringify(test.options)} and position is equal "${test.position}"`, function() {
+                     result = scrollMod.Container._private.isShadowEnable(test.options, test.position);
+                     assert.equal(result, test.result);
+                  });
+               });
+            });
+
+            describe('isShadowVisible', function() {
+               [{
+                  options: { shadowVisible: false },
+                  shadowVisibilityByInnerComponents: { top: 'auto', bottom: 'auto' },
+                  position: 'top',
+                  shadowPosition: 'topbottom',
+                  result: false
+               }, {
+                  options: { shadowVisible: false },
+                  shadowVisibilityByInnerComponents: { top: 'auto', bottom: 'auto' },
+                  position: 'bottom',
+                  shadowPosition: 'topbottom',
+                  result: false
+               }, {
+                  options: { topShadowVisibility: 'visible', bottomShadowVisibility: 'hidden' },
+                  shadowVisibilityByInnerComponents: { top: 'auto', bottom: 'auto' },
+                  position: 'top',
+                  shadowPosition: 'topbottom',
+                  result: true
+               }, {
+                  options: { topShadowVisibility: 'visible', bottomShadowVisibility: 'hidden' },
+                  shadowVisibilityByInnerComponents: { top: 'auto', bottom: 'auto' },
+                  position: 'bottom',
+                  shadowPosition: 'topbottom',
+                  result: false
+               }].forEach(function(test) {
+                  it(`should return ${test.result} if options is equal ${JSON.stringify(test.options)} and position is equal "${test.position}"`, function() {
+                     const component = {
+                        _options: test.options,
+                        _shadowVisibilityByInnerComponents: test.shadowVisibilityByInnerComponents
+                     };
+                     result = scrollMod.Container._private.isShadowVisible(component, test.position, test.shadowPosition);
+                     assert.equal(result, test.result);
+                  });
+               });
             });
          });
       });

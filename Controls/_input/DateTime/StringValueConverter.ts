@@ -278,7 +278,7 @@ var _private = {
       var endDateOfMonth;
 
       if (autoCorrect) {
-         endDateOfMonth = dateUtils.getEndOfMonth(new Date(year, month, 1)).getDate();
+         endDateOfMonth = dateUtils.getEndOfMonth(new dateConstructor(year, month, 1)).getDate();
          if (date > endDateOfMonth) {
             date = endDateOfMonth;
          }
@@ -294,7 +294,7 @@ var _private = {
       }
 
       if (!_private.isValidDate(year, month, date, hours, minutes, seconds)) {
-         return new Date('Invalid');
+         return new dateConstructor('Invalid');
       }
 
       return new dateConstructor(year, month, date, hours, minutes, seconds);
@@ -360,14 +360,14 @@ var ModuleClass = cExtend.extend({
 
       valueModel = _private.parseString(this, str);
       if (!valueModel) {
-         return new Date('Invalid');
+         return new this._dateConstructor('Invalid');
       }
       _private.fillFromBaseValue(this, valueModel, baseValue);
 
       if (_private.isFilled(this, str) &&
           (this._mask && this._mask.indexOf('YYYY') !== -1 && parseInt(valueModel.year.str, 10) < 1000)) {
          // Zero year and year < 1000 does not exist
-         return new Date('Invalid');
+         return new this._dateConstructor('Invalid');
       }
       if (autoCompleteType && !_private.isValueModelFilled(valueModel) && !(_private.isEmpty(str))) {
          _private.autocomplete(this, valueModel, autoCompleteType, required);
@@ -378,7 +378,7 @@ var ModuleClass = cExtend.extend({
             valueModel.hours.value, valueModel.minutes.value, valueModel.seconds.value, autoCompleteType, this._dateConstructor);
       }
 
-      return new Date('Invalid');
+      return new this._dateConstructor('Invalid');
    },
    getCurrentDate: function(baseValue, mask) {
       baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1)

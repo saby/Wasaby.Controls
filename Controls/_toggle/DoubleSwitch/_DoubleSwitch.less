@@ -6,6 +6,7 @@
    border-style: solid;
    box-sizing: border-box;
    user-select: none;
+   position: relative;
 }
 
 .controls-DoubleSwitch__toggle_theme-@{themeName} {
@@ -152,7 +153,8 @@
  */
 & {
    @width_sticker: floor(@thickness_ToggleCircle-borderCircle-border / 2) * 2;
-   @offset_sticker: @length_Switch-track / 2 - @size_Switch__ToggleCircle;
+   @vertical-offset_sticker: @height_Switch / 2 - @thickness_Switch-track;
+   @horizontal-offset_sticker: (@width_Switch - @length_Switch-track - @width_sticker) / 2 - @width_Switch__border + @size_Switch__ToggleCircle;
 
    .controls-DoubleSwitch__toggle_theme-@{themeName}::after {
       content: '';
@@ -161,16 +163,20 @@
       height: @thickness_Switch-track;
    }
    .controls-DoubleSwitch__toggle_horizontal_notChecked_theme-@{themeName}::after {
-      margin-left: @offset_sticker;
+      top: @vertical-offset_sticker;
+      right: @horizontal-offset_sticker;
    }
    .controls-DoubleSwitch__toggle_horizontal_checked_theme-@{themeName}::after {
-      margin-left: -@offset_sticker;
+      top: @vertical-offset_sticker;
+      left: @horizontal-offset_sticker;
    }
    .controls-DoubleSwitch__toggle_vertical_checked_theme-@{themeName}::after {
-      margin-top: -@offset_sticker;
+      left: @vertical-offset_sticker;
+      top: @horizontal-offset_sticker;
    }
    .controls-DoubleSwitch__toggle_vertical_notChecked_theme-@{themeName}::after {
-      margin-top: @offset_sticker;
+      left: @vertical-offset_sticker;
+      bottom: @horizontal-offset_sticker;
    }
 }
 .controls-DoubleSwitch__toggle_enabled_theme-@{themeName}::after {

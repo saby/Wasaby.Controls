@@ -5,9 +5,9 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 import {isEqual} from 'Types/object';
-import {constants, IoC} from 'Env/Env';
+import {constants} from 'Env/Env';
 import {List} from 'Types/collection';
-
+import {Logger} from 'UI/Utils';
 
 const KEY_CODE_F2 = 113;
 
@@ -74,7 +74,7 @@ var BaseLookupView = Control.extend({
         }
 
         if (options.suggestFooterTemplate) {
-            IoC.resolve('ILogger').warn('In the "Controls.lookup:Input" control, use "footerTemplate" option instead of "suggestFooterTemplate"');
+            Logger.warn('In the "Controls.lookup:Input" control, use "footerTemplate" option instead of "suggestFooterTemplate"', this);
         }
     },
 
@@ -93,6 +93,8 @@ var BaseLookupView = Control.extend({
 
         if (newOptions.value !== this._options.value) {
             this._inputValue = newOptions.value;
+        } else if (currentOptions.items !== newOptions.items) {
+            _private.resetInputValue(this);
         }
 
         if (!isNeedUpdate) {
@@ -101,10 +103,6 @@ var BaseLookupView = Control.extend({
                     isNeedUpdate = true;
                 }
             });
-        }
-
-        if (currentOptions.items !== newOptions.items) {
-            _private.resetInputValue(this);
         }
 
         if (isNeedUpdate) {
@@ -123,6 +121,10 @@ var BaseLookupView = Control.extend({
             /* focus can be moved in choose event */
             if (this._active) {
                 this.activate();
+
+                if (this._determineAutoDropDown()) {
+                    this._suggestState = true;
+                }
             }
         }
     },
@@ -136,8 +138,10 @@ var BaseLookupView = Control.extend({
         // move focus to input after select, because focus will be lost after closing popup
         _private.activate(this);
 
-        this._notify('addItem', [item]);
+        // Сначало сбросим значение поля ввода, необходимо что бы событие selectedKeysChanged сработало после valueChanged
+        // дабы в propertyGrid панели фильтра выставилось значение из выбранных ключей а не из поля ввода
         _private.resetInputValue(this);
+        this._notify('addItem', [item]);
     },
 
     _crossClick: function (event, item) {

@@ -12,6 +12,7 @@ export {default as DateRangeSelectionController} from './_dateRange/Controllers/
 export {default as DateRangeModel} from './_dateRange/DateRangeModel';
 export {default as rangeSelection} from './_dateRange/Utils/RangeSelection';
 export {default as dateRangeQuantum} from './_dateRange/Utils/DateRangeQuantum';
+export {default as IRangeSelectable} from './_dateRange/interfaces/IRangeSelectable';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
 
 export {IDateRangeSelectable};
@@ -25,12 +26,12 @@ export {IDateRangeSelectable};
  * @includes RelationController Controls/_dateRange/RelationController
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
- * @includes IDateTimeMask Controls/_dateRange/interfaces/IDateTimeMask
  * @includes IInput Controls/_dateRange/interfaces/IInput
  * @includes IInputDateTag Controls/_dateRange/interfaces/IInputDateTag
  * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @includes IRangeSelectable Controls/_dateRange/interfaces/IRangeSelectable
  * @includes Utils Controls/_dateRange/Utils
  * @includes Link Controls/_dateRange/Link
  * @includes LinkView Controls/_dateRange/LinkView
@@ -51,7 +52,6 @@ export {IDateRangeSelectable};
  * @includes RelationController Controls/_dateRange/RelationController
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
- * @includes IDateTimeMask Controls/_dateRange/interfaces/IDateTimeMask
  * @includes IInput Controls/_dateRange/interfaces/IInput
  * @includes IInputDateTag Controls/_dateRange/interfaces/IInputDateTag
  * @includes ILinkView Controls/_dateRange/interfaces/ILinkView

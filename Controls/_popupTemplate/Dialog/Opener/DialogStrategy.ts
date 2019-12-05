@@ -1,3 +1,5 @@
+import {detection} from 'Env/Env';
+
 interface ILimitingSizes {
     minWidth: number;
     maxWidth: number;
@@ -85,11 +87,22 @@ export = {
         return Math.max(Math.round((wWidth - width) / 2), 0);
     },
 
+    _isIOS13() {
+        return detection.isMobileIOS && detection.IOSVersion > 12;
+    },
+
     _getTopCoord: function (windowData, height, popupOptions) {
         if (popupOptions.maximize) {
             return 0;
         }
-        return Math.round((windowData.height - height) / 2) + (windowData.scrollTop || 0);
+        const middleCoef = 2;
+        let scrollTop: number = windowData.scrollTop || 0;
+
+        // только на ios13 scrollTop больше чем нужно. опытным путем нашел коэффициент
+        if (this._isIOS13()) {
+            scrollTop /= middleCoef;
+        }
+        return Math.round((windowData.height - height) / middleCoef) + scrollTop;
     }
 };
 

@@ -1,23 +1,28 @@
-.controls-FilterView_theme_@{themeName} {
+.controls-FilterView_theme-@{themeName} {
    display: inline-flex;
    align-items: center;
    height: @height_FilterButton;
    min-width: 1px;
 }
 
-.controls-FilterView__wrapper_theme_@{themeName} {
+.controls-FilterView__wrapper_theme-@{themeName} {
    display: inline-flex;
    align-items: baseline;
    overflow: hidden;
+   flex-shrink: 1;
 }
 
-.controls-FilterView__wrapper_theme_@{themeName}:before {
+.controls-FilterView__wrapper_theme-@{themeName}:before {
    content: '\200b';
    line-height: @height_FilterView;
 }
 
-.controls-FilterView__wrapper_state_enabled_theme_@{themeName} {
+.controls-FilterView__wrapper_state_enabled_theme-@{themeName} {
    cursor: pointer;
+}
+
+.controls-FilterView__filterTextLine {
+   flex-shrink: 999;
 }
 
 .controls-FilterView__block {
@@ -30,65 +35,72 @@
    content: "\200b";
 }
 
-.controls-FilterView__block_theme_@{themeName} {
+.controls-FilterView__block-withoutArrow_theme-@{themeName} {
+   margin-left: @spacing_FilterView-between-filterButton-text;
+   min-width: @min-width_FilterButton_text;
+}
+
+.controls-FilterView__block-withArrow_theme-@{themeName} {
    min-width: @font-size_FilterButton_arrow + @min-width_FilterButton_text;
 }
 
 //Text
-.controls-FilterView__text-wrapper_theme_@{themeName} {
+.controls-FilterView__text-wrapper_theme-@{themeName} {
    box-sizing: border-box;
    width: 100%;
    overflow: hidden;
    display: inline-flex;
    font-size: @font-size_FastFilter-text;
+   flex-shrink: 1;
 }
 
-.controls-FilterView__text_theme_@{themeName} {
+.controls-FilterView__text_theme-@{themeName} {
    .text-overflow();
+   flex-shrink: 1;
 }
 
-.controls-FilterView__text_state_enabled_theme_@{themeName} {
+.controls-FilterView__text_state_enabled_theme-@{themeName} {
    color: @color_FastFilter-text;
 }
 
-.controls-FilterView__text_state_readOnly_theme_@{themeName} {
+.controls-FilterView__text_state_readOnly_theme-@{themeName} {
    color: @color_FilterView-text_readOnly;
 }
 
 .ws-is-hover {
-   .controls-FilterView__block_theme_@{themeName}:hover {
-      .controls-FilterView__text_state_enabled_theme_@{themeName} {
+   .controls-FilterView__block_theme-@{themeName}:hover {
+      .controls-FilterView__text_state_enabled_theme-@{themeName} {
          cursor: pointer;
          color: @color_FastFilter-text_hover;
          text-decoration: underline;
       }
-      .controls-FilterView__iconArrow_state_enabled_theme_@{themeName} {
+      .controls-FilterView__iconArrow_state_enabled_theme-@{themeName} {
          color: @color_FastFilter-arrow_hover;
       }
    }
 }
 
-.controls-FilterView__block_theme_@{themeName}:active {
-   .controls-FilterView__text_state_enabled_theme_@{themeName} {
+.controls-FilterView__block_theme-@{themeName}:active {
+   .controls-FilterView__text_state_enabled_theme-@{themeName} {
       color: @color_FastFilter-text_active;
       text-decoration: underline;
    }
-   .controls-FilterView__iconArrow_state_enabled_theme_@{themeName} {
+   .controls-FilterView__iconArrow_state_enabled_theme-@{themeName} {
       color: @color_FastFilter-arrow_active;
    }
 }
 
 // filter button icon
-.controls-FilterView-button-left_theme_@{themeName} {
+.controls-FilterView-button-left_theme-@{themeName} {
    margin-right: @spacing_FilterView-between-filterButton-text;
    order: -1;
 }
 
-.controls-FilterView-button-right_theme_@{themeName} {
+.controls-FilterView-button-right_theme-@{themeName} {
    margin-left: @spacing_FilterView-between-filterButton-text;
 }
 
-.controls-FilterView__icon_theme_@{themeName} {
+.controls-FilterView__icon_theme-@{themeName} {
    display: inline-flex;
    align-items: center;
    justify-content: center;
@@ -98,7 +110,7 @@
    height: @height_FilterButton_icon;
 }
 
-.controls-FilterView__icon_state_enabled_theme_@{themeName} {
+.controls-FilterView__icon_state_enabled_theme-@{themeName} {
    color: @color_FilterButton_icon;
    background-color: @background-color_FilterButton-icon;
    box-shadow: @box-shadow-size_FilterButton-icon @box-shadow-color_FilterButton-icon;
@@ -106,24 +118,24 @@
 }
 
 .ws-is-hover {
-   .controls-FilterView__icon_state_enabled_theme_@{themeName}:hover {
+   .controls-FilterView__icon_state_enabled_theme-@{themeName}:hover {
       color: @color_FilterButton_icon_hover;
       background-color: @background-color_FilterButton-icon_hover;
    }
 }
 
-.controls-FilterView__icon_state_enabled_theme_@{themeName}:active {
+.controls-FilterView__icon_state_enabled_theme-@{themeName}:active {
    color: @color_FilterButton_icon_active;
    background-color: @background-color_FilterButton-icon_active;
 }
 
-.controls-FilterView__icon_state_disabled_theme_@{themeName} {
+.controls-FilterView__icon_state_disabled_theme-@{themeName} {
    color: @color_FilterButton_icon_readOnly;
    background-color: @background-color_FilterButton-icon_readOnly;
 }
 
 //Reset button
-.controls-FilterView__iconReset_theme_@{themeName} {
+.controls-FilterView__iconReset_theme-@{themeName} {
    .icon-size(@font-size_FastFilter-reset);
    display: flex;
    color: @color_FastFilter-reset;
@@ -131,37 +143,37 @@
    flex-shrink: 0;
 }
 
-.controls-FilterView__iconReset_theme_@{themeName}:active {
+.controls-FilterView__iconReset_theme-@{themeName}:active {
    color: @color_FastFilter-reset_active;
 }
 
 .ws-is-hover {
-   .controls-FilterView__iconReset_theme_@{themeName}:hover {
+   .controls-FilterView__iconReset_theme-@{themeName}:hover {
       color: @color_FastFilter-reset_hover;
    }
 }
 
 //arrow
-.controls-FilterView-left__block_theme_@{themeName}:first-of-type {
+.controls-FilterView-left__block_theme-@{themeName}:first-of-type {
    min-width: @min-width_FilterButton_text;
 
-   .controls-FilterView__iconArrow_theme_@{themeName} {
+   .controls-FilterView__iconArrow_theme-@{themeName} {
       display: none;
    }
 }
 
-.controls-FilterView__iconArrow_theme_@{themeName} {
+.controls-FilterView__iconArrow_theme-@{themeName} {
    .icon-size(@font-size_FastFilter-arrow);
    align-self: center;
    flex-shrink: 0;
 }
 
-.controls-FilterView__iconArrow_state_enabled_theme_@{themeName} {
+.controls-FilterView__iconArrow_state_enabled_theme-@{themeName} {
    cursor: pointer;
    color: @color_FastFilter-arrow;
 }
 
-.controls-FilterView__iconArrow_state_readOnly_theme_@{themeName} {
+.controls-FilterView__iconArrow_state_readOnly_theme-@{themeName} {
    color: @color_FilterView-arrow_readOnly;
 }
 

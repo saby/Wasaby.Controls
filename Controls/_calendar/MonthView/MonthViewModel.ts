@@ -60,8 +60,8 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       var obj = {},
          today = DateUtil.normalizeDate(new this._state.dateConstructor()),
-         firstDateOfMonth = DateUtil.getStartOfMonth(today),
-         lastDateOfMonth = DateUtil.getEndOfMonth(today);
+         firstDateOfMonth = DateUtil.getStartOfMonth(date),
+         lastDateOfMonth = DateUtil.getEndOfMonth(date);
 
       obj.readOnly = state.readOnly;
       obj.mode = state.mode;
@@ -125,7 +125,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          textColorClass += '-workday';
       }
 
-      if (scope.selected) {
+      if (scope.selected && (scope.isCurrentMonth || scope.mode === 'extended')) {
          backgroundColorClass += '-selected';
          if (scope.selectedStart || scope.selectedEnd) {
             if (scope.selectionProcessing) {

@@ -1,11 +1,9 @@
-<ws:if data="{{value.isCurrentMonth || mode === 'extended'}}">
+<ws:if data="{{_isDayInteractionAllowed(mode, value.isCurrentMonth)}}">
    <div if="{{value.today}}" class="controls-MonthViewVDOM__item-today-background {{_themeCssClass}}"></div>
-   <div class="controls-MonthViewVDOM__item-title {{_themeCssClass}}">
-      <ws:if data="{{!!contentTemplate}}">
-         <ws:partial template="{{contentTemplate}}" value="{{value}}"/>
-      </ws:if>
-      <ws:else>
-         {{value.day}}
-      </ws:else>
-   </div>
+   <ws:if data="{{!!contentTemplate}}">
+      <ws:partial template="{{contentTemplate}}" value="{{value}}"/>
+   </ws:if>
+   <ws:else>
+      {{value.day}}
+   </ws:else>
 </ws:if>

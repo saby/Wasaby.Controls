@@ -4,8 +4,8 @@ import template = require('wml!Controls/_listRender/Render/Render');
 import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/ItemTemplateWrapper');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
-import { debounce } from 'Types/function';
 import { CollectionItem, Collection } from 'Controls/display';
+import { constants } from 'Env/Env';
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -19,8 +19,6 @@ export interface IRenderChildren {
     itemsContainer?: HTMLDivElement;
 }
 
-const HOVERED_ITEM_CHANGE_DELAY = 150;
-
 export default class Render extends Control<IRenderOptions> {
     protected _template: TemplateFunction = template;
     protected _children: IRenderChildren;
@@ -28,16 +26,41 @@ export default class Render extends Control<IRenderOptions> {
     protected _templateKeyPrefix: string;
     protected _itemTemplate: TemplateFunction;
 
-    private _debouncedSetHoveredItem: typeof Render.prototype._setHoveredItem;
+    protected _pendingResize: boolean = false;
+    protected _onCollectionChange = (_e: unknown, action: string) => {
+        if (action !== 'ch') {
+            // Notify resize when items are added, removed or replaced, or
+            // when the recordset is reset
+            this._pendingResize = true;
+        }
+    }
 
     protected _beforeMount(options: IRenderOptions): void {
         this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
 
-        this._debouncedSetHoveredItem = debounce(
-            this._setHoveredItem.bind(this),
-            HOVERED_ITEM_CHANGE_DELAY
-        ) as typeof Render.prototype._setHoveredItem;
+        this._subscribeToModelChanges(options.listModel);
+    }
+
+    protected _beforeUpdate(newOptions: IRenderOptions): void {
+        if (newOptions.listModel !== this._options.listModel) {
+            this._subscribeToModelChanges(newOptions.listModel);
+        }
+    }
+
+    protected _afterRender(): void {
+        if (this._pendingResize) {
+            this._notify('controlResize', [], { bubbling: true });
+            this._pendingResize = false;
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        this._unsubscribeFromModelChanges(this._options.listModel);
+    }
+
+    protected _afterMount(): void {
+        this._notify('itemsContainerReady', [this.getItemsContainer()]);
     }
 
     getItemsContainer(): HTMLDivElement {
@@ -64,13 +87,12 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>): void {
-        this._notify('itemSwipe', [item, e]);
         e.stopPropagation();
+        this._notify('itemSwipe', [item, e]);
     }
 
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         // this._notify('itemMouseEnter', [item, e]);
-        this._debouncedSetHoveredItem(item);
     }
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
@@ -79,11 +101,36 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         // this._notify('itemMouseMove', [item, e]);
-        this._debouncedSetHoveredItem(null);
     }
 
     protected _onItemWheel(e: SyntheticEvent<WheelEvent>, item: CollectionItem<unknown>): void {
         // Empty handler
+    }
+
+    protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
+        if (item.isEditing()) {
+            // TODO Will probably be moved to EditInPlace container
+            // keydown event should not bubble if processed here, but if we stop propagation
+            // the rich text editor and tab focus movement would break because they listen
+            // to the keydown event on the bubbling phase
+            // https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
+            //
+            // Escape should not bubble above the edit in place row, because it is only
+            // used to cancel the edit mode. If the keydown event bubbles, some parent
+            // control might handle the event when it is not needed (e.g. if edit in
+            // place is inside of a popup, the popup will be closed).
+            if (
+                e.nativeEvent.keyCode === constants.key.esc ||
+                (
+                    !e.target.closest('.richEditor_TinyMCE') &&
+                    e.nativeEvent.keyCode !== constants.key.tab
+                )
+            ) {
+                e.stopPropagation();
+            }
+            // Compatibility with BaseControl and EditInPlace control
+            this._notify('editingRowKeyDown', [e.nativeEvent], {bubbling: true});
+        }
     }
 
     protected _canHaveMultiselect(options: IRenderOptions): boolean {
@@ -91,7 +138,16 @@ export default class Render extends Control<IRenderOptions> {
         return visibility === 'onhover' || visibility === 'visible';
     }
 
-    private _setHoveredItem(item: CollectionItem<unknown>): void {
-        this._options.listModel.setHoveredItem(item);
+    protected _subscribeToModelChanges(model: Collection<unknown>): void {
+        this._unsubscribeFromModelChanges(this._options.listModel);
+        if (model && !model.destroyed) {
+            model.subscribe('onCollectionChange', this._onCollectionChange);
+        }
+    }
+
+    protected _unsubscribeFromModelChanges(model: Collection<unknown>): void {
+        if (model && !model.destroyed) {
+            this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChange);
+        }
     }
 }

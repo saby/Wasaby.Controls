@@ -36,13 +36,11 @@
            class="controls-ComboBox-InputRender">
       <ws:afterFieldWrapper>
          <ws:if data="{{!_options.readOnly}}">
-            <Controls.Container.Async templateName="Controls/toggle:Separator">
-               <ws:partial template="{{content.resolvedTemplate}}"
-                           attr:class="controls-SelectorSuggest__button-separator"
-                           attr:ws-no-focus="{{true}}"
-                           value="{{_suggestState}}"
-                           on:click="_open()"/>
-            </Controls.Container.Async>
+            <span if="{{!_options.readOnly}}" class="controls-SelectorSuggest__arrow-wrapper"
+                  on:click="_open()"
+                  attr:ws-no-focus="true">
+               <span attr:class="controls-SelectorSuggest__iconArrow icon-{{_suggestState ? 'CollapseLight' : 'ExpandLight'}}"></span>
+            </span>
          </ws:if>
       </ws:afterFieldWrapper>
    </Controls._suggest.Input.Render>

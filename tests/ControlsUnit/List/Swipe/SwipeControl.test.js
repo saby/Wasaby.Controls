@@ -314,6 +314,33 @@ define([
             assert.deepEqual(instance._swipeConfig.itemActions.all, itemData.itemActions.all);
             assert.isTrue(instance._isActual);
          });
+         it('updateItemActions editArrow', async function() {
+            let item = {};
+            let itemData = {
+               item: item,
+               actionsItem: item,
+               dispItem: {},
+            };
+            let itemActionsWithEditArrow = [{
+               id: 'view',
+               icon: 'icon-Forward',
+               showType: 2
+            }];
+            let cfg = {
+               showEditArrow: true,
+               listModel: mockListModel(itemData)
+            };
+            await instance._beforeMount(cfg);
+            instance.saveOptions(cfg);
+            instance._actionsHeight = 100;
+            instance._isActual = false;
+            instance._currentItemData = itemData;
+            instance._beforeUpdate(cfg);
+            assert.equal(instance._swipeConfig.itemActions.all[0].id, itemActionsWithEditArrow[0].id);
+            assert.equal(instance._swipeConfig.itemActions.all[0].icon, itemActionsWithEditArrow[0].icon);
+            assert.equal(instance._swipeConfig.itemActions.all[0].showType, itemActionsWithEditArrow[0].showType);
+            assert.isTrue(instance._isActual);
+         });
       });
       describe('_onListChange', function() {
          it('itemActionsUpdated', function() {

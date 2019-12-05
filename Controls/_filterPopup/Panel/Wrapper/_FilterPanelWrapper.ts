@@ -10,6 +10,7 @@ import _FilterPanelWrapper = require('Controls/_filterPopup/Panel/Wrapper/_Filte
        * @class Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper
        * @extends Core/Control
        * @control
+       * @private
        */
 
       export = Control.extend({

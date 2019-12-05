@@ -6,7 +6,7 @@
                 direction="horizontal"
                 contentSize="{{_options.contentSize}}"
                 gridSupport="{{_options.gridSupport}}"
-                attr:class="controls-ColumnScroll"
+                attr:class="controls-ColumnScroll_theme-{{_options.theme}}"
                 on:positionChanged="_localPositionHandler()"/>
     </div>
 </ws:if>
@@ -17,6 +17,6 @@
         direction="horizontal"
         contentSize="{{_options.contentSize}}"
         gridSupport="{{_options.gridSupport}}"
-        attr:class="controls-ColumnScroll controls-ColumnScroll_without_offset"
+        attr:class="controls-ColumnScroll_theme-{{_options.theme}} controls-ColumnScroll_without_offset"
         on:positionChanged="_localPositionHandler()"/>
 </ws:else>

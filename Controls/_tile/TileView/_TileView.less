@@ -16,6 +16,11 @@
    margin: @spacing_TileView-between-items / 2;
 }
 
+.controls-TileView__item .controls-itemActionsV {
+   display: inline-block;
+   opacity: 0;
+}
+
 .controls-TileView__itemContent {
    background-color: @background-color_TileView-item;
    box-sizing: border-box;
@@ -26,6 +31,9 @@
    right: 0;
 }
 
+.controls-TileView__item_animated  .controls-itemActionsV{
+   transition: opacity 0.05s step-end;
+}
 .controls-TileView__item_animated {
    transition-property: left, right, bottom, top, height;
    transition-duration: 0.05s;

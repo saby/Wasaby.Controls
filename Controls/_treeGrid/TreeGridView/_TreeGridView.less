@@ -1,41 +1,41 @@
-.controls-TreeGrid__row-expander_size_s, .controls-TreeGrid__row-expanderPadding_size_s {
+.controls-TreeGrid__row-expander_size_s_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_s_theme-@{themeName} {
    padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_s;
    padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_s;
    padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_s;
    padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_s;
 }
-.controls-TreeGrid__row-expander_size_m, .controls-TreeGrid__row-expanderPadding_size_m {
+.controls-TreeGrid__row-expander_size_m_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_m_theme-@{themeName} {
    padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_m;
    padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_m;
    padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_m;
    padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_m;
 }
-.controls-TreeGrid__row-expander_size_l, .controls-TreeGrid__row-expanderPadding_size_l {
+.controls-TreeGrid__row-expander_size_l_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_l_theme-@{themeName} {
    padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_l;
    padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_l;
    padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_l;
    padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_l;
 }
-.controls-TreeGrid__row-expander_size_xl, .controls-TreeGrid__row-expanderPadding_size_xl {
+.controls-TreeGrid__row-expander_size_xl_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_xl_theme-@{themeName} {
    padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_xl;
    padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_xl;
    padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_xl;
    padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_xl;
 }
-.controls-TreeGrid__row-expander_size_default, .controls-TreeGrid__row-expanderPadding_size_default {
+.controls-TreeGrid__row-expander_size_default_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_default_theme-@{themeName} {
    padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_s;
    padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_s;
    padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_s;
    padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_s;
 }
-.controls-TreeGrid__row-expander, .controls-TreeGrid__row-expanderPadding {
+.controls-TreeGrid__row-expander_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_theme-@{themeName} {
    line-height: 1;
    display: inline-block;
    position: relative;
    min-height: @height_TreeGridView-expander;
    min-width: @width_TreeGridView-expander;
 }
-.controls-TreeGridView__dragTargetNode {
+.controls-TreeGridView__dragTargetNode_theme-@{themeName} {
    border-top: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
    border-bottom: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
    position: absolute;
@@ -50,61 +50,61 @@
    //Will be deleted by task: https://online.sbis.ru/opendoc.html?guid=7503eaab-e38a-4c6e-8f0d-940646d8bd28
    z-index: 2;
 }
-.controls-TreeGridView__dragTargetNode_first {
+.controls-TreeGridView__dragTargetNode_first_theme-@{themeName} {
    border-left: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
 }
-.controls-TreeGridView__dragTargetNode_last {
+.controls-TreeGridView__dragTargetNode_last_theme-@{themeName} {
    border-right: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
 }
 .controls-TreeGrid__row-expanderPadding {
    visibility: hidden;
 }
 
-.controls-TreeGrid__row-expander_node_default:before {
+.controls-TreeGrid__row-expander_node_default_theme-@{themeName}:before {
    color: @color_TreeGridView-expander;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander;
    padding: @padding_TreeGridView-expander;
 }
 
-.controls-TreeGrid__row-expander_node_default:hover:before {
+.controls-TreeGrid__row-expander_node_default_theme-@{themeName}:hover:before {
    color: @color_TreeGridView-expander_hover;
 }
 
-.controls-TreeGrid__row-expander_hiddenNode_default:before {
+.controls-TreeGrid__row-expander_hiddenNode_default_theme-@{themeName}:before {
    color: @color_TreeGridView-expander-hiddenNode;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander;
    padding: @padding_TreeGridView-expander;
 }
 
-.controls-TreeGrid__row-expander_hiddenNode_default:hover:before {
+.controls-TreeGrid__row-expander_hiddenNode_default_theme-@{themeName}:hover:before {
    color: @color_TreeGridView-expander_hover;
 }
 
-.controls-TreeGrid__row-expander_node_master:before {
+.controls-TreeGrid__row-expander_node_master_theme-@{themeName}:before {
    color: @color_TreeGridView-expander_master;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander_master;
    padding: @padding_TreeGridView-expander_master;
 }
 
-.controls-TreeGrid__row-expander_node_master:hover:before {
+.controls-TreeGrid__row-expander_node_master_theme-@{themeName}:hover:before {
    color: @color_TreeGridView-expander_hover_master;
 }
 
-.controls-TreeGrid__row-expander_hiddenNode_master:before {
+.controls-TreeGrid__row-expander_hiddenNode_master_theme-@{themeName}:before {
    color: @color_TreeGridView-expander-hiddenNode_master;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander_master;
    padding: @padding_TreeGridView-expander_master;
 }
 
-.controls-TreeGrid__row-expander_hiddenNode_master:hover:before {
+.controls-TreeGrid__row-expander_hiddenNode_master_theme-@{themeName}:hover:before {
    color: @color_TreeGridView-expander_hover;
 }
 
-.controls-TreeGrid__row-expander:before {
+.controls-TreeGrid__row-expander_theme-@{themeName}:before {
    user-select: none;
    flex-shrink: 0;
    cursor: pointer;
@@ -112,20 +112,20 @@
    text-align: center;
    position: absolute;
 }
-.controls-TreeGrid__row-expander_node_default_collapsed:before,
-.controls-TreeGrid__row-expander_node_master_collapsed:before {
+.controls-TreeGrid__row-expander_node_default_collapsed_theme-@{themeName}:before,
+.controls-TreeGrid__row-expander_node_master_collapsed_theme-@{themeName}:before {
    content: @icon_TreeGridView-expander_node-collapsed;
 }
-.controls-TreeGrid__row-expander_node_default_expanded:before,
-.controls-TreeGrid__row-expander_node_master_expanded:before {
+.controls-TreeGrid__row-expander_node_default_expanded_theme-@{themeName}:before,
+.controls-TreeGrid__row-expander_node_master_expanded_theme-@{themeName}:before {
    content: @icon_TreeGridView-expander_node-expanded;
 }
-.controls-TreeGrid__row-expander_hiddenNode_default_collapsed:before,
-.controls-TreeGrid__row-expander_hiddenNode_master_collapsed:before {
+.controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-@{themeName}:before,
+.controls-TreeGrid__row-expander_hiddenNode_master_collapsed_theme-@{themeName}:before {
    content: @icon_TreeGridView-expander_hiddenNode-collapsed;
 }
-.controls-TreeGrid__row-expander_hiddenNode_default_expanded:before,
-.controls-TreeGrid__row-expander_hiddenNode_master_expanded:before {
+.controls-TreeGrid__row-expander_hiddenNode_default_expanded_theme-@{themeName}:before,
+.controls-TreeGrid__row-expander_hiddenNode_master_expanded_theme-@{themeName}:before {
    content: @icon_TreeGridView-expander_hiddenNode-expanded;
 }
 .controls-TreeGrid__row {
@@ -135,45 +135,49 @@
    flex-shrink: 0;
    display: inline-block;
 }
-.controls-TreeGrid__nodeFooterContent {
+.controls-TreeGrid__nodeFooterContent_theme-@{themeName} {
    display: inline-flex;
    align-items: center;
 }
-.controls-TreeGrid__nodeFooterContent:before {
+.controls-TreeGrid__nodeFooterContent_theme-@{themeName}:before {
     content: '\200b';
     font-size: @font-size_TreeGridView-nodeFooter-content-baseline;
  }
-.controls-TreeGrid__nodeFooterLoadMore {
+.controls-TreeGrid__nodeFooterLoadMore_theme-@{themeName} {
    font-size: @font-size_TreeGridView-nodeFooterHasMore;
 }
-.controls-TreeGrid__row-levelPadding_size_default {
+.controls-TreeGrid__row-levelPadding_size_default_theme-@{themeName} {
    width: @width-TreeGridView-levelPadding_size_s;
 }
-.controls-TreeGrid__row-levelPadding_size_s {
+.controls-TreeGrid__row-levelPadding_size_s_theme-@{themeName} {
    width: @width-TreeGridView-levelPadding_size_s;
 }
-.controls-TreeGrid__row-levelPadding_size_m {
+.controls-TreeGrid__row-levelPadding_size_m_theme-@{themeName} {
    width: @width-TreeGridView-levelPadding_size_m;
 }
-.controls-TreeGrid__row-levelPadding_size_l {
+.controls-TreeGrid__row-levelPadding_size_l_theme-@{themeName} {
    width: @width-TreeGridView-levelPadding_size_l;
 }
-.controls-TreeGrid__row-levelPadding_size_xl {
+.controls-TreeGrid__row-levelPadding_size_xl_theme-@{themeName}{
    width: @width-TreeGridView-levelPadding_size_xl;
 }
-.controls-TreeGrid__row-cell.controls-TreeGrid__row-cell__node {
+.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__node_theme-@{themeName},
+.controls-TreeGrid__row-cell__node_theme-@{themeName} .controls-EditingTemplateText {
   font-size: @font-size_TreeGridView-row-cell-node;
 }
-.controls-TreeGrid__row-cell.controls-TreeGrid__row-cell__hiddenNode {
+.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName},
+.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName} .controls-EditingTemplateText {
   font-size: @font-size_TreeGridView-row-cell-hiddenNode;
 }
-.controls-TreeGrid__row-cell.controls-TreeGrid__row-cell__item {
+.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
+.controls-TreeGrid__row-cell__item_theme-@{themeName} .controls-EditingTemplateText {
   font-size: @font-size_TreeGridView-row-cell-item;
 }
 
 // For right vertiacal align of items inside block with display: table-cell.
 .controls-Grid_table-layout .controls-TreeGridView__row-cell_innerWrapper {
    display: flex;
+   min-height: 100%;
 }
 
 // Master list sets ::before on selected item, witch overflows expander. It has z-index: 2 and pointer-events: none, but
@@ -182,6 +186,16 @@
    z-index: 2;
 }
 
-.controls-Grid__cell_fixed.controls-TreeGrid__row-cell {
+.controls-Grid__cell_fixed.controls-TreeGrid__row-cell_theme-@{themeName} {
    overflow-x: hidden;
+}
+
+.ws-is-hover .controls-BaseControl_showActions {
+   .controls-Grid__row:hover > .controls-TreeGrid__row-cell_theme-@{themeName} > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {
+      display: inline-block;
+   }
+}
+
+.controls-Grid__row-cell-background-editing_theme-@{themeName} > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {
+   display: inline-block;
 }

@@ -15,13 +15,15 @@
  * @includes TimeInterval Controls/_input/TimeInterval
  * @includes Money Controls/_input/Money
  * @includes INewLineKey Controls/_input/interface/INewLineKey
- * @includes IValidationStatus Controls/_input/interface/IValidationStatus
  * @includes IText Controls/_input/interface/IText
+ * @includes INumberLength Controls/_input/interface/INumberLength
  * @includes IBase Controls/_input/interface/IBase
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
- * @includes INewLineKey Controls/_input/interface/INewLineKey
+ * @includes InputCallback Controls/input/InputCallback
+ * @includes IFieldData Controls/_input/interface/IFieldData
+ * @includes ICallbackData Controls/_input/interface/ICallbackData
  *
  * @public
  * @author Крайнов Д.О.
@@ -44,13 +46,13 @@
  * @includes TimeInterval Controls/_input/TimeInterval
  * @includes Money Controls/_input/Money
  * @includes INewLineKey Controls/_input/interface/INewLineKey
- * @includes IValidationStatus Controls/_input/interface/IValidationStatus
  * @includes IText Controls/_input/interface/IText
  * @includes IBase Controls/_input/interface/IBase
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
- * @includes INewLineKey Controls/_input/interface/INewLineKey
+ * @includes IFieldData Controls/_input/interface/IFieldData
+ * @includes ICallbackData Controls/_input/interface/ICallbackData
  *
  * @public
  * @author Крайнов Д.О.
@@ -69,6 +71,7 @@ import Date = require('Controls/_input/Date/Picker');
 import {default as Render} from 'Controls/_input/Render';
 import TimeInterval from 'Controls/_input/TimeInterval';
 import Money from 'Controls/_input/Money';
+import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask'
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
@@ -79,6 +82,7 @@ import MaskFormatter = require('Controls/_input/Mask/Formatter');
 import PhoneMaskBuilder = require('Controls/_input/Phone/MaskBuilder');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
 
+import hoursFormat from  'Controls/_input/InputCallback/hoursFormat'
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
@@ -86,10 +90,19 @@ import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue';
 export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
 export {default as IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
 export {default as ITag, ITagOptions, TagStyle} from 'Controls/_input/interface/ITag';
-export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from 'Controls/_input/interface/IValidationStatus';
+export {default as INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
 export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
+export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 
+/**
+ * Объект с набором методов для опции {@link Controls/_input/interface/IValue#inputCallback}
+ * @class Controls/input/InputCallback
+ * @public
+ * @mixes Controls/_input/InputCallback/hoursFormat
+ * @mixes Controls/_input/InputCallback/lengthConstraint
+ */
 const InputCallback = {
+    hoursFormat,
     lengthConstraint
 };
 
@@ -117,5 +130,6 @@ export {
     INewLineKey,
     ActualAPI,
     MaskFormatter,
-    PhoneMaskBuilder
+    PhoneMaskBuilder,
+    IDateTimeMask
 };

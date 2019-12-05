@@ -1,22 +1,57 @@
-<div class="controls-TreeGrid__nodeFooterContent"
-     style="{{(itemData.multiSelectVisibility !== 'hidden' ? 'grid-column: 2; -ms-grid-column: 2; grid-column: 2 / ' : 'grid-column: 1; -ms-grid-column: 1; grid-column: 1 / ') + (itemData.columns.length + 1) + ';'}}">
-    <ws:for data="i in itemData.level">
-        <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
-    </ws:for>
-    <div class="{{itemData.getExpanderPaddingClasses(expanderSize)}}"></div>
-    <ws:if data="{{itemData.hasMoreStorage}}">
-        <Controls.buttons:Button
-                fontSize="xs"
-                attr:class="controls-TreeGrid__nodeFooterLoadMore"
-                viewMode="link" fontColorStyle="link"
-                caption="{{rk('Еще') + '...'}}"
-                on:click="_onLoadMoreClick(itemData.dispItem)"
-                readOnly="{{false}}"/>
+<ws:template name="multiSelectIfNeed">
+    <ws:if data="{{footer.multiSelectVisibility !== 'hidden'}}">
+        <ws:if data="{{footer.isFullGridSupport}}">
+            <div></div>
+        </ws:if>
+        <ws:else>
+            <td></td>
+        </ws:else>
+    </ws:if>
+</ws:template>
+
+<ws:template name="footerContent">
+    <div class="controls-TreeGrid__nodeFooterContent controls-TreeGrid__nodeFooterContent_theme-{{theme}}" style="{{footer.colspanStyles || ''}}">
+        <ws:for data="i in footer.level">
+            <div class="controls-TreeGrid__row-levelPadding {{footer.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
+        </ws:for>
+        <div class="{{footer.getExpanderPaddingClasses(expanderSize, theme)}}"></div>
+        <ws:if data="{{footer.hasMoreStorage}}">
+            <Controls.buttons:Button attr:class="controls-TreeGrid__nodeFooterLoadMore controls-TreeGrid__nodeFooterLoadMore_theme-{{theme}}"
+                                     fontSize="xs"
+                                     viewMode="link"
+                                     fontColorStyle="link"
+                                     caption="{{rk('Еще') + '...'}}"
+                                     on:click="_onLoadMoreClick(footer.dispItem)"
+                                     readOnly="{{false}}"/>
+        </ws:if>
+        <ws:else>
+            <ws:if data="{{footer.template}}">
+                <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{footer.template}}" itemData="{{footer}}"/>
+            </ws:if>
+        </ws:else>
+    </div>
+</ws:template>
+
+<ws:template name="footer">
+    <ws:partial template="multiSelectIfNeed"/>
+
+    <ws:if data="{{footer.isFullGridSupport}}">
+        <ws:partial template="footerContent"/>
     </ws:if>
     <ws:else>
-        <ws:if data="{{itemData.template}}">
-            <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{itemData.template}}"
-                        itemData="{{itemData}}"/>
-        </ws:if>
+        <td colspan="{{footer.colspan}}">
+            <ws:partial template="footerContent"/>
+        </td>
     </ws:else>
-</div>
+</ws:template>
+
+<ws:if data="{{footer.isFullGridSupport}}">
+    <div class="controls-Grid__row controls-TreeGrid__nodeFooter" key="nodeFooter_{{footer.key}}">
+        <ws:partial template="footer"/>
+    </div>
+</ws:if>
+<ws:else>
+    <tr class="controls-Grid__row controls-TreeGrid__nodeFooter" key="nodeFooter_{{footer.key}}">
+        <ws:partial template="footer"/>
+    </tr>
+</ws:else>

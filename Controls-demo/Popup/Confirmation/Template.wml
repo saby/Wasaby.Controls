@@ -1,0 +1,63 @@
+<div class="controlsDemo__wrapper ws-flexbox ws-flex-row" style="margin-left: auto; margin-right: auto; align-items: flex-start;">
+    <div class="controlsDemo__wrapper ws-flexbox ws-flex-column controlsDemo__mr4">
+        <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-Confirm__ok"
+                                                   name="Confirm4"
+                                                   message="Информационное сообщение"
+                                                   details="Детали сообщения"
+                                                   type="ok">
+        </Controls.popupTemplate:ConfirmationDialog>
+
+        <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-Confirm__yesno"
+                                                   name="Confirm3"
+                                                   message="Сохранить изменения?"
+                                                   style = "success"
+                                                   type="yesno">
+        </Controls.popupTemplate:ConfirmationDialog>
+
+        <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-Confirm__yesnocancel"
+                                                   name="Confirm1"
+                                                   message="Вы уверены?"
+                                                   style="danger"
+                                                   type="yesnocancel">
+        </Controls.popupTemplate:ConfirmationDialog>
+
+        <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-Confirm__captionButton"
+                                                   name="Confirm2"
+                                                   message="Are you sure you want to delete?"
+                                                   style="danger"
+                                                   type="yesnocancel"
+                                                   primaryAction="no"
+                                                   yesCaption="Yes"
+                                                   noCaption="No"
+                                                   cancelCaption="Cancel">
+        </Controls.popupTemplate:ConfirmationDialog>
+    </div>
+
+    <div class="controlsDemo__wrapper ws-flexbox ws-flex-column" style="align-items: center;">
+        <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-ConfirmSize__yesnocancel"
+                                                   name="ConfirmSize1"
+                                                   message="Advertisers study how people learn so that they can ‘teach’ them to respond to their advertising"
+                                                   details="If advertisements are to he learned, there is a need for lots of repetition."
+                                                   type="yesnocancel">
+        </Controls.popupTemplate:ConfirmationDialog>
+
+        <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-ConfirmSize__yesno"
+                                                   name="ConfirmSize2"
+                                                   message="Advertisers study how people learn so that they can ‘teach’ them to respond to their advertising"
+                                                   type="yesno">
+        </Controls.popupTemplate:ConfirmationDialog>
+
+        <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-ConfirmSize__ok"
+                                                   name="ConfirmSize3"
+                                                   message="Advertisers study how people learn so that they can ‘teach’ them to respond to their advertising. They want us to be interested, to try something, and then to do it again."
+                                                   type="ok">
+        </Controls.popupTemplate:ConfirmationDialog>
+
+        <Controls.popupTemplate:ConfirmationDialog attr:class="controlsDemo__mb1 controlsDemo-ConfirmSize__details"
+                                                   name="ConfirmSize4"
+                                                   message="Advertisers study how people learn so that they can ‘teach’ them to respond to their advertising"
+                                                   details="For example, the highly successful ‘Weston Tea Country’ advertising for different tea has led to ‘DAEWOO Country’ for automobile dealers and ‘Cadbury Country’ for chocolate bars."
+                                                   type="yesno">
+        </Controls.popupTemplate:ConfirmationDialog>
+    </div>
+</div>

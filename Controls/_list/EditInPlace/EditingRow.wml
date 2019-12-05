@@ -2,5 +2,6 @@
             template="{{_options.content}}"
             scope="{{_options}}"
             on:click="_onClickHandler()"
+            on:itemClick="_onClickHandler()"
             on:mousedown="_onClickHandler()"
             on:keyDown="_onKeyDown()" />

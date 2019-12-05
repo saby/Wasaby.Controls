@@ -22,7 +22,7 @@ define([
       });
 
       it('_updateSelection', function() {
-         var instance = new MultiSelector();
+         var instance = new MultiSelector.default();
          var
             selectedKeys = [null],
             excludedKeys = [],
@@ -37,6 +37,10 @@ define([
 
          selectedKeys = [1, 2];
          selectedKeysCount = 2;
+         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
+         assert.equal(instance._menuCaption, 'Отмечено: 2');
+
+         selectedKeysCount = undefined;
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
 
@@ -58,12 +62,12 @@ define([
          assert.equal(instance._menuCaption, 'Отметить');
       });
       it('_getMenuSource', function() {
-         var instance = new MultiSelector();
+         var instance = new MultiSelector.default();
          var menuSource = instance._getMenuSource();
          assert.equal(menuSource._$data.length, 3);
       });
       it('_onMenuItemActivate', function() {
-         var instance = new MultiSelector();
+         var instance = new MultiSelector.default();
          instance.notify = function(eventName, argumentsArray) {
             assert.equal(argumentsArray[0], 'selectAll');
             assert.equal(eventName, 'selectedTypeChanged');
@@ -101,7 +105,7 @@ define([
          );
       });
       it('_beforeMount', function() {
-         var instance = new MultiSelector();
+         var instance = new MultiSelector.default();
          var newOptions = {
             selectedKeys: [null],
             excludedKeys: [],
@@ -120,7 +124,7 @@ define([
          assert.equal(instance._menuCaption, 'Отмечено: 2');
       });
       it('_beforeUpdate', function() {
-         var instance = new MultiSelector();
+         var instance = new MultiSelector.default();
          var newOptions = {
             selectedKeys: [null],
             excludedKeys: [],
@@ -138,7 +142,7 @@ define([
          assert.equal(instance._menuCaption, 'Отмечено: 2');
       });
       it('_afterUpdate', function() {
-         var instance = new MultiSelector();
+         var instance = new MultiSelector.default();
          instance._notify = mockNotify();
          instance._afterUpdate();
          assert.equal(eventQueue.length, 0);

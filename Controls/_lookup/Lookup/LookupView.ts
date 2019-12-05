@@ -2,7 +2,7 @@ import BaseLookupView = require('Controls/_lookup/BaseLookupView');
 import chain = require('Types/chain');
 import merge = require('Core/core-merge');
 import getWidthUtil = require('Controls/Utils/getWidth');
-import Collection = require('Controls/_lookup/SelectedCollection');
+import {default as Collection} from 'Controls/_lookup/SelectedCollection';
 import itemsTemplate = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
@@ -124,7 +124,6 @@ var _private = {
           * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить  кавычку и правильно посчитать ширину элементов сами &amp заменяем на &*/
          measurer.innerHTML = itemsTemplate({
             _options: merge(Collection.getDefaultOptions(), _private.getCollectionOptions(newOptions, maxVisibleItems, counterWidth)),
-            _items: items,
             _visibleItems: visibleItems,
             _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth,
             _contentTemplate: ContentTemplate,
@@ -165,7 +164,7 @@ var _private = {
             maxVisibleItems,
             _counterWidth: counterWidth
          };
-         const depOptions = ['itemTemplate', 'readOnly', 'displayProperty'];
+         const depOptions = ['itemTemplate', 'readOnly', 'displayProperty', 'items'];
 
          depOptions.forEach((optName) => {
             if (options.hasOwnProperty(optName)) {

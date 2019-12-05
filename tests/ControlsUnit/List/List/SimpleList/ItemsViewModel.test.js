@@ -496,6 +496,32 @@ define([
          });
       });
 
+      it('getItemDataByItem addition and removal reset cache', () => {
+         const cfg = {
+            items: data,
+            keyProperty: 'id'
+         };
+         const model = new list.ItemsViewModel(cfg);
+         const dispItem = {
+            getContents: function () {
+               return {
+                  getId: function() {
+                     return 1;
+                  }
+               };
+            }
+         };
+         const cacheResetActions = ['itemActionsUpdated', 'indexesChanged'];
+
+         let itemData = model.getItemDataByItem(dispItem);
+         cacheResetActions.forEach((action) => {
+            model._nextModelVersion(true, 'collectionChanged', action);
+            const afterNextVersion = model.getItemDataByItem(dispItem);
+            assert.notStrictEqual(afterNextVersion, itemData, action + ' change should reset getItemDataByItem cache');
+            itemData = afterNextVersion;
+         });
+      });
+
       it('_getDisplayItemCacheKey works based on key property', function() {
          const cfg = {
             items: data,
@@ -523,13 +549,6 @@ define([
 
          assert.strictEqual(
             model._getDisplayItemCacheKey(dispItem),
-            model._convertItemKeyToCacheKey(456)
-         );
-
-         // emulate breadcrumbs
-         const crumbsDisplay = { getContents: () => [{}, {}, dispItem.getContents()] };
-         assert.strictEqual(
-            model._getDisplayItemCacheKey(crumbsDisplay),
             model._convertItemKeyToCacheKey(456)
          );
 

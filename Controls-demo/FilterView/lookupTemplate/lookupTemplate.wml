@@ -10,6 +10,8 @@
            displayProperty="title"
            multiSelect="{{_options.multiSelect}}"
            selectorTemplate="{{_options.selectorTemplate}}"
+           lookupClassName="controls-Input_negativeOffset_theme_{{_options.theme}}"
+           on:itemsChanged="_itemsChangedHandler()"
            on:selectedKeysChanged="_selectedKeysHandler()"
            on:textValueChanged="_textValueHandler()"
            attr:class="controls-demo-Lookup__control {{_options.className}}">

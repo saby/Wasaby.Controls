@@ -1,0 +1,55 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Explorer_new/Default/Index' }}">
+            <a href="{{content.href}}">Базовый Explorer</a>
+        </Router.router:Reference>
+        <Controls-demo.Explorer_new.Default.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Explorer_new/Falling/Index' }}">
+            <a href="{{content.href}}">С проваливанием</a>
+        </Router.router:Reference>
+        <Controls-demo.Explorer_new.Falling.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Explorer_new/Search/Index' }}">
+            <a href="{{content.href}}">Search Explorer</a>
+        </Router.router:Reference>
+        <Controls-demo.Explorer_new.Search.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Explorer_new/EditArrow/Index' }}">
+            <a href="{{content.href}}">Edit Arrow</a>
+        </Router.router:Reference>
+        <Controls-demo.Explorer_new.EditArrow.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Explorer_new/ChangeRoot/Index' }}">
+            <a href="{{content.href}}">Changes root</a>
+        </Router.router:Reference>
+        <Controls-demo.Explorer_new.ChangeRoot.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Explorer_new/BreadCrumbsInHeader/Index' }}">
+            <a href="{{content.href}}">Changes root</a>
+        </Router.router:Reference>
+        <Controls-demo.Explorer_new.BreadCrumbsInHeader.Index/>
+    </div>
+</div>

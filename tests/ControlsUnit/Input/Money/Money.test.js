@@ -41,7 +41,8 @@ define(
                   value: ''
                });
                ctrl._readOnlyField.scope.options = {
-                  theme: 'default'
+                  theme: 'default',
+                  precision: 2
                };
                ctrl._readOnlyField.template = TemplateUtil.clearTemplate(ctrl._readOnlyField.template);
             });
@@ -59,6 +60,10 @@ define(
 
          describe('User input.', function() {
             it('Enter "0" in the empty field.', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  precision: 2
+               });
                InputUtility.init(ctrl);
                InputUtility.insert(ctrl, '0');
                InputUtility.triggerInput(ctrl);

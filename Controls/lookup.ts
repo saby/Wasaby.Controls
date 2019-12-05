@@ -4,12 +4,7 @@
  * @includes Selector Controls/_lookup/Button
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
- * @includes ItemTemplate wml!Controls/_lookup/SelectedCollection/ItemTemplate
- * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
- * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
- * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
- * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
+ * @includes ItemTemplate Controls/lookup:ItemTemplate
  * @includes Link Controls/_lookup/Lookup/Link
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Collection Controls/_lookup/SelectedCollection
@@ -23,12 +18,7 @@
  * @includes Selector Controls/_lookup/Button
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
- * @includes ItemTemplate wml!Controls/_lookup/SelectedCollection/ItemTemplate
- * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
- * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
- * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
- * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
+ * @includes ItemTemplate Controls/lookup:ItemTemplate
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Link Controls/_lookup/Lookup/Link
  * @includes Collection Controls/_lookup/SelectedCollection
@@ -39,7 +29,7 @@
 import Selector = require("Controls/_lookup/Button");
 import Input = require("Controls/_lookup/Lookup");
 import MultipleInput = require("Controls/_lookup/MultipleInput");
-import Collection = require("Controls/_lookup/SelectedCollection");
+import {default as Collection} from "Controls/_lookup/SelectedCollection";
 import _CollectionController = require("Controls/_lookup/BaseController");
 import ItemTemplate = require("wml!Controls/_lookup/SelectedCollection/ItemTemplate");
 import ButtonItemTemplate = require("wml!Controls/_lookup/Button/itemTemplate");
@@ -59,3 +49,4 @@ export {
    PlaceholderChooser,
    Link
 };
+

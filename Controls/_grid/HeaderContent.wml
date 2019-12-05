@@ -1,4 +1,4 @@
-<div class="controls-Grid__header-cell__content {{colData.column.startRow ? '' : ' controls-Grid__header-cell_baseline_XL' }}">
+<div class="controls-Grid__header-cell__content_theme-{{_options.theme}} {{colData.column.startRow ? '' : ' controls-Grid__header-cell_baseline_XL_theme-' + _options.theme }}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial template="{{contentTemplate}}" colData="{{colData}}" scope="{{_options}}"/>
     </ws:if>
@@ -10,6 +10,10 @@
                     type="{{colData.column.sortingType}}"
                     value="{{colData.sortingDirection}}"/>
         </ws:if>
-        <ws:else>{{colData.column.caption || colData.column.title}}</ws:else>
+        <ws:else>
+            <div class="controls-Grid__header-cell__content__innerWrapper">
+                {{colData.column.caption || colData.column.title}}
+            </div>
+        </ws:else>
     </ws:else>
 </div>

@@ -377,7 +377,32 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
                overdueCompleted: 12,
                completed: 170,
                left: 35
-            }]
+            },{
+               id: 211112,
+               parent: 21111,
+               'parent@': null,
+               name: 'Белоконь Д.Д.',
+               position: 'Проектировщик пользовательских интерфейсов',
+               photo: cConstants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/Belokon.png',
+               start: 22,
+               received: 190,
+               overdueCompleted: 6,
+               completed: 155,
+               left: 35
+            }, {
+               id: 211113,
+               parent: 21111,
+               'parent@': null,
+               name: 'Боровиков К.К.',
+               position: 'аместитель директора по информационным системам',
+               photo: cConstants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/Borovikov.png',
+               start: 345,
+               received: 234,
+               overdueCompleted: 34,
+               completed: 342,
+               left: 35
+            }
+            ]
          });
          this._header3 = [{
             title: ''

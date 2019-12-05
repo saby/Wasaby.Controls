@@ -4,13 +4,13 @@
 import CoreExtend = require('Core/core-extend');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
-import collection = require('Types/collection');
 import Constants = require('Controls/_history/Constants');
 import entity = require('Types/entity');
 import sourceLib = require('Types/source');
 import chain = require('Types/chain');
 import clone = require('Core/core-clone');
 import cInstance = require('Core/core-instance');
+import {factory, RecordSet} from 'Types/collection';
 
 /**
  * Источник, который возвращает из исходного источника отсортированные данные с учётом истории.
@@ -307,7 +307,7 @@ var _private = {
          keyProperty: items.getKeyProperty(),
          format: items.getFormat()
       };
-      var frequentItems = new collection.RecordSet(config);
+      var frequentItems = new RecordSet(config);
       var displayProperty = self._displayProperty || 'title';
       var firstName, secondName;
 
@@ -319,7 +319,7 @@ var _private = {
          secondName = second.get(displayProperty);
 
          return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
-      }).value(collection.factory.recordSet, config);
+      }).value(factory.recordSet, config);
 
       items.append(frequentItems);
    },
@@ -525,8 +525,8 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
       return self.originSource.query(query);
    },
 
-   getItems: function() {
-      if (this._history) {
+   getItems(withHistory: boolean = true): RecordSet {
+      if (this._history && withHistory) {
          return _private.getItemsWithHistory(this, this._history, this._oldItems);
       } else {
          return this._oldItems;
@@ -534,8 +534,8 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
    },
 
    prepareItems: function(items) {
-      this._oldItems = clone(items);
-      return _private.getItemsWithHistory(this, this._history, this._oldItems);
+      this._oldItems = items.clone();
+      return this.getItems();
    },
 
    resetHistoryFields: function(item, keyProperty) {
@@ -556,6 +556,14 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
 
    addOptions: function (options) {
       return this.originSource.addOptions(options);
+   },
+
+   getHistory() {
+      return this._history;
+   },
+
+   setHistory(history) {
+      this._history = history;
    }
 
    // </editor-fold>

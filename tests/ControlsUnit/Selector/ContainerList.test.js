@@ -177,7 +177,6 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
 
 
          listContainer.saveOptions(options);
-         listContainer._ignoreItemClickEvent = false;
          listContainer._notify = function(event, result) {
             if (event === 'selectComplete') {
                selectCompleted = true;

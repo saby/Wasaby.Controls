@@ -5,9 +5,10 @@ define(
       'Controls/history',
       'Types/collection',
       'Core/core-clone',
-      'Core/Deferred'
+      'Core/Deferred', 
+      'Env/Env'
    ],
-   function(filterPopup, filter, history, collection, Clone, Deferred) {
+   function(filterPopup, filter, history, collection, Clone, Deferred,Env) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -49,6 +50,7 @@ define(
          });
 
          it('Init::historyItems', function(done) {
+            if (Env.constants.isServerSide) { return done(); }
             var config2 = {
                items: items,
                historyId: 'TEST_PANEL_HISTORY_ID'
@@ -172,8 +174,8 @@ define(
             assert.isTrue(isNotifyClose);
          });
 
-         it('reset and filter', function() {
-            var changedItems = [
+         it('_resetFilter', function() {
+            const changedItems = [
                {
                   id: 'list',
                   value: 5,
@@ -198,7 +200,7 @@ define(
                   value: 'reset'
                }
             ];
-            var resetedItems = [
+            const resetedItems = [
                {
                   id: 'list',
                   value: 1,
@@ -223,10 +225,17 @@ define(
                   value: 'reset'
                }
             ];
-            var panel2 = getFilterPanel({ items: changedItems });
+            let itemsChangedResult;
+            let panel2 = getFilterPanel({ items: changedItems });
+            panel2._notify = (event, data) => {
+               if (event === 'itemsChanged') {
+                  itemsChangedResult = data[0];
+               }
+            };
             panel2._resetFilter();
             assert.deepStrictEqual({'reseted': 'reset'}, filterPopup.DetailPanel._private.getFilter(panel2._items));
             assert.deepStrictEqual(panel2._items, resetedItems);
+            assert.deepStrictEqual(itemsChangedResult, resetedItems);
             assert.isFalse(panel2._isChanged);
          });
 
@@ -400,6 +409,20 @@ define(
                               resetValue: true
                            }
                         ])
+                     },
+                     { ObjectData: JSON.stringify([
+                           {
+                              id: 'Methods',
+                              value: '1234',
+                              resetValue: '',
+                              textValue: null
+                           },
+                           {
+                              id: 'Faces',
+                              value: true,
+                              resetValue: true
+                           }
+                        ])
                      }
                   ]
                });
@@ -410,6 +433,7 @@ define(
             });
 
             it('_private:reloadHistoryItems', function() {
+               if (Env.constants.isServerSide) { return; }
                filter.HistoryUtils.getHistorySource({historyId: 'TEST_RELOAD_ITEMS_HISTORY_ID'}).getItems = () => {
                   return historyItems;
                };
@@ -523,6 +547,7 @@ define(
          });
 
          it('_historyItemsChanged', function() {
+            if (Env.constants.isServerSide) { return; }
             var panel = getFilterPanel(config);
             filterPopup.DetailPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
             panel._historyId = 'TEST_HISTORY_ID';
@@ -533,10 +558,10 @@ define(
             var validationResult = [null];
             assert.isTrue(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
 
-            validationResult = [null, 'Дата заполнена некорректно.'];
+            validationResult = [null, 'Дата заполнена некорректно'];
             assert.isFalse(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
 
-            validationResult = ['Дата заполнена некорректно.', null];
+            validationResult = ['Дата заполнена некорректно', null];
             assert.isFalse(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
          });
       });

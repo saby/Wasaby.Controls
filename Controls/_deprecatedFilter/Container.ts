@@ -7,7 +7,7 @@ import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {Controller} from 'Controls/source';
 import isEmptyObject = require('Core/helpers/Object/isEmpty');
-import {IoC} from 'Env/Env';
+import {Logger} from 'UI/Utils';
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -54,7 +54,7 @@ var _private = {
          recent = that.getHistorySource(self, id).getRecent();
          if (recent.getCount()) {
             lastFilter = recent.at(0);
-            return that.getHistorySource(self, id).getDataObject(lastFilter.get('ObjectData'));
+            return that.getHistorySource(self, id).getDataObject(lastFilter);
          }
       });
    },
@@ -120,7 +120,7 @@ var Filter = Control.extend({
    _fastFilterItems: null,
 
    constructor: function() {
-      IoC.resolve('ILogger').error('Controls/deprecatedFilter:Container', 'Component is deprecated and will be deleted in 3.18.600, use Controls/filter:Controller instead.');
+      Logger.error('Controls/deprecatedFilter:Container: Component is deprecated and will be deleted in 3.18.600, use Controls/filter:Controller instead.', this);
       Filter.superclass.constructor.apply(this, arguments);
    },
 

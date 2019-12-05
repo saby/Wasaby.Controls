@@ -1,6 +1,6 @@
 @import "../_scroll/Scroll/_contentEnvironmentZIndex";
 
-.controls-ColumnScroll {
+.controls-ColumnScroll_theme-@{themeName} {
    position: absolute;
    top: 0;
    left: 0;
@@ -13,7 +13,7 @@
    position: relative;
 }
 
-.controls-ColumnScroll__shadow {
+.controls-ColumnScroll__shadow_theme-@{themeName} {
    top: 0;
    bottom: 0;
    z-index: @z-index_Scroll-shadow;
@@ -27,12 +27,12 @@
    visibility: hidden;
 }
 
-.controls-ColumnScroll__shadow-start {
+.controls-ColumnScroll__shadow-start_theme-@{themeName} {
    background: linear-gradient(to right, @start-color-gradient_ColumnScroll-shadow, @end-color-gradient_ColumnScroll-shadow);
    border-left: 1px solid @border-color_ColumnScroll-shadow;
 }
 
-.controls-ColumnScroll__shadow-end {
+.controls-ColumnScroll__shadow-end_theme-@{themeName} {
    background: linear-gradient(to left, @start-color-gradient_ColumnScroll-shadow, @end-color-gradient_ColumnScroll-shadow);
    border-right: 1px solid @border-color_ColumnScroll-shadow;
    right: 0;

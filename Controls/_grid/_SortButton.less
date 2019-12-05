@@ -4,20 +4,33 @@
 
 .controls-SortButton__content {
 	.baseline-fix();
-	display: inline-flex;
+	display: flex;
 	align-items: baseline;
 }
 
-.controls-SortButton__icon {
-	.icon-size(@font-size_SortButton-icon);
+.controls-SortButton_icon_trendDown {
+	transform: rotate(180deg);
+}
+
+.controls-SortButton__icon_theme-@{themeName} {
+	background-image: @background-image_SortButton-trendUp;
 	color: @color_SortButton-icon;
-	align-self: center;
+	align-self: baseline;
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-size: @size_SortButton-icon @size_SortButton-icon;
+	width: @size_SortButton-icon;
+	height: @size_SortButton-icon;
 }
 
 .controls-SortButton__caption {
+	cursor: pointer;
+	display: inline;
+}
+
+.controls-SortButton__caption_theme-@{themeName} {
 	font-size: @font-size_SortButton-caption;
 	color: @color_SortButton-caption;
-	cursor: pointer;
 }
 
 .ws-is-hover {

@@ -1,8 +1,21 @@
-define(['Controls/lookup', 'Types/entity'], function(lookup, entity) {
+define(['Controls/lookup', 'Types/entity', 'Types/collection'], function(lookup, entity, collection) {
    describe('"Controls/_lookup/SelectedCollection', function() {
+      function getItems(countItems) {
+         for (var items = []; countItems; countItems--) {
+            items.push(new entity.Model({
+               rawData: {id: countItems},
+               keyProperty: 'id'
+            }));
+         }
+
+         return new collection.List({
+            items: items
+         });
+      }
+
       if (typeof window === 'undefined') {
          // Кастыль, дабы избежать работы с версткой
-         lookup.Collection._private.getCounterWidth = function(itemsCount, readOnly, itemsLayout) {
+         lookup.Collection.prototype.getCounterWidth = function(itemsCount, readOnly, itemsLayout) {
             // in mode read only and single line, counter does not affect the collection
             if (readOnly && itemsLayout === 'oneRow') {
                return 0;
@@ -12,30 +25,37 @@ define(['Controls/lookup', 'Types/entity'], function(lookup, entity) {
          }
       }
 
-      it('getTemplateOptions', function() {
+      it('_openInfoBox', function() {
          var
             items = [1, 2, 3, 4],
-            items2 = [1, 5, 7],
-            self = {
-               _options: {
-                  items: items
-               },
-               _onResult: function(){}
-            };
+            collection = new lookup.Collection(),
+            templateOptions;
 
-         self._templateOptions = lookup.Collection._private.getTemplateOptions(self);
-         assert.deepEqual(self._templateOptions.items, items);
+         items.clone = () => items.slice();
+         collection._options.items = items;
+         collection._container = {};
+         collection._children = {
+            infoBox: {
+               open: (config) => {
+                  templateOptions = config.templateOptions;
+               }
+            }
+         };
+
+         collection._openInfoBox();
+         assert.deepEqual(templateOptions.items, items);
 
          // Проверка на то что список элементов не будет меняться по ссылке
-         self._templateOptions.items.push(10);
-         assert.notDeepEqual(self._templateOptions.items, items);
+         templateOptions.items.push(10);
+         assert.notDeepEqual(templateOptions.items, items);
       });
 
-      it('isShowCounter', function() {
-         assert.isFalse(lookup.Collection._private.isShowCounter(1, 2));
-         assert.isFalse(lookup.Collection._private.isShowCounter(2, 2));
-         assert.isTrue(lookup.Collection._private.isShowCounter(3, 2));
+      it('_isShowCounter', function() {
+         let collection = new lookup.Collection();
 
+         assert.isFalse(collection._isShowCounter(1, 2));
+         assert.isFalse(collection._isShowCounter(2, 2));
+         assert.isTrue(collection._isShowCounter(3, 2));
       });
 
       it('_afterMount', function() {
@@ -44,7 +64,7 @@ define(['Controls/lookup', 'Types/entity'], function(lookup, entity) {
             selectedCollection = new lookup.Collection();
 
          selectedCollection._counterWidth = 0;
-         selectedCollection._items = ['test', 7, 2];
+         selectedCollection._options.items = getItems(3);
          selectedCollection._options.maxVisibleItems = 5;
          selectedCollection._forceUpdate = function() {
             isUpdate = true;

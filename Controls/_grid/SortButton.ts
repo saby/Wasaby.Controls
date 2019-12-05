@@ -8,6 +8,7 @@ import 'css!theme?Controls/grid';
  * @class Controls/_grid/SortButton
  * @extends Core/Control
  * @mixes Controls/_grid/SortButton/Styles
+ * @private
  */
 
 /**

@@ -4,7 +4,7 @@ import {TouchContextField} from 'Controls/context';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import 'css!theme?Controls/list';
 import { IMeasurer } from './interface/IMeasurer';
-import { IItemAction } from './interface/IItemAction';
+import { IItemAction, ShowType } from './interface/IItemAction';
 import { ISwipeConfig } from './interface/ISwipeConfig';
 import {
    ISwipeContext,
@@ -47,7 +47,8 @@ export default class SwipeControl extends Control {
       itemData: IItemData,
       childEvent: ISwipeEvent
    ): void {
-      if (childEvent.nativeEvent.direction === 'left' && itemData.itemActions) {
+      const itemActions = this._options.useNewModel ? itemData.getActions() : itemData.itemActions;
+      if (childEvent.nativeEvent.direction === 'left' && (itemActions || this._options.showEditArrow)) {
          this._initSwipe(this._options.listModel, itemData, childEvent);
       } else {
          this.closeSwipe(true);
@@ -85,11 +86,18 @@ export default class SwipeControl extends Control {
 
    private _updateModel(newOptions: ISwipeControlOptions): void {
       this.closeSwipe();
-      newOptions.listModel.subscribe('onListChange', this._onListChange.bind(this));
+      if (newOptions.useNewModel) {
+         newOptions.listModel.subscribe('onCollectionChange', (event, action, changedItems) => {
+            const changedProperty = changedItems && changedItems.properties;
+            this._onListChange(event, `newModelUpdated - ${changedProperty}`, action);
+         });
+      } else {
+         newOptions.listModel.subscribe('onListChange', this._onListChange.bind(this));
+      }
    }
 
    private _onListChange(event, changesType, action): void {
-      if (changesType !== 'itemActionsUpdated' && action !== 'ch') {
+      if (changesType !== 'itemActionsUpdated' && action !== 'ch' || changesType === 'newModelUpdated - editing') {
          this.closeSwipe();
       } else if (changesType === 'itemActionsUpdated') {
 
@@ -131,22 +139,45 @@ export default class SwipeControl extends Control {
       return [[showedActions[0],showedActions[1]],
               [showedActions[2],showedActions[3]]];
    }
-   private _updateActionsOnCurrentItem(): void{
+   private editArrowHandler(item): void {
+      this._notify('editArrowClick', [item]);
+   }
+   private _updateActionsOnCurrentItem(): void {
       this._setMeasurer(this._options.actionAlignment);
+
+      const itemActions = this._options.useNewModel
+         ? (this._currentItemData.getActions().all ? this._currentItemData.getActions().all : [])
+         : (this._currentItemData.itemActions ? this._currentItemData.itemActions.all : []);
+
+
+      if (this._options.showEditArrow) {
+         if (!this._options.editArrowVisibilityCallback || this._options.editArrowVisibilityCallback(this._currentItemData.actionsItem)){
+            let editArrow = {
+               id: 'view',
+               icon: 'icon-Forward',
+               title: rk('Просмотреть'),
+               showType: ShowType.TOOLBAR,
+               handler: this.editArrowHandler.bind(this)
+            };
+            itemActions = [editArrow, ...itemActions];
+         }
+      }
+
       this._swipeConfig = this._measurer.getSwipeConfig(
-          this._currentItemData.itemActions.all,
+          itemActions,
           this._actionsHeight,
           this._options.actionCaptionPosition
       );
       if (this._needHorizontalRecalc(this._swipeConfig)) {
          this._setMeasurer('horizontal');
          this._swipeConfig = this._measurer.getSwipeConfig(
-             this._currentItemData.itemActions.all,
+             itemActions,
              this._actionsHeight,
              this._options.actionCaptionPosition
          );
       }
-      this._options.listModel.setItemActions(this._currentItemData.actionsItem, this._swipeConfig.itemActions);
+      const actionsItem = this._options.useNewModel ? this._currentItemData : this._currentItemData.actionsItem;
+      this._options.listModel.setItemActions(actionsItem, this._swipeConfig.itemActions);
       if (this._swipeConfig.twoColumns) {
          this._swipeConfig.twoColumnsActions = this._prepareTwoColumns(this._swipeConfig.itemActions.showed);
       }
@@ -248,7 +279,7 @@ export default class SwipeControl extends Control {
    closeSwipe(withAnimation: boolean = false): void {
       if (this._animationState === 'open') {
          this._animationState = 'close';
-         if (withAnimation) {
+         if (withAnimation && !this._options.useNewModel) {
             this._options.listModel.nextModelVersion();
          } else {
             this._notifyAndResetSwipe();

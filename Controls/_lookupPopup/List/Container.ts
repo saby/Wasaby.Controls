@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('tmpl!Controls/_lookupPopup/List/Container');
+import template = require('wml!Controls/_lookupPopup/List/Container');
 import {showType} from 'Controls/Utils/Toolbar';
 
 /**
@@ -260,7 +260,6 @@ var _private = {
 var Container = Control.extend({
 
    _template: template,
-   _ignoreItemClickEvent: false,
    _selectedKeys: null,
    _markedKey: null,
    _itemsActions: null,
@@ -306,14 +305,9 @@ var Container = Control.extend({
    },
 
    _itemClick: function(event, item) {
-      if (!this._ignoreItemClickEvent && !item.get(this._options.nodeProperty)) {
+      if (!item.get(this._options.nodeProperty)) {
          _private.itemClick(this, item.get(this._options.keyProperty), this._options.multiSelect, this._options.selectedKeys);
       }
-      this._ignoreItemClickEvent = false;
-   },
-
-   _checkboxClick: function() {
-      this._ignoreItemClickEvent = true;
    },
 
    _itemActionsClick: function(event, action, item) {

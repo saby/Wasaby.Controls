@@ -69,6 +69,23 @@ define(
             assert.equal(element.popupOptions.testOption, 'created');
          });
 
+         it('add popup async', function(done) {
+            const Manager = getManager();
+            const Controller = new BaseController();
+            Controller.getDefaultConfig = () => {
+               assert.equal(Manager._private.popupItems.getCount(), 0);
+               setTimeout(() => {
+                  assert.equal(Manager._private.popupItems.getCount(), 1);
+                  Manager.destroy();
+                  done();
+               }, 30);
+               return Promise.resolve();
+            };
+            id = Manager.show({
+               testOption: 'created'
+            }, Controller);
+         });
+
          it('getMaxZIndexPopupIdForActivate', function(done) {
             let Manager = getManager();
             let id1 = Manager.show({}, new BaseController());
@@ -128,9 +145,14 @@ define(
             element = Manager.find(id);
             element.popupState = 'created';
             id = Manager.update(id, {
-               testOption: 'updated'
+               testOption: 'updated1'
             });
-            assert.equal(element.popupOptions.testOption, 'updated');
+            assert.equal(element.popupOptions.testOption, 'updated1');
+            id = Manager.show({
+               id: id,
+               testOption: 'updated2'
+            }, new BaseController());
+            assert.equal(element.popupOptions.testOption, 'updated2');
          });
 
          it('fireEventHandler', function() {
@@ -420,6 +442,7 @@ define(
             let deactivatedCount = 0;
             Manager.remove = () => deactivatedCount++;
             Manager._private.isIgnoreActivationArea = () => false;
+            Manager._private.isNewEnvironment = () => true;
             Manager._private.needClosePopupByDeactivated = () => true;
             let id1 = Manager.show({
                testOption: 'created',
@@ -449,19 +472,11 @@ define(
             let id1 = Manager.show({
             }, new BaseController());
 
-            let fakePopupControl1 = {
-               _moduleName: 'Controls/_popup/Manager/Popup',
-               _options: {
-                  id: id1
-               }
-            };
-
             let id2 = Manager.show({
-               opener: fakePopupControl1
             }, new BaseController());
 
-            assert.equal(Manager._private.popupItems.at(0).childs[0].id, id2);
-            assert.equal(Manager._private.popupItems.at(1).parentId, id1);
+            Manager._private.popupItems.at(0).childs = [Manager._private.popupItems.at(1)];
+            Manager._private.popupItems.at(1).parentId = id1;
 
             let item1 = Manager._private.popupItems.at(0);
             let removeDeferred2 = new Deferred();
@@ -494,18 +509,11 @@ define(
             let id1 = Manager.show({
             }, new BaseController());
 
-            let fakePopupControl1 = {
-               _moduleName: 'Controls/_popup/Manager/Popup',
-               _options: {
-                  id: id1
-               }
-            };
-
             let id2 = Manager.show({
-               opener: fakePopupControl1
             }, new BaseController());
 
-            assert.equal(Manager._private.popupItems.at(0).childs.length, 1);
+            Manager._private.popupItems.at(0).childs = [Manager._private.popupItems.at(1)];
+            Manager._private.popupItems.at(1).parentId = id1;
             Manager._private.removeFromParentConfig(Manager._private.popupItems.at(1));
             assert.equal(Manager._private.popupItems.at(0).childs.length, 0);
 

@@ -11,6 +11,7 @@
                     itemActionsClass="{{itemActionsClass}}"
                     itemData="{{itemData}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
+                    attr:class="controls-Grid__itemAction"
                     highlightOnHover="{{highlightOnHover}}"/>
     </ws:else>
 </ws:template>
@@ -27,7 +28,7 @@
                        expanderSize="{{expanderSize}}"/>
        </ws:if>
        <ws:else data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
-           <div class="{{itemData.getExpanderPaddingClasses(expanderSize)}} js-controls-ListView__notEditable"></div>
+           <div class="{{itemData.getExpanderPaddingClasses(expanderSize, _options.theme)}} js-controls-ListView__notEditable"></div>
        </ws:else>
    </ws:if>
    <ws:if data="{{colspan}}">
@@ -62,34 +63,34 @@
 
 <ws:template name="columnContentWrapper">
    <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
-       <div class="controls-ListView__itemV_marker"></div>
+       <div attr:class="{{itemData.getMarkerClasses(itemData.rowSeparatorVisibility)}}"></div>
    </ws:if>
    <div if="{{!!itemData.dragTargetNode}}"
-        class="controls-TreeGridView__dragTargetNode {{currentColumn.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
-               {{currentColumn.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
+        class="controls-TreeGridView__dragTargetNode {{currentColumn.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first_theme-' + _options.theme}}
+               {{currentColumn.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last_theme-' + _options.theme}}"></div>
    <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
 
 <ws:template name="colTpl">
    <td class="{{currentColumn.cellClasses}}
-              {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}
+              {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
               {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-              {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first'}}
+              {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
               controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-       colspan="{{itemData.getColspanFor(colspan || colspanCurrentNode ? 'node')}}">
+       colspan="{{itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
        <div class="controls-TreeGridView__row-cell_innerWrapper">
            <ws:partial template="columnContentWrapper"
                        attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
            <div if="{{!!itemData.dragTargetNode}}"
-                class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
-                       {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
+                class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first_theme-' + _options.theme}}
+                       {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last_theme-' + _options.theme}}"></div>
        </div>
    </td>
 </ws:template>
 
-<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}
-            {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}">
+<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
+            {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
        {{itemData.resetColumnIndex();}}
        <ws:if data="{{itemData.hasMultiSelect}}">

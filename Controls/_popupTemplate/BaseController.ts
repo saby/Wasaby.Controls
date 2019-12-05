@@ -52,6 +52,7 @@ export interface IPopupOptions {
  * @category Popup
  * @class Controls/_popupTemplate/BaseController
  * @author Красильников А.С.
+ * @private
  */
 abstract class BaseController {
 
@@ -89,7 +90,9 @@ abstract class BaseController {
             return this.elementCreated && this.elementCreated.apply(this, arguments);
         }
     }
-
+    _popupDragEnd(item: IPopupItem) {
+        return this.popupDragEnd && this.popupDragEnd.apply(this, arguments);
+    }
     _elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean {
         if (this._checkContainer(item, container, 'elementUpdated')) {
             if (item.popupState === this.POPUP_STATE_CREATED ||
@@ -173,7 +176,11 @@ abstract class BaseController {
         }
     }
 
-    protected popupResize(item: IPopupItem, container: HTMLDivElement): boolean {
+    protected resizeInner(item: IPopupItem, container: HTMLDivElement): boolean {
+        return this._elementUpdated(item, container);
+    }
+
+    protected resizeOuter(item: IPopupItem, container: HTMLDivElement): boolean {
         return this._elementUpdated(item, container);
     }
 

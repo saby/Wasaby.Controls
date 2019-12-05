@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper">
+    <Controls.treeGrid:View
+            useTableInOldBrowsers="{{true}}"
+            source="{{_viewSource}}"
+            keyProperty="id"
+            columns="{{_columns}}"
+            parentProperty="parent"
+            nodeProperty="type">
+        <ws:navigation source="page" view="infinity">
+            <ws:sourceConfig pageSize="{{1}}" page="{{0}}" hasMore="{{false}}"/>
+        </ws:navigation>
+        <ws:nodeFooterTemplate>
+            <Controls.list:AddButton caption="Добавить товар"/>
+        </ws:nodeFooterTemplate>
+    </Controls.treeGrid:View>
+</div>

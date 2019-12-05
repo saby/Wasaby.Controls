@@ -139,7 +139,7 @@
 <ws:template name="detailingPeriod">
 <Controls.filterPopup:Dropdown displayProperty="title"
                                        bind:selectedKeys="item.value"
-                                       keyProperty="id"
+                                       keyProperty="key"
                                        parentProperty="parent"
                                        nodeProperty="parent@"
                                        source="{{item.source}}">
@@ -149,5 +149,20 @@
 </Controls.filterPopup:Dropdown>
 </ws:template>
 
+<ws:template name="hierarchyOperations">
+<Controls.filterPopup:HierarchyLookup
+        scope="{{item.editorOptions}}"
+        selectedKeys="{{item.value}}">
+   <Controls-demo.FilterView.lookupTemplate />
+</Controls.filterPopup:HierarchyLookup>
+</ws:template>
+
+<ws:template name="lists">
+<Controls.filterPopup:HierarchyLookup
+        scope="{{item.editorOptions}}"
+        selectedKeys="{{item.value}}">
+   <Controls-demo.FilterView.lookupTemplate />
+</Controls.filterPopup:HierarchyLookup>
+</ws:template>
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>

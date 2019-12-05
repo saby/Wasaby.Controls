@@ -1,5 +1,6 @@
 import {default as BaseController, IPopupItem, IPopupOptions,
     IPopupSizes, IPopupPosition, IDragOffset} from 'Controls/_popupTemplate/BaseController';
+import {detection} from 'Env/Env';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 
 interface IDialogItem extends IPopupItem {
@@ -52,9 +53,13 @@ class DialogController extends BaseController {
             }
             if (item.popupOptions.maxWidth) {
                 container.style.maxWidth = item.popupOptions.maxWidth + 'px';
+            } else {
+                container.style.maxWidth = '';
             }
             if (item.popupOptions.maxHeight) {
                 container.style.maxHeight = item.popupOptions.maxHeight + 'px';
+            } else {
+                container.style.maxHeight = '';
             }
         }
 
@@ -101,6 +106,14 @@ class DialogController extends BaseController {
 
     popupDragEnd(item: IDialogItem): void {
         delete item.startPosition;
+    }
+
+    resizeOuter(item: IPopupItem, container: HTMLDivElement): boolean {
+        // На ios ресайз страницы - это зум. Не реагируем на него.
+        if (!detection.isMobileIOS) {
+            return this._elementUpdated(item, container);
+        }
+        return false;
     }
 
     pageScrolled(): boolean {

@@ -1,7 +1,7 @@
 import {isValidDateRange} from 'Controls/validate';
 
 describe('Controls.Validate:isValidDateRange', () => {
-    const errorMessage = 'Дата конца периода должна быть больше даты начала.';
+    const errorMessage = 'Дата конца периода должна быть больше даты начала';
     [{
         startValue: null,
         endValue: null,

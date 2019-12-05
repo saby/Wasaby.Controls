@@ -2,7 +2,7 @@
  * Библиотека контролов, которые реализуют содержимое подсказки, отображающейся при вводе текста.
  * @library Controls/suggestPopup
  * @includes ListContainer Controls/_suggestPopup/List
- * @includes FooterTemplate wml!Controls/_suggestPopup/footer
+ * @includes FooterTemplate Controls/suggestPopup:FooterTemplate
  * @public
  * @author Крайнов Д.О.
  */
@@ -11,7 +11,7 @@
  * suggestPopup library
  * @library Controls/suggestPopup
  * @includes ListContainer Controls/_suggestPopup/List
- * @includes FooterTemplate wml!Controls/_suggestPopup/footer
+ * @includes FooterTemplate Controls/suggestPopup:FooterTemplate
  * @public
  * @author Крайнов Д.О.
  */ 
@@ -34,3 +34,5 @@ export {
    _ListWrapper,
    Dialog
 };
+
+

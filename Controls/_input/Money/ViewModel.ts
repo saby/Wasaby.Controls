@@ -1,27 +1,29 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import NumberViewModel = require('Controls/_input/Number/ViewModel');
 
+import toString from 'Controls/Utils/Formatting/toString';
 import {parse} from 'Controls/_input/Number/parse';
 import {format} from 'Controls/_input/Number/format';
 import {decimalSplitter} from 'Controls/_input/Number/constant';
 import {startingPosition} from "../Number/startingPosition";
 
 class ViewModel extends BaseViewModel {
-    handleInput = NumberViewModel.prototype.handleInput;
+    protected _convertToValue(displayValue: string): string | number {
+        let value: string | number = ViewModel.removeSpaces(displayValue);
+        if (typeof this.value !== 'string') {
+            value = parseFloat(value);
 
-    protected _convertToValue(displayValue: string): string {
-        return ViewModel.removeTrailingZeros(
-            ViewModel.removeSpaces(displayValue)
-        );
+            return Number.isNaN(value) ? null : value;
+        }
+
+        return ViewModel.removeTrailingZeros(value);
     }
 
-    protected _convertToDisplayValue(value: string): string {
-        const displayValue = super._convertToDisplayValue(value);
+    protected _convertToDisplayValue(value: string | number): string {
+        const displayValue = toString(value);
 
-        return format(parse(displayValue), this._options, 0).value;
+        return format(parse(displayValue), this._options, displayValue.length).value;
     }
-
-    protected _getStartingPosition = NumberViewModel.prototype._getStartingPosition;
 
     private static zeroFractionalPart: RegExp = new RegExp(`\\${decimalSplitter}?0*$`, 'g');
 
@@ -33,5 +35,8 @@ class ViewModel extends BaseViewModel {
         return value.replace(ViewModel.zeroFractionalPart, '');
     }
 }
+
+ViewModel.prototype._getStartingPosition = NumberViewModel.prototype._getStartingPosition;
+ViewModel.prototype.handleInput = NumberViewModel.prototype.handleInput;
 
 export default ViewModel;

@@ -1,7 +1,14 @@
-import Base = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Controller');
-import Env = require('Env/Env');
-import ParallelDeferred = require('Core/ParallelDeferred');
+import ValidateContainer = require('wml!Controls/_validate/Container');
+import {Logger} from 'UI/Utils';
+import {IValidateConfig} from 'Controls/_validate/Container';
+
+interface IValidateResult {
+    [key: number]: boolean;
+
+    hasErrors?: boolean;
+}
 
 /**
  * Контрол, регулирующий валидацию формы.
@@ -10,79 +17,89 @@ import ParallelDeferred = require('Core/ParallelDeferred');
  * @extends Core/Control
  * @control
  * @public
- * @demo Controls-demo/Input/Validate/Controller
+ * @demo Controls-demo/Input/Validate/FormController
  * @author Красильников А.С.
  */
 
-      var Form = Base.extend({
-         _template: template,
-         constructor: function(cfg) {
-            Form.superclass.constructor.call(this, cfg);
-            this._validates = [];
-         },
-         onValidateCreated: function(e, control) {
-            this._validates.push(control);
-         },
-         onValidateDestroyed: function(e, control) {
-            this._validates = this._validates.filter(function(validate) {
-               return validate !== control;
-            });
-         },
-         submit: function() {
-            var parallelDeferred = new ParallelDeferred();
+class Form extends Control<IControlOptions> {
+    _template: TemplateFunction = template;
+    _validates: ValidateContainer[] = [];
 
-            // The infobox should be displayed on the first not valid field.
-            this._validates.reverse();
-            this._validates.forEach(function(validate) {
-               if (!(validate._options && validate._options.readOnly)) {
-                  var def = validate.validate();
-                  parallelDeferred.push(def);
-               }
-            });
+    onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._validates.push(control);
+    }
 
-            // TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
-            var resultDef = parallelDeferred.done().getResult().addCallback(function(results) {
-               var key, needValid, resultCounter = 0;
+    onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        this._validates = this._validates.filter((validate) => {
+            return validate !== control;
+        });
+    }
 
-               // Walking through object with errors and focusing first not valid field.
-               for (key in this._validates) {
-                  if (!this._validates[key]._options.readOnly) {
-                     if (results[resultCounter]) {
+    submit(): Promise<IValidateResult | Error> {
+        const validatePromises = [];
+
+        // The infobox should be displayed on the first not valid field.
+        this._validates.reverse();
+        let config: IValidateConfig = {
+            hideInfoBox: true,
+        };
+        this._validates.forEach((validate: ValidateContainer) => {
+            if (!(validate._options && validate._options.readOnly)) {
+                //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=2ebc5fff-6c4f-44ed-8764-baf39e4d4958
+                validatePromises.push(validate.validate(config));
+            }
+        });
+
+        const resultPromise = Promise.all(validatePromises);
+
+        this._notify('registerPending', [resultPromise, {showLoadingIndicator: true}], {bubbling: true});
+        return resultPromise.then((results: IValidateResult) => {
+            let key: string;
+            let needValid: boolean;
+            let resultCounter: number = 0;
+
+            // Walking through object with errors and focusing first not valid field.
+            for (key in this._validates) {
+                if (!this._validates[key]._options.readOnly) {
+                    if (results[resultCounter]) {
                         needValid = this._validates[key];
-                     }
-                     resultCounter++;
-                  }
-               }
-               if (needValid) {
-                  results.hasErrors = true;
-                  this.activateValidator(needValid);
-               }
-               this._validates.reverse();
-               return results;
-            }.bind(this)).addErrback(function(e) {
-               Env.IoC.resolve('ILogger').error('Form', 'Submit error', e);
-               return e;
-            });
-            this._notify('registerPending', [resultDef, { showLoadingIndicator: true }], { bubbling: true });
-            return resultDef;
-         },
-         activateValidator: function(control) {
-            control.activate();
-         },
-         setValidationResult: function() {
-            this._validates.forEach(function(validate) {
-               validate.setValidationResult(null);
-            });
-         },
-         isValid: function() {
-            var results = {}, i = 0;
-            this._validates.forEach(function(validate) {
-               results[i++] = validate.isValid();
-            });
+                    }
+                    resultCounter++;
+                }
+            }
+            if (needValid) {
+                results.hasErrors = true;
+                this.activateValidator(needValid);
+            }
+            this._validates.reverse();
             return results;
-         }
-      });
-      export = Form;
+        }).catch((e: Error) => {
+            Logger.error('Form: Submit error', this, e);
+            return e;
+        });
+    }
+
+    activateValidator(control: ValidateContainer): void {
+        control.activate();
+    }
+
+    setValidationResult(): void {
+        this._validates.forEach((validate: ValidateContainer) => {
+            validate.setValidationResult(null);
+        });
+    }
+
+    isValid(): IValidateResult {
+        const results: IValidateResult = {};
+        let i: number = 0;
+        this._validates.forEach((validate: ValidateContainer) => {
+            results[i++] = validate.isValid();
+        });
+        return results;
+    }
+}
+
+export default Form;
 
 /**
  * @name Controls/_validate/Controller#content

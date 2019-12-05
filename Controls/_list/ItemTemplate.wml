@@ -18,7 +18,7 @@
     </ws:if>
 
    <ws:if data="{{itemData.shouldDrawMarker(marker)}}">
-      <div class="controls-ListView__itemV_marker"></div>
+      <div class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
 
     <ws:if data="{{contentTemplate}}">

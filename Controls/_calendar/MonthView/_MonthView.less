@@ -95,6 +95,7 @@
 
 .controls-MonthViewVDOM__item-today-background {
    position: absolute;
+   z-index: -1;
 }
 
 .controls-MonthViewVDOM__item-title {
@@ -236,6 +237,9 @@
 
 .controls-MonthViewVDOM__today {
    color: @color_MonthView-item-today;
+   // Изолируем контекст наложения. Раньше стоял z-index: 0;. Но если в windows учтановить масшатб 150%,
+   // то контекст не изолируется.
+   transform: translateZ(0);
 }
 
 // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.

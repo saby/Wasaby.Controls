@@ -3,6 +3,7 @@
    attr:class="controls-PeriodDialog-MonthsRange"
    virtualPageSize="{{3}}"
    position="{{_options.position}}"
+   _limit="{{1}}"
    on:itemClick="_onItemClick()"
 >
    <ws:yearHeaderTemplate>

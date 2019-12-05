@@ -35,6 +35,8 @@
       displayProperty="title"
       imageProperty="image"
       keyProperty="id"
+      parentProperty="parent"
+      nodeProperty="type"
       source="{{_viewSourceDynamic}}"
       itemActions="{{_itemActions}}"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
@@ -52,6 +54,8 @@
       tileMode="dynamic"
       displayProperty="title"
       imageProperty="image"
+      parentProperty="parent"
+      nodeProperty="type"
       keyProperty="id"
       tileScalingMode="outside"
       source="{{_viewSourceDynamic}}"
@@ -89,6 +93,8 @@
    <Controls.tile:View
       attr:class="demo-Tile__static demo-Tile__staticGroup"
       tileMode="static"
+      parentProperty="parent"
+      nodeProperty="type"
       displayProperty="title"
       imageProperty="image"
       keyProperty="id"

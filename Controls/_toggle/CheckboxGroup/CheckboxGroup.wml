@@ -2,6 +2,7 @@
    <ws:partial template="{{_groupTemplate}}"
                groupTemplate="{{_groupTemplate}}"
                itemTemplate="{{_options.itemTemplate}}"
+               itemTemplateProperty="{{_options.itemTemplateProperty}}"
                groups="{{_groups}}"
                parent="{{null}}"
                direction="{{_options.direction}}"

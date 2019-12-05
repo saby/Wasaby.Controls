@@ -29,7 +29,7 @@
             </div>
             <div class="controls-PeriodLiteDialog__year-next"
                  on:click="_onNextYearBtnClick()"
-                 title="{['Следующий год']}"></div>
+                 title="{[Следующий год]}"></div>
          </div>
          <ws:partial
                class="controls-PeriodLiteDialog__body"

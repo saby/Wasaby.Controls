@@ -24,9 +24,20 @@
     <ws:if data="{{listModel.getMultiSelectVisibility() !== 'hidden'}}">
         <div>&nbsp;</div>
     </ws:if>
-    <div class="{{listModel.getCurrentResultsColumn().cellClasses}}" style="{{listModel.getStyleForCustomResultsTemplate()}}">
-        <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
-    </div>
+    <ws:if data="{{ listModel.isStickyHeader() }}">
+        <Controls.scroll:StickyHeader
+            attr:class="{{listModel.getCurrentResultsColumn().cellClasses}}"
+            attr:style="{{listModel.getStyleForCustomResultsTemplate()}}"
+            mode="stackable"
+            fixedZIndex="{{listModel.getCurrentResultsColumn().zIndex}}">
+            <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
+        </Controls.scroll:StickyHeader>
+    </ws:if>
+    <ws:else>
+        <div class="{{listModel.getCurrentResultsColumn().cellClasses}}" style="{{listModel.getStyleForCustomResultsTemplate()}}">
+            <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
+        </div>
+    </ws:else>
 </ws:if>
 <ws:else>
    <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
@@ -37,7 +48,6 @@
                   listModel="{{ listModel }}"
                   multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
                   currentResultsColumn="{{listModel.getCurrentResultsColumn()}}"
-                  attr:style="{{ listModel.getCurrentResultsColumn().gridCellStyles }}"
                   offset="{{listModel.getResultOffset() ? listModel.getResultOffset()}}"/>
    </ws:for>
 </ws:else>

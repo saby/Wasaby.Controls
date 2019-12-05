@@ -3,7 +3,7 @@
  */
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
-import {error} from 'UI/Logger';
+import {Logger} from 'UI/Utils';
 import 'css!theme?Controls/decorator';
 
    var markupGenerator,
@@ -56,7 +56,9 @@ import 'css!theme?Controls/decorator';
        } catch (e) {
            strNode = '"Невалидный Json узел"';
        }
-       error(`Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}\n`, control, {});
+
+       Logger.error('View/Executor/TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`);
+       // Logger.error(`Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}\n`, control, {});
    }
 
    function generateEventSubscribeObject(handlerName) {
@@ -228,7 +230,7 @@ import 'css!theme?Controls/decorator';
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-         error(e.message, control, e);
+          Logger.error('View/Executor/TClosure: ' + e.message, undefined, e);
       } finally {
          markupGenerator.escape = oldEscape;
       }

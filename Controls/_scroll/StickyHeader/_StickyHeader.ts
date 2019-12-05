@@ -44,7 +44,26 @@ var _private = {
 
    _getNormalizedContainer: function(self) {
       //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+      // There's no container at first building of template.
+      if (!self._container) {
+         return;
+      }
       return self._container.get ? self._container.get(0) : self._container;
+   },
+
+   _isSafari13: function(): boolean {
+      // TODO remove after complete https://online.sbis.ru/opendoc.html?guid=14d98228-de34-4ad3-92a3-4d7fe8770097
+      if (Env.detection.safari) {
+         const safariVersionMatching = Env.detection.userAgent.match(/Version\/([0-9\.]*)/);
+         if (safariVersionMatching) {
+            return parseInt(safariVersionMatching[1], 10) >= 13;
+         }
+      }
+      // Check chrome ang safari on ios 13.
+      if (Env.detection.isMobileIOS && Env.detection.IOSVersion >= 13) {
+         return true;
+      }
+      return false;
    }
 };
 
@@ -74,6 +93,7 @@ var StickyHeader = Control.extend({
     */
    _isMobilePlatform: Env.detection.isMobilePlatform,
    _isMobileAndroid: Env.detection.isMobileAndroid,
+   _isSafari13: _private._isSafari13(),
 
    _shadowVisible: true,
    _stickyHeadersHeight: null,
@@ -89,6 +109,8 @@ var StickyHeader = Control.extend({
 
    _notifyHandler: tmplNotify,
 
+   _bottomShadowStyle: '',
+
    constructor: function() {
       StickyHeader.superclass.constructor.apply(this, arguments);
       this._observeHandler = this._observeHandler.bind(this);
@@ -97,6 +119,10 @@ var StickyHeader = Control.extend({
          top: 0,
          bottom: 0
       };
+   },
+
+   _afterUpdate: function() {
+      this._updateBottomShadowStyle();
    },
 
    _afterMount: function() {
@@ -117,16 +143,23 @@ var StickyHeader = Control.extend({
 
       this._observer.observe(children.observationTargetTop);
       this._observer.observe(children.observationTargetBottom);
+
+      this._updateBottomShadowStyle();
    },
 
    _beforeUnmount: function() {
       this._model.destroy();
       this._stickyDestroy = true;
-      this._observer.disconnect();
+
+      // его может и не быть, если контрол рушится не успев замаунтиться
+      if (this._observer) {
+          this._observer.disconnect();
+      }
 
       //Let the listeners know that the element is no longer fixed before the unmount.
       this._fixationStateChangeHandler('', this._model.fixedPosition);
       this._observeHandler = undefined;
+      this._observer = undefined;
       this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
    },
 
@@ -252,6 +285,8 @@ var StickyHeader = Control.extend({
          offset = MOBILE_GAP_FIX_OFFSET;
       }
 
+      fixedPosition = this._model ? this._model.fixedPosition : undefined;
+
       if (this._options.position.indexOf('top') !== -1) {
          // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
          // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
@@ -266,7 +301,7 @@ var StickyHeader = Control.extend({
             top += this._context.stickyHeader.top;
          }
 
-         style += 'top: ' + (top - offset)  + 'px;';
+         style += 'top: ' + (top - (fixedPosition ? offset : 0))  + 'px;';
       }
 
       if (this._options.position.indexOf('bottom') !== -1) {
@@ -281,7 +316,6 @@ var StickyHeader = Control.extend({
          style += 'bottom: ' + (bottom - offset) + 'px;';
       }
 
-      fixedPosition = this._model ? this._model.fixedPosition : undefined;
       if (fixedPosition) {
          if (offset) {
             container = _private._getNormalizedContainer(this);
@@ -332,8 +366,26 @@ var StickyHeader = Control.extend({
       if (position === 'top' && this._options.offsetTop && this._options.shadowVisibility === 'visible') {
          coord += this._options.offsetTop;
       }
-      return position + ': -' + coord + 'px;';
 
+      // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
+      const container = _private._getNormalizedContainer(this);
+      if (this._isSafari13 && position === 'bottom') {
+         return 'top: ' + (coord + (container ? container.offsetHeight : 0)) + 'px;';
+      }
+
+      return position + ': -' + coord + 'px;';
+   },
+
+   _updateBottomShadowStyle: function(): string {
+      if (this._isSafari13) {
+         const container = _private._getNormalizedContainer(this);
+         // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
+         // There's no container at first building of template.
+         if (container) {
+            this._bottomShadowStyle = 'bottom: unset; right: unset; top:' + container.offsetHeight + 'px;' +
+                'width:' + container.offsetWidth + 'px;';
+         }
+      }
    },
 
    _updateStickyShadow: function(e, ids) {

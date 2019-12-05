@@ -35,6 +35,8 @@
               keyProperty="id"
               parentProperty="parent"
               nodeProperty="parent@"
+              showEditArrow="{{true}}"
+              editArrowVisibilityCallback="{{_editArrowVisibilityCallback}}"
               displayProperty="title"
               columns="{{_customColumns}}"
               on:editArrowClick="_editArrowClick()"

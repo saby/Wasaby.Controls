@@ -146,9 +146,11 @@
    background-color: @background-color_ListView-item_editing;
    > .controls-itemActionsV {
       display: inline-block;
+      opacity: 1;
    }
    .controls-itemActionsV_custom {
       display: inline-block;
+      opacity: 1;
    }
 }
 
@@ -156,14 +158,16 @@
    opacity: @opacity_ListView-item_dragging;
 }
 
-.ws-is-hover {
+.ws-is-hover .controls-BaseControl_showActions {
    .controls-ListView__item_showActions {
       &:hover {
          > .controls-itemActionsV {
             display: inline-block;
+            opacity: 1;
          }
          .controls-itemActionsV_custom {
             display: inline-block;
+            opacity: 1;
          }
       }
    }
@@ -316,6 +320,16 @@
    box-sizing: border-box;
 }
 
+.ws-is-mobile-chrome-ios .controls-ListView__item__marked_master,
+.ws-is-desktop-safari .controls-ListView__item__marked_master,
+.ws-is-mobile-safari .controls-ListView__item__marked_master {
+   // ave safari 13
+   // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
+   // иначе все position: absolute элементы внутри position: sticky
+   // начинают сроиться относительно родителя уровнем выше
+   transform: translateZ(0);
+}
+
 .controls-ListView__item__marked_master {
    background-color: @background-color_List-masterList-item_selected;
    //z-index 1 is needed to overlap the right line of master
@@ -366,5 +380,17 @@
       &:hover {
          background-color: @background-color_List-masterList-item_hover;
       }
+   }
+}
+
+// Решает проблему, когда уже отрендеренные в DOM'е элементы списка в Safari становятся
+// видимыми при скролле только когда попадают в область видимости пользователя, и еще
+// с некоторой задержкой. То есть появляется эффект "мигания" элементов списка.
+// Приводит к этому, насколько я смог разобраться, какая-то комбинация position'ов и z-index'ов
+// https://stackoverflow.com/a/10170170/2298183
+.ws-is-mobile-safari {
+   // Делаем только для списков с новым рендером, а то страшно
+   .controls-ListViewV__itemsContainer--newRender {
+      .translate3d(0);
    }
 }

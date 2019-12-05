@@ -7,6 +7,7 @@ import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 import { goUpByControlTree } from 'UI/Focus';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
@@ -27,6 +28,8 @@ const _private = {
     remove(self, id) {
         const item = _private.find(id);
         if (item) {
+            // TODO: https://online.sbis.ru/opendoc.html?guid=7a963eb8-1566-494f-903d-f2228b98f25c
+            item.startRemove = true;
             return new Promise((resolve) => {
                 _private.closeChilds(self, item).then(() => {
                     _private.finishPendings(id, null, null, () => {
@@ -256,12 +259,8 @@ const _private = {
         return document && document.activeElement;
     },
 
-    goUpByControlTree(target) {
-        return goUpByControlTree(target);
-    },
-
     getActiveControl() {
-        return _private.goUpByControlTree(_private.getActiveElement())[0];
+        return goUpByControlTree(_private.getActiveElement())[0];
     },
 
     popupDragStart(id, offset) {
@@ -289,15 +288,23 @@ const _private = {
         return false;
     },
 
-    popupControlResize(id) {
+    popupResizeInner(id) {
         const item = _private.find(id);
         if (item) {
             const parentItem = _private.find(item.parentId);
             // Если над скрытым стековым окном позиционируются другие окна, то не даем им реагировать на внутренние ресайзы
             // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
             if (!parentItem || parentItem.popupOptions.hidden !== true) {
-                return item.controller.popupResize(item, _private.getItemContainer(id));
+                return item.controller.resizeInner(item, _private.getItemContainer(id));
             }
+        }
+        return false;
+    },
+
+    popupResizeOuter(id) {
+        const item = _private.find(id);
+        if (item) {
+            return item.controller.resizeOuter(item, _private.getItemContainer(id));
         }
         return false;
     },
@@ -305,7 +312,7 @@ const _private = {
     popupDragEnd(id, offset) {
         const element = _private.find(id);
         if (element) {
-            element.controller.popupDragEnd(element, offset);
+            element.controller._popupDragEnd(element, offset);
             return true;
         }
         return false;
@@ -406,7 +413,7 @@ const _private = {
                 }, function(e) {
                     item.removePending = null;
                     if (e.canceled !== true) {
-                        Env.IoC.resolve('ILogger').error('Controls/_popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                        Logger.error('Controls/_popup/Manager/Container: Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', undefined, e);
                         pendingsFinishedCallback && pendingsFinishedCallback();
                     }
 
@@ -528,14 +535,19 @@ const Manager = Control.extend({
      * @param controller popup controller
      */
     show(options, controller): string {
+        if (this.find(options.id)) {
+            this.update(options.id, options);
+            return options.id;
+        }
         const item = this._createItemConfig(options, controller);
         const defaultConfigResult = controller.getDefaultConfig(item);
-        _private.addElement(item);
         if (defaultConfigResult instanceof Promise) {
             defaultConfigResult.then(() => {
+                _private.addElement(item);
                 _private.redrawItems();
             });
         } else {
+            _private.addElement(item);
             _private.redrawItems();
         }
         return item.id;
@@ -551,7 +563,7 @@ const Manager = Control.extend({
     },
 
     _createItemConfig(options, controller) {
-        const popupId = randomId('popup-');
+        const popupId = options.id || randomId('popup-');
         const popupConfig = {
             id: popupId,
             modal: options.modal,
@@ -590,10 +602,13 @@ const Manager = Control.extend({
     },
 
     _findParentPopup(control) {
-        while (control && control._moduleName !== 'Controls/_popup/Manager/Popup') {
-            control = control._logicParent || (control.getParent && control.getParent());
+        const parentControls = goUpByControlTree(control._container);
+        for (let i = 0; i < parentControls.length; i++) {
+            if (parentControls[i]._moduleName === 'Controls/_popup/Manager/Popup') {
+                return parentControls[i];
+            }
         }
-        return control;
+        return false;
     },
 
     _mouseDownHandler(event) {
@@ -603,8 +618,11 @@ const Manager = Control.extend({
             const isResizingLine = event.target.classList.contains('controls-ResizingLine');
             _private.popupItems.each((item) => {
                 // if we have deactivated popup
-                if (item && (item.waitDeactivated || isResizingLine)) {
-                    const parentControls = _private.goUpByControlTree(event.target);
+                // Отказываюсь на старых страницах от закрытия окон по деактивации, сам отслеживаю необходимость закрытия
+                // в 20.1000 по работе в план разделю закрытие по клику мимо и по деактивации на 2 разные опции,
+                // из этой проверки нужно удалить item.waitDeactivated и isNewEnvironment()
+                if (item && (item.waitDeactivated || isResizingLine || !_private.isNewEnvironment())) {
+                    const parentControls = goUpByControlTree(event.target);
                     const popupInstance = ManagerController.getContainer().getPopupById(item.id);
 
                     // Check the link between target and popup

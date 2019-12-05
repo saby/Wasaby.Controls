@@ -1,4 +1,4 @@
-import Env = require('Env/Env');
+import {Logger} from 'UI/Utils';
 
 var deprecatedStyles = {
     error: 'danger',
@@ -13,7 +13,7 @@ export = function getStyle(style, controlName) {
     }
 
     if (deprecatedStyles.hasOwnProperty(style)) {
-        Env.IoC.resolve('ILogger').warn(controlName, 'Используются устаревшие стили. Используйте ' + deprecatedStyles[style] + ' вместо ' + style);
+        Logger.warn(controlName + ': Используются устаревшие стили. Используйте ' + deprecatedStyles[style] + ' вместо ' + style);
         return deprecatedStyles[style];
     }
 

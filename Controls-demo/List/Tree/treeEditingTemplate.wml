@@ -6,6 +6,7 @@
                     enabled="{{true}}">
             <ws:editorTemplate>
                 <Controls.input:Text bind:value="itemData.item[itemData.column.displayProperty || 'title']"
+                                     fontSize="l"
                                      selectOnClick="{{ false }}" />
             </ws:editorTemplate>
         </ws:partial>

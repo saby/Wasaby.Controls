@@ -14,6 +14,19 @@ define(
             useAdditionToMaxPrecision: true
          }, null);
 
+         it('_getStartingPosition', function() {
+            var testModel = new ViewModel.default({
+               precision: 2,
+               useGrouping: true,
+               onlyPositive: false,
+               showEmptyDecimals: true,
+               useAdditionToMaxPrecision: true
+            }, '0.00');
+
+            assert.equal(testModel.selection.start, 1);
+            assert.equal(testModel.selection.end, 1);
+         });
+
          describe('Change the value.', function() {
             it('0', function() {
                model.value = '0';
@@ -35,6 +48,18 @@ define(
             });
             it('123456', function() {
                model.value = '123456';
+
+               assert.equal(model.value, '123456');
+               assert.equal(model.displayValue, '123 456.00');
+            });
+            it('1e21', function() {
+               model.value = 1e21;
+
+               assert.equal(model.value, 1e21);
+               assert.equal(model.displayValue, '1 000 000 000 000 000 000 000.00');
+            });
+            it('Type number', function() {
+               model.value = 123456;
 
                assert.equal(model.value, '123456');
                assert.equal(model.displayValue, '123 456.00');
@@ -63,6 +88,13 @@ define(
                model.displayValue = '123 456.00';
 
                assert.equal(model.value, '123456');
+               assert.equal(model.displayValue, '123 456.00');
+            });
+            it('Type number', function() {
+               model.value = 0;
+               model.displayValue = '123 456.00';
+
+               assert.equal(model.value, 123456);
                assert.equal(model.displayValue, '123 456.00');
             });
          });

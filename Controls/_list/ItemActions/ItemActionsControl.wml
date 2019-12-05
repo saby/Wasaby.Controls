@@ -6,19 +6,16 @@
             canUpdateItemsActions="{{ null }}"
             attr:class="{{_options.menuIsShown ? 'controls-itemActionsV_invisible'}}">
    <ws:itemActionsTemplate>
-      <ws:if data="{{serverSide}}">
-         <invisible-node />
-      </ws:if>
-      <ws:else>
-         {{ '' }}
-         <ws:partial
-                 toolbarVisibility="{{_options.toolbarVisibility}}"
-                 style="{{_options.style}}"
-                 size="{{_options.editingConfig ? 's' : 'm'}}"
-                 template="{{ _itemActionsTemplate }}"
-                 itemActionsPosition="{{_options.itemActionsPosition}}"
-                 actionMenuIsShown="{{_options.actionMenuIsShown}}"
-                 scope="{{itemActionsTemplate}}"/>
-      </ws:else>
+      {{ '' }}
+      <ws:partial
+               toolbarVisibility="{{_options.toolbarVisibility}}"
+               style="{{_options.style}}"
+               size="{{_options.editingConfig ? 's' : 'm'}}"
+               template="{{ _itemActionsTemplate }}"
+               itemPadding="{{_options.itemPadding}}"
+               getContainerPaddingClass="{{_getContainerPaddingClass}}"
+               itemActionsPosition="{{_options.itemActionsPosition}}"
+               actionMenuIsShown="{{_options.actionMenuIsShown}}"
+               scope="{{itemActionsTemplate}}"/>
    </ws:itemActionsTemplate>
 </ws:partial>

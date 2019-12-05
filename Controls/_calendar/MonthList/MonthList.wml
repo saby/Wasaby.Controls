@@ -6,6 +6,8 @@
       name="scroll"
       attr:class="MonthList-ScrollContainer"
       scrollbarVisible="{{false}}"
+      topShadowVisibility="visible"
+      bottomShadowVisibility="visible"
       on:scroll="_scrollHandler()">
       <Controls.list:View
          source="{{_viewSource}}"
@@ -20,7 +22,7 @@
          >
          <ws:itemPadding left="null" right="null" bottom="null" top="null"/>
          <ws:navigation source="position" view="infinity">
-            <ws:sourceConfig limit="{{8}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
+            <ws:sourceConfig limit="{{_options._limit}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
          </ws:navigation>
 
          <ws:itemTemplate>
@@ -34,7 +36,7 @@
                         data="{{ itemTemplate.itemData.item.getRawData() }}">
                      <ws:partial
                            template="{{_getTemplate(itemTemplate.itemData.item)}}"
-                           date="{{itemTemplate.itemData.item.date}}"
+                           date="{{_idToDate(itemTemplate.itemData.item.id)}}"
                            extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
                            startValue="{{itemTemplate.itemData.item.startValue}}"
                            endValue="{{itemTemplate.itemData.item.endValue}}"
