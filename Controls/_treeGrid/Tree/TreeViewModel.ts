@@ -375,8 +375,19 @@ var
                 curNodeForItem = parentItem;
                 dispParent = curNodeForDispItem.getParent();
             }
+        },
+        getDefaultContentFontSize(itemType: null | boolean): string {
+            switch (itemType) {
+                case true:
+                    return '2xl';
+                case false:
+                    return 'xl';
+                case null:
+                    return 'm';
+                default:
+                    return undefined;
+            }
         }
-
     },
 
     TreeViewModel = ListViewModel.extend({
@@ -556,6 +567,7 @@ var
             current.shouldDrawExpanderPadding = _private.shouldDrawExpanderPadding;
             current.getExpanderPaddingClasses = _private.getExpanderPaddingClasses;
             current.prepareExpanderClasses = _private.prepareExpanderClasses;
+            current.defaultContentFontSize = _private.getDefaultContentFontSize(current.item.get(this._options.nodeProperty));
 
             // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
             current.expanderTemplate = this._options.expanderTemplate;

@@ -133,6 +133,7 @@ var
 
                 currentColumn.isExpanded = current.isExpanded;
                 currentColumn.cellClasses += ' controls-TreeGrid__row-cell' + `_theme-${theme}`;
+                currentColumn.defaultContentFontSize = current.defaultContentFontSize;
 
                 if (currentColumn.nodeType) {
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__node' + `_theme-${theme}`;
