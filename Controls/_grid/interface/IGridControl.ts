@@ -355,13 +355,11 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsPosition
- * @cfg {String} Устанавливает положение строки итогов.
+ * @cfg {String|undefined} Устанавливает положение строки итогов.
+ * @variant top Строка располагается над списком.
+ * @variant bottom Строка располагается под списком.
  * @remark
- * Доступные значения:
- *
- * * **top** — над списком.
- * * **bottom** — под списком.
- * * **undefined** — строка итогов скрыта.
+ * При значении опции **undefined** строка итогов скрыта.
  * @default undefined
  * @result
  * @see resultsTemplate
