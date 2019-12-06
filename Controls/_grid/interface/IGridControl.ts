@@ -354,13 +354,17 @@
  */
 
 /**
- * @name Controls/_grid/interface/IGridControl#resultsPosition
- * @cfg {String|undefined} Устанавливает положение строки итогов.
+ * @typedef {Enum} ResultsPosition
  * @variant top Строка располагается над списком.
  * @variant bottom Строка располагается под списком.
+ * @default undefined
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#resultsPosition
+ * @cfg {ResultsPosition} Устанавливает положение строки итогов.
  * @remark
  * При значении опции **undefined** строка итогов скрыта.
- * @default undefined
  * @result
  * @see resultsTemplate
  * @see resultsVisibility
