@@ -8,7 +8,7 @@ import {isEqual} from 'Types/object';
 import {Logger} from 'UI/Utils';
 import {ContextOptions as dataOptions} from 'Controls/context';
 import {Confirmation} from 'Controls/popup';
-import {TKeysSelection} from "../_interface/ISelectionType";
+import {TKeysSelection} from 'Controls/interface';
 import {selectionToRecord} from 'Controls/operations';
 
 var BEFORE_ITEMS_MOVE_RESULT = {
