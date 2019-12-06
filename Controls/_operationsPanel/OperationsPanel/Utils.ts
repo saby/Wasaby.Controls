@@ -36,6 +36,8 @@ import getWidthUtil = require('Controls/Utils/getWidth');
                size: 'm',
                itemsSpacing: 'medium',
                theme,
+               buttonTemplate: toolbars.getButtonTemplate(),
+               buttonTemplateOptions: toolbars.getButtonTemplateOptionsByItem(item),
                contentTemplate: _private.getContentTemplate(item, itemTemplate, itemTemplateProperty)
             });
          });
@@ -44,7 +46,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
 
          measurer.classList.add('controls-UtilsOperationsPanel__measurer');
          document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-Toolbar_item'), function(item) {
+         [].forEach.call(measurer.getElementsByClassName('controls-Toolbar__item'), function(item) {
             var
                styles = window.getComputedStyle(item),
                padding = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);
@@ -68,6 +70,8 @@ import getWidthUtil = require('Controls/Utils/getWidth');
             itemsSizes,
             currentWidth,
             visibleItemsKeys = [];
+
+         toolbars.actualItems(items);
 
          items.each(function(item) {
             if (!item.get(parentProperty)) {

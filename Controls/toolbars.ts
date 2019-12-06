@@ -40,4 +40,5 @@
 import ItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 export {ItemTemplate};
 
-export {default as View, IToolbarOptions, TItemsSpacing} from './_toolbars/View';
+export {items as actualItems} from 'Controls/_toolbars/ActualAPI';
+export {default as View, IToolbarOptions, TItemsSpacing, getButtonTemplateOptionsByItem, getButtonTemplate} from './_toolbars/View';

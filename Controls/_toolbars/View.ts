@@ -31,6 +31,26 @@ type TItems = RecordSet<TItem>;
 type TypeItem = 'toolButton' | 'icon' | 'link' | 'list';
 export type TItemsSpacing = 'medium' | 'big';
 
+export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
+    const size = 'm';
+    const icon = item.get('icon');
+    const style = item.get('buttonStyle');
+    const viewMode = item.get('viewMode');
+    const iconStyle = item.get('iconStyle');
+    const transparent = item.get('buttonTransparent');
+    const caption = item.get('caption');
+    const readOnly = item.get('readOnly');
+    const cfg = {};
+    cssStyleGeneration.call(cfg, {
+        size, icon, style, viewMode, iconStyle, transparent, caption, readOnly
+    });
+    return cfg
+}
+
+export function getButtonTemplate(): TemplateFunction {
+    return ButtonTemplate;
+}
+
 /**
  * Интерфейс опций контрола {@link Control/toolbar:View}.
  * @interface Control/_toolbars/View:IToolbarOptions
@@ -82,7 +102,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     protected _nodeProperty: string = null;
     protected _parentProperty: string = null;
     protected _menuOptions: object = null;
-    protected _buttonTemplate: TemplateFunction = ButtonTemplate;
+    protected _buttonTemplate: TemplateFunction = getButtonTemplate();
 
     protected _template: TemplateFunction = template;
 
@@ -295,19 +315,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     }
 
     private _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
-        const size = 'm';
-        const icon = item.get('icon');
-        const style = item.get('buttonStyle');
-        const viewMode = item.get('viewMode');
-        const iconStyle = item.get('iconStyle');
-        const transparent = item.get('buttonTransparent');
-        const caption = item.get('caption');
-        const readOnly = item.get('readOnly');
-        const cfg = {};
-        cssStyleGeneration.call(cfg, {
-            size, icon, style, viewMode, iconStyle, transparent, caption, readOnly
-        });
-        return cfg
+        return getButtonTemplateOptionsByItem(item);
     }
 
     protected _showMenu(event: SyntheticEvent<UIEvent>): void {
