@@ -1,7 +1,6 @@
 import * as Deferred from 'Core/Deferred';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import ICrud from './ICrud';
-import {Memory} from 'Types/source';
 
 const SEARCH_DELAY = 3000;
 
