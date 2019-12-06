@@ -5,6 +5,11 @@ import {constants} from 'Env/Env'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksPhoto'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksDescription'
 import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksReceived'
+import * as Images from 'Controls-demo/DragNDrop/Images';
+import * as itemTpl from  'wml!Controls-demo/grid/_resources/CellTemplates/CellWithBgc';
+import * as itemCountr from 'wml!Controls-demo/grid/_resources/CellTemplates/CountryTemp';
+
+
 
 
 const resultCellTpl = numberResultTpl;
@@ -196,6 +201,15 @@ function getCountriesStats() {
             {
                 displayProperty: 'capital',
                 width: '200px'
+            },
+        ],
+
+        getColumnsForLoad: () => [
+            {
+                displayProperty: 'id',
+            },
+            {
+                displayProperty: 'load',
             },
         ],
 
@@ -889,6 +903,148 @@ function forShowWidths() {
     }
 }
 
+const cellPadding = () => ({
+    getCollumns: () => ([
+        {
+            displayProperty: 'number',
+            width: '100px',
+            template: itemCountr,
+            cellPadding: {
+                right: 's'
+            }
+        },
+        {
+            displayProperty: 'country',
+            width: '100px',
+            template: itemTpl,
+            cellPadding: {
+                left: 's',
+                right: 'null'
+            }
+        },
+        {
+            displayProperty: 'capital',
+            width: '100px'
+        },
+    ]),
+    getData: () => ([
+        {
+            id: 0,
+            number: 'Russian Federation',
+            country: 'Российская Федерация',
+            capital: 'Москва',
+            population: 143420300,
+            square: 17075200,
+            populationDensity: 8
+        },
+        {
+            id: 1,
+            number: 'Canada',
+            country: 'Канада',
+            capital: 'Оттава',
+            population: 32805000,
+            square: 9976140,
+            populationDensity: 3
+        },
+        {
+            id: 2,
+            number: 'Unated States of America',
+            country: 'Соединенные Штаты Америки',
+            capital: 'Вашингтон',
+            population: 295734100,
+            square: 9629091,
+            populationDensity: 30.71
+        },
+        {
+            id: 3,
+            number: 'Peoples Republic of China',
+            country: 'Китайская народная республика',
+            capital: 'Пекин',
+            population: 1306313800,
+            square: 9596960,
+            populationDensity: 136.12
+        },
+        {
+            id: 4,
+            number: 'trinidad and tabago',
+            country: 'Тринидад и Табаго',
+            capital: 'Город',
+            population: 186112800,
+            square: 8511965,
+            populationDensity: 21.86
+        }
+    ]),
+    getCellPaddingHeader: () => {
+        return [
+            {
+                title: 'right: S',
+            },
+            {
+                title: 'left: S and right: null',
+            },
+            {
+                title: 'left: default',
+            }
+        ];
+    }
+})
+
+const DragNDrop = () => ({
+    data: [{
+        id: 0,
+        title: 'America',
+        additional: 'USA',
+        image: Images[0],
+        'Раздел@': true,
+        'Раздел': null
+    }, {
+        id: 1,
+        title: 'France',
+        additional: 'Europe',
+        image: Images[1],
+        'Раздел@': true,
+        'Раздел': null
+    }, {
+        id: 2,
+        title: 'Solar',
+        additional: 'Star',
+        image: Images[2],
+        'Раздел@': true,
+        'Раздел': null
+    }, {
+        id: 3,
+        title: 'Luna',
+        additional: 'Sattelite',
+        image: Images[3],
+        'Раздел@': null,
+        'Раздел': null
+    }, {
+        id: 4,
+        title: 'Pizza',
+        additional: 'Food',
+        image: Images[4],
+        'Раздел@': null,
+        'Раздел': null
+    }, {
+        id: 5,
+        title: 'Monkey',
+        additional: 'Animals',
+        image: Images[5],
+        'Раздел@': null,
+        'Раздел': null
+    }],
+    columns: [{
+        displayProperty: 'id',
+        width: '30px'
+    }, {
+        displayProperty: 'title',
+        width: '200px',
+    }, {
+        displayProperty: 'additional',
+        width: '200px',
+    }],
+})
+
 const changeSourceData = () => ({
     data: [
         {
@@ -988,5 +1144,7 @@ export {
     forShowWidths,
     getEditing,
     countries,
+    DragNDrop,
+    cellPadding,
     changeSourceData
 }
