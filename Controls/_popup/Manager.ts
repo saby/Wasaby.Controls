@@ -515,7 +515,7 @@ const _private = {
 const Manager = Control.extend({
     _template: template,
     _afterMount(options, context) {
-        this._contextIsTouch = context.isTouch && context.isTouch.isTouch;
+        this._updateContext(context);
         ManagerController.setManager(this);
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
         this._hasMaximizePopup = false;
@@ -529,11 +529,15 @@ const Manager = Control.extend({
     },
 
     _afterUpdate(oldOptions, context) {
-        this._contextIsTouch = context.isTouch && context.isTouch.isTouch;
+        this._updateContext(context);
         // Theme of the popup header can be changed dynamically.
         // The option is not inherited, so in order for change option in 1 synchronization cycle, we have to make an event model on ManagerController.
         // Now there are no cases where the theme changes when the popup are open, so now just change the theme to afterUpdate.
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
+    },
+
+    _updateContext(context) {
+        this._contextIsTouch = context && context.isTouch && context.isTouch.isTouch;
     },
 
     /**
