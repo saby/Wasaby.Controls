@@ -1,7 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 
 /**
- * @typedef {String} TColumns
+ * @typedef {IColumn[]} TColumns
  * @description Тип опции columns в табличном представлении
  * @public
  * @author Авраменко А.С.
