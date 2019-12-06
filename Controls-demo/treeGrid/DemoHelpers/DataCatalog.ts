@@ -383,7 +383,7 @@ export const Gadgets = {
         ];
     },
 
-    getGridColumnsWithCellPadding(){
+    getGridColumnsWithCellPadding() {
         return [
             {
                 displayProperty: 'title',

@@ -4,6 +4,7 @@
                 keyProperty="id"
                 source="{{_viewSource}}"
                 columns="{{_columns}}"
+                header="{{_header}}"
                 columnScroll="{{true}}"
                 stickyColumnsCount="{{2}}"
                 columnScrollStartPosition="end"/>

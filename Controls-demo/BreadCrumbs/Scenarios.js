@@ -36,6 +36,11 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
 
    var Scenarios = Control.extend({
       _template: template,
+      _root: 12221,
+      _root1: 121111,
+      _root2: 21111,
+      _root4: 11,
+      _root5: 121111,
 
       _beforeMount: function() {
          this._columns = [{
