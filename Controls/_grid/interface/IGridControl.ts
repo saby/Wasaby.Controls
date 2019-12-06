@@ -361,7 +361,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsPosition
- * @cfg {ResultsPosition} Устанавливает положение строки итогов.
+ * @cfg {ResultsPosition|undefined} Устанавливает положение строки итогов.
  * @default undefined
  * @remark
  * При значении опции **undefined** строка итогов скрыта.
