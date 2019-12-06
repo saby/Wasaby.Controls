@@ -1,4 +1,10 @@
 <div>
+    <div class="compatibleDemo__row">
+        <SBIS3.CONTROLS.Label  name="initStatus"/>
+    </div>
+    <div class="compatibleDemo__row">
+        <SBIS3.CONTROLS.TextBox  name="TextBoxWrapper" text="{{ _text }}"/>
+    </div>
     <div class="for__ws4">
     </div>
 </div>
