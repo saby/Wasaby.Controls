@@ -333,6 +333,24 @@ define(
             assert.equal(position.left, 400);
             assert.equal(position.bottom, 600);
             assert.equal(Object.keys(position).length, 4);
+
+            const newTargetCoords = {
+               top: 450,
+               left: 450,
+               bottom: 550,
+               right: 550,
+               width: 100,
+               height: 100,
+               leftScroll: 0,
+               topScroll: 0
+            };
+            cfg = getPositionConfig();
+            cfg.sizes.width = 1000;
+            cfg.sizes.height = 1000;
+
+            position = StickyStrategy.getPosition(cfg, newTargetCoords);
+            assert.equal(position.left, 450);
+            assert.equal(position.bottom, 550);
          });
 
          it('Sticky fittingMode fixed', () => {
