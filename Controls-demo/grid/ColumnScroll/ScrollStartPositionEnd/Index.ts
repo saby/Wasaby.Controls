@@ -9,6 +9,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;
     private _columns = getCountriesStats().getColumnsWithWidths();
+    private _header = getCountriesStats().getDefaultHeader();
 
     protected _beforeMount() {
         this._viewSource = new Memory({

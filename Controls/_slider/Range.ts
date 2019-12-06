@@ -1,20 +1,14 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {ISlider, ISliderOptions} from './interface/ISlider';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
-export interface ISliderRangeOptions extends IControlOptions {
-   size?: string;
-   borderVisible?: boolean;
-   minValue: number;
-   maxValue: number;
-   scaleStep?: number;
+export interface ISliderRangeOptions extends IControlOptions, ISliderOptions {
    startValue: number;
    endValue: number;
-   precision: number;
-   tooltipFormatter?: Function;
 }
 
 const maxPercentValue = 100;
@@ -26,6 +20,7 @@ const maxPercentValue = 100;
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Range
+ * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Range/SliderRangeDemo
  */
@@ -37,121 +32,9 @@ const maxPercentValue = 100;
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Range
+ * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Range/SliderRangeDemo
- */
-
-/**
- * @name Controls/_slider/Range#size
- * @cfg {Boolean} Устанавливает размер ползунка слайдера.
- * @variant m
- * @variant s
- * @default m
- * @example
- * Слайдер с диаметром ползунка = 12px
- * <pre class="brush:html">
- *   <Controls.slider:Base size="s"/>
- * </pre>
- */
-
-/*
- * @name Controls/_slider/Range#size
- * @cfg {Boolean} sets the size of slider point
- * @example
- * Slider with diameter of point = 12px
- * <pre class="brush:html">
- *   <Controls.slider:Base size="s"/>
- * </pre>
- */
-
-/**
- * @name Controls/_slider/Range#borderVisible
- * @cfg {Boolean} Устанавливает границу вокруг контрола.
- * @example
- * Слайдер с границей:
- * <pre class="brush:html">
- *   <Controls.slider:Base borderVisible="{{true}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_slider/Range#borderVisible
- * @cfg {Boolean} sets the stroke around control
- * @example
- * Slider with border
- * <pre class="brush:html">
- *   <Controls.slider:Base borderVisible="{{true}}"/>
- * </pre>
- */
-
-/**
- * @name Controls/_slider/Range#minValue
- * @cfg {Number} Устанавливает минимальное значение слайдера. Обязательная к конфигурации опция.
- * @remark Должно быть меньше, чем {@link maxValue}.
- * @example
- * Слайдер с границей:
- * <pre class="brush:html">
- *   <Controls.slider:Base minValue="{{10}}"/>
- * </pre>
- * @see maxValue
- */
-
-/*
- * @name Controls/_slider/Range#minValue
- * @cfg {Number} sets the minimum value of slider
- * @remark must be less than maxValue
- * @example
- * Slider with border
- * <pre class="brush:html">
- *   <Controls.slider:Base minValue="{{10}}"/>
- * </pre>
- * @see maxValue
- */
-
-/**
- * @name Controls/_slider/Range#maxValue
- * @cfg {Number} Устанавливает максимальное значение слайдера. Обязательная к конфигурации опция.
- * @remark Должно быть больше, чем {@link minValue}.
- * @example
- * Слайдер с границей:
- * <pre class="brush:html">
- *   <Controls.slider:Base maxValue="{{100}}"/>
- * </pre>
- * @see minValue
- */
-
-/*
- * @name Controls/_slider/Range#maxValue
- * @cfg {Number} sets the maximum value of slider
- * @remark must be greater than minValue
- * @example
- * Slider with border
- * <pre class="brush:html">
- *   <Controls.slider:Base maxValue="{{100}}"/>
- * </pre>
- * @see minValue
- */
-
-/**
- * @name Controls/_slider/Range#scaleStep
- * @cfg {Number} Параметр scaleStep определяет шаг шкалы, расположенной под слайдером.
- * @remark Шкала отображается, когда опция {@link borderVisible} установлена в значения false, а параметр scaleStep положительный.
- * @example
- * Слайдер со шкалой с шагом 20:
- * <pre class="brush:html">
- *   <Controls.slider:Base scaleStep="{{20}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_slider/Range#scaleStep
- * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
- * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
- * @example
- * Slider with scale step of 20
- * <pre class="brush:html">
- *   <Controls.slider:Base scaleStep="{{20}}"/>
- * </pre>
  */
 
 /**
@@ -202,48 +85,8 @@ const maxPercentValue = 100;
  * @see startValue
  */
 
-/**
- * @name Controls/_slider/Range#precision
- * @cfg {Number} Количество символов в десятичной части.
- * @remark Должно быть неотрицательным.
- * @example
- * Слайдер с целыми значениями:
- * <pre class="brush:html">
- *   <Controls.slider:Base precision="{{0}}"/>
- * </pre>
- */
 
-/*
- * @name Controls/_slider/Range#precision
- * @cfg {Number} Number of characters in decimal part.
- * @remark Must be non-negative
- * @example
- * Slider with integer values;
- * <pre class="brush:html">
- *   <Controls.slider:Base precision="{{0}}"/>
- * </pre>
- */
-
-/**
- * @name Controls/_slider/Base#tooltipFormatter
- * @cfg {Function} Функция форматирования подсказки.
- * @remark
- * Аргументы функции:
- * <ul>
- *    <li>value - текущее положение слайдера</li>
- * </ul>
- */
-
-/*
- * @name Controls/_slider/Base#tooltipFormatter
- * @cfg {Function} Tooltip formatter function.
- * @remark
- * Function Arguments:
- * <ul>
- *    <li>value - slider current position</li>
- * </ul>
- */
-class Range extends Control<ISliderRangeOptions> {
+class Range extends Control<ISliderRangeOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;

@@ -27,6 +27,7 @@ const ERROR_ON_TIMEOUT = 504;
  * данных, будет выведена соответствующая ошибка.
  * @class Controls/_dataSource/_error/DataLoader
  * @extends UI/Base:Control
+ * @implements Controls/_interface/IErrorController
  * @control
  * @public
  * @author Сухоручкин А.С

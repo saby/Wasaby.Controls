@@ -383,7 +383,7 @@ export const Gadgets = {
         ];
     },
 
-    getGridColumnsWithCellPadding(){
+    getGridColumnsWithCellPadding() {
         return [
             {
                 displayProperty: 'title',
@@ -1241,7 +1241,7 @@ export const VirtualScrollHasMore = {
             parent: null,
             type: null,
         },
-    ];
+    ]
 
 };
 

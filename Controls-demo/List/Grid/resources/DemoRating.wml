@@ -1,5 +1,5 @@
 <ws:partial template="Controls/grid:ColumnTemplate" attr:class="js-controls-ListView__notEditable controls-Grid__row-cell__content_baseline_L" valign="bottom" itemData="{{itemData}}">
     <ws:contentTemplate>
-        <Controls.Render.Money.Money attr:class="demo-Grid__item" text="{{itemData.item[itemData.column.displayProperty]}}"/>
+        <Controls.decorator:Money attr:class="demo-Grid__item" value="{{itemData.item[itemData.column.displayProperty]}}"/>
     </ws:contentTemplate>
 </ws:partial>

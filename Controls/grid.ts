@@ -10,6 +10,8 @@
  * @includes ColumnTemplate Controls/grid:ColumnTemplate
  * @includes RowEditor Controls/grid:RowEditor
  * @includes IGridControl Controls/_grid/interface/IGridControl
+ * @includes IColumn Controls/_grid/interface/IColumn
+ * @includes IHeaderCell Controls/_grid/interface/IHeaderCell
  * @public
  * @author Крайнов Д.О.
  */
@@ -43,3 +45,18 @@ export {
 
     RowEditor
 };
+
+export {
+    TColumns,
+    IColumn,
+    ICellPadding,
+    TCellAlign,
+    TCellPaddingVariant,
+    TCellVerticalAlign,
+    TOverflow
+} from './_grid/interface/IColumn';
+
+export {
+    THeader,
+    IHeaderCell
+} from './_grid/interface/IHeaderCell';

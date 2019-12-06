@@ -6,7 +6,8 @@ define([
    'Core/core-instance',
    'Env/Env',
    'Types/collection',
-   'Types/source'
+   'Types/source',
+   'Controls/Application/SettingsController'
 ], function(
    treeGrid,
    listMod,
@@ -15,7 +16,8 @@ define([
    cInstance,
    Env,
    collection,
-   sourceLib
+   sourceLib,
+   SettingsController
 ) {
    function correctCreateTreeControl(cfg) {
       var
@@ -490,83 +492,103 @@ define([
 
       it('_private.shouldLoadChildren', function() {
          const
+            source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: [
+                  {
+                     id: 'leaf',
+                     title: 'Leaf',
+                     parent: null,
+                     nodeType: null,
+                     hasChildren: false
+                  },
+                  {
+                     id: 'node_has_loaded_children',
+                     title: 'Has Loaded Children',
+                     parent: null,
+                     nodeType: true,
+                     hasChildren: true
+                  },
+                  {
+                     id: 'node_has_unloaded_children',
+                     title: 'Has Unloaded Children',
+                     parent: null,
+                     nodeType: true,
+                     hasChildren: true
+                  },
+                  {
+                     id: 'node_has_no_children',
+                     title: 'Has No Children',
+                     parent: null,
+                     nodeType: true,
+                     hasChildren: false
+                  },
+                  {
+                     id: 'leaf_2',
+                     title: 'Leaf 2',
+                     parent: 'node_has_loaded_children',
+                     nodeType: null,
+                     hasChildren: false
+                  },
+                  {
+                     id: 'leaf_3',
+                     title: 'Leaf 3',
+                     parent: 'node_has_unloaded_children',
+                     nodeType: null,
+                     hasChildren: false
+                  }
+               ],
+               filter: function(item, where) {
+                  if (!where.parent) {
+                     // Эмулируем метод БЛ, который по запросу корня возвращает еще и подзаписи родителя
+                     // с ключом node_has_loaded_children
+                     return !item.get('parent') || item.get('parent') === 'node_has_loaded_children';
+                  }
+                  return item.get('parent') === where.parent;
+               }
+            }),
+            originalQuery = source.query;
+         source.query = function() {
+            return originalQuery.apply(this, arguments).addCallback(function(items) {
+               let moreDataRs = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     {
+                        id: 'node_has_loaded_children',
+                        nav_result: false
+                     },
+                     {
+                        id: 'node_has_no_children',
+                        nav_result: true
+                     }
+                  ]
+               });
+               let rawData = items.getRawData();
+               rawData.meta.more = moreDataRs;
+               items.setRawData(rawData);
+               return items;
+            });
+         };
+         const
             treeControl = correctCreateTreeControl({
                columns: [],
                parentProperty: 'parent',
                nodeProperty: 'nodeType',
                hasChildrenProperty: 'hasChildren',
-               source: new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: [
-                     {
-                        id: 'leaf',
-                        title: 'Leaf',
-                        parent: null,
-                        nodeType: null,
-                        hasChildren: false
-                     },
-                     {
-                        id: 'node_has_loaded_children',
-                        title: 'Has Loaded Children',
-                        parent: null,
-                        nodeType: true,
-                        hasChildren: true
-                     },
-                     {
-                        id: 'node_has_unloaded_children',
-                        title: 'Has Unloaded Children',
-                        parent: null,
-                        nodeType: true,
-                        hasChildren: true
-                     },
-                     {
-                        id: 'node_has_no_children',
-                        title: 'Has No Children',
-                        parent: null,
-                        nodeType: true,
-                        hasChildren: false
-                     },
-
-                     {
-                        id: 'leaf_2',
-                        title: 'Leaf 2',
-                        parent: 'node_has_loaded_children',
-                        nodeType: null,
-                        hasChildren: false
-                     },
-                     {
-                        id: 'leaf_3',
-                        title: 'Leaf 3',
-                        parent: 'node_has_unloaded_children',
-                        nodeType: null,
-                        hasChildren: false
-                     }
-                  ],
-                  filter: function(item, where) {
-                     if (!where.parent) {
-                        // Эмулируем метод БЛ, который по запросу корня возвращает еще и подзаписи родителя
-                        // с ключом node_has_loaded_children
-                        return !item.get('parent') || item.get('parent') === 'node_has_loaded_children'
-                     }
-                     return item.get('parent') === where.parent;
-                  }
-               })
+               source: source
             }),
             shouldLoadChildrenResult = {
                'node_has_loaded_children': false,
                'node_has_unloaded_children': true,
-               'node_has_no_children': false
-            },
-            listViewModel = treeControl._children.baseControl.getViewModel();
-
+               'node_has_no_children': true
+            };
          return new Promise(function(resolve) {
             setTimeout(function() {
                for (const nodeKey in shouldLoadChildrenResult) {
                   const
-                     expectedResult = shouldLoadChildrenResult[nodeKey],
-                     node = listViewModel.getItemById(nodeKey).getContents();
+                     expectedResult = shouldLoadChildrenResult[nodeKey];
                   assert.strictEqual(
-                     treeGrid.TreeControl._private.shouldLoadChildren(treeControl, node),
+                     treeGrid.TreeControl._private.shouldLoadChildren(treeControl, nodeKey),
                      expectedResult,
                      '_private.shouldLoadChildren returns unexpected result for ' + nodeKey
                   );
@@ -998,6 +1020,45 @@ define([
          assert.equal(treeGridViewModel._model._options.nodeProperty, 'itemType');
          assert.equal(treeGridViewModel._options.hasChildrenProperty, 'hasChildren');
          assert.equal(treeGridViewModel._model._options.hasChildrenProperty, 'hasChildren');
+      });
+      describe('propStorageId', function() {
+         let origSaveConfig = SettingsController.saveConfig;
+         afterEach(() => {
+            SettingsController.saveConfig = origSaveConfig;
+         });
+         it('saving sorting', function() {
+            var saveConfigCalled = false;
+            SettingsController.saveConfig = function() {
+               saveConfigCalled = true;
+            };
+            var source = new sourceLib.Memory({
+               data: [],
+               keyProperty: 'id'
+            });
+            var cfg = {
+               columns: [],
+               viewModelConstructor: treeGrid.ViewModel,
+               source: source,
+               items: new collection.RecordSet({
+                  rawData: [],
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               sorting: [1]
+            };
+            var cfg1 = {...cfg, propStorageId: '1'};
+            cfg1.sorting = [2];
+            var treeControl = correctCreateTreeControl(({...cfg}));
+            treeControl.saveOptions(cfg);
+            treeControl._beforeUpdate(cfg);
+            assert.isFalse(saveConfigCalled);
+            treeControl._beforeUpdate({...cfg, sorting: [3]});
+            assert.isFalse(saveConfigCalled);
+            treeControl._beforeUpdate(cfg1);
+            assert.isTrue(saveConfigCalled);
+
+         });
       });
       it('TreeControl._beforeUpdate', function() {
          var

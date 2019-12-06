@@ -1,6 +1,8 @@
 import Control = require('Core/Control');
 import ListControlTpl = require('wml!Controls/_list/ListControl/ListControl');
+import {saveConfig} from 'Controls/Application/SettingsController';
 import Deferred = require('Core/Deferred');
+import {isEqual} from 'Types/object';
 
 /**
  * Plain list control with custom item template. Can load data from data source.
@@ -25,6 +27,11 @@ import Deferred = require('Core/Deferred');
 
 var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype */{
     _template: ListControlTpl,
+    _beforeUpdate(cfg) {
+        if (cfg.propStorageId && !isEqual(cfg.sorting, this._options.sorting)) {
+            saveConfig(cfg.propStorageId, ['sorting'], cfg);
+        }
+    },
     reload: function () {
         return this._children.baseControl.reload();
     },
@@ -49,7 +56,7 @@ var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype
     },
 
     scrollToItem(key: string|number, toBottom: boolean): void {
-        this._children.baseControl.scrollToItem(key, toBottom);
+        return this._children.baseControl.scrollToItem(key, toBottom);
     },
 });
 

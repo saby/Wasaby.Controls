@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {SyntheticEvent} from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import SyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
 import template = require('wml!Controls/_scroll/IntersectionObserver/Controller');

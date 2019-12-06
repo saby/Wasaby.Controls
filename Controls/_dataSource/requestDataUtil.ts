@@ -6,11 +6,15 @@
 
 import {Controller as SourceController} from 'Controls/source';
 import {Controller as FilterController} from 'Controls/filter';
+import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
 type HistoryItems = object[];
 
+interface ISorting {
+   sorting: object[];
+}
 interface IFilter {
    filter: Record<string, unknown>;
    historyItems: HistoryItems;
@@ -29,6 +33,7 @@ export interface ISourceConfig {
    filter?: object;
    sorting?: object;
    historyItems?: HistoryItems;
+   propStorageId: string;
 }
 
 export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDataResult> {
@@ -36,22 +41,22 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       source: cfg.source,
       navigation: cfg.navigation
    });
-
+   let sortingPromise;
+   let filterPromise;
    if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
-      // Load filter, then load data
-      return FilterController.getCalculatedFilter(cfg).then((filterObject: IFilter) => {
-         return sourceController.load(filterObject.filter, cfg.sorting).then((data: RecordSet) => {
-            return {
-               data,
-               historyItems: filterObject.historyItems
-            };
-         });
-      });
-   } else {
-      return sourceController.load(cfg.filter, cfg.sorting).then((data: RecordSet) => {
-         return {
-            data
-         };
-      });
+      filterPromise = FilterController.getCalculatedFilter(cfg);
    }
+   if (cfg.propStorageId) {
+      sortingPromise = loadSavedConfig(cfg.propStorageId, ['sorting']);
+   }
+
+   return Promise.all([filterPromise, sortingPromise]).then(([filterObject, sortingObject]: [IFilter, ISorting]) => {
+      return sourceController.load(filterObject ? filterObject.filter : cfg.filter, sortingObject ? sortingObject.sorting : cfg.sorting).then((data: RecordSet) => {
+         let result = {data};
+         if (filterObject) {
+            result.historyItems = filterObject.historyItems;
+         }
+         return result;
+      });
+   });
 }

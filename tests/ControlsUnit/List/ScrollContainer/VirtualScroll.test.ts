@@ -3,156 +3,254 @@ import VirtualScroll from 'Controls/_list/ScrollContainer/VirtualScroll';
 describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
     const heights = [20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40];
     const children = heights.map((offsetHeight) => ({offsetHeight: offsetHeight, className: '', getBoundingClientRect() { return {height: this.offsetHeight}}}));
-    describe('common virtual scroll', () => {
-        let vsInstance: VirtualScroll;
-        let affectingInstance: object = {};
-
-        beforeEach(() => {
-            affectingInstance = {
-                indexesChanged: false,
-                loadMoreCalled: false,
-                placeholderChanged: false
-            };
-            vsInstance = new VirtualScroll({
-                pageSize: 20,
-                segmentSize: 4,
-                virtualScrollMode: 'hide',
-                indexesChangedCallback() {
-                    affectingInstance.indexesChanged = true;
-                },
-                loadMoreCallback() {
-                    affectingInstance.loadMoreCalled = true;
-                },
-                placeholderChangedCallback() {
-                    affectingInstance.placeholderChanged = true;
-                },
-                saveScrollPositionCallback() {
-                    affectingInstance.positionSaved = true;
-                },
-                viewModel: {
-                    subscribe() {},
-                    getStartIndex() {
-                        return vsInstance.startIndex;
+    const itemsContainer = {children};
+    const viewModel = {
+        at(index) {
+            return {
+                getContents() {
+                    return {
+                        get() {
+                            return heights[index];
+                        }
                     }
                 }
+            }
+        },
+
+        // mock
+        subscribe() {}
+    };
+    describe('common virtual scroll', () => {
+        const affectingInstance = {
+            indexesChangedCallback(startIndex, stopIndex) {
+                this.startIndex = startIndex;
+                this.stopIndex = stopIndex;
+            },
+            placeholderChangedCallback(placeholdersValues) {
+                this.placeholdersValues = placeholdersValues;
+            },
+            saveScrollPositionCallback(direction) {
+                this.direction = direction;
+            },
+            loadMoreCallback(direction) {
+                this.loadDirection = direction;
+            }
+        };
+
+        const defaultOptions = {
+            indexesChangedCallback(startIndex, stopIndex) {
+                affectingInstance.indexesChangedCallback(startIndex, stopIndex);
+            },
+            placeholderChangedCallback(placeholdersValues) {
+                affectingInstance.placeholderChangedCallback(placeholdersValues);
+            },
+            saveScrollPositionCallback(direction) {
+                affectingInstance.saveScrollPositionCallback(direction);
+            },
+            loadMoreCallback(direction) {
+                affectingInstance.loadMoreCallback(direction);
+            },
+            segmentSize: null,
+            pageSize: 20,
+            viewModel,
+            itemHeightProperty: null,
+            useNewModel: true,
+            viewportHeight: null
+        };
+
+        it('segmentSize calc correctly', () => {
+            let instance = new VirtualScroll({
+                ...defaultOptions,
+                pageSize: 100
             });
 
-            vsInstance.itemsCount = 20;
-            vsInstance.reset();
-            vsInstance.viewportHeight = 400;
-            vsInstance.itemsContainer = {
-                children, offsetHeight: 600
-            };
+            assert.equal(25, instance._options.segmentSize, 'middle page size');
+
+            instance = new VirtualScroll({
+                ...defaultOptions,
+                pageSize: 3
+            });
+
+            assert.equal(1, instance._options.segmentSize, 'minimum page size');
         });
 
         it('reset', () => {
-            vsInstance.reset();
-            assert.equal(0, vsInstance.itemsHeights.length);
-            assert.equal(0, vsInstance.itemsOffsets.length);
-            assert.isTrue(affectingInstance.indexesChanged);
-            assert.isTrue(affectingInstance.placeholderChanged);
-            assert.equal(0, vsInstance.startIndex);
-            assert.equal(20, vsInstance.stopIndex);
+            let instance = new VirtualScroll({
+                ...defaultOptions,
+                pageSize: 4
+            });
+
+            instance.itemsCount = 20;
+
+            instance.reset();
+
+            assert.equal(0, affectingInstance.startIndex, 'without initial index');
+            assert.equal(4, affectingInstance.stopIndex);
+
+            instance.reset(4);
+
+            assert.equal(4, affectingInstance.startIndex, 'with initial index');
+            assert.equal(8, affectingInstance.stopIndex);
+
+            instance = new VirtualScroll({
+                ...defaultOptions,
+                viewportHeight: 200,
+                viewModel,
+                itemHeightProperty: 'height'
+            });
+
+            instance.itemsCount = 20;
+            instance.reset();
+
+            assert.equal(0, affectingInstance.startIndex, 'with item height property');
+            assert.equal(6, affectingInstance.stopIndex);
         });
         it('recalcItemsHeights', () => {
+            const instance = new VirtualScroll(defaultOptions);
+
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+
             const itemsHeight = heights.slice(0, 20);
             const itemsOffsets = [];
             let sum = 0;
-            for (let i = 0; i < vsInstance.itemsCount; i++) {
+            for (let i = 0; i < instance.itemsCount; i++) {
                 itemsOffsets[i] = sum;
                 sum += itemsHeight[i];
             }
 
-            vsInstance.recalcItemsHeights();
+            instance.recalcItemsHeights();
 
-            assert.deepEqual(vsInstance.itemsHeights, itemsHeight);
-            assert.deepEqual(vsInstance.itemsOffsets, itemsOffsets)
-        });
-        it('recalcFromIndex', () => {
-            vsInstance.recalcRangeFromIndex(1);
-
-            assert.equal(0, vsInstance.startIndex);
-            assert.equal(20, vsInstance.stopIndex);
-
-            vsInstance.itemsCount = 40;
-            vsInstance.recalcRangeFromIndex(5);
-            assert.equal(5, vsInstance.startIndex);
-            assert.equal(24, vsInstance.stopIndex);
+            assert.deepEqual(instance.itemsHeights, itemsHeight);
+            assert.deepEqual(instance.itemsOffsets, itemsOffsets)
         });
         it('getItemsHeights', () => {
-            assert.equal(60, vsInstance.getItemsHeights(0, 2));
+            const instance = new VirtualScroll({
+                ...defaultOptions
+            });
+
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+
+            assert.equal(60, instance.getItemsHeights(0, 2));
         });
         it('can scroll to item', () => {
-            assert.isTrue(vsInstance.canScrollToItem(1));
-            assert.isFalse(vsInstance.canScrollToItem(19));
-            assert.isFalse(vsInstance.canScrollToItem(21));
+            const instance = new VirtualScroll(defaultOptions);
+
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+            instance.itemsContainerHeight = 600;
+            instance.viewportHeight = 400;
+
+            assert.isTrue(instance.canScrollToItem(1));
+            assert.isFalse(instance.canScrollToItem(19));
+            assert.isFalse(instance.canScrollToItem(21));
         });
         it('recalcFromScrollTop', () => {
-            vsInstance.scrollTop = 0;
-            vsInstance.setStartIndex(4);
-            vsInstance.recalcRangeFromScrollTop();
-            assert.equal(0, vsInstance.startIndex);
-            assert.equal(20, vsInstance.stopIndex);
+            const instance = new VirtualScroll(defaultOptions);
+
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+
+            instance.scrollTop = 0;
+            instance.setStartIndex(4);
+            instance.recalcRangeFromScrollTop();
+
+            assert.equal(0, affectingInstance.startIndex);
+            assert.equal(20, affectingInstance.stopIndex);
         });
         it('getActiveElement', () => {
-            vsInstance.itemsContainerHeight = 600;
-            vsInstance.scrollTop = 0;
-            assert.equal(0, vsInstance.getActiveElement());
-            vsInstance.scrollTop = 200;
-            assert.equal(19, vsInstance.getActiveElement());
-            vsInstance.scrollTop = 100;
-            assert.equal(9, vsInstance.getActiveElement());
-            vsInstance.itemsHeights = [];
-            assert.isUndefined(vsInstance.getActiveElement());
+            const instance = new VirtualScroll(defaultOptions);
+
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+
+            instance.itemsContainerHeight = 600;
+            instance.viewportHeight = 400;
+            instance.scrollTop = 0;
+            assert.equal(0, instance.getActiveElement());
+            instance.scrollTop = 200;
+            assert.equal(19, instance.getActiveElement());
+            instance.scrollTop = 100;
+            assert.equal(9, instance.getActiveElement());
+            instance.itemsHeights = [];
+            assert.isUndefined(instance.getActiveElement());
         });
         it('recalcToDirection', () => {
-            vsInstance.itemsCount = 20;
-            vsInstance.reset();
-            vsInstance.viewportHeight = 400;
-            vsInstance.itemsContainer = {
-                children, offsetHeight: 600
-            };
-            vsInstance.setStartIndex(0);
-            vsInstance.itemsCount = 40;
-            vsInstance.scrollTop = 160;
-            vsInstance.recalcRangeToDirection('down');
-            assert.equal(0, vsInstance.startIndex);
-            assert.equal(24, vsInstance.stopIndex);
-            vsInstance.setStartIndex(10);
-            vsInstance.recalcItemsHeights();
-            vsInstance.viewportHeight = 200;
-            vsInstance.scrollTop = 10;
-            vsInstance.recalcRangeToDirection('up');
-            assert.equal(6, vsInstance.startIndex);
-            assert.equal(24, vsInstance.stopIndex);
+            const instance = new VirtualScroll(defaultOptions);
+
+            instance.itemsCount = 20;
+
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+            instance.viewportHeight = 100;
+
+            instance.setStartIndex(0);
+            instance.itemsCount = 40;
+            instance.scrollTop = 280;
+            instance.recalcRangeToDirection('down');
+            assert.equal(5, affectingInstance.startIndex);
+            assert.equal(25, affectingInstance.stopIndex);
+            instance.setStartIndex(10);
+            instance.recalcItemsHeights();
+            instance.viewportHeight = 200;
+            instance.scrollTop = 10;
+            instance.recalcRangeToDirection('up');
+            assert.equal(5, affectingInstance.startIndex);
+            assert.equal(24, affectingInstance.stopIndex);
+            instance.startIndex = 0;
+            instance.stopIndex = 20;
+            instance.itemsCount = 20;
+            instance.recalcRangeToDirection('up');
+            assert.equal('up', affectingInstance.loadDirection);
         });
         it('itemsAddedHandler', () => {
-            vsInstance.itemsCount = 20;
-            vsInstance.reset();
-            vsInstance.recalcItemsHeights();
-            vsInstance.itemsCount = 40;
-            vsInstance.itemsAddedHandler(20, {length: 20} as object[]);
-            assert.equal(0, vsInstance.startIndex);
-            assert.equal(24, vsInstance.stopIndex);
-            vsInstance.itemsCount = 20;
-            vsInstance.reset();
-            vsInstance.actualizeSavedIndexes();
-            vsInstance.itemsCount = 40;
-            vsInstance.recalcItemsHeights();
-            vsInstance.itemsFromLoadToDirection = true;
-            vsInstance.itemsAddedHandler(0, {length: 20} as object[]);
-            assert.equal(16, vsInstance.startIndex);
-            assert.equal(40, vsInstance.stopIndex);
-            assert.equal(20, vsInstance.savedStartIndex);
-            assert.equal(40, vsInstance.savedStopIndex);
+            const instance = new VirtualScroll(defaultOptions);
+            instance._options.viewModel.getStartIndex = () => instance.startIndex;
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+            instance.viewportHeight = 100;
+            instance.itemsCount = 40;
+            instance.itemsAddedHandler(20, {length: 20} as object[]);
+            assert.equal(0, affectingInstance.startIndex);
+            assert.equal(25, affectingInstance.stopIndex);
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.actualizeSavedIndexes();
+            instance.itemsCount = 40;
+            instance.recalcItemsHeights();
+            instance.itemsFromLoadToDirection = true;
+            instance.itemsAddedHandler(0, {length: 20} as object[]);
+            assert.equal(15, affectingInstance.startIndex);
+            assert.equal(40, affectingInstance.stopIndex);
+            assert.equal(20, instance.savedStartIndex);
+            assert.equal(40, instance.savedStopIndex);
         });
         it('itemsRemovedHandler', () => {
-            vsInstance.itemsCount = 20;
-            vsInstance.reset();
-            vsInstance.itemsCount = 19;
-            vsInstance.itemsRemovedHandler(19, {length: 1} as object[]);
-            assert.equal(0, vsInstance.startIndex);
-            assert.equal(19, vsInstance.stopIndex);
+            const instance = new VirtualScroll(defaultOptions);
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+            instance.itemsCount = 19;
+            instance.itemsRemovedHandler(19, {length: 1} as object[]);
+            assert.equal(0, affectingInstance.startIndex);
+            assert.equal(19, affectingInstance.stopIndex);
+        });
+        it('isLoaded', () => {
+            const instance = new VirtualScroll(defaultOptions);
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+            assert.isTrue(instance.isLoaded({body: {contains: () => true}}));
+            instance.stopIndex = 100;
+            instance.itemsCount = 100;
+            assert.isFalse(instance.isLoaded({body: {contains: () => true}}));
         });
     });
 });

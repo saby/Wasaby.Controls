@@ -32,6 +32,8 @@ define([
             },
             notify = function() {},
             forceUpdate = function() {},
+            updateHeadingPath = () => {
+            },
             itemOpenHandlerCalled = false,
             itemOpenHandler = function() {
                itemOpenHandlerCalled = true;
@@ -39,6 +41,7 @@ define([
             self = {
                _forceUpdate: forceUpdate,
                _notify: notify,
+               _updateHeadingPath: updateHeadingPath,
                _options: {
                   dataLoadCallback: dataLoadCallback,
                   itemOpenHandler: itemOpenHandler
@@ -51,6 +54,9 @@ define([
                   { id: 2, title: 'item2', parent: 1 },
                   { id: 3, title: 'item3', parent: 2 }
                ]
+            }),
+            testBreadCrumbs2 = new collection.RecordSet({
+               rawData: []
             }),
             testData1 = {
                getMetaData: function() {
@@ -67,9 +73,7 @@ define([
             testData3 = {
                getMetaData: function() {
                   return {
-                     path: new collection.RecordSet({
-                        rawData: []
-                     })
+                     path: testBreadCrumbs2
                   };
                }
             };
@@ -77,6 +81,7 @@ define([
          assert.deepEqual({
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
+            _updateHeadingPath: updateHeadingPath,
             _notify: notify,
             _options: {
                dataLoadCallback: dataLoadCallback,
@@ -84,14 +89,83 @@ define([
             }
          }, self, 'Incorrect self data after "setRoot(self, testRoot)".');
          assert.isTrue(itemOpenHandlerCalled);
-         explorerMod.View._private.serviceDataLoadCallback(self, testData1);
+
+         explorerMod.View._private.serviceDataLoadCallback(self, null, testData1);
          assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
-         explorerMod.View._private.serviceDataLoadCallback(self, testData2);
+
+         explorerMod.View._private.serviceDataLoadCallback(self, testData1, testData2);
          assert.deepEqual(self._breadCrumbsItems, chain.factory(testBreadCrumbs).toArray(), 'Incorrect "breadCrumbsItems"');
-         explorerMod.View._private.serviceDataLoadCallback(self, testData1);
+
+         explorerMod.View._private.serviceDataLoadCallback(self, testData2, testData1);
          assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
-         explorerMod.View._private.serviceDataLoadCallback(self, testData3);
+
+         explorerMod.View._private.serviceDataLoadCallback(self, testData1, testData3);
          assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
+      });
+
+      it('should update subscription on data recordSet on change', function () {
+         let
+             isSubscribed = false,
+             isUnSubscribed = false,
+             _updateHeadingPath = () => {},
+             subscribe = (eName, fn) => {
+                if (eName === 'onCollectionItemChange') {
+                   isSubscribed = true;
+                   assert.equal(fn, _updateHeadingPath);
+                }
+             },
+             unsubscribe = (eName, fn) => {
+                if (eName === 'onCollectionItemChange') {
+                   isUnSubscribed = true;
+                   assert.equal(fn, _updateHeadingPath);
+                }
+             },
+             self = {
+                _updateHeadingPath
+             },
+             testBreadCrumbs1 = new collection.RecordSet({
+                rawData: []
+             }),
+             testBreadCrumbs2 = new collection.RecordSet({
+                rawData: []
+             }),
+             testDataRecordSet1 = {
+                getMetaData: function() {
+                   return {
+                      path: testBreadCrumbs1
+                   };
+                },
+                getCount() {
+                }
+             },
+             testDataRecordSet2 = {
+                getMetaData: function() {
+                   return {
+                      path: testBreadCrumbs2
+                   };
+                },
+                getCount() {
+                }
+             },
+            assertCase = (_isUnSubscribed, _isSubscribed) => {
+               assert.equal(_isUnSubscribed, isUnSubscribed);
+               assert.equal(_isSubscribed, isSubscribed);
+               isUnSubscribed = isSubscribed = false;
+            };
+
+         testBreadCrumbs1.subscribe = subscribe;
+         testBreadCrumbs1.unsubscribe = unsubscribe;
+         testBreadCrumbs2.subscribe = subscribe;
+         testBreadCrumbs2.unsubscribe = unsubscribe;
+
+         explorerMod.View._private.serviceDataLoadCallback(self, null, testDataRecordSet1);
+         assertCase(false, true);
+
+         explorerMod.View._private.serviceDataLoadCallback(self, testDataRecordSet1, testDataRecordSet2);
+         assertCase(true, true);
+
+         explorerMod.View._private.serviceDataLoadCallback(self, testDataRecordSet2, testDataRecordSet1);
+         assertCase(true, true);
       });
 
       it('_private.canStartDragNDrop', function() {
@@ -301,7 +375,6 @@ define([
          };
 
          instance._beforeMount(cfg);
-         assert.equal(instance._breadCrumbsItems.length, 1);
 
          assert.deepEqual({ 1: { markedKey: null } }, instance._restoredMarkedKeys);
 
