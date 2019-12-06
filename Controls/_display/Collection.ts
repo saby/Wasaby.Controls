@@ -181,6 +181,7 @@ function onCollectionChange<T>(
                 0
             );
             this._notifyAfterCollectionChange();
+            this._nextVersion();
             return;
 
         case IObservable.ACTION_CHANGE:

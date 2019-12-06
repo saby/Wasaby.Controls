@@ -16,7 +16,8 @@ import {
 
 import {
     Model,
-    functor
+    functor,
+    Record
 } from 'Types/entity'
 
 const ComputeFunctor = functor.Compute;
@@ -4368,5 +4369,85 @@ describe('Controls/_display/Collection', () => {
             display.getLastItem(),
             items[items.length - 1]
         );
+    });
+
+    describe('version increases on collection change', () => {
+        let rs: RecordSet;
+        let display: CollectionDisplay<unknown>;
+
+        beforeEach(() => {
+            const items = [
+                { id: 1, name: 'Ivan' },
+                { id: 2, name: 'Alexey' },
+                { id: 3, name: 'Olga' }
+            ];
+            rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs
+            });
+        });
+
+        it('collection reset', () => {
+            const version = display.getVersion();
+
+            rs.setEventRaising(false, true);
+            while (rs.getCount() > 0) {
+                rs.removeAt(0);
+            }
+            rs.add(new Record({
+                rawData: {
+                    id: 4,
+                    name: 'Nataly'
+                }
+            }));
+            rs.setEventRaising(true, true);
+
+            assert.isAbove(display.getVersion(), version);
+        });
+
+        it('collection change', () => {
+            const version = display.getVersion();
+            rs.at(0).set('name', 'Dmitry');
+            assert.isAbove(display.getVersion(), version);
+        });
+
+        it('collection add', () => {
+            const version = display.getVersion();
+            rs.add(
+                new Record({
+                    rawData: {
+                        id: 4,
+                        name: 'Vadim'
+                    }
+                })
+            );
+            assert.isAbove(display.getVersion(), version);
+        });
+
+        it('collection remove', () => {
+            const version = display.getVersion();
+            rs.removeAt(0);
+            assert.isAbove(display.getVersion(), version);
+        });
+
+        it('collection replace', () => {
+            const version = display.getVersion();
+            rs.replace(new Record({
+                rawData: {
+                    id: 4,
+                    name: 'Daniel'
+                }
+            }), 0);
+            assert.isAbove(display.getVersion(), version);
+        });
+
+        it('collection move', () => {
+            const version = display.getVersion();
+            rs.move(1, 0);
+            assert.isAbove(display.getVersion(), version);
+        });
     });
 });
