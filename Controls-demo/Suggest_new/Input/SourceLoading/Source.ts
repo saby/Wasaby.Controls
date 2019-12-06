@@ -1,12 +1,12 @@
 import * as Deferred from 'Core/Deferred';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
-import {Memory} from 'Types/source';
+import ICrud from './ICrud';
 
 const SEARCH_DELAY = 3000;
 
 export default class DelaySuggestSource {
-   private source: Memory = null;
-   private _mixins: Array = [];
+   private source: ICrud;
+   private _mixins: any[] = [];
    constructor(opts) {
       this.source = new SearchMemory(opts);
       this['[Types/_source/ICrud]'] = true;
@@ -19,7 +19,6 @@ export default class DelaySuggestSource {
    getKeyProperty() {
       return this.source.getKeyProperty();
    }
-
 
    query(query) {
       const origQuery = this.source.query.apply(this.source, arguments);
@@ -35,6 +34,4 @@ export default class DelaySuggestSource {
       });
       return loadDef;
    }
-
-   static '[Types/_source/ICrud]': boolean = true;
 }
