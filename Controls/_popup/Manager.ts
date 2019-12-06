@@ -148,6 +148,10 @@ const _private = {
         ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
     },
 
+    prepareIsTouchData(self, item) {
+        item.contextIsTouch = self._contextIsTouch;
+    },
+
     pageScrolled(id: string): boolean {
         const item = _private.find(id);
         if (item) {
@@ -171,6 +175,7 @@ const _private = {
         if (item) {
             // Register new popup
             _private.fireEventHandler(id, 'onOpen');
+            _private.prepareIsTouchData(this, item);
             item.controller._elementCreated(item, _private.getItemContainer(id), id);
             // if it's CompoundTemplate, then compoundArea notify event, when template will ready.
             // notify this event on popupBeforePaintOnMount, cause we need synchronous reaction on created popup
@@ -509,7 +514,8 @@ const _private = {
 
 const Manager = Control.extend({
     _template: template,
-    _afterMount() {
+    _afterMount(options, context) {
+        this._contextIsTouch = context.isTouch && context.isTouch.isTouch;
         ManagerController.setManager(this);
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
         this._hasMaximizePopup = false;
@@ -522,7 +528,8 @@ const Manager = Control.extend({
         }
     },
 
-    _afterUpdate() {
+    _afterUpdate(oldOptions, context) {
+        this._contextIsTouch = context.isTouch && context.isTouch.isTouch;
         // Theme of the popup header can be changed dynamically.
         // The option is not inherited, so in order for change option in 1 synchronization cycle, we have to make an event model on ManagerController.
         // Now there are no cases where the theme changes when the popup are open, so now just change the theme to afterUpdate.
