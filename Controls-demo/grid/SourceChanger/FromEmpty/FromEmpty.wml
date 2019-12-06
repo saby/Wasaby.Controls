@@ -1,6 +1,5 @@
 <div class="controlsDemo__wrapper">
     <Controls.buttons:Button caption="Request" on:click="_onChangeSource()"/>
-    <Controls.buttons:Button caption="OnPending" on:click="onPending()"/>
 
     <Controls.grid:View
             keyProperty="id"

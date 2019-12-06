@@ -1,108 +1,42 @@
 import {Control, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/grid/SourceChanger/WithFull/WithFull"
 import {Memory} from "Types/source"
-import {getCountriesStats} from "../../DemoHelpers/DataCatalog"
-import Deferred = require('Core/Deferred');
+import {getCountriesStats, changeSourceData} from "../../DemoHelpers/DataCatalog"
 
 import 'css!Controls-demo/Controls-demo'
 
+const { data, data2 } = changeSourceData();
 
-const data = [
-    {
-        id: 1,
-        load: 'hello',
-        title: 'hello'
-    }, {
-        id: 2,
-        load: 'hello',
-        title: 'hello'
-
-    }, {
-        id: 3,
-        load: 'hello',
-        title: 'hello'
-
-    }, {
-        id: 4,
-        load: 'hello',
-        title: 'hello'
-
-    }, {
-        id: 5,
-        load: 'hello',
-        title: 'hello'
-
-    }, {
-        id: 6,
-        load: 'hello',
-        title: 'hello'
-
-    }, {
-        id: 7,
-        load: 'hello',
-        title: 'hello'
-
-    }];
-
-const data2 = [
-    {
-        id: 1,
-        load: 1,
-        title: 'hello'
-    }, {
-        id: 2,
-        load: 2,
-        title: 'hello'
-
-    }, {
-        id: 3,
-        load: 2,
-        title: 'hello'
-
-    }, {
-        id: 4,
-        load: 2,
-        title: 'hello'
-
-    }, {
-        id: 5,
-        load: 2,
-        title: 'hello'
-
-    }, {
-        id: 6,
-        load: 2,
-        title: 'hello'
-
-    }, {
-        id: 7,
-        load: 2,
-        title: 'hello'
-
-    }];
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 class demoSource extends Memory {
     queryNumber: number = 0;
     pending: Promise<any>;
     private query(query) {
         const self = this;
-        // return this.pending.addCallback(() => {
+        return delay(2500).then(() => {
+            return super.query.apply(this, arguments).addCallback((items) => {
+                const rawData = items.getRawData();
+                rawData.items = data2.filter((cur) => cur.load === this.queryNumber);
+                rawData.meta.more = this.queryNumber < 2;
+                rawData.meta.total = rawData.items.length;
+                items.setRawData(rawData);
+                this.queryNumber++;
+                return items;
+            });
+        });
+
+    }
+}
+
+class initialMemory extends Memory {
+    private query(query) {
         return super.query.apply(this, arguments).addCallback((items) => {
             const rawData = items.getRawData();
-            const newItems = data2.filter((cur) => cur.load === this.queryNumber);
-            if (true) {
-                rawData.items = newItems;
-                rawData.meta.total = rawData.items.length;
-            }
-
-            rawData.meta.more = this.queryNumber < 2;
-            items.setRawData(rawData);
-
-            this.queryNumber++;
+            rawData.meta.more = false;
+            items.setRawData(rawData); //dsadsa
             return items;
         });
-        // })
-
     }
 }
 
@@ -111,11 +45,10 @@ export default class extends Control {
     private _viewSource: Memory;
     private _viewSource2: Memory;
     private _columns = getCountriesStats().getColumnsForLoad();
-    // private queryNumber = 0;
 
     protected _beforeMount() {
         const self = this;
-        this._viewSource = new demoSource({
+        this._viewSource = new initialMemory({
             keyProperty: 'id',
             data: data
         });
@@ -134,19 +67,11 @@ export default class extends Control {
             keyProperty: 'id',
             data: data2,
         });
-
-
-        // this._viewSource2.pending = new Deferred();
     }
-
-    // private onPending() {
-    //     this._viewSource2.pending.callback();
-    // }
 
     private _onChangeSource() {
         this._viewSource2.queryNumber = 0;
         this._viewSource = this._viewSource2;
     }
-
 
 }
