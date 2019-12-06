@@ -1,18 +1,15 @@
-.controls-Toolbar__item_has-title-and-icon_theme-@{themeName} {
-  padding-left: @spacing_Toolbar-between-icon-text;
-}
 .controls-Toolbar {
   display: inline-block;
   max-width: 100%;
 }
-.controls-Toolbar_item_medium_theme-@{themeName} {
+.controls-Toolbar__item_spacing_medium_theme-@{themeName} {
   margin-right: @spacing_Toolbar-between-items_medium;
 }
 
-.controls-Toolbar_item_big_theme-@{themeName} {
+.controls-Toolbar__item_spacing_big_theme-@{themeName} {
   margin-right: @spacing_Toolbar-between-items_big;
 }
-.controls-Toolbar_item_theme-@{themeName} {
+.controls-Toolbar__item_theme-@{themeName} {
   max-width: 100%;
   .inline-flexbox();
   cursor: pointer;
@@ -23,10 +20,10 @@
     margin-right: 0;
   }
 }
-.controls-Toolbar_item:before, .controls-Toolbar_item_readOnly:before {
+.controls-Toolbar__item:before, .controls-Toolbar__item_readOnly:before {
   content: "\200b";
 }
-.controls-Toolbar_item_readOnly {
+.controls-Toolbar__item_readOnly {
   cursor: auto;
 }
 .controls-Toolbar_content {
@@ -38,67 +35,11 @@
     content: "\200b";
   }
 }
-.controls-Toolbar__item_icon_theme-@{themeName} {
-  .icon(@font-size_Toolbar-icon, 'cbuc-icons24');
-}
-.controls-Toolbar__item_title_theme-@{themeName} {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: @color_Toolbar-text;
-}
-.controls-Toolbar__item_title_readOnly_theme-@{themeName} {
-  white-space: nowrap;
-  color: @color_Toolbar-text_readOnly;
-}
-.controls-Toolbar__item_title_theme-@{themeName}:active {
-  color: @color_Toolbar-text_active;
-}
 .controls-Toolbar__menu {
   .inline-flexbox();
   cursor: pointer;
 }
-.controls-Toolbar__item_icon_secondary_theme-@{themeName} {
-  color: @color_secondary;
-}
-.controls-Toolbar__item_icon_readOnly_theme-@{themeName} {
-  color: @color_Toolbar-icon_readOnly;
-}
-//TODO выпилить старые вариант iconStyle когда пмо и ддл поддержат новые iconStyle'ы
-.controls-Toolbar__item_icon_hover_theme-@{themeName}, .controls-Toolbar__item_icon_primary_theme-@{themeName} {
-  color: @color_primary;
-}
-.controls-Toolbar__item_icon_error_theme-@{themeName}, .controls-Toolbar__item_icon_danger_theme-@{themeName} {
-  color: @color_danger;
-}
-.controls-Toolbar__item_icon_done_theme-@{themeName}, .controls-Toolbar__item_icon_success_theme-@{themeName} {
-  color: @color_success;
-}
-.controls-Toolbar__item_icon_disabled_theme-@{themeName}, .controls-Toolbar__item_icon_info_theme-@{themeName} {
-  color: @color_info;
-}
-.controls-Toolbar__item_icon_attention_theme-@{themeName}, .controls-Toolbar__item_icon_warning_theme-@{themeName} {
-  color: @color_warning;
-}
-.controls-Toolbar__item_icon_secondary_theme-@{themeName}:active {
-  color: @color_Toolbar-icon_active;
-}
-.controls-Toolbar__item_title_theme-@{themeName}:active {
-  text-decoration: underline;
-}
 .ws-is-hover {
-  .controls-Toolbar_item:hover {
-    .controls-Toolbar__item_icon_secondary_theme-@{themeName} {
-      color: @color_Toolbar-icon_hovered;
-    }
-    .controls-Toolbar__item_title_theme-@{themeName} {
-      text-decoration: underline;
-    }
-    .controls-Toolbar__item_title_theme-@{themeName} {
-      white-space: nowrap;
-      color: @color_Toolbar-text_hovered;
-    }
-  }
   .controls-Toolbar__menu_theme-@{themeName}:hover {
     color: @color_Toolbar-icon_hovered;
   }
