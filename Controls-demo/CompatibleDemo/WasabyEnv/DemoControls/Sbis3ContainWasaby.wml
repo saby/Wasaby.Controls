@@ -1,0 +1,10 @@
+<div class="compatibleDemo__column">
+    <div class="compatibleDemo__row">
+        <SBIS3.CONTROLS.TextBox  name="TextBoxWrapper" text="{{ _text }}"/>
+    </div>
+    <div class="compatibleDemo__row" >
+        <div class="for__ws4" _text="{{ _text }}">
+        </div>
+    </div>
+</div>
+

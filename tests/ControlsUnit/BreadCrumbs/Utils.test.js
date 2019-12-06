@@ -23,11 +23,11 @@ define([
          stub.withArgs('<div class="controls-BreadCrumbsView__title_min"></div>').returns(BREAD_CRUMB_MIN_WIDTH);
          stub.withArgs('<div class="controls-BreadCrumbsView__crumb"><span class="controls-BreadCrumbsView__arrow icon-size icon-DayForwardBsLine controls-BreadCrumbsView__arrow_enabled"></span><div class="controls-BreadCrumbsView__titleWrapper"><div class="controls-BreadCrumbsView__title controls-BreadCrumbsView__title_enabled">...</div></div></div>').returns(DOTS_WIDTH);
       }
-
+      let stubFontLoadUtil;
       beforeEach(function() {
-         FontLoadUtil.waitForFontLoad = function() {
+         stubFontLoadUtil = sinon.stub(FontLoadUtil, 'waitForFontLoad').callsFake(() => {
             return Deferred.success();
-         };
+         });
          data = [
             {
                id: 2,
@@ -56,6 +56,7 @@ define([
 
       afterEach(function() {
          sandbox.restore();
+         stubFontLoadUtil.restore();
       });
 
       describe('shouldRedraw', function() {

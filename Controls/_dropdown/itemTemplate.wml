@@ -1,3 +1,13 @@
+<ws:template name="iconTemplate">
+   <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])}}">
+      <div class="{{itemData.getPropValue(itemData.item, displayProperty || 'title') ?
+                     'controls-DropdownList__icon controls-DropdownList__icon-' + iconAlign + '_theme-' + _options.theme}}
+                     controls-icon_style-{{(itemData.getPropValue(itemData.item, 'readOnly') ? 'readonly' : itemData.iconStyle) + '_theme-' + _options.theme}}
+                     {{itemData.iconSize ? 'controls-icon_size-' + itemData.iconSize + '_theme-' + _options.theme}}
+                     {{iconPadding[itemData.getPropValue(itemData.item, parentProperty)]}} {{itemData.icon}} theme_{{_options.theme}}"></div>
+   </ws:if>
+</ws:template>
+
 <div attr:class="controls-DropdownList__row controls-DropdownList__row_state_{{itemData.getPropValue(itemData.item, 'readOnly') ? 'readOnly' : 'default'}}
                  {{marker !== false && itemData.isSelected && (!itemData.multiSelect || itemData.emptyText) ? 'controls-DropdownList__selected'}}
                  {{itemData.spacingClassList}}
@@ -28,17 +38,25 @@
          />
       </ws:else>
    </ws:if>
+
    <ws:else>
-      <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])}}">
-         <div class="{{itemData.getPropValue(itemData.item, displayProperty || 'title') ? 'controls-DropdownList__icon'}}
-                     controls-icon_style-{{(itemData.getPropValue(itemData.item, 'readOnly') ? 'readonly' : itemData.iconStyle) + '_theme-' + _options.theme}}
-                     {{itemData.iconSize ? 'controls-icon_size-' + itemData.iconSize + '_theme-' + _options.theme}}
-                     {{iconPadding[itemData.getPropValue(itemData.item, parentProperty)]}} {{itemData.icon}} theme_{{_options.theme}}"></div>
-      </ws:if>
       <div class="controls-DropdownList__content {{itemData.getPropValue(itemData.item, 'readOnly') ? 'controls-DropdownList__content-readOnly'}}
-                  controls-DropdownList__content_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}"
+                  controls-DropdownList__content_{{multiLine ? 'multiLine' : 'singleLine'}}
+                  controls-DropdownList__content_{{additionalTextTemplate ? 'padding'}} theme_{{_options.theme}}"
            title="{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}">
-         {{itemData.getPropValue(itemData.item, displayProperty || 'title')}}
+         <ws:if data="{{iconAlign !== 'right'}}">
+            <ws:partial template="iconTemplate" iconAlign="left"/>
+         </ws:if>
+         <div class="controls-DropdownList__content-wrapper">
+            {{itemData.getPropValue(itemData.item, displayProperty || 'title')}}
+            <ws:if data="{{iconAlign === 'right'}}">
+               <ws:partial template="iconTemplate" iconAlign="right" />
+            </ws:if>
+            <ws:if data="{{additionalTextTemplate}}">
+               <ws:partial template="{{additionalTextTemplate}}"
+                           class="controls-DropdownList__row-additionalText_theme-{{_options.theme}}"/>
+            </ws:if>
+         </div>
       </div>
    </ws:else>
    <ws:if data="{{itemData.hasPinned && !itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">

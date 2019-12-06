@@ -8,8 +8,8 @@
             <ws:for data="i in 3">
                 <div class="asyncDemo_column">
                     <ws:for data="j in 3">
-                        <Controls.Container.Async templateName="Controls-demo/AsyncTest/Childs/Simple/Second">
-                            <ws:partial template="{{ content.resolvedTemplate }}" i="{{i}}" j="{{j}}"/>
+                        <Controls.Container.Async templateName="Controls-demo/AsyncTest/Childs/Simple/First">
+                            <ws:partial template="{{ content.resolvedTemplate }}" i="{{i}}" j="{{j}}" delay="1000" value="{{i}}"/>
                         </Controls.Container.Async>
                     </ws:for>
                 </div>

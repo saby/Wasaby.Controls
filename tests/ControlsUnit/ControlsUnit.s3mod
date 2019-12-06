@@ -12,7 +12,7 @@
 
   <parameters/>
 
-  <unit_test/>
+  <unit_test onlyNode="true"/>
 
   <resources/>
 

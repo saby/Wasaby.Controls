@@ -40,7 +40,6 @@
  */
 
 import Edit = require('Controls/_popup/Opener/Edit');
-import Notification = require('Controls/_popup/Opener/Notification');
 import InfoboxTarget = require('Controls/_popup/InfoBox');
 import PreviewerTarget = require('Controls/_popup/Previewer');
 import Manager = require('Controls/_popup/Manager');
@@ -48,7 +47,6 @@ import Controller = require('Controls/_popup/Manager/ManagerController');
 import Container = require('Controls/_popup/Manager/Container');
 import GlobalTemplate = require('wml!Controls/_popup/Global/Global');
 import PreviewerTemplate = require('Controls/_popup/Previewer/PreviewerTemplate');
-import {default as IConfirmation, IConfirmationOptions} from 'Controls/_popup/Opener/interface/IConfirmation';
 
 import EditContainer = require('Controls/_popup/Opener/Edit/Container');
 
@@ -61,10 +59,11 @@ export {default as Previewer} from './_popup/Opener/Previewer';
 export {default as Confirmation} from './_popup/Opener/Confirmation';
 export {default as InfoboxButton} from './_popup/InfoBox/InfoboxButton';
 export {default as BaseOpener} from 'Controls/_popup/Opener/BaseOpener';
+export {default as Notification} from 'Controls/_popup/Opener/Notification';
+export {default as IConfirmation, IConfirmationOptions} from 'Controls/_popup/Opener/interface/IConfirmation';
 
 export {
     Edit,
-    Notification,
     InfoboxTarget,
     PreviewerTarget,
     Manager,
@@ -72,8 +71,6 @@ export {
     Container,
     GlobalTemplate,
     PreviewerTemplate,
-    IConfirmation,
-    IConfirmationOptions,
 
     EditContainer
 };

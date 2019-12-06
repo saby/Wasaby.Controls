@@ -2,7 +2,7 @@
  * Библиотека, которая реализует <a href='/doc/platform/developmentapl/interface-development/controls/toolbar/'>набор команд</a> в виде кнопок и выпадающего меню с дополнительными командами.
  * @library Controls/toolbars
  * @includes View Controls/_toolbars/View
- * @includes ItemTemplate wml!Controls/_toolbars/ItemTemplate
+ * @includes ItemTemplate Controls/toolbars:ItemTemplate
  * @includes IToolbarSource Controls/_toolbars/IToolbarSource
  * @public
  * @author Красильников А.С.
@@ -12,7 +12,7 @@
  * Toolbars library
  * @library Controls/toolbars
  * @includes View Controls/_toolbars/View
- * @includes ItemTemplate wml!Controls/_toolbars/ItemTemplate
+ * @includes ItemTemplate Controls/toolbars:ItemTemplate
  * @public
  * @author Красильников А.С.
  */ 
