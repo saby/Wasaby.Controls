@@ -3,24 +3,17 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 
 /**
- * Выделяет цветом текст, в котором содержится ссылка.
+ * Декорирует текст таким образом, что все ссылки в нем становятся активными и выделяются цветом.
+ * Активная ссылка - это элемент страници, клик пользователя по которой приводит к переходу на внешний ресурс.
+ * @remark
+ * Поддерживаемые ссылки:
+ * 1. Ссылка на web-страници.
+ * 2. Ссылка на email.
  *
  * @class Controls/_decorator/WrapURLs
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @public
- *
- * @author Красильников А.С.
- */
-
-/*
- * Wrap references in text.
- *
- * @class Controls/_decorator/WrapURLs
- * @extends Core/Control
- *
- * @public
- *
  * @author Красильников А.С.
  */
 
@@ -28,11 +21,6 @@ export interface IWrapURLsOptions extends IControlOptions {
     /**
      * @name Controls/_decorator/WrapURLs#text
      * @cfg {String} Текст для преобразования.
-     */
-
-    /*
-     * @name Controls/_decorator/WrapURLs#text
-     * @cfg {String} Text to convert.
      */
     text: string;
     /**
