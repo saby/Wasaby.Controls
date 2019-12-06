@@ -131,7 +131,7 @@ interface ICellPadding {
 
 /**
  * @name Controls/_grid/interface/IColumn#cellPadding
- * @cfg {String}  Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+ * @cfg {CellPadding}  Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  * <pre>
  * columns: [{
  *    width: '1fr',

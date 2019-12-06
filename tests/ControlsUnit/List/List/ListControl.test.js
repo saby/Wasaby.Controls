@@ -1,13 +1,38 @@
 define([
    'Controls/list',
    'Core/Deferred',
-   'Core/core-instance'
+   'Core/core-instance',
+   'Controls/Application/SettingsController'
 ], function(
    lists,
    Deferred,
-   cInstance
+   cInstance,
+   SettingsController
 ) {
    describe('Controls.List.ListControl', function() {
+      describe('propStorageId', function() {
+         let origSaveConfig = SettingsController.saveConfig;
+         afterEach(() => {
+            SettingsController.saveConfig = origSaveConfig;
+         });
+         it('saving sorting', function() {
+            var saveConfigCalled = false;
+            SettingsController.saveConfig = function() {
+               saveConfigCalled = true;
+            };
+            var cfg = {sorting: [1]};
+            var cfg1 = {sorting: [2], propStorageId: '1'};
+            var listControl = new lists.ListControl(cfg);
+            listControl.saveOptions(cfg);
+            listControl._beforeUpdate(cfg);
+            assert.isFalse(saveConfigCalled);
+            listControl._beforeUpdate({sorting: [3]});
+            assert.isFalse(saveConfigCalled);
+            listControl._beforeUpdate(cfg1);
+            assert.isTrue(saveConfigCalled);
+
+         });
+      });
       describe('EditInPlace', function() {
          it('beginEdit', function() {
             var opt = {
@@ -118,7 +143,7 @@ define([
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
-   
+
          it('reloadItem', function() {
             var list = new lists.ListControl({});
             list._children = {

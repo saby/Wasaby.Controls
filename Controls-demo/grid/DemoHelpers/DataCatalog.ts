@@ -219,6 +219,17 @@ function getCountriesStats() {
                 displayProperty: 'populationDensity',
             }
         ],
+        getColumnsForLoad: () => [
+            {
+                displayProperty: 'id',
+                width: '50px',
+            },
+            {
+                displayProperty: 'load',
+                width: '200px',
+            },
+
+        ],
         getColumnsWithFixedWidths: () => [
             {
                 displayProperty: 'number',
@@ -878,6 +889,81 @@ function forShowWidths() {
     }
 }
 
+const changeSourceData = () => ({
+    data: [
+        {
+            id: 1,
+            load: 'One',
+            title: 'hello'
+        }, {
+            id: 2,
+            load: 'Two',
+            title: 'hello'
+
+        }, {
+            id: 3,
+            load: 'three',
+            title: 'hello'
+
+        }, {
+            id: 4,
+            load: 'Four',
+            title: 'hello'
+
+        }, {
+            id: 5,
+            load: 'Five',
+            title: 'hello'
+
+        }, {
+            id: 6,
+            load: 'Six',
+            title: 'hello'
+
+        }, {
+            id: 7,
+            load: 'Seven',
+            title: 'hello'
+
+        }],
+    data2: [
+        {
+            id: 1,
+            load: 1,
+            title: 'hello'
+        }, {
+            id: 2,
+            load: 2,
+            title: 'hello'
+
+        }, {
+            id: 3,
+            load: 2,
+            title: 'hello'
+
+        }, {
+            id: 4,
+            load: 2,
+            title: 'hello'
+
+        }, {
+            id: 5,
+            load: 2,
+            title: 'hello'
+
+        }, {
+            id: 6,
+            load: 2,
+            title: 'hello'
+
+        }, {
+            id: 7,
+            load: 2,
+            title: 'hello'
+
+        }]
+});
+
 
 const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
     ,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
@@ -901,5 +987,6 @@ export {
     getPorts,
     forShowWidths,
     getEditing,
-    countries
+    countries,
+    changeSourceData
 }

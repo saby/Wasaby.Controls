@@ -25,7 +25,7 @@ export default class extends Control{
          source: 'page',
          view: 'page',
          sourceConfig: {
-            pageSize: 2,
+            pageSize: 12,
             page: 0,
             hasMore: false
          }
@@ -34,12 +34,12 @@ export default class extends Control{
          source: 'page',
          view: 'maxCount',
          sourceConfig: {
-            pageSize: 2,
+            pageSize: 4,
             page: 0,
             hasMore: false
          },
          viewConfig: {
-            maxCountValue: 4
+            maxCountValue: 12
          }
       };
    }

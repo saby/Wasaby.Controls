@@ -8,6 +8,7 @@ import selectionToRecord = require('Controls/_operations/MultiSelector/selection
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
+import {saveConfig} from 'Controls/Application/SettingsController';
 
 var
     HOT_KEYS = {
@@ -446,7 +447,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (newOptions.collapsedItems) {
             this._children.baseControl.getViewModel().setCollapsedItems(newOptions.collapsedItems);
         }
-
+        if (newOptions.propStorageId && !isEqual(newOptions.sorting, this._options.sorting)) {
+            saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
+        }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
         }

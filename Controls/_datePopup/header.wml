@@ -76,18 +76,13 @@
       </ws:if>
    </div>
 
-   <Controls.buttons:Button
-      if="{{_homeButtonVisible}}"
-      fontColorStyle="link"
-      viewMode="link"
-      activableByClick="{{false}}"
-      iconStyle="secondary"
-      iconSize="s"
-      tooltip="{[Текущий период]}"
-      icon="icon-Home3"
-      readOnly="{{false}}"
-      on:click="_homeButtonClick()"
-   />
+   <div if="{{_homeButtonVisible}}" title="{[Текущий период]}"
+        attr:class="controls-PeriodDialog__homeButton controls-PeriodDialog__cursor-pointer"
+        on:click="_homeButtonClick()">
+      <i attr:class="icon-Home3 controls-icon controls-icon_style-secondary_theme-{{_options.theme}}
+                     controls-PeriodDialog__homeButton-icon"/>
+   </div>
+
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
    <Controls.buttons:Button
       viewMode="toolButton"
