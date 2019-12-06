@@ -95,4 +95,28 @@
        </Router.router:Reference>
        <Controls-demo.Suggest_new.Input.DialogMode.DialogMode/>
    </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/Input/DirectoryUnavailable/DirectoryUnavailable' }}">
+           <a href="{{content.href}}">Справочник недоступен.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.Input.DirectoryUnavailable.DirectoryUnavailable/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/Input/ScrollContent/ScrollContent' }}">
+           <a href="{{content.href}}">Автодополнение со скроллом.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.Input.ScrollContent.ScrollContent/>
+   </div>
+   <div class="controlsDemo__cell">
+       <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                state="/Controls-demo/app/:app"
+                                app="{{ 'Controls-demo/Suggest_new/Input/SourceLoading/SourceLoading' }}">
+           <a href="{{content.href}}">Автодополнение с индикатором.</a>
+       </Router.router:Reference>
+       <Controls-demo.Suggest_new.Input.SourceLoading.SourceLoading/>
+   </div>
 </div>
