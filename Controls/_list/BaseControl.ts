@@ -165,7 +165,7 @@ var _private = {
                 }
 
                 if (cfg.serviceDataLoadCallback instanceof Function) {
-                    cfg.serviceDataLoadCallback(list);
+                    cfg.serviceDataLoadCallback(self._items, list);
                 }
 
                 if (cfg.dataLoadCallback instanceof Function) {
@@ -444,7 +444,7 @@ var _private = {
                 self._loadedItems = addedItems;
             }
             if (self._options.serviceDataLoadCallback instanceof Function) {
-                self._options.serviceDataLoadCallback(addedItems);
+                self._options.serviceDataLoadCallback(self._items, addedItems);
             }
             if (userCallback && userCallback instanceof Function) {
                 userCallback(addedItems, direction);
@@ -1565,7 +1565,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
-                        newOptions.serviceDataLoadCallback(self._items);
+                        newOptions.serviceDataLoadCallback(null, self._items);
                     }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);

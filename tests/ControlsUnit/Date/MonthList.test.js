@@ -91,6 +91,7 @@ define([
             assert.strictEqual(ml._displayedPosition, position);
             assert.equal(ml._startPositionId, '2018-01-01');
             assert.isEmpty(ml._displayedDates);
+            sinon.assert.called(ml._children.months.reload);
             sandbox.restore();
          });
 
@@ -131,7 +132,7 @@ define([
             assert.strictEqual(ml._displayedPosition, position1);
             assert.strictEqual(ml._lastPositionFromOptions, position2);
             assert.equal(ml._startPositionId, '2018-01-01');
-            sinon.assert.notCalled(ml._children.months.reload);
+            sinon.assert.calledOnce(ml._children.months.reload);
             sandbox.restore();
          });
 

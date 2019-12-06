@@ -61,11 +61,11 @@ define([
          getContainerSpacing = HeadingPath._private.getContainerSpacing;
          HeadingPath._private.getContainerSpacing = () => 12;
       }
-
+      let stubFontLoadUtil;
       beforeEach(function() {
-         FontLoadUtil.waitForFontLoad = function() {
+         stubFontLoadUtil = sinon.stub(FontLoadUtil, 'waitForFontLoad').callsFake(() => {
             return Deferred.success();
-         };
+         });
          data = [
             {
                id: 1,
@@ -112,6 +112,7 @@ define([
       });
       afterEach(function() {
          path = null;
+         stubFontLoadUtil.restore();
       });
       describe('_afterMount', function() {
          afterEach(function() {

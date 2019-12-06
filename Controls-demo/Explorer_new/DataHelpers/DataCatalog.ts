@@ -1,3 +1,5 @@
+import * as explorerImages from 'Controls-demo/Explorer/ExplorerImages';
+
 export const Gadgets = {
    getData: () => [{
    id: 1,
@@ -179,109 +181,14 @@ export const Gadgets = {
          discr: '5',
          price: 123
    }, {
-      id: 7,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 71,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 72,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 73,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 74,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 75,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 76,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 77,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 78,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 79,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 80,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 81,
-      'parent': null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
       id: 82,
       'parent': null,
       'parent@': null,
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
          discr: '5',
-         price: 123
+         price: 123,
+         image: explorerImages[1]
    }, {
       id: 83,
       'parent': null,
@@ -289,7 +196,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
          discr: '5',
-         price: 123
+         price: 123,
+         image: explorerImages[2]
    }, {
       id: 84,
       'parent': null,
@@ -297,7 +205,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
          discr: '5',
-         price: 123
+         price: 123,
+         image: explorerImages[3]
    }, {
       id: 85,
       'parent': null,
@@ -305,7 +214,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
          discr: '5',
-         price: 123
+         price: 123,
+         image: explorerImages[4]
    }, {
       id: 86,
       'parent': null,
@@ -313,7 +223,8 @@ export const Gadgets = {
       title: 'Скриншот от 25.12.16, 11-37-16',
       isDocument: true,
       discr: '5',
-      price: 123
+      price: 123,
+      image: explorerImages[5]
    }],
 
    getColumns: () => [

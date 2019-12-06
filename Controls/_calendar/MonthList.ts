@@ -120,6 +120,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             }
 
         }
+
     }
 
     protected _afterUpdate(oldOptions?: IModuleComponentOptions, oldContext?: any): void {
@@ -175,7 +176,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 header: Boolean(this._itemHeaderTemplate),
                 dateConstructor: options.dateConstructor,
                 displayedRanges: options.displayedRanges,
-                viewMode: options.viewMode
+                viewMode: options.viewMode,
+                order: options.order
             });
         }
         if (!oldOptions || options.viewMode !== oldOptions.viewMode || options.source !== oldOptions.source) {
@@ -210,6 +212,12 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         } else {
             this._displayedDates = [];
             this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
+            // After changing the navigation options, we must call the "reload" to redraw the control,
+            // because the last time we could start rendering from the same position.
+            // Position option is the initial position from which control is initially drawn.
+            if (this._children.months) {
+                this._children.months.reload();
+            }
         }
     }
 
@@ -239,7 +247,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             // We select only those containers that are not fully displayed
             // and intersect with the scrolled container in its upper part, or lie higher.
             if (entry.nativeEntry.boundingClientRect.top - entry.nativeEntry.rootBounds.top <= 0) {
-                if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top >= 0) {
+                if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top > 0) {
                     // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
                     date = entryDate;
                     break;
@@ -249,10 +257,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                     // We save the date, and check the following. This condition branch is needed,
                     // because a situation is possible when the container partially intersected from above, climbed up,
                     // persecuted, and the lower container approached the upper edge and its intersection did not change.
+                    const delta: number = this._options.order === 'asc' ? 1 : -1;
                     if (this._options.viewMode === 'year') {
-                        date = new this._options.dateConstructor(entryDate.getFullYear() + 1, entryDate.getMonth());
+                        date = new this._options.dateConstructor(entryDate.getFullYear() + delta, entryDate.getMonth());
                     } else {
-                        date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + 1);
+                        date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + delta);
                     }
                 }
             }
@@ -409,6 +418,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             // Draw the elements above and below.
             virtualPageSize: 6,
             _limit: 8,
+            order: 'asc',
             dateConstructor: WSDate,
             displayedRanges: null
         };

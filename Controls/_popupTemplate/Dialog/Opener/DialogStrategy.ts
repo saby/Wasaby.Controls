@@ -53,7 +53,14 @@ export = {
             width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width, popupOptions.maxWidth);
             height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height, popupOptions.maxHeight);
             left = this._getLeftCoord(windowData.width, width || containerSizes.width, popupOptions) + (windowData.scrollLeft || 0);
-            top = this._getTopCoord(windowData, height || containerSizes.height, popupOptions);
+
+            // Если диалоговое окно открыто через touch, то позиционируем его в самом верху экрана.
+            // Это решает проблемы с показом клавиатуры и прыжком контента из-за изменившегося scrollTop.
+            if (item.contextIsTouch) {
+                top = 0;
+            } else {
+                top = this._getTopCoord(windowData, height || containerSizes.height, popupOptions);
+            }
         }
 
         return {

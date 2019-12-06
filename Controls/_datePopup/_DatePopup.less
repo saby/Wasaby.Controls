@@ -78,6 +78,25 @@
    margin: 0 @spacing_PeriodDialog-header-between-applyButton-otherElements;
 }
 
+.controls-PeriodDialog__homeButton {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+   box-sizing: border-box;
+   &:before {
+      content: "\200b";
+   }
+}
+
+.controls-PeriodDialog__homeButton-icon {
+   font-size: @home-button_icon-size_datePopup;
+   line-height: @home-button_icon-size_datePopup;
+   width: @home-button_icon-size_datePopup;
+   height: @home-button_icon-size_datePopup;
+   font-family: @icon_font-family_s;
+}
+
 .controls-PeriodDialog__cursor-pointer {
    cursor: pointer;
 }

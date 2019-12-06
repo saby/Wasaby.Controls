@@ -94,7 +94,8 @@ var Component = BaseSelector.extend({
                 selectionType: this._options.selectionType,
                 quantum: this._options.ranges,
                 minRange: this._options.minRange,
-                clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility
+                clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility,
+                range: this._options.range
             }
         };
     }

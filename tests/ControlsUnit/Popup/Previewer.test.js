@@ -1,10 +1,11 @@
 define(
    [
       'Controls/popup',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'Vdom/Vdom'
    ],
-   (popup, SyntheticEvent) => {
+   (popup, Vdom) => {
       'use strict';
+      var SyntheticEvent = Vdom.SyntheticEvent;
       describe('Controls/_popup/Previewer', () => {
          it('previewerClickHandler', () => {
             let PWInstance = new popup.PreviewerTarget();

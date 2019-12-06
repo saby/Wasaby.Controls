@@ -124,73 +124,8 @@
  */
 
 /**
- * @typedef {Object} HeaderCell
- * @property {String} caption Текст заголовка ячейки.
- * @property {String} align Выравнивание содержимого ячейки по горизонтали.
- * Доступные значения:
- * * **left** — по левому краю.
- * * **center** — по центру.
- * * **right** — по правому краю.
- * @property {String} valign Выравнивание содержимого ячейки по вертикали.
- * Доступные значения:
- * * **top** — по верхнему краю.
- * * **center** — по центру.
- * * **bottom** — по нижнему краю.
- * @property {String} [template=Controls/grid:HeaderContent] Шаблон заголовка ячейки.
- * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/ документации}.
- * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
- * В качестве значения принимает имя поля.
- * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки.
- * Клик по кнопке будет менять порядок сортировки элементов на противоположный.
- * При этом элементы будут отсортированы по полю, имя которого указано в свойстве sortingProperty.
- * <pre class="brush: js">
- * _sorting: null,
- * _header: null,
- * _beforeMount: function(){
- *    this._sorting = [
- *       {
- *          price: 'desc'
- *       },
- *       {
- *          balance: 'asc'
- *       }
- *    ],
- *    this._header = [
- *       {
- *          title: 'Цена',
- *          sortingProperty: 'price'
- *       },
- *       {
- *          title: 'Остаток',
- *          sortingProperty: 'balance'
- *       }
- *    ];
- * }
- * </pre>
- * @property {Number} startRow Порядковый номер строки, на которой начинается ячейка.
- * @property {Number} endRow Порядковый номер строки, на которой заканчивается ячейка.
- * @property {Number} startColumn Порядковый номер колонки, на которой начинается ячейка.
- * @property {Number} endColumn Порядковый номер колонки, на которой заканчивается ячейка.
- * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
- * @property {CellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
- */
-
-/*
- * @typedef {Object} HeaderCell Describer grid's header cell.
- * @property {String} [caption] Header cell caption text.
- * @property {GridCellAlign} [align] Horizontal cell content align.
- * @property {GridCellVAlign} [valign] Vertical cell content align.
- * @property {String} [template] Template for the header cell. CSS class controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields.
- * @property {String} sortingProperty Property by which doing sorting.
- * @property {Number} startRow The sequence number of the line on which the cell begins.
- * @property {Number} endRow The sequence number of the line on which the cell ends.
- * @property {Number} startColumn The serial number of the column on which the cell begins.
- * @property {Number} endColumn The serial number of the column on which the cell ends.
- */
-
-/**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки шапки нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке.
+ * @cfg {THeader} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки шапки нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке.
  * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @example
@@ -260,7 +195,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {Array.<Controls/_grid/interface/IColumn>} Описывает колонки таблицы. Колонки объекты реализующие интерфейс {@link Controls/_grid/interface/IColumn IColumn}
+ * @cfg {TColumns} Описывает колонки таблицы. Колонки объекты реализующие интерфейс {@link IColumn}
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark Перед отрисовкой убедитесь, что {@link Types/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example
@@ -291,7 +226,7 @@
 
 /*
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {Array.<Column>} Describes grid's columns.
+ * @cfg {TColumns} Describes grid's columns.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark Before rendering, make sure that {@link Types/display:Collection Collection} contains required data, when the {@link Controls/_grid/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/_grid/interface/IGridControl#columns columns} option, if necessary.
  * @example

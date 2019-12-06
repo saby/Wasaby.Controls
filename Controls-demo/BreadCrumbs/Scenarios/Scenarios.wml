@@ -3,6 +3,7 @@
       <Controls.heading:Title caption="Реестр без заголовков"
                         size="xl"/>
       <Controls.explorer:View
+         bind:root="_root"
          keyProperty="id"
          parentProperty="parent"
          nodeProperty="parent@"
@@ -19,6 +20,7 @@
       </div>
       <Controls.explorer:View
          keyProperty="id"
+         bind:root="_root1"
          parentProperty="parent"
          nodeProperty="parent@"
          displayProperty="title"
@@ -34,6 +36,7 @@
       </div>
       <Controls.explorer:View
          keyProperty="id"
+         bind:root="_root2"
          parentProperty="parent"
          nodeProperty="parent@"
          displayProperty="department"
@@ -81,6 +84,7 @@
                         size="xl"/>
       <Controls.explorer:View
          keyProperty="id"
+         bind:root="_root4"
          parentProperty="parent"
          nodeProperty="parent@"
          displayProperty="department"
@@ -158,6 +162,7 @@
          displayProperty="title"
          columns="{{_columns1}}"
          header="{{_header5}}"
+         bind:root="_root5"
          rowSeparatorVisibility="{{true}}"
          source="{{_viewSource1}}">
       </Controls.explorer:View>

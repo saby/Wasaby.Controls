@@ -8,7 +8,7 @@ import {TimeInterval} from 'Types/entity';
  * c {@link Controls.input:TimeInterval#mask} маской HH:MM.
  * @demo Controls-demo/Input/InputCallback/Index
  */
-const hoursFormat: ICallback<TimeInterval> = (data: ICallbackData<TimeInterval>): IFieldData {
+const hoursFormat: ICallback<TimeInterval> = (data: ICallbackData<TimeInterval>): IFieldData => {
     const hours = Math.min(data.value.getTotalHours(), 24);
     const minutes = hours === 24 ? 0 : data.value.getMinutes();
     return {

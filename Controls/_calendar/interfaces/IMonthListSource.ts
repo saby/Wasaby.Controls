@@ -3,6 +3,7 @@ import {TemplateFunction} from 'UI/Base';
 
 export interface IMonthListSourceOptions {
    source?: ICrud;
+   order?: string;
    dayTemplate?: TemplateFunction;
 }
 /*Eng
@@ -82,4 +83,28 @@ export interface IMonthListSource {
  * </Controls.calendar:MonthList>
  * </pre>
  * @see Controls/_calendar/interfaces/IMonthListSource#source
+ */
+
+/*
+ * @name Controls/_calendar/interfaces/IMonthListSource#order
+ * @cfg {String} Направление сортировки
+ * @default 'asc'
+ * @remark Работает только если не задан заголовок
+ * @variant 'ask' прямой порядок
+ * @variant 'desc' обратный порядок
+ * @example
+ * <pre>
+ * <Controls.calendar:MonthList
+ *     bind:month="_month"
+ *     order='desk'>
+ *     <ws:dayTemplate>
+ *         <ws:partial template="Controls/calendar:MonthViewDayTemplate">
+ *             <ws:contentTemplate>
+ *                 <ws:partial template="{{_dayTemplate}}"/>
+ *             </ws:contentTemplate>
+ *         </ws:partial>
+ *     </ws:dayTemplate>
+ * </Controls.calendar:MonthList>
+ * </pre>
+ * @noShow
  */
