@@ -1,18 +1,14 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import {date as formatDate} from 'Types/formatter';
 import {Date as WSDate} from 'Types/entity';
 import getCurrentPeriod = require('Core/helpers/Date/getCurrentPeriod');
 import IPeriodSimpleDialog from './_dateLitePopup/IDateLitePopup';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_dateLitePopup/DateLitePopup');
-import itemTmpl = require('wml!Controls/_dateLitePopup/Item');
-import itemFullTmpl = require('wml!Controls/_dateLitePopup/ItemFull');
-import itemMonthsTmpl = require('wml!Controls/_dateLitePopup/ItemMonths');
-import itemQuartersTmpl = require('wml!Controls/_dateLitePopup/ItemQuarters');
+import listTmpl = require('wml!Controls/_dateLitePopup/List');
 import ItemWrapper = require('wml!Controls/_dateLitePopup/ItemWrapper');
-import monthCaptionTemplate = require('wml!Controls/_dateLitePopup/MonthCaption');
 import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
+import {date as formatDate} from 'Types/formatter';
 
 /**
  * Контрол выбора даты или периода.
@@ -42,122 +38,35 @@ import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
 
 var _private = {
 
-    _getDefaultYear: function (options, dateConstructor) {
+    _getYearListPosition: function (options, dateConstructor) {
 
-        var start = options.startValue,
-            currentYear = (new dateConstructor()).getFullYear(),
-            startValueYear;
-
-        if (!options.chooseYears || options.chooseHalfyears || options.chooseQuarters || options.chooseMonths) {
-            return start ? start.getFullYear() : undefined;
-        }
-
-        startValueYear = start ? start.getFullYear() : null;
+        let start = options.startValue,
+            currentDate = new dateConstructor(),
+            startValueYear = start ? start.getFullYear() : null;
 
         if (!startValueYear) {
-            return currentYear;
+            return currentDate;
         }
 
-        if (startValueYear >= currentYear) {
-            return startValueYear;
-        } else if (currentYear - startValueYear >= 5) {
-            return startValueYear + 4;
+        if (startValueYear >= currentDate.getFullYear()) {
+            return start;
+        } else if (currentDate.getFullYear() - startValueYear >= 5) {
+            return new dateConstructor(startValueYear + 4, 0);
         } else {
-            return currentYear;
+            return currentDate;
         }
-    },
-
-    getQuarterData: function (quarterNumber, monthName, monthIndex) {
-        return {
-            number: quarterNumber * 3 + monthIndex,
-            name: monthName
-        };
-    },
-    getYearModel: function (year, dateConstructor) {
-        return [{
-            name: 'I',
-            tooltip: formatDate(new dateConstructor(year, 0, 1), formatDate.FULL_HALF_YEAR),
-            quarters: [{
-                name: 'I',
-                fullName: formatDate(new dateConstructor(year, 0, 1), 'QQQQr'),
-                tooltip: formatDate(new dateConstructor(year, 0, 1), formatDate.FULL_QUATER),
-                months: [{
-                    name: new dateConstructor(year, 0, 1),
-                    tooltip: formatDate(new dateConstructor(year, 0, 1), formatDate.FULL_MONTH)
-                }, {
-                    name: new dateConstructor(year, 1, 1),
-                    tooltip: formatDate(new dateConstructor(year, 1, 1), formatDate.FULL_MONTH)
-                }, {
-                    name: new dateConstructor(year, 2, 1),
-                    tooltip: formatDate(new dateConstructor(year, 2, 1), formatDate.FULL_MONTH)
-                }],
-                number: 0
-            }, {
-                name: 'II',
-                fullName: formatDate(new dateConstructor(year, 3, 1), 'QQQQr'),
-                tooltip: formatDate(new dateConstructor(year, 3, 1), formatDate.FULL_QUATER),
-                months: [{
-                    name: new dateConstructor(year, 3, 1),
-                    tooltip: formatDate(new dateConstructor(year, 3, 1), formatDate.FULL_MONTH)
-                }, {
-                    name: new dateConstructor(year, 4, 1),
-                    tooltip: formatDate(new dateConstructor(year, 4, 1), formatDate.FULL_MONTH)
-                }, {
-                    name: new dateConstructor(year, 5, 1),
-                    tooltip: formatDate(new dateConstructor(year, 5, 1), formatDate.FULL_MONTH)
-                }],
-                number: 1
-            }]
-        }, {
-            name: 'II',
-            tooltip: formatDate(new dateConstructor(year, 6, 1), formatDate.FULL_HALF_YEAR),
-            quarters: [{
-                name: 'III',
-                fullName: formatDate(new dateConstructor(year, 6, 1), 'QQQQr'),
-                tooltip: formatDate(new dateConstructor(year, 6, 1), formatDate.FULL_QUATER),
-                months: [{
-                    name: new dateConstructor(year, 6, 1),
-                    tooltip: formatDate(new dateConstructor(year, 6, 1), formatDate.FULL_MONTH)
-                }, {
-                    name: new dateConstructor(year, 7, 1),
-                    tooltip: formatDate(new dateConstructor(year, 7, 1), formatDate.FULL_MONTH)
-                }, {
-                    name: new dateConstructor(year, 8, 1),
-                    tooltip: formatDate(new dateConstructor(year, 8, 1), formatDate.FULL_MONTH)
-                }],
-                number: 2
-            }, {
-                name: 'IV',
-                fullName: formatDate(new dateConstructor(year, 9, 1), 'QQQQr'),
-                tooltip: formatDate(new dateConstructor(year, 9, 1), formatDate.FULL_QUATER),
-                months: [{
-                    name: new dateConstructor(year, 9, 1),
-                    tooltip: formatDate(new dateConstructor(year, 9, 1), formatDate.FULL_MONTH)
-                }, {
-                    name: new dateConstructor(year, 10, 1),
-                    tooltip: formatDate(new dateConstructor(year, 10, 1), formatDate.FULL_MONTH)
-                }, {
-                    name: new dateConstructor(year, 11, 1),
-                    tooltip: formatDate(new dateConstructor(year, 11, 1), formatDate.FULL_MONTH)
-                }],
-                number: 3
-            }]
-        }];
     }
 };
 
 var Component = BaseControl.extend({
     _template: componentTmpl,
-    _defaultItemTemplate: itemTmpl,
-    _itemTmplByType: null,
-    _monthCaptionTemplate: null,
+    _defaultListTemplate: listTmpl,
 
-    _year: null,
+    _position: null,
 
-    _yearHovered: false,
-    _halfyearHovered: false,
+    _yearHovered: null,
 
-    _formatDate: formatDate,
+    _range: null,
 
     // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
@@ -166,24 +75,6 @@ var Component = BaseControl.extend({
 
     _beforeMount: function (options) {
 
-        this._monthCaptionTemplate = monthCaptionTemplate;
-
-        if (options.chooseHalfyears && options.chooseQuarters && options.chooseMonths) {
-            this._itemTmplByType = itemFullTmpl;
-        } else if (options.chooseMonths) {
-            this._itemTmplByType = itemMonthsTmpl;
-        } else if (options.chooseQuarters) {
-            this._itemTmplByType = itemQuartersTmpl;
-        }
-
-        if (options.year instanceof Date) {
-            this._year = options.year.getFullYear();
-        } else {
-            this._year = _private._getDefaultYear(options, options.dateConstructor);
-            if (!this._year) {
-                this._year = (new options.dateConstructor()).getFullYear();
-            }
-        }
         this._emptyCaption = options.emptyCaption;
         if (!this._emptyCaption) {
             if (options.chooseMonths && (options.chooseQuarters || options.chooseHalfyears)) {
@@ -195,7 +86,13 @@ var Component = BaseControl.extend({
 
         this._caption = options.captionFormatter(options.startValue, options.endValue, options.emptyCaption);
 
-        this._months = _private.getYearModel(this._year, options.dateConstructor);
+        if (options.chooseQuarters || options.chooseMonths || options.chooseHalfyears) {
+            this._position = options.year || options.startValue || (new options.dateConstructor());
+        } else {
+            this._position = _private._getYearListPosition(options, options.dateConstructor);
+        }
+
+        this._range = options.range;
     },
 
     _beforeUpdate: function (options) {
@@ -207,28 +104,31 @@ var Component = BaseControl.extend({
      * @param year
      */
     setYear: function (year) {
-        this._year = year;
-        this._months = _private.getYearModel(this._year, this._options.dateConstructor);
+        this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
     },
 
-    _onYearMouseEnter: function () {
+    _dateToDataString(date) {
+        return formatDate(date, 'YYYY-MM-DD');
+    },
+
+    _onYearMouseEnter: function (event, year) {
         if (this._options.chooseYears) {
-            this._yearHovered = true;
+            this._yearHovered = year;
         }
     },
 
     _onYearMouseLeave: function () {
-        this._yearHovered = false;
+        this._yearHovered = null;
     },
 
     _onPrevYearBtnClick: function () {
-        var year = this._year - 1;
+        var year = this._position.getFullYear() - 1;
         this.setYear(year);
     },
 
     _onNextYearBtnClick: function () {
-        var year = this._year + 1;
+        var year = this._position.getFullYear() + 1;
         this.setYear(year);
     },
 
@@ -249,36 +149,6 @@ var Component = BaseControl.extend({
             {bubbling: true});
     },
 
-    _onWheel: function (event) {
-        let wheelDelta = event.nativeEvent.deltaY;
-        // In the year selection mode, years are located in another direction.
-        if (this._options.chooseQuarters || this._options.chooseHalfyears || this._options.chooseMonths) {
-            wheelDelta = -wheelDelta;
-        }
-        if (wheelDelta > 0) {
-            this._onPrevYearBtnClick();
-        } else {
-            this._onNextYearBtnClick();
-        }
-        event.preventDefault();
-    },
-
-    _onQuarterMouseEnter: function (event, quarter) {
-        this._quarterHovered = quarter;
-    },
-
-    _onQuarterMouseLeave: function () {
-        this._quarterHovered = null;
-    },
-
-    _onHalfYearMouseEnter: function (event, halfyear) {
-        this._halfyearHovered = halfyear;
-    },
-
-    _onHalfYearMouseLeave: function () {
-        this._halfyearHovered = null;
-    },
-
     _onHeaderClick: function () {
         this._notify('close', [], {bubbling: true});
     },
@@ -292,28 +162,37 @@ var Component = BaseControl.extend({
         }
     },
 
-    _onHalfYearClick: function (event, halfYear) {
-        var start = new this._options.dateConstructor(this._year, halfYear * 6, 1),
-            end = new this._options.dateConstructor(this._year, (halfYear + 1) * 6, 0);
-        this._notify('sendResult', [start, end], {bubbling: true});
-    },
-
-    _onQuarterClick: function (event, quarter) {
-        var start = new this._options.dateConstructor(this._year, quarter * 3, 1),
-            end = new this._options.dateConstructor(this._year, (quarter + 1) * 3, 0);
-        this._notify('sendResult', [start, end], {bubbling: true});
-    },
-
-    _onMonthClick: function (event, month) {
-        this._notify('sendResult', [month, dateUtils.getEndOfMonth(month)], {bubbling: true});
-    },
-
     _getWidthCssClass: function () {
         if (this._options.chooseHalfyears) {
             return 'controls-PeriodLiteDialog__width-big';
         }
         if (this._options.chooseQuarters || this._options.chooseMonths) {
             return 'controls-PeriodLiteDialog__width-medium';
+        }
+        return '';
+    },
+
+    _getListCssClasses: function () {
+        if (this._options.chooseHalfyears) {
+            return 'controls-PeriodLiteDialog-item controls-PeriodLiteDialog__fullYear-list';
+        }
+        if (this._options.chooseMonths) {
+            return 'controls-PeriodLiteDialog__vLayout controls-PeriodLiteDialog__text-align-center ' +
+                'controls-PeriodLiteDialog__month-list';
+        }
+        if (this._options.chooseQuarters) {
+            return 'controls-PeriodLiteDialog__vLayout controls-PeriodLiteDialog__text-align-center ' +
+                ' controls-PeriodLiteDialog__quarter-list';
+        }
+        return '';
+    },
+
+    _getYearWrapperCssClasses: function () {
+        if (this._options.chooseHalfyears) {
+            return 'controls-PeriodLiteDialog__yearWrapper__fullYear';
+        }
+        if (this._options.chooseQuarters || this._options.chooseMonths) {
+            return 'controls-PeriodLiteDialog__yearWrapper__quarters-months';
         }
         return '';
     },
