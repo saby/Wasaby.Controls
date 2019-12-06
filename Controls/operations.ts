@@ -5,6 +5,7 @@
  * @includes Button Controls/_operations/Button
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
+ * @includes BaseSelectionStrategy Controls/_operations/MultiSelector/SelectionStrategy/Base
  * @includes FlatSelectionStrategy Controls/_operations/MultiSelector/SelectionStrategy/Flat
  * @includes TreeSelectionStrategy Controls/_operations/MultiSelector/SelectionStrategy/Tree
  * @includes DeepTreeSelectionStrategy Controls/_operations/MultiSelector/SelectionStrategy/DeepTree
