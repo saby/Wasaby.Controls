@@ -10,8 +10,8 @@
  * @includes ColumnTemplate Controls/grid:ColumnTemplate
  * @includes RowEditor Controls/grid:RowEditor
  * @includes IGridControl Controls/_grid/interface/IGridControl
- * @includes IColumn Controls/grid:IColumn
- * @includes IHeaderCell Controls/grid:IHeaderCell
+ * @includes IColumn Controls/_grid/interface/IColumn
+ * @includes IHeaderCell Controls/_grid/interface/IHeaderCell
  * @public
  * @author Крайнов Д.О.
  */
