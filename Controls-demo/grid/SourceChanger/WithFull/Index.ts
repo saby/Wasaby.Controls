@@ -7,15 +7,14 @@ import 'css!Controls-demo/Controls-demo'
 
 const { data, data2 } = changeSourceData();
 
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-
 class demoSource extends Memory {
     queryNumber: number = 0;
     pending: Promise<any>;
     private query(query) {
         const self = this;
-        return delay(2500).then(() => {
-            return super.query.apply(this, arguments).addCallback((items) => {
+        const args = arguments;
+        return this.pending.then(() => {
+            return super.query.apply(this, args).addCallback((items) => {
                 const rawData = items.getRawData();
                 rawData.items = data2.filter((cur) => cur.load === this.queryNumber);
                 rawData.meta.more = this.queryNumber < 2;
@@ -45,6 +44,7 @@ export default class extends Control {
     private _viewSource: Memory;
     private _viewSource2: Memory;
     private _columns = getCountriesStats().getColumnsForLoad();
+    private _resolve = null;
 
     protected _beforeMount() {
         const self = this;
@@ -69,7 +69,15 @@ export default class extends Control {
         });
     }
 
+    private _onPen() {
+        const self = this;
+        this._resolve();
+        this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
+    }
+
     private _onChangeSource() {
+        const self = this;
+        this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
         this._viewSource2.queryNumber = 0;
         this._viewSource = this._viewSource2;
     }

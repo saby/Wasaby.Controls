@@ -222,9 +222,11 @@ function getCountriesStats() {
         getColumnsForLoad: () => [
             {
                 displayProperty: 'id',
+                width: '50px',
             },
             {
                 displayProperty: 'load',
+                width: '200px',
             },
 
         ],
@@ -891,36 +893,36 @@ const changeSourceData = () => ({
     data: [
         {
             id: 1,
-            load: 'hello',
+            load: 'One',
             title: 'hello'
         }, {
             id: 2,
-            load: 'hello',
+            load: 'Two',
             title: 'hello'
 
         }, {
             id: 3,
-            load: 'hello',
+            load: 'three',
             title: 'hello'
 
         }, {
             id: 4,
-            load: 'hello',
+            load: 'Four',
             title: 'hello'
 
         }, {
             id: 5,
-            load: 'hello',
+            load: 'Five',
             title: 'hello'
 
         }, {
             id: 6,
-            load: 'hello',
+            load: 'Six',
             title: 'hello'
 
         }, {
             id: 7,
-            load: 'hello',
+            load: 'Seven',
             title: 'hello'
 
         }],
