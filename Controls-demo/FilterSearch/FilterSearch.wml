@@ -17,7 +17,7 @@
                                         <ws:partial template="Controls/list:ItemTemplate">
                                             <ws:contentTemplate>
                                                 <div class="demo-FilterSearch__listItem-wrapper">
-                                                    <span class="demo-FilterSearch__department {{ itemTemplate.itemData.searchValue }}">
+                                                    <span class="demo-FilterSearch__department">
                                                         <Controls.decorator:Highlight highlight="{{itemTemplate.itemData.searchValue}} || ''" text="{{itemTemplate.itemData.item.get('department')}}"/>
                                                     </span>
                                                    <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span>
@@ -60,7 +60,7 @@
                                             <ws:partial template="Controls/list:ItemTemplate">
                                                 <ws:contentTemplate>
                                                     <div class="demo-FilterSearch__listItem-wrapper">
-                                                        <span class="demo-FilterSearch__department {{ itemTemplate.itemData.searchValue }}">
+                                                        <span class="demo-FilterSearch__department">
                                                             <Controls.decorator:Highlight highlight="{{itemTemplate.itemData.searchValue}} || ''" text="{{itemTemplate.itemData.item.get('department')}}"/>
                                                         </span>
                                                         <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span>
@@ -147,7 +147,7 @@
                                             <ws:partial template="Controls/list:ItemTemplate">
                                                 <ws:contentTemplate>
                                                     <div class="demo-FilterSearch__listItem-wrapper">
-                                                        <span class="demo-FilterSearch__department {{ itemTemplate.itemData.searchValue }}">
+                                                        <span class="demo-FilterSearch__department">
                                                             <Controls.decorator:Highlight highlight="{{itemTemplate.itemData.searchValue}} || ''" text="{{itemTemplate.itemData.item.get('department')}}"/>
                                                         </span>
                                                         <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span>
