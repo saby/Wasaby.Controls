@@ -155,7 +155,7 @@ interface IPosition {
                let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
                let isNegativeRevertPosition = _private.isNegativePosition(popupCfg, revertPosition, targetCoords);
                if (revertPositionOverflow > 0 || isNegativeRevertPosition) {
-                  if ((positionOverflow < revertPositionOverflow) && !isNegativePos || isNegativeRevertPosition) {
+                  if ((positionOverflow <= revertPositionOverflow) && !isNegativePos || isNegativeRevertPosition) {
                      _private.invertPosition(popupCfg, direction);
                      _private.restrictContainer(position, property, popupCfg, positionOverflow);
                      resultPosition = position;
