@@ -1,5 +1,5 @@
-import {default as BaseController, IPopupItem, IPopupOptions,
-    IPopupSizes, IPopupPosition, IDragOffset} from 'Controls/_popupTemplate/BaseController';
+import {default as BaseController, IDragOffset} from 'Controls/_popupTemplate/BaseController';
+import {IPopupItem, IPopupOptions, IPopupSizes, IPopupPosition} from 'Controls/popup';
 import {detection} from 'Env/Env';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 
