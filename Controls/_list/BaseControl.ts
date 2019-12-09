@@ -783,7 +783,7 @@ var _private = {
     },
 
     showIndicator(self, direction: 'down' | 'up' | 'all' = 'all'): void {
-        if (!self._isMounted || !!self._loadingState) {
+        if (!self._isMounted || self._loadingState === 'all') {
             return;
         }
 
