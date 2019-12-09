@@ -174,7 +174,12 @@ const
 
       prepareDebouncedUpdateSizes: function() {
           return debounce(_private.updateSizes, DELAY_UPDATE_SIZES, true);
+      },
+
+       hasColumnScrollRects(content: HTMLElement): boolean {
+         return !!content.getClientRects().length;
       }
+
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -241,7 +246,9 @@ const
       },
 
       _resizeHandler() {
-         this._debouncedUpdateSizes(this);
+          if (_private.hasColumnScrollRects(this._children.content)) {
+              this._debouncedUpdateSizes(this);
+          }
       },
 
       _isColumnScrollVisible: function() {
