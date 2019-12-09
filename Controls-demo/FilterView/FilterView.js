@@ -630,7 +630,7 @@ define('Controls-demo/FilterView/FilterView',
             this._hierarchyItems = Clone(items);
          },
 
-         _beforeUnmount: function () {
+         _beforeUnmount: function() {
             this._hierarchyItems.forEach( (item) => {
                item.editorOptions.source.destroyHistory();
             });
