@@ -40,6 +40,9 @@ const
           }
       },
       updateSizes(self) {
+          if (self._destroyed) {
+              return;
+          }
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
          _private.setDispalyNoneForScroll(self._children.content);
          _private.drawTransform(self, 0);

@@ -447,7 +447,6 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 0);
       });
 
-
       it('_isColumnScrollVisible', function() {
 
          assert.isTrue(columnScroll._isColumnScrollVisible());
@@ -910,5 +909,15 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._leftOffsetForHScroll = 0;
          columnScroll._offsetForHScroll = 0;
       });
+      it('updateSizes after destroy', function () {
+         assert.equal(450, columnScroll._contentSize);
+         assert.equal(200, columnScroll._contentContainerSize);
+         columnScroll._children.content.scrollWidth = 650;
+         columnScroll._children.content.offsetWidth = 300;
+         columnScroll.destroy();
+         columnScroll._resizeHandler();
+         assert.equal(450, columnScroll._contentSize); // previous value
+         assert.equal(200, columnScroll._contentContainerSize); //previous value
+      })
    });
 });
