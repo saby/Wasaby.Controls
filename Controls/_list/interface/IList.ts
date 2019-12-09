@@ -49,15 +49,10 @@
 
 /**
  * @name Controls/_list/interface/IList#emptyTemplate
- * @cfg {Function} Шаблон пустого списка (без элементов).
- * См.<a href="/materials/demo-ws4-list-base">демо-пример</a>
+ * @cfg {Function} Устанавливает шаблон отображения контрола без элементов.
  * @remark
- * По умолчанию для emptyTemplate используется шаблон "Controls/list:EmptyTemplate".
- * Он рекомендован к использованию при описании собственного шаблона, отображаемого для пустого списка.
- * Шаблон "Controls/list:EmptyTemplate" принимает следующие параметры:
- * - contentTemplate — контент шаблона;
- * - topSpacing — расстояние между верхней границей и контентом шаблона;
- * - bottomSpacing — расстояние между нижней границей и контентом шаблона;
+ * См. <a href="/materials/demo-ws4-list-base">демо-пример</a>.
+ * @default Controls/list:EmptyTemplate
  * @example
  * <pre>
  *    <Controls.list:View>
