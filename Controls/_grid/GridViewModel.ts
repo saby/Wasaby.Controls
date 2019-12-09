@@ -1,7 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 import {BaseViewModel, ItemsUtil, ListViewModel} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
-import {Utils as stickyUtil} from 'Controls/scroll';
+import {isStickySupport} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
 import {detection} from 'Env/Env';
 import {isEqual} from 'Types/object';
@@ -726,7 +726,7 @@ var
                });
             }
 
-            if (!stickyUtil.isStickySupport()) {
+            if (!isStickySupport()) {
                 cellClasses = cellClasses + ' controls-Grid__header-cell_static';
             }
 

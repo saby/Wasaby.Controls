@@ -22,7 +22,7 @@ define([
       },
       getRegisterObject = function(cfg) {
          return {
-            id: scroll.Utils.getNextId(),
+            id: scroll.getNextStickyId(),
             position: (cfg && cfg.position) || 'top',
             inst: {
                getOffset: function() {

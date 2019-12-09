@@ -28,7 +28,8 @@ define([
       describe('Initialisation', function() {
          it('should set correct header id', function() {
             const component = createComponent(StickyHeader, options);
-            assert.strictEqual(component._index, scroll.Utils._lastId);
+            const component2 = createComponent(StickyHeader, options);
+            assert.strictEqual(component._index, component2._index - 1);
          });
       });
 
