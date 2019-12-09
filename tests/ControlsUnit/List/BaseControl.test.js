@@ -4553,6 +4553,30 @@ define([
          instance._afterUpdate(cfg);
          assert.isTrue(fakeNotify.calledOnce);
       });
+      it('should update saved indexes if virtual scroll indexes updated', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source,
+            virtualScrolling: true
+         },
+             instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         let applyVirtualScrollIndexes = lists.BaseControl._private.applyVirtualScrollIndexes;
+         let lvm = instance.getViewModel();
+         lvm.getCount = () => { return 10; };
+         lvm.setIndexes(0, 4);
+         instance._virtualScroll = new lists.VirtualScroll({
+               virtualPageSize: 4,
+               virtualSegmentSize: 2
+            });
+         instance._virtualScroll.ItemsCount = 10;
+         instance._virtualScroll.StartIndex = 2;
+         applyVirtualScrollIndexes(instance);
+         assert.deepEqual([instance._savedStartIndex, instance._savedStopIndex], [0, 4], 'saved indexes have not updated');
+      });
 
       it('should fire "drawItems" event if indexes have changed', async function() {
          var
