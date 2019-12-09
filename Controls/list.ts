@@ -5,6 +5,7 @@
  * @includes Container Controls/_list/Container
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
+ * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
@@ -30,6 +31,7 @@
  * @includes Container Controls/_list/Container
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
+ * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
