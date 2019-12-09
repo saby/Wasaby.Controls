@@ -4,6 +4,8 @@ import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadcrumbs/View/View');
 import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
 import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
+
+
 import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
 import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 
@@ -28,7 +30,11 @@ var BreadCrumbsView = Control.extend({
     },
 
     _onItemClick: function (e, itemData) {
-        if (itemData.isDots) {
+            if (!this._options.readOnly) {
+                this._notify('itemClick', [itemData.item]);
+            }
+    },
+    _dotsClick: function (e) {
             var rs = new RecordSet({
                 rawData: this._options.items.map(function (item) {
                     var newItem = {};
@@ -51,23 +57,12 @@ var BreadCrumbsView = Control.extend({
                 }
             });
             e.stopPropagation();
-        } else {
-            if (!this._options.readOnly) {
-                this._notify('itemClick', [itemData.item]);
-            }
-        }
     },
 
     _applyHighlighter: applyHighlighter,
 
     _onHoveredItemChanged: function (event, item) {
         this._notify('hoveredItemChanged', [item]);
-    },
-
-    _onResize: function () {
-        this._children.menuOpener.close();
-        // todo добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
-       this._forceUpdate();
     },
 
     _onResult: function (event, args) {

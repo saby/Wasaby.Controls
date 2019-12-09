@@ -618,6 +618,12 @@ define('Controls-demo/FilterView/FilterView',
             ];
          },
 
+         _beforeUnmount: function() {
+            this._hierarchyItems.forEach( function(item) {
+               item.editorOptions.source.destroyHistory();
+            });
+         },
+
          _getMultiItems: function() {
             var items = [];
             for (var i = 0; i < 100; i++) {

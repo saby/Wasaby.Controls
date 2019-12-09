@@ -362,7 +362,7 @@ import dataSource = require('Controls/dataSource');
          if (forceFinishValue !== undefined) {
             this._confirmDialogResult(forceFinishValue, def);
          } else {
-            this._showConfirmPopup('yesnocancel', rk('Чтобы продолжить редактирование, нажмите "Отмена".')).then((answer) => {
+            this._showConfirmPopup('yesnocancel', rk('Чтобы продолжить редактирование, нажмите \'Отмена\'')).then((answer) => {
                this._confirmDialogResult(answer, def);
                return answer;
             });
@@ -427,6 +427,7 @@ import dataSource = require('Controls/dataSource');
                updateResult.dependOn(res);
             } else {
                updateResult.callback(true);
+               self._updateIsNewRecord(false);
             }
          }
 

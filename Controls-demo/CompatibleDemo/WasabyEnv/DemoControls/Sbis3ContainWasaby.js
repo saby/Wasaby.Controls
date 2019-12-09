@@ -13,6 +13,7 @@ define('Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/Sbis3ContainWasaby',
 
       init: function(opts) {
          CompatibleDemoNext.superclass.init.call(this);
+         this.getChildControlByName('initStatus').setCaption('init');
          this.myTextBoxElement = this._container.find('.for__ws4');
          this.myTextBox = Base.Control.createControl(
             Text,
@@ -22,8 +23,10 @@ define('Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/Sbis3ContainWasaby',
             this.myTextBoxElement
          );
          makeInstanceCompatible(this.myTextBox);
-         this.subscribeTo(this.myTextBox, 'onTextChange', function() {
-         //    alert(1);
+         var myTextBox = this.getChildControlByName('TextBoxWrapper');
+         var self = this;
+         myTextBox.subscribe('onTextChange', function() {
+            self.getChildControlByName('initStatus').setCaption('update');
          });
       },
 

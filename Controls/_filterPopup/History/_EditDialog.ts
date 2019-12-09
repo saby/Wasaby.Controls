@@ -98,7 +98,7 @@ class EditDialog extends Control<IEditDialog> {
 
     private showConfirmation(): void {
         Confirmation.openPopup({
-            message: rk('Выберите параметры фильтрации для сохраниения'),
+            message: rk('Выберите параметры фильтрации для сохранения'),
             type: 'ok',
             style: 'danger'
         });

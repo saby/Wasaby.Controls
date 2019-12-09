@@ -1,28 +1,18 @@
-<a attr:class="controls-BaseButton controls-ToggleButton controls-Button_style-{{_buttonStyle}}{{_state}}
-             controls-Button_viewMode-{{_viewMode}}{{_options.readOnly ? '_readOnly':''}}
-             controls-Button_viewMode-{{_viewMode}}_size-{{_options.size}}
-             controls-Button_viewMode-{{_viewMode}}{{_state}}_style-common
-             controls-Button_viewMode-{{_viewMode}}{{_transparent ? '_transparent' : '_withBackground'}}
-             controls-Button_style-{{_buttonStyle}}_viewMode-{{_viewMode}}{{_state}}
-             {{_options.readOnly ?  '':'controls-Button_viewMode-' + _viewMode + '_iconStyle-' + _iconStyle + _state}}
-             theme_{{_options.theme}}"
-    attr:title="{{_options.tooltip}}"
-    on:click="_clickHandler()"
-    on:keypress="_keyUpHandler()"
-    attr:href="{{_options.href}}">
-    <span attr:class="controls-BaseButton__content controls-ToggleButton__content controls-Button__wrapper_viewMode-{{_viewMode}}_size-{{_options.size}} theme_{{_options.theme}}">
-        <ws:if data="{{!!_icon}}">
-            <i attr:class="controls-Button__icon controls-ToggleButton__icon {{_icon}} {{_iconSize ? 'icon-' + _iconSize}}
-                            {{_options.readOnly ? '':'controls-Button__icon-' + _iconStyle + _state}}
-                            {{_options.readOnly ? '':'controls-Button__icon-' + _buttonStyle + '_iconStyle-' + _iconStyle + '_viewMode-' +_viewMode + _state}}
-                            theme_{{_options.theme}}"/>
-        </ws:if>
-        <ws:if data="{{!!_caption}}">
-           <span attr:class="controls-ToggleButton__text controls-BaseButton__text theme_{{_options.theme}} controls-Button__text_style-{{_buttonStyle}}
-                            controls-Button__text_viewMode-{{_viewMode}} {{_options.icon || _options.icons ? ' controls-Button__text_gap'}}">
-              <ws:if data="{{_stringCaption}}">{{_caption}}</ws:if>
-              <ws:else><ws:partial template="{{_caption}}"/></ws:else>
-           </span>
-        </ws:if>
-    </span>
-</a>
+<ws:partial template="Controls/buttons:ButtonTemplate"
+            _viewMode="{{_viewMode}}"
+            _options="{{_options}}"
+            _buttonStyle="{{_buttonStyle}}"
+            _contrastBackground="{{_contrastBackground}}"
+            _height="{{_height}}"
+            _fontSize="{{_fontSize}}"
+            _icon="{{_icon}}"
+            _hoverIcon="{{_hoverIcon}}"
+            _toggled="{{_options.value}}"
+            _iconSize="{{_iconSize}}"
+            _caption="{{_caption}}"
+            _fontColorStyle="{{_fontColorStyle}}"
+            _hasIcon="{{_hasIcon}}"
+            _stringCaption="{{_stringCaption}}"
+            _iconStyle="{{_iconStyle}}"
+            on:click="_clickHandler()"
+            on:keypress="_keyUpHandler()"/>

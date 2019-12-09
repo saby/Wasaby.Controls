@@ -169,58 +169,58 @@ define(['Controls/buttons'], function(buttons) {
       });
       describe('iconSize', function() {
          it('iconSize', function() {
-            let cfg = actualAPI.iconSize({ 'icon-size': 's', icon: 'icon-16 icon-Author' });
+            const cfg = actualAPI.iconSize('s', 'icon-16 icon-Author');
             assert.equal('s', cfg, 'wrong cfg');
          });
          it('icon-16', function() {
-            let cfg = actualAPI.iconSize({ icon: 'icon-16 icon-Author' });
+            const cfg = actualAPI.iconSize(undefined, 'icon-16 icon-Author');
             assert.equal('s', cfg, 'wrong cfg');
          });
          it('icon-24', function() {
-            let cfg = actualAPI.iconSize({ icon: 'icon-24 icon-Author' });
+            const cfg = actualAPI.iconSize(undefined, 'icon-24 icon-Author');
             assert.equal('m', cfg, 'wrong cfg');
          });
          it('icon-32', function() {
-            let cfg = actualAPI.iconSize({ icon: 'icon-32 icon-Author' });
+            const cfg = actualAPI.iconSize(undefined, 'icon-32 icon-Author');
             assert.equal('l', cfg, 'wrong cfg');
          });
          it('icon-small', function() {
-            let cfg = actualAPI.iconSize({ icon: 'icon-small icon-Author' });
+            const cfg = actualAPI.iconSize(undefined, 'icon-small icon-Author');
             assert.equal('s', cfg, 'wrong cfg');
          });
          it('icon-medium', function() {
-            let cfg = actualAPI.iconSize({ icon: 'icon-medium icon-Author' });
+            const cfg = actualAPI.iconSize(undefined, 'icon-medium icon-Author');
             assert.equal('m', cfg, 'wrong cfg');
          });
          it('icon-large', function() {
-            let cfg = actualAPI.iconSize({ icon: 'icon-large icon-Author' });
+            const cfg = actualAPI.iconSize(undefined, 'icon-large icon-Author');
             assert.equal('l', cfg, 'wrong cfg');
          });
          it('empty', function() {
-            let cfg = actualAPI.iconSize({ icon: 'icon-Author' });
+            const cfg = actualAPI.iconSize(undefined, 'icon-Author');
             assert.equal('m', cfg, 'wrong cfg');
          });
       });
 
       describe('iconStyle', function() {
          it('readonly', function() {
-            let cfg = actualAPI.iconStyle({ readOnly: true, iconStyle: 'success', icon: 'icon-done icon-Author' });
+            const cfg = actualAPI.iconStyle('success', 'icon-done icon-Author', true, false);
             assert.equal('readonly', cfg, 'wrong cfg');
          });
          it('buttonAdd', function() {
-            let cfg = actualAPI.iconStyle({ buttonAdd: true, iconStyle: 'success', icon: 'icon-done icon-Author' });
+            const cfg = actualAPI.iconStyle('success', 'icon-done icon-Author', false, true);
             assert.equal('default', cfg, 'wrong cfg');
          });
          it('iconStyle success', function() {
-            let cfg = actualAPI.iconStyle({ iconStyle: 'success', icon: 'icon-done icon-Author' });
+            const cfg = actualAPI.iconStyle('success', 'icon-done icon-Author', false, false);
             assert.equal('success', cfg, 'wrong cfg');
          });
          it('iconStyle done', function() {
-            let cfg = actualAPI.iconStyle({ iconStyle: 'done', icon: 'icon-done icon-Author' });
+            const cfg = actualAPI.iconStyle('done', 'icon-done icon-Author', false, false);
             assert.equal('success', cfg, 'wrong cfg');
          });
          it('icon-done', function() {
-            let cfg = actualAPI.iconStyle({ icon: 'icon-done icon-Author' });
+            const cfg = actualAPI.iconStyle(undefined, 'icon-done icon-Author', false, false);
             assert.equal('success', cfg, 'wrong cfg');
          });
       });

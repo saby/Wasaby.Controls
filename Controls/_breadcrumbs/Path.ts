@@ -35,27 +35,21 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
 var BreadCrumbs = Control.extend({
     _template: template,
     _visibleItems: [],
-    _oldWidth: 0,
     _viewUpdated: false,
 
     _afterMount: function () {
-        this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
         if (this._options.items && this._options.items.length > 0) {
-            this._oldWidth = this._container.clientWidth;
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
-                BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, this._options.items, this._oldWidth);
-                this._forceUpdate();
+                BreadCrumbsUtil.drawBreadCrumbs(this, this._options.items);
             }.bind(this));
         }
     },
-
     _beforeUpdate: function (newOptions) {
         this._redrawIfNeed(this._options.items, newOptions.items);
     },
     _redrawIfNeed: function(currentItems, newItems) {
-        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems, this._oldWidth, this._container.clientWidth)) {
-            this._oldWidth = this._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newItems, this._container.clientWidth);
+        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems)) {
+            BreadCrumbsUtil.drawBreadCrumbs(this, newItems);
             this._viewUpdated = true;
         }
     },
@@ -63,21 +57,13 @@ var BreadCrumbs = Control.extend({
     _afterUpdate: function() {
         if (this._viewUpdated) {
             this._viewUpdated = false;
-            this._notify('controlResize', [], {bubbling: true});
         }
     },
     _notifyHandler: tmplNotify,
     _itemClickHandler: function(e, item) {
         e.stopPropagation();
         this._notify('itemClick', [item])
-    },
-    _onResize: function() {
-        this._redrawIfNeed(this._options.items, this._options.items);
-    },
-
-   _beforeUnmount: function() {
-      this._notify('unregister', ['controlResize', this], { bubbling: true });
-   }
+    }
 });
 
 BreadCrumbs.getDefaultOptions = function () {

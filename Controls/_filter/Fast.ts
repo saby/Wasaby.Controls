@@ -476,7 +476,7 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
                config.text = text[0];
                config.title = text.join(', ');
                if (text.length > 1) {
-                  config.hasMoreText = ', ' + rk('еще ') + (text.length - 1);
+                  config.hasMoreText = ', ' + rk('еще') + ' ' + (text.length - 1);
                } else {
                   config.hasMoreText = '';
                }
