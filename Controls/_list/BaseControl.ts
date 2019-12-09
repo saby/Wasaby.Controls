@@ -282,8 +282,10 @@ var _private = {
             const needShowIndicatorByNavigation =
                 (navigation && navigation.view === 'maxCount') ||
                 self._needScrollCalculation;
-            const hasDataToDirection = direction === 'down' && hasMoreDataDown || direction === 'up' && hasMoreDataUp;
-            const needShowIndicatorByMeta = direction === 'all' ? hasMoreDataDown || hasMoreDataUp : hasDataToDirection;
+
+            const hasMoreData = hasMoreDataDown || hasMoreDataUp;
+            const hasDataToCurrentDirection = direction === 'down' && hasMoreDataDown || direction === 'up' && hasMoreDataUp;
+            const needShowIndicatorByMeta = direction === 'all' ? hasMoreData : hasDataToCurrentDirection;
 
             // because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             // otherwise empty template will shown
