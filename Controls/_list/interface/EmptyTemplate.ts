@@ -29,7 +29,7 @@
  */
 
 /**
- * @name Controls/listEmptyTemplate#topSpacing
+ * @name Controls/list:EmptyTemplate#topSpacing
  * @cfg {String} Расстояние между верхней границей и контентом шаблона.
  * @remark 
  * Доступные значения: null, xs, s, m, l, xl, xxl.
