@@ -27,6 +27,7 @@
          <ws:partial
                  class="controls-PeriodLiteDialog__body {{_getListCssClasses()}}"
                  _dateToDataString="{{_dateToDataString}}"
+                 isIconsChecked="{{isIconsChecked}}"
                  template="{{_defaultListTemplate}}"
                  _options="{{_options}}"
                  _range="{{_range}}"
@@ -42,7 +43,6 @@
       <div class="controls-PeriodLiteDialog__years-next" on:click="_onNextYearBtnClick()"></div>
       <Controls.calendar:MonthList
               order="desc"
-              virtualPageSize="{{24}}"
               bind:position="_position"
          class="controls-PeriodLiteDialog__year-list">
          <ws:yearTemplate>
