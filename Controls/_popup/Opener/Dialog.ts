@@ -42,6 +42,22 @@ const getDialogConfig = (config) => {
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
 class Dialog extends BaseOpener {
+    protected _contextIsTouch: boolean = false;
+
+    protected _afterMount(options, context): void {
+        super._afterMount();
+        this._updateContext(context);
+    }
+
+    protected _afterUpdate(oldOptions, context): void{
+        this._updateContext(context);
+    }
+
+    private _updateContext(context): void {
+        this._contextIsTouch = context && context.isTouch && context.isTouch.isTouch;
+    }
+
+
     /*
      * Open dialog popup.
      * If you call this method while the window is already opened, it will cause the redrawing of the window.
@@ -90,6 +106,11 @@ class Dialog extends BaseOpener {
      * @see closePopup
      */
     open(popupOptions) {
+        // Если диалоговое окно открыто через touch, то позиционируем его в самом верху экрана.
+        // Это решает проблемы с показом клавиатуры и прыжком контента из-за изменившегося scrollTop.
+        if(this._contextIsTouch) {
+            popupOptions.top = 0;
+        }
         super.open(this._getDialogConfig(popupOptions), POPUP_CONTROLLER);
     }
 
