@@ -1,14 +1,13 @@
-define('Controls-demo/SelectionStrategies/SelectionStrategies', [
+define('Controls-demo/operations/SelectionStrategies', [
    'Core/Control',
-   'wml!Controls-demo/SelectionStrategies/SelectionStrategies',
-   'Engine-demo/Selector/SelectorData',
+   'wml!Controls-demo/operations/SelectionStrategies',
    'Engine-demo/Selector/TreeListSelector/SelectorMemory',
 
    // Зависит от другой демки, надо переписать
    'Controls-demo/OperationsPanel/Demo/Data',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo',
    'css!Controls-demo/OperationsPanel/Demo/Demo'
-], function(Control, template, SelectorData, MemorySource, Data) {
+], function(Control, template, MemorySource, Data) {
    'use strict';
 
    return Control.extend({

@@ -1,9 +1,9 @@
 <Controls.dropdown:Button name="myMenuButton2"
-                      keyProperty="id"
-                      viewMode="link"
-                      style="secondary"
-                      caption="{{_menuCaption}}"
-                      size="{{_options.size}}"
-                      fontSize="{{_options.fontSize}}"
-                      on:onMenuItemActivate="_onMenuItemActivate()"
-                      source="{{_menuSource}}"/>
+                          keyProperty="id"
+                          viewMode="link"
+                          style="secondary"
+                          caption="{{_menuCaption}}"
+                          size="{{_options.size}}"
+                          fontSize="{{_options.fontSize}}"
+                          on:onMenuItemActivate="_onMenuItemActivate()"
+                          source="{{_menuSource}}"/>
