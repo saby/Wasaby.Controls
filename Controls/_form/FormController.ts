@@ -427,6 +427,7 @@ import dataSource = require('Controls/dataSource');
                updateResult.dependOn(res);
             } else {
                updateResult.callback(true);
+               self._updateIsNewRecord(false);
             }
          }
 
