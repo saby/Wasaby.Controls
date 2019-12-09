@@ -3,8 +3,9 @@
  * @class Controls/treeGrid:ItemTemplate
  * @mixes Controls/list:BaseItemTemplate
  * @author Авраменко А.С.
- * @see Controls/treeGrid:View#itemTemplate
- * @see Controls/treeGrid:View#itemTemplateProperty
+ * @see Controls/interface/ITreeGridItemTemplate#itemTemplate
+ * @see Controls/interface/ITreeGridItemTemplate#itemTemplateProperty
+ * @see Controls/treeGrid:View
  * @example
  * <pre class="brush: html">
  * <Controls.treeGrid:View>

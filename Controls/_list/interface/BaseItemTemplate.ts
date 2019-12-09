@@ -18,26 +18,26 @@
 
 /**
  * @name Controls/list:BaseItemTemplate#clickable
- * @cfg {Boolean} Устанавливает доступность элемента для клика. В зависимости от выбранного значения изменяется тип {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора}.
+ * @cfg {Boolean} Когда опция установлена в значение true, элемент доступен для клика и используется {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursorкурсор} pointer.
+ * В значении false элемент недоступен для клика, и используется курсор default.
  * @default true
- * @remark
- * Доступные значения:
- * 
- * * **true** — элемент доступен для клика, используется курсор pointer.
- * * **false** — элемент недоступен для клика, используется курсор default.
+ */
+
+/**
+ * @typedef {String} ItemActionsClass
+ * @variant controls-itemActionsV_position_bottomRight Опции записи отображаются в правом нижнем углу элемента. 
+ * @variant controls-itemActionsV_position_topRight Опции записи отображаются в правом верхнем углу элемента.
  */
 
 /**
  * @name Controls/list:BaseItemTemplate#itemActionsClass
- * @cfg {String|Function} Устанавливает положение {@link опций записи} относительно элемента списка.
- * @remark
- * * controls-itemActionsV_position_bottomRight — отображение операций в правом нижнем углу (по умолчанию); 
- * * controls-itemActionsV_position_topRight — отображение операций в правом верхнем углу.
+ * @cfg {ItemActionsClass} Устанавливает положение {@link опций записи} относительно элемента.
+ * @default controls-itemActionsV_position_bottomRight
  */
 
 /**
  * @name Controls/list:BaseItemTemplate#contentTemplate
- * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
+ * @cfg {String|Function|undefined} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
  * @default undefined
  * @remark
  * В области видимости шаблона доступен объект **itemData**.
@@ -50,7 +50,7 @@
  * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/list:View}, однако тоже самое справедливо и для других списочных контролов.
  * В примерах №№ 1, 2 и 3 показано, как получить доступ к переменной itemData из области видимости шаблона.
  * 
- * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
+ * **Пример 1.** Контрол и шаблон настроены в одном WML-файле.
  * <pre class="brush: html">
  * <!-- file1.wml -->
  * <Controls.list:View>
@@ -64,7 +64,7 @@
  * </Controls.list:View>
  * </pre>
  * 
- * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
+ * **Пример 2.** Контрол и шаблон itemTemplate настроены в отдельных WML-файлах.
  * <pre class="brush: html">
  * <!-- file1.wml --> 
  * <Controls.list:View>
@@ -83,7 +83,7 @@
  * </ws:partial>
  * </pre>
  * 
- * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
+ * **Пример 3.** Контрол и шаблон contentTemplate настроены в отдельных WML-файлах.
  * 
  * <pre class="brush: html">
  * <!-- file1.wml --> 

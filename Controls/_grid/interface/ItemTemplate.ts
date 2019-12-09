@@ -3,8 +3,9 @@
  * @class Controls/grid:ItemTemplate
  * @mixes Controls/list:BaseItemTemplate
  * @author Авраменко А.С.
- * @see Controls/grid:View#itemTemplate
- * @see Controls/grid:View#itemTemplateProperty
+ * @see Controls/interface/IGridItemTemplate#itemTemplate
+ * @see Controls/interface/IGridItemTemplate#itemTemplateProperty
+ * @see Controls/grid:View
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
  * <pre class="brush: html">

@@ -3,14 +3,15 @@
  * @class Controls/list:ItemTemplate
  * @mixes Controls/list:BaseItemTemplate
  * @author Авраменко А.С.
- * @see Controls/list:View#itemTemplate
- * @see Controls/list:View#itemTemplateProperty
+ * @see Controls/interface/IItemTemplate#itemTemplate
+ * @see Controls/interface/IItemTemplate#itemTemplateProperty
+ * @see Controls/list:View
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
  * <pre class="brush: html">
  * <Controls.list:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate" marker="{{true}}"> 
+ *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}"> 
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>
