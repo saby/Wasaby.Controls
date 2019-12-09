@@ -67,6 +67,15 @@ define(
             assert.equal(resultItems.at(1).getId(), 0);
             assert.equal(resultItems.at(2).getId(), 1);
             assert.equal(resultItems.at(3).getId(), 2);
+
+            items = new collection.RecordSet({
+               keyProperty: 'key',
+               rawData: initItems,
+               model: 'Types/entity:Record',
+               metaData: {test: true}
+            });
+            resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key');
+            assert.equal(resultItems.getModel(), items.getModel());
          });
 
          it('isHistorySource', function() {

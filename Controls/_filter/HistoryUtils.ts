@@ -87,7 +87,8 @@ function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
       uniqItems = factory(uniqItems).first(allCount).value(CollectionFactory.recordSet, {
          adapter: oldItems.getAdapter(),
          keyProperty: oldItems.getKeyProperty(),
-         format: oldItems.getFormat()
+         format: oldItems.getFormat(),
+         model: oldItems.getModel()
       });
    }
    uniqItems.setMetaData(oldItems.getMetaData());
