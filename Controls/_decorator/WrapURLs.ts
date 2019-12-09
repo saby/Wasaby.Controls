@@ -1,36 +1,32 @@
 import {descriptor} from 'Types/entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+// @ts-ignore
 import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 
+import {wrapURLsValue} from 'Controls/_decorator/ActualAPI';
+
 /**
- * Декорирует текст таким образом, что все ссылки в нем становятся активными и выделяются цветом.
- * Активная ссылка - это элемент страници, клик пользователя по которой приводит к переходу на внешний ресурс.
- * @remark
- * Поддерживаемые ссылки:
- * 1. Ссылка на web-страници.
- * 2. Ссылка на email.
- *
- * @class Controls/_decorator/WrapURLs
- * @extends UI/Base:Control
- *
+ * @interface Controls/_decorator/WrapURLs/IWrapURLsOptions
  * @public
  * @author Красильников А.С.
  */
-
 export interface IWrapURLsOptions extends IControlOptions {
     /**
-     * @name Controls/_decorator/WrapURLs#text
-     * @cfg {String} Текст для преобразования.
+     * Опция устарела, используйте опцию {@link value}.
+     * @deprecated
      */
     text: string;
     /**
-     * @name Controls/_decorator/WrapURLs#newTab
-     * @cfg {Boolean} Открыть ссылку в новой вкладке.
+     * Декорируемый текст.
+     * @demo Controls-demo/Decorator/WrapURLs/Index
      */
-
-    /*
-     * @name Controls/_decorator/WrapURLs#newTab
-     * @cfg {Boolean} Open link in new tab.
+    value: string;
+    /**
+     * Определяет, следует ли переходить в новую вкладку при клике на ссылку.
+     * @demo Controls-demo/Decorator/WrapURLs/NewTab/Index
+     * @remark
+     * true - Переход в новой вкладке.
+     * false - Переход в текущей вкладке.
      */
     newTab?: boolean;
 }
@@ -63,18 +59,40 @@ interface IPlain {
 
 type Path = ILink | IEmail | IPlain;
 
+/**
+ * Графический контрол, декоририрующий текст таким образом, что все ссылки в нем становятся активными и меняют свой внешний вид.
+ * Активная ссылка - это элемент страницы, при клике на который происходит переход на внешний ресурс.
+ * @remark
+ * Поддерживаемые ссылки:
+ * 1. Ссылка на web-страницу ({@link https://en.wikipedia.org/wiki/File_Transfer_Protocol ftp}, www, http, https).
+ * 2. Ссылка на email адрес ([текст]@[текст].[текст от 2 до 6 знаков]).
+ * 3. Ссылка на локальный файл ({@link https://en.wikipedia.org/wiki/File_URI_scheme file}).
+ *
+ * @mixes Controls/_decorator/WrapURLs/IWrapURLsOptions
+ *
+ * @class Controls/_decorator/WrapURLs
+ * @extends UI/Base:Control
+ *
+ * @public
+ * @demo Controls-demo/Decorator/WrapURLs/Index
+ *
+ * @author Красильников А.С.
+ */
 class WrapURLs extends Control<IWrapURLsOptions, void> {
     protected _parsedText: Path[] = null;
 
     protected _template: TemplateFunction = template;
 
     protected _beforeMount(options: IWrapURLsOptions): void {
-        this._parsedText = WrapURLs.parseText(options.text);
+        this._parsedText = WrapURLs.parseText(wrapURLsValue(options.text, options.value, true));
     }
 
     protected _beforeUpdate(newOptions: IWrapURLsOptions): void {
-        if (newOptions.text !== this._options.text) {
-            this._parsedText = WrapURLs.parseText(newOptions.text);
+        const oldValue = wrapURLsValue(this._options.text, this._options.value);
+        const newValue = wrapURLsValue(newOptions.text, newOptions.value);
+
+        if (oldValue !== newValue) {
+            this._parsedText = WrapURLs.parseText(newValue);
         }
     }
 
@@ -145,10 +163,9 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
         let iteration: number = 1;
         const maxIterations = 10000;
         const parsedText: Path[] = [];
-        let exec: RegExpExecArray = null;
+        let exec: RegExpExecArray = WrapURLs.parseRegExp.exec(text);
 
-        // tslint:disable-next-line
-        while (exec = WrapURLs.parseRegExp.exec(text)) {
+        while (exec) {
             if (text.length === WrapURLs.parseRegExp.lastIndex && !exec[WrapURLs.mapExec.result]) {
                 WrapURLs.parseRegExp.lastIndex = 0;
                 break;
@@ -167,6 +184,7 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
                 break;
             }
             iteration++;
+            exec = WrapURLs.parseRegExp.exec(text);
         }
 
         return parsedText;
@@ -174,12 +192,18 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
 
     static getOptionTypes() {
         return {
-            text: descriptor(String).required()
+            newTab: descriptor(Boolean)/*,
+            TODO: https://online.sbis.ru/opendoc.html?guid=d04dc579-2453-495f-b0a7-282370f6a9c5
+            value: descriptor(String).required()*/
         };
     }
 
     static getDefaultOptions() {
         return {
+            /**
+             * @name Controls/_decorator/WrapURLs#newTab
+             * @default true
+             */
             newTab: true
         };
     }
