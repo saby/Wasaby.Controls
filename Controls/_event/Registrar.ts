@@ -19,9 +19,6 @@ var Registrar = cExtend.extend({
          component: component,
          callback: callback
       };
-      component.unmountCallback = () => {
-          this.unregister(event, component);
-      };
       event.stopPropagation();
    },
    unregister: function(event, component) {
