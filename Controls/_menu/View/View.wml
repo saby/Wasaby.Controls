@@ -1,0 +1,60 @@
+<ws:template name="footer">
+   <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_closeSubMenu()">
+      <ws:if data="{{_options.footerTemplate}}">
+         <ws:partial template="{{_options.footerTemplate}}" attr:class="controls-DropdownList__footer-content_theme_{{_options.theme}}"
+                     itemData="{{_options.footerItemData}}" on:click="_footerClick()"/>
+      </ws:if>
+      <ws:if data="{{_hasMoreButton || _showApplyButton}}">
+         <div class="controls-DropdownList__footer-content_theme_{{_options.theme}} controls-DropdownList__footer-buttons_theme_{{_options.theme}}">
+            <ws:if data="{{_hasMoreButton}}">
+               <Controls._dropdownPopup.MoreButton caption="{[Еще]}..."
+                                                   items="{{_options.items}}"
+                                                   selectedKeys="{{_options.selectedKeys}}"
+                                                   selectorTemplate="{{_options.selectorTemplate}}"
+                                                   isCompoundTemplate="{{_options.isCompoundTemplate}}"
+                                                   selectorOpener="{{_options.selectorOpener}}"
+                                                   selectorDialogResult="{{_options.selectorDialogResult}}"
+                                                   afterOpenCallback="{{_options.afterSelectorOpenCallback}}"/>
+            </ws:if>
+            <ws:if data="{{_showApplyButton}}">
+               <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
+                  <Controls.buttons:Button viewMode="toolButton"
+                                           icon="icon-Yes"
+                                           iconSize="m"
+                                           iconStyle="success"
+                                           buttonStyle="success"
+                                           on:click="_applySelection()"/>
+               </div>
+            </ws:if>
+         </div>
+      </ws:if>
+   </div>
+</ws:template>
+
+<div class="controls-DropdownList__popup
+            controls-DropdownList__popup_theme-{{_options.theme}}">
+   <Controls.listRender:Render
+           listModel="{{_listModel}}">
+      <ws:itemTemplate>
+         <ws:partial template="Controls/dropdown:ItemTemplate"
+                     itemData="{{itemTemplate.item}}"
+                     item="{{itemTemplate.item.getContents()}}"
+                     on:mouseenter="_onItemMouseEnter(itemTemplate.item)"
+                     on:click="_onItemClick(itemTemplate.item)"
+         />
+      </ws:itemTemplate>
+      <ws:footerTemplate>
+         <ws:if data="{{_options.footerTemplate || _showApplyButton || _hasMoreButton}}">
+            <ws:partial template="footer" />
+         </ws:if>
+         <ws:else>
+            <invisible-node />
+         </ws:else>
+      </ws:footerTemplate>
+   </Controls.listRender:Render>
+   <Controls.popup:Sticky name="Sticky"
+                          actionOnScroll="close"
+                          closeOnOutsideClick="{{true}}"
+                          on:result="_subMenuResult()"
+                          template="Controls/popupTemplate:Sticky"/>
+</div>

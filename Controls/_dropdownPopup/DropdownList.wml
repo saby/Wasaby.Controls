@@ -1,4 +1,6 @@
 <div class="controls-DropdownList__popup controls-Popup__isolatedFocusingContext
+            controls-DropdownList__popup_theme-{{_options.theme}}
+            controls-DropdownList__popup-border_theme-{{_options.theme}}
             {{_dropdownClass}}
             {{_options.dropdownClassName}}
             theme_{{_options.theme}}"

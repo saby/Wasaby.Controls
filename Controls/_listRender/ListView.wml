@@ -1,0 +1,7 @@
+<Controls._listRender.View
+        collection="Controls/display:Tree"
+        render="Controls/listRender:Render"
+        scope="{{ _options }}"
+
+        actionAlignment="{{ _options.actionAlignment || 'vertical' }}"
+        actionCaptionPosition="{{ _options.actionCaptionPosition || 'none' }}"/>

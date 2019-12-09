@@ -20,6 +20,9 @@ export {
 import TileView = require('wml!Controls/_listRender/TileView');
 export { TileView };
 
+import ListView = require('wml!Controls/_listRender/ListView');
+export { ListView };
+
 // Если используется новый рендер, то используется новая модель. Грузим ее
 // здесь, чтобы не заморачиваться с асинхронной подгрузкой в BaseControl
 import 'Controls/display';

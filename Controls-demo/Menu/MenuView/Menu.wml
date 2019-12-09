@@ -1,0 +1,61 @@
+<div class="ControlsDemo-Menu_wrapper">
+   <div class="ControlsDemo-Menu_item">
+      <Controls.menu:View
+              source="{{_hierarchySource}}"
+              selectedKeys="{{_selectedKeys1}}"
+              keyProperty="key"
+              displayProperty="title"
+              nodeProperty="@parent"
+              parentProperty="parent"
+              on:sendResult="_keysChanged()"
+      />
+   </div>
+   <div class="ControlsDemo-Menu_item">
+      <Controls.menu:View
+              source="{{_source}}"
+              keyProperty="key"
+              selectedKeys="{{[1]}}"
+              displayProperty="title"
+              nodeProperty="@parent"
+              parentProperty="parent"
+              on:sendResult="_handler()"
+      />
+      <Controls.input:Area value="{{_ids}}" />
+   </div>
+   <div class="ControlsDemo-Menu_item">
+      <Controls.menu:View
+              source="{{_sourceMore}}"
+              keyProperty="id"
+              displayProperty="title" >
+         <ws:navigation view="page" source="page">
+            <ws:sourceConfig pageSize="{{4}}" page="{{0}}" hasMore="{{false}}"/>
+         </ws:navigation>
+         <ws:selectorTemplate templateName="Controls-demo/Dropdown/StackTemplate">
+            <ws:templateOptions items="{{_itemsMore}}"/>
+         </ws:selectorTemplate>
+      </Controls.menu:View>
+   </div>
+   <div class="ControlsDemo-Menu_item">
+      <Controls.menu:View
+              source="{{_sourceMultiSelect}}"
+              emptyText="Not selected"
+              multiSelect="{{true}}"
+              keyProperty="key"
+              selectedKeys="{{[1]}}"
+              displayProperty="title"
+              on:sendResult="_multiSelectHandler()"
+      />
+      <Controls.input:Area value="{{_idMultiSelect}}" />
+
+   </div>
+
+   <div class="ControlsDemo-Menu_item">
+      <Controls.menu:View
+              source="{{_hierarchySource}}"
+              keyProperty="key"
+              displayProperty="title"
+              nodeProperty="@parent"
+              parentProperty="parent"
+      />
+   </div>
+</div>

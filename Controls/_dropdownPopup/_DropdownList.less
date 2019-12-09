@@ -1,13 +1,19 @@
-.controls-DropdownList__popup.theme_@{themeName} {
+.controls-DropdownList__popup {
    .flexbox();
    .flex-direction(column);
-   max-width: @max-width_DropdownList;
-   border: @border-width_DropdownList solid @border-color_DropdownList;
-   background: @background_DropdownList;
    box-sizing: border-box;
    max-height: 100%;
    width: 100%;
    overflow: hidden;
+}
+
+.controls-DropdownList__popup_theme-@{themeName} {
+   max-width: @max-width_DropdownList;
+   background: @background_DropdownList;
+}
+
+.controls-DropdownList__popup-border_theme-@{themeName} {
+   border: @border-width_DropdownList solid @border-color_DropdownList;
 }
 
 .controls-DropdownList__popup-shadow-default.theme_@{themeName} {
