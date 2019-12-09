@@ -143,7 +143,7 @@ var _private = {
     },
 
     getHasMoreText: function(selection) {
-        return selection.length > 1 ? ', ' + rk('еще ') + (selection.length - 1) : '';
+        return selection.length > 1 ? ', ' + rk('еще') + ' ' + (selection.length - 1) : '';
     },
 
     getFastText: function(config, selectedKeys) {

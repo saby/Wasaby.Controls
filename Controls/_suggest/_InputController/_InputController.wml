@@ -46,7 +46,7 @@
                 </ws:showSelectorButtonTemplate>
                 <ws:showMoreButtonTemplate>
                     <span if="{{_searchResult.more}}" class="controls-Suggest__moreLink" on:click="_moreClick()">
-                        <span class="controls-Suggest__moreLink-content">Ещё {{_searchResult.more}}</span>
+                        <span class="controls-Suggest__moreLink-content">{[Ещё]} {{_searchResult.more}}</span>
                     </span>
                 </ws:showMoreButtonTemplate>
             </ws:partial>
