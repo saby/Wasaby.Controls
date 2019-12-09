@@ -17,13 +17,13 @@
                      <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
                         <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                            <Controls.popup:Global>
-                              <Controls.Application.TouchDetector name="touchDetector" on:changeTouchState="_changeTouchStateHandler()">
-                                 <Controls.popup:Manager
-                                    popupHeaderTheme="{{_options.popupHeaderTheme}}"
-                                    popupSettingsController="{{_options.popupSettingsController}}"
-                                    on:managerPopupCreated="_popupCreatedHandler()"
-                                    on:managerPopupDestroyed="_popupDestroyedHandler()"
-                                    stackRootWidth="{{_options.width}}">
+                              <Controls.popup:Manager
+                                 popupHeaderTheme="{{_options.popupHeaderTheme}}"
+                                 popupSettingsController="{{_options.popupSettingsController}}"
+                                 on:managerPopupCreated="_popupCreatedHandler()"
+                                 on:managerPopupDestroyed="_popupDestroyedHandler()"
+                                 stackRootWidth="{{_options.width}}">
+                                 <Controls.Application.TouchDetector name="touchDetector" on:changeTouchState="_changeTouchStateHandler()">
                                     <Controls.dragnDrop:Controller name="dragNDropContainer"
                                                                    on:dragStart="_dragStartHandler()"
                                                                    on:dragEnd="_dragEndHandler()">
@@ -72,8 +72,8 @@
                                           </ws:partial>
                                        </UI.HotKeys:Dispatcher>
                                     </Controls.dragnDrop:Controller>
-                                 </Controls.popup:Manager>
-                              </Controls.Application.TouchDetector>
+                                 </Controls.Application.TouchDetector>
+                              </Controls.popup:Manager>
                            </Controls.popup:Global>
                         </Controls.event:Register>
                      </Controls.event:Register>

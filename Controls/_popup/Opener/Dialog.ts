@@ -1,5 +1,6 @@
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import {IoC} from 'Env/Env';
+import {IConfirmationOptions} from "./interface/IConfirmation";
 /**
  * Контрол, открывающий всплывающее окно, которое позиционнируется по центру экрана.
  * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup здесь}.
@@ -41,6 +42,22 @@ const _private = {
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
 class Dialog extends BaseOpener {
+    protected _contextIsTouch: boolean = false;
+
+    protected _afterMount(options, context): void {
+        super._afterMount();
+        this._updateContext(context);
+    }
+
+    protected _afterUpdate(oldOptions, context): void{
+        this._updateContext(context);
+    }
+
+    private _updateContext(context): void {
+        this._contextIsTouch = context && context.isTouch && context.isTouch.isTouch;
+    }
+
+
     /*
      * Open dialog popup.
      * If you call this method while the window is already opened, it will cause the redrawing of the window.
@@ -89,6 +106,11 @@ class Dialog extends BaseOpener {
      * @see closePopup
      */
     open(popupOptions) {
+ 		// Если диалоговое окно открыто через touch, то позиционируем его в самом верху экрана.
+        // Это решает проблемы с показом клавиатуры и прыжком контента из-за изменившегося scrollTop.
+        if(this._contextIsTouch) {
+            popupOptions.top = 0;
+        }
         super.open(_private.getDialogConfig(popupOptions), POPUP_CONTROLLER);
     }
 }
