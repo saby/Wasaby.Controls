@@ -99,6 +99,11 @@ define('Controls-demo/FilterView/resources/hierarchyHistoryMemory', [
 
          getModel: function() {
             return this.originSource.getModel();
+         },
+
+         destroyHistory: function () {
+            recentData.d = [];
+            pinnedData.d = [];
          }
 
       });
