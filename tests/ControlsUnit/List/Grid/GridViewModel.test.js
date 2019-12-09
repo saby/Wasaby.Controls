@@ -896,6 +896,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(!!data.isFirstInGroup);
          });
 
+         it('getItemDataByItem cache is reset on base template change', () => {
+            const gridViewModel = new gridMod.GridViewModel(cfg);
+            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+
+            assert.isNotOk(data.resolveBaseItemTemplate);
+
+            const resolver = {};
+            gridViewModel.setBaseItemTemplateResolver(resolver);
+            data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+
+            assert.strictEqual(data.resolveBaseItemTemplate, resolver);
+         });
+
          it('getMultiSelectClassList visible', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'visible';
@@ -2632,6 +2645,51 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
       });
+      describe('_onCollectionChangeFn prefix update', () => {
+         it('does not update prefix version without ladder', () => {
+            const model = new gridMod.GridViewModel({
+               ...cfg,
+               ladderProperties: null
+            });
+            const event = {
+               result: undefined,
+               setResult(result) {
+                  this.result = result;
+               }
+            };
 
+            model._onCollectionChangeFn(event, collection.IObservable.ACTION_ADD);
+            assert.isUndefined(event.result, 'Add action should not update prefix version without ladder');
+
+            model._onCollectionChangeFn(event, collection.IObservable.ACTION_REMOVE);
+            assert.isUndefined(event.result, 'Remove action should not update prefix version without ladder');
+
+            model._onCollectionChangeFn(event, collection.IObservable.ACTION_CHANGE);
+            assert.isUndefined(event.result, 'Change action should not update prefix version without ladder');
+         });
+
+         it('updates prefix version with ladder only on add and remove', () => {
+            const model = new gridMod.GridViewModel({
+               ...cfg,
+               ladderProperties: ['date']
+            });
+            const event = {
+               result: undefined,
+               setResult(result) {
+                  this.result = result;
+               }
+            };
+
+            model._onCollectionChangeFn(event, collection.IObservable.ACTION_CHANGE);
+            assert.isUndefined(event.result, 'Change action should not update prefix version with ladder');
+
+            model._onCollectionChangeFn(event, collection.IObservable.ACTION_ADD);
+            assert.strictEqual(event.result, 'updatePrefix', 'Add action should update prefix version with ladder');
+
+            event.result = undefined;
+            model._onCollectionChangeFn(event, collection.IObservable.ACTION_REMOVE);
+            assert.strictEqual(event.result, 'updatePrefix', 'Remove action should update prefix version with ladder');
+         });
+      });
    });
 });

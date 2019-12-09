@@ -688,7 +688,18 @@ var
                 // In browsers that do not support "display: contents", need redraw all elements,
                 // because row and column indices are set for all elements.
                 // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-                if (this._isPartialGridSupport && !this._shouldUseTableLayout && action === collection.IObservable.ACTION_ADD) {
+                // When item is added to or removed from the grid with ladder support, we have to recalculate
+                // ladder styles for every cell, so we need to update prefix version
+                if (
+                    this._isPartialGridSupport && !this._shouldUseTableLayout && action === collection.IObservable.ACTION_ADD ||
+                    (
+                        this._isSupportLadder(this._options.ladderProperties) &&
+                        (
+                            action === collection.IObservable.ACTION_ADD ||
+                            action === collection.IObservable.ACTION_REMOVE
+                        )
+                    )
+                ) {
                     event.setResult('updatePrefix');
                 }
             }.bind(this);
@@ -1581,6 +1592,11 @@ var
             this._nextModelVersion();
         },
 
+        setColumnScroll(columnScroll: boolean): void {
+            this._options.columnScroll = columnScroll;
+            this._nextModelVersion();
+        },
+
         setLadderProperties: function(ladderProperties) {
             if (!isEqual(this._options.ladderProperties, ladderProperties)) {
                 this._options.ladderProperties = ladderProperties;
@@ -1604,6 +1620,7 @@ var
 
         setBaseItemTemplateResolver(baseItemTemplateResolver: () => TemplateFunction): void {
             this._baseItemTemplateResolver = baseItemTemplateResolver;
+            this.resetCachedItemData();
         },
 
         getItems: function() {

@@ -578,6 +578,7 @@ define(
          it('_private:loadSelectedItems', function(done) {
             let source = [...defaultSource];
             source[1].value = [1];
+            let isDataLoad;
             let configs = {
                document: {
                   items: new collection.RecordSet({
@@ -598,6 +599,7 @@ define(
                   emptyText: 'all state',
                   emptyKey: null,
                   sourceController: {hasMoreData: () => {return true;}},
+                  dataLoadCallback: () => {isDataLoad = true},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
@@ -607,6 +609,7 @@ define(
                assert.strictEqual(configs['state'].popupItems.getCount(), 6);
                assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
+               assert.isTrue(isDataLoad);
                done();
             });
          });
@@ -738,6 +741,18 @@ define(
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
             });
+         });
+
+         it('_beforeUnmount', function() {
+            let view = getView(defaultConfig);
+
+            view._beforeMount(defaultConfig);
+            assert.isOk(view._configs);
+            assert.isOk(view._loadDeferred);
+
+            view._beforeUnmount();
+            assert.isNull(view._configs);
+            assert.isNull(view._loadDeferred);
          });
 
          describe('View::resultHandler', function() {
@@ -1012,6 +1027,25 @@ define(
                assert.deepStrictEqual(view._source[0].value, {'-1': [], '-2': [4]});
                assert.deepStrictEqual(view._displayText.document, {text: 'Deleted', title: 'Deleted', hasMoreText: '' });
             });
+
+            it ('moreButtonClick', function () {
+               let filterChanged, isClosed;
+               view._notify = (event, data) => {
+                  if (event === 'filterChanged') {
+                     filterChanged = data[0];
+                  }
+               };
+               let eventResult = {
+                  action: 'moreButtonClick',
+                  id: 'document'
+               };
+               view._children = {
+                  StickyOpener: { close: () => {isClosed = true;} }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.strictEqual(view._idOpenSelector, 'document');
+               assert.isTrue(isClosed);
+            });
          });
 
          describe('View history', function() {
@@ -1072,6 +1106,15 @@ define(
                };
                let resultItems = filter.View._private.getPopupConfig(view, view._configs, view._source);
                assert.isOk(resultItems[0].loadDeferred);
+
+               const sandBox = sinon.createSandbox();
+               sandBox.stub(filter.View._private, 'loadItemsFromSource').returns({
+                  isReady: () => {return false;}
+               });
+
+               filter.View._private.getPopupConfig(view, view._configs, view._source);
+               sinon.assert.calledOnce(filter.View._private.loadItemsFromSource);
+               sandBox.restore();
             });
          });
       });

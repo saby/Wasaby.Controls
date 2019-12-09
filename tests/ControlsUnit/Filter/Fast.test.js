@@ -403,6 +403,9 @@ define(
             fastData2 = getFastFilterWithItems(fastConfig);
             filterMod.Fast._private.setValue(fastData2, ['все страны']);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
+
+            filterMod.Fast._private.setValue(fastData2, []);
+            assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 
          it('onResult footerClick', function() {
@@ -494,7 +497,24 @@ define(
          });
 
          it('selectItems', function() {
-            let configMultiSelect = Clone(configItems);
+            let configMultiSelect = {
+               items: [{
+                  id: 'first',
+                  value: [1],
+                  resetValue: [0],
+                  textValue: '',
+                  properties: {
+                     keyProperty: 'key',
+                     displayProperty: 'title',
+                     emptyText: 'Все',
+                     multiSelect: true,
+                     source: new sourceLib.Memory({
+                        data: items[0],
+                        keyProperty: 'key'
+                     })
+                  }}
+               ]
+            };
             let fastData2 = getFastFilterWithItems(configMultiSelect);
 
             // multi selection
@@ -502,25 +522,30 @@ define(
                { key: 1, title: 'Россия' },
                { key: 2, title: 'США' },
                { key: 3, title: 'Великобритания' }]);
-            assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'США', 'Великобритания']);
+            assert.deepEqual(fastData2._items.at(0).value, [1, 2, 3]);
 
             // single selection
             configMultiSelect.items[0].properties.multiSelect = false;
             fastData2 = getFastFilterWithItems(configMultiSelect);
             filterMod.Fast._private.selectItems.call(fastData2, [{ key: 3, title: 'Великобритания' }]);
-            assert.deepEqual(fastData2._items.at(0).value, 'Великобритания');
+            assert.deepEqual(fastData2._items.at(0).value, 3);
 
             // empty selection
             fastData2 = getFastFilterWithItems(configMultiSelect);
             filterMod.Fast._private.selectItems.call(fastData2, []);
-            assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
+            assert.deepEqual(fastData2._items.at(0).value, [0]);
+
+            // empty selection with key = null
+            fastData2 = getFastFilterWithItems(configMultiSelect);
+            filterMod.Fast._private.selectItems.call(fastData2, [{key: null}]);
+            assert.deepEqual(fastData2._items.at(0).value, [0]);
 
             // resetValue selection
-            configMultiSelect.items[0].resetValue = 'все страны';
+            configMultiSelect.items[0].resetValue = 0;
             fastData2 = getFastFilterWithItems(configMultiSelect);
             fastData2._configs[0].multiSelect = true;
             filterMod.Fast._private.selectItems.call(fastData2, [{ key: 0, title: 'все страны' }]);
-            assert.deepEqual(fastData2._items.at(0).value, 'все страны');
+            assert.deepEqual(fastData2._items.at(0).value, 0);
          });
 
          it('setText', function(done) {

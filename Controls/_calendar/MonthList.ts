@@ -113,9 +113,15 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             // https://online.sbis.ru/opendoc.html?guid=4c2ee6ae-c41d-4bc2-97e7-052963074621
             if (!this._lastPositionFromOptions) {
                 this._displayedPosition = options.position;
+                // Обновляем _lastPositionFromOptions перед вызовом _scrollToPosition потому что
+                // если элемент уже отрисован, то подскол может произойти синхронно.
+                // В этом случае _lastPositionFromOptions обнулиться сразу же.
+                this._lastPositionFromOptions = options.position;
                 this._scrollToPosition(options.position);
+            } else {
+                this._lastPositionFromOptions = options.position;
             }
-            this._lastPositionFromOptions = options.position;
+
         }
     }
 
@@ -207,6 +213,12 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         } else {
             this._displayedDates = [];
             this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
+            // After changing the navigation options, we must call the "reload" to redraw the control,
+            // because the last time we could start rendering from the same position.
+            // Position option is the initial position from which control is initially drawn.
+            if (this._children.months) {
+                this._children.months.reload();
+            }
         }
     }
 
@@ -309,6 +321,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         if (this._positionToScroll && this._canScroll(this._positionToScroll)) {
             if (this._scrollToDate(this._positionToScroll)) {
                 this._positionToScroll = null;
+                this._lastPositionFromOptions = null;
             }
         }
     }

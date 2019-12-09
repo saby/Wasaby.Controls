@@ -4383,15 +4383,18 @@ define([
                }
             },
             _notify: () => {},
-            _isMounted: true
+            _isMounted: true,
+         };
+         const navigation = {
+            view: 'maxCount'
          };
          var emptyList = new collection.List();
          var list = new collection.List({items: [{test: 'testValue'}]});
 
-         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList, navigation);
          assert.equal(baseControlMock._loadingState, 'down');
 
-         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list);
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list, navigation);
          assert.isNull(baseControlMock._loadingState);
 
       });
@@ -4869,6 +4872,7 @@ define([
                up: false,
                down: true
             };
+            ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             ctrl._afterMount(cfg);
@@ -4918,6 +4922,7 @@ define([
             await lists.BaseControl._private.reload(ctrl, cfgClone);
 
             assert.equal(2, queryCallsCount);
+            assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);
          });
          it('Navigation position', function() {
             return new Promise(function(resolve, reject) {
