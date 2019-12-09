@@ -27,7 +27,9 @@ export interface IPropertyGrid {
 }
 /**
  * @name Controls/_propertyGrid/IPropertyGrid#editingObject
- * @cfg {Object} Данные, которые будут отображаться в виде редакторов со значениями в _propertyGrid.
+ * @cfg {Object} Объект, значения которого будут отображаться в propertyGrid.
+ * @remark 
+ * Каждое поле объекта представлено в виде редактора со значением этого поля.
  */
 
 /*
@@ -62,6 +64,7 @@ export interface IPropertyGrid {
 /**
  * @name Controls/_propertyGrid/IPropertyGrid#source
  * @cfg {Array[IPropertyGridProperty]} Источник данных.
+ * @see Types/source
  */
 
 /**
