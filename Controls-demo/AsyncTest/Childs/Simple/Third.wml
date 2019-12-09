@@ -1,5 +1,5 @@
 <div class="asyncDemo__row">
-    <div attr:style="margin-right: 0.5em;">
+    <div class="asyncDemo__nbsp">
         {{_options.value}} {{_options.delay}}:
     </div>
     <Controls.heading:Title  caption="Not Async" readOnly="{{true}}" fontColorStyle="secondary" fontSize="s"/>
