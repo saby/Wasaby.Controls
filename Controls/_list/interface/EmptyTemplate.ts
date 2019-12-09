@@ -2,14 +2,12 @@
  * Шаблон, который по умолчанию используется для отображения пустого {@link Controls/list:View списка}.
  * @class Controls/list:EmptyTemplate
  * @author Авраменко А.С.
+ * @see Controls/list:IList#emptyTemplate
  * @see Controls/list:View
- * @see Controls/list
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
  * <pre>
- * <Controls.list:View
- *    source="{{_viewSource}}"
- *    keyProperty="id">
+ * <Controls.list:View>
  *    <ws:emptyTemplate>
  *       <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xxl" bottomSpacing="m">
  *          <ws:contentTemplate>No data available!</ws:contentTemplate>
@@ -23,17 +21,25 @@
 
 /**
  * @name Controls/list:EmptyTemplate#contentTemplate
- * @cfg {String|Function} Вёрстка, определяющая пользовательское отображение элемента.
- * 
- * @default undefined
+ * @cfg {String|Function|undefined} Устанавливает пользовательский шаблон, описывающий отображение контрола без элементов.
  */
 
 /**
- * @name Controls/listEmptyTemplate#topSpacing
- * @cfg {String} Расстояние между верхней границей и контентом шаблона.
- * @remark 
- * Доступные значения: null, xs, s, m, l, xl, xxl.
- * 
+ * @typedef {String} Spacing
+ * @description Значения, которые скрыты под описанными переменными, задаются настройками {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления}.
+ * @variant xs Минимальный отступ.
+ * @variant s Маленький отступ.
+ * @variant m Средний отступ.
+ * @variant l Большой отступ.
+ * @variant xl Очень большой оступ.
+ * @variant xxl Максимальный отступ.
+ */
+
+/**
+ * @name Controls/list:EmptyTemplate#topSpacing
+ * @cfg {Spacing|null} Устанавливает расстояние между верхней границей и контентом шаблона.
+ * @remark
+ * В значении null отступ отсутствует.
  * @default l
  * @example
  * <pre>
@@ -47,10 +53,9 @@
 
 /**
  * @name Controls/list:EmptyTemplate#bottomSpacing
- * @cfg {String} Расстояние между нижней границей и контентом шаблона.
- * @remark 
- * Доступные значения: null, xs, s, m, l, xl, xxl.
- * 
+ * @cfg {Spacing|null} Устанавливает расстояние между нижней границей и контентом шаблона.
+ * @remark
+ * В значении null отступ отсутствует.
  * @default l
  * @example
  * <pre>
