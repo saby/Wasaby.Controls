@@ -4397,6 +4397,15 @@ define([
          lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, list, navigation);
          assert.isNull(baseControlMock._loadingState);
 
+         baseControlMock._sourceController.hasMoreData = (dir) => dir === 'up';
+
+         baseControlMock._loadingState = 'down';
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList, navigation, 'down');
+         assert.isNull(baseControlMock._loadingState);
+
+         baseControlMock._loadingState = 'up';
+         lists.BaseControl._private.resolveIndicatorStateAfterReload(baseControlMock, emptyList, navigation, 'up');
+         assert.equal('up', baseControlMock._loadingState);
       });
 
       it('reloadItem', function() {
