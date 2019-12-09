@@ -915,8 +915,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._children.content.scrollWidth = 650;
          columnScroll._children.content.offsetWidth = 300;
          columnScroll.destroy();
-         assert.equal(450, columnScroll._contentSize);
-         assert.equal(200, columnScroll._contentContainerSize);
+         columnScroll._resizeHandler();
+         assert.equal(450, columnScroll._contentSize); // previous value
+         assert.equal(200, columnScroll._contentContainerSize); //previous value
       })
    });
 });
