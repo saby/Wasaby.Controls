@@ -501,6 +501,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._children = {
             contentStyle: {},
             content: {
+               getClientRects: () => [{x: 200}],
                offsetWidth: 200,
                getElementsByClassName: () => {
                   return [{
@@ -549,6 +550,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             contentStyle: {},
             content: {
                offsetWidth: 0,
+               getClientRects: () => [],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 300,
@@ -641,6 +643,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               getClientRects: () => [{x: 200}],
                offsetWidth: 200,
                getElementsByClassName: () => {
                   return [{
@@ -713,6 +716,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             contentStyle: {},
             content: {
                offsetWidth: 650,
+               getClientRects: () => [{x: 650}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 850,
@@ -806,6 +810,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             contentStyle: {},
             content: {
                offsetWidth: 200,
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 650,
