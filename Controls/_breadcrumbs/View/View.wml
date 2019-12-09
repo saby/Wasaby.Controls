@@ -20,6 +20,4 @@
         <ws:direction horizontal="left"/>
     </Controls.dropdown:Opener>
 
-    <Controls.event:Listener event="controlResize"
-                            on:controlResize="_onResize()"/>
 </div>
