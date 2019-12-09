@@ -182,6 +182,8 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._resizeHandler();
     }
 
+
+
     /**
      * Изменить свойства контрола отвечающего за размеры.
      * @param contentSize размер контента.
@@ -191,11 +193,10 @@ class Scrollbar extends Control<IScrollBarOptions> {
         const verticalDirection = this._options.direction === 'vertical';
         const horizontalDirection = this._options.direction === 'horizontal';
         const scrollbar = this._children.scrollbar;
-        var _scrollBarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'];
-        if (!_scrollBarSize) {
-            return;
+        if (!Scrollbar._isScrollBarVisible(scrollbar as HTMLElement)) {
+            return false;
         }
-        this._scrollBarSize = _scrollBarSize;
+        this._scrollBarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'];
         const scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'];
         let thumbSize: number;
 
@@ -323,6 +324,10 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _resizeHandler(): void {
         this._setSizes(this._options.contentSize);
         this._setPosition(this._options.position);
+    }
+
+    private static _isScrollBarVisible(scrollbar: HTMLElement): boolean {
+        return !!scrollbar.getClientRects().length;
     }
 
     private static _getMouseCoord(nativeEvent: Event, direction: TDirection): number {

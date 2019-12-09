@@ -71,6 +71,32 @@ define(
             assert.isFalse(result);
          });
 
+         it('_setSizes', function () {
+            var component = createComponent(Scrollbar.default, {contentSize: 1000});
+            component._options.direction = 'horizontal';
+            const originalComputedStyle = window.getComputedStyle;
+            window.getComputedStyle = () => ({ 'min-width': 46 })
+            component._children = {
+               scrollbar: {
+                  offsetWidth: 0,
+                  clientWidth: 0,
+                  getClientRects: () => []
+               }
+            }
+            result = component._setSizes(100);
+            assert.isFalse(result);
+            component._children = {
+               scrollbar: {
+                  offsetWidth: 450,
+                  clientWidth: 450,
+                  getClientRects: () => [{x: 450}]
+               }
+            }
+            result = component._setSizes(650);
+            assert.isTrue(result);
+            window.getComputedStyle = originalComputedStyle;
+         });
+
          it('_scrollbarMouseDownHandler', function () {
             var component = createComponent(Scrollbar.default, {contentSize: 1000});
             result = component._setPosition(100);
