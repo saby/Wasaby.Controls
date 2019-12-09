@@ -97,6 +97,19 @@ define(
             assert.isTrue(panel._hasAdditionalParams);
          });
 
+         it('before update new items', function() {
+            let newConfig = Clone(config);
+            newConfig.items[2].visibility = true;
+            var panel = getFilterPanel(newConfig);
+            panel._beforeMount(newConfig);
+            assert.isFalse(panel._hasAdditionalParams);
+
+            newConfig = Clone(newConfig);
+            newConfig.items[2].visibility = false;
+            panel._beforeUpdate(newConfig);
+            assert.isTrue(panel._hasAdditionalParams);
+         });
+
          it('before update new historyId', function() {
             var changedConfig = Clone(config);
             changedConfig.historyId = 'new_history_id';
