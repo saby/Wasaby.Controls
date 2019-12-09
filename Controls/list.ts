@@ -3,9 +3,10 @@
  * @library Controls/list
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
+ * @includes BaseItemTemplate Controls/list:BaseItemTemplate
+ * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
- * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
@@ -28,9 +29,10 @@
  * @library Controls/list
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
+ * @includes BaseItemTemplate Controls/list:BaseItemTemplate
+ * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
- * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
