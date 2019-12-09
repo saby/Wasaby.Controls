@@ -40,9 +40,11 @@ export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
     const transparent = item.get('buttonTransparent');
     const caption = item.get('caption');
     const readOnly = item.get('readOnly');
+    const fontColorStyle = item.get('fontColorStyle');
+    const contrastBackground = item.get('contrastBackground');
     const cfg = {};
     cssStyleGeneration.call(cfg, {
-        size, icon, style, viewMode, iconStyle, transparent, caption, readOnly
+        size, icon, style, viewMode, iconStyle, transparent, caption, readOnly, fontColorStyle, contrastBackground
     });
     return cfg
 }

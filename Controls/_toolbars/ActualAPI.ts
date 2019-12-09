@@ -11,7 +11,7 @@ export function items(items: RecordSet<Record>): RecordSet<Record> {
 
         if (viewModeValue && viewModeValue !== 'toolButton') {
             captionValue = item.get('caption') || item.get('buttonCaption')
-        } else if (item.get('title') && !item.get('buttonViewMode')) {
+        } else if (item.get('title') && !viewModeValue) {
             captionValue = item.get('title');
         }
 
