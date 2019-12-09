@@ -631,7 +631,7 @@ define('Controls-demo/FilterView/FilterView',
          },
 
          _beforeUnmount: function () {
-            this._hierarchyItems.forEach( item => {
+            this._hierarchyItems.forEach( (item) => {
                item.editorOptions.source.destroyHistory();
             });
          }
