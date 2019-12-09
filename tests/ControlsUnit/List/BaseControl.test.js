@@ -4460,16 +4460,16 @@ define([
 
       it('update key property', async () => {
          const cfg = {
-               viewName: 'Controls/List/ListView',
-               viewModelConfig: {
-                  items: [],
-                  keyProperty: 'id'
-               },
-               viewModelConstructor: lists.ListViewModel,
-               keyProperty: 'id',
-               source: source
-            },
-            instance = new lists.BaseControl(cfg);
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          let newKeyProperty;
@@ -4481,6 +4481,35 @@ define([
          instance._beforeUpdate(newCfg);
          assert.equal(newKeyProperty, 'name');
          instance.destroy();
+      });
+
+      it('close editInPlace if model changed', async () => {
+         const cfg = {
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         let cancelClosed = false;
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._listViewModel.getEditingItemData = () => ({});
+         instance._viewModelConstructor = {};
+         instance._children = {
+            editInPlace: {
+               cancelEdit: () => {
+                  cancelClosed = true;
+               }
+            }
+         };
+         instance._beforeUpdate(cfg);
+         assert.isTrue(cancelClosed);
+         instance.destroy(cancelClosed);
       });
 
       it('getListTopOffset', function () {

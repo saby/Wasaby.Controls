@@ -1956,6 +1956,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 newOptions.viewModelConstructor !== this._viewModelConstructor
             )
         ) {
+            if (this._children.editInPlace && this._listViewModel.getEditingItemData()) {
+                this._children.editInPlace.cancelEdit();
+            }
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
