@@ -41,88 +41,73 @@ define(['Controls/toggle'], function(toggle) {
          assert.isFalse(changeValue, 'switch to off state failed');
       });
 
-      it('change style', function() {
-         var opt = {
-            style: 'iconButtonBordered',
-            readOnly: true,
-            value: true,
-            size: 'l'
-         };
-         Btn._beforeUpdate(opt);
-         assert.isTrue(Btn._buttonStyle === 'secondary', 'changing style failed in style');
-         assert.isTrue(Btn._viewMode === 'toolButton', 'changing style failed in type');
-         assert.isTrue(Btn._state === '_toggle_on_readOnly', 'changing style failed in state');
-      });
-
-      it('change style, new styles', function() {
-         var opt = {
-            style: 'secondary',
-            viewMode: 'toolButton',
-            readOnly: true,
-            value: true,
-            size: 'l'
-         };
-         Btn._beforeUpdate(opt);
-         assert.isTrue(Btn._buttonStyle === 'secondary', 'changing style failed in style');
-         assert.isTrue(Btn._viewMode === 'toolButton', 'changing style failed in type');
-         assert.isTrue(Btn._state === '_toggle_on_readOnly', 'changing style failed in state');
-      });
-
       it('value true two icons and two captions', function() {
          var opt = {
-            style: 'secondary',
+            buttonStyle: 'secondary',
             viewMode: 'toolButton',
-            readOnly: true,
             value: true,
-            size: 'l',
+            iconSize: 'l',
+            iconStyle: 'primary',
             icons: ['icon-testOne', 'icon-testTwo'],
             captions: ['testOne', 'testTwo']
          };
          Btn._beforeUpdate(opt);
          assert.isTrue(Btn._caption === 'testOne', 'caption changed uncorrect');
          assert.isTrue(Btn._icon === 'icon-testOne', 'icon changed uncorrect');
+         assert.isTrue(Btn._iconSize === 'l', 'icon changed uncorrect');
+         assert.isTrue(Btn._iconStyle === 'primary', 'icon changed uncorrect');
       });
 
       it('value false two icons and two captions', function() {
          var opt = {
-            style: 'secondary',
+            buttonStyle: 'secondary',
             viewMode: 'toolButton',
-            readOnly: false,
             value: false,
-            size: 'l',
+            iconSize: 'l',
+            iconStyle: 'primary',
             icons: ['icon-testOne', 'icon-testTwo'],
             captions: ['testOne', 'testTwo']
          };
          Btn._beforeUpdate(opt);
          assert.isTrue(Btn._caption === 'testTwo', 'caption changed uncorrect');
          assert.isTrue(Btn._icon === 'icon-testTwo', 'icon changed uncorrect');
+         assert.isTrue(Btn._iconSize === 'l', 'icon changed uncorrect');
+         assert.isTrue(Btn._iconStyle === 'primary', 'icon changed uncorrect');
       });
 
-      it('_beforeMount', function() {
+      it('iconHover', function() {
          var opt = {
-            style: 'iconButtonBordered',
-            readOnly: true,
-            value: true,
-            size: 'l'
+            viewMode: 'toolButton'
          };
-         Btn._beforeMount(opt);
-         assert.isTrue(Btn._buttonStyle === 'secondary', 'changing style failed in style');
-         assert.isTrue(Btn._viewMode === 'toolButton', 'changing style failed in type');
-         assert.isTrue(Btn._state === '_toggle_on_readOnly', 'changing style failed in state');
-      });
+         Btn._beforeUpdate(opt);
+         assert.isTrue(Btn._hoverIcon, 'hover icon mode uncorrect');
 
-      it('_beforeMount, new styles', function() {
-         var opt = {
-            style: 'secondary',
+         opt = {
+            viewMode: 'pushButton'
+         };
+         Btn._beforeUpdate(opt);
+         assert.isTrue(Btn._hoverIcon, 'hover icon mode uncorrect');
+
+         opt = {
             viewMode: 'toolButton',
-            readOnly: true,
-            value: true,
-            size: 'l'
+            value: true
          };
-         Btn._beforeMount(opt);
-         assert.isTrue(Btn._buttonStyle === 'secondary', 'changing style failed in style');
-         assert.isTrue(Btn._viewMode === 'toolButton', 'changing style failed in type');
-         assert.isTrue(Btn._state === '_toggle_on_readOnly', 'changing style failed in state');
+         Btn._beforeUpdate(opt);
+         assert.isFalse(Btn._hoverIcon, 'hover icon mode uncorrect');
+
+         opt = {
+            viewMode: 'pushButton',
+            value: true
+         };
+         Btn._beforeUpdate(opt);
+         assert.isFalse(Btn._hoverIcon, 'hover icon mode uncorrect');
+
+         opt = {
+            viewMode: 'link',
+            value: true
+         };
+         Btn._beforeUpdate(opt);
+         assert.isTrue(Btn._hoverIcon, 'hover icon mode uncorrect');
       });
    });
 });
