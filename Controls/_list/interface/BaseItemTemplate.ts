@@ -120,7 +120,6 @@
  */
 
 export default interface IBaseItemTemplateOptions {
-   displayProperty?: string;
    highlightOnHover?: boolean;
    clickable?: boolean;
    marker?: boolean;

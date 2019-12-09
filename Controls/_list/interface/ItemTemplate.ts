@@ -29,3 +29,7 @@
  * Опцию не используют, если задан пользовательский шаблон в опции {@link Controls/list:BaseItemTemplate#contentTemplate}.
  * @default title
  */
+
+export default interface IItemTemplateOptions {
+   displayProperty?: string;
+}
