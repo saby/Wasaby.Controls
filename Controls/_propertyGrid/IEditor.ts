@@ -47,6 +47,6 @@ export default interface IEditor {
  *    }
  * }
  * 
- * export = MyEditor ; 
+ * export default MyEditor; 
  * </pre>
  */
