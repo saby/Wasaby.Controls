@@ -3,7 +3,7 @@ import VirtualScroll from 'Controls/_list/ScrollContainer/VirtualScroll';
 describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
     const heights = [20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40, 20, 40];
     const children = heights.map((offsetHeight) => ({offsetHeight: offsetHeight, className: '', getBoundingClientRect() { return {height: this.offsetHeight}}}));
-    const itemsContainer = {children};
+    const itemsContainer = {children, offsetHeight: 600};
     const viewModel = {
         at(index) {
             return {
@@ -103,7 +103,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.reset();
 
             assert.equal(0, affectingInstance.startIndex, 'with item height property');
-            assert.equal(6, affectingInstance.stopIndex);
+            assert.equal(8, affectingInstance.stopIndex);
         });
         it('recalcItemsHeights', () => {
             const instance = new VirtualScroll(defaultOptions);
@@ -146,7 +146,8 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.viewportHeight = 400;
 
             assert.isTrue(instance.canScrollToItem(1));
-            assert.isFalse(instance.canScrollToItem(19));
+            assert.isFalse(instance.canScrollToItem(18));
+            assert.isTrue(instance.canScrollToItem(19));
             assert.isFalse(instance.canScrollToItem(21));
         });
         it('recalcFromScrollTop', () => {
@@ -212,6 +213,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         it('itemsAddedHandler', () => {
             const instance = new VirtualScroll(defaultOptions);
             instance._options.viewModel.getStartIndex = () => instance.startIndex;
+            instance.triggerVisibility = { up: true , down: true };
             instance.itemsCount = 20;
             instance.reset();
             instance.itemsContainer = itemsContainer;
@@ -231,6 +233,17 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.equal(40, affectingInstance.stopIndex);
             assert.equal(20, instance.savedStartIndex);
             assert.equal(40, instance.savedStopIndex);
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.actualizeSavedIndexes();
+            instance.itemsCount = 40;
+            instance.recalcItemsHeights();
+            instance.triggerVisibility = { up: false, down: false };
+            affectingInstance.startIndex = 0;
+            affectingInstance.stopIndex = 20;
+            instance.itemsAddedHandler(0, {length: 20} as object[]);
+            assert.equal(0, affectingInstance.startIndex);
+            assert.equal(20, affectingInstance.stopIndex);
         });
         it('itemsRemovedHandler', () => {
             const instance = new VirtualScroll(defaultOptions);
@@ -251,6 +264,11 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.stopIndex = 100;
             instance.itemsCount = 100;
             assert.isFalse(instance.isLoaded({body: {contains: () => true}}));
+        })
+        it('set items container', () => {
+            const instance = new VirtualScroll(defaultOptions);
+            instance.itemsContainer = itemsContainer;
+            assert.equal(instance.itemsContainerHeight, itemsContainer.offsetHeight);
         });
     });
 });

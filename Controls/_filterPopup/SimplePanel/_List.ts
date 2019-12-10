@@ -9,10 +9,8 @@ var _private = {
     isNeedUpdateSelectedKeys: function(self, target, item) {
         var clickOnEmptyItem = item.get(self._options.keyProperty) === self._options.emptyKey,
             clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
-            selectedKeys = self._listModel.getSelectedKeys(),
-            hasSelection = selectedKeys.length && !isEqual(selectedKeys, self._options.resetValue) && !isEqual(selectedKeys[0], self._options.emptyKey),
             clickOnFolder = item.get(self._options.nodeProperty);
-        return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox) && !clickOnFolder;
+        return self._options.multiSelect && !clickOnEmptyItem && (clickOnCheckBox || self._selectionChanged) && !clickOnFolder;
     },
 
     updateSelection: function(listModel, item, resetValue) {
@@ -43,6 +41,7 @@ var List = Control.extend({
     _items: null,
     _defaultItemTemplate: defaultItemTemplate,
     _emptyItemTemplate: emptyItemTemplate,
+    _selectionChanged: false,
 
     _beforeMount: function(options) {
         this._listModel = new DropdownViewModel({
@@ -67,10 +66,15 @@ var List = Control.extend({
         if (newOptions.selectedKeys !== this._options.selectedKeys) {
             this._listModel.setSelectedKeys(newOptions.selectedKeys);
         }
+
+        if (newOptions.selectionChanged !== this._options.selectionChanged) {
+            this._selectionChanged = newOptions.selectionChanged;
+        }
     },
 
     _itemClickHandler: function(event, item) {
         if (_private.isNeedUpdateSelectedKeys(this, event.target, item)) {
+            this._selectionChanged = true;
             _private.updateSelection(this._listModel, item, this._options.resetValue);
             let selectedKeys = this._listModel.getSelectedKeys().slice().sort();
             this._notify('checkBoxClick', [selectedKeys]);

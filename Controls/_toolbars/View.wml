@@ -1,22 +1,23 @@
 <div class="controls-Toolbar">
-    <div class="controls-Toolbar_content">
-        <ws:for data="item in _items">
-            <ws:if data="{{_isShowToolbar(item, _parentProperty)}}">
-                <ws:partial on:click="_onItemClick(item)"
-                            itemsSpacing="{{_options.itemsSpacing}}"
-                        template="{{item[_options.itemTemplateProperty] || _options.itemTemplate || _defaultItemTemplate}}"
+   <div class="controls-Toolbar_content">
+      <ws:for data="item in _items">
+         <ws:if data="{{_isShowToolbar(item, _parentProperty)}}">
+            <ws:partial template="{{_getTemplateByItem(item)}}"
                         item="{{item}}"
+                        itemsSpacing="{{_options.itemsSpacing}}"
                         buttonTemplate="{{_buttonTemplate}}"
-                        getButtonConfig="{{_getButtonConfig}}"
+                        buttonTemplateOptions="{{_getButtonTemplateOptionsByItem(item)}}"
                         theme="{{_options.theme}}"
-                        size="{{_options.size}}"/>
+                        on:click="_itemClickHandler(item)"/>
          </ws:if>
       </ws:for>
-      <div if="{{_needShowMenu}}"
-           class="controls-Toolbar__menu controls-Toolbar__menu_theme-{{_options.theme}} controls-Toolbar__item_icon_secondary_theme-{{_options.theme}}"
-           name="popupTarget" on:click="_showMenu()">
-         <i class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-ExpandDown"/>
-      </div>
+      <ws:if data="{{_needShowMenu}}">
+         <div name="menuTarget"
+              class="controls-Toolbar__menu controls-Toolbar__menu_theme-{{_options.theme}} controls-icon_style-secondary_theme-{{_options.theme}}"
+              on:click="_showMenu()">
+            <i class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-ExpandDown"/>
+         </div>
+      </ws:if>
    </div>
-   <Controls.dropdown:Opener name="menuOpener" scope="{{_popupOptions}}"/>
+   <Controls.dropdown:Opener name="menuOpener" scope="{{_menuOptions}}"/>
 </div>

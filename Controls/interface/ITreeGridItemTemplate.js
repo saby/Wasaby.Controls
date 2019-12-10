@@ -3,7 +3,7 @@ define('Controls/interface/ITreeGridItemTemplate', [
 ], function() {
 
    /**
-    * Интерфейс для компонентов с настраиваемым отображением элементов в контроле {@link Controls/treeGrid:View Дерево}.
+    * Интерфейс для настройки отображения элементов в {@link Controls/treeGrid:View дереве}.
     *
     * @interface Controls/interface/ITreeGridItemTemplate
     * @public
@@ -22,16 +22,24 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * @default Controls/treeGrid:ItemTemplate
     * @remark
     * См. <a href="/materials/demo-ws4-tree-grid-item-template">демо-пример</a>.
-    * Может быть переопределён с помощью {@link Controls/interface/ITreeGridItemTemplate#itemTemplateProperty itemTemplateProperty}.
+    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/tree/templates/item/ здесь}.
+    * Шаблон может быть переопределён с помощью {@link Controls/interface/ITreeGridItemTemplate#itemTemplateProperty itemTemplateProperty}.
     * @example
-    * <pre>
-    *    <Controls.treeGrid:View>
-    *       <ws:itemTemplate>
-    *          <ws:partial template="Controls/treeGrid:ItemTemplate" levelIndentSize="null" expanderSize="l" expanderIcon="node" />
-    *       </ws:itemTemplate>
-    *    </Controls.treeGrid:View>
+    * <pre class="brush: html">
+    * <Controls.treeGrid:View>
+    *    <ws:itemTemplate>
+    *       <ws:partial template="Controls/treeGrid:ItemTemplate" levelIndentSize="null" expanderSize="l" expanderIcon="node">
+    *          <ws:contentTemplate>
+    *             <div title="{{contentTemplate.itemData.item.Name}}">
+    *                {{contentTemplate.itemData.item.Name}}
+    *             </div>
+    *          </ws:contentTemplate>
+    *       </ws:partial>
+    *    </ws:itemTemplate>
+    * </Controls.treeGrid:View>
     * </pre>
     * @see Controls/interface/ITreeGridItemTemplate#itemTemplateProperty
+    * @see Controls/treeGrid:ItemTemplate
     */
 
    /*
@@ -41,45 +49,6 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * @remark
     * Base itemTemplate for Controls.treeGrid:View: "Controls/treeGrid:ItemTemplate".
     * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
-    * Base itemTemplate supports these parameters:
-    * <ul>
-    *     <li>
-    *       clickable {Boolean} - Cursor type (default or pointer).
-    *       <ul>
-    *          <li>true - cursor pointer</li>
-    *          <li>false - cursor default</li>
-    *       </ul>
-    *       Default: <b>true</b>
-    *    </li>
-    *    <li>
-    *       levelIndentSize {String} - Size of hierarchical indent.
-    *       <ul>
-    *          <li>s - S size of hierarchical indent</li>
-    *          <li>m - M size of hierarchical indent</li>
-    *          <li>l - L size of hierarchical indent</li>
-    *          <li>xl - XL size of hierarchical indent</li>
-    *       </ul>
-    *       Default: <b>s</b>
-    *    </li>
-    *    <li>
-    *       expanderSize {String} - Size of nodes and hidden nodes expanders.
-    *       <ul>
-    *          <li>s - S size of nodes and hidden nodes expanders</li>
-    *          <li>m - M size of nodes and hidden nodes expanders</li>
-    *          <li>l - L size of nodes and hidden nodes expanders</li>
-    *          <li>xl - XL size of nodes and hidden nodes expanders</li>
-    *       </ul>
-    *       Default: <b>s</b>
-    *    </li>
-    *    <li>
-    *       expanderIcon {String} - Icon of nodes and hidden nodes expanders.
-    *       <ul>
-    *          <li>none - No icon of expander.</li>
-    *          <li>node - Icon of expander like in node.</li>
-    *          <li>hiddenNode - Icon of expander like in hidden node.</li>
-    *       </ul>
-    *    </li>
-    * </ul>
     * @example
     * Using custom template for item rendering:
     * <pre>
@@ -94,9 +63,9 @@ define('Controls/interface/ITreeGridItemTemplate', [
    /**
     * @name Controls/interface/ITreeGridItemTemplate#itemTemplateProperty
     * @cfg {String} Устанавливает имя свойства элемента, которое содержит имя шаблона, используемого для отрисовки элементов.
-    * Если не определено, используется {@link Controls/interface/ITreeGridItemTemplate#itemTemplate itemTemplate}.
     * @remark
     * См. <a href="/materials/demo-ws4-tree-grid-item-template">демо-пример</a>.
+    * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/interface/ITreeGridItemTemplate#itemTemplate itemTemplate}.
     * @see Controls/interface/ITreeGridItemTemplate#itemTemplate
     */
    /*

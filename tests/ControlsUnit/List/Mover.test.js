@@ -141,7 +141,7 @@ define([
                      moveItemsCalled = true;
                      assert.deepEqual(callingParams, params);
                   };
-                  openArgs.templateOptions.eventHandlers.onResult({}, 4);
+                  openArgs.eventHandlers.onResult(4);
                   mover.moveItems = origMoveItems;
                   assert.isTrue(moveItemsCalled);
                   done();

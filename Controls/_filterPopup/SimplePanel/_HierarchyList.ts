@@ -72,6 +72,7 @@ var HierarchyList = Control.extend({
     _folders: null,
     _selectedKeys: null,
     _emptyItemTemplate: emptyItemTemplate,
+    _selectionChanged: false,
 
     _beforeMount: function(options) {
         this._folders = _private.getFolders(options.selectorItems, options.nodeProperty);
@@ -96,9 +97,10 @@ var HierarchyList = Control.extend({
     },
 
     _itemClickHandler: function(event, index, key) {
-        if (_private.getViewModelSelectedKeys(this._selectedKeys, this._options.emptyKey).length) {
+        if (this._selectionChanged) {
             this._checkBoxClickHandler(event, index, key);
         } else {
+            this._selectedKeys = {};
             this._selectedKeys[index] = key;
             this._notify('itemClick', [this._selectedKeys]);
         }
@@ -110,6 +112,7 @@ var HierarchyList = Control.extend({
     },
 
     _checkBoxClickHandler: function(event, index, keys) {
+        let eventName = 'checkBoxClick';
         let setKeys = () => {
             if (keys === undefined) {
                 this._selectedKeys[index] = [];
@@ -120,16 +123,16 @@ var HierarchyList = Control.extend({
 
         if (!!this._folders[keys[0]]) {
             _private.clearSelectedKeys(this._folders, this._selectedKeys);
-            setKeys();
-            this._notify('itemClick', [this._selectedKeys]);
+            eventName = 'itemClick';
         } else {
+            this._selectionChanged = true;
             const currentFolderKey = this._folders[index].get(this._options.keyProperty);
             if (this._selectedKeys[index].includes(currentFolderKey) && keys.length > 1) {
                 keys.splice(keys.indexOf(currentFolderKey), 1);
             }
-            setKeys();
-            this._notify('checkBoxClick', [this._selectedKeys]);
         }
+        setKeys();
+        this._notify(eventName, [this._selectedKeys]);
         this._listModel.setSelectedKeys(_private.getViewModelSelectedKeys(this._selectedKeys, this._options.emptyKey));
     },
 
