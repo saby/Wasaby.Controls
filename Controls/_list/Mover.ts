@@ -51,15 +51,15 @@ var _private = {
             movedItems: isNewLogic ? items.selectedKeys : items,
             source: self._source,
             keyProperty: self._keyProperty,
-            eventHandlers: {
-                onResult: (event, target): void => {
-                    self.moveItems(items, target, MOVE_POSITION.on);
-                }
-            },
             ...self._moveDialogOptions
         };
         self._children.dialogOpener.open({
-            templateOptions
+            templateOptions,
+            eventHandlers: {
+                onResult: (target): void => {
+                    self.moveItems(items, target, MOVE_POSITION.on);
+                }
+            }
         });
     },
     beforeItemsMove: function (self, items, target, position) {

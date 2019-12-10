@@ -31,9 +31,9 @@ export default class OperationsFilterController extends Control<IOperationsFilte
 
    private static prepareFilter(filter: object, selectedKeys: TKeys, excludedKeys: TKeys, source: Rpc|PrefetchProxy, selectionViewMode: string): object {
       const preparedFilter = {...filter};
-      const source = source.getOriginal ? source.getOriginal() : source;
 
       if (selectionViewMode === 'selected') {
+         source = source.getOriginal ? source.getOriginal() : source;
          preparedFilter.selectionWithPaths = selectionToRecord({
             selected: selectedKeys || [],
             excluded: excludedKeys || []

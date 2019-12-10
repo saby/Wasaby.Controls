@@ -5,6 +5,7 @@
             name="infoBox"
             attr:class="controls-SelectedCollection_sticky"
             closeOnOutsideClick="{{true}}"
+            actionOnScroll="close"
             template="Controls/lookupPopup:Collection"
             on:close="_notifyHandler('closeInfoBox')"
             _vdomOnOldPage="{{true}}">

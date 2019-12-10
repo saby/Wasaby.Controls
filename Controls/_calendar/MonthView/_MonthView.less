@@ -91,6 +91,7 @@
 .controls-MonthViewVDOM__item-selectedStartEnd {
    outline: @border-color_RangeSelection-selected-startEnd-edgeBorder solid @border-thickness_RangeSelection-selected-startEnd;
    outline-offset: @border-thickness_RangeSelection - @border-thickness_RangeSelection-selected-startEnd;
+   z-index: 1; //При масштабе 150% соседние блоки наезжают на outline
 }
 
 .controls-MonthViewVDOM__item-today-background {

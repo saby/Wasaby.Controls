@@ -305,12 +305,12 @@ import {Logger} from 'UI/Utils';
       },
 
       _beforeUpdate: function(newOptions, context) {
-         this._isChanged = _private.isChangedValue(this._items);
-         this._hasAdditionalParams = (newOptions.additionalTemplate || newOptions.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
-         this._hasResetValue = _private.hasResetValue(this._items);
          if (!isEqual(this._options.items, newOptions.items)) {
             _private.resolveItems(this, newOptions, context);
          }
+         this._isChanged = _private.isChangedValue(this._items);
+         this._hasAdditionalParams = (newOptions.additionalTemplate || newOptions.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
+         this._hasResetValue = _private.hasResetValue(this._items);
          if (this._options.historyId !== newOptions.historyId) {
             _private.resolveHistoryId(this, newOptions, context);
             return _private.loadHistoryItems(this, this._historyId);

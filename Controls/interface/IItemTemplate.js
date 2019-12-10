@@ -7,7 +7,7 @@ define('Controls/interface/IItemTemplate', [
     *
     * @interface Controls/interface/IItemTemplate
     * @public
-    * @author Герасимов А.М.
+    * @author Авраменко А.С.
     */
 
    /*
@@ -15,36 +15,31 @@ define('Controls/interface/IItemTemplate', [
     *
     * @interface Controls/interface/IItemTemplate
     * @public
-    * @author Герасимов А.М.
+    * @author Авраменко А.С.
     */
 
    /**
     * @name Controls/interface/IItemTemplate#itemTemplate
-    * @cfg {Function} Шаблон элемента списка.
-    * <a href="/materials/demo-ws4-list-item-template">Демо-пример</a>.
+    * @cfg {String|Function} Устанавливает шаблон отображения элемента.
+    * @default Controls/list:ItemTemplate
     * @remark
-    * По умолчанию используется шаблон "Controls/list:ItemTemplate".
-    *
-    * Базовый шаблон itemTemplate поддерживает следующие параметры:
-    * - contentTemplate {Function} — Шаблон содержимого элемента;
-    * - highlightOnHover {Boolean} — Выделять элемент при наведении на него курсора мыши.
-    * - clickable {Boolean} - Тип курсора (false - default или true - pointer) По умолчанию true.
-    *
-    * В области видимости шаблона доступен объект itemData, позволяющий получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
-    *
-    * Подробнее о работе с шаблоном читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/">руководстве разработчика</a>.
+    * См. <a href="/materials/demo-ws4-list-item-template">демо-пример</a>.
+    * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
+    * Шаблон может быть переопределён с помощью {@link Controls/interface/IItemTemplate#itemTemplateProperty itemTemplateProperty}.
     * @example
-    * <pre>
-    *    <Controls.list:View>
-    *       <ws:itemTemplate>
-    *          <ws:partial template="Controls/list:ItemTemplate">
-    *             <ws:contentTemplate>
-    *                <span>{{itemTemplate.itemData.item.description}}</span>
-    *             </ws:contentTemplate>
-    *          </ws:partial>
-    *       </ws:itemTemplate>
-    *    </Controls.list:View>
+    * <pre class="brush: html">
+    * <Controls.list:View>
+    *    <ws:itemTemplate>
+    *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}"> 
+    *          <ws:contentTemplate>
+    *             {{contentTemplate.itemData.item.title}}
+    *          </ws:contentTemplate>
+    *       </ws:partial>
+    *    </ws:itemTemplate>
+    * </Controls.list:View>
     * </pre>
+    * @see Controls/interface/IItemTemplate#itemTemplateProperty
+    * @see Controls/list:ItemTemplate
     */
 
    /*
@@ -77,8 +72,11 @@ define('Controls/interface/IItemTemplate', [
 
    /**
     * @name Controls/interface/IItemTemplate#itemTemplateProperty
-    * @cfg {String} Имя свойства, содержащего ссылку на шаблон элемента. Если значение свойства не передано, то для отрисовки используется itemTemplate.
-    * <a href="/materials/demo-ws4-list-item-template">Демо-пример</a>.
+    * @cfg {String|undefined} Устанавливает имя поля элемента, где содержится имя шаблона. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
+    * @remark
+    * См. <a href="/materials/demo-ws4-list-item-template">демо-пример</a>.
+    * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/interface/IItemTemplate#itemTemplate itemTemplate}.
+    * @see Controls/interface/IItemTemplate#itemTemplate
     */
 
    /*

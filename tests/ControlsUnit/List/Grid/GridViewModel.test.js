@@ -578,6 +578,51 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             }, theme));
 
+            assert.equal(expectedResultWithRowSeparator[0], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: true,
+               isFirstInGroup: false,
+               index: 0,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }, theme, { index: 3 }));
+
+            assert.equal(expectedResultWithRowSeparator[1], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: true,
+               isFirstInGroup: false,
+               index: 2,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }, theme, { index: 3 }));
+
+            assert.equal(expectedResultWithRowSeparator[2], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: true,
+               isFirstInGroup: false,
+               index: 3,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }, theme, { index: 3 }));
+
             assert.equal(expectedResultWithoutRowSeparator[0], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: false,
                isFirstInGroup: false,
@@ -674,6 +719,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                expectedResultForOnlyItemInHiddenGroup
             );
          });
+
 
          it('_isFirstInGroup', function() {
             let newGridData = [

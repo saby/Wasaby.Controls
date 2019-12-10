@@ -11,7 +11,7 @@
       </div>
    </ws:else>
    <div class="controls-DragNDrop__draggingTemplate-text">
-      <div class="controls-DragNDrop__draggingTemplate-mainText">{{_options.mainText || 'Запись реестра'}}</div>
+      <div class="controls-DragNDrop__draggingTemplate-mainText">{{_options.mainText || rk('Запись реестра')}}</div>
       <div class="controls-DragNDrop__draggingTemplate-additionalText">{{_options.additionalText}}</div>
    </div>
    <ws:if data="{{_itemsCount}}">

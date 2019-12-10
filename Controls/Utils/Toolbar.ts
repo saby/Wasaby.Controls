@@ -5,21 +5,30 @@
  */
 import {factory, Abstract as ChainAbstract} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
+import {Record} from 'Types/entity';
 
-export const showType = {
+export interface IShowType {
+   /**
+    * Show only in Menu.
+    */
+   MENU: number;
+   /**
+    * Show in Menu and Toolbar.
+    */
+   MENU_TOOLBAR: number;
+   /**
+    * Show only in Toolbar
+    */
+   TOOLBAR: number;
+}
 
-   // show only in Menu
+export const showType: IShowType = {
    MENU: 0,
-
-   // show in Menu and Toolbar
    MENU_TOOLBAR: 1,
-
-   // show only in Toolbar
    TOOLBAR: 2
-
 };
 
-export function getMenuItems<T>(items: RecordSet<T> | T[]): ChainAbstract<T> {
+export function getMenuItems<T extends Record>(items: RecordSet<T> | T[]): ChainAbstract<T> {
    return factory(items).filter((item) => {
       return item.get('showType') !== this.showType.TOOLBAR;
    });
