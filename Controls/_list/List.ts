@@ -15,6 +15,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  *
  * @class Controls/_list/List
  * @extends Core/Control
+ * @implements Controls/_interface/IErrorController
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
@@ -49,6 +50,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  *
  * @class Controls/_list/List
  * @extends Core/Control
+ * @implements Controls/_interface/IErrorController
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable

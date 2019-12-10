@@ -227,6 +227,7 @@ var
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
+    * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IItemTemplate
@@ -259,6 +260,7 @@ var
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
+    * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IItemTemplate
