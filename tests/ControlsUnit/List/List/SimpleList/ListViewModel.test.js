@@ -102,6 +102,27 @@ define([
          model.setSwipeItem(null);
          version = model._calcItemVersion(item, item.key);
          assert.notInclude(version, 'SWIPE');
+
+         model.setItemActions(model._items.at(0), [{
+            id: 0,
+            title: 'first'
+         }]);
+         version = model._calcItemVersion(item, item.key);
+         assert.include(version, 'ITEM_ACTION_1');
+
+         model.setItemActions(model._items.at(0), [{
+            id: 0,
+            title: 'second'
+         }]);
+         version = model._calcItemVersion(item, item.key);
+         assert.include(version, 'ITEM_ACTION_2');
+
+         model.setItemActions(model._items.at(0), [{
+            id: 0,
+            title: 'second'
+         }]);
+         version = model._calcItemVersion(item, item.key);
+         assert.include(version, 'ITEM_ACTION_2');
       });
 
       it('getCurrent', function() {

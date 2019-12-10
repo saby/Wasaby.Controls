@@ -71,7 +71,7 @@ var _private = {
             });
         }
         if (!self._destroyed) {
-            options.listModel.setItemActions(item, {
+            return options.listModel.setItemActions(item, {
                 all,
                 showed
             });
@@ -91,15 +91,18 @@ var _private = {
                 });
                 options.listModel.setEventRaising(true, true);
             } else {
+                let hasChanges = false;
                 for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                     var
                         itemData = options.listModel.getCurrent(),
                         item = itemData.actionsItem;
                     if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                        _private.updateItemActions(self, item, options);
+                        hasChanges = _private.updateItemActions(self, item, options) || hasChanges;
                     }
                 }
-                options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
+                if (hasChanges) {
+                    options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
+                }
             }
         }
     },
