@@ -40,6 +40,11 @@
  * @cfg {Spacing|null} Устанавливает расстояние между верхней границей и контентом шаблона.
  * @remark
  * В значении null отступ отсутствует.
+ * @name Controls/list:EmptyTemplate#topSpacing
+ * @cfg {String} Расстояние между верхней границей и контентом шаблона.
+ * @remark 
+ * Доступные значения: null, xs, s, m, l, xl, xxl.
+ * 
  * @default l
  * @example
  * <pre>
