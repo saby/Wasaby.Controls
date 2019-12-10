@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
+import {isStickySupport, getNextId, getOffset} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
 
 
@@ -56,8 +56,8 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
          _isRegistry: false,
 
          _beforeMount: function(options, context, receivedState) {
-            this._isStickySupport = stickyUtils.isStickySupport();
-            this._index = stickyUtils.getNextId();
+            this._isStickySupport = isStickySupport();
+            this._index = getNextId();
             this._stickyHeadersIds = {
                top: [],
                bottom: []
@@ -74,7 +74,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
          },
 
          getOffset: function(parentElement, position) {
-            return stickyUtils.getOffset(parentElement, this._container, position);
+            return getOffset(parentElement, this._container, position);
          },
 
          get height() {
