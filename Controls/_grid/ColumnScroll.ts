@@ -39,7 +39,7 @@ const
           }
       },
       updateSizes(self) {
-          if (self._destroyed) {
+          if (self._destroyed || !_private.hasColumnScrollRects(self._children.content)) {
               return;
           }
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
@@ -249,9 +249,7 @@ const
       },
 
       _resizeHandler() {
-          if (_private.hasColumnScrollRects(this._children.content)) {
-              this._debouncedUpdateSizes(this);
-          }
+          this._debouncedUpdateSizes(this);
       },
 
       _isColumnScrollVisible: function() {
