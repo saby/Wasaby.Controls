@@ -1,0 +1,20 @@
+<div class="controls-StickyTemplate__top-area controls-StickyTemplate__top-area_theme_{{_options.theme}}
+            controls-StickyTemplate__top-area-background_theme_{{_options.theme}}
+            controls-StackTemplate__top-area-border_theme_{{_options.theme}}">
+   <div class="controls-StickyTemplate__top-area-content">
+      <ws:if data="{{_options.headingCaption}}">
+         <div class="controls-StickyTemplate__caption controls-StickyTemplate__caption_theme_{{_options.theme}}">
+            <Controls.heading:Title attr:class="controls-StickyTemplate__caption_text controls-StickyTemplate__caption_text_theme_{{_options.theme}}"
+                                    caption="{{_options.headingCaption}}"
+                                    style="{{_options.headingStyle}}"
+                                    size="{{_options.headingSize}}"
+                                    readOnly="{{true}}"/>
+         </div>
+      </ws:if>
+      <ws:if data="{{_options.headerContentTemplate}}">
+         <div class="controls-StickyTemplate__headerContentTemplate controls-StickyTemplate__headerContentTemplate_theme_{{_options.theme}}">
+               <ws:partial template="{{_options.headerContentTemplate}}" scope="{{_options.stackOptions}}" theme="{{_options.theme}}"/>
+         </div>
+      </ws:if>
+   </div>
+</div>

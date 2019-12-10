@@ -2,3 +2,61 @@
    // todo: To do without it, just take into account the indentation when positioning
    margin: 0 !important;
 }
+
+.controls-StickyTemplate {
+   padding-bottom: @spacing-Sticky_between_content_border;
+   height: 100%;
+   width: 100%;
+   max-width: @max-width-Sticky-content;
+   background: @border-color_sticky;
+   box-shadow: @box-shadow_sticky;
+}
+
+.controls-StickyTemplate_theme_@{themeName} {
+   background-color: @background-color_sticky;
+}
+
+.controls-StickyTemplate__top-area_theme_@{themeName} {
+   padding: @spacing-Sticky_between_content_border @header_padding-left_sticky 0 @header_padding-right_sticky;
+   min-height: @header_min-height_sticky;
+}
+
+.controls-StickyTemplate__top-area-content {
+   width: 100%;
+   min-height: @header_min-height_sticky;
+   flex-shrink: 1;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+
+.controls-StickyTemplate__content-area {
+   display: flex;
+   height: 100%;
+   padding: @spacing-Sticky_between_content_border @header_padding-left_sticky;
+   flex-direction: column;
+   flex-grow: 1;
+   flex-shrink: 1;
+   overflow: hidden;
+}
+
+.controls-StickyTemplate__caption_theme_@{themeName} {
+   min-width: @header_min-width_sticky;
+   padding-right: @header-content_padding-right_sticky;
+}
+
+.controls-StickyTemplate__caption {
+   cursor: default;
+   display: flex;
+   flex-shrink: 10;
+   overflow: hidden;
+}
+
+.controls-StickyTemplate__top-area-background_theme_@{themeName} {
+   background: @header_background-color_sticky;
+}
+
+.controls-StickyTemplate__top-area-border_theme_@{themeName} {
+   border-bottom: @header_bottom-border-thickness_sticky solid @header_bottom-border-color_sticky;
+}
+
