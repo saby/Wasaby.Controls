@@ -77,10 +77,10 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
 
    static load(sources: Array<ISourceConfig>,
                loadDataTimeout?: number,
-               sourcesPromises?: Array<Promise<IRequestDataResult>>): {
+               sourcesPromises?: Array<Promise<IRequestDataResult>>): Promise<{
       sources: Array<ISourceConfig>,
       errors: Array<Error>
-   } {
+   }> {
       const sourcesResult: Array<ISourceConfig> = [];
       const errorsResult: Array<Error> = [];
 
@@ -111,8 +111,11 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
       });
    }
 
-   static _createSourceConfig(sourceConfig: ISourceConfig, loadDataResult: IRequestDataResult): ISourceConfig {
-      const result = {...sourceConfig};
+   static _createSourceConfig(
+      sourceConfig: ISourceConfig,
+      { data, historyItems, filter, sorting }: IRequestDataResult
+   ): ISourceConfig {
+      const result = {...sourceConfig, historyItems, filter, sorting};
 
       result.source = new PrefetchProxy({
          // Не делаем вложенность PrefetchProxy в PrefetchProxy, иначе прикладным программистам сложно получиить
@@ -120,15 +123,14 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
          // у PrefetchProxy.
          target: sourceConfig.source instanceof PrefetchProxy ? sourceConfig.source.getOriginal() : sourceConfig.source,
          data: {
-            query: loadDataResult.data
+            query: data
          }
       });
-      result.historyItems = loadDataResult.historyItems;
 
       return result;
    }
 
-   static getDefaultOptions(): IErrorContainerOptions {
+   static getDefaultOptions(): Partial<IErrorContainerOptions> {
       return {
          errorHandlingEnabled: true,
          requestTimeout: 5000
