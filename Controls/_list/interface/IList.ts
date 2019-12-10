@@ -54,7 +54,7 @@
  * См. <a href="/materials/demo-ws4-list-base">демо-пример</a>.
  * @default Controls/list:EmptyTemplate
  * @example
- * <pre>
+ * <pre class="brush: html">
  *    <Controls.list:View>
  *       <ws:emptyTemplate>
  *          <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="l">
