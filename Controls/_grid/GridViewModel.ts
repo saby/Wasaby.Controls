@@ -1433,7 +1433,7 @@ var
         },
 
         setItemActions: function(item, actions) {
-            this._model.setItemActions(item, actions);
+            return this._model.setItemActions(item, actions);
         },
 
         nextModelVersion: function() {
