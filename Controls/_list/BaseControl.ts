@@ -1086,7 +1086,14 @@ var _private = {
     setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
         let firstItemIndex = self._listViewModel.getStartIndex();
         firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
-        self._listViewModel.setMarkerOnValidItem(firstItemIndex);
+        if (self._options.useNewModel) {
+            const item = self._listViewModel.at(firstItemIndex);
+            if (item) {
+                self._listViewModel.setMarkedItem(item);
+            }
+        } else {
+            self._listViewModel.setMarkerOnValidItem(firstItemIndex);
+        }
     },
 
     getFirstVisibleItemIndex: function(itemsContainer, verticalOffset) {
