@@ -635,7 +635,7 @@ var _private = {
     },
 
     throttledUpdateIndexesByVirtualScrollMove: throttle((self, params) => {
-        self._virtualScr1oll.recalcToDirectionByScrollTop(params, self._loadOffset.top);
+        self._virtualScroll.recalcToDirectionByScrollTop(params, self._loadOffset.top);
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
             _private.updateShadowMode(self);
