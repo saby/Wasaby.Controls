@@ -6,7 +6,6 @@ import Slider from './Slider';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import coreMerge = require('Core/core-merge');
 
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
    value: number;
@@ -61,7 +60,7 @@ const maxPercentValue = 100;
  */
 
 
-class Base extends Slider implements ISlider {
+class Base extends Slider implements ISlider, ISliderBaseOptions {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
@@ -141,17 +140,17 @@ class Base extends Slider implements ISlider {
 
    static _theme: string[] = ['Controls/slider'];
 
-   static getDefaultOptions() {
-      return coreMerge({
+   static getDefaultOptions(): object {
+      return {...{
          theme: 'default',
          value: undefined
-      }, Slider.getDefaultOptions());
+      }, ...Slider.getDefaultOptions()};
 
    }
-   static getOptionTypes()  {
-      return coreMerge({
+   static getOptionTypes(): object {
+      return {...{
          value: EntityDescriptor(Number)
-      }, Slider.getOptionTypes());
+      }, ...Slider.getOptionTypes()};
 
 }
 }
