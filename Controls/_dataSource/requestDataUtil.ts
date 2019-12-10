@@ -23,8 +23,8 @@ interface IFilter {
 }
 export interface IRequestDataResult {
    data: RecordSet;
-   filter: FilterObject;
-   sorting: SortingObject;
+   filter?: FilterObject;
+   sorting?: SortingObject;
    historyItems?: HistoryItems;
 }
 
