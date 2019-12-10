@@ -142,9 +142,9 @@
 .controls-Grid__cell_fixed_theme-@{themeName} {
    z-index: 3;
    background-color: @background-color_Grid-row-sticky;
-   // stickyHeader считает что колонка не зафиксированна если повесить overflow-y: hidden;
+   // stickyHeader считает что колонка не зафиксированна если повесить overflow-y: hidden;, а без overflow-x: hidden оявляется горизонтальный скролл
    &:not(.controls-StickyHeader) {
-      overflow-y: hidden;
+      overflow: hidden;
    }
 }
 
