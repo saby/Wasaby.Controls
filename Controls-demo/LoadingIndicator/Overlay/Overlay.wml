@@ -1,0 +1,36 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell ws-flexbox ws-flex-row controlsDemo__mb1">
+        <div class="controlsDemo__mr3" style="font-size: 15px; color: red">Overlay</div>
+        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
+            <div class="controlsDemo__mb1">
+                <div>overlay = default</div>
+            </div>
+            <div>
+                <Controls.buttons:Button caption="Open" class="controls-demo__indicator_first_open"
+                                         on:click="_firstOpen()"/>
+            </div>
+        </div>
+
+        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
+            <div class="controlsDemo__mb1">
+                <div>overlay = dark</div>
+            </div>
+            <div>
+                <Controls.buttons:Button caption="Open" class="controls-demo__indicator_first_open"
+                                         on:click="_secondOpen()"/>
+            </div>
+        </div>
+
+        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
+            <div class="controlsDemo__mb1">
+                <div>overlay = none (реагирует на клик)</div>
+            </div>
+            <div>
+                <Controls.buttons:Button caption="Open" class="controls-demo__indicator_first_open"
+                                         on:click="_thirdOpen()"/>
+                <Controls.buttons:Button caption="Close" class="controls-demo__indicator_first_close"
+                                         on:click="_close('third')"/>
+            </div>
+        </div>
+    </div>
+</div>

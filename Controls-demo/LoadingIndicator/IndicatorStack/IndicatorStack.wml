@@ -1,0 +1,17 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell ws-flexbox ws-flex-row controlsDemo__mb1">
+        <div class="controlsDemo__mr3" style="font-size: 15px; color: red">Стек индикаторов</div>
+        <div class="controlsDemo__mr2">
+            <Controls.buttons:Button caption="Open the first indicator"
+                                     on:click="_firstOpen()"/>
+            <Controls.buttons:Button caption="Close"
+                                     on:click="_close('first')"/>
+        </div>
+        <div class="controlsDemo__mr2">
+            <Controls.buttons:Button caption="Open the second indicator"
+                                     on:click="_secondOpen()"/>
+            <Controls.buttons:Button caption="Close"
+                                     on:click="_close('second')"/>
+        </div>
+    </div>
+</div>
