@@ -983,7 +983,7 @@ var _private = {
     },
 
     showIndicator(self, direction: 'down' | 'up' | 'all' = 'all'): void {
-        if (!self._isMounted || !!self._loadingState) {
+        if (!self._isMounted || self._loadingState === 'all') {
             return;
         }
 
@@ -1956,6 +1956,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 newOptions.viewModelConstructor !== this._viewModelConstructor
             )
         ) {
+            if (this._children.editInPlace && this._listViewModel.getEditingItemData()) {
+                this._children.editInPlace.cancelEdit();
+            }
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();

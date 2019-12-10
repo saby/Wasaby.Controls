@@ -65,6 +65,11 @@ const _private = {
             } else {
                historyItems = _private.cloneItems(filterButtonItems || fastFilterItems);
             }
+
+            historyItems = historyItems.filter(item => {
+               return !item.doNotSaveToHistory;
+            });
+
             return _private.minimizeFilterItems(historyItems);
          },
 
