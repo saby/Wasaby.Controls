@@ -450,40 +450,27 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropdownList._beforeMount(config);
             assert.isFalse(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
-            // multiSelect = true && has selected items  && click on unselected item
+            // multiSelect = true && click on unselected item
             config.multiSelect = true;
             config.selectedKeys = [3];
             dropdownList._beforeMount(config);
-            assert.isTrue(!dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
+            assert.isFalse(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
-            // multiSelect = true && has selected items && click on checkbox
-            isCheckBox = true;
-            config.selectedKeys = [2, 3];
+            // multiSelect = true && _selectionChanged && click on unselected item
+            isCheckBox = false;
             dropdownList._beforeMount(config);
+            dropdownList._selectionChanged = true;
             assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(4)));
-
-            // multiSelect = true && has selected items && click on checkbox
-            isCheckBox = true;
-            config.selectedKeys = [2, 3];
-            dropdownList._beforeMount(config);
-            assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(2)));
 
             // multiSelect = true && click on checkbox
             isCheckBox = true;
             assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
-            config.selectedKeys = [];
             dropdownList._beforeMount(config);
             assert.isTrue(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
             // multiSelect = true && click on empty item
             isCheckBox = false;
             assert.isFalse(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, { get: () => {return null;} }));
-
-            // multiSelect = true && selected empty item
-            isCheckBox = false;
-            config.selectedKeys = [null];
-            dropdownList._beforeMount(config);
-            assert.isFalse(dropdownPopup.List._private.isNeedUpdateSelectedKeys(dropdownList, target, items.at(0)));
 
          });
 
