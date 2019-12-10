@@ -1,24 +1,4 @@
-<div class="controls-Toolbar_item{{item['readOnly'] ? '_readOnly'}} controls-Toolbar_item_theme-{{theme}} controls-Toolbar_item_{{itemsSpacing}}_theme-{{theme}}"
-     title="{{item['tooltip']}}">
-    <ws:if data="{{contentTemplate}}">
-        <ws:partial
-                template="{{contentTemplate}}"
-                item="{{item}}"
-                size="{{size}}"/>
-    </ws:if>
-    <ws:else>
-        <ws:if data="{{item.icon || item[iconProperty]}}">
-            <i class="controls-Toolbar__item_icon_{{ item['readOnly'] === true ? 'readOnly' : (item['buttonIconStyle'] || item['iconStyle'] || item[iconStyleProperty]) || 'secondary'}}_theme-{{theme}} controls-Toolbar__item_icon_theme-{{theme}} {{item['icon'] || item[iconProperty]}}"/>
-        </ws:if>
-        <ws:else data="{{!!item['buttonStyle']}}">
-            <ws:partial template="{{buttonTemplate}}" scope="{{getButtonConfig(item)}}"/>
-        </ws:else>
-        <ws:if data="{{(item['title'] || item[displayProperty]) && !item['buttonViewMode']}}">
-            <span class="controls-Toolbar__item_title{{item['readOnly'] ? '_readOnly'}}_theme-{{theme}}
-                  {{item['icon'] || item[iconProperty] ? 'controls-Toolbar__item_has-title-and-icon_theme-' + theme}}"
-                  title="{{item['title'] || item[displayProperty]}}">
-               {{item['title'] || item[displayProperty]}}
-            </span>
-        </ws:if>
-    </ws:else>
+<div class="controls-Toolbar__item{{item.readOnly ? '_readOnly'}} controls-Toolbar__item_theme-{{theme}} controls-Toolbar__item_spacing_{{itemsSpacing}}_theme-{{theme}}"
+     title="{{item.tooltip}}">
+   <ws:partial template="{{buttonTemplate}}" scope="{{buttonTemplateOptions}}"/>
 </div>
