@@ -1,5 +1,7 @@
 /**
  * Библиотека контролов, которые служат для организации поиска в списках.
+ * @remark
+ * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
  * @library Controls/search
  * @includes InputContainer Controls/_search/Input/Container
  * @includes Misspell Controls/_search/Misspell
