@@ -186,7 +186,7 @@ export default class TileRender extends BaseRender {
     private _shouldProcessHover(): boolean {
         return (
             !this._context.isTouch.isTouch &&
-            (typeof document === 'undefined' || !document.body.classList.contains('ws-is-drag'))
+            !document.body.classList.contains('ws-is-drag')
         );
     }
 

@@ -184,6 +184,7 @@ describe('Controls/_listRender/Tile', () => {
 
         describe('_onItemMouseEnter()', () => {
             it('sets hovered item', () => {
+                tile._shouldProcessHover = () => true;
                 const item = {};
                 tile._onItemMouseEnter({}, item);
                 assert.strictEqual(hoveredItem, item);
@@ -220,11 +221,7 @@ describe('Controls/_listRender/Tile', () => {
     describe('_onItemMouseMove()', () => {
         it('sets hovered item position', () => {
             const tile = new Tile(defaultCfg);
-            tile._context = {
-                isTouch: {
-                    isTouch: false
-                }
-            };
+            tile._shouldProcessHover = () => true;
 
             let setHoveredItemPositionCalled = false;
             tile._setHoveredItemPosition = () => {
