@@ -1,8 +1,9 @@
 <div class="longTap">
     <div>tapCount: <span>{{ tapCount }}</span></div>
+    <div>swipeCount:  <span>{{ swipeCount }}</span></div>
     <div>longTapCount:  <span>{{ longTapCount }}</span></div>
-    <div on:longtap="longClick()" class="longTap__button"></div>
-    <Controls.heading:Title caption=" {{ _text }}" readOnly="{{true}}" fontColorStyle="primary" fontSize="l"  on:longtap="longClick()"/>
+    <div on:longtap="longClick()"  on:swipe="swipe()" class="longTap__button"></div>
+    <Controls.heading:Title caption="Длинный тап" readOnly="{{true}}" fontColorStyle="primary" fontSize="l"  on:longtap="longClick()"/>
     <Controls.buttons:Button on:click="simpleClick()" caption="tapOnly" class="longTap__button"/>
     <Controls.buttons:Button on:longtap="longClick()" caption="longTapOnly" class="longTap__button"/>
 </div>
