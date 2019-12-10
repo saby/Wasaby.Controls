@@ -56,7 +56,8 @@ export = {
 
             // Если диалоговое окно открыто через touch, то позиционируем его в самом верху экрана.
             // Это решает проблемы с показом клавиатуры и прыжком контента из-за изменившегося scrollTop.
-            if (item.contextIsTouch) {
+            // Даем возможность некоторые окна отображать по центру ( например, окно подтверждения)
+            if (item.contextIsTouch && !item.popupOptions.isCentered) {
                 top = 0;
             } else {
                 top = this._getTopCoord(windowData, height || containerSizes.height, popupOptions);
