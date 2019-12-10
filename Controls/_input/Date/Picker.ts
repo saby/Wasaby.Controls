@@ -78,17 +78,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
                range: this._options.range
             }
          };
-         if (!this._isVdomDialog()) {
-            cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
-            cfg.className = 'controls-PeriodDialog__picker-withoutModeBtn';
-            cfg.isCompoundTemplate = true;
-            cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
-         }
          this._children.opener.open(cfg);
-      },
-
-      _isVdomDialog: function() {
-         return this._options.vdomDialog;
       },
 
       _onResultWS3: function(event, startValue) {
@@ -110,9 +100,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
    });
 
    Component.getDefaultOptions = function() {
-      return coreMerge({
-          vdomDialog: true
-      }, IDateTimeMask.getDefaultOptions());
+      return IDateTimeMask.getDefaultOptions();
    };
 
    Component.getOptionTypes = function() {

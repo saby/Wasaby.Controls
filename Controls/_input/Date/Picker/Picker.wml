@@ -34,7 +34,6 @@
    />
    <Controls.popup:Sticky name="opener"
                                  closeOnOutsideClick="{{true}}"
-                                 actionOnScroll="close"
-                                 _vdomOnOldPage="{{_isVdomDialog()}}">
+                                 actionOnScroll="close">
    </Controls.popup:Sticky>
 </div>
