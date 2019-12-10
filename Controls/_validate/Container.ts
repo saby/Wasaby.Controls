@@ -16,7 +16,7 @@ export interface IValidateConfig {
 
 /**
  * Контрол, регулирующий валидацию своего контента.
- * Валидация запускается вызовом метода ({@link Controls/_validate/Container#validate validate})
+ * Валидация запускается вызовом метода {@link Controls/_validate/Container#validate validate}.
  * @class Controls/_validate/Container
  * @extends Core/Control
  * @control
