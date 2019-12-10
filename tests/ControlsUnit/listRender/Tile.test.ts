@@ -182,10 +182,20 @@ describe('Controls/_listRender/Tile', () => {
             assert.isNull(hoveredItem);
         });
 
-        it('_onItemMouseEnter()', () => {
-            const item = {};
-            tile._onItemMouseEnter({}, item);
-            assert.strictEqual(hoveredItem, item);
+        describe('_onItemMouseEnter()', () => {
+            it('sets hovered item', () => {
+                tile._shouldProcessHover = () => true;
+                const item = {};
+                tile._onItemMouseEnter({}, item);
+                assert.strictEqual(hoveredItem, item);
+            });
+
+            it('checks if it should process hover', () => {
+                tile._shouldProcessHover = () => false;
+                const item = {};
+                tile._onItemMouseEnter({}, item);
+                assert.isUndefined(hoveredItem);
+            });
         });
 
         describe('_onItemMouseLeave()', () => {
@@ -208,28 +218,41 @@ describe('Controls/_listRender/Tile', () => {
         });
     });
 
-    it('_onItemMouseMove()', () => {
-        const tile = new Tile(defaultCfg);
-        tile._context = {
-            isTouch: {
-                isTouch: false
-            }
-        };
+    describe('_onItemMouseMove()', () => {
+        it('sets hovered item position', () => {
+            const tile = new Tile(defaultCfg);
+            tile._shouldProcessHover = () => true;
 
-        let setHoveredItemPositionCalled = false;
-        tile._setHoveredItemPosition = () => {
-            setHoveredItemPositionCalled = true;
-        };
+            let setHoveredItemPositionCalled = false;
+            tile._setHoveredItemPosition = () => {
+                setHoveredItemPositionCalled = true;
+            };
 
-        tile._onItemMouseMove({}, {
-            isFixed() { return true; }
+            tile._onItemMouseMove({}, {
+                isFixed() { return true; }
+            });
+            assert.isFalse(setHoveredItemPositionCalled, 'should not calculate hover position on already fixed items');
+
+            tile._onItemMouseMove({}, {
+                isFixed() { return false; }
+            });
+            assert.isTrue(setHoveredItemPositionCalled, 'should calculate hover position for unfixed items');
         });
-        assert.isFalse(setHoveredItemPositionCalled, 'should not calculate hover position on already fixed items');
 
-        tile._onItemMouseMove({}, {
-            isFixed() { return false; }
+        it('checks if should process hover', () => {
+            const tile = new Tile(defaultCfg);
+            tile._shouldProcessHover = () => false;
+
+            let setHoveredItemPositionCalled = false;
+            tile._setHoveredItemPosition = () => {
+                setHoveredItemPositionCalled = true;
+            };
+
+            tile._onItemMouseMove({}, {
+                isFixed() { return false; }
+            });
+            assert.isFalse(setHoveredItemPositionCalled);
         });
-        assert.isTrue(setHoveredItemPositionCalled, 'should calculate hover position for unfixed items');
     });
 
     it('_convertPositionToStyle()', () => {
