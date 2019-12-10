@@ -542,7 +542,10 @@ define([
       });
       it('updateActions', function() {
          let data, rs, lvm;
-         data = [];
+         data = [{
+            id: 1,
+            title: 'item1'
+         }];
          rs = new collection.RecordSet({
             keyProperty: 'id',
             rawData: data
@@ -559,10 +562,27 @@ define([
          let modelUpdated = false;
          lvm.nextModelVersion = function() {
             modelUpdated = true;
-         }
+         };
          var ctrl = new lists.ItemActionsControl(cfg);
          lists.ItemActionsControl._private.updateActions(ctrl, cfg);
          assert.isTrue(modelUpdated);
+
+         modelUpdated = false;
+         lists.ItemActionsControl._private.updateActions(ctrl, cfg);
+         assert.isFalse(modelUpdated);
+
+         modelUpdated = false;
+         cfg.itemActions = [{
+            id: 0,
+            title: 'first',
+            showType: tUtil.showType.MENU
+         }];
+         lists.ItemActionsControl._private.updateActions(ctrl, cfg);
+         assert.isTrue(modelUpdated);
+
+         modelUpdated = false;
+         lists.ItemActionsControl._private.updateActions(ctrl, cfg);
+         assert.isFalse(modelUpdated);
       });
       it('updateItemActions', function() {
          var cfg = {
