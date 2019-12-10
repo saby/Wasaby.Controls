@@ -37,7 +37,7 @@ export default interface IEditor {
  * TS:
  * <pre>
  * import { Control, TemplateFunction } from 'UI/Base';
- * import template = require('wmlMyEditor');
+ * import template = require('wml!MyEditor');
  *
  * class MyEditor extends Control implements IEditor {
  *    protected _template: Function = TemplateFunction;
