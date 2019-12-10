@@ -115,13 +115,13 @@ class BaseOpener extends Control<IControlOptions> {
     }
 
     /* Защита от множественного вызова. собираем все синхронные вызовы, открываем окно с последним конфигом */
-    private _showDialog(template, cfg, controller, popupId, resolve): void {
+    private _showDialog(template, cfg, controller, resolve): void {
         if (this._openPopupTimerId) {
             clearTimeout(this._openPopupTimerId);
         }
         this._openPopupTimerId = setTimeout(() => {
             this._openPopupTimerId = null;
-            BaseOpener.showDialog(template, cfg, controller, popupId, this).addCallback((id: string) => {
+            BaseOpener.showDialog(template, cfg, controller, this).addCallback((id: string) => {
                 if (this._useVDOM()) {
                     this._popupId = id;
                     // Call redraw to create emitter on scroll after popup opening
@@ -142,8 +142,8 @@ class BaseOpener extends Control<IControlOptions> {
     private _openPopup(cfg, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             this._requireModules(cfg, controller).addCallback((result) => {
-                const popupId = this._getCurrentPopupId();
-                this._showDialog(result.template, cfg, result.controller, popupId, resolve);
+                cfg.id = this._getCurrentPopupId();
+                this._showDialog(result.template, cfg, result.controller, resolve);
             }).addErrback(() => {
                 this._toggleIndicator(false);
                 resolve();
@@ -281,7 +281,7 @@ class BaseOpener extends Control<IControlOptions> {
         });
     }
 
-    static showDialog(rootTpl: TemplateFunction, cfg, controller: string, popupId?: string, opener?: BaseOpener) {
+    static showDialog(rootTpl: TemplateFunction, cfg, controller: string, opener?: BaseOpener) {
         const def = new Deferred();
         if (BaseOpener.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!BaseOpener.isNewEnvironment()) {
@@ -296,21 +296,21 @@ class BaseOpener extends Control<IControlOptions> {
                         if (!BaseOpener.isVDOMTemplate(rootTpl)) {
                             requirejs(['Controls/compatiblePopup'], function(compatiblePopup) {
                                 compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl);
-                                BaseOpener._openPopup(popupId, cfg, controller, def);
+                                BaseOpener._openPopup(cfg, controller, def);
                             });
                         } else {
-                            BaseOpener._openPopup(popupId, cfg, controller, def);
+                            BaseOpener._openPopup(cfg, controller, def);
                         }
                     });
                 });
             } else if (BaseOpener.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
                 BaseOpener.getManager().then(() => {
-                    BaseOpener._openPopup(popupId, cfg, controller, def);
+                    BaseOpener._openPopup(cfg, controller, def);
                 });
             } else {
                 requirejs(['Controls/compatiblePopup'], function(compatiblePopup) {
                     compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl);
-                    BaseOpener._openPopup(popupId, cfg, controller, def);
+                    BaseOpener._openPopup(cfg, controller, def);
                 });
             }
         } else {
@@ -374,14 +374,14 @@ class BaseOpener extends Control<IControlOptions> {
 
                     let action;
                     let openedDialog = null;
-                    if (!opener || !opener._action) {
+                    if (!opener || (!opener._action && !cfg.id)) {
                         action = new Action({
                             withIndicator: !isFormController,
                             closeByFocusOut: true,
                             dialogCreatedCallback: (newDialog) => openedDialog = newDialog
                         });
                     } else {
-                        action = opener._action;
+                        action = opener._action || cfg.id;
                     }
 
                     const dialog = action.getDialog(),
@@ -490,6 +490,7 @@ class BaseOpener extends Control<IControlOptions> {
         // попасть не должны.
         const baseConfig = {};
         const usedOptions = [
+            'id',
             'showOldIndicator',
             'closeByExternalClick',
             'isCompoundTemplate',
@@ -578,13 +579,13 @@ class BaseOpener extends Control<IControlOptions> {
         return deferred;
     }
 
-    static _openPopup(popupId, cfg, controller, def) {
-        if (!ManagerController.isPopupCreating(popupId)) {
-            popupId = ManagerController.show(cfg, controller);
+    static _openPopup(cfg, controller, def) {
+        if (!ManagerController.isPopupCreating(cfg.id)) {
+            cfg.id = ManagerController.show(cfg, controller);
         } else {
-            ManagerController.updateOptionsAfterInitializing(popupId, cfg);
+            ManagerController.updateOptionsAfterInitializing(cfg.id, cfg);
         }
-        def.callback(popupId);
+        def.callback(cfg.id);
     }
 
     static getDefaultOptions() {

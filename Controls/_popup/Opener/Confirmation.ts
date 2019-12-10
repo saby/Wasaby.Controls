@@ -178,7 +178,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> implements IConfirma
             _vdomOnOldPage: true // Open vdom popup in the old environment
         };
     }
-    static openPopup (templateOptions: IConfirmationOptions) : Promise<boolean>  {
+    static openPopup(templateOptions: IConfirmationOptions) : Promise<boolean>  {
         return new Promise((resolve) => {
             const config: IPopupOptions = Confirmation._getConfirmationConfig(templateOptions, resolve);
             config._vdomOnOldPage = true;
