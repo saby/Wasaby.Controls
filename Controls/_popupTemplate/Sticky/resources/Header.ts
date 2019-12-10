@@ -5,7 +5,7 @@ class Header extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     /**
      * Закрыть всплывающее окно
-     * @function Controls/_popupTemplate/Stack#close
+     * @function Controls/_popupTemplate/Sticky#close
      */
     close():void {
         this._notify('close', [], {bubbling: true});
