@@ -9,7 +9,7 @@
 
 .controls-BreadCrumbsPath__wrapper {
    display: flex;
-   align-items: baseline;
+   align-items: center;
    white-space: nowrap;
 
    //TODO KINGO есть темы, в которых выравнивание ХК идет по базовой линии шрифта, размер которого отличается от размера шрифта кнопки назад
@@ -36,7 +36,7 @@
    display: inline-flex;
    align-items: baseline;
    padding-right: @spacing_Path-between-home-and-backButton;
-   max-width: 100%;
+   max-width: 50%;
 }
 
 .controls-BreadCrumbsPath__backButton__wrapper_inHeader {
@@ -45,6 +45,7 @@
    To prevent this, we have to explicitly align button to the start of the cell.
     */
    align-self: flex-start;
+   max-width: 100%;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow-container {

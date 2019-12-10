@@ -7,6 +7,7 @@
             _fontSize="{{_fontSize}}"
             _icon="{{_icon}}"
             _iconSize="{{_iconSize}}"
+            _hoverIcon="{{_hoverIcon}}"
             _caption="{{_caption}}"
             _fontColorStyle="{{_fontColorStyle}}"
             _hasIcon="{{_hasIcon}}"

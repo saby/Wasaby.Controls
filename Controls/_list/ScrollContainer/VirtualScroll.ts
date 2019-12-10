@@ -187,6 +187,7 @@ export default class VirtualScrollController {
         const updateLength = Math.min(this.stopIndex - startIndex, items.length);
 
         this.updateItemsHeights(startIndex, updateLength);
+        this.itemsContainerHeight = this._itemsContainer.offsetHeight;
     }
 
     actualizeSavedIndexes(): void {
@@ -207,8 +208,9 @@ export default class VirtualScrollController {
     canScrollToItem(index: number): boolean {
         let canScroll = false;
 
-        if (this.startIndex <= index && this.stopIndex >= index) {
-            if (this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index]) {
+        if (this.startIndex <= index && this.stopIndex > index) {
+            if (this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index] ||
+                this.itemsCount - 1 === index) {
                 canScroll = true;
             }
         }
@@ -296,14 +298,21 @@ export default class VirtualScrollController {
         for (let i = startIndex; i < this.itemsCount; i++) {
             const itemHeight = this._options.viewModel.at(i).getContents().get(this._options.itemHeightProperty);
             if (sumHeight + itemHeight <= this._options.viewportHeight) {
-                stopIndex = i;
                 sumHeight += itemHeight;
             } else {
+                stopIndex = i;
                 break;
             }
         }
 
-        this.checkIndexesChanged(startIndex, stopIndex);
+        /**
+         * @remark Так как списки итерируются пока i < stopIndex, то нужно добавить 1
+         * @example items: [{height: 20, ...}, {height: 40, ...}, {height: 50, ...}], itemHeightProperty: 'height'
+         * viewportHeight: 70
+         * Если бы мы не добавили единицу, то получили бы startIndex = 0 и stopIndex = 2, но так как итерируюется
+         * пока i < stopIndex, то мы получим не три отрисованных элемента, а 2
+         */
+        this.checkIndexesChanged(startIndex, stopIndex + 1);
     }
 
     /**
@@ -401,15 +410,17 @@ export default class VirtualScrollController {
         if (this.itemsContainer) {
             const direction = newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
 
-            if (direction === 'up' && this.itemsFromLoadToDirection) {
-                this.savedStopIndex += newItems.length;
-                this.savedStartIndex += newItems.length;
-                this.setStartIndex(this.startIndex + newItems.length);
+            if (this.triggerVisibility[direction]) {
+                if (direction === 'up' && this.itemsFromLoadToDirection) {
+                    this.savedStopIndex += newItems.length;
+                    this.savedStartIndex += newItems.length;
+                    this.setStartIndex(this.startIndex + newItems.length);
+                }
+
+                this.recalcRangeToDirection(direction, false);
+
+                this._options.saveScrollPositionCallback(direction);
             }
-
-            this.recalcRangeToDirection(direction, false);
-
-            this._options.saveScrollPositionCallback(direction);
         }
     }
 

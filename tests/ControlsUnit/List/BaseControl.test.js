@@ -1235,15 +1235,15 @@ define([
          assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
 
          lists.BaseControl._private.showIndicator(ctrl);
-         assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
-         assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
-         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
+         assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 200, 'Wrong top offset');
          lists.BaseControl._private.hideIndicator(ctrl);
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
-         assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
+         assert.isTrue(!!ctrl._loadingIndicatorTimer, 'Loading timer should created');
          assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 200, 'Wrong top offset');
 
          // картинка должнa появляться через 2000 мс, проверим, что её нет сразу
@@ -4238,16 +4238,16 @@ define([
 
       it('update key property', async() => {
          const cfg = {
-               viewName: 'Controls/List/ListView',
-               viewModelConfig: {
-                  items: [],
-                  keyProperty: 'id'
-               },
-               viewModelConstructor: lists.ListViewModel,
-               keyProperty: 'id',
-               source: source
-            },
-            instance = new lists.BaseControl(cfg);
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          let newKeyProperty;
@@ -4262,6 +4262,35 @@ define([
          instance._beforeUpdate(newCfg);
          assert.equal(newKeyProperty, 'name');
          instance.destroy();
+      });
+
+      it('close editInPlace if model changed', async () => {
+         const cfg = {
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         let cancelClosed = false;
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._listViewModel.getEditingItemData = () => ({});
+         instance._viewModelConstructor = {};
+         instance._children = {
+            editInPlace: {
+               cancelEdit: () => {
+                  cancelClosed = true;
+               }
+            }
+         };
+         instance._beforeUpdate(cfg);
+         assert.isTrue(cancelClosed);
+         instance.destroy(cancelClosed);
       });
 
       it('getListTopOffset', function () {

@@ -295,5 +295,14 @@ define([
          assert.equal(calledEventName, 'cancelFinishingPending');
          FC.destroy();
       });
+
+      it('requestCustomUpdate isNewRecord', () => {
+         let FC = new form.Controller();
+         FC._isNewRecord = true;
+         FC._notify = () => true;
+         FC.update();
+         assert.equal(FC._isNewRecord, false);
+         FC.destroy();
+      });
    });
 });

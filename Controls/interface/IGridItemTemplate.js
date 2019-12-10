@@ -3,10 +3,11 @@ define('Controls/interface/IGridItemTemplate', [
 ], function() {
 
    /**
-    * Интерфейс для настройки отображения табличного представления.
+    * Интерфейс для настройки отображения элементов в {@link Controls/grid:View табличном представлении}.
     *
     * @interface Controls/interface/IGridItemTemplate
     * @public
+    * @author Авраменко А.С.
     */
 
    /*
@@ -14,17 +15,32 @@ define('Controls/interface/IGridItemTemplate', [
     *
     * @interface Controls/interface/IGridItemTemplate
     * @public
+    * @author Авраменко А.С.
     */
 
    /**
     * @name Controls/interface/IGridItemTemplate#itemTemplate
-    * @cfg {Function} Шаблон отображения элемента таблицы.
-    * См. <a href="/materials/demo-ws4-grid-item-template">демо-пример</a>.
+    * @cfg {String|Function} Устанавливает шаблон отображения элемента.
     * @default Controls/grid:ItemTemplate
     * @remark
-    * Подробнее о параметрах шаблона читайте {@link Controls/grid:ItemTemplate здесь}.
-    * Подробнее работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
-    * @see itemTemplateProperty
+    * См. <a href="/materials/demo-ws4-grid-item-template">демо-пример</a>.
+    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
+    * Шаблон может быть переопределён с помощью {@link Controls/interface/IGridItemTemplate#itemTemplateProperty itemTemplateProperty}.
+    * @example
+    * В следующем примере показано, как изменить параметры шаблона.
+    * <pre class="brush: html">
+    * <Controls.grid:View>
+    *    <ws:itemTemplate>
+    *       <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}">
+    *          <ws:contentTemplate>
+    *             {{contentTemplate.itemData.item.title}}
+    *          </ws:contentTemplate>
+    *       </ws:partial>
+    *    </ws:itemTemplate>
+    * </Controls.grid:View>
+    * </pre>
+    * @see Controls/interface/IGridItemTemplate#itemTemplateProperty
+    * @see Controls/grid:ItemTemplate
     */
 
    /*
@@ -59,9 +75,11 @@ define('Controls/interface/IGridItemTemplate', [
 
    /**
     * @name Controls/interface/IGridItemTemplate#itemTemplateProperty
-    * @cfg {String} Имя свойства элемента, содержащего шаблон для рендеринга. Если не задано, используется itemTemplate.
-    * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
-    * @see itemTemplate
+    * @cfg {String|undefined} Устанавливает имя поля элемента, где содержится имя шаблона. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
+    * @remark
+    * См. <a href="/materials/demo-ws4-grid-item-template">демо-пример</a>.
+    * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/interface/IGridItemTemplate#itemTemplate itemTemplate}.
+    * @see Controls/interface/IGridItemTemplate#itemTemplate
     */
 
    /*

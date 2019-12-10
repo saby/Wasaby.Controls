@@ -3,13 +3,13 @@
    <table>
       <thead>
       <tr>
-         <td>Пн</td>
-         <td>Вт</td>
-         <td>Ср</td>
-         <td>Чт</td>
-         <td>Пт</td>
-         <td>Сб</td>
-         <td>Вс</td>
+         <td>{[Пн]}</td>
+         <td>{[Вт]}</td>
+         <td>{[Ср]}</td>
+         <td>{[Чт]}</td>
+         <td>{[Пт]}</td>
+         <td>{[Сб]}</td>
+         <td>{[Вс]}</td>
       </tr>
       </thead>
       <tbody>

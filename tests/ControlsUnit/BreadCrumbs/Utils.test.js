@@ -58,35 +58,5 @@ define([
          sandbox.restore();
          stubFontLoadUtil.restore();
       });
-
-      describe('shouldRedraw', function() {
-         it('same items, same width', function() {
-            assert.isFalse(BreadCrumbsUtil.shouldRedraw(data, data, 10, 10));
-         });
-
-         it('different items, same width', function() {
-            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data.slice(3), 10, 10));
-         });
-
-         it('same items, different width', function() {
-            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data, 15, 10));
-         });
-
-         it('different items, different width', function() {
-            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data.slice(3), 15, 10));
-         });
-      });
-
-      describe('getMinCrumbsWidth', function() {
-         it('should return min width of one crumb', function() {
-            assert.equal(BreadCrumbsUtil.getMinCrumbsWidth(1), BREAD_CRUMB_MIN_WIDTH);
-         });
-         it('should return min width of two crumbs and one arrow', function() {
-            assert.equal(BreadCrumbsUtil.getMinCrumbsWidth(2), BREAD_CRUMB_MIN_WIDTH * 2 + ARROW_WIDTH);
-         });
-         it('should return min width of two crumbs, two arrows and dots', function() {
-            assert.equal(BreadCrumbsUtil.getMinCrumbsWidth(3), BREAD_CRUMB_MIN_WIDTH * 2 + ARROW_WIDTH * 2 + DOTS_WIDTH);
-         });
-      });
    });
 });

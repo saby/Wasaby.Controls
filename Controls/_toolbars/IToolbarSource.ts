@@ -20,16 +20,15 @@ export default interface IToolbarSource {
 /**
  * @typedef {Object} Item
  * @property {Boolean} [item.readOnly] Определяет, может ли пользователь изменить значение контрола. {@link UI/_base/Control#readOnly Подробнее}
- * @property {String} [item.buttonCaption] Текст кнопки элемента. {@link Controls/_interface/ICaption#caption Подробнее}
- * @property {Boolean} [item.buttonTransparent] Определяет, имеет ли кнопка элемента фон.{@link Controls/_buttons/Button#contrastBackground Подробнее}
- * @property {String} [item.buttonIconStyle] Определяет цвет иконки элемента.{@link Controls/_interface/IIconStyle#iconStyle Подробнее}
+ * @property {String} [item.caption] Текст кнопки элемента. {@link Controls/_interface/ICaption#caption Подробнее}
+ * @property {Boolean} [item.contrastBackground] Определяет, имеет ли кнопка элемента фон.{@link Controls/_buttons/Button#contrastBackground Подробнее}
+ * @property {String} [item.iconStyle] Определяет цвет иконки элемента.{@link Controls/_interface/IIconStyle#iconStyle Подробнее}
  * @property {String} [item.icon] Определяет иконку элемента. {@link Controls/_interface/IIcon#icon Подробнее}
  * @property {String} [item.title] Определеяет текст элемента.
  * @property {Boolean} [item.showHeader] Определяет, будет ли отображаться шапка у выпадающего списка элемента.
  * @property {String} [item.tooltip] Текст подсказки, при наведении на элемент тулбара. {@link Controls/_interface/ITooltip#tooltip Подробнее}
  * @property {Number} [item.showType] Определяет, где будет отображаться элемент( 0 - только в меню,1 - в меню и в тулбаре, 2 - только в тулбаре)
- * @property {String} [item.buttonStyle] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#buttonStyle Подробнее}
- * @property {String} [item.buttonViewMode] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#viewMode Подробнее }
+ * @property {String} [item.viewMode] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#viewMode Подробнее }
  */
 /*
  * @typedef {Object} Item

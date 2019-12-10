@@ -1,6 +1,6 @@
 <div class="asyncDemo__row">
-    <div>
-        {{_options.value}} {{_options.delay}}:&nbsp;
+    <div class="asyncDemo__nbsp">
+        {{_options.value}} {{_options.delay}}:
     </div>
     <Controls.heading:Title  caption="Not Async" readOnly="{{true}}" fontColorStyle="secondary" fontSize="s"/>
     <ws:for data="i in 3">
