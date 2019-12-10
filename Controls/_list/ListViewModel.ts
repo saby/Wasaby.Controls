@@ -604,9 +604,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             const id = item.get(this._options.keyProperty);
             if (this.hasItemById(id, this._options.keyProperty)) {
                if (isEqual(this._actions[id], actions)) {
-                   return false;
+                   return 'none';
                }
-               const result = Object.keys(this._actions).length ? !!this._actions[id] : true;
+               const result = Object.keys(this._actions).length ? 'partial' : 'all';
                this._actions[id] = actions;
                this._actionsVersions[id] = this._actionsVersions[id] ? ++this._actionsVersions[id] : 1;
                this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
@@ -615,7 +615,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 this._editingItemData.itemActions = actions;
                 this._editingItemData.drawActions = !!(actions && actions.all.length) ||
                    !!(this._options.editingConfig && this._options.editingConfig.toolbarVisibility);
-                return true;
+                return 'all';
             }
         }
     },
