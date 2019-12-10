@@ -31,6 +31,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             innerHTML: ''
          },
          content: {
+            getClientRects: () => [{x: 200}],
             getElementsByClassName: () => {
                return [{
                   scrollWidth: 500,
@@ -89,6 +90,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 600,
@@ -167,6 +169,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 500,
@@ -217,6 +220,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 500,
@@ -256,6 +260,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 100);
 
          clearColumnScroll._children.content = {
+            getClientRects: () => [{x: 200}],
             getElementsByClassName: () => {
                return [{
                   scrollWidth: 200,
@@ -291,6 +296,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          clearColumnScroll._children.content = {
             offsetTop: 0,
+            getClientRects: () => [{x: 200}],
             getElementsByClassName: (className) => {
                if (className === 'controls-Grid__header') {
                   return [
@@ -372,6 +378,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      style: {
@@ -417,6 +424,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 250,
@@ -446,7 +454,6 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._shadowState, '');
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 0);
       });
-
 
       it('_isColumnScrollVisible', function() {
 
@@ -600,6 +607,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 450,
@@ -674,6 +682,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 650,
@@ -763,6 +772,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
                      scrollWidth: 450,
@@ -950,5 +960,15 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._leftOffsetForHScroll = 0;
          columnScroll._offsetForHScroll = 0;
       });
+      it('updateSizes after destroy', function () {
+         assert.equal(450, columnScroll._contentSize);
+         assert.equal(200, columnScroll._contentContainerSize);
+         columnScroll._children.content.scrollWidth = 650;
+         columnScroll._children.content.offsetWidth = 300;
+         columnScroll.destroy();
+         columnScroll._resizeHandler();
+         assert.equal(450, columnScroll._contentSize); // previous value
+         assert.equal(200, columnScroll._contentContainerSize); //previous value
+      })
    });
 });
