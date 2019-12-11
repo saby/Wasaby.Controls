@@ -459,13 +459,13 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 0);
       });
 
-      it('_isColumnScrollVisible', function() {
+      it('_isDisplayColumnScroll', function() {
 
-         assert.isTrue(columnScroll._isColumnScrollVisible());
+         assert.isTrue(columnScroll._isDisplayColumnScroll());
          columnScroll._options.listModel.getItems = () => ({
             getCount: () => 0
          });
-         assert.isFalse(columnScroll._isColumnScrollVisible());
+         assert.isFalse(columnScroll._isDisplayColumnScroll());
       });
       it('_calculateShadowStyles', function() {
          let cont = columnScroll._container;
