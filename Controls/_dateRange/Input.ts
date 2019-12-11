@@ -95,6 +95,7 @@ var Component = Control.extend([], {
                headerType: 'input',
                closeButtonEnabled: true,
                rangeselect: true,
+               range: this._options.range
             }
         };
         if (!this._isVdomDialog()) {

@@ -1,5 +1,5 @@
 /**
- * Шаблон, который по умолчанию используется для отображения выбранных значений в контроле {@link Controls/lookup:Input}.
+ * Шаблон, который по умолчанию используется для отображения выбранных значений в контролах {@link Controls/lookup:Input} и {@link Controls/lookup:Selector}.
  * 
  * @class Controls/lookup:ItemTemplate
  * @author Капустин И.А.

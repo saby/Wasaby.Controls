@@ -5,9 +5,11 @@
  * @includes Button Controls/_operations/Button
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
+ * @includes BaseSelectionStrategy Controls/_operations/MultiSelector/SelectionStrategy/Base
  * @includes FlatSelectionStrategy Controls/_operations/MultiSelector/SelectionStrategy/Flat
  * @includes TreeSelectionStrategy Controls/_operations/MultiSelector/SelectionStrategy/Tree
  * @includes DeepTreeSelectionStrategy Controls/_operations/MultiSelector/SelectionStrategy/DeepTree
+ * @includes SimpleMultiSelector Controls/_operations/__MultiSelector
  * @public
  * @author Крайнов Д.О.
  */
@@ -24,11 +26,12 @@
  */
 
 import Panel = require('Controls/_operations/Panel');
-import Controller = require('Controls/_operations/Controller');
+import Controller from 'Controls/_operations/Controller';
 import Container = require('Controls/_operations/Container');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 import {default as Button} from './_operations/Button';
 import MultiSelector from 'Controls/_operations/__MultiSelector';
+import FilterController from 'Controls/_operations/FilterController';
 
 export {default as HierarchySelection} from 'Controls/_operations/MultiSelector/HierarchySelection';
 export {default as Selection} from 'Controls/_operations/MultiSelector/Selection';
@@ -44,7 +47,7 @@ export {
    Container,
    selectionToRecord,
    MultiSelector as SimpleMultiSelector,
-   BaseSelectionStrategy,
+   FilterController,
    FlatSelectionStrategy,
    TreeSelectionStrategy,
    DeepTreeSelectionStrategy

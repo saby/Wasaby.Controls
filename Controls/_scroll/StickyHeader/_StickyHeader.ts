@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import Env = require('Env/Env');
 import entity = require('Types/entity');
 import Context = require('Controls/_scroll/StickyHeader/Context');
-import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
+import {getNextId, getOffset} from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
@@ -114,7 +114,7 @@ var StickyHeader = Control.extend({
    constructor: function() {
       StickyHeader.superclass.constructor.apply(this, arguments);
       this._observeHandler = this._observeHandler.bind(this);
-      this._index = stickyUtils.getNextId();
+      this._index = getNextId();
       this._stickyHeadersHeight = {
          top: 0,
          bottom: 0
@@ -164,7 +164,7 @@ var StickyHeader = Control.extend({
    },
 
    getOffset: function(parentElement, position) {
-      return stickyUtils.getOffset(parentElement, this._container, position);
+      return getOffset(parentElement, this._container, position);
    },
 
    get height() {

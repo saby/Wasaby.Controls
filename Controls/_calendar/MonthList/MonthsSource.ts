@@ -28,6 +28,7 @@ export default class MonthsSource extends Memory {
     protected _dateConstructor: Function;
     protected _displayedRanges: [];
     protected _viewMode: string;
+    protected _order: string;
 
     constructor(options) {
         super(options);
@@ -35,6 +36,7 @@ export default class MonthsSource extends Memory {
         this._dateConstructor = options.dateConstructor || WSDate;
         this._displayedRanges = options.displayedRanges;
         this._viewMode = options.viewMode;
+        this._order = options.order;
     }
 
     query(query: Query)/*: ExtendPromise<DataSet>*/ {
@@ -61,9 +63,11 @@ export default class MonthsSource extends Memory {
             month = monthListUtils.idToDate(month, this._dateConstructor);
 
             month = this._shiftRange(month, offset);
-
+            if (this._order === 'desc') {
+                delta *= -1;
+            }
             if (monthLt) {
-                delta = -1;
+                delta *= -1;
                 month = this._shiftRange(month, delta);
             }
 

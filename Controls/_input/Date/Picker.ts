@@ -9,7 +9,7 @@ import 'css!theme?Controls/input';
 import getOptions from 'Controls/Utils/datePopupUtils';
 
    /**
-    * Поле ввода даты. Поддерживает выбор даты из всплывающего календаря.
+    * Поле ввода даты. Поддерживает как ввод с клавиатуры, так и выбор даты из всплывающего календаря с помощью мыши. Не поддерживает ввод времени.
     * @remark
     * <a href="/materials/demo-ws4-input-datepicker">Демо-пример</a>.
     *
@@ -75,6 +75,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
                selectionType: 'single',
                headerType: 'input',
                closeButtonEnabled: true,
+               range: this._options.range
             }
          };
          if (!this._isVdomDialog()) {

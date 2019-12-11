@@ -1,7 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 import {BaseViewModel, ItemsUtil, ListViewModel} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
-import {Utils as stickyUtil} from 'Controls/scroll';
+import {isStickySupport} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
 import {detection} from 'Env/Env';
 import {isEqual} from 'Types/object';
@@ -175,8 +175,14 @@ var
 
             return preparedClasses;
         },
-
-        prepareRowSeparatorClasses: function(current, theme) {
+        isLastItem: function(editingItem, rowCount, itemIndex) {
+            if (editingItem && editingItem.index >= rowCount) {
+                return itemIndex === editingItem.index;
+            } else {
+                return itemIndex === rowCount - 1;
+            }
+        },
+        prepareRowSeparatorClasses: function(current, theme, editingItem) {
             let result = '';
 
             if (current.rowSeparatorVisibility) {
@@ -191,7 +197,7 @@ var
                         result += ' controls-Grid__row-cell_withRowSeparator' + `_theme-${theme}`;
                     }
                 }
-                if (current.index === rowCount - 1) {
+                if (_private.isLastItem(editingItem, rowCount, current.index)) {
                     result += ` controls-Grid__row-cell_lastRow_theme-${theme}`;
                     result += ` controls-Grid__row-cell_withRowSeparator_lastRow_theme-${theme}`;
                 } else {
@@ -224,7 +230,7 @@ var
            return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
         },
 
-        getItemColumnCellClasses: function(current, theme) {
+        getItemColumnCellClasses: function(current, theme, editingItem) {
             const cellClasses = `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} `;
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
 
@@ -237,7 +243,7 @@ var
 
             var currentStyle = current.style || 'default';
 
-            cellClasses += _private.prepareRowSeparatorClasses(current, theme);
+            cellClasses += _private.prepareRowSeparatorClasses(current, theme, editingItem);
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (checkBoxCell) {
@@ -726,7 +732,7 @@ var
                });
             }
 
-            if (!stickyUtil.isStickySupport()) {
+            if (!isStickySupport()) {
                 cellClasses = cellClasses + ' controls-Grid__header-cell_static';
             }
 
@@ -1313,7 +1319,7 @@ var
                         },
                         _preferVersionAPI: true
                     };
-                currentColumn.cellClasses = current.getItemColumnCellClasses(current, self._options.theme);
+                currentColumn.cellClasses = current.getItemColumnCellClasses(current, self._options.theme, self.getEditingItemData());
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                 if (self._isSupportLadder(self._options.ladderProperties)) {
@@ -1427,7 +1433,7 @@ var
         },
 
         setItemActions: function(item, actions) {
-            this._model.setItemActions(item, actions);
+            return this._model.setItemActions(item, actions);
         },
 
         nextModelVersion: function() {

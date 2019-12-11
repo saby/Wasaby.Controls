@@ -3,8 +3,9 @@ define([
    'Types/source',
    'Types/collection',
    'Core/Deferred',
-   'Core/core-clone'
-], function(lists, source, collection, Deferred, cClone) {
+   'Core/core-clone',
+   'Controls/_operations/MultiSelector/selectionToRecord'
+], function(lists, source, collection, Deferred, cClone, selectionToRecord) {
    describe('Controls.List.Mover', function() {
       var
          items,
@@ -116,6 +117,80 @@ define([
          };
 
          mover.moveItemsWithDialog(items);
+      });
+
+      it('moveItemsWithDialog for newLogic call moveItems', function(done) {
+         var
+            params = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [11],
+               filter: {
+                  testProp: 'testValue'
+               }
+            },
+            moveItemsCalled = false;
+
+         mover._children = {
+            dialogOpener: {
+               open: function(openArgs) {
+                  assert.deepEqual(openArgs.templateOptions.movedItems, params.selectedKeys);
+                  assert.equal(openArgs.templateOptions.source, mover._source);
+                  assert.equal(openArgs.templateOptions.keyProperty, mover._keyProperty);
+                  var origMoveItems = mover.moveItems;
+                  mover.moveItems = function(callingParams) {
+                     moveItemsCalled = true;
+                     assert.deepEqual(callingParams, params);
+                  };
+                  openArgs.eventHandlers.onResult(4);
+                  mover.moveItems = origMoveItems;
+                  assert.isTrue(moveItemsCalled);
+                  done();
+               }
+            }
+         };
+
+         mover.moveItemsWithDialog(params);
+      });
+
+      it('moveItems for newLogic', function() {
+         var
+            callMethodCalled = false,
+            params = {
+               selectedKeys: [1, 2, 3],
+               excludedKeys: [11],
+               filter: {
+                  testProp: 'testValue'
+               }
+            },
+            bindings = {
+               move: 'testMoveMethod',
+               list: 'testListMethod'
+            },
+            targetId = 4,
+            originaSourceGetBinding = mover._source.getBinding,
+            originaSourceCall = mover._source.call;
+         mover._source.getBinding = function() {
+            return bindings;
+         };
+         mover._source.call = function(methodName, data) {
+            callMethodCalled = true;
+            assert.equal(methodName, bindings.move);
+            assert.equal(data.method, bindings.list);
+            assert.equal(data.folder_id, targetId);
+            assert.equal(data.filter.testProp, 'testValue');
+            assert.deepEqual(data.filter.selection.getRawData(),
+               selectionToRecord({
+                  selected: params.selectedKeys,
+                  excluded: params.excludedKeys
+               }, mover._source.getAdapter()).getRawData()
+            );
+            return Promise.resolve();
+         };
+         return mover.moveItems(params, targetId).then(function () {
+            assert.isTrue(callMethodCalled);
+            mover._source.getBinding = originaSourceGetBinding;
+            mover._source.call = originaSourceCall;
+         });
       });
 
       it('moveItemsWithDialog with empty items', function() {

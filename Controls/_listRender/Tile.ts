@@ -23,6 +23,7 @@ export default class TileRender extends BaseRender {
 
     protected _animatedItem: TileCollectionItem<unknown> = null;
     protected _animatedItemTargetPosition: string;
+    protected _shouldPerformAnimation: boolean;
 
     private _debouncedSetHoveredItem: typeof TileRender.prototype._setHoveredItem;
 
@@ -48,6 +49,8 @@ export default class TileRender extends BaseRender {
         if (newOptions.listModel !== this._options.listModel) {
             this._animatedItem = null;
         }
+        this._shouldPerformAnimation =
+            this._animatedItem && !this._animatedItem.destroyed && this._animatedItem.isFixed();
     }
 
     protected _afterUpdate(): void {
@@ -55,7 +58,11 @@ export default class TileRender extends BaseRender {
         if (this._animatedItem) {
             if (this._animatedItem.destroyed) {
                 this._animatedItem = null;
-            } else if (this._animatedItem.isFixed() && !this._animatedItem.isAnimated()) {
+            } else if (
+                this._shouldPerformAnimation &&
+                this._animatedItem.isFixed() &&
+                !this._animatedItem.isAnimated()
+            ) {
                 this._animatedItem.setAnimated(true);
                 this._animatedItem.setFixedPositionStyle(this._animatedItemTargetPosition);
                 this._animatedItem.setCanShowActions(true);
@@ -82,7 +89,7 @@ export default class TileRender extends BaseRender {
     }
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
-        if (!item.isFixed() && !this._context.isTouch.isTouch /* && !this._listModel.getDragEntity() */) {
+        if (!item.isFixed() && this._shouldProcessHover() /* && !this._listModel.getDragEntity() */) {
             // TODO Might be inefficient, can get called multiple times per hover. Should
             // be called immediately before or after the hovered item is set in the model,
             // but then we can't get the hover target element.
@@ -94,7 +101,7 @@ export default class TileRender extends BaseRender {
 
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
         super._onItemMouseEnter(e, item);
-        if (!this._context.isTouch.isTouch) {
+        if (this._shouldProcessHover()) {
             this._debouncedSetHoveredItem(item);
         }
     }
@@ -174,6 +181,13 @@ export default class TileRender extends BaseRender {
         ) {
             this._options.listModel.setHoveredItem(item);
         }
+    }
+
+    private _shouldProcessHover(): boolean {
+        return (
+            !this._context.isTouch.isTouch &&
+            !document.body.classList.contains('ws-is-drag')
+        );
     }
 
     static contextTypes() {

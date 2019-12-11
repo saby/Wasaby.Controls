@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_operations/__MultiSelector';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {TKeySelection as TKey, TKeysSelection as TKeys} from 'Controls/interface/';
 
 const DEFAULT_ITEMS = [
    {
@@ -17,15 +18,23 @@ const DEFAULT_ITEMS = [
    }
 ];
 
-type TKeys = string[]|number[];
+const SHOW_SELECTED_ITEM =  {
+   id: 'selected',
+   title: rk('Показать отмеченнные')
+};
+
+const SHOW_ALL_ITEM =  {
+   id: 'all',
+   title: rk('Показать все')
+};
+
 type TCount = void|number;
-type TRoot = null|string|number;
 
 export interface IMultiSelectorOptions extends IControlOptions {
    selectedKeys: TKeys;
    excludedKeys: TKeys;
    selectedKeysCount: TCount;
-   root: TRoot;
+   root: TKey;
 }
 
 export default class MultiSelector extends Control<IMultiSelectorOptions> {
@@ -35,16 +44,20 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    protected _menuCaption: string = null;
 
    protected _beforeMount(options: IMultiSelectorOptions): void {
-      this._menuSource = this._getMenuSource();
+      this._menuSource = this._getMenuSource(options);
       this._updateSelection(options.selectedKeys, options.excludedKeys, options.selectedKeysCount, options.root);
    }
 
    protected _beforeUpdate(options: IMultiSelectorOptions): void {
       const currOpts = this._options;
-      if (currOpts.selectedKeys !== options.selectedKeys ||
-          currOpts.excludedKeys !== options.excludedKeys ||
-          currOpts.selectedKeysCount !== options.selectedKeysCount) {
+      const selectionIsChanged = currOpts.selectedKeys !== options.selectedKeys || currOpts.excludedKeys !== options.excludedKeys;
+
+      if (selectionIsChanged || currOpts.selectedKeysCount !== options.selectedKeysCount) {
          this._updateSelection(options.selectedKeys, options.excludedKeys, options.selectedKeysCount, options.root);
+      }
+
+      if (selectionIsChanged || currOpts.selectionViewMode !== options.selectionViewMode) {
+         this._menuSource = this._getMenuSource(options);
       }
    }
 
@@ -55,14 +68,28 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       }
    }
 
-   private _getMenuSource(): Memory {
+   private _getAdditionalMenuItems(options: IMultiSelectorOptions): Array<Object> {
+      let additionalItems: Array<Object> = [];
+      let isAllSelected = options.selectedKeys.includes(options.root) && options.excludedKeys.includes(options.root);
+
+      if (options.selectionViewMode === 'selected') {
+         additionalItems.push(SHOW_ALL_ITEM);
+         // Показываем кнопку если есть выбранные и невыбранные записи
+      } else if (options.selectionViewMode === 'all' && options.selectedKeys.length && (!isAllSelected || options.excludedKeys.length > 1)) {
+         additionalItems.push(SHOW_SELECTED_ITEM);
+      }
+
+      return additionalItems;
+   }
+
+   private _getMenuSource(options: IMultiSelectorOptions): Memory {
       return new Memory({
          keyProperty: 'id',
-         data: DEFAULT_ITEMS
+         data: DEFAULT_ITEMS.concat(this._getAdditionalMenuItems(options))
       });
    }
 
-   private _updateSelection(selectedKeys: TKeys, excludedKeys: TKeys, count: TCount, root: TRoot): void {
+   private _updateSelection(selectedKeys: TKeys, excludedKeys: TKeys, count: TCount, root: TKey): void {
       const selectedCount = count === undefined ? selectedKeys.length : count;
 
       if (selectedCount > 0 && selectedKeys.length) {
@@ -77,15 +104,19 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       this._sizeChanged = true;
    }
 
-   private _onMenuItemActivate(event: SyntheticEvent<'menuItemActivate'>, item: Model): void {
-      this._notify('selectedTypeChanged', [item.get('id')], {
+   protected _onMenuItemActivate(event: SyntheticEvent<'menuItemActivate'>, item: Model): void {
+      let itemId: string = item.get('id');
+
+      this._notify('selectedTypeChanged', [itemId], {
          bubbling: true
       });
    }
 
    static getDefaultOptions(): object {
       return {
-         root: null
+         root: null,
+         selectedKeys: [],
+         excludedKeys: []
       };
    }
 }

@@ -48,11 +48,16 @@ describe('Controls/_listRender/Tile', () => {
         const tile = new Tile(defaultCfg);
         tile.saveOptions(oldCfg);
 
-        const animatedItem = {};
+        const animatedItem = { isFixed: () => false };
         tile._animatedItem = animatedItem;
 
         tile._beforeUpdate(oldCfg);
         assert.strictEqual(tile._animatedItem, animatedItem);
+        assert.isFalse(tile._shouldPerformAnimation, 'should not perform animation if animated item is not fixed');
+
+        tile._animatedItem = { isFixed: () => true };
+        tile._beforeUpdate(oldCfg);
+        assert.isTrue(tile._shouldPerformAnimation, 'should perform animation if animated item is fixed');
 
         tile._beforeUpdate(newCfg);
         assert.isNull(tile._animatedItem);
@@ -61,6 +66,7 @@ describe('Controls/_listRender/Tile', () => {
     describe('_afterUpdate()', () => {
         it('animates and shows actions of fixed animated item once', () => {
             const tile = new Tile(defaultCfg);
+            tile._shouldPerformAnimation = true;
 
             const animatedItem = {
                 _animated: false,
@@ -86,6 +92,7 @@ describe('Controls/_listRender/Tile', () => {
 
         it('ignores unfixed animated item', () => {
             const tile = new Tile(defaultCfg);
+            tile._shouldPerformAnimation = true;
 
             const animatedItem = {
                 _animated: false,
@@ -105,6 +112,7 @@ describe('Controls/_listRender/Tile', () => {
 
         it('does not fail with destroyed animated item', () => {
             const tile = new Tile(defaultCfg);
+            tile._shouldPerformAnimation = true;
 
             const animatedItem = {
                 destroyed: true
@@ -114,6 +122,26 @@ describe('Controls/_listRender/Tile', () => {
             tile._afterUpdate();
 
             assert.isNull(tile._animatedItem);
+        });
+
+        it('does not animate without shouldPerformAnimation', () => {
+            const tile = new Tile(defaultCfg);
+            tile._shouldPerformAnimation = false;
+
+            const animatedItem = {
+                _animated: false,
+                _canShowActions: false,
+                isFixed() { return true; },
+                isAnimated() { return this._animated; },
+                setFixedPositionStyle() {},
+                setCanShowActions(value) { this._canShowActions = value; },
+                setAnimated(value) { this._animated = value; }
+            };
+
+            tile._animatedItem = animatedItem;
+            tile._afterUpdate();
+
+            assert.isFalse(animatedItem._animated, 'should not animate without shouldPerformAnimation');
         });
     });
 
@@ -154,10 +182,20 @@ describe('Controls/_listRender/Tile', () => {
             assert.isNull(hoveredItem);
         });
 
-        it('_onItemMouseEnter()', () => {
-            const item = {};
-            tile._onItemMouseEnter({}, item);
-            assert.strictEqual(hoveredItem, item);
+        describe('_onItemMouseEnter()', () => {
+            it('sets hovered item', () => {
+                tile._shouldProcessHover = () => true;
+                const item = {};
+                tile._onItemMouseEnter({}, item);
+                assert.strictEqual(hoveredItem, item);
+            });
+
+            it('checks if it should process hover', () => {
+                tile._shouldProcessHover = () => false;
+                const item = {};
+                tile._onItemMouseEnter({}, item);
+                assert.isUndefined(hoveredItem);
+            });
         });
 
         describe('_onItemMouseLeave()', () => {
@@ -180,28 +218,41 @@ describe('Controls/_listRender/Tile', () => {
         });
     });
 
-    it('_onItemMouseMove()', () => {
-        const tile = new Tile(defaultCfg);
-        tile._context = {
-            isTouch: {
-                isTouch: false
-            }
-        };
+    describe('_onItemMouseMove()', () => {
+        it('sets hovered item position', () => {
+            const tile = new Tile(defaultCfg);
+            tile._shouldProcessHover = () => true;
 
-        let setHoveredItemPositionCalled = false;
-        tile._setHoveredItemPosition = () => {
-            setHoveredItemPositionCalled = true;
-        };
+            let setHoveredItemPositionCalled = false;
+            tile._setHoveredItemPosition = () => {
+                setHoveredItemPositionCalled = true;
+            };
 
-        tile._onItemMouseMove({}, {
-            isFixed() { return true; }
+            tile._onItemMouseMove({}, {
+                isFixed() { return true; }
+            });
+            assert.isFalse(setHoveredItemPositionCalled, 'should not calculate hover position on already fixed items');
+
+            tile._onItemMouseMove({}, {
+                isFixed() { return false; }
+            });
+            assert.isTrue(setHoveredItemPositionCalled, 'should calculate hover position for unfixed items');
         });
-        assert.isFalse(setHoveredItemPositionCalled, 'should not calculate hover position on already fixed items');
 
-        tile._onItemMouseMove({}, {
-            isFixed() { return false; }
+        it('checks if should process hover', () => {
+            const tile = new Tile(defaultCfg);
+            tile._shouldProcessHover = () => false;
+
+            let setHoveredItemPositionCalled = false;
+            tile._setHoveredItemPosition = () => {
+                setHoveredItemPositionCalled = true;
+            };
+
+            tile._onItemMouseMove({}, {
+                isFixed() { return false; }
+            });
+            assert.isFalse(setHoveredItemPositionCalled);
         });
-        assert.isTrue(setHoveredItemPositionCalled, 'should calculate hover position for unfixed items');
     });
 
     it('_convertPositionToStyle()', () => {

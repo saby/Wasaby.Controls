@@ -84,6 +84,10 @@
    box-sizing: border-box;
 }
 
+.controls-PeriodLiteDialog__yearHeader-background-hovered {
+   border-color: @border-color_PeriodLiteDialog_hovered !important;
+}
+
 .controls-PeriodLiteDialog__background-transparent {
    background-color: transparent !important;
 }
@@ -97,8 +101,8 @@
    font-weight: @font-weight_PeriodLiteDialog-currentValue;
    color: @color_PeriodLiteDialog-currentValue;
    text-align: center;
-   height: @height_PeriodLiteDialog-currentValue;
-   line-height: @height_PeriodLiteDialog-currentValue;
+   height: @height_PeriodLiteDialog-currentValue - @border-width_DateLitePopup;
+   line-height: @height_PeriodLiteDialog-currentValue - @border-width_DateLitePopup;
    border-bottom: none;
    padding: 0 @padding-left-right_PeriodLiteDialog-currentValue;
    margin-bottom: 0;
@@ -107,12 +111,15 @@
 }
 
 .controls-PeriodLiteDialog__yearWrapper {
+   padding-bottom: @border-width_PeriodLiteDialog_hovered ;
    position: relative;
-   margin-bottom: @indents_PeriodLiteDialog;
    background-color: @bg-color_PeriodLiteDialog-yearWrapper;
    height: @height_PeriodLiteDialog-year;
+   box-sizing: border-box;
    display: flex;
    align-items: stretch;
+   border: 1px solid transparent;
+   border-bottom: none;
 }
 
 .controls-PeriodLiteDialog__year-prev,
@@ -123,7 +130,7 @@
    text-align: center;
    height: @height_PeriodLiteDialog-year;
    width: @width_PeriodLiteDialog-year-prev-next-btns;
-   line-height: @height_PeriodLiteDialog-year;
+   line-height: @height_PeriodLiteDialog-year - @border-width_PeriodLiteDialog_hovered;
    &:hover {
       color: @color_PeriodLiteDialog-year-prev-next_hovered;
    }
@@ -178,6 +185,18 @@
 
 .controls-PeriodLiteDialog-item-years {
    min-width: @min-width_PeriodLiteDialog-item-years;
+}
+
+.controls-PeriodLiteDialog-item-yearList-years {
+   cursor: pointer;
+   position: relative;
+   box-sizing: border-box;
+   min-width: @min-width_PeriodLiteDialog-item-years;
+   height: @standart-line-height_PeriodLiteDialog - @border-width_PeriodLiteDialog_hovered;
+}
+
+.controls-PeriodLiteDialog__yearList-year {
+   border: 1px solid transparent;
 }
 
 .controls-PeriodLiteDialog__bodyWrapper {
@@ -277,4 +296,55 @@
 .controls-PeriodLiteDialog__selectedYear {
    font-weight: bold;
    color: @color_PeriodLiteDialog-selected-year;
+}
+
+.controls-PeriodLiteDialog__fullYear-listElement {
+   position: relative;
+   height: @height_PeriodLiteDialog-currentValue + @indents_PeriodLiteDialog;
+   background-color: #fff;
+   color: @color_PeriodLiteDialog-year;
+   font-weight: bold;
+   cursor: pointer;
+}
+
+.controls-PeriodLiteDialog__fullYear-listElement_bottom-line {
+   &:after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      border-bottom: solid @indents_PeriodLiteDialog @indents-color_PeriodLiteDialog;
+   }
+}
+
+.controls-PeriodLiteDialog__month-list {
+   height: @standart-line-height_PeriodLiteDialog * 12 - @border-width_PeriodLiteDialog_hovered * 11;
+}
+
+.controls-PeriodLiteDialog__quarter-list {
+   height: @standart-line-height_PeriodLiteDialog * 4 - @border-width_PeriodLiteDialog_hovered * 3;
+}
+
+.controls-PeriodLiteDialog__fullYear-list {
+   height: @standart-line-height_PeriodLiteDialog * 12 + @indents_PeriodLiteDialog;
+}
+
+.controls-PeriodLiteDialog__year-list {
+   height: @standart-line-height_PeriodLiteDialog * 5 - @border-width_PeriodLiteDialog_hovered * 4;
+}
+
+.controls-PeriodLiteDialog_fullYear-list-hovered {
+   border: solid @border-width_PeriodLiteDialog_hovered @border-color_PeriodLiteDialog_hovered;
+   border-bottom: none;
+   margin-top: -1px;
+}
+
+.border-top-hidden {
+   border-top: none;
+}
+
+.controls-PeriodLiteDialog_calendarBody {
+   position: relative;
+   border-bottom: @indents_PeriodLiteDialog solid @indents-color_PeriodLiteDialog;
 }

@@ -53,6 +53,7 @@ define([
                template: 'Controls/popupTemplate:ConfirmationDialog',
                modal: true,
                autofocus: true,
+               isCentered: true,
                className: 'controls-Confirmation_popup',
                templateOptions: {
                   closeHandler: {}

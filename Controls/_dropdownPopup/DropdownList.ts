@@ -125,10 +125,8 @@ import {SyntheticEvent} from 'Vdom/Vdom'
 
          isNeedUpdateSelectedKeys: function(self, target, item) {
             const clickOnEmptyItem = item.get(self._options.keyProperty) === null,
-               clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
-               hasSelection = self._listModel.getSelectedKeys().length && self._listModel.getSelectedKeys()[0] !== null,
-               needToSelect = !isEqual(self._listModel.getSelectedKeys(), self._options.selectedKeys);
-            return self._options.multiSelect && !clickOnEmptyItem && (hasSelection && needToSelect || clickOnCheckBox);
+               clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox');
+            return self._options.multiSelect && !clickOnEmptyItem && (self._selectionChanged || clickOnCheckBox);
          },
 
          getRootKey: function(key) {
@@ -199,6 +197,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          _hasHierarchy: false,
          _listModel: null,
          _subDropdownItem: null,
+         _selectionChanged: false,
 
          _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions, this);
@@ -331,6 +330,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                return;
             }
             if (this._listModel.getSelectedKeys() && _private.isNeedUpdateSelectedKeys(this, event.target, item)) {
+               this._selectionChanged = true;
                let isApplyButtonVisible = this._needShowApplyButton;
                let self = this;
 

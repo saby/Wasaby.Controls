@@ -3,7 +3,7 @@ import Deferred = require('Core/Deferred');
 import Env = require('Env/Env');
 import ScrollData = require('Controls/_scroll/Scroll/Context');
 import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
-import stickyHeaderUtils = require('Controls/_scroll/StickyHeader/Utils');
+import {isStickySupport} from 'Controls/_scroll/StickyHeader/Utils';
 import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
 import template = require('wml!Controls/_scroll/Scroll/Scroll');
@@ -167,7 +167,7 @@ var
          // The scrollHeight returned by the browser is more, because of the invisible elements
          // that climbs outside of the fixed headers (shadow and observation targets).
          // We take this into account when calculating. 8 pixels is the height of the shadow.
-         if ((Env.detection.firefox || Env.detection.isIE) && stickyHeaderUtils.isStickySupport()) {
+         if ((Env.detection.firefox || Env.detection.isIE) && isStickySupport()) {
             scrollHeight -= _private.SHADOW_HEIGHT;
          }
 

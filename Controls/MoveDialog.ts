@@ -150,7 +150,7 @@ let MoveDialog = Control.extend({
       },
 
       _applyMove: function(item) {
-         this._notify('sendResult', [item, this._options.movedItems], {bubbling: true});
+         this._notify('sendResult', [item], {bubbling: true});
          this._notify('close', [], {bubbling: true});
       }
    });

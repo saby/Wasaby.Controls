@@ -1,5 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controller');
+import {TRegisterEventData} from './Utils';
 
 // @ts-ignore
 
@@ -53,7 +54,7 @@ class Component extends Control {
         return height + replaceableHeight;
     }
 
-    _stickyRegisterHandler(event, data: object, register: boolean): void {
+    _stickyRegisterHandler(event, data: TRegisterEventData, register: boolean): void {
         if (register) {
             this._headers[data.id] = {
                 ...data,
@@ -96,7 +97,7 @@ class Component extends Control {
      * Update information about the fixation state.
      * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
      */
-    private _updateFixationState(data: object) {
+    private _updateFixationState(data: TRegisterEventData) {
         if (!!data.fixedPosition) {
             this._fixedHeadersStack[data.fixedPosition].push(data.id);
         } else if (!!data.prevPosition && this._fixedHeadersStack[data.prevPosition].indexOf(data.id) !== -1) {

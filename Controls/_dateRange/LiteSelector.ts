@@ -75,6 +75,7 @@ var Component = BaseSelector.extend({
                 emptyCaption: this._options.emptyCaption,
 
                 itemTemplate: this._options.itemTemplate,
+                range: this._options.range,
                 captionFormatter: this._options.captionFormatter,
                 dateConstructor: this._options.dateConstructor
             }

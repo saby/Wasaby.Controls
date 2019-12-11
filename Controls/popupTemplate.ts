@@ -31,7 +31,6 @@
  * @author Крайнов Д.О.
  */
 
-import CloseButton = require('Controls/_popupTemplate/CloseButton');
 import Dialog = require('Controls/_popupTemplate/Dialog');
 import { Template as Confirmation, DialogTemplate as ConfirmationDialog } from 'Controls/popupConfirmation';
 import InfoBox = require('Controls/_popupTemplate/InfoBox');
@@ -41,6 +40,7 @@ export {default as StackHeader} from 'Controls/_popupTemplate/Stack/resources/He
 export {default as Stack} from 'Controls/_popupTemplate/Stack';
 export {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 export {default as INotification, INotificationOptions} from 'Controls/_popupTemplate/Notification/interface/INotification';
+export {default as CloseButton} from 'Controls/_popupTemplate/CloseButton'
 
 import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 import DialogController = require('Controls/_popupTemplate/Dialog/Opener/DialogController');
@@ -56,7 +56,6 @@ import templateInfoBox = require('Controls/_popupTemplate/InfoBox/Opener/resourc
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
 
 export {
-   CloseButton,
    Dialog,
    Confirmation,
    InfoBox,

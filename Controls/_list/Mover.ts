@@ -8,6 +8,8 @@ import {isEqual} from 'Types/object';
 import {Logger} from 'UI/Utils';
 import {ContextOptions as dataOptions} from 'Controls/context';
 import {Confirmation} from 'Controls/popup';
+import {TKeysSelection} from 'Controls/interface';
+import {selectionToRecord} from 'Controls/operations';
 
 var BEFORE_ITEMS_MOVE_RESULT = {
     CUSTOM: 'Custom',
@@ -19,7 +21,47 @@ var MOVE_POSITION = {
     before: 'before',
     after: 'after'
 };
+interface IMoveItemsParams {
+    selectedKeys: TKeysSelection;
+    excludedKeys: TKeysSelection;
+    filter: object;
+}
 var _private = {
+    moveItems(self, items, target, position) {
+        const isNewLogic = !items.forEach && !items.selected;
+        return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
+            if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS && !isNewLogic) {
+                _private.moveInItems(self, items, target, position);
+            } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
+                return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
+                    if (!isNewLogic) {
+                        _private.moveInItems(self, items, target, position);
+                    }
+                    return moveResult;
+                });
+            }
+        }).addBoth(function (result) {
+            _private.afterItemsMove(self, items, target, position, result);
+            return result;
+        });
+    },
+    openMoveDialog(self, items): void {
+        const isNewLogic = !items.forEach && !items.selected;
+        const templateOptions = {
+            movedItems: isNewLogic ? items.selectedKeys : items,
+            source: self._source,
+            keyProperty: self._keyProperty,
+            ...self._moveDialogOptions
+        };
+        self._children.dialogOpener.open({
+            templateOptions,
+            eventHandlers: {
+                onResult: (target): void => {
+                    self.moveItems(items, target, MOVE_POSITION.on);
+                }
+            }
+        });
+    },
     beforeItemsMove: function (self, items, target, position) {
         var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
@@ -89,17 +131,30 @@ var _private = {
     },
 
     moveInSource: function (self, items, target, position) {
+        const targetId = _private.getIdByItem(self, target);
+        const isNewLogic = !items.forEach && !items.selected;
+        if (isNewLogic) {
+            const callFilter = {
+                selection: selectionToRecord({
+                    selected: items.selectedKeys,
+                    excluded: items.excludedKeys
+                }, self._source.getAdapter()), ...items.filter
+            };
+            return self._source.call(self._source.getBinding().move, {
+                method: self._source.getBinding().list,
+                filter: callFilter,
+                folder_id: targetId
+            });
+        }
         var
             idArray = items.map(function (item) {
                 return _private.getIdByItem(self, item);
-            }),
-            targetId = _private.getIdByItem(self, target);
+            });
 
         //If reverse sorting is set, then when we call the move on the source, we invert the position.
         if (position !== MOVE_POSITION.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
             position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
         }
-
         return self._source.move(idArray, targetId, {
             position: position,
             parentProperty: self._options.parentProperty
@@ -262,7 +317,6 @@ var Mover = Control.extend({
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
     _beforeMount: function (options, context) {
-        this._onDialogResult = this._onDialogResult.bind(this);
         _private.updateDataOptions(this, context.dataOptions);
 
         if (options.moveDialogTemplate) {
@@ -283,10 +337,6 @@ var Mover = Control.extend({
         }
     },
 
-    _onDialogResult: function (event, target, items) {
-        this.moveItems(items, target, MOVE_POSITION.on);
-    },
-
     moveItemUp: function (item) {
         return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.before);
     },
@@ -294,47 +344,37 @@ var Mover = Control.extend({
     moveItemDown: function (item) {
         return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.after);
     },
-
-    moveItems: function (items, target, position) {
-        var self = this;
-
-        return _private.getItemsBySelection.call(this, items).addCallback(function (items) {
-            items = items.filter(function (item) {
-                return _private.checkItem(self, item, target, position);
-            });
-            if (target !== undefined && items.length > 0) {
-                return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
-                    if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
-                        _private.moveInItems(self, items, target, position);
-                    } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-                        return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
-                            _private.moveInItems(self, items, target, position);
-                            return moveResult;
-                        });
-                    }
-                }).addBoth(function (result) {
-                    _private.afterItemsMove(self, items, target, position, result);
-                    return result;
-                });
+    moveItems(items: []|IMoveItemsParams, target, position): Promise<any> {
+        const self = this;
+        const isNewLogic = !items.forEach && !items.selected;
+        if (target === undefined) {
+            return Deferred.success();
+        }
+        if (isNewLogic) {
+            if (items.selectedKeys.length) {
+                return _private.moveItems(self, items, target, position);
             } else {
                 return Deferred.success();
             }
-        });
-    },
-
-    moveItemsWithDialog: function (items) {
-        var self = this;
-
-        _private.getItemsBySelection.call(this, items).addCallback(function (items) {
-            if (items.length > 0) {
-               const templateOptions = Object.assign({
-                  movedItems: _private.prepareMovedItems(self, items),
-                  source: self._source,
-                  keyProperty: self._keyProperty
-               }, self._moveDialogOptions);
-                self._children.dialogOpener.open({
-                    templateOptions: templateOptions
+        } else {
+            return _private.getItemsBySelection.call(this, items).addCallback(function (items) {
+                items = items.filter((item) => {
+                    return _private.checkItem(self, item, target, position);
                 });
+                if (items.length) {
+                    return _private.moveItems(self, items, target, position);
+                } else {
+                    return Deferred.success();
+                }
+            });
+        }
+    },
+    moveItemsWithDialog(items: []|IMoveItemsParams): void {
+        const self = this;
+        const isNewLogic = !items.forEach && !items.selected;
+        if (isNewLogic) {
+            if (items.selectedKeys.length) {
+                _private.openMoveDialog(self, items);
             } else {
                 Confirmation.openPopup({
                     type: 'ok',
@@ -342,7 +382,19 @@ var Mover = Control.extend({
                     style: 'danger'
                 });
             }
-        });
+        } else {
+            _private.getItemsBySelection.call(this, items).addCallback((items: []) => {
+                if (items.length) {
+                    _private.openMoveDialog(self, _private.prepareMovedItems(self, items));
+                } else {
+                    Confirmation.openPopup({
+                        type: 'ok',
+                        message: rk('Нет записей для обработки команды'),
+                        style: 'danger'
+                    });
+                }
+            });
+        }
     }
 });
 

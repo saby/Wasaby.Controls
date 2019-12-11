@@ -6,7 +6,8 @@ define([
    'Core/core-instance',
    'Env/Env',
    'Types/collection',
-   'Types/source'
+   'Types/source',
+   'Controls/Application/SettingsController'
 ], function(
    treeGrid,
    listMod,
@@ -15,7 +16,8 @@ define([
    cInstance,
    Env,
    collection,
-   sourceLib
+   sourceLib,
+   SettingsController
 ) {
    function correctCreateTreeControl(cfg) {
       var
@@ -1018,6 +1020,45 @@ define([
          assert.equal(treeGridViewModel._model._options.nodeProperty, 'itemType');
          assert.equal(treeGridViewModel._options.hasChildrenProperty, 'hasChildren');
          assert.equal(treeGridViewModel._model._options.hasChildrenProperty, 'hasChildren');
+      });
+      describe('propStorageId', function() {
+         let origSaveConfig = SettingsController.saveConfig;
+         afterEach(() => {
+            SettingsController.saveConfig = origSaveConfig;
+         });
+         it('saving sorting', function() {
+            var saveConfigCalled = false;
+            SettingsController.saveConfig = function() {
+               saveConfigCalled = true;
+            };
+            var source = new sourceLib.Memory({
+               data: [],
+               keyProperty: 'id'
+            });
+            var cfg = {
+               columns: [],
+               viewModelConstructor: treeGrid.ViewModel,
+               source: source,
+               items: new collection.RecordSet({
+                  rawData: [],
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               sorting: [1]
+            };
+            var cfg1 = {...cfg, propStorageId: '1'};
+            cfg1.sorting = [2];
+            var treeControl = correctCreateTreeControl(({...cfg}));
+            treeControl.saveOptions(cfg);
+            treeControl._beforeUpdate(cfg);
+            assert.isFalse(saveConfigCalled);
+            treeControl._beforeUpdate({...cfg, sorting: [3]});
+            assert.isFalse(saveConfigCalled);
+            treeControl._beforeUpdate(cfg1);
+            assert.isTrue(saveConfigCalled);
+
+         });
       });
       it('TreeControl._beforeUpdate', function() {
          var

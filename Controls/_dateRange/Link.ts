@@ -33,6 +33,7 @@ var Component = BaseControl.extend({
             headerType: 'link',
             closeButtonEnabled: true,
             rangeselect: false,
+            range: this._options.range,
             quantum: null
          }
       };

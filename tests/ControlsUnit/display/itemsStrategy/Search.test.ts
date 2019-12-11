@@ -299,7 +299,44 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             });
         });
 
-        it('should return breadcrumbs with leaves', () => {
+        it('shouldn place leaves before nodes for single breadcrumbs', () => {
+            items = [];
+            items[0] = new TreeItem({
+                contents: 'A',
+                node: true
+            });
+            items[1] = new TreeItem({
+                parent: items[0],
+                contents: 'b'
+            });
+            items[2] = new TreeItem({
+                parent: items[0],
+                contents: 'C',
+                node: true
+            });
+            items[3] = new TreeItem({
+                parent: items[2],
+                contents: 'd'
+            });
+            items[4] = new TreeItem({
+                parent: items[0],
+                contents: 'e'
+            });
+
+            source = getSource(items);
+            strategy = new Search({
+                source
+            });
+
+            const result = strategy.items.map((item) => {
+                const contents: unknown = item.getContents();
+                return (contents instanceof Array ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
+            });
+
+            assert.deepEqual(result, ['#A:0', 'b:1', 'e:1', '#A,C:0', 'd:1']);
+        });
+
+        it('shouldn\'t return breadcrumbs finished with leaf', () => {
             items = [];
             items[0] = new TreeItem({
                 contents: 'A',
@@ -322,6 +359,10 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 parent: leaf,
                 contents: 'e'
             });
+            items[5] = new TreeItem({
+                parent: items[2],
+                contents: 'f'
+            });
 
             source = getSource(items);
             strategy = new Search({
@@ -333,7 +374,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 return (contents instanceof Array ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
             });
 
-            assert.deepEqual(result, ['#A:0', 'b:1', '#A,b,C:0', 'd:1', '#A,b:0', 'e:1']);
+            assert.deepEqual(result, ['#A:0', 'b:1', '#A,b,C:0', 'd:1', 'f:1', 'e:2']);
         });
 
         it('should return the same instances for second call', () => {
@@ -426,7 +467,6 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             const removeCount = 2;
             const expected = [
                 '#A',
-                '#A,AA,AAA',
                 'AAAa',
                 'AAAb',
                 '#A,AA,AAB',
@@ -436,7 +476,8 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 '#B',
                 '#C',
                 'd',
-                'e'
+                'e',
+                '#A,AA,AAA'
             ];
 
             const sourceCount = source.count;

@@ -1,6 +1,5 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton');
-import Env = require('Env/Env');
    /**
     * Кнопка для закрытия всплывающих окон и диалогов.
     * @class Controls/_popupTemplate/CloseButton
@@ -8,7 +7,7 @@ import Env = require('Env/Env');
     * @control
     * @public
     * @author Красильников А.С.
-    * @demo Controls-demo/Buttons/Close/CloseDemo
+    * @demo Controls-demo/PopupTemplate/CloseButton/ViewModes/Index
     * @mixes Controls/_buttons/interface/IClick
     * @remark
     * См. <a href="/materials/demo-ws4-buttons">демо-пример</a>
@@ -135,18 +134,18 @@ import Env = require('Env/Env');
     * </pre>
     */
 
-   var CloseButton = Control.extend({
-      _template: template
-   });
+   class CloseButton extends Control<IControlOptions> {
+      protected _template: TemplateFunction = template;
 
-   CloseButton._theme = ['Controls/popupTemplate'];
+      static _theme: string[] = ['Controls/popupTemplate'];
 
-   CloseButton.getDefaultOptions = function() {
-      return {
-         size: 'l',
-         viewMode: 'toolButton',
-         transparent: true
-      };
-   };
+      static getDefaultOptions(): object {
+         return {
+            size: 'l',
+            viewMode: 'toolButton',
+            transparent: true
+         };
+      }
+   }
 
-   export = CloseButton;
+   export default CloseButton;

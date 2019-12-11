@@ -121,7 +121,7 @@ var ComboBox = Control.extend({
 
 ComboBox.getDefaultOptions = function () {
    return {
-      placeholder: rk('Выберите...')
+      placeholder: rk('Выберите') + '...'
    };
 };
 
