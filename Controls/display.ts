@@ -60,3 +60,6 @@ export {default as ColumnsCollectionItem} from './_display/ColumnsCollectionItem
 
 import * as MarkerController from './_display/controllers/Marker';
 export { MarkerController };
+
+import * as EditInPlaceController from './_display/controllers/EditInPlace';
+export { EditInPlaceController };

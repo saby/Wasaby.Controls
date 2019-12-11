@@ -28,7 +28,6 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 
-import EditInPlaceManager from './utils/EditInPlaceManager';
 import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import SwipeManager from './utils/SwipeManager';
@@ -627,7 +626,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _startIndex: number;
     protected _stopIndex: number;
 
-    protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
     protected _$virtualScrollMode: IVirtualScrollMode;
@@ -691,7 +689,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._$virtualScrollMode = virtualScrollConfig.mode;
 
-        this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
             new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
@@ -2046,15 +2043,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
-    setEditingItem(item: CollectionItem<S>, editingContents?: S): void {
-        this._editInPlaceManager.beginEdit(item, editingContents);
-        this._nextVersion();
-    }
-
-    isEditing(): boolean {
-        return this._editInPlaceManager.isEditing();
-    }
-
     setItemActions(item: CollectionItem<S>, actions: any): void {
         this._itemActionsManager.setItemActions(item, actions);
         this._nextVersion();
@@ -3271,7 +3259,6 @@ Object.assign(Collection.prototype, {
     _onCollectionChange: null,
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
-    _editInPlaceManager: null,
     _itemActionsManager: null,
     _virtualScrollManager: null,
     _swipeManager: null,

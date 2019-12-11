@@ -1339,12 +1339,17 @@ var _private = {
     },
 
     needBottomPadding: function(options, items, listViewModel) {
-        return (!!items &&
-            (!!items.getCount() ||
-                (options.useNewModel ? listViewModel.isEditing() : !!listViewModel.getEditingItemData())) &&
+        const isEditing =
+            options.useNewModel
+            ? displayLib.EditInPlaceController.isEditing(listViewModel)
+            : !!listViewModel.getEditingItemData();
+        return (
+            !!items &&
+            (!!items.getCount() || isEditing) &&
             options.itemActionsPosition === 'outside' &&
             !options.footerTemplate &&
-            options.resultsPosition !== 'bottom');
+            options.resultsPosition !== 'bottom'
+        );
     },
 
     isPagingNavigation: function(navigation) {
@@ -2027,7 +2032,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
         const noData = !listViewModel.getCount();
-        const noEdit = this._options.useNewModel ? !listViewModel.isEditing() : !listViewModel.getEditingItemData();
+        const noEdit =
+            this._options.useNewModel
+            ? !displayLib.EditInPlaceController.isEditing(listViewModel)
+            : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !(this._sourceController && (this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up')));
         const noDataBeforeReload = this._noDataBeforeReload;
