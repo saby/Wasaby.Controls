@@ -3,17 +3,23 @@
    cursor: pointer;
 }
 
-.controls-BigSeparator__icon {
-   .icon-size-without-important(@size-BigSeparator__icon);
-   color: @color_BigSeparator-icon;
+.controls-BigSeparator_theme-@{themeName} {
+   width: @width_toggleBigSeparator;
+   height: @height_toggleBigSeparator;
 }
 
-.controls-BigSeparator__icon:active {
-   color: @color_BigSeparator-icon_hovered;
+.controls-BigSeparator__icon_theme-@{themeName} {
+   font-size: @icon-size_toggleBigSeparator;
+   font-family: @icon_font-family_s;
+   color: @icon-color_toggleBigSeparator;
+}
+
+.controls-BigSeparator__icon_theme-@{themeName}:active {
+   color: @icon-color_active_toggleBigSeparator;
 }
 
 .ws-is-hover {
-   .controls-BigSeparator__icon:hover {
-      color: @color_BigSeparator-icon_hovered;
+   .controls-BigSeparator__icon_theme-@{themeName}:hover {
+      color: @icon-color_hover_toggleBigSeparator;
    }
 }
