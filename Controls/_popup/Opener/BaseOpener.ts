@@ -374,6 +374,9 @@ class BaseOpener extends Control<IControlOptions> {
 
                     let action;
                     let openedDialog = null;
+                    if (typeof cfg.id === 'string') {
+                        cfg.id = null;
+                    }
                     if (!opener || (!opener._action && !cfg.id)) {
                         action = new Action({
                             withIndicator: !isFormController,
