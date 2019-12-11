@@ -60,7 +60,7 @@ const maxPercentValue = 100;
  */
 
 
-class Base extends Slider implements ISlider, ISliderBaseOptions {
+class Base extends Slider<ISliderBaseOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
