@@ -11,19 +11,16 @@ import {isEqual} from 'Types/object';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import 'css!theme?Controls/filter';
 /**
- * Контрол для поддержки фильтрации данных. Состоит из иконки-кнопки и строкового представления выбранного фильтра.
- * Клик по иконке-кнопке или строке открывает панель фильтрации. {@link Controls/filterPopup:DetailPanel}
- * Поддерживает вставку пользовательского шаблона между кнопкой и строкой фильтра.
- * Подробное описание и инструкцию по настройке контрола смотрите <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
- * <a href="/materials/demo-ws4-filter-button">Демо-пример</a>.
- *
- * Инструкцию по настройке фильтрации в списке с помощью контрола "Filter Button" читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
- *
+ * Контрол "Кнопка фильтров". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде. Состоит из кнопки-иконки и строкового представления выбранного фильтра.
+ * @remark
+ * См. <a href="/materials/demo-ws4-filter-button">демо-пример</a>
+ * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
  * @class Controls/_filter/Button
  * @extends Core/Control
  * @mixes Controls/interface/IFilterButton
  * @demo Controls-demo/Filter/Button/ButtonPG
- * @deprecated Контрол устарел и в скором времени будет удалён, используйте {@link Controls/filter:View}.
+ * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
  * @control
  * @public
  * @author Герасимов А.М.
