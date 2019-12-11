@@ -1,0 +1,3 @@
+<div>
+    <Controls.buttons:Button caption="Open" name="Button" on:click="_load()"/>
+</div>

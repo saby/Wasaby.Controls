@@ -1,0 +1,7 @@
+<Controls.popupTemplate:Confirmation style="success" >
+    <ws:bodyContentTemplate>
+        <div style="text-align: center">
+            Hello, It is Confirmation Template
+        </div>
+    </ws:bodyContentTemplate>
+</Controls.popupTemplate:Confirmation>
