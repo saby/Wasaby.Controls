@@ -8,6 +8,8 @@ import Constants = require('Controls/Constants');
 import { error as dataSourceError } from 'Controls/dataSource';
 import 'css!theme?Controls/list';
 
+let displayLib: typeof import('Controls/display');
+
 var
     typographyStyles = [
         'fontFamily',
@@ -391,6 +393,9 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 }
             }
         }
+        if (newOptions.useNewModel) {
+            displayLib = require('Controls/display');
+        }
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
     },
 
@@ -623,7 +628,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
 
         if (this._isAdd) {
             if (options.useNewModel) {
-                listModel.setMarkedItem(this._editingItemData);
+                displayLib.MarkerController.markItem(listModel, this._editingItemData.getContents().getId());
             } else {
                 listModel.markAddingItem();
             }

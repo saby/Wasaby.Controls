@@ -38,6 +38,8 @@ var
     defaultSelectedKeys = [],
     defaultExcludedKeys = [];
 
+let displayLib: typeof import('Controls/display');
+
 const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 2, title: '10', pageSize: 10},
     {id: 3, title: '25', pageSize: 25},
@@ -311,7 +313,7 @@ var _private = {
         if (key !== undefined) {
             const model = self.getViewModel();
             if (self._options.useNewModel) {
-                model.setMarkedItem(model.getItemBySourceId(key));
+                displayLib.MarkerController.markItem(model, key);
             } else {
                 model.setMarkedKey(key);
             }
@@ -342,7 +344,9 @@ var _private = {
             // TODO Update after MarkerManager is fully implemented
             let nextKey;
             if (self._options.useNewModel) {
-                const nextItem = model.getNext(model.getMarkedItem());
+                const nextItem = model.getNext(
+                    displayLib.MarkerController.getMarkedItem(model)
+                );
                 const contents = nextItem && nextItem.getContents();
                 nextKey = contents && contents.getId();
             } else {
@@ -363,7 +367,9 @@ var _private = {
             // TODO Update after MarkerManager is fully implemented
             let prevKey;
             if (self._options.useNewModel) {
-                const prevItem = model.getPrevious(model.getMarkedItem());
+                const prevItem = model.getPrevious(
+                    displayLib.MarkerController.getMarkedItem(model)
+                );
                 const contents = prevItem && prevItem.getContents();
                 prevKey = contents && contents.getId();
             } else {
@@ -396,7 +402,12 @@ var _private = {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
         }
-        let markedItem = self.getViewModel().getMarkedItem();
+        let markedItem;
+        if (self._options.useNewModel) {
+            markedItem = displayLib.MarkerController.getMarkedItem(self.getViewModel());
+        } else {
+            markedItem = self.getViewModel().getMarkedItem();
+        }
         if (markedItem) {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
@@ -896,8 +907,9 @@ var _private = {
         firstItemIndex = Math.min(firstItemIndex, self._listViewModel.getStopIndex());
         if (self._options.useNewModel) {
             const item = self._listViewModel.at(firstItemIndex);
+            const key = item && item.getContents().getId();
             if (item) {
-                self._listViewModel.setMarkedItem(item);
+                displayLib.MarkerController.markItem(self._listViewModel, key);
             }
         } else {
             self._listViewModel.setMarkerOnValidItem(firstItemIndex);
@@ -2032,9 +2044,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.itemActionsOpener.close();
 
         const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
+        const key = this._options.useNewModel ? itemData.getContents().getId() : itemData.key;
 
         if (direction === 'right' && !isSwiped && _private.isItemsSelectionAllowed(this._options)) {
-            const key = this._options.useNewModel ? itemData.getId() : itemData.key;
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
             /**
              * After the right swipe the item should get selected.
@@ -2054,7 +2066,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (direction === 'right' || direction === 'left') {
             if (this._options.useNewModel) {
-                this._listViewModel.setMarkedItem(itemData);
+                displayLib.MarkerController.markItem(this._listViewModel, key);
             } else {
                 var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
                 this._listViewModel.setMarkedKey(newKey);
@@ -2109,7 +2121,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             e.stopPropagation();
         }
         if (this._options.useNewModel) {
-            this._listViewModel.setMarkedItem(this._listViewModel.getItemBySourceItem(item));
+            displayLib.MarkerController.markItem(this._listViewModel, item.getId());
         } else {
             var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
@@ -2198,7 +2210,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
         if (this._options.useNewModel) {
-            this._listViewModel.setMarkedItem(itemData);
+            displayLib.MarkerController.markItem(this._listViewModel, itemData.getContents().getId());
         } else {
             this._listViewModel.setMarkedKey(itemData.key);
         }
@@ -2431,6 +2443,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // библиотеки Controls/listRender
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
+        }
+        if (typeof displayLib === 'undefined') {
+            displayLib = require('Controls/display');
         }
         return diCreate(modelName, { ...modelConfig, collection: items });
     }

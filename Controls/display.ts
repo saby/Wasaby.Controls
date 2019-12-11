@@ -57,3 +57,6 @@ export {default as TileCollectionItem} from './_display/TileCollectionItem';
 
 export {default as ColumnsCollection} from './_display/ColumnsCollection';
 export {default as ColumnsCollectionItem} from './_display/ColumnsCollectionItem';
+
+import * as MarkerController from './_display/controllers/Marker';
+export { MarkerController };
