@@ -7,6 +7,8 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';
 import { Model } from 'Types/entity';
 
+import { SwipeController } from 'Controls/display'
+
 import * as itemActionsUtil from './ItemActions/processItemActions';
 
 interface ISwipeEvent extends Event {
@@ -77,7 +79,7 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
 
     private _openSwipe(item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
         // TODO Work with managers directly, create Swipe manager in this control
-        this._options.listModel.setSwipeItem(item);
+        SwipeController.setSwipeItem(this._options.listModel, item.getContents().getId());
         this._options.listModel.setActiveItem(item);
 
         if (this._options.itemActionsPosition !== 'outside') {
@@ -102,7 +104,7 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
         // TODO Do we need this here?
         // this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
         if (model && !model.destroyed) {
-            model.setSwipeItem(null);
+            SwipeController.setSwipeItem(model, null);
             model.setActiveItem(null);
         }
     }

@@ -30,7 +30,6 @@ import {Object as EventObject} from 'Env/Event';
 
 import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
-import SwipeManager from './utils/SwipeManager';
 import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
 import {IVirtualScrollConfig} from 'Controls/list';
 import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
@@ -629,7 +628,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
     protected _$virtualScrollMode: IVirtualScrollMode;
-    protected _swipeManager: SwipeManager;
     protected _selectionManager: SelectionManager;
 
     protected _controllerCache: Record<string, unknown>;
@@ -692,7 +690,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
             new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
-        this._swipeManager = new SwipeManager(this);
         this._selectionManager = new SelectionManager(this);
 
         this._controllerCache = {};
@@ -2053,15 +2050,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
-    setSwipeItem(item: CollectionItem<S>): void {
-        this._swipeManager.setSwipeItem(item);
-        this._nextVersion();
-    }
-
-    getSwipeItem(): CollectionItem<S> {
-        return this._swipeManager.getSwipeItem() as CollectionItem<S>;
-    }
-
     getActiveItem(): CollectionItem<S> {
         return this._itemActionsManager.getActiveItem() as CollectionItem<S>;
     }
@@ -3261,7 +3249,6 @@ Object.assign(Collection.prototype, {
     _oEventRaisingChange: null,
     _itemActionsManager: null,
     _virtualScrollManager: null,
-    _swipeManager: null,
     _controllerCache: null,
     _startIndex: 0,
     _stopIndex: 0,
