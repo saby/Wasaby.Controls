@@ -7,7 +7,7 @@ define(['Controls/operations', 'Types/source'], function (operations, source) {
             keyProperty: 'id'
          });
 
-         filterController._beforeUpdate({filter: {}, source: sourceInstance});
+         filterController._beforeUpdate({filter: {}});
          assert.deepEqual(filterController._filter, {});
 
          filterController._beforeUpdate({filter: {}, source: sourceInstance, selectionViewMode: 'selected'});

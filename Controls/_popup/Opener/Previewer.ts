@@ -111,7 +111,7 @@ class Previewer extends BaseOpener {
                 newCfg.isCancelOpening = false;
                 BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
                     if (!newCfg.isCancelOpening) {
-                        BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id);
+                        BaseOpener.showDialog(result[0], newCfg, result[1]);
                     }
                 });
             }, newCfg, type);

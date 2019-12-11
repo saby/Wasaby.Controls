@@ -155,9 +155,24 @@ export default class VirtualScrollController {
             newStartIndex++;
         }
 
-        this._options.indexesChangedCallback(
-            this.startIndex = Math.max(newStartIndex - (Math.trunc(this._options.pageSize / 2)), 0),
-            this.stopIndex = Math.min(this.startIndex + this._options.pageSize, this.itemsCount));
+        this.startIndex = Math.max(newStartIndex - (Math.trunc(this._options.pageSize / 2)), 0);
+        this.stopIndex = Math.min(this.startIndex + this._options.pageSize, this.itemsCount);
+
+        // Если мы скроллим быстро к концу списка, startIndex может вычислиться такой,
+        // что число отрисовываемых записей будет меньше virtualPageSize (например если
+        // в списке из 100 записей по scrollTop вычисляется startIndex == 95, то stopIndex
+        // будет равен 100 при любом virtualPageSize >= 5.
+        // Нам нужно всегда рендерить virtualPageSize записей, если это возможно, т. е. когда
+        // в коллекции достаточно записей. Поэтому если мы находимся в конце списка, пробуем
+        // отодвинуть startIndex назад так, чтобы отрисовывалось нужное число записей.
+        if (this.stopIndex === this.itemsCount) {
+            const missingCount = this._options.pageSize - (this.stopIndex - this.startIndex);
+            if (missingCount > 0) {
+                this.startIndex = Math.max(this.startIndex - missingCount, 0);
+            }
+        }
+
+        this._options.indexesChangedCallback(this.startIndex, this.stopIndex);
         this._options.placeholderChangedCallback(this.calcPlaceholderSize());
 
     }

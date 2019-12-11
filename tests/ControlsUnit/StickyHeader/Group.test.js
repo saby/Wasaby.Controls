@@ -26,8 +26,8 @@ define([
       describe('Initialisation', function() {
          it('should set correct header id', function() {
             const component = createComponent(scroll.Group, options);
-            component._afterMount();
-            assert.strictEqual(component._index, scroll.Utils._lastId);
+            const component2 = createComponent(scroll.Group, options);
+            assert.strictEqual(component._index, component2._index - 1);
          });
       });
 
@@ -38,8 +38,8 @@ define([
          it('should add fixed header to list of fixed headers', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerIdTop = scroll.Utils.getNextId(),
-               headerIdBottom = scroll.Utils.getNextId();
+               headerIdTop = scroll.getNextStickyId(),
+               headerIdBottom = scroll.getNextStickyId();
 
             component._fixedHandler(event, { fixedPosition: 'top', id: headerIdTop });
             assert.lengthOf(component._stickyHeadersIds.top, 1);
@@ -55,8 +55,8 @@ define([
          it('should remove fixed header from list of fixed headers on header unfixed', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerIdTop = scroll.Utils.getNextId(),
-               headerIdBottom = scroll.Utils.getNextId();
+               headerIdTop = scroll.getNextStickyId(),
+               headerIdBottom = scroll.getNextStickyId();
 
             component._stickyHeadersIds.top.push(headerIdTop);
             component._stickyHeadersIds.bottom.push(headerIdBottom);
@@ -73,7 +73,7 @@ define([
          it('should generate event on first header fixed', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerId = scroll.Utils.getNextId();
+               headerId = scroll.getNextStickyId();
 
             sinon.stub(component, '_notify');
             component._fixedHandler(event,
@@ -100,11 +100,11 @@ define([
                component = createComponent(scroll.Group, options);
 
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: scroll.Utils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+                { fixedPosition: 'top', prevPosition: '', id: scroll.getNextStickyId(), mode: 'replaceable', offsetHeight: 10 });
 
             sinon.stub(component, '_notify');
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: scroll.Utils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+                { fixedPosition: 'top', prevPosition: '', id: scroll.getNextStickyId(), mode: 'replaceable', offsetHeight: 10 });
 
             sinon.assert.notCalled(component._notify);
             sinon.restore();
@@ -113,7 +113,7 @@ define([
          it('should generate event on last header unfixed', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerId = scroll.Utils.getNextId();
+               headerId = scroll.getNextStickyId();
 
             component._fixedHandler(event,
                 { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
@@ -141,10 +141,10 @@ define([
          it('should not generate event on not last header unfixed', function() {
             const
                component = createComponent(scroll.Group, options),
-               headerId = scroll.Utils.getNextId();
+               headerId = scroll.getNextStickyId();
 
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: scroll.Utils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+                { fixedPosition: 'top', prevPosition: '', id: scroll.getNextStickyId(), mode: 'replaceable', offsetHeight: 10 });
             component._fixedHandler(event,
                 { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
 

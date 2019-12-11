@@ -1,3 +1,3 @@
-<span on:click="_clickHandler()" class="controls-BigSeparator">
-    <i class="controls-BigSeparator__icon {{_icon}} icon-size"></i>
+<span on:click="_clickHandler()" class="controls-BigSeparator controls-BigSeparator_theme-{{_options.theme}}">
+    <i class="controls-icon controls-BigSeparator__icon_theme-{{_options.theme}} {{_icon}}"></i>
 </span>

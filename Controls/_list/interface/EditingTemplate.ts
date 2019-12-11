@@ -50,8 +50,7 @@
 
 /**
  * @typedef {String} Size
- * @description  Значения, которые скрыты под описанными переменными, задаются настройками {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления}.
- * @variant default
+ * @variant default Размер, используемый по умолчанию.
  * @variant s Маленький размер.
  * @variant m Средний размер.
  * @variant l Большой размер.
@@ -62,7 +61,8 @@
  * @cfg {Size} Устанавливает размер шрифта для {@link Controls/list:EditingTemplate#value текста}, который отображается в строке в режиме просмотра. 
  * @default default
  * @see Controls/list:EditingTemplate#value
- * 
+ * @remark
+ * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
  */
 
 export default interface IEditingTemplateOptions {

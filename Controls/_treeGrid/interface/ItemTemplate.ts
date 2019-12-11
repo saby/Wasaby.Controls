@@ -25,7 +25,6 @@
 
 /**
  * @typedef {String} Size
- * @description Значения, которые скрыты под описанными переменными, задаются настройками {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления}.
  * @variant s Маленький размер.
  * @variant m Средний размер.
  * @variant l Большой размер.
@@ -36,6 +35,9 @@
  * @name Controls/treeGrid:ItemTemplate#expanderSize
  * @cfg {Size} Устанавливает размер иконки для узла и скрытого узла.
  * @default s
+ * @see expanderIcon
+ * @remark
+ * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
  */
 
 /**
@@ -51,21 +53,23 @@
  * @default undefined
  * @remark
  * Когда в опции задано undefined, используются иконки узлов и скрытых узлов.
+ * @see expanderSize
  */
 
 /**
  * @name Controls/treeGrid:ItemTemplate#withoutLevelPadding
  * @cfg {Boolean} Когда опция установлена в значение true, в дереве отсутствуют структурные отступы для элементов иерархии.
  * @default false
- * @remark levelIndentSize
+ * @see levelIndentSize
  */
 
 /**
  * @name Controls/treeGrid:ItemTemplate#levelIndentSize
  * @cfg {Size} Устанавливает размер структурного отступа для элементов иерархии.
  * @default s
+ * @see withoutLevelPadding
  * @remark
- * @remark withoutLevelPadding
+ * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
  */
 
 

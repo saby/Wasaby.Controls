@@ -71,14 +71,14 @@ var _private = {
             });
         }
         if (!self._destroyed) {
-            options.listModel.setItemActions(item, {
+            return options.listModel.setItemActions(item, {
                 all,
                 showed
             });
         }
     },
 
-    updateActions: function(self, options, collectionChanged: boolean = false): void {
+    updateActions: function(self, options): void {
         if (constants.isNodePlatform && !ItemActionsControl._isUnitTesting) {
             return;
         }
@@ -91,15 +91,24 @@ var _private = {
                 });
                 options.listModel.setEventRaising(true, true);
             } else {
+                let hasChanges = 'none',
+                    updateItemActionsResult;
                 for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                     var
                         itemData = options.listModel.getCurrent(),
                         item = itemData.actionsItem;
                     if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                        _private.updateItemActions(self, item, options);
+                        updateItemActionsResult = _private.updateItemActions(self, item, options);
+                        if (hasChanges !== 'all') {
+                            if (hasChanges !== 'partial') {
+                                hasChanges = updateItemActionsResult;
+                            }
+                        }
                     }
                 }
-                options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
+                if (hasChanges !== 'none') {
+                    options.listModel.nextModelVersion(hasChanges !== 'all', ACTION_TYPE);
+                }
             }
         }
     },

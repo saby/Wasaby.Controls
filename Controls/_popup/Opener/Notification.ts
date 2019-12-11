@@ -211,7 +211,7 @@ class Notification extends BaseOpener {
         this._compatibleClose(this);
     }
 
-    static openPopup (config: object, id: string): Promise<string> {
+    static openPopup(config: object): Promise<string> {
         return new Promise((resolve) => {
             const newConfig = BaseOpener.getConfig(BASE_OPTIONS, config);
             if (isNewEnvironment()) {
@@ -219,7 +219,7 @@ class Notification extends BaseOpener {
                     newConfig.opener = null;
                 }
                 BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
-                    BaseOpener.showDialog(result[0], newConfig, result[1], id).then((popupId: string) => {
+                    BaseOpener.showDialog(result[0], newConfig, result[1]).then((popupId: string) => {
                         resolve(popupId);
                     });
                 });

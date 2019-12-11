@@ -31,7 +31,7 @@
                                     <Controls.search:Input bind:value="value"/>
                                 </ws:search>
                                 <ws:filterButton>
-                                    <Controls.filter:Selector templateName="tmpl!Engine-demo/Browser/resources/filterButtonEngineTemplate"/>
+                                    <Controls.filter:Selector templateName="wml!Controls-demo/OperationsPanel/Demo/resources/filterButtonEngineTemplate"/>
                                 </ws:filterButton>
                                 <ws:operationsPanel>
                                     <Controls.operations:Panel

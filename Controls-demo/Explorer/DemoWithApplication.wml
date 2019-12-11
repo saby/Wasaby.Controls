@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Tile" demoname="Controls-demo/Explorer/Demo.wml">
+<Controls.Application.ApplicationWrapper caption="Tile" demoname="Controls-demo/Explorer/Demo/Demo.wml">
    <ws:content>
       <Controls-demo.Explorer.Demo/>
    </ws:content>
