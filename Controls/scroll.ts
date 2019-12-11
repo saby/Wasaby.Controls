@@ -42,7 +42,7 @@ import IntersectionObserverContainer from 'Controls/_scroll/IntersectionObserver
 import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
 
 import Group = require('Controls/_scroll/StickyHeader/Group');
-import Utils = require('Controls/_scroll/StickyHeader/Utils');
+import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset} from 'Controls/_scroll/StickyHeader/Utils';
 import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
 export {
@@ -53,8 +53,10 @@ export {
    _scrollContext,
    _stickyHeaderContext,
    _stickyHeaderController,
+   isStickySupport,
+   getNextStickyId,
+   getStickyOffset,
    Group,
-   Utils,
    HotKeysContainer,
    IntersectionObserverController,
    IntersectionObserverContainer,

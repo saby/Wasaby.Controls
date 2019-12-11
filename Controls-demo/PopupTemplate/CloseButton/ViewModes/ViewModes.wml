@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">viewMode=toolButton</div>
+        <Controls.popupTemplate:CloseButton viewMode="toolButton"></Controls.popupTemplate:CloseButton>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">viewMode=link</div>
+        <Controls.popupTemplate:CloseButton viewMode="link"></Controls.popupTemplate:CloseButton>
+    </div>
+</div>

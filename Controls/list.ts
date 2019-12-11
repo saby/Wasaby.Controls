@@ -6,6 +6,7 @@
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
@@ -32,6 +33,7 @@
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
@@ -87,6 +89,7 @@ import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
+import {IList} from './_list/interface/IList';
 
 import {Paging} from 'Controls/paging';
 
@@ -129,5 +132,6 @@ export {
     ItemsViewModel,
     HotKeysContainer,
     InertialScrolling,
-    IVirtualScrollConfig
+    IVirtualScrollConfig,
+    IList
 };

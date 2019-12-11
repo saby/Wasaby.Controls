@@ -4,7 +4,7 @@
          template="{{_options.master}}"
          attr:class="controls-MasterDetail_master-template"
          on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
-      <ws:if data="{{_currentWidth}}">
+      <ws:if data="{{_canResizing}}">
          <Controls.dragnDrop:ResizingLine attr:class="controls-MasterDetail_resizing-line"
                                           minOffset="{{_minOffset}}"
                                           maxOffset="{{_maxOffset}}"

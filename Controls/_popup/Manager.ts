@@ -480,8 +480,6 @@ const _private = {
     // TODO Должно быть удалено после https://online.sbis.ru/opendoc.html?guid=f2b13a65-f404-4fbd-a05c-bbf6b59358e6
     navigationHandler(event, activeElement, isIconClick): void {
         let hasPendings = false;
-        let registrator;
-        let popupId;
         // Если пытаются перейти по аккордеону, то закрываем все открытые окна
         // Если есть пендинги - отменяем переход.
         _private.popupItems.each((item) => {
@@ -496,8 +494,10 @@ const _private = {
                 _private.remove(this, item.id);
             }
         });
-        if (!isIconClick) {
-            event.setResult(!hasPendings);
+        // Устанавливаю результат только когда нужно отменить переход, иначе ломается старый механизм spa-переходов,
+        // работающий на значении результата события onbeforenavigate
+        if (!isIconClick && hasPendings) {
+            event.setResult(false);
         }
     }
 };

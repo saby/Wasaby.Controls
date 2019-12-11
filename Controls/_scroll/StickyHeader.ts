@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
+import {isStickySupport} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
 import 'Controls/_scroll/StickyHeader/_StickyHeader';
 import tmplNotify = require('Controls/Utils/tmplNotify');
@@ -128,7 +128,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
          _isStickySupport: null,
 
          _beforeMount: function(options, context, receivedState) {
-            this._isStickySupport = stickyUtils.isStickySupport();
+            this._isStickySupport = isStickySupport();
          },
       });
 
