@@ -13,7 +13,7 @@
     </ws:if>
 
     <!-- Скроллбар горизонтального скролла -->
-    <ws:if data="{{isHorizontalScrollVisible}}">
+    <ws:if data="{{isDisplayColumnScroll}}">
         <Controls._grid.ScrollWrapper
                 name="horizontalScrollWrapper"
                 position="{{ position }}"

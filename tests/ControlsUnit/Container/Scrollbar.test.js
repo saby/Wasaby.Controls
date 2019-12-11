@@ -71,6 +71,21 @@ define(
             assert.isFalse(result);
          });
 
+         it('_setSizes', function () {
+            var component = createComponent(Scrollbar.default, {contentSize: 1000});
+            component._options.direction = 'horizontal';
+            component._children = {
+               scrollbar: {
+                  offsetWidth: 0,
+                  clientWidth: 0,
+                  getClientRects: () => []
+               }
+            }
+            result = component._setSizes(650);
+            assert.isFalse(result);
+         });
+
+
          it('_scrollbarMouseDownHandler', function () {
             var component = createComponent(Scrollbar.default, {contentSize: 1000});
             result = component._setPosition(100);
