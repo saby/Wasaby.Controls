@@ -39,7 +39,7 @@ const
           }
       },
       updateSizes(self) {
-          if (self._destroyed) {
+          if (self._destroyed || !_private.isColumnScrollVisible(self._children.content)) {
               return;
           }
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
@@ -177,7 +177,12 @@ const
 
       prepareDebouncedUpdateSizes: function() {
           return debounce(_private.updateSizes, DELAY_UPDATE_SIZES, true);
+      },
+
+       isColumnScrollVisible(content: HTMLElement): boolean {
+         return !!content.getClientRects().length;
       }
+
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -211,7 +216,7 @@ const
 
       _afterMount() {
          this._debouncedUpdateSizes(this);
-         if (this._options.columnScrollStartPosition === 'end' && this._isColumnScrollVisible()) {
+         if (this._options.columnScrollStartPosition === 'end' && this._isDisplayColumnScroll()) {
             this._positionChangedHandler(null, this._contentSize - this._contentContainerSize);
          }
          if (!this._isFullGridSupport) {
@@ -244,10 +249,10 @@ const
       },
 
       _resizeHandler() {
-         this._debouncedUpdateSizes(this);
+          this._debouncedUpdateSizes(this);
       },
 
-      _isColumnScrollVisible: function() {
+       _isDisplayColumnScroll: function() {
          const items = this._options.listModel.getItems();
          return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
       },

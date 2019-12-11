@@ -5,7 +5,7 @@
     <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
-    <ws:if data="{{isHorizontalScrollVisible}}">
+    <ws:if data="{{isDisplayColumnScroll}}">
         <Controls._grid.ScrollWrapper
                 name="horizontalScrollWrapper"
                 position="{{position}}"
