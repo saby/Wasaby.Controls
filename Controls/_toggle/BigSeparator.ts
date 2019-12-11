@@ -78,7 +78,7 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
       this._iconChangedValue(newOptions.value);
    }
 
-   static _theme: string[] = ['Controls/toggle'];
+   static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
    static getDefaultOptions(): object {
       return {
          value: false
