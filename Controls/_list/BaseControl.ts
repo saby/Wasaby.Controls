@@ -749,15 +749,13 @@ var _private = {
     applyVirtualScrollIndexes(self, direction): void {
         let savedStart: number;
         let savedStop: number;
-        if (self._options.useNewModel) {
-            savedStart = self._listViewModel.getStartIndex();
-            savedStop = self._listViewModel.getStopIndex();
-        }
+        savedStart = self._listViewModel.getStartIndex();
+        savedStop = self._listViewModel.getStopIndex();
+
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
-            if (self._options.useNewModel) {
-                self._savedStartIndex = savedStart;
-                self._savedStopIndex = savedStop;
-            }
+            self._savedStartIndex = savedStart;
+            self._savedStopIndex = savedStop;
+
             self._saveAndRestoreScrollPosition = direction;
             self._shouldRestoreScrollPosition = true;
             _private.applyPlaceholdersSizes(self);
