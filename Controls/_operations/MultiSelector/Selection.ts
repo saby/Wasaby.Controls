@@ -1,6 +1,6 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
-import { Collection } from 'Controls/display';
+import { Collection, SelectionController } from 'Controls/display';
 
 import { Rpc, PrefetchProxy } from 'Types/source';
 import { ListViewModel } from 'Controls/list';
@@ -173,7 +173,7 @@ export default class Selection {
       let selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();
 
       if (this._listModel instanceof Collection) {
-         this._listModel.setSelection(selectionForModel);
+         SelectionController.selectItems(this._listModel, selectionForModel);
       } else {
          let selectionForOldModel: Object = {};
 

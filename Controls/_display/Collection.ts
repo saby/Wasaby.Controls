@@ -32,7 +32,6 @@ import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
 import {IVirtualScrollConfig} from 'Controls/list';
-import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -628,7 +627,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
     protected _$virtualScrollMode: IVirtualScrollMode;
-    protected _selectionManager: SelectionManager;
 
     protected _controllerCache: Record<string, unknown>;
 
@@ -690,7 +688,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
             new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
-        this._selectionManager = new SelectionManager(this);
 
         this._controllerCache = {};
     }
@@ -1951,10 +1948,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setSelectedItemsAll(selected: boolean): void {
         this._setSelectedItems(this._getItems(), selected);
-    }
-
-    setSelection(selection: ISelectionMap): void {
-        this._selectionManager.setSelection(selection);
     }
 
     /**
