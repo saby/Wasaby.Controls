@@ -9,6 +9,6 @@
  */
 import * as parking from 'Controls/_dataSource/parking';
 import * as error from 'Controls/_dataSource/error';
-import requestDataUtil from 'Controls/_dataSource/requestDataUtil';
+import requestDataUtil, {ISourceConfig, IRequestDataResult} from 'Controls/_dataSource/requestDataUtil';
 
-export { parking, error, requestDataUtil };
+export { parking, error, requestDataUtil, ISourceConfig, IRequestDataResult };
