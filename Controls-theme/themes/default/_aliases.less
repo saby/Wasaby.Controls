@@ -576,28 +576,27 @@
 //цвет фона шапки прилипающего блока.
 @header_background-color_sticky:          #F8F8F8;
 //толщина нижней границы шапки прилипающего блока.
-@header_bottom-border-thickness_sticky:   1px;
+@header_bottom-border-thickness_sticky:   @border-thickness;
 //цвет нижней границы шапки прилипающего блока.
 @header_bottom-border-color_sticky:       #F0F0F0;
-//Отступ от между границей прилипающего блока и его контентом.
-@spacing-Sticky_between_content_border:   2px;
-//Толщина обводки прилипающего блока.
-//Примечание: равна толщине обводки по-умолчанию.
-@border-thickness_sticky:                 @border-thickness;
+//Нижний отступ для контента прилипающего блока.
+@content_padding-bottom_sticky:           8px;
+//Верхний отступ для контента прилипающего блока.
+@content_padding-top_sticky:              8px;
 //Цвет обводки прилипающего блока.
 @border-color_sticky:                     #CCCCCC;
 //тень прилипающего блока
 @box-shadow_sticky:                       0 0 12px 0 rgba(0,0,0,0.25);
-//минимальная ширина заголовка прилипающего блока ( должна влезать одна буква и троеточие)
-@header_min-width_sticky:                 30px;
 //горизонтальный отступ слева в шапке прилипающего блока.
 @header_padding-left_sticky:              12px;
-//горизонтальный отступ справа в шапке прилипающего блока.
-@header_padding-right_sticky:             12px;
 //Максимальная ширина прилипающего блока.
-@max-width-Sticky-content:                700px;
+@max-width_sticky:                        700px;
 //горизонтальный отступ справа в шапке прилипающего блока.
 @header-content_padding-right_sticky:     16px;
+//отступы для крестика закрытия прилипающего блока.
+@close-button_padding_sticky:             4px;
+//отступ сверху для кнопок в шапке прилипающего блока.
+@button_padding-top_sticky:               7px;
 
 /*toggle button Стили для кнопок с залипанием*/
 //Цвет обводки кнопки-иконки для тулбара в зажатом состоянии.

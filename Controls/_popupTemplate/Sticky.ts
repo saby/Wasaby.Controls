@@ -14,7 +14,6 @@ import {default as IPopupTemplate, IPopupTemplateOptions} from "./interface/IPop
  */
 
 class StickyTemplate extends Control implements IControlOptions, IPopupTemplateOptions {
-    '[Controls/_popupTemplate/interface/IPopupTemplate]': boolean = true;
     protected _template: TemplateFunction = template;
     protected _headerTheme: string;
 
@@ -38,8 +37,8 @@ class StickyTemplate extends Control implements IControlOptions, IPopupTemplateO
 
     static getDefaultOptions() {
         return {
-            headingStyle: 'secondary',
-            headingSize: 'l'
+            closeButtonVisibility: true,
+            closeButtonViewMode: 'link'
         };
     }
 }
