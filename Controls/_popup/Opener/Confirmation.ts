@@ -9,6 +9,7 @@ export interface IPopupOptions {
     modal?: Boolean;
     autofocus?: Boolean;
     className?: String;
+    isCentered?: boolean;
     _vdomOnOldPage?: Boolean;
 }
 
@@ -162,6 +163,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> implements IConfirma
             modal: true,
             autofocus: true,
             className: 'controls-Confirmation_popup',
+            isCentered: true,
             templateOptions
         };
         Confirmation._compatibleOptions(popupOptions);
