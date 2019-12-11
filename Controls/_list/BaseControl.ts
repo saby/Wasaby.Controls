@@ -2269,9 +2269,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'End': _private.scrollToEdge(this, 'down'); break;
         }
     },
-    _updateLoadOffset: function(viewSize, viewPortSize) {
-        let minSize = viewSize !== null && viewPortSize !== null ? Math.min(viewSize, viewPortSize) : 0;
-        let offset = Math.floor(minSize / 3);
+    _updateLoadOffset: function(viewSize: number = 0, viewPortSize: number = 0) {
+        const minSize = Math.min(viewSize, viewPortSize);
+        const offset = Math.floor(minSize / 3);
         this._setLoadOffset(offset, offset);
     },
 

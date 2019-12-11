@@ -1769,6 +1769,9 @@ define([
          bc._viewSize = 0;
          bc._onViewPortResize(bc, 0, {y: 0,height: 0});
          assert.deepEqual(bc._loadOffset, {top: 0, bottom: 0});
+
+         bc._onViewPortResize(bc, undefined, {});
+         assert.deepEqual(bc._loadOffset, {top: 0, bottom: 0});
       });
 
       it('scrollHide/scrollShow base control state', function() {
