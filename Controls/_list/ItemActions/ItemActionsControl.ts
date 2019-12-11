@@ -13,6 +13,8 @@ import { CollectionItem } from 'Controls/display';
 
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 
+let displayLib: typeof import('Controls/display');
+
 const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
 const POSITION_CLASSES = {
@@ -183,6 +185,7 @@ var ItemActionsControl = Control.extend({
         }
         this._getContainerPaddingClass = _private.getContainerPaddingClass.bind(this);
         if (newOptions.useNewModel) {
+            displayLib = require('Controls/display');
             return import('Controls/listRender').then((listRender) => {
                 this._itemActionsTemplate = listRender.itemActionsTemplate;
             });
@@ -209,7 +212,7 @@ var ItemActionsControl = Control.extend({
         if (!this._destroyed) {
             if (this._options.useNewModel) {
                 this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
-                this._options.listModel.setMarkedItem(itemData);
+                displayLib.MarkerController.markItem(this._options.listModel, itemData.getContents().getId());
             } else {
                 this.updateItemActions(itemData.actionsItem);
                 this._options.listModel.setMarkedKey(itemData.key);

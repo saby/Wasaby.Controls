@@ -28,7 +28,6 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 
-import MarkerManager from './utils/MarkerManager';
 import EditInPlaceManager from './utils/EditInPlaceManager';
 import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
@@ -629,7 +628,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _startIndex: number;
     protected _stopIndex: number;
 
-    protected _markerManager: MarkerManager;
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
@@ -637,6 +635,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
     protected _selectionManager: SelectionManager;
+
+    protected _controllerCache: Record<string, unknown>;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -693,7 +693,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._$virtualScrollMode = virtualScrollConfig.mode;
 
-        this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
@@ -701,6 +700,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
         this._selectionManager = new SelectionManager(this);
+
+        this._controllerCache = {};
     }
 
     destroy(): void {
@@ -726,6 +727,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._itemsUid = null;
         this._cursorEnumerator = null;
         this._utilityEnumerator = null;
+        this._controllerCache = null;
 
         super.destroy();
     }
@@ -1997,15 +1999,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$displayProperty;
     }
 
-    setMarkedItem(item: CollectionItem<S>): void {
-        this._markerManager.markItem(item);
-        this._nextVersion();
-    }
-
-    getMarkedItem(): CollectionItem<S> {
-        return this._markerManager.getMarkedItem() as CollectionItem<S>;
-    }
-
     getItemCounters(): ICollectionCounters[] {
         const result: ICollectionCounters[] = [];
         this.each((item: unknown) => {
@@ -2168,6 +2161,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     isItemHidden(index: number): boolean {
         return !this.getViewIterator().isItemVisible(index);
+    }
+
+    getCacheValue<V>(key: string): V {
+        return this._controllerCache[key] as V;
+    }
+
+    setCacheValue(key: string, value: unknown): void {
+        this._controllerCache[key] = value;
+    }
+
+    nextVersion(): void {
+        this._nextVersion();
     }
 
     // region SerializableMixin
@@ -3269,12 +3274,12 @@ Object.assign(Collection.prototype, {
     _onCollectionChange: null,
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
-    _markerManager: null,
     _editInPlaceManager: null,
     _itemActionsManager: null,
     _virtualScrollManager: null,
     _hoverManager: null,
     _swipeManager: null,
+    _controllerCache: null,
     _startIndex: 0,
     _stopIndex: 0,
     getIdProperty: Collection.prototype.getKeyProperty

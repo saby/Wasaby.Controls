@@ -54,3 +54,6 @@ export {default as TreeItem} from './_display/TreeItem';
 
 export {default as TileCollection} from './_display/TileCollection';
 export {default as TileCollectionItem} from './_display/TileCollectionItem';
+
+import * as MarkerController from './_display/controllers/Marker';
+export { MarkerController };
