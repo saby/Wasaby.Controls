@@ -1,6 +1,6 @@
 /**
  * @mixin Controls/Container/Suggest/Layout/Styles
- * @public
+ * @private
  * @author Герасимов А.М.
  *
  * @css @box-shadow-color_Suggest Цвет тени автодополнения.
@@ -33,7 +33,7 @@
  */
 /*
  * @mixin Controls/Container/Suggest/Layout/Styles
- * @public
+ * @private
  * @author Gerasimov A.M.
  *
  * @css @box-shadow-color_Suggest Suggest shadow color.
