@@ -30,8 +30,7 @@
  * @name Controls/grid:HeaderContent#contentTemplate
  * @cfg {String|Function} Устанавливает пользовательский шаблон для отображения содержимого ячейки шапки.
  * @remark
- * В области видимости шаблона доступен объект **colData**.
- * Через него можно получить доступ к свойству **column**, которое содержит конфигурацию {@link https://wi.sbis.ru/docs/js/Controls/grid/IGridControl/typedefs/HeaderCell/ ячейки шапки}.
+ * В области видимости шаблона доступен объект **colData**. Через него можно получить доступ к свойству **column**, которое содержит конфигурацию {@link https://wi.sbis.ru/docs/js/Controls/grid/IGridControl/typedefs/HeaderCell/ ячейки шапки}.
  * @example
  * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
  * <pre class="brush: html">
