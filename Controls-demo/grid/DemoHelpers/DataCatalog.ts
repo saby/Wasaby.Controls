@@ -669,6 +669,20 @@ function getTasks() {
                 template: 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksReceived',
                 width: 'auto'
             }
+        ],
+        getDefaultColumns: () => [
+            {
+                displayProperty: 'id',
+                width: '30px'
+            },
+            {
+                displayProperty: 'state',
+                width: '200px'
+            },
+            {
+                displayProperty: 'date',
+                width: '100px'
+            }
         ]
     }
 }

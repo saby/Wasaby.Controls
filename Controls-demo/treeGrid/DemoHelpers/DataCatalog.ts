@@ -340,7 +340,7 @@ export const Gadgets = {
             }
         ];
     },
-    getGridColumnsWithPhoto(){
+    getGridColumnsWithPhoto() {
         return [
             {
                 displayProperty: 'title',
@@ -354,7 +354,7 @@ export const Gadgets = {
             }
         ]
     },
-    getGridTwoLevelColumnsWithPhoto(){
+    getGridTwoLevelColumnsWithPhoto() {
         return [
             {
                 displayProperty: 'title',
