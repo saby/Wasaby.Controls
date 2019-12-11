@@ -31,7 +31,6 @@ import {Object as EventObject} from 'Env/Event';
 import EditInPlaceManager from './utils/EditInPlaceManager';
 import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
-import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
 import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
 import {IVirtualScrollConfig} from 'Controls/list';
@@ -632,7 +631,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
     protected _$virtualScrollMode: IVirtualScrollMode;
-    protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
     protected _selectionManager: SelectionManager;
 
@@ -697,7 +695,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
             new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
-        this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
         this._selectionManager = new SelectionManager(this);
 
@@ -3277,7 +3274,6 @@ Object.assign(Collection.prototype, {
     _editInPlaceManager: null,
     _itemActionsManager: null,
     _virtualScrollManager: null,
-    _hoverManager: null,
     _swipeManager: null,
     _controllerCache: null,
     _startIndex: 0,
