@@ -20,6 +20,8 @@ import VerticalMeasurer from 'Controls/_list/Swipe/VerticalMeasurer';
 
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
 
+let displayLib: typeof import('Controls/display');
+
 const MEASURER_NAMES: Record<ISwipeControlOptions['actionAlignment'], IMeasurer> = {
    horizontal: HorizontalMeasurer,
    vertical: VerticalMeasurer
@@ -80,7 +82,11 @@ export default class SwipeControl extends Control {
       this._swipeConfig = null;
       this._currentItemData = null;
       this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
-      this._options.listModel.setSwipeItem(null);
+      if (this._options.useNewModel) {
+         displayLib.SwipeController.setSwipeItem(this._options.listModel, null);
+      } else {
+         this._options.listModel.setSwipeItem(null);
+      }
       this._options.listModel.setActiveItem(null);
    }
 
@@ -192,7 +198,11 @@ export default class SwipeControl extends Control {
       childEvent: ISwipeEvent
    ): void {
       this._actionsHeight = this._getActionsHeight(childEvent.target);
-      listModel.setSwipeItem(itemData);
+      if (this._options.useNewModel) {
+         displayLib.SwipeController.setSwipeItem(listModel, itemData.getContents().getId());
+      } else {
+         listModel.setSwipeItem(itemData);
+      }
       listModel.setActiveItem(itemData);
 
       //TODO: KINGO
@@ -225,6 +235,7 @@ export default class SwipeControl extends Control {
       this._updateModel(newOptions);
       this._setMeasurer(newOptions.actionAlignment);
       if (newOptions.useNewModel) {
+         displayLib = require('Controls/display');
          return import('Controls/listRender').then((listRender) => {
             this._swipeTemplate = listRender.swipeTemplate;
          });
