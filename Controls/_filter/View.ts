@@ -8,6 +8,7 @@ import converterFilterItems = require('Controls/_filter/converterFilterItems');
 import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
+import {detection} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
@@ -663,7 +664,7 @@ var Filter = Control.extend({
                 theme: this._options.theme
             },
             target: this._container[0] || this._container,
-            actionOnScroll: 'close'
+            actionOnScroll: detection.isMobileIOS ? 'none' : 'close'
         };
         this._children.StickyOpener.open(Merge(popupOptions, panelPopupOptions), this);
     },
