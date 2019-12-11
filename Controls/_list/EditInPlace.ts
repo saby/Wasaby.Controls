@@ -563,7 +563,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _setEditingItemData: function (item, listModel, options) {
         if (!item) {
             if (options.useNewModel) {
-                listModel.setEditingItem(null);
+                displayLib.EditInPlaceController.endEdit(listModel);
             } else {
                 listModel._setEditingItemData(null);
             }
@@ -588,8 +588,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         }
 
         if (options.useNewModel) {
-            this._editingItemData = editingItemProjection;
-            listModel.setEditingItem(this._editingItemData, item);
+            displayLib.EditInPlaceController.beginEdit(listModel, item.getId(), item);
         } else {
             this._editingItemData = listModel.getItemDataByItem(editingItemProjection);
 

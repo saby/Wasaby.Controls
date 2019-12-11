@@ -57,3 +57,6 @@ export {default as TileCollectionItem} from './_display/TileCollectionItem';
 
 import * as MarkerController from './_display/controllers/Marker';
 export { MarkerController };
+
+import * as EditInPlaceController from './_display/controllers/EditInPlace';
+export { EditInPlaceController };
