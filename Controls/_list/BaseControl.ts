@@ -1048,9 +1048,13 @@ var _private = {
             const rs = new RecordSet({ rawData: showActions, keyProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
-            self._listViewModel.setActiveItem(itemData);
-            if (!self._options.useNewModel) {
-                // TODO Do we need this in new model?
+            if (self._options.useNewModel) {
+                displayLib.ItemActionsController.setActiveItem(
+                    self._listViewModel,
+                    itemData.getContents().getId()
+                );
+            } else {
+                self._listViewModel.setActiveItem(itemData);
                 self._listViewModel.setMenuState('shown');
             }
             self._itemWithShownMenu = self._options.useNewModel ? itemData.getContents() : itemData.item;
@@ -1105,9 +1109,13 @@ var _private = {
         const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
         const children = self._children.itemActions.getChildren(action, itemActions.all);
         if (children.length) {
-            self._listViewModel.setActiveItem(itemData);
-            if (!self._options.useNewModel) {
-                // TODO Do we need this in new model?
+            if (self._options.useNewModel) {
+                displayLib.ItemActionsController.setActiveItem(
+                    self._listViewModel,
+                    itemData.getContents().getId()
+                );
+            } else {
+                self._listViewModel.setActiveItem(itemData);
                 self._listViewModel.setMenuState('shown');
             }
             require(['css!Controls/input'], () => {
@@ -1146,9 +1154,13 @@ var _private = {
             event = args && args.event;
 
         function closeMenu() {
-            self._listViewModel.setActiveItem(null);
-            if (!self._options.useNewModel) {
-                // TODO Do we need this in new model?
+            if (self._options.useNewModel) {
+                displayLib.ItemActionsController.setActiveItem(
+                    self._listViewModel,
+                    null
+                );
+            } else {
+                self._listViewModel.setActiveItem(null);
                 self._listViewModel.setMenuState('hidden');
             }
             self._children.swipeControl && self._children.swipeControl.closeSwipe();
@@ -1158,8 +1170,12 @@ var _private = {
         }
 
         if (actionName === 'itemClick') {
-            var action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem(), self._listViewModel);
+            const action = args.data && args.data[0] && args.data[0].getRawData();
+            const activeItem =
+                self._options.useNewModel
+                ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
+                : self._listViewModel.getActiveItem();
+            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
                 closeMenu();
@@ -2064,11 +2080,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (direction === 'right' || direction === 'left') {
             if (this._options.useNewModel) {
                 displayLib.MarkerController.markItem(this._listViewModel, key);
+                displayLib.ItemActionsController.setActiveItem(this._listViewModel, key);
             } else {
                 var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
                 this._listViewModel.setMarkedKey(newKey);
+                this._listViewModel.setActiveItem(itemData);
             }
-            this._listViewModel.setActiveItem(itemData);
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {

@@ -84,10 +84,11 @@ export default class SwipeControl extends Control {
       this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
       if (this._options.useNewModel) {
          displayLib.SwipeController.setSwipeItem(this._options.listModel, null);
+         displayLib.ItemActionsController.setActiveItem(this._options.listModel, null);
       } else {
          this._options.listModel.setSwipeItem(null);
+         this._options.listModel.setActiveItem(null);
       }
-      this._options.listModel.setActiveItem(null);
    }
 
    private _updateModel(newOptions: ISwipeControlOptions): void {
@@ -183,7 +184,15 @@ export default class SwipeControl extends Control {
          );
       }
       const actionsItem = this._options.useNewModel ? this._currentItemData : this._currentItemData.actionsItem;
-      this._options.listModel.setItemActions(actionsItem, this._swipeConfig.itemActions);
+      if (this._options.useNewModel) {
+         displayLib.ItemActionsController.setActionsToItem(
+            this._options.listModel,
+            actionsItem.getContents().getId(),
+            this._swipeConfig.itemActions
+         );
+      } else {
+         this._options.listModel.setItemActions(actionsItem, this._swipeConfig.itemActions);
+      }
       if (this._swipeConfig.twoColumns) {
          this._swipeConfig.twoColumnsActions = this._prepareTwoColumns(this._swipeConfig.itemActions.showed);
       }
@@ -199,11 +208,13 @@ export default class SwipeControl extends Control {
    ): void {
       this._actionsHeight = this._getActionsHeight(childEvent.target);
       if (this._options.useNewModel) {
+         const key = itemData.getContents().getId();
          displayLib.SwipeController.setSwipeItem(listModel, itemData.getContents().getId());
+         displayLib.ItemActionsController.setActiveItem(listModel, key);
       } else {
          listModel.setSwipeItem(itemData);
+         listModel.setActiveItem(itemData);
       }
-      listModel.setActiveItem(itemData);
 
       //TODO: KINGO
       // запоминаем текущий активный элемент, чтобы мы могли обновить опции на немпри необходимости

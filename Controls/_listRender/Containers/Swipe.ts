@@ -4,7 +4,7 @@ import { SwipeVerticalMeasurer, SwipeHorizontalMeasurer } from 'Controls/list';
 import template = require('wml!Controls/_listRender/Containers/Swipe/Swipe');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
-import { CollectionItem, Collection } from 'Controls/display';
+import { CollectionItem, Collection, ItemActionsController } from 'Controls/display';
 import { Model } from 'Types/entity';
 
 import { SwipeController } from 'Controls/display'
@@ -78,9 +78,10 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
     }
 
     private _openSwipe(item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
-        // TODO Work with managers directly, create Swipe manager in this control
-        SwipeController.setSwipeItem(this._options.listModel, item.getContents().getId());
-        this._options.listModel.setActiveItem(item);
+        const key = item.getContents().getId();
+
+        SwipeController.setSwipeItem(this._options.listModel, key);
+        ItemActionsController.setActiveItem(this._options.listModel, key);
 
         if (this._options.itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(item, swipeEvent);
@@ -105,7 +106,7 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
         // this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
         if (model && !model.destroyed) {
             SwipeController.setSwipeItem(model, null);
-            model.setActiveItem(null);
+            ItemActionsController.setActiveItem(model, null);
         }
     }
 
@@ -118,8 +119,11 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
             this._measureSwipeConfig(actions, 'horizontal', actionsHeight);
         }
 
-        // TODO Move this to manager
-        this._options.listModel.setItemActions(item, this._swipeConfig.itemActions);
+        ItemActionsController.setActionsToItem(
+            this._options.listModel,
+            item.getContents().getId(),
+            this._swipeConfig.itemActions
+        );
 
         if (this._swipeConfig.twoColumns) {
             const visibleActions = this._swipeConfig.itemActions.showed;

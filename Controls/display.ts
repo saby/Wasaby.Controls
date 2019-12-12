@@ -66,3 +66,6 @@ export { SwipeController };
 
 import * as SelectionController from './_display/controllers/Selection';
 export { SelectionController };
+
+import * as ItemActionsController from './_display/controllers/ItemActions';
+export { ItemActionsController };
