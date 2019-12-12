@@ -76,6 +76,11 @@ export default {
              */
             emptyCaption: undefined,
 
+            /**
+             * @name Controls/dateLitePopup/IDateLitePopup#popupClassName
+             * @cfg {String} Класс, который навешивается на всплывающее окно.
+             */
+            popupClassName: undefined,
             // TODO: Доделать полноценную поддержку следующих опций. Пока не показываем их в документации.
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedStart
