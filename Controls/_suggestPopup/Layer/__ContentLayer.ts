@@ -1,4 +1,4 @@
-__ContentLayer/**
+/**
  * Created by am.gerasimov on 18.04.2018.
  */
 
