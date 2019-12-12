@@ -75,9 +75,10 @@ var _private = {
       return item.viewMode === 'frequent';
     },
 
-    prepareItems: function(self, items) {
+    resolveItems: function(self, items) {
         // When serializing the Date, "_serializeMode" field is deleted, so object.clone can't be used
         self._source = CoreClone(items);
+        self._hasResetValues = !!items.find((item) => item.hasOwnProperty('resetValue'));
     },
 
     calculateStateSourceControllers: function(configs, source) {
@@ -561,6 +562,7 @@ var Filter = Control.extend({
     _source: null,
     _idOpenSelector: null,
     _dateRangeItem: null,
+    _hasResetValues: true,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -570,11 +572,11 @@ var Filter = Control.extend({
 
         if (receivedState) {
             this._configs = receivedState.configs;
-            _private.prepareItems(this, options.source);
+            _private.resolveItems(this, options.source);
             _private.calculateStateSourceControllers(this._configs, this._source);
             _private.updateText(this, this._source, this._configs);
         } else if (options.source) {
-            _private.prepareItems(this, options.source);
+            _private.resolveItems(this, options.source);
             resultDef = _private.reload(this);
         }
         this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
@@ -585,7 +587,7 @@ var Filter = Control.extend({
         if (newOptions.source && newOptions.source !== this._options.source) {
             const self = this;
             let resultDef;
-            _private.prepareItems(this, newOptions.source);
+            _private.resolveItems(this, newOptions.source);
             if (_private.isNeedReload(this._options.source, newOptions.source) || _private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this).addCallback(() => {
                     self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
@@ -687,7 +689,7 @@ var Filter = Control.extend({
     _resultHandler: function(event, result) {
         if (!result.action) {
             const filterSource = converterFilterItems.convertToFilterSource(result.items);
-            _private.prepareItems(this, mergeSource(this._source, filterSource));
+            _private.resolveItems(this, mergeSource(this._source, filterSource));
             _private.updateText(this, this._source, this._configs, true);
         } else {
             _private[result.action].call(this, result);
