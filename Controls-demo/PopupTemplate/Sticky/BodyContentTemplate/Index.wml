@@ -1,20 +1,27 @@
 <div class="controlsDemo__flexRow">
-    <div class="controlsDemo__wrapper  controlsDemo_fixedWidth500">
-        <div class="controls-text-label_theme-{{_options.theme}}">bodyContentTemplate с полями ввода</div>
-        <Controls.popup:Sticky name="sticky" template="wml!Controls-demo/PopupTemplate/Sticky/BodyContentTemplate/resources/PopupTemplate"
-                                             closeOnOutsideClick="{{true}}">
-             <ws:direction vertical="top" horizontal="right"/>
-             <ws:targetPoint vertical="bottom" horizontal="left"/>
-        </Controls.popup:Sticky>
-        <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()"/>
-    </div>
-    <div class="controlsDemo__wrapper  controlsDemo_fixedWidth500">
-        <div class="controls-text-label_theme-{{_options.theme}}">bodyContentTemplate со скроллом</div>
-        <Controls.popup:Sticky name="stickyScroll" template="wml!Controls-demo/PopupTemplate/Sticky/BodyContentTemplate/resources/PopupTemplateList"
-                                                   closeOnOutsideClick="{{true}}">
-             <ws:direction vertical="top" horizontal="right"/>
-             <ws:targetPoint vertical="bottom" horizontal="left"/>
-        </Controls.popup:Sticky>
-        <Controls.buttons:Button name="stickyScrollButton" caption="sticky" on:click="openScrollSticky()"/>
+    <div class="controlsDemo__wrapper">
+        <Controls.popupTemplate:Sticky>
+            <ws:headerContentTemplate>
+                <div class="controlsDemo__Grid_header-with-add-button__gridTitle"> Подпись </div>
+            </ws:headerContentTemplate>
+            <ws:bodyContentTemplate>
+                <div>
+                    <div class="controlsDemo__Grid_header-gridTitle-spacing">Ветка</div>
+                    <input value="19.700/bugfix/create-dialog" type="text" class="controlsDemo__input"/>
+                </div>
+                <div>
+                    <div class="controlsDemo__Grid_header-gridTitle-spacing">Хранилище</div>
+                    <input value="controls" type="text" class="controlsDemo__input"/>
+                </div>
+                <div>
+                    <div class="controlsDemo__Grid_header-gridTitle-spacing">Заголовок</div>
+                    <input value="Регламент: Ошибка в документации." type="text" class="controlsDemo__input"/>
+                </div>
+                <div class="controlsDemo__cell">
+                    <div class="controlsDemo__Grid_header-gridTitle-spacing">Описание</div>
+                    <input value="(reg-chrome) 19.700 VDOM controls" type="text" class="controlsDemo__input"/>
+                </div>
+            </ws:bodyContentTemplate>
+        </Controls.popupTemplate:Sticky>
     </div>
 </div>

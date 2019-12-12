@@ -1,20 +1,10 @@
 <div class="controlsDemo__flexRow">
-    <div class="controlsDemo__wrapper  controlsDemo_fixedWidth500">
-        <div class="controls-text-label_theme-{{_options.theme}}">Прилипающий блок с крестиком закрытия</div>
-        <Controls.popup:Sticky name="sticky" template="wml!Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/resources/PopupTemplate"
-                                             closeOnOutsideClick="{{true}}">
-             <ws:direction vertical="bottom" horizontal="right"/>
-             <ws:targetPoint vertical="top" horizontal="left"/>
-        </Controls.popup:Sticky>
-        <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()"/>
+    <div class="controlsDemo__wrapper">
+        <div class="controls-text-label_theme-{{_options.theme}}">С кнопкой закрытия</div>
+        <ws:partial template="wml!Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/resources/PopupTemplate" closeButtonVisibility="{{true}}"/>
     </div>
-    <div class="controlsDemo__wrapper  controlsDemo_fixedWidth500">
-        <div class="controls-text-label_theme-{{_options.theme}}">Прилипающий блок без крестика закрытия</div>
-        <Controls.popup:Sticky name="stickyClose" template="wml!Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/resources/PopupTemplate"
-                                                  closeOnOutsideClick="{{true}}">
-             <ws:direction vertical="bottom" horizontal="right"/>
-             <ws:targetPoint vertical="top" horizontal="left"/>
-        </Controls.popup:Sticky>
-        <Controls.buttons:Button name="stickyCloseButton" caption="sticky" on:click="openCloseSticky()"/>
+    <div class="controlsDemo__wrapper">
+        <div class="controls-text-label_theme-{{_options.theme}}">Без кнопки закрытия</div>
+        <ws:partial template="wml!Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/resources/PopupTemplate" closeButtonVisibility="{{false}}"/>
     </div>
 </div>

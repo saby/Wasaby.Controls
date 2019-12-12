@@ -1,10 +1,6 @@
 <Controls.popupTemplate:Sticky closeButtonVisibility="{{_options.closeButtonVisibility}}">
     <ws:headerContentTemplate>
-    <Controls.heading:Title attr:class="controls-StackTemplate__caption_text controls-StackTemplate__caption_text_theme_{{_options.theme}}"
-                                        caption="Подпись"
-                                        style="secondary"
-                                        size="l"
-                                        readOnly="{{true}}"/>
+        <div class="controlsDemo__Grid_header-with-add-button__gridTitle"> Подпись </div>
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
         <div class="controlsDemo__wrapper__horizontal">
