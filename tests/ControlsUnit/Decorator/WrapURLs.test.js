@@ -20,7 +20,7 @@ define(
 
                assert.equal(template({
                   _parsedText: parsedText
-               }), '<div>test...</div>');
+               }), '<div class="controls-DecoratorWrapURLs">test...</div>');
             });
          });
 

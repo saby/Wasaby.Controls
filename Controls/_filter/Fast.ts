@@ -13,11 +13,13 @@ import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
 
-/**
-       * Контрол "Быстрый фильтр".
-       * Использует выпадающие списки для фильтрации данных.
-       *
-       * <a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+      /**
+       * Контрол "Быстрый фильтр". Использует выпадающие списки для фильтрации данных.
+       * 
+       * @remark
+       * См. <a href="/materials/demo-ws4-filter-search-new">демо-пример</a>
+       * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+       * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
        *
        * @class Controls/_filter/Fast
        * @extends Core/Control
@@ -26,7 +28,7 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
        * @demo Controls-demo/FastFilter/fastPG
        * @control
        * @public
-       * @deprecated Контрол устарел и в скором времени будет удалён, используйте {@link Controls/filter:View}.
+       * @deprecated Данный контрол устарел и будет удалён Вместо него используйте {@link Controls/filter:View}.
        * @author Герасимов А.М.
        */
 

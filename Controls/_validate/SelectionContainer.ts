@@ -4,7 +4,7 @@ import template = require('wml!Controls/_validate/SelectionContainer');
 
 /**
  * Контрол, регулирующий валидацию своего контента.
- * Используется с контролами, поддерживающими интерфейс {@link Controls/interface/IMultiSelectable}.
+ * Используется с контролами, поддерживающими интерфейс {@link Controls/interface/IMultiSelectable IMultiSelectable}.
  * Автоматически запускает валидацию при смене значения в контроле и при его деактивации.
  * @class Controls/_validate/SelectionContainer
  * @extends Controls/_validate/Container

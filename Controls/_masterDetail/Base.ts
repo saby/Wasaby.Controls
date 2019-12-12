@@ -86,7 +86,8 @@ class Base extends Control<IMasterDetail> {
      */
 
     protected _template: TemplateFunction = template;
-    protected _selected: Boolean|null;
+    protected _selected: boolean|null;
+    protected _canResizing: boolean = false;
     protected _minOffset: number;
     protected _maxOffset: number;
     protected _currentWidth: string;
@@ -95,7 +96,7 @@ class Base extends Control<IMasterDetail> {
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: number): Promise<number> | void {
         this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
-
+        this._canResizing = this._isCanResizing(options);
         if (receivedState) {
             this._currentWidth = receivedState + 'px';
         } else if (options.propStorageId) {
@@ -124,11 +125,19 @@ class Base extends Control<IMasterDetail> {
     }
 
     protected _afterMount(options: IMasterDetail): void {
-        this._updateOffset(options);
+        if (this._isPercentValue(options.masterWidth)) {
+            this._updateOffset(options);
+        }
     }
 
     protected _beforeUpdate(options: IMasterDetail): void {
-        this._updateOffset(options);
+        if (options.masterMinWidth !== this._options.masterMinWidth ||
+            options.masterWidth !== this._options.masterWidth ||
+            options.masterMaxWidth !== this._options.masterMaxWidth) {
+            this._currentWidth = null;
+            this._canResizing = this._isCanResizing(options);
+            this._updateOffset(options);
+        }
     }
 
     private _selectedMasterValueChangedHandler(event: Event, value: boolean): void {
@@ -144,22 +153,33 @@ class Base extends Control<IMasterDetail> {
             // Protect against window resize
             if (this._maxOffset < 0) {
                 currentWidth += this._maxOffset;
+                this._maxOffset = 0;
             }
             this._minOffset = currentWidth - this._getOffsetValue(options.masterMinWidth);
             // Protect against window resize
             if (this._minOffset < 0) {
                 currentWidth -= this._minOffset;
+                this._minOffset = 0;
             }
             this._currentWidth = currentWidth + 'px';
         }
     }
 
+    private _isCanResizing(options: IMasterDetail): boolean {
+        const canResizing = options.masterWidth && options.masterMaxWidth && options.masterMinWidth &&
+            options.masterMaxWidth !== options.masterMinWidth;
+        return !!canResizing;
+    }
+
     private _offsetHandler(event: Event, offset: number): void {
-        const width = parseInt(this._currentWidth, 10) + offset;
-        this._currentWidth = width + 'px';
-        const propStorageId = this._options.propStorageId;
-        if (propStorageId) {
-            setSettings({[propStorageId]: width});
+        if (offset !== 0) {
+            const width = parseInt(this._currentWidth, 10) + offset;
+            this._currentWidth = width + 'px';
+            this._updateOffset(this._options);
+            const propStorageId = this._options.propStorageId;
+            if (propStorageId) {
+                setSettings({[propStorageId]: width});
+            }
         }
     }
 

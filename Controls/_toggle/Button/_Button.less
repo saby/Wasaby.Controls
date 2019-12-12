@@ -1,6 +1,17 @@
 .controls-Button__wrapper_viewMode-pushButton {
    justify-content: center;
 }
+//button
+.controls-Button_button_style-secondary_toggled_theme-@{themeName} {
+   border-color: @secondary_toggled_border-color_toggleButton_button;
+   border-width: @secondary_toggled_border-thickness_toggleButton_button;
+}
+
+.controls-Button_button_style-primary_toggled_theme-@{themeName} {
+   border-color: @primary_toggled_border-color_toggleButton_button;
+   border-width: @primary_toggled_border-thickness_toggleButton_button;
+}
+
 //toolButton
 .controls-Button_toolButton_style-secondary_toggled_theme-@{themeName} {
    border-color: @secondary_toggled_border-color_toggleButton_toolButton;
@@ -19,7 +30,7 @@
 }
 
 //borders
-.controls-Button_pushButton, .controls-Button_toolButton {
+.controls-Button_pushButton {
    border-style: solid;
 }
 

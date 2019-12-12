@@ -3,7 +3,7 @@
             controls-Area__field_theme_{{options.theme}}_margin controls-Area__fieldWrapper">
    <ws:if data="{{value}}">
       <div class="controls-Area__wrapURLs">
-         <Controls.decorator:WrapURLs text="{{value}}"/>
+         <Controls.decorator:WrapURLs value="{{value}}"/>
       </div>
       <span class="controls-Area__emptySymbol">{{emptySymbol}}</span>
    </ws:if>

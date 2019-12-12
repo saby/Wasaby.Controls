@@ -54,7 +54,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/_interface/IButton
+ * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
  * @control

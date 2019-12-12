@@ -2,7 +2,6 @@
  * Библиотека, содержащая интерфейсы, которые используются в нескольких библиотеках.
  * @library Controls/interface
  * @includes ITooltip Controls/_interface/ITooltip
- * @includes IButton Controls/_interface/IButton
  * @includes IIconStyle Controls/_interface/IIconStyle
  * @includes ICaption Controls/_interface/ICaption
  * @includes IIcon Controls/_interface/IIcon
@@ -37,7 +36,6 @@
  */
 
 export {default as ITooltip, ITooltipOptions} from './_interface/ITooltip';
-export {default as IButton, IButtonOptions} from './_interface/IButton';
 export {default as IItemTemplate, IItemTemplateOptions} from './_interface/IItemTemplate';
 export {default as IIconStyle, IIconStyleOptions} from './_interface/IIconStyle';
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';

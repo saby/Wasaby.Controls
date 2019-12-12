@@ -568,6 +568,15 @@
 @box-shadow-container_width:              8px;
 
 /*toggle button Стили для кнопок с залипанием*/
+//Цвет обводки неосновной кнопки в зажатом состоянии.
+@secondary_toggled_border-color_toggleButton_button:                        @secondary_color;
+//Цвет обводки основной кнопки в зажатом состоянии.
+@primary_toggled_border-color_toggleButton_button:                          @primary_color;
+//Толщина обводки основной кнопки в зажатом состоянии.
+@secondary_toggled_border-thickness_toggleButton_button:                    2px;
+//Толщина обводки неосновной кнопки в зажатом состоянии.
+@primary_toggled_border-thickness_toggleButton_button:                      2px;
+
 //Цвет обводки кнопки-иконки для тулбара в зажатом состоянии.
 @secondary_toggled_border-color_toggleButton_toolButton:                    @secondary_color;
 //Цвет обводки залипающей кнопки в зажатом состоянии.
@@ -608,5 +617,15 @@
 @readonly_contrast_toggled_background-color_toggleButton_pushButton:        transparent;
 //Тень залипающей кнопки
 @box-shadow_toggleButton_pushButton:                                        none;
+
+
+/*toggle big separator стили для большого разделителя*/
+//Цвет иконки большого разделителя
+@icon-color_toggleBigSeparator:                                             @unaccented_icon-color;
+@icon-color_hover_toggleBigSeparator:                                       @link_hover_text-color;
+@icon-color_active_toggleBigSeparator:                                      @icon-color_hover_toggleBigSeparator;
+@width_toggleBigSeparator:                                                  26px;
+@height_toggleBigSeparator:                                                 @width_toggleBigSeparator;
+@icon-size_toggleBigSeparator:                                              @width_toggleBigSeparator;
 
 //last line

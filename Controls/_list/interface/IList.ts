@@ -1,3 +1,6 @@
+import { RecordSet } from 'Types/collection';
+import { TemplateFunction } from 'UI/Base';
+
 /**
  * Интерфейс для списков.
  *
@@ -5,6 +8,72 @@
  * @public
  * @author Авраменко А.С.
  */
+
+type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
+type TIconStyle = 'default'|'attention'|'error'|'done';
+type TItemActionsPosition = 'inside'|'outside'|'custom';
+type TActionAlignment = 'horizontal'|'vertical';
+type TActionCaptionPosition = 'right'|'bottom'|'none';
+type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
+type TListStyle = 'master'|'default';
+type TVerticalItemPadding = 'S'|null;
+type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
+
+interface IContextMenuConfig {
+    items?: RecordSet;
+    groupTemplate?: TemplateFunction|string;
+    groupingKeyCallback?: (item) => string;
+    itemTemplate?: TemplateFunction|string;
+    footerTemplate?: TemplateFunction|string;
+    headerTemplate?: TemplateFunction|string;
+}
+
+interface IItemAction {
+    id: string;
+    title?: string;
+    icon?: string;
+    showType?: 0|1|2;
+    style?: string;
+    iconStyle?: TIconStyle;
+    handler?: (item) => void;
+    parent?: string;
+    'parent@'?: boolean|null;
+}
+
+interface IItemPadding {
+    top?: TVerticalItemPadding;
+    bottom?: TVerticalItemPadding;
+    left?: THorizontalItemPadding;
+    right?: THorizontalItemPadding;
+}
+
+interface ISelectionStrategy {
+    name: string;
+    options?;
+}
+
+export interface IList {
+    contextMenuVisibility?: boolean;
+    contextMenuConfig?: IContextMenuConfig;
+    emptyTemplate?: TemplateFunction|string;
+    footerTemplate?: TemplateFunction|string;
+    multiSelectVisibility?: TMultiSelectVisibility;
+    itemActions?: IItemAction[];
+    itemActionsPosition?: TItemActionsPosition;
+    actionAlignment?: TActionAlignment;
+    actionCaptionPosition?: TActionCaptionPosition;
+    itemActionVisibilityCallback?: (action: IItemAction, item) => boolean;
+    itemActionsProperty?: string;
+    markedKey?: string|number;
+    markerVisibility?: TMarkerVisibility;
+    uniqueKeys?: boolean;
+    itemsReadyCallback?: (items) => void;
+    dataLoadCallback?: (items) => void;
+    dataLoadErrback?: () => void;
+    style?: TListStyle;
+    itemPadding?: IItemPadding;
+    selectionStrategy?: ISelectionStrategy;
+}
 
 /*
  * Interface for lists.
@@ -34,7 +103,7 @@
  * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
  * В качестве ключей можно использовать следующие свойства:
  * - items - для смены набора элементов.
- * - groupingKeyCallback, groupingTemplate для установки группировки.
+ * - groupingKeyCallback, groupTemplate для установки группировки.
  * - itemTemplate - шаблон элемента меню.
  * - footerTemplate - шаблон футера.
  * - headerTemplate - шаблон шапки.
@@ -54,7 +123,7 @@
  * См. <a href="/materials/demo-ws4-list-base">демо-пример</a>.
  * @default Controls/list:EmptyTemplate
  * @example
- * <pre>
+ * <pre class="brush: html">
  *    <Controls.list:View>
  *       <ws:emptyTemplate>
  *          <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="l">
@@ -454,7 +523,7 @@
 
 /**
  * @name Controls/_list/interface/IList#uniqueKeys
- * @cfg {String} Определяет стратегию вставки элементов при загрузке с дублирующимися идентификаторами.
+ * @cfg {Boolean} Определяет стратегию вставки элементов при загрузке с дублирующимися идентификаторами.
  * @remark
  * true - Merge, элементы с одинаковым идентификатором будут объединены в один.
  * false - Add, элементы с одинаковым идентификатором будут объединены в один.
@@ -462,7 +531,7 @@
 
 /*
  * @name Controls/_list/interface/IList#uniqueKeys
- * @cfg {String} Strategy for loading new list items.
+ * @cfg {Boolean} Strategy for loading new list items.
  * @remark
  * true - Merge, items with the same identifier will be combined into one.
  * false - Add, items with the same identifier will be shown in the list.
@@ -539,10 +608,10 @@
  */
 
 /**
- * Перезагружает данные из источника данных. 
- * При перезагрузке в фильтр уходит список развернутых узлов (с целью восстановить пользователю структуру, которая была до перезагрузки). 
+ * Перезагружает данные из источника данных.
+ * При перезагрузке в фильтр уходит список развернутых узлов (с целью восстановить пользователю структуру, которая была до перезагрузки).
  * В дальнейшем также планируется передавать навигацию, в настоящее время этот функционал в разработке.
- * @function 
+ * @function
  * @name Controls/_list/interface/IList#reload
  */
 

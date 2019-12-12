@@ -103,7 +103,7 @@ class Stack extends BaseOpener {
                 Logger.error('Controls/popup:Stack: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }
             BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-                BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
+                BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
                     resolve(popupId);
                 });
             });

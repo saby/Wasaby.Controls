@@ -3,14 +3,17 @@ import template = require('wml!Controls/_search/Input/Container');
 import {constants} from 'Env/Env';
 
 /**
- * Контрол используют в качестве контейнера для {@link Controls/search:Input}. 
- * Он обеспечивает передачу текстового значения, введённого в Controls/search:Input, в {@link Controls/search:Controller}.
+ * Контрол используют в качестве контейнера для {@link Controls/search:Input}. Он обеспечивает передачу текстового значения, введённого в Controls/search:Input, в {@link Controls/search:Controller}.
+ * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
  *
  * @class Controls/_search/Input/Container
  * @extends Core/Control
  * @author Герасимов А.М.
  * @control
  * @public
+ * @remark
+ * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
  */
 
 /*
