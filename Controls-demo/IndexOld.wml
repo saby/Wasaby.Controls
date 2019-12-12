@@ -80,6 +80,11 @@
          </Router.router:Reference>
       </div>
       <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/Tile/Index' }}">
+            <a href="{{content.href}}">tile_new</a>
+         </Router.router:Reference>
+      </div>
+      <div>
          <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FBase'}}">List/Base</a>
       </div>
       <div>

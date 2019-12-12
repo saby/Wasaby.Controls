@@ -1,0 +1,49 @@
+<div class="controlsDemo__wrapper">
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
+        <div class="controls-text-label_theme-{{_options.theme}}">Стандартные отступы</div>
+        <Controls.tile:View
+                tileMode="dynamic"
+                displayProperty="title"
+                imageProperty="image"
+                keyProperty="id"
+                source="{{_viewSource}}"/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру null</div>
+        <Controls.tile:View
+                tileMode="dynamic"
+                displayProperty="title"
+                imageProperty="image"
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="null" right="null"/>
+        </Controls.tile:View>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру S</div>
+        <Controls.tile:View
+                tileMode="dynamic"
+                displayProperty="title"
+                imageProperty="image"
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="s" right="s"/>
+        </Controls.tile:View>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
+        <Controls.tile:View
+                tileMode="dynamic"
+                displayProperty="title"
+                imageProperty="image"
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="m" right="m"/>
+        </Controls.tile:View>
+    </div>
+
+</div>

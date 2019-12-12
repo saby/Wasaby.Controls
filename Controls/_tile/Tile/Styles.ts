@@ -2,6 +2,14 @@
  * @mixin Controls/_tile/Tile/Styles
  * @private
  *
+ * @css @spacing_TileView-between-items-borderLeft_default Default size of spacing between first tile item in a row and left border.
+ * @css @spacing_TileView-between-items-borderLeft_null Null size of spacing between first tile item in a row and left border.
+ * @css @spacing_TileView-between-items-borderLeft_s S size of spacing between first tile item in a row and left border.
+ * @css @spacing_TileView-between-items-borderLeft_m M size of spacing between first tile item in a row and left border.
+ * @css @spacing_TileView-between-items-borderRight_default Default size of spacing between first tile item in a row and right border.
+ * @css @spacing_TileView-between-items-borderRight_null Null size of spacing between first tile item in a row and right border.
+ * @css @spacing_TileView-between-items-borderRight_s S size of spacing between first tile item in a row and right border.
+ * @css @spacing_TileView-between-items-borderRight_m M size of spacing between first tile item in a row and right border.
  * @css @spacing_TileView-between-items Spacing between items.
  * @css @border-width_TileView-item Thickness of the border around items.
  * @css @box-shadow-size_TileView-item Shadow size around items.
