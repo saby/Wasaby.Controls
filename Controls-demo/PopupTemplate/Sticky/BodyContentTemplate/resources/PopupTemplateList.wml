@@ -1,0 +1,14 @@
+<Controls.popupTemplate:Sticky>
+    <ws:headerContentTemplate>
+    <Controls.heading:Title attr:class="controls-StackTemplate__caption_text controls-StackTemplate__caption_text_theme_{{_options.theme}}"
+                                        caption="Подпись со скроллом"
+                                        style="secondary"
+                                        size="l"
+                                        readOnly="{{true}}"/>
+    </ws:headerContentTemplate>
+    <ws:bodyContentTemplate>
+        <Controls.scroll:Container scrollbarVisible="{{true}}" shadowVisible="{{false}}" attr:class="ControlsDemo-PopupTemplate__scroll">
+            <Controls.list:View displayProperty="title" keyProperty="id" source="{{_options.source}}"/>
+        </Controls.scroll:Container>
+    </ws:bodyContentTemplate>
+</Controls.popupTemplate:Sticky>

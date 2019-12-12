@@ -64,15 +64,12 @@
  * @cfg {Boolean} Определяет прозрачность фона кнопки закрытия.
  * @default true
  */
-import {TemplateFunction} from 'UI/Base';
-export interface IPopupTemplateOptions {
+
+import {IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
+export interface IPopupTemplateOptions extends IPopupTemplateBaseOptions {
     headingCaption?: string;
     headingStyle?: string;
     headingSize?: string;
-    headerContentTemplate?: TemplateFunction;
-    bodyContentTemplate?: TemplateFunction;
-    footerContentTemplate?: TemplateFunction;
-    closeButtonVisibility?: boolean;
     closeButtonViewMode?: string;
     closeButtonTransparent?: boolean;
 }
