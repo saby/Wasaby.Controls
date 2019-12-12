@@ -24,7 +24,6 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @demo Controls-demo/Switch/SwitchDemo
  *
  * @mixes Controls/_toggle/Switch/SwitchStyles
- * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
  */
 
 /*
@@ -43,7 +42,6 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @demo Controls-demo/Switch/SwitchDemo
  *
  * @mixes Controls/_toggle/Switch/SwitchStyles
- * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
  */
 
 /**
