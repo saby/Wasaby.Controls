@@ -1,11 +1,11 @@
 <div class="controlsDemo__flexRow">
     <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
         <div class="controls-text-label_theme-{{_options.theme}}">Прилипающий блок с footerContentTemplate</div>
-        <Controls.popup:Sticky name="stickyWithoutHead" template="wml!Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/resources/PopupTemplateWithFooter"
+        <Controls.popup:Sticky name="sticky" template="wml!Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/resources/PopupTemplateWithFooter"
                                                         closeOnOutsideClick="{{true}}">
              <ws:direction vertical="top" horizontal="right"/>
              <ws:targetPoint vertical="bottom" horizontal="left"/>
         </Controls.popup:Sticky>
-        <Controls.buttons:Button name="stickyButtonWithoutHead" caption="sticky" on:click="openStickyWithoutHead()"/>
+        <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()"/>
     </div>
 </div>

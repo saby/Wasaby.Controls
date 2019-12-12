@@ -28,13 +28,6 @@ class BodyContentTemplate extends Control<IPopupTemplateBaseOptions> {
             opener: this._children.stickyButton
         });
     }
-
-    openStickyWithoutHead() {
-        this._children.stickyWithoutHead.open({
-            target: this._children.stickyButtonWithoutHead,
-            opener: this._children.stickyButtonWithoutHead
-        });
-    }
     openScrollSticky() {
         this._children.stickyScroll.open({
             target: this._children.stickyScrollButton,

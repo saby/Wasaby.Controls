@@ -15,12 +15,5 @@ class FooterContentTemplate extends Control<IPopupTemplateBaseOptions> {
             opener: this._children.stickyButton
         });
     }
-
-    openStickyWithoutHead() {
-        this._children.stickyWithoutHead.open({
-            target: this._children.stickyButtonWithoutHead,
-            opener: this._children.stickyButtonWithoutHead
-        });
-    }
 }
 export default FooterContentTemplate;
