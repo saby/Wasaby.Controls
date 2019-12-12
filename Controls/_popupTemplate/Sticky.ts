@@ -10,7 +10,7 @@ import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from "./interf
  * @public
  * @category Popup
  * @author Красильников А.С.
- * @implements Controls/_popupTemplate/interface/IPopupTemplate
+ * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
  */
 
 class StickyTemplate extends Control<IPopupTemplateBaseOptions> implements IPopupTemplateBase {
