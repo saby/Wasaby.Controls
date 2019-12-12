@@ -19,45 +19,26 @@ define('Controls/interface/IDropdown', [], function() {
 
    /**
     * @name Controls/interface/IDropdown#itemTemplate
-    * @cfg {Function} Шаблон отображения элемента в выпадающем списке.
-    * @default "Controls/dropdown:ItemTemplate"
-    * @remark
-    * Для определения шаблона следует вызвать базовый шаблон "Controls/dropdown:ItemTemplate".
-    * Шаблон должен быть помещен в контрол с помощью тега <ws:partial> с атрибутом "template".
-    * По умолчанию, базовый шаблон Controls/dropdown:ItemTemplate отображает только поле "title".
-    * Чтобы настроить отображение записей, нужно установить значения следующим полям:
-    *    -  displayProperty — имя поля, значение которого будет отображаться,
-    *    -  iconAlign - выравнивание иконки, по умолчанию по левому краю,
-    *    -  marker — определяет, отображается ли маркер у выбранного значения,
-    *    -  multiLine — определяет, может ли запись отображаться в несколько строк,
-    *    -  additionalTextTemplate — шаблон отображения дополнительного текста.
-    * Чтобы переопределить отображаемый контент, используйте опцию {@link contentTemplate}.
+    * @cfg {Function} Устанавливает шаблон отображения элемента в выпадающем списке.
+    * @default Controls/dropdown:ItemTemplate
     * @example
-    * Меню с комментариями к записям в списке.
-    * TMPL:
-    * <pre>
-    *    <Controls.dropdown:Button
-    *          keyProperty="id"
-    *          icon="icon-medium icon-AddButtonNew"
-    *          source="{{_source)}}"
-    *          tooltip="Add">
-    *       <ws:itemTemplate>
-    *          <ws:partial
-    *             template="Controls/dropdown:ItemTemplate"
-    *             itemData="{{itemData}}"
-    *             multiLine="{{true}}">
+    * <pre class="brush: html">
+    * <Controls.dropdown:Button source="{{_source)}}">
+    *    <ws:itemTemplate>
+    *       <ws:partial template="Controls/dropdown:ItemTemplate" multiLine="{{true}}">
     *          <ws:contentTemplate>
     *             <div class="demo-menu__item">
-    *                <div class="demo-title">{{itemTemplate.itemData.item.get('title')}}</div>
-    *                <div class="demo-comment">{{itemTemplate.itemData.item.get('comment')}}</div>
+    *                <div class="demo-title">{{contentTemplate.itemData.item.get('title')}}</div>
     *             </div>
     *          </ws:contentTemplate>
-    *          </ws:partial>
-    *       </ws:itemTemplate>
-    *    </Controls.dropdown:Button>
+    *          <ws:additionalTextTemplate>
+    *             <div class="demo-comment">{{contentTemplate.itemData.item.get('comment')}}</div>
+    *          </ws:additionalTextTemplate>
+    *       </ws:partial>
+    *    </ws:itemTemplate>
+    * </Controls.dropdown:Button>
     * </pre>
-    * JS:
-    * <pre>
+    * <pre class="brush: js">
     *    this._source = new Memory ({
     *       data: [
     *           { id: 1,
