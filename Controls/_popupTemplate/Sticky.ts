@@ -1,9 +1,10 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls/_popupTemplate/Sticky/Sticky');
+import * as template from 'wml!Controls/_popupTemplate/Sticky/Sticky';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from "./interface/IPopupTemplateBase";
 
 /**
+ * Базовый шаблон для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ прилипающих блоков}.
  * @class Controls/_popupTemplate/Sticky
  * @extends Core/Control
  * @control
@@ -11,6 +12,10 @@ import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from "./interf
  * @category Popup
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
+ * @demo Controls-demo/PopupTemplate/Sticky/BodyContentTemplate/Index
+ * @demo Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/Index
+ * @demo Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/Index
+ * @demo Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/Index
  */
 
 class StickyTemplate extends Control<IPopupTemplateBaseOptions> implements IPopupTemplateBase {
