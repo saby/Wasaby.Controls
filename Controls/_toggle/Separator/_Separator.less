@@ -1,17 +1,20 @@
 .controls-Separator__icon_size_theme-@{themeName} {
-   .icon-size-without-important(@size-Separator__icon);
+   font-size: @icon-size_toggleSeparator;
+   width: @icon-size_toggleSeparator;
+   height: @icon-size_toggleSeparator;
+   font-family: @icon_font-family_s;
 }
 
 .controls-Separator__icon_style-secondary_theme-@{themeName} {
-   color: @color-Separator__icon_style-secondary;
+   color: @secondary_icon-color_toggleSeparator;
 }
 
 .controls-Separator__icon_style-primary_theme-@{themeName} {
-   color: @color-Separator__icon_style-primary;
+   color: @primary_icon-color_toggleSeparator;
 }
 
 .controls-Separator__icon_style-additional_theme-@{themeName} {
-   color: @color-Separator__icon_style-additional;
+   color: @unaccented_icon-color_toggleSeparator;
 }
 
 .controls-Separator__wrapper {
@@ -22,8 +25,8 @@
 }
 
 .controls-Separator__wrapper_theme-@{themeName} {
-   width: @size-Separator;
-   height: @size-Separator;
+   width: @width_toggleSeparator;
+   height: @height_toggleSeparator;
 }
 
 .controls-Separator__wrapper:before {
@@ -35,28 +38,28 @@
 }
 
 .controls-Separator__icon_style-secondary_theme-@{themeName}:active {
-   color: @color-Separator__icon_style-secondary_hovered;
+   color: @secondary_active_icon-color_toggleSeparator;
 }
 
 .controls-Separator__icon_style-primary_theme-@{themeName}:active {
-   color: @color-Separator__icon_style-primary_hovered;
+   color: @primary_active_icon-color_toggleSeparator;
 }
 
-.controls-Separator__icon_style-additional_theme-@{themeName}:active{
-   color: @color-Separator__icon_style-additional_hovered;
+.controls-Separator__icon_style-unaccented_theme-@{themeName}:active {
+   color: @unaccented_active_icon-color_toggleSeparator;
 }
 
 .ws-is-hover {
    .controls-Separator__icon_style-secondary_theme-@{themeName}:hover {
-      color: @color-Separator__icon_style-secondary_hovered;
+      color: @secondary_hover_icon-color_toggleSeparator;
    }
 
    .controls-Separator__icon_style-primary_theme-@{themeName}:hover {
-      color: @color-Separator__icon_style-primary_hovered;
+      color: @primary_hover_icon-color_toggleSeparator;
    }
 
-   .controls-Separator__icon_style-additional_theme-@{themeName}:hover {
-      color: @color-Separator__icon_style-additional_hovered;
+   .controls-Separator__icon_style-unaccented_theme-@{themeName}:hover {
+      color: @unaccented_hover_icon-color_toggleSeparator;
    }
 }
 

@@ -4,7 +4,7 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 
 export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
-    style?: string;
+    style?: 'primary' | 'secondary' | 'unaccented';
     bold?: boolean;
 }
 
@@ -21,9 +21,8 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
- * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
+ * @demo Controls-demo/toggle/BigSeparator/Index
  *
- * @mixes Controls/_toggle/Separator/SeparatorStyles
  */
 
 /*
@@ -39,16 +38,15 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
- * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
+ * @demo Controls-demo/toggle/BigSeparator/Index
  *
- * @mixes Controls/_toggle/Separator/SeparatorStyles
  */
 
 /**
  * @name Controls/_toggle/Separator#style
  * @cfg {String} Стиль отображения разделителя.
  * @variant secondary
- * @variant additional
+ * @variant unaccented
  * @variant primary
  */
 
@@ -113,8 +111,8 @@ class Separator extends Control<ISeparatorOptions> implements ICheckable {
             bold: EntityDescriptor(Boolean),
             style: EntityDescriptor(String).oneOf([
                 'secondary',
-                'additional',
-                'primary'
+                'primary',
+                'unaccented'
             ]),
             value: EntityDescriptor(Boolean)
         };
