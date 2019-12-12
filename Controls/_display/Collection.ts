@@ -28,7 +28,6 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 
-import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
 import {IVirtualScrollConfig} from 'Controls/list';
@@ -624,7 +623,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _startIndex: number;
     protected _stopIndex: number;
 
-    protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
     protected _$virtualScrollMode: IVirtualScrollMode;
 
@@ -685,7 +683,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._$virtualScrollMode = virtualScrollConfig.mode;
 
-        this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
             new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
 
@@ -1972,13 +1969,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // endregion
 
-    // FIXME Will be removed, managers will be created from the outside of
-    // the model in Stage 2. For now we have to create them here and access
-    // them from the model to stay compatible with BaseControl.
-    getItemActionsManager(): ItemActionsManager {
-        return this._itemActionsManager;
-    }
-
     getDisplayProperty(): string {
         return this._$displayProperty;
     }
@@ -2031,20 +2021,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         this._$editingConfig = config;
         this._nextVersion();
-    }
-
-    setItemActions(item: CollectionItem<S>, actions: any): void {
-        this._itemActionsManager.setItemActions(item, actions);
-        this._nextVersion();
-    }
-
-    setActiveItem(item: CollectionItem<S>): void {
-        this._itemActionsManager.setActiveItem(item);
-        this._nextVersion();
-    }
-
-    getActiveItem(): CollectionItem<S> {
-        return this._itemActionsManager.getActiveItem() as CollectionItem<S>;
     }
 
     getSearchValue(): string {
@@ -3240,7 +3216,6 @@ Object.assign(Collection.prototype, {
     _onCollectionChange: null,
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
-    _itemActionsManager: null,
     _virtualScrollManager: null,
     _controllerCache: null,
     _startIndex: 0,

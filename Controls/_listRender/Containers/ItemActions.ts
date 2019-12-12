@@ -3,7 +3,7 @@ import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
 import template = require('wml!Controls/_listRender/Containers/ItemActions/ItemActions');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
-import { CollectionItem, Collection } from 'Controls/display';
+import { CollectionItem, Collection, ItemActionsController } from 'Controls/display';
 import { Model } from 'Types/entity';
 
 import * as itemActionsUtil from './ItemActions/processItemActions';
@@ -35,7 +35,7 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
                 options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback
             )
         ) {
-            this._assignItemActions(
+            ItemActionsController.assignActions(
                 options.listModel,
                 options.itemActions,
                 options.itemActionVisibilityCallback
@@ -45,7 +45,7 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
 
     protected _onContainerMouseEnter(): void {
         if (!this._initializedActions) {
-            this._assignItemActions(
+            ItemActionsController.assignActions(
                 this._options.listModel,
                 this._options.itemActions,
                 this._options.itemActionVisibilityCallback
@@ -73,17 +73,6 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
             item,
             clickEvent,
             true
-        );
-    }
-
-    protected _assignItemActions(
-        listModel: Collection<Model>,
-        itemActions: any[],
-        itemActionVisibilityCallback: TItemActionVisibilityCallback
-    ): void {
-        listModel.getItemActionsManager().assignItemActions(
-            itemActions,
-            itemActionVisibilityCallback
         );
     }
 

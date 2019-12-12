@@ -73,10 +73,18 @@ var _private = {
             });
         }
         if (!self._destroyed) {
-            return options.listModel.setItemActions(item, {
-                all,
-                showed
-            });
+            if (options.useNewModel) {
+                return displayLib.ItemActionsController.setActionsToItem(
+                    options.listModel,
+                    item.getContents().getId(),
+                    { all, showed }
+                );
+            } else {
+                return options.listModel.setItemActions(item, {
+                    all,
+                    showed
+                });
+            }
         }
     },
 

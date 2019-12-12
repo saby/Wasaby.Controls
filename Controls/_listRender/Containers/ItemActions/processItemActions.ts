@@ -1,4 +1,4 @@
-import { CollectionItem } from 'Controls/display';
+import { CollectionItem, ItemActionsController } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
@@ -39,8 +39,7 @@ export function openActionsMenu(
     // TODO look carefully at the conditions in BaseControl, port them
     // over if needed
     // TODO Part of this should probably be moved into the manager
-    // FIXME This should not be calling the manager itself
-    const menuActions = this._options.listModel.getItemActionsManager().getMenuActions(item);
+    const menuActions = ItemActionsController.getMenuActions(item);
     if (menuActions && menuActions.length > 0) {
         event.stopPropagation();
         event.preventDefault();
@@ -79,7 +78,7 @@ export function openActionsMenu(
         };
 
         // TODO Move this to manager
-        this._options.listModel.setActiveItem(item);
+        ItemActionsController.setActiveItem(this._options.listModel, item.getContents().getId());
         // this._itemWithShownMenu = item.getContents();
 
         import('css!theme?Controls/toolbars').then(() => {
@@ -95,7 +94,7 @@ function openActionsSubmenu(
     parentAction: any,
     event: SyntheticEvent<MouseEvent>
 ): void {
-    const childActions = this._options.listModel.getItemActionsManager().getChildActions(item, parentAction);
+    const childActions = ItemActionsController.getChildActions(item, parentAction);
     if (childActions.length > 0) {
         const closeHandler = closeActionsMenu.bind(this);
         const submenuRecordSet = new RecordSet({ rawData: childActions, keyProperty: 'id' });
@@ -124,7 +123,7 @@ function openActionsSubmenu(
             className: 'controls-DropdownList__margin-head'
         };
 
-        this._options.listModel.setActiveItem(item);
+        ItemActionsController.setActiveItem(this._options.listModel, item.getContents().getId());
 
         import('css!Controls/input').then(() => {
             this._notify('requestDropdownMenuOpen', [dropdownConfig]);
@@ -140,7 +139,13 @@ export function closeActionsMenu(args?: { action: string, event: SyntheticEvent<
         // the action handler first
         if (args && args.action === 'itemClick') {
             const action = args.data && args.data[0] && args.data[0].getRawData();
-            processItemActionClick.call(this, args.event, action, this._options.listModel.getActiveItem(), true);
+            processItemActionClick.call(
+                this,
+                args.event,
+                action,
+                ItemActionsController.getActiveItem(this._options.listModel),
+                true
+            );
 
             // If this action has children, don't close the menu if it was clicked
             if (action['parent@']) {
@@ -148,8 +153,7 @@ export function closeActionsMenu(args?: { action: string, event: SyntheticEvent<
             }
         }
 
-        // TODO Move this to the manager as well??
-        this._options.listModel.setActiveItem(null);
+        ItemActionsController.setActiveItem(this._options.listModel, null);
     }
     this._notify('requestDropdownMenuClose');
 }
