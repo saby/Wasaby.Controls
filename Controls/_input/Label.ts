@@ -16,7 +16,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions, IFontSi
  * @extends Core/Control
  *
  * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/IIconSize
+ * @mixes Controls/_interface/IFontSize
  *
  * @public
  * @demo Controls-demo/Input/Labels/Index
