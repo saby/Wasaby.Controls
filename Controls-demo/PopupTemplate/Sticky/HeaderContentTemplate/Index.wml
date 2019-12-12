@@ -17,22 +17,4 @@
         </Controls.popup:Sticky>
         <Controls.buttons:Button name="stickyButtonWithoutHead" caption="sticky" on:click="openStickyWithoutHead()"/>
     </div>
-    <div class="controlsDemo__wrapper  controlsDemo_fixedWidth500">
-        <div class="controls-text-label_theme-{{_options.theme}}">Прилипающий блок с headerContentTemplate без кнопки закрытия</div>
-        <Controls.popup:Sticky name="stickyClose" template="wml!Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/resources/PopupTemplate"
-                                                  closeOnOutsideClick="{{true}}">
-             <ws:direction vertical="bottom" horizontal="right"/>
-             <ws:targetPoint vertical="top" horizontal="left"/>
-        </Controls.popup:Sticky>
-        <Controls.buttons:Button name="stickyCloseButton" caption="sticky" on:click="openCloseSticky()"/>
-    </div>
-    <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
-        <div class="controls-text-label_theme-{{_options.theme}}">Прилипающий блок без headerContentTemplate и кнопки закрытия</div>
-        <Controls.popup:Sticky name="stickyCloseWithoutHead" template="wml!Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/resources/PopupTemplateWithoutHead"
-                                                             closeOnOutsideClick="{{true}}">
-             <ws:direction vertical="bottom" horizontal="right"/>
-             <ws:targetPoint vertical="top" horizontal="left"/>
-        </Controls.popup:Sticky>
-        <Controls.buttons:Button name="stickyCloseButtonWithoutHead" caption="sticky" on:click="openCloseStickyWithoutHead()"/>
-    </div>
 </div>

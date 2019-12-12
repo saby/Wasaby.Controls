@@ -1,14 +1,12 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
-import controlTemplate = require('wml!Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/Index');
-import popupTemplate = require('wml!Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/resources/PopupTemplate');
-import popupTemplateWithoutHead = require('wml!Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/resources/PopupTemplateWithoutHead');
+import controlTemplate = require('wml!Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/Index');
+import popupTemplate = require('wml!Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/resources/PopupTemplate');
 import 'css!Controls-demo/Controls-demo';
 
 class HeaderContentTemplate extends Control<IPopupTemplateBaseOptions> {
     protected _template: TemplateFunction = controlTemplate;
     private _popupTemplate: TemplateFunction = popupTemplate;
-    private _popupTemplateWithoutHead: TemplateFunction = popupTemplateWithoutHead;
     static _theme: string[] = ['Controls/Classes'];
 
     openSticky(): void {
@@ -21,12 +19,12 @@ class HeaderContentTemplate extends Control<IPopupTemplateBaseOptions> {
         });
     }
 
-    openStickyWithoutHead(): void {
-        this._children.stickyWithoutHead.open({
-            target: this._children.stickyButtonWithoutHead,
-            opener: this._children.stickyButtonWithoutHead,
+    openCloseSticky(): void {
+        this._children.stickyClose.open({
+            target: this._children.stickyCloseButton,
+            opener: this._children.stickyCloseButton,
             templateOptions: {
-                closeButtonVisibility: true
+                closeButtonVisibility: false
             }
         });
     }

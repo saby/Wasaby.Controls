@@ -1,4 +1,5 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
+import {IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
 import * as MemorySourceData from 'Controls-demo/Utils/MemorySourceData';
 import controlTemplate = require('wml!Controls-demo/PopupTemplate/Sticky/BodyContentTemplate/Index');
 import popupTemplate = require('wml!Controls-demo/PopupTemplate/Sticky/BodyContentTemplate/resources/PopupTemplate');
@@ -7,7 +8,7 @@ import {Memory} from 'Types/source';
 import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/PopupTemplate/Sticky/Sticky';
 
-class BodyContentTemplate extends Control<IControlOptions> {
+class BodyContentTemplate extends Control<IPopupTemplateBaseOptions> {
     protected _template: TemplateFunction = controlTemplate;
     private _popupTemplate: TemplateFunction = popupTemplate;
     private _popupTemplateList: TemplateFunction = popupTemplateList;

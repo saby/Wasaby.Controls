@@ -31,26 +31,6 @@
  */
 
 /**
- * @name Controls/_popupTemplate/interface/IPopupTemplate#headerContentTemplate
- * @cfg {function|String} Контент, располагающийся между заголовком и крестиком закрытия.
- */
-
-/**
- * @name Controls/_popupTemplate/interface/IPopupTemplate#bodyContentTemplate
- * @cfg {function|String} Основной контент шаблона, располагается под headerContentTemplate.
- */
-
-/**
- * @name Controls/_popupTemplate/interface/IPopupTemplate#footerContentTemplate
- * @cfg {function|String} Контент, располагающийся в нижней части шаблона.
- */
-
-/**
- * @name Controls/_popupTemplate/interface/IPopupTemplate#closeButtonVisibility
- * @cfg {Boolean} Определяет, будет ли отображаться кнопка закрытия
- * @default true
- */
-/**
  * @name Controls/_popupTemplate/interface/IPopupTemplate#closeButtonViewMode
  * @cfg {String} Стиль отображения кнопки закрытия
  * @variant toolButton

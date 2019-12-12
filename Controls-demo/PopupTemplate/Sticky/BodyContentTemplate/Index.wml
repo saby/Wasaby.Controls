@@ -1,6 +1,6 @@
 <div class="controlsDemo__flexRow">
     <div class="controlsDemo__wrapper  controlsDemo_fixedWidth500">
-        <div class="controls-text-label_theme-{{_options.theme}}">Прилипающий блок с bodyContentTemplate</div>
+        <div class="controls-text-label_theme-{{_options.theme}}">bodyContentTemplate с полями ввода</div>
         <Controls.popup:Sticky name="sticky" template="wml!Controls-demo/PopupTemplate/Sticky/BodyContentTemplate/resources/PopupTemplate"
                                              closeOnOutsideClick="{{true}}">
              <ws:direction vertical="top" horizontal="right"/>
