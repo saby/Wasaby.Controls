@@ -192,7 +192,8 @@ var _private = {
  * Контрол используют в качестве контроллера для организации поиска в реестрах. 
  * Он обеспечивает связь между {@link Controls/search:InputContainer} и {@link Controls/list:Container} — контейнерами для строки поиска и списочного контрола соответветственно. 
  * С помощью этого контрола можно настроить: временную задержку между вводом символа и началом поиска, количество символов, с которых начинается поиск, параметры фильтрации и другое.
- *
+ * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
+ * 
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
