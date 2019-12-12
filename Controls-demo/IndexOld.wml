@@ -353,16 +353,26 @@
          Demo
       </a>
 
-      <h1>
-         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FDecorators">
-            Decorators
-         </a>
-      </h1>
-      <div>
-         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FMoney%252FMoney">
-            Money
-         </a>
-      </div>
+      <h1>Decorator</h1>
+      <h2>
+         <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FWrapURLs%252FIndex">WrapURLs</a>
+      </h2>
+      <ul>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FWrapURLs%252FIndex">value</a>
+         </li>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FWrapURLs%252FNewTab%252FIndex">NewTab</a>
+         </li>
+      </ul>
+      <h2>
+         <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FPhone%252FIndex">Phone</a>
+      </h2>
+      <ul>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FPhone%252FIndex">value</a>
+         </li>
+      </ul>
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FNumber%252FNumber">
             Number
@@ -376,11 +386,6 @@
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FHighlight%252FHighlight">
             Highlight
-         </a>
-      </div>
-      <div>
-         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FPhoneNumber%252FPhoneNumber">
-            PhoneNumber
          </a>
       </div>
    </div>

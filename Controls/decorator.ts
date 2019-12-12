@@ -40,10 +40,10 @@ import {default as Markup} from './_decorator/Markup';
 import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 
-export {default as Phone} from 'Controls/_decorator/Phone';
+export {default as Phone, IPhoneOptions} from 'Controls/_decorator/Phone';
 export {default as Money, IMoneyOptions} from 'Controls/_decorator/Money';
-import {default as WrapURLs, IWrapURLsOptions} from 'Controls/_decorator/WrapURLs';
-import {Highlight, SearchMode, IHighlightOptions} from 'Controls/_decorator/Highlight';
+export {default as WrapURLs, IWrapURLsOptions} from 'Controls/_decorator/WrapURLs';
+export {default as Highlight, SearchMode, IHighlightOptions} from 'Controls/_decorator/Highlight';
 
 import * as Converter from './_decorator/Markup/Converter';
 import {default as InnerText}  from './_decorator/Markup/resolvers/innerText';
@@ -53,14 +53,9 @@ import {default as linkDecorate}  from './_decorator/Markup/resolvers/linkDecora
 import {default as linkWrapResolver}  from './_decorator/Markup/resolvers/linkWrap';
 
 export {
-    Highlight,
-    SearchMode,
-    IHighlightOptions,
     Markup,
     Number,
     PhoneNumber,
-    WrapURLs,
-    IWrapURLsOptions,
 
     Converter,
     InnerText,
