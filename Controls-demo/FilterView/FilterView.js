@@ -70,6 +70,7 @@ define('Controls-demo/FilterView/FilterView',
          _navigation: null,
          _itemsMore: null,
          _buttonItems: null,
+         _buttonItemsWithoutResetValue: null,
          _fastButtonItems: null,
          _fastButtonItems2: null,
          _oneFastItems: null,
@@ -436,6 +437,8 @@ define('Controls-demo/FilterView/FilterView',
                   ]
                })}
             ];
+            this._buttonItemsWithoutResetValue = Clone(this._buttonItems);
+            this._buttonItemsWithoutResetValue.forEach(function (item) {delete item.resetValue;});
             this._fastButtonItems = [
                {
                   name: 'date',
