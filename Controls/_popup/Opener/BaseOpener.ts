@@ -33,7 +33,7 @@ class BaseOpener extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     private _actionOnScroll: string = 'none';
     private _popupId: string = '';
-    private _indicatorId: string = '';
+    private _indicatorId = null;
     private _loadModulesPromise: Promise<ILoadDependencies>;
     private _openerUpdateCallback: Function;
     private _openPopupTimerId: number;
@@ -62,8 +62,8 @@ class BaseOpener extends Control<IControlOptions> {
     }
     open(popupOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
-            const cfg = this._getConfig(popupOptions || {});
             this._toggleIndicator(true);
+            const cfg = this._getConfig(popupOptions || {});
             let resultPromise: Promise<string>;
             // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
             if (cfg.isCompoundTemplate) {
@@ -222,7 +222,11 @@ class BaseOpener extends Control<IControlOptions> {
             if (this._getCurrentPopupId() || this._action) {
                 return;
             }
-            this._indicatorId = this._notify('showIndicator', [this._getIndicatorConfig()], {bubbling: true});
+            this._indicatorId = this._notify('showIndicator', [{
+                id: this._indicatorId,
+                message: rk('Загрузка'),
+                delay: 0 // by standart
+            }], {bubbling: true});
         } else if (this._indicatorId) {
             this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
             this._indicatorId = null;
