@@ -18,7 +18,7 @@ define('Controls/EditAtPlace', [
 
    var EditAtPlace = editableArea.View.extend({
       _beforeMount: function() {
-         Env.IoC.resolve('ILogger').warn('Компонент Controls/EditAtPlace был перенесён и будет удалён в версию 3.19.110. Используйте компонент Controls/editableArea:View.');
+         Env.IoC.resolve('ILogger').error('Компонент Controls/EditAtPlace был перенесён и будет удалён в версию 3.19.110. Используйте компонент Controls/editableArea:View.');
          EditAtPlace.superclass._beforeMount.apply(this, arguments);
       },
 
