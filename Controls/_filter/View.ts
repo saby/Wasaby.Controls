@@ -33,6 +33,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @class Controls/_filter/View
  * @extends Core/Control
  * @mixes Controls/_filter/View/interface/IFilterView
+ * @mixes Controls/interface/ISelectorCallback
  * @control
  * @public
  * @author Золотова Э.Е.

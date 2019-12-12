@@ -25,6 +25,7 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
        * @extends Core/Control
        * @mixes Controls/interface/IFastFilter
        * @mixes Controls/_filter/Fast/FastStyles
+       * @mixes Controls/interface/ISelectorCallback
        * @demo Controls-demo/FastFilter/fastPG
        * @control
        * @public
