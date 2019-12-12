@@ -1795,6 +1795,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         _private.bindHandlers(this);
 
+        this._loadOffset = {};
         _private.initializeNavigation(this, newOptions);
         _private.updateNavigation(this);
 
@@ -2276,9 +2277,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _setLoadOffset: function(top, bottom) {
         if (this.__error) {
             return;
-        }
-        if (!this._loadOffset) {
-            this._loadOffset = {};
         }
         this._loadOffset.top = top;
         this._loadOffset.bottom = bottom;
