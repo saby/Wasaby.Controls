@@ -1457,7 +1457,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _isScrollShown: false,
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
-    _loadOffset: null,
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
     _loadingIndicatorContainerOffsetTop: 0,
