@@ -3,6 +3,7 @@
       <div class="controlsDemo-Link__title"></div>
       <div class="controlsDemo-Link__content">
          <div class="controlsDemo-Link__componentWrap">
+            {{_value}}
             <Controls.dateRange:Link
 			   attr:test_name="default_range"
                bind:value="_value"/>

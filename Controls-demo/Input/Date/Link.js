@@ -10,7 +10,7 @@ define('Controls-demo/Input/Date/Link', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
-      _value: new Date(2018, 0, 1)
+      _value: new Date()
    });
    return ModuleClass;
 });
