@@ -11,6 +11,7 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
 /**
  * Контрол "Строка поиска". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса. 
  * Функционал контрола идентичен полям ввода из библиотеки {@link Controls/input}, однако в отличие от них имеет собственное визуальное оформление.
+ * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
  *
  * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base
