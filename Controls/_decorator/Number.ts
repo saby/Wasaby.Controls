@@ -37,6 +37,7 @@ export interface INumberOptions extends IControlOptions {
      * @remark
      * true - число разделено на группы.
      * false - разделения не происходит.
+     * @default true
      * @demo Controls-demo/Decorator/Number/UseGrouping/Index
      */
     useGrouping: boolean;
@@ -48,6 +49,7 @@ export interface INumberOptions extends IControlOptions {
     /**
      * Режим форматирования дробной части числа.
      * @type {RoundMode}
+     * @default trunc
      * @demo Controls-demo/Decorator/Number/RoundMode/Index
      */
     roundMode: RoundMode;
@@ -160,15 +162,7 @@ class NumberDecorator extends Control<INumberOptions> {
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_decorator/Number#useGrouping
-             * @default true
-             */
             useGrouping: true,
-            /**
-             * @name Controls/_decorator/Number#roundMode
-             * @default 'trunc'
-             */
             roundMode: 'trunc'
         }
     }
