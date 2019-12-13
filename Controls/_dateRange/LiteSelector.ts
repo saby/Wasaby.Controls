@@ -61,6 +61,7 @@ var Component = BaseSelector.extend({
                 onResult: this._onResult.bind(this)
             },
             templateOptions: {
+                popupClassName: this._options.popupClassName,
                 startValue: this._rangeModel.startValue,
                 endValue: this._rangeModel.endValue,
 

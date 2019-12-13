@@ -157,26 +157,26 @@ define(
                });
             });
          });
-         describe('title', function() {
+         describe('tooltip', function() {
             it('value: "0.00"', function() {
                ctrl._beforeMount({
                   value: '0.00'
                });
-               assert.equal(ctrl._title, '0.00');
+               assert.equal(ctrl._tooltip, '0.00');
             });
-            it('value: "0.00", title: ""', function() {
+            it('value: "0.00", tooltip: ""', function() {
                ctrl._beforeMount({
                   value: '0.00',
-                  title: ''
+                  tooltip: ''
                });
-               assert.equal(ctrl._title, '');
+               assert.equal(ctrl._tooltip, '');
             });
-            it('value: "0.00", title: "title"', function() {
+            it('value: "0.00", tooltip: "tooltip"', function() {
                ctrl._beforeMount({
                   value: '0.00',
-                  title: 'title'
+                  tooltip: 'tooltip'
                });
-               assert.equal(ctrl._title, 'title');
+               assert.equal(ctrl._tooltip, 'tooltip');
             });
          });
          describe('isDisplayFractionPath', function() {

@@ -42,7 +42,15 @@
       </div>
       <div class="controls-demo-FilterView__item">
          <h3>Only button filter</h3>
-         <Controls.filter:View source="{{_buttonItems}}"
+            <Controls.filter:View source="{{_buttonItems}}"
+                                  alignment="left"
+                                  detailPanelTemplateName="Controls-demo/FilterView/resources/PanelWithCaption"
+                                  attr:class="controls-demo-FilterView__itemButton demo-FilterView__onlyButton">
+            </Controls.filter:View>
+      </div>
+      <div class="controls-demo-FilterView__item">
+         <h3>Only button filter without resetValue</h3>
+         <Controls.filter:View source="{{_buttonItemsWithoutResetValue}}"
                                alignment="left"
                                detailPanelTemplateName="Controls-demo/FilterView/resources/PanelWithCaption"
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__onlyButton">

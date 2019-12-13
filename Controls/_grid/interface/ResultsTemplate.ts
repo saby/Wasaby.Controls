@@ -5,7 +5,7 @@
  * @see Controls/grid:View#resultsTemplate
  * @see Controls/grid:View#resultsPosition
  * @remark
- * Дополнительно работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/ здесь}.
  * @example
  * <pre class="brush: html">
  * <Controls.grid:View>

@@ -439,13 +439,13 @@
 //контрастный цвет фона основной кнопки-иконки для тулбара.
 @background-color_contrast_button_toolButton:         #F8F8F8;
 //цвет фона основной кнопки-иконки для тулбара при наведении мыши
-@background-color_hover_button_toolButton:            transparent;
+@background-color_hover_button_toolButton:            @background-color_button_toolButton;
 //контрастный цвет фона основной кнопки-иконки для тулбара при наведении мыши
-@background-color_contrast_hover_button_toolButton:   #F8F8F8;
+@background-color_contrast_hover_button_toolButton:   @background-color_contrast_button_toolButton;
 //цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
-@background-color_active_button_toolButton:           transparent;
+@background-color_active_button_toolButton:           @background-color_button_toolButton;
 //контрастный цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
-@background-color_contrast_active_button_toolButton:  #F8F8F8;
+@background-color_contrast_active_button_toolButton:  @background-color_contrast_button_toolButton;
 
 //header. Переменные, использующиеся для темизации заголовков.
 //Цвет иконки для заголовка, использующегося для проваливания в раздел.
@@ -568,6 +568,15 @@
 @box-shadow-container_width:              8px;
 
 /*toggle button Стили для кнопок с залипанием*/
+//Цвет обводки неосновной кнопки в зажатом состоянии.
+@secondary_toggled_border-color_toggleButton_button:                        @secondary_color;
+//Цвет обводки основной кнопки в зажатом состоянии.
+@primary_toggled_border-color_toggleButton_button:                          @primary_color;
+//Толщина обводки основной кнопки в зажатом состоянии.
+@secondary_toggled_border-thickness_toggleButton_button:                    2px;
+//Толщина обводки неосновной кнопки в зажатом состоянии.
+@primary_toggled_border-thickness_toggleButton_button:                      2px;
+
 //Цвет обводки кнопки-иконки для тулбара в зажатом состоянии.
 @secondary_toggled_border-color_toggleButton_toolButton:                    @secondary_color;
 //Цвет обводки залипающей кнопки в зажатом состоянии.
@@ -609,8 +618,7 @@
 //Тень залипающей кнопки
 @box-shadow_toggleButton_pushButton:                                        none;
 
-
-/*toggle big separator стили для большого разделителя*/
+/*toggle big separator стили для большого разделителя-переключателя*/
 //Цвет иконки большого разделителя
 @icon-color_toggleBigSeparator:                                             @unaccented_icon-color;
 @icon-color_hover_toggleBigSeparator:                                       @link_hover_text-color;
@@ -618,5 +626,32 @@
 @width_toggleBigSeparator:                                                  26px;
 @height_toggleBigSeparator:                                                 @width_toggleBigSeparator;
 @icon-size_toggleBigSeparator:                                              @width_toggleBigSeparator;
+
+/*toggle separator стили для разделителя-переключателя*/
+//Цвет иконки большого разделителя
+@icon-size_toggleSeparator:                                                 @icon-size_s;
+@height_toggleSeparator:                                                    @inline_height_default;
+@width_toggleSeparator:                                                     @height_toggleSeparator;
+@primary_icon-color_toggleSeparator:                                        @primary_text-color;
+@secondary_icon-color_toggleSeparator:				                        @secondary_color;
+@unaccented_icon-color_toggleSeparator:                                     @unaccented_icon-color;
+@primary_hover_icon-color_toggleSeparator:                                  @primary_color;
+@secondary_hover_icon-color_toggleSeparator:				                @link_hover_text-color;
+@unaccented_hover_icon-color_toggleSeparator:				                @link_hover_text-color;
+@primary_active_icon-color_toggleSeparator:				                    @primary_hover_icon-color_toggleSeparator;
+@secondary_active_icon-color_toggleSeparator:				                @secondary_hover_icon-color_toggleSeparator;
+@unaccented_active_icon-color_toggleSeparator:	                            @unaccented_hover_icon-color_toggleSeparator;
+
+/*Label - метка для полей ввода*/
+//цвет знака сноски у метки
+@asterisk_color_label:                  @danger_color;
+//высота метки
+@inline_height_default_label:           @inline_height_m;
+//отступ от метки до контрола при позиционировании с краю от контрола
+@offset-horizontal_label:               8px;
+//цвет текста метки
+@text-color_label:                      @label_text-color;
+//размер шрифта метки
+@font-size_default_label:               @font-size_m;
 
 //last line

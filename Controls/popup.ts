@@ -61,6 +61,7 @@ export {default as InfoboxButton} from './_popup/InfoBox/InfoboxButton';
 export {default as BaseOpener} from 'Controls/_popup/Opener/BaseOpener';
 export {default as Notification} from 'Controls/_popup/Opener/Notification';
 export {default as IConfirmation, IConfirmationOptions} from 'Controls/_popup/Opener/interface/IConfirmation';
+export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers} from './_popup/interface/IPopup';
 
 export {
     Edit,
