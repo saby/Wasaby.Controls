@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell controlsDemo__grid_inline">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/grid/Header/Default/Index' }}">
@@ -8,7 +8,7 @@
         <Controls-demo.grid.Header.Default.Index/>
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell controlsDemo__grid_add-button">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/grid/Header/AddButton/Index' }}">
@@ -17,7 +17,7 @@
         <Controls-demo.grid.Header.AddButton.Index/>
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell controlsDemo__grid_long">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/grid/Header/LongHeader/Index' }}">
@@ -26,7 +26,7 @@
         <Controls-demo.grid.Header.LongHeader.Index/>
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell controlsDemo__grid_multilevel">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/grid/Header/Multiheader/Index' }}">
@@ -37,7 +37,7 @@
 
     <div class="controlsDemo__wrapper controlsDemo__flexRow">
 
-        <div class="controlsDemo__cell">
+        <div class="controlsDemo__cell controlsDemo__grid_scroll">
             <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                      state="/Controls-demo/app/:app"
                                      app="{{ 'Controls-demo/grid/Header/NoSticky/Index' }}">
@@ -46,7 +46,7 @@
             <Controls-demo.grid.Header.NoSticky.Index/>
         </div>
 
-        <div class="controlsDemo__cell">
+        <div class="controlsDemo__cell controlsDemo__grid_bind">
             <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                      state="/Controls-demo/app/:app"
                                      app="{{ 'Controls-demo/grid/Header/Sticky/Index' }}">
@@ -57,7 +57,7 @@
 
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell controlsDemo__grid_custom">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/grid/Header/CellTemplate/Index' }}">
