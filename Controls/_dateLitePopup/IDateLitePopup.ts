@@ -78,6 +78,11 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              */
             emptyCaption: undefined,
 
+             /**
+              * @name Controls/dateLitePopup/IDateLitePopup#popupClassName
+              * @cfg {String} Класс, который навешивается на всплывающее окно.
+              */
+            popupClassName: undefined,
             // TODO: Доделать полноценную поддержку следующих опций. Пока не показываем их в документации.
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#checkedStart
