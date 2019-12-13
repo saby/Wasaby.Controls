@@ -16,6 +16,21 @@
    transition: transform @animation-duration_Scrollbar ease-in-out;
 }
 
+.controls-VScrollbar_horizontal-midline {
+   display: flex;
+   align-items: center;
+
+   &::before {
+      content: '';
+      height: @height_Scrollbar_mideline;
+      background-color: @background_Scrollbar_mideline;
+      margin: 0 @margin_horizontal_Scrollbar_mideline;
+      position: absolute;
+      left: 0;
+      right: 0;
+   }
+}
+
 .controls-ColumnScroll_without_offset {
    transform-origin: 50% 0;
 }
@@ -67,8 +82,8 @@
    width: @width_Scrollbar_animation + 2 * @margin_Scrollbar;
 }
 
-.controls-VScrollbar_horizontal:hover,
-.controls-VScrollbar_horizontal_dragging {
+.controls-VScrollbar_horizontal_dragging .controls-VScrollbar__thumb_horizontal,
+.controls-VScrollbar_horizontal:hover .controls-VScrollbar__thumb_horizontal {
    transform: scaleY(@scale_Scrollbar-horizontal_thumb);
 }
 
@@ -89,6 +104,7 @@
 
 .controls-VScrollbar__thumb_horizontal {
    background-color: @bg_Scrollbar-horizontal_thumb_normal;
+   transition: transform @animation-duration_Scrollbar ease-in-out;
 }
 .controls-VScrollbar__thumb_horizontal:hover {
    background-color: @bg_Scrollbar-horizontal_thumb_normal;
