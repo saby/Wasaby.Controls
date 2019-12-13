@@ -102,6 +102,24 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), 'auto');
       });
 
+      it('Suggest::_private.updateHeight', function() {
+         var self = getComponentObject();
+         var isUpdated = false;
+         self._height = '200px';
+         self._forceUpdate = function() {
+            isUpdated = true;
+         };
+         __ContentLayer.default._private.calcHeight = function() {
+            return '400px';
+         }
+         __ContentLayer.default._private.updateHeight(self, false);
+         assert.equal(self._height, '400px');
+         assert.equal(isUpdated, false);
+         self._height = '600px';
+         __ContentLayer.default._private.updateHeight(self, true);
+         assert.equal(self._height, '400px');
+         assert.equal(isUpdated, true);
+      });
    });
 
 });
