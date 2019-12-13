@@ -57,7 +57,7 @@
  */
 
 /**
- * @typefed {String} IconAlign
+ * @typedef {String} IconAlign
  * @variant left Выравнивание слева.
  * @variant right Выравнивание справа.
  */
@@ -76,7 +76,7 @@
 
 /**
  * @name Controls/dropdown:ItemTemplate#contentTemplate
- * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
+ * @cfg {String|Function|undefined} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
  * @default undefined
  * @remark
  * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
@@ -141,6 +141,40 @@
 
  /**
  * @name Controls/dropdown:ItemTemplate#additionalTextTemplate
- * @cfg {String|Function} Устанавливает пользовательский шаблон, который отображается под основным контентом элемента и используется для вывода дополнительного текста (комментария).
+ * @cfg {String|Function|undefined} Устанавливает пользовательский шаблон, который отображается под основным контентом элемента и используется для вывода дополнительного текста (комментария).
  * @default undefined
+ * @example
+ * <pre class="brush: html; highlight: [9,10,11]">
+ * <Controls.dropdown:Button source="{{_source)}}">
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/dropdown:ItemTemplate" multiLine="{{true}}">
+ *          <ws:contentTemplate>
+ *             <div class="demo-menu__item">
+ *                <div class="demo-title">{{contentTemplate.itemData.item.get('title')}}</div>
+ *             </div>
+ *          </ws:contentTemplate>
+ *          <ws:additionalTextTemplate>
+ *             <div class="demo-comment">{{contentTemplate.itemData.item.get('comment')}}</div>
+ *          </ws:additionalTextTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.dropdown:Button>
+ * </pre>
+ * <pre class="brush: js">
+ *    this._source = new Memory ({
+ *       data: [
+ *           { id: 1,
+ *             title: 'Discussion',
+ *             comment: 'Create a discussion to find out the views of other group members on this issue' },
+ *           { id: 2,
+ *             title: 'Idea/suggestion',
+ *             comment: 'Offer your idea, which others can not only discuss, but also evaluate.
+ *             The best ideas will not go unnoticed and will be realized' },
+ *           { id: 3,
+ *             title: 'Problem',
+ *             comment: 'Do you have a problem? Tell about it and experts will help to find its solution' }
+ *       ],
+ *       keyProperty: 'id'
+ *    });
+ * </pre>
  */
