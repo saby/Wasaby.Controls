@@ -366,7 +366,8 @@ export default class ScrollContainer extends Control<IOptions> {
             pageSize: null,
             segmentSize: null,
             itemHeightProperty: null,
-            viewportHeight: null
+            viewportHeight: null,
+            mode: 'remove'
         };
 
         if (options.virtualScrollConfig) {
@@ -376,6 +377,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
             virtualScrollConfig.segmentSize = options.virtualSegmentSize;
             virtualScrollConfig.pageSize = options.virtualPageSize;
+            virtualScrollConfig.mode = options.virtualScrollMode;
         }
 
         return virtualScrollConfig;
@@ -534,8 +536,8 @@ export default class ScrollContainer extends Control<IOptions> {
      * @returns {boolean}
      */
     private applyIndexesToModel(model: unknown, startIndex: number, stopIndex: number): boolean {
-        if (model.setViewIndices) {
-            return model.setViewIndices(startIndex, stopIndex);
+        if (model.getViewIterator) {
+            return model.getViewIterator().setIndices(startIndex, stopIndex);
         } else {
             return model.setIndexes(startIndex, stopIndex);
         }

@@ -890,7 +890,10 @@ var _private = {
     },
 
     setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
-        let firstItemIndex = self._listViewModel.getStartIndex();
+        let firstItemIndex =
+            self._options.useNewModel
+            ? displayLib.VirtualScrollController.getStartIndex(self._listViewModel)
+            : self._listViewModel.getStartIndex();
         firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
         if (self._options.useNewModel) {
             const item = self._listViewModel.at(firstItemIndex);

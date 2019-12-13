@@ -6,7 +6,7 @@
       multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
       searchValue="{{ collection.getSearchValue() }}"
 
-      attr:class="{{collection.isItemHidden(index) ? 'ws-hidden'}}"
+      attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'ws-hidden' }}"
       attr:key="{{ keyPrefix }}-{{ item.getUid() }}"
 
       on:click="_onItemClick(item)"

@@ -28,18 +28,10 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 
-import VirtualScrollManager from './utils/VirtualScrollManager';
-import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
-import {IVirtualScrollConfig} from 'Controls/list';
-
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
-const VIRTUAL_SCROLL_MODE = {
-    HIDE: 'hide',
-    REMOVE: 'remove'
-};
 
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
@@ -99,12 +91,17 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     editingConfig: any;
     unique?: boolean;
     importantItemProperties?: string[];
-    virtualScrollConfig: IVirtualScrollConfig;
 }
 
 export interface ICollectionCounters {
     key: string|number;
     counters: ICollectionItemCounters;
+}
+
+export interface IViewIterator {
+    each: Function;
+    isItemAtIndexHidden: Function;
+    setIndices: Function;
 }
 
 /**
@@ -620,13 +617,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     protected _oEventRaisingChange: Function;
 
-    protected _startIndex: number;
-    protected _stopIndex: number;
-
-    protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
-    protected _$virtualScrollMode: IVirtualScrollMode;
-
     protected _controllerCache: Record<string, unknown>;
+
+    protected _viewIterator: IViewIterator;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -677,16 +670,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this.setItemsSpacings(options.itemPadding);
         }
 
-        this._stopIndex = this.getCount();
-
-        const virtualScrollConfig = options.virtualScrollConfig || {mode: options.virtualScrollMode};
-
-        this._$virtualScrollMode = virtualScrollConfig.mode;
-
-        this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
-            new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
-
         this._controllerCache = {};
+
+        this._viewIterator = {
+            each: this.each.bind(this),
+            setIndices: () => false,
+            isItemAtIndexHidden: () => false
+        };
     }
 
     destroy(): void {
@@ -2027,31 +2017,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$searchValue;
     }
 
-    getStartIndex(): number {
-        return this._startIndex;
-    }
-
-    getStopIndex(): number {
-        return this._stopIndex;
-    }
-
-    setViewIndices(startIndex: number, stopIndex: number): boolean {
-        const newStart = Math.max(startIndex, 0);
-        const newStop = Math.min(stopIndex, this.getCount());
-        if (newStart !== this._startIndex || newStop !== this._stopIndex) {
-            this._startIndex = newStart;
-            this._stopIndex = newStop;
-
-            if (this._$virtualScrollMode === VIRTUAL_SCROLL_MODE.HIDE) {
-                this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
-            }
-
-            this._nextVersion();
-            return true;
-        }
-        return false;
-    }
-
     getItemBySourceId(id: string|number): CollectionItem<S> {
         if (this._$collection['[Types/_collection/RecordSet]']) {
             const record = (this._$collection as unknown as RecordSet).getRecordById(id);
@@ -2076,17 +2041,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    getViewIterator(): {
-        each: (callback: EnumeratorCallback<unknown>, context?: object) => void;
-        isItemVisible: (index: number) => boolean;
-    } {
-        if (this._$virtualScrolling) {
-            return this._virtualScrollManager;
-        } else {
-            return this;
-        }
-    }
-
     getHasMoreData(): boolean {
         return this._$hasMoreData;
     }
@@ -2099,18 +2053,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$compatibleReset = compatible;
     }
 
-    isItemVisible = (index: number) => true;
-
-    isItemHidden(index: number): boolean {
-        return !this.getViewIterator().isItemVisible(index);
-    }
-
     getCacheValue<V>(key: string): V {
         return this._controllerCache[key] as V;
     }
 
     setCacheValue(key: string, value: unknown): void {
         this._controllerCache[key] = value;
+    }
+
+    setViewIterator(viewIterator: IViewIterator): void {
+        this._viewIterator = viewIterator;
+    }
+
+    getViewIterator(): IViewIterator {
+        return this._viewIterator;
     }
 
     nextVersion(): void {
@@ -3201,8 +3157,6 @@ Object.assign(Collection.prototype, {
     _$editingConfig: null,
     _$unique: false,
     _$importantItemProperties: null,
-    _$virtualScrollMode: VIRTUAL_SCROLL_MODE.REMOVE,
-    _$virtualScrolling: false,
     _$hasMoreData: false,
     _$compatibleReset: false,
     _localize: false,
@@ -3216,10 +3170,8 @@ Object.assign(Collection.prototype, {
     _onCollectionChange: null,
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
-    _virtualScrollManager: null,
     _controllerCache: null,
-    _startIndex: 0,
-    _stopIndex: 0,
+    _viewIterator: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 

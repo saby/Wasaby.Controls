@@ -69,3 +69,9 @@ export { SelectionController };
 
 import * as ItemActionsController from './_display/controllers/ItemActions';
 export { ItemActionsController };
+
+import * as VirtualScrollController from './_display/controllers/VirtualScroll';
+export { VirtualScrollController };
+
+import * as VirtualScrollHideController from './_display/controllers/VirtualScrollHide';
+export { VirtualScrollHideController };
