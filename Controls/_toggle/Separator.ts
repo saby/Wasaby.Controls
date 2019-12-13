@@ -9,8 +9,7 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
 }
 
 /**
- * Кнопка-разделитель с поддержкой различных стилей отображения и жирным шрифтом. Может использоваться как самостоятельно, так и в составе сложных заголовков.
- * Контрол состоит из <a href="/docs/js/Controls/Heading/?v=3.18.500">заголовка</a>, <a href="/docs/js/Controls/Heading/Separator/?v=3.18.500">заголовка-разделителя</a> и <a href="/docs/js/Controls/Heading/Counter/?v=3.18.500">счетчика</a>.
+ * Кнопка-разделитель с поддержкой различных стилей отображения и жирным шрифтом. Может использоваться как самостоятельно, так и в составе {@link Controls/heading сложных заголовков}.
  *
  * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
  *
@@ -96,7 +95,7 @@ class Separator extends Control<ISeparatorOptions> implements ICheckable {
         this._iconChangedValue(newOptions);
     }
 
-    static _theme: string[] = ['Controls/toggle'];
+    static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
