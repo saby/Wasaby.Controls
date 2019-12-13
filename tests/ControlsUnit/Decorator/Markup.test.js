@@ -161,6 +161,11 @@ define([
             var json = [[], 'some text without tag ', ['span', 'and some text in tag'], ' dot'];
             assert.deepEqual(decorator.Converter.htmlToJson(html), json);
          });
+         it('only text no trim', function() {
+            var html = '   some text without tag\t';
+            var json = [[], '   some text without tag\t'];
+            assert.deepEqual(decorator.Converter.htmlToJson(html), json);
+         });
          it('basic', function() {
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
             var json = [['p', { version: currentVersion }, 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
