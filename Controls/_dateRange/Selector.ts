@@ -106,7 +106,6 @@ Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 Component.getDefaultOptions = function () {
     return coreMerge(coreMerge({
         minRange: 'day',
-        vdomDialog: true
     }, IDateRangeSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
 };
 
