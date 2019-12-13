@@ -1,6 +1,10 @@
 import {IDirection} from '../interface/IVirtualScroll';
 import {Record as entityRecord} from 'Types/entity';
-import {CollectionItem} from 'Controls/display';
+import {
+    CollectionItem,
+    VirtualScrollController as ModelVirtualScrollController,
+    VirtualScrollHideController as ModelVirtualScrollHideController
+} from 'Controls/display';
 import {IObservable} from 'Types/collection';
 import * as getDimension from 'Controls/Utils/getDimensions';
 import {Collection} from 'Controls/display';
@@ -21,6 +25,7 @@ interface IVirtualScrollControllerOptions {
     viewModel: Collection<entityRecord>;
     useNewModel: boolean;
     viewportHeight: number;
+    mode: string;
 }
 
 type IPlaceholders = [number, number];
@@ -74,6 +79,9 @@ export default class VirtualScrollController {
             pageSize, segmentSize
         };
         this.subscribeToModelChange(options.viewModel, options.useNewModel);
+        if (options.useNewModel) {
+            this.setupModelController(options.viewModel, options.mode);
+        }
     }
 
     /**
@@ -393,7 +401,11 @@ export default class VirtualScrollController {
         // Обновляем виртуальный скроллинг, только если он инициализирован, так как в другом случае,
         // мы уже не можем на него повлиять
         if (this.itemsContainer) {
-            const direction = newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
+            const startIndex =
+                this._options.useNewModel
+                ? ModelVirtualScrollController.getStartIndex(this._options.viewModel)
+                : this._options.viewModel.getStartIndex();
+            const direction = newItemsIndex <= startIndex ? 'up' : 'down';
 
             if (this.triggerVisibility[direction]) {
                 if (direction === 'up' && this.itemsFromLoadToDirection) {
@@ -415,8 +427,12 @@ export default class VirtualScrollController {
         // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
         // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
         if (this.itemsContainer) {
+            const startIndex =
+                this._options.useNewModel
+                ? ModelVirtualScrollController.getStartIndex(this._options.viewModel)
+                : this._options.viewModel.getStartIndex();
             this.recalcRangeToDirection(
-                removedItemsIndex < this._options.viewModel.getStartIndex() ? 'up' : 'down', false
+                removedItemsIndex < startIndex ? 'up' : 'down', false
             );
         }
     }
@@ -511,5 +527,21 @@ export default class VirtualScrollController {
         }
 
         return quantity;
+    }
+
+    /**
+     * Настраивает модель на работу в переданном режиме виртуального скролла (сейчас hide или remove)
+     * @param model
+     * @param scrollMode
+     */
+    private setupModelController(model: unknown, scrollMode: string): void {
+        switch (scrollMode) {
+            case 'hide':
+                ModelVirtualScrollHideController.setup(model);
+                break;
+            default:
+                ModelVirtualScrollController.setup(model);
+                break;
+        }
     }
 }

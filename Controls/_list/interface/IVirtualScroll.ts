@@ -4,6 +4,7 @@ export interface IVirtualScrollConfig {
     segmentSize: number;
     itemHeightProperty: string;
     viewportHeight: number;
+    mode: 'hide'|'remove';
 }
 
 /**
@@ -43,7 +44,7 @@ export interface IVirtualScrollConfig {
  * @cfg {Boolean} Turns on and off virtual scrolling in the list.
  * @remark
  * It is also necessary to set the view navigation to 'infinity'
- */ 
+ */
 
 /**
  * @deprecated

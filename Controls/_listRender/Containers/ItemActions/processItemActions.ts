@@ -1,4 +1,4 @@
-import { CollectionItem, ItemActionsController } from 'Controls/display';
+import { CollectionItem, ItemActionsController, VirtualScrollController } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
@@ -168,7 +168,7 @@ function getFakeMenuTarget(realTarget: HTMLElement): { getBoundingClientRect(): 
 function getItemContainer(item: CollectionItem<Model>): HTMLElement {
     const container: HTMLElement = this._container[0] || this._container;
 
-    const startIndex = this._options.listModel.getStartIndex();
+    const startIndex = VirtualScrollController.getStartIndex(this._options.listModel);
     const itemIndex = this._options.listModel.getSourceIndexByItem(item);
 
     // TODO Grid support
