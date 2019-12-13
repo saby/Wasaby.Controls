@@ -107,27 +107,41 @@ class Highlight extends Control<IHighlightOptions> {
     protected _template: TemplateFunction = template;
     protected _theme: string[] = ['Controls/decorator'];
 
-    private _parseText(value: string, highlight: string, highlightMode: HighlightMode): Element[] {
-        /**
-         * Подсвечиваемый текст нужно ограничить, потому что в дальнейшем он будет преобразован в регулярное выражение, которое
-         * имеет ограничение длины. При превышении длины регулярное выражение будет считаться невалидным, и с ним невозможно будет работать.
-         * Возьмем максимум 10000 символов. Этого точно должно хватить для покрытия всех адекватных сценариев.
-         */
-        const maxLength: number = 10000;
-        const limitHighlight: string = highlight.length > maxLength ? highlight.substring(0, maxLength) : highlight;
-        const escapedHighlight: string = escapeSpecialChars(limitHighlight);
-        const searchResultByAnd: Element[] = this._searchBy(value, escapedHighlight, highlightMode, 'and');
-
-        if (searchResultByAnd.length) {
-            return searchResultByAnd;
-        }
-
-        return this._searchBy(value, escapedHighlight, highlightMode, 'or');
+    private _needChangeParsedText(newOptions: IHighlightOptions): boolean {
+        const currentOptions = highlightOptions(this._options);
+        return [
+            'value',
+            'highlightedValue',
+            'highlightMode'
+        ].some((optionName: string) => currentOptions[optionName] !== newOptions[optionName]);
     }
 
-    private _prepareParsedText(options: IHighlightOptions): Element[] {
+    protected _beforeMount(options: IHighlightOptions): void {
+        const actualOptions = highlightOptions(options);
+
+        this._className = actualOptions.className;
+        this._parsedText = Highlight._prepareParsedText(highlightOptions(options));
+    }
+
+    protected _beforeUpdate(newOptions: IHighlightOptions): void {
+        const actualOptions = highlightOptions(newOptions);
+
+        if (this._needChangeParsedText(actualOptions)) {
+            this._parsedText = Highlight._prepareParsedText(actualOptions);
+        }
+        this._className = actualOptions.className;
+    }
+
+    private static WORD_SEPARATOR: RegExp = /\s+/g;
+    private static MINIMUM_WORD_LENGTH: number = 2;
+
+    private static _isNotEmpty(value: string): boolean {
+        return value !== '';
+    }
+
+    private static _prepareParsedText(options: IHighlightOptions): Element[] {
         if (options.highlightedValue) {
-            return this._parseText(options.value, options.highlightedValue, options.highlightMode);
+            return Highlight._parseText(options.value, options.highlightedValue, options.highlightMode);
         } else {
             return [{
                 type: 'plain',
@@ -135,8 +149,8 @@ class Highlight extends Control<IHighlightOptions> {
             }];
         }
     }
-
-    private _searchBy(value: string, highlight: string, highlightMode: HighlightMode, by: SearchBy): Element[] {
+    
+    private static _searchBy(value: string, highlight: string, highlightMode: HighlightMode, by: SearchBy): Element[] {
         let words: string[];
         switch (by) {
             case 'and':
@@ -149,10 +163,6 @@ class Highlight extends Control<IHighlightOptions> {
                     words = words.filter(Highlight._isWord);
                 }
                 break;
-            default:
-                Logger.error(this._moduleName + ': ' + `"${by}" search is not supported.`, this);
-                words = [highlight];
-                break;
         }
 
         words = words.filter(Highlight._isNotEmpty);
@@ -163,7 +173,7 @@ class Highlight extends Control<IHighlightOptions> {
                 'is not required now.', this);
         }
 
-        const regexp: RegExp = this._calculateRegExp(words, highlightMode);
+        const regexp: RegExp = Highlight._calculateRegExp(words, highlightMode);
         const highlightSearchResult: ISearchResult[] = Highlight._search(value, regexp);
 
         if (highlightSearchResult.length === 0) {
@@ -179,8 +189,26 @@ class Highlight extends Control<IHighlightOptions> {
 
         return Highlight._split(value, highlightSearchResult);
     }
+    
+    private static _parseText(value: string, highlight: string, highlightMode: HighlightMode): Element[] {
+        /**
+         * Подсвечиваемый текст нужно ограничить, потому что в дальнейшем он будет преобразован в регулярное выражение, которое
+         * имеет ограничение длины. При превышении длины регулярное выражение будет считаться невалидным, и с ним невозможно будет работать.
+         * Возьмем максимум 10000 символов. Этого точно должно хватить для покрытия всех адекватных сценариев.
+         */
+        const maxLength: number = 10000;
+        const limitHighlight: string = highlight.length > maxLength ? highlight.substring(0, maxLength) : highlight;
+        const escapedHighlight: string = escapeSpecialChars(limitHighlight);
+        const searchResultByAnd: Element[] = Highlight._searchBy(value, escapedHighlight, highlightMode, 'and');
 
-    private _calculateRegExp(valueArr: string[], highlightMode: HighlightMode): RegExp {
+        if (searchResultByAnd.length) {
+            return searchResultByAnd;
+        }
+
+        return Highlight._searchBy(value, escapedHighlight, highlightMode, 'or');
+    }
+
+    private static _calculateRegExp(valueArr: string[], highlightMode: HighlightMode): RegExp {
         const flags: string = 'gi';
         const value: string = valueArr.join('|');
 
@@ -189,42 +217,7 @@ class Highlight extends Control<IHighlightOptions> {
                 return new RegExp(`\\b${value}\\b`, flags);
             case 'substring':
                 return new RegExp(`${value}`, flags);
-            default:
-                Logger.error(this._moduleName + `: Unsupported search mode: ${highlightMode}.`, this);
-                return new RegExp(`${value}`, flags);
         }
-    }
-
-    private _needChangeParsedText(newOptions: IHighlightOptions): boolean {
-        const currentOptions = highlightOptions(this._options);
-        return [
-            'value',
-            'highlightedValue',
-            'highlightMode'
-        ].some((optionName: string) => currentOptions[optionName] !== newOptions[optionName]);
-    }
-
-    protected _beforeMount(options: IHighlightOptions): void {
-        const actualOptions = highlightOptions(options);
-
-        this._className = actualOptions.className;
-        this._parsedText = this._prepareParsedText(highlightOptions(options));
-    }
-
-    protected _beforeUpdate(newOptions: IHighlightOptions): void {
-        const actualOptions = highlightOptions(newOptions);
-
-        if (this._needChangeParsedText(actualOptions)) {
-            this._parsedText = this._prepareParsedText(actualOptions);
-        }
-        this._className = actualOptions.className;
-    }
-
-    private static WORD_SEPARATOR: RegExp = /\s+/g;
-    private static MINIMUM_WORD_LENGTH: number = 2;
-
-    private static _isNotEmpty(value: string): boolean {
-        return value !== '';
     }
 
     private static _isWord(value: string): boolean {
@@ -258,6 +251,7 @@ class Highlight extends Control<IHighlightOptions> {
                 type: 'plain',
                 value: value
             });
+            console.log('_split good');
 
             return result;
         }
