@@ -70,15 +70,13 @@ var _private = {
       return container.getBoundingClientRect();
    },
 
-   updateHeight: function(self, needForceUpdate) {
+   updateHeight: function(self) {
       const height = _private.calcHeight(self);
       const heightChanged = self._height !== height;
 
       if (heightChanged) {
          self._height = height;
-         if (needForceUpdate) {
-            self._forceUpdate();
-         }
+         self._forceUpdate();
       }
    },
 
@@ -119,12 +117,12 @@ var __ContentLayer = BaseLayer.extend({
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
        2) do not change orientation of suggest, if suggest already showed or data loading now */
       if (this._options.showContent) {
-         _private.updateHeight(this, true);
+         _private.updateHeight(this);
       }
    },
 
    _resize: function() {
-      _private.updateHeight(this, false);
+      _private.updateHeight(this);
    },
 
    close: function() {
