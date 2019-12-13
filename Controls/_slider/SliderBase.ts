@@ -7,7 +7,7 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
 }
 
-class Slider extends Control<ISliderBaseOptions> {
+class SliderBase extends Control<ISliderBaseOptions> {
     private _tooltipPosition: number | null = null;
     private _tooltipValue: string | null = null;
     private _isDrag: boolean = false;
@@ -66,4 +66,4 @@ class Slider extends Control<ISliderBaseOptions> {
     }
 }
 
-export default Slider;
+export default SliderBase;

@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ISlider, ISliderOptions} from './interface/ISlider';
-import Slider from './Slider';
+import SliderBase from './SliderBase';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -87,7 +87,7 @@ const maxPercentValue = 100;
  */
 
 
-class Range extends Slider<ISliderRangeOptions> implements ISlider {
+class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
@@ -217,14 +217,14 @@ class Range extends Slider<ISliderRangeOptions> implements ISlider {
          theme: 'default',
          startValue: undefined,
          endValue: undefined
-      }, ...Slider.getDefaultOptions()};
+      }, ...SliderBase.getDefaultOptions()};
 
    }
    static getOptionTypes(): object {
       return {...{
          startValue: EntityDescriptor(Number),
          endValue: EntityDescriptor(Number)
-      }, ...Slider.getOptionTypes()};
+      }, ...SliderBase.getOptionTypes()};
 
    }
 }
