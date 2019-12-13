@@ -6,7 +6,8 @@
                 direction="horizontal"
                 contentSize="{{_options.contentSize}}"
                 gridSupport="{{_options.gridSupport}}"
-                attr:class="controls-ColumnScroll_theme-{{_options.theme}} controls-VScrollbar_horizontal-midline"
+                trackVisible="{{_options.trackVisible}}"
+                attr:class="controls-ColumnScroll_theme-{{_options.theme}}"
                 on:positionChanged="_localPositionHandler()"/>
     </div>
 </ws:if>
