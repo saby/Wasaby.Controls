@@ -33,7 +33,7 @@ class BaseOpener extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     private _actionOnScroll: string = 'none';
     private _popupId: string = '';
-    private _indicatorId = null;
+    private _indicatorId: string = '';
     private _loadModulesPromise: Promise<ILoadDependencies>;
     private _openerUpdateCallback: Function;
     private _openPopupTimerId: number;
