@@ -212,6 +212,10 @@ const moduleClass = CompoundControl.extend({
          this.popupBeforeDestroyed();
          if (this._vDomTemplate.hasRegisteredPendings()) {
             event.setResult(false);
+            // FloatArea после отмены закрытия на beforeClose не сбрасывает state === hide,
+            // из-за чего закрытие после завершения пендингов не отрабатывает, т.к. панель считает что уже закрывается.
+            // Сбрасываю состояние только в совместимости, старый контрол не трогаю.
+            this.getParent()._state = '';
             this._finishPendingOperations();
          }
       }
