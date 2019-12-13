@@ -76,7 +76,6 @@ var _private = {
 
       if (heightChanged) {
          self._height = height;
-         self._forceUpdate();
       }
    },
 
