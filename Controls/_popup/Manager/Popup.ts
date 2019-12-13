@@ -252,9 +252,10 @@ class Popup extends Control<IPopupOptions> {
         const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
         const hasWidthChanged: boolean = oldPosition.width !== newPosition.width;
         const hasHeightChanged: boolean = oldPosition.height !== newPosition.height;
+        const hasMaxHeightChanged: boolean = oldPosition.maxHeight !== newPosition.maxHeight;
         const hasHiddenChanged: boolean = oldHidden !== newHidden;
 
-        return hasWidthChanged || hasHeightChanged || (hasHiddenChanged && newHidden === false);
+        return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged || (hasHiddenChanged && newHidden === false);
     }
 
     static getDefaultOptions() {
