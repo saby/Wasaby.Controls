@@ -2495,7 +2495,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _commitEditActionHandler: function() {
-        this._children.editInPlace.commitEdit();
+        this._children.editInPlace.commitAndMoveNextRow();
     },
 
     _cancelEditActionHandler: function() {
