@@ -1990,15 +1990,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._scrollPageLocked = false;
     },
-    _updateVirtualScroll: function(){
-        if (!this._virtualScroll.ItemsContainer) {
-            this._setScrollItemContainer();
-        }
-        if (this._itemsChanged) {
-            this._virtualScroll.updateItemsSizes();
-            _private.applyPlaceholdersSizes(this);
-        }
-    },
 
     __onPagingArrowClick: function(e, arrow) {
         switch (arrow) {
