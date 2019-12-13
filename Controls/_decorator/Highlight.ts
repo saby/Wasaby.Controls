@@ -59,7 +59,7 @@ export interface IHighlightOptions extends IControlOptions {
     highlightedValue: string;
     /**
      * Режим подсветки.
-     * @type {HighlightMode}
+     * @type HighlightMode
      * @default substring
      * @demo @demo Controls-demo/Decorator/WrapURLs/HighlightMode/Index
      */
