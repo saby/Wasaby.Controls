@@ -1,5 +1,6 @@
-define(['Controls/_list/Swipe/VerticalMeasurer'], function(
-   VerticalMeasurer
+define(['Controls/_list/Swipe/VerticalMeasurer', 'i18n!ControlsUnit'], function(
+   VerticalMeasurer,
+   rk
 ) {
    describe('Controls.List.Swipe.VerticalMeasurer', function() {
       it('needIcon', function() {
@@ -132,7 +133,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer'], function(
                      showed: [
                         {
                            icon: 'icon-SwipeMenu',
-                           title: 'Ещё',
+                           title: rk('Ещё'),
                            _isMenu: true,
                            showType: 2
                         }
@@ -192,7 +193,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer'], function(
                      showed: [
                         {
                            icon: 'icon-SwipeMenu',
-                           title: 'Ещё',
+                           title: rk('Ещё'),
                            _isMenu: true,
                            showType: 2
                         }
@@ -321,7 +322,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer'], function(
                         },
                         {
                            icon: 'icon-SwipeMenu',
-                           title: 'Ещё',
+                           title: rk('Ещё'),
                            _isMenu: true,
                            showType: 2
                         }
@@ -344,7 +345,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer'], function(
                      showed: [
                         {
                            icon: 'icon-SwipeMenu',
-                           title: 'Ещё',
+                           title: rk('Ещё'),
                            _isMenu: true,
                            showType: 2
                         }
@@ -452,7 +453,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer'], function(
                   },
                   {
                      icon: 'icon-SwipeMenu',
-                     title: 'Ещё',
+                     title: rk('Ещё'),
                      _isMenu: true,
                      showType: 2
                   }];

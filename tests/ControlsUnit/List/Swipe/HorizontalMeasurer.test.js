@@ -1,7 +1,9 @@
 define([
-   'Controls/_list/Swipe/HorizontalMeasurer'
+   'Controls/_list/Swipe/HorizontalMeasurer',
+   'i18n!ControlsUnit'
 ], function(
-   HorizontalMeasurer
+   HorizontalMeasurer,
+   rk
 ) {
    describe('Controls.List.Swipe.HorizontalMeasurer', function() {
       it('needIcon', function() {
@@ -100,7 +102,7 @@ define([
                   }),
                   showed: actions.slice(0, 3).concat({
                      icon: 'icon-SwipeMenu',
-                     title: 'Ещё',
+                     title: rk('Ещё'),
                      _isMenu: true,
                      showType: 2
                   })
@@ -230,7 +232,7 @@ define([
                },
                {
                   icon: 'icon-SwipeMenu',
-                  title: 'Ещё',
+                  title: rk('Ещё'),
                   _isMenu: true,
                   showType: 2
                }];
