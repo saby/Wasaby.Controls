@@ -45,6 +45,8 @@
 @unaccented_text-color:      @unaccented_color;
 //Цвет иконок по-умолчанию.
 @icon-color:                 #000000;
+//Цвет иконок на контрастном фоне.
+@contrast_icon-color:        #ffffff;
 //Цвет иконок отображающих дополнительную информацию.
 @unaccented_icon-color:      #CCC;
 //Цвет фона контрола при ошибке валидации при установке фокуса
@@ -61,7 +63,6 @@
 @icon-color_infoboxbutton:    @unaccented_icon-color;
 //Цвет иконки InfoboxButton при наведении.
 @hover_icon-color_infoboxbutton:  @secondary_text-color;
-
 
 
 //* Высоты строчных контролов. Применяются ко всем контролам, которые могут располагаться в одну строку.
@@ -390,6 +391,35 @@
 //контрастный цвет фона кнопки в состоянии "только для чтения".
 //Примечание: равен цвету фона по-умолчанию.
 @readonly_contrast_background-color_button:           @background-color;
+
+//цвет фона основной кнопки-иконки для тулбара.
+@background-color_button_toolButton:                  transparent;
+//контрастный цвет фона основной кнопки-иконки для тулбара.
+@background-color_contrast_button_toolButton:         #F8F8F8;
+//цвет фона основной кнопки-иконки для тулбара при наведении мыши
+@background-color_hover_button_toolButton:            @background-color_button_toolButton;
+//контрастный цвет фона основной кнопки-иконки для тулбара при наведении мыши
+@background-color_contrast_hover_button_toolButton:   @background-color_contrast_button_toolButton;
+//цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
+@background-color_active_button_toolButton:           @background-color_button_toolButton;
+//контрастный цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
+@background-color_contrast_active_button_toolButton:  @background-color_contrast_button_toolButton;
+
+//цвет фона основной функциональной кнопки
+@secondary_background-color_button_functionalButton:  #0a7ed7;
+//цвет фона неосновной функциональной кнопки
+@primary_background-color_button_functionalButton:    @primary_color;
+//цвет фона функциональной кнопки в состоянии "только для чтения"
+@reaondly_background-color_button_functionalButton:   #eeeeee;
+//цвет фона основной функциональной кнопки при наведении мыши
+@secondary_hover_background-color_button_functionalButton:  #1f8ee3;
+//цвет фона функциональной кнопки в состоянии "только для чтения" при наведении мыши
+@success_hover_background-color_button_functionalButton:   #38ad4e;
+//цвет фона основной функциональной кнопки при нажатии мыши.
+@secondary_active_background-color_button_functionalButton:  @secondary_hover_background-color_button_functionalButton;
+//цвет фона функциональной кнопки в состоянии "только для чтения" при нажатии мыши.
+@success_active_background-color_button_functionalButton:   @success_hover_background-color_button_functionalButton;
+
 //Толщина обводки кнопки.
 //Примечание: равна толщине обводки по-умолчанию.
 @border-thickness_button:                             @border-thickness;
@@ -434,18 +464,30 @@
 //Тень вокруг кнопки-иконки для тулбара.
 //Примечание: при нажатии на кнопку тень пропадает во всех темах.
 @box-shadow_button_toolButton:                        0 1px 4px rgba(0, 0, 0, 0.05);
-//цвет фона основной кнопки-иконки для тулбара.
-@background-color_button_toolButton:                  transparent;
-//контрастный цвет фона основной кнопки-иконки для тулбара.
-@background-color_contrast_button_toolButton:         #F8F8F8;
-//цвет фона основной кнопки-иконки для тулбара при наведении мыши
-@background-color_hover_button_toolButton:            @background-color_button_toolButton;
-//контрастный цвет фона основной кнопки-иконки для тулбара при наведении мыши
-@background-color_contrast_hover_button_toolButton:   @background-color_contrast_button_toolButton;
-//цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
-@background-color_active_button_toolButton:           @background-color_button_toolButton;
-//контрастный цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
-@background-color_contrast_active_button_toolButton:  @background-color_contrast_button_toolButton;
+//Тень вокруг функциональной кнопки для тулбара.
+//Примечание: при нажатии на кнопку тень пропадает во всех темах.
+@box-shadow_button_functionalButton:                  0 1px 4px rgba(0, 0, 0, 0.05);
+//Радиус скругления обводки функциональной кнопки высоты xs.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_xs_button_functionalButton:            @inline_height_xs / 2;
+//Радиус скругления обводки функциональной кнопки высоты s.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_s_button_functionalButton:             @inline_height_s / 2;
+//Радиус скругления обводки функциональной кнопки высоты m.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_m_button_functionalButton:             @inline_height_m / 2;
+//Радиус скругления обводки функциональной кнопки высоты l.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_l_button_functionalButton:             @inline_height_l / 2;
+//Радиус скругления обводки функциональной кнопки высоты xl.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_xl_button_functionalButton:            @inline_height_xl / 2;
+//Радиус скругления обводки функциональной кнопки высоты 2xl.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_2xl_button_functionalButton:           @inline_height_2xl / 2;
+//Радиус скругления обводки функциональной кнопки высоты по-умолчанию.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_default_button_functionalButton:       @inline_height_default / 2;
 
 //header. Переменные, использующиеся для темизации заголовков.
 //Цвет иконки для заголовка, использующегося для проваливания в раздел.
