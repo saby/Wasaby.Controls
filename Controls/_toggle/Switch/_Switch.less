@@ -34,7 +34,7 @@
    // Ограничиваем область видимости переменных.
    @width_sticker: floor(@marker-box_border-thickness_switcher / 2) * 2;
    @vertical-offset_sticker: @height_switcher / 2 - @track_thickness_switcher;
-   @horizontal-offset_sticker: (@width_switcher - @track_length_switcher - @width_sticker) / 2 - @border-thickness_switcher + @marker-box_size_swicher;
+   @horizontal-offset_sticker: (@width_switcher - @track_length_switcher - @width_sticker) / 2 - @border-thickness_switcher + @marker-box_size_switcher;
 
    /**
     * Чтобы не засорять верстку используем псевдоэлементы. Так как before используется для
@@ -92,7 +92,7 @@
 
 .controls-Switch__line_theme-@{themeName} {
    height: @track_thickness_switcher;
-   width: @track_length_switcher - @marker-box_size_swicher;
+   width: @track_length_switcher - @marker-box_size_switcher;
 }
 
 .controls-Switch__line_enabled_theme-@{themeName} {
