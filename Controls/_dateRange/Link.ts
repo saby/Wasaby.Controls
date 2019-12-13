@@ -37,11 +37,6 @@ var Component = BaseControl.extend({
             quantum: null
          }
       };
-      if (!this._options.vdomDialog) {
-         cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
-         cfg.isCompoundTemplate = true;
-         cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
-      }
       this._children.opener.open(cfg);
    },
    _onResultWS3: function(event, startValue) {
@@ -60,7 +55,7 @@ var Component = BaseControl.extend({
 Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function() {
-   return {vdomDialog: true, ...ILinkView.getDefaultOptions()};
+   return ILinkView.getDefaultOptions();
 };
 
 Component.getOptionTypes = function() {

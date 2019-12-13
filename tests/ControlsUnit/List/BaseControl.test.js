@@ -4523,48 +4523,6 @@ define([
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
-
-
-      it('saveScrollOnToggleLoadingIndicator', async function() {
-         let
-            cfg = {
-               viewName: 'Controls/List/ListView',
-               sorting: [],
-               viewModelConfig: {
-                  items: [],
-                  keyProperty: 'id'
-               },
-               viewModelConstructor: lists.ListViewModel,
-               keyProperty: 'id',
-               source: source
-            },
-            instance = new lists.BaseControl(cfg);
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-
-         instance._shouldRestoreScrollPosition = false;
-         instance._loadingIndicatorState = 'all';
-
-         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
-         assert.isFalse(instance._shouldRestoreScrollPosition);
-         assert.isUndefined(instance._saveAndRestoreScrollPosition);
-
-         instance._shouldRestoreScrollPosition = false;
-         instance._loadingIndicatorState = 'up';
-
-         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
-         assert.isTrue(instance._shouldRestoreScrollPosition);
-         assert.equal('up', instance._saveAndRestoreScrollPosition);
-
-         instance._shouldRestoreScrollPosition = false;
-         instance._loadingIndicatorState = 'down';
-         instance._saveAndRestoreScrollPosition = undefined;
-
-         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
-         assert.isFalse(instance._shouldRestoreScrollPosition);
-         assert.isUndefined(instance._saveAndRestoreScrollPosition);
-      });
-
       describe('navigation', function() {
          it('Navigation demand', async function() {
             const source = new sourceLib.Memory({

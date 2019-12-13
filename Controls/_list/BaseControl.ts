@@ -797,7 +797,6 @@ var _private = {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
-                    _private.saveScrollOnToggleLoadingIndicator(self);
                     self._showLoadingIndicatorImage = true;
                     self._notify('controlResize');
                 }
@@ -817,16 +816,8 @@ var _private = {
             self._loadingIndicatorTimer = null;
         }
         if (self._loadingIndicatorState !== null) {
-            _private.saveScrollOnToggleLoadingIndicator(self);
             self._loadingIndicatorState = self._loadingState;
             self._notify('controlResize');
-        }
-    },
-
-    saveScrollOnToggleLoadingIndicator(self: BaseControl): void {
-        if (self._loadingIndicatorState === 'up') {
-            self._shouldRestoreScrollPosition = true;
-            self._saveAndRestoreScrollPosition = self._loadingIndicatorState;
         }
     },
 
@@ -2128,7 +2119,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _commitEditActionHandler: function() {
-        this._children.editInPlace.commitEdit();
+        this._children.editInPlace.commitAndMoveNextRow();
     },
 
     _cancelEditActionHandler: function() {

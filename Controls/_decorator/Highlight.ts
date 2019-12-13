@@ -1,77 +1,69 @@
-import {descriptor} from 'Types/entity';
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as RegExpUtil from 'Controls/Utils/RegExp';
-import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 import {Logger} from 'UI/Utils';
+import {descriptor} from 'Types/entity';
+import {escapeSpecialChars} from 'Controls/Utils/RegExp';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+//@ts-ignore
+import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 
-/*
- * Highlighting the searched phrase.
- *
- * @class Controls/_decorator/Highlight
- * @extends UI/_base/Control
- *
- * @public
- * @demo Controls-demo/Decorator/Highlight
- *
- * @author Красильников А.С.
- */
+import {highlightOptions} from 'Controls/_decorator/ActualAPI';
+
 /**
- * Контрол выполняет поиск сопоставления между {@link text текстом} и {@link highlight искомой фразой}.
- *
- * @class Controls/_decorator/Highlight
- * @extends UI/_base/Control
- *
+ * @typedef HighlightMode
+ * @variant word Подсветка осуществляется по словам.
+ * Слово - это набор символов,  длина не менее 2. Слова разделяются пробелом и пунктуацией.
+ * @variant substring Подсветка осуществляется по подстрокам.
+ */
+export type HighlightMode = 'word' | 'substring';
+
+/**
+ * @interface Controls/_decorator/Highlight/IHighlightOptions
  * @public
- * @demo Controls-demo/Decorator/Highlight
- *
  * @author Красильников А.С.
  */
-
-export type SearchMode = 'word' | 'substring';
-
 export interface IHighlightOptions extends IControlOptions {
-    /*
-     * @name Controls/_decorator/Highlight#text
-     * @cfg {String} The text in which to search.
-     */
     /**
-     * @name Controls/_decorator/Highlight#text
-     * @cfg {String} Текст в котором выполняется поиск.
+     * Опция устарела, используйте опцию {@link value}.
+     * @deprecated
      */
-    text: string;
-    /*
-     * @name Controls/_decorator/Highlight#highlight
-     * @cfg {String} Text to search.
-     */
+    text?: string;
     /**
-     * @name Controls/_decorator/Highlight#highlight
-     * @cfg {String} Текст для поиска.
+     * Опция устарела, используйте опцию {@link highlightedValue}.
+     * @deprecated
      */
-    highlight: string;
-    /*
-     * @name Controls/_decorator/Highlight#class
-     * @cfg {String} Class for highlight.
-     */
+    highlight?: string;
     /**
-     * @name Controls/_decorator/Highlight#class
-     * @cfg {String} Класс подсвечивающий результат поиска.
+     * Опция устарела, используйте опцию {@link className}.
+     * @deprecated
      */
-    class: string;
-    /*
-     * @name Controls/_decorator/Highlight#searchMode
-     * @cfg {Enum}
-     * @variant word The search is carried out by words. A word is a set of characters,
-     * length not less than 2. Words are separated by whitespace and punctuation.
-     * @variant substring The search is carried out by substrings.
-     */
+    class?: string;
     /**
-     * @name Controls/_decorator/Highlight#searchMode
-     * @cfg {Enum}
-     * @variant word Поиск осуществляется по словам.
-     * Слово - это набор символов,  длина не менее 2. Слова разделяются пробелом и пунктуацией.
-     * @variant substring Поиск осуществляется по подстрокам.
+     * Опция устарела, используйте опцию {@link highlightMode}.
+     * @deprecated
      */
-    searchMode: SearchMode;
+    searchMode?: HighlightMode
+    /**
+     * Класс обеспечивающий внешнее отображение подсветки.
+     * @default controls-Highlight_highlight
+     * @demo Controls-demo/Decorator/WrapURLs/ClassName/Index
+     */
+    className: string;
+    /**
+     * Декорируемый текст.
+     * @demo Controls-demo/Decorator/WrapURLs/Value/Index
+     */
+    value: string;
+    /**
+     * Подсвечиваемый текст.
+     * @demo Controls-demo/Decorator/WrapURLs/highlightedValue/Index
+     */
+    highlightedValue: string;
+    /**
+     * Режим подсветки.
+     * @type {HighlightMode}
+     * @default substring
+     * @demo @demo Controls-demo/Decorator/WrapURLs/HighlightMode/Index
+     */
+    highlightMode: HighlightMode;
 }
 
 interface IHighlight {
@@ -92,12 +84,30 @@ interface ISearchResult {
 type SearchBy = 'and' | 'or';
 type Element = IHighlight | IPlain;
 
-export class Highlight extends Control<IHighlightOptions> {
+/**
+ * Графический контрол, декоририрующий текст таким образом, что все вхождения {@link highlightedValue подсвечиваемого текста} в нем изменениют свой внешний вид.
+ * Изменение внешнего вида текста используется с целью акцентирования на нём внимания.
+ * @remark
+ * Для нахождения подсвечиваемого текста выполняется поиск сопоставления между {@link value текстом} и {@link highlightedValue искомым текстом}.
+ * Алгоритм поиска описан в {@link http://axure.tensor.ru/standarts/v7/%D1%80%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82%D0%B0%D1%82%D1%8B_%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_02_.html стандарте}.
+ *
+ * @mixes Controls/_decorator/Highlight/IHighlightOptions
+ *
+ * @class Controls/_decorator/Highlight
+ * @extends UI/Base:Control
+ *
+ * @public
+ * @demo Controls-demo/Decorator/Highlight/Index
+ *
+ * @author Красильников А.С.
+ */
+class Highlight extends Control<IHighlightOptions> {
+    protected _className: string = null;
     protected _parsedText: Element[];
     protected _template: TemplateFunction = template;
     protected _theme: string[] = ['Controls/decorator'];
 
-    private _parseText(text: string, highlight: string, searchMode: SearchMode): Element[] {
+    private _parseText(value: string, highlight: string, highlightMode: HighlightMode): Element[] {
         /**
          * Подсвечиваемый текст нужно ограничить, потому что в дальнейшем он будет преобразован в регулярное выражение, которое
          * имеет ограничение длины. При превышении длины регулярное выражение будет считаться невалидным, и с ним невозможно будет работать.
@@ -105,28 +115,28 @@ export class Highlight extends Control<IHighlightOptions> {
          */
         const maxLength: number = 10000;
         const limitHighlight: string = highlight.length > maxLength ? highlight.substring(0, maxLength) : highlight;
-        const escapedHighlight: string = RegExpUtil.escapeSpecialChars(limitHighlight);
-        const searchResultByAnd: Element[] = this._searchBy(text, escapedHighlight, searchMode, 'and');
+        const escapedHighlight: string = escapeSpecialChars(limitHighlight);
+        const searchResultByAnd: Element[] = this._searchBy(value, escapedHighlight, highlightMode, 'and');
 
         if (searchResultByAnd.length) {
             return searchResultByAnd;
         }
 
-        return this._searchBy(text, escapedHighlight, searchMode, 'or');
+        return this._searchBy(value, escapedHighlight, highlightMode, 'or');
     }
 
     private _prepareParsedText(options: IHighlightOptions): Element[] {
-        if (options.highlight) {
-            return this._parseText(options.text, options.highlight, options.searchMode);
+        if (options.highlightedValue) {
+            return this._parseText(options.value, options.highlightedValue, options.highlightMode);
         } else {
             return [{
                 type: 'plain',
-                value: options.text
+                value: options.value
             }];
         }
     }
 
-    private _searchBy(text: string, highlight: string, searchMode: SearchMode, by: SearchBy): Element[] {
+    private _searchBy(value: string, highlight: string, highlightMode: HighlightMode, by: SearchBy): Element[] {
         let words: string[];
         switch (by) {
             case 'and':
@@ -135,7 +145,7 @@ export class Highlight extends Control<IHighlightOptions> {
             case 'or':
                 words = highlight.split(Highlight.WORD_SEPARATOR);
 
-                if (searchMode === 'word') {
+                if (highlightMode === 'word') {
                     words = words.filter(Highlight._isWord);
                 }
                 break;
@@ -153,50 +163,61 @@ export class Highlight extends Control<IHighlightOptions> {
                 'is not required now.', this);
         }
 
-        const regexp: RegExp = this._calculateRegExp(words, searchMode);
-        const highlightSearchResult: ISearchResult[] = Highlight._search(text, regexp);
+        const regexp: RegExp = this._calculateRegExp(words, highlightMode);
+        const highlightSearchResult: ISearchResult[] = Highlight._search(value, regexp);
 
         if (highlightSearchResult.length === 0) {
             if (by === 'or') {
                 return [{
                     type: 'plain',
-                    value: text
+                    value: value
                 }];
             }
 
             return [];
         }
 
-        return Highlight._split(text, highlightSearchResult);
+        return Highlight._split(value, highlightSearchResult);
     }
 
-    private _calculateRegExp(valueArr: string[], searchMode: SearchMode): RegExp {
+    private _calculateRegExp(valueArr: string[], highlightMode: HighlightMode): RegExp {
         const flags: string = 'gi';
         const value: string = valueArr.join('|');
 
-        switch (searchMode) {
+        switch (highlightMode) {
             case 'word':
                 return new RegExp(`\\b${value}\\b`, flags);
             case 'substring':
                 return new RegExp(`${value}`, flags);
             default:
-                Logger.error(this._moduleName + `: Unsupported search mode: ${searchMode}.`, this);
+                Logger.error(this._moduleName + `: Unsupported search mode: ${highlightMode}.`, this);
                 return new RegExp(`${value}`, flags);
         }
     }
 
+    private _needChangeParsedText(newOptions: IHighlightOptions): boolean {
+        const currentOptions = highlightOptions(this._options);
+        return [
+            'value',
+            'highlightedValue',
+            'highlightMode'
+        ].some((optionName: string) => currentOptions[optionName] !== newOptions[optionName]);
+    }
+
     protected _beforeMount(options: IHighlightOptions): void {
-        this._parsedText = this._prepareParsedText(options);
+        const actualOptions = highlightOptions(options);
+
+        this._className = actualOptions.className;
+        this._parsedText = this._prepareParsedText(highlightOptions(options));
     }
 
     protected _beforeUpdate(newOptions: IHighlightOptions): void {
-        if (
-            newOptions.text !== this._options.text ||
-            newOptions.highlight !== this._options.highlight ||
-            newOptions.searchMode !== this._options.searchMode
-        ) {
-            this._parsedText = this._prepareParsedText(newOptions);
+        const actualOptions = highlightOptions(newOptions);
+
+        if (this._needChangeParsedText(actualOptions)) {
+            this._parsedText = this._prepareParsedText(actualOptions);
         }
+        this._className = actualOptions.className;
     }
 
     private static WORD_SEPARATOR: RegExp = /\s+/g;
@@ -210,10 +231,10 @@ export class Highlight extends Control<IHighlightOptions> {
         return value.length >= Highlight.MINIMUM_WORD_LENGTH;
     }
 
-    private static _search(text: string, regexp: RegExp): ISearchResult[] {
+    private static _search(value: string, regexp: RegExp): ISearchResult[] {
         let iterations: number = 1e4;
         const searchResult: ISearchResult[] = [];
-        let found: RegExpExecArray | null = regexp.exec(text);
+        let found: RegExpExecArray | null = regexp.exec(value);
 
         while (found && iterations >= 1) {
             searchResult.push({
@@ -221,21 +242,21 @@ export class Highlight extends Control<IHighlightOptions> {
                 index: found.index
             });
 
-            found = regexp.exec(text);
+            found = regexp.exec(value);
             iterations--;
         }
 
         return searchResult;
     }
 
-    private static _split(text: string, found: ISearchResult[]): Element[] {
+    private static _split(value: string, found: ISearchResult[]): Element[] {
         const result: Element[] = [];
         const foundLength: number = found.length;
 
         if (foundLength === 0) {
             result.push({
                 type: 'plain',
-                value: text
+                value: value
             });
 
             return result;
@@ -244,7 +265,7 @@ export class Highlight extends Control<IHighlightOptions> {
         let index: number = 0;
         for (let i = 0; i < foundLength; i++) {
             const highlight = found[i];
-            const plainValue: string = text.substring(index, highlight.index);
+            const plainValue: string = value.substring(index, highlight.index);
 
             if (plainValue) {
                 result.push({
@@ -261,10 +282,10 @@ export class Highlight extends Control<IHighlightOptions> {
             index = highlight.index + highlight.value.length;
         }
 
-        if (index !== text.length) {
+        if (index !== value.length) {
             result.push({
                 type: 'plain',
-                value: text.substring(index)
+                value: value.substring(index)
             });
         }
 
@@ -273,20 +294,26 @@ export class Highlight extends Control<IHighlightOptions> {
 
     static getDefaultOptions() {
         return {
-            searchMode: 'substring',
-            class: 'controls-Highlight_highlight'
+            highlightMode: 'substring',
+            className: 'controls-Highlight_highlight'
         };
     }
 
     static getOptionTypes() {
         return {
-            class: descriptor(String),
-            searchMode: descriptor(String).oneOf([
+            className: descriptor(String),
+            highlightMode: descriptor(String).oneOf([
                 'word',
                 'substring'
-            ]),
-            text: descriptor(String).required(),
-            highlight: descriptor(String).required()
+            ])/*,
+            TODO: https://online.sbis.ru/opendoc.html?guid=d04dc579-2453-495f-b0a7-282370f6a9c5
+            value: descriptor(String).required(),
+            highlightedValue: descriptor(String).required()
+            */
         };
     }
+
+    static _theme = ['Controls/decorator']
 }
+
+export default Highlight;

@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">style=secondary</div>
+        <Controls.toggle:Separator caption="Button" bind:value="_expanded" style="secondary"></Controls.toggle:Separator>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">style=primary</div>
+        <Controls.toggle:Separator caption="Button" bind:value="_expanded" style="primary"></Controls.toggle:Separator>
+    </div>
+    <ws:if data="{{_expanded}}">
+        <div class="controlsDemo__cell">
+            <div class="controls-text-secondary_theme-{{_options.theme}}">Hello!</div>
+        </div>
+    </ws:if>
+</div>
+
