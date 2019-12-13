@@ -68,11 +68,9 @@ type Path = ILink | IEmail | IPlain;
  * 2. Ссылка на email адрес ([текст]@[текст].[текст от 2 до 6 знаков]).
  * 3. Ссылка на локальный файл ({@link https://en.wikipedia.org/wiki/File_URI_scheme file}).
  *
- * @mixes Controls/_decorator/WrapURLs/IWrapURLsOptions
- *
  * @class Controls/_decorator/WrapURLs
  * @extends UI/Base:Control
- *
+ * @mixes Controls/_decorator/WrapURLs/IWrapURLsOptions
  * @public
  * @demo Controls-demo/Decorator/WrapURLs/Index
  *

@@ -7,9 +7,9 @@
  * @includes Number Controls/_decorator/Number
  * @includes INumberOptions Controls/_decorator/Number/INumberOptions
  * @includes Phone Controls/_decorator/Phone
- * @includes IPhoneOptions Controls/_decorator/Phone/IPhoneOptions
+ * @includes IPhoneOptions Controls/_decorator/Phone
  * @includes WrapURLs Controls/_decorator/WrapURLs
- * @includes IWrapURLsOptions Controls/_decorator/WrapURLs/IWrapURLsOptions
+ * @includes IWrapURLsOptions Controls/_decorator/WrapURLs
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
  * @includes _highlightResolver Controls/_decorator/Markup/resolvers/highlight
@@ -28,7 +28,9 @@
  * @includes Money Controls/_decorator/Money
  * @includes Number Controls/_decorator/Number
  * @includes Phone Controls/_decorator/Phone
+ * @includes IPhoneOptions Controls/_decorator/Phone
  * @includes WrapURLs Controls/_decorator/WrapURLs
+ * @includes IWrapURLsOptions Controls/_decorator/WrapURLs
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
  * @includes _highlightResolver Controls/_decorator/Markup/resolvers/highlight
