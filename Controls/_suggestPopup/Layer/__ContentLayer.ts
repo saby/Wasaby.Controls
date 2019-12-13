@@ -120,6 +120,10 @@ var __ContentLayer = BaseLayer.extend({
       }
    },
 
+   _resize: function() {
+      this._height = _private.calcHeight(this);
+   },
+
    close: function() {
       this._notify('close', [], {bubbling: true});
    }
