@@ -103,6 +103,7 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
      * $4 - Email address.
      * $5 - Plain text.
      * $6 - Closing delimiter.
+     * @private
      */
     private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
 
