@@ -13,7 +13,6 @@
 .controls-VScrollbar_horizontal {
    height: @width_Scrollbar + 2 * @margin_Scrollbar;
    border-width: 0 @margin_Scrollbar;
-   transition: transform @animation-duration_Scrollbar ease-in-out;
 }
 
 .controls-VScrollbar_horizontal-midline {
@@ -82,6 +81,8 @@
    width: @width_Scrollbar_animation + 2 * @margin_Scrollbar;
 }
 
+// при наведении или перемещении увеличиваем только thumb,
+// что бы линия посередине не изменялась
 .controls-VScrollbar_horizontal_dragging .controls-VScrollbar__thumb_horizontal,
 .controls-VScrollbar_horizontal:hover .controls-VScrollbar__thumb_horizontal {
    transform: scaleY(@scale_Scrollbar-horizontal_thumb);
