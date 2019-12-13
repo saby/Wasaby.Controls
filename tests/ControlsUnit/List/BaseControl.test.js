@@ -1569,18 +1569,18 @@ define([
        });
 
        it('update virtual scroll in afterMount', async function() {
-          cfg = {
-             virtualScrolling: true,
-             navigation: {
-                view: 'infinity'
+          var cfg = {
+                virtualScrolling: true,
+                navigation: {
+                   view: 'infinity'
+                },
+                source: new sourceLib.Memory({
+                   keyProperty: 'id',
+                   data: data
+                })
              },
-             source: new sourceLib.Memory({
-                keyProperty: 'id',
-                data: data
-             })
-          },
-          baseControl = new lists.BaseControl(cfg),
-          virtualScrollUpdated = false;
+             baseControl = new lists.BaseControl(cfg),
+             virtualScrollUpdated = false;
           baseControl._setLoadOffset = lists.BaseControl._private.startScrollEmitter = function(){};
           await baseControl._beforeMount(cfg);
           baseControl._updateVirtualScroll = function(){
