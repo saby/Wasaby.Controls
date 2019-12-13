@@ -68,7 +68,7 @@ export type TOverflow = 'ellipsis' | 'none';
 /**
  * Интерфейс для конфигурации колонки табличного представления.
  *
- * @interface
+ * @interface Controls/_grid/interface/IColumn
  * @public
  * @author Авраменко А.С.
  */

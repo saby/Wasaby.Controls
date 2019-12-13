@@ -2,8 +2,10 @@
  * Библиотека контролов, которые предназначены для преобразования данных к какому-либо внешнему виду.
  * @library Controls/decorator
  * @includes Highlight Controls/_decorator/Highlight
+ * @includes IHighlightOptions Controls/_decorator/Highlight/IHighlightOptions
  * @includes Markup Controls/_decorator/Markup
  * @includes Money Controls/_decorator/Money
+ * @includes IMoneyOptions Controls/_decorator/Money/IMoneyOptions
  * @includes Number Controls/_decorator/Number
  * @includes INumberOptions Controls/_decorator/Number/INumberOptions
  * @includes Phone Controls/_decorator/Phone
