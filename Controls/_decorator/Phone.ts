@@ -20,6 +20,7 @@ export interface IPhoneOptions extends IControlOptions {
     number: string;
     /**
      * Декорируемый телефонный номер.
+     * @default ''
      * @demo Controls-demo/Decorator/Phone/Index
      */
     value: string | null;
@@ -179,10 +180,6 @@ class Phone extends Control<IPhoneOptions> {
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_decorator/Phone#value
-             * @default ''
-             */
             value: ''
         };
     }

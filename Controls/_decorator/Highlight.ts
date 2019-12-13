@@ -43,6 +43,7 @@ export interface IHighlightOptions extends IControlOptions {
     searchMode?: HighlightMode
     /**
      * Класс обеспечивающий внешнее отображение подсветки.
+     * @default controls-Highlight_highlight
      * @demo Controls-demo/Decorator/WrapURLs/ClassName/Index
      */
     className: string;
@@ -59,6 +60,7 @@ export interface IHighlightOptions extends IControlOptions {
     /**
      * Режим подсветки.
      * @type {HighlightMode}
+     * @default substring
      * @demo @demo Controls-demo/Decorator/WrapURLs/HighlightMode/Index
      */
     highlightMode: HighlightMode;
@@ -292,15 +294,7 @@ class Highlight extends Control<IHighlightOptions> {
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_decorator/WrapURLs#highlightMode
-             * @default substring
-             */
             highlightMode: 'substring',
-            /**
-             * @name Controls/_decorator/WrapURLs#className
-             * @default controls-Highlight_highlight
-             */
             className: 'controls-Highlight_highlight'
         };
     }

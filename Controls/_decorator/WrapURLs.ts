@@ -23,6 +23,7 @@ export interface IWrapURLsOptions extends IControlOptions {
     value: string;
     /**
      * Определяет, следует ли переходить в новую вкладку при клике на ссылку.
+     * @default true
      * @demo Controls-demo/Decorator/WrapURLs/NewTab/Index
      * @remark
      * true - Переход в новой вкладке.
@@ -201,10 +202,6 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_decorator/WrapURLs#newTab
-             * @default true
-             */
             newTab: true
         };
     }
