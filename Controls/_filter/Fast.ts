@@ -14,7 +14,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
 
       /**
-       * Контрол "Быстрый фильтр". Использует выпадающие списки для фильтрации данных.
+       * Контрол "Быстрый фильтр". Использует выпадающие списки для выбора параметров фильтрации.
        * 
        * @remark
        * См. <a href="/materials/demo-ws4-filter-search-new">демо-пример</a>
@@ -28,7 +28,7 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
        * @demo Controls-demo/FastFilter/fastPG
        * @control
        * @public
-       * @deprecated Данный контрол устарел и будет удалён Вместо него используйте {@link Controls/filter:View}.
+       * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
        * @author Герасимов А.М.
        */
 

@@ -92,7 +92,7 @@ interface ISearchResult {
 type SearchBy = 'and' | 'or';
 type Element = IHighlight | IPlain;
 
-export class Highlight extends Control<IHighlightOptions> {
+class Highlight extends Control<IHighlightOptions> {
     protected _parsedText: Element[];
     protected _template: TemplateFunction = template;
     protected _theme: string[] = ['Controls/decorator'];
@@ -290,3 +290,5 @@ export class Highlight extends Control<IHighlightOptions> {
         };
     }
 }
+
+export default Highlight;

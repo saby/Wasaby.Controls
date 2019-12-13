@@ -191,13 +191,13 @@
         </div>
         <div>
             <div attr:class="test_element__wrapper">
-                <span attr:class="test_element">Additional style:</span>
+                <span attr:class="test_element">Unaccented style:</span>
             </div>
             <div attr:class="test_element__wrapper">
-                <Controls.toggle:Separator attr:class="test_element" on:click="clickIcon(3)" bold="{{true}}" style="additional" value="{{_iconValue3}}"/>
+                <Controls.toggle:Separator attr:class="test_element" on:click="clickIcon(3)" bold="{{true}}" style="unaccented" value="{{_iconValue3}}"/>
             </div>
             <div attr:class="test_element__wrapper">
-                <Controls.toggle:Separator attr:class="test_element" on:click="clickIcon(6)" bold="{{false}}" style="additional" value="{{_iconValue6}}"/>
+                <Controls.toggle:Separator attr:class="test_element" on:click="clickIcon(6)" bold="{{false}}" style="unaccented" value="{{_iconValue6}}"/>
             </div>
         </div>
     </div>

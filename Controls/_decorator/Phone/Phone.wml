@@ -1,1 +1,1 @@
-<span class="controls-Number" title="{{_formattedNumber}}">{{_formattedNumber}}</span>
+<span class="controls-DecoratorPhone" title="{{_formattedPhone}}">{{_formattedPhone}}</span>

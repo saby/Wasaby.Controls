@@ -235,17 +235,6 @@ import {Logger} from 'UI/Utils';
          return isChanged;
       },
 
-      hasResetValue: function(items) {
-         var hasReset = false;
-         chain.factory(items).each(function(item) {
-            if (hasReset) {
-               return;
-            }
-            hasReset = getPropValue(item, 'resetValue') !== undefined;
-         });
-         return hasReset;
-      },
-
       validate: function(self) {
          return self._children.formController.submit();
       },
@@ -299,7 +288,7 @@ import {Logger} from 'UI/Utils';
          _private.resolveHistoryId(this, options, this._contextOptions);
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
-         this._hasResetValue = _private.hasResetValue(this._items);
+         this._hasResetValue = FilterUtils.hasResetValue(this._items);
          const isReportPanel = options.orientation === 'horizontal';
          return _private.loadHistoryItems(this, this._historyId, isReportPanel);
       },
@@ -310,7 +299,7 @@ import {Logger} from 'UI/Utils';
          }
          this._isChanged = _private.isChangedValue(this._items);
          this._hasAdditionalParams = (newOptions.additionalTemplate || newOptions.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
-         this._hasResetValue = _private.hasResetValue(this._items);
+         this._hasResetValue = FilterUtils.hasResetValue(this._items);
          if (this._options.historyId !== newOptions.historyId) {
             _private.resolveHistoryId(this, newOptions, context);
             return _private.loadHistoryItems(this, this._historyId);

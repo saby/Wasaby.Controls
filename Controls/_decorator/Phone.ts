@@ -1,168 +1,191 @@
-import Control = require('Core/Control');
-import entity = require('Types/entity');
-import template = require('wml!Controls/_decorator/Phone/Phone');
-import phoneCodeModule = require('Controls/_decorator/Phone/Dictionary');
+import {descriptor} from 'Types/entity';
+import toString from 'Controls/Utils/Formatting/toString';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import dictionary from 'Controls/_decorator/Phone/Dictionary';
+// @ts-ignore
+import * as template from 'wml!Controls/_decorator/Phone/Phone';
+
+import {phoneValue} from 'Controls/_decorator/ActualAPI';
 
 /**
- * Преобразует телефонный номер из строки, которая состоит из цифр и других символов(пробелов, скобок, дефисов) в форматированную строку:
- * <ul>
- *    <li>для российских мобильных номеров формат <code>+7(***) ***-**-**</code></li>
- *    <li>для других российских мобильных номеров +7(****) **-**-** или +7(*****) *-**-** в зависимости от кода города;</li>
- *    <li>для иностранных номеров +(иностранный код)(остальные цифры).</li>
- * </ul>
- * @class Controls/_decorator/Phone
- * @extends Core/Control
- * @control
+ * @interface Controls/_decorator/Phone/IPhoneOptions
  * @public
  * @author Красильников А.С.
- * @category Decorators
  */
+export interface IPhoneOptions extends IControlOptions {
+    /**
+     * Опция устарела, используйте опцию {@link value}.
+     * @deprecated
+     */
+    number: string;
+    /**
+     * Декорируемый телефонный номер.
+     * @demo Controls-demo/Decorator/Phone/Index
+     */
+    value: string | null;
+}
 
 /**
- * @name Controls/_decorator/Phone#number
- * @cfg {String} Номер, который будет преобразован.
+ * Графический контрол, декоририрующий телефонный номер таким образом, что он приводится к формату:
+ * <ul>
+ *    <li>Российские мобильные номера - +7(***) ***-**-**[ доб. {остальные цифры}];</li>
+ *    <li>Российские мобильные номера в зависимости от кода города - +7(****) **-**-**[ доб. {остальные цифры}] или +7(*****) *-**-**[ доб. {остальные цифры}];</li>
+ *    <li>Иностранные номера - +{иностранный код} {остальные цифры};</li>
+ *    <li>Остальные номера - отображаются как есть без формата</li>
+ * </ul>
+ *
+ * @mixes Controls/_decorator/Phone/IPhoneOptions
+ *
+ * @class Controls/_decorator/Phone
+ * @extends UI/Base:Control
+ *
+ * @public
+ * @demo Controls-demo/Decorator/Phone/Index
+ *
+ * @author Красильников А.С.
  */
+class Phone extends Control<IPhoneOptions> {
+    protected _formattedPhone: string = null;
 
-var _private = {
-    formatPhone: function (phoneIn) {
-        phoneIn = (phoneIn || '').toString();
+    protected _template: TemplateFunction = template;
 
-        /*remove non-numeric characters from the string*/
-        var
-            phoneStr = (phoneIn || '').replace(/\D/g, '');
+    protected _beforeMount(options: IPhoneOptions): void {
+        this._formattedPhone = Phone._formatPhone(phoneValue(options.number, options.value, true));
+    }
 
-        if (phoneStr.length > 10) {
-            phoneStr = phoneStr.replace(/^(7|8|07|08)/g, '7'); // replace 7, 8, 07, 08 with the Russian code - 7
-        } else if (phoneStr.length === 10) {
-            phoneStr = '7' + phoneStr; // if the length of the string is 10, then this is Russia and the user forgot to write 8 or +7
+    protected _beforeUpdate(newOptions: IPhoneOptions): void {
+        const oldValue = phoneValue(this._options.number, this._options.value);
+        const newValue = phoneValue(newOptions.number, newOptions.value);
+
+        if (oldValue !== newValue) {
+            this._formattedPhone = Phone._formatPhone(newValue);
         }
+    }
 
-        var
-            country_code = phoneStr.charAt(0),
-            phone_max_length = country_code === '7' ? 11 : phoneStr.length,  //if the number begins with '7', the maximum length will be 11 symbols
-            phone = phoneStr.substr(0, phone_max_length), // cut to normal number
-            subphone = phoneStr.substr(phone_max_length), // extra symbols is additional number
-            /**
-             * @param b_num - количество символов в коде города (будет в скобках).
-             * @type {number}
-             */
+    private static MAX_LENGTH_RUSSIAN_PHONE = 11;
+    private static NON_NUMBER_CHARS: RegExp = /\D/g;
+    private static BEGIN_RUSSIAN_PHONE: RegExp = /^0?[78]/;
 
-            /*
-             * @param b_num - the number of symbols in the area code(will be in brackets)
-             * @type {number}
-             */
-            b_num = 3,
+    private static _isRussianPhone(phone: string, countryCode: string): boolean {
+        return phone.length > 9 && countryCode === '7';
+    }
 
-            /**
-             * @param c_num - количество символов от закрывающей скобки до тире (1 - город, 2 - район, 3 - номер телефона,
-             * 5 - 4 символа в конце номера с 1 символом, который определяет код страны).
-             * @type {number}
-             */
+    private static _isForeignPhone(phone: string, countryCode: string): boolean {
+        return Boolean(dictionary.foreignCodes[countryCode]);
+    }
 
-            /*
-             * @param c_num - the number of symbols from closing bracket to hyphen (1 if city, 2 if district, 3 if this is mobile phone)
-             * 5 - is 4 symbols at the end of number with 1 symbol - is code of country
-             * @type {number}
-             */
-            c_num = phone_max_length - b_num - 5;
-
-        //if phone has less then 5 symbols return it
-        if (phone.length <= 4) {
-            return phone;
+    private static _formatCountryCode(phone: string): string {
+        if (phone.length > 10) {
+            return phone.replace(Phone.BEGIN_RUSSIAN_PHONE, '7');
         }
-
-        if (phone.length >= 10 && (~['7', '8'].indexOf(country_code) || phone.length < 11)) {
-            /*if number is with country code and it's Russian code, then we will look at russian region and city codes*/
-            /*if number hasn't got country code, we think it's Russia*/
-            var
-
-                /*first symbol. If number is with country code then is 1, else 0: if length is 11 then first symbol is code,
-                 * if less than 11 then number hasn't got a code*/
-                firstChar = phone.length - 10,
-
-                // the list if the city codes in region (code of the region consist of 3 symbols)
-                codeList = phoneCodeModule.region[phone.substr(firstChar, 3)] || [],
-
-                /* tcode - city code. Can consist of 2 or 3 symbols. For example 494: city code can be '2' or '31'.
-                 Suppose that 2 symbols after region code is city,  if not then will check 1 symbol*/
-                tcode = phone.substr(firstChar + 3, 2),
-                m = 0;
-
-            /*determine the offset of code number by city code
-             if there is our code from 2 symbols in array, then we indent 2 symbol after region code, else will try to find only first symbol.
-             If have found, then indent only one symbol after region code*/
-
-            m = ~codeList.indexOf(tcode) ? 2 : (~codeList.indexOf(tcode.charAt(0)) ? 1 : 0);
-
-            /*the number of symbols in brackets increases by number of symbols in city code (and will be equal to the city code + region code)*/
-            b_num += m;
-
-            /*the number of symbols from closing bracket of region code to first hyphen decreases by code of city that will bo located in brackets*/
-            c_num -= m;
-
-            /*if there is no symbol before first hyphen then we will separate 3 first symbols*/
-            c_num = c_num > 0 ? c_num : 3;
-
-            /*if the length of entering number less than 7 (standard number ***-**-**), then we will ignore region code and city code*/
-            b_num = phone_max_length > 7 ? b_num : -1;
-
-            /*if the max length of number less then 10, we take it equal to 10 (the number of symbols without the country code)*/
-            phone_max_length = phone_max_length > 10 ? phone_max_length : 10;
-
-            /*place brackets around the code, spaces and hyphens*/
-            var
-                re = new RegExp('(?:(\\d]{1,}?))??(?:([\\d]{1,' + b_num + '}?))??(?:([\\d]{1,' + c_num +
-                    '}?))??(?:([\\d]{2}))??([\\d]{2})$'),
-                formatted = (phone.toString()).replace(re, function (all, a, b, c, d, e) {
-                    return (a || '') + (b ? '(' + b + ') ' : '') + (c ? c + '-' : '') + (d ? d + '-' : '') + e;
-                });
-
-            /*construct number and append it by extra digits
-             * if the length of the number is bigger or is equal to maximal russian length append '+', else there is no code there and we don't do anything*/
-            phone = ((phone.length >= phone_max_length) ? '+' + formatted : formatted) +
-                (subphone ? ' доб. ' + subphone : '');
-        } else if (phoneCodeModule.foreignCodes[country_code]) {
-            /*the number of symbols after country code (without +)*/
-            var countBeforeSpace = 0;
-            if (!phoneCodeModule.foreignCodes[country_code].length) {
-                countBeforeSpace = 1;
-            } else if (phoneCodeModule.foreignCodes[country_code].indexOf(phone.substring(1, 3)) >= 0) { //check at first the match with three-digit number
-                countBeforeSpace = 3;
-            } else if (phoneCodeModule.foreignCodes[country_code].indexOf(phone.substring(1, 2)) >= 0) { //if three-digit number didn't match, then check two-digit number
-                countBeforeSpace = 2;
-            } else {
-                return '+' + phone;
-            }
-
-            phone = '+' + phone.substring(0, countBeforeSpace) + ' ' + phone.substring(countBeforeSpace);
+        if (phone.length === 10) {
+            return `7${phone}`;
         }
 
         return phone;
     }
-};
+    
+    private static _lengthForeignCode(phone: string, countryCode: string): number {
+        const codes: string[] = dictionary.foreignCodes[countryCode];
 
-var Phone = Control.extend({
-    _template: template,
-
-    _formattedNumber: '',
-
-    _beforeMount: function (options) {
-        this._formattedNumber = _private.formatPhone(options.number);
-    },
-
-    _beforeUpdate: function (newOptions) {
-        if (newOptions.number !== this._options.number) {
-            this._formattedNumber = _private.formatPhone(newOptions.number);
+        if (codes.length === 0) {
+            return 1;
         }
+        if (codes.includes(phone.substring(1, 2))) {
+            return 2;
+        }
+        if (codes.indexOf(phone.substring(1, 3))) {
+            return 3;
+        }
+        
+        return 0;
     }
-});
 
-Phone.getOptionTypes = function () {
-    return {
-        number: entity.descriptor(String)
-    };
-};
+    private static _cityCode(phone: string, regionCode: string): string {
+        const codes = dictionary.region[regionCode] || [];
 
-Phone._private = _private;
+        if (codes.length === 0) {
+            return '';
+        }
+        for (let lengthCode = 1; lengthCode < 3; lengthCode++) {
+            const code = phone.substr(1 + regionCode.length, lengthCode);
+            if (codes.includes(code)) {
+                return code;
+            }
+        }
+
+        return '';
+    }
+
+    private static _tail(phone: string, regionCode: string, cityCode: string): string {
+        const main = phone.substring(0, Phone.MAX_LENGTH_RUSSIAN_PHONE);
+        const secondary = phone.substring(Phone.MAX_LENGTH_RUSSIAN_PHONE);
+        const start = 1 + regionCode.length + cityCode.length;
+        let tail = `${main.slice(start, -4)}-${main.slice(-4, -2)}-${main.slice(-2)}`;
+
+        if (secondary) {
+            tail += ` доб. ${secondary}`;
+        }
+
+        return tail;
+    }
+
+    private static _toForeignFormat(phone: string, codeLength: number): string {
+        if (codeLength === 0) {
+            return `+${phone}`;
+        }
+
+        return `+${phone.substring(0, codeLength)} ${phone.substring(codeLength)}`;
+    }
+
+    private static _removeNonNumberChars(original: string): string {
+        return original.replace(Phone.NON_NUMBER_CHARS, '');
+    }
+
+    private static _formatPhone(phone: string | null): string {
+        const strPhone = toString(phone);
+        
+        if (strPhone === '') {
+            return '';
+        }
+        
+        let numPhone = Phone._removeNonNumberChars(strPhone);
+
+        if (numPhone.length < 5) {
+            return numPhone;
+        }
+
+        numPhone = Phone._formatCountryCode(numPhone);
+        const countryCode = numPhone.charAt(0);
+
+        if (Phone._isRussianPhone(numPhone, countryCode)) {
+            const regionCode = numPhone.substr(1, 3);
+            const cityCode = Phone._cityCode(numPhone, regionCode);
+            return `+7(${regionCode}${cityCode}) ${Phone._tail(numPhone, regionCode, cityCode)}`;
+        }
+        if (Phone._isForeignPhone(numPhone, countryCode)) {
+            const codeLength = Phone._lengthForeignCode(numPhone, countryCode);
+            return Phone._toForeignFormat(numPhone, codeLength);
+        }
+
+        return numPhone;
+    }
+
+    static getOptionTypes() {
+        return {
+            value: descriptor(String, null)
+        };
+    }
+
+    static getDefaultOptions() {
+        return {
+            /**
+             * @name Controls/_decorator/Phone#value
+             * @default ''
+             */
+            value: ''
+        };
+    }
+}
 
 export default Phone;

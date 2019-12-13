@@ -12,8 +12,7 @@
    <Controls.popup:Sticky name="opener"
                                  template="Controls/dateLitePopup"
                                  closeOnOutsideClick="{{true}}"
-                                 actionOnScroll="close"
-                                 _vdomOnOldPage="{{true}}">
+                                 actionOnScroll="close">
       <ws:direction vertical="bottom" horizontal="center"/>
       <ws:targetPoint vertical="top" horizontal="center"/>
    </Controls.popup:Sticky>

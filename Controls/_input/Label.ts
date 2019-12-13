@@ -1,9 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {ICaption, ICaptionOptions} from 'Controls/interface';
+import {ICaption, ICaptionOptions, IFontSize, IFontSizeOptions,} from 'Controls/interface';
 import * as LabelTemplate from 'wml!Controls/_input/Label/Label';
 
-export interface ILabelOptions extends IControlOptions, ICaptionOptions {
+export interface ILabelOptions extends IControlOptions, ICaptionOptions, IFontSizeOptions {
    required?: boolean;
    underline?: string | null;
    href?: string;
@@ -16,6 +16,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
  * @extends Core/Control
  *
  * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/IFontSize
  *
  * @public
  * @demo Controls-demo/Input/Labels/Index
@@ -53,6 +54,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
  * @variant hovered
  * @variant fixed
  * @variant none
+ * @default none
  */
 
 /*
@@ -72,12 +74,13 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
  * @name Controls/_input/Label#href
  * @cfg {String} Contains a URL or a URL fragment that the hyperlink points to.
  */
-class Label extends Control<ILabelOptions> implements ICaption {
+class Label extends Control<ILabelOptions> implements ICaption, IFontSize {
    protected _template: TemplateFunction = LabelTemplate;
 
    readonly '[Controls/_interface/ICaption]': true;
+   readonly '[Controls/_interface/IFontSize]': true;
 
-   static _theme: string[] = ['Controls/input'];
+   static _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
    static getDefaultOptions(): object {
       return {

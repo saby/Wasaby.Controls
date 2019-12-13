@@ -5,8 +5,11 @@
  * @includes Markup Controls/_decorator/Markup
  * @includes Money Controls/_decorator/Money
  * @includes Number Controls/_decorator/Number
+ * @includes INumberOptions Controls/_decorator/Number/INumberOptions
  * @includes Phone Controls/_decorator/Phone
+ * @includes IPhoneOptions Controls/_decorator/Phone/IPhoneOptions
  * @includes WrapURLs Controls/_decorator/WrapURLs
+ * @includes IWrapURLsOptions Controls/_decorator/WrapURLs/IWrapURLsOptions
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
  * @includes _highlightResolver Controls/_decorator/Markup/resolvers/highlight
@@ -37,13 +40,13 @@
  */
 
 import {default as Markup} from './_decorator/Markup';
-import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 
-export {default as Phone} from 'Controls/_decorator/Phone';
+export {default as Number, INumberOptions, RoundMode} from 'Controls/_decorator/Number';
+export {default as Phone, IPhoneOptions} from 'Controls/_decorator/Phone';
 export {default as Money, IMoneyOptions} from 'Controls/_decorator/Money';
-import {default as WrapURLs, IWrapURLsOptions} from 'Controls/_decorator/WrapURLs';
-import {Highlight, SearchMode, IHighlightOptions} from 'Controls/_decorator/Highlight';
+export {default as WrapURLs, IWrapURLsOptions} from 'Controls/_decorator/WrapURLs';
+export {default as Highlight, SearchMode, IHighlightOptions} from 'Controls/_decorator/Highlight';
 
 import * as Converter from './_decorator/Markup/Converter';
 import {default as InnerText}  from './_decorator/Markup/resolvers/innerText';
@@ -53,14 +56,8 @@ import {default as linkDecorate}  from './_decorator/Markup/resolvers/linkDecora
 import {default as linkWrapResolver}  from './_decorator/Markup/resolvers/linkWrap';
 
 export {
-    Highlight,
-    SearchMode,
-    IHighlightOptions,
     Markup,
-    Number,
     PhoneNumber,
-    WrapURLs,
-    IWrapURLsOptions,
 
     Converter,
     InnerText,
