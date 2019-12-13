@@ -4,6 +4,7 @@
  */
 
 import {Logger} from 'UI/Utils';
+import {IHighlightOptions} from 'Controls/_decorator/Highlight';
 
 export function wrapURLsValue(text?: string, value?: string, useLogging: boolean = false): string {
     if (typeof text === 'string') {
@@ -62,7 +63,9 @@ export function moneyValue(number: number, value?: string | number | null, useLo
 
 export function moneyOptions(options: {title?: string, tooltip?: string}, useLogging: boolean = false): {tooltip?: string} {
     if ('title' in options) {
-        Logger.warn('Controls.decorator:Money - опция title устарела, используйте опцию tooltip.');
+        if (useLogging) {
+            Logger.warn('Controls.decorator:Money - опция title устарела, используйте опцию tooltip.');
+        }
         return {
             tooltip: options.title
         }
@@ -74,4 +77,37 @@ export function moneyOptions(options: {title?: string, tooltip?: string}, useLog
     }
 
     return {}
+}
+
+export function highlightOptions(options: IHighlightOptions, useLogging: boolean = false): IHighlightOptions {
+    let {value, highlightedValue, className, highlightMode} = options;
+    if (typeof options.text === 'string') {
+        if (useLogging) {
+            Logger.warn('Controls.decorator:Highlight - опция text устарела, используйте опцию value.');
+        }
+        value = options.text;
+    }
+
+    if (typeof options.highlight === 'string') {
+        if (useLogging) {
+            Logger.warn('Controls.decorator:Highlight - опция highlight устарела, используйте опцию value.');
+        }
+        highlightedValue = options.highlight;
+    }
+
+    if (typeof options.class === 'string') {
+        if (useLogging) {
+            Logger.warn('Controls.decorator:Highlight - опция class устарела, используйте опцию className.');
+        }
+        className = options.class;
+    }
+
+    if (typeof options.searchMode === 'string') {
+        if (useLogging) {
+            Logger.warn('Controls.decorator:Highlight - опция searchMode устарела, используйте опцию highlightMode.');
+        }
+        highlightMode = options.searchMode;
+    }
+
+    return <IHighlightOptions>{value, highlightedValue, className, highlightMode};
 }
