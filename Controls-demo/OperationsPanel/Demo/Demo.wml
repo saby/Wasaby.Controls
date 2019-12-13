@@ -56,7 +56,7 @@
                                                            parentProperty="Раздел"
                                                            on:beforeItemsRemove="_beforeItemsRemove()"
                                                            on:afterItemsRemove="_afterItemsRemove()"/>
-                                    <Controls.list:Mover name="dialogMover" on:afterItemsMove="_afterItemsMove()">
+                                    <Controls.list:Mover name="dialogMover">
                                         <ws:moveDialogTemplate>
                                             <Controls.MoveDialog
                                                root="{{null}}"
@@ -94,6 +94,4 @@
         </ws:items>
     </Layout.Browser.Tabs>
     <Controls.popup:Confirmation name="popupOpener"/>
-    <Controls.popup:Dialog name="operationsResultOpener" modal="{{true}}" template="Controls/operationsPopup:ReportDialog">
-    </Controls.popup:Dialog>
 </div>
