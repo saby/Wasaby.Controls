@@ -1,14 +1,14 @@
-.controls-Money_theme_@{themeName} {
+.controls-DecoratorMoney_theme_@{themeName} {
    white-space: nowrap;
 }
 
-.controls-Money__fraction_theme_@{themeName} {
+.controls-DecoratorMoney__fraction_theme_@{themeName} {
    color: @color_DecoratorMoney-fractional;
    font-size: @font-size_DecoratorMoney-fractional;
    font-weight: @font-weight_DecoratorMoney-fractional;
 }
 
-.controls-Money__integer_theme_@{themeName}_style {
+.controls-DecoratorMoney__integer_theme_@{themeName}_style {
    @variants: default, accentResults, noAccentResults, group, basicRegistry, noBasicRegistry, accentRegistry, noAccentRegistry, error;
 
    .for(@variants, { &_@{_item} {

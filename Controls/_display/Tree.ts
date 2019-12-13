@@ -250,12 +250,17 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         return this._moveTo(false);
     }
 
-    protected _exctractItemId(item: T): string {
-        const path = [super._exctractItemId(item)];
+    protected _extractItemId(item: T): string {
+        const path = [super._extractItemId(item)];
 
-        let parent;
-        while ((parent = item.getParent()) && !parent.isRoot()) {
-            path.push(super._exctractItemId(parent));
+        let parent: T;
+        while (
+            item instanceof TreeItem &&
+            (parent = item.getParent() as T) &&
+            parent instanceof TreeItem &&
+            !parent.isRoot()
+            ) {
+            path.push(super._extractItemId(parent));
             item = parent;
         }
 

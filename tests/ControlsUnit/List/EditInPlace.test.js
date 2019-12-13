@@ -1711,6 +1711,50 @@ define([
          });
       });
 
+      describe('commitAndMoveNextRow (commitEdit by itemAction click)', () => {
+         it('commit edit existing record', async function () {
+            let
+                source = new sourceLib.Memory({
+                   keyProperty: 'id',
+                   data: data
+                });
+            eip.saveOptions({
+               listModel: listModel
+            });
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            assert.isNotNull(eip._editingItemData);
+            await (new Promise((resolve) => {
+               eip.commitAndMoveNextRow();
+               setTimeout(resolve, 10);
+            }));
+            assert.isNull(eip._editingItemData);
+         });
+         it('commit edit new record', async function () {
+            let
+                source = new sourceLib.Memory({
+                   keyProperty: 'id',
+                   data: data
+                });
+            eip.saveOptions({
+               listModel: listModel,
+               source
+            });
+            eip.beginAdd({
+               item: newItem
+            });
+            assert.isNotNull(eip._editingItemData);
+            await (new Promise((resolve) => {
+               eip.commitAndMoveNextRow();
+               setTimeout(resolve, 10);
+            }));
+            assert.isNotNull(eip._editingItemData);
+            assert.equal(eip._editingItemData.index, 4);
+            assert.isTrue(eip._editingItemData.item !== newItem);
+         });
+      });
+
       describe('_beforeUpdate', function() {
          it('editingConfig has sequential editing', function() {
             eip._beforeUpdate({

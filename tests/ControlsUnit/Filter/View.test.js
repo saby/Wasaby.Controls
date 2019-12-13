@@ -552,12 +552,29 @@ define(
             assert.isFalse(!!keys.length);
          });
 
-         it('_private:prepareItems', function() {
+         it('_private:resolveItems', function() {
             let date = new Date();
             date.setSQLSerializationMode(Date.SQL_SERIALIZE_MODE_TIME);
             let self = {};
-            filter.View._private.prepareItems(self, date);
-            assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
+            filter.View._private.resolveItems(self, [date]);
+            assert.strictEqual(self._source[0].getSQLSerializationMode(), date.getSQLSerializationMode());
+         });
+
+         it('_private:resolveItems check _hasResetValues', function() {
+            let self = {};
+            let items = [
+               {name: '1', value: '', resetValue: null},
+               {name: '2', value: '', resetValue: undefined}
+            ];
+            filter.View._private.resolveItems(self, items);
+            assert.isTrue(self._hasResetValues);
+
+            items = [
+               {name: '1', value: ''},
+               {name: '2', value: ''}
+            ];
+            filter.View._private.resolveItems(self, items);
+            assert.isFalse(self._hasResetValues);
          });
 
          it('_private:getFolderIds', function() {

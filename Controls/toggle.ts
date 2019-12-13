@@ -35,31 +35,23 @@
  * @author Крайнов Д.О.
  */
 
-import {default as Button} from 'Controls/_toggle/Button';
-import {default as Switch} from 'Controls/_toggle/Switch';
-import {default as DoubleSwitch} from 'Controls/_toggle/DoubleSwitch';
-import RadioGroup = require('Controls/_toggle/RadioGroup');
-import {default as CheckboxGroup} from 'Controls/_toggle/CheckboxGroup';
-import {default as Checkbox} from 'Controls/_toggle/Checkbox';
-import {default as Separator} from 'Controls/_toggle/Separator';
-import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
+export {default as Button} from './_toggle/Button';
+export {default as Switch} from './_toggle/Switch';
+export {default as DoubleSwitch} from './_toggle/DoubleSwitch';
+export {default as CheckboxGroup} from './_toggle/CheckboxGroup';
+export {default as Checkbox} from './_toggle/Checkbox';
+export {default as Separator} from './_toggle/Separator';
+export {default as BigSeparator} from './_toggle/BigSeparator';
+export {IToggleGroupOptions, IToggleGroup} from './_toggle/interface/IToggleGroup';
+import RadioGroup = require('./_toggle/RadioGroup');
+
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 import CheckboxItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
 import switchCircleTemplate = require('wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle');
-import {IToggleGroupOptions, IToggleGroup} from 'Controls/_toggle/interface/IToggleGroup';
 
 export {
-   Button,
-   Switch,
-   DoubleSwitch,
    RadioGroup,
-   Checkbox,
-   CheckboxGroup,
-   Separator,
-   BigSeparator,
    ItemTemplate,
    CheckboxItemTemplate,
-   switchCircleTemplate,
-   IToggleGroupOptions,
-   IToggleGroup
+   switchCircleTemplate
 };

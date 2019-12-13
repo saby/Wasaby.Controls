@@ -69,7 +69,6 @@ define('Controls-demo/Input/Date/RangePG',
             this._componentOptions = {
                name: 'DateRange',
                readOnly: false,
-               vdomDialog: true,
                mask: 'DD.MM.YY',
                startTagStyle: undefined,
                endTagStyle: undefined

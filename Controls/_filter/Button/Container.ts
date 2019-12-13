@@ -1,5 +1,5 @@
 /**
- * Контрол используют в качестве контейнера для {Controls/filter:Selector}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и Controls/filter:Selector.
+ * Контрол используют в качестве контейнера для {@link Controls/filter:Selector}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и Controls/filter:Selector.
  * @remark
  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
  * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.

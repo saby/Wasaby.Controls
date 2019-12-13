@@ -1,50 +1,11 @@
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
 import collection = require('Types/collection');
-import {Controller as ManagerController} from 'Controls/popup';
-
-export interface IPopupItem {
-    id: string;
-    parentId: string;
-    position: IPopupPosition;
-    popupOptions: IPopupOptions;
-    popupState: string;
-    sizes: IPopupSizes;
-    _destroyDeferred: Promise<undefined>;
-}
-
-export interface IPopupSizes {
-    width: number;
-    height: number;
-}
-
-export interface IPopupPosition {
-    top?: number;
-    left?: number;
-    bottom?: number;
-    right?: number;
-    minWidth?: number;
-    maxWidth?: number;
-    minHeight?: number;
-    maxHeight?: number;
-}
+import {Controller as ManagerController, IPopupItem, IPopupSizes} from 'Controls/popup';
 
 export interface IDragOffset {
     x: number;
     y: number;
-}
-
-export interface IPopupOptions {
-    className: string;
-    template: string;
-    closeOnOutsideClick: boolean;
-    width: number;
-    height: number;
-    minWidth: number;
-    maxWidth: number;
-    minHeight: number;
-    maxHeight: number;
-    content: Function;
 }
 
 /**
@@ -90,7 +51,7 @@ abstract class BaseController {
             return this.elementCreated && this.elementCreated.apply(this, arguments);
         }
     }
-    _popupDragEnd(item: IPopupItem) {
+    _popupDragEnd(item: IPopupItem): boolean {
         return this.popupDragEnd && this.popupDragEnd.apply(this, arguments);
     }
     _elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean {
