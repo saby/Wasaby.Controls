@@ -150,7 +150,7 @@ class Highlight extends Control<IHighlightOptions> {
                 }
                 break;
             default:
-                Logger.error(this._moduleName + ': ' + `"${by}" search is not supported.`, this);
+                Logger.error(`"${by}" search is not supported.`, this);
                 words = [highlight];
                 break;
         }
@@ -158,7 +158,7 @@ class Highlight extends Control<IHighlightOptions> {
         words = words.filter(Highlight._isNotEmpty);
 
         if (words.length === 0) {
-            Logger.warn(this._moduleName + ': When searching there is a problem, there are no ' +
+            Logger.warn('When searching there is a problem, there are no ' +
                 'words in the highlight option. Perhaps the control is not used for its intended purpose or ' +
                 'is not required now.', this);
         }
@@ -190,7 +190,7 @@ class Highlight extends Control<IHighlightOptions> {
             case 'substring':
                 return new RegExp(`${value}`, flags);
             default:
-                Logger.error(this._moduleName + `: Unsupported search mode: ${highlightMode}.`, this);
+                Logger.error(`Unsupported highlight mode: ${highlightMode}.`, this);
                 return new RegExp(`${value}`, flags);
         }
     }
