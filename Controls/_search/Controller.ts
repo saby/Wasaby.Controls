@@ -192,7 +192,9 @@ var _private = {
  * Контрол используют в качестве контроллера для организации поиска в реестрах. 
  * Он обеспечивает связь между {@link Controls/search:InputContainer} и {@link Controls/list:Container} — контейнерами для строки поиска и списочного контрола соответветственно. 
  * С помощью этого контрола можно настроить: временную задержку между вводом символа и началом поиска, количество символов, с которых начинается поиск, параметры фильтрации и другое.
- * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
+ * @remark
+ * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
  * 
  * @class Controls/_search/Controller
  * @extends Core/Control
