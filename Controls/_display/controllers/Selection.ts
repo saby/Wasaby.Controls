@@ -1,20 +1,31 @@
-import Collection from '../Collection';
-import { updateCollection } from './controllerUtils';
+import {
+    updateCollection,
+    IBaseCollection,
+    TCollectionKey
+} from './controllerUtils';
+
 import { Model } from 'Types/entity';
 
 export interface ISelectionItem {
     getContents(): Model;
-    setSelected(selected: boolean|null): void;
-    isSelected(): boolean|null;
+    setSelected(selected: boolean | null): void;
+    isSelected(): boolean;
 }
 
-export type TSelectionMap = Map<string|number, boolean|null>;
+export interface ISelectionCollection extends IBaseCollection {
+    each(cb: (item: ISelectionItem) => void): void;
+}
 
-export function selectItems(collection: Collection<unknown>, selection: TSelectionMap): void {
+export type TSelectionMap = Map<TCollectionKey, boolean>;
+
+export function selectItems(
+    collection: ISelectionCollection,
+    selection: TSelectionMap
+): void {
     updateCollection(collection, () => {
         collection.each((item: ISelectionItem) => {
-            const itemId: string|number = item.getContents().getId();
-            let selected: boolean|null = false;
+            const itemId: TCollectionKey = item.getContents().getId();
+            let selected: boolean = false;
 
             if (selection.has(itemId)) {
                 selected = selection.get(itemId);

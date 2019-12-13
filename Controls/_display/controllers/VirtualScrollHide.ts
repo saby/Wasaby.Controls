@@ -1,9 +1,24 @@
-import Collection from '../Collection';
 import * as VirtualScroll from './VirtualScroll';
 import { updateCollection } from './controllerUtils';
 import { EnumeratorCallback } from 'Types/collection';
 
-export function setup(collection: Collection<unknown>): void {
+export interface IVirtualScrollHideItem {
+    setRendered(rendered: boolean): void;
+    isRendered(): boolean;
+}
+
+export interface IVirtualScrollHideEnumerator
+    extends VirtualScroll.IVirtualScrollEnumerator {
+    getCurrent(): IVirtualScrollHideItem;
+}
+
+export interface IVirtualScrollHideCollection
+    extends VirtualScroll.IVirtualScrollCollection {
+    at(pos: number): IVirtualScrollHideItem;
+    getEnumerator(): IVirtualScrollHideEnumerator;
+}
+
+export function setup(collection: IVirtualScrollHideCollection): void {
     updateCollection(collection, () => {
         collection.setViewIterator({
             each: each.bind(null, collection),
@@ -13,8 +28,16 @@ export function setup(collection: Collection<unknown>): void {
     });
 }
 
-export function setIndices(collection: Collection<unknown>, startIndex: number, stopIndex: number): boolean {
-    const indicesChanged = VirtualScroll.setIndices(collection, startIndex, stopIndex);
+export function setIndices(
+    collection: IVirtualScrollHideCollection,
+    startIndex: number,
+    stopIndex: number
+): boolean {
+    const indicesChanged = VirtualScroll.setIndices(
+        collection,
+        startIndex,
+        stopIndex
+    );
     if (indicesChanged) {
         updateCollection(collection, () => {
             const setStart = VirtualScroll.getStartIndex(collection);
@@ -27,7 +50,11 @@ export function setIndices(collection: Collection<unknown>, startIndex: number, 
     return indicesChanged;
 }
 
-export function each(collection: Collection<unknown>, callback: EnumeratorCallback<unknown>, context?: object): void {
+export function each(
+    collection: IVirtualScrollHideCollection,
+    callback: EnumeratorCallback<unknown>,
+    context?: object
+): void {
     const enumerator = collection.getEnumerator();
 
     enumerator.setPosition(-1);
@@ -35,15 +62,17 @@ export function each(collection: Collection<unknown>, callback: EnumeratorCallba
     while (enumerator.moveNext()) {
         const item = enumerator.getCurrent();
         if (item.isRendered()) {
-            callback.call(
-                context,
-                item,
-                enumerator.getCurrentIndex()
-            );
+            callback.call(context, item, enumerator.getCurrentIndex());
         }
     }
 }
 
-export function isItemAtIndexHidden(collection: Collection<unknown>, index: number): boolean {
-    return index < VirtualScroll.getStartIndex(collection) || index >= VirtualScroll.getStopIndex(collection);
+export function isItemAtIndexHidden(
+    collection: IVirtualScrollHideCollection,
+    index: number
+): boolean {
+    return (
+        index < VirtualScroll.getStartIndex(collection) ||
+        index >= VirtualScroll.getStopIndex(collection)
+    );
 }

@@ -1,11 +1,24 @@
-import Collection from '../Collection';
-import { updateCollection } from './controllerUtils';
+import { IViewIterator } from '../Collection';
+import { updateCollection, IBaseCollection } from './controllerUtils';
 import { EnumeratorCallback } from 'Types/collection';
 
 const CACHE_START_INDEX = 'startIndex';
 const CACHE_STOP_INDEX = 'stopIndex';
 
-export function setup(collection: Collection<unknown>): void {
+export interface IVirtualScrollEnumerator {
+    setPosition(pos: number): void;
+    moveNext(): boolean;
+    getCurrentIndex(): number;
+    getCurrent(): unknown;
+}
+
+export interface IVirtualScrollCollection extends IBaseCollection {
+    setViewIterator(viewIterator: IViewIterator): void;
+    getCount(): number;
+    getEnumerator(): IVirtualScrollEnumerator;
+}
+
+export function setup(collection: IVirtualScrollCollection): void {
     updateCollection(collection, () => {
         collection.setViewIterator({
             each: each.bind(null, collection),
@@ -15,7 +28,11 @@ export function setup(collection: Collection<unknown>): void {
     });
 }
 
-export function setIndices(collection: Collection<unknown>, startIndex: number, stopIndex: number): boolean {
+export function setIndices(
+    collection: IVirtualScrollCollection,
+    startIndex: number,
+    stopIndex: number
+): boolean {
     const oldStart = getStartIndex(collection);
     const oldStop = getStopIndex(collection);
 
@@ -33,7 +50,11 @@ export function setIndices(collection: Collection<unknown>, startIndex: number, 
     return false;
 }
 
-export function each(collection: Collection<unknown>, callback: EnumeratorCallback<unknown>, context?: object): void {
+export function each(
+    collection: IVirtualScrollCollection,
+    callback: EnumeratorCallback<unknown>,
+    context?: object
+): void {
     const startIndex = getStartIndex(collection);
     const stopIndex = getStopIndex(collection);
     const enumerator = collection.getEnumerator();
@@ -49,10 +70,13 @@ export function each(collection: Collection<unknown>, callback: EnumeratorCallba
     }
 }
 
-export function getStartIndex(collection: Collection<unknown>): number {
-    return collection.getCacheValue(CACHE_START_INDEX) || 0;
+export function getStartIndex(collection: IVirtualScrollCollection): number {
+    return (collection.getCacheValue(CACHE_START_INDEX) as number) || 0;
 }
 
-export function getStopIndex(collection: Collection<unknown>): number {
-    return collection.getCacheValue(CACHE_STOP_INDEX) || collection.getCount();
+export function getStopIndex(collection: IVirtualScrollCollection): number {
+    return (
+        (collection.getCacheValue(CACHE_STOP_INDEX) as number) ||
+        collection.getCount()
+    );
 }
