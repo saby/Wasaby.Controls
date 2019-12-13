@@ -1,7 +1,5 @@
-<Controls.popupTemplate:Confirmation style="success">
+<Controls.popupTemplate:Dialog style="success" headingCaption="Окно">
     <ws:bodyContentTemplate>
-        <div style="text-align: center">
-            Hello, It is Confirmation Template
-        </div>
+        <div style="padding: 10px">Диалоговое окно</div>
     </ws:bodyContentTemplate>
-</Controls.popupTemplate:Confirmation>
+</Controls.popupTemplate:Dialog>

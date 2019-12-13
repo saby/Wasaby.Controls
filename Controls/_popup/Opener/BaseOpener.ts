@@ -222,11 +222,7 @@ class BaseOpener extends Control<IControlOptions> {
             if (this._getCurrentPopupId() || this._action) {
                 return;
             }
-            this._indicatorId = this._notify('showIndicator', [{
-                id: this._indicatorId,
-                message: rk('Загрузка'),
-                delay: 0 // by standart
-            }], {bubbling: true});
+            this._indicatorId = this._notify('showIndicator', [this._getIndicatorConfig()], {bubbling: true});
         } else if (this._indicatorId) {
             this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
             this._indicatorId = null;
