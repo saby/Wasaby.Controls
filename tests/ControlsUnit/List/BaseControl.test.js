@@ -1568,6 +1568,27 @@ define([
            lists.BaseControl._private.updateShadowMode = originalUpdateShadowMode;
        });
 
+       it('update virtual scroll in afterMount', async function() {
+          cfg = {
+             virtualScrolling: true,
+             navigation: {
+                view: 'infinity'
+             },
+             source: new sourceLib.Memory({
+                keyProperty: 'id',
+                data: data
+             })
+          },
+          baseControl = new lists.BaseControl(cfg),
+          virtualScrollUpdated = false;
+          baseControl._setLoadOffset = lists.BaseControl._private.startScrollEmitter = function(){};
+          await baseControl._beforeMount(cfg);
+          baseControl._updateVirtualScroll = function(){
+             virtualScrollUpdated = true;
+          }
+          baseControl._afterMount(cfg);
+          assert.isTrue(virtualScrollUpdated);
+       });
       it('scrollToEdge_load', function(done) {
          var rs = new collection.RecordSet({
             keyProperty: 'id',

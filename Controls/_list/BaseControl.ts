@@ -1935,6 +1935,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
         }
+        if (this._virtualScroll){
+            this._updateVirtualScroll();
+        }
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
@@ -2176,12 +2179,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforePaint(): void {
-        if (this._virtualScroll && !this._virtualScroll.ItemsContainer) {
-            this._setScrollItemContainer();
-        }
-        if (this._virtualScroll && this._itemsChanged) {
-            this._virtualScroll.updateItemsSizes();
-            _private.applyPlaceholdersSizes(this);
+        if (this._virtualScroll){
+            this._updateVirtualScroll();
         }
 
         _private.updateShadowMode(this);
@@ -2258,6 +2257,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         this._scrollPageLocked = false;
+    },
+    _updateVirtualScroll: function(){
+        if (!this._virtualScroll.ItemsContainer) {
+            this._setScrollItemContainer();
+        }
+        if (this._itemsChanged) {
+            this._virtualScroll.updateItemsSizes();
+            _private.applyPlaceholdersSizes(this);
+        }
     },
 
     __onPagingArrowClick: function(e, arrow) {
