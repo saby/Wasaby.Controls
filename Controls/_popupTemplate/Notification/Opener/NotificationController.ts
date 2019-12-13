@@ -1,6 +1,7 @@
 import Deferred = require('Core/Deferred');
 import collection = require('Types/collection');
-import {default as BaseController, IPopupItem, IPopupOptions} from 'Controls/_popupTemplate/BaseController';
+import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
+import {IPopupItem, IPopupOptions} from 'Controls/popup';
 import NotificationStrategy = require('Controls/_popupTemplate/Notification/Opener/NotificationStrategy');
 import NotificationContent = require('Controls/_popupTemplate/Notification/Opener/NotificationContent');
 
