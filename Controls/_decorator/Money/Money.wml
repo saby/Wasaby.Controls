@@ -1,6 +1,6 @@
-<span class="controls-Money_theme_{{_options.theme}}" title="{{_title}}">
-   <span class="controls-Money__integer_theme_{{_options.theme}}_style_{{_options.style}}">{{_parsedNumber.integer}}</span>
+<span class="controls-DecoratorMoney_theme_{{_options.theme}}" title="{{_tooltip}}">
+   <span class="controls-DecoratorMoney__integer_theme_{{_options.theme}}_style_{{_options.style}}">{{_parsedNumber.integer}}</span>
    <ws:if data="{{_isDisplayFractionPath(_parsedNumber.fraction, _options.showEmptyDecimals)}}">
-      <span class="controls-Money__fraction_theme_{{_options.theme}}">{{_parsedNumber.fraction}}</span>
+      <span class="controls-DecoratorMoney__fraction_theme_{{_options.theme}}">{{_parsedNumber.fraction}}</span>
    </ws:if>
 </span>

@@ -22,7 +22,7 @@ export interface IPhoneOptions extends IControlOptions {
      * Декорируемый телефонный номер.
      * @demo Controls-demo/Decorator/Phone/Index
      */
-    value: string;
+    value: string | null;
 }
 
 /**
