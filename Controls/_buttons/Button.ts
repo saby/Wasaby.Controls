@@ -53,10 +53,6 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
     this._iconSize = options.icon ? ActualApi.iconSize(options.iconSize, this._icon) : '';
     this._iconStyle = options.icon ?
         ActualApi.iconStyle(options.iconStyle, this._icon, options.readOnly, options.buttonAdd) : '';
-    // может можно как то умнее это сделать
-    if (this._viewMode === 'functionalButton') {
-        this._iconStyle = 'contrast';
-    }
 }
 
 /**
