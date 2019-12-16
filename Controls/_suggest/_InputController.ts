@@ -98,13 +98,13 @@ var _private = {
                filter[HISTORY_KEYS_FIELD] = self._historyKeys;
             }
 
-            _private.setFilter(self, filter);
+            _private.setFilter(self, filter, self._options);
             _private.open(self);
 
             return self._historyKeys;
          });
       } else {
-         _private.setFilter(self, self._options.filter);
+         _private.setFilter(self, self._options.filter, self._options);
          _private.open(self);
       }
    },
@@ -186,19 +186,19 @@ var _private = {
          _private.close(self);
       }
    },
-   prepareFilter: function(self, filter, searchValue, tabId, historyKeys) {
+   prepareFilter: function(filter, searchParam, searchValue, minSearchLength, tabId, historyKeys) {
       var preparedFilter = clone(filter) || {};
       if (tabId) {
          preparedFilter.currentTab = tabId;
       }
-      if (self._searchValue.length < self._options.minSearchLength && historyKeys && historyKeys.length) {
+      if (searchValue.length < minSearchLength && historyKeys && historyKeys.length) {
          preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
       }
-      preparedFilter[self._options.searchParam] = searchValue;
+      preparedFilter[searchParam] = searchValue;
       return preparedFilter;
    },
-   setFilter: function(self, filter) {
-      self._filter = this.prepareFilter(self, filter, self._searchValue, self._tabsSelectedKey, self._historyKeys);
+   setFilter: function(self, filter, options) {
+      self._filter = this.prepareFilter(filter, options.searchParam, self._searchValue, options.minSearchLength, self._tabsSelectedKey, self._historyKeys);
    },
    getEmptyTemplate: function(emptyTemplate) {
       return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
@@ -209,7 +209,7 @@ var _private = {
       if (self._options.historyId && self._options.autoDropDown && !shouldSearch && !self._options.suggestState) {
          _private.openWithHistory(self);
       } else if (shouldSearch || self._options.autoDropDown && !self._options.suggestState) {
-         _private.setFilter(self, self._options.filter);
+         _private.setFilter(self, self._options.filter, self._options);
          _private.open(self);
       } else if (!self._options.autoDropDown) {
          //autoDropDown - close only on Esc key or deactivate
@@ -346,9 +346,7 @@ var SuggestLayout = Control.extend({
       this._searchDelay = options.searchDelay;
       this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
-   },
-   _afterMount: function() {
-      _private.setFilter(this, this._options.filter);
+      _private.setFilter(this, options.filter, options);
    },
    _beforeUnmount: function() {
       this._searchResult = null;
@@ -380,7 +378,7 @@ var SuggestLayout = Control.extend({
       }
 
       if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
-         _private.setFilter(this, newOptions.filter);
+         _private.setFilter(this, newOptions.filter, newOptions);
       }
 
       if (!isEqual(this._options.emptyTemplate, newOptions.emptyTemplate)) {
@@ -423,7 +421,7 @@ var SuggestLayout = Control.extend({
       this._searchDelay = this._options.searchDelay;
 
       _private.setSearchValue(self, shouldSearch ? value : '');
-      _private.setFilter(self, self._options.filter);
+      _private.setFilter(self, self._options.filter, self._options);
       _private.updateSuggestState(this);
    },
    _inputActivated: function() {
@@ -448,7 +446,7 @@ var SuggestLayout = Control.extend({
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
       if (this._tabsSelectedKey !== key) {
-         this._filter = _private.prepareFilter(this, this._options.filter, this._searchValue, key, this._historyKeys);
+         this._filter = _private.prepareFilter(this._options.filter, this._options.searchParam, this._searchValue, this._options.minSearchLength, key, this._historyKeys);
       }
 
       // move focus from tabs to input, after change tab

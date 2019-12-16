@@ -4,6 +4,17 @@ import {object as objectUtils} from 'Types/util';
 const getPropValue = objectUtils.getPropertyValue;
 const setPropValue = objectUtils.setPropertyValue;
 
+export function hasResetValue(items) {
+      let hasReset = false;
+      factory(items).each(function(item) {
+         if (hasReset) {
+            return;
+         }
+         hasReset = getPropValue(item, 'resetValue') !== undefined;
+      });
+      return hasReset;
+}
+
 export function resetFilter(items) {
    factory(items).each((item) => {
       const resetValue = getPropValue(item, 'resetValue');

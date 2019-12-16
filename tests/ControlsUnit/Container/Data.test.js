@@ -58,6 +58,38 @@ define(
             });
          });
 
+         it('source and filter/navigation changed', () => {
+            const data = getDataWithConfig({source: source, keyProperty: 'id'});
+            data._dataOptionsContext = new contexts.ContextOptions();
+
+            const newSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: sourceDataEdited
+            });
+            const newNavigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
+            const newFilter = {title: 'Ivan'};
+
+            const loadDef = data._beforeUpdate({
+               source: newSource,
+               idProperty: 'id',
+               navigation: newNavigation,
+               filter: newFilter
+            });
+            assert.isUndefined(data._dataOptionsContext.navigation);
+
+            return new Promise((resolve, reject) => {
+               loadDef
+                  .addCallback(() => {
+                     assert.deepEqual(data._dataOptionsContext.navigation, newNavigation);
+                     assert.deepEqual(data._dataOptionsContext.filter, newFilter);
+                     resolve();
+                  })
+                  .addErrback((error) => {
+                     reject(error);
+                  });
+            });
+         });
+
          it('_beforeMount with receivedState', function() {
             var data = getDataWithConfig({source: source, keyProperty: 'id'});
             var newSource = new sourceLib.Memory({

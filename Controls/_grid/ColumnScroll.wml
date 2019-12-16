@@ -1,6 +1,6 @@
 <div name="content" class="controls-ColumnScroll_content_wrapper {{_transformSelector}}" on:wheel="_wheelHandler()">
    <style name="contentStyle" data-vdom-ignore="true"></style>
-   <ws:if data="{{_isColumnScrollVisible()}}">
+   <ws:if data="{{_isDisplayColumnScroll()}}">
       <div name="startShadow" class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
       <div class="{{_calculateShadowClasses('end')}}"></div>
    </ws:if>
@@ -14,7 +14,8 @@
            positionChangeHandler="{{_positionHandler}}"
            bind:scrollWidth="_scrollWidth"
            bind:containerSize="_contentContainerSize"
-           isHorizontalScrollVisible="{{_isColumnScrollVisible()}}"
+           isDisplayColumnScroll="{{_isDisplayColumnScroll()}}"
+           trackVisible="{{_options.trackVisible}}"
 
            attr:class="controls-Grid_columnScroll"
            on:itemClick="_notifyHandler('itemClick')"

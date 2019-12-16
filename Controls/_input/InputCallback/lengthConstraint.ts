@@ -1,4 +1,4 @@
-import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
+import splitIntoTriads from 'Controls/Utils/splitIntoTriads';
 
 import ICallback from 'Controls/interface/ICallback';
 

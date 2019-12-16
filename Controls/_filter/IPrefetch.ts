@@ -16,7 +16,7 @@ export interface IPrefetchHistoryParams {
 }
 
 /**
- * Интерфейс контролов, поддеживающих кэширование данных.
+ * Интерфейс для контролов, поддерживающих кэширование данных.
  *
  * @interface Controls/_filter/IPrefetch
  * @public

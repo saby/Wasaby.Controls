@@ -6,6 +6,7 @@
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
@@ -32,6 +33,7 @@
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List

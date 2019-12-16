@@ -12,7 +12,7 @@
 
     <!-- Скроллбар горизонтального скролла -->
     <!-- TODO: Попробовать вынести через scope={{_options}}, но нужно переименовать _options в options, раз {{...}} нельзя-->
-    <ws:if data="{{isHorizontalScrollVisible}}">
+    <ws:if data="{{isDisplayColumnScroll}}">
         <Controls._grid.ScrollWrapper
                 name="horizontalScrollWrapper"
                 position="{{ position }}"
@@ -21,6 +21,7 @@
                 gridSupport="full"
                 scrollWidth="{{ scrollWidth }}"
                 listModel="{{ _listModel }}"
+                trackVisible="{{ trackVisible }}"
                 positionChangeHandler="{{ positionChangeHandler }}">
         </Controls._grid.ScrollWrapper>
     </ws:if>

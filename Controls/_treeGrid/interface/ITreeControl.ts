@@ -29,11 +29,16 @@
 
 /**
  * @name Controls/_treeGrid/interface/ITreeControl#expandByItemClick
- * @cfg {Boolean} Определят режим разворота узла в дереве.
- * @variant true Разворачивание и сворачивание узла осуществляется по клику на него.
- * @variant false Разворачивание и сворачивание узла осуществляется только по клику на экспандер.
+ * @cfg {Boolean} Определят режим разворачивания и сворачивания узлов в {@link Controls/treeGrid:View дереве}.
  * @default false
- * <a href="/materials/demo-ws4-tree-grid-base">Example</a>.
+ * @remark
+ * См. <a href="/materials/demo-ws4-tree-grid-base">демо-пример</a>
+ * Доступные значения:
+ * 
+ * * true — осуществляется по клику на него.
+ * * false — осуществляется только по клику на экспандер.
+ * @see expandedItems
+ * @see expanderVisibility
  */
 
 /*
@@ -47,11 +52,13 @@
 
 /**
  * @name Controls/_treeGrid/interface/ITreeControl#expandedItems
- * @cfg {{Array.<String>}} Массив идентификаторов развернутых узлов дерева.
- * <b>Note:</b>
- * Чтобы развернуть все элементы списка, параметр expandedItems должен быть задан как массив, содержащий один элемент - "null".
- * В этом случае предполагается, что все данные будут загружены сразу.
- * <a href="/materials/demo-ws4-tree-grid-base">Example</a>.
+ * @cfg {Array.<String>|undefined} Устанавливает массив идентификаторов развернутых узлов {@link Controls/treeGrid:View дерева}.
+ * @default undefined
+ * @remark
+ * См. <a href="/materials/demo-ws4-tree-grid-base">демо-пример</a>
+ * Чтобы развернуть все элементы списка, параметр expandedItems должен быть задан как массив, содержащий один элемент — "null". В этом случае предполагается, что все данные будут загружены сразу.
+ * @see expandByItemClick
+ * @see expanderVisibility
  */
 
 /*
@@ -149,12 +156,21 @@
  */
 
 /**
- * @name Controls/_treeGrid/interface/ITreeControl#expanderVisibility
- * @cfg {String} Режим отображения элемента развертывания узла дерева.
+ * @typedef {String} ExpanderVisibility
  * @variant visible Всегда показывать экспандер для узлов и отступ для листьев.
  * @variant hasChildren Показывать экспандер только для узлов с дочерними элементами.
+ */
+
+
+
+/**
+ * @name Controls/_treeGrid/interface/ITreeControl#expanderVisibility
+ * @cfg {ExpanderVisibility} Устанавливает режим отображения элемента развертывания узла {@link Controls/treeGrid:View дерева}.
  * @default visible
- * <a href="/materials/demo-ws4-tree-grid-extended">Example</a>.
+ * @remark
+ * См. <a href="/materials/demo-ws4-tree-grid-extended">демо-пример</a>.
+ * @see expandedItems
+ * @see expandByItemClick
  */
 
 /*

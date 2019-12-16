@@ -12,7 +12,7 @@ export type THeader = IHeaderCell[];
 /**
  * Интерфейс для конфигурации ячеек шапки табличного представления.
  *
- * @interface
+ * @interface Controls/_grid/interface/IHeaderCell
  * @public
  * @author Авраменко А.С.
  */
