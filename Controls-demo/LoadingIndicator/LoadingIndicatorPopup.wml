@@ -1,0 +1,6 @@
+<div style="text-align: center">
+    <Controls.buttons:Button caption="Open" name="Button" on:click="_load()"/>
+    <Controls.popup:Dialog
+            name="dialog"
+            template="Controls-demo/LoadingIndicator/contentPopup/contentPopup" />
+</div>

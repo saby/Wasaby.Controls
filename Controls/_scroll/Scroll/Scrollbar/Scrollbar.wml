@@ -1,5 +1,9 @@
 <div name="scrollbar"
-     class="controls-VScrollbar{{_dragging ? ' controls-VScrollbar_' + _options.direction + '_dragging'}}{{!_thumbSize ? ' ws-invisible'}} controls-VScrollbar_{{_options.direction}}{{_options.direction === 'horizontal' && _options.gridSupport === 'full' ? ' controls-VScrollbar_horizontal_margin-top'}}"
+     class="controls-VScrollbar{{_dragging ? ' controls-VScrollbar_' + _options.direction + '_dragging'}}
+         {{!_thumbSize ? ' ws-invisible'}}
+         controls-VScrollbar_{{_options.direction}}
+         {{_options.direction === 'horizontal' && _options.gridSupport === 'full' ? ' controls-VScrollbar_horizontal_margin-top'}}
+         {{ _trackVisible ? ' controls-VScrollbar_horizontal-track' }}"
      on:wheel="_wheelHandler()"
      on:mousedown="_scrollbarMouseDownHandler()"
      on:touchstart="_scrollbarTouchStartHandler()">

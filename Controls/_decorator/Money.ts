@@ -61,12 +61,14 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
     title: string;
     /**
      * Декорируемое число.
+     * @default null
      * @demo Controls-demo/Decorator/Money/Value/Index
      */
     value: TValue;
     /**
      * Стиль отображения числа в денежном формате.
      * @type {TStyle}
+     * @default default
      * @demo Controls-demo/Decorator/Money/Style/Index
      */
     style: TStyle;
@@ -197,10 +199,10 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
 
     static getDefaultOptions() {
         return {
+            value: null,
             style: 'default',
             useGrouping: true,
-            showEmptyDecimals: true,
-            value: null
+            showEmptyDecimals: true
         };
     }
 

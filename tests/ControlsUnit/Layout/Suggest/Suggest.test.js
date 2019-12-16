@@ -215,23 +215,18 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       });
 
       it('Suggest::_private.prepareFilter', function() {
-         var self = getComponentObject();
-         self._searchValue = 'dassdaasd';
-         self._options.searchParam = 'searchParam';
-         self._options.minSearchLength = 3;
-
-         var resultFilter = {
+         let self = getComponentObject();
+         let resultFilter = {
             currentTab: 1,
             searchParam: 'test',
             filterTest: 'filterTest'
          };
 
-         var filter = suggestMod._InputController._private.prepareFilter(self, {filterTest: 'filterTest'}, 'test', 1, [1, 2]);
+         let filter = suggestMod._InputController._private.prepareFilter({filterTest: 'filterTest'}, 'searchParam', 'test', 3, 1, [1, 2]);
          assert.deepEqual(filter, resultFilter);
 
-         self._searchValue = '';
          resultFilter.historyKeys = [1, 2];
-         filter = suggestMod._InputController._private.prepareFilter(self, {filterTest: 'filterTest'}, 'test', 1, [1, 2]);
+         filter = suggestMod._InputController._private.prepareFilter({filterTest: 'filterTest'}, 'searchParam', 'test', 20, 1, [1, 2]);
          assert.deepEqual(filter, resultFilter);
       });
 
@@ -248,7 +243,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             test: 'test',
             currentTab: 1
          };
-         suggestMod._InputController._private.setFilter(self, filter);
+         suggestMod._InputController._private.setFilter(self, filter, self._options);
          assert.deepEqual(self._filter, resultFilter);
       });
 
@@ -439,7 +434,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
          suggestComponent._searchDelay = 300;
          suggestComponent.saveOptions(self._options);
-         suggestMod._InputController._private.setFilter(suggestComponent, {});
+         suggestMod._InputController._private.setFilter(suggestComponent, {}, suggestComponent._options);
          suggestComponent._notify = function(event, val) {
             if (event === 'suggestStateChanged') {
                suggestState = val[0];
@@ -639,6 +634,22 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.equal(suggestComponent._searchDelay, 0);
       });
 
+      it('Suggest::_beforeMount', function() {
+         let suggestComponent = new suggestMod._InputController();
+
+         suggestComponent._searchValue = '123';
+         suggestComponent._beforeMount({
+            searchParam: 'title',
+            minSearchLength: 3,
+            filter: {test: 5}
+         });
+
+         assert.deepEqual(suggestComponent._filter, {
+            test: 5,
+            title: '123'
+         });
+      });
+
       it('Suggest::_beforeUpdate', function() {
          var options = {
             emptyTemplate: 'anyTpl',
@@ -674,7 +685,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.equal(suggestComponent._filter, null);
          assert.equal(suggestComponent._searchValue, '');
 
-         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test'});
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test', searchParam: 'testSearchParam'});
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
 
@@ -685,7 +696,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          sinon.assert.calledWith(suggestComponent._notify, 'suggestStateChanged', [false]);
 
          suggestComponent._searchValue = 'test';
-         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: ''});
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: '', searchParam: 'testSearchParam'});
          assert.deepEqual(suggestComponent._filter, {testSearchParam: ''});
          assert.equal(suggestComponent._searchValue, '');
 
