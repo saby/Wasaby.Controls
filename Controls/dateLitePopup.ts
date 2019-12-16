@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {Date as WSDate} from 'Types/entity';

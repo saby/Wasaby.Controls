@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import * as template from 'wml!Controls/_list/Swipe/SwipeControl';
 import {TouchContextField} from 'Controls/context';
