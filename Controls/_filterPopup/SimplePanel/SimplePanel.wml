@@ -22,6 +22,7 @@
                                   iconSize="m"
                                   iconStyle="contrast"
                                   buttonStyle="success"
+                                  inlineHeight="l"
                                   on:click="_applySelection()"/>
       </div>
    </ws:if>
