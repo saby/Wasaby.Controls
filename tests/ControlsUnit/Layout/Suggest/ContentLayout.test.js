@@ -102,6 +102,16 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), 'auto');
       });
 
+      it('Suggest::_private.updateHeight', function() {
+         var self = getComponentObject();
+         self._height = '200px';
+         self._forceUpdate = function() {};
+         __ContentLayer.default._private.calcHeight = function() {
+            return '400px';
+         }
+         __ContentLayer.default._private.updateHeight(self, false);
+         assert.equal(self._height, '400px');
+      });
    });
 
 });

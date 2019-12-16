@@ -122,6 +122,9 @@ let getData = (crudResult: CrudResult): Promise<any> => {
 };
 
 var _private = {
+    isNewModelItemsChange: (action, newItems) => {
+        return action && (action !== 'ch' || newItems && !newItems.properties);
+    },
     checkDeprecated: function(cfg) {
         if (cfg.historyIdCollapsedGroups) {
             Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
@@ -944,7 +947,7 @@ var _private = {
     onListChange: function(self, event, changesType, action, newItems, newItemsIndex, removedItems) {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
-        const newModelChanged = self._options.useNewModel && action && action !== 'ch';
+        const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
         if (changesType === 'collectionChanged' || newModelChanged) {
             //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {

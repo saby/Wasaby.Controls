@@ -17,7 +17,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @public
  * @author Красильников А.С.
  * @category DragnDrop
- * @demo Controls-demo/ResizingLine/ResizingLine
+ * @demo Controls-demo/ResizingLine/Index
  */
 
 /**

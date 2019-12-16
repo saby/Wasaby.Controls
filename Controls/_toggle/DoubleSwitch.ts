@@ -26,11 +26,6 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @category Toggle
  *
  * @demo Controls-demo/Switch/DoubleSwitchDemo
- *
- * @mixes Controls/_toggle/resources/Switch/SwitchStyles
- * @mixes Controls/_toggle/resources/DoubleSwitch/DoubleSwitchStyles
- * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
- *
  * @css @line-height_DoubleSwitch_vertical Line-height of vertical double switcher. It's align vertical switch toggle.
  */
 
@@ -49,10 +44,6 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @category Toggle
  *
  * @demo Controls-demo/Switch/DoubleSwitchDemo
- *
- * @mixes Controls/_toggle/resources/Switch/SwitchStyles
- * @mixes Controls/_toggle/resources/DoubleSwitch/DoubleSwitchStyles
- * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
  *
  * @css @line-height_DoubleSwitch_vertical Line-height of vertical double switcher. It's align vertical switch toggle.
  */

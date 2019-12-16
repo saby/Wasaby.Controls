@@ -20,7 +20,6 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemoPG
     *
-    * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
     * @mixes Controls/_toggle/RadioGroup/RadioGroupStyles
     */
 
@@ -39,8 +38,6 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @author Красильников А.С.
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemoPG
-    *
-    * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
     * @mixes Controls/_toggle/RadioGroup/RadioGroupStyles
     */
 

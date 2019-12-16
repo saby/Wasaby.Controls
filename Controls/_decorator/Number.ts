@@ -48,7 +48,7 @@ export interface INumberOptions extends IControlOptions {
     fractionSize?: number;
     /**
      * Режим форматирования дробной части числа.
-     * @type {RoundMode}
+     * @type RoundMode
      * @default trunc
      * @demo Controls-demo/Decorator/Number/RoundMode/Index
      */
