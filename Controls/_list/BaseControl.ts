@@ -2495,7 +2495,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _commitEditActionHandler: function() {
-        this._children.editInPlace.commitAndMoveNextRow();
+        if (this._options.task1178374430) {
+            this._children.editInPlace.commitAndMoveNextRow();
+        } else {
+            this._children.editInPlace.commitEdit();
+        }
     },
 
     _cancelEditActionHandler: function() {
