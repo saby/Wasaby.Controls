@@ -17,6 +17,7 @@ export interface IScrollBarOptions extends IControlOptions {
     position?: number;
     contentSize: number;
     direction: TDirection;
+    trackVisible: boolean;
 }
 /**
  * Thin scrollbar.
@@ -73,8 +74,12 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _currentCoords: IScrollBarCoords | null = null;
     // Координата точки на ползунке, за которую начинаем тащить
     private _dragPointOffset: number | null = null;
+    private _trackVisible: boolean = false;
 
     protected _afterMount(): void {
+        if (this._options.direction === 'horizontal') {
+            this._trackVisible = !!this._options.trackVisible;
+        }
         this._resizeHandler();
         this._forceUpdate();
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,

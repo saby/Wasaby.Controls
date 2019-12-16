@@ -70,6 +70,15 @@ var _private = {
       return container.getBoundingClientRect();
    },
 
+   updateHeight: function(self) {
+      const height = _private.calcHeight(self);
+      const heightChanged = self._height !== height;
+
+      if (heightChanged) {
+         self._height = height;
+      }
+   },
+
    /**
     * calculate height of suggestions container by orient and suggestions container sizes
     * @param self
@@ -107,17 +116,12 @@ var __ContentLayer = BaseLayer.extend({
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
        2) do not change orientation of suggest, if suggest already showed or data loading now */
       if (this._options.showContent) {
-         var height = _private.calcHeight(this);
-         var heightChanged = this._height !== height;
-
-         if (heightChanged) {
-            this._height = height;
-         }
-
-         if (heightChanged) {
-            this._forceUpdate();
-         }
+         _private.updateHeight(this);
       }
+   },
+
+   _resize: function() {
+      _private.updateHeight(this);
    },
 
    close: function() {

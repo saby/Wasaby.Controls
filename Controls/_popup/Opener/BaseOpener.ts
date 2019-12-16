@@ -62,8 +62,8 @@ class BaseOpener extends Control<IControlOptions> {
     }
     open(popupOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
-            const cfg = this._getConfig(popupOptions || {});
             this._toggleIndicator(true);
+            const cfg = this._getConfig(popupOptions || {});
             let resultPromise: Promise<string>;
             // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
             if (cfg.isCompoundTemplate) {
