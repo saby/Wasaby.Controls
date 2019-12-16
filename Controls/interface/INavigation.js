@@ -57,7 +57,7 @@ define('Controls/interface/INavigation', [
     * @description Подробнее о данном типе навигации читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
     * @property {String|Array.<String>} field Имя поля, используемое для навигации по курсору.
     * Для такого поля в таблице БД должен быть создан индекс, иначе теряется смысл использования навигации.
-    * @property {String|Array.<String>} position Значение, которое будет начальным значением для курсора.
+    * @property {String|Array.<String>} position Значение, которое будет начальной позицией для курсора.
     * @property {Direction} direction Направление выборки.
     * @property {Number} limit Ограничение количества записей, запрошенных для одной загрузки.
     */
