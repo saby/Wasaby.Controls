@@ -2953,6 +2953,58 @@ define([
             assert.isTrue(result.isSuccessful());
          });
 
+         it('commitEditActionHandler', function () {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            let commitDef = cDeferred.success();
+            let commitAndMoveDef = cDeferred.success();
+            let result;
+
+            var ctrl = new lists.BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  commitEdit: function() {
+                     result = commitDef;
+                  },
+                  commitAndMoveNextRow: function () {
+                     result = commitAndMoveDef;
+                  }
+               }
+            };
+            ctrl._commitEditActionHandler();
+            assert.equal(commitDef, result);
+
+            commitDef = cDeferred.success();
+            commitAndMoveDef = cDeferred.success();
+
+            ctrl._options.task1178374430 = true;
+            ctrl._commitEditActionHandler();
+            assert.equal(commitAndMoveDef, result);
+         });
+
          it('commitEdit, readOnly: true', function() {
             var cfg = {
                viewName: 'Controls/List/ListView',
