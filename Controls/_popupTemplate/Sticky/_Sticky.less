@@ -6,6 +6,7 @@
 .controls-StickyTemplate {
    position: relative;
    width: 100%;
+   padding-bottom: @padding-bottom_sticky;
    background: @border-color_sticky;
    box-shadow: @box-shadow_sticky;
 }
@@ -19,7 +20,7 @@
    align-items: center;
    justify-content: space-between;
    flex-shrink: 1;
-   padding-left: @header_padding-left_sticky;
+   padding: @padding-top_sticky 0 0 @header_padding-left_sticky;
    min-height: @header_min-height_sticky;
    border-bottom: @header_bottom-border-thickness_sticky solid @header_bottom-border-color_sticky;
    background: @header_background-color_sticky;
@@ -27,7 +28,7 @@
 
 .controls-StickyTemplate__content-area {
    display: inline-flex;
-   padding: @content_padding-top_sticky @header_padding-left_sticky;
+   padding: @padding-top_sticky @header_padding-left_sticky 0;
    flex-direction: column;
    overflow: hidden;
 }
