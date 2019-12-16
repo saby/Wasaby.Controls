@@ -81,10 +81,6 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * @author Красильников А.С.
  * @category Button
  * @demo Controls-demo/Buttons/ViewModes/Index
- * @demo Controls-demo/Buttons/SizesAndHeights/Index
- * @demo Controls-demo/Buttons/FontStyles/Index
- * @demo Controls-demo/Buttons/IconStyles/Index
- * @demo Controls-demo/Buttons/ContrastBackground/Index
  */
 
 /*
@@ -109,7 +105,7 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * @public
  * @author Красильников А.С.
  * @category Button
- * @demo Controls-demo/Buttons/ButtonDemoPG
+ * @demo Controls-demo/Buttons/ViewModes/Index
  */
 /**
  * @name Controls/_buttons/Button#viewMode
