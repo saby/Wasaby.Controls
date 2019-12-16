@@ -85,10 +85,9 @@
 
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
    <Controls.buttons:Button
-      viewMode="toolButton"
-      transparent="{{true}}"
+      viewMode="functionalButton"
       buttonStyle="success"
-      icon="icon-medium icon-Yes"
+      icon="icon-Yes"
       iconStyle="success"
       iconSize="m"
       height="l"
