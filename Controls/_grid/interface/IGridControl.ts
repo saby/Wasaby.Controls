@@ -195,9 +195,11 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {TColumns} Описывает колонки таблицы. Колонки объекты реализующие интерфейс {@link IColumn}
- * <a href="/materials/demo-ws4-grid-base">Example</a>
- * @remark Перед отрисовкой убедитесь, что {@link Types/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
+ * @cfg {Array.<Controls/grid:IColumn>} Описывает колонки таблицы.
+ * @remark 
+ * См. <a href="/materials/demo-ws4-grid-base">демо-пример</a>
+ * Перед отрисовкой убедитесь, что {@link Types/display:Collection Collection} содержит необходимые данные при изменении параметра columns.
+ * При необходимости вызовите асинхронный метод "reload" перед изменением параметра columns.
  * @example
  * <pre>
  * _columns = [
@@ -226,7 +228,7 @@
 
 /*
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {TColumns} Describes grid's columns.
+ * @cfg {Array.<Controls/grid:IColumn>} Describes grid's columns.
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark Before rendering, make sure that {@link Types/display:Collection Collection} contains required data, when the {@link Controls/_grid/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/_grid/interface/IGridControl#columns columns} option, if necessary.
  * @example
