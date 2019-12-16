@@ -1,6 +1,7 @@
 <div class="controls-Area__field_readOnly controls-Area__field_theme_default_margin controls-Area__fieldWrapper">
-   <div class="controls-Area__wrapURLs">
-      <div class="controls-DecoratorWrapURLs">Hi <a class="ws-link" rel="noreferrer" href="https://www.google.ru/" target="_blank">https://www.google.ru/</a></div>
+   <div class="controls-Area__wrapURLs_container">
+      <div class="controls-DecoratorWrapURLs controls-Area__wrapURLs">Hi <a class="ws-link" rel="noreferrer" href="https://www.google.ru/" target="_blank">https://www.google.ru/</a></div>
    </div>
    <span class="controls-Area__emptySymbol"></span>
 </div>
+
