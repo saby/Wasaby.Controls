@@ -61,13 +61,14 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
     title: string;
     /**
      * Декорируемое число.
+     * @type string|number|null
      * @default null
      * @demo Controls-demo/Decorator/Money/Value/Index
      */
     value: TValue;
     /**
      * Стиль отображения числа в денежном формате.
-     * @type {TStyle}
+     * @type TStyle
      * @default default
      * @demo Controls-demo/Decorator/Money/Style/Index
      */
