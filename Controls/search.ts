@@ -1,6 +1,6 @@
 /**
  * Библиотека контролов, которые служат для организации поиска в списках.
- * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
+ * Подробнее об организации поиска и фильтрации данных в реестре {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
  * @library Controls/search
  * @includes InputContainer Controls/_search/Input/Container
  * @includes Misspell Controls/_search/Misspell
