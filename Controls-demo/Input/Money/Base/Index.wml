@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">default options</div>
+        <Controls.input:Money bind:value="_value1"></Controls.input:Money>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">integersLength=4, precision=1</div>
+        <Controls.input:Money integersLength="{{4}}" precision="{{1}}" bind:value="_value2"></Controls.input:Money>
+    </div>
+</div>
+
