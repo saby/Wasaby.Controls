@@ -3,7 +3,7 @@ define('Controls/interface/IGridItemTemplate', [
 ], function() {
 
    /**
-    * Интерфейс для настройки отображения элементов в {@link Controls/grid:View табличном представлении}.
+    * Интерфейс для настройки отображения элементов в контроле {@link Controls/grid:View Таблица}.
     *
     * @interface Controls/interface/IGridItemTemplate
     * @public
