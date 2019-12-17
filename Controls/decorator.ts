@@ -9,9 +9,9 @@
  * @includes Number Controls/_decorator/Number
  * @includes INumberOptions Controls/_decorator/Number/INumberOptions
  * @includes Phone Controls/_decorator/Phone
- * @includes IPhoneOptions Controls/_decorator/Phone
+ * @includes IPhoneOptions Controls/_decorator/Phone/IPhoneOptions
  * @includes WrapURLs Controls/_decorator/WrapURLs
- * @includes IWrapURLsOptions Controls/_decorator/WrapURLs
+ * @includes IWrapURLsOptions Controls/_decorator/WrapURLs/IWrapURLsOptions
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
  * @includes _highlightResolver Controls/_decorator/Markup/resolvers/highlight
