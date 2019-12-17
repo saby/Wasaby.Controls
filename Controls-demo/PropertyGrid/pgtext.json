@@ -333,60 +333,6 @@
       }
     }
   },
-  "Controls/toolbars:View": {
-    "name": "Controls/toolbars:View",
-    "title": "Toolbar.",
-    "className": "Controls/Toolbar",
-    "kind": "control",
-    "isPublic": true,
-    "fullname": "Controls/Toolbar",
-    "properties": {
-      "ws-config": {
-        "title": "Базовая конфигурация",
-        "options": {
-          "source": {
-            "title": "Object that implements ISource interface for data access."
-          },
-          "itemTemplate": {
-            "type": "function",
-            "title": "Template for item render."
-          },
-          "keyProperty": {
-            "type": "String",
-            "title": "Name of the item property that uniquely identifies collection item."
-          },
-          "itemTemplateProperty": {
-            "type": "enum",
-            "title": "Name of the item property that contains template for item render",
-            "enum": {
-              "customTemplate": "Custom template",
-              "null": "No template"
-            }
-          },
-          "name": {
-            "title": "Control name",
-            "type": "String",
-            "default": ""
-          },
-          "nodeProperty": {
-            "title": "Name of the field describing the type of the node (list, node, hidden node).",
-            "type": "String",
-            "default": ""
-          },
-          "parentProperty": {
-            "title": "Name of the field that contains information about parent node.",
-            "type": "String",
-            "default": ""
-          },
-          "itemsSpacing": {
-            "title": "Type of spacing between items.",
-            "type": "String",
-            "default": ""
-          }
-        }
-      }
-    }
-  },
   "Controls/breadcrumbs:Path": {
     "name": "Controls.breadcrumbs:Path",
     "title": "Breadcrumbs.",
