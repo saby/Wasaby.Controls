@@ -1,7 +1,7 @@
 <div class="controls-EditableArea__Toolbar">
     <div class="controls-EditableArea__applyButton" on:click="_tmplNotify('applyButtonClick')">
         <div class="controls-EditableArea__applyButton-icon
-                           controls-icon_style-success_theme-{{_options.theme}} icon-Yes"></div>
+                           controls-icon_style-contrast_theme-{{_options.theme}} icon-Yes"></div>
     </div>
     <div class="controls-EditableArea__closeButton" on:click="_tmplNotify('closeButtonClick')">
         <div class="controls-EditableArea__closeButton-icon"></div>
