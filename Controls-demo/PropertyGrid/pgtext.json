@@ -387,13 +387,13 @@
       }
     }
   },
-  "Controls.crumbs:Path": {
-    "name": "Controls.crumbs:Path",
+  "Controls/breadcrumbs:Path": {
+    "name": "Controls.breadcrumbs:Path",
     "title": "Breadcrumbs.",
-    "className": "Controls.crumbs:Path",
+    "className": "Controls.breadcrumbs:Path",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls.crumbs:Path",
+    "fullname": "Controls.breadcrumbs:Path",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -422,13 +422,13 @@
       }
     }
   },
-  "Controls.crumbs:HeadingPath": {
-    "name": "Controls.crumbs:HeadingPath",
+  "Controls/breadcrumbs:HeadingPath": {
+    "name": "Controls.breadcrumbs:HeadingPath",
     "title": "Breadcrumbs with back button.",
-    "className": "Controls.crumbs:HeadingPath",
+    "className": "Controls.breadcrumbs:HeadingPath",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls.crumbs:HeadingPath",
+    "fullname": "Controls.breadcrumbs:HeadingPath",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
