@@ -578,6 +578,7 @@ define(
          it('_private:loadSelectedItems', function(done) {
             let source = [...defaultSource];
             source[1].value = [1];
+            source[1].editorOptions.dataLoadCallback = () => {isDataLoad = true};
             let isDataLoad;
             let configs = {
                document: {
@@ -599,7 +600,6 @@ define(
                   emptyText: 'all state',
                   emptyKey: null,
                   sourceController: {hasMoreData: () => {return true;}},
-                  dataLoadCallback: () => {isDataLoad = true},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
