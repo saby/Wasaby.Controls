@@ -3,6 +3,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import { DefaultOpenerFinder } from 'UI/Focus';
+import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import {Logger} from 'UI/Utils';
@@ -16,7 +17,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
  * Base Popup opener
  * @category Popup
  * @class Controls/_popup/Opener/BaseOpener
- * @mixes Controls/interface/IOpener
+ * @mixes Controls/_popup/interface/IBaseOpener
  * @control
  * @private
  * @author Красильников А.С.
@@ -27,10 +28,17 @@ interface ILoadDependencies {
     controller: Control;
 }
 
+export interface IBaseOpenerOptions extends IBasePopupOptions, IControlOptions {
+    closePopupBeforeUnmount?: boolean;
+}
+
 const OPEN_POPUP_DEBOUNCE_DELAY: number = 10;
 let ManagerWrapperCreatingPromise; // TODO: Compatible
 
-class BaseOpener extends Control<IControlOptions> {
+class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
+    extends Control<TBaseOpenerOptions> implements IOpener, IBaseOpener {
+
+    readonly '[Controls/_popup/interface/IBaseOpener]': boolean;
     protected _template: TemplateFunction = Template;
     private _actionOnScroll: string = 'none';
     private _popupId: string = '';
@@ -61,10 +69,10 @@ class BaseOpener extends Control<IControlOptions> {
             }
         }
     }
-    open(popupOptions, controller: string): Promise<string | undefined> {
+    open(popupOptions: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             this._toggleIndicator(true);
-            const cfg = this._getConfig(popupOptions || {});
+            const cfg: IBasePopupOptions = this._getConfig(popupOptions || {});
             let resultPromise: Promise<string>;
             // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
             if (cfg.isCompoundTemplate) {
@@ -116,7 +124,7 @@ class BaseOpener extends Control<IControlOptions> {
     }
 
     /* Защита от множественного вызова. собираем все синхронные вызовы, открываем окно с последним конфигом */
-    private _showDialog(template, cfg, controller, resolve): void {
+    private _showDialog(template: TemplateFunction, cfg: IBasePopupOptions, controller: Function, resolve: Function): void {
         if (this._openPopupTimerId) {
             clearTimeout(this._openPopupTimerId);
         }
@@ -282,7 +290,7 @@ class BaseOpener extends Control<IControlOptions> {
         });
     }
 
-    static showDialog(rootTpl: TemplateFunction, cfg, controller: string, opener?: BaseOpener) {
+    static showDialog(rootTpl: TemplateFunction, cfg, controller: Function, opener?: BaseOpener) {
         const def = new Deferred();
         if (BaseOpener.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!BaseOpener.isNewEnvironment()) {
@@ -592,7 +600,7 @@ class BaseOpener extends Control<IControlOptions> {
         def.callback(cfg.id);
     }
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): IBaseOpenerOptions {
         return {
             closePopupBeforeUnmount: true,
             actionOnScroll: 'none',
