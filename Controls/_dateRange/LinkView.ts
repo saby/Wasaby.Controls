@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import BaseControl = require('Core/Control');
 import CalendarControlsUtils from './Utils';
 import DateRangeModel from './DateRangeModel';

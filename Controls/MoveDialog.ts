@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_MoveDialog/MoveDialog');
 import 'css!theme?Controls/_MoveDialog/MoveDialog';

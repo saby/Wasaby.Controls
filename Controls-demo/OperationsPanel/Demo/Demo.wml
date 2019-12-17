@@ -56,7 +56,7 @@
                                                            parentProperty="Раздел"
                                                            on:beforeItemsRemove="_beforeItemsRemove()"
                                                            on:afterItemsRemove="_afterItemsRemove()"/>
-                                    <Controls.list:Mover name="dialogMover" on:afterItemsMove="_afterItemsMove()">
+                                    <Controls.list:Mover name="dialogMover">
                                         <ws:moveDialogTemplate>
                                             <Controls.MoveDialog
                                                root="{{null}}"
