@@ -248,8 +248,8 @@ var _private = {
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
                         // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
-                        if (config.dataLoadCallback) {
-                            config.dataLoadCallback(newItems);
+                        if (item.editorOptions.dataLoadCallback) {
+                            item.editorOptions.dataLoadCallback(newItems);
                         }
                         _private.setItems(config, item, newItems);
                     });
