@@ -45,6 +45,8 @@
 @unaccented_text-color:      @unaccented_color;
 //Цвет иконок по-умолчанию.
 @icon-color:                 #000000;
+//Цвет иконок на контрастном фоне.
+@contrast_icon-color:        #ffffff;
 //Цвет иконок отображающих дополнительную информацию.
 @unaccented_icon-color:      #CCC;
 //Цвет фона контрола при ошибке валидации при установке фокуса
@@ -55,13 +57,16 @@
 @invalid_padding-vertical:                  2px;
 //отступ от контрола до обводки валидации справа и слева
 @invalid_padding-horizontal:                  4px;
+//цвет маркера активного элемента. как правило в списках
+@marker_color:            #FF7033;
+//цвет маркера в режиме чтения
+@readonly_marker-color:   #313E78;
 
 //Переменные, использующиеся для InfoboxButton.
 //Цвет иконки InfoboxButton.
 @icon-color_infoboxbutton:    @unaccented_icon-color;
 //Цвет иконки InfoboxButton при наведении.
 @hover_icon-color_infoboxbutton:  @secondary_text-color;
-
 
 
 //* Высоты строчных контролов. Применяются ко всем контролам, которые могут располагаться в одну строку.
@@ -390,6 +395,35 @@
 //контрастный цвет фона кнопки в состоянии "только для чтения".
 //Примечание: равен цвету фона по-умолчанию.
 @readonly_contrast_background-color_button:           @background-color;
+
+//цвет фона основной кнопки-иконки для тулбара.
+@background-color_button_toolButton:                  transparent;
+//контрастный цвет фона основной кнопки-иконки для тулбара.
+@background-color_contrast_button_toolButton:         #F8F8F8;
+//цвет фона основной кнопки-иконки для тулбара при наведении мыши
+@background-color_hover_button_toolButton:            @background-color_button_toolButton;
+//контрастный цвет фона основной кнопки-иконки для тулбара при наведении мыши
+@background-color_contrast_hover_button_toolButton:   @background-color_contrast_button_toolButton;
+//цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
+@background-color_active_button_toolButton:           @background-color_button_toolButton;
+//контрастный цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
+@background-color_contrast_active_button_toolButton:  @background-color_contrast_button_toolButton;
+
+//цвет фона основной функциональной кнопки
+@secondary_background-color_button_functionalButton:  #0a7ed7;
+//цвет фона неосновной функциональной кнопки
+@primary_background-color_button_functionalButton:    @primary_color;
+//цвет фона функциональной кнопки в состоянии "только для чтения"
+@reaondly_background-color_button_functionalButton:   #eeeeee;
+//цвет фона основной функциональной кнопки при наведении мыши
+@secondary_hover_background-color_button_functionalButton:  #1f8ee3;
+//цвет фона функциональной кнопки в состоянии "только для чтения" при наведении мыши
+@success_hover_background-color_button_functionalButton:   #38ad4e;
+//цвет фона основной функциональной кнопки при нажатии мыши.
+@secondary_active_background-color_button_functionalButton:  @secondary_hover_background-color_button_functionalButton;
+//цвет фона функциональной кнопки в состоянии "только для чтения" при нажатии мыши.
+@success_active_background-color_button_functionalButton:   @success_hover_background-color_button_functionalButton;
+
 //Толщина обводки кнопки.
 //Примечание: равна толщине обводки по-умолчанию.
 @border-thickness_button:                             @border-thickness;
@@ -434,18 +468,30 @@
 //Тень вокруг кнопки-иконки для тулбара.
 //Примечание: при нажатии на кнопку тень пропадает во всех темах.
 @box-shadow_button_toolButton:                        0 1px 4px rgba(0, 0, 0, 0.05);
-//цвет фона основной кнопки-иконки для тулбара.
-@background-color_button_toolButton:                  transparent;
-//контрастный цвет фона основной кнопки-иконки для тулбара.
-@background-color_contrast_button_toolButton:         #F8F8F8;
-//цвет фона основной кнопки-иконки для тулбара при наведении мыши
-@background-color_hover_button_toolButton:            transparent;
-//контрастный цвет фона основной кнопки-иконки для тулбара при наведении мыши
-@background-color_contrast_hover_button_toolButton:   #F8F8F8;
-//цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
-@background-color_active_button_toolButton:           transparent;
-//контрастный цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
-@background-color_contrast_active_button_toolButton:  #F8F8F8;
+//Тень вокруг функциональной кнопки для тулбара.
+//Примечание: при нажатии на кнопку тень пропадает во всех темах.
+@box-shadow_button_functionalButton:                  0 1px 4px rgba(0, 0, 0, 0.05);
+//Радиус скругления обводки функциональной кнопки высоты xs.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_xs_button_functionalButton:            @inline_height_xs / 2;
+//Радиус скругления обводки функциональной кнопки высоты s.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_s_button_functionalButton:             @inline_height_s / 2;
+//Радиус скругления обводки функциональной кнопки высоты m.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_m_button_functionalButton:             @inline_height_m / 2;
+//Радиус скругления обводки функциональной кнопки высоты l.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_l_button_functionalButton:             @inline_height_l / 2;
+//Радиус скругления обводки функциональной кнопки высоты xl.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_xl_button_functionalButton:            @inline_height_xl / 2;
+//Радиус скругления обводки функциональной кнопки высоты 2xl.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_2xl_button_functionalButton:           @inline_height_2xl / 2;
+//Радиус скругления обводки функциональной кнопки высоты по-умолчанию.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_default_button_functionalButton:       @inline_height_default / 2;
 
 //header. Переменные, использующиеся для темизации заголовков.
 //Цвет иконки для заголовка, использующегося для проваливания в раздел.
@@ -618,8 +664,55 @@
 //Тень залипающей кнопки
 @box-shadow_toggleButton_pushButton:                                        none;
 
+/*switcher*/
+//размер шрифта переключателя
+@font-size_switcher:                      @font-size_m;
+//ширина переключателя
+@width_switcher:                          46px;
+//высота переключателя
+@height_switcher:                         @inline_height_m;
+//толщина обводки переключателя
+@border-thickness_switcher:               @border-thickness;
+//радиус скругления обводки переключателя
+@border-radius_switcher:                  @height_switcher/2;
+//толщина линии переключателя
+@track_thickness_switcher:                2px;
+//длина линии переключателя
+@track_length_switcher:                   34px;
+//отступ между переключателем и текстом
+@text_offset_switcher:                    6px;
+//толщина обводки контейнера маркера переключателя
+@marker-box_border-thickness_switcher:    2px;
+//размер контейнера для маркера переключателя
+@marker-box_size_switcher:                12px;
+//размер маркера переключателя
+@marker-size_switcher:                    6px;
+//цвет обводки переключателя
+@border-color_switcher:                   #E4E4E4;
+//цвет линии переключателя
+@track_color_switcher:                    #CCC;
+//цвет линии переключателя в режиме чтения
+@readonly_track_color_switcher:           #E4E4E4;
+//освной цвет текста переключателя
+@text-color_switcher:                     @text-color;
+//цвет текста переключателя в выключенном состоянии
+@unselected_text-color_switcher:          @unaccented_text-color;
+//основной цвет текста переключателя в режиме чтения
+@readonly_text-color_switcher:            @text-color;
+//цвет текста переключателя в выключенном состоянии в режиме чтения
+@readonly_unselected_text-color_switcher: @readonly_color;
+//цвет маркера переключателя
+@marker_color_switcher:                   @marker_color;
+//цвет маркера переключателя в режиме чтения
+@readonly_marker_color_switcher:          @readonly_marker-color;
+//цвет обводки маркера переключателя
+@marker-box_border-color_switcher:        #CCC;
+//цвет обводки маркера переключателя в режиме чтения
+@readonly_marker-box_border-color_switcher: #E4E4E4;
+//цвет обводки маркера переключателя при наведении
+@marker-box_hover_border-color_switcher:  @marker_color_switcher;
 
-/*toggle big separator стили для большого разделителя*/
+/*toggle big separator стили для большого разделителя-переключателя*/
 //Цвет иконки большого разделителя
 @icon-color_toggleBigSeparator:                                             @unaccented_icon-color;
 @icon-color_hover_toggleBigSeparator:                                       @link_hover_text-color;
@@ -627,6 +720,21 @@
 @width_toggleBigSeparator:                                                  26px;
 @height_toggleBigSeparator:                                                 @width_toggleBigSeparator;
 @icon-size_toggleBigSeparator:                                              @width_toggleBigSeparator;
+
+/*toggle separator стили для разделителя-переключателя*/
+//Цвет иконки большого разделителя
+@icon-size_toggleSeparator:                                                 @icon-size_s;
+@height_toggleSeparator:                                                    @inline_height_default;
+@width_toggleSeparator:                                                     @height_toggleSeparator;
+@primary_icon-color_toggleSeparator:                                        @primary_text-color;
+@secondary_icon-color_toggleSeparator:				                        @secondary_color;
+@unaccented_icon-color_toggleSeparator:                                     @unaccented_icon-color;
+@primary_hover_icon-color_toggleSeparator:                                  @primary_color;
+@secondary_hover_icon-color_toggleSeparator:				                @link_hover_text-color;
+@unaccented_hover_icon-color_toggleSeparator:				                @link_hover_text-color;
+@primary_active_icon-color_toggleSeparator:				                    @primary_hover_icon-color_toggleSeparator;
+@secondary_active_icon-color_toggleSeparator:				                @secondary_hover_icon-color_toggleSeparator;
+@unaccented_active_icon-color_toggleSeparator:	                            @unaccented_hover_icon-color_toggleSeparator;
 
 /*Label - метка для полей ввода*/
 //цвет знака сноски у метки
@@ -639,4 +747,5 @@
 @text-color_label:                      @label_text-color;
 //размер шрифта метки
 @font-size_default_label:               @font-size_m;
+
 //last line
