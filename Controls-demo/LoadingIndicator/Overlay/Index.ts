@@ -13,9 +13,13 @@ class Overlay extends Control<IControlOptions> {
     private _firstOpen(): void {
         const cfg = {
             id: this._firstId,
-            message: 'Текст первого индикатора'
+            message: 'Закроется через 3 секунды',
+            delay: 0
         };
         this._firstId = this._notify('showIndicator', [cfg], { bubbling: true });
+        setTimeout(() => {
+            this._notify('hideIndicator', [this._firstId], { bubbling: true });
+        }, 3000);
     }
     private _close(event, name): void {
         const indicatorName = '_' + name + 'Id';
@@ -28,17 +32,25 @@ class Overlay extends Control<IControlOptions> {
         const cfg = {
             id: this._secondId,
             overlay: 'dark',
-            message: 'Текст второго индикатора',
+            message: 'Закроется через 3 секунды',
+            delay: 0
         };
         this._secondId = this._notify('showIndicator', [cfg], { bubbling: true });
+        setTimeout(() => {
+            this._notify('hideIndicator', [this._secondId], { bubbling: true });
+        }, 3000);
     }
     private _thirdOpen(): void {
         const cfg = {
             id: this._thirdId,
             overlay: 'none',
-            message: 'Текст третьего индикатора',
+            message: 'Закроется при нажатии на кнопку close',
+            delay: 0
         };
         this._thirdId = this._notify('showIndicator', [cfg], { bubbling: true });
+        setTimeout(() => {
+            this._notify('hideIndicator', [this._thirdId], { bubbling: true });
+        }, 3000);
     }
 }
 export default Overlay;
