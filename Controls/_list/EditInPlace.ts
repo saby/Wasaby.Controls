@@ -287,6 +287,18 @@ var
                 parentId = editingItem.get(listModel._options.parentProperty);
                 parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
                 index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getChildren(parentId).length) + 1;
+            } else if (listModel._options.groupingKeyCallback) {
+                const groupId = listModel._options.groupingKeyCallback(editingItem);
+                const isAddInTop = self._options.editingConfig && self._options.editingConfig.addPosition === 'top';
+                let renderNearItem;
+
+                const groupItems = listModel.getDisplay().getGroupItems(groupId);
+                if (typeof groupId === 'undefined' || groupItems.length === 0) {
+                    renderNearItem = isAddInTop ? listModel.getDisplay().getFirst() : listModel.getDisplay().getLast();
+                } else {
+                    renderNearItem = groupItems[isAddInTop ? 0 : groupItems.length - 1];
+                }
+                index = listModel.getDisplay().getIndex(renderNearItem);
             }
 
             return index;
