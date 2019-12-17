@@ -32,8 +32,9 @@ var _private = {
 
 /**
  * Хлебные крошки с кнопкой "Назад".
- * <a href="/materials/demo-ws4-breadcrumbs">Демо-пример</a>.
- *
+ * @remark
+ * См. <a href="/materials/demo-ws4-breadcrumbs">демо-пример</a>.
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/ здесь}.
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
@@ -41,8 +42,8 @@ var _private = {
  * @control
  * @public
  * @author Авраменко А.С.
- *
  * @demo Controls-demo/BreadCrumbs/PathPG
+ * @see Controls/_breadcrumbs/Path
  */
 
 /*
