@@ -177,7 +177,7 @@ export default {
 
     shouldRedraw: function (currentItems, newItems, oldWidth, availableWidth) {
 
-        //если ширина меньше нуля, то хлебных крошек не видно, и их не следует пересчитывать и перерисовывать
-        return availableWidth > 0 && (currentItems !== newItems || oldWidth !== availableWidth);
+        //если items не изменились, а ширина контейнера стала меньше нуля, то хлебных крошек не видно, и их не следует пересчитывать и перерисовывать
+        return currentItems !== newItems || availableWidth > 0 && oldWidth !== availableWidth;
     }
 };

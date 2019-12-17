@@ -71,8 +71,12 @@ define([
             assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data, 15, 10));
          });
 
+         it('same items, new width = 0', function() {
+            assert.isFalse(BreadCrumbsUtil.shouldRedraw(data, data, 15, 0));
+         });
+
          it('different items, new width = 0', function() {
-            assert.isFalse(BreadCrumbsUtil.shouldRedraw(data, data.slice(3), 15, 0));
+            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data.slice(3), 15, 0));
          });
 
          it('different items, different width', function() {
