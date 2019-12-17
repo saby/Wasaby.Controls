@@ -748,7 +748,7 @@ define(
                newConfigItems.items[3].properties.dataLoadCallback = () => {isCallback = true};
                fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                   assert.equal(fastFilter._items.at(3).value, 'Великобритания');
-                  assert.isFalse(isCallback);
+                  assert.isTrue(isCallback);
                   done();
                });
             });
