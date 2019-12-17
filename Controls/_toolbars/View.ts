@@ -92,7 +92,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  *
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/Toolbar/ToolbarPG
+ * @demo Controls-demo/Toolbar/ToolbarVdom
  */
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, ISource, IIconSize, IItemTemplate, IGrouped {
     /**
