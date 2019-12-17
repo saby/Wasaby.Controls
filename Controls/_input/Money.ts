@@ -20,12 +20,7 @@ interface IMoneyOptions extends INumberLengthOptions {
  * @mixes Controls/_input/interface/INumberLength
  *
  * @public
- * @demo Controls-demo/Input/SizesAndHeights/Index
- * @demo Controls-demo/Input/FontStyles/Index
- * @demo Controls-demo/Input/TextAlignments/Index
- * @demo Controls-demo/Input/TagStyles/Index
- * @demo Controls-demo/Input/ValidationStatuses/Index
- * @demo Controls-demo/Input/SelectOnClick/Index
+ * @demo Controls-demo/Input/Money/Base/Index
  *
  * @author Красильников А.С.
  */
