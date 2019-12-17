@@ -10,9 +10,17 @@ class IsGlobal extends Control<IControlOptions> {
     private _firstOpen(): void {
         const cfg = {
             id: this._firstId,
-            message: 'Текст первого индикатора'
+            message: 'Текст первого индикатора',
+            overlay: 'none'
         };
         this._firstId = this._notify('showIndicator', [cfg], { bubbling: true });
+    }
+    private _close(event, name): void {
+        const indicatorName = '_' + name + 'Id';
+        if (this[indicatorName]) {
+            this._notify('hideIndicator', [this[indicatorName]], { bubbling: true });
+            this[indicatorName] = null;
+        }
     }
 }
 export default IsGlobal;

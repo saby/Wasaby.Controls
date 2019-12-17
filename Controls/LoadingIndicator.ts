@@ -342,6 +342,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         const isOpened = this._getItemIndex(newCfg.id) > -1;
         if (isOpened) {
             this._replaceItem(newCfg.id, newCfg);
+            this._updateProperties(newCfg);
         } else {
             this._stack.add(newCfg);
             this._toggleIndicator(true, newCfg);

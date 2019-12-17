@@ -10,6 +10,8 @@
             <div>
                 <Controls.buttons:Button caption="Open"
                                          on:click="_firstOpen()"/>
+                <Controls.buttons:Button caption="Close" class="controls-demo__indicator_first_close"
+                                         on:click="_close('first')"/>
             </div>
         </div>
 
