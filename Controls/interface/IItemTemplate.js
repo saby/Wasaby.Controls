@@ -24,7 +24,7 @@ define('Controls/interface/IItemTemplate', [
     * @default Controls/list:ItemTemplate
     * @remark
     * См. <a href="/materials/demo-ws4-list-item-template">демо-пример</a>.
-    * Подробнее о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
+    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
     * Шаблон может быть переопределён с помощью {@link Controls/interface/IItemTemplate#itemTemplateProperty itemTemplateProperty}.
     * @example
     * <pre class="brush: html">
