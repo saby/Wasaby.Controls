@@ -536,6 +536,64 @@ define([
                });
             });
          });
+
+         it('add item to the top of the grouped list', async function() {
+            var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModelWithGroups,
+               source: source,
+               editingConfig: {
+                  addPosition: 'top'
+               }
+            });
+
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 1); // First item in display is group
+            await eip.cancelEdit();
+
+            newItem.set('type', 'goods');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 1);
+            await eip.cancelEdit();
+
+            newItem.set('type', 'services');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 4);
+            await eip.cancelEdit();
+         });
+
+         it('add item to the bottom of the grouped list', async function() {
+            var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModelWithGroups,
+               source: source,
+               editingConfig: {
+                  addPosition: 'bottom'
+               }
+            });
+
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 4);
+            await eip.cancelEdit();
+
+            newItem.set('type', 'goods');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 2);
+            await eip.cancelEdit();
+
+            newItem.set('type', 'services');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 4);
+            await eip.cancelEdit();
+         });
       });
 
       describe('commitEdit', function() {
