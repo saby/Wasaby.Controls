@@ -20,7 +20,7 @@ define('Controls/interface/INavigation', [
 
    /**
     * @typedef {String} NavigationSource
-    * @variant position Навигация по курсору.
+    * @variant position Навигация по курсору. Подробнее читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
     * @variant page Постраничная навигация.
     */
 
@@ -35,8 +35,7 @@ define('Controls/interface/INavigation', [
     * @variant infinity Бесконечный скролл.
     * @variant pages Страницы с постраничной навигацией.
     * @variant demand Подгружать данные при нажатии на кнопку "Еще".
-    * @variant maxCount Подгружать данные, пока не будет достигут порог,
-    * указанный в maxCountValue, указанный в {@link NavigationViewConfig}.
+    * @variant maxCount Подгружать данные, пока не будет достигут порог, указанный в maxCountValue в свойстве viewConfig.
     */
 
    /*
@@ -47,16 +46,19 @@ define('Controls/interface/INavigation', [
     */
 
    /**
+    * @typedef {String} Direction
+    * @variant forward Загружать данные после позиционируемой записи.
+    * @variant backward Загружать данные до позиционируемой записи.
+    * @variant bothways Загружать данные в обоих направлениях относительно позиционируемой записи.
+    */    
+
+    /**
     * @typedef {Object} PositionSourceConfig Конфигурация для навигации по курсору.
-    * @property {String|Array} field Поле (массив полей), используемый для навигации по курсору.
-    * @property {String|Array} position Значение поля (массива полей), используемого для навигации по курсору.
-    * @property {String} direction Направление загрузки.
-    * Поддерживаются следующие значения:
-    * <ul>
-    *    <li><b>after</b> -  Загружать данные после позиционируемой записи.
-    *    <li><b>before</b> -  Загружать данные до позиционируемой записи.
-    *    <li><b>both</b> -  Загружать данные в обоих направлениях относительно позиционируемой записи.
-    * </ul>
+    * @description Подробнее о данном типе навигации читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
+    * @property {String|Array.<String>} field Имя поля, используемое для навигации по курсору.
+    * Для такого поля в таблице БД должен быть создан индекс, иначе теряется смысл использования навигации.
+    * @property {String|Array.<String>} position Значение, которое будет начальной позицией для курсора.
+    * @property {Direction} direction Направление выборки.
     * @property {Number} limit Ограничение количества записей, запрошенных для одной загрузки.
     */
 
@@ -89,19 +91,18 @@ define('Controls/interface/INavigation', [
     */
 
    /**
+    * @typedef {String} TotalInfo
+    * @variant basic Отображается только общее число записей.
+    * @variant extended отображается общее число записей, номера первой и последней записей на текущей странице, а также размер страницы.
+    */ 
+
+   /**
     * @typedef {Object} NavigationViewConfig
-    * @property {String} pagingMode Режим отображения постраничной навигации.
-    * Поддерживаются следующие значения:
-    * <ul>
-    *    <li><b>direct</b> - Постраничная навигация отображается в прямом направлении: от первой страницы до последней.</li>
-    * </ul>
-    * @property {String} totalInfo Режим отображения информационной подписи.
-    * <ul>
-    *    <li><b>basic</b> - отображается только общее число записей. (по умолчанию)/li>
-    *    <li><b>extended</b> - отображается общее число записей, номера первой и последней записей на текущей странице, а также размер страницы.</li>
-    * </ul>
-    * @property maxCountValue Кол-во записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
-    * О режиме навигации maxCount вы можете посмотреть тут {@link NavigationView}.
+    * @property {String} [pagingMode=direct] Режим отображения постраничной навигации.
+    * В настоящий момент поддерживается навигация только в прямом направлении: от первой страницы до последней.
+    * @property {TotalInfo} [totalInfo=basic] Режим отображения информационной подписи.
+    * @property {Number} maxCountValue Количество записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
+    * О режиме навигации maxCount вы можете посмотреть {@link Controls/interface/INavigation/Navigation.typedef здесь}.
     */
 
    /*
@@ -120,6 +121,10 @@ define('Controls/interface/INavigation', [
 
    /**
     * @typedef {Object} Navigation
+    * @description Конфигурация навигации в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}.
+    * Подробнее о настройке навигации читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/navigation/ здесь}.
+    * Подробнее о настройке навигации по курсору читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
+    * Подробнее об источниках данных читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/data-sources/ здесь}.
     * @property {NavigationSource} source Алгоритм, с которым работает источник данных.
     * @property {NavigationView} view Режим визуального отображения навигации (кнопка навигации и т.д.).
     * @property {PositionSourceConfig|PageSourceConfig} sourceConfig Конфигурация источника данных.

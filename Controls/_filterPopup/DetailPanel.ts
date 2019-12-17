@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import chain = require('Types/chain');
 import Utils = require('Types/util');

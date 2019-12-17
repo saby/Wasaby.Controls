@@ -1451,7 +1451,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _isScrollShown: false,
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
-    _loadOffset: null,
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
     _loadingIndicatorContainerOffsetTop: 0,
@@ -2122,7 +2121,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _commitEditActionHandler: function() {
-        this._children.editInPlace.commitAndMoveNextRow();
+        if (this._options.task1178374430) {
+            this._children.editInPlace.commitAndMoveNextRow();
+        } else {
+            this._children.editInPlace.commitEdit();
+        }
     },
 
     _cancelEditActionHandler: function() {

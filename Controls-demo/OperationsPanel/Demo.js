@@ -155,16 +155,6 @@ define('Controls-demo/OperationsPanel/Demo', [
          });
       },
 
-      _afterItemsMove: function(event, items, target, position) {
-         this._children.operationsResultOpener.open({
-            templateOptions: {
-               operationsCount: items.length,
-               operationsSuccess: items.length,
-               title: 'Move items'
-            }
-         });
-      },
-
       _beforeItemsRemove: function(event, items) {
          var
             item,

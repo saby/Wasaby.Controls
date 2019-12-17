@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_MoveDialog/MoveDialog');
 import 'css!theme?Controls/_MoveDialog/MoveDialog';
@@ -105,6 +106,8 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
 let MoveDialog = Control.extend({
       _template: template,
       _itemActions: undefined,
+      _root: undefined,
+      _expandedItems: undefined,
 
       _beforeMount: function(options) {
          this._itemActions = [{
@@ -113,6 +116,7 @@ let MoveDialog = Control.extend({
             showType: 2
          }];
          this._root = options.root;
+         this._expandedItems = options.expandedItems;
 
          // TODO: сейчас прикладной программист передает в MoveDialog опцию columns, что плохо, т.к. он может повлиять на
          // отображение колонки, а диалог во всех реестрах должен выглядеть одинаково. Нужно убрать возможно передавать

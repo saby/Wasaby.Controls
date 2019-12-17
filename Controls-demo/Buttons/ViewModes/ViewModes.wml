@@ -21,6 +21,6 @@
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">viewMode=functionalButton, buttonStyle=secondary</div>
-        <Controls.buttons:Button viewMode="functionalButton" icon="icon-AddButtonNew" iconStyle="contrast" iconSize="m" inlineHeight="l" buttonStyle="secondary"></Controls.buttons:Button>
+        <Controls.buttons:Button viewMode="functionalButton" icon="icon-RoundPlus" iconStyle="contrast" iconSize="m" inlineHeight="l" buttonStyle="secondary"></Controls.buttons:Button>
     </div>
 </div>

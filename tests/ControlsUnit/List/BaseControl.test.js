@@ -2642,6 +2642,58 @@ define([
             assert.isTrue(result.isSuccessful());
          });
 
+         it('commitEditActionHandler', function () {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            let commitDef = cDeferred.success();
+            let commitAndMoveDef = cDeferred.success();
+            let result;
+
+            var ctrl = new lists.BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  commitEdit: function() {
+                     result = commitDef;
+                  },
+                  commitAndMoveNextRow: function () {
+                     result = commitAndMoveDef;
+                  }
+               }
+            };
+            ctrl._commitEditActionHandler();
+            assert.equal(commitDef, result);
+
+            commitDef = cDeferred.success();
+            commitAndMoveDef = cDeferred.success();
+
+            ctrl._options.task1178374430 = true;
+            ctrl._commitEditActionHandler();
+            assert.equal(commitAndMoveDef, result);
+         });
+
          it('commitEdit, readOnly: true', function() {
             var cfg = {
                viewName: 'Controls/List/ListView',
@@ -4330,6 +4382,54 @@ define([
 
          instance.getViewModel()
             ._notify('onListChange', 'collectionChanged');
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isTrue(fakeNotify.calledOnce);
+      });
+
+      it('should fire "drawItems" with new collection if source item has changed', async function() {
+         var
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         instance.saveOptions({
+            ...cfg,
+            useNewModel: true
+         });
+
+         var fakeNotify = sandbox.spy(instance, '_notify')
+            .withArgs('drawItems');
+
+         const noRedrawChange = [{ sourceItem: true}];
+         noRedrawChange.properties = 'marked';
+
+         instance.getViewModel()
+            ._notify('onListChange', null, 'ch', noRedrawChange, 0, noRedrawChange, 0);
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isFalse(fakeNotify.calledOnce);
+
+         const redrawChange = [{ sourceItem: true}];
+
+         instance.getViewModel()
+            ._notify('onListChange', null, 'ch', redrawChange, 0, redrawChange, 0);
          assert.isFalse(fakeNotify.called);
          instance._beforeUpdate(cfg);
          assert.isFalse(fakeNotify.called);

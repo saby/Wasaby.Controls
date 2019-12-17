@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/Stack/Stack');
 import {Controller as ManagerController} from 'Controls/popup';
