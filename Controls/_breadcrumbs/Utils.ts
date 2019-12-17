@@ -78,6 +78,10 @@ var _private = {
         return itemsSizes;
     },
 
+    isVisible(container: HTMLDivElement): boolean {
+        return !!container.getClientRects().length;
+    },
+
     canShrink: function (itemWidth, currentWidth, availableWidth) {
         return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
     }
@@ -175,7 +179,7 @@ export default {
         }
     },
 
-    shouldRedraw: function (currentItems, newItems, oldWidth, availableWidth) {
-        return currentItems !== newItems || oldWidth !== availableWidth;
+    shouldRedraw: function (currentItems, newItems, oldWidth, availableWidth, container) {
+        return currentItems !== newItems || _private.isVisible(container) && oldWidth !== availableWidth;
     }
 };

@@ -188,7 +188,10 @@ define([
             path._visibleItems = [1, 2, 3];
             path._breadCrumbsItems = [2, 3];
             path._container = {
-               clientWidth: 0
+               clientWidth: 0,
+               getClientRects: function() {
+                  return [0];
+               }
             };
             path._beforeUpdate({ items: path._options.items });
 
@@ -343,7 +346,10 @@ define([
             mockBreadCrumbsUtil(650, 650);
             path._oldWidth = 100;
             path._container = {
-               clientWidth: 200
+               clientWidth: 200,
+               getClientRects: function() {
+                  return [1];
+               }
             }
             path._onResize();
             assert.isTrue(path._viewUpdated);
@@ -355,7 +361,10 @@ define([
             mockBreadCrumbsUtil(650, 650);
             path._oldWidth = 100;
             path._container = {
-               clientWidth: 100
+               clientWidth: 100,
+               getClientRects: function() {
+                  return [1];
+               }
             }
             path._beforeUpdate({
                items: data1.map(function(item) {
