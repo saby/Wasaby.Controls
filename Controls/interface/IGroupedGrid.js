@@ -44,7 +44,7 @@ define('Controls/interface/IGroupedGrid', [
    /**
     * @name Controls/interface/IGroupedGrid#groupTemplate
     * @cfg {Function} Шаблон группировки списка.
-    * @default {@link Controls/grid:GroupTemplate}
+    * @default {@link /docs/js/Controls/grid/GroupTemplate/ Controls/grid:GroupTemplate}
     * @remark
     * См. <a href="/materials/demo-ws4-grid-group">демо-пример</a>.
     * Подробнее о параметрах шаблона читайте {@link Controls/grid:GroupTemplate здесь}.
