@@ -132,6 +132,11 @@
    user-select: none;
    position: absolute;
    visibility: hidden;
+   /**
+    * Элемент с этим классом используется для вычисления ширины текста.
+    * Запрещаем перенос, чтобы текст был в одну строку.
+    */
+   white-space: nowrap;
 }
 
 .controls-InputBase__stretcher-content {

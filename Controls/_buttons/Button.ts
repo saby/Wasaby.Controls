@@ -28,7 +28,7 @@ import 'wml!Controls/_buttons/ButtonBase';
 export interface IButtonControlOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
        IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
        IButtonOptions {
-    viewMode?: 'button' | 'link' | 'toolButton';
+    viewMode?: 'button' | 'link' | 'toolButton' | 'functionalButton';
 }
 
 export function cssStyleGeneration(options: IButtonControlOptions): void {
@@ -81,10 +81,6 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * @author Красильников А.С.
  * @category Button
  * @demo Controls-demo/Buttons/ViewModes/Index
- * @demo Controls-demo/Buttons/SizesAndHeights/Index
- * @demo Controls-demo/Buttons/FontStyles/Index
- * @demo Controls-demo/Buttons/IconStyles/Index
- * @demo Controls-demo/Buttons/ContrastBackground/Index
  */
 
 /*
@@ -109,7 +105,7 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * @public
  * @author Красильников А.С.
  * @category Button
- * @demo Controls-demo/Buttons/ButtonDemoPG
+ * @demo Controls-demo/Buttons/ViewModes/Index
  */
 /**
  * @name Controls/_buttons/Button#viewMode
@@ -117,6 +113,7 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * @variant button В виде обычной кнопки по-умолчанию.
  * @variant link В виде гиперссылки.
  * @variant toolButton В виде кнопки для панели инструментов.
+ * @variant functionalButton В виде кнопки выполняющей определенную функцию. Например добавление или сохранение.
  * @default button
  * @demo Controls-demo/Buttons/ViewModes/Index
  * @example

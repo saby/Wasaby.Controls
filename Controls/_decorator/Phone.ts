@@ -20,25 +20,23 @@ export interface IPhoneOptions extends IControlOptions {
     number: string;
     /**
      * Декорируемый телефонный номер.
+     * @default ''
      * @demo Controls-demo/Decorator/Phone/Index
      */
-    value: string;
+    value: string | null;
 }
 
 /**
  * Графический контрол, декоририрующий телефонный номер таким образом, что он приводится к формату:
- * <ul>
- *    <li>Российские мобильные номера - +7(***) ***-**-**[ доб. {остальные цифры}];</li>
- *    <li>Российские мобильные номера в зависимости от кода города - +7(****) **-**-**[ доб. {остальные цифры}] или +7(*****) *-**-**[ доб. {остальные цифры}];</li>
- *    <li>Иностранные номера - +{иностранный код} {остальные цифры};</li>
- *    <li>Остальные номера - отображаются как есть без формата</li>
- * </ul>
- *
- * @mixes Controls/_decorator/Phone/IPhoneOptions
+ * 
+ * * Российские мобильные номера, например +7(XXX) XXX-XX-XX[ доб. {остальные цифры}];
+ * * Российские мобильные номера в зависимости от кода города, например +7(XXXX) XX-XX-XX[ доб. {остальные цифры}] или +7(XXXXX) X-XX-XX[ доб. {остальные цифры}];
+ * * Иностранные номера, например +{иностранный код} {остальные цифры};
+ * * Остальные номера отображаются как есть без формата.
  *
  * @class Controls/_decorator/Phone
  * @extends UI/Base:Control
- *
+ * @mixes Controls/_decorator/Phone/IPhoneOptions
  * @public
  * @demo Controls-demo/Decorator/Phone/Index
  *
@@ -179,10 +177,6 @@ class Phone extends Control<IPhoneOptions> {
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_decorator/Phone#value
-             * @default ''
-             */
             value: ''
         };
     }

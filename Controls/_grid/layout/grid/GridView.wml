@@ -21,6 +21,7 @@
                 gridSupport="full"
                 scrollWidth="{{ scrollWidth }}"
                 listModel="{{ _listModel }}"
+                trackVisible="{{ trackVisible }}"
                 positionChangeHandler="{{ positionChangeHandler }}">
         </Controls._grid.ScrollWrapper>
     </ws:if>

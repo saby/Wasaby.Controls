@@ -23,6 +23,7 @@ export interface IWrapURLsOptions extends IControlOptions {
     value: string;
     /**
      * Определяет, следует ли переходить в новую вкладку при клике на ссылку.
+     * @default true
      * @demo Controls-demo/Decorator/WrapURLs/NewTab/Index
      * @remark
      * true - Переход в новой вкладке.
@@ -68,11 +69,9 @@ type Path = ILink | IEmail | IPlain;
  * 2. Ссылка на email адрес ([текст]@[текст].[текст от 2 до 6 знаков]).
  * 3. Ссылка на локальный файл ({@link https://en.wikipedia.org/wiki/File_URI_scheme file}).
  *
- * @mixes Controls/_decorator/WrapURLs/IWrapURLsOptions
- *
  * @class Controls/_decorator/WrapURLs
  * @extends UI/Base:Control
- *
+ * @mixes Controls/_decorator/WrapURLs/IWrapURLsOptions
  * @public
  * @demo Controls-demo/Decorator/WrapURLs/Index
  *
@@ -103,6 +102,7 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
      * $4 - Email address.
      * $5 - Plain text.
      * $6 - Closing delimiter.
+     * @private
      */
     private static parseRegExp: RegExp = /([({\[⟨<«„‘'"]?)(?:(((?:https?|ftp|file):\/\/|www\.)\S+?)|(\S+@\S+(?:\.\S{2,6}?))|(\S*?))([)}\]⟩>»”’'".,:]?(?:\s|$))/g;
 
@@ -200,10 +200,6 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_decorator/WrapURLs#newTab
-             * @default true
-             */
             newTab: true
         };
     }

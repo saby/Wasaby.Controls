@@ -5,6 +5,8 @@ import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
 import { IoC } from 'Env/Env';
+
+const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
 /**
  * Преобразователь типов из JsonML в HTML и обратно с возможностью клонирования JsonML массива.
  *
@@ -85,6 +87,14 @@ import { IoC } from 'Env/Env';
             .error('Controls/_decorator/Markup/Converter' ,'htmlToJson method doesn\'t work on server-side');
          return [];
       }
+
+      if (html.trim() && !hasAnyTagRegExp.test(html)) {
+         // Пришла строка без тега, значит, это текст, а не HTML.
+         // TODO: во время рефактора написать функцию textToJson, и писать в консоль ошибку, если текст пришёл в
+         // htmlToJson, а не в textToJson. https://online.sbis.ru/opendoc.html?guid=0ae06fe3-d773-4094-be9c-c365f4329d39
+         return [[], html]
+      }
+
       let div = document.createElement('div'),
          rootNode,
          rootNodeTagName,

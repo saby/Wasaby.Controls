@@ -373,21 +373,51 @@
             <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FPhone%252FIndex">value</a>
          </li>
       </ul>
-      <div>
-         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FNumber%252FNumber">
-            Number
-         </a>
-      </div>
-      <div>
-         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FWrapURLs%252FWrapURLs">
-            WrapURLs
-         </a>
-      </div>
-      <div>
-         <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FHighlight%252FHighlight">
-            Highlight
-         </a>
-      </div>
+      <h2>
+         <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FNumber%252FIndex">Number</a>
+      </h2>
+      <ul>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FNumber%252FValue%252FIndex">value</a>
+         </li>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FNumber%252FRoundMode%252FIndex">roundMode</a>
+         </li>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FNumber%252FFractionSize%252FIndex">fractionSize</a>
+         </li>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FNumber%252FUseGrouping%252FIndex">useGrouping</a>
+         </li>
+      </ul>
+      <h2>
+         <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FMoney%252FIndex">Money</a>
+      </h2>
+      <ul>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FMoney%252FValue%252FIndex">value</a>
+         </li>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FMoney%252FStyle%252FIndex">style</a>
+         </li>
+      </ul>
+      <h2>
+         <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FHighlight%252FIndex">Highlight</a>
+      </h2>
+      <ul>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FHighlight%252FHighlightMode%252FIndex">highlightMode</a>
+         </li>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FHighlight%252FHighlightedValue%252FIndex">highlightedValue</a>
+         </li>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FHighlight%252FClassName%252FIndex">className</a>
+         </li>
+         <li>
+            <a href="/Controls-demo/app/Controls-demo%252FDecorator%252FHighlight%252FValue%252FIndex">value</a>
+         </li>
+      </ul>
    </div>
    <div class="demo_controls_list_section">
       <h1>FormController</h1>

@@ -119,7 +119,7 @@
  */
 
 /**
- * @name Controls/grid:GroupTemplate#contentTemplate
+ * @name Controls/list:BaseGroupTemplate#contentTemplate
  * @cfg {String|Function|undefined} Устанавливает пользовательский шаблон, описывающий заголовок группы.
  * @remark
  * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:

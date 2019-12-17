@@ -1,25 +1,25 @@
-<div style="flex-direction: column;height: 100%;align-items: center;justify-content: center;display: inline-flex;">
-   <Controls.heading:Title caption="Движение границ."/>
-   <ws:if data="{{_offset}}">
-      <div>Вы только что потянули за {{_border}} край</div>
-      <div>Смещение равно {{_offset}}</div>
-   </ws:if>
-   <ws:else>
-      <div>Потяните за левый или правый край.</div>
-      <div>&nbsp;</div>
-   </ws:else>
-   <div style="height: 200px; width: {{_width}}px; background: red; position: relative;">
-      <Controls.dragnDrop:ResizingLine attr:style="position:absolute; left: 0; height: 100%"
-                                      direction="reverse"
-                                      minOffset="{{_minOffsetLeft}}"
-                                      maxOffset="{{_maxOffsetLeft}}"
-                                      on:offset="_offsetHandlerLeft()"/>
-      <Controls.dragnDrop:ResizingLine attr:style="position:absolute; right: 0; height: 100%"
-                                       direction="direct"
-                                       minOffset="{{_minOffsetRight}}"
-                                       maxOffset="{{_maxOffsetRight}}"
-                                      on:offset="_offsetHandlerRight()"/>
+<div class="controlsDemo__wrapper ws-flexbox ws-flex-column">
+   <div class="controlsDemo__cell ws-align-self-start">
+      <div class="controls-text-label_theme-{{_options.theme}}">Потяните за правый край</div>
+      <div class="controlsDemo__container" style="width: {{_widthOfRightContainer}}px;">
+         <Controls.dragnDrop:ResizingLine attr:class="controlsDemo__resizingLine controlsDemo__resizingLine_right"
+                                          on:offset="_offsetHandler('rightContainer')"/>
+      </div>
    </div>
-
-
+   <div class="controlsDemo__cell ws-align-self-center">
+      <div class="controls-text-label_theme-{{_options.theme}}">Потяните за правый или левый край</div>
+      <div class="controlsDemo__container" style="width: {{_widthOfCenterContainer}}px;">
+         <Controls.dragnDrop:ResizingLine attr:class="controlsDemo__resizingLine controlsDemo__resizingLine_right"
+                                          on:offset="_offsetHandler('centerContainer')"/>
+         <Controls.dragnDrop:ResizingLine attr:class="controlsDemo__resizingLine controlsDemo__resizingLine_left"
+                                          direction="reverse" on:offset="_offsetHandler('centerContainer')"/>
+      </div>
+   </div>
+   <div class="controlsDemo__cell ws-align-self-end">
+      <div class="controls-text-label_theme-{{_options.theme}}">Потяните за левый край</div>
+      <div class="controlsDemo__container" style="width: {{_widthOfLeftContainer}}px;">
+         <Controls.dragnDrop:ResizingLine attr:class="controlsDemo__resizingLine controlsDemo__resizingLine_left"
+                                          direction="reverse" on:offset="_offsetHandler('leftContainer')"/>
+      </div>
+   </div>
 </div>

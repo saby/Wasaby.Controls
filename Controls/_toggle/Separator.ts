@@ -4,13 +4,12 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 
 export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
-    style?: string;
+    style?: 'primary' | 'secondary' | 'unaccented';
     bold?: boolean;
 }
 
 /**
- * Кнопка-разделитель с поддержкой различных стилей отображения и жирным шрифтом. Может использоваться как самостоятельно, так и в составе сложных заголовков.
- * Контрол состоит из <a href="/docs/js/Controls/Heading/?v=3.18.500">заголовка</a>, <a href="/docs/js/Controls/Heading/Separator/?v=3.18.500">заголовка-разделителя</a> и <a href="/docs/js/Controls/Heading/Counter/?v=3.18.500">счетчика</a>.
+ * Кнопка-разделитель с поддержкой различных стилей отображения и жирным шрифтом. Может использоваться как самостоятельно, так и в составе {@link Controls/heading сложных заголовков}.
  *
  * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
  *
@@ -21,9 +20,8 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
- * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
+ * @demo Controls-demo/toggle/BigSeparator/Index
  *
- * @mixes Controls/_toggle/Separator/SeparatorStyles
  */
 
 /*
@@ -39,16 +37,15 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
- * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
+ * @demo Controls-demo/toggle/BigSeparator/Index
  *
- * @mixes Controls/_toggle/Separator/SeparatorStyles
  */
 
 /**
  * @name Controls/_toggle/Separator#style
  * @cfg {String} Стиль отображения разделителя.
  * @variant secondary
- * @variant additional
+ * @variant unaccented
  * @variant primary
  */
 
@@ -98,7 +95,7 @@ class Separator extends Control<ISeparatorOptions> implements ICheckable {
         this._iconChangedValue(newOptions);
     }
 
-    static _theme: string[] = ['Controls/toggle'];
+    static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
@@ -113,8 +110,8 @@ class Separator extends Control<ISeparatorOptions> implements ICheckable {
             bold: EntityDescriptor(Boolean),
             style: EntityDescriptor(String).oneOf([
                 'secondary',
-                'additional',
-                'primary'
+                'primary',
+                'unaccented'
             ]),
             value: EntityDescriptor(Boolean)
         };

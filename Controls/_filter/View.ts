@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
 import CoreClone = require('Core/core-clone');
@@ -13,6 +14,7 @@ import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource, getUniqItems} from 'Controls/_filter/HistoryUtils';
+import {hasResetValue} from 'Controls/_filter/resetFilterUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
@@ -78,7 +80,7 @@ var _private = {
     resolveItems: function(self, items) {
         // When serializing the Date, "_serializeMode" field is deleted, so object.clone can't be used
         self._source = CoreClone(items);
-        self._hasResetValues = !!items.find((item) => item.hasOwnProperty('resetValue'));
+        self._hasResetValues = hasResetValue(items);
     },
 
     calculateStateSourceControllers: function(configs, source) {

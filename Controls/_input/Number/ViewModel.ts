@@ -1,11 +1,11 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
-import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 
 import toString from 'Controls/Utils/Formatting/toString';
 import {format} from 'Controls/_input/Number/format';
 import {IText, paste, replaceWithRepositioning} from 'Controls/_input/Base/Util';
 import {IParsedNumber, parse} from 'Controls/_input/Number/parse';
 import {decimalSplitter, decimalSplitters} from 'Controls/_input/Number/constant';
+import splitIntoTriads from 'Controls/Utils/splitIntoTriads';
 import {startingPosition} from "./startingPosition";
 
 /**
