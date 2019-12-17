@@ -67,6 +67,7 @@
       <div class="controls-PeriodLiteDialog__years-prev" on:click="_onPrevYearBtnClick()"></div>
       <div class="controls-PeriodLiteDialog__years-home" title="{[Поставить текущий диапазон]}">
          <Controls.buttons:Button
+            class="controls-PeriodLiteDialog__homeButton"
             viewMode="toolButton"
             inlineHeight="m"
             icon="icon-Home3"
