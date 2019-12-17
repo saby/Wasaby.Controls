@@ -2,7 +2,7 @@ import {TemplateFunction} from 'UI/Base';
 
 /**
  * @typedef {IColumn[]} TColumns
- * @description Тип опции columns в табличном представлении
+ * @description Тип опции columns в таблице
  * @public
  * @author Авраменко А.С.
  */
@@ -66,7 +66,7 @@ export type TCellVerticalAlign = 'top' | 'center' | 'bottom' | 'baseline';
 export type TOverflow = 'ellipsis' | 'none';
 
 /**
- * Интерфейс для конфигурации колонки табличного представления.
+ * Интерфейс для конфигурации колонки в контроле {@link Controls/grid:View Таблица}.
  *
  * @interface Controls/_grid/interface/IColumn
  * @public

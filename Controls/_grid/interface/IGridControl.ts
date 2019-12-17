@@ -1,5 +1,5 @@
 /**
- * Интерфейс для табличного представления.
+ * Интерфейс для контрола {@link Controls/grid:View Таблица}.
  *
  * @interface Controls/_grid/interface/IGridControl
  * @public
