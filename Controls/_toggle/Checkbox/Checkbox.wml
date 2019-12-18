@@ -11,12 +11,12 @@
                          ' controls-Checkbox__icon-tristate-color__' + (_options.readOnly ? 'disabled':'enabled')+ '_theme-'+(_options.theme)}}
                          controls-Checkbox__icon-border-color__{{_options.readOnly ? 'disabled': 'enabled'}}_theme-{{_options.theme}}
                          controls-Checkbox__iconWrapper controls-Checkbox__iconWrapper_theme-{{_options.theme}}">
-                <svg attr:xmlns="http://www.w3.org/2000/svg"
-                     attr:viewBox="0 0 18 18"
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 18 18"
                      attr:class="controls-Checkbox__icon-checked_theme-{{_options.theme}}
                                 {{_options.value ? ' controls-Checkbox__icon-checked-color_'+(_options.readOnly ? 'disabled':'enabled')+ '_theme-' + (_options.theme) :
                                  ' controls-Checkbox__icon-checked-color_transparent'}}">
-                    <path attr:xmlns="http://www.w3.org/2000/svg" attr:d="M13,17.69l3.94,3.38,10.13-9L17.5,25Z" attr:transform="translate(-13 -12.06)"/>
+                    <path d="M1.3,9.2l4,3.4l10.3-9.1L5.8,16.6L1.3,9.2z"/>
                 </svg>
             </div>
             <ws:partial template="wml!Controls/_toggle/Checkbox/resources/CheckboxCaption"
