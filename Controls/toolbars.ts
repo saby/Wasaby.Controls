@@ -4,7 +4,7 @@
  * @includes View Controls/_toolbars/View
  * @includes ItemTemplate Controls/toolbars:ItemTemplate
  * @includes IToolbarSource Controls/_toolbars/IToolbarSource
- * @includes IToolbarOptions Control/_toolbar/View:IToolbarOptions
+ * @includes IToolbarOptions Control/_toolbar/IToolbarOptions
  * @public
  * @author Красильников А.С.
  */

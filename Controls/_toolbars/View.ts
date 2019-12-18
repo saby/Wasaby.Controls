@@ -56,7 +56,7 @@ export function getButtonTemplate(): TemplateFunction {
 
 /**
  * Интерфейс опций контрола {@link Control/toolbar:View}.
- * @interface Control/_toolbars/View:IToolbarOptions
+ * @interface Control/_toolbars/IToolbarOptions
  * @public
  * @author Красильников А.С.
  */
