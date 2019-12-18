@@ -249,6 +249,30 @@ export const Gadgets = {
       }
    ],
 
+   getGridColumnsForScroll: () => [
+      {
+         displayProperty: 'id',
+         width: '150px'
+      },
+      {
+         displayProperty: 'title',
+         width: '200px',
+         align: 'right'
+      },
+      {
+         displayProperty: 'discr',
+         width: '200px',
+         align: 'right'
+
+      },
+      {
+         displayProperty: 'price',
+         width: '200px',
+         align: 'right'
+
+      }
+   ],
+
    getHeader() {
       return [
          {

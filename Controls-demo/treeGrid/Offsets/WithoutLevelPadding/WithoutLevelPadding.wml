@@ -4,6 +4,7 @@
             source="{{_viewSource}}"
             columns="{{_columns}}"
             parentProperty="parent"
+            bind:expandedItems="_expandedItems"
             nodeProperty="type">
     <ws:itemTemplate>
         <ws:partial template="Controls/treeGrid:ItemTemplate" withoutLevelPadding="{{true}}" />
