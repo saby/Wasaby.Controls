@@ -270,9 +270,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          var controller;
 
          searchController._dataOptions = defaultOptions;
+         searchController._dataOptions.filter = null;
          controller = searchMod.Controller._private.getSearchController(searchController);
          assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/search:_SearchController'));
          assert.deepEqual(controller._options.sorting, []);
+         assert.deepEqual(controller._options.filter, {});
       });
 
       it('_private.searchErrback', function() {
