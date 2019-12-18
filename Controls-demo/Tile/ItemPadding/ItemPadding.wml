@@ -46,4 +46,16 @@
         </Controls.tile:View>
     </div>
 
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру L</div>
+        <Controls.tile:View
+                tileMode="dynamic"
+                displayProperty="title"
+                imageProperty="image"
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="l" right="l"/>
+        </Controls.tile:View>
+    </div>
+
 </div>

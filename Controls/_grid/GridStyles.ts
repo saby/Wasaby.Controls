@@ -31,18 +31,18 @@
  * @css @spacing_Grid-row-between-content-borderBottom_l L spacing between row content and bottom row border
  * @css @spacing_Grid-column-between-content-borderLeft spacing between column content and left column border
  * @css @spacing_Grid-column-between-content-borderRight spacing between column content and right column border
- * @css @spacing_Grid-row-between-content-borderLeft_xs xs spacing between grid row and left border
- * @css @spacing_Grid-row-between-content-borderLeft_s s spacing between grid row and left border
- * @css @spacing_Grid-row-between-content-borderLeft_m m spacing between grid row and left border
- * @css @spacing_Grid-row-between-content-borderLeft_l l spacing between grid row and left border
- * @css @spacing_Grid-row-between-content-borderLeft_xl xl spacing between grid row and left border
- * @css @spacing_Grid-row-between-content-borderLeft_xxl xxl spacing between grid row and left border
- * @css @spacing_Grid-row-between-content-borderRight_xs xs spacing between grid row and right border
- * @css @spacing_Grid-row-between-content-borderRight_s s spacing between grid row and right border
- * @css @spacing_Grid-row-between-content-borderRight_m m spacing between grid row and right border
- * @css @spacing_Grid-row-between-content-borderRight_l l spacing between grid row and right border
- * @css @spacing_Grid-row-between-content-borderRight_xl xl spacing between grid row and right border
- * @css @spacing_Grid-row-between-content-borderRight_xxl xxl spacing between grid row and right border
+ * @css @padding-left_xs_grid XS size of left padding of grid
+ * @css @padding-left_s_grid S size of left padding of grid
+ * @css @padding-left_m_grid M size of left padding of grid
+ * @css @padding-left_l_grid L size of left padding of grid
+ * @css @padding-left_xl_grid XL size of left padding of grid
+ * @css @padding-left_xxl_grid XXL size of left padding of grid
+ * @css @padding-right_xs_grid XS size of right padding of grid
+ * @css @padding-right_s_grid S size of right padding of grid
+ * @css @padding-right_m_grid M size of right padding of grid
+ * @css @padding-right_l_grid L size of right padding of grid
+ * @css @padding-right_xl_grid XL size of right padding of grid
+ * @css @padding-right_xxl_grid XXL size of right padding of grid
  * @css @spacing_Grid-row-between-checkbox-borderTop spacing between grid row checkbox and top border
  * @css @spacing_Grid-row-with-checkbox-between-content-borderLeft spacing between grid row content and checkbox
  *

@@ -1,9 +1,5 @@
 @import "../../_scroll/Scroll/_contentEnvironmentZIndex";
 
-.controls-TileView__itemPaddingContainer {
-   overflow-x: hidden;
-}
-
 .controls-TileView {
    display: flex;
    flex-wrap: wrap;
@@ -15,35 +11,43 @@
 }
 
 .controls-TileView__itemPaddingContainer_spacingLeft_default {
-   margin-left: @spacing_TileView-between-items-borderLeft_default_inner;
+   margin-left: @spacing_TileView-between-items / 2 + @padding-left_default_tile;
 }
 
 .controls-TileView__itemPaddingContainer_spacingLeft_null {
-   margin-left: @spacing_TileView-between-items-borderLeft_null_inner;
+   margin-left: @spacing_TileView-between-items / 2;
 }
 
 .controls-TileView__itemPaddingContainer_spacingLeft_s {
-   margin-left: @spacing_TileView-between-items-borderLeft_s_inner;
+   margin-left: @spacing_TileView-between-items / 2 + @padding-left_s_tile;
 }
 
 .controls-TileView__itemPaddingContainer_spacingLeft_m {
-   margin-left: @spacing_TileView-between-items-borderLeft_m_inner;
+   margin-left: @spacing_TileView-between-items / 2 + @padding-left_m_tile;
+}
+
+.controls-TileView__itemPaddingContainer_spacingLeft_l {
+   margin-left: @spacing_TileView-between-items / 2 + @padding-left_l_tile;
 }
 
 .controls-TileView__itemPaddingContainer_spacingRight_default {
-   margin-right: @spacing_TileView-between-items-borderRight_default_inner;
+   margin-right: @spacing_TileView-between-items / 2 + @padding-right_default_tile;
 }
 
 .controls-TileView__itemPaddingContainer_spacingRight_null {
-   margin-right: @spacing_TileView-between-items-borderRight_null_inner;
+   margin-right: @spacing_TileView-between-items / 2;
 }
 
 .controls-TileView__itemPaddingContainer_spacingRight_s {
-   margin-right: @spacing_TileView-between-items-borderRight_s_inner;
+   margin-right: @spacing_TileView-between-items / 2 + @padding-right_s_tile;
 }
 
 .controls-TileView__itemPaddingContainer_spacingRight_m {
-   margin-right: @spacing_TileView-between-items-borderRight_m_inner;
+   margin-right: @spacing_TileView-between-items / 2 + @padding-right_m_tile;
+}
+
+.controls-TileView__itemPaddingContainer_spacingRight_l {
+   margin-right: @spacing_TileView-between-items / 2 + @padding-right_l_tile;
 }
 
 .controls-TileView__item {
