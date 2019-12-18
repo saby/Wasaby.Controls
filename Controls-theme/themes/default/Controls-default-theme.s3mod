@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui_module for_cdn="0" id="8f18db65-1c21-46dd-8c99-8e2b13a96069" name="Controls-default-theme" package="Платформа" required="0" responsible="Андрюх Н. Э." version="1.00">
+
+  <description/>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <preload/>
+
+</ui_module>
