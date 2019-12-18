@@ -8,7 +8,7 @@ import { ViewModel } from 'Controls/treeGrid';
 
 export function isNode(item: Record, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy): boolean {
    if (model instanceof TreeCollection) {
-      return model.getItemBySourceId(item.getId()).isNode();
+      return model.getItemBySourceKey(item.getId()).isNode();
    } else {
       return hierarchyRelation ? hierarchyRelation.isNode(item) !== null : false;
    }
@@ -16,7 +16,7 @@ export function isNode(item: Record, model: ViewModel|TreeCollection, hierarchyR
 
 export function isHasChildren(item: Record, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy): boolean {
    if (model instanceof TreeCollection) {
-      return model.getItemBySourceId(item.getId()).isHasChildren();
+      return model.getItemBySourceKey(item.getId()).isHasChildren();
    } else {
       return hierarchyRelation ? hierarchyRelation.hasDeclaredChildren(item) !== false : false;
    }

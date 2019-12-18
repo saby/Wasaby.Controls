@@ -48,7 +48,7 @@ var _private = {
         }
         // TODO Remove this, compatibility between management controls
         if (options.useNewModel && !item.getContents) {
-            item = options.listModel.getItemBySourceId(item.get(options.listModel.getKeyProperty()));
+            item = options.listModel.getItemBySourceKey(item.get(options.listModel.getKeyProperty()));
         }
 
         const all = _private.fillItemAllActions(

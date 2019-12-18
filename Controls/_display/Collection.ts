@@ -795,6 +795,17 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
+    find(predicate: (item: T) => boolean): T {
+        const enumerator = this.getEnumerator();
+        while (enumerator.moveNext()) {
+            const current = enumerator.getCurrent();
+            if (predicate(current)) {
+                return current;
+            }
+        }
+        return null;
+    }
+
     assign(): void {
         throw new Error(MESSAGE_READ_ONLY);
     }
@@ -2017,16 +2028,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$searchValue;
     }
 
-    getItemBySourceId(id: string|number): CollectionItem<S> {
+    getItemBySourceKey(key: string|number): CollectionItem<S> {
         if (this._$collection['[Types/_collection/RecordSet]']) {
-            const record = (this._$collection as unknown as RecordSet).getRecordById(id);
-            return this.getItemBySourceItem(record as unknown as S);
+            if (key !== undefined && key !== null) {
+                const record = (this._$collection as unknown as RecordSet).getRecordById(key);
+                return this.getItemBySourceItem(record as unknown as S);
+            } else {
+                return null;
+            }
         }
-        throw new Error('Collection#getItemBySourceId is implemented for RecordSet only');
+        throw new Error('Collection#getItemBySourceKey is implemented for RecordSet only');
     }
 
     getIndexByKey(key: string|number): number {
-        return this.getIndex(this.getItemBySourceId(key) as T);
+        return this.getIndex(this.getItemBySourceKey(key) as T);
     }
 
     getFirstItem(): S {
