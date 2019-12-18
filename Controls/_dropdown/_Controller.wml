@@ -30,7 +30,7 @@
               isCompoundTemplate="{{_options.isCompoundTemplate}}"
               headConfig="{{_options.headConfig}}"
               showHeader="{{_options.showHeader}}"
-              selectedKeys="{{_options.selectedKeys}}"
+              selectedKeys="{{_selectedKeys}}"
               marker="{{_options.marker}}"
               emptyText="{{_getEmptyText()}}"
               icon="{{_options.icon}}"

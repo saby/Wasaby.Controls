@@ -70,11 +70,12 @@ var _private = {
       };
 
       if (!selectedKeys.length || selectedKeys[0] === null) {
-        if (emptyText) {
-           selectedItems.push(null);
-        } else {
-           addToSelected(null);
-         }
+          self._selectedKeys = [null];
+          if (emptyText) {
+              selectedItems.push(null);
+          } else {
+              addToSelected(null);
+          }
       } else {
          chain.factory(selectedKeys).each( (key) => {
             // fill the array of selected items from the array of selected keys
@@ -316,12 +317,14 @@ var _Controller = Control.extend({
    _template: template,
    _items: null,
    _depsDeferred: null,
+   _selectedKeys: null,
 
    _beforeMount: function (options, context, receivedState) {
       let result;
 
       this._onResult = _private.onResult.bind(this);
       _private.setHandlers(this, options);
+      this._selectedKeys = options.selectedKeys;
       if (!options.lazyItemsLoading) {
          if (receivedState) {
             this._setItems(receivedState.items);
@@ -366,7 +369,8 @@ var _Controller = Control.extend({
          }
       }
       if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
-         _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
+          this._selectedKeys = newOptions.selectedKeys;
+          _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
          !isEqual(newOptions.navigation, this._options.navigation) ||
