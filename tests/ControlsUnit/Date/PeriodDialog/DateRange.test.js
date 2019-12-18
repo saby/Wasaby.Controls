@@ -82,16 +82,22 @@ define([
 
       describe('_wheelHandler', function() {
          it('should should increase the year.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { position: year });
+            const
+               component = calendarTestUtils.createComponent(DateRange, { position: year }),
+               position = new Date(year.getFullYear() + 1, 0, 1);
             sandbox.stub(component, '_notify');
             component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: 1 } });
-            sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() + 1, 0, 1)]);
+            sinon.assert.calledWith(component._notify, 'positionChanged', [position]);
+            assert.strictEqual(+component._position, +position);
          });
          it('should should decrease the year.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { position: year });
+            const
+               component = calendarTestUtils.createComponent(DateRange, { position: year }),
+               position = new Date(year.getFullYear() - 1, 0, 1);
             sandbox.stub(component, '_notify');
             component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: -1 } });
-            sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() - 1, 0, 1)]);
+            sinon.assert.calledWith(component._notify, 'positionChanged', [position]);
+            assert.strictEqual(+component._position, +position);
          });
       });
       describe('_swipeHandler', function() {

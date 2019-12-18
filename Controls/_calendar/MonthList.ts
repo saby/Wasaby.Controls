@@ -205,17 +205,19 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         const newPosition = dateUtils.getStartOfMonth(position);
 
         this._positionToScroll = newPosition;
+        this._lastNotifiedPositionChangedDate = newPosition;
 
         if (this._container && this._canScroll(newPosition)) {
             // Update scroll position without waiting view modification
             this._updateScrollAfterViewModification();
         } else {
             this._displayedDates = [];
+            const oldPositionId = this._startPositionId;
             this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
             // After changing the navigation options, we must call the "reload" to redraw the control,
             // because the last time we could start rendering from the same position.
             // Position option is the initial position from which control is initially drawn.
-            if (this._children.months) {
+            if (oldPositionId === this._startPositionId && this._children.months) {
                 this._children.months.reload();
             }
         }
