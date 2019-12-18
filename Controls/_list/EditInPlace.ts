@@ -282,7 +282,7 @@ var
 
             // TODO no hasParentInItems for new model at the moment
             if (self._options.useNewModel) {
-                originalItem = listModel.getItemBySourceId(editingItem.get(listModel.getKeyProperty()));
+                originalItem = listModel.getItemBySourceKey(editingItem.get(listModel.getKeyProperty()));
             } else {
                 originalItem = listModel.getItemById(editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty);
             }
@@ -386,7 +386,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 this._setEditingItemData(this._editingItem, newOptions.listModel, newOptions);
                 if (!this._isAdd) {
                     if (newOptions.useNewModel) {
-                        this._originalItem = newOptions.listModel.getItemBySourceId(this._editingItem.get(newOptions.listModel.getKeyProperty())).getContents();
+                        this._originalItem = newOptions.listModel.getItemBySourceKey(this._editingItem.get(newOptions.listModel.getKeyProperty())).getContents();
                     } else {
                         this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.keyProperty), newOptions.listModel._options.keyProperty).getContents();
                     }
@@ -589,7 +589,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
 
         let editingItemProjection;
         if (options.useNewModel) {
-            editingItemProjection = listModel.getItemBySourceId(this._editingItem.get(listModel.getKeyProperty()));
+            editingItemProjection = listModel.getItemBySourceKey(this._editingItem.get(listModel.getKeyProperty()));
         } else {
             editingItemProjection = listModel.getItemById(this._editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty);
         }
