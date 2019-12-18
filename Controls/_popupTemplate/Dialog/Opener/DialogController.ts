@@ -1,5 +1,5 @@
-import {default as BaseController, IPopupItem, IPopupOptions,
-    IPopupSizes, IPopupPosition, IDragOffset} from 'Controls/_popupTemplate/BaseController';
+import {default as BaseController, IDragOffset} from 'Controls/_popupTemplate/BaseController';
+import {IPopupItem, IPopupOptions, IPopupSizes, IPopupPosition} from 'Controls/popup';
 import {detection} from 'Env/Env';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 
@@ -83,8 +83,16 @@ class DialogController extends BaseController {
             width: 0,
             height: 0
         };
-        const defaultCoordinate: number = -10000;
+        let defaultCoordinate: number = -10000;
         this._prepareConfig(item, sizes);
+
+        // Error on ios when position: absolute container is created outside the screen and stretches the page
+        // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
+        if (this._isIOS12()) {
+            defaultCoordinate = 0;
+            item.position.hidden = true;
+        }
+
         item.position.top = defaultCoordinate;
         item.position.left = defaultCoordinate;
     }
@@ -123,6 +131,10 @@ class DialogController extends BaseController {
 
     needRecalcOnKeyboardShow(): boolean {
         return true;
+    }
+
+    _isIOS12(): boolean {
+        return detection.isMobileIOS && detection.IOSVersion === 12;
     }
 
     _prepareConfigWithSizes(item: IDialogItem, container: HTMLDivElement): void {

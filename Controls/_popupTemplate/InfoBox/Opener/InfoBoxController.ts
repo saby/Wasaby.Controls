@@ -3,7 +3,7 @@ import StickyController = require('Controls/_popupTemplate/Sticky/StickyControll
 import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/resources/themeConstantsGetter');
 import cMerge = require('Core/core-merge');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
-import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/_popupTemplate/BaseController';
+import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/popup';
 import * as ThemesController from 'Core/Themes/ThemesControllerNew';
 
 import collection = require('Types/collection');

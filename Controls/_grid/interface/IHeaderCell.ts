@@ -3,16 +3,16 @@ import {ICellPadding, TCellAlign, TCellVerticalAlign} from 'Controls/grid';
 
 /**
  * @typedef {String} THeader
- * @description Тип опции header в табличном представлении
+ * @description Тип опции header в таблице
  * @public
  * @author Авраменко А.С.
  */
 export type THeader = IHeaderCell[];
 
 /**
- * Интерфейс для конфигурации ячеек шапки табличного представления.
+ * Интерфейс для конфигурации ячеек шапки в контроле {@link Controls/grid:View Таблица}.
  *
- * @interface
+ * @interface Controls/_grid/interface/IHeaderCell
  * @public
  * @author Авраменко А.С.
  */

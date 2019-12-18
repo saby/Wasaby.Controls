@@ -14,6 +14,7 @@
 }
 
 .controls-MonthViewVDOM__tableRow {
+   min-height: 0;
    flex-grow: 1;
    flex-shrink: 1;
    display: flex;
@@ -26,7 +27,7 @@
 
 .controls-MonthViewVDOM__item {
    position: relative;
-
+   min-width: 0;
    flex-grow: 1;
    flex-shrink: 1;
    flex-basis: 0;
@@ -240,7 +241,7 @@
    color: @color_MonthView-item-today;
    // Изолируем контекст наложения. Раньше стоял z-index: 0;. Но если в windows учтановить масшатб 150%,
    // то контекст не изолируется.
-   transform: translateZ(0);
+   transform: translateY(0);
 }
 
 // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.

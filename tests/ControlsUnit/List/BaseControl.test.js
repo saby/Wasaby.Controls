@@ -633,6 +633,7 @@ define([
 
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
+         ctrl._container = {clientHeight: 100};
          ctrl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -1139,6 +1140,7 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
+         baseControl._container = {clientHeight: 100};
          baseControl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
@@ -1986,6 +1988,7 @@ define([
                }
             }
          };
+         baseControl._container = {clientHeight: 100};
          baseControl._afterMount(cfg);
          it('_initItemActions', function() {
             baseControl._initItemActions();
@@ -2062,6 +2065,7 @@ define([
             await baseControl._beforeMount(cfg);
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
+            baseControl._container = {clientHeight: 100};
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
          });
@@ -2085,7 +2089,7 @@ define([
          });
       });
 
-      describe('move marker after scroll', function() {
+      describe('move marker after scroll', async function() {
          var lnSource = new sourceLib.Memory({
                keyProperty: 'id',
                data: data
@@ -2103,7 +2107,7 @@ define([
             };
          };
          lnBaseControl.saveOptions(lnCfg);
-         lnBaseControl._beforeMount(lnCfg);
+         await lnBaseControl._beforeMount(lnCfg);
          var itemsContainer = {
             children: [
                { getBoundingClientRect: getBCR },
@@ -2123,6 +2127,8 @@ define([
          });
          it('setMarkerToFirstVisibleItem', function() {
             var expectedIndex = 0;
+            lnBaseControl._listViewModel._startIndex = 0;
+            lnBaseControl._listViewModel._stopIndex = 3;
             lnBaseControl._listViewModel.setMarkerOnValidItem = function(index) {
                assert.equal(index, expectedIndex);
             };
@@ -2130,8 +2136,13 @@ define([
             expectedIndex = 1;
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 1);
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 29);
-            expectedIndex = 2;
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 30);
+            expectedIndex = 2;
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 31);
+
+
+            lnBaseControl._listViewModel._startIndex = 2;
+            expectedIndex = 3;
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 31);
          });
 
@@ -2640,6 +2651,58 @@ define([
             var result = ctrl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isTrue(result.isSuccessful());
+         });
+
+         it('commitEditActionHandler', function () {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               }
+            };
+            let commitDef = cDeferred.success();
+            let commitAndMoveDef = cDeferred.success();
+            let result;
+
+            var ctrl = new lists.BaseControl(cfg);
+            ctrl._children = {
+               editInPlace: {
+                  commitEdit: function() {
+                     result = commitDef;
+                  },
+                  commitAndMoveNextRow: function () {
+                     result = commitAndMoveDef;
+                  }
+               }
+            };
+            ctrl._commitEditActionHandler();
+            assert.equal(commitDef, result);
+
+            commitDef = cDeferred.success();
+            commitAndMoveDef = cDeferred.success();
+
+            ctrl._options.task1178374430 = true;
+            ctrl._commitEditActionHandler();
+            assert.equal(commitAndMoveDef, result);
          });
 
          it('commitEdit, readOnly: true', function() {
@@ -4337,6 +4400,102 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
+      it('should fire "drawItems" with new collection if source item has changed', async function() {
+         var
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         instance.saveOptions({
+            ...cfg,
+            useNewModel: true
+         });
+
+         var fakeNotify = sandbox.spy(instance, '_notify')
+            .withArgs('drawItems');
+
+         const noRedrawChange = [{ sourceItem: true}];
+         noRedrawChange.properties = 'marked';
+
+         instance.getViewModel()
+            ._notify('onListChange', null, 'ch', noRedrawChange, 0, noRedrawChange, 0);
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isFalse(fakeNotify.calledOnce);
+
+         const redrawChange = [{ sourceItem: true}];
+
+         instance.getViewModel()
+            ._notify('onListChange', null, 'ch', redrawChange, 0, redrawChange, 0);
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isTrue(fakeNotify.calledOnce);
+      });
+
+      it('should fire "drawItems" with new collection if source item has changed', async function() {
+         var
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         instance.saveOptions({
+            ...cfg,
+            useNewModel: true
+         });
+
+         var fakeNotify = sandbox.spy(instance, '_notify')
+            .withArgs('drawItems');
+
+         const noRedrawChange = [{ sourceItem: true}];
+         noRedrawChange.properties = 'marked';
+
+         instance.getViewModel()
+            ._notify('onListChange', null, 'ch', noRedrawChange, 0, noRedrawChange, 0);
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isFalse(fakeNotify.calledOnce);
+
+         const redrawChange = [{ sourceItem: true}];
+
+         instance.getViewModel()
+            ._notify('onListChange', null, 'ch', redrawChange, 0, redrawChange, 0);
+         assert.isFalse(fakeNotify.called);
+         instance._beforeUpdate(cfg);
+         assert.isFalse(fakeNotify.called);
+         instance._afterUpdate(cfg);
+         assert.isTrue(fakeNotify.calledOnce);
+      });
+
       it('should fire "drawItems" event if indexes have changed', async function() {
          var
             cfg = {
@@ -4383,6 +4542,7 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
+         instance._container = {clientHeight: 100};
          instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
@@ -4523,48 +4683,6 @@ define([
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
-
-
-      it('saveScrollOnToggleLoadingIndicator', async function() {
-         let
-            cfg = {
-               viewName: 'Controls/List/ListView',
-               sorting: [],
-               viewModelConfig: {
-                  items: [],
-                  keyProperty: 'id'
-               },
-               viewModelConstructor: lists.ListViewModel,
-               keyProperty: 'id',
-               source: source
-            },
-            instance = new lists.BaseControl(cfg);
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-
-         instance._shouldRestoreScrollPosition = false;
-         instance._loadingIndicatorState = 'all';
-
-         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
-         assert.isFalse(instance._shouldRestoreScrollPosition);
-         assert.isUndefined(instance._saveAndRestoreScrollPosition);
-
-         instance._shouldRestoreScrollPosition = false;
-         instance._loadingIndicatorState = 'up';
-
-         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
-         assert.isTrue(instance._shouldRestoreScrollPosition);
-         assert.equal('up', instance._saveAndRestoreScrollPosition);
-
-         instance._shouldRestoreScrollPosition = false;
-         instance._loadingIndicatorState = 'down';
-         instance._saveAndRestoreScrollPosition = undefined;
-
-         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
-         assert.isFalse(instance._shouldRestoreScrollPosition);
-         assert.isUndefined(instance._saveAndRestoreScrollPosition);
-      });
-
       describe('navigation', function() {
          it('Navigation demand', async function() {
             const source = new sourceLib.Memory({
@@ -4602,6 +4720,7 @@ define([
 
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
+            ctrl._container = {clientHeight: 100};
             ctrl._afterMount(cfg);
 
             assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
@@ -4692,6 +4811,7 @@ define([
             ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
+            ctrl._container = {clientHeight: 100};
             ctrl._afterMount(cfg);
 
             let queryCallsCount = 0;

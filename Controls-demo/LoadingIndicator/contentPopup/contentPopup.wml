@@ -1,0 +1,5 @@
+<Controls.popupTemplate:Dialog style="success" headingCaption="Окно">
+    <ws:bodyContentTemplate>
+        <div style="padding: 10px">Диалоговое окно</div>
+    </ws:bodyContentTemplate>
+</Controls.popupTemplate:Dialog>

@@ -536,6 +536,64 @@ define([
                });
             });
          });
+
+         it('add item to the top of the grouped list', async function() {
+            var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModelWithGroups,
+               source: source,
+               editingConfig: {
+                  addPosition: 'top'
+               }
+            });
+
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 1); // First item in display is group
+            await eip.cancelEdit();
+
+            newItem.set('type', 'goods');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 1);
+            await eip.cancelEdit();
+
+            newItem.set('type', 'services');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 4);
+            await eip.cancelEdit();
+         });
+
+         it('add item to the bottom of the grouped list', async function() {
+            var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModelWithGroups,
+               source: source,
+               editingConfig: {
+                  addPosition: 'bottom'
+               }
+            });
+
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 4);
+            await eip.cancelEdit();
+
+            newItem.set('type', 'goods');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 2);
+            await eip.cancelEdit();
+
+            newItem.set('type', 'services');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 4);
+            await eip.cancelEdit();
+         });
       });
 
       describe('commitEdit', function() {
@@ -1708,6 +1766,50 @@ define([
             assert.isTrue(!!listModel.getItemById(4));
             assert.isTrue(result.isReady());
             assert.isFalse(isPendingCanceled);
+         });
+      });
+
+      describe('commitAndMoveNextRow (commitEdit by itemAction click)', () => {
+         it('commit edit existing record', async function () {
+            let
+                source = new sourceLib.Memory({
+                   keyProperty: 'id',
+                   data: data
+                });
+            eip.saveOptions({
+               listModel: listModel
+            });
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            assert.isNotNull(eip._editingItemData);
+            await (new Promise((resolve) => {
+               eip.commitAndMoveNextRow();
+               setTimeout(resolve, 10);
+            }));
+            assert.isNull(eip._editingItemData);
+         });
+         it('commit edit new record', async function () {
+            let
+                source = new sourceLib.Memory({
+                   keyProperty: 'id',
+                   data: data
+                });
+            eip.saveOptions({
+               listModel: listModel,
+               source
+            });
+            eip.beginAdd({
+               item: newItem
+            });
+            assert.isNotNull(eip._editingItemData);
+            await (new Promise((resolve) => {
+               eip.commitAndMoveNextRow();
+               setTimeout(resolve, 10);
+            }));
+            assert.isNotNull(eip._editingItemData);
+            assert.equal(eip._editingItemData.index, 4);
+            assert.isTrue(eip._editingItemData.item !== newItem);
          });
       });
 

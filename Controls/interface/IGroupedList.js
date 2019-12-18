@@ -13,8 +13,8 @@ define('Controls/interface/IGroupedList', [
    /**
     * @name Controls/interface/IGroupedList#groupingKeyCallback
     * @cfg {Function} Функция обратного вызова для получения идентификатора группы элемента списка.
-    * <a href="/materials/demo-ws4-list-group">Example</a>.
     * @remark
+    * См. <a href="/materials/demo-ws4-list-group">демо-пример</a>.
     * Среди групп списка существует "скрытая группа".
     * Для такой группы не создаётся заголовок, а её элементы визуально размещены в начале списка.
     * Чтобы отнести элемент к скрытой группе, из функции groupingKeyCallback верните константу view.hiddenGroup, которая принадлежит библиотеке Controls/Constants.
@@ -30,42 +30,55 @@ define('Controls/interface/IGroupedList', [
     * <pre>
     *    groupingKeyCallback ="{{_groupByBrand}}",
     * </pre>
+    * @see groupTemplate
+    * @see groupHistoryId
+    * @see collapsedGroups
     */
 
    /**
     * @name Controls/interface/IGroupedList#groupTemplate
-    * @cfg {Function} Шаблон группировки.
-    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    * @cfg {Function} Устанавливает шаблон отображения разделителя {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/ группы}.
+    * @default Controls/list:GroupTemplate
     * @remark
-    * Базовый шаблон группировки "Controls/grid:GroupTemplate".
-    * Шаблон группировки поддерживает параметры:
-    * <ul>
-    *    <li>separatorVisibility (тип Boolean) — видимость горизонтальной линии-разделителя.</li>
-    *    <li>expanderAlign (тип enum('hidden'|'right'|'left')) — расположение кнопки-экспандера, позволяющей сворачивать/разворачивать группу. Стандартное расположение - слева.</li>
-    *    <li>expanderVisible (тип Boolean) — видимость кнопки-экспандера, позволяющей сворачивать/разворачивать группу.</li>
-    *    <li>textAlign (тип String) — горизонтальное выравнивание текста группы. Доступные значения: 'left' и 'right'. По умолчанию используется выравнивание текста по центру.</li>
-    *    <li>rightTemplate (тип Function) — шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</li>
-    * </ul>
+    * См. <a href="/materials/demo-ws4-list-group">демо-пример</a>.
+    * Подробнее о параметрах шаблона читайте {@link Controls/list:GroupTemplate здесь}.
     * @example
-    * Пример использования пользовательских параметров для группового рендеринга в Controls.list:View без экспандера и с выравниванием текста слева:
-    * <pre>
-    *    <Controls.list:View
-    *       <ws:groupTemplate>
-    *          <ws:partial template="Controls/list:GroupTemplate" expanderVisible="{{ false }}" textAlign="left" />
-    *       </ws:groupTemplate>
-    *    </Controls.list:View>
+    * Далее показано как изменить параметры шаблона на примере контрола Controls/list:View, однако то же самое справедливо и для других {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочных контролов}..
+    * <pre class="brush: html">
+    * <Controls.list:View>
+    *    <ws:groupTemplate>
+    *       <ws:partial template="Controls/list:GroupTemplate"
+    *          separatorVisibility="{{ false }}"
+    *          expanderVisible="{{ false }}"
+    *          textAlign="left">
+    *          <ws:contentTemplate>
+    *             <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+    *             <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
+    *          </ws:contentTemplate>
+    *       </ws:partial>
+    *    </ws:groupTemplate>
+    * </Controls.list:View>
     * </pre>
+    * @see collapsedGroups
+    * @see groupingKeyCallback
+    * @see groupHistoryId
     */
 
    /**
     * @name Controls/interface/IGroupedList#collapsedGroups
     * @cfg {Array} Список идентификаторов свернутых групп. Идентификаторы групп получаются в результате вызова {@link groupingKeyCallback}.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
+    * @see groupTemplate
+    * @see groupingKeyCallback
+    * @see groupHistoryId
     */
 
    /**
     * @name Controls/interface/IGroupedList#groupHistoryId
     * @cfg {String} Идентификатор для сохранения в истории списка идентификаторов свернутых групп.
+    * @see groupTemplate
+    * @see groupingKeyCallback
+    * @see collapsedGroups
     */
 
    /**

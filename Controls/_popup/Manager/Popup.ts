@@ -222,7 +222,7 @@ class Popup extends Control<IPopupOptions> {
     protected _keyUp(event: SyntheticEvent<KeyboardEvent>): void {
         /**
          * Старая панель по событию keydown закрывается и блокирует всплытие события. Новая панель делает
-         * тоже самое, но по событию keyup. Из-за этого возникает следующая ошибка.
+         * то же самое, но по событию keyup. Из-за этого возникает следующая ошибка.
          * https://online.sbis.ru/opendoc.html?guid=0e4a5c02-f64c-4c7d-88b8-3ab200655c27
          *
          * Что бы не трогать старые окна, мы добавляем поведение на закрытие по esc. Закрываем только в том случае,
@@ -252,9 +252,10 @@ class Popup extends Control<IPopupOptions> {
         const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
         const hasWidthChanged: boolean = oldPosition.width !== newPosition.width;
         const hasHeightChanged: boolean = oldPosition.height !== newPosition.height;
+        const hasMaxHeightChanged: boolean = oldPosition.maxHeight !== newPosition.maxHeight;
         const hasHiddenChanged: boolean = oldHidden !== newHidden;
 
-        return hasWidthChanged || hasHeightChanged || (hasHiddenChanged && newHidden === false);
+        return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged || (hasHiddenChanged && newHidden === false);
     }
 
     static getDefaultOptions() {

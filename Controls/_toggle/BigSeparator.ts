@@ -19,9 +19,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
- * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo
- *
- * @mixes Controls/_toggle/BigSeparator/BigSeparatorStyles
+ * @demo Controls-demo/toggle/BigSeparator/Index
  */
 
 /*
@@ -36,9 +34,8 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
- * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo
+ * @demo Controls-demo/toggle/BigSeparator/Index
  *
- * @mixes Controls/_toggle/BigSeparator/BigSeparatorStyles
  */
 
 /**
@@ -78,7 +75,7 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
       this._iconChangedValue(newOptions.value);
    }
 
-   static _theme: string[] = ['Controls/toggle'];
+   static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
    static getDefaultOptions(): object {
       return {
          value: false

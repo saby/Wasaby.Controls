@@ -13,7 +13,7 @@
     </ws:if>
 
     <!-- Скроллбар горизонтального скролла -->
-    <ws:if data="{{isHorizontalScrollVisible}}">
+    <ws:if data="{{isDisplayColumnScroll}}">
         <Controls._grid.ScrollWrapper
                 name="horizontalScrollWrapper"
                 position="{{ position }}"
@@ -47,7 +47,7 @@
     <!-- Отступ под последней записью вслучае, если в таблице есть операции над записью "вне строки" -->
     <ws:if data="{{_options._needBottomPadding}}">
         <tr>
-            <td class="controls-itemActionsV_outside-spacing" colspan="{{ getColspanFor('bottomPadding') }}"></td>
+            <td class="controls-itemActionsV_outside-spacing" colspan="{{ _listModel.getColspanFor('bottomPadding') }}"></td>
         </tr>
     </ws:if>
 

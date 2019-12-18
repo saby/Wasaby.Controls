@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
 import CoreClone = require('Core/core-clone');
@@ -13,18 +14,23 @@ import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource, getUniqItems} from 'Controls/_filter/HistoryUtils';
+import {hasResetValue} from 'Controls/_filter/resetFilterUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
- * Контрол для фильтрации данных. Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
+ * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
  * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
- * При клике на кнопку-иконку или строковое представления, открывается панель фильтров {@link Controls/filterPopup:DetailPanel}.
- * Клик на параметры быстрого фильтра открывает панель "Быстрых фильтров" {@link Controls/filterPopup:SimplePanel}.
- * Подробное описание и инструкции по настройке контрола можно найти <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/'>здесь</a>
- * Здесь вы можете посмотреть <a href="/materials/demo-ws4-filter-view">демонстрационный пример</a>.
+ * @remark
+ * См. <a href="/materials/demo-ws4-filter-view">демо-пример</a>
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/ здесь}.
+ * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
+ * 
+ * При клике на кнопку-иконку или строковое представления открывается панель фильтров, созданная на основе {@link Controls/filterPopup:DetailPanel}.
+ * При клике на параметры быстрого фильтра открывается панель "Быстрых фильтров", созданная на основе {@link Controls/filterPopup:SimplePanel}.
  *
  * @class Controls/_filter/View
  * @extends Core/Control
@@ -71,9 +77,10 @@ var _private = {
       return item.viewMode === 'frequent';
     },
 
-    prepareItems: function(self, items) {
+    resolveItems: function(self, items) {
         // When serializing the Date, "_serializeMode" field is deleted, so object.clone can't be used
         self._source = CoreClone(items);
+        self._hasResetValues = hasResetValue(items);
     },
 
     calculateStateSourceControllers: function(configs, source) {
@@ -240,8 +247,9 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
-                        if (config.dataLoadCallback) {
-                            config.dataLoadCallback(newItems);
+                        // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
+                        if (item.editorOptions.dataLoadCallback) {
+                            item.editorOptions.dataLoadCallback(newItems);
                         }
                         _private.setItems(config, item, newItems);
                     });
@@ -557,6 +565,7 @@ var Filter = Control.extend({
     _source: null,
     _idOpenSelector: null,
     _dateRangeItem: null,
+    _hasResetValues: true,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -566,11 +575,11 @@ var Filter = Control.extend({
 
         if (receivedState) {
             this._configs = receivedState.configs;
-            _private.prepareItems(this, options.source);
+            _private.resolveItems(this, options.source);
             _private.calculateStateSourceControllers(this._configs, this._source);
             _private.updateText(this, this._source, this._configs);
         } else if (options.source) {
-            _private.prepareItems(this, options.source);
+            _private.resolveItems(this, options.source);
             resultDef = _private.reload(this);
         }
         this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
@@ -581,7 +590,7 @@ var Filter = Control.extend({
         if (newOptions.source && newOptions.source !== this._options.source) {
             const self = this;
             let resultDef;
-            _private.prepareItems(this, newOptions.source);
+            _private.resolveItems(this, newOptions.source);
             if (_private.isNeedReload(this._options.source, newOptions.source) || _private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this).addCallback(() => {
                     self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
@@ -683,7 +692,7 @@ var Filter = Control.extend({
     _resultHandler: function(event, result) {
         if (!result.action) {
             const filterSource = converterFilterItems.convertToFilterSource(result.items);
-            _private.prepareItems(this, mergeSource(this._source, filterSource));
+            _private.resolveItems(this, mergeSource(this._source, filterSource));
             _private.updateText(this, this._source, this._configs, true);
         } else {
             _private[result.action].call(this, result);

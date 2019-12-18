@@ -10,13 +10,13 @@
 }
 
 .controls-DoubleSwitch__toggle_theme-@{themeName} {
-   border-width: @width_Switch__border;
-   border-color: @color_Switch__border;
-   border-radius: @size_Switch__border-radius;
+   border-width: @border-thickness_switcher;
+   border-color: @border-color_switcher;
+   border-radius: @border-radius_switcher;
 }
 
 .controls-DoubleSwitch_theme-@{themeName} {
-   font-size: @font-size_DoubleSwitch;
+   font-size: @font-size_switcher;
 }
 
 .controls-DoubleSwitch__toggle_enabled {
@@ -24,9 +24,9 @@
 }
 
 .controls-DoubleSwitch__toggle_horizontal_theme-@{themeName} {
-   margin: 0 @spacing_Switch-between-toggle-text;
-   width: @width_Switch;
-   height: @height_Switch;
+   margin: 0 @text_offset_switcher;
+   width: @width_switcher;
+   height: @height_switcher;
 }
 
 .controls-DoubleSwitch__toggle_vertical {
@@ -35,11 +35,11 @@
 }
 
 .controls-DoubleSwitch__toggle_vertical_theme-@{themeName} {
-   width: @height_Switch;
-   height: @width_Switch;
+   width: @height_switcher;
+   height: @width_switcher;
    &:before {
       height: 0;
-      line-height: @line-height_DoubleSwitch__vertical;
+      line-height: @font-size_switcher;
    }
 }
 
@@ -53,7 +53,7 @@
 }
 
 .controls-DoubleSwitch__textBlock_theme-@{themeName} {
-   margin-left: @spacing_Switch-between-toggle-text;
+   margin-left: @text_offset_switcher;
 }
 
 .controls-DoubleSwitch__line_horizontal {
@@ -61,16 +61,16 @@
 }
 
 .controls-DoubleSwitch__line_horizontal_theme-@{themeName} {
-   height: @thickness_Switch-track;
-   width: @length_Switch-track - @width_ToggleCircle;
+   height: @track_thickness_switcher;
+   width: @track_length_switcher - @marker-box_size_switcher;
 }
 
 .controls-DoubleSwitch__line_vertical {
    position: relative;
 }
 .controls-DoubleSwitch__line_vertical_theme-@{themeName} {
-   height: @length_Switch-track - @height_ToggleCircle;
-   width: @thickness_Switch-track;
+   height: @track_length_switcher - @marker-box_size_switcher;
+   width: @track_thickness_switcher;
 }
 
 .controls-DoubleSwitch__line_vertical_checked_theme-@{themeName} {
@@ -82,11 +82,11 @@
    display: inline-block;
 }
 .controls-DoubleSwitch__line_enabled_theme-@{themeName} {
-   background-color: @background-color_Switch-track__enabled;
+   background-color: @track_color_switcher;
 }
 
 .controls-DoubleSwitch__line_disabled_theme-@{themeName} {
-   background-color: @background-color_Switch-track__disabled;
+   background-color: @readonly_track_color_switcher;
 }
 
 .controls-DoubleSwitch__line_disabled {
@@ -96,8 +96,8 @@
 .controls-DoubleSwitch__text_vertical_theme-@{themeName} {
    //If border is in height text block base line between text and toggle circle deviates to switch border height.
    //In vertical state width = height, height = width.
-   height: @width_Switch / 2 - @width_Switch__border;
-   line-height: @width_Switch / 2;
+   height: @width_switcher / 2 - @border-thickness_switcher;
+   line-height: @width_switcher / 2;
 }
 
 .controls-DoubleSwitch__text_vertical {
@@ -105,7 +105,7 @@
 }
 
 .controls-DoubleSwitch__text_enabled_unselected_theme-@{themeName} {
-   color: @color_Switch-text__enabled_unselected;
+   color: @unselected_text-color_switcher;
 }
 
 .controls-DoubleSwitch__text_enabled_unselected {
@@ -113,17 +113,17 @@
 }
 
 .controls-DoubleSwitch__text_disabled_unselected_theme-@{themeName} {
-   color: @color_Switch-text__disabled_unselected;
+   color: @readonly_unselected_text-color_switcher;
 }
 .controls-DoubleSwitch__text_enabled_selected {
    cursor: pointer;
 }
 .controls-DoubleSwitch__text_enabled_selected_theme-@{themeName} {
-   color: @color_DoubleSwitch-text_enabled_selected;
+   color: @text-color_switcher;
 }
 
 .controls-DoubleSwitch__text_disabled_selected_theme-@{themeName} {
-   color: @color_DoubleSwitch-text_disabled_selected;
+   color: @readonly_text-color_switcher;
 }
 
 .ws-is-hover {
@@ -135,7 +135,7 @@
    // Two hover class because first hover class set in js.
    .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
       .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
-         stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
+         stroke: @marker-box_hover_border-color_switcher;
       }
    }
 }
@@ -143,7 +143,7 @@
 //touch on switcher
 .controls-DoubleSwitch:active {
    .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
-      stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
+      stroke: @marker-box_hover_border-color_switcher;
    }
 }
 
@@ -152,15 +152,15 @@
  * Поробнее в проблема описана в Switch.less
  */
 & {
-   @width_sticker: floor(@thickness_ToggleCircle-borderCircle-border / 2) * 2;
-   @vertical-offset_sticker: @height_Switch / 2 - @thickness_Switch-track;
-   @horizontal-offset_sticker: (@width_Switch - @length_Switch-track - @width_sticker) / 2 - @width_Switch__border + @size_Switch__ToggleCircle;
+   @width_sticker: floor(@marker-box_border-thickness_switcher / 2) * 2;
+   @vertical-offset_sticker: @height_switcher / 2 - @track_thickness_switcher;
+   @horizontal-offset_sticker: (@width_switcher - @track_length_switcher - @width_sticker) / 2 - @border-thickness_switcher + @marker-box_size_switcher;
 
    .controls-DoubleSwitch__toggle_theme-@{themeName}::after {
       content: '';
       position: absolute;
       width: @width_sticker;
-      height: @thickness_Switch-track;
+      height: @track_thickness_switcher;
    }
    .controls-DoubleSwitch__toggle_horizontal_notChecked_theme-@{themeName}::after {
       top: @vertical-offset_sticker;
@@ -180,10 +180,10 @@
    }
 }
 .controls-DoubleSwitch__toggle_enabled_theme-@{themeName}::after {
-   background-color: @background-color_Switch-track__enabled;
+   background-color: @track_color_switcher;
 }
 .controls-DoubleSwitch__toggle_disabled_theme-@{themeName}::after {
-   background-color: @background-color_Switch-track__disabled;
+   background-color: @readonly_track_color_switcher;
 }
 
 // End holeFix

@@ -2,10 +2,11 @@ export interface IHrefOptions {
    href?: string;
 }
 /**
- * Интерфейс для контролов, который могут работать в режиме гиперссылки.
+ * Интерфейс для контролов, которые могут работать в режиме гиперссылки.
  *
  * @interface Controls/_buttons/interface/IHref
  * @public
+ * @author Красильников А.С.
  */
 
 /*
@@ -13,6 +14,7 @@ export interface IHrefOptions {
  *
  * @interface Controls/_buttons/interface/IHref
  * @public
+ * @author Красильников А.С.
  */
 export interface IHref {
    readonly '[Controls/_buttons/interface/IHref]': boolean;

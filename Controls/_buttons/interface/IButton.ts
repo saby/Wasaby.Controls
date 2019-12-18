@@ -3,10 +3,11 @@ export interface IButtonOptions {
     buttonStyle?: string;
 }
 /**
- * Интерфейс для кнопок.
+ * Интерфейс для стилевого оформления кнопки.
  *
  * @interface Controls/_buttons/interface/IButton
  * @public
+ * @author Красильников А.С.
  */
 
 /*
@@ -14,6 +15,7 @@ export interface IButtonOptions {
  *
  * @interface Controls/_buttons/interface/IButton
  * @public
+ * @author Красильников А.С.
  */
 export interface IButton {
     readonly '[Controls/_buttons/interface/IButton]': boolean;

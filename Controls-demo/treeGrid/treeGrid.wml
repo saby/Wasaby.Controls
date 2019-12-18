@@ -29,6 +29,15 @@
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/treeGrid/Mover/Index' }}">
+            <a href="{{content.href}}">Перемещение</a>
+        </Router.router:Reference>
+        <Controls-demo.treeGrid.Mover.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/MultiSelect/Index' }}">
             <a href="{{content.href}}">Множественный выбор</a>
         </Router.router:Reference>

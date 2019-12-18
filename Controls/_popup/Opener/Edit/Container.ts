@@ -16,8 +16,8 @@ import {ContextOptions} from 'Controls/context';
  * @see Controls/popupTemplate:Stack
  * @see Controls/form:Controller
  * @remark
- * Подробнее об использовании контейнера читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ здесь}.
- * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">здесь</a>.
+ * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
  */
 let Container = Control.extend({
     _template: template,

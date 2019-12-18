@@ -77,7 +77,7 @@ var
  * @css @background-color_EditableArea_style_withBackground Background color of the input field with the style option set to "accentHeader".
  * @css @spacing_EditableArea-between-editor-toolbar Spacing between the editor and the toolbar.
  *
- * @demo Controls-demo/EditableArea/EditableAreaPG
+ * @demo Controls-demo/EditableArea/EditableArea
  */
 
 /*
@@ -90,10 +90,6 @@ var
  * @author Авраменко А.С.
  * @public
  *
- * @css @background-color_EditableArea_style_withBackground Background color of the input field with the style option set to "accentHeader".
- * @css @spacing_EditableArea-between-editor-toolbar Spacing between the editor and the toolbar.
- *
- * @demo Controls-demo/EditableArea/EditableAreaPG
  */
 
 var View = Control.extend( /** @lends Controls/List/View.prototype */ {

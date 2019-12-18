@@ -195,7 +195,7 @@ var
             }
         },
 
-        editNextRow: function (self, editNextRow) {
+        editNextRow: function (self, editNextRow: boolean, addAnyway: boolean = false) {
             var index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
 
             if (editNextRow) {
@@ -203,7 +203,7 @@ var
                     self.beginEdit({
                         item: _private.getNext(self._editingItem, index, self._options.listModel)
                     });
-                } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
+                } else if (addAnyway || self._options.editingConfig && self._options.editingConfig.autoAdd) {
                     self.beginAdd();
                 } else {
                     self.commitEdit();
@@ -287,6 +287,18 @@ var
                 parentId = editingItem.get(listModel._options.parentProperty);
                 parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
                 index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getChildren(parentId).length) + 1;
+            } else if (listModel._options.groupingKeyCallback) {
+                const groupId = listModel._options.groupingKeyCallback(editingItem);
+                const isAddInTop = self._options.editingConfig && self._options.editingConfig.addPosition === 'top';
+                let renderNearItem;
+
+                const groupItems = listModel.getDisplay().getGroupItems(groupId);
+                if (typeof groupId === 'undefined' || groupItems.length === 0) {
+                    renderNearItem = isAddInTop ? listModel.getDisplay().getFirst() : listModel.getDisplay().getLast();
+                } else {
+                    renderNearItem = groupItems[isAddInTop ? 0 : groupItems.length - 1];
+                }
+                index = listModel.getDisplay().getIndex(renderNearItem);
             }
 
             return index;
@@ -614,6 +626,19 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         }
 
         listModel.subscribe('onCollectionChange', this._updateIndex);
+    },
+
+    commitAndMoveNextRow(): void {
+        /*
+        * Стандартное поведение. При нажатии "Галки" в операциях над записью, возможно два варианта дальнейшего поведения:
+        * 1) если сохраняется уже существующая запись, то она просто сохраняется, курсор остается на строке, редактирование закрывается.
+        * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и начинается добавление новой.
+        * */
+        if (this._isAdd) {
+            _private.editNextRow(this, true, true);
+        } else {
+            this.commitEdit();
+        }
     },
 
     _updateIndex() {
