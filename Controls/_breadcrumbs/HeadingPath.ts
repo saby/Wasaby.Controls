@@ -215,7 +215,7 @@ var BreadCrumbsPath = Control.extend({
         }
         const containerWidth = _private.getAvailableContainerWidth(this);
 
-        if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
+        if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth, _private.getContainer(this))) {
             this._oldWidth = containerWidth;
             _private.calculateItems(this, newOptions, containerWidth);
         }

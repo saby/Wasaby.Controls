@@ -53,7 +53,7 @@ var BreadCrumbs = Control.extend({
         this._redrawIfNeed(this._options.items, newOptions.items);
     },
     _redrawIfNeed: function(currentItems, newItems) {
-        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems, this._oldWidth, this._container.clientWidth)) {
+        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems, this._oldWidth, this._container.clientWidth, this._container)) {
             this._oldWidth = this._container.clientWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newItems, this._container.clientWidth);
             this._viewUpdated = true;

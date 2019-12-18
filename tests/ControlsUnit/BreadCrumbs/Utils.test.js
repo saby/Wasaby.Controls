@@ -59,20 +59,25 @@ define([
       });
 
       describe('shouldRedraw', function() {
+         let container = {
+            getClientRects: () => {
+               return [1];
+            }
+         };
          it('same items, same width', function() {
-            assert.isFalse(BreadCrumbsUtil.shouldRedraw(data, data, 10, 10));
+            assert.isFalse(BreadCrumbsUtil.shouldRedraw(data, data, 10, 10, container));
          });
 
          it('different items, same width', function() {
-            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data.slice(3), 10, 10));
+            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data.slice(3), 10, 10, container));
          });
 
          it('same items, different width', function() {
-            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data, 15, 10));
+            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data, 15, 10, container));
          });
 
          it('different items, different width', function() {
-            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data.slice(3), 15, 10));
+            assert.isTrue(BreadCrumbsUtil.shouldRedraw(data, data.slice(3), 15, 10, container));
          });
       });
 
