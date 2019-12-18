@@ -386,7 +386,14 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             id: 'moveDown',
             icon: 'icon-ArrowDown icon-primary',
             showType: 2
-         }]
+         }],
+         owners:  [
+            { id: 0, title: 'По ответственному', owner: '0' },
+            { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
+            { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
+            { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
+            { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
+         ]
       };
    return data;
 });
