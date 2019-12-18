@@ -1,4 +1,4 @@
-<ws:partial template="wml!Controls/_dropdown/Input/resources/defaultContentTemplate" countItems="{{countItems}}">
+<ws:partial template="wml!Controls/_dropdown/Input/resources/defaultContentTemplate" scope="{{_options}}">
    <ws:contentTemplate>
       <div if="{{icon}}" class="controls-Dropdown__icon_theme_{{_options.theme}} controls-Dropdown__icon_{{item.get('iconStyle') || 'secondary'}}_theme_{{_options.theme}}
             {{text ? ' controls-Dropdown__icon-rightSpacing_theme_' + _options.theme}}"

@@ -299,8 +299,7 @@ var Input = Control.extend({
 
 Input.getDefaultOptions = (): object => {
    return {
-       iconStyle: 'secondary',
-       fontColorStyle: 'link'
+       iconStyle: 'secondary'
    };
 };
 

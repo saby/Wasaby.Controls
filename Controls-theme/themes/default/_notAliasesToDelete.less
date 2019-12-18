@@ -447,10 +447,120 @@
 @shift-top_Dropdown-head-popup:                    -(@popup_border-thickness_dropdown + @item_padding-horizontal_l_menu);
 @shift-left_Dropdown-popup:                        -(@popup_border-thickness_dropdown + @click-area_width_checkbox);
 @color_Dropdown-icon-iconStyle_secondary_hovered:  @link_hover_text-color;
+@color_Dropdown-text:                              @link_text-color;
+@color_Dropdown-text_hovered:                      @link_hover_text-color;
+@color_Dropdown-icon-iconStyle_secondary_hovered:  @link_hover_text-color;
 
 //Menu
+@max-width_DropdownList:                                                @popup_max-width_dropdown;
+@background_DropdownList:                                               @popup_background-color_dropdown;
 
-//DropdownList
-@background_DropdownList-header:                @header_background-color_dropdown;
+@border-width_DropdownList:                                             @popup_border-thickness_dropdown;
+@border-color_DropdownList:                                             @popup_border-color_dropdown;
+
+@spacing_DropdownList-between-topBorder-content:                        @popup_padding-vertical_dropdown;
+@spacing_DropdownList-between-bottomBorder-content:                     @popup_padding-vertical_dropdown;
+@spacing_DropdownList-item-between-leftBorder-content:                  @item_padding-horizontal_l_menu;
+@spacing_DropdownList-item-between-rightBorder-content:                 @item_padding-horizontal_l_menu;
+@spacing_DropdownList-withNodes-item-between-rightBorder-content:       @@hierarchy_icon_offset-right_menu + @hierarchy_icon-size_menu + @hierarchy_icon_offset-left_menu;
+@spacing_DropdownList_withClose-item-between-rightBorder-content:       @close-button_offset-left_menu + @width_closeButton_link + @close-button_offset-right_menu;
+@spacing_DropdownList-withPin-item-between-rightBorder-content:         @pin-button_offset-left_menu + @pin-button_icon-size_menu + @pin-button_offset-right_menu;
+
+@box-shadow-color_DropdownList:                                   @popup_box-shadow-color_dropdown;
+@height_DropdownList-row:                                         @item_height_menu;
+@font-size_DropdownList:                                          @item_font-size_menu;
+@color_DropdownList__row-text_readOnly:                           @readonly_item_text-color_menu;
+@background_DropdownList-row_hover:                               @item_hover_background-color_menu;
+@background_DropdownList-row_active:                              @item_active_background-color_menu;
+
+@spacing_DropdownList-item-between-icon-text:                     @item_icon_offset_menu;
+@color_DropdownList-icon-iconStyle_primary:                       @primary_color;
+@color_DropdownList-icon-iconStyle_secondary:                     @secondary_color;
+@color_DropdownList-icon-iconStyle_warning:                       @warning_color;
+@color_DropdownList-icon-iconStyle_danger:                        @danger_color;
+@color_DropdownList-icon-iconStyle_success:                       @success_color;
+@color_DropdownList-icon-iconStyle_info:                          @unaccented_icon-color;
+
+@background_DropdownList-marker:                                  @marker_color_menu;
+@width_DropdownList-marker:                                       @marker_width_menu;
+@height_DropdownList-marker:                                      @marker_height_menu;
+
+@background_DropdownList-header:                                  @header_background-color_dropdown;
+@spacing_DropdownList-header-between-icon-text:                   @item_icon_offset_menu;
+@color_DropdownList-heading:                                      @secondary_text-color;
+
+@shift-top_DropdownList-submenu:                            -(@popup_padding-vertical_dropdown + @popup_border-thickness_dropdown);
+
+@icon-size_DropdownList-arrow:                              @hierarchy_icon-size_menu;
+@color_DropdownList-arrow:                                  @hierarchy_icon-color_menu;
+@color_DropdownList-arrow_readOnly:                         @readonly_hierarchy_icon-color_menu;
+@spacing_DropdownList-item-between-arrow-topBorder:         (@item_height_menu - @hierarchy_icon-size_menu) / 2;
+@spacing_DropdownList-item-between-arrow-rightBorder:       @hierarchy_icon_offset-right_menu;
+
+//cross
+@spacing_DropdownList-between-close-rightBorder:      @close-button_offset-right_menu;
+@spacing_DropdownList-between-close-topBorder:        @close-button_offset-top_menu;
+
+@height_DropdownList-arrowSeparator:                  @icon-size_toggleBigSeparator;
+
+//grouping
+@thickness_DropdownList-group-separator:                       @grouping_separator_thickness_menu;
+@height_DropdownList-group-separator:                          @grouping_separator_thickness_menu;
+@color_DropdownList-group-separator:                           @grouping_separator_color_menu;
+
+@spacing_DropdownList-group-between-content-topBorder:         @grouping_padding-vertical_menu;
+@spacing_DropdownList-group-between-content-rightBorder:       @grouping_padding-horizontal_menu;
+@spacing_DropdownList-group-between-content-bottomBorder:      @grouping_padding-vertical_menu;
+@spacing_DropdownList-group-between-content-leftBorder:        @grouping_padding-horizontal_menu;
+@spacing_DropdownList-group-between-text-separator:            @grouping_padding-horizontal_menu;
+
+@color_DropdownList-group-text:                                @grouping_text-color_menu;
+@font-size_DropdownList-group-text:                            @grouping_font-size_menu;
+
+// checkbox
+@spacing_DropdownList-row-between-checkbox-topBorder:          @spacing_default_xs;
+@spacing_DropdownList-row-between-checkbox-rightBorder:        @spacing_DropdownList-row-between-checkbox-rightBorder_val;
+
+//row separator
+@background-color_DropdownList-row_separator:                  @item_separator_color_menu;
+@height_DropdownList-row-separator:                            @item_separator_thickness_menu;
+@spacing_DropdownList-row-between-leftBorder-row-separator:    @item_separator_padding-horizontal_menu;
+@spacing_DropdownList-row-between-rightBorder-row-separator:   @item_separator_padding-horizontal_menu;
+@spacing_DropdownList-row-between-bottomBorder-row-separator:  0;
+
+@min-height_DropdownList-footer:                                           @footer_min-height_dropdown;
+@spacing_DropdownList-between-footer-bottomBorder:                         @popup_padding-vertical_dropdown;
+
+@spacing_DropdownList-between-applyButton-rightBorder:                     @apply-button_offset_dropdown;
+@spacing_DropdownList-between-applyButton-footerContent:                   @apply-button_offset_dropdown;
+@spacing_DropdownList-between-moreButton-leftBorder:                       @item_padding-horizontal_l_menu;
+@spacing_DropdownList_multiSelect-between-moreButton-leftBorder:           @click-area_width_checkbox;
+
+@box-shadow-size_DropdownList-shadowStyle_center:                 0 0 @popup_box-shadow-offset_dropdown 0;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-left:      -@popup_box-shadow-offset_dropdown 0 @popup_box-shadow-offset_dropdown -@popup_box-shadow-offset_dropdown;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-right:     @popup_box-shadow-offset_dropdown 0 @popup_box-shadow-offset_dropdown @popup_box-shadow-offset_dropdown;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-bottom:    0 @popup_box-shadow-offset_dropdown @popup_box-shadow-offset_dropdown @popup_box-shadow-offset_dropdown;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-left:         -@popup_box-shadow-offset_dropdown 0 @popup_box-shadow-offset_dropdown @popup_box-shadow-offset_dropdown;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-right:        @popup_box-shadow-offset_dropdown 0 @popup_box-shadow-offset_dropdown @popup_box-shadow-offset_dropdown;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-top:          0 -@popup_box-shadow-offset_dropdown @popup_box-shadow-offset_dropdown @popup_box-shadow-offset_dropdown;
+
+@spacing_DropdownList-iconSize_medium-between-iconHead-topBorder:          @popup_padding-vertical_dropdown + @popup_border-thickness_dropdown + (@item_height_menu - @icon-size_m) / 2;
+@spacing_DropdownList-iconSize_medium-between-iconHead-leftBorder:         @item_padding-horizontal_l_menu + @popup_border-thickness_dropdown;
+@spacing_DropdownList-iconSize_small-between-iconHead-topBorder:           @popup_padding-vertical_dropdown + @popup_border-thickness_dropdown + (@item_height_menu - @icon-size_s) / 2;
+@spacing_DropdownList-iconSize_small-between-iconHead-leftBorder:          @item_padding-horizontal_l_menu + @popup_border-thickness_dropdown;
+
+//HistoryMenu
+@color_HistoryMenu-pin:                                        @pin-button_icon-color_menu;
+@color_HistoryMenu-pin_hovered:                                @pin-button_hover_icon-color_menu;
+@spacing_HistoryMenu-between-itemCaption-rightBorder:          @pin-button_offset-left_menu + @pin-button_icon-size_menu + @pin-button_offset-right_menu;
+@spacing_HistoryMenu-between-pin-rightBorder:                  @pin-button_offset-right_menu;
+@icon-size_HistoryMenu-pin:                                    @pin-button_icon-size_menu;
+
+// FIXME
+@color_DropdownList-emptyItem:                        @color_info;
+@spacing_DropdownList-item-between-topBorder-text:    @spacing_default_s;
+@spacing_DropdownList-item-between-bottomBorder-text: @spacing_default_s;
+@font-size_DropdownList-row-additionalText-content:      @font-size_xs;
+@color_DropdownList-row-additionalText-content:          @unaccented_text-color;
 
 //last line

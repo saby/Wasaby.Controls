@@ -3,6 +3,8 @@
 //Примечание: Применяется в том числе к основному фону самой страницы.
 @background-color:                                                          #FFF;
 
+@hover_background-color:     #F0F5FB;
+
 //Цвет элементов отображающих опасность или ошибку.
 //Пример: Ошибка валидации, операция завершенная с ошибкой, отклонения от нормы выполнения процесса.
 @danger_color:                                                              #D04D4D;
@@ -1241,12 +1243,13 @@
 
 //
 @click-area_width_checkbox:               20px;
+@width_closeButton_link:                  @inline_height_m;
 
 /*Combobox */
-@trigger-color_combobox:                @secondary_icon-color_toggleSeparator;
-@trigger-color_hover_combobox:          @secondary_hover_icon-color_toggleSeparator;
-@trigger_icon-size_combobox:            @icon-size_toggleSeparator;
-@trigger_padding-right_combobox:        4px;
+@trigger-color_combobox:                           @secondary_icon-color_toggleSeparator;
+@trigger-color_hover_combobox:                     @secondary_hover_icon-color_toggleSeparator;
+@trigger_icon-size_combobox:                       @icon-size_toggleSeparator;
+@trigger_padding-right_combobox:                   4px;
 
 /*Dropdown:Input */
 @height_dropdownSelector:                          @inline_height_default;
@@ -1278,7 +1281,7 @@
 @item_separator_thickness_menu:                    0;
 @item_separator_padding-horizontal_menu:           0;
 @item_background-color_menu:                       @background-color;
-@item_hover_background-color_menu:                 #F0F5FB;// Нет такого: @hover_background-color;
+@item_hover_background-color_menu:                 @hover_background-color;
 @item_active_background-color_menu:                @item_hover_background-color_menu;
 @item_height_menu:                                 32px;
 @item_font-size_menu:                              @font-size_l;

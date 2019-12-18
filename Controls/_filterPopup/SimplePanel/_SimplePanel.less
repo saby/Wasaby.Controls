@@ -5,7 +5,7 @@
    border: @border-width_DropdownList solid @border-color_DropdownList;
    background: @background_DropdownList;
    box-sizing: border-box;
-   box-shadow: @box-shadow-color_DropdownList @box-shadow-size_DropdownList-shadowStyle_center;
+   box-shadow: @popup_box-shadow-color_dropdown @box-shadow-size_DropdownList-shadowStyle_center;
    max-height: 100%;
    width: 100%;
 }
@@ -49,6 +49,12 @@
 
 .controls-DropdownList__item-rightPadding_multiSelect {
    padding-right: @spacing_default_m + @inline_height_l + @spacing-between-applyButton-rightBorder;
+}
+
+.controls-DropdownList__row-checkbox-right_theme_@{themeName} {
+   position: absolute;
+   top: @spacing_DropdownList-row-between-checkbox-topBorder;
+   right: @spacing_DropdownList-row-between-checkbox-rightBorder;
 }
 
 .controls-SimplePanel-folderItem_theme_@{themeName} {

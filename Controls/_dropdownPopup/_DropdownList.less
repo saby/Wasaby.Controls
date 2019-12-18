@@ -105,15 +105,15 @@
 }
 
 .controls-DropdownList__item-rightPadding_hierarchy.theme_@{themeName} {
-   padding-right: @spacing_DropdownList-withNodes-item-between-rightBorder-content;
+   padding-right: @hierarchy_icon_offset-right_menu + @hierarchy_icon-size_menu + @hierarchy_icon_offset-left_menu;
 }
 
 .controls-DropdownList__item-rightPadding_close.theme_@{themeName} {
-   padding-right: @spacing_DropdownList_withClose-item-between-rightBorder-content;
+   padding-right: @close-button_offset-left_menu + @width_closeButton_link + @close-button_offset-right_menu;
 }
 
 .controls-DropdownList__item-rightPadding_history.theme_@{themeName} {
-   padding-right: @spacing_DropdownList-withPin-item-between-rightBorder-content;
+   padding-right: @pin-button_offset-left_menu + @pin-button_icon-size_menu + @pin-button_offset-right_menu;
 }
 
 .controls-DropdownList__item-rightPadding_xs.theme_@{themeName} {
@@ -132,7 +132,6 @@
    position: absolute;
    display: none;
    .align-items(center);
-   //left: @pin-button_offset-left_menu;
    right: @pin-button_offset-right_menu;
    top: (@item_height_menu - @pin-button_icon-size_menu) / 2;
    .icon-size(@pin-button_icon-size_menu);
@@ -149,7 +148,7 @@
    }
 
    .controls-HistoryMenu__iconPin.theme_@{themeName}:hover {
-      color: @color_HistoryMenu-pin_hovered;
+      color: @pin-button_hover_icon-color_menu;
    }
 }
 
@@ -213,7 +212,7 @@
    font-size: @header_font-size_dropdown;
    font-weight: bold;
    background: @header_background-color_dropdown;
-   color: @secondary_text-color;
+   color: @color_DropdownList-heading;
    height: @header_min-height_dropdown;
    padding: 0 @header_padding-horizontal_dropdown 0 @header_padding-horizontal_dropdown;
    cursor: pointer;
@@ -229,7 +228,7 @@
 }
 
 .controls-DropdownList__header-icon.theme_@{themeName} {
-   margin-right: @spacing_DropdownList-header-between-icon-text; // ??? @item_icon_offset_menu 6px
+   margin-right: @item_icon_offset_menu;
 }
 
 .controls-DropdownList__subMenu_margin.theme_@{themeName} {
@@ -256,7 +255,6 @@
 
 .controls-DropdownList-cross.theme_@{themeName} {
    position: absolute;
-   left: @close-button_offset-left_menu;
    right: @close-button_offset-right_menu;
    top: @close-button_offset-top_menu;
    z-index: 2;
@@ -294,35 +292,10 @@
    display: flex;
    justify-content: center;
    align-items: center;
-   height: @height_DropdownList-arrowSeparator;
 }
 
 .controls-DropdownList__additional-button.theme_@{themeName} {
    cursor: pointer;
-}
-
-.controls-DropdownList__icon_style_secondary.theme_@{themeName} {
-   color: @color_DropdownList-icon-iconStyle_secondary;
-}
-
-.controls-DropdownList__icon_style_warning.theme_@{themeName} {
-   color: @color_DropdownList-icon-iconStyle_warning;
-}
-
-.controls-DropdownList__icon_style_danger.theme_@{themeName} {
-   color: @color_DropdownList-icon-iconStyle_danger;
-}
-
-.controls-DropdownList__icon_style_success.theme_@{themeName} {
-   color: @color_DropdownList-icon-iconStyle_success;
-}
-
-.controls-DropdownList__icon_style_info.theme_@{themeName} {
-   color: @color_DropdownList-icon-iconStyle_info;
-}
-
-.controls-DropdownList__icon_style_label.theme_@{themeName} {
-   color: @label_text-color;
 }
 
 .controls-DropdownList__group_separator.theme_@{themeName} {
@@ -372,10 +345,10 @@
 }
 
 .controls-DropdownList__hasMoreButton_theme_@{themeName} {
-   padding-left: @spacing_DropdownList-between-moreButton-leftBorder;
+   padding-left: @item_padding-horizontal_l_menu;
 }
 .controls-DropdownList_multiSelect__hasMoreButton_theme_@{themeName} {
-   padding-left: @spacing_DropdownList_multiSelect-between-moreButton-leftBorder;
+   padding-left: @click-area_width_checkbox;
 }
 
 .controls-DropdownList__applyButton.theme_@{themeName} {
@@ -388,12 +361,6 @@
 
 .controls-DropdownList__row-checkbox_active_theme_@{themeName} {
    visibility: visible;
-}
-
-.controls-DropdownList__row-checkbox-right_theme_@{themeName} {
-   position: absolute;
-   top: @spacing_DropdownList-row-between-checkbox-topBorder;
-   right: @spacing_DropdownList-row-between-checkbox-rightBorder;
 }
 
 // TODO Kingo
