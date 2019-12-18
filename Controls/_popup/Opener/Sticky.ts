@@ -1,4 +1,4 @@
-import BaseOpener, {IBaseOpenerOptions} from 'Controls/_popup/Opener/BaseOpener';
+import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {Logger} from 'UI/Utils';
 import {IStickyOpener, IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 
@@ -54,8 +54,8 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error('Controls/popup:Sticky: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }
-            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-                BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
+                BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {
                     resolve(popupId);
                 });
             });
