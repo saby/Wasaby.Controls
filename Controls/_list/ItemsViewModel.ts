@@ -465,10 +465,14 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     appendItems: function(items) {
+        let shouldAppend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
+            shouldAppend = items.getCount() > 0;
         }
-        this._items.append(items);
+        if (shouldAppend) {
+            this._items.append(items);
+        }
     },
 
     mergeItems: function(items, options) {
@@ -477,7 +481,13 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     prependItems: function(items) {
-        this._items.prepend(items);
+        let shouldPrepend = true;
+        if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
+            shouldPrepend = items.getCount() > 0;
+        }
+        if (shouldPrepend) {
+            this._items.prepend(items);
+        }
     },
 
     getIndexBySourceItem: function(item) {

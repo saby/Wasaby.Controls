@@ -280,6 +280,13 @@ define([
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
          assert.equal(iv._items.getMetaData(), metaData, 'Incorrect metaData appendItems');
 
+         const rsEmpty = new collection.RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         });
+         iv.appendItems(rsEmpty);
+
+         assert.strictEqual(iv.getVersion(), 1, 'Version should not change when appending an empty RecordSet');
       });
 
       it('Prepend', function () {
@@ -304,6 +311,13 @@ define([
          assert.equal(1, iv._items.at(3).get('id'), 'Incorrect items after prependItems');
          assert.equal(1, iv.getVersion(), 'Incorrect version prependItems');
 
+         const rsEmpty = new collection.RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         });
+         iv.prependItems(rsEmpty);
+
+         assert.strictEqual(iv.getVersion(), 1, 'Version should not change when prepending an empty RecordSet');
       });
 
       it('itemsReadyCallback', function () {
