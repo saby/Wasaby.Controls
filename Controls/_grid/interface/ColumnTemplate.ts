@@ -1,5 +1,5 @@
 /**
- * Шаблон, который по умолчанию используется для отображения ячеек в {@link Controls/grid:View табличном представлении}.
+ * Шаблон, который по умолчанию используется для отображения ячеек в контроле {@link Controls/grid:View Таблица}.
  * @class Controls/grid:ColumnTemplate
  * @author Авраменко А.С.
  * @see Controls/_grid/interface/IGridControl/Column.typedef

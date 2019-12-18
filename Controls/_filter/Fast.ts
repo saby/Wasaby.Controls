@@ -314,6 +314,10 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
                   properties.filter = itemProperties.filter || {};
                   properties.filter[itemProperties.keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
+                     // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
+                     if (itemProperties.dataLoadCallback) {
+                        itemProperties.dataLoadCallback(items);
+                     }
                      _private.setItems(configs[index], items);
                   });
                   pDef.push(result);

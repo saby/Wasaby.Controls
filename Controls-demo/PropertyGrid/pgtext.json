@@ -333,67 +333,13 @@
       }
     }
   },
-  "Controls/toolbars:View": {
-    "name": "Controls/toolbars:View",
-    "title": "Toolbar.",
-    "className": "Controls/Toolbar",
-    "kind": "control",
-    "isPublic": true,
-    "fullname": "Controls/Toolbar",
-    "properties": {
-      "ws-config": {
-        "title": "Базовая конфигурация",
-        "options": {
-          "source": {
-            "title": "Object that implements ISource interface for data access."
-          },
-          "itemTemplate": {
-            "type": "function",
-            "title": "Template for item render."
-          },
-          "keyProperty": {
-            "type": "String",
-            "title": "Name of the item property that uniquely identifies collection item."
-          },
-          "itemTemplateProperty": {
-            "type": "enum",
-            "title": "Name of the item property that contains template for item render",
-            "enum": {
-              "customTemplate": "Custom template",
-              "null": "No template"
-            }
-          },
-          "name": {
-            "title": "Control name",
-            "type": "String",
-            "default": ""
-          },
-          "nodeProperty": {
-            "title": "Name of the field describing the type of the node (list, node, hidden node).",
-            "type": "String",
-            "default": ""
-          },
-          "parentProperty": {
-            "title": "Name of the field that contains information about parent node.",
-            "type": "String",
-            "default": ""
-          },
-          "itemsSpacing": {
-            "title": "Type of spacing between items.",
-            "type": "String",
-            "default": ""
-          }
-        }
-      }
-    }
-  },
-  "Controls.crumbs:Path": {
-    "name": "Controls.crumbs:Path",
+  "Controls/breadcrumbs:Path": {
+    "name": "Controls.breadcrumbs:Path",
     "title": "Breadcrumbs.",
-    "className": "Controls.crumbs:Path",
+    "className": "Controls.breadcrumbs:Path",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls.crumbs:Path",
+    "fullname": "Controls.breadcrumbs:Path",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -422,13 +368,13 @@
       }
     }
   },
-  "Controls.crumbs:HeadingPath": {
-    "name": "Controls.crumbs:HeadingPath",
+  "Controls/breadcrumbs:HeadingPath": {
+    "name": "Controls.breadcrumbs:HeadingPath",
     "title": "Breadcrumbs with back button.",
-    "className": "Controls.crumbs:HeadingPath",
+    "className": "Controls.breadcrumbs:HeadingPath",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls.crumbs:HeadingPath",
+    "fullname": "Controls.breadcrumbs:HeadingPath",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
