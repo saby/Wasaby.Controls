@@ -1,11 +1,12 @@
-import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
-import template = require('wml!Controls/_listRender/Render/Render');
+import { TemplateFunction, IControlOptions } from 'UI/Base';
+import template = require('wml!Controls/_listRender/Columns/Columns');
 
-import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/ItemTemplateWrapper');
+import defaultItemTemplate = require('wml!Controls/_listRender/Columns/resources/ItemTemplateWrapper');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';
 import { constants } from 'Env/Env';
+import {default as BaseRender, IRenderOptions} from './Render';
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -19,7 +20,8 @@ export interface IRenderChildren {
     itemsContainer?: HTMLDivElement;
 }
 
-export default class Render extends Control<IRenderOptions> {
+export default class Columns extends BaseRender {
+    static _theme: string[] = ['Controls/list_multi'];
     protected _template: TemplateFunction = template;
     protected _children: IRenderChildren;
 
@@ -36,7 +38,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _beforeMount(options: IRenderOptions): void {
-        this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
+        this._templateKeyPrefix = `columns-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
 
         this._subscribeToModelChanges(options.listModel);
@@ -93,9 +95,6 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         // this._notify('itemMouseEnter', [item, e]);
-    }
-    protected _onItemMouseDown(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
-         this._notify('itemMouseDown', [item, e]);
     }
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {

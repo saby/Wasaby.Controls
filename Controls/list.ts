@@ -54,6 +54,7 @@ import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
+import ColumnsView = require('Controls/_list/Columns');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
@@ -98,6 +99,7 @@ export {
     GroupTemplate,
     ItemTemplate,
     View,
+    ColumnsView,
     Mover,
     Remover,
     Paging,

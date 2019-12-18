@@ -1,0 +1,32 @@
+<ws:template name="renderColumn">
+   <div class="controls-ColumnsView_column">
+      <ws:partial
+              template="wml!Controls/_listRender/Columns/resources/For"
+              collection="{{ _options.listModel }}"
+              keyPrefix="{{ _templateKeyPrefix }}"
+              column="{{column}}"
+              itemActionsPosition="{{ _options.itemActionsPosition }}"
+              itemActionsTemplate="{{ _options.itemActionsTemplate }}"
+              swipeTemplate="{{ _options.swipeTemplate }}"
+              multiSelectTpl="{{ _options.multiSelectTpl }}"
+              isAdd="{{ _options.isAdd }}"
+              itemTemplate="{{ _itemTemplate }}"/>
+   </div>
+</ws:template>
+<div attr:class="controls-ListViewV controls-ColumnsView">
+   <ws:if data="{{ _options.listModel }}">
+      <div attr:class="controls-ColumnsView__itemsContainer" name="itemsContainer">
+        <ws:partial template="renderColumn" column="0" attr:class="controls-ColumnsView_first-column"></ws:partial>
+        <ws:partial template="renderColumn" column="1"></ws:partial>
+      </div>
+   </ws:if>
+   <ws:if data="{{ _options.emptyTemplate }}">
+      <ws:partial template="{{ _options.emptyTemplate }}" />
+   </ws:if>
+   <ws:if data="{{ _options.footerTemplate }}">
+      <div
+         attr:class="controls-ListView__footer__paddingLeft_{{ _canHaveMultiselect(_options) ? 'withCheckboxes' : 'default' }}">
+         <ws:partial template="{{ _options.footerTemplate }}" />
+      </div>
+   </ws:if>
+</div>

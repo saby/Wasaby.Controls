@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper">
+   <Controls.scroll:Container attr:class="controlsDemo__height400 controlsDemo__minWidth600 controlsDemo__maxWidth800">
+      <Controls.list:ColumnsView
+         keyProperty="id"
+         useNewModel="{{true}}"
+         source="{{ _viewSource }}"
+         itemActions="{{_itemActions}}"
+         markerVisibility="visible"
+         name="listView2">
+         <ws:navigation source="page" view="infinity">
+            <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
+            <ws:viewConfig pagingMode="direct" ></ws:viewConfig>
+         </ws:navigation>
+      </Controls.list:ColumnsView>
+   </Controls.scroll:Container>
+</div>

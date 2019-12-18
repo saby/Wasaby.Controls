@@ -1,0 +1,7 @@
+<Controls._listRender.View
+   collection="Controls/display:ColumnsCollection"
+   render="Controls/listRender:Columns"
+   scope="{{ _options }}"
+
+   actionAlignment="{{ _options.actionAlignment || 'vertical' }}"
+   actionCaptionPosition="{{ _options.actionCaptionPosition || 'none' }}"/>

@@ -1,0 +1,38 @@
+.controls-ColumnsView__itemsContainer {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+}
+
+.controls-ColumnsView_column {
+   height: fit-content;
+}
+
+.controls-ColumnsView__itemsContainer,
+.controls-ColumnsView_column {
+   margin: 0 8px;
+}
+
+.controls-ColumnsView__itemV {
+   min-width: 270px;
+   max-width: 400px;
+   min-height: 34px;
+   width: 100%;
+   display: inline-block;
+   overflow: hidden;
+   margin: 4px 0;
+   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+   border: 1px solid transparent;
+   box-sizing: border-box;
+}
+
+.controls-ColumnsView__itemV:hover {
+   box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+}
+
+.controls-ColumnsView__itemContent {
+   width: 100%;
+}
+
+.controls-ColumnsView__item_marked {
+   border-color: #ff7033;
+}

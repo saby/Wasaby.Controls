@@ -1,0 +1,39 @@
+<div attr:class="{{ item.getWrapperClasses(highlightOnHover, marker) }}">
+   <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
+      <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses() }}">
+         <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
+      </ws:partial>
+   </ws:if>
+   <ws:if data="{{ contentTemplate }}">
+      <div attr:class="{{ item.getContentClasses() }}">
+         <ws:partial
+            template="{{ contentTemplate }}"
+            item="{{ item }}"
+            useNewModel="{{ true }}"
+            searchValue="{{ searchValue }}"
+            itemActionsTemplate="{{ itemActionsTemplate }}"
+            swipeTemplate="{{ swipeTemplate }}" />
+      </div>
+   </ws:if>
+   <ws:else>
+      <div attr:class="{{ item.getContentClasses() }}">
+         {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
+      </div>
+   </ws:else>
+   <ws:if data="{{ item.shouldDisplayActions() }}">
+      <ws:if data="{{ item.isSwiped() }}">
+         <ws:partial
+            template="{{ swipeTemplate }}"
+            item="{{ item }}"
+            itemActionsTemplate="{{ itemActionsTemplate }}">
+            <ws:swipeConfig itemActionsSize="m" paddingSize="s"/>
+         </ws:partial>
+      </ws:if>
+      <ws:else data="{{ itemActionsPosition !== 'custom' }}">
+         <ws:partial
+            template="{{ itemActionsTemplate }}"
+            itemActionsClass="{{ itemActionsClass }}"
+            item="{{ item }}" />
+      </ws:else>
+   </ws:if>
+</div>
