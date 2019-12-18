@@ -8,7 +8,7 @@ define('Controls-demo/Index', [
    'Application/Env',
    'Core/Deferred',
    'css!Controls-demo/Demo/Page',
-   'css!Controls-theme/themes/default/helpers/AreaBlocks'
+   'css!Controls-default-theme/helpers/AreaBlocks'
 ], function (BaseControl,
              template,
              AppInit,

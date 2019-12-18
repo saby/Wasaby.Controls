@@ -13,8 +13,8 @@
       "path": "%cd%/Controls-demo"
     },
     {
-      "name": "Controls-theme",
-      "path": "%cd%/Controls-theme"
+      "name": "Controls-default-theme",
+      "path": "%cd%/Controls-default-theme"
     },
     {
       "name": "Core",
