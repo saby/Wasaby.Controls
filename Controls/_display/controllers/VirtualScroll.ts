@@ -1,9 +1,6 @@
+import { IBaseCollection } from './interface';
 import { IViewIterator } from '../Collection';
-import { updateCollection, IBaseCollection } from './controllerUtils';
 import { EnumeratorCallback } from 'Types/collection';
-
-const CACHE_START_INDEX = 'startIndex';
-const CACHE_STOP_INDEX = 'stopIndex';
 
 export interface IVirtualScrollEnumerator {
     setPosition(pos: number): void;
@@ -12,20 +9,31 @@ export interface IVirtualScrollEnumerator {
     getCurrent(): unknown;
 }
 
-export interface IVirtualScrollCollection extends IBaseCollection {
-    setViewIterator(viewIterator: IViewIterator): void;
+export interface IVirtualScrollViewIterator extends IViewIterator {
+    data: {
+        startIndex: number;
+        stopIndex: number;
+    };
+}
+
+export interface IVirtualScrollCollection extends IBaseCollection<unknown> {
+    setViewIterator(viewIterator: IVirtualScrollViewIterator): void;
+    getViewIterator(): IVirtualScrollViewIterator;
     getCount(): number;
     getEnumerator(): IVirtualScrollEnumerator;
 }
 
 export function setup(collection: IVirtualScrollCollection): void {
-    updateCollection(collection, () => {
-        collection.setViewIterator({
-            each: each.bind(null, collection),
-            setIndices: setIndices.bind(null, collection),
-            isItemAtIndexHidden: () => false
-        });
+    collection.setViewIterator({
+        each: each.bind(null, collection),
+        setIndices: setIndices.bind(null, collection),
+        isItemAtIndexHidden: () => false,
+        data: {
+            startIndex: 0,
+            stopIndex: collection.getCount()
+        }
     });
+    collection.nextVersion();
 }
 
 export function setIndices(
@@ -40,10 +48,15 @@ export function setIndices(
     const newStop = Math.min(stopIndex, collection.getCount());
 
     if (newStart !== oldStart || newStop !== oldStop) {
-        updateCollection(collection, () => {
-            collection.setCacheValue(CACHE_START_INDEX, newStart);
-            collection.setCacheValue(CACHE_STOP_INDEX, newStop);
-        });
+        const viewIterator = {
+            ...collection.getViewIterator(),
+            data: {
+                startIndex: newStart,
+                stopIndex: newStop
+            }
+        };
+        collection.setViewIterator(viewIterator);
+        collection.nextVersion();
         return true;
     }
 
@@ -71,12 +84,9 @@ export function each(
 }
 
 export function getStartIndex(collection: IVirtualScrollCollection): number {
-    return (collection.getCacheValue(CACHE_START_INDEX) as number) || 0;
+    return collection.getViewIterator()?.data?.startIndex ?? 0;
 }
 
 export function getStopIndex(collection: IVirtualScrollCollection): number {
-    return (
-        (collection.getCacheValue(CACHE_STOP_INDEX) as number) ||
-        collection.getCount()
-    );
+    return collection.getViewIterator()?.data?.stopIndex ?? collection.getCount();
 }

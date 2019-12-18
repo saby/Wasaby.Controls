@@ -1,5 +1,4 @@
 import * as VirtualScroll from './VirtualScroll';
-import { updateCollection } from './controllerUtils';
 import { EnumeratorCallback } from 'Types/collection';
 
 export interface IVirtualScrollHideItem {
@@ -7,25 +6,24 @@ export interface IVirtualScrollHideItem {
     isRendered(): boolean;
 }
 
-export interface IVirtualScrollHideEnumerator
-    extends VirtualScroll.IVirtualScrollEnumerator {
+export interface IVirtualScrollHideEnumerator extends VirtualScroll.IVirtualScrollEnumerator {
     getCurrent(): IVirtualScrollHideItem;
 }
 
-export interface IVirtualScrollHideCollection
-    extends VirtualScroll.IVirtualScrollCollection {
+export interface IVirtualScrollHideCollection extends VirtualScroll.IVirtualScrollCollection {
     at(pos: number): IVirtualScrollHideItem;
     getEnumerator(): IVirtualScrollHideEnumerator;
 }
 
 export function setup(collection: IVirtualScrollHideCollection): void {
-    updateCollection(collection, () => {
-        collection.setViewIterator({
-            each: each.bind(null, collection),
-            setIndices: setIndices.bind(null, collection),
-            isItemAtIndexHidden: isItemAtIndexHidden.bind(null, collection)
-        });
+    VirtualScroll.setup(collection);
+    collection.setViewIterator({
+        ...collection.getViewIterator(),
+        each: each.bind(null, collection),
+        setIndices: setIndices.bind(null, collection),
+        isItemAtIndexHidden: isItemAtIndexHidden.bind(null, collection)
     });
+    collection.nextVersion();
 }
 
 export function setIndices(
@@ -39,13 +37,12 @@ export function setIndices(
         stopIndex
     );
     if (indicesChanged) {
-        updateCollection(collection, () => {
-            const setStart = VirtualScroll.getStartIndex(collection);
-            const setStop = VirtualScroll.getStopIndex(collection);
-            for (let i = setStart; i < setStop; i++) {
-                collection.at(i).setRendered(true);
-            }
-        });
+        const setStart = VirtualScroll.getStartIndex(collection);
+        const setStop = VirtualScroll.getStopIndex(collection);
+        for (let i = setStart; i < setStop; i++) {
+            collection.at(i).setRendered(true);
+        }
+        collection.nextVersion();
     }
     return indicesChanged;
 }

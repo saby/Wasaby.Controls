@@ -1,44 +1,38 @@
-import {
-    updateCollectionWithCachedItem,
-    getItemByKey,
-    IBaseCollection,
-    TCollectionKey
-} from './controllerUtils';
+import { TItemKey, IBaseCollection } from './interface';
 
 export interface IEditInPlaceItem {
     setEditing(editing: boolean, editingContents?: unknown): void;
     isEditing(): boolean;
 }
 
-const CACHE_EDIT_MODE_ITEM = 'editModeItem';
+export type IEditInPlaceCollection = IBaseCollection<IEditInPlaceItem>;
 
 export function beginEdit(
-    collection: IBaseCollection,
-    key: TCollectionKey,
+    collection: IEditInPlaceCollection,
+    key: TItemKey,
     editingContents?: unknown
 ): void {
-    updateCollectionWithCachedItem(
-        collection,
-        CACHE_EDIT_MODE_ITEM,
-        (oldEditItem: IEditInPlaceItem) => {
-            const newEditItem: IEditInPlaceItem = getItemByKey(collection, key);
+    const oldEditItem = getEditedItem(collection);
+    const newEditItem = collection.getItemBySourceKey(key);
 
-            if (oldEditItem) {
-                oldEditItem.setEditing(false);
-            }
-            if (newEditItem) {
-                newEditItem.setEditing(true, editingContents);
-            }
+    if (oldEditItem) {
+        oldEditItem.setEditing(false);
+    }
+    if (newEditItem) {
+        newEditItem.setEditing(true);
+    }
 
-            return newEditItem;
-        }
-    );
+    collection.nextVersion();
 }
 
-export function endEdit(collection: IBaseCollection): void {
+export function endEdit(collection: IEditInPlaceCollection): void {
     beginEdit(collection, null);
 }
 
-export function isEditing(collection: IBaseCollection): boolean {
-    return !!collection.getCacheValue(CACHE_EDIT_MODE_ITEM);
+export function isEditing(collection: IEditInPlaceCollection): boolean {
+    return !!getEditedItem(collection);
+}
+
+export function getEditedItem(collection: IEditInPlaceCollection): IEditInPlaceItem {
+    return collection.find((item) => item.isEditing());
 }

@@ -1,39 +1,29 @@
-import {
-    updateCollectionWithCachedItem,
-    getItemByKey,
-    TCollectionKey,
-    IBaseCollection
-} from './controllerUtils';
+import { IBaseCollection, TItemKey } from './interface';
 
 export interface ISwipeItem {
     setSwiped(swiped: boolean): void;
     isSwiped(): boolean;
 }
 
-const CACHE_SWIPED_ITEM = 'swipedItem';
+export type ISwipeCollection = IBaseCollection<ISwipeItem>;
 
 export function setSwipeItem(
-    collection: IBaseCollection,
-    key: TCollectionKey
+    collection: ISwipeCollection,
+    key: TItemKey
 ): void {
-    updateCollectionWithCachedItem(
-        collection,
-        CACHE_SWIPED_ITEM,
-        (oldSwipedItem: ISwipeItem) => {
-            const newSwipedItem: ISwipeItem = getItemByKey(collection, key);
+    const oldSwipeItem = getSwipeItem(collection);
+    const newSwipeItem = collection.getItemBySourceKey(key);
 
-            if (oldSwipedItem) {
-                oldSwipedItem.setSwiped(false);
-            }
-            if (newSwipedItem) {
-                newSwipedItem.setSwiped(true);
-            }
+    if (oldSwipeItem) {
+        oldSwipeItem.setSwiped(false);
+    }
+    if (newSwipeItem) {
+        newSwipeItem.setSwiped(true);
+    }
 
-            return newSwipedItem;
-        }
-    );
+    collection.nextVersion();
 }
 
-export function getSwipeItem(collection: IBaseCollection): ISwipeItem {
-    return collection.getCacheValue(CACHE_SWIPED_ITEM) as ISwipeItem;
+export function getSwipeItem(collection: ISwipeCollection): ISwipeItem {
+    return collection.find((item) => item.isSwiped());
 }
