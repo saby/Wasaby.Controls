@@ -1106,7 +1106,7 @@ var _private = {
         if (verticalOffset <= 0) {
             return 0;
         }
-        while (itemsHeight <= verticalOffset && i < itemsCount) {
+        while (itemsHeight < verticalOffset && i < itemsCount) {
             itemsHeight += uDimension(items[i]).height;
             i++;
         }
