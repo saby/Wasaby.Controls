@@ -1,4 +1,4 @@
-import { default as BaseOpener, IBaseOpenerOptions} from 'Controls/_popup/Opener/BaseOpener';
+import { default as BaseOpener, IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {Logger} from 'UI/Utils';
 import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 
@@ -62,8 +62,8 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error('Controls/popup:Stack: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }
-            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-                BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
+                BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {
                     resolve(popupId);
                 });
             });
