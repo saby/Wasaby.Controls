@@ -535,6 +535,7 @@ define(
             // emptyText + selectedKeys = []
             dropdown._Controller._private.updateSelectedItems(dropdownController, '123', [], 'id', selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [null]);
+            assert.deepEqual(dropdownController._selectedKeys, [null]);
 
             // selectedKeys = []
             let newItems = new collection.RecordSet({
