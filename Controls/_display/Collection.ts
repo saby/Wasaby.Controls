@@ -617,8 +617,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     protected _oEventRaisingChange: Function;
 
-    protected _controllerCache: Record<string, unknown>;
-
     protected _viewIterator: IViewIterator;
 
     constructor(options: IOptions<S, T>) {
@@ -670,8 +668,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this.setItemsSpacings(options.itemPadding);
         }
 
-        this._controllerCache = {};
-
         this._viewIterator = {
             each: this.each.bind(this),
             setIndices: () => false,
@@ -702,7 +698,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._itemsUid = null;
         this._cursorEnumerator = null;
         this._utilityEnumerator = null;
-        this._controllerCache = null;
 
         super.destroy();
     }
@@ -2068,14 +2063,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$compatibleReset = compatible;
     }
 
-    getCacheValue<V>(key: string): V {
-        return this._controllerCache[key] as V;
-    }
-
-    setCacheValue(key: string, value: unknown): void {
-        this._controllerCache[key] = value;
-    }
-
     setViewIterator(viewIterator: IViewIterator): void {
         this._viewIterator = viewIterator;
     }
@@ -3185,7 +3172,6 @@ Object.assign(Collection.prototype, {
     _onCollectionChange: null,
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
-    _controllerCache: null,
     _viewIterator: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });

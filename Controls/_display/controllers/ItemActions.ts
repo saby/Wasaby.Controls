@@ -1,11 +1,4 @@
-import {
-    updateCollection,
-    getItemByKey,
-    updateCollectionWithCachedItem,
-    IBaseCollection,
-    TCollectionKey
-} from './controllerUtils';
-
+import { IBaseCollection, TItemKey } from './interface';
 import { showType } from 'Controls/Utils/Toolbar';
 
 // TODO Написать реальный тип для action'ов
@@ -26,86 +19,74 @@ export interface IItemActionsItem {
     getContents(): unknown;
     setActions(actions: IItemActionsContainer): void;
     setActive(active: boolean): void;
+    isActive(): boolean;
 }
 
-export interface IItemActionsCollection extends IBaseCollection {
-    setEventRaising(raising: boolean, analyze?: boolean): void;
+export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
     each(cb: (item: IItemActionsItem) => void): void;
+    setEventRaising?(raising: boolean, analyze?: boolean): void;
 }
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
-
-const CACHE_ACTIVE_ITEM = 'activeItem';
 
 export function assignActions(
     collection: IItemActionsCollection,
     actions: TItemAction[],
     visibilityCallback: TItemActionVisibilityCallback = () => true
 ): void {
-    updateCollection(collection, () => {
-        const supportsEventRaising =
-            typeof collection.setEventRaising === 'function';
-        const fixedActions = actions.map(_fixActionIcon);
+    const supportsEventRaising = typeof collection.setEventRaising === 'function';
+    const fixedActions = actions.map(_fixActionIcon);
 
-        if (supportsEventRaising) {
-            collection.setEventRaising(false, true);
-        }
+    if (supportsEventRaising) {
+        collection.setEventRaising(false, true);
+    }
 
-        collection.each((item) => {
-            const actionsForItem = fixedActions.filter((action) =>
-                visibilityCallback(action, item.getContents())
-            );
-            _setItemActions(item, _wrapActionsInContainer(actionsForItem));
-        });
-
-        if (supportsEventRaising) {
-            collection.setEventRaising(true, true);
-        }
+    collection.each((item) => {
+        const actionsForItem = fixedActions.filter((action) =>
+            visibilityCallback(action, item.getContents())
+        );
+        _setItemActions(item, _wrapActionsInContainer(actionsForItem));
     });
+
+    if (supportsEventRaising) {
+        collection.setEventRaising(true, true);
+    }
+    collection.nextVersion();
 }
 
 export function setActionsToItem(
     collection: IItemActionsCollection,
-    key: TCollectionKey,
+    key: TItemKey,
     actions: IItemActionsContainer
 ): void {
-    updateCollection(collection, () => {
-        const item: IItemActionsItem = getItemByKey(collection, key);
-        if (item) {
-            _setItemActions(item, actions);
-        }
-    });
+    const item = collection.getItemBySourceKey(key);
+    if (item) {
+        _setItemActions(item, actions);
+    }
+    collection.nextVersion();
 }
 
 export function setActiveItem(
     collection: IItemActionsCollection,
-    key: TCollectionKey
+    key: TItemKey
 ): void {
-    updateCollectionWithCachedItem(
-        collection,
-        CACHE_ACTIVE_ITEM,
-        (oldActiveItem: IItemActionsItem) => {
-            const newActiveItem: IItemActionsItem = getItemByKey(
-                collection,
-                key
-            );
+    const oldActiveItem = getActiveItem(collection);
+    const newActiveItem = collection.getItemBySourceKey(key);
 
-            if (oldActiveItem) {
-                oldActiveItem.setActive(false);
-            }
-            if (newActiveItem) {
-                newActiveItem.setActive(true);
-            }
+    if (oldActiveItem) {
+        oldActiveItem.setActive(false);
+    }
+    if (newActiveItem) {
+        newActiveItem.setActive(true);
+    }
 
-            return newActiveItem;
-        }
-    );
+    collection.nextVersion();
 }
 
 export function getActiveItem(
     collection: IItemActionsCollection
 ): IItemActionsItem {
-    return collection.getCacheValue(CACHE_ACTIVE_ITEM) as IItemActionsItem;
+    return collection.find((item) => item.isActive());
 }
 
 export function getMenuActions(item: IItemActionsItem): TItemAction[] {

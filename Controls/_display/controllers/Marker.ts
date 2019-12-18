@@ -1,39 +1,29 @@
-import {
-    getItemByKey,
-    updateCollectionWithCachedItem,
-    IBaseCollection,
-    TCollectionKey
-} from './controllerUtils';
+import { IBaseCollection, TItemKey } from './interface';
 
 export interface IMarkerItem {
     setMarked(marked: boolean): void;
     isMarked(): boolean;
 }
 
-const CACHE_MARKED_ITEM = 'markedItem';
+export type IMarkerCollection = IBaseCollection<IMarkerItem>;
 
 export function markItem(
-    collection: IBaseCollection,
-    key: TCollectionKey
+    collection: IMarkerCollection,
+    key: TItemKey
 ): void {
-    updateCollectionWithCachedItem(
-        collection,
-        CACHE_MARKED_ITEM,
-        (oldMarkedItem: IMarkerItem) => {
-            const newMarkedItem: IMarkerItem = getItemByKey(collection, key);
+    const oldMarkedItem = getMarkedItem(collection);
+    const newMarkedItem = collection.getItemBySourceKey(key);
 
-            if (oldMarkedItem) {
-                oldMarkedItem.setMarked(false);
-            }
-            if (newMarkedItem) {
-                newMarkedItem.setMarked(true);
-            }
+    if (oldMarkedItem) {
+        oldMarkedItem.setMarked(false);
+    }
+    if (newMarkedItem) {
+        newMarkedItem.setMarked(true);
+    }
 
-            return newMarkedItem;
-        }
-    );
+    collection.nextVersion();
 }
 
-export function getMarkedItem(collection: IBaseCollection): IMarkerItem {
-    return collection.getCacheValue(CACHE_MARKED_ITEM) as IMarkerItem;
+export function getMarkedItem(collection: IMarkerCollection): IMarkerItem {
+    return collection.find((item) => item.isMarked());
 }
