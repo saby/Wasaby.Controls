@@ -6,14 +6,20 @@ define('Controls-demo/OperationsPanel/Demo', [
    'Controls-demo/OperationsPanel/Demo/Data',
    'Controls/list',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
-   'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
+   'wml!Controls-demo/OperationsPanel/Demo/PersonInfo',
+   'wml!Controls-demo/OperationsPanel/Demo/resources/filterButtonEngineTemplate',
+   'wml!Controls-demo/OperationsPanel/Demo/resources/filterPanelItemsTemplate'
 ], function(Control, template, source, TreeMemory, Data, lists) {
    'use strict';
 
    var filterButtonData = [{
       id: 'owner',
       resetValue: '0',
-      value: '0'
+      value: '0',
+      source: new source.Memory({
+         data: Data.owners,
+         keyProperty: 'owner'
+      })
    }];
 
    return Control.extend({
