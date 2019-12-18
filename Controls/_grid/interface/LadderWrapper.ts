@@ -13,7 +13,7 @@
  *       <ws:Array>
  *          <ws:Object width="1fr">
  *             <ws:template>
- *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                <ws:partial template="Controls/grid:ColumnTemplate" scope="{{template}}">
  *                   <ws:contentTemplate>
  *                      <ws:partial template="Controls/grid:LadderWrapper" ladderProperty="date">
  *                         {{contentTemplate.itemData.item['date']}}

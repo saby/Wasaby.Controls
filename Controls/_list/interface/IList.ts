@@ -259,7 +259,7 @@ export interface IList {
  *    <ws:itemTemplate>
  *      <ws:partial template="Controls/list:ItemTemplate">
  *        <ws:contentTemplate>
- *          <ws:partial template="wml!customTemplateName"/>
+ *          <ws:partial template="wml!customTemplateName" scope="{{contentTemplate}}" />
  *        </ws:contentTemplate>
  *      </ws:partial>
  *    </ws:itemTemplate>
@@ -297,7 +297,7 @@ export interface IList {
  *    <ws:itemTemplate>
  *      <ws:partial template="Controls/list:ItemTemplate">
  *        <ws:contentTemplate>
- *          <ws:partial template="wml!customTemplateName"/>
+ *          <ws:partial template="wml!customTemplateName" scope="{{contentTemplate}}" />
  *        </ws:contentTemplate>
  *      </ws:partial>
  *    </ws:itemTemplate>

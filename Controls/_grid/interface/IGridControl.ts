@@ -28,7 +28,7 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="Controls/grid:ColumnTemplate">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate" scope="{{template}}">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -85,11 +85,11 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="Controls/grid:ColumnTemplate">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate" scope="{{template}}">
  *                         <ws:contentTemplate>
- *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *                            <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
- *                                  {{itemData.item['date']}}
+ *                                  {{template.itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
  *                         </ws:contentTemplate>

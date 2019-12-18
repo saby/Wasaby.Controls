@@ -14,7 +14,7 @@
  *       <ws:Array>
  *          <ws:Object displayProperty="name">
  *             <ws:template>
- *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                <ws:partial template="Controls/grid:ColumnTemplate" scope="{{template}}">
  *                   <ws:contentTemplate>
  *                      <div title="{{contentTemplate.itemData.item.name}}">
  *                         {{contentTemplate.itemData.item.name}}
@@ -51,7 +51,7 @@
  *       <ws:Array>
  *          <ws:Object displayProperty="Name">
  *             <ws:template>
- *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                <ws:partial template="Controls/grid:ColumnTemplate" scope="{{template}}">
  *                   <ws:contentTemplate>
  *                      <div title="{{contentTemplate.itemData.item.Name}}">
  *                         {{contentTemplate.itemData.item.Name}}
@@ -124,7 +124,7 @@
  *       <ws:Array>
  *          <ws:Object displayProperty="name">
  *             <ws:template>
- *                <ws:partial template="Controls/grid:ColumnTemplate">
+ *                <ws:partial template="Controls/grid:ColumnTemplate" scope="{{template}}">
  *                   <ws:contentTemplate>
  *                      <div title="{{contentTemplate.itemData.item.name}}">
  *                         {{contentTemplate.itemData.item.name}}
