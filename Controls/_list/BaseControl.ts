@@ -2536,7 +2536,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._shouldUpdateItemActions = true;
+        this._updateItemActions();
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
