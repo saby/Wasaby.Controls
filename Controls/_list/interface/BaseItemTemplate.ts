@@ -18,19 +18,19 @@
 
 /**
  * @name Controls/list:BaseItemTemplate#clickable
- * @cfg {Boolean} Когда опция установлена в значение true, элемент доступен для клика и используется {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} pointer. В значении false элемент недоступен для клика, и используется курсор default.
+ * @cfg {Boolean} Когда опция установлена в значение true, элемент доступен для клика, и используется {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} pointer. В значении false элемент недоступен для клика, и используется курсор default.
  * @default true
  */
 
 /**
  * @typedef {String} ItemActionsClass
- * @variant controls-itemActionsV_position_bottomRight Опции записи отображаются в правом нижнем углу элемента. 
- * @variant controls-itemActionsV_position_topRight Опции записи отображаются в правом верхнем углу элемента.
+ * @variant controls-itemActionsV_position_bottomRight В правом нижнем углу элемента. 
+ * @variant controls-itemActionsV_position_topRight В правом верхнем углу элемента.
  */
 
 /**
  * @name Controls/list:BaseItemTemplate#itemActionsClass
- * @cfg {ItemActionsClass} Устанавливает положение {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опций записи} относительно элемента.
+ * @cfg {ItemActionsClass} Задаёт расположение для панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опциями записи} внутри элемента.
  * @default controls-itemActionsV_position_bottomRight
  */
 

@@ -11,7 +11,7 @@
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes INotification Controls/_popupTemplate/Notification/interface/INotification
  * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
- * 
+ * @includes Sticky Controls/_popupTemplate/Sticky
  * @public
  * @author Крайнов Д.О.
  */
@@ -27,6 +27,7 @@
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
+ * @includes Sticky Controls/_popupTemplate/Sticky
  * @public
  * @author Крайнов Д.О.
  */

@@ -11,10 +11,14 @@
  * @includes PreviewerTarget Controls/_popup/Previewer
  * @includes InfoboxButton Controls/_popup/InfoBox/InfoboxButton
  * @includes EditContainer Controls/_popup/Opener/Edit/Container
+<<<<<<< HEAD
  * @includes IStackPopupOptions Controls/_popup/interface/IStack
  * @includes IStickyPopupOptions Controls/_popup/interface/ISticky
  * @includes IDialogPopupOptions Controls/_popup/interface/IDialog
  * @includes IConfirmationOptions Controls/_popup/interface/IConfirmation
+=======
+ * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
+>>>>>>> 20.1000/docs/by/19-dec-must-fix
  * @public
  * @author Крайнов Д.О.
  */
@@ -32,10 +36,14 @@
  * @includes PreviewerTarget Controls/_popup/Previewer
  * @includes InfoboxButton Controls/_popup/InfoBox/InfoboxButton
  * @includes EditContainer Controls/_popup/Opener/Edit/Container
+<<<<<<< HEAD
  * @includes IStackPopupOptions Controls/_popup/interface/IStack
  * @includes IStickyPopupOptions Controls/_popup/interface/ISticky
  * @includes IStickyPopupOptions Controls/_popup/interface/IDialog
  * @includes IConfirmationOptions Controls/_popup/interface/IConfirmation
+=======
+ * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
+>>>>>>> 20.1000/docs/by/19-dec-must-fix
  * @public
  * @author Крайнов Д.О.
  */
