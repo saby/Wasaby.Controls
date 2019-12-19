@@ -1,5 +1,7 @@
 import { IBaseCollection, TItemKey } from './interface';
 import { showType } from 'Controls/Utils/Toolbar';
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { RecordSet } from 'Types/collection';
 
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
@@ -23,8 +25,14 @@ export interface IItemActionsItem {
 }
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
+    destroyed: boolean;
     each(cb: (item: IItemActionsItem) => void): void;
     setEventRaising?(raising: boolean, analyze?: boolean): void;
+    areActionsAssigned(): boolean;
+    setActionsAssigned(assigned: boolean): void;
+    setActionsMenuConfig(config: any): void;
+    getActionsMenuConfig(): any;
+    getContextMenuConfig(): any;
 }
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
@@ -34,6 +42,10 @@ export function assignActions(
     actions: TItemAction[],
     visibilityCallback: TItemActionVisibilityCallback = () => true
 ): void {
+    if (collection.areActionsAssigned()) {
+        return;
+    }
+
     const supportsEventRaising = typeof collection.setEventRaising === 'function';
     const fixedActions = actions.map(_fixActionIcon);
 
@@ -51,7 +63,14 @@ export function assignActions(
     if (supportsEventRaising) {
         collection.setEventRaising(true, true);
     }
+
+    collection.setActionsAssigned(true);
+
     collection.nextVersion();
+}
+
+export function resetActionsAssignment(collection: IItemActionsCollection): void {
+    collection.setActionsAssigned(false);
 }
 
 export function setActionsToItem(
@@ -100,15 +119,143 @@ export function getMenuActions(item: IItemActionsItem): TItemAction[] {
 
 export function getChildActions(
     item: IItemActionsItem,
-    parentAction: TItemAction
+    parentActionKey: TItemAction
 ): TItemAction[] {
     const actions = item.getActions();
     const allActions = actions && actions.all;
     if (allActions) {
-        const parentId = parentAction.id;
-        return allActions.filter((action) => action.parent === parentId);
+        return allActions.filter((action) => action.parent === parentActionKey);
     }
     return [];
+}
+
+export function processActionClick(
+    collection: IItemActionsCollection,
+    itemKey: TItemKey,
+    action: TItemAction,
+    clickEvent: SyntheticEvent<MouseEvent>,
+    fromDropdown: boolean
+): void {
+    clickEvent.stopPropagation();
+    if (action._isMenu) {
+        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false);
+    } else if (action['parent@']) {
+        if (!fromDropdown) {
+            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false);
+        }
+    } else {
+        const item = collection.getItemBySourceKey(itemKey);
+        if (item) {
+            const contents = item.getContents();
+
+            // How to fire from here???
+            // this._notify('actionClick', [action, contents, itemContainer]);
+
+            if (action.handler) {
+                action.handler(contents);
+            }
+        }
+    }
+    // TODO update some item actions
+    // TODO move the marker
+}
+
+export function prepareActionsMenuConfig(
+    collection: IItemActionsCollection,
+    itemKey: TItemKey,
+    clickEvent: SyntheticEvent<MouseEvent>,
+    parentAction: TItemAction,
+    isContext: boolean
+): void {
+    const item = collection.getItemBySourceKey(itemKey);
+    if (!item) {
+        return;
+    }
+
+    const hasParentAction = parentAction !== null && parentAction !== undefined;
+    const menuActions = hasParentAction
+        ? getChildActions(item, parentAction.id)
+        : getMenuActions(item);
+
+    if (menuActions && menuActions.length > 0) {
+        // there was a fake target before, check if it is needed
+        const menuTarget = isContext ? null : clickEvent.target;
+        const closeHandler = _processActionsMenuClose.bind(null, collection);
+        const menuRecordSet = new RecordSet({
+            rawData: menuActions,
+            keyProperty: 'id'
+        });
+        const headConfig = hasParentAction ? { caption: parentAction.title } : null;
+        const contextMenuConfig = collection.getContextMenuConfig();
+        const menuConfig = {
+            items: menuRecordSet,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'parent@',
+            dropdownClassName: 'controls-itemActionsV__popup',
+            showClose: true,
+            ...contextMenuConfig,
+            rootKey: parentAction,
+            showHeader: hasParentAction,
+            headConfig
+        };
+        const dropdownConfig = {
+            // opener: this,
+            target: menuTarget,
+            templateOptions: menuConfig,
+            eventHandlers: {
+                onResult: closeHandler,
+                onClose: closeHandler
+            },
+            closeOnOutsideClick: true,
+            targetPoint: {
+                vertical: 'top',
+                horizontal: 'right'
+            },
+            direction: {
+                horizontal: isContext ? 'right' : 'left'
+            },
+            className: 'controls-DropdownList__margin-head controls-Toolbar__popup__list_theme-',
+            nativeEvent: isContext ? clickEvent.nativeEvent : false
+        };
+
+        setActiveItem(collection, itemKey);
+        collection.setActionsMenuConfig(dropdownConfig);
+
+        collection.nextVersion();
+    }
+}
+
+function _processActionsMenuClose(
+    collection: IItemActionsCollection,
+    args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] }
+): void {
+    // Actions dropdown can start closing after the view itself was unmounted already, in which case
+    // the model would be destroyed and there would be no need to process the action itself
+    if (collection && !collection.destroyed) {
+        // If menu needs to close because one of the actions was clicked, process
+        // the action handler first
+        if (args && args.action === 'itemClick') {
+            const action = args.data && args.data[0] && args.data[0].getRawData();
+            processActionClick(
+                collection,
+                getActiveItem(collection)?.getContents()?.getKey(),
+                action,
+                args.event,
+                true
+            );
+
+            // If this action has children, don't close the menu if it was clicked
+            if (action['parent@']) {
+                return;
+            }
+        }
+
+        setActiveItem(collection, null);
+        collection.setActionsMenuConfig(null);
+
+        collection.nextVersion();
+    }
 }
 
 function _setItemActions(

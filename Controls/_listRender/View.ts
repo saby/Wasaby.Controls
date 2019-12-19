@@ -6,7 +6,7 @@ import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
 
-import { Collection } from 'Controls/display';
+import { Collection, CollectionItem, ItemActionsController } from 'Controls/display';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';
@@ -17,6 +17,14 @@ export interface IViewOptions extends IControlOptions {
 
     collection: string;
     render: string;
+
+    itemActions?: any[];
+    itemActionVisibilityCallback?: Function;
+    itemActionsPosition?: string;
+}
+
+interface ISwipeEvent extends Event {
+    direction: string;
 }
 
 export default class View extends Control<IViewOptions> {
@@ -25,7 +33,7 @@ export default class View extends Control<IViewOptions> {
 
     protected _collection: Collection<Model>;
 
-    protected _dropdownMenuIsOpen: boolean = false;
+    protected _isHovered: boolean = false;
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
@@ -39,6 +47,19 @@ export default class View extends Control<IViewOptions> {
             }
             this._collection = this._createCollection(options.collection, options.items, options);
         }
+        if (
+            options.itemActions !== this._options.itemActions ||
+            options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback
+        ) {
+            ItemActionsController.resetActionsAssignment(this._collection);
+            if (this._isHovered) {
+                ItemActionsController.assignActions(
+                    this._collection,
+                    options.itemActions,
+                    options.itemActionVisibilityCallback
+                );
+            }
+        }
     }
 
     protected _beforeUnmount(): void {
@@ -48,18 +69,76 @@ export default class View extends Control<IViewOptions> {
         }
     }
 
-    protected _onDropdownMenuOpenRequested(event: SyntheticEvent<null>, dropdownConfig: any): void {
-        if (this._children.dropdownMenuOpener) {
-            this._children.dropdownMenuOpener.open(dropdownConfig);
-            this._dropdownMenuIsOpen = true;
-        }
+    protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
+        this._isHovered = true;
+        ItemActionsController.assignActions(
+            this._collection,
+            this._options.itemActions,
+            this._options.itemActionVisibilityCallback
+        );
     }
 
-    protected _onDropdownMenuCloseRequested(): void {
-        if (this._children.dropdownMenuOpener) {
-            this._children.dropdownMenuOpener.close();
-            this._dropdownMenuIsOpen = false;
-        }
+    protected _onRenderMouseLeave(e: SyntheticEvent<MouseEvent>): void {
+        this._isHovered = false;
+    }
+
+    protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
+        this._isHovered = true;
+        ItemActionsController.assignActions(
+            this._collection,
+            this._options.itemActions,
+            this._options.itemActionVisibilityCallback
+        );
+    }
+
+    protected _onRenderTouchEnd(e: SyntheticEvent<TouchEvent>): void {
+        this._isHovered = false;
+    }
+
+    protected _onItemClick(
+        e: SyntheticEvent<null>,
+        item: Model,
+        clickEvent: SyntheticEvent<MouseEvent>
+    ): void {
+
+    }
+
+    protected _onItemSwipe(
+        e: SyntheticEvent<null>,
+        item: CollectionItem<Model>,
+        swipeEvent: SyntheticEvent<ISwipeEvent>
+    ): void {
+
+    }
+
+    protected _onItemActionClick(
+        e: SyntheticEvent<null>,
+        item: CollectionItem<Model>,
+        action: unknown,
+        clickEvent: SyntheticEvent<MouseEvent>
+    ): void {
+        ItemActionsController.processActionClick(
+            this._collection,
+            item.getContents().getKey(),
+            action,
+            clickEvent,
+            false
+        );
+        // NB How to fire 'actionClick' event???
+    }
+
+    protected _onItemContextMenu(
+        e: SyntheticEvent<null>,
+        item: CollectionItem<Model>,
+        clickEvent: SyntheticEvent<MouseEvent>
+    ): void {
+        ItemActionsController.prepareActionsMenuConfig(
+            this._collection,
+            item.getContents().getKey(),
+            clickEvent,
+            null,
+            true
+        );
     }
 
     private _createCollection(
@@ -68,5 +147,11 @@ export default class View extends Control<IViewOptions> {
         collectionOptions: IViewOptions
     ): Collection<Model> {
         return diCreate(module, { ...collectionOptions, collection: items });
+    }
+
+    static getDefaultOptions(): Partial<IViewOptions> {
+        return {
+            itemActionsPosition: 'inside'
+        };
     }
 }

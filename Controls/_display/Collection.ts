@@ -524,6 +524,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$hasMoreData: boolean;
 
+    protected _$contextMenuConfig: any;
+
     protected _$compatibleReset: boolean;
 
     /**
@@ -618,6 +620,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _oEventRaisingChange: Function;
 
     protected _viewIterator: IViewIterator;
+
+    protected _actionsAssigned: boolean;
+    protected _actionsMenuConfig: unknown;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2063,6 +2068,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$compatibleReset = compatible;
     }
 
+    getContextMenuConfig(): unknown {
+        return this._$contextMenuConfig;
+    }
+
     setViewIterator(viewIterator: IViewIterator): void {
         this._viewIterator = viewIterator;
     }
@@ -2073,6 +2082,22 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     nextVersion(): void {
         this._nextVersion();
+    }
+
+    setActionsAssigned(assigned: boolean): void {
+        this._actionsAssigned = assigned;
+    }
+
+    areActionsAssigned(): boolean {
+        return this._actionsAssigned;
+    }
+
+    getActionsMenuConfig(): unknown {
+        return this._actionsMenuConfig;
+    }
+
+    setActionsMenuConfig(config: unknown): void {
+        this._actionsMenuConfig = config;
     }
 
     // region SerializableMixin
@@ -3161,6 +3186,7 @@ Object.assign(Collection.prototype, {
     _$importantItemProperties: null,
     _$hasMoreData: false,
     _$compatibleReset: false,
+    _$contextMenuConfig: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
@@ -3173,6 +3199,8 @@ Object.assign(Collection.prototype, {
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
     _viewIterator: null,
+    _actionsAssigned: false,
+    _actionsMenuConfig: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
