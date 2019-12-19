@@ -23,6 +23,7 @@ import {
     IEnumerableComparatorSession,
     RecordSet
 } from 'Types/collection';
+import { isEqual } from 'Types/object';
 import {create, register} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
@@ -622,7 +623,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _viewIterator: IViewIterator;
 
     protected _actionsAssigned: boolean;
-    protected _actionsMenuConfig: unknown;
+    protected _actionsMenuConfig: any;
+    protected _actionsTemplateConfig: any;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2092,12 +2094,23 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._actionsAssigned;
     }
 
-    getActionsMenuConfig(): unknown {
+    getActionsMenuConfig(): any {
         return this._actionsMenuConfig;
     }
 
-    setActionsMenuConfig(config: unknown): void {
+    setActionsMenuConfig(config: any): void {
         this._actionsMenuConfig = config;
+    }
+
+    getActionsTemplateConfig(): any {
+        return this._actionsTemplateConfig;
+    }
+
+    setActionsTemplateConfig(config: any): void {
+        if (!isEqual(this._actionsTemplateConfig, config)) {
+            this._actionsTemplateConfig = config;
+            this._nextVersion();
+        }
     }
 
     // region SerializableMixin
@@ -3201,6 +3214,7 @@ Object.assign(Collection.prototype, {
     _viewIterator: null,
     _actionsAssigned: false,
     _actionsMenuConfig: null,
+    _actionsTemplateConfig: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
