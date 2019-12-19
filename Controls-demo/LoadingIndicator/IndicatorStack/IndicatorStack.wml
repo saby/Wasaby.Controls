@@ -1,17 +1,24 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell ws-flexbox ws-flex-row controlsDemo__mb1">
-        <div class="controlsDemo__mr3" style="font-size: 15px; color: red">Стек индикаторов</div>
+    <div class="controlsDemo__cell controls-text-label_theme-{{_options.theme}}">Стек глобальных индикаторов</div>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-row controlsDemo__mb2">
         <div class="controlsDemo__mr2">
-            <Controls.buttons:Button caption="Open the first indicator"
-                                     on:click="_firstOpen()"/>
-            <Controls.buttons:Button caption="Close"
-                                     on:click="_close('first')"/>
+            <a attr:class="ws-link" on:click="_firstOpen()">Открыть 1 индикатор</a>
         </div>
+        <div>
+            <a attr:class="ws-link" on:click="_close('first')">Закрыть 1 индикатор</a>
+        </div>
+    </div>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-row controlsDemo__mb2">
         <div class="controlsDemo__mr2">
-            <Controls.buttons:Button caption="Open the second indicator"
-                                     on:click="_secondOpen()"/>
-            <Controls.buttons:Button caption="Close"
-                                     on:click="_close('second')"/>
+            <a attr:class="ws-link" on:click="_secondOpen()">Открыть 2 индикатор</a>
+        </div>
+        <div>
+            <a attr:class="ws-link" on:click="_close('second')">Закрыть 2 индикатор</a>
+        </div>
+    </div>
+    <div class="controlsDemo__cell">
+        <div>
+            <a attr:class="ws-link" on:click="_overlay()">Индикатор с обновляющимся контентом</a>
         </div>
     </div>
 </div>

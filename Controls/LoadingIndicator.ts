@@ -10,7 +10,6 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @variant true В этом случае индикатор позиционируется через position: fixed.
  * @variant false В этом случае индикатор позиционируется через position: absolute.
  * @default true
- * @demo Controls-demo/LoadingIndicator/isGlobal/Index
  */
 
 /*
@@ -19,7 +18,6 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @variant true It means position: fixed of indicator's container
  * @variant false It means position: absolute of indicator's container
  * @default true
- * @demo Controls-demo/LoadingIndicator/isGlobal/Index
  */
 
 /**
@@ -186,8 +184,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @author Красильников А.С.
  * @public
  * @category Container
- * @demo Controls-demo/LoadingIndicator/UpdatedIndicator/index
- * @demo Controls-demo/LoadingIndicator/IndicatorStack/index
+ * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
 /*
@@ -242,8 +239,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @author Красильников А.С.
  * @public
  * @category Container
- * @demo Controls-demo/LoadingIndicator/UpdatedIndicator/index
- * @demo Controls-demo/LoadingIndicator/IndicatorStack/index
+ * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 let ManagerController;
 const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{

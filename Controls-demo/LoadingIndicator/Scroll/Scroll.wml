@@ -1,60 +1,57 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell ws-flexbox ws-flex-row controlsDemo__mb1">
-        <div class="controlsDemo__mr3" style="font-size: 15px; color: red">Scroll</div>
-        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
-            <div class="controlsDemo__mb1">
-                <div>без градиента(по умолчанию)</div>
-            </div>
-            <Controls-demo.LoadingIndicator.IndicatorContainer
-                    isGlobal="{{false}}"
-                    overlay="dark"
-                    delay="{{0}}"
-            ></Controls-demo.LoadingIndicator.IndicatorContainer>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mr2">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">без градиента(по умолчанию)</div>
         </div>
+        <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
+                isGlobal="{{false}}"
+                overlay="dark"
+                delay="{{0}}"
+        ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
+    </div>
 
-        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
-            <div class="controlsDemo__mb1">
-                <div>scroll = right</div>
-            </div>
-            <Controls-demo.LoadingIndicator.IndicatorContainer
-                    isGlobal="{{false}}"
-                    scroll="right"
-                    overlay="dark"
-                    delay="{{0}}"
-            ></Controls-demo.LoadingIndicator.IndicatorContainer>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mr2">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">scroll=right</div>
         </div>
-        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
-            <div class="controlsDemo__mb1">
-                <div>scroll = left</div>
-            </div>
-            <Controls-demo.LoadingIndicator.IndicatorContainer
-                    isGlobal="{{false}}"
-                    scroll="left"
-                    overlay="dark"
-                    delay="{{0}}"
-            ></Controls-demo.LoadingIndicator.IndicatorContainer>
+        <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
+                isGlobal="{{false}}"
+                scroll="right"
+                overlay="dark"
+                delay="{{0}}"
+        ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
+    </div>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mr2">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">scroll=left</div>
         </div>
-        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
-            <div class="controlsDemo__mb1">
-                <div>scroll = top</div>
-            </div>
-            <Controls-demo.LoadingIndicator.IndicatorContainer
-                    isGlobal="{{false}}"
-                    scroll="top"
-                    overlay="dark"
-                    delay="{{0}}"
-            ></Controls-demo.LoadingIndicator.IndicatorContainer>
+        <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
+                isGlobal="{{false}}"
+                scroll="left"
+                overlay="dark"
+                delay="{{0}}"
+        ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
+    </div>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mr2">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">scroll=top</div>
         </div>
-        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
-            <div class="controlsDemo__mb1">
-                <div>scroll = bottom</div>
-            </div>
-            <Controls-demo.LoadingIndicator.IndicatorContainer
-                    isGlobal="{{false}}"
-                    scroll="bottom"
-                    overlay="dark"
-                    delay="{{0}}"
-            ></Controls-demo.LoadingIndicator.IndicatorContainer>
+        <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
+                isGlobal="{{false}}"
+                scroll="top"
+                overlay="dark"
+                delay="{{0}}"
+        ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
+    </div>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mr2">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">scroll=bottom</div>
         </div>
+        <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
+                isGlobal="{{false}}"
+                scroll="bottom"
+                overlay="dark"
+                delay="{{0}}"
+        ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
     </div>
 </div>

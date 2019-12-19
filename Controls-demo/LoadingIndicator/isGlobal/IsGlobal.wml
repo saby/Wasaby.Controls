@@ -1,32 +1,23 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell ws-flexbox ws-flex-row controlsDemo__mb1">
-        <div class="controlsDemo__mr3" style="font-size: 15px; color: red">isGlobal</div>
-        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
+        <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mb2">
             <div class="controlsDemo__mb1">
-                <div>isGlobal = true(по умолчанию)</div>
-                <div>Глобальный индикатор'</div>
-                <div>message: 'Текст первого индикатора'</div>
+                <div class="controls-text-label_theme-{{_options.theme}}">isGlobal=true, delay=2000</div>
             </div>
             <div>
-                <Controls.buttons:Button caption="Open"
-                                         on:click="_firstOpen()"/>
-                <Controls.buttons:Button caption="Close" class="controls-demo__indicator_first_close"
-                                         on:click="_close('first')"/>
+                <a attr:class="ws-link" on:click="_firstOpen()">Открыть (закроется через 3 сек.)</a>
             </div>
         </div>
 
-        <div class="ws-flexbox ws-flex-column controlsDemo__mr2">
+        <div class="controlsDemo__cell ws-flexbox ws-flex-column">
             <div class="controlsDemo__mb1">
-                <div>isGlobal = false</div>
-                <div>Локальный индикатор</div>
-                <div>message: 'Локальный индикатор'</div>
+                <div class="controls-text-label_theme-{{_options.theme}}">isGlobal=false, delay=0</div>
             </div>
             <Controls-demo.LoadingIndicator.IndicatorContainer
                     isGlobal="{{false}}"
                     overlay="dark"
                     delay="{{0}}"
                     message="Локальный индикатор"
+                    time="3000"
             ></Controls-demo.LoadingIndicator.IndicatorContainer>
         </div>
-    </div>
 </div>

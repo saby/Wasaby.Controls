@@ -13,14 +13,10 @@ class IsGlobal extends Control<IControlOptions> {
             message: 'Текст первого индикатора',
             overlay: 'none'
         };
-        this._firstId = this._notify('showIndicator', [cfg], { bubbling: true });
-    }
-    private _close(event, name): void {
-        const indicatorName = '_' + name + 'Id';
-        if (this[indicatorName]) {
-            this._notify('hideIndicator', [this[indicatorName]], { bubbling: true });
-            this[indicatorName] = null;
-        }
+        this._firstId = this._notify('showIndicator', [cfg], {bubbling: true});
+        setTimeout(() => {
+            this._notify('hideIndicator', [this._firstId], { bubbling: true });
+        }, 5000);
     }
 }
 export default IsGlobal;
