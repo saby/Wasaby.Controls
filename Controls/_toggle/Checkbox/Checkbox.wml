@@ -16,7 +16,7 @@
                      attr:class="controls-Checkbox__icon-checked_theme-{{_options.theme}}
                                 {{_options.value ? ' controls-Checkbox__icon-checked-color_'+(_options.readOnly ? 'disabled':'enabled')+ '_theme-' + (_options.theme) :
                                  ' controls-Checkbox__icon-checked-color_transparent'}}">
-                    <path d="M1.3,9.2l4,3.4l10.3-9.1L5.8,16.6L1.3,9.2z"/>
+                    <path d="M1.85,8.65l4,3.4,10.3-9.1-9.8,13.1Z"/>
                 </svg>
             </div>
             <ws:partial template="wml!Controls/_toggle/Checkbox/resources/CheckboxCaption"
