@@ -6,11 +6,19 @@ import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
 
-import { Collection, CollectionItem, ItemActionsController } from 'Controls/display';
+import {
+    Collection,
+    CollectionItem,
+    ItemActionsController,
+    MarkerCommands,
+    ICollectionCommand
+} from 'Controls/display';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';
 import { SyntheticEvent } from 'Vdom/Vdom';
+
+import { constants } from 'Env/Env';
 
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
@@ -33,32 +41,36 @@ export default class View extends Control<IViewOptions> {
 
     protected _collection: Collection<Model>;
 
-    protected _isHovered: boolean = false;
-
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
         return libraryLoad(options.render).then(() => null);
     }
 
     protected _beforeUpdate(options: IViewOptions): void {
+        let collectionRecreated = false;
+
         if (options.items !== this._options.items) {
             if (this._collection) {
                 this._collection.destroy();
             }
             this._collection = this._createCollection(options.collection, options.items, options);
+            collectionRecreated = true;
         }
+
         if (
             options.itemActions !== this._options.itemActions ||
-            options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback
+            options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
+            collectionRecreated
         ) {
             ItemActionsController.resetActionsAssignment(this._collection);
-            if (this._isHovered) {
-                ItemActionsController.assignActions(
-                    this._collection,
-                    options.itemActions,
-                    options.itemActionVisibilityCallback
-                );
-            }
+
+            // TODO Only reassign actions if Render is hovered. Otherwise wait
+            // for mouseenter or touchstart to recalc the items
+            ItemActionsController.assignActions(
+                this._collection,
+                options.itemActions,
+                options.itemActionVisibilityCallback
+            );
         }
     }
 
@@ -70,29 +82,19 @@ export default class View extends Control<IViewOptions> {
     }
 
     protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
-        this._isHovered = true;
         ItemActionsController.assignActions(
             this._collection,
             this._options.itemActions,
             this._options.itemActionVisibilityCallback
         );
-    }
-
-    protected _onRenderMouseLeave(e: SyntheticEvent<MouseEvent>): void {
-        this._isHovered = false;
     }
 
     protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        this._isHovered = true;
         ItemActionsController.assignActions(
             this._collection,
             this._options.itemActions,
             this._options.itemActionVisibilityCallback
         );
-    }
-
-    protected _onRenderTouchEnd(e: SyntheticEvent<TouchEvent>): void {
-        this._isHovered = false;
     }
 
     protected _onItemClick(
@@ -100,7 +102,9 @@ export default class View extends Control<IViewOptions> {
         item: Model,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-
+        const moveMarker = new MarkerCommands.Mark(item.getKey());
+        this._executeCommands([moveMarker]);
+        // TODO fire 'markedKeyChanged' event
     }
 
     protected _onItemSwipe(
@@ -117,6 +121,10 @@ export default class View extends Control<IViewOptions> {
         action: unknown,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
+        const moveMarker = new MarkerCommands.Mark(item.getContents().getKey());
+        this._executeCommands([moveMarker]);
+        // TODO fire 'markedKeyChanged' event
+
         ItemActionsController.processActionClick(
             this._collection,
             item.getContents().getKey(),
@@ -124,7 +132,7 @@ export default class View extends Control<IViewOptions> {
             clickEvent,
             false
         );
-        // NB How to fire 'actionClick' event???
+        // TODO fire 'actionClick' event
     }
 
     protected _onItemContextMenu(
@@ -139,6 +147,28 @@ export default class View extends Control<IViewOptions> {
             null,
             true
         );
+    }
+
+    protected _onItemKeyDown(
+        e: SyntheticEvent<null>,
+        item: CollectionItem<Model>,
+        keyDownEvent: SyntheticEvent<KeyboardEvent>
+    ): void {
+        const commands: Array<ICollectionCommand<unknown>> = [];
+        switch (keyDownEvent.nativeEvent.keyCode) {
+        case constants.key.down:
+            commands.push(new MarkerCommands.MarkNext());
+            break;
+        case constants.key.up:
+            commands.push(new MarkerCommands.MarkPrevious());
+            break;
+        }
+        this._executeCommands(commands);
+        // TODO fire 'markedKeyChanged' event if needed
+    }
+
+    protected _executeCommands(commands: Array<ICollectionCommand<unknown>>): void {
+        commands.forEach((command) => command.execute(this._collection));
     }
 
     private _createCollection(

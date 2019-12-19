@@ -611,7 +611,8 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
 
         if (this._isAdd) {
             if (options.useNewModel) {
-                displayLib.MarkerController.markItem(listModel, this._editingItemData.getContents().getId());
+                const markCommand = new displayLib.MarkerCommands.Mark(this._editingItemData.getContents().getId());
+                markCommand.execute(listModel);
             } else {
                 listModel.markAddingItem();
             }

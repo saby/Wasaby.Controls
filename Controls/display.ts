@@ -55,9 +55,6 @@ export {default as TreeItem} from './_display/TreeItem';
 export {default as TileCollection} from './_display/TileCollection';
 export {default as TileCollectionItem} from './_display/TileCollectionItem';
 
-import * as MarkerController from './_display/controllers/Marker';
-export { MarkerController };
-
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
 export { EditInPlaceController };
 
@@ -75,3 +72,8 @@ export { VirtualScrollController };
 
 import * as VirtualScrollHideController from './_display/controllers/VirtualScrollHide';
 export { VirtualScrollHideController };
+
+export { ICollectionCommand } from './_display/interface';
+
+import * as MarkerCommands from './_display/commands/Marker';
+export { MarkerCommands };

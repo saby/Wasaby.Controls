@@ -220,7 +220,8 @@ var ItemActionsControl = Control.extend({
         if (!this._destroyed) {
             if (this._options.useNewModel) {
                 this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
-                displayLib.MarkerController.markItem(this._options.listModel, itemData.getContents().getId());
+                const markCommand = new displayLib.MarkerCommands.Mark(itemData.getContents().getId());
+                markCommand.execute(this._options.listModel);
             } else {
                 this.updateItemActions(itemData.actionsItem);
                 this._options.listModel.setMarkedKey(itemData.key);

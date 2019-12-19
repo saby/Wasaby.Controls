@@ -309,7 +309,8 @@ var _private = {
         if (key !== undefined) {
             const model = self.getViewModel();
             if (self._options.useNewModel) {
-                displayLib.MarkerController.markItem(model, key);
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(model);
             } else {
                 model.setMarkedKey(key);
             }
@@ -341,7 +342,7 @@ var _private = {
             let nextKey;
             if (self._options.useNewModel) {
                 const nextItem = model.getNext(
-                    displayLib.MarkerController.getMarkedItem(model)
+                    model.find((item) => item.isMarked())
                 );
                 const contents = nextItem && nextItem.getContents();
                 nextKey = contents && contents.getId();
@@ -364,7 +365,7 @@ var _private = {
             let prevKey;
             if (self._options.useNewModel) {
                 const prevItem = model.getPrevious(
-                    displayLib.MarkerController.getMarkedItem(model)
+                    model.find((item) => item.isMarked())
                 );
                 const contents = prevItem && prevItem.getContents();
                 prevKey = contents && contents.getId();
@@ -400,7 +401,7 @@ var _private = {
         }
         let markedItem;
         if (self._options.useNewModel) {
-            markedItem = displayLib.MarkerController.getMarkedItem(self.getViewModel());
+            markedItem = self.getViewModel().find((item) => item.isMarked());
         } else {
             markedItem = self.getViewModel().getMarkedItem();
         }
@@ -897,9 +898,10 @@ var _private = {
         firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
         if (self._options.useNewModel) {
             const item = self._listViewModel.at(firstItemIndex);
-            const key = item && item.getContents().getId();
             if (item) {
-                displayLib.MarkerController.markItem(self._listViewModel, key);
+                const key = item.getContents().getId();
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(self._listViewModel);
             }
         } else {
             self._listViewModel.setMarkerOnValidItem(firstItemIndex);
@@ -2082,7 +2084,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (direction === 'right' || direction === 'left') {
             if (this._options.useNewModel) {
-                displayLib.MarkerController.markItem(this._listViewModel, key);
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(this._listViewModel);
                 displayLib.ItemActionsController.setActiveItem(this._listViewModel, key);
             } else {
                 var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
@@ -2138,7 +2141,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             e.stopPropagation();
         }
         if (this._options.useNewModel) {
-            displayLib.MarkerController.markItem(this._listViewModel, item.getId());
+            const markCommand = new displayLib.MarkerCommands.Mark(item.getId());
+            markCommand.execute(this._listViewModel);
         } else {
             var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
@@ -2223,7 +2227,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
         if (this._options.useNewModel) {
-            displayLib.MarkerController.markItem(this._listViewModel, itemData.getContents().getId());
+            const markCommand = new displayLib.MarkerCommands.Mark(itemData.getContents().getId());
+            markCommand.execute(this._listViewModel);
         } else {
             this._listViewModel.setMarkedKey(itemData.key);
         }

@@ -135,6 +135,8 @@ export default class Render extends Control<IRenderOptions> {
             }
             // Compatibility with BaseControl and EditInPlace control
             this._notify('editingRowKeyDown', [e.nativeEvent], {bubbling: true});
+        } else {
+            this._notify('itemKeyDown', [item, e]);
         }
     }
 

@@ -1,4 +1,4 @@
-import { IBaseCollection, TItemKey } from './interface';
+import { IBaseCollection, TItemKey } from '../interface';
 import { showType } from 'Controls/Utils/Toolbar';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
