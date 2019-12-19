@@ -244,6 +244,7 @@ var _private = {
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
             if (!isDeepReload || self._needResetExpandedItems) {
                 viewModel.resetExpandedItems();
+                viewModel.setHasMoreStorage({});
                 self._needResetExpandedItems = false;
             }
 
