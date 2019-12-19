@@ -11,7 +11,6 @@
                 delay="0"
         ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
     </div>
-
     <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mb2">
         <div class="controlsDemo__mb1">
             <div class="controls-text-label_theme-{{_options.theme}}">overlay=dark</div>
@@ -23,9 +22,7 @@
                 time="3000"
                 delay="0"
         ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
-
     </div>
-
     <div class="controlsDemo__cell  ws-flexbox ws-flex-column">
         <div class="controlsDemo__mb1">
             <div class="controls-text-label_theme-{{_options.theme}}">overlay=none</div>

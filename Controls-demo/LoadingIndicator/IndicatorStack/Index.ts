@@ -52,7 +52,6 @@ class IndicatorStack extends Control<IControlOptions> {
         this._interval(this._overlayId, delay);
 
     }
-
     private _interval(id, delay): void {
         let self = this;
         setTimeout(() => {

@@ -1,23 +1,22 @@
 <div class="controlsDemo__wrapper">
-        <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mb2">
-            <div class="controlsDemo__mb1">
-                <div class="controls-text-label_theme-{{_options.theme}}">isGlobal=true, delay=2000</div>
-            </div>
-            <div>
-                <a attr:class="ws-link" on:click="_firstOpen()">Открыть (закроется через 3 сек.)</a>
-            </div>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mb2">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">isGlobal=true, delay=2000</div>
         </div>
-
-        <div class="controlsDemo__cell ws-flexbox ws-flex-column">
-            <div class="controlsDemo__mb1">
-                <div class="controls-text-label_theme-{{_options.theme}}">isGlobal=false, delay=0</div>
-            </div>
-            <Controls-demo.LoadingIndicator.IndicatorContainer
-                    isGlobal="{{false}}"
-                    overlay="dark"
-                    delay="{{0}}"
-                    message="Локальный индикатор"
-                    time="3000"
-            ></Controls-demo.LoadingIndicator.IndicatorContainer>
+        <div>
+            <a attr:class="ws-link" on:click="_firstOpen()">Открыть (закроется через 3 сек.)</a>
         </div>
+    </div>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">isGlobal=false, delay=0</div>
+        </div>
+        <Controls-demo.LoadingIndicator.IndicatorContainer
+                isGlobal="{{false}}"
+                overlay="dark"
+                delay="{{0}}"
+                message="Локальный индикатор"
+                time="3000"
+        ></Controls-demo.LoadingIndicator.IndicatorContainer>
+    </div>
 </div>
