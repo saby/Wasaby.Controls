@@ -13,9 +13,9 @@
       "SBIS3.CONTROLS/*"
    ],
    "scripts": {
-      "build": "npm run builder && node build-app",
+      "build": "npm run builder",
       "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
-      "builder": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../buildTemplate.json --log-level=warning -LLLL",
+      "builder": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../buildTemplate.json -LLLL",
       "compile": "saby-typescript --compiler",
       "start": "node app --applicationRoot=application",
       "start:units": "node node_modules/saby-units/cli/server",
