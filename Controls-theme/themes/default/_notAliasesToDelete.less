@@ -466,6 +466,7 @@
 @color_DropdownList__row-text_readOnly:                           @readonly_item_text-color_menu;
 @background_DropdownList-row_hover:                               @item_hover_background-color_menu;
 @background_DropdownList-row_active:                              @item_active_background-color_menu;
+@color_DropdownList-emptyItem:                                    @empty-item_text-color_menu;
 
 @spacing_DropdownList-item-between-topBorder-text:                @item_padding-top_menu;
 @spacing_DropdownList-item-between-bottomBorder-text:             @item_padding-bottom_menu;
@@ -518,7 +519,7 @@
 
 // checkbox
 @spacing_DropdownList-row-between-checkbox-topBorder:          @spacing_default_xs;
-@spacing_DropdownList-row-between-checkbox-rightBorder:        @spacing_DropdownList-row-between-checkbox-rightBorder_val;
+@spacing_DropdownList-row-between-checkbox-rightBorder:        (@item_height_menu - @height_checkbox) / 2;
 
 //row separator
 @background-color_DropdownList-row_separator:                  @item_separator_color_menu;
@@ -597,8 +598,5 @@
 
 @shift-top_MenuButton-link_duplicate_small-popup:    -@spacing_DropdownList-iconSize_small-between-iconHead-topBorder + @border-width_DropdownList;
 @shift-left_MenuButton-link_duplicate_small-popup:   -@spacing_DropdownList-iconSize_small-between-iconHead-leftBorder;
-
-// FIXME
-@color_DropdownList-emptyItem:                           @readonly_color;
 
 //last line
