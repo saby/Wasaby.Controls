@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
-import emptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
+import {EmptyTemplate as emptyTemplate} from 'Controls/suggestPopup';
 import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
@@ -8,7 +8,7 @@ import Env = require('Env/Env');
 import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
-import LoadService from './LoadService';
+import {LoadService} from 'Controls/suggestPopup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/suggest';
 
@@ -137,7 +137,7 @@ var _private = {
       }
       if (!error || !error.canceled) {
           return new Promise(function(resolve) {
-              requirejs(['tmpl!Controls/_suggest/_InputController/emptyError'], function(result) {
+              requirejs(['tmpl!Controls/_suggestPopup/resource/emptyError'], function(result) {
                   self._emptyTemplate = result;
                   self._children.indicator.hide();
                   resolve();
@@ -588,4 +588,3 @@ SuggestLayout.getDefaultOptions = function() {
 // </editor-fold>
 SuggestLayout._private = _private;
 export = SuggestLayout;
-
