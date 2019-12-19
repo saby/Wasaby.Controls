@@ -520,8 +520,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         const baseConfig = {};
         const usedOptions = [
             'id',
+            'closeByExternalClick',
             'isCompoundTemplate',
             'eventHandlers',
+            'autoCloseOnHide',
             'autoClose',
             'type',
             'style',
@@ -532,6 +534,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             'cancelCaption',
             'okCaption',
             'autofocus',
+            'isModal',
             'modal',
             'closeOnOutsideClick',
             'closeOnTargetScroll',
@@ -545,6 +548,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             'propStorageId',
             'resizable',
             'top',
+            'autoHide',
             'left',
             'maxHeight',
             'minHeight',
