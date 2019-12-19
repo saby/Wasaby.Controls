@@ -1,4 +1,4 @@
-import { IBaseCollection, TItemKey } from './interface';
+import { IBaseCollection, TItemKey } from '../interface';
 
 export interface ISwipeItem {
     setSwiped(swiped: boolean): void;

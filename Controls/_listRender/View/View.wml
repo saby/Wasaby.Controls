@@ -21,12 +21,11 @@
       scope="{{ _options }}"
 
       on:mouseenter="_onRenderMouseEnter()"
-      on:mouseleave="_onRenderMouseLeave()"
       on:touchstart="_onRenderTouchStart()"
-      on:touchend="_onRenderTouchEnd()"
 
       on:itemClick="_onItemClick()"
       on:itemSwipe="_onItemSwipe()"
       on:itemActionClick="_onItemActionClick()"
-      on:itemContextMenu="_onItemContextMenu()"/>
+      on:itemContextMenu="_onItemContextMenu()"
+      on:itemKeyDown="_onItemKeyDown()"/>
 </div>

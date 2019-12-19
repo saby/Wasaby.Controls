@@ -1,4 +1,4 @@
-import { IBaseCollection, TItemKey } from './interface';
+import { IBaseCollection, TItemKey } from '../interface';
 import { Model } from 'Types/entity';
 
 export interface ISelectionItem {

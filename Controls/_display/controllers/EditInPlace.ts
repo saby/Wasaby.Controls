@@ -1,4 +1,4 @@
-import { TItemKey, IBaseCollection } from './interface';
+import { TItemKey, IBaseCollection } from '../interface';
 
 export interface IEditInPlaceItem {
     setEditing(editing: boolean, editingContents?: unknown): void;
