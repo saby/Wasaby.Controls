@@ -142,7 +142,36 @@ define([
             instance._beforeUpdate(newCfg2);
             assert.equal(instance._header, undefined);
          });
-         it('new items', function() {
+
+         it('new same items', async function() {
+            var
+               headerInst,
+               cfg,
+               instance = new PathController(),
+               header = [{
+                  align: 'right',
+                  width: '100px'
+               }, {
+                  title: 'second'
+               }];
+            cfg = {
+               items: items,
+               header: header,
+               displayProperty: 'title'
+            };
+            instance._header = [];
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            headerInst = instance._header;
+            instance._beforeUpdate({
+               header: header,
+               items: items.slice(),
+               displayProperty: 'title'
+            });
+            assert.strictEqual(instance._header, headerInst);
+         });
+
+         it('new different items', function() {
             var
                instance = new PathController(),
                header = [{
@@ -157,7 +186,7 @@ define([
             });
             instance._beforeUpdate({
                header: header,
-               items: items.slice(),
+               items: items.slice(0,1),
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
@@ -167,8 +196,8 @@ define([
                   showArrowOutsideOfBackButton: false,
                   showActionButton: false,
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
-                  backButtonCaption: 'second',
-                  counterCaption: 2
+                  backButtonCaption: 'first',
+                  counterCaption: 1
                },
                align: 'right',
                width: '100px',

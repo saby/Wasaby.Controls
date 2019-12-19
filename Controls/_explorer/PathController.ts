@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_explorer/PathController/PathController');
 import {ItemsUtil} from 'Controls/list';
+import {isEqual} from 'Types/object';
 import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
 import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingPathBack');
 
@@ -54,7 +55,7 @@ import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingP
       },
 
       _beforeUpdate: function(newOptions) {
-         if (this._options.rootVisible !== newOptions.rootVisible || this._options.items !== newOptions.items || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
+         if (this._options.rootVisible !== newOptions.rootVisible || !isEqual(this._options.items, newOptions.items) || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
             this._header = _private.getHeader(this, newOptions);
             this._needCrumbs = _private.needCrumbs(this._header, newOptions.items, newOptions.rootVisible);
             this._needShadow = _private.needShadow(this._header, newOptions.header);
