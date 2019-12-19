@@ -6,28 +6,8 @@
          actionAlignment="{{ _options.actionAlignment }}"
          actionCaptionPosition="{{ _options.actionCaptionPosition }}"
          menuIsShown="{{ _dropdownMenuIsOpen }}">
-         <Controls._listRender.Containers.ItemActions
-            listModel="{{ _collection }}"
-            itemActions="{{ _options.itemActions }}"
-            itemActionVisibilityCallback="{{ _options.itemActionVisibilityCallback }}"
-            itemActionsPosition="{{ _options.itemActionsPosition }}"
-            itemActionsProperty="{{ _options.itemActionsProperty }}"
-            contextMenuConfig="{{ _options.contextMenuConfig }}"
-
-            toolbarVisibility="{{ _options.editingConfig.toolbarVisibility }}"
-            style="{{ _options.style }}"
-            menuIsShown="{{ _dropdownMenuIsOpen }}"
-
-            on:requestDropdownMenuOpen="_onDropdownMenuOpenRequested()"
-            on:requestDropdownMenuClose="_onDropdownMenuCloseRequested()"
-            on:actionClick="_tmplNotify('actionClick')">
-            <ws:partial template="{{ contentTemplate }}" />
-         </Controls._listRender.Containers.ItemActions>
+         <ws:partial template="{{ contentTemplate }}" />
       </Controls._listRender.Containers.Swipe>
-      <Controls.dropdown:Opener
-         name="dropdownMenuOpener"
-         keyProperty="id"
-         menuStyle="cross"/>
    </ws:if>
    <ws:else>
       <ws:partial template="{{ contentTemplate }}" />
@@ -35,13 +15,18 @@
 </ws:template>
 
 <div class="controls-BaseControl controls-BaseControl__renderContainer">
-   <ws:partial template="conditionalItemActions">
-      <ws:contentTemplate>
-         <ws:partial
-            template="{{ _options.render }}"
-            listModel="{{ _collection }}"
-            scope="{{ _options }}">
-         </ws:partial>
-      </ws:contentTemplate>
-   </ws:partial>
+   <ws:partial
+      template="{{ _options.render }}"
+      listModel="{{ _collection }}"
+      scope="{{ _options }}"
+
+      on:mouseenter="_onRenderMouseEnter()"
+      on:mouseleave="_onRenderMouseLeave()"
+      on:touchstart="_onRenderTouchStart()"
+      on:touchend="_onRenderTouchEnd()"
+
+      on:itemClick="_onItemClick()"
+      on:itemSwipe="_onItemSwipe()"
+      on:itemActionClick="_onItemActionClick()"
+      on:itemContextMenu="_onItemContextMenu()"/>
 </div>
