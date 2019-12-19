@@ -314,7 +314,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          const shouldSearch = this._isSearchControllerLoading() ? value !== this._inputSearchValue : true;
          if (shouldSearch) {
             const searchValue = this._options.searchValueTrim ? value.trim() : value;
-            if (searchValue !== '') {
+            if (searchValue !== '' || !this._options.searchValueTrim) {
                _private.getSearchController(this).search(searchValue, force);
             }
          }
