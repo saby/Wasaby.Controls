@@ -1,6 +1,0 @@
-<div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell ws-flexbox ws-flex-row controlsDemo__mb1">
-        <Controls.buttons:Button caption="Open indicator with updated content" name="controls-demo__indicator_overlay"
-                                 class="controls-demo__indicator_overlay" on:click="_overlay()"/>
-    </div>
-</div>
