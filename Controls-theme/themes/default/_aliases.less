@@ -3,6 +3,9 @@
 //Примечание: Применяется в том числе к основному фону самой страницы.
 @background-color:                                                          #FFF;
 
+//Цвет фона элементов при наведении мыши.
+@hover_background-color:                                                    #F0F5FB;
+
 //Цвет элементов отображающих опасность или ошибку.
 //Пример: Ошибка валидации, операция завершенная с ошибкой, отклонения от нормы выполнения процесса.
 @danger_color:                                                              #D04D4D;
@@ -1297,10 +1300,25 @@
 //отступ между флагами с наследованием в группе
 @hierarchy_padding-left_checkbox-group:                                     24px;
 
+//
+@width_closeButton_link:                  @inline_height_m;
+
+// Временно
+@inline_height_default_link_button:                18px; // Высота текста link кнопки
+@@header_color_dropdown:                           @secondary_text-color; // должно переехать в popupTemplate:Sticky
+
 /*Combobox */
-@trigger-color_combobox:                @secondary_icon-color_toggleSeparator;
-@trigger-color_hover_combobox:          @secondary_hover_icon-color_toggleSeparator;
-@trigger_icon-size_combobox:            @icon-size_toggleSeparator;
-@trigger_padding-right_combobox:        4px;
+@trigger-color_combobox:                           @secondary_icon-color_toggleSeparator;
+@trigger-color_hover_combobox:                     @secondary_hover_icon-color_toggleSeparator;
+@trigger_icon-size_combobox:                       @icon-size_toggleSeparator;
+@trigger_padding-right_combobox:                   4px;
+
+/*Dropdown:Input */
+@height_dropdownSelector:                          @inline_height_default;
+@font-size_default_dropdownSelector:               @font-size_default;
+@invalid_border-thickness_dropdownSelector:        @border-thickness;
+@invalid_border-color_dropdownSelector:            @danger_color;
+@empty-item_text-color_dropdownSelector:           #CCC;
+@icon_offset_dropdownSelector:                     6px;
 
 //last line
