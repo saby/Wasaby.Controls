@@ -71,13 +71,14 @@ var _private = {
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/ITextValue
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
  * @control
  * @public
  * @author Золотова Э.Е.
  * @category Input
  * @demo Controls-demo/Input/Dropdown/DropdownPG
  */
-
 /*
  * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
  * The full list of options is displayed when you click on the control.
@@ -295,6 +296,12 @@ var Input = Control.extend({
       this._children.controller.closeMenu();
    }
 });
+
+Input.getDefaultOptions = (): object => {
+   return {
+       iconStyle: 'secondary'
+   };
+};
 
 Input._theme = ['Controls/dropdown', 'Controls/Classes'];
 
