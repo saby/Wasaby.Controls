@@ -1,7 +1,7 @@
 {
     "multi": true,
     "old": {
-        "variables": "Controls-default-theme"
+        "variables": "Controls-theme"
     },
     "compatibility": {
         "**/*.less": [

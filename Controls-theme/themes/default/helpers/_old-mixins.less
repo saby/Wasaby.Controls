@@ -1,0 +1,263 @@
+.checkbox-null-size() {
+   &:after {
+      left: 0;
+      content: '';
+      position: absolute;
+      height: @check-box-icon-null-size;
+      width: @check-box-icon-null-size;
+      line-height: @check-box-icon-null-size;
+      margin: (@height_CheckBox - @check-box-icon-null-size) / 2 (@width_CheckBox - @check-box-icon-null-size) / 2;
+   }
+}
+
+// 6 использований
+// Только в SBIS3.Controls
+.button-default-style(@button-font-size: @font-size_Button_default, @button-default-shadow: none) {
+   display: inline-block;
+   outline: none;
+   line-height: normal;
+   .box-sizing(border-box);
+   font-family: @default-font-name;
+   font-size: @button-font-size;
+   font-weight: normal;
+   position: relative;
+   .box-shadow(@button-default-shadow);
+   border: none;
+   padding: 0;
+}
+
+// 6 Использований
+// Только в SBIS3.Controls
+.marker(@bg-image, @position: left top) {
+   background-image: @bg-image;
+   background-position: @position;
+   background-repeat: repeat-y;
+   background-size: @background-size_Marker;
+}
+
+// 6 Использований
+// Только в SBIS3.Controls
+.ws-header-mixin(@padding-left, @padding-right, @font-size, @color, @height, @hoverColor: @color) {
+   display: inline-block;
+   padding-left: @padding-left;
+   padding-right: @padding-right;
+   font-size: @font-size;
+   font-weight: @font-weight_Header;
+   font-family: @default-font-name;
+   color: @color;
+   height: @height;
+   line-height: @height;
+   body.ws-is-desktop-platform &:hover {
+      color:@hoverColor;
+   }
+}
+
+// 3 использования
+// Только в SBIS3.Controls
+.checkbox() {
+   .user-select();
+   width: @width_CheckBox;
+   height: @height_CheckBox;
+}
+
+// 9 использований
+// Только в SBIS3.Controls
+.checkbox-border-size() {
+   &:before {
+      .box-sizing();
+      content: '';
+      position: absolute;
+      border-width: @default-border-width;
+      border-style: solid;
+      width: @check-box-icon-box-size;
+      height: @check-box-icon-box-size;
+      margin: (@height_CheckBox - @check-box-icon-box-size) / 2 (@width_CheckBox - @check-box-icon-box-size) / 2;;
+   }
+}
+
+// 4 Использования
+// Только в SBIS3.Controls
+.checkbox-checked-size() {
+   &:after {
+      .draw-checkbox();
+      position: absolute;
+      font-size: @check-box-icon-successful-size;
+      height: @check-box-icon-successful-size;
+      width: @check-box-icon-successful-size;
+      line-height: @check-box-icon-successful-size;
+      top: @check-box-icon-successful-top;
+      left: @check-box-icon-successful-left;
+
+
+      // На iPad при расчете высоты оказывается, что она на 1px больше, чем на других устройствах. Выравнивание галки по
+      // вертикали осуществляется через line-height равным высоте. Поэтому галка уезжает вверх. Чтобы это поправить мы
+      // увеличим line-height в iPad на 1px;
+      .ws-is-mobile-platform & {
+         line-height: calc(~"@{check-box-icon-successful-size} + 1px");
+      }
+   }
+}
+
+// 1 Только в SBIS3.Controls
+// DropdownList(SBIS3.Controls)
+.border-with-pseudo-element(@color: @default-border-color, @width: @default-border-width, @border-radius: 0, @block-height: 100%) {
+   &:after {
+      content: '\200b';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: @block-height;
+      box-sizing: border-box;
+      border-style: solid;
+      border-width: @width;
+      border-color: @color;
+      border-radius: @border-radius;
+      pointer-events: none;
+   }
+}
+
+// 5
+// Только в SBIS3.Controls
+.ws-header-size-mixin(@text-size, @height: @default-height) {
+   display: inline-block;
+   font-size: @text-size;
+   height: @height;
+   line-height: @height;
+   font-family: @default-font-name;
+}
+
+// 1 Только в SBIS3.Controls
+// EditAtPlace(SBIS3)
+.closeButton() {
+   width: @width_EditActions-cancelButton;
+   height: @height_EditActions-cancelButton;
+   margin-right:  @margin-right_ListView-itemsToolbar-closeButton;
+   background: @background_EditActions-closeButton;
+   border-width: @border-width_IconButton_bordered;
+   border-style: solid;
+   border-color: @border-color_IconButton_bordered;
+   .box-shadow(@box-shadow_IconButton);
+   text-shadow: @text-shadow_IconButton_bordered;
+   box-sizing: border-box;
+   cursor: pointer;
+   display: inline-block;
+   &:hover {
+      border-color: @border-color_IconButton_bordered_standard_hovered;
+      background: @background_EditActions-closeButton_hovered;
+      box-shadow: @box-shadow_Button_bordered_hovered;
+      // нужно по нажатию перекрашивать primary иконку, поэтому используем каскад
+      // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
+      .controls-Button__icon.icon-primary, .icon-primary {
+         color: @color_Link-text_active;
+      }
+   }
+   &:active {
+      border-color: @border-color_IconButton_bordered_standard_hovered;
+      background: @background_EditActions-closeButton_active;
+      // нужно по нажатию перекрашивать primary иконку, поэтому используем каскад
+      // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
+      .controls-Button__icon.icon-primary, .icon-primary {
+         color: @color_Link-text_active;
+      }
+   }
+
+   .controls-ButtonBase__content {
+      .justify-content(center);
+   }
+
+   .icon-size {
+      .icon-size(@font-size_EditActions-cancelButton);
+   }
+}
+
+// 2 Только в SBIS3.Controls
+.closeButton__popup() {
+   cursor: pointer;
+   right: 0px;
+   z-index: 1;
+   top: @controls-Popup-closeButton-top;
+   .flexbox();
+   .align-items(center);
+   .justify-content(center);
+   &:before {
+      content: @content_CloseButton_icon;
+   }
+}
+
+// 2 Только в SBIS3.Controls
+.closeButton__popup_standard(@width, @height, @fontSize) {
+   border-style: solid;
+   width: @width - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+   height: @height - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+   font-family: @default-icon-font;
+   line-height: @height;
+   font-size: @fontSize;
+   box-shadow: @box-shadow_CloseButton;
+   border-width: @border-width_CloseButton;
+   border-color: @border-color_CloseButton;
+   border-radius: @border-radius_CloseButton;
+   background-color: @background-color_CloseButton_default;
+   &:before {
+      color: @color_CloseButton-icon;
+      text-shadow: @text-shadow_Button;
+   }
+   &:active {
+      box-shadow: none;
+   }
+}
+// 2 Только в SBIS3.Controls
+.closeButton__popup_standard_hover() {
+   &:hover, &:active {
+      background-color: @background-color_CloseButton_default_hover;
+      box-shadow: @box-shadow_CloseButton_active;
+      border-color: @border-color_CloseButton_hover;
+      &:before {
+         color: @color_CloseButton-icon_hover;
+      }
+   }
+   &:active {
+      box-shadow: none;
+   }
+}
+
+.icon-size(@size: 16px, @fontFamily: @default-icon-font) {
+   font-size: @size !important;
+   line-height: @size !important;
+   width: @size;
+   height: @size;
+   font-family: @fontFamily !important;
+}
+
+.icon-size-without-important(@size: 16px, @fontFamily: @default-icon-font) {
+   font-size: @size;
+   width: @size;
+   height: @size;
+   font-family: @fontFamily;
+}
+
+.icon(@size: @default-icon-size, @fontFamily: @default-icon-font) {
+   font-size: @size;
+   width: @size;
+   height: @size;
+   font-family: @fontFamily;
+   speak: none;
+   font-style: normal;
+   font-weight: normal;
+   font-variant: normal;
+   text-transform: none;
+   line-height: 1;
+   display: inline-block;
+}
+
+.compatPlaceholder(@color: @default-placeholder-color) {
+   .user-select(none);
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 100%;
+   cursor: text;
+   color: @color;
+   font: inherit;
+}
