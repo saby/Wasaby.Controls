@@ -25,6 +25,10 @@
       "path": "./Controls-demo"
     },
     {
+      "name": "Controls-theme",
+      "path": "./Controls-theme"
+    },
+    {
       "name": "Controls-default-theme",
       "path": "./Controls-default-theme"
     },
