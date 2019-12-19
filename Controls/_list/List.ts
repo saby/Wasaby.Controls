@@ -10,8 +10,9 @@ import viewName = require('Controls/_list/ListView');
 import viewTemplate = require('Controls/_list/ListControl');
 
 /**
- * Простой список с пользовательским шаблоном элемента. Может загружать данные из источника данных.
- * Подробное описание и инструкцию по настройке контрола вы можете прочитать <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
+ * Контрол «Плоский список» с пользовательским шаблоном элемента. Может загружать данные из источника данных.
+ * @remark
+ * Подробное описание и инструкцию по настройке контрола вы можете прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ здесь}.
  *
  * @class Controls/_list/List
  * @extends Core/Control

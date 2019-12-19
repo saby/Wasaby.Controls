@@ -361,10 +361,10 @@ export interface IList {
  */
 
 /**
- * @event Controls/_list/interface/IList#actionClick Происходит при клике на элемент панели действий над записью.
+ * @event Controls/_list/interface/IList#actionClick Происходит при клике по {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/index/ опции записи}.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {ItemAction} action Запись, по которой был выполнен клик.
- * @param {Types/entity:Model} item Экземпляр записи, по которой был выполнен клик.
+ * @param {ItemAction} action Объект с конфигурацией опции записи, по которой выполнили клик.
+ * @param {Types/entity:Model} item Экземпляр записи, для которой была отображена опция записи.
  * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
  */
 

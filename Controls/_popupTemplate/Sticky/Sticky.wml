@@ -19,7 +19,7 @@
     <div class="controls-StickyTemplate__content-area">
         <ws:if data="{{_options.bodyContentTemplate}}">
             <ws:partial template="{{_options.bodyContentTemplate}}" scope="{{_options}}"></ws:partial>
-        </ws:if data="{{_options.bodyContentTemplate}}">
+        </ws:if>
         <ws:if data="{{_options.footerContentTemplate}}">
             <ws:partial template="{{_options.footerContentTemplate}}" scope="{{_options}}"></ws:partial>
         </ws:if>
