@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, которые служат для организации фильтрации в списках.
+ * Библиотека контролов, которые служат для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ организации фильтрации в списках}.
  * @library Controls/filter
  * @includes Selector Controls/_filter/Button
  * @includes Fast Controls/_filter/Fast
@@ -13,7 +13,6 @@
  * @includes IPrefetch Controls/_filter/IPrefetch
  * @includes Prefetch Controls/_filter/Prefetch
  * @includes DateRangeEditor Controls/_filter/Editors/DateRange
- * @includes mergeSource Controls/_filter/Utils/mergeSource
  * @public
  * @author Крайнов Д.О.
  */
@@ -32,7 +31,6 @@
  * @includes IPrefetch Controls/_filter/IPrefetch
  * @includes Prefetch Controls/_filter/Prefetch
  * @includes DateRangeEditor Controls/_filter/Editors/DateRange
- * @includes mergeSource Controls/_filter/Utils/mergeSource
  * @public
  * @author Крайнов Д.О.
  */

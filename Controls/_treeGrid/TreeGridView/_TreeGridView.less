@@ -163,15 +163,15 @@
 }
 .controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__node_theme-@{themeName},
 .controls-TreeGrid__row-cell__node_theme-@{themeName} .controls-EditingTemplateText {
-  font-size: @font-size_TreeGridView-row-cell-node;
+  font-size: @font-size_node-content-treeGrid;
 }
 .controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName},
 .controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName} .controls-EditingTemplateText {
-  font-size: @font-size_TreeGridView-row-cell-hiddenNode;
+  font-size: @font-size_hidden-node-content-treeGrid;
 }
 .controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
 .controls-TreeGrid__row-cell__item_theme-@{themeName} .controls-EditingTemplateText {
-  font-size: @font-size_TreeGridView-row-cell-item;
+  font-size: @font-size_leaf-content-treeGrid;
 }
 
 // For right vertiacal align of items inside block with display: table-cell.
@@ -186,9 +186,6 @@
    z-index: 2;
 }
 
-.controls-Grid__cell_fixed.controls-TreeGrid__row-cell_theme-@{themeName} {
-   overflow-x: hidden;
-}
 
 .ws-is-hover .controls-BaseControl_showActions {
    .controls-Grid__row:hover > .controls-TreeGrid__row-cell_theme-@{themeName} > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {

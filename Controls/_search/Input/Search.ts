@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import * as buttonsTemplate from 'wml!Controls/_search/Input/Buttons';
 import {Base, TextViewModel as ViewModel} from 'Controls/input';
 import {throttle} from 'Types/function';
@@ -11,6 +12,9 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
 /**
  * Контрол "Строка поиска". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса. 
  * Функционал контрола идентичен полям ввода из библиотеки {@link Controls/input}, однако в отличие от них имеет собственное визуальное оформление.
+ * @remark
+ * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
  *
  * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base

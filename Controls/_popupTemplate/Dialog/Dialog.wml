@@ -18,11 +18,13 @@
             </ws:if>
             </div>
         </ws:else>
-        <div class="controls-DialogTemplate__content-area">
-            <ws:partial template="{{_options.bodyContentTemplate}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
-        </div>
-       <ws:if data="{{ _options.footerContentTemplate }}">
-                       <ws:partial template="{{ _options.footerContentTemplate}}" attr:class="controls-DialogTemplate__footer_theme_{{_options.theme}}"></ws:partial>
-               </ws:if>
+        <ws:if data="{{ _options.bodyContentTemplate }}">
+            <div class="controls-DialogTemplate__content-area">
+                <ws:partial template="{{_options.bodyContentTemplate}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
+            </div>
+        </ws:if>
+        <ws:if data="{{ _options.footerContentTemplate }}">
+            <ws:partial template="{{ _options.footerContentTemplate}}" attr:class="controls-DialogTemplate__footer_theme_{{_options.theme}}"></ws:partial>
+        </ws:if>
     </div>
 </Controls.dragnDrop:Container>

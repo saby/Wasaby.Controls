@@ -6,7 +6,7 @@
  * @see Controls/list:View
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
- * <pre>
+ * <pre class="brush: html">
  * <Controls.list:View>
  *    <ws:emptyTemplate>
  *       <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xxl" bottomSpacing="m">
@@ -16,7 +16,7 @@
  * </Controls.list:View>
  * </pre>
  * @remark
- * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/empty/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/empty/ здесь}.
  */
 
 /**
@@ -26,7 +26,6 @@
 
 /**
  * @typedef {String} Spacing
- * @description Значения, которые скрыты под описанными переменными, задаются настройками {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления}.
  * @variant xs Минимальный отступ.
  * @variant s Маленький отступ.
  * @variant m Средний отступ.
@@ -40,15 +39,8 @@
  * @cfg {Spacing|null} Устанавливает расстояние между верхней границей и контентом шаблона.
  * @remark
  * В значении null отступ отсутствует.
+ * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
  * @default l
- * @example
- * <pre>
- * <ws:emptyTemplate>
- *    <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl">
- *       <ws:contentTemplate>No data available!</ws:contentTemplate>
- *    </ws:partial>
- * </ws:emptyTemplate>
- * </pre>
  */
 
 /**
@@ -56,15 +48,9 @@
  * @cfg {Spacing|null} Устанавливает расстояние между нижней границей и контентом шаблона.
  * @remark
  * В значении null отступ отсутствует.
+ * @remark
+ * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
  * @default l
- * @example
- * <pre>
- * <ws:emptyTemplate>
- *    <ws:partial template="Controls/list:EmptyTemplate" bottomSpacing="m">
- *       <ws:contentTemplate>No data available!</ws:contentTemplate>
- *    </ws:partial>
- * </ws:emptyTemplate>
- * </pre>
  */
 
 export default interface IEmptyTemplateOptions {

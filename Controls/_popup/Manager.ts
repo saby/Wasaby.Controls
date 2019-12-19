@@ -8,6 +8,7 @@ import Deferred = require('Core/Deferred');
 import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
 import {Logger} from 'UI/Utils';
+import {IPopupItem, IPopupOptions} from 'Controls/_popup/interface/IPopup';
 import { goUpByControlTree } from 'UI/Focus';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
@@ -480,8 +481,6 @@ const _private = {
     // TODO Должно быть удалено после https://online.sbis.ru/opendoc.html?guid=f2b13a65-f404-4fbd-a05c-bbf6b59358e6
     navigationHandler(event, activeElement, isIconClick): void {
         let hasPendings = false;
-        let registrator;
-        let popupId;
         // Если пытаются перейти по аккордеону, то закрываем все открытые окна
         // Если есть пендинги - отменяем переход.
         _private.popupItems.each((item) => {
@@ -496,8 +495,10 @@ const _private = {
                 _private.remove(this, item.id);
             }
         });
-        if (!isIconClick) {
-            event.setResult(!hasPendings);
+        // Устанавливаю результат только когда нужно отменить переход, иначе ломается старый механизм spa-переходов,
+        // работающий на значении результата события onbeforenavigate
+        if (!isIconClick && hasPendings) {
+            event.setResult(false);
         }
     }
 };
@@ -545,13 +546,13 @@ const Manager = Control.extend({
      * @param options popup configuration
      * @param controller popup controller
      */
-    show(options, controller): string {
+    show(options: IPopupOptions, controller): string {
         if (this.find(options.id)) {
             this.update(options.id, options);
             return options.id;
         }
-        const item = this._createItemConfig(options, controller);
-        const defaultConfigResult = controller.getDefaultConfig(item);
+        const item: IPopupItem = this._createItemConfig(options, controller);
+        const defaultConfigResult: null|Promise<null> = controller.getDefaultConfig(item);
         if (defaultConfigResult instanceof Promise) {
             defaultConfigResult.then(() => {
                 _private.addElement(item);
@@ -564,7 +565,7 @@ const Manager = Control.extend({
         return item.id;
     },
 
-    updateOptionsAfterInitializing(id, options) {
+    updateOptionsAfterInitializing(id: string, options: IPopupOptions): void {
         const item = this.find(id);
         if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
             item.popupOptions = options;
@@ -573,9 +574,9 @@ const Manager = Control.extend({
         }
     },
 
-    _createItemConfig(options, controller) {
-        const popupId = options.id || randomId('popup-');
-        const popupConfig = {
+    _createItemConfig(options: IPopupOptions, controller): IPopupItem {
+        const popupId: string = options.id || randomId('popup-');
+        const popupConfig: IPopupItem = {
             id: popupId,
             modal: options.modal,
             controller,
@@ -598,7 +599,7 @@ const Manager = Control.extend({
     },
 
     // Register the relationship between the parent and child popup
-    _registerPopupLink(popupConfig) {
+    _registerPopupLink(popupConfig: IPopupItem): void {
         if (popupConfig.popupOptions.opener) {
             const parent = this._findParentPopup(popupConfig.popupOptions.opener);
             if (parent) {
@@ -612,8 +613,8 @@ const Manager = Control.extend({
         }
     },
 
-    _findParentPopup(control) {
-        const parentControls = goUpByControlTree(control._container);
+    _findParentPopup(control: Control): boolean {
+        const parentControls: Control[] = goUpByControlTree(control._container);
         for (let i = 0; i < parentControls.length; i++) {
             if (parentControls[i]._moduleName === 'Controls/_popup/Manager/Popup') {
                 return parentControls[i];
@@ -622,7 +623,7 @@ const Manager = Control.extend({
         return false;
     },
 
-    _mouseDownHandler(event) {
+    _mouseDownHandler(event: Event): void {
         if (_private.popupItems && !_private.isIgnoreActivationArea(event.target)) {
             const deactivatedPopups = [];
             // todo https://online.sbis.ru/opendoc.html?guid=ab4ffabb-20ba-4782-8c38-c4ab72b73a1a
@@ -654,12 +655,12 @@ const Manager = Control.extend({
      * @param id popup id
      * @param options new options of popup
      */
-    update(id, options) {
-        const item = this.find(id);
+    update(id: string, options: IPopupOptions): string|null {
+        const item: IPopupItem = this.find(id);
         if (item) {
-            const oldOptions = item.popupOptions;
+            const oldOptions: IPopupOptions = item.popupOptions;
             item.popupOptions = options;
-            const updateOptionsResult = item.controller.elementUpdateOptions(item, _private.getItemContainer(id));
+            const updateOptionsResult: null|Promise<null> = item.controller.elementUpdateOptions(item, _private.getItemContainer(id));
             if (updateOptionsResult instanceof Promise) {
                 updateOptionsResult.then((result) => {
                     return _private.updatePopupOptions(id, item, oldOptions, result);
@@ -677,7 +678,7 @@ const Manager = Control.extend({
      * @function Controls/_popup/Manager#remove
      * @param id popup id
      */
-    remove(id) {
+    remove(id: string): Promise<null> {
         return _private.remove(this, id);
     },
 
@@ -686,7 +687,7 @@ const Manager = Control.extend({
      * @function Controls/_popup/Manager#find
      * @param id popup id
      */
-    find(id) {
+    find(id: string): IPopupItem {
         return _private.find(id);
     },
 
@@ -694,18 +695,18 @@ const Manager = Control.extend({
      * Reindex a set of popups, for example, after changing the configuration of one of them
      * @function Controls/_popup/Manager#reindex
      */
-    reindex() {
+    reindex(): void {
         _private.popupItems._reindex();
     },
 
-    _eventHandler(event, actionName) {
+    _eventHandler(event: Event, actionName: string): void {
         const args = Array.prototype.slice.call(arguments, 2);
         const actionResult = _private[actionName].apply(this, args);
         if (actionResult === true) {
             _private.redrawItems();
         }
     },
-    _beforeUnmount() {
+    _beforeUnmount(): void {
         if (Env.detection.isMobileIOS) {
             EnvEvent.Bus.globalChannel().unsubscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
             EnvEvent.Bus.globalChannel().unsubscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);

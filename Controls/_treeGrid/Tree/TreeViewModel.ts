@@ -376,7 +376,7 @@ var
                 dispParent = curNodeForDispItem.getParent();
             }
         },
-        getDefaultContentFontSize(itemType: null | boolean): string {
+        getItemFontSize(itemType: null | boolean): string {
             switch (itemType) {
                 case true:
                     return '2xl';
@@ -384,8 +384,6 @@ var
                     return 'xl';
                 case null:
                     return 'm';
-                default:
-                    return undefined;
             }
         }
     },
@@ -587,7 +585,7 @@ var
 
            if (current.item.get) {
                _private.setNodeFooterIfNeed(this, current);
-               current.defaultContentFontSize = _private.getDefaultContentFontSize(current.item.get(this._options.nodeProperty));
+               current.itemFontSize = _private.getItemFontSize(current.item.get(this._options.nodeProperty));
            }
             return current;
         },

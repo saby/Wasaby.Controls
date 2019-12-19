@@ -3,8 +3,8 @@
 }
 
 .controls-Label_underline_none_theme-@{themeName} {
-   height: @height_Label;
-   padding: @padding_Label;
+   height: @inline_height_default_label;
+   padding-right: @offset-horizontal_label;
 }
 
 .controls-Label__wrapper {
@@ -21,25 +21,25 @@
    .text-overflow();
 }
 .controls-Label__caption_theme-@{themeName} {
-   font-size: @font-size_Label-caption;
+   font-size: @font-size_default_label;
 }
 .controls-Label__caption_underline_none_theme-@{themeName} {
-   color: @color_Label-caption_underline_none;
+   color: @text-color_label;
 }
 
 .controls-Label__caption_underline_hovered_edit_theme-@{themeName} {
    cursor: pointer;
-   color: @color_Label-caption_underline_hovered;
+   color: @text-color_label;
 }
 
 .controls-Label__caption_underline_hovered_read_theme-@{themeName} {
-   color: @color_Label-caption_underline_hovered_readOnly;
+   color: @readonly_color;
 }
 
 .ws-is-hover .controls-Label__caption_underline_hovered_edit_theme-@{themeName}:hover,
 .controls-Label__caption_underline_hovered_edit_theme-@{themeName}:active {
    text-decoration: underline;
-   color: @color_Label-caption_underline_hovered_hover;
+   color: @text-color_label;
 }
 
 .controls-Label__caption_underline_fixed_theme-@{themeName} {
@@ -48,20 +48,20 @@
 
 .controls-Label__caption_underline_fixed_edit_theme-@{themeName} {
    cursor: pointer;
-   color: @color_Label-caption_underline_fixed;
+   color: @text-color_label;
 }
 
 .controls-Label__caption_underline_fixed_read_theme-@{themeName} {
-   color: @color_Label-caption_underline_fixed_readOnly;
+   color: @readonly_color;
 }
 
 .ws-is-hover .controls-Label__caption_underline_fixed_edit_theme-@{themeName}:hover,
 .controls-Label__caption_underline_fixed_edit_theme-@{themeName}:active {
-   color: @color_Label-caption_underline_fixed_hover;
+   color: @link_hover_text-color;
 }
 
 .controls-Label__asterisk_theme-@{themeName} {
-   color: @color_Label-asterisk;
+   color: @asterisk_color_label;
 }
 
 .controls-Label__fakeLink {

@@ -17,11 +17,12 @@
    </Controls.scroll:Container>
    <ws:if data="{{_needShowApplyButton}}">
       <div class="controls-SimplePanel__applyButton_theme_{{_options.theme}}">
-         <Controls.buttons:Button viewMode="toolButton"
+         <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"
                                   iconSize="m"
-                                  iconStyle="success"
+                                  iconStyle="contrast"
                                   buttonStyle="success"
+                                  inlineHeight="l"
                                   on:click="_applySelection()"/>
       </div>
    </ws:if>

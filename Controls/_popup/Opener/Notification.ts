@@ -1,4 +1,4 @@
-import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
+import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import coreMerge = require('Core/core-merge');
@@ -211,15 +211,15 @@ class Notification extends BaseOpener {
         this._compatibleClose(this);
     }
 
-    static openPopup (config: object, id: string): Promise<string> {
+    static openPopup(config: object): Promise<string> {
         return new Promise((resolve) => {
             const newConfig = BaseOpener.getConfig(BASE_OPTIONS, config);
             if (isNewEnvironment()) {
                 if (!newConfig.hasOwnProperty('opener')) {
                     newConfig.opener = null;
                 }
-                BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
-                    BaseOpener.showDialog(result[0], newConfig, result[1], id).then((popupId: string) => {
+                BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
+                    BaseOpener.showDialog(result.template, newConfig, result.controller).then((popupId: string) => {
                         resolve(popupId);
                     });
                 });

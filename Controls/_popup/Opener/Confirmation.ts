@@ -1,4 +1,4 @@
-import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
+import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {default as IConfirmation, IConfirmationOptions} from 'Controls/_popup/Opener/interface/IConfirmation';
@@ -180,12 +180,12 @@ class Confirmation extends BaseOpener<IConfirmationOptions> implements IConfirma
             _vdomOnOldPage: true // Open vdom popup in the old environment
         };
     }
-    static openPopup (templateOptions: IConfirmationOptions) : Promise<boolean>  {
+    static openPopup(templateOptions: IConfirmationOptions): Promise<boolean>  {
         return new Promise((resolve) => {
             const config: IPopupOptions = Confirmation._getConfirmationConfig(templateOptions, resolve);
             config._vdomOnOldPage = true;
-            return BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
-                BaseOpener.showDialog(result[0], config, result[1]);
+            return BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
+                BaseOpener.showDialog(result.template, config, result.controller);
             });
         });
     };

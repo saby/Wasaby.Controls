@@ -1,12 +1,26 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {INumberFormatOptions, INumberFormat} from 'Controls/interface';
+import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
+import {moneyOptions, moneyUseGrouping, moneyValue} from 'Controls/_decorator/ActualAPI';
 import numberToString from 'Controls/Utils/Formatting/numberToString';
-import * as splitIntoTriads from 'Controls/Utils/splitIntoTriads';
+import splitIntoTriads from 'Controls/Utils/splitIntoTriads';
+//@ts-ignore
 import * as template from 'wml!Controls/_decorator/Money/Money';
 
 type TValue = string | number | null;
+/**
+ * @typedef TStyle
+ * @variant default
+ * @variant accentResults
+ * @variant noAccentResults
+ * @variant group
+ * @variant basicRegistry
+ * @variant noBasicRegistry
+ * @variant accentRegistry
+ * @variant noAccentRegistry
+ * @variant error
+ */
 type TStyle =
     'default'
     | 'accentResults'
@@ -24,45 +38,66 @@ interface IPaths {
     number: string;
 }
 
-interface IDeprecatedOptions {
-    number: number;
-    delimiters: boolean;
-}
-
-export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IDeprecatedOptions {
+/**
+ * @interface Controls/_decorator/Money/IMoneyOptions
+ * @public
+ * @author Красильников А.С.
+ */
+export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions {
     /**
-     * @name Controls/_decorator/Money#value
-     * Значение в числовом формате для преобразования.
+     * Опция устарела, используйте опцию {@link value}.
+     * @deprecated
+     */
+    number: number;
+    /**
+     * Опция устарела, используйте опцию {@link useGrouping}.
+     * @deprecated
+     */
+    delimiters: boolean;
+    /**
+     * Опция устарела, используйте опцию {@link tooltip}.
+     * @deprecated
+     */
+    title: string;
+    /**
+     * Декорируемое число.
+     * @type string|number|null
+     * @default null
+     * @demo Controls-demo/Decorator/Money/Value/Index
      */
     value: TValue;
     /**
-     * @name Controls/_decorator/Money#style
      * Стиль отображения числа в денежном формате.
-     * @demo Controls-demo/Decorator/Money/Styles/Index
+     * @type TStyle
+     * @default default
+     * @demo Controls-demo/Decorator/Money/Style/Index
      */
     style: TStyle;
-    title: string;
 }
 
 /**
- * Преобразует значение в денежный формат.
+ * Графический контрол, декоририрующий число таким образом, что оно приводится к денежному формату.
+ * Денежным форматом является число с неограниченной целой частью, и двумя знаками в дробной части.
  *
  * @class Controls/_decorator/Money
- * @extends UI/_base/Control
+ * @extends UI/Base:Control
  *
- * @mixes Controls/_interface/INumberFormat
+ * @mixes Controls/interface:ITooltip
+ * @mixes Controls/interface:INumberFormat
+ * @mixes Controls/_decorator/Money/IMoneyOptions
  *
  * @public
- * @demo Controls-demo/Decorator/Money/Styles/Index
+ * @demo Controls-demo/Decorator/Money/Index
  *
  * @author Красильников А.С.
  */
-class Money extends Control<IMoneyOptions> implements INumberFormat {
+class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
     private _value: TValue;
     private _useGrouping: boolean;
-    private _title: string;
+    private _tooltip: string;
     private _parsedNumber: IPaths;
 
+    readonly '[Controls/_interface/ITooltip]' = true;
     readonly '[Controls/_interface/INumberFormat]' = true;
 
     protected _options: IMoneyOptions;
@@ -73,41 +108,19 @@ class Money extends Control<IMoneyOptions> implements INumberFormat {
         return showEmptyDecimals || value !== '.00';
     }
 
-    private _isUseGrouping(options: IMoneyOptions, useLogging: boolean): boolean {
-        if ('delimiters' in options) {
-            if (useLogging) {
-                Logger.warn('Controls/_decorator/Money: Опция delimiters устарела, используйте useGrouping.', this);
-            }
+    private _getTooltip(options: IMoneyOptions): string {
+        const actualOptions = moneyOptions(options);
 
-            return options.delimiters;
-        }
-
-        return options.useGrouping;
-    }
-
-    _getValue(options: IMoneyOptions, useLogging: boolean) {
-        if ('number' in options) {
-            if (useLogging) {
-                Logger.warn('Controls/_decorator/Money: Опция number устарела, используйте value.', this);
-            }
-
-            return options.number.toString();
-        }
-
-        return options.value;
-    }
-
-    private _getTitle(options: IMoneyOptions): string {
-        if (options.hasOwnProperty('title')) {
-            return options.title;
+        if (actualOptions.hasOwnProperty('tooltip')) {
+            return actualOptions.tooltip;
         }
 
         return this._parsedNumber.number;
     }
 
     private _changeState(options: IMoneyOptions, useLogging: boolean): boolean {
-        const value = this._getValue(options, useLogging);
-        const useGrouping = this._isUseGrouping(options, useLogging);
+        const value = moneyValue(options.number, options.value, useLogging);
+        const useGrouping = moneyUseGrouping(options.delimiters, options.useGrouping, useLogging);
 
         if (this._value !== value || this._useGrouping !== useGrouping) {
             this._value = value;
@@ -141,14 +154,14 @@ class Money extends Control<IMoneyOptions> implements INumberFormat {
     protected _beforeMount(options: IMoneyOptions): void {
         this._changeState(options, true);
         this._parsedNumber = this._parseNumber();
-        this._title = this._getTitle(options);
+        this._tooltip = this._getTooltip(options);
     }
 
     protected _beforeUpdate(newOptions): void {
         if (this._changeState(newOptions, false)) {
             this._parsedNumber = this._parseNumber();
         }
-        this._title = this._getTitle(newOptions);
+        this._tooltip = this._getTooltip(newOptions);
     }
 
     private static FRACTION_LENGTH = 2;
@@ -187,10 +200,10 @@ class Money extends Control<IMoneyOptions> implements INumberFormat {
 
     static getDefaultOptions() {
         return {
+            value: null,
             style: 'default',
             useGrouping: true,
-            showEmptyDecimals: true,
-            value: null
+            showEmptyDecimals: true
         };
     }
 

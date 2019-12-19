@@ -1,7 +1,7 @@
 <div class="controls-EditingTemplateText__editorWrapper controls-EditingTemplateText__editorWrapper_align_{{align ? align : 'left'}}">
     <!--TODO: после избавления от itemData сюда всегда будет приходить isEditing https://online.sbis.ru/opendoc.html?guid=dac09cd4-c94e-43f5-b8e0-5a2b0357ff18-->
     <ws:if data="{{itemData.isEditing}}">
-        <ws:partial attr:class="controls-EditingTemplateText__editor" template="{{editorTemplate}}" defaultContentFontSize="{{itemData.defaultContentFontSize}}"/>
+        <ws:partial attr:class="controls-EditingTemplateText__editor" template="{{editorTemplate}}" itemFontSize="{{itemData.itemFontSize}}"/>
     </ws:if>
     <ws:else>
         <div class="controls-EditingTemplateText

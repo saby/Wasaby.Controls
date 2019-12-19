@@ -40,7 +40,7 @@ const DialogTemplate = Control.extend({
           _prepareTheme(): void {
               this._headerTheme = ManagerController.getPopupHeaderTheme();
           },
-         /**
+         /*
           * Закрытие всплывающего диалогового окна.
           * @function Controls/_popupTemplate/Dialog#close
           */

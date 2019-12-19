@@ -37,7 +37,7 @@
  * @css @width-TreeGridView-levelPadding_size_l width of TreeGridView l level padding
  * @css @width-TreeGridView-levelPadding_size_xl width of TreeGridView xl level padding
  * @css @font-family-TreeGridView-icons font family of TreeGridView icons
- * @css @font-size_TreeGridView-row-cell-node cell content font size of node item
- * @css @font-size_TreeGridView-row-cell-hiddenNode cell content font size of hidden node item
- * @css @font-size_TreeGridView-row-cell-item cell content font size of item wich hasn't children
+ * @css @font-size_node-content-treeGrid cell content font size of node item
+ * @css @font-size_hidden-node-content-treeGrid cell content font size of hidden node item
+ * @css @font-size_leaf-content-treeGrid cell content font size of item wich hasn't children
  */

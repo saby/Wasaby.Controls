@@ -1,6 +1,6 @@
-define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
+define(['Controls/_list/Swipe/VerticalMeasurer', 'i18n!ControlsUnit'], function(
    VerticalMeasurer,
-   i18n
+   rk
 ) {
    describe('Controls.List.Swipe.VerticalMeasurer', function() {
       it('needIcon', function() {
@@ -133,7 +133,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      showed: [
                         {
                            icon: 'icon-SwipeMenu',
-                           title: i18n.rk('Ещё'),
+                           title: rk('Ещё'),
                            _isMenu: true,
                            showType: 2
                         }
@@ -193,7 +193,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      showed: [
                         {
                            icon: 'icon-SwipeMenu',
-                           title: i18n.rk('Ещё'),
+                           title: rk('Ещё'),
                            _isMenu: true,
                            showType: 2
                         }
@@ -322,7 +322,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                         },
                         {
                            icon: 'icon-SwipeMenu',
-                           title: i18n.rk('Ещё'),
+                           title: rk('Ещё'),
                            _isMenu: true,
                            showType: 2
                         }
@@ -345,7 +345,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                      showed: [
                         {
                            icon: 'icon-SwipeMenu',
-                           title: i18n.rk('Ещё'),
+                           title: rk('Ещё'),
                            _isMenu: true,
                            showType: 2
                         }
@@ -453,7 +453,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                   },
                   {
                      icon: 'icon-SwipeMenu',
-                     title: i18n.rk('Ещё'),
+                     title: rk('Ещё'),
                      _isMenu: true,
                      showType: 2
                   }];

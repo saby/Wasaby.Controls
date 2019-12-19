@@ -239,6 +239,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._reloadedKeys[key]) {
             version = 'RELOADED_' + version;
         }
+        version = (this._editingItemData ? 'WITH_EDITING_' : 'WITHOUT_EDITING_') + version;
         if (this._editingItemData && this._editingItemData.key === key) {
             version = 'EDITING_' + version;
         }

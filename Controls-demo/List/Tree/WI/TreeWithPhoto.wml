@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Tree with photo" demoname="Controls-demo\List\Tree\TreeWithPhoto.wml">
+    <ws:content>
+        <Controls-demo.List.Tree.TreeWithPhoto/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>

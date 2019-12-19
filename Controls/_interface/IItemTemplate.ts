@@ -42,7 +42,7 @@ export interface IItemTemplateOptions {
  * Интерфейс для контролов с возможностью настройки отображения элементов.
  *
  * @interface Controls/_interface/IItemTemplate
- * @public
+ * @private
  * @author Герасимов А.М.
  */
 interface IItemTemplate {

@@ -2,11 +2,10 @@ import {Control} from 'UI/Base';
 import * as template from 'wml!Controls/_filter/View/Container';
 
 /**
- * Контрол используют в качестве контейнера для {@link Controls/filter:View}.
- * Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
- *
- * Подробнее о организации поиска и фильтрации в реестре читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
- * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">здесь</a>.
+ * Контрол используют в качестве контейнера для {@link Controls/filter:View}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
+ * @remark
+ * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
  *
  * @class Controls/_filter/View/Container
  * @extends Core/Control

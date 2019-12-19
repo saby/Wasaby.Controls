@@ -1,4 +1,4 @@
-<div class="controls-PeriodLiteDialog {{_getWidthCssClass()}}">
+<div class="controls-PeriodLiteDialog {{_getWidthCssClass()}} {{_options.popupClassName}}">
    <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__currentValue" on:click="_onHeaderClick()">{{_caption}}</div>
       <div class="controls-PeriodLiteDialog__bodyWrapper">
@@ -67,11 +67,12 @@
       <div class="controls-PeriodLiteDialog__years-prev" on:click="_onPrevYearBtnClick()"></div>
       <div class="controls-PeriodLiteDialog__years-home" title="{[Поставить текущий диапазон]}">
          <Controls.buttons:Button
-            style="secondary"
+            class="controls-PeriodLiteDialog__homeButton"
             viewMode="toolButton"
-            size="s"
-            transparent="{{true}}"
-            icon="icon-small icon-Home3"
+            inlineHeight="m"
+            icon="icon-Home3"
+            iconSize="s"
+            iconStyle="secondary"
             on:click="_onHomeClick()"
          />
       </div>

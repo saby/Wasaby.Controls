@@ -1,10 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {ActualApi, cssStyleGeneration} from 'Controls/buttons';
+import {ActualApi, cssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
 import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
-IButton,
-        IButtonOptions,
         IFontColorStyle,
         IFontColorStyleOptions,
         IFontSize,
@@ -42,7 +40,7 @@ export interface IToggleButtonOptions extends
  *
  * @class Controls/_toggle/Button
  * @extends Core/Control
- * @implements Controls/_interface/IButton
+ * @implements Controls/_buttons/interface/IButton
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
@@ -65,7 +63,7 @@ export interface IToggleButtonOptions extends
  *
  * @class Controls/_toggle/Button
  * @extends Core/Control
- * @implements Controls/_interface/IButton
+ * @implements Controls/_buttons/interface/IButton
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
@@ -147,7 +145,7 @@ export interface IToggleButtonOptions extends
 
 /**
  * @name Controls/_toggle/Button#viewMode
- * @cfg {Enum} Кнопка переключения режима отображения.
+ * @cfg {Enum} Режим отображения кнопки.
  * @variant link В виде гиперссылки.
  * @variant toolButton В виде кнопки для панели инструментов.
  * @variant pushButton В виде гиперссылки, которая меняет свой внешний в зажатом состоянии
@@ -196,7 +194,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
     IIconStyle,
     ITooltip {
     '[Controls/_toggle/interface/ICheckable]': true;
-    '[Controls/_interface/IButton]': true;
+    '[Controls/_buttons/interface/IButton]': true;
     '[Controls/_interface/IIconStyle]': true;
     '[Controls/_interface/ITooltip]': true;
     '[Controls/_interface/IFontColorStyle]': true;

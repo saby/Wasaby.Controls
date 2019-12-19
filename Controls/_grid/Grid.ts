@@ -4,7 +4,7 @@ import viewName = require('Controls/_grid/GridView');
 
 
 /**
-    * Табличное представление. Может загружать данные из источника данных.
+    * Контрол «Таблица». Может загружать данные из источника данных.
     * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
     * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>.
     *

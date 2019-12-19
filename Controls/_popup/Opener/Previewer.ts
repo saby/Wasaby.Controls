@@ -1,5 +1,5 @@
 import cClone = require('Core/core-clone');
-import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
+import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import randomId = require('Core/helpers/Number/randomId');
 
@@ -109,9 +109,9 @@ class Previewer extends BaseOpener {
             }
             open(() => {
                 newCfg.isCancelOpening = false;
-                BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
                     if (!newCfg.isCancelOpening) {
-                        BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id);
+                        BaseOpener.showDialog(result.template, newCfg, result.controller);
                     }
                 });
             }, newCfg, type);

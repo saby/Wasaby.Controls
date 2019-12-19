@@ -5,7 +5,7 @@
                     itemData="{{itemData}}"
                     enabled="{{true}}">
             <ws:editorTemplate>
-                <Controls.input:Text fontSize="{{editorTemplate.defaultContentFontSize}}" bind:value="itemData.item['title']" selectOnClick="{{ false }}" />
+                <Controls.input:Text fontSize="{{editorTemplate.itemFontSize}}" bind:value="itemData.item['title']" selectOnClick="{{ false }}" />
             </ws:editorTemplate>
         </ws:partial>
     </ws:contentTemplate>

@@ -1,5 +1,5 @@
 <ws:template name="cross">
-   <ws:if data="{{!_options.readOnly && (!item || item.hasOwnProperty('resetValue'))}}">
+   <ws:if data="{{!_options.readOnly}}">
       <span class="controls-FilterView__iconReset_theme-{{_options.theme}} icon-CloseNew" ws-no-focus="{{true}}"></span>
    </ws:if>
 </ws:template>
@@ -34,7 +34,9 @@
                         on:click="_openPanel(item.name)"
                         item="{{item}}"
                         itemName="{{item.name}}" />
+            <ws:if data="{{item.hasOwnProperty('resetValue')}}">
                <ws:partial template="cross" on:click="_reset(item)" item="{{item}}"/>
+            </ws:if>
          </ws:if>
       </ws:for>
       <ws:if data="{{_filterText}}">
@@ -43,7 +45,9 @@
                      title="{{_filterText}}"
                      on:click="openDetailPanel()"
                      attr:class="controls-FilterView__filterTextLine"/>
+         <ws:if data="{{_hasResetValues}}">
             <ws:partial template="cross" on:click="_resetFilterText()" />
+         </ws:if>
       </ws:if>
    </div>
    <ws:if data="{{(_options.detailPanelTemplateName || _isFastReseted()) && !_options.readOnly}}">
