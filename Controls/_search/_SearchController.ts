@@ -29,7 +29,7 @@ var _private = {
             var filter = self._options.filter;
 
             filter = clone(filter);
-            filter[self._options.searchParam] = self._options.searchValueTrim ? value.trim() : value;
+            filter[self._options.searchParam] = value;
 
             search.search(filter, force)
                 .addCallback((result) => {
