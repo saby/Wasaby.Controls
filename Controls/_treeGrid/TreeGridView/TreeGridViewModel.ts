@@ -225,9 +225,14 @@ var
             this._notify('onNodeRemoved', nodeId);
         },
 
+        getHasMoreStorage(): object {
+            return this._model.getHasMoreStorage();
+        },
+
         setHasMoreStorage: function (hasMoreStorage) {
             this._model.setHasMoreStorage(hasMoreStorage);
         },
+
         destroy: function () {
             this._model.unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
             TreeGridViewModel.superclass.destroy.apply(this, arguments);
