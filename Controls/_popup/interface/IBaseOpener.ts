@@ -20,6 +20,7 @@ export interface IBasePopupOptions {
     eventHandlers?: IEventHandlers;
     isDefaultOpener?: boolean;
     actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
+    zIndex?: number; // TODO Compatible
     _vdomOnOldPage?: boolean; // TODO Compatible
     isCompoundTemplate?: boolean; // TODO Compatible
     _type?: string; // TODO Compatible

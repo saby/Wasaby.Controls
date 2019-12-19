@@ -55,7 +55,7 @@ export = {
      * Удалить popup
      */
 
-    remove(id: string): Promise<undefined> {
+    remove(id: string): Promise<void> {
         return this._callManager('remove', arguments);
     },
 

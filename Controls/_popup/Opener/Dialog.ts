@@ -1,4 +1,4 @@
-import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
+import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {Logger} from 'UI/Utils';
 import coreMerge = require('Core/core-merge');
 /**
@@ -103,8 +103,8 @@ class Dialog extends BaseOpener {
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error(Dialog.prototype._moduleName + ': Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }
-            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-                BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
+                BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {
                     resolve(popupId);
                 });
             });
