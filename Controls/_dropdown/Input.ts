@@ -297,12 +297,6 @@ var Input = Control.extend({
    }
 });
 
-Input.getDefaultOptions = (): object => {
-   return {
-       iconStyle: 'secondary'
-   };
-};
-
 Input._theme = ['Controls/dropdown', 'Controls/Classes'];
 
 export = Input;
