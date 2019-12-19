@@ -12,6 +12,7 @@
  * @includes PreviewerTarget Controls/_popup/Previewer
  * @includes InfoboxButton Controls/_popup/InfoBox/InfoboxButton
  * @includes EditContainer Controls/_popup/Opener/Edit/Container
+ * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @public
  * @author Крайнов Д.О.
  */
@@ -29,6 +30,7 @@
  * @includes PreviewerTarget Controls/_popup/Previewer
  * @includes InfoboxButton Controls/_popup/InfoBox/InfoboxButton
  * @includes EditContainer Controls/_popup/Opener/Edit/Container
+ * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @public
  * @author Крайнов Д.О.
  */

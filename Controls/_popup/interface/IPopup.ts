@@ -46,7 +46,7 @@ export interface IPopupOptions extends IBaseOpener {
  * Интерфейс окон
  *
  * @interface Controls/_popup/interface/IPopup
- * @public
+ * @private
  * @author Красильников А.С.
  */
 

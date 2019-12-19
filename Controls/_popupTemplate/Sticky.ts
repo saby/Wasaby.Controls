@@ -8,7 +8,7 @@ import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from "./interf
  * @class Controls/_popupTemplate/Sticky
  * @extends Core/Control
  * @control
- * @public
+ * @private
  * @category Popup
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
