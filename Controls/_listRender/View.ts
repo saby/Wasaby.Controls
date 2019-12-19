@@ -110,7 +110,8 @@ export default class View extends Control<IViewOptions> {
     protected _onItemSwipe(
         e: SyntheticEvent<null>,
         item: CollectionItem<Model>,
-        swipeEvent: SyntheticEvent<ISwipeEvent>
+        swipeEvent: SyntheticEvent<ISwipeEvent>,
+        swipeContainerHeight: number
     ): void {
 
     }
