@@ -26,7 +26,6 @@ import Input = require('Controls/_suggest/Input');
 import _InputController = require('Controls/_suggest/_InputController');
 import InputRender = require('Controls/_suggest/Input/Render');
 import SearchInput from 'Controls/_suggest/Input/Search/Suggest';
-import LoadService from 'Controls/_suggestPopup/LoadService';
 
 export {default as Selector} from './_suggest/Selector';
 
@@ -34,6 +33,5 @@ export {
    Input,
    _InputController,
    SearchInput,
-   InputRender,
-   LoadService
+   InputRender
 };
