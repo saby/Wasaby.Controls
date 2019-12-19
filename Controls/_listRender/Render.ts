@@ -88,7 +88,18 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>): void {
         e.stopPropagation();
-        this._notify('itemSwipe', [item, e]);
+
+        const itemContainer =
+            (e.target as HTMLElement)
+            ?.closest('.controls-ListView__itemV')
+            ?.querySelector('.js-controls-SwipeControl__actionsContainer');
+
+        const swipeContainer =
+            itemContainer?.classList.contains('js-controls-SwipeControl__actionsContainer')
+            ? itemContainer
+            : itemContainer?.querySelector('.js-controls-SwipeControl__actionsContainer');
+
+        this._notify('itemSwipe', [item, e, swipeContainer?.clientHeight]);
     }
 
     protected _onItemActionsClick(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {
