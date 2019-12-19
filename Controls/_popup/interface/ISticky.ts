@@ -1,6 +1,14 @@
 import {IBasePopupOptions, IOpener} from 'Controls/_popup/interface/IBaseOpener';
 import {Control} from 'UI/Base';
 
+/**
+ * Интерфейс для опций стики окон
+ *
+ * @interface Controls/_popup/interface/ISticky
+ * @public
+ * @author Красильников А.С.
+ */
+
 export interface IStickyPopupOptions extends IBasePopupOptions {
     minWidth?: number;
     width?: number;
@@ -28,7 +36,7 @@ export interface IStickyPositionOffset {
 }
 
 export interface IStickyOpener extends IOpener {
-    readonly '[Controls/_popup/interface/IStackOpener]': boolean;
+    readonly '[Controls/_popup/interface/IStickyOpener]': boolean;
 }
 
 /**
@@ -52,13 +60,13 @@ export interface IStickyOpener extends IOpener {
  * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционируется всплывающее окно.
  * @property {Node} opener Логический инициатор открытия всплывающего окна
  * @property {fittingMode} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
- * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события всплывающего окна.
+ * @property {Controls/_popup/interface/IStickyOpener.typedef} eventHandlers Функции обратного вызова на события всплывающего окна.
  */
 
 /*
  * Open sticky popup.
  * If you call this method while the window is already opened, it will cause the redrawing of the window.
- * @function Controls/_popup/Opener/Sticky#open
+ * @function Controls/_popup/interface/IStickyOpener#open
  * @param {PopupOptions} popupOptions Sticky popup options.
  * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
  */
@@ -66,7 +74,7 @@ export interface IStickyOpener extends IOpener {
 /**
  * Метод открытия диалогового окна.
  * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
- * @function Controls/_popup/Opener/Sticky#open
+ * @function Controls/_popup/interface/IStickyOpener#open
  * @param {PopupOptions} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
  * @remark Если требуется открыть окно, без создания popup:Sticky в верстке, следует использовать статический метод {@link openPopup}
  * @example

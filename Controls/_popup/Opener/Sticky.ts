@@ -31,6 +31,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ здесь}.
  * @class Controls/_popup/Opener/Sticky
  * @extends Controls/_popup/Opener/BaseOpener
+ * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/ISticky
  * @control
  * @author Красильников А.С.
@@ -42,7 +43,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
 interface IStickyOpenerOptions extends IStickyPopupOptions, IBaseOpenerOptions {}
 
 class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
-    readonly '[Controls/_popup/interface/IStackOpener]': boolean;
+    readonly '[Controls/_popup/interface/IStickyOpener]': boolean;
 
     open(popupOptions: IStickyPopupOptions): Promise<string | undefined> {
         return super.open(getStickyConfig(popupOptions), POPUP_CONTROLLER);
