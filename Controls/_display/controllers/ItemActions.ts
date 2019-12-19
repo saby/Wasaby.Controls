@@ -11,9 +11,15 @@ export type TItemActionVisibilityCallback = (
     item: unknown
 ) => boolean;
 
-interface IItemActionsContainer {
+export interface IItemActionsContainer {
     all: TItemAction[];
     showed: TItemAction[];
+}
+
+export interface IItemActionsTemplateOptions {
+    style?: string;
+    editingConfig?: any;
+    itemActionsPosition: string;
 }
 
 export interface IItemActionsItem {
@@ -33,6 +39,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setActionsMenuConfig(config: any): void;
     getActionsMenuConfig(): any;
     getContextMenuConfig(): any;
+    setActionsTemplateConfig(config: any): void;
 }
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
@@ -83,6 +90,18 @@ export function setActionsToItem(
         _setItemActions(item, actions);
     }
     collection.nextVersion();
+}
+
+export function calculateActionsTemplateConfig(
+    collection: IItemActionsCollection,
+    options: IItemActionsTemplateOptions
+): void {
+    collection.setActionsTemplateConfig({
+        toolbarVisibility: options.editingConfig?.toolbarVisibility,
+        style: options.style,
+        size: options.editingConfig ? 's' : 'm',
+        itemActionsPosition: options.itemActionsPosition
+    });
 }
 
 export function setActiveItem(

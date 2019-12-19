@@ -19,9 +19,13 @@
       on:keydown="_onItemKeyDown(item)"
 
       itemActionsPosition="{{ itemActionsPosition }}"
-      itemActionsTemplate="{{ itemActionsTemplate }}"
       swipeTemplate="{{ swipeTemplate }}"
       multiSelectTpl="{{ multiSelectTpl }}"
-      isAdd="{{ isAdd }}"
-      itemActionsPosition="{{ itemActionsPosition }}"/>
+      isAdd="{{ isAdd }}">
+      <ws:itemActionsTemplate>
+         <ws:partial
+            template="wml!Controls/_listRender/Render/resources/ItemActionsTemplate"
+            scope="{{ collection.getActionsTemplateConfig() }}" />
+      </ws:itemActionsTemplate>
+   </ws:partial>
 </ws:for>
