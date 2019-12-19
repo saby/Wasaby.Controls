@@ -1,10 +1,9 @@
 import {TemplateFunction} from 'UI/Base';
 
 /**
- * @typedef {IColumn[]} TColumns
+ * @typedef {IColumn[]}
  * @description Тип опции columns в таблице
  * @public
- * @author Авраменко А.С.
  */
 export type TColumns = IColumn[];
 
@@ -20,7 +19,7 @@ export type TColumns = IColumn[];
 export type TCellPaddingVariant = 'S' | 'M' | 'null';
 
 /**
- * @typedef {Object} ICellPadding
+ * @typedef {Object}
  * @description Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  * @property {TCellPaddingVariant} [left=null] Отступ от левой границы ячейки.
  * @property {TCellPaddingVariant} [right=null] Отступ от правой границы ячейки.
@@ -33,7 +32,7 @@ export interface ICellPadding {
 }
 
 /**
- * @typedef {String} TCellAlign
+ * @typedef {String}
  * @description Значения для выравнивания ячеек по горизонтали.
  * @variant left по левому краю.
  * @variant center по центру.
@@ -44,7 +43,7 @@ export interface ICellPadding {
 export type TCellAlign = 'left' | 'center' | 'right';
 
 /**
- * @typedef {String} TCellVerticalAlign
+ * @typedef {String}
  * @description Значения для выравнивания ячеек по вертикали.
  * @variant top по верхнему краю.
  * @variant center по центру.
@@ -56,7 +55,7 @@ export type TCellAlign = 'left' | 'center' | 'right';
 export type TCellVerticalAlign = 'top' | 'center' | 'bottom' | 'baseline';
 
 /**
- * @typedef {String} TOverflow
+ * @typedef {String}
  * @description Обрезается или не обрезается строка
  * @variant ellipsis по верхнему краю.
  * @variant none текст разбивается на несколько строк.
@@ -96,19 +95,17 @@ export interface IColumn {
     /**
      * @description Шаблон отображения ячейки.
      * <br/>О создании пользовательского шаблона читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">здесь</a>.
+     * @default {@link https://wi.sbis.ru/docs/js/Controls/grid/ColumnTemplate/ Controls/grid:ColumnTemplate}
      */
     template?: TemplateFunction;
     /**
      * @description Шаблон отображения ячейки в строке итогов.
      * <br/>Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
+     * @default {@link https://wi.sbis.ru/docs/js/Controls/grid/ResultsTemplate/ Controls/grid:ResultsTemplate}
      */
     resultTemplate?: TemplateFunction;
     /**
      * @description Выравнивание содержимого ячейки по горизонтали.
-     * Доступные значения:
-     * **left** — по левому краю.
-     * **center** — по центру.
-     * **right** — по правому краю.
      */
     align?: TCellAlign;
     /**
@@ -127,9 +124,6 @@ export interface IColumn {
     textOverflow?: TOverflow;
     /**
      * @description Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
-     * @variant ellipsis по верхнему краю.
-     * @variant none текст разбивается на несколько строк.
-     * @default none
      * <pre>
      * columns: [{
      *    width: '1fr',
