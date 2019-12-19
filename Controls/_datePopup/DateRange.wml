@@ -35,7 +35,7 @@
          name="monthList"
          virtualPageSize="{{4}}"
          _limit="{{1}}"
-         position="{{_options.position}}"
+         position="{{_position}}"
          attr:class="controls-PeriodDialog-DateRange-dates-wrapper"
          calendarSource="{{_options.calendarSource}}"
          dayTemplate="{{_options.dayTemplate}}"

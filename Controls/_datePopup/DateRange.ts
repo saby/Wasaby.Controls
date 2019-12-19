@@ -27,6 +27,7 @@ const _private = {
         self._monthSelectionEnabled = !options.readOnly && (options.selectionType === 'range' ||
             (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.quantum) &&
                 options.quantum.months[0] === 1));
+        self._position = options.position;
     },
 
     notifyPositionChanged: function(self, date) {
@@ -48,7 +49,9 @@ const _private = {
         }
 
         if (year !== null) {
-            _private.notifyPositionChanged(self, new Date(year, 0, 1));
+            const yearDate = new Date(year, 0, 1);
+            _private.notifyPositionChanged(self, yearDate);
+            self._position = yearDate;
         }
     }
 };
@@ -65,6 +68,10 @@ var Component = BaseControl.extend([EventProxy], {
 
     _monthSelectionEnabled: true,
     _selectionProcessing: false,
+
+    // We store the position locally in the component, and don't use the value from options
+    // to be able to quickly switch it on the mouse wheel.
+    _position: Date,
 
     constructor: function (options) {
         Component.superclass.constructor.apply(this, arguments);
@@ -119,12 +126,12 @@ var Component = BaseControl.extend([EventProxy], {
 
     _wheelHandler: function(event) {
         const direction = event.nativeEvent.deltaY > 0 ? 'top' : 'bottom';
-        _private.changeYear(this, this._options.position, direction);
+        _private.changeYear(this, this._position, direction);
         event.preventDefault();
     },
 
     _swipeHandler: function(event) {
-        _private.changeYear(this, this._options.position, event.nativeEvent.direction);
+        _private.changeYear(this, this._position, event.nativeEvent.direction);
         event.preventDefault();
     },
 
