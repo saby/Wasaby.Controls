@@ -45,7 +45,7 @@
 
 /**
  * @name Controls/list:EditingTemplate#value
- * @cfg {String} Устанавливает текст, отображаемый в элементе в режиме просмотра.
+ * @cfg {String} Устанавливает текст, отображаемый внутри элемента в режиме просмотра.
  */
 
 /**
@@ -58,7 +58,7 @@
 
 /**
  * @name Controls/list:EditingTemplate#size
- * @cfg {Size} Устанавливает размер шрифта для {@link Controls/list:EditingTemplate#value текста}, который отображается в строке в режиме просмотра. 
+ * @cfg {Size} Устанавливает размер шрифта для {@link Controls/list:EditingTemplate#value текста}, который отображается внутри элемента в режиме просмотра. 
  * @default default
  * @see Controls/list:EditingTemplate#value
  * @remark

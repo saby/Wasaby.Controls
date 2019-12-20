@@ -15,6 +15,7 @@
  * @includes IStickyPopupOptions Controls/_popup/interface/ISticky
  * @includes IDialogPopupOptions Controls/_popup/interface/IDialog
  * @includes IConfirmationOptions Controls/_popup/interface/IConfirmation
+ * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @public
  * @author Крайнов Д.О.
  */
@@ -36,6 +37,7 @@
  * @includes IStickyPopupOptions Controls/_popup/interface/ISticky
  * @includes IStickyPopupOptions Controls/_popup/interface/IDialog
  * @includes IConfirmationOptions Controls/_popup/interface/IConfirmation
+ * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @public
  * @author Крайнов Д.О.
  */
