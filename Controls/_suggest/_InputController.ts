@@ -236,11 +236,19 @@ var _private = {
    },
    getHistoryService: function(self) {
       if (!self._historyServiceLoad) {
-         self._historyServiceLoad = LoadService({
-            historyId: self._options.historyId
+         return new Promise(function(resolve) {
+            require(['Controls/suggestPopup'], function(result) {
+               self._historyServiceLoad = result.LoadService({
+                  historyId: self._options.historyId
+               });
+               resolve();
+            });
+         }).then(function() {
+            return self._historyServiceLoad;
          });
+      } else {
+         return self._historyServiceLoad;
       }
-      return self._historyServiceLoad;
    },
    getRecentKeys: function(self) {
       if (self._historyLoad) {
@@ -248,7 +256,7 @@ var _private = {
       }
 
       self._historyLoad = new Deferred();
-
+      
       //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
       _private.getHistoryService(self).addCallback(function(historyService) {
          historyService.query().addCallback(function(dataSet) {
