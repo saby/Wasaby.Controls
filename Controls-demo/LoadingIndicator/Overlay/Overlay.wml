@@ -6,7 +6,6 @@
         <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
                 isGlobal="{{false}}"
                 overlay="default"
-                message="Локальный индикатор"
                 time="3000"
                 delay="0"
         ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
@@ -18,7 +17,6 @@
         <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
                 isGlobal="{{false}}"
                 overlay="dark"
-                message="Локальный индикатор"
                 time="3000"
                 delay="0"
         ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
@@ -30,7 +28,6 @@
         <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
                 isGlobal="{{false}}"
                 overlay="none"
-                message="Локальный индикатор"
                 time="3000"
                 delay="0"
         ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
