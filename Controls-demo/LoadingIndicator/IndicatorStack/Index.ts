@@ -12,7 +12,7 @@ class IndicatorStack extends Control<IControlOptions> {
     private _firstOpen(): void {
         const cfg = {
             id: this._firstId,
-            message: 'Текст первого индикатора',
+            message: 'first indicator text',
             overlay: 'none',
             delay: 0
         };
@@ -29,7 +29,7 @@ class IndicatorStack extends Control<IControlOptions> {
         const cfg = {
             id: this._secondId,
             overlay: 'none',
-            message: 'Текст второго индикатора',
+            message: 'second indicator text',
             delay: 0
         };
         this._secondId = this._notify('showIndicator', [cfg], { bubbling: true });
@@ -44,7 +44,7 @@ class IndicatorStack extends Control<IControlOptions> {
         });
         const cfg = {
             id: this._overlayId,
-            message: 'Индикатор закроется через ' + delay / 1000,
+            message: 'The indicator will close after ' + delay / 1000,
             overlay: 'dark',
             delay: 0
         };
@@ -60,7 +60,7 @@ class IndicatorStack extends Control<IControlOptions> {
                 let cfg = {
                     id: id,
                     overlay: 'dark',
-                    message: 'Индикатор закроется через ' + delay / 1000,
+                    message: 'The indicator will close after ' + delay / 1000,
                     delay: 0
                 };
                 self._overlayId = self._notify('showIndicator', [cfg], { bubbling: true });
