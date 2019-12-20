@@ -22,7 +22,7 @@ type TIconStyle = 'default'|'attention'|'error'|'done';
  * @typedef {String} TItemActionsPosition
  * @variant inside Внутри элемента.
  * @variant outside Под элементом.
- * @variant custom Произвольная позиция отображения. Задаётся через прикладной шаблон {@link Controls/interface/IItemTemplate itemTemplate}.
+ * @variant custom Произвольная позиция отображения. Задаётся через шаблон {@link Controls/interface/IItemTemplate itemTemplate}.
  */
 type TItemActionsPosition = 'inside'|'outside'|'custom';
 /**
@@ -277,7 +277,7 @@ export interface IList {
  * См. <a href="/materials/demo-ws4-list-item-actions-custom">демо-пример</a>.
  * Подробнее о работе с опциями записи читайте [@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
- * Размещаем опции записи в прикладном шаблоне с использованием itemActionsTemplate:
+ * Размещаем опции записи в шаблоне с использованием itemActionsTemplate:
  * <pre>
  * <Controls.list:View itemActionsPosition="custom" itemActions="{{_itemActions}}">
  *    <ws:itemTemplate>
