@@ -7,7 +7,6 @@ import Env = require('Env/Env');
 import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
-import {LoadService} from 'Controls/suggestPopup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/suggest';
 
@@ -256,7 +255,7 @@ var _private = {
       }
 
       self._historyLoad = new Deferred();
-      
+
       //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
       _private.getHistoryService(self).addCallback(function(historyService) {
          historyService.query().addCallback(function(dataSet) {
