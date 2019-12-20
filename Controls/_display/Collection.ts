@@ -105,6 +105,26 @@ export interface IViewIterator {
     setIndices: Function;
 }
 
+export interface IItemActionsTemplateConfig {
+    toolbarVisibility?: boolean;
+    style?: string;
+    size?: string;
+    itemActionsPosition?: string;
+    actionAlignment?: string;
+    actionsCaptionPosition?: 'right'|'bottom'|'none';
+}
+
+export interface ISwipeConfig {
+    itemActionsSize?: 's'|'m'|'l';
+    itemActions?: {
+        all: any[],
+        showed: any[]
+    };
+    paddingSize?: 's'|'m'|'l';
+    twoColumns?: boolean;
+    twoColumnsActions?: [[any, any], [any, any]];
+}
+
 /**
  * Преобразует проекцию в массив из ее элементов
  */
@@ -624,7 +644,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _actionsAssigned: boolean;
     protected _actionsMenuConfig: any;
-    protected _actionsTemplateConfig: any;
+    protected _actionsTemplateConfig: IItemActionsTemplateConfig;
+    protected _swipeConfig: ISwipeConfig;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2102,16 +2123,27 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._actionsMenuConfig = config;
     }
 
-    getActionsTemplateConfig(): any {
+    getActionsTemplateConfig(): IItemActionsTemplateConfig {
         return this._actionsTemplateConfig;
     }
 
-    setActionsTemplateConfig(config: any): void {
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void {
         if (!isEqual(this._actionsTemplateConfig, config)) {
             this._actionsTemplateConfig = config;
             this._nextVersion();
         }
     }
+
+    getSwipeConfig(): ISwipeConfig {
+        return this._swipeConfig;
+    }
+
+    setSwipeConfig(config: ISwipeConfig): void {
+        if (!isEqual(this._swipeConfig, config)) {
+            this._swipeConfig = config;
+            this._nextVersion();
+        }
+    },
 
     // region SerializableMixin
 
@@ -3215,6 +3247,7 @@ Object.assign(Collection.prototype, {
     _actionsAssigned: false,
     _actionsMenuConfig: null,
     _actionsTemplateConfig: null,
+    _swipeConfig: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 

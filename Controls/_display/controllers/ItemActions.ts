@@ -1,7 +1,12 @@
 import { IBaseCollection, TItemKey } from '../interface';
+import { IItemActionsTemplateConfig, ISwipeConfig } from '../Collection';
 import { showType } from 'Controls/Utils/Toolbar';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
+import { Model } from 'Types/entity';
+
+// TODO Move these measurers to listRender, maybe rewrite them
+import { SwipeVerticalMeasurer, SwipeHorizontalMeasurer } from 'Controls/list';
 
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
@@ -20,14 +25,18 @@ export interface IItemActionsTemplateOptions {
     style?: string;
     editingConfig?: any;
     itemActionsPosition: string;
+    actionAlignment?: string;
+    actionsCaptionPosition?: 'right'|'bottom'|'none';
 }
 
 export interface IItemActionsItem {
     getActions(): IItemActionsContainer;
-    getContents(): unknown;
+    getContents(): Model;
     setActions(actions: IItemActionsContainer): void;
     setActive(active: boolean): void;
     isActive(): boolean;
+    setSwiped(swiped: boolean): void;
+    isSwiped(): boolean;
 }
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
@@ -39,7 +48,10 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setActionsMenuConfig(config: any): void;
     getActionsMenuConfig(): any;
     getContextMenuConfig(): any;
-    setActionsTemplateConfig(config: any): void;
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
+    getActionsTemplateConfig(): IItemActionsTemplateConfig;
+    setSwipeConfig(config: ISwipeConfig): void;
+    getSwipeConfig(): ISwipeConfig;
 }
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
@@ -100,7 +112,9 @@ export function calculateActionsTemplateConfig(
         toolbarVisibility: options.editingConfig?.toolbarVisibility,
         style: options.style,
         size: options.editingConfig ? 's' : 'm',
-        itemActionsPosition: options.itemActionsPosition
+        itemActionsPosition: options.itemActionsPosition,
+        actionAlignment: options.actionAlignment,
+        actionsCaptionPosition: options.actionsCaptionPosition
     });
 }
 
@@ -243,6 +257,116 @@ export function prepareActionsMenuConfig(
 
         collection.nextVersion();
     }
+}
+
+export function activateSwipe(
+    collection: IItemActionsCollection,
+    itemKey: TItemKey,
+    actionsContainerHeight: number
+): void {
+    setSwipeItem(collection, itemKey);
+    setActiveItem(collection, itemKey);
+
+    if (collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
+        _updateSwipeConfig(collection, actionsContainerHeight);
+    }
+
+    collection.nextVersion();
+}
+
+export function setSwipeItem(
+    collection: IItemActionsCollection,
+    key: TItemKey
+): void {
+    const oldSwipeItem = getSwipeItem(collection);
+    const newSwipeItem = collection.getItemBySourceKey(key);
+
+    if (oldSwipeItem) {
+        oldSwipeItem.setSwiped(false);
+    }
+    if (newSwipeItem) {
+        newSwipeItem.setSwiped(true);
+    }
+
+    collection.nextVersion();
+}
+
+export function getSwipeItem(collection: IItemActionsCollection): IItemActionsItem {
+    return collection.find((item) => item.isSwiped());
+}
+
+function _updateSwipeConfig(
+    collection: IItemActionsCollection,
+    actionsContainerHeight: number
+): void {
+    const item = getSwipeItem(collection);
+    if (!item) {
+        return;
+    }
+
+    const actions = item.getActions().all;
+    const actionsTemplateConfig = collection.getActionsTemplateConfig();
+
+    let swipeConfig = _calculateSwipeConfig(
+        actions,
+        actionsTemplateConfig.actionAlignment,
+        actionsContainerHeight,
+        actionsTemplateConfig.actionsCaptionPosition
+    );
+
+    if (
+        actionsTemplateConfig.actionAlignment !== 'horizontal' &&
+        _needsHorizontalMeasurement(swipeConfig)
+    ) {
+        swipeConfig = _calculateSwipeConfig(
+            actions,
+            'horizontal',
+            actionsContainerHeight,
+            actionsTemplateConfig.actionsCaptionPosition
+        );
+        collection.setActionsTemplateConfig({
+            ...actionsTemplateConfig,
+            actionAlignment: 'horizontal'
+        });
+    }
+
+    _setItemActions(item, swipeConfig.itemActions);
+
+    if (swipeConfig.twoColumns) {
+        const visibleActions = swipeConfig.itemActions.showed;
+        swipeConfig.twoColumnsActions = [
+            [visibleActions[0], visibleActions[1]],
+            [visibleActions[2], visibleActions[3]]
+        ];
+    }
+
+    collection.setSwipeConfig(swipeConfig);
+}
+
+function _calculateSwipeConfig(
+    actions: TItemAction[],
+    actionAlignment: string,
+    actionsContainerHeight: number,
+    actionsCaptionPosition: 'right'|'bottom'|'none'
+): ISwipeConfig {
+    const measurer =
+        actionAlignment === 'vertical'
+        ? SwipeVerticalMeasurer.default
+        : SwipeHorizontalMeasurer.default;
+    return measurer.getSwipeConfig(
+        actions,
+        actionsContainerHeight,
+        actionsCaptionPosition
+    );
+}
+
+function _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
+    const actions = config.itemActions;
+    return (
+        actions &&
+        actions.showed?.length === 1 &&
+        actions.all?.length > 1
+    );
 }
 
 function _processActionsMenuClose(
