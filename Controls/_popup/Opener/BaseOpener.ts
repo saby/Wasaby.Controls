@@ -1,17 +1,17 @@
-import rk = require('i18n!Controls');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import { DefaultOpenerFinder } from 'UI/Focus';
 import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
-import CoreMerge = require('Core/core-merge');
-import cInstance = require('Core/core-instance');
-import {Logger} from 'UI/Utils';
-import randomId = require('Core/helpers/Number/randomId');
-import Deferred = require('Core/Deferred');
-import isNewEnvironment = require('Core/helpers/isNewEnvironment');
+import * as CoreMerge from 'Core/core-merge';
+import * as cInstance from 'Core/core-instance';
+import * as randomId from 'Core/helpers/Number/randomId';
+import * as Deferred from 'Core/Deferred';
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {parse as parserLib, load} from 'Core/library';
-import isEmpty = require('Core/helpers/Object/isEmpty');
+import {Logger} from 'UI/Utils';
+import { DefaultOpenerFinder } from 'UI/Focus';
+import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import rk = require('i18n!Controls');
+import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 
 /**
  * Base Popup opener
@@ -340,7 +340,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 deps.push('SBIS3.CONTROLS/Action/OpenDialog');
             }
 
-
             let libInfo;
             if (typeof cfg.template === 'string') {
                 libInfo = parserLib(cfg.template);
@@ -403,7 +402,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                     const compoundArea = dialog && dialog._getTemplateComponent();
 
                     // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
-                    if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundAreaNewTpl' && !isFormController && compoundArea._options.template === newCfg.template) {
+                    if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundAreaNewTpl' &&
+                        !isFormController && compoundArea._options.template === newCfg.template) {
                         // Redraw template with new options
                         compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
                         compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
@@ -419,11 +419,14 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                         action.closeDialog();
                         action._isExecuting = false;
                         action.execute(newCfg).addCallback(() => {
-                            // Защита от утечки. проверяем, что закрылось окно, которое открывали последним. в этом случае дестроим action.
+                            // Защита от утечки. проверяем, что закрылось окно, которое открывали последним.
+                            // в этом случае дестроим action.
                             // Т.к. мы создаем его динамически, никто кроме baseOpener его не задестроит
                             if (action.getDialog() === openedDialog) {
-                                // Этот дестрой не должен звать за собой дестрой панели, т.к. она уже в состоянии закрытия
-                                // Если action позовет дестрой панели в этом обработчике, то все остальные обработчики на onAfterClose не вызовутся
+                                // Этот дестрой не должен звать за собой дестрой панели,
+                                // т.к. она уже в состоянии закрытия
+                                // Если action позовет дестрой панели в этом обработчике,
+                                // то все остальные обработчики на onAfterClose не вызовутся
                                 // т.к. в системе событий есть провека на isDestroyed();
                                 action._closeDialogAfterDestroy = false;
                                 action.destroy();
@@ -454,7 +457,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         }
     }
 
-     /**
+    /**
      *
      * @param config
      * @param controller
@@ -517,7 +520,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         const baseConfig = {};
         const usedOptions = [
             'id',
-            'showOldIndicator',
             'closeByExternalClick',
             'isCompoundTemplate',
             'eventHandlers',
@@ -599,13 +601,13 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         if (requirejs.defined(module)) {
             return deferred.callback(requirejs(module));
         }
-        requirejs([module], function(getZIndex) {
+        requirejs([module], (getZIndex) => {
             return deferred.callback(getZIndex);
         });
         return deferred;
     }
 
-    static _openPopup(cfg, controller, def) {
+    static _openPopup(cfg: IBaseOpenerOptions, controller: Control, def: Promise<string>): void {
         if (!ManagerController.isPopupCreating(cfg.id)) {
             cfg.id = ManagerController.show(cfg, controller);
         } else {
