@@ -12,7 +12,6 @@ import {LoadService} from 'Controls/suggestPopup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/suggest';
 
-
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
 
@@ -242,7 +241,6 @@ var _private = {
             historyId: self._options.historyId
          });
       }
-
       return self._historyServiceLoad;
    },
    getRecentKeys: function(self) {
@@ -588,3 +586,4 @@ SuggestLayout.getDefaultOptions = function() {
 // </editor-fold>
 SuggestLayout._private = _private;
 export = SuggestLayout;
+
