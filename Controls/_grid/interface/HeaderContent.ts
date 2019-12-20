@@ -13,7 +13,7 @@
  *       <ws:Array>
  *          <ws:Object>
  *             <ws:template>
- *                <ws:partial template="Controls/grid:HeaderContent" scope="{{template}}">
+ *                <ws:partial template="Controls/grid:HeaderContent">
  *                   <ws:contentTemplate>
  *                      {{contentTemplate.colData.column.title}}
  *                   </ws:contentTemplate>
@@ -39,7 +39,7 @@
  *       <ws:Array>
  *          <ws:Object>
  *             <ws:template>
- *                <ws:partial template="Controls/grid:HeaderContent" scope="{{template}}">
+ *                <ws:partial template="Controls/grid:HeaderContent">
  *                   <ws:contentTemplate>
  *                      {{contentTemplate.colData.column.title}}
  *                   </ws:contentTemplate>
