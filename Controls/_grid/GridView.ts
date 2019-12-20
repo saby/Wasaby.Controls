@@ -81,6 +81,13 @@ var
 
         _resetScroll(self): void {
             self._notify('doScroll', ['top'], { bubbling: true });
+        },
+
+        getClickedColumnIndex(self,  e): number {
+            const rowContainer = e.target.closest('.controls-Grid__row');
+            const cellContainer = e.target.closest('.controls-Grid__row-cell');
+            const multiSelectOffset = self._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+            return Array.from(rowContainer.children).indexOf(cellContainer) - multiSelectOffset;
         }
     },
     GridView = ListView.extend({
@@ -266,6 +273,19 @@ var
                 this._resultsTemplate = options.results.template;
             } else {
                 this._resultsTemplate =  options.resultsTemplate || this._baseResultsTemplate;
+            }
+        },
+
+        _onItemClick(e, dispItem): void {
+            e.stopImmediatePropagation();
+            // Флаг preventItemEvent выставлен, если нужно предотвратить возникновение
+            // событий itemClick, itemMouseDown по нативному клику, но по какой-то причине
+            // невозможно остановить всплытие события через stopPropagation
+            // TODO: Убрать, preventItemEvent когда это больше не понадобится
+            // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
+            if (!e.preventItemEvent) {
+                var item = dispItem.getContents();
+                this._notify('itemClick', [item, e, _private.getClickedColumnIndex(this, e)], {bubbling: true});
             }
         },
 
