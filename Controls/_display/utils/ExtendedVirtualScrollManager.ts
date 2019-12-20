@@ -3,7 +3,7 @@ import { EnumeratorCallback } from 'Types/collection';
 
 export default class VirtualScrollManager extends BaseManager {
     isItemVisible = (index: number): boolean => {
-        return index >= this._collection.getStartIndex() && index <= this._collection.getStopIndex();
+        return index >= this._collection.getStartIndex() && index < this._collection.getStopIndex();
     }
 
     /**
