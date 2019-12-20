@@ -17,7 +17,7 @@ import 'css!theme?Controls/suggest';
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes CControls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_suggest/Input/Styles
@@ -39,7 +39,7 @@ import 'css!theme?Controls/suggest';
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_suggest/Input/Styles

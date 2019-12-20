@@ -23,7 +23,7 @@ type GetSourceResult = {
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
-       * @mixes Controls/interface/INavigation
+       * @mixes Controls/_interface/INavigation
        * @extends Core/Control
        * @control
        * @public
@@ -37,7 +37,7 @@ type GetSourceResult = {
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
-       * @mixes Controls/interface/INavigation
+       * @mixes Controls/_interface/INavigation
        * @extends Core/Control
        * @control
        * @public

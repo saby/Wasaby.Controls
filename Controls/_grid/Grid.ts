@@ -12,7 +12,7 @@ import viewName = require('Controls/_grid/GridView');
     * @extends Controls/list:View
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
-    * @mixes Controls/interface/INavigation
+    * @mixes Controls/_interface/INavigation
     * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
@@ -52,7 +52,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedGrid
-    * @mixes Controls/interface/INavigation
+    * @mixes Controls/_interface/INavigation
     * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
