@@ -5,7 +5,7 @@ import {IEventHandlers} from './IPopup';
  * Интерфейс базовых опций опенеров.
  *
  * @interface Controls/_popup/interface/IBaseOpener
- * @private
+ * @public
  * @author Красильников А.С.
  */
 

@@ -23,8 +23,8 @@ import {IDialogOpener, IDialogPopupOptions} from 'Controls/_popup/interface/IDia
  * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
  * @class Controls/_popup/Opener/Dialog
  * @extends Controls/_popup/Opener/BaseOpener
- * @mixes Controls/interface/IOpener
- * @mixes Controls/_popup/Opener/Confirmation/Dialog/DialogStyles
+ * @mixes Controls/_popup/interface/IBaseOpener
+ * @mixes Controls/_popup/interface/IDialog
  * @control
  * @author Красильников А.С.
  * @category Popup

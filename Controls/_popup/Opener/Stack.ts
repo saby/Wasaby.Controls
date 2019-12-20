@@ -29,8 +29,9 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * @control
  * @author Красильников А.С.
  * @category Popup
- * @mixes Controls/interface/IOpener
- * @demo Controls-demo/Popup/Opener/StackPG
+ * @mixes Controls/_popup/interface/IBaseOpener
+ * @mixes Controls/_popup/interface/IStack
+ * @mixes Controls/_interface/IPropStorage
  * @public
  */
 

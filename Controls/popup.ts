@@ -15,6 +15,7 @@
  * @includes IStickyPopupOptions Controls/_popup/interface/ISticky
  * @includes IDialogPopupOptions Controls/_popup/interface/IDialog
  * @includes IConfirmationOptions Controls/_popup/interface/IConfirmation
+ * @includes INotificationPopupOptions Controls/_popup/interface/INotification
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @public
  * @author Крайнов Д.О.
@@ -37,6 +38,7 @@
  * @includes IStickyPopupOptions Controls/_popup/interface/ISticky
  * @includes IStickyPopupOptions Controls/_popup/interface/IDialog
  * @includes IConfirmationOptions Controls/_popup/interface/IConfirmation
+ * @includes INotificationPopupOptions Controls/_popup/interface/INotification
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @public
  * @author Крайнов Д.О.
@@ -70,10 +72,12 @@ export {default as InfoboxButton} from './_popup/InfoBox/InfoboxButton';
 export {default as BaseOpener} from 'Controls/_popup/Opener/BaseOpener';
 export {default as Notification} from 'Controls/_popup/Opener/Notification';
 export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers} from './_popup/interface/IPopup';
+export {IBasePopupOptions} from './_popup/interface/IBaseOpener';
 export {IStackPopupOptions} from './_popup/interface/IStack';
 export {IStickyPopupOptions} from './_popup/interface/ISticky';
 export {IDialogPopupOptions} from './_popup/interface/IDialog';
 export {IConfirmationOptions} from './_popup/interface/IConfirmation';
+export {INotificationPopupOptions} from './_popup/interface/INotification';
 
 export {
     Edit,
