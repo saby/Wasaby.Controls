@@ -375,8 +375,17 @@ var
                 curNodeForItem = parentItem;
                 dispParent = curNodeForDispItem.getParent();
             }
+        },
+        getItemFontSize(itemType: null | boolean): string {
+            switch (itemType) {
+                case true:
+                    return '2xl';
+                case false:
+                    return 'xl';
+                case null:
+                    return 'm';
+            }
         }
-
     },
 
     TreeViewModel = ListViewModel.extend({
@@ -576,6 +585,7 @@ var
 
            if (current.item.get) {
                _private.setNodeFooterIfNeed(this, current);
+               current.itemFontSize = _private.getItemFontSize(current.item.get(this._options.nodeProperty));
            }
             return current;
         },
