@@ -514,22 +514,7 @@ var _private = {
                     }
                     afterAddItems(countCurrentItems, addedItems);
                 } else if (direction === 'up') {
-                    /**
-                     * todo KINGO.
-                     * Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
-                     * Устанавливаем в true флаг _saveAndRestoreScrollPosition, чтобы при ближайшей перерисовке
-                     * запомнить позицию скролла непосредственно до перерисовки и восстановить позицию скролла
-                     * сразу после перерисовки.
-                     * Пробовали запоминать позицию скролла здесь, в loadToDirection. Из-за асинхронности отрисовки
-                     * получается неактуальным запомненная позиция скролла и происходит дерганье контента таблицы.
-                     */
-                    if (detection.isMobileIOS) {
-                        _private.getIntertialScrolling(self).callAfterScrollStopped(() => {
-                            drawItemsUp(countCurrentItems, addedItems);
-                        });
-                    } else {
-                        drawItemsUp(countCurrentItems, addedItems);
-                    }
+                    drawItemsUp(countCurrentItems, addedItems);
                 }
                 return addedItems;
             }).addErrback((error) => {
