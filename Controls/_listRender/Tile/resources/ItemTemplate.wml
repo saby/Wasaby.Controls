@@ -38,15 +38,18 @@
          </ws:if>
       </ws:else>
       <ws:if data="{{ item.shouldDisplayActions() }}">
-         <ws:if data="{{ item.isSwiped() && itemActionsPosition !== 'custom' }}">
+         <ws:if data="{{ item.isSwiped() && itemActionsPosition !== 'custom' && itemActionsPosition !== 'outside' }}">
             <ws:partial
-               template="{{ swipeTemplate }}"
-               item="{{ item }}"
-               itemActionsTemplate="{{ itemActionsTemplate }}"/>
+               template="wml!Controls/_listRender/Render/resources/SwipeTemplate"
+               scope="{{ actionsTemplateConfig }}"
+               swipeConfig="{{ swipeConfig }}"
+               animationState="open"
+               item="{{ item }}" />
          </ws:if>
          <ws:else>
             <ws:partial
-               template="{{ itemActionsTemplate }}"
+               template="wml!Controls/_listRender/Render/resources/ItemActionsTemplate"
+               scope="{{ actionsTemplateConfig }}"
                highlightOnHover="{{ highlightOnHover }}"
                item="{{ item }}"
                itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight" />

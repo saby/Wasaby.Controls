@@ -6,6 +6,9 @@
       multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
       searchValue="{{ collection.getSearchValue() }}"
 
+      actionsTemplateConfig="{{ collection.getActionsTemplateConfig() }}"
+      swipeConfig="{{ collection.getSwipeConfig() }}"
+
       attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'ws-hidden' }}"
       attr:key="{{ keyPrefix }}-{{ item.getUid() }}"
 
@@ -19,13 +22,6 @@
       on:keydown="_onItemKeyDown(item)"
 
       itemActionsPosition="{{ itemActionsPosition }}"
-      swipeTemplate="{{ swipeTemplate }}"
       multiSelectTpl="{{ multiSelectTpl }}"
-      isAdd="{{ isAdd }}">
-      <ws:itemActionsTemplate>
-         <ws:partial
-            template="wml!Controls/_listRender/Render/resources/ItemActionsTemplate"
-            scope="{{ collection.getActionsTemplateConfig() }}" />
-      </ws:itemActionsTemplate>
-   </ws:partial>
+      isAdd="{{ isAdd }}" />
 </ws:for>

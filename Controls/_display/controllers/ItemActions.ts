@@ -26,7 +26,7 @@ export interface IItemActionsTemplateOptions {
     editingConfig?: any;
     itemActionsPosition: string;
     actionAlignment?: string;
-    actionsCaptionPosition?: 'right'|'bottom'|'none';
+    actionCaptionPosition: 'right'|'bottom'|'none';
 }
 
 export interface IItemActionsItem {
@@ -114,7 +114,7 @@ export function calculateActionsTemplateConfig(
         size: options.editingConfig ? 's' : 'm',
         itemActionsPosition: options.itemActionsPosition,
         actionAlignment: options.actionAlignment,
-        actionsCaptionPosition: options.actionsCaptionPosition
+        actionCaptionPosition: options.actionCaptionPosition
     });
 }
 
@@ -274,6 +274,13 @@ export function activateSwipe(
     collection.nextVersion();
 }
 
+export function deactivateSwipe(collection: IItemActionsCollection): void {
+    setSwipeItem(collection, null);
+    setActiveItem(collection, null);
+    collection.setSwipeConfig(null);
+    collection.nextVersion();
+}
+
 export function setSwipeItem(
     collection: IItemActionsCollection,
     key: TItemKey
@@ -311,7 +318,7 @@ function _updateSwipeConfig(
         actions,
         actionsTemplateConfig.actionAlignment,
         actionsContainerHeight,
-        actionsTemplateConfig.actionsCaptionPosition
+        actionsTemplateConfig.actionCaptionPosition
     );
 
     if (
@@ -322,12 +329,8 @@ function _updateSwipeConfig(
             actions,
             'horizontal',
             actionsContainerHeight,
-            actionsTemplateConfig.actionsCaptionPosition
+            actionsTemplateConfig.actionCaptionPosition
         );
-        collection.setActionsTemplateConfig({
-            ...actionsTemplateConfig,
-            actionAlignment: 'horizontal'
-        });
     }
 
     _setItemActions(item, swipeConfig.itemActions);
@@ -347,17 +350,20 @@ function _calculateSwipeConfig(
     actions: TItemAction[],
     actionAlignment: string,
     actionsContainerHeight: number,
-    actionsCaptionPosition: 'right'|'bottom'|'none'
+    actionCaptionPosition: 'right'|'bottom'|'none'
 ): ISwipeConfig {
     const measurer =
         actionAlignment === 'vertical'
         ? SwipeVerticalMeasurer.default
         : SwipeHorizontalMeasurer.default;
-    return measurer.getSwipeConfig(
+    const config: ISwipeConfig = measurer.getSwipeConfig(
         actions,
         actionsContainerHeight,
-        actionsCaptionPosition
+        actionCaptionPosition
     );
+    config.needTitle = measurer.needTitle;
+    config.needIcon = measurer.needIcon;
+    return config;
 }
 
 function _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
