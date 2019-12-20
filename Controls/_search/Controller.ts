@@ -201,7 +201,7 @@ var _private = {
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
  * @control
@@ -227,7 +227,7 @@ var _private = {
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
  * @control

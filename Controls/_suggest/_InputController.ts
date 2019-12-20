@@ -293,7 +293,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @control
  * @private
  */
@@ -307,7 +307,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @control
  * @private
  */

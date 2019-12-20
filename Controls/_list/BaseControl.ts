@@ -1407,7 +1407,7 @@ var _private = {
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList

@@ -28,7 +28,7 @@ interface IMoverDialogTemplate extends IControlOptions {
  * @mixes Controls/_treeGrid/interface/ITreeControl
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_explorer/interface/IExplorer
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @control
  * @public
  * @author Авраменко А.С.

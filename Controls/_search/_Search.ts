@@ -86,7 +86,7 @@ var _private = {
 
 /**
  * @name Controls/_search/_Search#navigation
- * @cfg {Controls/interface/INavigation} source
+ * @cfg {Controls/_interface/INavigation} source
  */
 
 var Search  = extend({

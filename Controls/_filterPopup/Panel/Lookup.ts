@@ -20,7 +20,7 @@ import 'Controls/lookup';
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
@@ -53,7 +53,7 @@ import 'Controls/lookup';
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
