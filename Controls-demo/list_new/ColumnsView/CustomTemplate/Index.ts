@@ -18,7 +18,7 @@ export default class RenderDemo extends Control {
     protected _beforeMount(): void {
         this._dataArray = generateData<{id: number, title: string, description: string}>({
             count: NUMBER_OF_ITEMS,
-            entityTemplate: {title: 'string', description: 'lorem'},
+            entityTemplate: {title: 'string', description: 'lorem_alter'},
             beforeCreateItemCallback: (item) => {
                 item.title = `Запись с id="${item.id}". ${item.title}`;
             }

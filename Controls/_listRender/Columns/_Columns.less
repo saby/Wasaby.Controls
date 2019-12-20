@@ -1,32 +1,33 @@
 .controls-ColumnsView__itemsContainer {
-   display: grid;
-   grid-template-columns: 1fr 1fr;
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
 }
 
 .controls-ColumnsView_column {
    height: fit-content;
+   max-width: @max-width_ColumnsView_tile + 2 * @side-spacing_ColumnsView_columns;
 }
 
 .controls-ColumnsView__itemsContainer,
 .controls-ColumnsView_column {
-   margin: 0 8px;
+   margin: 0 @side-spacing_ColumnsView_columns;
 }
 
 .controls-ColumnsView__itemV {
-   min-width: 270px;
-   max-width: 400px;
-   min-height: 34px;
+   min-width: @min-width_ColumnsView_tile;
+   max-width: @max-width_ColumnsView_tile;
    width: 100%;
    display: inline-block;
    overflow: hidden;
-   margin: 4px 0;
-   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-   border: 1px solid transparent;
+   margin: @vertical_spacing_ColumnsView_tile 0;
+   box-shadow: @shadow_ColumnsView_tile_normal;
+   border: @border_ColumnsView_tile_normal;
    box-sizing: border-box;
 }
 
 .controls-ColumnsView__itemV:hover {
-   box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+   box-shadow: @shadow_ColumnsView_tile_hovered;
 }
 
 .controls-ColumnsView__itemContent {
@@ -34,5 +35,5 @@
 }
 
 .controls-ColumnsView__item_marked {
-   border-color: #ff7033;
+   border-color: @border-color_ColumnsView_tile_marked;
 }

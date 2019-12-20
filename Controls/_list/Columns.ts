@@ -3,11 +3,11 @@
  */
 import Control = require('Core/Control');
 import ListControlTpl = require('wml!Controls/_list/List');
-import ListViewModel = require('Controls/_list/ListViewModel');
 import Deferred = require('Core/Deferred');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import viewName = require('Controls/_listRender/Columns');
 import viewTemplate = require('Controls/_list/ListControl');
+import {Logger} from 'UI/Utils';
 
 /**
  * Простой список с пользовательским шаблоном элемента. Может загружать данные из источника данных.
@@ -90,16 +90,18 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
     _theme: ['Controls/list_multi'],
 
     _beforeMount: function(options) {
-        this._viewModelConstructor = this._getModelConstructor(options.useNewModel);
+        this._viewModelConstructor = this._getModelConstructor();
         if (options.useNewModel) {
             return import('Controls/listRender').then((listRender) => {
                 this._viewName = listRender.Columns;
             });
+        } else {
+            Logger.error('ColumnsView: for ColumnsView useNewModel option is required');
         }
     },
 
-    _getModelConstructor: function(useNewModel: boolean) {
-        return !useNewModel ? ListViewModel : 'Controls/display:ColumnsCollection';
+    _getModelConstructor: function() {
+        return 'Controls/display:ColumnsCollection';
     },
 
     reload: function() {
