@@ -31,6 +31,9 @@ export interface IViewOptions extends IControlOptions {
     itemActionsPosition?: string;
     style?: string;
 
+    actionAlignment?: string;
+    actionsCaptionPosition?: 'right'|'bottom'|'none';
+
     editingConfig?: any;
 }
 
@@ -46,6 +49,18 @@ export default class View extends Control<IViewOptions> {
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
+
+        ItemActionsController.calculateActionsTemplateConfig(
+            this._collection,
+            {
+                itemActionsPosition: options.itemActionsPosition,
+                editingConfig: options.editingConfig,
+                style: options.style,
+                actionAlignment: options.actionAlignment,
+                actionsCaptionPosition: options.actionsCaptionPosition
+            }
+        );
+
         return libraryLoad(options.render).then(() => null);
     }
 
@@ -76,14 +91,14 @@ export default class View extends Control<IViewOptions> {
             );
         }
 
-        // TODO Also do this in _beforeMount if itemActions are present so this
-        // could happen during the first synchronization
         ItemActionsController.calculateActionsTemplateConfig(
             this._collection,
             {
                 itemActionsPosition: options.itemActionsPosition,
                 editingConfig: options.editingConfig,
-                style: options.style
+                style: options.style,
+                actionAlignment: options.actionAlignment,
+                actionsCaptionPosition: options.actionsCaptionPosition
             }
         );
     }
@@ -127,7 +142,18 @@ export default class View extends Control<IViewOptions> {
         swipeEvent: SyntheticEvent<ISwipeEvent>,
         swipeContainerHeight: number
     ): void {
-
+        switch (swipeEvent.nativeEvent.direction) {
+        case 'left':
+            ItemActionsController.activateSwipe(
+                this._collection,
+                item.getContents().getKey(),
+                swipeContainerHeight
+            );
+            break;
+        default:
+            // close swipe
+            break;
+        }
     }
 
     protected _onItemActionClick(

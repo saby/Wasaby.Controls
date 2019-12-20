@@ -67,19 +67,6 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
         }
     }
 
-    private _openSwipe(item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
-        const key = item.getContents().getId();
-
-        SwipeController.setSwipeItem(this._options.listModel, key);
-        ItemActionsController.setActiveItem(this._options.listModel, key);
-
-        if (this._options.itemActionsPosition !== 'outside') {
-            this._updateSwipeConfig(item, swipeEvent);
-        }
-
-        this._animationState = 'open';
-    }
-
     private _closeSwipe(animated: boolean = false): void {
         if (this._animationState === 'open' && !this._options.menuIsShown) {
             this._animationState = 'close';
@@ -97,60 +84,6 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
         if (model && !model.destroyed) {
             SwipeController.setSwipeItem(model, null);
             ItemActionsController.setActiveItem(model, null);
-        }
-    }
-
-    private _updateSwipeConfig(item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
-        const actions = item.getActions().all;
-        const actionsHeight = this._getActionsContainerHeight(swipeEvent.target as HTMLElement);
-
-        this._measureSwipeConfig(actions, this._options.actionAlignment, actionsHeight);
-        if (this._needsHorizontalMeasurement()) {
-            this._measureSwipeConfig(actions, 'horizontal', actionsHeight);
-        }
-
-        ItemActionsController.setActionsToItem(
-            this._options.listModel,
-            item.getContents().getId(),
-            this._swipeConfig.itemActions
-        );
-
-        if (this._swipeConfig.twoColumns) {
-            const visibleActions = this._swipeConfig.itemActions.showed;
-            this._swipeConfig.twoColumnsActions = [
-                [ visibleActions[0], visibleActions[1] ],
-                [ visibleActions[2], visibleActions[3] ]
-            ];
-        }
-    }
-
-    private _needsHorizontalMeasurement(): boolean {
-        const actions = this._swipeConfig.itemActions;
-        return (
-            actions.showed &&
-            actions.showed.length === 1 &&
-            actions.all.length > 1
-        );
-    }
-
-    private _measureSwipeConfig(actions: any[], actionAlignment: string, actionsHeight: number): void {
-        this._setMeasurer(actionAlignment);
-        this._swipeConfig = this._measurer.getSwipeConfig(
-            actions,
-            actionsHeight,
-            this._options.actionCaptionPosition
-        );
-    }
-
-    private _setMeasurer(actionAlignment: string): void {
-        this._actionAlignment = actionAlignment;
-        switch (actionAlignment) {
-            case 'vertical':
-                this._measurer = SwipeVerticalMeasurer.default;
-                break;
-            case 'horizontal':
-                this._measurer = SwipeHorizontalMeasurer.default;
-                break;
         }
     }
 
