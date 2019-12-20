@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Popup-edit" demoname="Controls-demo/Popup/Edit/Opener.wml">
+    <ws:content>
+        <Controls-demo.Input.TimeInterval.Base.Index />
+    </ws:content>
+</Controls.Application.ApplicationWrapper>
