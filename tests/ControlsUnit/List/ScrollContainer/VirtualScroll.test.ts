@@ -264,7 +264,9 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.stopIndex = 100;
             instance.itemsCount = 100;
             assert.isFalse(instance.isLoaded({body: {contains: () => true}}));
-        })
+            instance.itemsContainer = null;
+            assert.isFalse(instance.isLoaded({body: {contains: () => true}}));
+        });
         it('set items container', () => {
             const instance = new VirtualScroll(defaultOptions);
             instance.itemsContainer = itemsContainer;

@@ -282,19 +282,23 @@ export default class VirtualScrollController {
         let startChildrenIndex = 0;
         let updateLength = this.stopIndex - this.startIndex;
 
-        for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
-            if (!this._itemsContainer.children[i].className.includes('ws-hidden')) {
-                startChildrenIndex = i;
-                break;
+        if (this._itemsContainer) {
+            for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
+                if (!this._itemsContainer.children[i].className.includes('ws-hidden')) {
+                    startChildrenIndex = i;
+                    break;
+                }
             }
-        }
 
-        for (let i = 0; i < updateLength; i++) {
-            const child = this.itemsContainer.children[startChildrenIndex + i];
+            for (let i = 0; i < updateLength; i++) {
+                const child = this.itemsContainer.children[startChildrenIndex + i];
 
-            if (!child || child.className.includes('ws-hidden') || !document.body.contains(child)) {
-                isLoaded = false;
+                if (!child || child.className.includes('ws-hidden') || !document.body.contains(child)) {
+                    isLoaded = false;
+                }
             }
+        } else {
+            isLoaded = false;
         }
 
         return isLoaded;
