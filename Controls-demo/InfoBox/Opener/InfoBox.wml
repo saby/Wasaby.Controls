@@ -41,13 +41,13 @@
     <Controls.buttons:Button viewMode="link" fontColorStyle="link"
                               icon="icon-EmptyMessage"
                               iconSize="default"
-                              attr:class="controls-InfoBoxDemo__top"
+                              attr:class="controls-InfoBoxDemo__top-center"
                               attr:style="position: absolute; top: 0px;left:calc(50% - 12px)"
                               on:mouseenter="_open(_cfgTop)"/>
     <Controls.buttons:Button viewMode="link" fontColorStyle="link"
                               icon="icon-EmptyMessage"
                               iconSize="default"
-                              attr:class="controls-InfoBoxDemo__bottom"
+                              attr:class="controls-InfoBoxDemo__bottom-center"
                               attr:style="position: absolute; bottom: 0px;left:calc(50% - 12px)"
                               on:mouseenter="_open(_cfgBottom)"/>
 
