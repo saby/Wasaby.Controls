@@ -29,6 +29,9 @@ export interface IViewOptions extends IControlOptions {
     itemActions?: any[];
     itemActionVisibilityCallback?: Function;
     itemActionsPosition?: string;
+    style?: string;
+
+    editingConfig?: any;
 }
 
 interface ISwipeEvent extends Event {
@@ -72,6 +75,17 @@ export default class View extends Control<IViewOptions> {
                 options.itemActionVisibilityCallback
             );
         }
+
+        // TODO Also do this in _beforeMount if itemActions are present so this
+        // could happen during the first synchronization
+        ItemActionsController.calculateActionsTemplateConfig(
+            this._collection,
+            {
+                itemActionsPosition: options.itemActionsPosition,
+                editingConfig: options.editingConfig,
+                style: options.style
+            }
+        );
     }
 
     protected _beforeUnmount(): void {

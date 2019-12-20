@@ -154,15 +154,6 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
         }
     }
 
-    private _getActionsContainerHeight(swipeEventTarget: HTMLElement): number {
-        const itemContainer = swipeEventTarget.closest('.controls-ListView__itemV');
-        if (itemContainer.className.includes('js-controls-SwipeControl__actionsContainer')) {
-            return itemContainer.clientHeight;
-        } else {
-            return itemContainer.querySelector('.js-controls-SwipeControl__actionsContainer').clientHeight;
-        }
-    }
-
     static getDefaultOptions(): Partial<ISwipeControlOptions> {
         return {
             itemActionsPosition: 'inside',
