@@ -1,3 +1,7 @@
+@months-in-year_PeriodLiteDialog: 12;
+@quarters-in-year_PeriodLiteDialog: 4;
+@displayed-years_PeriodLiteDialog: 5;
+
 .controls-PeriodLiteDialog__container () {
    position: relative;
    height: auto;
@@ -319,19 +323,19 @@
 }
 
 .controls-PeriodLiteDialog__month-list {
-   height: @standart-line-height_PeriodLiteDialog * 12 - @border-width_PeriodLiteDialog_hovered * 11;
+   height: @standart-line-height_PeriodLiteDialog * @months-in-year_PeriodLiteDialog - @border-width_PeriodLiteDialog_hovered * (@months-in-year_PeriodLiteDialog - 1);
 }
 
 .controls-PeriodLiteDialog__quarter-list {
-   height: @standart-line-height_PeriodLiteDialog * 4 - @border-width_PeriodLiteDialog_hovered * 3;
+   height: @standart-line-height_PeriodLiteDialog * @quarters-in-year_PeriodLiteDialog - @border-width_PeriodLiteDialog_hovered * (@quarters-in-year_PeriodLiteDialog - 1);
 }
 
 .controls-PeriodLiteDialog__fullYear-list {
-   height: @standart-line-height_PeriodLiteDialog * 12 + @indents_PeriodLiteDialog;
+   height: @standart-line-height_PeriodLiteDialog * @months-in-year_PeriodLiteDialog + @indents_PeriodLiteDialog;
 }
 
 .controls-PeriodLiteDialog__year-list {
-   height: @standart-line-height_PeriodLiteDialog * 5 - @border-width_PeriodLiteDialog_hovered * 4;
+   height: @standart-line-height_PeriodLiteDialog * @displayed-years_PeriodLiteDialog - @border-width_PeriodLiteDialog_hovered * (@displayed-years_PeriodLiteDialog - 1);
 }
 
 .controls-PeriodLiteDialog_fullYear-list-hovered {
