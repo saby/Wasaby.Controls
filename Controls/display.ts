@@ -61,9 +61,6 @@ export {default as ColumnsCollectionItem} from './_display/ColumnsCollectionItem
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
 export { EditInPlaceController };
 
-import * as SwipeController from './_display/controllers/Swipe';
-export { SwipeController };
-
 import * as SelectionController from './_display/controllers/Selection';
 export { SelectionController };
 

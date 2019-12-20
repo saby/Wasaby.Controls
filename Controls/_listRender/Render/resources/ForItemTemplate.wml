@@ -7,6 +7,9 @@
 
    attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'ws-hidden' }}"
 
+   actionsTemplateConfig="{{ collection.getActionsTemplateConfig() }}"
+   swipeConfig="{{ collection.getSwipeConfig() }}"
+
    on:click="_onItemClick(item)"
    on:contextmenu="_onItemContextMenu(item)"
    on:swipe="_onItemSwipe(item)"

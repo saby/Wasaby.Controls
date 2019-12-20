@@ -27,12 +27,12 @@ export interface IViewOptions extends IControlOptions {
     render: string;
 
     itemActions?: any[];
-    itemActionVisibilityCallback?: Function;
+    itemActionVisibilityCallback?: (action, item) => boolean;
     itemActionsPosition?: string;
     style?: string;
 
     actionAlignment?: string;
-    actionsCaptionPosition?: 'right'|'bottom'|'none';
+    actionCaptionPosition?: 'right'|'bottom'|'none';
 
     editingConfig?: any;
 }
@@ -57,7 +57,7 @@ export default class View extends Control<IViewOptions> {
                 editingConfig: options.editingConfig,
                 style: options.style,
                 actionAlignment: options.actionAlignment,
-                actionsCaptionPosition: options.actionsCaptionPosition
+                actionCaptionPosition: options.actionCaptionPosition
             }
         );
 
@@ -98,7 +98,7 @@ export default class View extends Control<IViewOptions> {
                 editingConfig: options.editingConfig,
                 style: options.style,
                 actionAlignment: options.actionAlignment,
-                actionsCaptionPosition: options.actionsCaptionPosition
+                actionCaptionPosition: options.actionCaptionPosition
             }
         );
     }
@@ -151,7 +151,8 @@ export default class View extends Control<IViewOptions> {
             );
             break;
         default:
-            // close swipe
+            // TODO How to close swipe with animation
+            ItemActionsController.deactivateSwipe(this._collection);
             break;
         }
     }
@@ -222,7 +223,9 @@ export default class View extends Control<IViewOptions> {
 
     static getDefaultOptions(): Partial<IViewOptions> {
         return {
-            itemActionsPosition: 'inside'
+            itemActionsPosition: 'inside',
+            actionAlignment: 'horizontal',
+            actionCaptionPosition: 'none'
         };
     }
 }

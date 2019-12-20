@@ -111,7 +111,7 @@ export interface IItemActionsTemplateConfig {
     size?: string;
     itemActionsPosition?: string;
     actionAlignment?: string;
-    actionsCaptionPosition?: 'right'|'bottom'|'none';
+    actionCaptionPosition?: 'right'|'bottom'|'none';
 }
 
 export interface ISwipeConfig {
@@ -123,6 +123,8 @@ export interface ISwipeConfig {
     paddingSize?: 's'|'m'|'l';
     twoColumns?: boolean;
     twoColumnsActions?: [[any, any], [any, any]];
+    needTitle?: Function;
+    needIcon?: Function;
 }
 
 /**

@@ -84,7 +84,7 @@ export default class SwipeControl extends Control {
       this._currentItemData = null;
       this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
       if (this._options.useNewModel) {
-         displayLib.SwipeController.setSwipeItem(this._options.listModel, null);
+         displayLib.ItemActionsController.setSwipeItem(this._options.listModel, null);
          displayLib.ItemActionsController.setActiveItem(this._options.listModel, null);
       } else {
          this._options.listModel.setSwipeItem(null);
@@ -210,7 +210,7 @@ export default class SwipeControl extends Control {
       this._actionsHeight = this._getActionsHeight(childEvent.target);
       if (this._options.useNewModel) {
          const key = itemData.getContents().getId();
-         displayLib.SwipeController.setSwipeItem(listModel, itemData.getContents().getId());
+         displayLib.ItemActionsController.setSwipeItem(listModel, itemData.getContents().getId());
          displayLib.ItemActionsController.setActiveItem(listModel, key);
       } else {
          listModel.setSwipeItem(itemData);
