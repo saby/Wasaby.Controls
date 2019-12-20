@@ -1,0 +1,35 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mb2">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">overlay=default</div>
+        </div>
+        <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
+                isGlobal="{{false}}"
+                overlay="default"
+                time="3000"
+                delay="0"
+        ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
+    </div>
+    <div class="controlsDemo__cell ws-flexbox ws-flex-column controlsDemo__mb2">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">overlay=dark</div>
+        </div>
+        <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
+                isGlobal="{{false}}"
+                overlay="dark"
+                time="3000"
+                delay="0"
+        ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
+    </div>
+    <div class="controlsDemo__cell  ws-flexbox ws-flex-column">
+        <div class="controlsDemo__mb1">
+            <div class="controls-text-label_theme-{{_options.theme}}">overlay=none</div>
+        </div>
+        <Controls-demo.LoadingIndicator.localIndicator.LocalIndicator
+                isGlobal="{{false}}"
+                overlay="none"
+                time="3000"
+                delay="0"
+        ></Controls-demo.LoadingIndicator.localIndicator.LocalIndicator>
+    </div>
+</div>
