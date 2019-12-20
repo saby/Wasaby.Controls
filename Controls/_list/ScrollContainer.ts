@@ -86,14 +86,6 @@ export default class ScrollContainer extends Control<IOptions> {
     private saveScrollPosition: boolean;
     private savedScrollDirection: IDirection;
 
-    // Предыдущие индексы отображаемых записей
-    private savedStopIndex: number = 0;
-    private savedStartIndex: number = 0;
-
-    // Актуальные индексы отображаемых записей
-    private actualStartIndex: number = 0;
-    private actualStopIndex: number = 0;
-
     // Стейт, хранящий ссылку на модель, нужен для сохранения индексов на _beforeMount, так как во время выполнения
     // _beforeMount модель не лежит в _options
     private viewModel: unknown;
@@ -291,7 +283,7 @@ export default class ScrollContainer extends Control<IOptions> {
                 this.virtualScrollMoveHandler(params);
                 break;
             case 'canScroll':
-                this.updateViewport(params.clientHeight, false);
+                this.updateViewport((params as IScrollParams).clientHeight, false);
                 this.proxyEvent(type, params as IScrollParams);
                 break;
             case 'scrollResize':
@@ -347,10 +339,15 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     reset(itemsCount: number, initialKey?: string|number): void {
         if (this.virtualScroll) {
-            const initialIndex = this.viewModel.getIndexByKey(initialKey);
+            let initialIndex: number;
+
+            if (initialKey) {
+                initialIndex = this.viewModel.getIndexByKey(initialKey);
+            }
+
             this.itemsChanged = true;
             this.virtualScroll.itemsCount = itemsCount;
-            this.virtualScroll.reset(initialIndex === -1 ? 0 : initialIndex);
+            this.virtualScroll.reset(typeof initialIndex === 'undefined' ? 0 : initialIndex);
         }
     }
 
@@ -501,8 +498,6 @@ export default class ScrollContainer extends Control<IOptions> {
     private indexesChangedCallback = (startIndex: number, stopIndex: number, direction?: IDirection): void => {
         // Пересчет активных элементов
         const model = this.viewModel;
-        this.actualStartIndex = startIndex;
-        this.actualStopIndex = stopIndex;
 
         if (direction) {
             this.indicatorState = direction;
@@ -543,6 +538,8 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private registerScroll(): void {
         if (!this.scrollRegistered) {
+
+            // @ts-ignore
             this._children.scrollEmitter.startRegister(this._children);
             this.scrollRegistered = true;
         }
