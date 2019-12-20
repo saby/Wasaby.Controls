@@ -15,7 +15,7 @@
                 isGlobal="{{false}}"
                 overlay="dark"
                 delay="{{0}}"
-                message="Локальный индикатор"
+                message="local indicator"
                 time="3000"
         ></Controls-demo.LoadingIndicator.IndicatorContainer>
     </div>
