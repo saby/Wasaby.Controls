@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
-import {EmptyTemplate as emptyTemplate} from 'Controls/suggestPopup';
 import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
@@ -136,8 +135,8 @@ var _private = {
       }
       if (!error || !error.canceled) {
           return new Promise(function(resolve) {
-              requirejs(['tmpl!Controls/_suggestPopup/resource/emptyError'], function(result) {
-                  self._emptyTemplate = result;
+              require(['Controls/suggestPopup'], function(result) {
+                  self._emptyTemplate = result.EmptyErrorTemplate;
                   self._children.indicator.hide();
                   resolve();
               });
@@ -573,7 +572,9 @@ SuggestLayout.getOptionTypes = function() {
 };
 SuggestLayout.getDefaultOptions = function() {
    return {
-      emptyTemplate: emptyTemplate,
+      emptyTemplate: {
+         templateName: 'Controls/suggestPopup:EmptyTemplate'
+      },
       footerTemplate: {
          templateName: 'Controls/suggestPopup:FooterTemplate'
       },
