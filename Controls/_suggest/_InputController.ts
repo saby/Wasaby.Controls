@@ -235,19 +235,16 @@ var _private = {
    },
    getHistoryService: function(self) {
       if (!self._historyServiceLoad) {
-         return new Promise(function(resolve) {
-            require(['Controls/suggestPopup'], function(result) {
-               self._historyServiceLoad = result.LoadService({
-                  historyId: self._options.historyId
-               });
-               resolve();
+         self._historyServiceLoad = new Deferred();
+         require(['Controls/suggestPopup'], function(result) {
+            self._historyServiceLoad = result.LoadService({
+               historyId: self._options.historyId
+            }).addCallback((result) => {
+               self._historyServiceLoad.callback(result);
             });
-         }).then(function() {
-            return self._historyServiceLoad;
          });
-      } else {
-         return self._historyServiceLoad;
       }
+      return self._historyServiceLoad;
    },
    getRecentKeys: function(self) {
       if (self._historyLoad) {
