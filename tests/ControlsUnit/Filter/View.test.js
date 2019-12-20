@@ -172,11 +172,15 @@ define(
 
                newConfig = Clone(defaultConfig);
                newConfig.source[0].viewMode = 'basic';
-               newConfig.source[1].viewMode = 'basic';
+               newConfig.source[2].viewMode = 'frequent';
+               newConfig.source[2].editorOptions.source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: defaultItems[0]
+               });
 
                //isNeedReload = true
                view._beforeUpdate(newConfig).addCallback(function() {
-                  assert.equal(Object.keys(view._configs).length, 0);
+                  assert.equal(Object.keys(view._configs).length, 2);
                   done();
                });
             });
@@ -233,7 +237,7 @@ define(
 
             newItems[0].viewMode = 'basic';
             result = filter.View._private.isNeedReload(oldItems, newItems);
-            assert.isTrue(result);
+            assert.isFalse(result);
 
             newItems[2].viewMode = 'frequent';
             result = filter.View._private.isNeedReload(oldItems, newItems);
@@ -600,6 +604,7 @@ define(
          it('_private:loadSelectedItems', function(done) {
             let source = [...defaultSource];
             source[1].value = [1];
+            source[1].editorOptions.dataLoadCallback = () => {isDataLoad = true};
             let isDataLoad;
             let configs = {
                document: {
@@ -621,7 +626,6 @@ define(
                   emptyText: 'all state',
                   emptyKey: null,
                   sourceController: {hasMoreData: () => {return true;}},
-                  dataLoadCallback: () => {isDataLoad = true},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}

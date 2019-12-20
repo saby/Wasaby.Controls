@@ -17,24 +17,17 @@
  * @css @spacing_ListView-empty-between-content-borderBottom_l bottom l-spacing of empty ListView
  * @css @spacing_ListView-empty-between-content-borderBottom_xl bottom xl-spacing of empty ListView
  * @css @spacing_ListView-empty-between-content-borderBottom_xxl bottom xxl-spacing of empty ListView
- * @css @padding-left_default_list Default size of left padding of list
- * @css @padding-left_xs_list XS size of left padding of list
- * @css @padding-left_s_list S size of left padding of list
- * @css @padding-left_m_list M size of left padding of list
- * @css @padding-left_l_list L size of left padding of list
- * @css @padding-left_xl_list XL size of left padding of list
- * @css @padding-left_xxl_list XXL size of left padding of list
- * @css @padding-right_default_list Default size of right padding of list
- * @css @padding-right_xs_list XS size of right padding of list
- * @css @padding-right_s_list S size of right padding of list
- * @css @padding-right_m_list M size of right padding of list
- * @css @padding-right_l_list L size of right padding of list
- * @css @padding-right_xl_list XL size of right padding of list
- * @css @padding-right_xxl_list XXL size of right padding of list
+ * @css @spacing_ListView-item-around-content_xs xs-spacing around ListView items
+ * @css @spacing_ListView-item-around-content_s s-spacing around ListView items
+ * @css @spacing_ListView-item-around-content_m m-spacing around ListView items
+ * @css @spacing_ListView-item-around-content_l l-spacing around ListView items
+ * @css @spacing_ListView-item-around-content_xl xl-spacing around ListView items
+ * @css @spacing_ListView-item-around-content_xxl xxl-spacing around ListView items
  * @css @width_ListView-marker marker width
  * @css @color_ListView-marker marker color
  * @css @spacing_ListView-item-between-checkbox-borderTop spacing between checkbox in item of list and top item border
  * @css @spacing_ListView-between-content-checkbox spacing between checkbox in item of list and item content
+ * @css @spacing_ListView-item-between-content-borderLeft spacing between item content and item left border in list without checkboxes
  * @css @spacing_ListView-item-between-content-borderTop spacing between item content and item top border in list without checkboxes
  * @css @spacing_ListView-item-between-content-borderBottom spacing between item content and item bottom border in list without checkboxes
  * @css @background-color_ListView-item_active background color of active item in ListView

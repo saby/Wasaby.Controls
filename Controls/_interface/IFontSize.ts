@@ -31,6 +31,7 @@ export default interface IFontSize {
  * @variant 4xl
  * @variant 5xl
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
+ * @demo Controls-demo/Input/SizesAndHeights/Index
  * @remark
  * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
  * @example

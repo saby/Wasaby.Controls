@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 /// <amd-module name='Controls/_popupConfirmation/Opener/Dialog' />
 // @ts-ignore
 import { Converter as MarkupConverter } from 'Controls/decorator';
@@ -124,18 +125,6 @@ var Submit = Control.extend({
    _keyDown: function (event) {
       if (event.nativeEvent.keyCode === constants.key.esc) {
          this._isEscDown = true;
-      }
-
-      //TODO Пришлось скопировать обработчик для _keyDown из Controls/_form/PrimaryAction, чтобы разорвать зацикливание.
-      // Controls/dataSource -> Controls/popupTemplate -> Controls/form -> Controls/dataSource
-      if (!(event.nativeEvent.altKey || event.nativeEvent.shiftKey) &&
-         (event.nativeEvent.ctrlKey || event.nativeEvent.metaKey) &&
-         event.nativeEvent.keyCode === constants.key.enter) { // Ctrl+Enter, Cmd+Enter, Win+Enter
-
-         // If "primary action" processed event, then event must be stopped.
-         // Otherwise, parental controls (including other primary action) can react to pressing ctrl+enter and call one more handler
-         event.stopPropagation();
-         this._notify('triggered');
       }
    },
 

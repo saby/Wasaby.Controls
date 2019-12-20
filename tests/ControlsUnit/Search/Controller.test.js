@@ -270,9 +270,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          var controller;
 
          searchController._dataOptions = defaultOptions;
+         searchController._dataOptions.filter = null;
          controller = searchMod.Controller._private.getSearchController(searchController);
          assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/search:_SearchController'));
          assert.deepEqual(controller._options.sorting, []);
+         assert.deepEqual(controller._options.filter, {});
       });
 
       it('_private.searchErrback', function() {
@@ -299,6 +301,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          var value;
          var isLoading = false;
          searchController._dataOptions = defaultOptions;
+         searchController._options.searchValueTrim = true;
          //initialize searchController
          searchMod.Controller._private.getSearchController(searchController);
 
@@ -320,12 +323,15 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchController._search(null, 'test');
          assert.equal(value, '');
 
+         searchController._search(null, '  test2  ');
+         assert.equal(value, 'test2');
+
          isLoading = false;
          value = '';
          searchController._options.source = null;
-         searchController._search(null, 'test2');
+         searchController._search(null, 'test3');
          assert.equal(value, '');
-         assert.equal(searchController._inputSearchValue, 'test2');
+         assert.equal(searchController._inputSearchValue, 'test3');
 
       });
 

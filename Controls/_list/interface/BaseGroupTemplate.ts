@@ -6,13 +6,13 @@
 
 /**
  * @name Controls/list:BaseGroupTemplate#separatorVisibility
- * @cfg {Boolean} Когда опция установлена в значение true, горизонтальная линия-разделитель будет отображена.
+ * @cfg {Boolean} Когда опция установлена в значение false, горизонтальная линия-разделитель будет скрыта.
  * @default true
  */
 
 /**
  * @name Controls/list:BaseGroupTemplate#expanderVisibile
- * @cfg {Boolean} Когда опция установлена в значение true, кнопка-экспандер группы будет отображена.
+ * @cfg {Boolean} Когда опция установлена в значение false, кнопка-экспандер группы будет скрыта.
  * @default true
  * @remark
  * Кнопка-экспандер позволяет сворачивать/разворачивать группу.
@@ -119,7 +119,7 @@
  */
 
 /**
- * @name Controls/grid:GroupTemplate#contentTemplate
+ * @name Controls/list:BaseGroupTemplate#contentTemplate
  * @cfg {String|Function|undefined} Устанавливает пользовательский шаблон, описывающий заголовок группы.
  * @remark
  * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:

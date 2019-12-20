@@ -9,7 +9,6 @@
 
 .controls-BreadCrumbsPath__wrapper {
    display: flex;
-   align-items: center;
    white-space: nowrap;
 
    //TODO KINGO есть темы, в которых выравнивание ХК идет по базовой линии шрифта, размер которого отличается от размера шрифта кнопки назад
@@ -29,6 +28,7 @@
    cursor: pointer;
    color: @color_Path-home;
    flex-shrink: 0;
+   min-width: @min-width_Breadcrumbs-home;
 }
 
 .controls-BreadCrumbsPath__backButton__wrapper {
@@ -92,7 +92,7 @@
 .controls-BreadCrumbsPath__homeContainer_withBackButton {
 
    // sets line-height === content's fontSize for correctly padding rounded border on drag&drop
-   line-height: 1;
+  // line-height: 1;
 }
 .controls-BreadCrumbsPath__homeContainer {
    .baseline-fix();
@@ -100,13 +100,14 @@
    position: relative;
    display: inline-flex;
    align-items: baseline;
+   &:before {
+     font-size: @font-size_BreadCrumbs-baseline;
+   }
 }
 
 .controls-BreadCrumbsPath__homeContainer_withoutBackButton {
    margin-left: @spacing_Path-between-home-and-backButton;
-   &:before {
-      font-size:@font-size_BreadCrumbs-baseline;
-   }
+
 }
 
 .controls-BreadCrumbsPath__backButton_short,

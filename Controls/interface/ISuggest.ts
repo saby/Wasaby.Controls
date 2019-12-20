@@ -198,7 +198,7 @@ interface ISuggest {
        * mySuggest.wml
        * <pre>
        *    <Controls.suggest:Input>
-       *       <ws:suggestFooterTemplate templateName="myFooter">
+       *       <ws:footerTemplate templateName="myFooter">
        *    </Controls.suggest:Input>
        * </pre>
        */
@@ -226,7 +226,7 @@ interface ISuggest {
        * mySuggest.wml
        * <pre>
        *    <Controls.suggest:Input>
-       *       <ws:suggestFooterTemplate templateName="myFooter">
+       *       <ws:footerTemplate templateName="myFooter">
        *    </Controls.suggest:Input>
        * </pre>
        */

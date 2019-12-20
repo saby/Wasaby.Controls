@@ -28,7 +28,7 @@ var _private = {
             minSearchLength: self._options.minSearchLength,
             searchDelay: self._options.searchDelay,
             searchValueTrim: self._options.searchValueTrim,
-            filter: clone(options.filter),
+            filter: clone(options.filter) || {},
             source: options.source,
             sorting: options.sorting,
             navigation: options.navigation,
@@ -313,7 +313,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       if (this._options.source) {
          const shouldSearch = this._isSearchControllerLoading() ? value !== this._inputSearchValue : true;
          if (shouldSearch) {
-            _private.getSearchController(this).search(value, force);
+            const searchValue = this._options.searchValueTrim ? value.trim() : value;
+            if (searchValue !== '' || !this._options.searchValueTrim) {
+               _private.getSearchController(this).search(searchValue, force);
+            }
          }
       } else {
          Logger.error('search:Controller source is required for search', this);

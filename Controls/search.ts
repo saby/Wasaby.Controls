@@ -23,7 +23,6 @@
  * @author Крайнов Д.О.
  */
 
-import 'i18n!Controls/search';
 import {default as Misspell} from 'Controls/_search/Misspell';
 import {default as FilterController} from 'Controls/_search/FilterController';
 import InputContainer = require('Controls/_search/Input/Container');

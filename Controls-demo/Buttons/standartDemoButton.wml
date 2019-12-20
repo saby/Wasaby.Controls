@@ -170,11 +170,11 @@
                     <span class="demo-Button__Label">Success</span>
                 </div>
                 <div attr:class="demo-Button__testBlock__controlPanel">
-                    <Controls.buttons:Button viewMode="functionalButton" icon="icon-AddButtonNew" iconSize="s" inlineHeight="m" buttonStyle="secondary" iconStyle="contrast"></Controls.buttons:Button>
+                    <Controls.buttons:Button viewMode="functionalButton" icon="icon-RoundPlus" iconSize="s" inlineHeight="m" buttonStyle="secondary" iconStyle="contrast"></Controls.buttons:Button>
                     <span class="demo-Button__Label">Add</span>
                 </div>
                 <div attr:class="demo-Button__testBlock__controlPanel">
-                    <Controls.buttons:Button viewMode="functionalButton" icon="icon-AddButtonNew" iconSize="s" inlineHeight="m" readOnly="{{true}}" buttonStyle="secondary" iconStyle="contrast"></Controls.buttons:Button>
+                    <Controls.buttons:Button viewMode="functionalButton" icon="icon-RoundPlus" iconSize="s" inlineHeight="m" readOnly="{{true}}" buttonStyle="secondary" iconStyle="contrast"></Controls.buttons:Button>
                     <span class="demo-Button__Label">Readonly</span>
                 </div>
             </div>
@@ -187,11 +187,11 @@
                     <span class="demo-Button__Label">Success</span>
                 </div>
                 <div attr:class="demo-Button__testBlock__controlPanel">
-                    <Controls.buttons:Button viewMode="functionalButton" icon="icon-AddButtonNew" iconSize="m" inlineHeight="l" buttonStyle="secondary" iconStyle="contrast"></Controls.buttons:Button>
+                    <Controls.buttons:Button viewMode="functionalButton" icon="icon-RoundPlus" iconSize="m" inlineHeight="l" buttonStyle="secondary" iconStyle="contrast"></Controls.buttons:Button>
                     <span class="demo-Button__Label">Add</span>
                 </div>
                 <div attr:class="demo-Button__testBlock__controlPanel">
-                    <Controls.buttons:Button viewMode="functionalButton" icon="icon-AddButtonNew" iconSize="m" inlineHeight="l" readOnly="{{true}}" buttonStyle="secondary" iconStyle="contrast"></Controls.buttons:Button>
+                    <Controls.buttons:Button viewMode="functionalButton" icon="icon-RoundPlus" iconSize="m" inlineHeight="l" readOnly="{{true}}" buttonStyle="secondary" iconStyle="contrast"></Controls.buttons:Button>
                     <span class="demo-Button__Label">Readonly</span>
                 </div>
             </div>

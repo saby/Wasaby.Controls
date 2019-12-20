@@ -66,9 +66,8 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                      }
                   }
                }
-               data.concat(rootData);
                result.callback(new source.DataSet({
-                  rawData: data,
+                  rawData: data.concat(rootData),
                   adapter: this.getAdapter(),
                   keyProperty: 'id'
                }));

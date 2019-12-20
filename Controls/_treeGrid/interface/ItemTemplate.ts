@@ -33,9 +33,9 @@
  * @variant xl Очень большой размер.
  */
 
-/**
+/** 
  * @name Controls/treeGrid:ItemTemplate#expanderSize
- * @cfg {Size} Устанавливает размер иконки для узла и скрытого узла.
+ * @cfg {Size} Устанавливает размер области, который отведён под иконку узла или скрытого узла.
  * @default s
  * @see expanderIcon
  * @remark

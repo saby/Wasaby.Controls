@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
 import CoreClone = require('Core/core-clone');
@@ -246,8 +247,9 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
-                        if (config.dataLoadCallback) {
-                            config.dataLoadCallback(newItems);
+                        // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
+                        if (item.editorOptions.dataLoadCallback) {
+                            item.editorOptions.dataLoadCallback(newItems);
                         }
                         _private.setItems(config, item, newItems);
                     });
@@ -492,11 +494,11 @@ var _private = {
         if (oldItems.length !== newItems.length) {
             result = true;
         } else {
-            factory(oldItems).each((oldItem) => {
-                const newItem = _private.getItemByName(newItems, oldItem.name);
-                const isFrequent = _private.isFrequentItem(oldItem);
-                if (newItem && (isFrequent || _private.isFrequentItem(newItem)) &&
-                    (optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) || isFrequent !== _private.isFrequentItem(newItem))) {
+            factory(newItems).each((newItem) => {
+                const oldItem = _private.getItemByName(oldItems, newItem.name);
+                const isFrequent = _private.isFrequentItem(newItem);
+                if (isFrequent && (!oldItem || !_private.isFrequentItem(oldItem) ||
+                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false))) {
                     result = true;
                 }
             });

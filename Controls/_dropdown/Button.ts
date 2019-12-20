@@ -141,7 +141,7 @@ Button.getDefaultOptions = function () {
    };
 };
 
-Button._theme = ['Controls/dropdown'];
+Button._theme = ['Controls/dropdown', 'Controls/Classes'];
 
 export = Button;
 

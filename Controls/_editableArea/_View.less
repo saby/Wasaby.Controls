@@ -9,7 +9,7 @@
 }
 
 .controls-EditableArea_isEditing_style_withBackground {
-   background-color: @background-color_EditableArea_style_withBackground;
+   background-color: @contrast_background-color_editableArea;
 }
 
 //TODO: https://online.sbis.ru/opendoc.html?guid=297f2c8c-f41d-4d8c-a9eb-9e574c2551a4
@@ -34,71 +34,60 @@
 }
 
 .controls-EditableArea__applyButton {
-   height: @height_ItemActions-editAtPlace-applyButton;
-   width: @width_ItemActions-editAtPlace-applyButton;
-   border: @border-width_ItemActions-editAtPlace-applyButton solid @border-color_ItemActions-editAtPlace-applyButton;
-   border-radius: @border-radius_ItemActions-editAtPlace-applyButton;
-   box-shadow: @box-shadow_ItemActions-editAtPlace-applyButton;
-   background-color: @background-color_ItemActions-editAtPlace-applyButton;
+   height: @height_applyButton_editableArea;
+   width: @width_applyButton_editableArea;
+   border-radius: @border-radius_applyButton_editableArea;
+   box-shadow: @box-shadow_applyButton_editableArea;
+   background-color: @background-color_applyButton_editableArea;
 }
 
 .controls-EditableArea__applyButton:hover {
-   border-color: @border-color_ItemActions-editAtPlace-applyButton_hovered;
-   box-shadow: @box-shadow_ItemActions-editAtPlace-applyButton_hovered;
-   background-color: @background-color_ItemActions-editAtPlace-applyButton_hovered;
+   background-color: @background-color_hover_applyButton_editableArea;
 }
 .controls-EditableArea__applyButton:active {
-   border-color: @border-color_ItemActions-editAtPlace-applyButton_active;
-   box-shadow: @box-shadow_ItemActions-editAtPlace-applyButton_active;
-   background-color: @background-color_ItemActions-editAtPlace-applyButton_active;
+   box-shadow: none;
+   background-color: @background-color_active_applyButton_editableArea;
 }
 
 .controls-EditableArea__closeButton {
-   width: @width_ItemActions-editAtPlace-closeButton;
-   height: @height_ItemActions-editAtPlace-closeButton;
-   border: solid @border-color_ItemActions-editAtPlace-closeButton;
-   border-top-width: @border-top-width_ItemActions-editAtPlace-closeButton;
-   border-right-width: @border-right-width_ItemActions-editAtPlace-closeButton;
-   border-bottom-width: @border-bottom-width_ItemActions-editAtPlace-closeButton;
-   border-left-width: @border-left-width_ItemActions-editAtPlace-closeButton;
-   border-top-right-radius: @border-top-right-radius_ItemActions-editAtPlace-closeButton;
-   border-bottom-right-radius: @border-bottom-right-radius_ItemActions-editAtPlace-closeButton;
-   border-bottom-left-radius: @border-bottom-left-radius_ItemActions-editAtPlace-closeButton;
-   border-top-left-radius: @border-top-left-radius_ItemActions-editAtPlace-closeButton;
-   box-shadow: @box-shadow_ItemActions-editAtPlace-closeButton;
-   margin-left: @spacing_EditableArea-between-applyButton-closeButton;
-   margin-right: @spacing_EditableArea-between-border-closeButton;
-   background-color: @background-color_ItemActions-editAtPlace-closeButton;
+   width: @width_closeButton_editableArea;
+   height: @height_closeButton_editableArea;
+   border-width: @border-thickness_closeButton_editableArea;
+   border-style: solid;
+   border-color: @border-color_button_toolButton;
+   border-radius: @border-radius_closeButton_editableArea;
+   box-shadow: @box-shadow_closeButton_editableArea;
+   margin-left: @toolbar_padding-left_editableArea;
+   margin-right: @toolbar_padding-right_editableArea;
+   background-color: @background-color_closeButton_editableArea;
 }
 
 .controls-EditableArea__closeButton:hover {
-   border-color: @border-color_ItemActions-editAtPlace-closeButton_hovered;
-   box-shadow: @box-shadow_ItemActions-editAtPlace-closeButton_hovered;
-   background-color: @background-color_ItemActions-editAtPlace-closeButton_hovered;
+   border-color: @border-color_hover_closeButton_editableArea;
+   background-color: @background-color_hover_closeButton_editableArea;
 }
 .controls-EditableArea__closeButton:active {
-   border-color: @border-color_ItemActions-editAtPlace-closeButton_active;
-   box-shadow: @box-shadow_ItemActions-editAtPlace-closeButton_active;
-   background-color: @background-color_ItemActions-editAtPlace-closeButton_active;
+   border-color: @border-color_active_closeButton_editableArea;
+   background-color: @background-color_active_closeButton_editableArea;
 }
 
 .controls-EditableArea__closeButton-icon {
-   background-image: @background-image_ItemActions-editAtPlace-closeButton-icon;
-   width: @width_ItemActions-editAtPlace-closeButton-icon;
-   height: @height_ItemActions-editAtPlace-closeButton-icon;
+   background-image: @icon_background-image_closeButton_editableArea;
+   width: @icon-size_closeButton_editableArea;
+   height: @icon-size_closeButton_editableArea;
 }
 
 .controls-EditableArea__closeButton-icon:hover {
-   background-image: @background-image_ItemActions-editAtPlace-closeButton-icon_hovered;
-   width: @width_ItemActions-editAtPlace-closeButton-icon;
-   height: @height_ItemActions-editAtPlace-closeButton-icon;
+   background-image: @icon_hovered_background-image_closeButton_editableArea;
+   width: @icon-size_closeButton_editableArea;
+   height: @icon-size_closeButton_editableArea;
 }
 
 .controls-EditableArea__applyButton-icon {
-   text-shadow: @text-shadow_ItemActions-editAtPlace-applyButton-icon;
-   .icon(@icon-size_ItemActions-editAtPlace-applyButton, @font-family_ItemActions-editAtPlace-applyButton);
+   text-shadow: @text-shadow_applyButton_editableArea;
+   .icon(@icon-size_applyButton_editableArea, 'cbuc-icons');
 }
 
 .controls-EditableArea_isEditing_wrapper {
-   margin-left: @spacing_EditableArea-between-editor-toolbar;
+   margin-left: @toolbar_button_offset_editableArea;
 }

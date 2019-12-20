@@ -1,751 +1,1299 @@
+//ОБЩИЕ ЦВЕТА
 //Цвет фона элементов по-умолчанию.
 //Примечание: Применяется в том числе к основному фону самой страницы.
-@background-color:           #FFF;
+@background-color:                                                          #FFF;
+
 //Цвет элементов отображающих опасность или ошибку.
 //Пример: Ошибка валидации, операция завершенная с ошибкой, отклонения от нормы выполнения процесса.
-@danger_color:               #D04D4D;
+@danger_color:                                                              #D04D4D;
+
 //Цвет элементов отображающих успешное завершение процесса.
-@success_color:              #069922;
+@success_color:                                                             #069922;
+
 //Цвет элементов отображающих предупреждение.
 //Пример: сообщение о том, что продолжение действия может привести к ошибке.
-@warning_color:              #FEC63F;
+
+@warning_color:                                                             #FEC63F;
 //Цвет основных элементов в окне или на странице.
 //Пример: кнопка по умолчанию, маркер в списке, переключатели.
-@primary_color:              #FF7033;
+
+@primary_color:                                                             #FF7033;
 //Цвет главных, выделенных особым образом текстовых элементов в окне или на странице.
 //Пример: главный заголовок, заголовок активной вкладки.
-@primary_text-color:         #D94700;
+
+@primary_text-color:                                                        #D94700;
 //Цвет главных выделенных особым образом текстовых элементов в окне или на странице при наведении мыши.
-@primary_hover_text-color:   #FF7033;
+
+@primary_hover_text-color:                                                  #FF7033;
+
 //Цвет акцентных функциональных элементов в окне или на странице.
 //Пример: кнопка, большинство иконок.
-@secondary_color:            #587AB0;
+@secondary_color:                                                           #587AB0;
+
 //Цвет акцентных текстовых элементов в окне или на странице.
 //Пример: неосновной заголовок.
-@secondary_text-color:       #313E78;
+@secondary_text-color:                                                      #313E78;
+
 //Цвет акцентных текстовых элементов в окне или на странице при наведении мыши.
-@secondary_hover_text-color: #0055BB;
+@secondary_hover_text-color:                                                #0055BB;
+
 //Цвет элементов в режиме "только для чтения".
 //Пример: кнопки, переключатели, чекбоксы.
-@readonly_color:             #CCCCCC;
+@readonly_color:                                                            #CCCCCC;
+
 //Цвет текстовых элементов по-умолчанию.
-@text-color:                 #000000;
+@text-color:                                                                #000000;
+
 //Цвет меток по умолчанию.
 //Примечание: применяется не только для меток, но и для элементов, которые используются в качестве метки в определенных интерфейсах, например выпадающие списки
-@label_text-color:           #8991A9;
+@label_text-color:                                                          #8991A9;
+
 //Цвет ссылок по умолчанию
 //Примечание: применяется для кнопок в виде ссылок и других кликабельных текстовых элементов, например строка фильтров или выпадающий список.
-@link_text-color:            #0055BB;
+@link_text-color:                                                           #0055BB;
+
 //Цвет ссылок при наведении мыши.
-@link_hover_text-color:      #313E78;
+@link_hover_text-color:                                                     #313E78;
+
 //Цвет элементов, отображающих дополнительную, поясняющую информацию.
-@unaccented_color:           #999999;
+@unaccented_color:                                                          #999999;
+
 //Цвет текстовых элементов, отображающих дополнительную, поясняющую информацию.
 //Пример: текст примечаний, дат и прочей доп. информацией.
-@unaccented_text-color:      @unaccented_color;
+@unaccented_text-color:                                                     @unaccented_color;
+
 //Цвет иконок по-умолчанию.
-@icon-color:                 #000000;
+@icon-color:                                                                #000000;
+
 //Цвет иконок на контрастном фоне.
-@contrast_icon-color:        #ffffff;
+@contrast_icon-color:                                                       #ffffff;
+
 //Цвет иконок отображающих дополнительную информацию.
-@unaccented_icon-color:      #CCC;
+@unaccented_icon-color:                                                     #CCC;
+
 //Цвет фона контрола при ошибке валидации при установке фокуса
-@invalid_focus_background-color:         #FADADD;
+@invalid_focus_background-color:                                            #FADADD;
+
 //Цвет обводки контрола при ошибке валидации
-@invalid_border-color:                 @danger_color;
-//отступ от контрола до обводки валидации сверху и снизу
-@invalid_padding-vertical:                  2px;
-//отступ от контрола до обводки валидации справа и слева
-@invalid_padding-horizontal:                  4px;
+@invalid_border-color:                                                      @danger_color;
+
 //цвет маркера активного элемента. как правило в списках
-@marker_color:            #FF7033;
+@marker_color:                                                              #FF7033;
+
 //цвет маркера в режиме чтения
-@readonly_marker-color:   #313E78;
+@readonly_marker-color:                                                     #313E78;
 
-//Переменные, использующиеся для InfoboxButton.
-//Цвет иконки InfoboxButton.
-@icon-color_infoboxbutton:    @unaccented_icon-color;
-//Цвет иконки InfoboxButton при наведении.
-@hover_icon-color_infoboxbutton:  @secondary_text-color;
+//отступ от контрола до обводки валидации сверху и снизу
+@invalid_padding-vertical:                                                  2px;
 
+//отступ от контрола до обводки валидации справа и слева
+@invalid_padding-horizontal:                                                4px;
 
-//* Высоты строчных контролов. Применяются ко всем контролам, которые могут располагаться в одну строку.
-//* При изменении любого параметра высоты, поменяется соотвествующая высота всех контролов.
+// ВЫСОТЫ СТРОЧНЫХ КОНТРОЛОВ
+// Применяются ко всем контролам, которые могут располагаться в одну строку.
+// При изменении любого параметра высоты, поменяется соотвествующая высота всех контролов.
 
 //Высота строчных контролов xs.
 //Пример: Маленькая иконка, индикатор внутри поля ввода с автодополнением.
-@inline_height_xs:           16px;
+@inline_height_xs:                                                          16px;
+
 //Высота строчных контролов s.
-@inline_height_s:            20px;
+@inline_height_s:                                                           20px;
+
 //Высота строчных контролов m.
 //Пример: большинство кнопок полей ввода, переключателей и прочих контролов.
-@inline_height_m:            24px;
+@inline_height_m:                                                           24px;
+
 //Высота строчных контролов l.
 //Пример: Кнопки - иконки, использующиеся в шапках панелей.
-@inline_height_l:            28px;
+@inline_height_l:                                                           28px;
+
 //Высота строчных контролов xl.
-@inline_height_xl:           32px;
+@inline_height_xl:                                                          32px;
+
 //Высота строчных контролов 2xl.
 //Пример: большие кнопки на странице регистрации.
-@inline_height_2xl:          36px;
+@inline_height_2xl:                                                         36px;
+
 //Высота строчных контролов по-умолчанию.
 //Примечание: по-умолчанию соответствует размеру m.
-@inline_height_default:      @inline_height_m;
+@inline_height_default:                                                     @inline_height_m;
 
-
+//ОБВОДКА КОНТРОЛОВ
 //Толщина обводки контролов.
-@border-thickness:                                    1px;
+@border-thickness:                                                          1px;
+
+//ШРИФТЫ
 //Шрифт по-умолчанию.
-@font-family:                                         'TensorFont', sans-serif;
+@font-family:                                                               'TensorFont', sans-serif;
+
 //Размер шрифта xs.
 //Пример: размер шрифта элементов, отображающих дополнительную, поясняющую информацию.
-@font-size_xs:                                        12px;
+@font-size_xs:                                                              12px;
+
 //Размер шрифта s.
-@font-size_s:                                         13px;
+@font-size_s:                                                               13px;
+
 //Размер шрифта m.
 //Пример: основной размер шрифта для большинства элементов на странице.
-@font-size_m:                                         14px;
+@font-size_m:                                                               14px;
+
 //Размер шрифта l.
 //Пример: увеличенный шрифт в отдельных реестрах
-@font-size_l:                                         15px;
+@font-size_l:                                                               15px;
+
 //Размер шрифта xl.
 //Пример: увеличенный шрифт в отдельных реестрах.
-@font-size_xl:                                        16px;
+@font-size_xl:                                                              16px;
+
 //Размер шрифта 2xl.
 //Пример: увеличенный шрифт в отдельных реестрах.
-@font-size_2xl:                                       17px;
+@font-size_2xl:                                                             17px;
+
 //Размер шрифта 3xl.
 //Пример: шрифт заголовков в разделах.
-@font-size_3xl:                                       18px;
+@font-size_3xl:                                                             18px;
+
 //Размер шрифта 4xl.
 //Пример: шрифт заголовков 1о уровня в разделах.
-@font-size_4xl:                                       20px;
+@font-size_4xl:                                                             20px;
+
 //Размер шрифта 5xl.
 //Пример: Заголовки в системе помощи.
-@font-size_5xl:                                       24px;
+@font-size_5xl:                                                             24px;
+
 //Размер шрифта по-умолчанию.
 //Примечание: по-умолчанию соответствует размеру m.
-@font-size_default:                                   @font-size_m;
+@font-size_default:                                                         @font-size_m;
+
 //Жирность шрифта по-умолчанию.
-@font-weight:                                         normal;
+@font-weight:                                                               normal;
 
-
+//ИКОНКИ
 //Шрифт для иконок размера s.
-@icon_font-family_s:                                  'cbuc-icons';
+@icon_font-family_s:                                                        'cbuc-icons';
+
 //Шрифт для иконок размера m.
-@icon_font-family_m:                                  'cbuc-icons24';
+@icon_font-family_m:                                                        'cbuc-icons24';
+
 //Шрифт для иконок размера l.
-@icon_font-family_l:                                  'cbuc-icons';
+@icon_font-family_l:                                                        'cbuc-icons';
+
 //Размер иконок s.
-@icon-size_s:                                         16px;
+@icon-size_s:                                                               16px;
+
 //Размер иконок m.
-@icon-size_m:                                         24px;
+@icon-size_m:                                                               24px;
+
 //Размер иконок l.
-@icon-size_l:                                         32px;
+@icon-size_l:                                                               32px;
 
+//ИНФОБОКС
+//InfoboxButton.
+//Цвет иконки InfoboxButton.
+@icon-color_infoboxbutton:                                                  @unaccented_icon-color;
 
-//input. Переменные, использующиеся для темизации полей ввода.
+//Цвет иконки InfoboxButton при наведении.
+@hover_icon-color_infoboxbutton:                                            @secondary_text-color;
+
+//ПОЛЯ ВВОДА
+//Общие Переменные, использующиеся для темизации полей ввода.
 //Размер шрифта в поле ввода xs.
-@font-size_xs_input:                                @font-size_xs;
+@font-size_xs_input:                                                        @font-size_xs;
+
 //Размер шрифта в поле ввода s.
-@font-size_s_input:                                 @font-size_s;
+@font-size_s_input:                                                         @font-size_s;
+
 //Размер шрифта в поле ввода m.
-@font-size_m_input:                                 @font-size_m;
+@font-size_m_input:                                                         @font-size_m;
+
 //Размер шрифта в поле ввода l.
-@font-size_l_input:                                 @font-size_l;
+@font-size_l_input:                                                         @font-size_l;
+
 //Размер шрифта в поле ввода xl.
-@font-size_xl_input:                                @font-size_xl;
+@font-size_xl_input:                                                        @font-size_xl;
+
 //Размер шрифта в поле ввода 2xl.
-@font-size_2xl_input:                               @font-size_2xl;
+@font-size_2xl_input:                                                       @font-size_2xl;
+
 //Размер шрифта в поле ввода 3xl.
-@font-size_3xl_input:                               @font-size_3xl;
+@font-size_3xl_input:                                                       @font-size_3xl;
+
 //Размер шрифта в поле ввода 4xl.
-@font-size_4xl_input:                               @font-size_4xl;
+@font-size_4xl_input:                                                       @font-size_4xl;
+
 //Размер шрифта в поле ввода 5xl.
-@font-size_5xl_input:                               @font-size_5xl;
+@font-size_5xl_input:                                                       @font-size_5xl;
+
 //Высота поля ввода xs.
-@inline_height_xs_input:           @inline_height_xs;
+@inline_height_xs_input:                                                    @inline_height_xs;
+
 //Высота поля ввода s.
-@inline_height_s_input:            @inline_height_s;
+@inline_height_s_input:                                                     @inline_height_s;
+
 //Высота поля ввода m.
-@inline_height_m_input:            @inline_height_m;
+@inline_height_m_input:                                                     @inline_height_m;
+
 //Высота поля ввода l.
-@inline_height_l_input:            @inline_height_l;
+@inline_height_l_input:                                                     @inline_height_l;
+
 //Высота поля ввода xl.
-@inline_height_xl_input:           @inline_height_xl;
+@inline_height_xl_input:                                                    @inline_height_xl;
+
 //Высота поля ввода 2xl.
-@inline_height_2xl_input:          @inline_height_2xl;
+@inline_height_2xl_input:                                                   @inline_height_2xl;
+
 //Высота поля ввода по умолчанию.
-@inline_height_default_input:      @inline_height_m_input;
+@inline_height_default_input:                                               @inline_height_m_input;
+
 //Размер тэга.
 //Примечание: тэг - это цветной индикатор, использующийся в поле ввода для информации о состоянии поля.
-@tag-size:                                            8px;
+@tag-size:                                                                  8px;
+
 //Цвет подсказки в поле ввода.
 //Примечание: подсказка выводится в поле, когда в него не в введен текст.
-@placeholder-color_inputText:                         #CCC;
+@placeholder-color_inputText:                                               #CCC;
+
 //Толщина обводки полей ввода.
 //Примечание: равна толщине обводки по-умолчанию.
-@border-thickness_inputText:                          @border-thickness;
+@border-thickness_inputText:                                                @border-thickness;
+
 //Цвет фона полей ввода.
 //Примечание: равен цвету фона по-умолчанию.
-@background-color_inputText:                          @background-color;
+@background-color_inputText:                                                @background-color;
+
 //Цвет фона полей ввода при наведении мыши.
 //Примечание: равен цвету фона по-умолчанию.
-@background-color_hover_inputText:                    @background-color;
+@background-color_hover_inputText:                                          @background-color;
+
 //Цвет фона полей ввода при установке фокуса.
 //Примечание: равен цвету фона по-умолчанию.
-@background-color_focus_inputText:                    @background-color;
+@background-color_focus_inputText:                                          @background-color;
+
 //Цвет фона полей ввода при ошибке валидации.
 //Примечание: равен цвету фона по-умолчанию.
-@invalid_background-color_inputText:                  @background-color;
+@invalid_background-color_inputText:                                        @background-color;
+
 //Цвет фона полей ввода в состоянии "только для чтения".
 //Примечание: равен цвету фона по-умолчанию.
-@readonly_background-color_inputText:                 transparent;
+@readonly_background-color_inputText:                                       transparent;
+
 //Цвет границы полей ввода
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
-@border-color_inputText:                              #EAEAEA #EAEAEA #CCCCCC #EAEAEA;
+@border-color_inputText:                                                    #EAEAEA #EAEAEA #CCCCCC #EAEAEA;
+
 //Цвет границы полей ввода при наведении мыши.
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
-@border-color_hover_inputText:                        #EAEAEA #EAEAEA #AAB0C1 #EAEAEA;
+@border-color_hover_inputText:                                              #EAEAEA #EAEAEA #AAB0C1 #EAEAEA;
+
 //Цвет границы полей ввода при установке фокуса.
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
-@border-color_focus_inputText:                        #EAEAEA #EAEAEA #AAB0C1 #EAEAEA;
+@border-color_focus_inputText:                                              #EAEAEA #EAEAEA #AAB0C1 #EAEAEA;
+
 //Цвет границы полей ввода при ошибке валидации.
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
-@invalid_border-color_inputText:                      @invalid_border-color;
+@invalid_border-color_inputText:                                            @invalid_border-color;
+
 //Цвет границы полей ввода при ошибке валидации при установке фокуса
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
 //Примечание: по-умолчанию равен цвету элементов отображающих опасность или ошибку.
-@invalid_focus_border-color_inputText:                @invalid_border-color;
+@invalid_focus_border-color_inputText:                                      @invalid_border-color;
+
 //Цвет границы полей ввода в состоянии "только для чтения".
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
 //Примечание: по-умолчанию равен цвету элементов отображающих опасность или ошибку.
-@readonly_border-color_inputText:                     transparent transparent #E4E4E4 transparent;
+@readonly_border-color_inputText:                                           transparent transparent #E4E4E4 transparent;
+
 //Цвет границы многострочных полей ввода в состоянии "только для чтения".
 //Примечание: для задания разных цветов можно использовать несколько значений через пробел.
-@readonly_border-color_inputArea:                     transparent;
+@readonly_border-color_inputArea:                                           transparent;
+
 //Цвет каретки в пустом поле ввода.
-@caret-color_empty_inputText:                         @text-color;
+@caret-color_empty_inputText:                                               @text-color;
+
 //Цвет каретки в поле ввода, в которое введен текст.
-@caret-color_fill_inputText:                          @text-color;
+@caret-color_fill_inputText:                                                @text-color;
+
 //горизонтальные отступы до текста в поле ввода.
 //Примечание: в однострочных полях вертикальный отступ не задается, текст в поле выравнивается по базовой линии
-@padding-horizontal_inputText:                        4px;
+@padding-horizontal_inputText:                                              4px;
+
+//Переменные многострочного поля ввода
 //вертикальные отступы до текста в многострочном поле ввода.
 //Примечание: в однострочных полях вертикальный отступ не задается, текст в поле выравнивается по базовой линии
-@padding-vertical_inputArea:                          2px;
+@padding-vertical_inputArea:                                                2px;
+
+//высота строки в многострочном поле с размером шрифта xs.
+@line-height_xs_inputArea:                                                  15px;
+
+//высота строки в многострочном поле с размером шрифта s.
+@line-height_s_inputArea:                                                   17px;
+
+//высота строки в многострочном поле с размером шрифта m.
+@line-height_m_inputArea:                                                   18px;
+
+//высота строки в многострочном поле с размером шрифта l.
+@line-height_l_inputArea:                                                   19px;
+
+//высота строки в многострочном поле с размером шрифта xl.
+@line-height_xl_inputArea:                                                  20px;
+
+//высота строки в многострочном поле с размером шрифта 2xl.
+@line-height_2xl_inputArea:                                                 22px;
+
+//высота строки в многострочном поле с размером шрифта 3xl.
+@line-height_3xl_inputArea:                                                 23px;
+
+//высота строки в многострочном поле с размером шрифта 4xl.
+@line-height_4xl_inputArea:                                                 26px;
+
+//высота строки в многострочном поле с размером шрифта 5xl.
+@line-height_5xl_inputArea:                                                 31px;
+
+//Переменные поля ввода пароля
 //цвет иконки в поле ввода пароля.
 //Примечание: по-умолчанию равен цвету иконок отображающих дополнительную информацию.
-@trigger-color_inputPassword:                         @unaccented_icon-color;
+@trigger-color_inputPassword:                                               @unaccented_icon-color;
+
 //размер иконки в поле ввода пароля.
 //Примечание: по-умолчанию равен размеру иконок m.
-@trigger_icon-size_inputPassword:                     @icon-size_m;
+@trigger_icon-size_inputPassword:                                           @icon-size_m;
+
 //отступ между иконкой и полем ввода в поле ввода пароля.
-@trigger-offset_inputPassword:                        4px;
+@trigger-offset_inputPassword:                                              4px;
+
 //отступ между иконкой и полем ввода в поле ввода даты.
-@trigger-offset_inputDate:                            8px;
-//высота строки в многострочном поле с размером шрифта xs.
-@line-height_xs_inputArea:                            15px;
-//высота строки в многострочном поле с размером шрифта s.
-@line-height_s_inputArea:                             17px;
-//высота строки в многострочном поле с размером шрифта m.
-@line-height_m_inputArea:                             18px;
-//высота строки в многострочном поле с размером шрифта l.
-@line-height_l_inputArea:                             19px;
-//высота строки в многострочном поле с размером шрифта xl.
-@line-height_xl_inputArea:                            20px;
-//высота строки в многострочном поле с размером шрифта 2xl.
-@line-height_2xl_inputArea:                           22px;
-//высота строки в многострочном поле с размером шрифта 3xl.
-@line-height_3xl_inputArea:                           23px;
-//высота строки в многострочном поле с размером шрифта 4xl.
-@line-height_4xl_inputArea:                           26px;
-//высота строки в многострочном поле с размером шрифта 5xl.
-@line-height_5xl_inputArea:                           31px;
+@trigger-offset_inputDate:                                                  8px;
 
-
-//button. Переменные, использующиеся для темизации кнопок.
+//КНОПКИ
+//Общие переменные, использующиеся для темизации кнопок.
 //отступ между иконкой и надписью в кнопке.
-@icon-offset_button:                                  6px;
+@icon-offset_button:                                                        6px;
+
 //горизонтальные отступы до текста в кнопке высоты xs.
-@padding-horizontal_xs_button:                        12px;
+@padding-horizontal_xs_button:                                              12px;
+
 //горизонтальные отступы до текста в кнопке высоты s.
-@padding-horizontal_s_button:                         12px;
+@padding-horizontal_s_button:                                               12px;
+
 //горизонтальные отступы до текста в кнопке высоты m.
-@padding-horizontal_m_button:                         12px;
+@padding-horizontal_m_button:                                               12px;
+
 //горизонтальные отступы до текста в кнопке высоты l.
-@padding-horizontal_l_button:                         24px;
+@padding-horizontal_l_button:                                               24px;
+
 //горизонтальные отступы до текста в кнопке высоты xl.
-@padding-horizontal_xl_button:                        24px;
+@padding-horizontal_xl_button:                                              24px;
+
 //горизонтальные отступы до текста в кнопке высоты 2xl.
-@padding-horizontal_2xl_button:                       24px;
+@padding-horizontal_2xl_button:                                             24px;
+
 //горизонтальные отступы до текста в кнопке высоты по-умолчанию.
-@padding-horizontal_default_button:                   12px;
+@padding-horizontal_default_button:                                         12px;
 
 //Размеры шрифта кнопок.
 //Общие размеры шрифта кнопок.
 //Размер шрифта кнопки xs.
-@font-size_xs_button:                                 @font-size_xs;
+@font-size_xs_button:                                                       @font-size_xs;
+
 //Размер шрифта кнопки s.
-@font-size_s_button:                                  @font-size_s;
+@font-size_s_button:                                                        @font-size_s;
+
 //Размер шрифта кнопки m.
-@font-size_m_button:                                  @font-size_m;
+@font-size_m_button:                                                        @font-size_m;
+
 //Размер шрифта кнопки l.
-@font-size_l_button:                                  @font-size_l;
+@font-size_l_button:                                                        @font-size_l;
+
 //Размер шрифта кнопки xl.
-@font-size_xl_button:                                 @font-size_xl;
+@font-size_xl_button:                                                       @font-size_xl;
+
 //Размер шрифта кнопки 2xl.
-@font-size_2xl_button:                                @font-size_2xl;
+@font-size_2xl_button:                                                      @font-size_2xl;
+
 //Размер шрифта кнопки 3xl.
-@font-size_3xl_button:                                @font-size_3xl;
+@font-size_3xl_button:                                                      @font-size_3xl;
+
 //Размер шрифта кнопки 4xl.
-@font-size_4xl_button:                                @font-size_4xl;
+@font-size_4xl_button:                                                      @font-size_4xl;
+
 //Размер шрифта кнопки 5xl.
-@font-size_5xl_button:                                @font-size_5xl;
+@font-size_5xl_button:                                                      @font-size_5xl;
+
 //Размеры шрифта кнопок в режиме отображения по-умолчанию.
 //Размер шрифта кнопки xs в режиме отображения по-умолчанию.
-@font-size_xs_button_button:                          @font-size_xs_button;
+@font-size_xs_button_button:                                                @font-size_xs_button;
+
 //Размер шрифта кнопки s в режиме отображения по-умолчанию.
-@font-size_s_button_button:                           @font-size_s_button;
+@font-size_s_button_button:                                                 @font-size_s_button;
+
 //Размер шрифта кнопки m в режиме отображения по-умолчанию.
-@font-size_m_button_button:                           @font-size_m_button;
+@font-size_m_button_button:                                                 @font-size_m_button;
+
 //Размер шрифта кнопки l в режиме отображения по-умолчанию.
-@font-size_l_button_button:                           @font-size_l_button;
+@font-size_l_button_button:                                                 @font-size_l_button;
+
 //Размер шрифта кнопки xl в режиме отображения по-умолчанию.
-@font-size_xl_button_button:                          @font-size_xl_button;
+@font-size_xl_button_button:                                                @font-size_xl_button;
+
 //Размер шрифта кнопки 2xl в режиме отображения по-умолчанию.
-@font-size_2xl_button_button:                         @font-size_2xl_button;
+@font-size_2xl_button_button:                                               @font-size_2xl_button;
+
 //Размер шрифта кнопки 3xl в режиме отображения по-умолчанию.
-@font-size_3xl_button_button:                         @font-size_3xl_button;
+@font-size_3xl_button_button:                                               @font-size_3xl_button;
+
 //Размер шрифта кнопки 4xl в режиме отображения по-умолчанию.
-@font-size_4xl_button_button:                         @font-size_4xl_button;
+@font-size_4xl_button_button:                                               @font-size_4xl_button;
+
 //Размер шрифта кнопки 5xl в режиме отображения по-умолчанию.
-@font-size_5xl_button_button:                         @font-size_5xl_button;
+@font-size_5xl_button_button:                                               @font-size_5xl_button;
+
 //Размеры шрифта кнопок в режиме отображения ссылки.
 //Размер шрифта кнопки xs в режиме отображения ссылки.
-@font-size_xs_button_link:                            @font-size_xs_button;
+@font-size_xs_button_link:                                                  @font-size_xs_button;
+
 //Размер шрифта кнопки s в режиме отображения ссылки.
-@font-size_s_button_link:                             @font-size_s_button;
+@font-size_s_button_link:                                                   @font-size_s_button;
+
 //Размер шрифта кнопки m в режиме отображения ссылки.
-@font-size_m_button_link:                             @font-size_m_button;
+@font-size_m_button_link:                                                   @font-size_m_button;
+
 //Размер шрифта кнопки l в режиме отображения ссылки.
-@font-size_l_button_link:                             @font-size_l_button;
+@font-size_l_button_link:                                                   @font-size_l_button;
+
 //Размер шрифта кнопки xl в режиме отображения ссылки.
-@font-size_xl_button_link:                            @font-size_xl_button;
+@font-size_xl_button_link:                                                  @font-size_xl_button;
+
 //Размер шрифта кнопки 2xl в режиме отображения ссылки.
-@font-size_2xl_button_link:                           @font-size_2xl_button;
+@font-size_2xl_button_link:                                                 @font-size_2xl_button;
+
 //Размер шрифта кнопки 3xl в режиме отображения ссылки.
-@font-size_3xl_button_link:                           @font-size_3xl_button;
+@font-size_3xl_button_link:                                                 @font-size_3xl_button;
+
 //Размер шрифта кнопки 4xl в режиме отображения ссылки.
-@font-size_4xl_button_link:                           @font-size_4xl_button;
+@font-size_4xl_button_link:                                                 @font-size_4xl_button;
+
 //Размер шрифта кнопки 5xl в режиме отображения ссылки.
-@font-size_5xl_button_link:                           @font-size_5xl_button;
+@font-size_5xl_button_link:                                                 @font-size_5xl_button;
 
 //Цвет текста главных, выделенных особым образом кнопок в режиме отображения ссылки
-@primary_text-color_button_link:                          @primary_text-color;
+@primary_text-color_button_link:                                            @primary_text-color;
+
 //Цвет текста акцентных кнопок в режиме отображения ссылки
-@secondary_text-color_button_link:                        @secondary_text-color;
+@secondary_text-color_button_link:                                          @secondary_text-color;
 
-
+//Высоты кнопок.
 //Высота кнопки xs.
-@inline_height_xs_button:                             @inline_height_xs;
+@inline_height_xs_button:                                                   @inline_height_xs;
+
 //Высота кнопки s.
-@inline_height_s_button:                              @inline_height_s;
+@inline_height_s_button:                                                    @inline_height_s;
+
 //Высота кнопки m.
-@inline_height_m_button:                              @inline_height_m;
+@inline_height_m_button:                                                    @inline_height_m;
+
 //Высота кнопки l.
-@inline_height_l_button:                              @inline_height_l;
+@inline_height_l_button:                                                    @inline_height_l;
+
 //Высота кнопки xl.
-@inline_height_xl_button:                             @inline_height_xl;
+@inline_height_xl_button:                                                   @inline_height_xl;
+
 //Высота кнопки 2xl.
-@inline_height_2xl_button:                            @inline_height_2xl;
+@inline_height_2xl_button:                                                  @inline_height_2xl;
+
 //Высота кнопки по умолчанию.
-@inline_height_default_button:                        @inline_height_m_button;
+@inline_height_default_button:                                              @inline_height_m_button;
+
 //минимальная ширина кнопки в режиме отображения "по умолчанию".
-@min-width_button_button:                             @inline_height_default_button + (@border-radius_m_button * 2 * @border-thickness_button);
+@min-width_button_button:                                                   @inline_height_default_button + (@border-radius_m_button * 2 * @border-thickness_button);
+
+//Текст в кнопках
 //цвет текста кнопки.
-@text-color_button:                                   @text-color;
+@text-color_button:                                                         @text-color;
+
 //цвет текста кнопки в режиме "только для чтения".
-@readonly_text-color_button:                          @readonly_color;
+@readonly_text-color_button:                                                @readonly_color;
+
 //цвет текста кнопки в режиме отображения "по умолчанию" в режиме "только для чтения".
-@readonly_text-color_button_button:                   @readonly_text-color_button;
+@readonly_text-color_button_button:                                         @readonly_text-color_button;
+
 //тень текста кнопки
 //Примечание: в режиме "только для чтения" тень текста всегда отключена.
-@text-shadow_button:                                  none;
+@text-shadow_button:                                                        none;
+
+//Фон кнопок
 //цвет фона основной кнопки.
-@primary_background-color_button:                     transparent;
+@primary_background-color_button:                                           transparent;
+
 //контрастный цвет фона основной кнопки.
 //Примечание: равен цвету фона по-умолчанию.
-@primary_contrast_background-color_button:            @background-color;
+@primary_contrast_background-color_button:                                  @background-color;
+
 //цвет фона основной кнопки при наведении мыши.
-@primary_hover_background-color_button:               #FDECD9;
+@primary_hover_background-color_button:                                     #FDECD9;
+
 //цвет фона основной кнопки при нажатии на нее.
-@primary_active_background-color_button:              #FDD2C0;
+@primary_active_background-color_button:                                    #FDD2C0;
+
 //цвет фона неосновной кнопки.
-@secondary_background-color_button:                   transparent;
+@secondary_background-color_button:                                         transparent;
+
 //контрастный цвет фона неосновной кнопки.
 //Примечание: равен цвету фона по-умолчанию.
-@secondary_contrast_background-color_button:          @background-color;
+@secondary_contrast_background-color_button:                                @background-color;
+
 //цвет фона неосновной кнопки при наведении мыши.
-@secondary_hover_background-color_button:             #F0F5FB;
+@secondary_hover_background-color_button:                                   #F0F5FB;
+
 //цвет фона неосновной кнопки при нажатии на нее.
-@secondary_active_background-color_button:            #E1ECF6;
+@secondary_active_background-color_button:                                  #E1ECF6;
+
 //цвет фона кнопки в состоянии "только для чтения".
-@readonly_background-color_button:                    transparent;
+@readonly_background-color_button:                                          transparent;
+
 //контрастный цвет фона кнопки в состоянии "только для чтения".
 //Примечание: равен цвету фона по-умолчанию.
-@readonly_contrast_background-color_button:           @background-color;
+@readonly_contrast_background-color_button:                                 @background-color;
 
 //цвет фона основной кнопки-иконки для тулбара.
-@background-color_button_toolButton:                  transparent;
+@background-color_button_toolButton:                                        transparent;
+
 //контрастный цвет фона основной кнопки-иконки для тулбара.
-@background-color_contrast_button_toolButton:         #F8F8F8;
+@background-color_contrast_button_toolButton:                               #F8F8F8;
+
 //цвет фона основной кнопки-иконки для тулбара при наведении мыши
-@background-color_hover_button_toolButton:            @background-color_button_toolButton;
+@background-color_hover_button_toolButton:                                  @background-color_button_toolButton;
+
 //контрастный цвет фона основной кнопки-иконки для тулбара при наведении мыши
-@background-color_contrast_hover_button_toolButton:   @background-color_contrast_button_toolButton;
+@background-color_contrast_hover_button_toolButton:                         @background-color_contrast_button_toolButton;
+
 //цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
-@background-color_active_button_toolButton:           @background-color_button_toolButton;
+@background-color_active_button_toolButton:                                 @background-color_button_toolButton;
+
 //контрастный цвет фона основной кнопки-иконки для тулбара при нажатии мыши.
-@background-color_contrast_active_button_toolButton:  @background-color_contrast_button_toolButton;
+@background-color_contrast_active_button_toolButton:                        @background-color_contrast_button_toolButton;
 
 //цвет фона основной функциональной кнопки
-@secondary_background-color_button_functionalButton:  #0a7ed7;
+@secondary_background-color_button_functionalButton:                        #0a7ed7;
+
 //цвет фона неосновной функциональной кнопки
-@primary_background-color_button_functionalButton:    @primary_color;
+@primary_background-color_button_functionalButton:                          @primary_color;
+
 //цвет фона функциональной кнопки в состоянии "только для чтения"
-@reaondly_background-color_button_functionalButton:   #eeeeee;
+@reaondly_background-color_button_functionalButton:                         #eeeeee;
+
 //цвет фона основной функциональной кнопки при наведении мыши
-@secondary_hover_background-color_button_functionalButton:  #1f8ee3;
+@secondary_hover_background-color_button_functionalButton:                  #1f8ee3;
+
 //цвет фона функциональной кнопки в состоянии "только для чтения" при наведении мыши
-@success_hover_background-color_button_functionalButton:   #38ad4e;
+@success_hover_background-color_button_functionalButton:                    #38ad4e;
+
 //цвет фона основной функциональной кнопки при нажатии мыши.
-@secondary_active_background-color_button_functionalButton:  @secondary_hover_background-color_button_functionalButton;
+@secondary_active_background-color_button_functionalButton:                 @secondary_hover_background-color_button_functionalButton;
+
 //цвет фона функциональной кнопки в состоянии "только для чтения" при нажатии мыши.
-@success_active_background-color_button_functionalButton:   @success_hover_background-color_button_functionalButton;
+@success_active_background-color_button_functionalButton:                   @success_hover_background-color_button_functionalButton;
 
 //Толщина обводки кнопки.
 //Примечание: равна толщине обводки по-умолчанию.
-@border-thickness_button:                             @border-thickness;
+@border-thickness_button:                                                   @border-thickness;
+
+//Тени кнопок
 //Тень вокруг кнопки.
 //Примечание: при нажатии на кнопку тень пропадает во всех темах.
-@box-shadow_button:                                   none;
-//Цвет обводки основной кнопки.
-@primary_border-color_button:                         @primary_color;
-//Цвет обводки неосновной кнопки.
-@secondary_border-color_button:                       @secondary_color;
-//Цвет обводки кнопки в состоянии  "только для чтения".
-@readonly_border-color_button:                        @readonly_color;
-//Цвет обводки кнопки-иконки для тулбара.
-@border-color_button_toolButton:                      rgba(0, 0, 0, 0.08);
-//Цвет обводки кнопки-иконки для тулбара при наведении мыши.
-@border-color_hover_button_toolButton:                #CCC;
-//Цвет обводки кнопки-иконки для тулбара в состоянии  "только для чтения".
-@readonly_border-color_button_toolButton:             rgba(0, 0, 0, 0.08);
-//Радиус скругления обводки кнопки высоты xs.
-//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_xs_button:                             @inline_height_xs / 2;
-//Радиус скругления обводки кнопки высоты s.
-//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_s_button:                              @inline_height_s / 2;
-//Радиус скругления обводки кнопки высоты m.
-//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_m_button:                              @inline_height_m / 2;
-//Радиус скругления обводки кнопки высоты l.
-//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_l_button:                              @inline_height_l / 2;
-//Радиус скругления обводки кнопки высоты xl.
-//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_xl_button:                             @inline_height_xl / 2;
-//Радиус скругления обводки кнопки высоты 2xl.
-//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_2xl_button:                            @inline_height_2xl / 2;
-//Радиус скругления обводки кнопки высоты по-умолчанию.
-//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_default_button:                        @inline_height_default / 2;
-//Радиус скругления обводки кнопки-иконки для тулбара.
-@border-radius_button_toolButton:                     2px;
+@box-shadow_button:                                                         none;
+
 //Тень вокруг кнопки-иконки для тулбара.
 //Примечание: при нажатии на кнопку тень пропадает во всех темах.
-@box-shadow_button_toolButton:                        0 1px 4px rgba(0, 0, 0, 0.05);
+@box-shadow_button_toolButton:                                              0 1px 4px rgba(0, 0, 0, 0.05);
+
 //Тень вокруг функциональной кнопки для тулбара.
 //Примечание: при нажатии на кнопку тень пропадает во всех темах.
-@box-shadow_button_functionalButton:                  0 1px 4px rgba(0, 0, 0, 0.05);
+@box-shadow_button_functionalButton:                                        0 1px 4px rgba(0, 0, 0, 0.05);
+
+//Обводка кнопок
+//Цвет обводки основной кнопки.
+@primary_border-color_button:                                               @primary_color;
+
+//Цвет обводки неосновной кнопки.
+@secondary_border-color_button:                                             @secondary_color;
+
+//Цвет обводки кнопки в состоянии  "только для чтения".
+@readonly_border-color_button:                                              @readonly_color;
+
+//Цвет обводки кнопки-иконки для тулбара.
+@border-color_button_toolButton:                                            rgba(0, 0, 0, 0.08);
+
+//Цвет обводки кнопки-иконки для тулбара при наведении мыши.
+@border-color_hover_button_toolButton:                                      #CCC;
+
+//Цвет обводки кнопки-иконки для тулбара в состоянии  "только для чтения".
+@readonly_border-color_button_toolButton:                                   rgba(0, 0, 0, 0.08);
+
+//Радиус скругления кнопок
+//Радиус скругления обводки кнопки высоты xs.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_xs_button:                                                   @inline_height_xs / 2;
+
+//Радиус скругления обводки кнопки высоты s.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_s_button:                                                    @inline_height_s / 2;
+
+//Радиус скругления обводки кнопки высоты m.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_m_button:                                                    @inline_height_m / 2;
+
+//Радиус скругления обводки кнопки высоты l.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_l_button:                                                    @inline_height_l / 2;
+
+//Радиус скругления обводки кнопки высоты xl.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_xl_button:                                                   @inline_height_xl / 2;
+
+//Радиус скругления обводки кнопки высоты 2xl.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_2xl_button:                                                  @inline_height_2xl / 2;
+
+//Радиус скругления обводки кнопки высоты по-умолчанию.
+//Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
+@border-radius_default_button:                                              @inline_height_default / 2;
+
+//Радиус скругления обводки кнопки-иконки для тулбара.
+@border-radius_button_toolButton:                                           2px;
+
 //Радиус скругления обводки функциональной кнопки высоты xs.
 //Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_xs_button_functionalButton:            @inline_height_xs / 2;
+@border-radius_xs_button_functionalButton:                                  @inline_height_xs / 2;
+
 //Радиус скругления обводки функциональной кнопки высоты s.
 //Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_s_button_functionalButton:             @inline_height_s / 2;
+@border-radius_s_button_functionalButton:                                   @inline_height_s / 2;
+
 //Радиус скругления обводки функциональной кнопки высоты m.
 //Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_m_button_functionalButton:             @inline_height_m / 2;
+@border-radius_m_button_functionalButton:                                   @inline_height_m / 2;
+
 //Радиус скругления обводки функциональной кнопки высоты l.
 //Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_l_button_functionalButton:             @inline_height_l / 2;
+@border-radius_l_button_functionalButton:                                   @inline_height_l / 2;
+
 //Радиус скругления обводки функциональной кнопки высоты xl.
 //Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_xl_button_functionalButton:            @inline_height_xl / 2;
+@border-radius_xl_button_functionalButton:                                  @inline_height_xl / 2;
+
 //Радиус скругления обводки функциональной кнопки высоты 2xl.
 //Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_2xl_button_functionalButton:           @inline_height_2xl / 2;
+@border-radius_2xl_button_functionalButton:                                 @inline_height_2xl / 2;
+
 //Радиус скругления обводки функциональной кнопки высоты по-умолчанию.
 //Примечание: по-умолчанию равен высоте кнопки, деленной на 2.
-@border-radius_default_button_functionalButton:       @inline_height_default / 2;
+@border-radius_default_button_functionalButton:                             @inline_height_default / 2;
 
-//header. Переменные, использующиеся для темизации заголовков.
-//Цвет иконки для заголовка, использующегося для проваливания в раздел.
-@forward-icon_color_heading:  #729EE6;
+//ЗАГОЛОВКИ
+//Общие переменные, использующиеся для темизации заголовков.
+
+//Шрифты в заголовках
 //Жирность шрифта для заголовков.
 @font-weight_heading:         bold;
-//Размер шрифта в заголовках xs.
-@font-size_xs_heading:                                @font-size_xs;
-//Размер шрифта в заголовках s.
-@font-size_s_heading:                                 @font-size_s;
-//Размер шрифта в заголовках m.
-@font-size_m_heading:                                 @font-size_m;
-//Размер шрифта в заголовках l.
-@font-size_l_heading:                                 @font-size_l;
-//Размер шрифта в заголовках xl.
-@font-size_xl_heading:                                @font-size_xl;
-//Размер шрифта в заголовках 2xl.
-@font-size_2xl_heading:                               @font-size_2xl;
-//Размер шрифта в заголовках 3xl.
-@font-size_3xl_heading:                               @font-size_3xl;
-//Размер шрифта в заголовках 4xl.
-@font-size_4xl_heading:                               @font-size_4xl;
-//Размер шрифта в заголовках 5xl.
-@font-size_5xl_heading:                               @font-size_5xl;
 
+//Размер шрифта в заголовках xs.
+@font-size_xs_heading:                                                      @font-size_xs;
+
+//Размер шрифта в заголовках s.
+@font-size_s_heading:                                                       @font-size_s;
+
+//Размер шрифта в заголовках m.
+@font-size_m_heading:                                                       @font-size_m;
+
+//Размер шрифта в заголовках l.
+@font-size_l_heading:                                                       @font-size_l;
+
+//Размер шрифта в заголовках xl.
+@font-size_xl_heading:                                                      @font-size_xl;
+
+//Размер шрифта в заголовках 2xl.
+@font-size_2xl_heading:                                                     @font-size_2xl;
+
+//Размер шрифта в заголовках 3xl.
+@font-size_3xl_heading:                                                     @font-size_3xl;
+
+//Размер шрифта в заголовках 4xl.
+@font-size_4xl_heading:                                                     @font-size_4xl;
+
+//Размер шрифта в заголовках 5xl.
+@font-size_5xl_heading:                                                     @font-size_5xl;
+
+//Цвета в заголовках
 //Цвет главных, выделенных особым образом заголовков.
 //Пример: главный заголовок, заголовок активной вкладки.
-@primary_text-color_heading:                          @primary_text-color;
-//Цвет главных выделенных особым образом заголовков при наведении мыши.
-@primary_hover_text-color_heading:                    @primary_hover_text-color;
-//Цвет обычных заголовков.
-@secondary_text-color_heading:                        @secondary_text-color;
-//Цвет обычных заголовков при наведении мыши.
-@secondary_hover_text-color_heading:                  @secondary_hover_text-color;
+@primary_text-color_heading:                                                @primary_text-color;
 
-//dialog. Переменные, использующиеся для темизации диалоговых окон.
+//Цвет главных выделенных особым образом заголовков при наведении мыши.
+@primary_hover_text-color_heading:                                          @primary_hover_text-color;
+
+//Цвет обычных заголовков.
+@secondary_text-color_heading:                                              @secondary_text-color;
+
+//Цвет обычных заголовков при наведении мыши.
+@secondary_hover_text-color_heading:                                        @secondary_hover_text-color;
+
+//Цвет иконки для заголовка, использующегося для проваливания в раздел.
+@forward-icon_color_heading:  #729EE6;
+
+//ДИАЛОГОВОЕ ОКНО
+//Переменные, использующиеся для темизации диалоговых окон.
 //цвет фона диалогового окна.
 //Примечание: равен цвету фона по-умолчанию.
-@background-color_dialog:                 @background-color;
+@background-color_dialog:                                                   @background-color;
+
 //Цвет обводки диалогового окна.
-@border-color_dialog:                     #BDBDBD;
+@border-color_dialog:                                                       #BDBDBD;
+
 //Толщина обводки диалогового окна.
 //Примечание: равна толщине обводки по-умолчанию.
-@border-thickness_dialog:                 @border-thickness;
+@border-thickness_dialog:                                                   @border-thickness;
+
 //Тень вокруг диалога.
-@box-shadow_dialog:                       0 0 6px 0 rgba(0,0,0,0.35);
+@box-shadow_dialog:                                                         0 0 6px 0 rgba(0,0,0,0.35);
+
+//Заголовок диалогового окна
 //цвет фона шапки диалогового окна.
 //Примечание: равен цвету фона по-умолчанию.
-@header_background-color_dialog:          @background-color;
+@header_background-color_dialog:                                            @background-color;
+
 //горизонтальный отступ слева в шапке диалогового окна.
-@header_padding-left_dialog:              12px;
+@header_padding-left_dialog:                                                12px;
+
 //минимальная высота шапки диалогового окна.
-@header-min-height_dialog:                44px;
+@header-min-height_dialog:                                                  44px;
+
 //толщина нижней границы шапки диалогового окна.
-@header_bottom-border-thickness_dialog:   0;
+@header_bottom-border-thickness_dialog:                                     0;
+
 //цвет нижней границы шапки диалогового окна.
-@header_bottom-border-color_dialog:       transparent;
+@header_bottom-border-color_dialog:                                         transparent;
+
 //высота строки шапки диалогового окна.
 //Примечание: расстояние от верхней границы окна до нижней границы текста.
-@header_lineheight_dialog:                27px;
+@header_lineheight_dialog:                                                  27px;
+
 //горизонтальный отступ справа в шапке диалогового окна.
 //Примечание: расстояние между контентом шапки и крестиком
-@header-content_padding-right_dialog:     12px;
-//цвет фона подвала диалогового окна.
-@footer_background-color_dialog:          #F5F5F5;
-//минимальная высота подвала диалогового окна.
-@footer_min-height_dialog:                64px;
-//толщина верхней границы шапки диалогового окна.
-@footer_top-border-thickness_dialog:      1px;
-//цвет верхней границы шапки диалогового окна.
-@footer_top-border-color_dialog:          #EAEAEA;
+@header-content_padding-right_dialog:                                       12px;
+
 //верхний отступ крестика закрытия диалогового окна.
-@close-button_padding-top_dialog:         8px;
+@close-button_padding-top_dialog:                                           8px;
+
 //минимальная ширина заголовка диалога ( должна влезать одна буква и троеточие)
-@header_min-width_dialog: 30px;
+@header_min-width_dialog:                                                   30px;
 
+//Подвал диалогового окна
+//цвет фона подвала диалогового окна.
+@footer_background-color_dialog:                                            #F5F5F5;
 
-//stack. Переменные, использующиеся для темизации стековых панелей.
+//минимальная высота подвала диалогового окна.
+@footer_min-height_dialog:                                                  64px;
+
+//толщина верхней границы шапки диалогового окна.
+@footer_top-border-thickness_dialog:                                        1px;
+
+//цвет верхней границы шапки диалогового окна.
+@footer_top-border-color_dialog:                                            #EAEAEA;
+
+//СТЕКОВАЯ ПАНЕЛЬ
+//Переменные, использующиеся для темизации стековых панелей.
 //цвет фона стековой панели.
 //Примечание: равен цвету фона по-умолчанию.
-@background-color_stack:                  @background-color;
+@background-color_stack:                                                    @background-color;
+
 //Цвет обводки стековой панели.
-@border-color_stack:                      #BDBDBD;
+@border-color_stack:                                                        #BDBDBD;
+
 //Толщина обводки стековой панели.
 //Примечание: равна толщине обводки по-умолчанию.
-@border-thickness_stack:                  @border-thickness;
+@border-thickness_stack:                                                    @border-thickness;
+
+//тень стековой панели
+@box-shadow_stack:                                                          12px -8px 6px 12px rgba(0,0,0,0.35);
+
+//размер контейнера для тени стековой панели
+@box-shadow-container_width:                                                8px;
+
 //цвет фона шапки стековой панели.
-@header_background-color_stack:           #F8F8F8;
+@header_background-color_stack:                                             #F8F8F8;
+
 //минимальная высота шапки стековой панели.
-@header_min-height_stack:                 38px;
+@header_min-height_stack:                                                   38px;
+
+//заголовок стековой панели
 //минимальная ширина заголовка стековой панели ( должна влезать одна буква и троеточие)
 @header_min-width_stack: 30px;
+
 //толщина нижней границы шапки стековой панели.
-@header_bottom-border-thickness_stack:    1px;
+@header_bottom-border-thickness_stack:                                      1px;
+
 //цвет нижней границы шапки стековой панели.
-@header_bottom-border-color_stack:        #F0F0F0;
+@header_bottom-border-color_stack:                                          #F0F0F0;
+
 //горизонтальный отступ слева в шапке стековой панели.
-@header_padding-left_stack:               12px;
+@header_padding-left_stack:                                                 12px;
+
 //высота строки шапки стековой панели.
 //Примечание: расстояние от верхней границы окна до нижней границы
-@header_lineheight_stack:                 25px;
+@header_lineheight_stack:                                                   25px;
+
 //горизонтальный отступ справа в шапке стековой панели.
 //Примечание: расстояние между контентом шапки и крестиком
-@header-content_padding-right_stack:      16px;
-//цвет фона подвала стековой панели.
-@footer_background-color_stack:           #F8F8F8;
-//толщина верхней границы шапки стековой панели.
-@footer_top-border-thickness_stack:       1px;
-//цвет верхней границы шапки стековой панели.
-@footer_top-border-color_stack:           #F0F0F0;
-//верхний отступ крестика закрытия стековой панели.
-@close-button_padding-top_stack:          5px;
-//верхний отступ кнопки, переводящей стековую панель в расширенный режим.
-@maximized-button_padding-top_stack:      7px;
-//отступ между кнопкой, переводящей стековую панель в расширенный режим и крестиком закрытия.
-@maximized-button_padding-right_stack:    8px;
-//тень стековой панели
-@box-shadow_stack:                        12px -8px 6px 12px rgba(0,0,0,0.35);
-//размер контейнера для тени стековой панели
-@box-shadow-container_width:              8px;
+@header-content_padding-right_stack:                                        16px;
 
-/*toggle button Стили для кнопок с залипанием*/
+//подвал стековой панели
+//цвет фона подвала стековой панели.
+@footer_background-color_stack:                                             #F8F8F8;
+
+//толщина верхней границы шапки стековой панели.
+@footer_top-border-thickness_stack:                                         1px;
+
+//цвет верхней границы шапки стековой панели.
+@footer_top-border-color_stack:                                             #F0F0F0;
+
+//верхний отступ крестика закрытия стековой панели.
+@close-button_padding-top_stack:                                            5px;
+//верхний отступ кнопки, переводящей стековую панель в расширенный режим.
+
+@maximized-button_padding-top_stack:                                        7px;
+//отступ между кнопкой, переводящей стековую панель в расширенный режим и крестиком закрытия.
+
+@maximized-button_padding-right_stack:                                      8px;
+
+//ПРИЛИПАЮЩЕЕ ОКНО
+//Переменные, использующиеся для темизации прилипающих окон.
+
+//цвет фона прилипающего окна.
+//Примечание: равен цвету фона по-умолчанию.
+@background-color_sticky:                                                   @background-color;
+
+//Нижний отступ для контента прилипающего блока.
+@content_padding-bottom_sticky:                                             8px;
+
+//Нижний отступ для прилипающего блока.
+@padding-bottom_sticky:                                                     2px;
+
+//Верхний отступ для прилипающего блока.
+@padding-top_sticky:                                                        2px;
+
+//Цвет обводки прилипающего блока.
+@border-color_sticky:                                                       #CCCCCC;
+
+//тень прилипающего блока
+@box-shadow_sticky:                                                         0 0 12px 0 rgba(0,0,0,0.25);
+
+//шапка прилипающего окна
+//горизонтальный отступ слева в шапке прилипающего блока.
+@header_padding-left_sticky:                                                12px;
+
+//цвет нижней границы шапки прилипающего блока.
+@header_bottom-border-color_sticky:                                         #F0F0F0;
+
+//минимальная высота шапки прилипающего блока.
+@header_min-height_sticky:                                                  32px;
+
+//цвет фона шапки прилипающего блока.
+@header_background-color_sticky:                                            #F8F8F8;
+
+//толщина нижней границы шапки прилипающего блока.
+@header_bottom-border-thickness_sticky:                                     @border-thickness;
+//отступы для крестика закрытия прилипающего блока.
+@close-button_padding_sticky:                                               4px;
+
+//КНОПКИ С ЗАЛИПАНИЕМ
+//Общие стили для кнопок с залипанием
+
+//Тень залипающей кнопки
+@box-shadow_toggleButton_pushButton:                                        none;
+
+//обводка кнопок с залипанием
 //Цвет обводки неосновной кнопки в зажатом состоянии.
 @secondary_toggled_border-color_toggleButton_button:                        @secondary_color;
+
 //Цвет обводки основной кнопки в зажатом состоянии.
 @primary_toggled_border-color_toggleButton_button:                          @primary_color;
+
 //Толщина обводки основной кнопки в зажатом состоянии.
 @secondary_toggled_border-thickness_toggleButton_button:                    2px;
+
 //Толщина обводки неосновной кнопки в зажатом состоянии.
 @primary_toggled_border-thickness_toggleButton_button:                      2px;
 
 //Цвет обводки кнопки-иконки для тулбара в зажатом состоянии.
 @secondary_toggled_border-color_toggleButton_toolButton:                    @secondary_color;
+
 //Цвет обводки залипающей кнопки в зажатом состоянии.
 @secondary_toggled_border-color_toggleButton_pushButton:                    @secondary_color;
+
 //Цвет обводки залипающей кнопки в зажатом состоянии "только для чтения".
 @readonly_toggled_border-color_toggleButton_pushButton:                     @readonly_color;
+
 //Радиус скругления обводки залипающей кнопки
 @border-radius_toggleButton_pushButton:                                     2px;
 
 //цвет границы неосновной залипающей кнопки.
-@secondary_border-color_toggleButton_pushButton:                        transparent;
-//цвет границы неосновной залипающей кнопки в зажатом состоянии "только для чтения".
-@readonly_toggled_border-color_toggleButton_pushButton:                 @secondary_active_background-color_toggleButton_pushButton;
+@secondary_border-color_toggleButton_pushButton:                            transparent;
 
+//цвет границы неосновной залипающей кнопки в зажатом состоянии "только для чтения".
+@readonly_toggled_border-color_toggleButton_pushButton:                     @secondary_active_background-color_toggleButton_pushButton;
+
+//цвета фона кнопок с залипанием
 //цвет фона неосновной залипающей кнопки.
 @secondary_background-color_toggleButton_pushButton:                        transparent;
+
 //цвет фона неосновной залипающей кнопки при наведении мыши.
 @secondary_hover_background-color_toggleButton_pushButton:                  transparent;
+
 //цвет фона неосновной залипающей кнопки при нажатии на нее.
 @secondary_active_background-color_toggleButton_pushButton:                 transparent;
+
 //цвет фона неосновной залипающей кнопки в состоянии "только для чтения".
 @readonly_background-color_toggleButton_pushButton:                         transparent;
+
 //цвет фона неосновной залипающей кнопки в зажатом состоянии.
 @secondary_toggled_background-color_toggleButton_pushButton:                #F3F3F3;
+
 //цвет фона неосновной залипающей кнопки в зажатом состоянии "только для чтения".
 @readonly_toggled_background-color_toggleButton_pushButton:                 transparent;
+
 //контрастный цвет фона неосновной залипающей кнопки.
 @secondary_contrast_background-color_toggleButton_pushButton:               transparent;
+
 //контрастный цвет фона неосновной кнопки при наведении мыши.
 @secondary_contrast_hover_background-color_toggleButton_pushButton:         #F0F5FB;
+
 //контрастный цвет фона неосновной залипающей кнопки при нажатии на нее.
 @secondary_contrast_active_background-color_toggleButton_pushButton:        transparent;
+
 //контрастный цвет фона неосновной залипающей кнопки в состоянии "только для чтения".
 @readonly_contrast_background-color_toggleButton_pushButton:                transparent;
+
 //контрастный цвет фона неосновной залипающей кнопки в зажатом состоянии.
 @secondary_contrast_toggled_background-color_toggleButton_pushButton:       @secondary_toggled_background-color_toggleButton_pushButton;
+
 //контрастный цвет фона неосновной залипающей кнопки в зажатом состоянии "только для чтения".
 @readonly_contrast_toggled_background-color_toggleButton_pushButton:        transparent;
-//Тень залипающей кнопки
-@box-shadow_toggleButton_pushButton:                                        none;
 
-/*switcher*/
+//ПЕРЕКЛЮЧАТЕЛИ
 //размер шрифта переключателя
-@font-size_switcher:                      @font-size_m;
-//ширина переключателя
-@width_switcher:                          46px;
-//высота переключателя
-@height_switcher:                         @inline_height_m;
-//толщина обводки переключателя
-@border-thickness_switcher:               @border-thickness;
-//радиус скругления обводки переключателя
-@border-radius_switcher:                  @height_switcher/2;
-//толщина линии переключателя
-@track_thickness_switcher:                2px;
-//длина линии переключателя
-@track_length_switcher:                   34px;
-//отступ между переключателем и текстом
-@text_offset_switcher:                    6px;
-//толщина обводки контейнера маркера переключателя
-@marker-box_border-thickness_switcher:    2px;
-//размер контейнера для маркера переключателя
-@marker-box_size_switcher:                12px;
-//размер маркера переключателя
-@marker-size_switcher:                    6px;
-//цвет обводки переключателя
-@border-color_switcher:                   #E4E4E4;
-//цвет линии переключателя
-@track_color_switcher:                    #CCC;
-//цвет линии переключателя в режиме чтения
-@readonly_track_color_switcher:           #E4E4E4;
-//освной цвет текста переключателя
-@text-color_switcher:                     @text-color;
-//цвет текста переключателя в выключенном состоянии
-@unselected_text-color_switcher:          @unaccented_text-color;
-//основной цвет текста переключателя в режиме чтения
-@readonly_text-color_switcher:            @text-color;
-//цвет текста переключателя в выключенном состоянии в режиме чтения
-@readonly_unselected_text-color_switcher: @readonly_color;
-//цвет маркера переключателя
-@marker_color_switcher:                   @marker_color;
-//цвет маркера переключателя в режиме чтения
-@readonly_marker_color_switcher:          @readonly_marker-color;
-//цвет обводки маркера переключателя
-@marker-box_border-color_switcher:        #CCC;
-//цвет обводки маркера переключателя в режиме чтения
-@readonly_marker-box_border-color_switcher: #E4E4E4;
-//цвет обводки маркера переключателя при наведении
-@marker-box_hover_border-color_switcher:  @marker_color_switcher;
+@font-size_switcher:                                                        @font-size_m;
 
-/*toggle big separator стили для большого разделителя-переключателя*/
+//ширина переключателя
+@width_switcher:                                                            46px;
+
+//высота переключателя
+@height_switcher:                                                           @inline_height_m;
+
+//толщина обводки переключателя
+@border-thickness_switcher:                                                 @border-thickness;
+
+//радиус скругления обводки переключателя
+@border-radius_switcher:                                                    @height_switcher/2;
+
+//толщина линии переключателя
+@track_thickness_switcher:                                                  2px;
+
+//длина линии переключателя
+@track_length_switcher:                                                     34px;
+
+//отступ между переключателем и текстом
+@text_offset_switcher:                                                      6px;
+
+//толщина обводки контейнера маркера переключателя
+@marker-box_border-thickness_switcher:                                      2px;
+
+//размер контейнера для маркера переключателя
+@marker-box_size_switcher:                                                  12px;
+
+//размер маркера переключателя
+@marker-size_switcher:                                                      6px;
+
+//цвет обводки переключателя
+@border-color_switcher:                                                     #E4E4E4;
+
+//цвет линии переключателя
+@track_color_switcher:                                                      #CCC;
+
+//цвет линии переключателя в режиме чтения
+@readonly_track_color_switcher:                                             #E4E4E4;
+
+//освной цвет текста переключателя
+@text-color_switcher:                                                       @text-color;
+
+//цвет текста переключателя в выключенном состоянии
+@unselected_text-color_switcher:                                            @unaccented_text-color;
+
+//основной цвет текста переключателя в режиме чтения
+@readonly_text-color_switcher:                                              @text-color;
+
+//цвет текста переключателя в выключенном состоянии в режиме чтения
+@readonly_unselected_text-color_switcher:                                   @readonly_color;
+
+//цвет маркера переключателя
+@marker_color_switcher:                                                     @marker_color;
+
+//цвет маркера переключателя в режиме чтения
+@readonly_marker_color_switcher:                                            @readonly_marker-color;
+
+//цвет обводки маркера переключателя
+@marker-box_border-color_switcher:                                          #CCC;
+
+//цвет обводки маркера переключателя в режиме чтения
+@readonly_marker-box_border-color_switcher:                                 #E4E4E4;
+
+//цвет обводки маркера переключателя при наведении
+@marker-box_hover_border-color_switcher:                                    @marker_color_switcher;
+
+//БОЛЬШОЙ РАЗДЕЛИТЕЛЬ
+//стили для большого разделителя-переключателя
 //Цвет иконки большого разделителя
 @icon-color_toggleBigSeparator:                                             @unaccented_icon-color;
+
+//Цвет иконки большого разделителя при наведении мыши
 @icon-color_hover_toggleBigSeparator:                                       @link_hover_text-color;
+
+//Цвет иконки большого разделителя при нажатии
 @icon-color_active_toggleBigSeparator:                                      @icon-color_hover_toggleBigSeparator;
-@width_toggleBigSeparator:                                                  26px;
-@height_toggleBigSeparator:                                                 @width_toggleBigSeparator;
+
+//Размер иконки большого разделителя
 @icon-size_toggleBigSeparator:                                              @width_toggleBigSeparator;
 
-/*toggle separator стили для разделителя-переключателя*/
-//Цвет иконки большого разделителя
-@icon-size_toggleSeparator:                                                 @icon-size_s;
-@height_toggleSeparator:                                                    @inline_height_default;
-@width_toggleSeparator:                                                     @height_toggleSeparator;
+//Ширина большого разделителя
+@width_toggleBigSeparator:                                                  26px;
+
+//Высота большого разделителя
+@height_toggleBigSeparator:                                                 @width_toggleBigSeparator;
+
+//МАЛЫЙ РАЗДЕЛИТЕЛЬ
+//Стили для разделителя-переключателя
+//Цвет иконки основного малого разделителя
 @primary_icon-color_toggleSeparator:                                        @primary_text-color;
+
+//Цвет иконки неосновного малого разделителя
 @secondary_icon-color_toggleSeparator:				                        @secondary_color;
+
+//Цвет иконки дополнительного малого разделителя
 @unaccented_icon-color_toggleSeparator:                                     @unaccented_icon-color;
+
+//Цвет иконки основного малого разделителя при наведении мыши
 @primary_hover_icon-color_toggleSeparator:                                  @primary_color;
+
+//Цвет иконки неосновного малого разделителя при наведении мыши
 @secondary_hover_icon-color_toggleSeparator:				                @link_hover_text-color;
+
+//Цвет иконки дополнительного малого разделителя при наведении мыши
 @unaccented_hover_icon-color_toggleSeparator:				                @link_hover_text-color;
+
+//Цвет иконки основного малого разделителя при нажатии
 @primary_active_icon-color_toggleSeparator:				                    @primary_hover_icon-color_toggleSeparator;
+
+//Цвет иконки неосновного малого разделителя при нажатии
 @secondary_active_icon-color_toggleSeparator:				                @secondary_hover_icon-color_toggleSeparator;
+
+//Цвет иконки дополнительного малого разделителя при нажатии
 @unaccented_active_icon-color_toggleSeparator:	                            @unaccented_hover_icon-color_toggleSeparator;
 
-/*Label - метка для полей ввода*/
-//цвет знака сноски у метки
-@asterisk_color_label:                  @danger_color;
-//высота метки
-@inline_height_default_label:           @inline_height_m;
-//отступ от метки до контрола при позиционировании с краю от контрола
-@offset-horizontal_label:               8px;
-//цвет текста метки
-@text-color_label:                      @label_text-color;
-//размер шрифта метки
-@font-size_default_label:               @font-size_m;
+//Размер иконки малого разделителя
+@icon-size_toggleSeparator:                                                 @icon-size_s;
 
+//Высота иконки малого разделителя
+@height_toggleSeparator:                                                    @inline_height_default;
+
+//Ширина иконки малого разделителя
+@width_toggleSeparator:                                                     @height_toggleSeparator;
+
+//МЕТКИ ДЛЯ ПОЛЕЙ ВВОДА
+
+//цвет знака сноски у метки
+@asterisk_color_label:                                                      @danger_color;
+
+//высота метки
+@inline_height_default_label:                                               @inline_height_m;
+
+//отступ от метки до контрола при позиционировании с краю от контрола
+
+@offset-horizontal_label:                                                   8px;
+
+//цвет текста метки
+@text-color_label:                                                          @label_text-color;
+
+//размер шрифта метки
+@font-size_default_label:                                                   @font-size_m;
+
+//РЕДАКТИРОВАНИЕ ПО МЕСТУ
+//фон подложки формы редактирования
+@contrast_background-color_editableArea:                                    #F3F3F3;
+
+//высота кнопки подтверждения
+@height_applyButton_editableArea:                                           @inline_height_m_button;
+
+//ширина кнопки подтверждения
+@width_applyButton_editableArea:                                            @height_applyButton_editableArea;
+
+//радиус скругления кнопки подтверждения
+@border-radius_applyButton_editableArea:                                    @height_applyButton_editableArea/2;
+
+//тень кнопки подтверждения
+@box-shadow_applyButton_editableArea:                                       @box-shadow_button_functionalButton;
+
+//фон кнопки подтверждения
+@background-color_applyButton_editableArea:                                 @success_color;
+
+//фон кнопки подтверждения при наведении
+@background-color_hover_applyButton_editableArea:                           @success_hover_background-color_button_functionalButton;
+
+//фон кнопки подтверждения при нажатии
+@background-color_active_applyButton_editableArea:                          @success_active_background-color_button_functionalButton;
+
+//тень текста кнопки подтверждения
+@text-shadow_applyButton_editableArea:                                      @text-shadow_button;
+
+//размер иконки кнопки потверждения
+@icon-size_applyButton_editableArea:                                        @icon-size_s;
+
+//высота кнопки отмены
+@height_closeButton_editableArea:                                           @inline_height_m_button;
+
+//ширина кнопки отмены
+@width_closeButton_editableArea:                                            29px;
+
+//ширина обводки кнопки отмены
+@border-thickness_closeButton_editableArea:                                 @border-thickness_button 0 @border-thickness_button @border-thickness_button;
+
+//цвет обводки кнопки отмены
+@border-color_closeButton_editableArea:                                     @border-color_closeButton_toolButton;
+
+//цвет обводки кнопки отмены при наведении
+@border-color_hover_closeButton_editableArea:                               @border-color_hover_closeButton_toolButton;
+
+//цвет обводки кнопки отмены при нажатии
+@border-color_active_closeButton_editableArea:                              @border-color_active_closeButton_toolButton;
+
+//радиус скругления кнопки отмены
+@border-radius_closeButton_editableArea:                                    @border-radius_button_toolButton 0 0 @border-radius_button_toolButton;
+
+//тень кнопки отмены
+@box-shadow_closeButton_editableArea:                                       @box-shadow_closeButton_toolButton;
+
+//отступ между кнопкой подверждения и кнопкой отмены
+@toolbar_padding-left_editableArea:                                         12px;
+
+//отступ справа от кнопки отмены
+@toolbar_padding-right_editableArea:                                        0;
+
+//фон кнопки отмены
+@background-color_closeButton_editableArea:                                 @background-color_closeButton_toolButton;
+
+//фон кнопки отмены при наведении
+@background-color_hover_closeButton_editableArea:                           @background-color_hover_closeButton_toolButton;
+
+//фон кнопки отмены при нажатии
+@background-color_active_closeButton_editableArea:                          @background-color_active_closeButton_toolButton;
+
+//отступ между кнопками и полем редактирования
+@toolbar_button_offset_editableArea:                                        12px;
+
+//размер иконки кнопки отмены
+@icon-size_closeButton_editableArea:                                        @icon-size_closeButton_toolButton;
+
+//фоновое изображение иконки кнопки отмены
+@icon_background-image_closeButton_editableArea:                            @icon_background-image_closeButton_toolButton;
+
+//фоновое изображение иконки кнопки отмены при наведении
+@icon_hovered_background-image_closeButton_editableArea:                    @icon_hovered_background-image_closeButton_toolButton;
+
+//КНОПКА ЗАКРЫТИЯ
+//тень кнопки закрытия
+@box-shadow_closeButton_toolButton:                                         @box-shadow_button_toolButton;
+
+//фон кнопки закрытия
+@background-color_closeButton_toolButton:                                   @background-color_button_toolButton;
+
+//фон кнопки закрытия при наведении
+@background-color_hover_closeButton_toolButton:                             @background-color_hover_button_toolButton;
+
+//фон кнопки закрытия при нажатии
+@background-color_active_closeButton_toolButton:                            @background-color_active_button_toolButton;
+
+//размер иконки кнопки закрытия
+@icon-size_closeButton_toolButton:                                          12px;
+
+//фоновое изображение иконки кнопки закрытия
+@icon_background-image_closeButton_toolButton:                              url('img/DefaultCloseIcon.svg');
+
+//фоновое изображение иконки кнопки закрытия при наведении
+@icon_hovered_background-image_closeButton_toolButton:                      url('img/CloseIconHovered.svg');
+
+//цвет обводки кнопки закрытия
+@border-color_closeButton_toolButton:                                       @border-color_button_toolButton;
+
+//цвет обводки кнопки закрытия при наведении
+@border-color_hover_closeButton_toolButton:                                 @border-color_hover_button_toolButton;
+
+//цвет обводки кнопки закрытия при нажатии
+@border-color_active_closeButton_toolButton:                                #CCCCCC;
+
+//ФЛАГ
+//размер шрифта флага
+@font-size_checkbox:                                                        @font-size_m;
+
+//высота флага
+@height_checkbox:                                                           @inline_height_m;
+
+//ширина кликабельной области флага
+@click-area_width_checkbox:                                                 20px;
+
+//цвет обводки маркера
+@marker-box_border-color_checkbox:                                          #CCCCCC;
+
+//цвет обводки маркера в режиме чтения
+@readonly_marker-box_border-color_checkbox:                                 #E4E4E4;
+
+//толщина обводки маркера
+@marker-box_border-thickness_checkbox:                                      @border-thickness;
+
+//размер обводки маркера
+@marker-box_size_checkbox:                                                  12px;
+
+//цвет текста флага
+@text-color_checkbox:                                                       @text-color;
+
+//цвет текста флага в режиме чтения
+@readonly_text-color_checkbox:                                              @readonly_color;
+
+//вертикальный отступ от текста
+@padding-vertical_checkbox:                                                 3px;
+
+//высота текста у флага
+@text_line-height_checkbox:                                                 18px;
+
+//размер контейнера с иконкой
+@true_marker_size_checkbox:                                                 18px;
+
+//левый отступ от контейнера флага до контейнера с иконкой
+@true_marker_padding-left_checkbox:                                         3px;
+
+//нижний отступ от контейнера флага до контейнера с иконкой
+@true_marker_padding-top_checkbox:                                          0;
+
+//размер иконки флага в третьем состоянии
+@tristate_marker_size_checkbox:                                             6px;
+
+//цвет маркера флага
+@marker_color_checkbox:                                                     @marker_color;
+
+//цвет маркера флага в режиме чтения
+@readonly_marker_color_checkbox:                                            @readonly_marker-color;
+
+//отступ между флагами в группе
+@item_offset_checkbox-group:                                                8px;
+
+//отступ между флагами с наследованием в группе
+@hierarchy_padding-left_checkbox-group:                                     24px;
 //last line

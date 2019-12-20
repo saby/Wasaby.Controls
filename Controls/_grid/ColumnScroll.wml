@@ -15,7 +15,7 @@
            bind:scrollWidth="_scrollWidth"
            bind:containerSize="_contentContainerSize"
            isDisplayColumnScroll="{{_isDisplayColumnScroll()}}"
-           trackVisible="{{_options.trackVisible}}"
+           trackVisible="{{ true }}"
 
            attr:class="controls-Grid_columnScroll"
            on:itemClick="_notifyHandler('itemClick')"

@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
@@ -134,16 +135,22 @@ var _private = {
         const targetId = _private.getIdByItem(self, target);
         const isNewLogic = !items.forEach && !items.selected;
         if (isNewLogic) {
-            const callFilter = {
-                selection: selectionToRecord({
-                    selected: items.selectedKeys,
-                    excluded: items.excludedKeys
-                }, self._source.getAdapter()), ...items.filter
-            };
-            return self._source.call(self._source.getBinding().move, {
-                method: self._source.getBinding().list,
-                filter: callFilter,
-                folder_id: targetId
+            if (self._source.call) {
+                const callFilter = {
+                    selection: selectionToRecord({
+                        selected: items.selectedKeys,
+                        excluded: items.excludedKeys
+                    }, self._source.getAdapter()), ...items.filter
+                };
+                return self._source.call(self._source.getBinding().move, {
+                    method: self._source.getBinding().list,
+                    filter: callFilter,
+                    folder_id: targetId
+                });
+            }
+            return self._source.move(items.selectedKeys, targetId, {
+                position,
+                parentProperty: self._options.parentProperty
             });
         }
         var
@@ -156,7 +163,7 @@ var _private = {
             position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
         }
         return self._source.move(idArray, targetId, {
-            position: position,
+            position,
             parentProperty: self._options.parentProperty
         });
     },

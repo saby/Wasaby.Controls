@@ -12,16 +12,9 @@ import 'css!theme?Controls/editableArea';
  * @extends Core/Control
  * @author Авраменко А.С.
  * @public
- *
- * @css @border-width_EditableAreaTemplate-Base Size of the border of the input field.
- * @css @padding_EditableAreaTemplate-Base Input padding.
- * @css @font-size_EditableAreaTemplate-Base_style_accentHeader Font size of the input field with the style option set to "accentHeader".
- * @css @font-weight_EditableAreaTemplate-Base_style_accentHeader Font weight of the input field with the style option set to "accentHeader".
- * @css @color_EditableAreaTemplate-Base_style_accentHeader Text color of the input field with the style option set to "accentHeader".
- *
  * @see Controls/_editableArea/Templates/Editors/DateTime
  *
- * @demo Controls-demo/EditableArea/EditableAreaPG
+ * @demo Controls-demo/EditableArea/EditableArea
  */
 
 /*
@@ -32,16 +25,7 @@ import 'css!theme?Controls/editableArea';
  * @extends Core/Control
  * @author Авраменко А.С.
  * @public
- *
- * @css @border-width_EditableAreaTemplate-Base Size of the border of the input field.
- * @css @padding_EditableAreaTemplate-Base Input padding.
- * @css @font-size_EditableAreaTemplate-Base_style_accentHeader Font size of the input field with the style option set to "accentHeader".
- * @css @font-weight_EditableAreaTemplate-Base_style_accentHeader Font weight of the input field with the style option set to "accentHeader".
- * @css @color_EditableAreaTemplate-Base_style_accentHeader Text color of the input field with the style option set to "accentHeader".
- *
  * @see Controls/_editableArea/Templates/Editors/DateTime
- *
- * @demo Controls-demo/EditableArea/EditableAreaPG
  */
 
 var Base = Control.extend({

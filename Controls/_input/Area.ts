@@ -23,13 +23,7 @@ import {Logger} from 'UI/Utils';
        * @mixes Controls/_input/interface/INewLineKey
        *
        * @public
-       * @demo Controls-demo/Input/SizesAndHeights/Index
-       * @demo Controls-demo/Input/FontStyles/Index
-       * @demo Controls-demo/Input/TextAlignments/Index
-       * @demo Controls-demo/Input/TagStyles/Index
-       * @demo Controls-demo/Input/ValidationStatuses/Index
-       * @demo Controls-demo/Input/SelectOnClick/Index
-       * @demo Controls-demo/Input/Text/Index
+       * @demo Controls-demo/Input/Area/MinMaxLines/Index
        *
        * @author Красильников А.С.
        */
@@ -46,7 +40,7 @@ import {Logger} from 'UI/Utils';
        * @mixes Controls/_input/interface/INewLineKey
        *
        * @public
-       * @demo Controls-demo/Input/Area/AreaPG
+       * @demo Controls-demo/Input/Area/MinMaxLines/Index
        *
        * @author Красильников А.С.
        */

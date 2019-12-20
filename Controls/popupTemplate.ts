@@ -11,7 +11,7 @@
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes INotification Controls/_popupTemplate/Notification/interface/INotification
  * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
- * 
+ * @includes Sticky Controls/_popupTemplate/Sticky
  * @public
  * @author Крайнов Д.О.
  */
@@ -27,6 +27,7 @@
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
+ * @includes Sticky Controls/_popupTemplate/Sticky
  * @public
  * @author Крайнов Д.О.
  */
@@ -38,6 +39,7 @@ export {default as Notification} from 'Controls/_popupTemplate/Notification/Base
 export {default as NotificationSimple} from 'Controls/_popupTemplate/Notification/Simple';
 export {default as StackHeader} from 'Controls/_popupTemplate/Stack/resources/Header';
 export {default as Stack} from 'Controls/_popupTemplate/Stack';
+export {default as Sticky} from 'Controls/_popupTemplate/Sticky';
 export {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 export {default as INotification, INotificationOptions} from 'Controls/_popupTemplate/Notification/interface/INotification';
 export {default as CloseButton} from 'Controls/_popupTemplate/CloseButton'
