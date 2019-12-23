@@ -629,9 +629,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
     },
 
-    _onItemClick: function(e, item, originalEvent) {
+    _onItemClick: function(e, item, originalEvent, columnIndex: number) {
         e.stopPropagation();
-        const eventResult = this._notify('itemClick', [item, originalEvent], { bubbling: true });
+        const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], { bubbling: true });
         if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
             const display = this._children.baseControl.getViewModel().getDisplay();
             const dispItem = display.getItemBySourceItem(item);
