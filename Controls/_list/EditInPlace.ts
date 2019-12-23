@@ -179,6 +179,10 @@ var
                 self._editingItem.unsubscribe('onPropertyChange', self._resetValidation);
                 self._options.listModel.unsubscribe('onCollectionChange', self._updateIndex);
             }
+            if (self._pendingDeferred && !self._pendingDeferred.isReady()) {
+                self._pendingDeferred.callback();
+            }
+            self._pendingDeferred = null;
             self._originalItem = null;
             self._editingItem = null;
             self._isAdd = null;

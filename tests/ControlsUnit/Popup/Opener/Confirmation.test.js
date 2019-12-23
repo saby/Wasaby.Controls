@@ -48,7 +48,7 @@ define([
          });
          it('getConfirmationConfig', () => {
             let templateOptions = {};
-            let popupOptions = popup.Confirmation._getConfirmationConfig(templateOptions, {});
+            let popupOptions = popup.Confirmation._getConfig(templateOptions, {});
             let config = {
                template: 'Controls/popupTemplate:ConfirmationDialog',
                modal: true,

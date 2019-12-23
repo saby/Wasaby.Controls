@@ -191,25 +191,6 @@ define(
             }).then(done, done);
          });
 
-         it('search, trim: true', function() {
-            var searchController = new searchLib._SearchController({
-               minSearchLength: 3,
-               source: source,
-               filter: {},
-               searchValueTrim: true,
-               searchDelay: 0,
-               searchParam: 'name'
-            });
-
-            return new Promise(function(resolve) {
-               searchController.search('   Sasha   ').then(function(result) {
-                  assert.equal(result.data.getCount(), 1);
-                  assert.equal(result.data.at(0).get('name'), 'Sasha');
-                  resolve();
-               });
-            });
-         });
-
          it('minSearchLength is null', async function() {
             var searchController = new searchLib._SearchController({
                minSearchLength: null,

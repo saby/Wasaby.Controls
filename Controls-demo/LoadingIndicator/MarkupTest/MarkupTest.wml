@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper ws-flexbox ws-flex-row">
+    <div class="controlsDemo__cell controlsDemo__mr3">
+        <Controls-demo.LoadingIndicator.Scroll.Index />
+    </div>
+    <div class="controlsDemo__cell controlsDemo__mr3">
+        <Controls-demo.LoadingIndicator.Small.Index />
+    </div>
+    <div class="controlsDemo__cell controlsDemo__mr3">
+        <Controls-demo.LoadingIndicator.Overlay.Index />
+    </div>
+</div>

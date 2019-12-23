@@ -875,6 +875,7 @@ var _private = {
     setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
         let firstItemIndex = self._listViewModel.getStartIndex();
         firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
+        firstItemIndex = Math.min(firstItemIndex, self._listViewModel.getStopIndex());
         if (self._options.useNewModel) {
             const item = self._listViewModel.at(firstItemIndex);
             if (item) {
@@ -893,11 +894,11 @@ var _private = {
         if (verticalOffset <= 0) {
             return 0;
         }
-        itemsHeight += uDimension(items[0]).height;
-        while (itemsHeight <= verticalOffset && i++ < itemsCount) {
+        while (itemsHeight < verticalOffset && i < itemsCount) {
             itemsHeight += uDimension(items[i]).height;
+            i++;
         }
-        return i + 1;
+        return i;
     },
 
     handleListScrollSync(self, params) {
@@ -1406,7 +1407,7 @@ var _private = {
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
@@ -1706,8 +1707,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _afterMount: function() {
         this._isMounted = true;
+        const container = this._container[0] || this._container;
+        this._viewSize = container.clientHeight;
         if (this._options.itemsDragNDrop) {
-            let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
         }
     },
@@ -2151,7 +2153,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._shouldUpdateItemActions = true;
+        this._updateItemActions();
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {

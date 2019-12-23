@@ -17,7 +17,7 @@ import 'Controls/search';
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  * @control
  * @public
@@ -34,7 +34,7 @@ import 'Controls/search';
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  * @control
  * @public

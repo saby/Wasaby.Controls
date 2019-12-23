@@ -3,11 +3,11 @@
 }
 
 .controls-RadioGroup_defaultItem_horizontal_theme-@{themeName} {
-   padding-left: @spacing-between-radioItems_horizontal;
+   padding-left: @item_offset-horizontal_radioGroup;
 }
 
 .controls-RadioGroup_defaultItem_vertical_theme-@{themeName} {
-   padding-top: @spacing-between-radioItems_vertical;
+   padding-top: @item_offset-vertical_radioGroup;
 }
 
 .controls-RadioItem__wrapper {
@@ -16,7 +16,7 @@
 }
 
 .controls-RadioItem__wrapper_theme-@{themeName} {
-   min-height: @height_RadioItem;
+   min-height: @item_height_radioGroup;
 }
 
 .controls-RadioItem__wrapper:before {
@@ -24,24 +24,27 @@
 }
 
 .controls-RadioItem__SwitchCircle_theme-@{themeName} {
-    padding-right: @spacing-between-radioItem-icon-caption;
+    padding-right: @text_offset_radioGroup;
  }
 
 .controls-RadioItem__caption_theme-@{themeName} {
-   font-size: @font-size_RadioItem__caption;
+   font-size: @font-size_radioGroup;
 }
 
-.controls-RadioItem__caption_selected_disabled_theme-@{themeName},
- .controls-RadioItem__caption_selected_enabled_theme-@{themeName} {
-    color: @color_RadioItem__caption_selected;
- }
+.controls-RadioItem__caption_selected_disabled_theme-@{themeName} {
+   color: @readonly_text-color_radioGroup;
+}
+
+.controls-RadioItem__caption_selected_enabled_theme-@{themeName} {
+   color: @text-color_radioGroup;
+}
 
 .controls-RadioItem__caption_unselected_disabled_theme-@{themeName} {
-   color: @color_RadioItem__caption_unselected_disabled;
+   color: @readonly_unselected_text-color_radioGroup;
 }
 
 .controls-RadioItem__caption_unselected_enabled_theme-@{themeName} {
-   color: @color_RadioItem__caption_unselected_enabled;
+   color: @unselected_text-color_radioGroup;
 }
 
 .controls-RadioGroup__wrapper_horizontal {

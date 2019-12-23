@@ -1,5 +1,13 @@
 import {IBaseOpener} from './IBaseOpener';
 
+/**
+ * Приватный интерфейс окон. Используется в работе менеджера окон и контроллеров.
+ *
+ * @interface Controls/_popup/interface/IPopup
+ * @private
+ * @author Красильников А.С.
+ */
+
 export interface IPopupItem {
    id: string;
    parentId: string;
@@ -41,14 +49,6 @@ export interface IPopupOptions extends IBaseOpener {
    maxHeight?: number;
    content?: Function;
 }
-
-/**
- * Интерфейс окон
- *
- * @interface Controls/_popup/interface/IPopup
- * @public
- * @author Красильников А.С.
- */
 
 export default interface IPopup {
    readonly '[Controls/_popup/interface/IPopup]': boolean;

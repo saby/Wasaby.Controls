@@ -1,4 +1,4 @@
-import { default as BaseOpener, IBaseOpenerOptions} from 'Controls/_popup/Opener/BaseOpener';
+import { default as BaseOpener, IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {Logger} from 'UI/Utils';
 import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 
@@ -7,7 +7,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * @remark
  * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ здесь}.
  * См. <a href="/materials/demo-ws4-stack-dialog">демо-пример</a>.
- * @class Controls/_popup/Opener/Stack
+ * @class Controls/popup:Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
  * @author Красильников А.С.
@@ -29,8 +29,9 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * @control
  * @author Красильников А.С.
  * @category Popup
- * @mixes Controls/interface/IOpener
- * @demo Controls-demo/Popup/Opener/StackPG
+ * @mixes Controls/_popup/interface/IBaseOpener
+ * @mixes Controls/_popup/interface/IStack
+ * @mixes Controls/_interface/IPropStorage
  * @public
  */
 
@@ -62,8 +63,8 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error('Controls/popup:Stack: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }
-            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-                BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
+                BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {
                     resolve(popupId);
                 });
             });

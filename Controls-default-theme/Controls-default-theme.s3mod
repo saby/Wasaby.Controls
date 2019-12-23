@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ui_module for_cdn="0" id="8f18db65-1c21-46dd-8c99-8e2b13a96069" name="Controls-default-theme" package="Платформа" required="0" responsible="Андрюх Н. Э." version="1.00">
+<ui_module id="af50caf5-f84b-4b81-a19c-6f6618372dbd" name="Controls-default-theme" package="Платформа" responsible="Крайнов Д.О." required="1" version="1.00">
 
   <description/>
 
@@ -8,6 +8,8 @@
   <load_after/>
 
   <parameters/>
+
+  <cluster_endpoints/>
 
   <resources/>
 

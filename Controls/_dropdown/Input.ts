@@ -60,7 +60,7 @@ var _private = {
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/Input/interface/IValidation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_dropdown/interface/IFooterTemplate
@@ -89,7 +89,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/Input/interface/IValidation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_dropdown/interface/IFooterTemplate

@@ -235,7 +235,18 @@ var
       setScrollTop: function(self, scrollTop) {
          self._children.scrollWatcher.setScrollTop(scrollTop);
          self._scrollTop = _private.getScrollTop(self, self._children.content);
-         self._notify('scroll', [self._scrollTop]);
+         _private.notifyScrollEvents(self, scrollTop);
+      },
+
+      notifyScrollEvents: function(self, scrollTop) {
+         self._notify('scroll', [scrollTop]);
+         const eventCfg = {
+             type: 'scroll',
+             target: self._children.content,
+             currentTarget: self._children.content,
+             _bubbling: false
+         };
+         self._children.scrollDetect.start(new SyntheticEvent(null, eventCfg), scrollTop);
       },
 
       calcCanScroll: function(self) {
@@ -776,7 +787,7 @@ var
             // текущей, установим ее при окончании перетаскивания
             if (this._scrollTopAfterDragEnd !== this._scrollTop) {
                this._scrollTop = this._scrollTopAfterDragEnd;
-               this._notify('scroll', [this._scrollTop]);
+               _private.notifyScrollEvents(this, this._scrollTop);
             }
             this._scrollTopAfterDragEnd = undefined;
          }
