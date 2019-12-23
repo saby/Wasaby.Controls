@@ -402,6 +402,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
 
       DropdownList.getDefaultOptions = function() {
          return {
+            iconSize: 'm',
             menuStyle: 'defaultHead',
             typeShadow: 'default',
             moreButtonCaption: rk('Еще') + '...',

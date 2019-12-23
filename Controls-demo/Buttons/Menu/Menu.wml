@@ -306,10 +306,8 @@
                  viewMode="link"
                  icon="icon-Linked"
                  iconSize="m"
+                 headerTemplate="{{null}}"
                  source="{{_createMemory(_additionalItems)}}">
-            <ws:headerTemplate>
-               <invisible-node />
-            </ws:headerTemplate>
          </Controls.dropdown:Button>
       </div>
 
