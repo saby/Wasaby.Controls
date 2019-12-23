@@ -10,10 +10,11 @@ export default class ColumnsCollection<
     > extends Collection<S, T> {
 
     protected _getItemsFactory(): ItemsFactory<T> {
+        const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
-            options.column = this._getOptions().collection.getIndex(options.contents) % 2;
+            options.column = this.getCollection().getIndex(options.contents) % 2;
             options.owner = this;
-            return create(this._itemModule, options);
+            return superFactory.call(this, options);
         };
     }
 }

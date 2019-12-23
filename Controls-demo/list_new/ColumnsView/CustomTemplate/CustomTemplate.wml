@@ -4,6 +4,7 @@
          keyProperty="id"
          useNewModel="{{true}}"
          source="{{ _viewSource }}"
+         itemActionsClass="controls-itemActionsV_position_topRight"
          itemActions="{{_itemActions}}"
          markerVisibility="visible"
          name="listView2">

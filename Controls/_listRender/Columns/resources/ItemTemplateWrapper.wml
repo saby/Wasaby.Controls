@@ -26,7 +26,6 @@
             template="{{ swipeTemplate }}"
             item="{{ item }}"
             itemActionsTemplate="{{ itemActionsTemplate }}">
-            <ws:swipeConfig itemActionsSize="m" paddingSize="s"/>
          </ws:partial>
       </ws:if>
       <ws:else data="{{ itemActionsPosition !== 'custom' }}">

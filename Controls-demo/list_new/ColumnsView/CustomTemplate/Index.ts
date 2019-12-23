@@ -3,6 +3,7 @@ import template = require('wml!Controls-demo/list_new/ColumnsView/CustomTemplate
 import 'css!Controls-demo/Controls-demo';
 import {Memory as MemorySource, Memory} from 'Types/source';
 import {generateData} from '../../DemoHelpers/DataCatalog';
+import {getActionsForContacts as getItemActions} from "../../DemoHelpers/ItemActionsCatalog";
 
 const NUMBER_OF_ITEMS = 1000;
 
@@ -12,6 +13,8 @@ export default class RenderDemo extends Control {
     private _viewSource: Memory;
 
     private _navigation: any;
+
+    private _itemActions = getItemActions();
 
     private _dataArray: Array<{id: number, title: string, description: string}>;
 

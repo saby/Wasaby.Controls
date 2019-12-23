@@ -10,10 +10,6 @@ export interface IOptions<T> extends IBaseOptions<T> {
 export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
     protected _$column: number;
     protected _$owner: ColumnsCollection<T>;
-    constructor(options: IOptions<T>) {
-        super(options);
-        this._$column = options.column;
-    }
     getColumn(): number {
         return this._$column;
     }

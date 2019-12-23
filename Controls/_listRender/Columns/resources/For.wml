@@ -1,9 +1,9 @@
 <ws:for data="index, item in collection.getViewIterator()">
    <ws:if data="{{item.getColumn() == column}}">
       <ws:partial
-              template="wml!Controls/_listRender/Columns/resources/ItemOutputWrapper"
               item="{{ item }}"
-              itemTemplate="{{ itemTemplate }}"
+              template="{{ itemTemplate }}"
+              scope="{{_options}}"
               multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
               searchValue="{{ collection.getSearchValue() }}"
 
@@ -22,6 +22,7 @@
 
               itemActionsPosition="{{ itemActionsPosition }}"
               itemActionsTemplate="{{ itemActionsTemplate }}"
+              itemActionsClass="{{ itemActionsClass }}"
               swipeTemplate="{{ swipeTemplate }}"
               multiSelectTpl="{{ multiSelectTpl }}"
               isAdd="{{ isAdd }}"/>

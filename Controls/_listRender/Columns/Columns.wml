@@ -5,6 +5,7 @@
               collection="{{ _options.listModel }}"
               keyPrefix="{{ _templateKeyPrefix }}"
               column="{{column}}"
+              itemActionsClass="{{ _options.itemActionsClass }}"
               itemActionsPosition="{{ _options.itemActionsPosition }}"
               itemActionsTemplate="{{ _options.itemActionsTemplate }}"
               swipeTemplate="{{ _options.swipeTemplate }}"

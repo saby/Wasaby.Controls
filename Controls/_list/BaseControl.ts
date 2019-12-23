@@ -2316,15 +2316,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseEnter: function(event, itemData, nativeEvent) {
-        var
-            dragPosition,
-            dragEntity = this._listViewModel.getDragEntity();
+        if (this._options.itemsDragNDrop) {
+            var
+                dragPosition,
+                dragEntity = this._listViewModel.getDragEntity();
 
-        if (dragEntity) {
-            dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+            if (dragEntity) {
+                dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
 
-            if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                this._listViewModel.setDragTargetPosition(dragPosition);
+                if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+                    this._listViewModel.setDragTargetPosition(dragPosition);
+                }
             }
         }
         this._notify('itemMouseEnter', [itemData, nativeEvent]);
@@ -2332,7 +2334,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData, nativeEvent]);
-        if (!this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData() && !this._showActions) {
+        if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
     },
