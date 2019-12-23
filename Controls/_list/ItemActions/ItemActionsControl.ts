@@ -9,7 +9,6 @@ import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { constants } from 'Env/Env';
 import 'css!theme?Controls/list';
-import { CollectionItem } from 'Controls/display';
 
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 
@@ -95,7 +94,7 @@ var _private = {
         if (options.itemActionsProperty || options.itemActions) {
             if (options.useNewModel) {
                 options.listModel.setEventRaising(false, true);
-                options.listModel.each((collectionItem: CollectionItem<unknown>) => {
+                options.listModel.each((collectionItem) => {
                     // TODO groups and whatnot
                     _private.updateItemActions(self, collectionItem, options);
                 });

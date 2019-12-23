@@ -1,12 +1,8 @@
 import {IDirection} from '../interface/IVirtualScroll';
-import {Record as entityRecord} from 'Types/entity';
-import {
-    CollectionItem,
-    VirtualScrollController as ModelVirtualScrollController,
-    VirtualScrollHideController as ModelVirtualScrollHideController
-} from 'Controls/display';
 import {IObservable} from 'Types/collection';
 import * as getDimension from 'Controls/Utils/getDimensions';
+
+let displayLib: typeof import('Controls/display');
 
 const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
 const DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION = 1 / 4;
@@ -80,6 +76,7 @@ export default class VirtualScrollController {
         };
         this.subscribeToModelChange(options.viewModel, options.useNewModel);
         if (options.useNewModel) {
+            displayLib = require('Controls/display');
             this.setupModelController(options.viewModel, options.mode);
         }
     }
@@ -404,8 +401,8 @@ export default class VirtualScrollController {
      * @param {CollectionItem<entityRecord>[]} removedItems
      * @param {number} removedItemsIndex
      */
-    private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: CollectionItem<entityRecord>[],
-                                        newItemsIndex: number, removedItems: CollectionItem<entityRecord>[], removedItemsIndex: number): void => {
+    private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: object[],
+                                        newItemsIndex: number, removedItems: object[], removedItemsIndex: number): void => {
         const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
 
         if ((changesType === 'collectionChanged' || newModelChanged) && action) {
@@ -433,7 +430,7 @@ export default class VirtualScrollController {
         if (this.itemsContainer) {
             const startIndex =
                 this._options.useNewModel
-                ? ModelVirtualScrollController.getStartIndex(this._options.viewModel)
+                ? displayLib.VirtualScrollController.getStartIndex(this._options.viewModel)
                 : this._options.viewModel.getStartIndex();
             const direction = newItemsIndex <= startIndex ? 'up' : 'down';
 
@@ -460,7 +457,7 @@ export default class VirtualScrollController {
         if (this.itemsContainer) {
             const startIndex =
                 this._options.useNewModel
-                ? ModelVirtualScrollController.getStartIndex(this._options.viewModel)
+                ? displayLib.VirtualScrollController.getStartIndex(this._options.viewModel)
                 : this._options.viewModel.getStartIndex();
             this.recalcRangeToDirection(
                 removedItemsIndex < startIndex ? 'up' : 'down', false
@@ -568,10 +565,10 @@ export default class VirtualScrollController {
     private setupModelController(model: unknown, scrollMode: string): void {
         switch (scrollMode) {
             case 'hide':
-                ModelVirtualScrollHideController.setup(model);
+                displayLib.VirtualScrollHideController.setup(model);
                 break;
             default:
-                ModelVirtualScrollController.setup(model);
+                displayLib.VirtualScrollController.setup(model);
                 break;
         }
     }
