@@ -211,6 +211,8 @@ export function prepareActionsMenuConfig(
         : getMenuActions(item);
 
     if (menuActions && menuActions.length > 0) {
+        clickEvent.preventDefault();
+
         // there was a fake target before, check if it is needed
         const menuTarget = isContext ? null : clickEvent.target;
         const closeHandler = _processActionsMenuClose.bind(null, collection);
@@ -249,7 +251,7 @@ export function prepareActionsMenuConfig(
                 horizontal: isContext ? 'right' : 'left'
             },
             className: 'controls-DropdownList__margin-head controls-Toolbar__popup__list_theme-',
-            nativeEvent: isContext ? clickEvent.nativeEvent : false
+            nativeEvent: isContext ? clickEvent.nativeEvent : null
         };
 
         setActiveItem(collection, itemKey);
