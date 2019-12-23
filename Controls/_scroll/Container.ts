@@ -49,14 +49,15 @@ import {Logger} from "UI/Utils";
  */
 
 /**
- * @event scroll Скроллируемая область.
- * @param {SyntheticEvent} eventObject.
- * @param {Number} scrollTop Скролл располагается сверху относительно контейнера.
+ * @event Происходит при скроллировании области.
+ * @name Controls/_scroll/Container#scroll 
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Number} scrollTop Смещение контента сверху относительно контейнера.
  */
 
 /*
  * @event scroll Scrolling content.
- * @param {SyntheticEvent} eventObject.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject.
  * @param {Number} scrollTop Top position of content relative to container.
  */
 
