@@ -9,7 +9,7 @@
  * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:groupTemplate>
- *       <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}">
+ *       <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}" scope="{{ groupTemplate }}">
  *          <ws:contentTemplate>
  *             <ws:if data="{{contentTemplate.itemData.item === 'tasks'}}">Задачи</ws:if>
  *             <ws:if data="{{contentTemplate.itemData.item === 'error'}}">Ошибки</ws:if>

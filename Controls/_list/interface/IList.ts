@@ -281,11 +281,11 @@ export interface IList {
  * <pre>
  * <Controls.list:View itemActionsPosition="custom" itemActions="{{_itemActions}}">
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate">
- *          <ws:contentTemplate>
- *             <ws:partial template="wml!customTemplateName"/>
- *          </ws:contentTemplate>
- *       </ws:partial>
+ *      <ws:partial template="Controls/list:ItemTemplate">
+ *        <ws:contentTemplate>
+ *          <ws:partial template="wml!customTemplateName" scope="{{contentTemplate}}" />
+ *        </ws:contentTemplate>
+ *      </ws:partial>
  *    </ws:itemTemplate>
  * </Controls.list:View>
  * </pre>
@@ -326,7 +326,7 @@ export interface IList {
  *    <ws:itemTemplate>
  *      <ws:partial template="Controls/list:ItemTemplate">
  *        <ws:contentTemplate>
- *          <ws:partial template="wml!customTemplateName"/>
+ *          <ws:partial template="wml!customTemplateName" scope="{{contentTemplate}}" />
  *        </ws:contentTemplate>
  *      </ws:partial>
  *    </ws:itemTemplate>
