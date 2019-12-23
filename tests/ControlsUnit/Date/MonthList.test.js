@@ -91,7 +91,6 @@ define([
             assert.strictEqual(ml._displayedPosition, position);
             assert.equal(ml._startPositionId, '2018-01-01');
             assert.isEmpty(ml._displayedDates);
-            sinon.assert.called(ml._children.months.reload);
             sandbox.restore();
          });
 
@@ -132,7 +131,6 @@ define([
             assert.strictEqual(ml._displayedPosition, position1);
             assert.strictEqual(ml._lastPositionFromOptions, position2);
             assert.equal(ml._startPositionId, '2018-01-01');
-            sinon.assert.calledOnce(ml._children.months.reload);
             sandbox.restore();
          });
 
@@ -230,6 +228,44 @@ define([
          });
       });
 
+      describe('_scrollToPosition', function() {
+         it('should update position in the list and reload list if it cannot scroll', function() {
+            let
+               sandbox = sinon.createSandbox(),
+               position = new Date(2018, 0, 1),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: position });
+            sandbox.stub(ml, '_canScroll').returns(false);
+            ml._children = {
+               months: {
+                  reload: sinon.fake()
+               }
+            };
+            ml._scrollToPosition(position);
+            assert.isEmpty(ml._displayedDates);
+            assert.strictEqual(ml._startPositionId, '2018-01-01');
+            sinon.assert.called(ml._children.months.reload);
+            sandbox.restore();
+         });
+
+         it('should not reload list if position changed, it will be changed on update hooks in list control.', function() {
+            let
+               sandbox = sinon.createSandbox(),
+               position = new Date(2018, 0, 1),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2019, 0, 1) });
+            sandbox.stub(ml, '_canScroll').returns(false);
+            ml._children = {
+               months: {
+                  reload: sinon.fake()
+               }
+            };
+            ml._scrollToPosition(position);
+            assert.isEmpty(ml._displayedDates);
+            assert.strictEqual(ml._startPositionId, '2018-01-01');
+            sinon.assert.notCalled(ml._children.months.reload);
+            sandbox.restore();
+         });
+      });
+
       describe('_getMonth', function() {
          it('should return correct month', function() {
             let mv = calendarTestUtils.createComponent(calendar.MonthList, config);
@@ -320,6 +356,20 @@ define([
                sinon.assert.calledWith(component._notify, 'positionChanged', [test.date]);
                sandbox.restore();
             });
+         });
+
+         it('Should\'t update position and displayed items if component invisible', function() {
+            const
+               sandbox = sinon.createSandbox(),
+               component = calendarTestUtils.createComponent(calendar.MonthList, config);
+
+            component._container.offsetParent = null;
+            sandbox.stub(component, '_updateDisplayedItems');
+            sandbox.stub(component, '_updateDisplayedPosition');
+            component._intersectHandler(null, [{}, {}]);
+            sinon.assert.notCalled(component._updateDisplayedItems);
+            sinon.assert.notCalled(component._updateDisplayedPosition);
+            sandbox.restore();
          });
 
          [{

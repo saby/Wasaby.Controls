@@ -633,6 +633,7 @@ define([
 
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
+         ctrl._container = {clientHeight: 100};
          ctrl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -1139,6 +1140,7 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
+         baseControl._container = {clientHeight: 100};
          baseControl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
@@ -1357,6 +1359,23 @@ define([
                bottom: 0
             });
             assert.deepEqual({top: 'visible', bottom: 'visible'}, control.lastNotifiedArguments[0]);
+         });
+         it('with demand navigation', () => {
+            control._options.navigation.view = 'maxCount';
+            control._options.navigation.viewConfig.maxCountValue = 12;
+            control._listViewModel.count = 10;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'visible'}, control.lastNotifiedArguments[0]);
+
+            control._listViewModel.count = 12;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
          });
       });
 
@@ -1986,6 +2005,7 @@ define([
                }
             }
          };
+         baseControl._container = {clientHeight: 100};
          baseControl._afterMount(cfg);
          it('_initItemActions', function() {
             baseControl._initItemActions();
@@ -2062,6 +2082,7 @@ define([
             await baseControl._beforeMount(cfg);
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
+            baseControl._container = {clientHeight: 100};
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
          });
@@ -2085,7 +2106,7 @@ define([
          });
       });
 
-      describe('move marker after scroll', function() {
+      describe('move marker after scroll', async function() {
          var lnSource = new sourceLib.Memory({
                keyProperty: 'id',
                data: data
@@ -2103,7 +2124,7 @@ define([
             };
          };
          lnBaseControl.saveOptions(lnCfg);
-         lnBaseControl._beforeMount(lnCfg);
+         await lnBaseControl._beforeMount(lnCfg);
          var itemsContainer = {
             children: [
                { getBoundingClientRect: getBCR },
@@ -2123,6 +2144,8 @@ define([
          });
          it('setMarkerToFirstVisibleItem', function() {
             var expectedIndex = 0;
+            lnBaseControl._listViewModel._startIndex = 0;
+            lnBaseControl._listViewModel._stopIndex = 3;
             lnBaseControl._listViewModel.setMarkerOnValidItem = function(index) {
                assert.equal(index, expectedIndex);
             };
@@ -2130,8 +2153,13 @@ define([
             expectedIndex = 1;
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 1);
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 29);
-            expectedIndex = 2;
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 30);
+            expectedIndex = 2;
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 31);
+
+
+            lnBaseControl._listViewModel._startIndex = 2;
+            expectedIndex = 3;
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 31);
          });
 
@@ -4531,6 +4559,7 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
+         instance._container = {clientHeight: 100};
          instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
@@ -4708,6 +4737,7 @@ define([
 
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
+            ctrl._container = {clientHeight: 100};
             ctrl._afterMount(cfg);
 
             assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
@@ -4798,6 +4828,7 @@ define([
             ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
+            ctrl._container = {clientHeight: 100};
             ctrl._afterMount(cfg);
 
             let queryCallsCount = 0;

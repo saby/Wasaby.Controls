@@ -101,6 +101,16 @@ var TileViewModel = ListViewModel.extend({
     setDragEntity: function () {
         this.setHoveredItem(null);
         TileViewModel.superclass.setDragEntity.apply(this, arguments);
+    },
+
+    getItemPaddingClasses(): string {
+        const leftSpacing = this._options.itemPadding && this._options.itemPadding.left || 'default';
+        const rightSpacing = this._options.itemPadding && this._options.itemPadding.right || 'default';
+
+        const leftSpacingClass = `controls-TileView__itemPaddingContainer_spacingLeft_${leftSpacing}`;
+        const rightSpacingClass = `controls-TileView__itemPaddingContainer_spacingRight_${rightSpacing}`;
+
+        return `${leftSpacingClass} ${rightSpacingClass}`;
     }
 });
 

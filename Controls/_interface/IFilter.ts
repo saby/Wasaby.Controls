@@ -9,22 +9,11 @@ export interface IFilterOptions {
  *
  * @interface Controls/_interface/IFilter
  * @public
+ * @author Авраменко А.С.
  */
 export default interface IFilter {
     readonly '[Controls/_interface/IFilter]': boolean;
 }
-/**
- * @name Controls/_interface/IFilter#filter
- * @cfg {Object} Конфигурация объекта фильтра. Фильтр отправляется в запрос к источнику для получения данных..
- * @remark
- * При изменении фильтра важно передавать новый объект фильтра, изменение объекта по ссылке не приведет к желаемому результату.
- * @example
- * Кнопка с размером шрифта xl.
- * <pre>
- *    <Controls.buttons:Button icon="icon-Add" fontSize="xl" viewMode="button"/>
- * </pre>
- * @see Icon
- */
 
 /**
  * @name Controls/_interface/IFilter#filter
@@ -33,14 +22,12 @@ export default interface IFilter {
  * При изменении фильтра важно передавать новый объект фильтра, изменение объекта по ссылке не приведет к желаемому результату.
  * @example
  * В данном примере в списке будет отображаться 2 элемента.
- * TMPL:
  * <pre>
  *    <Controls.list:View
  *       keyProperty="id"
- *       filter={{_filter}}
+ *       filter="{{_filter}}"
  *       source="{{_source}}" />
  * </pre>
- * JS:
  * <pre>
  *    this._filter = {id: ['1', '2']};
  *    this._source = new Memory({
@@ -61,6 +48,7 @@ export default interface IFilter {
  *      ]
  *    });
  * </pre>
+ * @see filterChanged
  */
 
 /*
@@ -105,25 +93,28 @@ export default interface IFilter {
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} filter Изменённый фильтр.
  * @remark
- * Важно помнить, что опции иммутабельны (https://ru.m.wikipedia.org/wiki/Неизменяемый_объект), поэтому фильтр в аргументах события отличается от фильтра в опциях контрола.
+ * Важно помнить, что опции {@link https://ru.m.wikipedia.org/wiki/Неизменяемый_объект иммутабельны}, поэтому фильтр в аргументах события отличается от фильтра в опциях контрола.
  * @example
- * WML:
  * <pre>
- *    <Controls.filter:Controller on:filterChanged="filterChanged()" filter="{{ _filter }}"/>
- *    <pre>{{ _filterString }}</pre>
+ * <!-- WML -->
+ * <Controls.filter:Controller on:filterChanged="filterChanged()" filter="{{ _filter }}"/>
+ * {{ _filterString }}
  * </pre>
- * JS:
  * <pre>
- *    _filter: null,
- *    _beforeMount: function() {
- *       this._filter = {
- *          city: 'Yaroslavl'
- *       }
- *    },
- *    filterChanged: function(e, filter) {
- *       this._filter = filter; //Т.к. в приведённом примере опция filter не связана с помощью bind c состоянием, необходимо обновить фильтр на состоянии самостоятельно.
- *       this._filterString = JSON.stringify(this._filter, null, 4);
+ * // JavaScript
+ * _filter: null,
+ * _beforeMount: function() {
+ *    this._filter = {
+ *       city: 'Yaroslavl'
  *    }
+ * },
+ * filterChanged: function(e, filter) {
+ *    
+ *    // Т.к. в приведённом примере опция filter не связана с помощью bind c состоянием,
+ *    // необходимо обновить фильтр на состоянии самостоятельно.
+ *    this._filter = filter;
+ *    this._filterString = JSON.stringify(this._filter, null, 4);
+ * }
  * </pre>
  * @see filter
  */

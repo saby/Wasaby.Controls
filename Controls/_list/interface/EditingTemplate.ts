@@ -8,7 +8,7 @@
  * <pre class="brush: html; highlight: [5,6,7,8,9,10,11,12,13,14,15,16]">
  * <Controls.list:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate">
+ *       <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
  *          <ws:contentTemplate>
  *             <ws:partial template="Controls/list:EditingTemplate" value="{{ contentTemplate.itemData.item.title }}" enabled="{{ true }}">
  *                <ws:editorTemplate>
@@ -45,7 +45,7 @@
 
 /**
  * @name Controls/list:EditingTemplate#value
- * @cfg {String} Устанавливает текст, отображаемый в элементе в режиме просмотра.
+ * @cfg {String} Устанавливает текст, отображаемый внутри элемента в режиме просмотра.
  */
 
 /**
@@ -58,7 +58,7 @@
 
 /**
  * @name Controls/list:EditingTemplate#size
- * @cfg {Size} Устанавливает размер шрифта для {@link Controls/list:EditingTemplate#value текста}, который отображается в строке в режиме просмотра. 
+ * @cfg {Size} Устанавливает размер шрифта для {@link Controls/list:EditingTemplate#value текста}, который отображается внутри элемента в режиме просмотра. 
  * @default default
  * @see Controls/list:EditingTemplate#value
  * @remark

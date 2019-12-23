@@ -11,7 +11,8 @@
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes INotification Controls/_popupTemplate/Notification/interface/INotification
  * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
- * 
+ * @includes IPopupTemplateBaseOptions Controls/_popupTemplate/interface/IPopupTemplateBase
+ * @includes Sticky Controls/_popupTemplate/Sticky
  * @public
  * @author Крайнов Д.О.
  */
@@ -27,6 +28,8 @@
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
+ * @includes IPopupTemplateBaseOptions Controls/_popupTemplate/interface/IPopupTemplateBase
+ * @includes Sticky Controls/_popupTemplate/Sticky
  * @public
  * @author Крайнов Д.О.
  */
@@ -41,7 +44,8 @@ export {default as Stack} from 'Controls/_popupTemplate/Stack';
 export {default as Sticky} from 'Controls/_popupTemplate/Sticky';
 export {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 export {default as INotification, INotificationOptions} from 'Controls/_popupTemplate/Notification/interface/INotification';
-export {default as CloseButton} from 'Controls/_popupTemplate/CloseButton'
+export {default as CloseButton} from 'Controls/_popupTemplate/CloseButton';
+export {default as IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
 
 import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 import DialogController = require('Controls/_popupTemplate/Dialog/Opener/DialogController');

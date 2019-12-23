@@ -431,7 +431,10 @@ define(
          });
 
          describe('_scrollHandler', function() {
-            let scrollContainer = new scrollMod.Container({});
+            let
+               scrollContainer = new scrollMod.Container({}),
+               sandbox = sinon.createSandbox();
+
             scrollContainer._children = {
                content: {
                   scrollHeight: 200,
@@ -439,34 +442,35 @@ define(
                   scrollTop: 0
                },
                scrollDetect: {
-                  start: function(e, scrollTop) {
-                     assert.equal(scrollTop, scrollContainer.__desiredScrollTop)
-                  }
-               },
-               __desiredScrollTop: 0
-            };
-            scrollContainer._scrollTop = 0;
-            scrollContainer.__desiredScrollTop = 0;
-            let scrollEventCallCount = 0;
-            scrollContainer._notify = function(event, args) {
-               if (event === 'scroll') {
-                  scrollEventCallCount++;
+                  start: () => null
                }
             };
+            scrollContainer._scrollTop = 0;
+
             it('scrollTop has not changed. scroll should not fire', function() {
+               sandbox.stub(scrollContainer._children.scrollDetect, 'start');
+               sandbox.stub(scrollContainer, '_notify');
                scrollContainer._scrollHandler({});
-               assert.equal(scrollEventCallCount, 0);
+               sinon.assert.notCalled(scrollContainer._notify);
+               sinon.assert.notCalled(scrollContainer._children.scrollDetect.start);
+               sandbox.restore();
             });
             it('scrollTop has changed. scroll should fire', function() {
+               sandbox.stub(scrollContainer._children.scrollDetect, 'start');
+               sandbox.stub(scrollContainer, '_notify');
                scrollContainer._children.content.scrollTop = 10;
-               scrollContainer.__desiredScrollTop = 10;
                scrollContainer._scrollHandler({});
-               assert.equal(scrollEventCallCount, 1);
+               sinon.assert.calledWith(scrollContainer._notify, 'scroll', [10]);
+               sinon.assert.calledWith(scrollContainer._children.scrollDetect.start, sinon.match.any, 10);
+               sandbox.restore();
             });
          });
 
          it('restores scroll after scrollbar drag end', () => {
-            let scrollContainer = new scrollMod.Container({});
+            let
+               sandbox = sinon.createSandbox(),
+               scrollContainer = new scrollMod.Container({});
+
             scrollContainer._children = {
                content: {
                   scrollHeight: 200,
@@ -484,6 +488,9 @@ define(
             scrollContainer._scrollTop = 0;
             scrollContainer._scrollHandler({});
 
+            sandbox.stub(scrollContainer._children.scrollDetect, 'start');
+            sandbox.stub(scrollContainer, '_notify');
+
             // Scroll position is restored from outside
             scrollContainer._children.content.scrollTop = 50;
             scrollContainer._scrollHandler({});
@@ -496,6 +503,9 @@ define(
 
             assert.strictEqual(scrollContainer._scrollTop, 50,
                'restored scroll top value should be applied after drag end');
+
+            sinon.assert.calledWith(scrollContainer._notify, 'scroll', [50]);
+            sinon.assert.calledWith(scrollContainer._children.scrollDetect.start, sinon.match.any, 50);
          });
 
          it('does not restore scroll after drag end if it was cancelled by dragging', () => {

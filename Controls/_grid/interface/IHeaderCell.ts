@@ -24,17 +24,18 @@ export interface IHeaderCell extends IControlOptions {
     /**
      * @description Выравнивание содержимого ячейки по горизонтали.
      * Доступные значения:
-     * **left** — по левому краю.
-     * **center** — по центру.
-     * **right** — по правому краю.
+     * @variant left по левому краю.
+     * @variant center по центру.
+     * @variant right по правому краю.
+     * @default left
      */
     align?: TCellAlign;
     /**
      * @description Выравнивание содержимого ячейки по вертикали.
      * Доступные значения:
-     * **top** — по верхнему краю.
-     * **center** — по центру.
-     * **bottom** — по нижнему краю.
+     * @variant top по верхнему краю.
+     * @variant center по центру.
+     * @variant bottom по нижнему краю.
      */
     valign?: TCellVerticalAlign;
     /**

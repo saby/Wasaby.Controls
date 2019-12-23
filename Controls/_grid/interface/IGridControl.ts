@@ -87,9 +87,9 @@
  *                   <ws:template>
  *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
- *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *                            <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
- *                                  {{itemData.item['date']}}
+ *                                  {{template.itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
  *                         </ws:contentTemplate>
@@ -195,7 +195,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {TColumns} Описывает колонки таблицы. Колонки объекты реализующие интерфейс {@link IColumn}
+ * @cfg {Array.<Controls/grid:IColumn>} Описывает колонки таблицы. Колонки объекты реализующие интерфейс {@link Controls/grid:IColumn IColumn}
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark Перед отрисовкой убедитесь, что {@link Types/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example

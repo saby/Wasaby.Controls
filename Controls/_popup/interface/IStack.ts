@@ -1,5 +1,13 @@
 import { IOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 
+/**
+ * Интерфейс для опций стековых окон.
+ *
+ * @interface Controls/_popup/interface/IStack
+ * @public
+ * @author Красильников А.С.
+ */
+
 export interface IStackPopupOptions extends IBasePopupOptions {
     minWidth?: number;
     width?: number;
@@ -234,5 +242,5 @@ export interface IStackOpener extends IOpener {
  * @property {Number} maxWidth The maximum width of popup.
  * @property {Number} width Width of popup.
  * @property {Node} opener Read more {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener there}.
- * @property {Controls/interface/IOpener/EventHandlers.typedef} eventHandlers Callback functions on popup events.
+ * @property {Controls/_popup/interface/IBaseOpener.typedef} eventHandlers Callback functions on popup events.
  */

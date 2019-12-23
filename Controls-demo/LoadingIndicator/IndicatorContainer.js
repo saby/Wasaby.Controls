@@ -7,12 +7,12 @@ define('Controls-demo/LoadingIndicator/IndicatorContainer', [
 
    var module = Control.extend({
       _template: tmpl,
-      _open: function() {
+      _open: function(e, time) {
          this._children.loadingIndicator.show({});
          setTimeout(function() {
             this._children.loadingIndicator.hide();
-         }.bind(this), 3000);
-      }
+         }.bind(this), time);
+      },
    });
 
    return module;

@@ -24,18 +24,14 @@
 
 import Input = require('Controls/_suggest/Input');
 import _InputController = require('Controls/_suggest/_InputController');
-import _InputControllerEmptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
 import InputRender = require('Controls/_suggest/Input/Render');
 import SearchInput from 'Controls/_suggest/Input/Search/Suggest';
-import LoadService from 'Controls/_suggest/LoadService';
 
 export {default as Selector} from './_suggest/Selector';
 
 export {
    Input,
    _InputController,
-   _InputControllerEmptyTemplate,
    SearchInput,
-   InputRender,
-   LoadService
+   InputRender
 };

@@ -820,7 +820,7 @@ define([
 
       });
 
-      it('TreeControl.afterReloadCallback resets expanded items on set root', function () {
+      it('TreeControl.afterReloadCallback resets expanded items and hasMoreStorage on set root', function () {
          const source = new sourceLib.Memory({
             data: [],
             idProperty: 'id'
@@ -846,6 +846,7 @@ define([
          treeControl._needResetExpandedItems = true;
          treeGrid.TreeControl._private.afterReloadCallback(treeControl, treeControl._options);
          assert.deepEqual([], treeViewModel.getExpandedItems());
+         assert.deepEqual({}, treeViewModel.getHasMoreStorage());
       });
 
       it('TreeControl.afterReloadCallback created source controller with multi root navigation', function () {

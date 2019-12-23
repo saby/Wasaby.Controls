@@ -45,6 +45,12 @@ var _private = {
  * @demo Controls-demo/Date/MonthView
  *
  */
+/**
+ * @event Controls/_calendar/MonthView#itemClick Происходит после клика по элементу дня в календаре.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Date} item Дата элемента, по которому произвели клик.
+ * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события onclick, при клике по дню месяца
+ */
 var MonthView = BaseControl.extend({
    _template: dotTplFn,
 
@@ -83,7 +89,7 @@ var MonthView = BaseControl.extend({
    _dayClickHandler: function(event, item, mode, isCurrentMonth) {
       if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable && !this._options.readOnly &&
           this._isDayInteractionAllowed(mode, isCurrentMonth)) {
-         this._notify('itemClick', [item]);
+         this._notify('itemClick', [item, event]);
       }
    },
 

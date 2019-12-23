@@ -28,7 +28,7 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * <pre class="brush: html">
     * <Controls.treeGrid:View>
     *    <ws:itemTemplate>
-    *       <ws:partial template="Controls/treeGrid:ItemTemplate" levelIndentSize="null" expanderSize="l" expanderIcon="node">
+    *       <ws:partial template="Controls/treeGrid:ItemTemplate" levelIndentSize="null" expanderSize="l" expanderIcon="node" scope="{{itemTemplate}}">
     *          <ws:contentTemplate>
     *             <div title="{{contentTemplate.itemData.item.Name}}">
     *                {{contentTemplate.itemData.item.Name}}

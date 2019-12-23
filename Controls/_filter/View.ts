@@ -494,11 +494,11 @@ var _private = {
         if (oldItems.length !== newItems.length) {
             result = true;
         } else {
-            factory(oldItems).each((oldItem) => {
-                const newItem = _private.getItemByName(newItems, oldItem.name);
-                const isFrequent = _private.isFrequentItem(oldItem);
-                if (newItem && (isFrequent || _private.isFrequentItem(newItem)) &&
-                    (optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) || isFrequent !== _private.isFrequentItem(newItem))) {
+            factory(newItems).each((newItem) => {
+                const oldItem = _private.getItemByName(oldItems, newItem.name);
+                const isFrequent = _private.isFrequentItem(newItem);
+                if (isFrequent && (!oldItem || !_private.isFrequentItem(oldItem) ||
+                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false))) {
                     result = true;
                 }
             });

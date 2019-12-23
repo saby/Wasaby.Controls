@@ -272,4 +272,3 @@ class Popup extends Control<IPopupOptions> {
 Popup.prototype._moduleName = 'Controls/_popup/Manager/Popup';
 
 export = Popup;
-
