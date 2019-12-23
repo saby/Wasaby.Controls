@@ -25,6 +25,7 @@ type GetSourceResult = {
        * @mixes Controls/_interface/IFilter
        * @mixes Controls/_interface/INavigation
        * @mixes Controls/_interface/IHierarchy
+       * @mixes Controls/_interface/ISource
        * @mixes Controls/_explorer/interface/IExplorer
        * @extends Core/Control
        * @control
@@ -41,31 +42,12 @@ type GetSourceResult = {
        * @mixes Controls/_interface/IFilter
        * @mixes Controls/_interface/INavigation
        * @mixes Controls/_interface/IHierarchy
+       * @mixes Controls/_interface/ISource
        * @mixes Controls/_explorer/interface/IExplorer
        * @extends Core/Control
        * @control
        * @public
        * @author Герасимов А.М.
-       */
-
-      /**
-       * @name Controls/_list/Data#source
-       * @cfg Объект, реализующий интерфейс ISource для поддержки доступа к данным.
-       */
-
-      /*
-       * @name Controls/_list/Data#source
-       * @cfg Object that implements ISource interface for data access.
-       */
-
-      /**
-       * @name Controls/_list/Data#keyProperty
-       * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
-       */
-
-      /*
-       * @name Controls/_list/Data#keyProperty
-       * @cfg {String} Name of the item property that uniquely identifies collection item.
        */
 
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
