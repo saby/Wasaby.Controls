@@ -341,7 +341,7 @@ export default class ScrollContainer extends Control<IOptions> {
         if (this.virtualScroll) {
             let initialIndex: number;
 
-            if (initialKey) {
+            if (typeof initialKey !== 'undefined') {
                 initialIndex = this.viewModel.getIndexByKey(initialKey);
             }
 
