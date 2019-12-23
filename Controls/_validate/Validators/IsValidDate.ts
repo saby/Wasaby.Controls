@@ -6,22 +6,21 @@ import cInstance = require('Core/core-instance');
  * @class
  * @name Controls/_validate/Validators/IsValidDate
  * @public
-
  * @author Красильников А.С.
- *
  * @remark
- * ## Аргументы функции
+ * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
+ * 
+ * Аргументы функции:
  *
- * - value — проверяемое значение.
- * - doNotValidate:Boolean — требуется ли валидация.
+ * * value — проверяемое значение.
+ * * doNotValidate:Boolean — требуется ли валидация.
  *
- * ## Типы возвращаемых значений
+ * Типы возвращаемых значений:
  *
- * - true — значение прошло проверку на валидность.
- * - String — значение не прошло проверку на валидность, возвращается текст сообщения об ошибке.
+ * * true — значение прошло проверку на валидность.
+ * * String — значение не прошло проверку на валидность, возвращается текст сообщения об ошибке.
  *
- * ## Пример использования функции
- *
+ * @example
  * <pre>
  * <Controls.validate:InputContainer name="InputValidate">
  *     <ws:validators>
