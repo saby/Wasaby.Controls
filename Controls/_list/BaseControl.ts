@@ -30,6 +30,7 @@ import {CssClassList} from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import {create as diCreate} from 'Types/di';
+import {INavigationOptionValue} from 'Controls/interface';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -283,7 +284,7 @@ var _private = {
 
         if (!list.getCount()) {
             const needShowIndicatorByNavigation =
-                (navigation && navigation.view === 'maxCount') ||
+                _private.isMaxCountNavigation(navigation) ||
                 self._needScrollCalculation;
             const needShowIndicatorByMeta = hasMoreDataDown || hasMoreDataUp;
 
@@ -422,7 +423,7 @@ var _private = {
         var
             loadedDataCount, allDataCount;
 
-        if (navigation && navigation.view === 'demand' && sourceController.hasMoreData('down')) {
+        if (_private.isDemandNavigation(navigation) && sourceController.hasMoreData('down')) {
             self._shouldDrawFooter = self._options.groupingKeyCallback ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
@@ -587,16 +588,48 @@ var _private = {
         return  result;
     },
 
-    needLoadByMaxCountNavigation(listViewModel, navigation): boolean {
+    needLoadByMaxCountNavigation(listViewModel, navigation: INavigationOptionValue): boolean {
         let result = false;
 
-        if (navigation && navigation.view === 'maxCount') {
-            if (!navigation.viewConfig || typeof navigation.viewConfig.maxCountValue !== 'number') {
-                Logger
-                    .error('BaseControl', 'maxCountValue is required for "maxCount" navigation type.');
-            } else {
-                result = navigation.viewConfig.maxCountValue > listViewModel.getCount();
-            }
+        if (_private.isMaxCountNavigation(navigation) && _private.isMaxCountNavigationConfiguredCorrect(navigation)) {
+            result = _private.isItemsCountLessThenMaxCount(
+                listViewModel.getCount(),
+                _private.getMaxCountFromNavigation(navigation)
+            );
+        }
+
+        return result;
+    },
+
+    getMaxCountFromNavigation(navigation: INavigationOptionValue): number {
+        return navigation.viewConfig.maxCountValue;
+    },
+
+    isMaxCountNavigation(navigation: INavigationOptionValue): boolean {
+        return navigation && navigation.view === 'maxCount';
+    },
+
+    isMaxCountNavigationConfiguredCorrect(navigation: INavigationOptionValue): boolean {
+        return navigation.viewConfig && typeof navigation.viewConfig.maxCountValue === 'number';
+    },
+
+    isItemsCountLessThenMaxCount(itemsCount: number, navigationMaxCount: number): boolean {
+        return navigationMaxCount >  itemsCount;
+    },
+
+    isDemandNavigation(navigation: INavigationOptionValue): boolean {
+        return navigation && navigation.view === 'demand';
+    },
+
+    needShowShadowByNavigation(navigation: INavigationOptionValue, itemsCount: number): boolean {
+        const isDemand = _private.isDemandNavigation(navigation);
+        const isMaxCount = _private.isMaxCountNavigation(navigation);
+        let result = true;
+
+        if (isDemand) {
+            result = false;
+        } else if (isMaxCount) {
+            result = _private.isItemsCountLessThenMaxCount(itemsCount, _private.getMaxCountFromNavigation(navigation));
         }
 
         return result;
@@ -1644,13 +1677,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     updateShadowModeHandler(_: SyntheticEvent<Event>, placeholderSizes: {top: number, bottom: number}): void {
-        const demandNavigation = this._options.navigation && this._options.navigation.view === 'demand';
-        const hasItems = this._listViewModel && this._listViewModel.getCount();
+        const itemsCount = this._listViewModel && this._listViewModel.getCount();
         const hasMoreData = (direction) => this._sourceController && this._sourceController.hasMoreData(direction);
+        const showShadowByNavigation = _private.needShowShadowByNavigation(this._options.navigation, itemsCount);
 
         this._notify('updateShadowMode', [{
-            top: (placeholderSizes.top || !demandNavigation && hasItems && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || !demandNavigation && hasItems && hasMoreData('down')) ? 'visible' : 'auto'
+            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+            bottom: (placeholderSizes.bottom || showShadowByNavigation && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
