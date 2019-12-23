@@ -214,6 +214,17 @@ describe('Controls/_list/ScrollContainer', () => {
             assert.isTrue(instance.itemsChanged);
             assert.isTrue(instance.virtualScroll.resetCalled);
         });
+        it('initial key', () => {
+            instance.viewModel.getIndexByKey = (index) => { if (index === 1) { return 1 } else { return 0 }};
+            instance.virtualScroll.reset = (index) => { instance.virtualScroll.index = index };
+
+            instance.reset(5, 1);
+            assert.equal(instance.virtualScroll.index, 1);
+            instance.reset(5, 2);
+            assert.equal(instance.virtualScroll.index, 0);
+            instance.reset(5);
+            assert.equal(instance.virtualScroll.index, 0);
+        });
     });
     describe('checkCapability', () => {
         const instance = new ScrollController();
