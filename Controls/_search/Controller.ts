@@ -70,7 +70,6 @@ var _private = {
    abortCallback: function (self, filter) {
       self._loading = false;
       if (self._viewMode === 'search') {
-         self._searchValue = '';
          self._misspellValue = '';
 
          if (self._options.parentProperty) {
@@ -82,7 +81,6 @@ var _private = {
          if (!isEqual(self._options.filter, filter)) {
             self._notify('filterChanged', [filter]);
          }
-         self._notify('searchValueChanged', [self._searchValue]);
       }
    },
 

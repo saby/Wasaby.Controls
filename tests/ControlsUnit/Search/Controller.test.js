@@ -172,14 +172,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          searchMod.Controller._private.abortCallback(controller, filter);
 
-         assert.isTrue(stubNotify.calledTwice);
          assert.isTrue(controller._viewMode === 'search');
          assert.isFalse(controller._loading);
          assert.equal(controller._misspellValue, '');
-         assert.equal(controller._searchValue, '');
          assert.equal(controller._inputSearchValue, 'testInputValue');
          assert.deepEqual(filter, {test: 'test'});
-         assert.isTrue(stubNotify.withArgs('searchValueChanged', ['']).calledOnce);
          assert.isTrue(stubNotify.withArgs('filterChanged', [filter]).calledOnce);
 
          controller._options.filter = { test: 'test' };
