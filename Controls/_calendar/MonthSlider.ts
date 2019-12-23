@@ -9,13 +9,13 @@ import DateUtil = require('Controls/Utils/Date');
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
 
 var _private = {
-    _setMonth: function (self, month, silent) {
+    _setMonth: function (self, month, silent, dateConstructor) {
         if (DateUtil.isDatesEqual(month, self._month)) {
             return;
         }
         self._animation = month < self._month ? Slider.ANIMATIONS.slideRight : Slider.ANIMATIONS.slideLeft;
         self._month = month;
-        self._isHomeVisible = !DateUtil.isMonthsEqual(month, new self._options.dateConstructor());
+        self._isHomeVisible = !DateUtil.isMonthsEqual(month, new dateConstructor());
         if (!silent) {
             self._notify('monthChanged', [month]);
         }
@@ -68,21 +68,21 @@ var Component = BaseControl.extend({
             this._themeCssClass = 'controls-MonthSlider__accordionTheme';
         }
         this._days = calendarUtils.getWeekdaysCaptions();
-        _private._setMonth(this, options.month, true);
+        _private._setMonth(this, options.month, true, options.dateConstructor);
     },
 
     _beforeUpdate: function (options) {
         this._days = calendarUtils.getWeekdaysCaptions();
-        _private._setMonth(this, options.month, true);
+        _private._setMonth(this, options.month, true, options.dateConstructor);
     },
 
     _slideMonth: function (event, delta) {
         _private._setMonth(this,
-            new this._options.dateConstructor(this._month.getFullYear(), this._month.getMonth() + delta, 1));
+            new this._options.dateConstructor(this._month.getFullYear(), this._month.getMonth() + delta, 1), false, this._options.dateConstructor);
     },
 
     _setCurrentMonth: function () {
-        _private._setMonth(this, DateUtil.normalizeDate(new this._options.dateConstructor()));
+        _private._setMonth(this, DateUtil.normalizeDate(new this._options.dateConstructor()), false, this._options.dateConstructor);
     },
 
     _itemClickHandler: function (event, item) {
