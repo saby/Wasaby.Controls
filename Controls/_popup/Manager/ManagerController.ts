@@ -2,6 +2,7 @@
  * Created by as.krasilnikov on 02.04.2018.
  */
 import {Control} from 'UI/Base';
+import Container from 'Controls/_popup/Manager/Container';
 // Модуль, необходимый для работы окон/панелей в слое совместимости
 // В WS2/WS3 модулях нет возможности работать через события, чтобы вызвать методы по работе с окнами
 // т.к. хелперы/инстансы старых компонентов могут не лежать в верстке. (а если и лежат, то нет возможности общаться с Manager)
@@ -17,7 +18,7 @@ export = {
     getManager(): Control {
         return this._manager;
     },
-    setContainer(container: Control): void {
+    setContainer(container: Container): void {
         this._container = container;
     },
     setPopupHeaderTheme(themeName: string): void {
@@ -35,7 +36,7 @@ export = {
     getIndicator(): Control {
         return this._indicator;
     },
-    getContainer(): void {
+    getContainer(): Container {
         return this._container;
     },
 

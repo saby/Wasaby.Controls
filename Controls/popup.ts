@@ -54,14 +54,14 @@
 
 import InfoboxTarget = require('Controls/_popup/InfoBox');
 import PreviewerTarget = require('Controls/_popup/Previewer');
-import Manager = require('Controls/_popup/Manager');
 import Controller = require('Controls/_popup/Manager/ManagerController');
-import Container = require('Controls/_popup/Manager/Container');
 import GlobalTemplate = require('wml!Controls/_popup/Global/Global');
 import PreviewerTemplate = require('Controls/_popup/Previewer/PreviewerTemplate');
 
 import EditContainer = require('Controls/_popup/Opener/Edit/Container');
 
+export {default as Container} from './_popup/Manager/Container';
+export {default as Manager} from './_popup/Manager';
 export {default as Global} from './_popup/Global';
 export {default as Stack} from './_popup/Opener/Stack';
 export {default as Dialog} from './_popup/Opener/Dialog';
@@ -84,9 +84,7 @@ export {INotificationPopupOptions} from './_popup/interface/INotification';
 export {
     InfoboxTarget,
     PreviewerTarget,
-    Manager,
     Controller,
-    Container,
     GlobalTemplate,
     PreviewerTemplate,
 
