@@ -24,6 +24,8 @@ type GetSourceResult = {
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
        * @mixes Controls/_interface/INavigation
+       * @mixes Controls/_interface/IHierarchy
+       * @mixes Controls/_explorer/interface/IExplorer
        * @extends Core/Control
        * @control
        * @public
@@ -38,6 +40,8 @@ type GetSourceResult = {
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
        * @mixes Controls/_interface/INavigation
+       * @mixes Controls/_interface/IHierarchy
+       * @mixes Controls/_explorer/interface/IExplorer
        * @extends Core/Control
        * @control
        * @public
