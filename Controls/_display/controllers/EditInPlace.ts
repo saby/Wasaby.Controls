@@ -19,7 +19,7 @@ export function beginEdit(
         oldEditItem.setEditing(false);
     }
     if (newEditItem) {
-        newEditItem.setEditing(true);
+        newEditItem.setEditing(true, editingContents);
     }
 
     collection.nextVersion();
