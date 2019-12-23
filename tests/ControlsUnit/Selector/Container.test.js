@@ -341,12 +341,21 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          it('single select', function() {
             let container = getContainer();
             container._selectedKeys = [1];
+            container._selectCompleteInitiator = true;
             container._selectComplete();
 
             return new Promise((resolve) => {
                container.loadDef.then((result) => {
                   assert.deepEqual(result.resultSelection.at(0).getRawData(), getItems()[1].getRawData());
-                  resolve();
+
+
+                  container._selectCompleteInitiator = false;
+                  container._selectComplete();
+
+                  container.loadDef.then((result) => {
+                     assert.equal(result.resultSelection.getCount(), 0);
+                     resolve();
+                  });
                });
             });
          });
