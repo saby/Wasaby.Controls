@@ -18,15 +18,14 @@ type GetSourceResult = {
 
       /**
        * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
-       *
-       *<a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+       * @remark
+       * См. <a href="/materials/demo-ws4-filter-search-new">демо-пример</a>.
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
        * @mixes Controls/_interface/INavigation
        * @mixes Controls/_interface/IHierarchy
        * @mixes Controls/_interface/ISource
-       * @mixes Controls/_explorer/interface/IExplorer
        * @extends Core/Control
        * @control
        * @public
@@ -43,13 +42,24 @@ type GetSourceResult = {
        * @mixes Controls/_interface/INavigation
        * @mixes Controls/_interface/IHierarchy
        * @mixes Controls/_interface/ISource
-       * @mixes Controls/_explorer/interface/IExplorer
        * @extends Core/Control
        * @control
        * @public
        * @author Герасимов А.М.
        */
 
+      /**
+       * @name Controls/_list/Data#root
+       * @cfg {Number|String} Идентификатор корневого узла.
+       */
+
+
+      /**
+       * @event Происходит при изменении корня иерархии.
+       * @name Controls/_list/Data#rootChanged
+       * @param event {eventObject} Дескриптор события.
+       * @param root {String|Number} Идентификатор корневой записи.
+       */
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
 
       var _private = {
