@@ -15,7 +15,7 @@ define('Controls/Utils/getZIndex', ['Core/helpers/isNewEnvironment'], function(i
    return function getZIndex(instance) {
       if (document && !isNewEnvironment()) {
          var container = $(instance._container);
-         var parentArea = container.closest('.controls-compoundAreaNew__floatArea, .ws-float-area-nostack-panel-overflow, .ws-float-area-stack-cut-wrapper, .controls-Popup, .controls-FloatArea, .ws-window');
+         var parentArea = container.closest('.controls-compoundAreaNew__floatArea, .ws-float-area-nostack-panel-overflow, .ws-float-area-stack-cut-wrapper, .controls-Popup, .controls-FloatArea, .ws-window:not(.controls-CompoundArea)');
          if (parentArea.length) {
             return parseInt(parentArea.css('z-index'), 10) + ZINDEX_STEP;
          }
