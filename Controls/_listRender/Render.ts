@@ -88,7 +88,27 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>): void {
         e.stopPropagation();
-        this._notify('itemSwipe', [item, e]);
+
+        const itemContainer =
+            (e.target as HTMLElement)
+            .closest('.controls-ListView__itemV');
+
+        const swipeContainer =
+            itemContainer.classList.contains('js-controls-SwipeControl__actionsContainer')
+            ? itemContainer
+            : itemContainer.querySelector('.js-controls-SwipeControl__actionsContainer');
+
+        this._notify('itemSwipe', [item, e, swipeContainer?.clientHeight]);
+    }
+
+    protected _onAnimationEnd(e: SyntheticEvent<null>): void {
+        // TODO Swipe animation has finished. If this was a close animation,
+        // clear swipe state
+    }
+
+    protected _onItemActionsClick(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {
+        e.stopPropagation();
+        this._notify('itemActionClick', [item, action, e]);
     }
 
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
@@ -130,6 +150,8 @@ export default class Render extends Control<IRenderOptions> {
             }
             // Compatibility with BaseControl and EditInPlace control
             this._notify('editingRowKeyDown', [e.nativeEvent], {bubbling: true});
+        } else {
+            this._notify('itemKeyDown', [item, e]);
         }
     }
 

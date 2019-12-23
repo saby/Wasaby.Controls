@@ -11,7 +11,7 @@
             swipeTemplate="{{ _options.swipeTemplate }}"
             multiSelectTpl="{{ _options.multiSelectTpl }}"
             isAdd="{{ _options.isAdd }}"
-            itemTemplate="{{ _itemTemplate }}"/>
+            itemTemplate="{{ _itemTemplate }}" />
       </div>
    </ws:if>
    <ws:if data="{{ _options.emptyTemplate }}">

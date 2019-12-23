@@ -19,9 +19,23 @@
       on:keydown="_onItemKeyDown(item)"
 
       itemActionsPosition="{{ itemActionsPosition }}"
-      itemActionsTemplate="{{ itemActionsTemplate }}"
-      swipeTemplate="{{ swipeTemplate }}"
       multiSelectTpl="{{ multiSelectTpl }}"
-      isAdd="{{ isAdd }}"
-      itemActionsPosition="{{ itemActionsPosition }}"/>
+      isAdd="{{ isAdd }}">
+      <ws:itemActionsTemplate>
+         <ws:partial
+            template="wml!Controls/_listRender/Render/resources/ItemActionsTemplate"
+            scope="{{ collection.getActionsTemplateConfig() }}"
+            item="{{ item }}" />
+         <!-- itemActionsClass -->
+      </ws:itemActionsTemplate>
+      <ws:swipeTemplate>
+         <ws:partial
+            template="wml!Controls/_listRender/Render/resources/SwipeTemplate"
+            scope="{{ collection.getActionsTemplateConfig() }}"
+            swipeConfig="{{ collection.getSwipeConfig() }}"
+            animationState="open"
+            item="{{ item }}" />
+         <!-- must have an itemActionsClass in TileView, should probably be calculated in model -->
+      </ws:swipeTemplate>
+   </ws:partial>
 </ws:for>

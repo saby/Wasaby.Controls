@@ -9,7 +9,6 @@ import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { constants } from 'Env/Env';
 import 'css!theme?Controls/list';
-import { CollectionItem } from 'Controls/display';
 
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 
@@ -48,7 +47,7 @@ var _private = {
         }
         // TODO Remove this, compatibility between management controls
         if (options.useNewModel && !item.getContents) {
-            item = options.listModel.getItemBySourceId(item.get(options.listModel.getKeyProperty()));
+            item = options.listModel.getItemBySourceKey(item.get(options.listModel.getKeyProperty()));
         }
 
         const all = _private.fillItemAllActions(
@@ -95,7 +94,7 @@ var _private = {
         if (options.itemActionsProperty || options.itemActions) {
             if (options.useNewModel) {
                 options.listModel.setEventRaising(false, true);
-                options.listModel.each((collectionItem: CollectionItem<unknown>) => {
+                options.listModel.each((collectionItem) => {
                     // TODO groups and whatnot
                     _private.updateItemActions(self, collectionItem, options);
                 });
@@ -220,7 +219,8 @@ var ItemActionsControl = Control.extend({
         if (!this._destroyed) {
             if (this._options.useNewModel) {
                 this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
-                displayLib.MarkerController.markItem(this._options.listModel, itemData.getContents().getId());
+                const markCommand = new displayLib.MarkerCommands.Mark(itemData.getContents().getId());
+                markCommand.execute(this._options.listModel);
             } else {
                 this.updateItemActions(itemData.actionsItem);
                 this._options.listModel.setMarkedKey(itemData.key);

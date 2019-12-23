@@ -23,6 +23,7 @@ import {
     IEnumerableComparatorSession,
     RecordSet
 } from 'Types/collection';
+import { isEqual } from 'Types/object';
 import {create, register} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
@@ -102,6 +103,28 @@ export interface IViewIterator {
     each: Function;
     isItemAtIndexHidden: Function;
     setIndices: Function;
+}
+
+export interface IItemActionsTemplateConfig {
+    toolbarVisibility?: boolean;
+    style?: string;
+    size?: string;
+    itemActionsPosition?: string;
+    actionAlignment?: string;
+    actionCaptionPosition?: 'right'|'bottom'|'none';
+}
+
+export interface ISwipeConfig {
+    itemActionsSize?: 's'|'m'|'l';
+    itemActions?: {
+        all: any[],
+        showed: any[]
+    };
+    paddingSize?: 's'|'m'|'l';
+    twoColumns?: boolean;
+    twoColumnsActions?: [[any, any], [any, any]];
+    needTitle?: Function;
+    needIcon?: Function;
 }
 
 /**
@@ -524,6 +547,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$hasMoreData: boolean;
 
+    protected _$contextMenuConfig: any;
+
     protected _$compatibleReset: boolean;
 
     /**
@@ -617,9 +642,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     protected _oEventRaisingChange: Function;
 
-    protected _controllerCache: Record<string, unknown>;
-
     protected _viewIterator: IViewIterator;
+
+    protected _actionsAssigned: boolean;
+    protected _actionsMenuConfig: any;
+    protected _actionsTemplateConfig: IItemActionsTemplateConfig;
+    protected _swipeConfig: ISwipeConfig;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -670,8 +698,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this.setItemsSpacings(options.itemPadding);
         }
 
-        this._controllerCache = {};
-
         this._viewIterator = {
             each: this.each.bind(this),
             setIndices: () => false,
@@ -702,7 +728,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._itemsUid = null;
         this._cursorEnumerator = null;
         this._utilityEnumerator = null;
-        this._controllerCache = null;
 
         super.destroy();
     }
@@ -793,6 +818,17 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 index
             );
         }
+    }
+
+    find(predicate: (item: T) => boolean): T {
+        const enumerator = this.getEnumerator();
+        while (enumerator.moveNext()) {
+            const current = enumerator.getCurrent();
+            if (predicate(current)) {
+                return current;
+            }
+        }
+        return null;
     }
 
     assign(): void {
@@ -2017,16 +2053,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$searchValue;
     }
 
-    getItemBySourceId(id: string|number): CollectionItem<S> {
+    getItemBySourceKey(key: string|number): CollectionItem<S> {
         if (this._$collection['[Types/_collection/RecordSet]']) {
-            const record = (this._$collection as unknown as RecordSet).getRecordById(id);
-            return this.getItemBySourceItem(record as unknown as S);
+            if (key !== undefined && key !== null) {
+                const record = (this._$collection as unknown as RecordSet).getRecordById(key);
+                return this.getItemBySourceItem(record as unknown as S);
+            } else {
+                return null;
+            }
         }
-        throw new Error('Collection#getItemBySourceId is implemented for RecordSet only');
+        throw new Error('Collection#getItemBySourceKey is implemented for RecordSet only');
     }
 
     getIndexByKey(key: string|number): number {
-        return this.getIndex(this.getItemBySourceId(key) as T);
+        return this.getIndex(this.getItemBySourceKey(key) as T);
     }
 
     getFirstItem(): S {
@@ -2053,12 +2093,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$compatibleReset = compatible;
     }
 
-    getCacheValue<V>(key: string): V {
-        return this._controllerCache[key] as V;
-    }
-
-    setCacheValue(key: string, value: unknown): void {
-        this._controllerCache[key] = value;
+    getContextMenuConfig(): unknown {
+        return this._$contextMenuConfig;
     }
 
     setViewIterator(viewIterator: IViewIterator): void {
@@ -2072,6 +2108,44 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     nextVersion(): void {
         this._nextVersion();
     }
+
+    setActionsAssigned(assigned: boolean): void {
+        this._actionsAssigned = assigned;
+    }
+
+    areActionsAssigned(): boolean {
+        return this._actionsAssigned;
+    }
+
+    getActionsMenuConfig(): any {
+        return this._actionsMenuConfig;
+    }
+
+    setActionsMenuConfig(config: any): void {
+        this._actionsMenuConfig = config;
+    }
+
+    getActionsTemplateConfig(): IItemActionsTemplateConfig {
+        return this._actionsTemplateConfig;
+    }
+
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void {
+        if (!isEqual(this._actionsTemplateConfig, config)) {
+            this._actionsTemplateConfig = config;
+            this._nextVersion();
+        }
+    }
+
+    getSwipeConfig(): ISwipeConfig {
+        return this._swipeConfig;
+    }
+
+    setSwipeConfig(config: ISwipeConfig): void {
+        if (!isEqual(this._swipeConfig, config)) {
+            this._swipeConfig = config;
+            this._nextVersion();
+        }
+    },
 
     // region SerializableMixin
 
@@ -3159,6 +3233,7 @@ Object.assign(Collection.prototype, {
     _$importantItemProperties: null,
     _$hasMoreData: false,
     _$compatibleReset: false,
+    _$contextMenuConfig: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
@@ -3170,8 +3245,11 @@ Object.assign(Collection.prototype, {
     _onCollectionChange: null,
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
-    _controllerCache: null,
     _viewIterator: null,
+    _actionsAssigned: false,
+    _actionsMenuConfig: null,
+    _actionsTemplateConfig: null,
+    _swipeConfig: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
