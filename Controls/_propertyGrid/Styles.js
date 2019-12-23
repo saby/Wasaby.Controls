@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/_propertyGrid/Styles', [], function() {}
 
    /**
@@ -19,3 +20,4 @@ define('Controls/_propertyGrid/Styles', [], function() {}
     * @css @spacing_PropertyGrid-group-between-bottom-border-content Empty spacing between bottom border of group and content
     */
 );
+/* eslint-enable */

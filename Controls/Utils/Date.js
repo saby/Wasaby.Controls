@@ -1,3 +1,4 @@
+/* eslint-disable */
 define('Controls/Utils/Date', [
 ], function() {
    'use strict';
@@ -294,3 +295,4 @@ define('Controls/Utils/Date', [
 
    return DateUtil;
 });
+/* eslint-enable */
