@@ -254,6 +254,9 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    },
 
    _beforeMount: function (options, context) {
+      if (this._searchController) {
+         this._searchController.abort();
+      }
       this._dataOptions = context.dataOptions;
       this._previousViewMode = this._viewMode = options.viewMode;
 
