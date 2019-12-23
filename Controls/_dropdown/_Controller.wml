@@ -17,7 +17,6 @@
               nodeProperty="{{_options.nodeProperty}}"
               itemTemplateProperty="{{_options.itemTemplateProperty}}"
               itemTemplate="{{_options.itemTemplate}}"
-              headTemplate="{{_options.headTemplate}}"
               headerTemplate="{{_options.headerTemplate}}"
               groupTemplate="{{_options.groupTemplate}}"
               groupingKeyCallback="{{_options.groupingKeyCallback}}"

@@ -254,14 +254,14 @@ define(
                }
             };
             dropdownController._depsDeferred = {};
-            dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
+            dropdownController._beforeUpdate({ ...config, headerTemplate: 'headerTemplate.wml', source: undefined });
             assert.isNull(dropdownController._depsDeferred);
             assert.isFalse(opened);
 
             dropdownController._isOpened = true;
             dropdownController._items = itemsRecords;
             dropdownController._sourceController = {hasMoreData: ()=>{}};
-            dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
+            dropdownController._beforeUpdate({ ...config, headerTemplate: 'headerTemplate.wml', source: undefined });
             assert.isTrue(opened);
          });
 

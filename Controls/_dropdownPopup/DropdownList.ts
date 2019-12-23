@@ -403,6 +403,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
       DropdownList.getDefaultOptions = function() {
          return {
             iconSize: 'm',
+            headerTemplate: defaultHeadTemplate,
             menuStyle: 'defaultHead',
             typeShadow: 'default',
             moreButtonCaption: rk('Еще') + '...',

@@ -75,7 +75,7 @@ define('Controls/interface/IDropdownList', [], function() {
     * @property {String} nodeProperty Имя параметра, определяющего тип элемента (список, узел, скрытый узел).
     * @property {String} itemTemplateProperty Имя параметра, содержащего шаблон отображения элемента. Если он не установлен, вместо него используется "itemTemplate".
     * @property {Function} itemTemplate Шаблон для рендеринга элементов.
-    * @property {Function} headTemplate Шаблон отображения шапки списка.
+    * @property {Function} headerTemplate Шаблон отображения шапки списка.
     * @property {Function} contentTemplate Шаблон отображения списка.
     * @property {Function} footerTemplate Шаблон отображения подвала списка.
     * @property {Boolean} showHeader Определяет, отображаются ли папки.
@@ -95,7 +95,7 @@ define('Controls/interface/IDropdownList', [], function() {
     * @property {String} nodeProperty Name of the item property that identifies item type (list, node, hidden node)
     * @property {String} itemTemplateProperty Name of the item property that contains template for item render. If not set, itemTemplate is used instead
     * @property {Function} itemTemplate Template for item render
-    * @property {Function} headTemplate Template that will be rendered above the list.
+    * @property {Function} headerTemplate Template that will be rendered above the list.
     * @property {Function} contentTemplate Template that will be render the list.
     * @property {Function} footerTemplate Template that will be rendered below the list.
     * @property {Boolean} showHeader Indicates whether folders should be displayed.

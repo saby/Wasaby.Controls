@@ -185,7 +185,7 @@ var _private = {
    },
 
    templateOptionsChanged: function(newOptions, options) {
-      if (newOptions.headTemplate !== options.headTemplate ||
+      if (newOptions.headerTemplate !== options.headerTemplate ||
           newOptions.itemTemplate !== options.itemTemplate ||
           newOptions.footerTemplate !== options.footerTemplate) {
          return true;
@@ -195,7 +195,7 @@ var _private = {
    requireTemplates: function(self, options) {
       if (!self._depsDeferred) {
          let templatesToLoad = _private.getItemsTemplates(self, options);
-         let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
+         let templates = ['headerTemplate', 'itemTemplate', 'footerTemplate'];
 
          templates.forEach((template) => {
             if (typeof options[template] === 'string') {

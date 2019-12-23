@@ -6,7 +6,7 @@
             attr:ws-no-focus="true"
      on:mouseleave="_mouseOutHandler()">
    <ws:if data="{{_options.showHeader && _options.headerTemplate !== null || _options.headerTemplate}}">
-      <ws:partial template="{{_options.headTemplate || _options.headerTemplate || _defaultHeadTemplate}}"
+      <ws:partial template="{{_options.headerTemplate}}"
                   duplicateHeadClassName="{{_duplicateHeadClassName}}"
                   on:click="_headerClick()"
                   on:mouseenter="_closeSubMenu()"

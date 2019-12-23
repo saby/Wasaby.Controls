@@ -38,7 +38,7 @@
     *          tooltip="Add">
     *       <ws:headerTemplate>
     *           <Controls.Container.Async templateName="Controls/dropdownPopup:Template">
-    *             <ws:partial template="{{ content.resolvedTemplate }}" scope="{{ headTemplate }}" caption="Add"/>
+    *             <ws:partial template="{{ content.resolvedTemplate }}" scope="{{ headerTemplate }}" caption="Add"/>
     *          </Controls.Container.Async>
     *       </ws:headerTemplate>
     *    </Controls.dropdown:Button>
@@ -81,7 +81,7 @@
     *          tooltip="Add">
     *       <ws:headerTemplate>
     *           <Controls.Container.Async templateName="Controls/dropdownPopup:Template">
-    *             <ws:partial template="{{ content.resolvedTemplate }}" scope="{{ headTemplate }}" caption="Add"/>
+    *             <ws:partial template="{{ content.resolvedTemplate }}" scope="{{ headerTemplate }}" caption="Add"/>
     *          </Controls.Container.Async>
     *       </ws:headerTemplate>
     *    </Controls.Button.Menu>

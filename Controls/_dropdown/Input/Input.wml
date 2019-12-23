@@ -1,6 +1,7 @@
 <Controls._dropdown._Controller
         name="controller"
         scope="{{_options}}"
+        headTemplate="{{_options.headTemplate || _options.headerTemplate}}"
         dataLoadCallback="{{_dataLoadCallback}}"
         popupClassName="{{_options.popupClassName || (_options.showHeader ? 'controls-DropdownList__margin-head' :
                               _options.multiSelect ? 'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin')}} theme_{{_options.theme}}"
