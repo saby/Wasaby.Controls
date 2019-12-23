@@ -1925,10 +1925,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-
-            if (!this._options.virtualScrolling) {
-                this._children.scrollController.checkTriggerVisibilityWithTimeout();
-            }
+            this._children.scrollController.checkTriggerVisibilityWithTimeout();
         }
 
         if (this._restoredScroll !== null) {
