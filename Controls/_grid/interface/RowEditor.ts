@@ -8,8 +8,10 @@
  * <Controls.grid:View>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/grid:RowEditor" scope="{{itemTemplate}}">
- *          Этот шаблон отображается в режиме редактирования.
- *          <Controls.dropdown:Combobox bind:selectedKey="content.itemData.item.documentSign"  />
+ *          <div>
+ *             Этот шаблон отображается в режиме редактирования.
+ *             <Controls.dropdown:Combobox bind:selectedKey="content.itemData.item.documentSign"  />
+ *          </div>
  *       </ws:partial>
  *    </ws:itemTemplate>
  * </Controls.grid:View>
