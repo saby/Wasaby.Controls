@@ -6,9 +6,6 @@
       multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
       searchValue="{{ collection.getSearchValue() }}"
 
-      actionsTemplateConfig="{{ collection.getActionsTemplateConfig() }}"
-      swipeConfig="{{ collection.getSwipeConfig() }}"
-
       attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'ws-hidden' }}"
       attr:key="{{ keyPrefix }}-{{ item.getUid() }}"
 
@@ -23,5 +20,22 @@
 
       itemActionsPosition="{{ itemActionsPosition }}"
       multiSelectTpl="{{ multiSelectTpl }}"
-      isAdd="{{ isAdd }}" />
+      isAdd="{{ isAdd }}">
+      <ws:itemActionsTemplate>
+         <ws:partial
+            template="wml!Controls/_listRender/Render/resources/ItemActionsTemplate"
+            scope="{{ collection.getActionsTemplateConfig() }}"
+            item="{{ item }}" />
+         <!-- itemActionsClass -->
+      </ws:itemActionsTemplate>
+      <ws:swipeTemplate>
+         <ws:partial
+            template="wml!Controls/_listRender/Render/resources/SwipeTemplate"
+            scope="{{ collection.getActionsTemplateConfig() }}"
+            swipeConfig="{{ collection.getSwipeConfig() }}"
+            animationState="open"
+            item="{{ item }}" />
+         <!-- must have an itemActionsClass in TileView, should probably be calculated in model -->
+      </ws:swipeTemplate>
+   </ws:partial>
 </ws:for>

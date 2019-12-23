@@ -101,6 +101,11 @@ export default class Render extends Control<IRenderOptions> {
         this._notify('itemSwipe', [item, e, swipeContainer?.clientHeight]);
     }
 
+    protected _onAnimationEnd(e: SyntheticEvent<null>): void {
+        // TODO Swipe animation has finished. If this was a close animation,
+        // clear swipe state
+    }
+
     protected _onItemActionsClick(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {
         e.stopPropagation();
         this._notify('itemActionClick', [item, action, e]);

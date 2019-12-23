@@ -1,4 +1,4 @@
-<div class="controls-BaseControl controls-BaseControl__renderContainer">
+<div class="controls-BaseControl controls-BaseControl_showActions controls-BaseControl__renderContainer">
    <ws:partial
       template="{{ _options.render }}"
       listModel="{{ _collection }}"
