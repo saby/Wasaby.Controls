@@ -226,7 +226,7 @@ export interface IList {
  * @property {String} style Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
  * Он будет установлен для html-контейнера самой опции записи, и свойства класса будут применены как к тексту (см. title), так и к иконке (см. icon).
  * @property {TIconStyle} [iconStyle=default] Стиль иконки.
- * Каждому значению свойства соответствует определённый, который определяется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
+ * Каждому значению свойства соответствует стиль, который определяется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
  * @property {Function} handler Обработчик опции записи.
  * См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler-click/ пример обработчика}.
  * @property {String} parent Идентификатор родительской опции записи.
@@ -281,11 +281,11 @@ export interface IList {
  * <pre>
  * <Controls.list:View itemActionsPosition="custom" itemActions="{{_itemActions}}">
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate">
- *          <ws:contentTemplate>
- *             <ws:partial template="wml!customTemplateName"/>
- *          </ws:contentTemplate>
- *       </ws:partial>
+ *      <ws:partial template="Controls/list:ItemTemplate">
+ *        <ws:contentTemplate>
+ *          <ws:partial template="wml!customTemplateName" scope="{{contentTemplate}}" />
+ *        </ws:contentTemplate>
+ *      </ws:partial>
  *    </ws:itemTemplate>
  * </Controls.list:View>
  * </pre>
@@ -326,7 +326,7 @@ export interface IList {
  *    <ws:itemTemplate>
  *      <ws:partial template="Controls/list:ItemTemplate">
  *        <ws:contentTemplate>
- *          <ws:partial template="wml!customTemplateName"/>
+ *          <ws:partial template="wml!customTemplateName" scope="{{contentTemplate}}" />
  *        </ws:contentTemplate>
  *      </ws:partial>
  *    </ws:itemTemplate>

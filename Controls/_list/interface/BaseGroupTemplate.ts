@@ -69,7 +69,7 @@
  * <!-- file1.wml -->
  * <Controls.list:View>
  *    <ws:groupTemplate>
- *       <ws:partial template="Controls/list:GroupTemplate">
+ *       <ws:partial template="Controls/list:GroupTemplate" scope="{{groupTemplate}}">
  *          <ws:rightTemplate>
  *             {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
  *          </ws:rightTemplate>
@@ -138,7 +138,7 @@
  * <!-- file1.wml -->
  * <Controls.list:View>
  *    <ws:groupTemplate>
- *       <ws:partial template="Controls/list:GroupTemplate">
+ *       <ws:partial template="Controls/list:GroupTemplate" scope="{{groupTemplate}}">
  *          <ws:contentTemplate>
  *             <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
  *             <ws:if data="{{contentTemplate.itemData.item === 'works'}}">Работы</ws:if>

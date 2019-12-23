@@ -30,7 +30,7 @@ define('Controls/interface/IItemTemplate', [
     * <pre class="brush: html">
     * <Controls.list:View>
     *    <ws:itemTemplate>
-    *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}"> 
+    *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}"> 
     *          <ws:contentTemplate>
     *             {{contentTemplate.itemData.item.title}}
     *          </ws:contentTemplate>
@@ -60,7 +60,7 @@ define('Controls/interface/IItemTemplate', [
     * <pre>
     *    <Controls.list:View>
     *       <ws:itemTemplate>
-    *          <ws:partial template="Controls/list:ItemTemplate">
+    *          <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}"> 
     *             <ws:contentTemplate>
     *                <span>{{contentTemplate.itemData.item.description}}</span>
     *             </ws:contentTemplate>
