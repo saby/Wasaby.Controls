@@ -16,6 +16,7 @@
  * @includes IDialogPopupOptions Controls/_popup/interface/IDialog
  * @includes IConfirmationOptions Controls/_popup/interface/IConfirmation
  * @includes INotificationPopupOptions Controls/_popup/interface/INotification
+ * @includes IEditOpener Controls/_popup/interface/IEdit
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @public
  * @author Крайнов Д.О.
@@ -39,6 +40,7 @@
  * @includes IStickyPopupOptions Controls/_popup/interface/IDialog
  * @includes IConfirmationOptions Controls/_popup/interface/IConfirmation
  * @includes INotificationPopupOptions Controls/_popup/interface/INotification
+ * @includes IEditOpener Controls/_popup/interface/IEdit
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @public
  * @author Крайнов Д.О.
@@ -50,7 +52,6 @@
  * @includes PreviewerTemplate wml!Controls/_popup/Global/Global
  */
 
-import Edit = require('Controls/_popup/Opener/Edit');
 import InfoboxTarget = require('Controls/_popup/InfoBox');
 import PreviewerTarget = require('Controls/_popup/Previewer');
 import Manager = require('Controls/_popup/Manager');
@@ -67,6 +68,7 @@ export {default as Dialog} from './_popup/Opener/Dialog';
 export {default as Sticky} from './_popup/Opener/Sticky';
 export {default as Infobox} from './_popup/Opener/InfoBox';
 export {default as Previewer} from './_popup/Opener/Previewer';
+export {default as Edit} from './_popup/Opener/Edit';
 export {default as Confirmation} from './_popup/Opener/Confirmation';
 export {default as InfoboxButton} from './_popup/InfoBox/InfoboxButton';
 export {default as BaseOpener} from 'Controls/_popup/Opener/BaseOpener';
@@ -80,7 +82,6 @@ export {IConfirmationOptions} from './_popup/interface/IConfirmation';
 export {INotificationPopupOptions} from './_popup/interface/INotification';
 
 export {
-    Edit,
     InfoboxTarget,
     PreviewerTarget,
     Manager,
