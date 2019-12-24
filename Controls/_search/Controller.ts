@@ -183,20 +183,6 @@ var _private = {
       return root;
    },
 
-   startSearch: function(self, value, force) {
-      if (self._options.source) {
-         const shouldSearch = self._isSearchControllerLoading() ? value !== self._inputSearchValue : true;
-         if (shouldSearch) {
-            const searchValue = self._options.searchValueTrim ? value.trim() : value;
-            if (searchValue !== '' || !self._options.searchValueTrim) {
-               _private.getSearchController(self).search(searchValue, force);
-            }
-         }
-      } else {
-         Logger.error('search:Controller source is required for search', self);
-      }
-   },
-
    setInputSearchValue: function(self, value: string): void {
       self._inputSearchValue = value;
    },
