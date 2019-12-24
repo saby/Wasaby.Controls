@@ -9,7 +9,7 @@ import {TKeySelection as TKey, TKeysSelection as TKeys} from 'Controls/interface
 const DEFAULT_ITEMS = [
    {
       id: 'selectAll',
-      title: rk('Всё')
+      title: rk('Все')
    }, {
       id: 'unselectAll',
       title: rk('Снять')
