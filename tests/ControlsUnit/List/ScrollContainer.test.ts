@@ -307,22 +307,16 @@ describe('Controls/_list/ScrollContainer', () => {
         });
     });
     describe('updateViewport', () => {
-        const instance = {
-            virtualScroll: {},
-            _notify() {
-            },
-            _options: {
-                virtualScrolling: true
-            },
-            proxyEvent() {
-            }
-        };
+        // @ts-ignore
+        const instance = new ScrollController();
+        instance._options.virtualScrolling = true;
+        instance.virtualScroll = {};
 
         it('offset recalc, viewport set', () => {
             // @ts-ignore
             instance.viewSize = 4;
             // @ts-ignore
-            ScrollController.prototype.updateViewport.call(instance, 2);
+            instance.updateViewport(2, {}, false);
             // @ts-ignore
             assert.equal (0.6, instance.virtualScroll.triggerOffset);
             // @ts-ignore
