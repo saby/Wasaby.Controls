@@ -22,10 +22,6 @@ export type RoundMode = 'round' | 'trunc';
  * @author Красильников А.С.
  */
 export interface INumberOptions extends IControlOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     number: number;
     /**
      * Декорируемое число.

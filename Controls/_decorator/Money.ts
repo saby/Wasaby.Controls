@@ -44,10 +44,6 @@ interface IPaths {
  * @author Красильников А.С.
  */
 export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     number: number;
     /**
      * Опция устарела, используйте опцию {@link useGrouping}.
