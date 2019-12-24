@@ -127,6 +127,17 @@ export interface ISwipeConfig {
     needIcon?: Function;
 }
 
+// При необходимости добавлять поля, сейчас описаны только те, которые
+// реально используются
+export interface IEditingConfig {
+    addPosition?: 'top'|'bottom';
+}
+
+interface IUserStrategy<S, T> {
+    strategy: new() => IItemsStrategy<S, T>;
+    options?: object;
+}
+
 /**
  * Преобразует проекцию в массив из ее элементов
  */
@@ -541,7 +552,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$searchValue: string;
 
-    protected _$editingConfig: any;
+    protected _$editingConfig: IEditingConfig;
 
     protected _$virtualScrolling: boolean;
 
@@ -649,6 +660,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _actionsTemplateConfig: IItemActionsTemplateConfig;
     protected _swipeConfig: ISwipeConfig;
 
+    protected _userStrategies: Array<IUserStrategy<S, T>>;
+
     constructor(options: IOptions<S, T>) {
         super(options);
         SerializableMixin.call(this);
@@ -683,6 +696,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._switchImportantPropertiesByUserSort(true);
         this._switchImportantPropertiesByGroup(true);
+
+        this._userStrategies = [];
 
         this._reBuild();
         this._bindHandlers();
@@ -728,6 +743,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._itemsUid = null;
         this._cursorEnumerator = null;
         this._utilityEnumerator = null;
+        this._userStrategies = null;
 
         super.destroy();
     }
@@ -2041,12 +2057,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$rightSpacing;
     }
 
-    setEditingConfig(config: any): void {
+    setEditingConfig(config: IEditingConfig): void {
         if (this._$editingConfig === config) {
             return;
         }
         this._$editingConfig = config;
         this._nextVersion();
+    }
+
+    getEditingConfig(): IEditingConfig {
+        return this._$editingConfig;
     }
 
     getSearchValue(): string {
@@ -2145,7 +2165,33 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._swipeConfig = config;
             this._nextVersion();
         }
-    },
+    }
+
+    appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object): void {
+        this._userStrategies.push({
+            strategy,
+            options
+        });
+
+        if (this._composer) {
+            this._composer.append(strategy, { ...options, display: this });
+        }
+
+        this.nextVersion();
+    }
+
+    removeStrategy(strategy: new() => IItemsStrategy<S, T>): void {
+        const idx = this._userStrategies.findIndex((us) => us.strategy === strategy);
+        if (idx >= 0) {
+            this._userStrategies.splice(idx, 1);
+
+            if (this._composer) {
+                this._composer.remove(strategy);
+            }
+
+            this.nextVersion();
+        }
+    }
 
     // region SerializableMixin
 
@@ -2471,6 +2517,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }).append(GroupItemsStrategy, {
             handler: this._$group
         });
+
+        this._userStrategies.forEach((us) =>
+            composer.append(
+                us.strategy,
+                {
+                    ...us.options,
+                    display: this
+                }
+            )
+        );
 
         return composer;
     }
@@ -3250,6 +3306,7 @@ Object.assign(Collection.prototype, {
     _actionsMenuConfig: null,
     _actionsTemplateConfig: null,
     _swipeConfig: null,
+    _userStrategies: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 

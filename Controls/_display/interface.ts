@@ -1,3 +1,5 @@
+import IItemsStrategy from 'Types/_display/IItemsStrategy';
+
 export type TItemKey = string | number;
 
 export interface IBaseCollection<T> {
@@ -6,6 +8,11 @@ export interface IBaseCollection<T> {
     getNext(item: T): T;
     getPrevious(item: T): T;
     nextVersion(): void;
+}
+
+export interface IStrategyCollection<T> {
+    appendStrategy(strategy: Function, options?: object): void;
+    removeStrategy(strategy: Function): void;
 }
 
 export interface ICollectionCommand<T> {

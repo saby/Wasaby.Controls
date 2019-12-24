@@ -8,12 +8,12 @@ interface IOptions<S, T extends CollectionItem<S>> extends IItemsStrategyOptions
     source: IItemsStrategy<S, T>;
     display: Collection<S, T>;
 
-    contentsToAdd: S;
-    indexToAdd?: number;
+    contents: S;
+    addIndex?: number;
 }
 
 interface ISortOptions {
-    indexToAdd: number;
+    addIndex: number;
 }
 
 export default class AddInPlace<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
@@ -120,7 +120,7 @@ export default class AddInPlace<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _getItems(): T[] {
         if (!this._addedItem) {
-            this._addedItem = this._createItem(this._options.contentsToAdd);
+            this._addedItem = this._createItem(this._options.contents);
         }
 
         // Добавляем _addedItem в 0 позицию, в нужный индекс он будет поставлен
@@ -131,7 +131,7 @@ export default class AddInPlace<S, T extends CollectionItem<S> = CollectionItem<
     protected _createItemsOrder(): number[] {
         const items = this.source.items;
         return AddInPlace.sortItems<S, T>(items, {
-            indexToAdd: this._options.indexToAdd ?? items.length
+            addIndex: this._options.addIndex ?? items.length
         });
     }
 
@@ -156,8 +156,8 @@ export default class AddInPlace<S, T extends CollectionItem<S> = CollectionItem<
             itemsOrder[i - 1] = i;
         }
 
-        // Указываем, что _addedItem должен быть в позиции indexToAdd
-        itemsOrder.splice(options.indexToAdd, 0, 0);
+        // Указываем, что _addedItem должен быть в позиции addIndex
+        itemsOrder.splice(options.addIndex, 0, 0);
 
         return itemsOrder;
     }
