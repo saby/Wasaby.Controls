@@ -36,7 +36,10 @@ var _private = {
             Logger.warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
         }
         if (cfg.groupMethod) {
-            Logger.warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+            Logger.warn('IGrouped: Option "groupMethod" is deprecated and removed in 20.2000. Use option "groupProperty".', self);
+        }
+        if (cfg.groupingKeyCallback) {
+            Logger.warn('IGrouped: Option "groupingKeyCallback" is deprecated and removed in 20.2000. Use option "groupProperty".', self);
         }
 
     },
@@ -77,7 +80,7 @@ var _private = {
     getDisplayFilter: function(data, cfg) {
         var
             filter = [];
-        if (cfg.groupingKeyCallback) {
+        if (cfg.groupingKeyCallback || cfg.groupProperty) {
             filter.push(_private.displayFilterGroups.bind({ collapsedGroups: data.collapsedGroups }));
         }
         if (cfg.itemsFilterMethod) {
@@ -180,6 +183,10 @@ var ItemsViewModel = BaseViewModel.extend({
         this._options.keyProperty = keyProperty;
     },
 
+    getGroupProperty(): string {
+        return this._options.groupProperty;
+    },
+
     _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         let changedItems = [];
 
@@ -255,7 +262,7 @@ var ItemsViewModel = BaseViewModel.extend({
             itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty);
         }
 
-        if (this._options.groupingKeyCallback) {
+        if (this._options.groupingKeyCallback || this._options.groupProperty) {
             if (this._isGroup(itemData.item)) {
                 itemData.isGroup = true;
                 itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;

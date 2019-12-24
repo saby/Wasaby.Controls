@@ -560,6 +560,10 @@ var
             this._options.keyProperty = keyProperty;
         },
 
+        getGroupProperty(): string {
+            return this._model.getGroupProperty();
+        },
+
         _nextModelVersion: function(notUpdatePrefixItemVersion) {
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
@@ -1650,9 +1654,12 @@ var
             const groupingKeyCallback = this._options.groupingKeyCallback;
             if (groupingKeyCallback) {
                 return groupingKeyCallback(item);
-            } else {
-                return null;
             }
+            const groupProperty = this._options.groupProperty;
+            if (groupProperty) {
+                return item.get(groupProperty);
+            }
+            return null;
         },
 
         markItemReloaded: function(key) {

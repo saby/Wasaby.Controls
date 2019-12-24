@@ -424,7 +424,7 @@ var _private = {
             loadedDataCount, allDataCount;
 
         if (_private.isDemandNavigation(navigation) && sourceController.hasMoreData('down')) {
-            self._shouldDrawFooter = self._options.groupingKeyCallback ? !self._listViewModel.isAllGroupsCollapsed() : true;
+            self._shouldDrawFooter = (self._options.groupingKeyCallback || self._options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
         }
@@ -1122,6 +1122,7 @@ var _private = {
                         nodeProperty: 'parent@',
                         groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
                         groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
+                        groupProperty: self._options.contextMenuConfig && self._options.contextMenuConfig.groupProperty,
                         rootKey: action.id,
                         showHeader: true,
                         dropdownClassName: 'controls-itemActionsV__popup',
