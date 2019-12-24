@@ -21,6 +21,25 @@ define(
             assert.equal(item.position.right, undefined);
             assert.equal(item.position.bottom, undefined);
          });
+         it('InfoBoxController: elementCreated', () => {
+            let prepareConfig = popupTemplate.InfoBoxController._prepareConfig;
+            popupTemplate.InfoBoxController._prepareConfig = () => true;
+            let container = {
+               style: {
+                  maxWidth: 100
+               }
+            };
+            popupTemplate.InfoBoxController.elementCreated({
+               position: {
+                  maxWidth: 20
+               },
+               popupOptions: {
+                  maxWidth: 50
+               }
+            }, container);
+            popupTemplate.InfoBoxController._prepareConfig = prepareConfig;
+            assert.equal(container.style.maxWidth, '');
+         });
 
          it('getCustomZIndex', () => {
             let popupList = new collection.List();
