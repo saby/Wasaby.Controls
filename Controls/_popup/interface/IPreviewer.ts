@@ -4,7 +4,7 @@ import { IOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpene
  * Интерфейс для опций окна предпросмотра.
  *
  * @interface Controls/_popup/interface/IPreviewer
- * @public
+ * @private
  * @author Красильников А.С.
  */
 
