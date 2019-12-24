@@ -135,7 +135,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          },
 
          prepareHeaderConfig: function(self, options) {
-            if (options.showHeader) {
+            if (options.showHeader || options.headerTemplate) {
                let headConfig;
                headConfig = options.headConfig || {};
                headConfig.caption = headConfig.caption || options.caption;
