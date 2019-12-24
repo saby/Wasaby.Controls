@@ -65,22 +65,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          sandbox.restore();
       });
 
-      it('private.needUpdateInputSearchValue', function() {
-         var searchController = getSearchController();
-         var result;
-         searchController._dataOptions = defaultOptions;
-
-         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'test');
-         assert.isTrue(result);
-
-         searchMod.Controller._private.setInputSearchValue(searchController, 'test');
-         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'testing');
-         assert.isTrue(result);
-
-         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'te');
-         assert.isFalse(result);
-      });
-
+      
       it('_private.searchCallback', function() {
          var controller = getSearchController();
          var filterChanged = false;
