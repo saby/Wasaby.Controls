@@ -9,3 +9,4 @@
             on:isPreviewerOpened="_isPreviewerOpenedHandler()"
             on:closePreviewer="_closePreviewerHandler()"
 />
+.

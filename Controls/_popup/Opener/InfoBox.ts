@@ -182,7 +182,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
     }
 
-    static  openPopup(config: IInfoBoxOptions): void {
+    static openPopup(config: IInfoBoxOptions): void {
         InfoBox._open((newCfg) => {
             BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
                 BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {
