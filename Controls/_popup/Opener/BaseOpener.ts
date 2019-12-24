@@ -388,14 +388,15 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                     if (typeof cfg.id === 'string') {
                         cfg.id = null;
                     }
-                    if (!opener || (!opener._action && !cfg.id)) {
+                    // Если нет сохраненного dialogMixin'a
+                    if (!(opener && opener._action) && !cfg.id) {
                         action = new Action({
                             withIndicator: !isFormController,
                             closeByFocusOut: true,
                             dialogCreatedCallback: (newDialog) => openedDialog = newDialog
                         });
                     } else {
-                        action = opener._action || cfg.id;
+                        action = (opener && opener._action) || cfg.id;
                     }
 
                     const dialog = action.getDialog();
