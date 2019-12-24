@@ -89,6 +89,7 @@ class InfoBoxController extends StickyController.constructor {
 
         // Remove the width obtained in getDefaultOptions
         item.position.maxWidth = undefined;
+        container.style.maxWidth = '';
 
         return super.elementCreated.apply(this, arguments);
     }
