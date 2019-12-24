@@ -1,7 +1,10 @@
+/* tslint:disable */
+import {assert} from 'chai';
 import ScrollController from 'Controls/_list/ScrollContainer';
 
 describe('Controls/_list/ScrollContainer', () => {
     describe('_afterMount', () => {
+        // @ts-ignore
         const instance = new ScrollController();
         instance._options = {};
         it('flag inited', () => {
@@ -27,6 +30,7 @@ describe('Controls/_list/ScrollContainer', () => {
     });
     describe('_beforeRender', () => {
         it('saveScrollPosition notified correctly', () => {
+            // @ts-ignore
             const instance = new ScrollController();
             instance._options = {};
             instance._notify = (eventName: string, eventArguments: unknown[], params: { bubbling: boolean }) => {
@@ -45,6 +49,7 @@ describe('Controls/_list/ScrollContainer', () => {
     });
     describe('_afterRender', () => {
         it('update virtual scroll items heights', () => {
+            // @ts-ignore
             const instance = new ScrollController();
             instance.virtualScroll = {
                 itemsContainer: {},
@@ -69,6 +74,7 @@ describe('Controls/_list/ScrollContainer', () => {
             });
         });
         it('updateShadowMode called', () => {
+            // @ts-ignore
             const instance = new ScrollController();
             instance.placeholdersSizes = {
                 top: 0,
@@ -83,6 +89,7 @@ describe('Controls/_list/ScrollContainer', () => {
             assert.deepEqual({top: 0, bottom: 0}, instance.eventArguments[0]);
         });
         it('applyScrollTopCallback called', () => {
+            // @ts-ignore
             const instance = new ScrollController();
             instance.virtualScroll = {};
             instance.applyScrollTopCallback = () => {
@@ -92,6 +99,7 @@ describe('Controls/_list/ScrollContainer', () => {
             assert.isTrue(instance.applyScrollTopCallbackCalled);
         });
         it('afterRenderCallback called', () => {
+            // @ts-ignore
             const instance = new ScrollController();
             instance.afterRenderCallback = () => {
                 instance.afterRenderCallbackCalled = true
@@ -100,6 +108,7 @@ describe('Controls/_list/ScrollContainer', () => {
             assert.isTrue(instance.afterRenderCallbackCalled);
         });
         it('position restored', () => {
+            // @ts-ignore
             const instance = new ScrollController();
             instance._notify = (eventName: string, eventArguments: unknown[], eventParams: { bubbling: boolean }) => {
                 instance.eventName = eventName;
@@ -127,6 +136,7 @@ describe('Controls/_list/ScrollContainer', () => {
     });
     describe('itemsContainerReadyHandler', () => {
         it('container saved', () => {
+            // @ts-ignore
             const instance = new ScrollController();
             const container = {};
             instance._options = {virtualScrolling: true};
@@ -138,6 +148,7 @@ describe('Controls/_list/ScrollContainer', () => {
     });
     describe('viewResize', () => {
         it('heights updated', () => {
+            // @ts-ignore
             const instance = new ScrollController();
             instance.virtualScroll = {
                 recalcItemsHeights() {
@@ -168,37 +179,47 @@ describe('Controls/_list/ScrollContainer', () => {
 
         it('without virtual scroll', () => {
             ScrollController.prototype.scrollToItem.call(instance, 0);
+            // @ts-ignore
             assert.isTrue(instance.scrollCalled);
         });
         it('with virtual scroll', () => {
+            // @ts-ignore
             instance.virtualScroll = {
                 recalcFromIndex() {
                     this.__recalcCalled = true;
                 }
             };
+            // @ts-ignore
             instance.scrollToElement = (el) => {
                 this.scrolledElement = el;
             };
             it('without recalc', () => {
+                // @ts-ignore
                 instance.virtualScroll.canScrollToItem = () => true;
                 it('with virtual scroll mode "remove"', () => {
+                    // @ts-ignore
                     instance.actualScrollIndex = 1;
                     ScrollController.prototype.scrollToItem.call(instance, 5);
+                    // @ts-ignore
                     assert.equal(instance.scrolledElement, 3);
                 });
                 it('with virtual scroll mode "hide"', () => {
                     ScrollController.prototype.scrollToItem.call(instance, 5);
+                    // @ts-ignore
                     assert.equal(instance.scrolledElement, 4);
                 });
             });
             it('with recalc', () => {
+                // @ts-ignore
                 instance.virtualScroll.canScrollToItem = () => false;
                 ScrollController.prototype.scrollToItem.call(instance, 5);
+                // @ts-ignore
                 assert.isTrue(instance.virtualScroll.__recalcCalled);
             });
         });
     });
     describe('reset', () => {
+        // @ts-ignore
         const instance = new ScrollController();
         instance.virtualScroll = {
             reset() {
@@ -227,6 +248,7 @@ describe('Controls/_list/ScrollContainer', () => {
         });
     });
     describe('checkCapability', () => {
+        // @ts-ignore
         const instance = new ScrollController();
         instance.virtualScroll = {
             recalcRangeToDirection(direction) {
@@ -273,10 +295,13 @@ describe('Controls/_list/ScrollContainer', () => {
         };
 
         it('offset recalc, viewport set', () => {
+            // @ts-ignore
             ScrollController.prototype.updateViewport.call(instance, 2);
+            // @ts-ignore
             assert.equal (0.6, instance.virtualScroll.triggerOffset);
-            assert.equal(0.6, instance.topTriggerOffset);
-            assert.equal(0.6, instance.bottomTriggerOffset);
+            // @ts-ignore
+            assert.equal(0.6, instance.triggerOffset);
+            // @ts-ignore
             assert.equal(2, instance.virtualScroll.viewportHeight);
         });
     });
@@ -291,11 +316,14 @@ describe('Controls/_list/ScrollContainer', () => {
         };
 
         it('scroll top set', () => {
+            // @ts-ignore
             ScrollController.prototype.handleListScrollSync.call(instance, {scrollTop: 400});
+            // @ts-ignore
             assert.equal(400, instance.virtualScroll.scrollTop);
         });
     });
     describe('indexesChangedCallback', () => {
+        // @ts-ignore
         const instance = new ScrollController();
         instance.viewModel = {
             setViewIndices(startIndex, stopIndex) {
@@ -312,6 +340,20 @@ describe('Controls/_list/ScrollContainer', () => {
             assert.isTrue(instance.itemsChanged);
             assert.isTrue(instance.saveScrollPosition);
             assert.equal(instance.savedScrollDirection, 'up');
+        });
+    });
+    describe('getTriggerOffset', () => {
+        it('null arguments', () => {
+            // @ts-ignore
+            assert.equal(0, ScrollController.prototype.getTriggerOffset(undefined, 1));
+            // @ts-ignore
+            assert.equal(0, ScrollController.prototype.getTriggerOffset(1, undefined));
+        });
+        it('with arguments', () => {
+            // @ts-ignore
+            assert.equal(3, ScrollController.prototype.getTriggerOffset(9, 12));
+            // @ts-ignore
+            assert.equal(3, ScrollController.prototype.getTriggerOffset(12, 9));
         });
     });
 });
