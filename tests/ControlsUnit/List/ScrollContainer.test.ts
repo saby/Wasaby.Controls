@@ -155,8 +155,29 @@ describe('Controls/_list/ScrollContainer', () => {
                 }
             };
             instance.__mounted = true;
+            instance._container = {
+                clientHeight: 700
+            };
             instance.viewResizeHandler();
             assert.isTrue(instance.virtualScroll.__recalcCalled);
+        });
+        it('offsets recalc', () => {
+            // @ts-ignore
+            const instance = new ScrollController();
+            instance.virtualScroll = {
+                recalcItemsHeights() {
+                    this.__recalcCalled = true;
+                }
+            };
+            instance.__mounted = true;
+            instance._container = {
+                clientHeight: 20
+            };
+            instance._options.observeScroll = true;
+            instance.viewportHeight = 10;
+            instance.viewResizeHandler();
+            instance._notify = () => {};
+            assert.equal(instance.triggerOffset, 3);
         });
     });
     describe('scrollToItem', () => {
@@ -299,9 +320,7 @@ describe('Controls/_list/ScrollContainer', () => {
             // @ts-ignore
             assert.equal (0.6, instance.virtualScroll.triggerOffset);
             // @ts-ignore
-            assert.equal(0.6, instance.topTriggerOffset);
-            // @ts-ignore
-            assert.equal(0.6, instance.bottomTriggerOffset);
+            assert.equal(0.6, instance.triggerOffset);
             // @ts-ignore
             assert.equal(2, instance.virtualScroll.viewportHeight);
         });
@@ -341,6 +360,20 @@ describe('Controls/_list/ScrollContainer', () => {
             assert.isTrue(instance.itemsChanged);
             assert.isTrue(instance.saveScrollPosition);
             assert.equal(instance.savedScrollDirection, 'up');
+        });
+    });
+    describe('getTriggerOffset', () => {
+        it('null arguments', () => {
+            // @ts-ignore
+            assert.equal(0, ScrollController.prototype.getTriggerOffset(undefined, 1));
+            // @ts-ignore
+            assert.equal(0, ScrollController.prototype.getTriggerOffset(1, undefined));
+        });
+        it('with arguments', () => {
+            // @ts-ignore
+            assert.equal(3, ScrollController.prototype.getTriggerOffset(10, 12));
+            // @ts-ignore
+            assert.equal(3, ScrollController.prototype.getTriggerOffset(12, 10));
         });
     });
 });
