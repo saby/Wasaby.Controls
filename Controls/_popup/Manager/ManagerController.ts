@@ -3,10 +3,13 @@
  */
 import {Control} from 'UI/Base';
 import Container from 'Controls/_popup/Manager/Container';
+import {IPopupItem, IPopupOptions, IPopupController} from 'Controls/_popup/interface/IPopup';
 // Модуль, необходимый для работы окон/панелей в слое совместимости
 // В WS2/WS3 модулях нет возможности работать через события, чтобы вызвать методы по работе с окнами
-// т.к. хелперы/инстансы старых компонентов могут не лежать в верстке. (а если и лежат, то нет возможности общаться с Manager)
-export = {
+// т.к. хелперы/инстансы старых компонентов могут не лежать в верстке.
+// (а если и лежат, то нет возможности общаться с Manager)
+
+export default {
     _manager: null,
     _container: null,
     _indicator: null,
@@ -48,7 +51,7 @@ export = {
      * Найти popup
      */
 
-    find(id: string) {
+    find(id: string): IPopupItem {
         return this._callManager('find', arguments);
     },
 
@@ -64,11 +67,11 @@ export = {
      * Обновить popup
      */
 
-    update(id: string, options): string {
+    update(id: string, options: IPopupOptions): string {
         return this._callManager('update', arguments);
     },
 
-    updateOptionsAfterInitializing(id: string, options): string {
+    updateOptionsAfterInitializing(id: string, options: IPopupOptions): string {
         return this._callManager('updateOptionsAfterInitializing', arguments);
     },
 
@@ -76,20 +79,16 @@ export = {
      * Показать popup
      */
 
-    show(options, controller): string {
+    show(options: IPopupOptions, controller: IPopupController): string {
         return this._callManager('show', arguments);
     },
 
-    reindex() {
-        return this._callManager('reindex', arguments);
+    reindex(): void {
+        this._callManager('reindex', arguments);
     },
 
     isPopupCreating(id: string): boolean {
         const item = this.find(id);
-
-        // TODO заюзал константы напрямую, чтобы перенести BaseController в библиотку popupTemplate.
-        // Надо разобраться с наследовниемю.
-        // https://online.sbis.ru/opendoc.html?guid=983e303b-d56e-4072-84e9-8514f23efc0e
         return item && (item.popupState === 'initializing' || item.popupState === 'creating');
     },
 

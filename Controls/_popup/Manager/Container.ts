@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {List} from 'Types/collection';
 import {IPopupItem} from 'Controls/_popup/interface/IPopup';
-import * as ManagerController from 'Controls/_popup/Manager/ManagerController';
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import template = require('wml!Controls/_popup/Manager/Container');
 import 'css!theme?Controls/popup';
 

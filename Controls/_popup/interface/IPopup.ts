@@ -77,15 +77,15 @@ export interface IPopupController {
    POPUP_STATE_UPDATED: string;
    POPUP_STATE_DESTROYING: string;
    POPUP_STATE_DESTROYED: string;
-   _elementCreated(item: IPopupItem, container: HTMLDivElement): boolean;
-   _elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
-   _elementAfterUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
-   _elementDestroyed(item: IPopupItem, container: HTMLDivElement): Promise<undefined>;
+   _elementCreated(item: IPopupItem, container: HTMLElement): boolean;
+   _elementUpdated(item: IPopupItem, container: HTMLElement): boolean;
+   _elementAfterUpdated(item: IPopupItem, container: HTMLElement): boolean;
+   _elementDestroyed(item: IPopupItem, container: HTMLElement): Promise<undefined>;
    getDefaultConfig(item: IPopupItem): null|Promise<void>;
    _popupDragEnd(item: IPopupItem): boolean;
    _popupResizingLine(item: IPopupItem, offset: IDragOffset): boolean;
    _elementAnimated(item: IPopupItem): boolean;
-   _elementMaximized(item: IPopupItem, container: HTMLDivElement, state: boolean): boolean;
+   _elementMaximized(item: IPopupItem, container: HTMLElement, state: boolean): boolean;
 }
 
 export default interface IPopup {

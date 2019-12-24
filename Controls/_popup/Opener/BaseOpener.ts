@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import ManagerController = require('Controls/_popup/Manager/ManagerController');
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 import * as CoreMerge from 'Core/core-merge';
 import * as cInstance from 'Core/core-instance';
