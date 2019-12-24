@@ -1,27 +1,6 @@
 <ws:for data="index, item in collection.getViewIterator()">
    <ws:partial
-      template="wml!Controls/_listRender/Render/resources/ItemOutputWrapper"
-      item="{{ item }}"
-      itemTemplate="{{ itemTemplate }}"
-      multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
-      searchValue="{{ collection.getSearchValue() }}"
-
-      attr:class="{{collection.isItemHidden(index) ? 'ws-hidden'}}"
-      attr:key="{{ keyPrefix }}-{{ item.getUid() }}"
-
-      on:click="_onItemClick(item)"
-      on:contextmenu="_onItemContextMenu(item)"
-      on:swipe="_onItemSwipe(item)"
-      on:mouseenter="_onItemMouseEnter(item)"
-      on:mousemove="_onItemMouseMove(item)"
-      on:mouseleave="_onItemMouseLeave(item)"
-      on:wheel="_onItemWheel(item)"
-      on:keydown="_onItemKeyDown(item)"
-
-      itemActionsPosition="{{ itemActionsPosition }}"
-      itemActionsTemplate="{{ itemActionsTemplate }}"
-      swipeTemplate="{{ swipeTemplate }}"
-      multiSelectTpl="{{ multiSelectTpl }}"
-      isAdd="{{ isAdd }}"
-      itemActionsPosition="{{ itemActionsPosition }}"/>
+           template="wml!Controls/_listRender/Render/resources/ForItemTemplate"
+           scope="{{_options}}"
+   />
 </ws:for>

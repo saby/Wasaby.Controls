@@ -1,7 +1,6 @@
-import CollectionItem from './CollectionItem';
-import { register } from 'Types/di';
-import { ColumnsCollection } from '../display';
-import {IOptions as IBaseOptions} from './CollectionItem';
+import CollectionItem, {IOptions as IBaseOptions} from './CollectionItem';
+import {register} from 'Types/di';
+import {ColumnsCollection} from '../display';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     column: number;
@@ -22,11 +21,9 @@ export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
         return result;
     }
     getContentClasses(): string {
-        let classes: string = ' controls-ColumnsView__itemContent';
-        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
-            classes += ' controls-ListView__itemContent_withCheckboxes';
-        }
-        return classes;
+
+        // Тут должен быть вызов метода суперкласса, НО нам не нужны почти все классы, которые он предлагает
+        return ' controls-ColumnsView__itemContent';
     }
 
 }

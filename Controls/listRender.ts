@@ -3,7 +3,7 @@ import itemTemplateWrapper = require('wml!Controls/_listRender/Render/resources/
 import itemActionsTemplate = require('wml!Controls/_listRender/Render/resources/ItemActionsTemplate');
 import swipeTemplate = require('wml!Controls/_listRender/Render/resources/SwipeTemplate');
 import TileItemTemplateWrapper = require('wml!Controls/_listRender/Tile/resources/ItemTemplateWrapper');
-import ColumnsItemTemplateWrapper = require('wml!Controls/_listRender/Columns/resources/ItemTemplateWrapper');
+import ColumnsItemTemplateWrapper = require('wml!Controls/_listRender/Columns/resources/ItemTemplate');
 
 export { default as Render, IRenderOptions, IRenderChildren } from 'Controls/_listRender/Render';
 

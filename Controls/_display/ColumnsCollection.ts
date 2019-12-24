@@ -1,7 +1,7 @@
 import Collection, {ItemsFactory} from './Collection';
 import ColumnsCollectionItem from './ColumnsCollectionItem';
 
-import {create, register} from 'Types/di';
+import {register} from 'Types/di';
 import {IOptions as ICollectionItemOptions} from './ColumnsCollectionItem';
 
 export default class ColumnsCollection<

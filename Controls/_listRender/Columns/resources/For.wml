@@ -1,30 +1,8 @@
 <ws:for data="index, item in collection.getViewIterator()">
-   <ws:if data="{{item.getColumn() == column}}">
+   <ws:if data="{{item.getColumn() === column}}">
       <ws:partial
-              item="{{ item }}"
-              template="{{ itemTemplate }}"
+              template="wml!Controls/_listRender/Render/resources/ForItemTemplate"
               scope="{{_options}}"
-              multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
-              searchValue="{{ collection.getSearchValue() }}"
-
-              attr:class="{{collection.isItemHidden(index) ? 'ws-hidden'}}"
-              attr:key="{{ keyPrefix }}-{{ item.getUid() }}"
-
-              on:click="_onItemClick(item)"
-              on:contextmenu="_onItemContextMenu(item)"
-              on:swipe="_onItemSwipe(item)"
-              on:mouseenter="_onItemMouseEnter(item)"
-              on:mousedown="_onItemMouseDown(item)"
-              on:mousemove="_onItemMouseMove(item)"
-              on:mouseleave="_onItemMouseLeave(item)"
-              on:wheel="_onItemWheel(item)"
-              on:keydown="_onItemKeyDown(item)"
-
-              itemActionsPosition="{{ itemActionsPosition }}"
-              itemActionsTemplate="{{ itemActionsTemplate }}"
-              itemActionsClass="{{ itemActionsClass }}"
-              swipeTemplate="{{ swipeTemplate }}"
-              multiSelectTpl="{{ multiSelectTpl }}"
-              isAdd="{{ isAdd }}"/>
+              />
    </ws:if>
 </ws:for>

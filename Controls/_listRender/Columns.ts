@@ -1,7 +1,7 @@
 import { TemplateFunction, IControlOptions } from 'UI/Base';
 import template = require('wml!Controls/_listRender/Columns/Columns');
 
-import defaultItemTemplate = require('wml!Controls/_listRender/Columns/resources/ItemTemplateWrapper');
+import defaultItemTemplate = require('wml!Controls/_listRender/Columns/resources/ItemTemplate');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';

@@ -17,8 +17,8 @@
 <div attr:class="controls-ListViewV controls-ColumnsView">
    <ws:if data="{{ _options.listModel }}">
       <div attr:class="controls-ColumnsView__itemsContainer" name="itemsContainer">
-        <ws:partial template="renderColumn" column="0" attr:class="controls-ColumnsView_first-column"></ws:partial>
-        <ws:partial template="renderColumn" column="1"></ws:partial>
+        <ws:partial template="renderColumn" column="{{0}}"></ws:partial>
+        <ws:partial template="renderColumn" column="{{1}}"></ws:partial>
       </div>
    </ws:if>
    <ws:if data="{{ _options.emptyTemplate }}">
