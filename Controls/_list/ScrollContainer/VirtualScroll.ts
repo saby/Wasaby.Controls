@@ -3,6 +3,7 @@ import {Record as entityRecord} from 'Types/entity';
 import {CollectionItem} from 'Controls/display';
 import {IObservable} from 'Types/collection';
 import * as getDimension from 'Controls/Utils/getDimensions';
+import {Collection} from 'Controls/display';
 
 const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
 const DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION = 1 / 4;
@@ -17,7 +18,7 @@ interface IVirtualScrollControllerOptions {
     placeholderChangedCallback: Function;
     saveScrollPositionCallback: Function;
     itemHeightProperty: string;
-    viewModel: unknown;
+    viewModel: Collection<entityRecord>;
     useNewModel: boolean;
     viewportHeight: number;
 }
@@ -32,7 +33,6 @@ export default class VirtualScrollController {
     private startIndex: number = 0;
     private stopIndex: number = 0;
     private savedStartIndex: number = 0;
-    private savedStopIndex: number = 0;
     private itemsHeights: IVirtualItem[] = [];
     private itemsOffsets: number[] = [];
     private _options: IVirtualScrollControllerOptions;
@@ -207,7 +207,6 @@ export default class VirtualScrollController {
 
     actualizeSavedIndexes(): void {
         this.savedStartIndex = this.startIndex;
-        this.savedStopIndex = this.stopIndex;
     }
 
     getRestoredScrollPosition(direction: IDirection): number {
@@ -376,7 +375,7 @@ export default class VirtualScrollController {
         this.itemsHeights.splice(itemIndex, itemsHeightsCount);
     }
 
-    private subscribeToModelChange(model: unknown, useNewModel: boolean) {
+    private subscribeToModelChange(model: Collection<entityRecord>, useNewModel: boolean) {
         if (useNewModel) {
             model.subscribe('onCollectionChange', (...args: unknown[]) => {
                 this.collectionChangedHandler.apply(this, [args[0], null, ...args.slice(1)]);
@@ -427,7 +426,6 @@ export default class VirtualScrollController {
 
             if (this.triggerVisibility[direction]) {
                 if (direction === 'up' && this.itemsFromLoadToDirection) {
-                    this.savedStopIndex += newItems.length;
                     this.savedStartIndex += newItems.length;
                     this.setStartIndex(this.startIndex + newItems.length);
                 }
