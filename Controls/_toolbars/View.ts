@@ -55,7 +55,7 @@ export function getButtonTemplate(): TemplateFunction {
 }
 
 /**
- * Интерфейс опций контрола {@link Control/toolbar:View}.
+ * Интерфейс опций контрола {@link Controls/toolbars:View}.
  * @interface Controls/_toolbars/IToolbarOptions
  * @public
  * @author Красильников А.С.
@@ -390,17 +390,17 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     static getDefaultOptions() {
         return {
             /**
-             * @name Control/_toolbars/View#popupClassName
+             * @name Controls/_toolbars/View#popupClassName
              * @default ''
              */
             popupClassName: '',
             /**
-             * @name Control/_toolbars/View#itemsSpacing
+             * @name Controls/_toolbars/View#itemsSpacing
              * @default 'medium'
              */
             itemsSpacing: 'medium',
             /**
-             * @name Control/_toolbars/View#itemTemplate
+             * @name Controls/_toolbars/View#itemTemplate
              * @default Controls/toolbars:ItemTemplate
              */
             itemTemplate: defaultItemTemplate
