@@ -331,7 +331,17 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _search: function (event, value, force) {
       if (_private.isSearchValueChanged(this, value)) {
-         _private.startSearch(this, value, force);
+         if (this._options.source) {
+         const shouldSearch = this._isSearchControllerLoading() ? value !== self._inputSearchValue : true;
+         if (shouldSearch) {
+            const searchValue = this._options.searchValueTrim ? value.trim() : value;
+            if (searchValue !== '' || !this._options.searchValueTrim) {
+               _private.getSearchController(this).search(searchValue, force);
+            }
+         }
+      } else {
+         Logger.error('search:Controller source is required for search', this);
+      }
          if (_private.needUpdateInputSearchValue(this, value) {
             _private.setInputSearchValue(this, value);
          }
