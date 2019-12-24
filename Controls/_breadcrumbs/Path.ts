@@ -53,9 +53,13 @@ var BreadCrumbs = Control.extend({
         this._redrawIfNeed(this._options.items, newOptions.items);
     },
     _redrawIfNeed: function(currentItems, newItems) {
-        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems, this._oldWidth, this._container.clientWidth, this._container)) {
-            this._oldWidth = this._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newItems, this._container.clientWidth);
+
+        // FIXME self._container[0] delete after
+        // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        const container = this._container[0] || this._container;
+        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems, this._oldWidth, container.clientWidth, container)) {
+            this._oldWidth = container.clientWidth;
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newItems, container.clientWidth);
             this._viewUpdated = true;
         }
     }
