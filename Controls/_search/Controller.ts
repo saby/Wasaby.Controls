@@ -321,7 +321,9 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       } else {
          Logger.error('search:Controller source is required for search', this);
       }
-      _private.setInputSearchValue(this, value);
+      if (this._options.searchValue !== this._inputSearchValue) {
+         _private.setInputSearchValue(this, value);
+      }
    },
 
    _beforeUnmount: function () {
