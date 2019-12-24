@@ -31,7 +31,7 @@ define('Controls/interface/IGridItemTemplate', [
     * <pre class="brush: html">
     * <Controls.grid:View>
     *    <ws:itemTemplate>
-    *       <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}">
+    *       <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}">
     *          <ws:contentTemplate>
     *             {{contentTemplate.itemData.item.title}}
     *          </ws:contentTemplate>

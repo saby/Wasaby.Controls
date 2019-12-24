@@ -264,6 +264,25 @@ define([
             sinon.assert.notCalled(ml._children.months.reload);
             sandbox.restore();
          });
+
+         it('should scroll to days.', function() {
+            let
+               sandbox = sinon.createSandbox(),
+               position = new Date(2018, 0, 2),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2019, 0, 1) });
+            sandbox.stub(ml, '_canScroll').returns(false);
+            ml._children = {
+               months: {
+                  reload: sinon.fake()
+               }
+            };
+            ml._scrollToPosition(position);
+            assert.isEmpty(ml._displayedDates);
+            assert.strictEqual(ml._startPositionId, '2018-01-01');
+            assert.strictEqual(ml._positionToScroll, position);
+            sinon.assert.notCalled(ml._children.months.reload);
+            sandbox.restore();
+         });
       });
 
       describe('_getMonth', function() {
@@ -478,6 +497,53 @@ define([
                } else {
                   assert.isFalse(result);
                }
+               sandbox.restore();
+            });
+         });
+      });
+
+      describe('_findElementByDate', function() {
+         const
+            ITEM_BODY_SELECTOR = calendar.MonthList._ITEM_BODY_SELECTOR,
+            returnAllPeriodTypes = function(selector, date) {
+               return selector;
+            },
+            returnMonths = function(selector, date) {
+               return selector === ITEM_BODY_SELECTOR.month ? selector : null;
+            },
+            returnYears = function(selector, date) {
+               return selector === ITEM_BODY_SELECTOR.year ? selector : null;
+            };
+
+         [{
+            date: new Date(2020, 1, 2),
+            getElementByDateStub: returnAllPeriodTypes,
+            result: ITEM_BODY_SELECTOR.day
+         }, {
+            date: new Date(2020, 1, 1),
+            getElementByDateStub: returnAllPeriodTypes,
+            result: ITEM_BODY_SELECTOR.month
+         }, {
+            date: new Date(2020, 0, 1),
+            getElementByDateStub: returnAllPeriodTypes,
+            result: ITEM_BODY_SELECTOR.year
+         }, {
+            date: new Date(2020, 1, 2),
+            getElementByDateStub: returnMonths,
+            result: ITEM_BODY_SELECTOR.month
+         }, {
+            date: new Date(2020, 1, 2),
+            getElementByDateStub: returnYears,
+            result: ITEM_BODY_SELECTOR.year
+         }].forEach(function(test, index) {
+            it(`test ${index}`, function () {
+               let
+                  sandbox = sinon.createSandbox(),
+                  control = calendarTestUtils.createComponent(
+                     calendar.MonthList, coreMerge(test.options, config, { preferSource: true }));
+
+               sandbox.stub(control, '_getElementByDate').callsFake(test.getElementByDateStub);
+               assert.strictEqual(control._findElementByDate(test.date), test.result);
                sandbox.restore();
             });
          });

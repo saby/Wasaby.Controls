@@ -7,17 +7,11 @@
  * <pre class="brush: html">
  * <Controls.grid:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/grid:ItemTemplate">
- *          <ws:contentTemplate>
- *             Этот отображается в режиме просмотра.
- *             <ws:partial template="{{contentTemplate.itemActionsTemplate}}" />
- *          </ws:contentTemplate>
- *       </ws:partial>
- *       <ws:partial template="Controls/grid:RowEditor" scope="{{_options}}">
- *          <ws:content>
- *             Этот отображается в режиме редактирования.
+ *       <ws:partial template="Controls/grid:RowEditor" scope="{{itemTemplate}}">
+ *          <div>
+ *             Этот шаблон отображается в режиме редактирования.
  *             <Controls.dropdown:Combobox bind:selectedKey="content.itemData.item.documentSign"  />
- *          </ws:content>
+ *          </div>
  *       </ws:partial>
  *    </ws:itemTemplate>
  * </Controls.grid:View>

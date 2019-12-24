@@ -319,6 +319,10 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          });
       },
 
+      _nodeFooterClick: function() {
+         this._children.nodeFooterDropdown.closeMenu();
+      },
+
       _groupingKeyCallback: function(item) {
          if (item.get('group') === 'hidden' || !item.get('group')) {
             return ControlsConstants.view.hiddenGroup;

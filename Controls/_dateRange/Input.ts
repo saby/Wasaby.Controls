@@ -155,5 +155,5 @@ Component.getDefaultOptions = function () {
 Component.getOptionTypes = function () {
     return coreMerge({}, IDateTimeMask.getOptionTypes());
 };
-Component._theme = ['Controls/dateRange'];
+Component._theme = ['Controls/dateRange', 'Controls/Classes'];
 export default Component;

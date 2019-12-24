@@ -111,8 +111,9 @@ export default Form;
  */
 
 /**
+ * Запускает валидацию.
  * @name Controls/_validate/Controller#submit
- * @description Запуск валидации.
+ * @function
  * @returns {Deferred}
  * @example
  * WML
@@ -178,12 +179,14 @@ export default Form;
  */
 
 /**
+ * Return the result of validation
  * @name Controls/_validate/Controller#isValid
- * @description Return the result of validation
+ * @function
  * @returns {Array}
  */
 /*
+ * Возвращает результат валидации. 
  * @name Controls/_validate/Controller#isValid
- * @description Возвращает результат валидации.
+ * @function
  * @returns {Array}
  */
