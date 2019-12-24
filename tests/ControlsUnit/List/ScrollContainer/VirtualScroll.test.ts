@@ -289,6 +289,16 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             // @ts-ignore
             assert.equal(19, affectingInstance.stopIndex);
         });
+        it('isLoaded', () => {
+            const instance = new VirtualScroll(defaultOptions);
+            instance.itemsCount = 20;
+            instance.reset();
+            instance.itemsContainer = itemsContainer;
+            assert.isTrue(instance.isLoaded({body: {contains: () => true}}));
+            instance.stopIndex = 100;
+            instance.itemsCount = 100;
+            assert.isFalse(instance.isLoaded({body: {contains: () => true}}));
+        });
         it('set items container', () => {
             // @ts-ignore
             const instance = new VirtualScroll(defaultOptions);
