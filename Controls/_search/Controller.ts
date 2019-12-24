@@ -70,6 +70,7 @@ var _private = {
    abortCallback: function (self, filter) {
       self._loading = false;
       if (self._viewMode === 'search') {
+         self._searchValue = '';
          self._misspellValue = '';
 
          if (self._options.parentProperty) {
@@ -81,6 +82,7 @@ var _private = {
          if (!isEqual(self._options.filter, filter)) {
             self._notify('filterChanged', [filter]);
          }
+         self._notify('searchValueChanged', [self._searchValue]);
       }
    },
 
@@ -302,7 +304,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
+      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue && this._options.minSearchLength <= newOptions.searchValue) {
          this._search(null, newOptions.searchValue);
       }
    },
