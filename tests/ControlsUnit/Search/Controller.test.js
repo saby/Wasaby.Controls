@@ -64,7 +64,59 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       afterEach(function() {
          sandbox.restore();
       });
-    
+
+      it('private.startSearch', function() {
+         var searchController = getSearchController();
+         var value;
+         searchController._dataOptions = defaultOptions;
+         searchController._options.searchValueTrim = true;
+
+         searchMod.Controller._private.getSearchController(searchController);
+
+         searchController._searchController.search = function(searchVal) {
+            value = searchVal;
+         };
+         searchMod.Controller._private.startSearch(searchController, 'test');
+         assert.equal(value, 'test');
+
+         searchMod.Controller._private.startSearch(searchController, '  test2  ');
+         assert.equal(value, 'test2');
+
+         value = '';
+         searchController._options.source = null;
+         searchMod.Controller._private.startSearch(searchController, 'test3');
+         assert.equal(value, '');
+      });
+
+      it('private.isSearchValueChanged', function() {
+         var searchController = getSearchController();
+         var result;
+         searchController._dataOptions = defaultOptions;
+
+         result = searchMod.Controller._private.isSearchValueChanged(searchController, 'test');
+         assert.isTrue(result);
+
+         searchMod.Controller._private.setInputSearchValue(searchController, 'test');
+         result = searchMod.Controller._private.isSearchValueChanged(searchController, 'test');
+         assert.isFalse(result);
+      });
+
+      it('private.needUpdateInputSearchValue', function() {
+         var searchController = getSearchController();
+         var result;
+         searchController._dataOptions = defaultOptions;
+
+         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'test');
+         assert.isTrue(result);
+
+         searchMod.Controller._private.setInputSearchValue(searchController, 'test');
+         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'testing');
+         assert.isTrue(result);
+
+         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'te');
+         assert.isFalse(result);
+      });
+
       it('_private.searchCallback', function() {
          var controller = getSearchController();
          var filterChanged = false;
