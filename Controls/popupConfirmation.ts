@@ -9,7 +9,6 @@ import 'css!theme?Controls/popupConfirmation';
  * @includes style Controls/_popupConfirmation/style
  * @includes Footer Controls/_popupConfirmation/Footer
  * @includes IConfirmationFooter Controls/_popup/interface/IConfirmationFooter
- * @includes IConfirmationFooterOptions Controls/_popup/interface/IConfirmationFooter
  * @public
  * @author Красильников А.С.
  */
@@ -21,7 +20,6 @@ import 'css!theme?Controls/popupConfirmation';
  * @includes style Controls/_popupConfirmation/style
  * @includes Footer Controls/_popupConfirmation/Footer
  * @includes IConfirmationFooter Controls/_popup/interface/IConfirmationFooter
- * @includes IConfirmationFooterOptions Controls/_popup/interface/IConfirmationFooter
  * @public
  * @author Красильников А.С.
  */

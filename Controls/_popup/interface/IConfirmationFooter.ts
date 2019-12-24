@@ -70,3 +70,19 @@ export interface IConfirmationFooter extends IOpener {
  * @cfg {String} Текст кнопки "принять"
  * @default ОК
  */
+
+/**
+ * @typedef {Boolean|undefined} Result
+ * @description Опредеяет, какая кнопка была нажата
+ * @remark
+ * true - Нажата кнопка "Да"
+ * false - Нажата кнопка "Нет"
+ * undefined - Нажата кнопка "ОК" или "Отмена"
+ */
+
+/**
+ * @event Происходит при клике по кнопке футера
+ * @name Controls/_popup/interface/IConfirmationFooter#result
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
+ * @param {Result} Результат
+ */
