@@ -1,11 +1,18 @@
-import { TItemKey, IBaseCollection } from '../interface';
+import { TItemKey, IBaseCollection, IStrategyCollection } from '../interface';
+
+import AddInPlaceStrategy from '../itemsStrategy/AddInPlace';
+import { Model } from 'Types/entity';
+import { IEditingConfig } from '../Collection';
 
 export interface IEditInPlaceItem {
     setEditing(editing: boolean, editingContents?: unknown): void;
     isEditing(): boolean;
 }
 
-export type IEditInPlaceCollection = IBaseCollection<IEditInPlaceItem>;
+export interface IEditInPlaceCollection
+    extends IBaseCollection<IEditInPlaceItem>, IStrategyCollection<IEditInPlaceItem> {
+    getEditingConfig(): IEditingConfig;
+}
 
 export function beginEdit(
     collection: IEditInPlaceCollection,
@@ -27,6 +34,25 @@ export function beginEdit(
 
 export function endEdit(collection: IEditInPlaceCollection): void {
     beginEdit(collection, null);
+}
+
+export function beginAdd(
+    collection: IEditInPlaceCollection,
+    record: Model
+): void {
+    const editingConfig = collection.getEditingConfig();
+
+    // TODO support tree
+    const addIndex = editingConfig?.addPosition === 'top' ? 0 : Number.MAX_SAFE_INTEGER;
+
+    collection.appendStrategy(AddInPlaceStrategy, {
+        contents: record,
+        addIndex
+    });
+}
+
+export function endAdd(collection: IEditInPlaceCollection): void {
+    collection.removeStrategy(AddInPlaceStrategy);
 }
 
 export function isEditing(collection: IEditInPlaceCollection): boolean {
