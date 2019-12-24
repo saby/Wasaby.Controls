@@ -8,7 +8,7 @@ define(
 
       describe('Controls/_popup/Popup', () => {
          it('isResized', () => {
-            const Popup = new PopupClass();
+            const Popup = new PopupClass.default();
             let oldOptions = { position: {} };
             let newOptions = { position: {} };
             assert.equal(false, Popup._isResized(oldOptions, newOptions));

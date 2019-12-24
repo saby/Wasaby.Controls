@@ -18,12 +18,14 @@ type GetSourceResult = {
 
       /**
        * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
-       *
-       *<a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+       * @remark
+       * См. <a href="/materials/demo-ws4-filter-search-new">демо-пример</a>.
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
        * @mixes Controls/_interface/INavigation
+       * @mixes Controls/_interface/IHierarchy
+       * @mixes Controls/_interface/ISource
        * @extends Core/Control
        * @control
        * @public
@@ -38,6 +40,8 @@ type GetSourceResult = {
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
        * @mixes Controls/_interface/INavigation
+       * @mixes Controls/_interface/IHierarchy
+       * @mixes Controls/_interface/ISource
        * @extends Core/Control
        * @control
        * @public
@@ -45,25 +49,17 @@ type GetSourceResult = {
        */
 
       /**
-       * @name Controls/_list/Data#source
-       * @cfg Объект, реализующий интерфейс ISource для поддержки доступа к данным.
+       * @name Controls/_list/Data#root
+       * @cfg {Number|String} Идентификатор корневого узла.
        */
 
-      /*
-       * @name Controls/_list/Data#source
-       * @cfg Object that implements ISource interface for data access.
-       */
 
       /**
-       * @name Controls/_list/Data#keyProperty
-       * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
+       * @event Происходит при изменении корня иерархии.
+       * @name Controls/_list/Data#rootChanged
+       * @param event {eventObject} Дескриптор события.
+       * @param root {String|Number} Идентификатор корневой записи.
        */
-
-      /*
-       * @name Controls/_list/Data#keyProperty
-       * @cfg {String} Name of the item property that uniquely identifies collection item.
-       */
-
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
 
       var _private = {

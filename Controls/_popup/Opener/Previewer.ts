@@ -1,5 +1,5 @@
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
-import * as ManagerController from 'Controls/_popup/Manager/ManagerController';
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as cClone from 'Core/core-clone';
 import {IPreviewerOpener, IPreviewerPopupOptions} from 'Controls/_popup/interface/IPreviewer';

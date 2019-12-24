@@ -11,10 +11,6 @@ import {wrapURLsValue} from 'Controls/_decorator/ActualAPI';
  * @author Красильников А.С.
  */
 export interface IWrapURLsOptions extends IControlOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     text: string;
     /**
      * Декорируемый текст.

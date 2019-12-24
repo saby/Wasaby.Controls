@@ -326,9 +326,21 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         return this._hide(id);
     },
 
-    /**
+    /*
      * show indicator (bypassing requests of indicator showing stack)
      */
+    /**
+     * Отображает индикатор загрузки.
+     * @param config Объект с параметрами.
+     * @param {Boolean} config.isGlobal Определяет, глобальный или нет идентификатор (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {String} config.message Текст сообщения индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {String} config.scroll Добавляет градиент фону индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {String} config.small Размер индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {String} config.overlay Настройки оверлея индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {Array.<String>|String} config.mods Может использоваться для пользовательской настройки индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {Number} config.delay Задержка перед началом показа индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param waitPromise Promise, к которому привязывается отображение индикатора. Индикатор скроется после завершения Promise (необязательное свойство).
+     */ 
     show(config, waitPromise) {
         return this._show(config, waitPromise);
     },
@@ -346,8 +358,11 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         return newCfg.id;
     },
 
-    /**
+    /*
      * hide indicator (bypassing requests of indicator showing stack)
+     */
+    /**
+     * Скрывает индикатор загрузки.
      */
     hide(id) {
         if (!id) {
