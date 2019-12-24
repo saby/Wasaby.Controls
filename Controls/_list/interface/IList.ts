@@ -254,7 +254,7 @@ export interface IList {
  * @remark
  * См. <a href="/materials/demo-ws4-list-item-actions">демо-пример</a>.
  * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View keyProperty}.
- * Подробнее о работе с опциями записи читайте [@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+ * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @see itemActionsPosition
  * @see itemActionVisibilityCallback
  * @see itemActionsProperty
@@ -275,7 +275,7 @@ export interface IList {
  * @remark
  * См. <a href="/materials/demo-ws4-list-item-actions">демо-пример</a>.
  * См. <a href="/materials/demo-ws4-list-item-actions-custom">демо-пример</a>.
- * Подробнее о работе с опциями записи читайте [@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+ * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
  * Размещаем опции записи в шаблоне с использованием itemActionsTemplate:
  * <pre>
@@ -395,7 +395,7 @@ export interface IList {
  * @param {ItemAction} action Объект с конфигурацией опции записи, по которой выполнили клик.
  * @param {Types/entity:Model} item Экземпляр записи, для которой была отображена опция записи.
  * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
- * @remark Подробнее о работе с опциями записи читайте [@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+ * @remark Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @see itemActions
  * @see itemActionsPosition
  * @see itemActionVisibilityCallback
@@ -417,7 +417,7 @@ export interface IList {
  * @cfg {TActionAlignment} Устанавливает выравнивание опций записи, когда они отображаются в режиме swipe.
  * @remark
  * См. <a href="/materials/demo-ws4-swipe">демо-пример</a>.
- * Подробнее о работе с опциями записи читайте [@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+ * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @see itemActions
  * @see itemActionsPosition
  * @see itemActionVisibilityCallback
@@ -439,7 +439,7 @@ export interface IList {
  * @cfg {TActionCaptionPosition} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
  * @remark
  * См. <a href="/materials/demo-ws4-swipe">демо-пример</a>.
- * Подробнее о работе с опциями записи читайте [@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+ * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @see itemActions
  * @see itemActionsPosition
  * @see itemActionVisibilityCallback
@@ -467,7 +467,7 @@ export interface IList {
  * * item — модель (см. {@link Types/entity:Model}), содержащая данные записи.
  *
  * Чтобы опция записи отображалась, из функции следует вернуть true.
- * Подробнее о работе с опциями записи читайте [@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+ * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
  * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
  * WML:
