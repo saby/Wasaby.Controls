@@ -54,9 +54,9 @@ define([
          validCtrl._isOpened = false;
          validCtrl._validationResult = 'error';
          validCtrl._private.openInfoBox(validCtrl);
-         validCtrl._mouseInfoboxHandler({type: 'mouseenter'});
+         validCtrl._mouseInfoboxHandler({ type: 'mouseenter' });
          assert.deepEqual(validCtrl._isOpened, true);
-         validCtrl._mouseInfoboxHandler({type: 'close'});
+         validCtrl._mouseInfoboxHandler({ type: 'close' });
          assert.deepEqual(validCtrl._isOpened, false);
          validCtrl.destroy();
       });
@@ -128,7 +128,6 @@ define([
             FC.destroy();
             done();
          });
-
       });
 
       it('setValidationResult', () => {
@@ -144,25 +143,29 @@ define([
 
          FC.destroy();
       });
-
-      it('submit', () => {
-         let FC = new validateMod.Controller();
-         let validator1 = getValidator(true);
-         let validator2 = getValidator(false);
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
-
-         FC.submit().addCallback((result) => {
-            assert.equal(validator1._validateCall, true, 'is validate1 call');
-            assert.equal(validator2._validateCall, true, 'is validate2 call');
-
-            assert.equal(result[0], true, 'validate1 result');
-            assert.equal(result[1], false, 'validate2 result');
-
-            assert.equal(validator1._activateCall, true, 'is validate1 activate');
-            assert.equal(validator2._activateCall, false, 'is validate2 activate');
-         });
-         FC.destroy();
+   });
+   describe('Validate/FormController - submit()', () => {
+      let submitResult;
+      let FC = new validateMod.Controller();
+      let validator1 = getValidator(true);
+      let validator2 = getValidator(false);
+      FC.onValidateCreated({}, validator1);
+      FC.onValidateCreated({}, validator2);
+      FC.submit().then((result) => {
+         submitResult = result;
       });
+      it('call validate() ', () => {
+         assert.equal(validator1._validateCall, true, 'is validate1 call');
+         assert.equal(validator2._validateCall, true, 'is validate2 call');
+      });
+      it('get validationResult ', () => {
+         assert.equal(submitResult[0], false, 'validate2 result');
+         assert.equal(submitResult[1], true, 'validate1 result');
+      });
+      it('call activate() only in first validator ', () => {
+         assert.equal(validator1._activateCall, true, 'is validate1 activate');
+         assert.equal(validator2._activateCall, false, 'is validate2 activate');
+      });
+      FC.destroy();
    });
 });
