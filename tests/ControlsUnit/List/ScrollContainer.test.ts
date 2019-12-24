@@ -283,6 +283,10 @@ describe('Controls/_list/ScrollContainer', () => {
         instance.triggerVisibility = {
             up: false, down: false
         };
+        instance.updateTriggerOffset = function() {
+            // @ts-ignore
+            ScrollController.prototype.updateTriggerOffset.apply(this, arguments);
+        };
 
         it('update view window didn`t call', () => {
             instance.checkTriggerVisibility();
@@ -315,6 +319,8 @@ describe('Controls/_list/ScrollContainer', () => {
         };
 
         it('offset recalc, viewport set', () => {
+            // @ts-ignore
+            instance.viewSize = 4;
             // @ts-ignore
             ScrollController.prototype.updateViewport.call(instance, 2);
             // @ts-ignore
