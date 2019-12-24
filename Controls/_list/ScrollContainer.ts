@@ -469,7 +469,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private updateViewWindow(direction: IDirection, params?: IScrollParams): void {
         this.changeTriggerVisibility(direction, true);
         if (this._options.virtualScrolling) {
-            if (this.virtualScroll.isLoaded(document)) {
+            if (!this.itemsChanged) {
                 if (params) {
                     this.virtualScroll.viewportHeight = params.clientHeight;
                 }
