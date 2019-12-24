@@ -194,12 +194,14 @@
                                   footerTemplate="wml!Controls-demo/Input/Dropdown/footerTemplateDropdown">
          </Controls.dropdown:Input>
          <h3>With footer on the second level</h3>
-         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysFooterHierarchy"
+         <Controls.dropdown:Input name="nodeFooterDropdown"
+                                  bind:selectedKeys="_selectedKeysFooterHierarchy"
                                   keyProperty="id"
                                   displayProperty="title"
                                   parentProperty="parent"
                                   nodeProperty="@parent"
                                   attr:class="demo-InputDropdown__withFooterSecondLevel"
+                                  on:footerClick="_nodeFooterClick()"
                                   nodeFooterTemplate="wml!Controls-demo/Input/Dropdown/footerHierarchyItem"
                                   source="{{_createMemory(_hierarchyFooterItems)}}"/>
       </div>
