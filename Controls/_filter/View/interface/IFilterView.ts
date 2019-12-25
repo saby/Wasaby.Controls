@@ -261,6 +261,7 @@
 /**
  * @name Controls/_filter/View/interface/IFilterView#panelTemplateName
  * @cfg {String} Шаблон всплывающей панели быстрых фильтров, которая открывается после клика по параметрам быстрого фильтра.
+ * @default Controls/filterPopup:SimplePanel
  * @remark
  * В качестве шаблона ркомендуется использовать {@link Controls/filterPopup:SimplePanel}
  * При указании panelTemplateName, параметр items должен быть передан в шаблон.

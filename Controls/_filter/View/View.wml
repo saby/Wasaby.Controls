@@ -21,7 +21,7 @@
                      on:textValueChanged="_rangeTextChangedHandler()"
                      on:rangeChanged="_rangeValueChangedHandler()"/>
       </ws:if>
-      <ws:if data="{{_needShowFastFilter(_source) && _isFastReseted() && _options.detailPanelTemplateName}}">
+      <ws:if data="{{_needShowFastFilter(_source) && _options.panelTemplateName && _isFastReseted() && _options.detailPanelTemplateName}}">
          <ws:partial template="itemTemplate"
                      itemName="all_frequent"
                      text="{[Все]}"
