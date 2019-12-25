@@ -101,20 +101,20 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isFalse(result);
       });
 
-      it('private.needUpdateInputSearchValue', function() {
+      it('private.isInputSearchValueShort', function() {
          var searchController = getSearchController();
          var result;
          searchController._dataOptions = defaultOptions;
 
-         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'test');
-         assert.isTrue(result);
+         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'test');
+         assert.isFalse(result);
 
          searchMod.Controller._private.setInputSearchValue(searchController, 'test');
-         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'testing');
-         assert.isTrue(result);
-
-         result = searchMod.Controller._private.needUpdateInputSearchValue(searchController, 'te');
+         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'testing');
          assert.isFalse(result);
+
+         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'te');
+         assert.isTrue(result);
       });
 
       it('_private.searchCallback', function() {
@@ -404,6 +404,14 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.equal(searchController._root, 'test2');
             assert.equal(searchController._previousViewMode, 'notSearch');
             assert.equal(searchController._viewMode, 'search');
+         });
+         it('with short searchValue', function() {
+            searchController._searchValue = '';
+            searchController._beforeMount({searchValue: 'te',  viewMode: 'notSearch'}, {});
+
+            assert.equal(searchController._inputSearchValue, 'te');
+            assert.equal(searchController._searchValue, '');
+            assert.equal(searchController._viewMode, 'notSearch');
          })
       });
 
