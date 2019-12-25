@@ -10,6 +10,7 @@ import {isHistorySource} from 'Controls/_filter/HistoryUtils';
 
 /**
  * Панель "быстрых фильтров" для {@link Controls/filter:View}.
+ * Шаблон окна, в котором для каждого фильтра с viewMode = 'frequent' отображает список элементов в отдельном блоке.
  *
  * @class Controls/_filterPopup/SimplePanel
  * @extends Core/Control
@@ -17,6 +18,13 @@ import {isHistorySource} from 'Controls/_filter/HistoryUtils';
  * @control
  * @public
  * @author Золотова Э.Е.
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.filterPopup:SimplePanel
+ *          attr:class="custom-SimplePanel"
+ *          items="{{_options.items}}" />
+ * </pre>
  *
  */
 
