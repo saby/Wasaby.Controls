@@ -183,8 +183,30 @@ var _private = {
       return root;
    },
 
+   startSearch: function(self, value, force) {
+      if (self._options.source) {
+         const shouldSearch = self._isSearchControllerLoading() ? value !== self._inputSearchValue : true;
+         if (shouldSearch) {
+            const searchValue = self._options.searchValueTrim ? value.trim() : value;
+            if (searchValue !== '' || !self._options.searchValueTrim) {
+               _private.getSearchController(self).search(searchValue, force);
+            }
+         }
+      } else {
+         Logger.error('search:Controller source is required for search', self);
+      }
+   },
+
    setInputSearchValue: function(self, value: string): void {
       self._inputSearchValue = value;
+   },
+
+   isSearchValueChanged: function (self, searchValue) {
+      return self._options.searchValue !== searchValue && searchValue !== self._inputSearchValue;
+   },
+
+   needUpdateInputSearchValue: function (self, searchValue) {
+      return searchValue.length >= self._options.minSearchLength;
    }
 };
 
@@ -304,23 +326,16 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
-         this._search(null, newOptions.searchValue);
+      if (_private.isSearchValueChanged(this, newOptions.searchValue)) {
+         _private.startSearch(this, newOptions.searchValue);
+         if (_private.needUpdateInputSearchValue(this, newOptions.searchValue)) {
+            _private.setInputSearchValue(this, newOptions.searchValue);
+         }
       }
    },
 
    _search: function (event, value, force) {
-      if (this._options.source) {
-         const shouldSearch = this._isSearchControllerLoading() ? value !== this._inputSearchValue : true;
-         if (shouldSearch) {
-            const searchValue = this._options.searchValueTrim ? value.trim() : value;
-            if (searchValue !== '' || !this._options.searchValueTrim) {
-               _private.getSearchController(this).search(searchValue, force);
-            }
-         }
-      } else {
-         Logger.error('search:Controller source is required for search', this);
-      }
+      _private.startSearch(this, value, force);
       _private.setInputSearchValue(this, value);
    },
 

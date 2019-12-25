@@ -55,7 +55,6 @@ define('Controls/Application/TouchDetector', [
       // Объявляем функцию, которая возвращает поля Контекста и их значения.
       // Имя функции фиксировано.
       _getChildContext: function() {
-
          // Возвращает объект.
          return {
             isTouch: this._touchObjectContext

@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {RequireHelper} from 'View/Executor/Utils';
 import template = require('wml!Controls/_popup/Previewer/PreviewerTemplate');
-import Utils = require('View/Executor/Utils');
 import 'Controls/Container/Async';
 import {load} from 'Core/library';
 
@@ -11,25 +11,25 @@ import {load} from 'Core/library';
 
 interface IPreviewerOptions extends IControlOptions {
     template: string|TemplateFunction;
+    templateOptions: any;
 }
 
 class PreviewerTemplate extends Control<IPreviewerOptions> {
     _template: TemplateFunction = template;
 
-    protected _beforeMount(options: IPreviewerOptions): void|Promise<TemplateFunction> {
+    protected _beforeMount(options: IPreviewerOptions): void|Promise<void> {
         if (typeof window !== 'undefined' && this._needRequireModule(options.template)) {
-            return load(options.template);
+            return load(options.template as string);
         }
     }
 
     private _needRequireModule(module: string|TemplateFunction): boolean {
-        return typeof module === 'string' && !Utils.RequireHelper.defined(module);
+        return typeof module === 'string' && !RequireHelper.defined(module);
     }
 
-    private _sendResult(event: Event): void {
+    protected _sendResult(event: Event): void {
         this._notify('sendResult', [event], {bubbling: true});
     }
 }
 
-export = PreviewerTemplate;
-
+export default PreviewerTemplate;

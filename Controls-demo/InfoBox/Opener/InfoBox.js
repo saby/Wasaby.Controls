@@ -4,7 +4,8 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
       'Controls/context',
       'wml!Controls-demo/InfoBox/resources/content',
       'wml!Controls-demo/InfoBox/Opener/InfoBox',
-      'css!Controls-demo/InfoBox/Opener/InfoBox'
+      'css!Controls-demo/InfoBox/Opener/InfoBox',
+      'css!Controls/Classes'
    ],
    function(Control, context, contentTpl, template) {
       'use strict';

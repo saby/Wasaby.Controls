@@ -783,5 +783,5 @@ define('Controls/Utils/IntersectionObserver',
 
       return IntersectionObserver;
    }
-   /* eslint-enable */
 );
+/* eslint-enable */

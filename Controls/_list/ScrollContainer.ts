@@ -6,9 +6,10 @@ import {detection} from 'Env/Env';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {throttle} from 'Types/function';
-import {descriptor} from 'Types/entity';
+import {descriptor, Record as entityRecord} from 'Types/entity';
 import {IDirection, IVirtualScrollConfig, IVirtualScrollMode} from './interface/IVirtualScroll';
 import {Logger} from 'UI/Utils';
+import {Collection} from 'Controls/display';
 
 const SCROLLMOVE_DELAY = 150;
 export const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
@@ -21,7 +22,7 @@ interface IDeprecatedOptions {
 }
 interface IOptions extends IControlOptions, IDeprecatedOptions {
     virtualScrollConfig: IVirtualScrollConfig;
-    viewModel: unknown;
+    viewModel: Collection<entityRecord>;
     useNewModel: boolean;
     virtualScrolling: boolean;
     observeScroll: boolean;
@@ -86,17 +87,9 @@ export default class ScrollContainer extends Control<IOptions> {
     private saveScrollPosition: boolean;
     private savedScrollDirection: IDirection;
 
-    // Предыдущие индексы отображаемых записей
-    private savedStopIndex: number = 0;
-    private savedStartIndex: number = 0;
-
-    // Актуальные индексы отображаемых записей
-    private actualStartIndex: number = 0;
-    private actualStopIndex: number = 0;
-
     // Стейт, хранящий ссылку на модель, нужен для сохранения индексов на _beforeMount, так как во время выполнения
     // _beforeMount модель не лежит в _options
-    private viewModel: unknown;
+    private viewModel: Collection<entityRecord>;
 
     // Коллбек, который нужно выполнить на следующую перерисовку
     private afterRenderCallback: Function;
@@ -217,8 +210,6 @@ export default class ScrollContainer extends Control<IOptions> {
 
     /**
      * Инициализация модели и подписка на ее изменения
-     * @param {unknown} model
-     * @param {boolean} useNewModel
      */
     private initModel(options: IOptions): void {
         this.viewModel = options.viewModel;
@@ -291,7 +282,7 @@ export default class ScrollContainer extends Control<IOptions> {
                 this.virtualScrollMoveHandler(params);
                 break;
             case 'canScroll':
-                this.updateViewport(params.clientHeight, false);
+                this.updateViewport((params as IScrollParams).clientHeight, false);
                 this.proxyEvent(type, params as IScrollParams);
                 break;
             case 'scrollResize':
@@ -347,10 +338,15 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     reset(itemsCount: number, initialKey?: string|number): void {
         if (this.virtualScroll) {
-            const initialIndex = this.viewModel.getIndexByKey(initialKey);
+            let initialIndex: number;
+
+            if (typeof initialKey !== 'undefined') {
+                initialIndex = this.viewModel.getIndexByKey(initialKey);
+            }
+
             this.itemsChanged = true;
             this.virtualScroll.itemsCount = itemsCount;
-            this.virtualScroll.reset(initialIndex === -1 ? 0 : initialIndex);
+            this.virtualScroll.reset(typeof initialIndex === 'undefined' ? 0 : initialIndex);
         }
     }
 
@@ -501,8 +497,6 @@ export default class ScrollContainer extends Control<IOptions> {
     private indexesChangedCallback = (startIndex: number, stopIndex: number, direction?: IDirection): void => {
         // Пересчет активных элементов
         const model = this.viewModel;
-        this.actualStartIndex = startIndex;
-        this.actualStopIndex = stopIndex;
 
         if (direction) {
             this.indicatorState = direction;
@@ -533,16 +527,19 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param {number} stopIndex
      * @returns {boolean}
      */
-    private applyIndexesToModel(model: unknown, startIndex: number, stopIndex: number): boolean {
+    private applyIndexesToModel(model: Collection<entityRecord>, startIndex: number, stopIndex: number): boolean {
         if (model.setViewIndices) {
             return model.setViewIndices(startIndex, stopIndex);
         } else {
+            // @ts-ignore
             return model.setIndexes(startIndex, stopIndex);
         }
     }
 
     private registerScroll(): void {
         if (!this.scrollRegistered) {
+
+            // @ts-ignore
             this._children.scrollEmitter.startRegister(this._children);
             this.scrollRegistered = true;
         }

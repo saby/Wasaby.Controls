@@ -1,27 +1,30 @@
-import cClone = require('Core/core-clone');
-import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
-import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import randomId = require('Core/helpers/Number/randomId');
+import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
+import * as randomId from 'Core/helpers/Number/randomId';
+import * as cClone from 'Core/core-clone';
+import {IPreviewerOpener, IPreviewerPopupOptions} from 'Controls/_popup/interface/IPreviewer';
+
+interface IPreviewerOpenerOptions extends IPreviewerPopupOptions, IBaseOpenerOptions {}
 
 const DISPLAY_DURATION: number = 1000;
 const POPUP_CONTROLLER = 'Controls/popupTemplate:PreviewerController';
 
-const clearClosingTimeout = (config) => {
+const clearClosingTimeout = (config: IPreviewerPopupOptions) => {
     if (config.closingTimerId) {
         clearTimeout(config.closingTimerId);
         config.closingTimerId = null;
     }
 };
 
-const clearOpeningTimeout = (config) => {
+const clearOpeningTimeout = (config: IPreviewerPopupOptions) => {
     if (config.openingTimerId) {
         clearTimeout(config.openingTimerId);
         config.openingTimerId = null;
     }
 };
 
-const prepareConfig = (config) => {
-    const newConfig = cClone(config);
+const prepareConfig = (config: IPreviewerPopupOptions) => {
+    const newConfig: IPreviewerPopupOptions = cClone(config);
 
     newConfig.closeOnOutsideClick = true;
     newConfig.className = 'controls-PreviewerController';
@@ -29,7 +32,7 @@ const prepareConfig = (config) => {
     return newConfig;
 };
 
-const open = (callback: Function, config: object, type?: string): void => {
+const open = (callback: Function, config: IPreviewerPopupOptions, type?: string): void => {
     clearOpeningTimeout(config);
     clearClosingTimeout(config);
 
@@ -43,7 +46,7 @@ const open = (callback: Function, config: object, type?: string): void => {
     }
 };
 
-const close = (callback: Function, config: object, type?: string): void => {
+const close = (callback: Function, config: IPreviewerPopupOptions, type?: string): void => {
     clearOpeningTimeout(config);
     clearClosingTimeout(config);
     if (type === 'hover') {
@@ -56,7 +59,7 @@ const close = (callback: Function, config: object, type?: string): void => {
     }
 };
 
-const cancel = (config, action: string): void => {
+const cancel = (config: IPreviewerPopupOptions, action: string): void => {
     switch (action) {
         case 'opening':
             config.isCancelOpening = true;
@@ -68,15 +71,16 @@ const cancel = (config, action: string): void => {
     }
 };
 
-class Previewer extends BaseOpener {
-    private _currentConfig: Object = {};
+class Previewer extends BaseOpener<IPreviewerOpenerOptions> implements IPreviewerOpener {
+    readonly '[Controls/_popup/interface/IPreviewerOpener]': boolean;
+    private _currentConfig: IPreviewerPopupOptions = {};
 
     protected _beforeUnmount(): void {
         clearClosingTimeout(this._currentConfig);
         clearOpeningTimeout(this._currentConfig);
     }
 
-    open(cfg: object, type?: string): void {
+    open(cfg: IPreviewerPopupOptions, type?: string): void {
         this.close();
         const newCfg = prepareConfig(cfg);
         open(() => {
@@ -101,9 +105,9 @@ class Previewer extends BaseOpener {
         cancel(this._currentConfig, action);
     }
 
-    static openPopup(config: object, type?: string): Promise<string> {
+    static openPopup(config: IPreviewerPopupOptions, type?: string): Promise<string> {
         return new Promise((resolve: Function) => {
-            const newCfg = prepareConfig(config);
+            const newCfg: IPreviewerPopupOptions = prepareConfig(config);
             if (!newCfg.id) {
                 newCfg.id = randomId('popup-');
             }
@@ -119,7 +123,7 @@ class Previewer extends BaseOpener {
         });
     }
 
-    static closePopup(config: object, type?: string): void {
+    static closePopup(config: IPreviewerPopupOptions, type?: string): void {
         if (config) {
             close(() => {
                 BaseOpener.closeDialog(config.id);
@@ -127,18 +131,18 @@ class Previewer extends BaseOpener {
         }
     }
 
-    static cancelPopup(config, action: string): void {
+    static cancelPopup(config: IPreviewerPopupOptions, action: string): void {
         if (config) {
             cancel(config, action);
         }
     }
 
     // TODO перенести метод в baseOpener, ManagerController здесь не нужен
-    static isOpenedPopup(config): boolean {
+    static isOpenedPopup(config: IPreviewerPopupOptions): boolean {
         return config && !!ManagerController.find(config.id);
     }
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): IPreviewerOpenerOptions {
         const baseOptions = BaseOpener.getDefaultOptions();
         baseOptions._vdomOnOldPage = true;
         return baseOptions;

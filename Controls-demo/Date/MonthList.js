@@ -67,6 +67,10 @@ define('Controls-demo/Date/MonthList', [
          this._children.monthsMonthList.invalidatePeriod(new Date(2019, 0, 1), new Date(2019, 11, 1));
       },
 
+      _scrollToDate: function() {
+         this._month = new Date(2019, 5, 3);
+      },
+
       _formatMonth: function(date) {
          return date ? formatter.date(date, formatter.date.FULL_MONTH) : '';
       }

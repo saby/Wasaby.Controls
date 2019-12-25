@@ -2,10 +2,10 @@ define(
    [
       'Controls/_popupTemplate/Sticky/StickyStrategy',
       'Controls/_popupTemplate/Sticky/StickyController',
-      'Controls/_popup/Manager/ManagerController',
+      'Controls/popup',
       'UI/Base'
    ],
-   (StickyStrategy, StickyController, ManagerController, UIBase) => {
+   (StickyStrategy, StickyController, popupLib, UIBase) => {
       'use strict';
 
       describe('Controls/_popup/Opener/Sticky', () => {
@@ -111,14 +111,14 @@ define(
          it('Sticky check visible target on elementCreated', () => {
             StickyController._isTargetVisible = () => false;
             let isRemoveCalled = false;
-            let ManagerControllerRemove = ManagerController.remove;
-            ManagerController.remove = () => {
+            let ManagerControllerRemove = popupLib.Controller.remove;
+            popupLib.Controller.remove = () => {
                isRemoveCalled = true;
             };
             StickyController.elementCreated({});
             assert.equal(isRemoveCalled, true);
 
-            ManagerController.remove = ManagerControllerRemove;
+            popupLib.Controller.remove = ManagerControllerRemove;
             StickyController._isTargetVisible = () => true;
          });
 

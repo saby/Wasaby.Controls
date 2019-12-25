@@ -23,11 +23,11 @@ define('Controls-demo/Explorer/Search', [
             this._viewColumns = [
                {
                   displayProperty: 'title',
-                  width: '1fr'
+                  width: 'auto'
                },
                {
                   displayProperty: 'code',
-                  width: '150px'
+                  width: '200px'
                },
                {
                   displayProperty: 'price',
