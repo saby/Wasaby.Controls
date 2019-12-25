@@ -69,8 +69,8 @@ var _private = {
    abortCallback: function (self, filter) {
       self._loading = false;
       if (self._viewMode === 'search') {
-         self._searchValue = '';
          self._misspellValue = '';
+         self._searchValue = '';
 
          if (self._options.parentProperty) {
             _private.deleteServiceFilters(filter);
