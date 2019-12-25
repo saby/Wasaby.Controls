@@ -1,12 +1,15 @@
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
-import * as Deferred from 'Core/Deferred';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import Template = require('wml!Controls/_popup/Opener/Confirmation');
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {IConfirmationOpener, IConfirmationOptions} from 'Controls/_popup/interface/IConfirmation';
 
 /**
- * Контрол, открывающий диалог подтверждения. Диалог позиционируется в центре экрана, а также блокирует работу пользователя с родительским приложением.
+ * Контрол, открывающий диалог подтверждения. Диалог позиционируется в центре экрана, а также блокирует работу
+ * пользователя с родительским приложением.
  * @remark
- * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ здесь}.
+ * Подробнее о работе с контролом читайте
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ здесь}.
  * См. <a href="/materials/demo-ws4-confirmation">демо-пример</a>.
  * @class Controls/_popup/Opener/Confirmation
  * @extends Controls/_popup/Opener/BaseOpener
@@ -25,28 +28,19 @@ interface IConfirmationOpenerOptions extends IBaseOpenerOptions {
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
-class Confirmation extends BaseOpener<IBaseOpenerOptions> implements IConfirmationOpener {
+class Confirmation extends Control<IControlOptions> implements IConfirmationOpener {
     '[Controls/_popup/interface/IConfirmationOpener]': boolean;
-    private _resultDef: Deferred<boolean> = null;
+    protected _template: TemplateFunction = Template;
 
-    protected _beforeMount(options: IConfirmationOpenerOptions): void {
-        this._closeHandler = this._closeHandler.bind(this);
+    protected _beforeMount(options: IControlOptions): void {
         super._beforeMount(options);
     }
 
-    private _closeHandler(result: boolean | undefined): void {
-        if (this._resultDef) {
-            this._resultDef.callback(result);
-            this._resultDef = null;
-        }
-    }
-
-    open(templateOptions: IConfirmationOptions): Promise<boolean | undefined> {
-        this._resultDef = new Deferred();
-        const popupOptions: IConfirmationOpenerOptions =
-            Confirmation._getConfig(templateOptions, this._closeHandler);
-        super.open.call(this, popupOptions, POPUP_CONTROLLER);
-        return this._resultDef;
+    open(templateOptions: IConfirmationOptions = {}): Promise<boolean | undefined> {
+        // TODO В engine задают templateOptions, нужно выписать им задачу
+        const options: IConfirmationOptions = {...templateOptions, ...this._options.templateOptions};
+        options.opener = this;
+        return Confirmation.openPopup(options);
     }
 
     private static _compatibleOptions(popupOptions: IConfirmationOpenerOptions): void {
@@ -58,7 +52,8 @@ class Confirmation extends BaseOpener<IBaseOpenerOptions> implements IConfirmati
         }
     }
 
-    private static _getConfig(templateOptions: IConfirmationOptions, closeHandler: Function): IConfirmationOpenerOptions {
+    private static _getConfig(templateOptions: IConfirmationOptions,
+                              closeHandler: Function): IConfirmationOpenerOptions {
         templateOptions.closeHandler = closeHandler;
         const popupOptions: IConfirmationOpenerOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
@@ -72,13 +67,7 @@ class Confirmation extends BaseOpener<IBaseOpenerOptions> implements IConfirmati
         return popupOptions;
     }
 
-    static getDefaultOptions(): IConfirmationOpenerOptions {
-        return {
-            _vdomOnOldPage: true // Open vdom popup in the old environment
-        };
-    }
-
-    static openPopup(templateOptions: IConfirmationOptions): Promise<boolean> {
+    static openPopup(templateOptions: IConfirmationOptions): Promise<boolean | undefined> {
         return new Promise((resolve) => {
             const config: IConfirmationOpenerOptions = Confirmation._getConfig(templateOptions, resolve);
             config._vdomOnOldPage = true;
