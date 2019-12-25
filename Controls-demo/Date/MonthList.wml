@@ -65,7 +65,14 @@
          </div>
       </div>
       <div class="demo-MonthList__content-row">
-         <Controls.buttons:Button caption="Обновить 2019 год" on:click="_updateYear()"/>
+         <Controls.buttons:Button
+               attr:class="demo-MonthList__button"
+               caption="Обновить 2019 год"
+               on:click="_updateYear()"/>
+         <Controls.buttons:Button
+               attr:class="demo-MonthList__button"
+               caption="Скролировать к 03.06.2019"
+               on:click="_scrollToDate()"/>
       </div>
    </div>
 

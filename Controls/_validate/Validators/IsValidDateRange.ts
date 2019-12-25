@@ -2,26 +2,24 @@ import rk = require('i18n!Controls');
 import dateUtils = require('Controls/Utils/Date');
 /**
  * Функция, позволяющая проверить период на валидность.
- * @class
- * @name Controls/_validate/Validators/IsValidDateRange
+ * @class Controls/_validate/Validators/IsValidDateRange
  * @public
  * @author Красильников А.С.
- *
  * @remark
- * <h2>Аргументы функции</h2>
+ * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
+ * 
+ * Аргументы функции:
  *
- * startValue - начало периода.
- * endValue - конец периода.
- * doNotValidate:Boolean -  требуется ли валидация
+ * * startValue — начало периода.
+ * * endValue — конец периода.
+ * * doNotValidate:Boolean — требуется ли валидация
  *
- * <h2>Возвращаемые значения</h2>
+ * Возвращаемые значения:
  *
- * <ul>
- *     <li><b>true</b> - значение прошло проверку на валидность </li>
- *     <li><b>String</b> - значение не прошло проверку на валидность, возвращается текст сообщения об ошибке </li>
- * </ul>
+ * * true — значение прошло проверку на валидность.
+ * * String — значение не прошло проверку на валидность, возвращается текст сообщения об ошибке.
  *
- * <h2>Пример использования функции:</h2>
+ * @example
  * <pre>
  *   <Controls.validate:InputContainer name="InputValidate">
  *     <ws:validators>

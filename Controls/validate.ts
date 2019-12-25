@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, которые позволяют организовать валидацию данных на форме.
+ * Библиотека контролов, которые позволяют организовать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ валидацию} данных на форме.
  * @library Controls/validate
  * @includes Controller Controls/_validate/Controller
  * @includes Container Controls/_validate/Container

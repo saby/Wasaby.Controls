@@ -21,10 +21,6 @@ export type HighlightMode = 'word' | 'substring';
  * @author Красильников А.С.
  */
 export interface IHighlightOptions extends IControlOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     text?: string;
     /**
      * Опция устарела, используйте опцию {@link highlightedValue}.

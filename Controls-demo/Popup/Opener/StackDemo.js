@@ -83,7 +83,6 @@ define('Controls-demo/Popup/Opener/StackDemo',
          openStackCustomHeader: function() {
             this._children.stack.open({
                opener: this._children.button6,
-               width: 800,
                template: 'Controls-demo/Popup/Opener/resources/StackTemplateHeader',
             });
          },
