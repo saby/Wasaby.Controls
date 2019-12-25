@@ -131,6 +131,7 @@ export interface ISwipeConfig {
 // реально используются
 export interface IEditingConfig {
     addPosition?: 'top'|'bottom';
+    toolbarVisibility?: boolean;
 }
 
 interface IUserStrategy<S, T> {
