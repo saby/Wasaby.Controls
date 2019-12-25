@@ -271,35 +271,6 @@ export default class VirtualScrollController {
     }
 
     /**
-     * Проверяет что отображемые записи соответствуют текущему стейту видимых индексов
-     * @returns {boolean}
-     * @remark Иногда триггер может сообщить, что нужно совершить подгрузку, при этом предыдущая пачка записей еще не
-     * отрисовалась.
-     */
-    isLoaded(document?: Document): boolean {
-        let isLoaded = true;
-        let startChildrenIndex = 0;
-        let updateLength = this.stopIndex - this.startIndex;
-
-        for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
-            if (!this._itemsContainer.children[i].className.includes('ws-hidden')) {
-                startChildrenIndex = i;
-                break;
-            }
-        }
-
-        for (let i = 0; i < updateLength; i++) {
-            const child = this.itemsContainer.children[startChildrenIndex + i];
-
-            if (!child || child.className.includes('ws-hidden') || !document.body.contains(child)) {
-                isLoaded = false;
-            }
-        }
-
-        return isLoaded;
-    }
-
-    /**
      * Высчитывает индексы видимого набора исходя из itemHeightProperty
      * @param {number} startIndex
      * @remark Если разработчик знает данные о высотах элементов и viewport, то он может указать их в данных элемента
