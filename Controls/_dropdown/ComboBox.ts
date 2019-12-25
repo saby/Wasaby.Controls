@@ -31,8 +31,6 @@ var _private = {
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IDropdown
- * @css @margin-top_ComboBox-popup Сдвиг сверху для всплывающего окна.
- * @css @spacing_ComboBox-between-arrow-rightBorder Расстояние между стрелкой и правой границей поля.
  * @control
  * @public
  * @category Input
@@ -53,8 +51,6 @@ var _private = {
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/interface/IDropdown
- * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
- * @css @spacing_ComboBox-between-arrow-rightBorder Spacing between arrow and right border of field.
  * @control
  * @public
  * @category Input

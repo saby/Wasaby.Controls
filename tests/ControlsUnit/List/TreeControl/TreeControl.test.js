@@ -1936,6 +1936,34 @@ define([
          treeGrid.TreeControl._private.createSourceController = savedMethod;
       });
 
+      it('itemClick sends right args', function() {
+         let isEventRaised = false;
+         let isParentEventStopped = false;
+
+         const treeControl = correctCreateTreeControl({ readOnly: true });
+         const item = {};
+         const nativeEvent = {};
+         const event = {
+            stopPropagation: () => {
+               isParentEventStopped = true;
+            }
+         };
+         const columnIndex = 12;
+         treeControl._notify = (eName, args) => {
+            if (eName === 'itemClick') {
+               isEventRaised = true;
+               assert.equal(args[0], item);
+               assert.equal(args[1], nativeEvent);
+               assert.equal(args[2], columnIndex);
+               return false;
+            }
+         };
+
+         treeControl._onItemClick(event, item, nativeEvent, columnIndex);
+         assert.isTrue(isEventRaised);
+         assert.isTrue(isParentEventStopped);
+      });
+
       it('check deepReload after load', function() {
          let source = new sourceLib.Memory({
             data: [{ id: 0, 'Раздел@': false, "Раздел": null }],

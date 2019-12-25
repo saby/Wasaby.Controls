@@ -540,6 +540,40 @@ export interface IList {
  * Функционал используют в тех случаях, когда опции записи привязаны к отображаемым данным.
  * Настройка для опций записи извлекается из данных самого элемента.
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+ * @example
+ * <pre>
+ * _beforeMount: function(newOptions) {
+ *    this._viewSource = new source.Memory({
+ *       keyProperty: 'id',
+ *       data: [
+ *          {
+ *             id: 0,
+ *             title: 'The agencies’ average client makes about $32,000 a year.',
+ *             itemActions: [
+ *                {
+ *                   id: 1,
+ *                   title: 'Прочитано',
+ *                   showType: showType.TOOLBAR,
+ *                },
+ *                {
+ *                   id: 2,
+ *                   icon: 'icon-PhoneNull',
+ *                   title: 'Позвонить',
+ *                   showType: showType.MENU_TOOLBAR,
+ *                },
+ *                {
+ *                   id: 3,
+ *                   icon: 'icon-EmptyMessage',
+ *                   title: 'Написать',
+ *                   showType: showType.TOOLBAR,
+ *                }
+ *             ]
+ *          },
+ *          ...
+ *       ]
+ *    });
+ * }
+ * </pre>
  * @see itemActions
  * @see itemActionsPosition
  * @see actionCaptionPosition

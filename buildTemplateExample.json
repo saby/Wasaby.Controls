@@ -17,6 +17,10 @@
       "path": "%cd%/Controls-theme"
     },
     {
+      "name": "Controls-default-theme",
+      "path": "%cd%/Controls-default-theme"
+    },
+    {
       "name": "Core",
       "path": "%cd%/node_modules/sbis3-ws/Core"
     },
