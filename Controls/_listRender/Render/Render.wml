@@ -7,11 +7,12 @@
             keyPrefix="{{ _templateKeyPrefix }}"
 
             itemActionsPosition="{{ _options.itemActionsPosition }}"
-            itemActionsTemplate="{{ _options.itemActionsTemplate }}"
-            swipeTemplate="{{ _options.swipeTemplate }}"
             multiSelectTpl="{{ _options.multiSelectTpl }}"
             isAdd="{{ _options.isAdd }}"
-            itemTemplate="{{ _itemTemplate }}" />
+            itemTemplate="{{ _itemTemplate }}"
+
+            itemActionsTemplate="{{ _options.itemActionsTemplate }}"
+            swipeTemplate="{{ _options.swipeTemplate }}" />
       </div>
    </ws:if>
    <ws:if data="{{ _options.emptyTemplate }}">

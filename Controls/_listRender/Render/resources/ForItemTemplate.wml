@@ -24,19 +24,33 @@
    multiSelectTpl="{{ multiSelectTpl }}"
    isAdd="{{ isAdd }}">
    <ws:itemActionsTemplate>
-      <ws:partial
-         template="wml!Controls/_listRender/Render/resources/ItemActionsTemplate"
-         scope="{{ collection.getActionsTemplateConfig() }}"
-         item="{{ item }}" />
-      <!-- itemActionsClass -->
+      <ws:if data="{{ _options.itemActionsTemplate.itemActionsTemplate }}">
+         <ws:partial
+            template="{{ _options.itemActionsTemplate.itemActionsTemplate }}"
+            item="{{ item }}" />
+      </ws:if>
+      <ws:else>
+         <ws:partial
+            template="wml!Controls/_listRender/Render/resources/ItemActionsTemplate"
+            scope="{{ collection.getActionsTemplateConfig() }}"
+            item="{{ item }}" />
+         <!-- itemActionsClass -->
+      </ws:else>
    </ws:itemActionsTemplate>
    <ws:swipeTemplate>
-      <ws:partial
-         template="wml!Controls/_listRender/Render/resources/SwipeTemplate"
-         scope="{{ collection.getActionsTemplateConfig() }}"
-         swipeConfig="{{ collection.getSwipeConfig() }}"
-         animationState="open"
-         item="{{ item }}" />
-      <!-- must have an itemActionsClass in TileView, should probably be calculated in model -->
+      <ws:if data="{{ _options.swipeTemplate.swipeTemplate }}">
+         <ws:partial
+            template="{{ _options.swipeTemplate.swipeTemplate }}"
+            item="{{ item }}" />
+      </ws:if>
+      <ws:else>
+         <ws:partial
+            template="wml!Controls/_listRender/Render/resources/SwipeTemplate"
+            scope="{{ collection.getActionsTemplateConfig() }}"
+            swipeConfig="{{ collection.getSwipeConfig() }}"
+            animationState="open"
+            item="{{ item }}" />
+         <!-- must have an itemActionsClass in TileView, should probably be calculated in model -->
+      </ws:else>
    </ws:swipeTemplate>
 </ws:partial>
