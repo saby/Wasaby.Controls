@@ -1,5 +1,3 @@
-import { IOpener } from 'Controls/_popup/interface/IBaseOpener';
-
 /**
  * Интерфейс для опций футера диалога подтверждения.
  *
@@ -17,7 +15,7 @@ export interface IConfirmationFooterOptions {
     okCaption?: string;
 }
 
-export interface IConfirmationFooter extends IOpener {
+export interface IConfirmationFooter {
     readonly '[Controls/_popup/interface/IConfirmationFooter]': boolean;
 }
 

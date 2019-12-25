@@ -8,7 +8,7 @@ import 'css!theme?Controls/popupConfirmation';
  * @includes DialogTemplate Controls/_popupConfirmation/Opener/Dialog
  * @includes style Controls/_popupConfirmation/style
  * @includes Footer Controls/_popupConfirmation/Footer
- * @includes IConfirmationFooter Controls/_popup/interface/IConfirmationFooter
+ * @includes IConfirmationFooter Controls/_popupConfirmation/IConfirmationFooter
  * @public
  * @author Красильников А.С.
  */
@@ -19,7 +19,7 @@ import 'css!theme?Controls/popupConfirmation';
  * @includes DialogTemplate Controls/_popupConfirmation/Opener/Dialog
  * @includes style Controls/_popupConfirmation/style
  * @includes Footer Controls/_popupConfirmation/Footer
- * @includes IConfirmationFooter Controls/_popup/interface/IConfirmationFooter
+ * @includes IConfirmationFooter  Controls/_popupConfirmation/IConfirmationFooter
  * @public
  * @author Красильников А.С.
  */

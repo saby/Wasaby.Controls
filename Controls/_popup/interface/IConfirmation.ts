@@ -1,4 +1,5 @@
 import {IConfirmationFooterOptions, IConfirmationFooter} from 'Controls/_popup/interface/IConfirmationFooter';
+import { IOpener } from 'Controls/_popup/interface/IBaseOpener';
 
 /**
  * Интерфейс для опций окон подтверждения.
@@ -7,7 +8,6 @@ import {IConfirmationFooterOptions, IConfirmationFooter} from 'Controls/_popup/i
  * @public
  * @author Красильников А.С.
  */
-
 export interface IConfirmationOptions extends IConfirmationFooterOptions {
     style?: string;
     size?: string;
@@ -17,7 +17,7 @@ export interface IConfirmationOptions extends IConfirmationFooterOptions {
     zIndex?: number; //todo: Compatible
 }
 
-export interface IConfirmationOpener extends IConfirmationFooter {
+export interface IConfirmationOpener extends IOpener, IConfirmationFooter {
     readonly '[Controls/_popup/interface/IConfirmationOpener]': boolean;
 }
 
