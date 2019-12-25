@@ -279,7 +279,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._dataOptions = context.dataOptions;
       this._previousViewMode = this._viewMode = options.viewMode;
 
-      if (options.searchValue) {
+      if (options.searchValue && _private.needUpdateInputSearchValue(this, options.searchValue)) {
          this._inputSearchValue = options.searchValue;
          this._searchValue = options.searchValue;
 
