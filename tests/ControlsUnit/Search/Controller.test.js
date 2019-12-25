@@ -516,10 +516,12 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             var aborted = false;
             var searchController = getSearchController(defaultOptions);
             searchController._beforeMount({filter: {test: 'testValue'}}, {dataOptions: defaultOptions});
-            searchMod.Controller._private.abortCallback = function() {
-               aborted = true;
-            };
             searchMod.Controller._private.getSearchController(searchController);
+            searchController._searchController.abort = function(forced) {
+               if (forced) {
+                  aborted = true;
+               }
+            };
             searchController._beforeUnmount();
             assert.isTrue(aborted);
          })
