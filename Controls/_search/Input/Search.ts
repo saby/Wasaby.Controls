@@ -204,11 +204,13 @@ var Search = Base.extend({
       }
 
       this._notify('resetClick');
+      this.reset();
+   },
 
+   reset: function() {
       this._viewModel.displayValue = '';
       this._notifyValueChanged();
-
-      // move focus from clear button to input
+      // move focus from reset button to input
       this.activate();
    },
 

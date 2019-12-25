@@ -73,6 +73,28 @@ define(
                assert.isFalse(activated);
             });
 
+            it('reset', function() {
+               let search = new searchMod.Input();
+               let activated = false;
+
+               search._beforeMount({
+                  value: 'test'
+               });
+
+               search._notify = (e, args) => {
+                  if (e == 'valueChanged') {
+                     assert.equal(args[0], '');
+                  }
+               };
+               search.activate = () => {
+                  activated = true;
+               };
+
+               search.reset();
+               assert.isTrue(activated);
+            });
+
+
             it('Enter click', function() {
                let search = new searchMod.Input();
                let activated = false;
