@@ -75,8 +75,6 @@ define(
 
             it('reset', function() {
                let search = new searchMod.Input();
-               let activated = false;
-
                search._beforeMount({
                   value: 'test'
                });
@@ -86,12 +84,7 @@ define(
                      assert.equal(args[0], '');
                   }
                };
-               search.activate = () => {
-                  activated = true;
-               };
-
                search.reset();
-               assert.isTrue(activated);
             });
 
 
