@@ -112,6 +112,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _afterMount(): void {
         this.__mounted = true;
+        this.itemsChanged = false;
 
         if (this._options.observeScroll) {
             this.registerScroll();
