@@ -1,5 +1,5 @@
 import { IBaseCollection, TItemKey } from '../interface';
-import { IItemActionsTemplateConfig, ISwipeConfig } from '../Collection';
+import { IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig } from '../Collection';
 import { showType } from 'Controls/Utils/Toolbar';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
@@ -23,7 +23,6 @@ export interface IItemActionsContainer {
 
 export interface IItemActionsTemplateOptions {
     style?: string;
-    editingConfig?: any;
     itemActionsPosition: string;
     actionAlignment?: string;
     actionCaptionPosition: 'right'|'bottom'|'none';
@@ -52,6 +51,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     getActionsTemplateConfig(): IItemActionsTemplateConfig;
     setSwipeConfig(config: ISwipeConfig): void;
     getSwipeConfig(): ISwipeConfig;
+    getEditingConfig(): IEditingConfig;
 }
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
@@ -108,10 +108,11 @@ export function calculateActionsTemplateConfig(
     collection: IItemActionsCollection,
     options: IItemActionsTemplateOptions
 ): void {
+    const editingConfig = collection.getEditingConfig();
     collection.setActionsTemplateConfig({
-        toolbarVisibility: options.editingConfig?.toolbarVisibility,
+        toolbarVisibility: editingConfig?.toolbarVisibility,
         style: options.style,
-        size: options.editingConfig ? 's' : 'm',
+        size: editingConfig ? 's' : 'm',
         itemActionsPosition: options.itemActionsPosition,
         actionAlignment: options.actionAlignment,
         actionCaptionPosition: options.actionCaptionPosition

@@ -54,7 +54,6 @@ export default class View extends Control<IViewOptions> {
             this._collection,
             {
                 itemActionsPosition: options.itemActionsPosition,
-                editingConfig: options.editingConfig,
                 style: options.style,
                 actionAlignment: options.actionAlignment,
                 actionCaptionPosition: options.actionCaptionPosition
@@ -73,6 +72,10 @@ export default class View extends Control<IViewOptions> {
             }
             this._collection = this._createCollection(options.collection, options.items, options);
             collectionRecreated = true;
+        }
+
+        if (options.editingConfig !== this._options.editingConfig || collectionRecreated) {
+            this._collection.setEditingConfig(options.editingConfig);
         }
 
         if (
@@ -95,7 +98,6 @@ export default class View extends Control<IViewOptions> {
             this._collection,
             {
                 itemActionsPosition: options.itemActionsPosition,
-                editingConfig: options.editingConfig,
                 style: options.style,
                 actionAlignment: options.actionAlignment,
                 actionCaptionPosition: options.actionCaptionPosition
