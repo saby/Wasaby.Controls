@@ -17,7 +17,7 @@
                <Controls.list:Container>
                   <Controls.operations:Container>
                      <Controls.explorer:View
-                             attr:class="demo-Explorer"
+                             attr:class="demo-Explorer ControlsDemo-Explorer"
                              multiSelectVisibility="{{_multiselectVisibility}}"
                              displayProperty="title"
                              nodeProperty="parent@"

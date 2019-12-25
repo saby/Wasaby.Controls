@@ -310,13 +310,26 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             return selectionToRecord(selection, adapter, type, recursiveSelection);
          },
 
+         needLoadItemsOnSelectComplete(self): boolean {
+            const hasSelectedItems = self._selectedKeys.length || self._excludedKeys.length;
+            let result;
+
+            if (self._options.multiSelect) {
+               result = hasSelectedItems;
+            } else {
+               result = hasSelectedItems && self._selectCompleteInitiator;
+            }
+
+            return result;
+         },
+
          loadSelectedItems(self: object, filter: object): Promise<RecordSet> {
             const dataOptions = self.context.get('dataOptions');
             const items = dataOptions.items;
             let indicatorId;
             let loadItemsPromise;
 
-            if (self._selectedKeys.length || self._excludedKeys.length) {
+            if (_private.needLoadItemsOnSelectComplete(self)) {
                if (!self._options.multiSelect) {
                   const selectedItems = _private.getEmptyItems(items);
 

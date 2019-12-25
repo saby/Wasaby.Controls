@@ -21,10 +21,6 @@ export type HighlightMode = 'word' | 'substring';
  * @author Красильников А.С.
  */
 export interface IHighlightOptions extends IControlOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     text?: string;
     /**
      * Опция устарела, используйте опцию {@link highlightedValue}.
@@ -85,7 +81,7 @@ type SearchBy = 'and' | 'or';
 type Element = IHighlight | IPlain;
 
 /**
- * Графический контрол, декоририрующий текст таким образом, что все вхождения {@link highlightedValue подсвечиваемого текста} в нем изменениют свой внешний вид.
+ * Графический контрол, декорирующий текст таким образом, что все вхождения {@link highlightedValue подсвечиваемого текста} в нём изменяют свой внешний вид.
  * Изменение внешнего вида текста используется с целью акцентирования на нём внимания.
  * @remark
  * Для нахождения подсвечиваемого текста выполняется поиск сопоставления между {@link value текстом} и {@link highlightedValue искомым текстом}.

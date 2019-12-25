@@ -25,6 +25,7 @@ define('Controls-demo/List/Grid/Grid', [
          {
             displayProperty: 'price',
             width: 'auto',
+            compatibleWidth: '57px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
          }
@@ -51,12 +52,14 @@ define('Controls-demo/List/Grid/Grid', [
          {
             displayProperty: 'price',
             width: 'auto',
+            compatibleWidth: '51px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice',
          },
          {
             displayProperty: 'balance',
             width: 'auto',
+            compatibleWidth: '69px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoBalancePrice',
             resultTemplate: 'wml!Controls-demo/List/Grid/Results',
@@ -65,11 +68,13 @@ define('Controls-demo/List/Grid/Grid', [
          {
             displayProperty: 'reserve',
             width: 'auto',
+            compatibleWidth: '49px',
             align: 'right'
          },
          {
             displayProperty: 'costPrice',
             width: 'auto',
+            compatibleWidth: '78px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice',
             resultTemplate: 'wml!Controls-demo/List/Grid/Results',
@@ -78,6 +83,7 @@ define('Controls-demo/List/Grid/Grid', [
          {
             displayProperty: 'balanceCostSumm',
             width: 'auto',
+            compatibleWidth: '95px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
          }

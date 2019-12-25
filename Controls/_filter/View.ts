@@ -494,11 +494,11 @@ var _private = {
         if (oldItems.length !== newItems.length) {
             result = true;
         } else {
-            factory(oldItems).each((oldItem) => {
-                const newItem = _private.getItemByName(newItems, oldItem.name);
-                const isFrequent = _private.isFrequentItem(oldItem);
-                if (newItem && (isFrequent || _private.isFrequentItem(newItem)) &&
-                    (optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) || isFrequent !== _private.isFrequentItem(newItem))) {
+            factory(newItems).each((newItem) => {
+                const oldItem = _private.getItemByName(oldItems, newItem.name);
+                const isFrequent = _private.isFrequentItem(newItem);
+                if (isFrequent && (!oldItem || !_private.isFrequentItem(oldItem) ||
+                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false))) {
                     result = true;
                 }
             });
@@ -678,15 +678,16 @@ var Filter = Control.extend({
         this._children.StickyOpener.open(Merge(popupOptions, panelPopupOptions), this);
     },
 
-    _rangeChangedHandler: function(event, start, end) {
-       return import('Controls/dateRange').then((dateRange) => {
-          let dateRangeItem = _private.getDateRangeItem(this._source);
-          dateRangeItem.value = [start, end];
-          dateRangeItem.textValue = dateRange.Utils.formatDateRangeCaption(start, end,
-             this._dateRangeItem.editorOptions.emptyCaption || 'Не указан');
-          this._dateRangeItem = object.clone(dateRangeItem);
-          _private.notifyChanges(this, this._source);
-       });
+    _rangeTextChangedHandler: function(event, textValue) {
+        let dateRangeItem = _private.getDateRangeItem(this._source);
+        dateRangeItem.textValue = textValue;
+    },
+
+    _rangeValueChangedHandler: function(event, start, end) {
+        let dateRangeItem = _private.getDateRangeItem(this._source);
+        dateRangeItem.value = [start, end];
+        this._dateRangeItem = object.clone(dateRangeItem);
+        _private.notifyChanges(this, this._source);
     },
 
     _resultHandler: function(event, result) {

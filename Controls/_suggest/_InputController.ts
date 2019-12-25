@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
-import emptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
 import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
@@ -8,10 +7,8 @@ import Env = require('Env/Env');
 import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
-import LoadService from './LoadService';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/suggest';
-
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -137,8 +134,8 @@ var _private = {
       }
       if (!error || !error.canceled) {
           return new Promise(function(resolve) {
-              requirejs(['tmpl!Controls/_suggest/_InputController/emptyError'], function(result) {
-                  self._emptyTemplate = result;
+              require(['Controls/suggestPopup'], function(result) {
+                  self._emptyTemplate = result.EmptyErrorTemplate;
                   self._children.indicator.hide();
                   resolve();
               });
@@ -238,11 +235,15 @@ var _private = {
    },
    getHistoryService: function(self) {
       if (!self._historyServiceLoad) {
-         self._historyServiceLoad = LoadService({
-            historyId: self._options.historyId
+         self._historyServiceLoad = new Deferred();
+         require(['Controls/suggestPopup'], function(result) {
+            self._historyServiceLoad = result.LoadService({
+               historyId: self._options.historyId
+            }).addCallback((result) => {
+               self._historyServiceLoad.callback(result);
+            });
          });
       }
-
       return self._historyServiceLoad;
    },
    getRecentKeys: function(self) {
@@ -293,7 +294,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @control
  * @private
  */
@@ -307,7 +308,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @control
  * @private
  */
@@ -575,7 +576,9 @@ SuggestLayout.getOptionTypes = function() {
 };
 SuggestLayout.getDefaultOptions = function() {
    return {
-      emptyTemplate: emptyTemplate,
+      emptyTemplate: {
+         templateName: 'Controls/suggestPopup:EmptyTemplate'
+      },
       footerTemplate: {
          templateName: 'Controls/suggestPopup:FooterTemplate'
       },

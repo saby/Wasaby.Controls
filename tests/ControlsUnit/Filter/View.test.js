@@ -172,11 +172,15 @@ define(
 
                newConfig = Clone(defaultConfig);
                newConfig.source[0].viewMode = 'basic';
-               newConfig.source[1].viewMode = 'basic';
+               newConfig.source[2].viewMode = 'frequent';
+               newConfig.source[2].editorOptions.source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: defaultItems[0]
+               });
 
                //isNeedReload = true
                view._beforeUpdate(newConfig).addCallback(function() {
-                  assert.equal(Object.keys(view._configs).length, 0);
+                  assert.equal(Object.keys(view._configs).length, 2);
                   done();
                });
             });
@@ -233,7 +237,7 @@ define(
 
             newItems[0].viewMode = 'basic';
             result = filter.View._private.isNeedReload(oldItems, newItems);
-            assert.isTrue(result);
+            assert.isFalse(result);
 
             newItems[2].viewMode = 'frequent';
             result = filter.View._private.isNeedReload(oldItems, newItems);
@@ -441,7 +445,7 @@ define(
             assert.deepStrictEqual(view._source[5].value, [new Date(2019, 5, 1), new Date(2019, 5, 31)]);
          });
 
-         it('_rangeChangedHandler', () => {
+         it('_rangeValueChangedHandler', () => {
             let source = [...defaultSource];
             let dateItem = {
                name: 'date',
@@ -464,18 +468,34 @@ define(
             };
             view._source = source;
             view._dateRangeItem = dateItem;
-            return new Promise(function(resolve) {
-               view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31)).addCallback(function () {
-                  assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
-                  assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");
-                  assert.deepStrictEqual(newFilter, {
-                     date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
-                     author: 'Ivanov K.K.',
-                     state: [1]
-                  });
-                  resolve();
-               })
-            })
+            view._rangeValueChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31));
+            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
+            assert.deepStrictEqual(newFilter, {
+               date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
+               author: 'Ivanov K.K.',
+               state: [1]
+            });
+         });
+
+         it('_rangeTextChangedHandler', () => {
+            let source = [...defaultSource];
+            let dateItem = {
+               name: 'date',
+               value: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               resetValue: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               editorOptions: {
+                  option1: '1',
+                  option2: '2'
+               },
+               type: 'dateRange',
+               viewMode: 'basic'
+            };
+            source.push(dateItem);
+            let view = getView(source);
+            view._source = source;
+            view._dateRangeItem = dateItem;
+            view._rangeTextChangedHandler('rangeChanged', 'Date textValue');
+            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, 'Date textValue');
          });
 
          it('_private:getDateRangeItem', () => {

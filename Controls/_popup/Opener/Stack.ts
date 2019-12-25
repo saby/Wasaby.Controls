@@ -7,7 +7,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * @remark
  * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ здесь}.
  * См. <a href="/materials/demo-ws4-stack-dialog">демо-пример</a>.
- * @class Controls/_popup/Opener/Stack
+ * @class Controls/popup:Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
  * @author Красильников А.С.
@@ -29,8 +29,9 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * @control
  * @author Красильников А.С.
  * @category Popup
- * @mixes Controls/interface/IOpener
- * @demo Controls-demo/Popup/Opener/StackPG
+ * @mixes Controls/_popup/interface/IBaseOpener
+ * @mixes Controls/_popup/interface/IStack
+ * @mixes Controls/_interface/IPropStorage
  * @public
  */
 

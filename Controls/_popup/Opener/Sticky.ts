@@ -12,12 +12,14 @@ const getStickyConfig = (config) => {
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
 
-/*
- * Component that opens a popup that is positioned relative to a specified element.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
+/**
+ * Контрол, открывающий всплывающее окно, которое позиционнируется относительно вызывающего элемента.
+ * @remark
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ здесь}.
  * @class Controls/_popup/Opener/Sticky
  * @extends Controls/_popup/Opener/BaseOpener
- * @mixes Controls/interface/IOpener
+ * @mixes Controls/_popup/interface/IBaseOpener
+ * @mixes Controls/_popup/interface/ISticky
  * @control
  * @author Красильников А.С.
  * @category Popup
@@ -25,12 +27,12 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @public
  */
 
-/**
- * Контрол, открывающий всплывающее окно, которое позиционнируется относительно вызывающего элемента.
- * @remark
- * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ здесь}.
+/*
+ * Component that opens a popup that is positioned relative to a specified element.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
  * @class Controls/_popup/Opener/Sticky
  * @extends Controls/_popup/Opener/BaseOpener
+ * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/ISticky
  * @control
  * @author Красильников А.С.
@@ -42,7 +44,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
 interface IStickyOpenerOptions extends IStickyPopupOptions, IBaseOpenerOptions {}
 
 class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
-    readonly '[Controls/_popup/interface/IStackOpener]': boolean;
+    readonly '[Controls/_popup/interface/IStickyOpener]': boolean;
 
     open(popupOptions: IStickyPopupOptions): Promise<string | undefined> {
         return super.open(getStickyConfig(popupOptions), POPUP_CONTROLLER);

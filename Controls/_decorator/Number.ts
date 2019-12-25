@@ -22,10 +22,6 @@ export type RoundMode = 'round' | 'trunc';
  * @author Красильников А.С.
  */
 export interface INumberOptions extends IControlOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     number: number;
     /**
      * Декорируемое число.
@@ -56,7 +52,7 @@ export interface INumberOptions extends IControlOptions {
 }
 
 /**
- * Графический контрол, декоририрующий число таким образом, что оно приводится к форматируемому виду.
+ * Графический контрол, декорирующий число таким образом, что оно приводится к форматируемому виду.
  * Форматом является число разбитое на триады с ограниченной дробной частью.
  *
  * @mixes Controls/_decorator/Number/INumberOptions

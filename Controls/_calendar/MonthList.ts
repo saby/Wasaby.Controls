@@ -22,8 +22,6 @@ import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 import stubTemplate = require('wml!Controls/_calendar/MonthList/Stub');
 import {Logger} from 'UI/Utils';
 
-
-
 interface IModuleComponentOptions extends
     IControlOptions,
     IMonthListSourceOptions,
@@ -32,12 +30,11 @@ interface IModuleComponentOptions extends
     IDateConstructorOptions {
 }
 
-const
-    ITEM_BODY_SELECTOR = {
-        year: '.controls-MonthList__year-months',
-        month: '.controls-MonthList__month-body'
-    };
-
+const enum ITEM_BODY_SELECTOR {
+    year = '.controls-MonthList__year-months',
+    month = '.controls-MonthList__month-body',
+    day = '.controls-MonthViewVDOM__item'
+}
 
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
@@ -202,20 +199,20 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return;
         }
 
-        const newPosition = dateUtils.getStartOfMonth(position);
+        this._positionToScroll = position;
+        this._lastNotifiedPositionChangedDate = dateUtils.getStartOfMonth(position);
 
-        this._positionToScroll = newPosition;
-
-        if (this._container && this._canScroll(newPosition)) {
+        if (this._container && this._canScroll(position)) {
             // Update scroll position without waiting view modification
             this._updateScrollAfterViewModification();
         } else {
             this._displayedDates = [];
+            const oldPositionId = this._startPositionId;
             this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
             // After changing the navigation options, we must call the "reload" to redraw the control,
             // because the last time we could start rendering from the same position.
             // Position option is the initial position from which control is initially drawn.
-            if (this._children.months) {
+            if (oldPositionId === this._startPositionId && this._children.months) {
                 this._children.months.reload();
             }
         }
@@ -377,12 +374,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _findElementByDate(date: Date): HTMLElement {
         let element: HTMLElement;
 
-        if (this._options.viewMode === 'month' || date.getMonth() !== 0) {
-            element = this._getElementByDate(
-                ITEM_BODY_SELECTOR.month,
-                monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
+        if (date.getDate() !== 1) {
+            element = this._getElementByDate(ITEM_BODY_SELECTOR.day, monthListUtils.dateToId(date));
         }
-
+        if (!element && date.getMonth() !== 0) {
+            element = this._getElementByDate(
+                ITEM_BODY_SELECTOR.month, monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
+        }
         if (!element) {
             element = this._getElementByDate(
                 ITEM_BODY_SELECTOR.year,
@@ -417,6 +415,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     protected _idToDate(dateId: string): Date {
         return monthListUtils.idToDate(dateId);
     }
+
+    static _ITEM_BODY_SELECTOR = ITEM_BODY_SELECTOR;
 
     static getDefaultOptions(): object {
         return {

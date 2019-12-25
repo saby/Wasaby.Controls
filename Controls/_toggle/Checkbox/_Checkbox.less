@@ -15,30 +15,30 @@
    text-align: left; //ie can inherit text-align: right from parent node
 }
 .controls-Checkbox__wrapper_theme-@{themeName} {
-   font-size: @font-size_CheckBox;
+   font-size: @font-size_checkbox;
    //Не можем сделать на флексах из-за стандарта
-   line-height: @height_CheckBox__clickArea;
+   line-height: @height_checkbox;
 }
 .controls-Checkbox__icon-border-color__enabled_theme-@{themeName} {
-   color: @color_CheckBox__iconBox;
+   color: @marker-box_border-color_checkbox;
 }
 .controls-Checkbox__icon-border-color__disabled_theme-@{themeName} {
-   color: @color_CheckBox__iconBox_disabled;
+   color: @readonly_marker-box_border-color_checkbox;
 }
 .controls-Checkbox__caption-color__enabled_theme-@{themeName}{
-   color: @color_CheckBox__caption_enabled;
+   color: @text-color_checkbox;
 }
 .controls-Checkbox__caption-color__disabled_theme-@{themeName}{
-   color: @color_CheckBox__caption_disabled;
+   color: @readonly_text-color_checkbox;
 }
 .controls-Checkbox_iconInCaption_theme-@{themeName} {
-   height: @height_CheckBox__clickArea - 2*@padding-horizontal_CheckBox-caption;
+   height: @height_checkbox - 2*@padding-vertical_checkbox;
 }
 .controls-Checkbox__caption_theme-@{themeName}, .controls-Checkbox_iconInCaption_theme-@{themeName} {
    word-wrap: break-word;
-   padding: @spacing_CheckBox-between-icon-caption;
+   padding: @padding-vertical_checkbox 0;
    //Не можем сделать на флексах из-за стандарта
-   line-height: @line-height_CheckBox__caption;
+   line-height: @text_line-height_checkbox;
 }
 .controls-Checkbox_iconInCaption_theme-@{themeName} {
    display: flex;
@@ -50,31 +50,31 @@
    flex-shrink: 0;
 }
 .controls-Checkbox__iconWrapper_theme-@{themeName} {
-   width: @width_CheckBox__clickArea;
-   height: @height_CheckBox__clickArea;
+   width: @click-area_width_checkbox;
+   height: @height_checkbox;
 }
 .controls-Checkbox__iconWrapper_theme-@{themeName}:before {
    box-sizing: border-box;
    content: '';
    position: absolute;
-   border-width: @width_CheckBox__border;
+   border-width: @marker-box_border-thickness_checkbox;
    border-style: solid;
-   width: @size_CheckBox__icon-box;
-   height: @size_CheckBox__icon-box;
-   margin: (@height_CheckBox - @size_CheckBox__icon-box) / 2 (@width_CheckBox - @size_CheckBox__icon-box) / 2;
+   width: @marker-box_size_checkbox;
+   height: @marker-box_size_checkbox;
+   margin: (@height_checkbox - @marker-box_size_checkbox) / 2 (@click-area_width_checkbox - @marker-box_size_checkbox) / 2;
 }
 .controls-Checkbox__icon-checked_theme-@{themeName} {
-   width: @size_CheckBox__iconSuccessful;
-   height: @size_CheckBox__iconSuccessful;
+   width: @true_marker_size_checkbox;
+   height: @true_marker_size_checkbox;
    position: relative;
-   left: @left_CheckBox__iconSuccessful;
-   top: @top_CheckBox__iconSuccessful;
+   left: @true_marker_padding-left_checkbox;
+   top: @true_marker_padding-top_checkbox;
 }
 .controls-Checkbox__icon-checked-color_enabled_theme-@{themeName} {
-   fill: @color_CheckBox__icon_enabled;
+   fill: @marker_color_checkbox;
 }
 .controls-Checkbox__icon-checked-color_disabled_theme-@{themeName} {
-   fill: @color_CheckBox__icon_disabled;
+   fill: @readonly_marker_color_checkbox;
 }
 .controls-Checkbox__icon-checked-color_transparent {
    fill: transparent;
@@ -83,16 +83,16 @@
    left: 0;
    content: '';
    position: absolute;
-   height:@size_CheckBox__iconTristate;
-   width: @size_CheckBox__iconTristate;
-   line-height: @size_CheckBox__iconTristate;
-   margin: (@height_CheckBox__clickArea - @size_CheckBox__iconTristate) / 2 (@width_CheckBox__clickArea - @size_CheckBox__iconTristate) / 2;
+   height:@tristate_marker_size_checkbox;
+   width: @tristate_marker_size_checkbox;
+   line-height: @tristate_marker_size_checkbox;
+   margin: (@height_checkbox - @tristate_marker_size_checkbox) / 2 (@click-area_width_checkbox - @tristate_marker_size_checkbox) / 2;
 }
 .controls-Checkbox__icon-tristate-color__disabled_theme-@{themeName}:after{
-   background-color: @color_CheckBox__icon_disabled;
+   background-color: @readonly_marker_color_checkbox;
 }
 .controls-Checkbox__icon-tristate-color__enabled_theme-@{themeName}:after{
-   background-color: @color_CheckBox__icon_enabled;
+   background-color: @marker_color_checkbox;
 }
 //растягиваем ширину, чтоб корректно переносился заголовок
 .controls-Checkbox__caption {

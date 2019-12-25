@@ -8,8 +8,22 @@
    min-height: 1px;
 }
 
+.controls-Input-DateRange__buttonWrapper {
+   padding-left: @spacing_DateRange-between-input-button;
+   display: inline-block;
+}
+
+.controls-Input-DateRange__buttonBaseLine::before {
+   content: "\200b";
+}
+
 .controls-Input-DateRange__button {
-   margin-left: @spacing_DateRange-between-input-button;
+   cursor: pointer;
+   font-size: @size_DateRange-icon;
+   line-height: @size_DateRange-icon;
+   width: @size_DateRange-icon;
+   height: @size_DateRange-icon;
+   font-family: @font-family_DateRange;
 }
 
 .controls-Input-DateRange__dash {
@@ -23,8 +37,4 @@
 .controls-PeriodDialog__picker {
    margin-top: @shift-top_PeriodDialog-picker;
    margin-left: @shift-left_PeriodDialog-picker;
-}
-
-.controls-Input-DateRange__icon-size {
-   .icon-size(@size_DateRange-icon, @font-family_DateRange);
 }

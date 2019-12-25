@@ -6,13 +6,13 @@
 
 /**
  * @name Controls/list:BaseGroupTemplate#separatorVisibility
- * @cfg {Boolean} Когда опция установлена в значение true, горизонтальная линия-разделитель будет отображена.
+ * @cfg {Boolean} Когда опция установлена в значение false, горизонтальная линия-разделитель будет скрыта.
  * @default true
  */
 
 /**
  * @name Controls/list:BaseGroupTemplate#expanderVisibile
- * @cfg {Boolean} Когда опция установлена в значение true, кнопка-экспандер группы будет отображена.
+ * @cfg {Boolean} Когда опция установлена в значение false, кнопка-экспандер группы будет скрыта.
  * @default true
  * @remark
  * Кнопка-экспандер позволяет сворачивать/разворачивать группу.
@@ -69,7 +69,7 @@
  * <!-- file1.wml -->
  * <Controls.list:View>
  *    <ws:groupTemplate>
- *       <ws:partial template="Controls/list:GroupTemplate">
+ *       <ws:partial template="Controls/list:GroupTemplate" scope="{{groupTemplate}}">
  *          <ws:rightTemplate>
  *             {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
  *          </ws:rightTemplate>
@@ -138,7 +138,7 @@
  * <!-- file1.wml -->
  * <Controls.list:View>
  *    <ws:groupTemplate>
- *       <ws:partial template="Controls/list:GroupTemplate">
+ *       <ws:partial template="Controls/list:GroupTemplate" scope="{{groupTemplate}}">
  *          <ws:contentTemplate>
  *             <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
  *             <ws:if data="{{contentTemplate.itemData.item === 'works'}}">Работы</ws:if>

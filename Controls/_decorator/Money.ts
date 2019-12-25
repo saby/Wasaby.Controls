@@ -44,10 +44,6 @@ interface IPaths {
  * @author Красильников А.С.
  */
 export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     number: number;
     /**
      * Опция устарела, используйте опцию {@link useGrouping}.
@@ -76,7 +72,7 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
 }
 
 /**
- * Графический контрол, декоририрующий число таким образом, что оно приводится к денежному формату.
+ * Графический контрол, декорирующий число таким образом, что оно приводится к денежному формату.
  * Денежным форматом является число с неограниченной целой частью, и двумя знаками в дробной части.
  *
  * @class Controls/_decorator/Money

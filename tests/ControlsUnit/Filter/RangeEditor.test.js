@@ -3,7 +3,7 @@ define(['Controls/filter'],
 
       describe('Controls/filter:DateRange', function() {
 
-         it('_rangeChanged', () => {
+         it('_rangeChanged', (done) => {
             var rangeEditor = new filter.DateRangeEditor();
             var textValue;
 
@@ -17,8 +17,10 @@ define(['Controls/filter'],
                }
             };
 
-            rangeEditor._rangeChanged({}, new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00'));
-            assert.equal(textValue, '17.04.95 - 17.05.95');
+            rangeEditor._rangeChanged({}, new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00')).then(() => {
+               assert.equal(textValue, '17.04.95 - 17.05.95');
+               done();
+            });
          });
 
       });

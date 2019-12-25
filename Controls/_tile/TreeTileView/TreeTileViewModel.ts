@@ -147,6 +147,10 @@ var TreeTileViewModel = TreeViewModel.extend({
         filterData.expandedItems = [];
         filterData.collapsedItems = [];
         return filterData;
+    },
+
+    getItemPaddingClasses(): string {
+        return this._tileModel.getItemPaddingClasses();
     }
 });
 

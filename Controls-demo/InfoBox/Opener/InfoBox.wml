@@ -14,43 +14,24 @@
       </div>
    </ws:for>
 
-    <Controls.buttons:Button viewMode="link" fontColorStyle="link"
-                              icon="icon-EmptyMessage"
-                              iconSize="default"
-                              attr:class="controls-InfoBoxDemo__top-right"
-                              attr:style="position: absolute; right: 0px; top: 6px"
-                              on:mouseenter="_open(_cfgRight)"/>
-    <Controls.buttons:Button viewMode="link" fontColorStyle="link"
-                              icon="icon-EmptyMessage"
-                              iconSize="default"
-                              attr:class="controls-InfoBoxDemo__bottom-right"
-                              attr:style="position: absolute; right: 0px; bottom: 5px"
-                              on:mouseenter="_open(_cfgRight)"/>
-    <Controls.buttons:Button viewMode="link" fontColorStyle="link"
-                              icon="icon-EmptyMessage"
-                              iconSize="default"
-                              attr:class="controls-InfoBoxDemo__top-left"
-                              attr:style="position: absolute; left: 0px; top: 6px"
-                              on:mouseenter="_open(_cfgLeft)"/>
-    <Controls.buttons:Button viewMode="link" fontColorStyle="link"
-                              icon="icon-EmptyMessage"
-                              iconSize="default"
-                              attr:class="controls-InfoBoxDemo__bottom-left"
-                              attr:style="position: absolute; left: 0px; bottom: 5px"
-                              on:mouseenter="_open(_cfgLeft)"/>
-    <Controls.buttons:Button viewMode="link" fontColorStyle="link"
-                              icon="icon-EmptyMessage"
-                              iconSize="default"
-                              attr:class="controls-InfoBoxDemo__top"
-                              attr:style="position: absolute; top: 0px;left:calc(50% - 12px)"
-                              on:mouseenter="_open(_cfgTop)"/>
-    <Controls.buttons:Button viewMode="link" fontColorStyle="link"
-                              icon="icon-EmptyMessage"
-                              iconSize="default"
-                              attr:class="controls-InfoBoxDemo__bottom"
-                              attr:style="position: absolute; bottom: 0px;left:calc(50% - 12px)"
-                              on:mouseenter="_open(_cfgBottom)"/>
-
+    <div class="controls-icon controls-icon_size-default_theme-{{_options.theme}} controls-icon_style-secondary_theme-{{_options.theme}}
+                icon-EmptyMessage controls-InfoBoxDemo-icon-position controls-InfoBoxDemo__top-right"
+         attr:style="right: 12px; top: 6px" on:mouseenter="_open(_cfgRight)"></div>
+    <div class="controls-icon controls-icon_size-default_theme-{{_options.theme}} controls-icon_style-secondary_theme-{{_options.theme}}
+                icon-EmptyMessage controls-InfoBoxDemo-icon-position controls-InfoBoxDemo__bottom-right"
+         attr:style="right: 12px; bottom: 5px" on:mouseenter="_open(_cfgRight)"></div>
+    <div class="controls-icon controls-icon_size-default_theme-{{_options.theme}} controls-icon_style-secondary_theme-{{_options.theme}}
+                icon-EmptyMessage controls-InfoBoxDemo-icon-position controls-InfoBoxDemo__top-left"
+         attr:style="left: 12px; top: 6px" on:mouseenter="_open(_cfgLeft)"></div>
+    <div class="controls-icon controls-icon_size-default_theme-{{_options.theme}} controls-icon_style-secondary_theme-{{_options.theme}}
+                icon-EmptyMessage controls-InfoBoxDemo-icon-position controls-InfoBoxDemo__bottom-left"
+         attr:style="left: 12px; bottom: 6px" on:mouseenter="_open(_cfgLeft)"></div>
+    <div class="controls-icon controls-icon_size-default_theme-{{_options.theme}} controls-icon_style-secondary_theme-{{_options.theme}}
+                icon-EmptyMessage controls-InfoBoxDemo-icon-position controls-InfoBoxDemo__top-center"
+         attr:style="top: 0;left:calc(50% - 12px)" on:mouseenter="_open(_cfgTop)"></div>
+    <div class="controls-icon controls-icon_size-default_theme-{{_options.theme}} controls-icon_style-secondary_theme-{{_options.theme}}
+                icon-EmptyMessage controls-InfoBoxDemo-icon-position controls-InfoBoxDemo__bottom-center"
+         attr:style="bottom: 0;left:calc(50% - 12px)" on:mouseenter="_open(_cfgBottom)"></div>
 
   <div style="margin-bottom: 30px ">
       <div class="controls-InfoBoxDemo-block demo-InfoBoxDemo__blockicons">
