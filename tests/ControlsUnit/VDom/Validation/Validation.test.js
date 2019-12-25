@@ -145,22 +145,25 @@ define([
          FC.destroy();
       });
 
-      it('submit', () => {
+      it('submit', (done) => {
          let FC = new validateMod.Controller();
          let validator1 = getValidator(true);
          let validator2 = getValidator(false);
          FC.onValidateCreated({}, validator1);
          FC.onValidateCreated({}, validator2);
 
-         FC.submit().addCallback((result) => {
+         FC.submit().then((result) => {
             assert.equal(validator1._validateCall, true, 'is validate1 call');
             assert.equal(validator2._validateCall, true, 'is validate2 call');
 
-            assert.equal(result[0], true, 'validate1 result');
-            assert.equal(result[1], false, 'validate2 result');
+            assert.equal(result[0], false, 'validate1 result');
+            assert.equal(result[1], true, 'validate2 result');
 
             assert.equal(validator1._activateCall, true, 'is validate1 activate');
             assert.equal(validator2._activateCall, false, 'is validate2 activate');
+            done();
+         }).catch((error) => {
+            done(error);
          });
          FC.destroy();
       });
