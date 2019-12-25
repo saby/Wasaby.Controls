@@ -2167,17 +2167,26 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object): void {
+    appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, rebuild?: boolean): void {
+        const strategyOptions = { ...options, display: this };
+
         this._userStrategies.push({
             strategy,
-            options
+            options: strategyOptions
         });
 
         if (this._composer) {
-            this._composer.append(strategy, { ...options, display: this });
+            this._composer.append(strategy, strategyOptions);
+            if (rebuild) {
+                this._reBuild();
+            }
         }
 
         this.nextVersion();
+    }
+
+    getStrategyInstance(strategy: new() => IItemsStrategy<S, T>): IItemsStrategy<S, T> {
+        return this._composer.getInstance(strategy);
     }
 
     removeStrategy(strategy: new() => IItemsStrategy<S, T>): void {
@@ -2518,15 +2527,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             handler: this._$group
         });
 
-        this._userStrategies.forEach((us) =>
-            composer.append(
-                us.strategy,
-                {
-                    ...us.options,
-                    display: this
-                }
-            )
-        );
+        this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));
 
         return composer;
     }
