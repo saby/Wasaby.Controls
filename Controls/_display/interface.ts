@@ -1,4 +1,4 @@
-import IItemsStrategy from 'Types/_display/IItemsStrategy';
+import IItemsStrategy from './IItemsStrategy';
 
 export type TItemKey = string | number;
 
@@ -11,7 +11,8 @@ export interface IBaseCollection<T> {
 }
 
 export interface IStrategyCollection<T> {
-    appendStrategy(strategy: Function, options?: object): void;
+    appendStrategy(strategy: Function, options?: object, rebuild?: boolean): void;
+    getStrategyInstance(strategy: Function): IItemsStrategy<unknown, T>;
     removeStrategy(strategy: Function): void;
 }
 

@@ -48,6 +48,11 @@ export default class Drag<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         return this._options;
     }
 
+    set avatarIndex(avatarIndex: number) {
+        this._options.avatarIndex = avatarIndex;
+        this.invalidate();
+    }
+
     get source(): IItemsStrategy<S, T> {
         return this._options.source;
     }
