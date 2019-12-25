@@ -107,6 +107,10 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * @event Controls/_search/Input/Search#resetClick Происходит при клике на кнопку сброса.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
+/**
+ * @name  Controls/_search/Input/Search#reset
+ * @cfg {Function} Функция сбрасывания значения в строке поиска
+ */
 
 /*
  * @event Controls/_suggest/Input/Search/Suggest#searchClick Occurs when search button is clicked.
@@ -131,6 +135,7 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
 /*
  * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
  * @event Controls/_search/Input/Search#resetClick Occurs when reset button is clicked.
+ * @name  Controls/_search/Input/Search#reset Search reset function
  */
 var _private = {
    isVisibleResetButton: function() {
@@ -205,13 +210,13 @@ var Search = Base.extend({
 
       this._notify('resetClick');
       this.reset();
+      // move focus from reset button to input
+      this.activate();
    },
 
    reset: function() {
       this._viewModel.displayValue = '';
       this._notifyValueChanged();
-      // move focus from reset button to input
-      this.activate();
    },
 
    _searchClick: function() {
