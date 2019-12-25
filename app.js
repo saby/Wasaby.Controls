@@ -68,7 +68,7 @@ app.use(cookieParser());
 app.use('/', serveStatic(pathToResources));
 
 
-const port = process.env.PORT || 666;
+const port = process.env.PORT || 777;
 app.listen(port);
 
 console.log('app available on port ' + port);
