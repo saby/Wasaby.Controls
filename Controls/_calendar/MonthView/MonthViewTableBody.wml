@@ -10,7 +10,6 @@
          value="{{value}}"
          _themeCssClass="{{_themeCssClass}}"
          mode="{{mode}}"
-         _isDayInteractionAllowed="{{_isDayInteractionAllowed}}"
       />
    </div>
 </div>

@@ -35,6 +35,11 @@ const enum ITEM_BODY_SELECTOR {
     day = '.controls-MonthViewVDOM__item'
 }
 
+const enum VIEW_MODE {
+    month = 'month',
+    year = 'year'
+}
+
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
  *
@@ -78,7 +83,15 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
                            Promise<TItems> | void {
-        const position = options.startPosition || options.position || new WSDate();
+
+        const now = new WSDate();
+        let position = options.startPosition || options.position;
+
+        if (!position) {
+            position = options.viewMode === VIEW_MODE.year ?
+                dateUtils.getStartOfYear(now) : dateUtils.getStartOfMonth(now);
+        }
+
         if (options.startPosition) {
             Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
@@ -167,10 +180,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _updateItemTemplate(options: IModuleComponentOptions): void {
-        this._itemHeaderTemplate = options.viewMode === 'year' ?
+        this._itemHeaderTemplate = options.viewMode === VIEW_MODE.year ?
             options.yearHeaderTemplate : options.monthHeaderTemplate;
 
-        this._itemTemplate = options.viewMode === 'year' ?
+        this._itemTemplate = options.viewMode === VIEW_MODE.year ?
             options.yearTemplate : options.monthTemplate;
     }
     private _getTemplate(data): TemplateFunction {
@@ -237,7 +250,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _normalizeStartPosition(date: Date): Date {
-        return this._options.viewMode === 'year' ?
+        return this._options.viewMode === VIEW_MODE.year ?
             dateUtils.getStartOfYear(date) : dateUtils.getStartOfMonth(date);
     }
 
@@ -277,7 +290,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                     // because a situation is possible when the container partially intersected from above, climbed up,
                     // persecuted, and the lower container approached the upper edge and its intersection did not change.
                     const delta: number = this._options.order === 'asc' ? 1 : -1;
-                    if (this._options.viewMode === 'year') {
+                    if (this._options.viewMode === VIEW_MODE.year) {
                         date = new this._options.dateConstructor(entryDate.getFullYear() + delta, entryDate.getMonth());
                     } else {
                         date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + delta);
@@ -370,7 +383,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         // then scroll to it unconditionally. In this case, the last month can be scrolled to the bottom
         // of the scrolled area. But this configuration is used only in a large selection of the period,
         // and there it is valid.
-        if ((this._options.viewMode === 'year' && date.getMonth() !== 0)) {
+        if ((this._options.viewMode === VIEW_MODE.year && date.getMonth() !== 0)) {
             return true;
         }
 
@@ -438,7 +451,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     static getDefaultOptions(): object {
         return {
-            viewMode: 'year',
+            viewMode: VIEW_MODE.year,
             yearTemplate,
             monthTemplate,
             // In most places where control is used, no more than 4 elements are displayed at the visible area.

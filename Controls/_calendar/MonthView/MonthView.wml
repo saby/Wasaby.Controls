@@ -14,7 +14,6 @@
          monthViewModel="{{_monthViewModel}}"
          _prepareClass="{{_prepareClass}}"
          _themeCssClass="{{_themeCssClass}}"
-         _isDayInteractionAllowed="{{_isDayInteractionAllowed}}"
           mode="{{_options.mode}}"
       />
    </div>
