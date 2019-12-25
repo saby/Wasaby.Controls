@@ -120,7 +120,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
-        // this._notify('itemMouseMove', [item, e]);
+        this._notify('itemMouseMove', [item, e]);
     }
 
     protected _onItemWheel(e: SyntheticEvent<WheelEvent>, item: CollectionItem<unknown>): void {
