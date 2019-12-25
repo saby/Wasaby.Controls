@@ -24,7 +24,6 @@ export default class Columns extends BaseRender {
     protected _template: TemplateFunction = template;
     protected _itemTemplate: TemplateFunction;
 
-
     protected _beforeMount(options: IRenderOptions): void {
         this._templateKeyPrefix = `columns-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
@@ -52,7 +51,9 @@ export default class Columns extends BaseRender {
     protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         this._notify('itemMouseLeave', [item, e]);
     }
-
+    protected _onItemMouseDown(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+        this._notify('itemMouseDown', [item, e]);
+    }
     // Обработка клавиатуры будет реализована по работам с маркером в ColumnsView
     protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
         e.preventDefault();
