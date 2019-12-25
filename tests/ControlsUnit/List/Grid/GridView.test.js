@@ -474,6 +474,52 @@ define(['Controls/grid'], function(gridMod) {
          assert.isTrue(columnScrollUpdateShadowStyleCalled);
       });
 
+      it('itemClick sends right args', function() {
+         const cfg = {
+            multiSelectVisibility: 'visible',
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+
+         let isEventRaised = false;
+         let isNativeStopped = false;
+         const fakeEvent = {
+            stopImmediatePropagation() {
+               isNativeStopped = true;
+            },
+            target: {
+               closest: (selector) => {
+                  if (selector === '.controls-Grid__row') {
+                     return {
+                        querySelectorAll: () => ['multiselect', 0, 1]
+                     };
+                  }
+                  if (selector === '.controls-Grid__row-cell') {
+                     return 1;
+                  }
+               }
+            }
+         };
+         const item = {};
+         const fakeDispItem = {
+            getContents: () => item
+         };
+         gridView._notify = function (e, args) {
+            if (e === 'itemClick') {
+               isEventRaised = true;
+               assert.equal(args[0], item);
+               assert.equal(args[1], fakeEvent);
+               assert.equal(args[2], 1);
+            }
+         };
+         gridView._onItemClick(fakeEvent, fakeDispItem);
+         assert.isTrue(isEventRaised);
+         assert.isTrue(isNativeStopped);
+      });
+
       describe('editArrowClick', function() {
          it('click on editArrow stops click event', function() {
             let cfg = {
