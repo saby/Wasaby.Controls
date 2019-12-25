@@ -7,7 +7,7 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
 import {IMonthList, IMonthListOptions} from './interfaces/IMonthList';
 import {IMonthListVirtualPageSize, IMonthListVirtualPageSizeOptions} from './interfaces/IMonthListVirtualPageSize';
-import ExtDataModel from './MonthList/ExtDataModel';
+import ExtDataModel, {TItems} from './MonthList/ExtDataModel';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import ITEM_TYPES from './MonthList/ItemTypes';
@@ -80,7 +80,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _virtualPageSize: number;
 
-    protected _beforeMount(options: IModuleComponentOptions): void {
+    protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
+                           Promise<TItems> | void {
         const position = options.startPosition || options.position || new WSDate();
         if (options.startPosition) {
             Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
@@ -95,6 +96,15 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._positionToScroll = position;
         this._displayedPosition = position;
         this._lastNotifiedPositionChangedDate = position;
+
+        if (this._extData) {
+            if (receivedState) {
+                this._extData.updateData(receivedState);
+            } else {
+                this._displayedDates = this._getDisplayedRanges(position, options.virtualPageSize);
+                return this._extData.enrichItems(this._displayedDates);
+            }
+        }
     }
 
     protected _afterMount(): void {
@@ -150,6 +160,14 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             this._displayedPosition = this._lastPositionFromOptions;
             this._scrollToPosition(this._displayedPosition);
         }
+    }
+
+    private  _getDisplayedRanges(position: Date, virtualPageSize: number): number[] {
+        const displayedRanges = [];
+        for (let i = 0; i < virtualPageSize; i++) {
+            displayedRanges.push(Date.parse(new Date(position.getFullYear(), position.getMonth() + i)));
+        }
+        return displayedRanges;
     }
 
     private _updateItemTemplate(options: IModuleComponentOptions): void {
