@@ -1,7 +1,14 @@
 .ControlsDemo-InputDropdown {
-   margin: 20px 35px;
+   margin: 20px 230px 20px 35px;
    min-height: 800px;
    display: flex;
+}
+
+.ControlsDemo-DropdownInput__verWrapper {
+   display: flex;
+   flex-direction: column;
+   overflow: hidden;
+   min-width: 400px;
 }
 
 .ControlsDemo-InputDropdown__item-limitMaxWidth {
@@ -9,16 +16,14 @@
 }
 
 .ControlsDemo-InputDropdown__wrapper {
+   display: flex;
+   flex-direction: column;
    margin-left: 25px;
    margin-bottom: 10px;
 }
 
 .ControlsDemo-InputDropdown__scroll {
    height: 400px;
-}
-
-.ControlsDemo-InputDropdown_column {
-   padding-bottom: 25px;
 }
 
 .ControlsDemo-InputDropdown-bottom-right {
@@ -123,7 +128,7 @@
 }
 
 .ControlsDemo-InputDropdown__item {
-   margin-right: 20px;
+   max-width: 100%;
 }
 
 .ControlsDemo-InputDropdown-limitWidth {
