@@ -149,4 +149,6 @@ export default class Render extends Control<IRenderOptions> {
             this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChange);
         }
     }
+
+    static _theme: string[] = ['Controls/list_multi'];
 }

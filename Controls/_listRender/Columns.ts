@@ -20,7 +20,6 @@ export interface IRenderChildren {
 }
 
 export default class Columns extends BaseRender {
-    static _theme: string[] = ['Controls/list_multi'];
     protected _template: TemplateFunction = template;
     protected _itemTemplate: TemplateFunction;
 
