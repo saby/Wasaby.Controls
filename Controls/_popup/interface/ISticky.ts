@@ -21,13 +21,13 @@ export interface IStickyPopupOptions extends IBasePopupOptions {
     targetPoint?: IStickyPosition;
     direction?: IStickyPosition;
     offset?: IStickyPositionOffset;
-    fittingMode?: string;
+    fittingMode?: string | IStickyPosition;
     horizontalAlign?: any; //TODO НУЖНО УДАЛЯТЬ ИСПОЛЬЗОВАНИЕ ОПЦИИ
 }
 
 export interface IStickyPosition {
-    vertical: string;
-    horizontal: string;
+    vertical?: string;
+    horizontal?: string;
 }
 
 export interface IStickyPositionOffset {

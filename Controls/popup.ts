@@ -18,6 +18,8 @@
  * @includes INotificationPopupOptions Controls/_popup/interface/INotification
  * @includes IEditOpener Controls/_popup/interface/IEdit
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
+ * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
+ * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
  * @public
  * @author Крайнов Д.О.
  */
@@ -42,6 +44,8 @@
  * @includes INotificationPopupOptions Controls/_popup/interface/INotification
  * @includes IEditOpener Controls/_popup/interface/IEdit
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
+ * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
+ * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
  * @public
  * @author Крайнов Д.О.
  */
@@ -51,10 +55,6 @@
  * @includes GlobalTemplate wml!Controls/_popup/Global/Global
  * @includes PreviewerTemplate wml!Controls/_popup/Global/Global
  */
-
-import InfoboxTarget = require('Controls/_popup/InfoBox');
-import PreviewerTarget = require('Controls/_popup/Previewer');
-import GlobalTemplate = require('wml!Controls/_popup/Global/Global');
 
 export {default as Manager} from './_popup/Manager';
 export {default as Container} from './_popup/Manager/Container';
@@ -73,6 +73,8 @@ export {default as Edit} from './_popup/Opener/Edit';
 export {default as EditContainer} from './_popup/Opener/Edit/Container';
 
 export {default as InfoboxButton} from './_popup/InfoBox/InfoboxButton';
+export {default as PreviewerTarget} from './_popup/Previewer';
+export {default as InfoboxTarget} from './_popup/InfoBox';
 export {default as PreviewerTemplate} from './_popup/Previewer/PreviewerTemplate';
 
 export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers} from './_popup/interface/IPopup';
@@ -82,9 +84,11 @@ export {IStickyPopupOptions} from './_popup/interface/ISticky';
 export {IDialogPopupOptions} from './_popup/interface/IDialog';
 export {IConfirmationOptions} from './_popup/interface/IConfirmation';
 export {INotificationPopupOptions} from './_popup/interface/INotification';
+export {IPreviewerOptions} from './_popup/interface/IPreviewer';
+export {IInfoBoxOptions} from './_popup/interface/IInfoBox';
 
+// TODO Compatible
+import GlobalTemplate = require('wml!Controls/_popup/Global/Global');
 export {
-    InfoboxTarget,
-    PreviewerTarget,
     GlobalTemplate
 };
