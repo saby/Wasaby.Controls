@@ -235,14 +235,16 @@ var _private = {
    },
    getHistoryService: function(self) {
       if (!self._historyServiceLoad) {
-         self._historyServiceLoad = new Deferred();
+         const def = new Deferred();
          require(['Controls/suggestPopup'], function(result) {
             self._historyServiceLoad = result.LoadService({
                historyId: self._options.historyId
             }).addCallback((result) => {
-               self._historyServiceLoad.callback(result);
+               def.callback(result);
+               return result;
             });
          });
+         return def;
       }
       return self._historyServiceLoad;
    },
@@ -468,6 +470,7 @@ var SuggestLayout = Control.extend({
 
       if (this._options.historyId) {
          _private.getHistoryService(this).addCallback(function(historyService) {
+
             historyService.update(item, {$_history: true});
             return historyService;
          });

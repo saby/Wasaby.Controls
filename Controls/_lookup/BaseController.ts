@@ -130,17 +130,17 @@ var _private = {
 
       getHistoryService: function(self) {
          if (!self._historyServiceLoad) {
-            self._historyServiceLoad = new Deferred();
-            require(['Controls/suggest'], (suggest) => {
-               suggest.LoadService({
+            const def = new Deferred();
+            require(['Controls/suggestPopup'], function(result) {
+               self._historyServiceLoad = result.LoadService({
                   historyId: self._options.historyId
                }).addCallback((result) => {
-                  self._historyServiceLoad.callback(result);
+                  def.callback(result);
                   return result;
                });
             });
+            return def;
          }
-
          return self._historyServiceLoad;
       }
    };
