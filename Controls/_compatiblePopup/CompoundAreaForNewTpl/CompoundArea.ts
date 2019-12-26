@@ -453,8 +453,9 @@ const moduleClass = CompoundControl.extend({
          const
             self = this,
             Sync = Vdom.Synchronizer;
+         const container = this._vDomTemplate._container;
 
-         Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
+         Sync.unMountControlFromDOM(this._vDomTemplate, container);
 
          // Временное решение для очистки памяти. Вдомные контролы при вызове unMountControlFromDOM
          // уничтожаются (destroy) синхронно, но удаляются из DOM через инферно асинхронно.
@@ -471,7 +472,7 @@ const moduleClass = CompoundControl.extend({
          // Более правильное решение будет придумываться по ошибке:
          // https://online.sbis.ru/opendoc.html?guid=37e1cf9f-913d-4c96-b73a-effc3a5fba92
          setTimeout(function() {
-            self._clearVdomProperties(self._vDomTemplate._container);
+            self._clearVdomProperties(container);
             self._vdomTemplate = null;
          }, 3000);
       }
