@@ -11,8 +11,6 @@ import entity = require('Types/entity');
 // @ts-ignore
 import contentTemplate = require('wml!Controls/_popupConfirmation/Opener/Dialog/content');
 // @ts-ignore
-import footerTemplate = require('wml!Controls/_popupConfirmation/Opener/Dialog/footer');
-// @ts-ignore
 import messageTemplate = require('wml!Controls/_popupConfirmation/Opener/Dialog/message');
 // @ts-ignore
 import detailsTemplate = require('wml!Controls/_popupConfirmation/Opener/Dialog/details');
@@ -109,7 +107,6 @@ var Submit = Control.extend({
    _messageTemplate: messageTemplate,
    _detailsTemplate: detailsTemplate,
    _contentTemplate: contentTemplate,
-   _footerTemplate: footerTemplate,
 
    _isEscDown: false,
 

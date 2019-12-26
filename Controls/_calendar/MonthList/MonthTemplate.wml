@@ -8,9 +8,6 @@
             _options="{{_options}}"
          />
       </ws:if>
-      <ws:else>
-         {{_formatMonth(date)}}
-      </ws:else>
    </div>
    <div class="controls-MonthList__month-body" data-date="{{_dateToDataString(date)}}">
       <ws:if data="{{bodyTemplate}}">

@@ -3,6 +3,9 @@
 //Примечание: Применяется в том числе к основному фону самой страницы.
 @background-color:                                                          #FFF;
 
+//Цвет фона элементов при наведении мыши.
+@hover_background-color:                                                    #F0F5FB;
+
 //Цвет элементов отображающих опасность или ошибку.
 //Пример: Ошибка валидации, операция завершенная с ошибкой, отклонения от нормы выполнения процесса.
 @danger_color:                                                              #D04D4D;
@@ -1239,6 +1242,10 @@
 //цвет обводки кнопки закрытия при нажатии
 @border-color_active_closeButton_toolButton:                                #CCCCCC;
 
+
+@width_closeButton_link:                                                    @inline_height_m;
+
+
 //ФЛАГ
 //размер шрифта флага
 @font-size_checkbox:                                                        @font-size_m;
@@ -1371,5 +1378,165 @@
 
 // отступ между текстом и иконкой
 @trigger_padding-right_combobox:                   4px;
+
+// dropdown:Popup
+@popup_max-width_dropdown:                         700px;
+@popup_border-thickness_dropdown:                  @border-thickness;
+@popup_border-color_dropdown:                      #CCC;
+@popup_background-color_dropdown:                  @background-color;
+
+@popup_box-shadow-offset_dropdown:                 6px;
+@popup_box-shadow-blur_dropdown:                   6px;
+@popup_box-shadow-color_dropdown:                  rgba(0, 0, 0, 0.2);
+
+@popup_padding-vertical_dropdown:                  2px;
+@header_background-color_dropdown:                 #F4F4F4;
+@header_font-size_dropdown:                        @font-size_l;
+@header_color_dropdown:                            @secondary_text-color; // должно переехать в menuPopupTemplate
+@header_min-height_dropdown:                       32px;
+@header_padding-horizontal_dropdown:               12px;
+@footer_min-height_dropdown:                       32px;
+@apply-button_offset_dropdown:                     8px;
+
+/* Menu */
+@item_separator_color_menu:                        transparent;
+@item_separator_thickness_menu:                    0;
+@item_separator_padding-horizontal_menu:           0;
+@item_background-color_menu:                       @background-color;
+@item_hover_background-color_menu:                 @hover_background-color;
+@item_active_background-color_menu:                @item_hover_background-color_menu;
+@item_height_menu:                                 32px;
+@item_font-size_menu:                              @font-size_l;
+@item_padding-horizontal_s_menu:                   4px;
+@item_padding-horizontal_l_menu:                   12px;
+@item_padding-top_menu:                            6px;
+@item_padding-bottom_menu:                         6px;
+@item_text-color_menu:                             @text-color;
+@empty-item_text-color_menu:                       #CCC;
+@item_icon_offset_menu:                            6px;
+@readonly_item_text-color_menu:                    @readonly_color;
+@hierarchy_icon-size_menu:                         @icon-size_s;
+@hierarchy_icon-color_menu:                        @secondary_color;
+@readonly_hierarchy_icon-color_menu:               @readonly_color;
+@hierarchy_icon_offset-right_menu:                 6px;
+@hierarchy_icon_offset-left_menu:                  6px;
+@close-button_offset-top_menu:                     6px;
+@close-button_offset-right_menu:                   6px;
+@close-button_offset-left_menu:                    0;
+@pin-button_icon-size_menu:                        @icon-size_s;
+@pin-button_offset-right_menu:                     12px;
+@pin-button_offset-left_menu:                      6px;
+@pin-button_icon-color_menu:                       @unaccented_icon-color;
+@pin-button_hover_icon-color_menu:                 @color_link-hover;
+@marker_width_menu:                                6px;
+@marker_height_menu:                               8px;
+@marker_color_menu:                                #D94700;
+@grouping_padding-vertical_menu:                   8px;
+@grouping_padding-horizontal_menu:                 12px;
+@grouping_separator_thickness_menu:                1px;
+@grouping_separator_color_menu:                    #EAEAEA;
+@grouping_text-color_menu:                         @label_text-color;
+@grouping_font-size_menu:                          @font-size_xs;
+
+
+//Слайдер
+//размер ползунка s
+@marker_s_size_slider:                                                      12px;
+
+//размер ползунка l
+@marker_l_size_slider:                                                      20px;
+
+//высота слайдера
+@height_slider:                                                             @inline_height_m;
+
+//цвет обводки слайдера
+@border-color_slider:                                                       #E4E4E4;
+
+//толщина обводки слайдера
+@border-thickness_slider:                                                   @border-thickness;
+
+//радиус скругления обводки слайдера
+@border-radius_slider:                                                      @height_slider/2;
+
+//горизонтальный отступ в слайдере
+@padding-horizontal_slider:                                                 14px;
+
+//цвет фона ползунка
+@marker_background-color_slider:                                            @background-color;
+
+//толщина обводки ползунка
+@marker_border-thickness_slider:                                            2px;
+
+//цвет обводки ползунка
+@marker_border-color_slider:                                                @secondary_color;
+
+//цвет обводки ползунка в режиме чтения
+@readonly_marker_border-color_slider:                                       @readonly_color;
+
+//толщина линии слайдера
+@track_thickness_slider:                                                    2px;
+
+//цвет линии слайдера выделенной области
+@track_color_slider:                                                        @secondary_color;
+
+//цвет линии слайдера в свободном состоянии
+@unselected_track_color_slider:                                             @unaccented_color;
+
+//цвет линии слайдера в режиме чтения
+@readonly_track_color_slider:                                               @readonly_color;
+
+//цвет фона ползунка при наведении
+@marker_hover_background-color_slider:                                      @hover_background-color;
+
+//цвет обводки ползунка при наведении
+@marker_hover_border-color_slider:                                          @unaccented_color;
+
+//размер шрифта шкалы
+@scale_font-size_slider:                                                    @font-size_m;
+
+//цвет текста шкалы
+@scale_text-color_slider:                                                   @unaccented_text-color;
+
+//цвет текста шкалы в режиме чтения
+@readonly_scale_text-color_slider:                                          #CCCCCC;
+
+//высота разделителя слайдера
+@tick_height_slider:                                                        4px;
+
+//толщина разделителя слайдера
+@tick_thickness_slider:                                                     1px;
+
+//цвет разделителя слайдера
+@tick_color_slider:                                                         @unselected_track_color_slider;
+
+//цвет разделителя слайдера в режиме чтения
+@readonly_tick_color_slider:                                                @readonly_track_color_slider;
+
+//горизонтальный отступ в тултипе слайдера
+@tooltip_padding-horizontal_slider:                                         8px;
+
+//вертикальный отступ в тултипе слайдера
+@tooltip_padding-vertical_slider:                                           4px;
+
+//цвет фона тултипа слайдера
+@tooltip_background-color_slider:                                           @marker_background-color_slider;
+
+//толщина обводки тултипа слайдера
+@tooltip_border-thickness_slider:                                           0;
+
+//цвет обводки тултипа слайдера
+@tooltip_border-color_slider:                                               transparent;
+
+//радиус скругления обводки тулипа слайдера
+@tooltip_border-radius_slider:                                              4px;
+
+//тень тултипа слайдера
+@tooltip_box-shadow_slider:                                                 0 0 6px 0 #999999;
+
+//размер шрифта тултипа
+@tooltip_font-size_slider:                                                  @font-size_l;
+
+//отступ между тултипом и ползунком
+@tooltip_offset_slider:                                                     2px;
 
 //last line

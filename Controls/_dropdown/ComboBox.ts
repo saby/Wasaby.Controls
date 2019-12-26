@@ -58,6 +58,25 @@ var _private = {
  * @demo Controls-demo/Input/ComboBox/ComboBoxPG
  */
 
+/**
+ * @event Controls/_dropdown/ComboBox#valueChanged Происходит при изменении отображаемого значения контрола.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} value Отображаемое значение контрола.
+ * @remark
+ * Событие используется в качестве реакции на изменения, вносимые пользователем.
+ * @example
+ * WML:
+ * <pre>
+ *     <Controls.dropdown:ComboBox
+ *                on:valueChanged="_valueChangedHandler()"
+ *                source="{{_source}}"/>
+ * </pre>
+ * TS:
+ *    private _valueChangedHandler(event, value) {
+ *        this._text = value;
+ *    }
+ */
+
 var ComboBox = Control.extend({
    _template: template,
    _isOpen: false,

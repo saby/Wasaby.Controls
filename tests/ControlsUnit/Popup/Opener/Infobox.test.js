@@ -72,7 +72,7 @@ define(
             };
             let Infobox = new popup.InfoboxTarget(config);
             Infobox.saveOptions(config);
-            let newConfig = popup.InfoboxTarget._private.getCfg(Infobox);
+            let newConfig = Infobox._getConfig();
 
             assert.equal(newConfig.floatCloseButton, true);
             assert.equal(newConfig.style, 'error');
@@ -87,7 +87,7 @@ define(
             Infobox._closeId = 500;
             assert.equal(Infobox._closeId, 500);
             assert.equal(Infobox._openId, 300);
-            popup.InfoboxTarget._private.resetTimeOut(Infobox);
+            Infobox._resetTimeOut();
             assert.equal(Infobox._closeId, null);
             assert.equal(Infobox._openId, null);
          });

@@ -62,11 +62,14 @@
                                      keyProperty="id"
                                      displayProperty="title"
                                      source="{{_createMemory(_titleItems)}}"
-                                     showHeader="{{true}}"
-                                     caption="Sort"
+                                     iconSize="s"
                                      attr:class="demo-InputDropdown__withTitle ControlsDemo-InputDropdown__item"
                                      contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
-               <ws:headConfig iconSize="icon-small"/>
+               <ws:headerTemplate>
+                  <Controls.Container.Async templateName="Controls/dropdownPopup:Template">
+                     <ws:partial template="{{ content.resolvedTemplate }}" scope="{{headerTemplate}}" caption="Sort"/>
+                  </Controls.Container.Async>
+               </ws:headerTemplate>
             </Controls.dropdown:Input>
          </div>
       </div>
@@ -208,9 +211,12 @@
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="demo-InputDropdown__withDuplicate ControlsDemo-InputDropdown__item"
-                                     source="{{_createMemory(_duplicateItems)}}"
-                                     showHeader="{{true}}">
-               <ws:headConfig menuStyle="duplicateSelectedItem"/>
+                                     source="{{_createMemory(_duplicateItems)}}">
+               <ws:headerTemplate>
+                  <Controls.Container.Async templateName="Controls/dropdownPopup:Template">
+                     <ws:partial template="{{ content.resolvedTemplate }}" scope="{{headerTemplate}}"/>
+                  </Controls.Container.Async>
+               </ws:headerTemplate>
             </Controls.dropdown:Input>
          </div>
       </div>

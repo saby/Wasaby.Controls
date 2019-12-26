@@ -1,8 +1,11 @@
-import Control = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popup/Previewer/Previewer');
+import {IPreviewerPopupOptions} from 'Controls/_popup/interface/IPreviewerOpener';
+import {IPreviewer, IPreviewerOptions} from 'Controls/_popup/interface/IPreviewer';
 import {debounce} from 'Types/function';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import PreviewerOpener from './Opener/Previewer';
-import { goUpByControlTree } from 'UI/Focus';
+import {goUpByControlTree} from 'UI/Focus';
 import 'css!theme?Controls/popup';
 
 /**
@@ -13,136 +16,139 @@ import 'css!theme?Controls/popup';
  * @author Красильников А.С.
  */
 
-let CALM_DELAY = 300; // During what time should not move the mouse to start opening the popup.
+const CALM_DELAY: number = 300; // During what time should not move the mouse to start opening the popup.
 
-let _private = {
-    getType(eventType) {
-        if (eventType === 'mousemove' || eventType === 'mouseleave') {
-            return 'hover';
+class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
+    readonly '[Controls/_popup/interface/IPreviewer]': boolean;
+
+    _template: TemplateFunction = template;
+    _previewerId: IPreviewerPopupOptions;
+    _waitTimer: number;
+    _isOpened: boolean = false;
+    _enableClose: boolean = true;
+
+    protected _beforeMount(options: IPreviewerOptions): void {
+        this._resultHandler = this._resultHandler.bind(this);
+        this._closeHandler = this._closeHandler.bind(this);
+        this._debouncedAction = debounce(this._debouncedAction, 10);
+    }
+
+    protected _beforeUnmount(): void {
+        this._clearWaitTimer();
+    }
+
+    /**
+     * @param type
+     * @variant hover
+     * @variant click
+     */
+    open(type: string): Promise<void> {
+        if (!this._isPopupOpened()) {
+            const newConfig: IPreviewerPopupOptions = this._getConfig();
+            this._isOpened = true;
+            return PreviewerOpener.openPopup(newConfig, type).then((id: IPreviewerPopupOptions) => {
+                this._previewerId = id;
+            });
         }
-        return 'click';
-    },
-    getCfg(self) {
-        let config = {
+    }
+
+    /**
+     * @param type
+     * @variant hover
+     * @variant click
+     */
+    close(type: string): void {
+        PreviewerOpener.closePopup(this._previewerId, type);
+    }
+
+    private _getConfig(): IPreviewerPopupOptions {
+        const config: IPreviewerPopupOptions = {
             fittingMode: {
                 vertical: 'adaptive',
                 horizontal: 'overflow'
             },
             autofocus: false,
-            opener: self,
-            target: self._container,
+            opener: this,
+            target: this._container,
             template: 'Controls/popup:PreviewerTemplate',
             targetPoint: {
                 vertical: 'bottom',
                 horizontal: 'right'
             },
-            isCompoundTemplate: self._options.isCompoundTemplate,
+            isCompoundTemplate: this._options.isCompoundTemplate,
             eventHandlers: {
-                onResult: self._resultHandler,
-                onClose: self._closeHandler
+                onResult: this._resultHandler,
+                onClose: this._closeHandler
             },
             templateOptions: {
-                template: self._options.template,
-                templateOptions: self._options.templateOptions
+                template: this._options.template,
+                templateOptions: this._options.templateOptions
             }
         };
 
-        if (self._options.targetPoint) {
-            config.targetPoint = self._options.targetPoint;
+        if (this._options.targetPoint) {
+            config.targetPoint = this._options.targetPoint;
         }
-        if (self._options.direction) {
-            config.direction = self._options.direction;
+        if (this._options.direction) {
+            config.direction = this._options.direction;
         }
-        if (self._options.offset) {
-            config.offset = self._options.offset;
+        if (this._options.offset) {
+            config.offset = this._options.offset;
         }
         return config;
-    },
-    open(self, event, type) {
-        if (!self._isPopupOpened()) {
-            const newConfig = _private.getCfg(self);
-            self._isOpened = true;
-            return PreviewerOpener.openPopup(newConfig, type).then((id) => {
-                self._previewerId = id;
-            });
-        }
-    },
-    close(self, type) {
-        PreviewerOpener.closePopup(self._previewerId, type);
     }
-};
 
-let Previewer = Control.extend({
-    _template: template,
-    _previewerId: null,
-    _isOpened: false,
+    private _open(event: SyntheticEvent<MouseEvent>): void {
+        const type: string = this._getType(event.type);
+        this.open(type);
+    }
 
-    _beforeMount(options) {
-        this._resultHandler = this._resultHandler.bind(this);
-        this._closeHandler = this._closeHandler.bind(this);
-        this._debouncedAction = debounce(this._debouncedAction, 10);
-        this._enableClose = true;
-    },
-    _beforeUnmount() {
-        this._clearWaitTimer();
-    },
+    private _close(event: SyntheticEvent<MouseEvent>): void {
+        const type: string = this._getType(event.type);
+        this.close(type);
+    }
 
-    /**
-     * @param type
-     * @variant hover
-     * @variant click
-     */
-    open(type) {
-        _private.open(this, {}, type);
-    },
-
-    /**
-     * @param type
-     * @variant hover
-     * @variant click
-     */
-    close(type) {
-        _private.close(this, type);
-    },
-
-    _open(event) {
-        let type = _private.getType(event.type);
-
-        _private.open(this, event, type);
-    },
-
-    _close(event) {
-        let type = _private.getType(event.type);
-
-        _private.close(this, type);
-    },
-
-    _isPopupOpened() {
+    private _isPopupOpened(): boolean {
         return PreviewerOpener.isOpenedPopup(this._previewerId);
-    },
-    _scrollHandler(event) {
-        this._close(event);
-    },
+    }
+
+    private _getType(eventType: string): string {
+        if (eventType === 'mousemove' || eventType === 'mouseleave') {
+            return 'hover';
+        }
+        return 'click';
+    }
+
     // Pointer action on hover with content and popup are executed sequentially.
     // Collect in package and process the latest challenge
-    _debouncedAction(method, args) {
+    private _debouncedAction(method: string, args: any): void {
         this[method].apply(this, args);
-    },
+    }
 
-    _cancel(event, action) {
+    private _cancel(event: SyntheticEvent<MouseEvent>, action: string): void {
         PreviewerOpener.cancelPopup(this._previewerId, action);
-    },
+    }
 
-    _contentMouseenterHandler(event) {
+    private _clearWaitTimer(): void {
+        if (this._waitTimer) {
+            clearTimeout(this._waitTimer);
+        }
+    }
+
+    protected _scrollHandler(event: SyntheticEvent<MouseEvent>): void {
+        this._close(event);
+    }
+
+    protected _contentMouseenterHandler(event: SyntheticEvent<MouseEvent>): void {
         if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
             // We will cancel closing of the popup, if it is already open
             if (this._isOpened) {
                 this._cancel(event, 'closing');
             }
         }
-    },
+    }
 
-    _contentMouseleaveHandler(event) {
+    protected _contentMouseleaveHandler(event: SyntheticEvent<MouseEvent>): void {
         if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
             this._clearWaitTimer();
             if (this._isPopupOpened()) {
@@ -151,9 +157,9 @@ let Previewer = Control.extend({
                 this._cancel(event, 'opening');
             }
         }
-    },
+    }
 
-    _contentMousemoveHandler(event) {
+    protected _contentMousemoveHandler(event: SyntheticEvent<MouseEvent>): void {
         if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
             // wait, until user stop mouse on target.
             // Don't open popup, if mouse moves through the target
@@ -165,15 +171,9 @@ let Previewer = Control.extend({
                 }
             }, CALM_DELAY);
         }
-    },
+    }
 
-    _clearWaitTimer() {
-        if (this._waitTimer) {
-            clearTimeout(this._waitTimer);
-        }
-    },
-
-    _previewerClickHandler(event) {
+    protected _previewerClickHandler(event: SyntheticEvent<MouseEvent>): void {
         if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
             /**
              * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
@@ -184,9 +184,9 @@ let Previewer = Control.extend({
             event.preventDefault();
             event.stopPropagation();
         }
-    },
+    }
 
-    _resultHandler(event) {
+    private _resultHandler(event: SyntheticEvent<MouseEvent>): void {
         switch (event.type) {
             case 'menuclosed':
                 this._enableClose = true;
@@ -209,9 +209,9 @@ let Previewer = Control.extend({
                 event.stopPropagation();
                 break;
         }
-    },
+    }
 
-    _isLinkedPreviewer(event: Event): boolean {
+    private _isLinkedPreviewer(event: SyntheticEvent<MouseEvent>): boolean {
         const parentControls = goUpByControlTree(event.nativeEvent.relatedTarget);
         for (let i = 0; i < parentControls.length; i++) {
             if (parentControls[i] === this) {
@@ -219,56 +219,17 @@ let Previewer = Control.extend({
             }
         }
         return false;
-    },
+    }
 
-    _closeHandler() {
+    private _closeHandler(): void {
         this._isOpened = false;
-    },
-    _private
-});
+    }
 
-Previewer.getDefaultOptions = function() {
-    return {
-        trigger: 'hoverAndClick'
-    };
-};
+    static getDefaultOptions(): IPreviewerOptions {
+        return {
+            trigger: 'hoverAndClick'
+        };
+    }
+}
 
-export = Previewer;
-
-/**
- * @name Controls/_popup/Previewer#content
- * @cfg {Content} Контент, при взаимодействии с которым открывается окно.
- */
-/*
- * @name Controls/_popup/Previewer#content
- * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
- */
-
-/**
- * @name Controls/_popup/Previewer#template
- * @cfg {Content} Содержимое окна.
- */
-/*
- * @name Controls/_popup/Previewer#template
- * @cfg {Content} Mini card contents.
- */
-
-/**
- * @name Controls/_popup/Previewer#trigger
- * @cfg {String} Название события, которое запускает открытие или закрытие окна.
- * @variant click Открытие кликом по контенту. Закрытие кликом "мимо" - не по контенту или шаблону.
- * @variant demand Закрытие кликом по контенту или шаблону.
- * @variant hover Открытие по ховеру - по наведению курсора на контент. Закрытие по ховеру - по навердению курсора на контент или шаблон.
- * @variant hoverAndClick Открытие по клику или ховеру на контент. Закрытие по клику или или ховеру "мимо" - не по контенту или шаблону.
- * @default hoverAndClick
- */
-/**
- * @name Controls/_popup/Previewer#trigger
- * @cfg {String} Event name trigger the opening or closing of the template.
- * @variant click Opening by click on the content. Closing by click not on the content or template.
- * @variant demand Closing by click not on the content or template.
- * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
- * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
- * @default hoverAndClick
- */
-
+export default PreviewerTarget;

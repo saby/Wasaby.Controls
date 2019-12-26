@@ -2,23 +2,35 @@
 
 /**
  * Возвращаемый обработчиком парковочной результат
- * @typedef {Object} Controls/_dataSource/_parking/ViewConfig
- * @property {Function | String} template Шаблон отображения ошибки
- * @property {Object} [options] параметры построяния шаблона ошибки
+ * @interface Controls/_dataSource/_parking/ViewConfig
  * @public
  * @author Санников К.А.
  */
 export interface ViewConfig<TOptions = object> {
+    /**
+     * @name Controls/_dataSource/_parking/ViewConfig#template
+     * @cfg {Function | String} Шаблон отображения ошибки
+     */
     template: any;
+    /**
+     * @name Controls/_dataSource/_parking/ViewConfig#options
+     * @cfg {Object} параметры построяния шаблона ошибки
+     */
     options?: Partial<TOptions>;
 }
 
 /**
  * Обработчик парковочной
- * @typedef {Function} Controls/_dataSource/_parking/Handler
- * @param {*} объект с параметрами
- * @return {void | Controls/_dataSource/_parking/ViewConfig}
+ * @interface Controls/_dataSource/_parking/Handler
  * @public
  * @author Санников К.А.
  */
 export type Handler<TOptions = object> = (config: any) => ViewConfig<TOptions> | void;
+
+/**
+ * Обработчик парковочной
+ * @function
+ * @name Controls/_dataSource/_parking/Handler#function
+ * @param {*} объект с параметрами
+ * @return {void | Controls/_dataSource/_parking/ViewConfig}
+ */

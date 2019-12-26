@@ -2,7 +2,7 @@
         name="controller"
         scope="{{_options}}"
         dataLoadCallback="{{_dataLoadCallback}}"
-        popupClassName="{{_options.popupClassName || (_options.showHeader ? 'controls-DropdownList__margin-head' :
+        popupClassName="{{_options.popupClassName || (_options.showHeader || _options.headerTemplate ? 'controls-DropdownList__margin-head' :
                               _options.multiSelect ? 'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin')}} theme_{{_options.theme}}"
         caption="{{_options.caption || _text}}"
         selectedItemsChangedCallback="{{_setText}}"
