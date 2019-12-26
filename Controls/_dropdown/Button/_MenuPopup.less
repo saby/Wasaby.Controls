@@ -1,6 +1,5 @@
 @padding-horizontal_default_menu: @popup_border-thickness_dropdown + @item_padding-horizontal_l_menu;
 
-
 @popup_offset-top_default_menu_button: -((@item_height_menu - @inline_height_m_button) / 2 + @popup_border-thickness_dropdown);
 @popup_offset-left_default_menu_button: -(@padding-horizontal_default_menu - @padding-horizontal_m_button);
 .controls-MenuButton_button__m_popup.theme_@{themeName} { // viewMode = 'button' inlineHeight = 'm'
@@ -88,4 +87,5 @@
    .justify-content(center);
    .align-items(center);
    z-index: 2;
+   color: @header_color_dropdown;
 }
