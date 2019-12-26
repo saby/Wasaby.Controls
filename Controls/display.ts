@@ -74,3 +74,6 @@ export { ICollectionCommand } from './_display/interface';
 
 import * as MarkerCommands from './_display/commands/Marker';
 export { MarkerCommands };
+
+import * as DragCommands from './_display/commands/Drag';
+export { DragCommands };
