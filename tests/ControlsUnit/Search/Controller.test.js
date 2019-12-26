@@ -130,6 +130,24 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isTrue(result);
       });
 
+      it('private.needStartSearch', function() {
+         var result;
+         result = searchMod.Controller._private.needStartSearch(undefined, '');
+         assert.isFalse(!!result);
+
+         result = searchMod.Controller._private.needStartSearch('', '');
+         assert.isFalse(!!result);
+
+         result = searchMod.Controller._private.needStartSearch('  ', '');
+         assert.isFalse(!!result);
+
+         result = searchMod.Controller._private.needStartSearch('', 'test');
+         assert.isTrue(!!result);
+
+         result = searchMod.Controller._private.needStartSearch('test', '');
+         assert.isTrue(!!result);
+      });
+
       it('_private.searchCallback', function() {
          var controller = getSearchController();
          var filterChanged = false;
