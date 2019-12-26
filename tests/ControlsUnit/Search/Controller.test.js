@@ -68,6 +68,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       it('private.startSearch', function() {
          var searchController = getSearchController();
          var value;
+         var wasSearch = false;
          searchController._dataOptions = defaultOptions;
          searchController._options.searchValueTrim = true;
 
@@ -75,18 +76,30 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          searchController._searchController.search = function(searchVal) {
             value = searchVal;
+            wasSearch = true;
          };
          searchMod.Controller._private.startSearch(searchController, 'test');
          assert.equal(value, 'test');
+         assert.isTrue(wasSearch);
 
+         searchController._isSearchControllerLoading = function() {
+            return true;
+         }
+         wasSearch = false;
+         searchController._inputSearchValue = 'test2'
          searchMod.Controller._private.startSearch(searchController, '  test2  ');
-         assert.equal(value, 'test2');
+         assert.isFalse(wasSearch);
+
+         searchMod.Controller._private.startSearch(searchController, '');
+         assert.equal(value, '');
+         assert.isTrue(wasSearch);
 
          value = '';
          searchController._options.source = null;
          searchMod.Controller._private.startSearch(searchController, 'test3');
          assert.equal(value, '');
       });
+
 
       it('private.isSearchValueChanged', function() {
          var searchController = getSearchController();
