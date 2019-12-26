@@ -17,22 +17,22 @@ import {isEqual} from 'Types/object';
 
 /**
  * @typedef {Object} SortingParameter Объект, содержащий данные о поле для сортировки и название, для отображения в выпадающем списке.
- * @property {String|null} paramName Поле для сортировки. Чтобы задать сброс сортировки, нужно указать значение null
+ * @property {String|null} parameterName Поле для сортировки. Чтобы задать сброс сортировки, нужно указать значение null
  * @property {String} title Название, для отображения параметра в выпадающем списке
  */
 
 /**
- * @name Controls/grid:SortMenu#sortingParams Массив, сожержащий данные для меню с вариантами сортировки.
+ * @name Controls/grid:SortMenu#sortingParameters Массив, сожержащий данные для меню с вариантами сортировки.
  * @cfg {Array<SortingParameter>}
  */
 
 export interface ISortingParameter {
-    paramName: string | null;
+    parameterName: string | null;
     title: string;
 }
 
 export interface ISortMenuOptions extends IControlOptions {
-   sortingParams: [ISortingParameter];
+   sortingParameters: [ISortingParameter];
    sorting: [object];
    header: string;
 }
@@ -41,39 +41,39 @@ class SortMenu extends Control<ISortMenuOptions> {
     protected _template: TemplateFunction = template;
     private _selectedKeys: [number|string];
     private _source: ICrud = null;
-    private _currentParamName: string = null;
+    private _currentParameterName: string = null;
     private _currentValue: 'ASC'|'DESC' = null;
 
     protected _beforeMount(options: ISortMenuOptions): void {
-        this.updateConfig(options.sortingParams, options.sorting);
+        this.updateConfig(options.sortingParameters, options.sorting);
     }
 
     protected  _beforeUpdate(newOptions: ISortMenuOptions): void {
         if (!isEqual(this._options.sorting, newOptions.sorting) ||
-            !isEqual(this._options.sortingParams, newOptions.sortingParams)) {
-            this.updateConfig(newOptions.sortingParams, newOptions.sorting);
+            !isEqual(this._options.sortingParameters, newOptions.sortingParameters)) {
+            this.updateConfig(newOptions.sortingParameters, newOptions.sorting);
         }
     }
 
-    private updateConfig(sortingParams: [ISortingParameter], sorting: [object]|undefined): void {
+    private updateConfig(sortingParameters: [ISortingParameter], sorting: [object]|undefined): void {
         const data = [];
 
         if (sorting && sorting.length) {
-            this._currentParamName = Object.keys(sorting[0])[0];
-            this._currentValue = sorting[0][this._currentParamName];
+            this._currentParameterName = Object.keys(sorting[0])[0];
+            this._currentValue = sorting[0][this._currentParameterName];
         } else {
-            this._currentParamName = null;
+            this._currentParameterName = null;
             this._currentValue = null;
         }
-        sortingParams.forEach((item: ISortingParameter, i: number) => {
+        sortingParameters.forEach((item: ISortingParameter, i: number) => {
             const dataElem = {...item, id: i, value: '', readOnly: true};
-            if (dataElem.paramName === this._currentParamName) {
+            if (dataElem.parameterName === this._currentParameterName) {
                 if (this._currentValue !== null) {
                     dataElem.value = this._currentValue;
                 }
                 this._selectedKeys = [i];
             }
-            if (item.paramName === null) {
+            if (item.parameterName === null) {
                 dataElem.readOnly = false;
             }
             data.push(dataElem);
@@ -87,7 +87,7 @@ class SortMenu extends Control<ISortMenuOptions> {
     }
 
     private _selectedKeysChangedHandler(e: SyntheticEvent<Event>, [key]: [number|string]): boolean | void {
-        if (this._options.sortingParams[key].paramName === null) {
+        if (this._options.sortingParameters[key].parameterName === null) {
             this._resetSorting();
             this._selectedKeys = [key];
         } else {
@@ -102,10 +102,10 @@ class SortMenu extends Control<ISortMenuOptions> {
     }
     private _switchSorting(): void {
         const newValue: string = this._currentValue === 'ASC' ? 'DESC' : 'ASC';
-        this._setSorting(this._currentParamName, newValue);
+        this._setSorting(this._currentParameterName, newValue);
     }
-    private _changeSorting(e: SyntheticEvent<Event>, item: Record, value: 'ASC'|'DESC'): void {
-        const param = item.get('paramName');
+    private _itemArrowClick(e: SyntheticEvent<Event>, item: Record, value: 'ASC'|'DESC'): void {
+        const param = item.get('parameterName');
         this._selectedKeys = [item.get('id')];
         this._children.dropdown.closeMenu();
         this._setSorting(param, value);

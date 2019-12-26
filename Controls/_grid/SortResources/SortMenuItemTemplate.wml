@@ -7,12 +7,12 @@
                 <div class="controls-SortMenu_arrowsContainer">
                     <div class="controls-SortMenu_arrow_theme-{{_options.theme}}
                                 controls-Sort_arrow_{{itemData.item.get('value') === 'DESC' ? 'active' : ('normal_theme-' + _options.theme + ' controls-SortArrow_with-hover')}}_theme-{{_options.theme}}"
-                         on:click="_changeSorting(itemData.item, 'DESC')">
+                         on:click="_itemArrowClick(itemData.item, 'DESC')">
                         <ws:partial attr:class="controls-Sort_arrow_theme-{{_options.theme}}" value="DESC" template="wml!Controls/_grid/SortResources/SortArrow"/>
                     </div>
                     <div class="controls-SortMenu_arrow_theme-{{_options.theme}} controls-Sort_arrow_theme-{{_options.theme}}
                                 controls-Sort_arrow_{{itemData.item.get('value') === 'ASC' ? 'active' : ('normal_theme-' + _options.theme + ' controls-SortArrow_with-hover')}}_theme-{{_options.theme}}"
-                         on:click="_changeSorting(itemData.item, 'ASC')">
+                         on:click="_itemArrowClick(itemData.item, 'ASC')">
                         <ws:partial  attr:class="controls-Sort_arrow_theme-{{_options.theme}}" template="wml!Controls/_grid/SortResources/SortArrow"/>
                     </div>
                 </div>
