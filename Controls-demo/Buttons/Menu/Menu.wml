@@ -236,11 +236,11 @@
                  viewMode="button"
                  icon="icon-AddButtonNew"
                  iconSize="s"
-                 showHeader="{{false}}"
                  source="{{_createMemory(_groupItems)}}"
                  groupingKeyCallback="{{_groupingKeyCallback}}"
                  groupTemplate="Controls/dropdownPopup:GroupTemplate"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
+                 headerTemplate="{{null}}"
                  tooltip="Add">
          </Controls.dropdown:Button>
          <Controls.dropdown:Button
@@ -268,7 +268,7 @@
                  caption="One group"
                  iconStyle="primary"
                  viewMode="button"
-                 showHeader="{{false}}"
+                 headerTemplate="{{null}}"
                  source="{{_createMemory(_oneGroupItems)}}"
                  groupingKeyCallback="{{_groupingKeyCallback}}"
                  groupTemplate="Controls/dropdownPopup:GroupTemplate"
@@ -306,10 +306,8 @@
                  viewMode="link"
                  icon="icon-Linked"
                  iconSize="m"
-                 source="{{_createMemory(_additionalItems)}}">
-            <ws:headerTemplate>
-               <invisible-node />
-            </ws:headerTemplate>
+                 source="{{_createMemory(_additionalItems)}}"
+                 headerTemplate="{{null}}" >
          </Controls.dropdown:Button>
       </div>
 
