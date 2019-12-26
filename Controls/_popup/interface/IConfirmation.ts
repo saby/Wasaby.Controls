@@ -1,3 +1,4 @@
+import {IConfirmationFooterOptions, IConfirmationFooter} from 'Controls/_popup/interface/IConfirmationFooter';
 import { IOpener } from 'Controls/_popup/interface/IBaseOpener';
 
 /**
@@ -7,43 +8,19 @@ import { IOpener } from 'Controls/_popup/interface/IBaseOpener';
  * @public
  * @author Красильников А.С.
  */
-
-export interface IConfirmationOptions {
-    type?: string;
+export interface IConfirmationOptions extends IConfirmationFooterOptions {
     style?: string;
     size?: string;
     message?: string;
     details?: string;
-    yesCaption?: string;
-    noCaption?: string;
-    cancelCaption?: string;
-    primaryAction?: string;
-    okCaption?: string;
     closeHandler?: Function;
     zIndex?: number; //todo: Compatible
 }
 
-export interface IConfirmationOpener extends IOpener {
+export interface IConfirmationOpener extends IOpener, IConfirmationFooter {
     readonly '[Controls/_popup/interface/IConfirmationOpener]': boolean;
 }
 
-/**
- * @name Controls/_popup/interface/IConfirmation#type
- * @cfg {String} Тип диалогового окна. Определяет с каким результатом будет закрыто окно подтверждения.
- * @variant ok (Результат: undefined)
- * @variant yesno (Результат: true/false)
- * @variant yesnocancel (Результат: true/false/undefined)
- * @default yesno
- */
-
-/**
- * @name Controls/_popup/interface/IConfirmation#style
- * @cfg {String} Внешний вид диалога подтверждения.
- * @variant default
- * @variant success
- * @variant danger
- * @default default
- */
 
 /**
  * @name Controls/_popup/interface/IConfirmation#size
@@ -62,38 +39,6 @@ export interface IConfirmationOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IConfirmation#details
  * @cfg {String} Дополнительный текст диалога подтверждения
- */
-
-/**
- * @name Controls/_popup/interface/IConfirmation#yesCaption
- * @cfg {String} Текст кнопки подтверждения.
- * @default Да
- */
-
-/**
- * @name Controls/_popup/interface/IConfirmation#noCaption
- * @cfg {String} Текст кнопки отрицания
- * @default Нет
- */
-
-/**
- * @name Controls/_popup/interface/IConfirmation#cancelCaption
- * @cfg {String} Текст кнопки отмены
- * @default Отмена
- */
-
-/**
- * @name Controls/_popup/interface/IConfirmation#primaryAction
- * @cfg {String} Определяет, какая кнопка будет активирована по нажатию ctrl+enter
- * @variant yes
- * @variant no
- * @default yes
- */
-
-/**
- * @name Controls/_popup/interface/IConfirmation#okCaption
- * @cfg {String} Текст кнопки "принять"
- * @default ОК
  */
 
 /**

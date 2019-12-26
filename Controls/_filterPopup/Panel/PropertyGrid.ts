@@ -123,6 +123,9 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _afterUpdate: function() {
+         // Когда элемент перемещается из блока "Еще можно отобрать" в основной блок,
+         // запоминаем индекс этого элемента в _changedIndex.
+         // Когда основной блок перестроился, зовем activate, чтобы сфокусировать этот элемент.
          if (this._changedIndex !== -1) {
             this.activate();
          }
