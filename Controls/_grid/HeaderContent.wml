@@ -5,6 +5,7 @@
     <ws:else>
         <ws:if data="{{colData.column.sortingProperty}}">
             <Controls._grid.SortButton
+                    align="{{colData.column.align}}"
                     caption="{{colData.column.caption || colData.column.title}}"
                     property="{{colData.column.sortingProperty}}"
                     type="{{colData.column.sortingType}}"

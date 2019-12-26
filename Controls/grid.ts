@@ -28,6 +28,7 @@ import SortButton = require('Controls/_grid/SortButton');
 import GridView = require('Controls/_grid/GridView');
 import GridViewModel = require('Controls/_grid/GridViewModel');
 
+import SortMenu from 'Controls/_grid/SortMenu';
 import RowEditor = require('wml!Controls/_grid/RowEditor');
 
 export {
@@ -43,7 +44,8 @@ export {
     GridView,
     GridViewModel,
 
-    RowEditor
+    RowEditor,
+    SortMenu
 };
 
 export {
