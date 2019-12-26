@@ -5,6 +5,7 @@ export interface IMonthListOptions {
    position?: Date;
    yearTemplate?: TemplateFunction;
    monthTemplate?: TemplateFunction;
+   stubTemplate?: TemplateFunction;
    displayedRanges?: [];
 }
 

@@ -19,7 +19,6 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
-import stubTemplate = require('wml!Controls/_calendar/MonthList/Stub');
 import {Logger} from 'UI/Utils';
 
 interface IModuleComponentOptions extends
@@ -174,7 +173,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 dateConstructor: options.dateConstructor,
                 displayedRanges: options.displayedRanges,
                 viewMode: options.viewMode,
-                order: options.order
+                order: options.order,
+                stubTemplate: options.stubTemplate
             });
         }
         if (!oldOptions || options.viewMode !== oldOptions.viewMode || options.source !== oldOptions.source) {
@@ -423,7 +423,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             viewMode: 'year',
             yearTemplate,
             monthTemplate,
-            stubTemplate,
             // In most places where control is used, no more than 4 elements are displayed at the visible area.
             // Draw the elements above and below.
             virtualPageSize: 6,
