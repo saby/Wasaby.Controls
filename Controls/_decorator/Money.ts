@@ -45,15 +45,7 @@ interface IPaths {
  */
 export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions {
     number: number;
-    /**
-     * Опция устарела, используйте опцию {@link useGrouping}.
-     * @deprecated
-     */
     delimiters: boolean;
-    /**
-     * Опция устарела, используйте опцию {@link tooltip}.
-     * @deprecated
-     */
     title: string;
     /**
      * Декорируемое число.

@@ -175,7 +175,6 @@ import {SyntheticEvent} from 'Vdom/Vdom'
        *
        * Контрол меню.
        * @control
-       * @mixes Controls/_dropdownPopup/DropdownListStyles
        * @public
        * @category Popup
        */
@@ -184,7 +183,6 @@ import {SyntheticEvent} from 'Vdom/Vdom'
        *
        * Template for controls, that opens dropdown list.
        * @control
-       * @mixes Controls/_dropdownPopup/DropdownListStyles
        * @public
        * @category Popup
        */

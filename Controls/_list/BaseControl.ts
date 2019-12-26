@@ -2331,28 +2331,30 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseEnter: function(event, itemData, nativeEvent) {
-        var
-            dragPosition,
-            dragEntity = this._listViewModel.getDragEntity();
+        if (this._options.itemsDragNDrop) {
+            var
+                dragPosition,
+                dragEntity = this._listViewModel.getDragEntity();
 
-        if (dragEntity) {
-            dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+            if (dragEntity) {
+                dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
 
-            if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                this._listViewModel.setDragTargetPosition(dragPosition);
+                if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+                    this._listViewModel.setDragTargetPosition(dragPosition);
+                }
             }
         }
-        this._notify('itemMouseEnter', [itemData, nativeEvent]);
+        this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
-        this._notify('itemMouseMove', [itemData, nativeEvent]);
-        if (!this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData() && !this._showActions) {
+        this._notify('itemMouseMove', [itemData.item, nativeEvent]);
+        if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
-        this._notify('itemMouseLeave', [itemData, nativeEvent]);
+        this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
     },
     _sortingChanged: function(event, propName, sortingType) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
