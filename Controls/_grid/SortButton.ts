@@ -13,13 +13,6 @@ import 'css!theme?Controls/grid';
  */
 
 /**
- * @name Controls/_grid/SortButton#type
- * @cfg {String} Способ соритровки
- * @variant single Сортировка по одному полю.
- * @variant multi Сортировка по несокльким полям.
- */
-
-/**
  * @name Controls/_grid/SortButton#property
  * @cfg {String} Поле для сортировки.
  */
@@ -34,25 +27,17 @@ import 'css!theme?Controls/grid';
  */
 
 /*
- * @name Controls/_grid/SortButton#type
- * @cfg {String} Type of sorting.
- * @variant single Sorting by single field.
- * @variant multi Allows you to sort by multiple fields.
- */
-
-/*
  * @тame Controls/_grid/SortButton#property
  * @cfg {String} Sorting property.
  */
 export interface ISortButtonOptions extends IControlOptions {
-    type: string;
     property: string;
 }
 class SortButton extends Control<ISortButtonOptions> {
     protected _template: TemplateFunction = template;
 
     protected _clickHandler(): void {
-        this._notify('sortingChanged', [this._options.property, this._options.type], {bubbling: true});
+        this._notify('sortingChanged', [this._options.property], {bubbling: true});
     }
 
     static _theme: [string] = ['Controls/grid'];
