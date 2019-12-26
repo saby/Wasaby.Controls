@@ -53,10 +53,45 @@ define([
             let
                sandbox = sinon.createSandbox(),
                control = calendarTestUtils.createComponent(
-               calendar.MonthList, coreMerge({ source: {} }, config, { preferSource: true }));
+                  calendar.MonthList, coreMerge(config, { preferSource: true }));
             sandbox.stub(control, '_enrichItemsDebounced');
             assert.strictEqual(control._extDataLastVersion, control._extData.getVersion());
             sandbox.restore();
+         });
+         it('without receivedState', function() {
+            const sandBox = sinon.createSandbox();
+            let ml = calendarTestUtils.createComponent(calendar.MonthList);
+            sinon.replace(ml, '_updateSource', () => {
+               return;
+            });
+            ml._extData = {
+               enrichItems: function() {
+                  return;
+               }
+            };
+            sandBox.stub(ml._extData, 'enrichItems');
+            ml._beforeMount({});
+            sinon.assert.calledOnce(ml._extData.enrichItems);
+            sandBox.restore();
+         });
+         it('with receivedState', function() {
+            const sandBox = sinon.createSandbox();
+            let ml = calendarTestUtils.createComponent(calendar.MonthList),
+               options = 'options',
+               context = 'context',
+               receivedState = 'receivedState';
+            sinon.replace(ml, '_updateSource', () => {
+               return;
+            });
+            ml._extData = {
+               updateData: function() {
+                  return;
+               }
+            };
+            sandBox.stub(ml._extData, 'updateData');
+            ml._beforeMount({}, '', 'receivedState');
+            sinon.assert.calledOnce(ml._extData.updateData);
+            sandBox.restore();
          });
       });
 
@@ -163,7 +198,7 @@ define([
             const
                sandbox = sinon.createSandbox(),
                component = calendarTestUtils.createComponent(
-                  calendar.MonthList, coreMerge({ source: {} }, config, { preferSource: true }));
+                  calendar.MonthList, coreMerge(config, { preferSource: true }));
 
             sandbox.stub(component, '_notify');
             sandbox.stub(component, '_enrichItemsDebounced');
@@ -177,7 +212,7 @@ define([
             const
                sandbox = sinon.createSandbox(),
                component = calendarTestUtils.createComponent(
-                  calendar.MonthList, coreMerge({ source: {} }, config, { preferSource: true }));
+                  calendar.MonthList, coreMerge(config, { preferSource: true }));
 
             sandbox.stub(component, '_notify');
             sandbox.stub(component, '_enrichItemsDebounced');
@@ -405,7 +440,15 @@ define([
                }
             }],
             displayedDates: [],
-            options: { source: {} },
+            options: {
+               source: {
+                  query:function (data) {
+                     return new Promise(function(resolve) {
+                        resolve(data);
+                     });
+                  }
+               }
+            },
             resultDisplayedDates: [(new Date(2019, 0)).getTime()],
             date: new Date(2019, 0)
          }, {
@@ -422,7 +465,15 @@ define([
                }
             }],
             displayedDates: [],
-            options: { source: {} },
+            options: {
+               source: {
+                  query:function (data) {
+                     return new Promise(function(resolve) {
+                        resolve(data);
+                     });
+                  }
+               }
+            },
             resultDisplayedDates: [],
             date: new Date(2019, 0)
          }, {
@@ -439,7 +490,15 @@ define([
                }
             }],
             displayedDates: [(new Date(2019, 0)).getTime(), 123],
-            options: { source: {} },
+            options: {
+               source: {
+                  query:function (data) {
+                     return new Promise(function(resolve) {
+                        resolve(data);
+                     });
+                  }
+               }
+            },
             resultDisplayedDates: [123],
             date: new Date(2019, 0)
          }, {
@@ -456,7 +515,15 @@ define([
                }
             }],
             displayedDates: [(new Date(2019, 0)).getTime(), 123],
-            options: { source: {} },
+            options: {
+               source: {
+                  query:function (data) {
+                     return new Promise(function(resolve) {
+                        resolve(data);
+                     });
+                  }
+               }
+            },
             resultDisplayedDates: [(new Date(2019, 0)).getTime(), 123],
             date: new Date(2019, 0)
          }].forEach(function(test) {
