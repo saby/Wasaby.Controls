@@ -26,9 +26,9 @@ export interface IItemTemplateOptions {
      * <pre>
      *    <Controls.list:View>
      *       <ws:itemTemplate>
-     *          <ws:partial template="Controls/list:ItemTemplate">
+     *          <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
      *             <ws:contentTemplate>
-     *                <span>{{itemTemplate.itemData.item.description}}</span>
+     *                <span>{{contentTemplate.itemData.item.description}}</span>
      *             </ws:contentTemplate>
      *          </ws:partial>
      *       </ws:itemTemplate>

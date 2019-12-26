@@ -22,8 +22,7 @@
                                     popupHeaderTheme="{{_options.popupHeaderTheme}}"
                                     popupSettingsController="{{_options.popupSettingsController}}"
                                     on:managerPopupCreated="_popupCreatedHandler()"
-                                    on:managerPopupDestroyed="_popupDestroyedHandler()"
-                                    stackRootWidth="{{_options.width}}">
+                                    on:managerPopupDestroyed="_popupDestroyedHandler()">
                                     <Controls.dragnDrop:Controller name="dragNDropContainer"
                                                                    on:dragStart="_dragStartHandler()"
                                                                    on:dragEnd="_dragEndHandler()">

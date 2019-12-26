@@ -87,9 +87,9 @@
  *                   <ws:template>
  *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
- *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *                            <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
- *                                  {{itemData.item['date']}}
+ *                                  {{template.itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
  *                         </ws:contentTemplate>
@@ -416,6 +416,24 @@
  * @example
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */
+
+/**
+ * @event Происходит при клике на элемент списка.
+ * @name Controls/_grid/interface/IGridControl#itemClick
+ * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
+ * @param {Types/entity:Record} item Элемент, по которому кликнули.
+ * @param {Object} nativeEvent Объект нативного события браузера.
+ * @param {Number} columnIndex Индекс колонки по которой кликнули.
+ */
+
+/*
+* @event Occurs when list item is clicked.
+* @name Controls/_grid/interface/IGridControl#itemClick
+* @param {Vdom/Vdom:SyntheticEvent} event Event object.
+* @param {Types/entity:Record} item Clicked item.
+* @param {Object} nativeEvent Native event object.
+* @param {Number} columnIndex Clicked column index.
+*/
 
 /**
  * @event Происходит при клике на "шеврон" элемента.

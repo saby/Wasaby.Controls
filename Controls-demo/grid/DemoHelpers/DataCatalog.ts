@@ -1,13 +1,13 @@
-import * as simpleResultTpl from 'wml!Controls-demo/grid/_resources/ResultCellTemplates/Simple'
-import * as numberResultTpl from 'wml!Controls-demo/grid/_resources/ResultCellTemplates/Number'
-import * as countryRatingNumber from 'wml!Controls-demo/grid/_resources/CellTemplates/CountryRatingNumber'
+import * as simpleResultTpl from 'wml!Controls-demo/grid/resources/ResultCellTemplates/Simple'
+import * as numberResultTpl from 'wml!Controls-demo/grid/resources/ResultCellTemplates/Number'
+import * as countryRatingNumber from 'wml!Controls-demo/grid/resources/CellTemplates/CountryRatingNumber'
 import {constants} from 'Env/Env'
-import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksPhoto'
-import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksDescription'
-import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksReceived'
+import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksPhoto'
+import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksDescription'
+import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksReceived'
 import * as Images from 'Controls-demo/DragNDrop/Images';
-import * as itemTpl from  'wml!Controls-demo/grid/_resources/CellTemplates/CellWithBgc';
-import * as itemCountr from 'wml!Controls-demo/grid/_resources/CellTemplates/CountryTemp';
+import * as itemTpl from  'wml!Controls-demo/grid/resources/CellTemplates/CellWithBgc';
+import * as itemCountr from 'wml!Controls-demo/grid/resources/CellTemplates/CountryTemp';
 
 
 
@@ -658,28 +658,42 @@ function getTasks() {
         ],
         getColumns: () => [
             {
-                template: 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksPhoto',
+                template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksPhoto',
                 width: '98px'
             },
             {
-                template: 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksDescription',
+                template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksDescription',
                 width: '1fr'
             },
             {
-                template: 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksReceived',
+                template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksReceived',
                 width: 'auto'
             }
-        ]
+        ],
+        getDefaultColumns: () => [
+            {
+                displayProperty: 'id',
+                width: '30px'
+            },
+            {
+                displayProperty: 'state',
+                width: '200px'
+            },
+            {
+                displayProperty: 'date',
+                width: '100px'
+            }
+        ],
     }
 }
 
 function getImages() {
     return {
-        dogadkin: constants.resourceRoot + 'Controls-demo/grid/_resources/images/dogadkin.png',
-        kesareva: constants.resourceRoot + 'Controls-demo/grid/_resources/images/kesareva.png',
-        korbyt: constants.resourceRoot + 'Controls-demo/grid/_resources/images/korbyt.png',
-        krainov: constants.resourceRoot + 'Controls-demo/grid/_resources/images/krainov.png',
-        baturina: constants.resourceRoot + 'Controls-demo/grid/_resources/images/baturina.png'
+        dogadkin: constants.resourceRoot + 'Controls-demo/grid/resources/images/dogadkin.png',
+        kesareva: constants.resourceRoot + 'Controls-demo/grid/resources/images/kesareva.png',
+        korbyt: constants.resourceRoot + 'Controls-demo/grid/resources/images/korbyt.png',
+        krainov: constants.resourceRoot + 'Controls-demo/grid/resources/images/krainov.png',
+        baturina: constants.resourceRoot + 'Controls-demo/grid/resources/images/baturina.png'
     }
 }
 

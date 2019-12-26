@@ -11,7 +11,7 @@
  * <pre class="brush: html">
  * <Controls.list:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}"> 
+ *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}"> 
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>

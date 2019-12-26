@@ -383,15 +383,19 @@ define(
 
          it('notify footer click', () => {
             let dropdownController = getDropdownController(config);
+            let isClosed = false, isFooterClicked = false;
             dropdownController._beforeMount(configLazyLoad);
             dropdownController._children.DropdownOpener = {
-               close: setTrue.bind(this, assert),
-               open: setTrue.bind(this, assert)
+               close: () => {isClosed = true}
             };
             dropdownController._notify = (e) => {
-               assert.equal(e, 'footerClick');
+               if (e === 'footerClick') {
+                  isFooterClicked = true;
+               }
             };
             dropdownController._onResult(null, {action: 'footerClick'});
+            assert.isFalse(isClosed);
+            assert.isTrue(isFooterClicked);
          });
 
          it('check item click', () => {

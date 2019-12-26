@@ -420,6 +420,7 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
             var selectedKeys = getPropValue(this._items.at(index), 'value');
             var templateOptions = {
                items: this._configs[index].popupItems || this._configs[index]._items,
+               selectorItems: this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),

@@ -53,7 +53,7 @@
  * <!-- file1.wml -->
  * <Controls.list:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate">
+ *       <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>
@@ -106,7 +106,7 @@
  * <!-- file1.wml --> 
  * <Controls.list:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate">
+ *       <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *             <ws:partial template="{{contentTemplate.itemActionsTemplate}}" />

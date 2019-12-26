@@ -107,6 +107,8 @@ import getOptions from 'Controls/Utils/datePopupUtils';
       return coreMerge({}, IDateTimeMask.getOptionTypes());
    };
 
+   Component._theme = ['Controls/Classes'];
+
    export = Component;
 
 

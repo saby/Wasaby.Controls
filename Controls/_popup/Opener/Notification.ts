@@ -1,6 +1,6 @@
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
-import * as ManagerController from 'Controls/_popup/Manager/ManagerController';
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {INotificationPopupOptions, INotificationOpener} from '../interface/INotification';
 
 /**

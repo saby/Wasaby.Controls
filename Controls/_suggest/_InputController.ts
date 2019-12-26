@@ -237,10 +237,11 @@ var _private = {
       if (!self._historyServiceLoad) {
          self._historyServiceLoad = new Deferred();
          require(['Controls/suggestPopup'], function(result) {
-            self._historyServiceLoad = result.LoadService({
+            result.LoadService({
                historyId: self._options.historyId
             }).addCallback((result) => {
                self._historyServiceLoad.callback(result);
+               return result;
             });
          });
       }

@@ -159,7 +159,6 @@ var _private = {
             break;
          case 'footerClick':
             this._notify('footerClick', [result.event]);
-            _private.closeDropdownList(this);
       }
    },
 

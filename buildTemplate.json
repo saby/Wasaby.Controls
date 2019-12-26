@@ -29,6 +29,10 @@
       "path": "./Controls-theme"
     },
     {
+      "name": "Controls-default-theme",
+      "path": "./Controls-default-theme"
+    },
+    {
       "name": "UI",
       "path": "./node_modules/saby-ui/UI",
       "required": true

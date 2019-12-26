@@ -4,7 +4,9 @@ import template = require('wml!Controls/_validate/InputContainer');
 
 /**
  * Контрол, регулирующий валидацию своего контента. Используется с контролами, поддерживающими интерфейс {@link Controls/interface/IInputField IInputField}.
- * Автоматически вызывает валидацию при потере фокуса.
+ * Валидация запускается автоматически при потере фокуса.
+ * @remark
+ * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/InputContainer
  * @extends Controls/_validate/Container
  * @control
