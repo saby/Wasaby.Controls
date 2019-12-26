@@ -92,7 +92,11 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
 
     _beforeMount: function(options) {
         this._viewModelConstructor = this._getModelConstructor(options.useNewModel);
-        if (options.useNewModel) {
+        return this._checkViewName(options.useNewModel);
+    },
+
+    _checkViewName: function(useNewModel) {
+        if (useNewModel) {
             return import('Controls/listRender').then((listRender) => {
                 this._viewName = listRender.Render;
             });
