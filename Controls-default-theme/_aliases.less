@@ -3,7 +3,7 @@
 //Примечание: Применяется в том числе к основному фону самой страницы.
 @background-color:                                                          #FFF;
 
-//Цвет фона элементов в режиме чтения.
+//Цвет фона элементов при наведении мыши.
 @hover_background-color:                                                    #F0F5FB;
 
 //Цвет элементов отображающих опасность или ошибку.
@@ -1242,6 +1242,10 @@
 //цвет обводки кнопки закрытия при нажатии
 @border-color_active_closeButton_toolButton:                                #CCCCCC;
 
+
+@width_closeButton_link:                                                    @inline_height_m;
+
+
 //ФЛАГ
 //размер шрифта флага
 @font-size_checkbox:                                                        @font-size_m;
@@ -1374,6 +1378,65 @@
 
 // отступ между текстом и иконкой
 @trigger_padding-right_combobox:                   4px;
+
+// dropdown:Popup
+@popup_max-width_dropdown:                         700px;
+@popup_border-thickness_dropdown:                  @border-thickness;
+@popup_border-color_dropdown:                      #CCC;
+@popup_background-color_dropdown:                  @background-color;
+
+@popup_box-shadow-offset_dropdown:                 6px;
+@popup_box-shadow-blur_dropdown:                   6px;
+@popup_box-shadow-color_dropdown:                  rgba(0, 0, 0, 0.2);
+
+@popup_padding-vertical_dropdown:                  2px;
+@header_background-color_dropdown:                 #F4F4F4;
+@header_font-size_dropdown:                        @font-size_l;
+@header_color_dropdown:                            @secondary_text-color; // должно переехать в menuPopupTemplate
+@header_min-height_dropdown:                       32px;
+@header_padding-horizontal_dropdown:               12px;
+@footer_min-height_dropdown:                       32px;
+@apply-button_offset_dropdown:                     8px;
+
+/* Menu */
+@item_separator_color_menu:                        transparent;
+@item_separator_thickness_menu:                    0;
+@item_separator_padding-horizontal_menu:           0;
+@item_background-color_menu:                       @background-color;
+@item_hover_background-color_menu:                 @hover_background-color;
+@item_active_background-color_menu:                @item_hover_background-color_menu;
+@item_height_menu:                                 32px;
+@item_font-size_menu:                              @font-size_l;
+@item_padding-horizontal_s_menu:                   4px;
+@item_padding-horizontal_l_menu:                   12px;
+@item_padding-top_menu:                            6px;
+@item_padding-bottom_menu:                         6px;
+@item_text-color_menu:                             @text-color;
+@empty-item_text-color_menu:                       #CCC;
+@item_icon_offset_menu:                            6px;
+@readonly_item_text-color_menu:                    @readonly_color;
+@hierarchy_icon-size_menu:                         @icon-size_s;
+@hierarchy_icon-color_menu:                        @secondary_color;
+@readonly_hierarchy_icon-color_menu:               @readonly_color;
+@hierarchy_icon_offset-right_menu:                 6px;
+@hierarchy_icon_offset-left_menu:                  6px;
+@close-button_offset-top_menu:                     6px;
+@close-button_offset-right_menu:                   6px;
+@close-button_offset-left_menu:                    0;
+@pin-button_icon-size_menu:                        @icon-size_s;
+@pin-button_offset-right_menu:                     12px;
+@pin-button_offset-left_menu:                      6px;
+@pin-button_icon-color_menu:                       @unaccented_icon-color;
+@pin-button_hover_icon-color_menu:                 @color_link-hover;
+@marker_width_menu:                                6px;
+@marker_height_menu:                               8px;
+@marker_color_menu:                                #D94700;
+@grouping_padding-vertical_menu:                   8px;
+@grouping_padding-horizontal_menu:                 12px;
+@grouping_separator_thickness_menu:                1px;
+@grouping_separator_color_menu:                    #EAEAEA;
+@grouping_text-color_menu:                         @label_text-color;
+@grouping_font-size_menu:                          @font-size_xs;
 
 
 //Слайдер
