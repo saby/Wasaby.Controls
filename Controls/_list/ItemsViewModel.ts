@@ -7,6 +7,7 @@ import cInstance = require('Core/core-instance');
 import ControlsConstants = require('Controls/Constants');
 import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
+import * as Grouping from 'Controls/_list/Controllers/Grouping';
 
 /**
  *
@@ -87,11 +88,19 @@ var _private = {
             filter.push(cfg.itemsFilterMethod);
         }
         return filter;
+    },
+    setGroupLoadState(loadedGroups, groupId, state) {
+        if (state) {
+            loadedGroups[groupId] = true;
+        } else {
+            delete loadedGroups[groupId];
+        }
     }
 };
 var ItemsViewModel = BaseViewModel.extend({
     _display: null,
     _items: null,
+    _loadedGroups: null,
     _itemDataCache: null,
     _curIndex: 0,
     _onCollectionChangeFnc: null,
@@ -103,6 +112,7 @@ var ItemsViewModel = BaseViewModel.extend({
     constructor: function(cfg) {
         this._prefixItemVersion = 0;
         this._itemDataCache = {};
+        this._loadedGroups = {};
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
         this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
@@ -181,10 +191,6 @@ var ItemsViewModel = BaseViewModel.extend({
 
     setKeyProperty(keyProperty: string): void {
         this._options.keyProperty = keyProperty;
-    },
-
-    getGroupProperty(): string {
-        return this._options.groupProperty;
     },
 
     _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
@@ -276,33 +282,50 @@ var ItemsViewModel = BaseViewModel.extend({
         return itemData;
     },
 
-    setCollapsedGroups: function(collapsedGroups) {
+    getCollapsedGroups(): Grouping.TArrayGroupId {
+        return _private.prepareCollapsedGroupsByObject(this._collapsedGroups);
+    },
+
+    setCollapsedGroups(collapsedGroups: Grouping.TArrayGroupId): void {
         this._options.collapsedGroups = collapsedGroups;
         this._collapsedGroups = {};
 
-        for (var i = 0; i < collapsedGroups.length; i++) {
+        for (let i = 0; i < collapsedGroups.length; i++) {
             this._collapsedGroups[collapsedGroups[i]] = true;
         }
         this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
         this._nextModelVersion();
     },
 
-    toggleGroup: function(group, state) {
+    isGroupExpanded(groupId: Grouping.TGroupId): boolean {
+        return typeof this._collapsedGroups[groupId] === 'undefined';
+    },
+
+    toggleGroup(groupId: Grouping.TGroupId, state: boolean): void {
         if (typeof state === 'undefined') {
-            state = typeof this._collapsedGroups[group] !== 'undefined';
+            state = !this.isGroupExpanded(groupId);
         }
         if (state) {
-            delete this._collapsedGroups[group];
+            _private.setGroupLoadState(this._loadedGroups, groupId, true);
+            delete this._collapsedGroups[groupId];
         } else {
-            this._collapsedGroups[group] = true;
+            this._collapsedGroups[groupId] = true;
         }
         this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
         this._nextModelVersion();
         this._notify('onGroupsExpandChange', {
-            group: group,
+            groupId,
             changeType: state ? 'expand' : 'collapse',
             collapsedGroups: _private.prepareCollapsedGroupsByObject(this._collapsedGroups)
         });
+    },
+
+    isGroupLoaded(groupId: Grouping.TGroupId): boolean {
+        return !!this._loadedGroups[groupId];
+    },
+
+    resetLoadedGroups(): void {
+        this._loadedGroups = {};
     },
 
     setFilter: function(filter) {
@@ -318,6 +341,14 @@ var ItemsViewModel = BaseViewModel.extend({
 
     getDisplayFilter: function(data, cfg) {
         return _private.getDisplayFilter(data, cfg);
+    },
+
+    setGroupProperty(groupProperty: string): void {
+        this._options.groupProperty = groupProperty;
+    },
+
+    getGroupProperty(): string {
+        return this._options.groupProperty;
     },
 
     setGroupMethod: function(groupMethod) {
@@ -432,7 +463,7 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     _isGroup: function(item) {
-        return item === ControlsConstants.view.hiddenGroup || !item.get
+        return item === ControlsConstants.view.hiddenGroup || !item.get;
     },
 
     isAllGroupsCollapsed(): boolean {

@@ -20,6 +20,7 @@ import {
 import cClone = require('Core/core-clone');
 import ControlsConstants = require('Controls/Constants');
 import collection = require('Types/collection');
+import * as Grouping from 'Controls/_list/Controllers/Grouping';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -558,6 +559,10 @@ var
 
         setKeyProperty(keyProperty: string): void {
             this._options.keyProperty = keyProperty;
+        },
+
+        setGroupProperty(groupProperty: string): void {
+            this._model.setGroupProperty(groupProperty);
         },
 
         getGroupProperty(): string {
@@ -1116,8 +1121,20 @@ var
             return this._model.getSwipeItem();
         },
 
-        setCollapsedGroups: function(collapsedGroups) {
+        getCollapsedGroups(): Grouping.TArrayGroupId {
+            return this._model.getCollapsedGroups();
+        },
+
+        setCollapsedGroups(collapsedGroups: Grouping.TArrayGroupId): void {
             this._model.setCollapsedGroups(collapsedGroups);
+        },
+
+        resetLoadedGroups(): void {
+            this._model.resetLoadedGroups();
+        },
+
+        isGroupLoaded(groupId: Grouping.TGroupId): boolean {
+            return this._model.isGroupLoaded(groupId);
         },
 
         reset: function() {
@@ -1367,8 +1384,8 @@ var
             return this.getItemDataByItem(dispItem);
         },
 
-        toggleGroup: function(group, state) {
-            this._model.toggleGroup(group, state);
+        toggleGroup(groupId: Grouping.TGroupId, state: boolean): void {
+            this._model.toggleGroup(groupId, state);
         },
 
         getNext: function() {

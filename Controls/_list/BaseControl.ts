@@ -29,6 +29,7 @@ import {debounce} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
+import * as GroupingManager from 'Controls/_list/Controllers/Grouping';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue} from 'Controls/interface';
 
@@ -147,6 +148,9 @@ var _private = {
             _private.showIndicator(self);
             _private.hideError(self);
 
+            if (cfg.groupProperty && cfg.useNewGrouping) {
+                GroupingManager.prepareFilterCollapsedGroups(cfg.groupProperty, cfg.collapsedGroups, filter);
+            }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
@@ -181,6 +185,9 @@ var _private = {
                 if (listModel) {
                     if (self._isActive) {
                         isActive = true;
+                    }
+                    if (self._options.useNewGrouping) {
+                        GroupingManager.resetLoadedGroups(listModel);
                     }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
@@ -498,6 +505,9 @@ var _private = {
                 _private.getPortionedSearch(self).startSearch();
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+            if (self._options.groupProperty && self._options.useNewGrouping) {
+                GroupingManager.prepareFilterCollapsedGroups(self._options.groupProperty, self._options.collapsedGroups, filter);
+            }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 //до реализации функционала и проблемы из новости делаем решение по месту:
@@ -1770,7 +1780,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
-            this._listViewModel.setCollapsedGroups(newOptions.collapsedGroups);
+            GroupingManager.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
         }
 
         if (newOptions.keyProperty !== this._options.keyProperty) {
@@ -2091,9 +2101,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.reload(this, this._options).addCallback(getData);
     },
 
-    _onGroupClick: function(e, item, baseEvent) {
+    _onGroupClick: function(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
-            this._listViewModel.toggleGroup(item);
+            GroupingManager.toggleGroup(this._listViewModel,
+                groupId,
+                this._options.useNewGrouping,
+                this._sourceController,
+                this._options.filter,
+                this._options.sorting);
         }
     },
 
