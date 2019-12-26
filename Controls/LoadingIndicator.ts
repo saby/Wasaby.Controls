@@ -37,6 +37,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /**
  * @typedef {String} Scroll
+ * @description Значения, которыми настраивается градиент для прокручивания объекта привязки. 
  * @variant '' Без градиента.
  * @variant left Градиент слева направо (увелечение цветового наполнения).
  * @variant right Градиент справа налево.
@@ -69,6 +70,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /**
  * @typedef {String} Small
+ * @description Значения, которыми настраивается размер индикатора.
  * @variant '' Стандартный размер индикатора
  * @variant small Делает индикатор меньше.
  */
@@ -81,7 +83,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /**
  * @name Controls/LoadingIndicator#small
- * @cfg {Small} Размер некоторых стилей индикатора (настройки полей, фона, границы, ширины, высоты).
+ * @cfg {Small} Размер параметров индикатора (полей, фона, границы, ширины, высоты).
  * @default '' (пустая строка)
  * @demo Controls-demo/LoadingIndicator/Small/Index
  */
@@ -95,6 +97,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /**
  * @typedef {Srting} Overlay
+ * @description Значения, которыми настраивается оверлей индикатора.
  * @variant default Невидимый фон, индикатор блокирует клики.
  * @variant dark Темный фон, индикатор блокирует клики.
  * @variant none Невидимый фон, индикатор не блокирует клики.
@@ -114,7 +117,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
-/*
+/**
  * @name Controls/LoadingIndicator#mods
  * @cfg {Array.<String>|String} Параметр может использоваться для пользовательской настройки индикатора.
  * @remark
