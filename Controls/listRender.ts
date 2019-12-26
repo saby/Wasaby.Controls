@@ -20,6 +20,9 @@ export {
     swipeTemplate
 };
 
+import ListView = require('wml!Controls/_listRender/ListView');
+export { ListView };
+
 import TileView = require('wml!Controls/_listRender/TileView');
 import ColumnsView = require('wml!Controls/_listRender/ColumnsView');
 export { TileView };

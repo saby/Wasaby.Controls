@@ -2168,7 +2168,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, rebuild?: boolean): void {
+    appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object): void {
         const strategyOptions = { ...options, display: this };
 
         this._userStrategies.push({
@@ -2178,9 +2178,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         if (this._composer) {
             this._composer.append(strategy, strategyOptions);
-            if (rebuild) {
-                this._reBuild();
-            }
+            this._reBuild();
         }
 
         this.nextVersion();
@@ -2197,6 +2195,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
             if (this._composer) {
                 this._composer.remove(strategy);
+                this._reBuild();
             }
 
             this.nextVersion();

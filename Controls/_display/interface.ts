@@ -11,7 +11,7 @@ export interface IBaseCollection<T> {
 }
 
 export interface IStrategyCollection<T> {
-    appendStrategy(strategy: Function, options?: object, rebuild?: boolean): void;
+    appendStrategy(strategy: Function, options?: object): void;
     getStrategyInstance(strategy: Function): IItemsStrategy<unknown, T>;
     removeStrategy(strategy: Function): void;
 }

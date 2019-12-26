@@ -19,7 +19,7 @@ export class Start implements ICollectionCommand<IDragItem> {
             draggedItemsKeys: this.draggedItemsKeys,
             avatarItemKey: this.avatarItemKey,
             avatarIndex: avatarStartIndex
-        }, true);
+        });
     }
 }
 
