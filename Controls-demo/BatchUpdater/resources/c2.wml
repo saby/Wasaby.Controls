@@ -1,5 +1,0 @@
-<div>
-   <div attr:id="div2">{{ text }}</div>
-   <div attr:id="noExtraUpdate">{{ noExtraUpdate }}</div>
-   <div attr:id="bothUpdated">{{ bothUpdated }}</div>
-</div>

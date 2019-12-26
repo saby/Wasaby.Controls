@@ -3,7 +3,8 @@
  */
 define('Controls-demo/RootRouter', [
    'Core/Control',
-   'wml!Controls-demo/RootRouter'
+   'wml!Controls-demo/RootRouter',
+   'css!Controls-demo/RootRouter'
 ], function(BaseControl,
    template) {
    'use strict';

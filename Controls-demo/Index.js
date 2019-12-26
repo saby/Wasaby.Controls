@@ -7,7 +7,6 @@ define('Controls-demo/Index', [
    'Application/Initializer',
    'Application/Env',
    'Core/Deferred',
-   'css!Controls-demo/Demo/Page',
    'css!SBIS3.CONTROLS/themes/AreaBlocks'
 ], function (BaseControl,
              template,
@@ -20,13 +19,7 @@ define('Controls-demo/Index', [
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
-         backClickHdl: function() {
-            window.history.back();
-         },
-         changeTheme: function(event, theme) {
-            this._notify('themeChanged', [theme], { bubbling: true });
-         },
-         _beforeMount: function() {
+        _beforeMount: function() {
             this._title = this._getTitle();
             this._settigsController = {
                getSettings: function(ids) {
