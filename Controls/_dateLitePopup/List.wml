@@ -2,9 +2,6 @@
         displayedRanges="{{_range}}"
         bind:position="_position"
         virtualPageSize="{{15}}">
-    <ws:stubTemplate>
-        <invisible-node />
-    </ws:stubTemplate>
     <ws:yearHeaderTemplate>
         <div
                 on:mouseenter="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"

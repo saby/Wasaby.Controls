@@ -88,23 +88,14 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
         }, {
             options: {
                 displayedRanges: [[new Date(2018, 0), new Date(2018, 11)]],
-                viewMode: 'month'
+                viewMode: 'month',
+                stubTemplate: 'template'
             },
             query: (new Query()).where({'id~': monthListUtils.dateToId(new Date(2018, 11))}),
             resp: [{
                 id: monthListUtils.dateToId(new Date(2018, 11)),
                 type: ITEM_TYPES.body
             }, {
-                id: monthListUtils.dateToId(new Date(2019, 0)),
-                type: ITEM_TYPES.stub
-            }]
-        }, {
-            options: {
-                displayedRanges: [[new Date(2018, 0), new Date(2018, 11)]],
-                viewMode: 'month'
-            },
-            query: (new Query()).where({'id>=': monthListUtils.dateToId(new Date(2018, 11))}),
-            resp: [{
                 id: monthListUtils.dateToId(new Date(2019, 0)),
                 type: ITEM_TYPES.stub
             }]
@@ -150,7 +141,8 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
         }, {
             options: {
                 displayedRanges: [[new Date(2018, 0), new Date(2018, 11)]],
-                viewMode: 'month'
+                viewMode: 'month',
+                stubTemplate: 'template'
             },
             query: (new Query()).where({'id<=': monthListUtils.dateToId(new Date(2018, 0))}),
             resp: [{
@@ -163,7 +155,8 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
                     [new Date(2018, 0), new Date(2018, 6)],
                     [new Date(2019, 0), new Date(2019, 6)]
                 ],
-                viewMode: 'month'
+                viewMode: 'month',
+                stubTemplate: 'template'
             },
             limit: 3,
             query: (new Query()).where({'id~': monthListUtils.dateToId(new Date(2018, 6))}),
@@ -180,7 +173,8 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
         }, {
             options: {
                 displayedRanges: [[new Date(2018, 0), new Date(2018, 6)]],
-                viewMode: 'month'
+                viewMode: 'month',
+                stubTemplate: 'template'
             },
             query: (new Query()).where({'id~': monthListUtils.dateToId(new Date(2017, 6))}),
             resp: [{
@@ -193,7 +187,8 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
         }, {
             options: {
                 displayedRanges: [[new Date(2018, 0), new Date(2018, 6)]],
-                viewMode: 'month'
+                viewMode: 'month',
+                stubTemplate: 'template'
             },
             query: (new Query()).where({'id~': monthListUtils.dateToId(new Date(2019, 6))}),
             resp: [{
@@ -288,9 +283,23 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
             resp: [{
                 id: monthListUtils.dateToId(new Date(2019, 3)),
                 type: ITEM_TYPES.body
+            }]
+        }, {
+            options: {
+                displayedRanges: [
+                    [new Date(2018, 0), new Date(2018, 6)],
+                    [new Date(2019, 0), new Date(2019, 6)]
+                ],
+                viewMode: 'month'
+            },
+            limit: 3,
+            query: (new Query()).where({'id~': monthListUtils.dateToId(new Date(2018, 6))}),
+            resp: [{
+                id: monthListUtils.dateToId(new Date(2018, 6)),
+                type: ITEM_TYPES.body
             }, {
-                id: monthListUtils.dateToId(new Date(2019, 4)),
-                type: ITEM_TYPES.stub
+                id: monthListUtils.dateToId(new Date(2019, 0)),
+                type: ITEM_TYPES.body
             }]
         }].forEach((test, i) => {
             it(`should return proper data ${i}`, () => {

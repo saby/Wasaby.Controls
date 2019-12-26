@@ -3,23 +3,20 @@
                     attr:id="Back"
                     attr:style="width: 100px"
                      on:click="backClickHdl()">&lt;&nbsp;Назад</a>
-
-   <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
-      <Router.router:Route mask="app/:app">
-         <Controls-demo.RootTemplateWrapper>
-            <ws:if data="{{content.app && content.templateLoaded}}">
-               <ws:if data="{{ isReloading }}">
-                  <invisible-node/>
-               </ws:if>
-               <ws:else>
-                  <Controls.Container.Async templateName="{{content.app}}"
-                                            attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
-               </ws:else>
+   <Router.router:Route mask="app/:app">
+      <Controls-demo.RootTemplateWrapper>
+         <ws:if data="{{content.app && content.templateLoaded}}">
+            <ws:if data="{{ isReloading }}">
+               <invisible-node/>
             </ws:if>
             <ws:else>
-               <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&nbsp;<a href='#' on:click="goHomeHandler()">разводящую</a></div>
+               <Controls.Container.Async templateName="{{content.app}}"
+                                         attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
             </ws:else>
-         </Controls-demo.RootTemplateWrapper>
-      </Router.router:Route>
-   </Controls.scroll:Container>
+         </ws:if>
+         <ws:else>
+            <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&nbsp;<a href='#' on:click="goHomeHandler()">разводящую</a></div>
+         </ws:else>
+      </Controls-demo.RootTemplateWrapper>
+   </Router.router:Route>
 </div>

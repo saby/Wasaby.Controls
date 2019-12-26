@@ -7,7 +7,7 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
 import {IMonthList, IMonthListOptions} from './interfaces/IMonthList';
 import {IMonthListVirtualPageSize, IMonthListVirtualPageSizeOptions} from './interfaces/IMonthListVirtualPageSize';
-import ExtDataModel from './MonthList/ExtDataModel';
+import ExtDataModel, {TItems} from './MonthList/ExtDataModel';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import ITEM_TYPES from './MonthList/ItemTypes';
@@ -19,7 +19,6 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
-import stubTemplate = require('wml!Controls/_calendar/MonthList/Stub');
 import {Logger} from 'UI/Utils';
 
 interface IModuleComponentOptions extends
@@ -77,7 +76,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _virtualPageSize: number;
 
-    protected _beforeMount(options: IModuleComponentOptions): void {
+    protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
+                           Promise<TItems> | void {
         const position = options.startPosition || options.position || new WSDate();
         if (options.startPosition) {
             Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
@@ -92,6 +92,15 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._positionToScroll = position;
         this._displayedPosition = position;
         this._lastNotifiedPositionChangedDate = position;
+
+        if (this._extData) {
+            if (receivedState) {
+                this._extData.updateData(receivedState);
+            } else {
+                this._displayedDates = this._getDisplayedRanges(position, options.virtualPageSize);
+                return this._extData.enrichItems(this._displayedDates);
+            }
+        }
     }
 
     protected _afterMount(): void {
@@ -149,6 +158,14 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
+    private  _getDisplayedRanges(position: Date, virtualPageSize: number): number[] {
+        const displayedRanges = [];
+        for (let i = 0; i < virtualPageSize; i++) {
+            displayedRanges.push(Date.parse(new Date(position.getFullYear(), position.getMonth() + i)));
+        }
+        return displayedRanges;
+    }
+
     private _updateItemTemplate(options: IModuleComponentOptions): void {
         this._itemHeaderTemplate = options.viewMode === 'year' ?
             options.yearHeaderTemplate : options.monthHeaderTemplate;
@@ -174,7 +191,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 dateConstructor: options.dateConstructor,
                 displayedRanges: options.displayedRanges,
                 viewMode: options.viewMode,
-                order: options.order
+                order: options.order,
+                stubTemplate: options.stubTemplate
             });
         }
         if (!oldOptions || options.viewMode !== oldOptions.viewMode || options.source !== oldOptions.source) {
@@ -423,7 +441,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             viewMode: 'year',
             yearTemplate,
             monthTemplate,
-            stubTemplate,
             // In most places where control is used, no more than 4 elements are displayed at the visible area.
             // Draw the elements above and below.
             virtualPageSize: 6,

@@ -4216,7 +4216,7 @@ define([
             instance._dragEndHandler();
             assert.isFalse(instance._showActions);
 
-            instance._itemMouseMove();
+            instance._itemMouseMove({}, {});
             assert.isTrue(instance._showActions);
 
          });
@@ -4769,14 +4769,16 @@ define([
                selectedKeysCount: 1
             };
             const instance = new lists.BaseControl(cfg);
-            const enterItemData = {};
+            const enterItemData = {
+               item: {}
+            };
             const enterNativeEvent = {};
             let called = false;
 
             instance._notify = (eName, args) => {
                if (eName === 'itemMouseEnter') {
                   called = true;
-                  assert.equal(args[0], enterItemData);
+                  assert.equal(args[0], enterItemData.item);
                   assert.equal(args[1], enterNativeEvent);
                }
             };

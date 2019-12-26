@@ -2344,17 +2344,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
             }
         }
-        this._notify('itemMouseEnter', [itemData, nativeEvent]);
+        this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
-        this._notify('itemMouseMove', [itemData, nativeEvent]);
+        this._notify('itemMouseMove', [itemData.item, nativeEvent]);
         if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
-        this._notify('itemMouseLeave', [itemData, nativeEvent]);
+        this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
     },
     _sortingChanged: function(event, propName, sortingType) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);

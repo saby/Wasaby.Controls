@@ -205,8 +205,8 @@ var _private = {
       return self._options.searchValue !== searchValue && searchValue !== self._inputSearchValue;
    },
 
-   needUpdateInputSearchValue: function (self, searchValue) {
-      return searchValue.length >= self._options.minSearchLength;
+   isInputSearchValueShort: function (self, searchValue) {
+      return searchValue.length < self._options.minSearchLength;
    }
 };
 
@@ -281,11 +281,14 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
-         this._searchValue = options.searchValue;
 
-         if (this._viewMode !== 'search') {
-            this._previousViewMode = this._viewMode;
-            this._viewMode = 'search';
+         if (!_private.isInputSearchValueShort(this, options.searchValue)) {
+            this._searchValue = options.searchValue;
+
+            if (this._viewMode !== 'search') {
+               this._previousViewMode = this._viewMode;
+               this._viewMode = 'search';
+            }
          }
       }
 
@@ -328,7 +331,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
       if (_private.isSearchValueChanged(this, newOptions.searchValue)) {
          _private.startSearch(this, newOptions.searchValue);
-         if (_private.needUpdateInputSearchValue(this, newOptions.searchValue)) {
+         if (!_private.isInputSearchValueShort(this, newOptions.searchValue)) {
             _private.setInputSearchValue(this, newOptions.searchValue);
          }
       }
@@ -341,7 +344,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _beforeUnmount: function () {
       if (this._searchController) {
-         this._searchController.abort();
+         this._searchController.abort(true);
          this._searchController = null;
       }
       this._dataOptions = null;

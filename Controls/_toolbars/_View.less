@@ -3,18 +3,17 @@
   max-width: 100%;
 }
 .controls-Toolbar__item_spacing_medium_theme-@{themeName} {
-  margin-right: @spacing_Toolbar-between-items_medium;
+  margin-right: @item_offset_s_toolbar;
 }
 
 .controls-Toolbar__item_spacing_big_theme-@{themeName} {
-  margin-right: @spacing_Toolbar-between-items_big;
+  margin-right: @item_offset_l_toolbar;
 }
 .controls-Toolbar__item_theme-@{themeName} {
   max-width: 100%;
   .inline-flexbox();
   cursor: pointer;
   .align-items(center);
-  font-size: @font-size_Toolbar-item;
 
   &:last-child {
     margin-right: 0;
@@ -41,6 +40,6 @@
 }
 .ws-is-hover {
   .controls-Toolbar__menu_theme-@{themeName}:hover {
-    color: @color_Toolbar-icon_hovered;
+    color: @icon-color_hover_toolbar;
   }
 }

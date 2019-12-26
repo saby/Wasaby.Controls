@@ -40,7 +40,8 @@
    </ws:if>
 
    <ws:else>
-      <div class="controls-DropdownList__content {{itemData.getPropValue(itemData.item, 'readOnly') ? 'controls-DropdownList__content-readOnly'}}
+      <div class="controls-DropdownList__content
+                  controls-DropdownList__content_{{itemData.getPropValue(itemData.item, 'readOnly') ? 'readOnly'}}_theme-{{_options.theme}}
                   controls-DropdownList__content_{{multiLine ? 'multiLine' : 'singleLine'}}
                   controls-DropdownList__content_{{additionalTextTemplate ? 'padding'}} theme_{{_options.theme}}"
            title="{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}">
