@@ -469,7 +469,6 @@ var SuggestLayout = Control.extend({
 
       if (this._options.historyId) {
          _private.getHistoryService(this).addCallback(function(historyService) {
-
             historyService.update(item, {$_history: true});
             return historyService;
          });
