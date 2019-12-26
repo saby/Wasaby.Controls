@@ -49,12 +49,13 @@ export interface ISortButtonOptions extends IControlOptions {
     property: string;
 }
 class SortButton extends Control<ISortButtonOptions> {
-    static _theme: [string] = ['Controls/grid'];
     protected _template: TemplateFunction = template;
 
     protected _clickHandler(): void {
         this._notify('sortingChanged', [this._options.property, this._options.type], {bubbling: true});
     }
+
+    static _theme: [string] = ['Controls/grid'];
 }
 
 export default SortButton;

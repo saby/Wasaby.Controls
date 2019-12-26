@@ -1,71 +1,97 @@
+.controls-SortMenu {
+   display: flex;
+   align-items: baseline;
+}
+
 .controls-SortMenu_itemWrapper {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   width: 100%;
 }
+
 .controls-Sort_arrow_theme-@{themeName} {
-	height: @height_SortMenu-arrow-icon;
-	width: @size_SortMenu-arrow;
+   height: @height_SortMenu-arrow-icon;
+   width: @size_SortMenu-arrow;
 }
+
+.controls-SortMenu_arrow-outside_theme-@{themeName},
 .controls-SortMenu_arrow_theme-@{themeName} {
-	width: @size_SortMenu-arrow;
-	height: @size_SortMenu-arrow;
-	margin-left: @spacing-left_SortMenu-arrow;
+   width: @size_SortMenu-arrow;
+   height: @size_SortMenu-arrow;
 }
+
+.controls-SortMenu_arrow-outside_theme-@{themeName} {
+   margin-left: @spacing-left_SortMenu-arrow-outside;
+   cursor: pointer;
+}
+
+.controls-SortMenu_arrow_theme-@{themeName} {
+   margin-left: @spacing-left_SortMenu-arrow;
+}
+
 .controls-Sort_arrow_desc {
-	transform: rotate(180deg);
+   transform: rotate(180deg);
 }
+
 .controls-SortMenu_arrowsContainer {
-	display: flex;
+   display: flex;
 }
+
 .controls-Sort_arrow_normal_theme-@{themeName} {
-	fill: @color_SortMenu-arrow_normal;
+   fill: @color_SortMenu-arrow_normal;
+   cursor: pointer;
 }
+
 .controls-Sort_arrow_active_theme-@{themeName} {
-	fill: @color_SortMenu-arrow_active;
+   fill: @color_SortMenu-arrow_active;
 }
-.controls-Sort_arrow_normal_theme-@{themeName}:hover {
-	fill: @color_SortMenu-arrow_hovered;
+
+.controls-SortArrow_with-hover_theme-@{themeName}:hover {
+   fill: @color_SortMenu-arrow_hovered;
 }
 
 .controls-SortButton {
-	display: inline-block;
+   display: inline-block;
 }
+
 .controls-SortButton__content_align-left {
-	flex-direction: row-reverse;
+   flex-direction: row-reverse;
 }
+
 .controls-SortButton__content_align-default {
-	flex-direction: row;
+   flex-direction: row;
 }
+
 .controls-SortButton__content {
-	.baseline-fix();
-	display: flex;
-	align-items: baseline;
+   .baseline-fix();
+
+   display: flex;
+   align-items: baseline;
 }
 
 .controls-SortButton__icon {
-	align-self: baseline;
-	display: inline-block;
-	flex-shrink: 0;
+   align-self: baseline;
+   display: inline-block;
+   flex-shrink: 0;
 }
 
 .controls-SortButton__caption {
-	cursor: pointer;
-	display: inline;
+   cursor: pointer;
+   display: inline;
 }
 
 .controls-SortButton__caption_theme-@{themeName} {
-	font-size: @font-size_SortButton-caption;
-	color: @color_SortButton-caption;
-}
-
-.ws-is-hover {
-	.controls-SortButton__caption:hover {
-		text-decoration: underline;
-	}
+   font-size: @font-size_SortButton-caption;
+   color: @color_SortButton-caption;
 }
 
 .controls-SortButton__caption:active {
-	text-decoration: underline;
+   text-decoration: underline;
+}
+
+.ws-is-hover {
+   .controls-SortButton__caption:hover {
+      text-decoration: underline;
+   }
 }

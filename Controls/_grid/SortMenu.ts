@@ -34,17 +34,20 @@ export interface ISortingParameter {
 export interface ISortMenuOptions extends IControlOptions {
    sortingParams: [ISortingParameter];
    sorting: [object];
+   header: string;
 }
 
 class SortMenu extends Control<ISortMenuOptions> {
-    static _theme: [string] = ['Controls/grid'];
     protected _template: TemplateFunction = template;
     private _selectedKeys: [number|string];
     private _source: ICrud = null;
+    private _currentParamName: string = null;
+    private _currentValue: 'ASC'|'DESC' = null;
 
     protected _beforeMount(options: ISortMenuOptions): void {
         this.updateConfig(options.sortingParams, options.sorting);
     }
+
     protected  _beforeUpdate(newOptions: ISortMenuOptions): void {
         if (!isEqual(this._options.sorting, newOptions.sorting) ||
             !isEqual(this._options.sortingParams, newOptions.sortingParams)) {
@@ -54,20 +57,24 @@ class SortMenu extends Control<ISortMenuOptions> {
 
     private updateConfig(sortingParams: [ISortingParameter], sorting: [object]|undefined): void {
         const data = [];
-        let currentParamName: string;
-        let currentValue: 'ASC'|'DESC';
+
         if (sorting && sorting.length) {
-            currentParamName = Object.keys(sorting[0])[0];
-            currentValue = sorting[0][currentParamName];
+            this._currentParamName = Object.keys(sorting[0])[0];
+            this._currentValue = sorting[0][this._currentParamName];
+        } else {
+            this._currentParamName = null;
+            this._currentValue = null;
         }
         sortingParams.forEach((item: ISortingParameter, i: number) => {
-            const dataElem = {...item, id: i, value: ''};
-            if (dataElem.paramName === currentParamName) {
-                dataElem.value = currentValue;
+            const dataElem = {...item, id: i, value: '', readOnly: true};
+            if (dataElem.paramName === this._currentParamName) {
+                if (this._currentValue !== null) {
+                    dataElem.value = this._currentValue;
+                }
                 this._selectedKeys = [i];
             }
-            if (currentParamName === undefined && dataElem.paramName === null) {
-                this._selectedKeys = [i];
+            if (item.paramName === null) {
+                dataElem.readOnly = false;
             }
             data.push(dataElem);
         });
@@ -87,15 +94,24 @@ class SortMenu extends Control<ISortMenuOptions> {
             return false;
         }
     }
-    private _changeSorting(e: SyntheticEvent<Event>, item: Record, value: 'ASC'|'DESC'): void {
+    private _setSorting(param: string, value: string): void {
         const newSorting = [];
-        const param = item.get('paramName');
-        this._selectedKeys = [item.get('id')];
-        this._children.dropdown.closeMenu();
         newSorting[0] = {};
         newSorting[0][param] = value;
         this._notify('sortingChanged', [newSorting]);
     }
+    private _switchSorting(): void {
+        const newValue: string = this._currentValue === 'ASC' ? 'DESC' : 'ASC';
+        this._setSorting(this._currentParamName, newValue);
+    }
+    private _changeSorting(e: SyntheticEvent<Event>, item: Record, value: 'ASC'|'DESC'): void {
+        const param = item.get('paramName');
+        this._selectedKeys = [item.get('id')];
+        this._children.dropdown.closeMenu();
+        this._setSorting(param, value);
+    }
+
+    static _theme: [string] = ['Controls/grid'];
 }
 
 export default SortMenu;

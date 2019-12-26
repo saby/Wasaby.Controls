@@ -5,11 +5,13 @@
             <div class="controls-SortMenu_itemTitle">{{itemData.item.get('title')}}</div>
             <ws:if data="{{itemData.item.get('paramName') !== null}}">
                 <div class="controls-SortMenu_arrowsContainer">
-                    <div class="controls-SortMenu_arrow_theme-{{_options.theme}} controls-Sort_arrow_{{itemData.item.get('value') === 'DESC' ? 'active' : 'normal'}}_theme-{{_options.theme}}"
+                    <div class="controls-SortMenu_arrow_theme-{{_options.theme}}
+                                controls-Sort_arrow_{{itemData.item.get('value') === 'DESC' ? 'active' : ('normal_theme-' + _options.theme + ' controls-SortArrow_with-hover')}}_theme-{{_options.theme}}"
                          on:click="_changeSorting(itemData.item, 'DESC')">
-                        <ws:partial attr:class="controls-Sort_arrow_theme-{{_options.theme}} controls-Sort_arrow_desc" template="wml!Controls/_grid/SortResources/SortArrow"/>
+                        <ws:partial attr:class="controls-Sort_arrow_theme-{{_options.theme}}" value="DESC" template="wml!Controls/_grid/SortResources/SortArrow"/>
                     </div>
-                    <div class="controls-SortMenu_arrow_theme-{{_options.theme}} controls-Sort_arrow_theme-{{_options.theme}} controls-Sort_arrow_{{itemData.item.get('value') === 'ASC' ? 'active' : 'normal'}}_theme-{{_options.theme}}"
+                    <div class="controls-SortMenu_arrow_theme-{{_options.theme}} controls-Sort_arrow_theme-{{_options.theme}}
+                                controls-Sort_arrow_{{itemData.item.get('value') === 'ASC' ? 'active' : ('normal_theme-' + _options.theme + ' controls-SortArrow_with-hover')}}_theme-{{_options.theme}}"
                          on:click="_changeSorting(itemData.item, 'ASC')">
                         <ws:partial  attr:class="controls-Sort_arrow_theme-{{_options.theme}}" template="wml!Controls/_grid/SortResources/SortArrow"/>
                     </div>
