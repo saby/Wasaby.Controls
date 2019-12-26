@@ -328,16 +328,16 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          }
       }
       if (_private.isSearchValueChanged(this, newOptions.searchValue)) {
-         _private.startSearch(this, newOptions.searchValue);
          if (!_private.isInputSearchValueShort(this, newOptions.searchValue)) {
             _private.setInputSearchValue(this, newOptions.searchValue);
          }
+         _private.startSearch(this, newOptions.searchValue);
       }
    },
 
    _search: function (event, value, force) {
-      _private.startSearch(this, value, force);
       _private.setInputSearchValue(this, value);
+      _private.startSearch(this, value, force);
    },
 
    _beforeUnmount: function () {
