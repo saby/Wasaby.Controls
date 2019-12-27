@@ -324,9 +324,16 @@ var _private = {
         return self._loadDeferred.addCallback(function() {
             return _private.loadSelectedItems(self._source, self._configs).addCallback(() => {
                 _private.updateText(self, self._source, self._configs);
-                return {
-                    configs: self._configs
-                };
+
+                // FIXME https://online.sbis.ru/opendoc.html?guid=0c3738a7-6e8f-4a12-8459-9c6a2034d927
+                // history.Source не умеет сериализоваться - удаляем его из receivedState
+                let configs = CoreClone(self._configs);
+                factory(configs).each((config) => {
+                    if (isHistorySource(config.source)) {
+                        delete config.source;
+                    }
+                });
+                return { configs };
             });
         });
     },

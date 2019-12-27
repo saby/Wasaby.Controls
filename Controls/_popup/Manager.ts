@@ -10,7 +10,6 @@ import {List} from 'Types/collection';
 import {Bus as EventBus} from 'Env/Event';
 import {detection} from 'Env/Env';
 import * as randomId from 'Core/helpers/Number/randomId';
-import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import * as Deferred from 'Core/Deferred';
 import template = require('wml!Controls/_popup/Manager/Manager');
 
@@ -190,8 +189,6 @@ class Manager extends Control<IManagerOptions> {
             modal: options.modal,
             controller,
             popupOptions: options,
-            isActive: false,
-            waitDeactivated: options.autofocus === false,
             sizes: {},
             activeControlAfterDestroy: this._getActiveControl(),
             activeNodeAfterDestroy: this._getActiveElement(), // TODO: COMPATIBLE
@@ -293,10 +290,6 @@ class Manager extends Control<IManagerOptions> {
         }
     }
 
-    private _isNewEnvironment(): boolean {
-        return isNewEnvironment();
-    }
-
     private _updateOverlay(): void {
         const indices = this._popupItems.getIndicesByValue('modal', true);
         ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
@@ -381,40 +374,61 @@ class Manager extends Control<IManagerOptions> {
     }
 
     protected _popupActivated(id: string): void {
-        const item = this.find(id);
-        if (item) {
-            item.waitDeactivated = false;
-            item.isActive = true;
-        }
+        // popup was activated
     }
 
     protected _popupDeactivated(id: string): boolean {
         const item = this.find(id);
-        if (item) {
-            item.isActive = false;
-            if (this._needClosePopupByDeactivated(item)) {
-                if (!this._isIgnoreActivationArea(this._getActiveElement())) {
-                    this._finishPendings(id, null, () => {
-                        // if pendings is exist, take focus back while pendings are finishing
-                        this._getPopupContainer().getPopupById(id).activate();
-                    }, () => {
-                        const itemContainer = this._getItemContainer(id);
-                        if (item.popupOptions.isCompoundTemplate) {
-                            this._getCompoundArea(itemContainer).close();
-                        } else {
-                            item.controller.popupDeactivated(item, itemContainer);
-                        }
-                    });
-                } else {
-                    item.waitDeactivated = true;
-                }
+        if (item && this._needClosePopupByDeactivated(item)) {
+            if (!this._isIgnoreActivationArea(this._getActiveElement())) {
+                this._finishPendings(id, null, () => {
+                    // if pendings is exist, take focus back while pendings are finishing
+                    this._getPopupContainer().getPopupById(id).activate();
+                }, () => {
+                    const itemContainer = this._getItemContainer(id);
+                    if (item.popupOptions.isCompoundTemplate) {
+                        this._getCompoundArea(itemContainer).close();
+                    } else {
+                        item.controller.popupDeactivated(item, itemContainer);
+                    }
+                });
             }
         }
         return false;
     }
 
-    private _needClosePopupByDeactivated(item: IPopupItem): boolean {
+    protected _mouseDownHandler(event: Event): void {
+        if (this._popupItems && !this._isIgnoreActivationArea(event.target as HTMLElement)) {
+            const deactivatedPopups = [];
+            this._popupItems.each((item) => {
+                if (item) {
+                    const parentControls = goUpByControlTree(event.target);
+                    const popupInstance = ManagerController.getContainer().getPopupById(item.id);
+
+                    // Check the link between target and popup
+                    if (this._needClosePopupByOutsideClick(item) && parentControls.indexOf(popupInstance) === -1) {
+                        deactivatedPopups.push(item);
+                    }
+                }
+            });
+            for (let i = 0; i < deactivatedPopups.length; i++) {
+                const itemContainer = this._getItemContainer(deactivatedPopups[i].id);
+                if (deactivatedPopups[i].popupOptions.isCompoundTemplate) {
+                    this._getCompoundArea(itemContainer).close();
+                } else {
+                    deactivatedPopups[i].controller.popupDeactivated(deactivatedPopups[i]);
+                }
+            }
+        }
+    }
+
+    private _needClosePopupByOutsideClick(item: IPopupItem): boolean {
         return item.popupOptions.closeOnOutsideClick && item.popupState !== item.controller.POPUP_STATE_INITIALIZING;
+    }
+
+    private _needClosePopupByDeactivated(item: IPopupItem): boolean {
+        // Временная опция, на момент перевода опции closeOnOutsideClick на работу через mousedown
+        return item.popupOptions.closeOnDeactivated && item.popupState !== item.controller.POPUP_STATE_INITIALIZING;
     }
 
     private _getActiveElement(): HTMLElement {
@@ -654,34 +668,6 @@ class Manager extends Control<IManagerOptions> {
         // работающий на значении результата события onbeforenavigate
         if (!isIconClick && hasPendings) {
             event.setResult(false);
-        }
-    }
-
-    protected _mouseDownHandler(event: Event): void {
-        if (this._popupItems && !this._isIgnoreActivationArea(event.target)) {
-            const deactivatedPopups = [];
-            const target = event.target as HTMLElement;
-            // todo https://online.sbis.ru/opendoc.html?guid=ab4ffabb-20ba-4782-8c38-c4ab72b73a1a
-            const isResizingLine = target.classList.contains('controls-ResizingLine');
-            this._popupItems.each((item) => {
-                // if we have deactivated popup
-                // Отказываюсь на старых страницах от закрытия окон по деактивации,
-                // сам отслеживаю необходимость закрытия
-                // в 20.1000 по работе в план разделю закрытие по клику мимо и по деактивации на 2 разные опции,
-                // из этой проверки нужно удалить item.waitDeactivated и isNewEnvironment()
-                if (item && (item.waitDeactivated || isResizingLine || !this._isNewEnvironment())) {
-                    const parentControls = goUpByControlTree(event.target);
-                    const popupInstance = ManagerController.getContainer().getPopupById(item.id);
-
-                    // Check the link between target and popup
-                    if (this._needClosePopupByDeactivated(item) && parentControls.indexOf(popupInstance) === -1) {
-                        deactivatedPopups.push(item.id);
-                    }
-                }
-            });
-            for (let i = 0; i < deactivatedPopups.length; i++) {
-                this.remove(deactivatedPopups[i]);
-            }
         }
     }
 
