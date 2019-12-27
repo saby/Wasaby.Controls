@@ -3,7 +3,7 @@
     <ws:contentTemplate>
         <div class="controls-SortMenu_itemWrapper">
             <div class="controls-SortMenu_itemTitle">{{itemData.item.get('title')}}</div>
-            <ws:if data="{{itemData.item.get('paramName') !== null}}">
+            <ws:if data="{{itemData.item.get('parameterName') !== null}}">
                 <div class="controls-SortMenu_arrowsContainer">
                     <div class="controls-SortMenu_arrow_theme-{{_options.theme}}
                                 controls-Sort_arrow_{{itemData.item.get('value') === 'DESC' ? 'active' : ('normal_theme-' + _options.theme + ' controls-SortArrow_with-hover')}}_theme-{{_options.theme}}"

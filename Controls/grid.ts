@@ -24,11 +24,11 @@ import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import ColumnTemplate = require('wml!Controls/_grid/Column');
 
 import HeaderContent = require('wml!Controls/_grid/HeaderContent');
-import SortButton = require('Controls/_grid/SortButton');
+import HeaderSortButton = require('Controls/_grid/HeaderSortButton');
 import GridView = require('Controls/_grid/GridView');
 import GridViewModel = require('Controls/_grid/GridViewModel');
 
-import SortMenu from 'Controls/_grid/SortMenu';
+import SortButton from 'Controls/_grid/SortButton';
 import RowEditor = require('wml!Controls/_grid/RowEditor');
 
 export {
@@ -40,12 +40,12 @@ export {
     ColumnTemplate,
 
     HeaderContent,
-    SortButton,
+    HeaderSortButton,
     GridView,
     GridViewModel,
 
     RowEditor,
-    SortMenu
+    SortButton
 };
 
 export {

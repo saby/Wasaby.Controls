@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/grid/Sorting/SortMenu/SortMenuWithReset/SortMenuWithReset';
+import * as Template from 'wml!Controls-demo/grid/Sorting/SortButton/SortButtonWithHeader/SortButtonWithHeader';
 import {Memory} from 'Types/source';
 import {getCountriesStats} from '../../../DemoHelpers/DataCatalog';
 
@@ -7,9 +7,10 @@ import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _sortingParams = [];
+    private _sortingParameters = [];
     private _sorting = [];
     private _viewSource: Memory;
+    private _menuHeader: string = 'Сортировка';
     private _columns = getCountriesStats().getColumnsWithWidths();
 
     protected _beforeMount() {
@@ -17,23 +18,20 @@ export default class extends Control {
             keyProperty: 'id',
             data: getCountriesStats().getData()
         });
-        this._sortingParams = [
-            {
-                title: 'Без сортировки',
-                paramName: null
-            },
+        this._sortingParameters = [
             {
                 title: 'По населению',
-                paramName: 'population'
+                parameterName: 'population'
             },
             {
                 title: 'По площади',
-                paramName: 'square'
+                parameterName: 'square'
             },
             {
                 title: 'По плотности населения',
-                paramName: 'populationDensity'
+                parameterName: 'populationDensity'
             }
         ];
+        this._sorting.push({population: 'ASC'});
     }
 }

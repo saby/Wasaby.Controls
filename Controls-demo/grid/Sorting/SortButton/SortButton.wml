@@ -2,28 +2,28 @@
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/grid/Sorting/SortMenu/Default/Index' }}">
+                                 app="{{ 'Controls-demo/grid/Sorting/SortButton/Default/Index' }}">
             <a href="{{content.href}}">Сортировка по кнопке</a>
         </Router.router:Reference>
-        <Controls-demo.grid.Sorting.SortMenu.Default.Index/>
+        <Controls-demo.grid.Sorting.SortButton.Default.Index/>
     </div>
 
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/grid/Sorting/SortMenu/SortMenuWithReset/Index' }}">
+                                 app="{{ 'Controls-demo/grid/Sorting/SortButton/SortButtonWithReset/Index' }}">
             <a href="{{content.href}}">Сортировка по кнопке со сбросом</a>
         </Router.router:Reference>
-        <Controls-demo.grid.Sorting.SortMenu.SortMenuWithReset.Index/>
+        <Controls-demo.grid.Sorting.SortButton.SortButtonWithReset.Index/>
     </div>
 
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/grid/Sorting/SortMenu/SortMenuWithHeader/Index' }}">
+                                 app="{{ 'Controls-demo/grid/Sorting/SortButton/SortButtonWithHeader/Index' }}">
             <a href="{{content.href}}">Сортировка по кнопке с заголовком меню</a>
         </Router.router:Reference>
-        <Controls-demo.grid.Sorting.SortMenu.SortMenuWithHeader.Index/>
+        <Controls-demo.grid.Sorting.SortButton.SortButtonWithHeader.Index/>
     </div>
 
 </div>
