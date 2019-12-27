@@ -5,9 +5,75 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
 
 /**
  *
- * Модуль с функцией замены общей ссылки на декорированную ссылку, если это необходимо.
- * Распознаватель тегов для {@link Controls/decorator:Markup}.
- *
+ * Модуль содержит функцию, которая позволяет преобразовать обычную ссылку в декорированную. 
+ * Декорации ссылки выполняется через Сервис декорирования ссылок. 
+ * Функция предназначена для использования в контроле {@link Controls/decorator:Markup} в опции tagResolver.
+ * пример
+ * WML:
+ * @example
+ * <pre class="brush: xml">
+ *    <Controls.decorator:Markup value="{{ _json }}" tagResolver="{{ _tagResolver }}" />
+ * </pre>
+ *  * JS:
+ * @example
+ * <pre class="brush: js">
+ * define("MyControl", ["UI/Base", "wml!MyControl", "Controls/decorator"], 
+ * function(Base, template, decorator) {
+ *    var ModuleClass = Base.Control.extend({
+ *       _template: template,
+ * _tagResolver: decorator.linkDecorate
+ * _json:
+ * [
+ *  [
+ *    ["p", // Ссылка, подходящая для декорирования, сразу в json
+ *       ["a",
+ *   {"href": "https://ya.ru
+ *   "},
+ *    "https://ya.ru"
+ *       ]
+ *    ],
+ *    ["p", // Ссылка, не подходящая для декорирования, сразу в json
+ *       ["a",
+ *   {"href": "http://www.google.com"},
+ *   "www.google.com"
+ *       ]
+ *    ],
+ *    ["pre", 
+ *       // Не подходящая и подходящая ссылки прямо в plain/text строке, 
+ *       //положенной в тег pre для отображения переноса строки \n
+ * "     www.google.com\nhttps://ya.ru"
+ *    ]
+ *  ]
+ * ]
+ *    });
+ *    return ModuleClass;
+ * });
+ * </pre>
+ * Результат
+ * @example
+ * <pre class="brush: html">
+ * <div>
+ *    <p>
+ *       <span class="...">
+ *          <a class="..." href="https://ya.ru">
+ *             <img class="..." src=".." alt="https://ya.ru"></img>
+ *          </a>
+ *       </span>
+ *    </p>
+ *    <p>
+ *       <a href="http://www.google.com">www.google.com</a>
+ *    </p>
+ *    <pre>
+ *       <a href="http://www.google.com">www.google.com</a>
+ *       \n
+ *       <span class="...">
+ *          <a class="..." href="https://ya.ru">
+ *             <img class="..." src="..." alt="https://ya.ru"></img>
+ *          </a>
+ *       </span>
+ *    </pre>
+ * </div>
+ * </pre>
  * @class Controls/_decorator/Markup/resolvers/linkDecorate
  * @public
  * @author Кондаков Р.Н.
