@@ -52,7 +52,6 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *    </pre>
  * </div>
  * </pre>
- * 
  * @class Controls/_decorator/Markup/resolvers/linkDecorate
  * @public
  * @author Кондаков Р.Н.
