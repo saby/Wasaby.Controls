@@ -20,33 +20,38 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  * function(Base, template, decorator) {
  *    var ModuleClass = Base.Control.extend({
  *       _template: template,
- * _tagResolver: decorator.linkDecorate
- * _json:
- * [
- *  [
- *    ["p", // Ссылка, подходящая для декорирования, сразу в json
- *       ["a",
- *   {"href": "https://ya.ru
- *   "},
- *    "https://ya.ru"
- *       ]
- *    ],
- *    ["p", // Ссылка, не подходящая для декорирования, сразу в json
- *       ["a",
- *   {"href": "http://www.google.com"},
- *   "www.google.com"
- *       ]
- *    ],
- *    ["pre", 
- *       // Не подходящая и подходящая ссылки прямо в plain/text строке, 
- *       //положенной в тег pre для отображения переноса строки \n
- * "     www.google.com\nhttps://ya.ru"
- *    ]
- *  ]
- * ]
- *    });
- *    return ModuleClass;
- * });
+ *       _tagResolver: decorator.linkDecorate
+ *       _json:
+ *          [
+ *             [
+ *                ["p", 
+ * 
+ *                   // Ссылка, подходящая для декорирования, сразу в json
+ *                   ["a",
+ *                   {"href": "https://ya.ru
+ *                   "},
+ *                   "https://ya.ru"
+ *                   ]
+ *                ],
+ *                ["p", 
+ * 
+ *                   // Ссылка, не подходящая для декорирования, сразу в json
+ *                   ["a",
+ *                   {"href": "http://www.google.com"},
+ *                   "www.google.com"
+ *                   ]
+ *                ],
+ *                ["pre", 
+ * 
+ *                   // Не подходящая и подходящая ссылки прямо в plain/text строке, 
+ *                   //положенной в тег pre для отображения переноса строки \n
+ *                   "     www.google.com\nhttps://ya.ru"
+ *                ]
+ *             ]
+ *          ]
+ *               });
+ *               return ModuleClass;
+ *            });
  * </pre>
  * Результат
  * @example
