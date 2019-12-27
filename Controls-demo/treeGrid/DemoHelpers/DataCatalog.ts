@@ -3,6 +3,36 @@ import * as CntTwoLvlTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImages';
 
 export const Gadgets = {
+
+    getDeepSet() {
+        return [
+            {
+                id: 1, title: 'Node', Раздел: null, 'Раздел@': true, Раздел$: null, hasChild: true, rating: 1, country: 'Russia',
+            },
+            {
+                id: 11, title: 'Node2', Раздел: 1, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
+            {
+                id: 111, title: 'Node3', Раздел: 11, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
+            {
+                id: 1111, title: 'Node4', Раздел: 111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
+            {
+                id: 11111, title: 'Node5', Раздел: 1111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
+            {
+                id: 111111, title: 'Node6', Раздел: 11111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
+            {
+                id: 2, title: 'Node7', Раздел: 111111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
+            {
+                id: 22, title: 'Node8', Раздел: 2, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
+        ];
+    },
+
     getDataSet() {
         return [
             {

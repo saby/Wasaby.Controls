@@ -84,6 +84,34 @@
   height: 500px;
 }
 
+.controlsDemo__customTileTpl {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 200px;
+
+  &-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 200px;
+  }
+
+  &-title {
+    z-index: 1;
+    margin-bottom: 20px;
+    color: blue;
+    font-weight: bold;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    padding: 0 5px;
+  }
+}
+
+
 .controlsDemo__clearWidth {
   width: initial;
   min-width: initial;

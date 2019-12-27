@@ -1,0 +1,13 @@
+<div class="controlsDemo__wrapper">
+    <Controls.treeGrid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            columns="{{_columns}}"
+            parentProperty="parent"
+            nodeProperty="type"
+            bind:expandedItems="_expandedItems">
+        <ws:nodeFooterTemplate>
+            <Controls.list:AddButton caption="Добавить товар"/>
+        </ws:nodeFooterTemplate>
+    </Controls.treeGrid:View>
+</div>
