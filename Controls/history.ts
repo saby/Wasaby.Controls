@@ -21,7 +21,6 @@
  * @author Крайнов Д.О.
  */
 
-import 'i18n!Controls/history';
 import Constants = require('Controls/_history/Constants');
 import FilterSource = require('Controls/_history/FilterSource');
 import Menu = require('Controls/_history/Menu');

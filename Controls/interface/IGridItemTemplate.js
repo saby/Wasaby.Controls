@@ -3,7 +3,7 @@ define('Controls/interface/IGridItemTemplate', [
 ], function() {
 
    /**
-    * Интерфейс для настройки отображения элементов в {@link Controls/grid:View табличном представлении}.
+    * Интерфейс для настройки отображения элементов в контроле {@link Controls/grid:View Таблица}.
     *
     * @interface Controls/interface/IGridItemTemplate
     * @public
@@ -24,14 +24,14 @@ define('Controls/interface/IGridItemTemplate', [
     * @default Controls/grid:ItemTemplate
     * @remark
     * См. <a href="/materials/demo-ws4-grid-item-template">демо-пример</a>.
-    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
+    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/ здесь}.
     * Шаблон может быть переопределён с помощью {@link Controls/interface/IGridItemTemplate#itemTemplateProperty itemTemplateProperty}.
     * @example
     * В следующем примере показано, как изменить параметры шаблона.
     * <pre class="brush: html">
     * <Controls.grid:View>
     *    <ws:itemTemplate>
-    *       <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}">
+    *       <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}">
     *          <ws:contentTemplate>
     *             {{contentTemplate.itemData.item.title}}
     *          </ws:contentTemplate>

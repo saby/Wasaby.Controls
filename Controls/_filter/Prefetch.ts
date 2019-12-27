@@ -1,6 +1,5 @@
 /**
- * Модуль, который экспортирует набор функций-хэлперов для работы с кэшированием данных на сервисе кэширования.
- * Подробнее о кэшировании вы можете почитать <a href='/doc/platform/application-optimization/reports-caching/'>здесь</a>.
+ * Модуль, который экспортирует набор функций-хэлперов для работы с кэшированием данных на {@link https://wi.sbis.ru/doc/platform/application-optimization/reports-caching/ сервисе кэширования}.
  *
  * @class Controls/_filter/Prefetch
  * @control

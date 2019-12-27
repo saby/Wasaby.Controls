@@ -1,4 +1,4 @@
-<div>
+<div class="controls-DecoratorWrapURLs">
    <ws:for data="path in _parsedText">
       <ws:if data="{{path.type === 'link'}}">
          <a class="ws-link"

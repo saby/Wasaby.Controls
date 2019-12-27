@@ -100,5 +100,11 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
          assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
       });
 
+      it('getItemPaddingClasses', () => {
+         assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_default controls-TileView__itemPaddingContainer_spacingRight_default');
+         tileViewModel.setItemPadding({left: 's', right: 'null'});
+         assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_s controls-TileView__itemPaddingContainer_spacingRight_null');
+      });
+
    });
 });

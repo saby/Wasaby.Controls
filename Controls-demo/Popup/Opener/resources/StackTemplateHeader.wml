@@ -1,18 +1,20 @@
-<Controls.popupTemplate:Stack attr:class="customHeader" headerBorderVisible="{{false}}" >
-    <ws:headerContentTemplate>
-        <Controls.buttons:Button caption="Закрыть" on:click="_close()"/>
-    </ws:headerContentTemplate>
-    <ws:bodyContentTemplate>
-        <div>
-            <div class="myTabs controls-StackTemplate__top-area-background_theme_{{_options.theme}}">
-                <Controls.tabs:Buttons
-                            bind:selectedKey='SelectedKey1'
-                            keyProperty="id"
-                            source="{{_source1}}"
-                />
-             </div>
-            <ws:partial template="Controls-demo/Popup/Opener/resources/BaseTemplate">
-            </ws:partial>
-        </div>
-    </ws:bodyContentTemplate>
-</Controls.popupTemplate:Stack>
+<div class="customHeader">
+    <Controls.popupTemplate:Stack headerBorderVisible="{{false}}" >
+        <ws:headerContentTemplate>
+            <Controls.buttons:Button caption="Закрыть" on:click="_close()"/>
+        </ws:headerContentTemplate>
+        <ws:bodyContentTemplate>
+            <div>
+                <div class="myTabs controls-StackTemplate__top-area-background_theme_{{_options.theme}}">
+                    <Controls.tabs:Buttons
+                                bind:selectedKey='SelectedKey1'
+                                keyProperty="id"
+                                source="{{_source1}}"
+                    />
+                 </div>
+                <ws:partial template="Controls-demo/Popup/Opener/resources/BaseTemplate">
+                </ws:partial>
+            </div>
+        </ws:bodyContentTemplate>
+        </Controls.popupTemplate:Stack>
+</div>

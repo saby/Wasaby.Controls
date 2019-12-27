@@ -5,20 +5,19 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/Fast/Container');
 
 /**
- * Контейнер для {@link Controls/filter:Fast}.
+ * Контрол используют в качестве контейнера для {@link Controls/filter:Fast}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и Controls/filter:Fast.
  * @remark
  * Получает результат дочернего события "filterChanged" и уведомляет о всплывающем событии "filterChanged".
- * Получает реквизиты из контекста и передает их в {@link Controls/_filter/Fast}.
- * NOTE:Должен находиться внутри Controls/_filter/Controller.
  *
- * Подробнее <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+ * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
  *
  * @class Controls/_filter/Fast/Container
  * @extends Core/Control
  * @author Герасимов А.М.
  * @control
  * @public
- * @deprecated
+ * @deprecated Данный контрол устарел и будет удалён.
  */
 
 /*

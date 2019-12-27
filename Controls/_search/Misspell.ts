@@ -4,6 +4,9 @@ import template = require('wml!Controls/_search/Misspell');
 
 /**
   * Контрол, отображающий подсказку, если в запросе при поиске найдена и исправлена опечатка.
+  * @remark
+  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+  * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
   * @class Controls/_search/Misspell
   * @mixes Controls/_interface/ICaption
   * @extends Core/Control

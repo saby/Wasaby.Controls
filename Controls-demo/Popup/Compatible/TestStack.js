@@ -60,7 +60,8 @@ define('Controls-demo/Popup/Compatible/TestStack', [
             this.getChildControlByName('resizeCheckButton')._notifyOnSizeChanged();
          }.bind(this));
 
-         this._popupContainer = this.getParent()._container.parent();
+         var container = $(this.getParent()._container);
+         this._popupContainer = container.parent();
       },
 
       _onAfterVisibilityChange: function(ev, visible) {

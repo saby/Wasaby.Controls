@@ -4,7 +4,7 @@ import randomId = require('Core/helpers/Number/randomId');
 import collection = require('Types/collection');
 import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
-/**
+/*
  * @name Controls/LoadingIndicator#isGlobal
  * @cfg {Boolean} Показать индикатор над всей страницей или только над собственным контентом.
  * @variant true В этом случае индикатор позиционируется через position: fixed.
@@ -24,6 +24,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @name Controls/LoadingIndicator#message
  * @cfg {String} Текст сообщения индикатора.
  * @default '' (пустая строка)
+ * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
 /*
@@ -41,6 +42,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @variant 'top' Градиент сверху вниз
  * @variant 'bottom' Градиент снизу вверх
  * @default '' (пустая строка)
+ * @demo Controls-demo/LoadingIndicator/Scroll/Index
  */
 
 /*
@@ -52,6 +54,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @variant 'top' gradient from top to bottom
  * @variant 'bottom' gradient from bottom to top
  * @default '' (empty string)
+ * @demo Controls-demo/LoadingIndicator/Scroll/Index
  */
 
 /**
@@ -60,6 +63,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @variant '' (пустая строка) Стандартный размер индикатора
  * @variant 'small' Делает индикатор меньше
  * @default '' (пустая строка)
+ * @demo Controls-demo/LoadingIndicator/Small/Index
  */
 
 /*
@@ -68,6 +72,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @variant '' (empty string) standard size of indicator
  * @variant 'small' make indicator smaller
  * @default '' (empty string)
+ * @demo Controls-demo/LoadingIndicator/Small/Index
  */
 
 /**
@@ -77,6 +82,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @variant 'dark' темный фон, индикатор блокирует клики
  * @variant 'none' невидимый фон, индикатор не блокирует клики
  * @default 'default'
+ * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
 /*
@@ -86,9 +92,10 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @variant 'dark' dark background, indicator blocks clicks
  * @variant 'none' invisible background, indicator don't blocks clicks
  * @default 'default'
+ * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
-/**
+/*
  * @name Controls/LoadingIndicator#mods
  * @cfg {Array.<String>|String} Параметр может использоваться для пользовательской настройки индикатора.
  * Параметр mods содержит слова, которые будут добавлены в качестве стиля "controls-loading-indicator_mod-[mod]" в контейнер индикатора.
@@ -112,12 +119,14 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @remark
  * Значение задаётся в миллисекундах.
  * @default 2000
+ * @demo Controls-demo/LoadingIndicator/Delay/Index
  */
 
 /*
  * @name Controls/LoadingIndicator#delay
  * @cfg {Number} timeout before indicator will be visible
  * @default 2000
+ * @demo Controls-demo/LoadingIndicator/Delay/Index
  */
 
 /**
@@ -134,14 +143,12 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  *
  * config — это объект, имеющий свойства:
  *    * id (String) — определяет уникальный идентификатор запроса на отображение индикатора (по умолчанию используется автоматически сгенерированный идентификатор)
- *    * isGlobal (Boolean) — определяет, глобальный или нет идентификатор (если не задан, по умолчанию используется значение аналогичного параметра контрола)
  *    * message (String) — текст сообщения индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола)
  *    * scroll (String) — добавляет градиент фону индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола)
  *    * small (String) — размер индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола)
  *    * overlay (String) — настройки оверлея индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола)
- *    * mods (Array.<String>|String) — может использоваться для пользовательской настройки индикатора. (если не задан, по умолчанию используется значение аналогичного параметра контрола)
  *    * delay (Number) — задержка перед началом показа индикатора. (если не задан, по умолчанию используется значение аналогичного параметра контрола)
- * 
+ *
  * waitPromise (Promise) — когда условие будет выполнено, индикатор скроется (необязательное свойство)
  *
  * showIndicator возвращает значение id, используя в качестве аргумента hideIndicator.
@@ -176,7 +183,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @author Красильников А.С.
  * @public
  * @category Container
- * @demo Controls-demo/LoadingIndicator/LoadingIndicatorPG
+ * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
 /*
@@ -231,7 +238,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @author Красильников А.С.
  * @public
  * @category Container
- * @demo Controls-demo/LoadingIndicator/LoadingIndicatorPG
+ * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 let ManagerController;
 const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
@@ -318,8 +325,18 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         return this._hide(id);
     },
 
-    /**
+    /*
      * show indicator (bypassing requests of indicator showing stack)
+     */
+    /**
+     * Отображает индикатор загрузки.
+     * @param config Объект с параметрами.
+     * @param {String} config.message Текст сообщения индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {String} config.scroll Добавляет градиент фону индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {String} config.small Размер индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {String} config.overlay Настройки оверлея индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param {Number} config.delay Задержка перед началом показа индикатора (если не задан, по умолчанию используется значение аналогичного параметра контрола).
+     * @param waitPromise Promise, к которому привязывается отображение индикатора. Индикатор скроется после завершения Promise (необязательное свойство).
      */
     show(config, waitPromise) {
         return this._show(config, waitPromise);
@@ -330,6 +347,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         const isOpened = this._getItemIndex(newCfg.id) > -1;
         if (isOpened) {
             this._replaceItem(newCfg.id, newCfg);
+            this._updateProperties(newCfg);
         } else {
             this._stack.add(newCfg);
             this._toggleIndicator(true, newCfg);
@@ -337,8 +355,11 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         return newCfg.id;
     },
 
-    /**
+    /*
      * hide indicator (bypassing requests of indicator showing stack)
+     */
+    /**
+     * Скрывает индикатор загрузки.
      */
     hide(id) {
         if (!id) {

@@ -93,12 +93,14 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                displayProperty: 'price',
                width: 'auto',
                align: 'right',
+               compatibleWidth: '39px',
                template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             },
             {
                displayProperty: 'balance',
                width: 'auto',
                align: 'right',
+               compatibleWidth: '62px',
                template: 'wml!Controls-demo/List/Grid/DemoBalancePrice'
             },
             {
@@ -111,11 +113,13 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                displayProperty: 'costPrice',
                width: 'auto',
                align: 'right',
+               compatibleWidth: '67px',
                template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             },
             {
                displayProperty: 'balanceCostSumm',
                width: 'auto',
+               compatibleWidth: '95px',
                align: 'right',
                template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
             }

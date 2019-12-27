@@ -362,18 +362,8 @@ class StickyController extends BaseController {
     }
 
     private _isTargetVisible(item): boolean {
-        if (!item.popupOptions._elementFromPoint || !item.popupOptions.target) {
-            const targetCoords = this._getTargetCoords(item, {});
-            return !!targetCoords.width;
-        }
-        // определяю видимость таргета. Он может быть в доме, но скрыт под скроллом
-        const target = item.popupOptions.target[0] || item.popupOptions.target;
-        const targetRect = target.getBoundingClientRect();
-        let elemFromPoint = document.elementFromPoint(targetRect.x + 1, targetRect.y + 1);
-        while (elemFromPoint && elemFromPoint !== target) {
-            elemFromPoint = elemFromPoint.parentElement;
-        }
-        return !!elemFromPoint;
+        const targetCoords = this._getTargetCoords(item, {});
+        return !!targetCoords.width;
     }
 }
 

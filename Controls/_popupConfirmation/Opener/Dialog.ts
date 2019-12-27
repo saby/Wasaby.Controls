@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 /// <amd-module name='Controls/_popupConfirmation/Opener/Dialog' />
 // @ts-ignore
 import { Converter as MarkupConverter } from 'Controls/decorator';
@@ -9,8 +10,6 @@ import { constants } from 'Env/Env';
 import entity = require('Types/entity');
 // @ts-ignore
 import contentTemplate = require('wml!Controls/_popupConfirmation/Opener/Dialog/content');
-// @ts-ignore
-import footerTemplate = require('wml!Controls/_popupConfirmation/Opener/Dialog/footer');
 // @ts-ignore
 import messageTemplate = require('wml!Controls/_popupConfirmation/Opener/Dialog/message');
 // @ts-ignore
@@ -108,7 +107,6 @@ var Submit = Control.extend({
    _messageTemplate: messageTemplate,
    _detailsTemplate: detailsTemplate,
    _contentTemplate: contentTemplate,
-   _footerTemplate: footerTemplate,
 
    _isEscDown: false,
 
@@ -125,24 +123,12 @@ var Submit = Control.extend({
       if (event.nativeEvent.keyCode === constants.key.esc) {
          this._isEscDown = true;
       }
-
-      //TODO Пришлось скопировать обработчик для _keyDown из Controls/_form/PrimaryAction, чтобы разорвать зацикливание.
-      // Controls/dataSource -> Controls/popupTemplate -> Controls/form -> Controls/dataSource
-      if (!(event.nativeEvent.altKey || event.nativeEvent.shiftKey) &&
-         (event.nativeEvent.ctrlKey || event.nativeEvent.metaKey) &&
-         event.nativeEvent.keyCode === constants.key.enter) { // Ctrl+Enter, Cmd+Enter, Win+Enter
-
-         // If "primary action" processed event, then event must be stopped.
-         // Otherwise, parental controls (including other primary action) can react to pressing ctrl+enter and call one more handler
-         event.stopPropagation();
-         this._notify('triggered');
-      }
    },
 
    _keyPressed: function (e) {
       /**
        * Старая панель по событию keydown закрывается и блокирует всплытие события. Новая панель делает
-       * тоже самое, но по событию keyup. Из-за этого возникает следующая ошибка.
+       * то же самое, но по событию keyup. Из-за этого возникает следующая ошибка.
        * https://online.sbis.ru/opendoc.html?guid=0e4a5c02-f64c-4c7d-88b8-3ab200655c27
        *
        * Что бы не трогать старые окна, мы добавляем поведение на закрытие по esc. Закрываем только в том случае,

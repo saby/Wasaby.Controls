@@ -269,10 +269,10 @@ var CompoundArea = CompoundContainer.extend([
 
             if (
                self._options.catchFocus &&
-               self._container.length &&
-               !self._container[0].contains(document.activeElement)
+               self.getContainer().length &&
+               !self.getContainer()[0].contains(document.activeElement)
             ) {
-               doAutofocus(self._container);
+               doAutofocus(self.getContainer());
             }
          });
       }
@@ -313,7 +313,7 @@ var CompoundArea = CompoundContainer.extend([
       // Если этого не сделать, то во время построения окна, при уничтожении контролов в других областях запустится восстановление фокуса,
       // которое восстановит его в последнюю активную область.
       if (self._options.catchFocus) {
-         doAutofocus(self._container);
+         doAutofocus(self.getContainer());
       }
 
       // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
@@ -322,7 +322,7 @@ var CompoundArea = CompoundContainer.extend([
       // по правилам AreaAbstract.compatible для контролов WS3
       self.detectNextActiveChildControl = self._oldDetectNextActiveChildControl;
 
-      var container = self._container.length ? self._container[0] : self._container;
+      var container = self.getContainer()[0];
       container.wsControl = self;
 
       self._childConfig = self._options.templateOptions || {};
@@ -484,10 +484,10 @@ var CompoundArea = CompoundContainer.extend([
 
    setSize: function(sizes) {
       if (sizes.width) {
-         this._container.width(sizes.width);
+         this.getContainer().width(sizes.width);
       }
       if (sizes.height) {
-         this._container.height(sizes.height);
+         this.getContainer().height(sizes.height);
       }
       this._notifyVDOM('controlResize', null, { bubbling: true });
    },
@@ -501,7 +501,7 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    _setCaption: function(newTitle) {
-      var titleContainer = $('.ws-float-area-title', this._container);
+      var titleContainer = $('.ws-float-area-title', this.getContainer());
       if (titleContainer.length) {
          titleContainer.text(newTitle);
       }
@@ -521,7 +521,7 @@ var CompoundArea = CompoundContainer.extend([
 
             // Ищем класс с кастомным заголовком, с вложенностью не более 5. 5 вычислено эмпирическим путем
             // Старая панель так умела
-            while (parent !== this._childControl._container[0] && nesting < 5) {
+            while (parent !== this._childControl.getContainer()[0] && nesting < 5) {
                parent = parent.parentElement;
                nesting++;
             }
@@ -564,7 +564,7 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    _removeCustomHeader: function() {
-      var customTitles = this._container.find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
+      var customTitles = this.getContainer().find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
       customTitles.remove();
    },
 
@@ -1078,7 +1078,7 @@ var CompoundArea = CompoundContainer.extend([
                      if (self._options.catchFocus) {
                         // автофокусировка теперь здесь, после того как все выехало, оживилось и отобразилось
                         // если звать автофокусировку в момент когда контейнер visibility: hidden, не сфокусируется!
-                        doAutofocus(self._container);
+                        doAutofocus(self.getContainer());
                      }
                   });
                }
@@ -1211,7 +1211,7 @@ var CompoundArea = CompoundContainer.extend([
 
    _unregisterEventListener: function() {
       var
-         element = this._container[0],
+         element = this.getContainer()[0],
          controlNodes = element && element.controlNodes,
          controlNode;
 

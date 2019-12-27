@@ -21,20 +21,17 @@
       on:tagClick="_proxyEvent('tagClick')"
       on:tagHover="_proxyEvent('tagHover')">
    </Controls._input.DateTime>
-   <Controls.buttons:Button
-      attr:class="controls-Input-DatePicker__button"
-      attr:tabindex="-1"
-      fontColorStyle="link"
-      viewMode="link"
-      icon="icon-Calendar2"
-      iconSize="s"
-      iconStyle="secondary"
-      readOnly="{{false}}"
-      on:click="_openDialog()"
-   />
+   <span class="controls-Input-DatePicker__buttonWrapper" attr:tabindex="-1">
+      <span class="ws-flexbox ws-align-items-center controls-Input-DatePicker__buttonBaseLine">
+         <span
+                 attr:class="controls-Input-DatePicker__button controls-icon icon-Calendar2 controls-icon_style-secondary_theme-{{_options.theme}}"
+                 iconStyle="secondary"
+                 on:click="_openDialog()">
+         </span>
+      </span>
+   </span>
    <Controls.popup:Sticky name="opener"
                                  closeOnOutsideClick="{{true}}"
-                                 actionOnScroll="close"
-                                 _vdomOnOldPage="{{_isVdomDialog()}}">
+                                 actionOnScroll="close">
    </Controls.popup:Sticky>
 </div>

@@ -30,6 +30,7 @@ import {CssClassList} from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import {create as diCreate} from 'Types/di';
+import {INavigationOptionValue} from 'Controls/interface';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -122,6 +123,9 @@ let getData = (crudResult: CrudResult): Promise<any> => {
 };
 
 var _private = {
+    isNewModelItemsChange: (action, newItems) => {
+        return action && (action !== 'ch' || newItems && !newItems.properties);
+    },
     checkDeprecated: function(cfg) {
         if (cfg.historyIdCollapsedGroups) {
             Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
@@ -280,7 +284,7 @@ var _private = {
 
         if (!list.getCount()) {
             const needShowIndicatorByNavigation =
-                (navigation && navigation.view === 'maxCount') ||
+                _private.isMaxCountNavigation(navigation) ||
                 self._needScrollCalculation;
             const needShowIndicatorByMeta = hasMoreDataDown || hasMoreDataUp;
 
@@ -419,7 +423,7 @@ var _private = {
         var
             loadedDataCount, allDataCount;
 
-        if (navigation && navigation.view === 'demand' && sourceController.hasMoreData('down')) {
+        if (_private.isDemandNavigation(navigation) && sourceController.hasMoreData('down')) {
             self._shouldDrawFooter = self._options.groupingKeyCallback ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
@@ -511,22 +515,7 @@ var _private = {
                     }
                     afterAddItems(countCurrentItems, addedItems);
                 } else if (direction === 'up') {
-                    /**
-                     * todo KINGO.
-                     * Демо на jsFiddle: https://jsfiddle.net/alex111089/9q0hgdre/
-                     * Устанавливаем в true флаг _saveAndRestoreScrollPosition, чтобы при ближайшей перерисовке
-                     * запомнить позицию скролла непосредственно до перерисовки и восстановить позицию скролла
-                     * сразу после перерисовки.
-                     * Пробовали запоминать позицию скролла здесь, в loadToDirection. Из-за асинхронности отрисовки
-                     * получается неактуальным запомненная позиция скролла и происходит дерганье контента таблицы.
-                     */
-                    if (detection.isMobileIOS) {
-                        _private.getIntertialScrolling(self).callAfterScrollStopped(() => {
-                            drawItemsUp(countCurrentItems, addedItems);
-                        });
-                    } else {
-                        drawItemsUp(countCurrentItems, addedItems);
-                    }
+                    drawItemsUp(countCurrentItems, addedItems);
                 }
                 return addedItems;
             }).addErrback((error) => {
@@ -584,16 +573,48 @@ var _private = {
         return  result;
     },
 
-    needLoadByMaxCountNavigation(listViewModel, navigation): boolean {
+    needLoadByMaxCountNavigation(listViewModel, navigation: INavigationOptionValue): boolean {
         let result = false;
 
-        if (navigation && navigation.view === 'maxCount') {
-            if (!navigation.viewConfig || typeof navigation.viewConfig.maxCountValue !== 'number') {
-                Logger
-                    .error('BaseControl', 'maxCountValue is required for "maxCount" navigation type.');
-            } else {
-                result = navigation.viewConfig.maxCountValue > listViewModel.getCount();
-            }
+        if (_private.isMaxCountNavigation(navigation) && _private.isMaxCountNavigationConfiguredCorrect(navigation)) {
+            result = _private.isItemsCountLessThenMaxCount(
+                listViewModel.getCount(),
+                _private.getMaxCountFromNavigation(navigation)
+            );
+        }
+
+        return result;
+    },
+
+    getMaxCountFromNavigation(navigation: INavigationOptionValue): number {
+        return navigation.viewConfig.maxCountValue;
+    },
+
+    isMaxCountNavigation(navigation: INavigationOptionValue): boolean {
+        return navigation && navigation.view === 'maxCount';
+    },
+
+    isMaxCountNavigationConfiguredCorrect(navigation: INavigationOptionValue): boolean {
+        return navigation.viewConfig && typeof navigation.viewConfig.maxCountValue === 'number';
+    },
+
+    isItemsCountLessThenMaxCount(itemsCount: number, navigationMaxCount: number): boolean {
+        return navigationMaxCount >  itemsCount;
+    },
+
+    isDemandNavigation(navigation: INavigationOptionValue): boolean {
+        return navigation && navigation.view === 'demand';
+    },
+
+    needShowShadowByNavigation(navigation: INavigationOptionValue, itemsCount: number): boolean {
+        const isDemand = _private.isDemandNavigation(navigation);
+        const isMaxCount = _private.isMaxCountNavigation(navigation);
+        let result = true;
+
+        if (isDemand) {
+            result = false;
+        } else if (isMaxCount) {
+            result = _private.isItemsCountLessThenMaxCount(itemsCount, _private.getMaxCountFromNavigation(navigation));
         }
 
         return result;
@@ -797,7 +818,6 @@ var _private = {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
-                    _private.saveScrollOnToggleLoadingIndicator(self);
                     self._showLoadingIndicatorImage = true;
                     self._notify('controlResize');
                 }
@@ -817,16 +837,8 @@ var _private = {
             self._loadingIndicatorTimer = null;
         }
         if (self._loadingIndicatorState !== null) {
-            _private.saveScrollOnToggleLoadingIndicator(self);
             self._loadingIndicatorState = self._loadingState;
             self._notify('controlResize');
-        }
-    },
-
-    saveScrollOnToggleLoadingIndicator(self: BaseControl): void {
-        if (self._loadingIndicatorState === 'up') {
-            self._shouldRestoreScrollPosition = true;
-            self._saveAndRestoreScrollPosition = self._loadingIndicatorState;
         }
     },
 
@@ -881,7 +893,15 @@ var _private = {
     setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
         let firstItemIndex = self._listViewModel.getStartIndex();
         firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
-        self._listViewModel.setMarkerOnValidItem(firstItemIndex);
+        firstItemIndex = Math.min(firstItemIndex, self._listViewModel.getStopIndex());
+        if (self._options.useNewModel) {
+            const item = self._listViewModel.at(firstItemIndex);
+            if (item) {
+                self._listViewModel.setMarkedItem(item);
+            }
+        } else {
+            self._listViewModel.setMarkerOnValidItem(firstItemIndex);
+        }
     },
 
     getFirstVisibleItemIndex: function(itemsContainer, verticalOffset) {
@@ -892,11 +912,11 @@ var _private = {
         if (verticalOffset <= 0) {
             return 0;
         }
-        itemsHeight += uDimension(items[0]).height;
-        while (itemsHeight <= verticalOffset && i++ < itemsCount) {
+        while (itemsHeight < verticalOffset && i < itemsCount) {
             itemsHeight += uDimension(items[i]).height;
+            i++;
         }
-        return i + 1;
+        return i;
     },
 
     handleListScrollSync(self, params) {
@@ -946,7 +966,7 @@ var _private = {
     onListChange: function(self, event, changesType, action, newItems, newItemsIndex, removedItems) {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
-        const newModelChanged = self._options.useNewModel && action && action !== 'ch';
+        const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
         if (changesType === 'collectionChanged' || newModelChanged) {
             //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
@@ -1405,7 +1425,7 @@ var _private = {
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  @mixes Controls/_interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
@@ -1450,7 +1470,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _isScrollShown: false,
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
-    _loadOffset: null,
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
     _loadingIndicatorContainerOffsetTop: 0,
@@ -1643,13 +1662,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     updateShadowModeHandler(_: SyntheticEvent<Event>, placeholderSizes: {top: number, bottom: number}): void {
-        const demandNavigation = this._options.navigation && this._options.navigation.view === 'demand';
-        const hasItems = this._listViewModel && this._listViewModel.getCount();
+        const itemsCount = this._listViewModel && this._listViewModel.getCount();
         const hasMoreData = (direction) => this._sourceController && this._sourceController.hasMoreData(direction);
+        const showShadowByNavigation = _private.needShowShadowByNavigation(this._options.navigation, itemsCount);
 
         this._notify('updateShadowMode', [{
-            top: (placeholderSizes.top || !demandNavigation && hasItems && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || !demandNavigation && hasItems && hasMoreData('down')) ? 'visible' : 'auto'
+            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+            bottom: (placeholderSizes.bottom || showShadowByNavigation && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -1706,8 +1725,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _afterMount: function() {
         this._isMounted = true;
+        const container = this._container[0] || this._container;
+        this._viewSize = container.clientHeight;
         if (this._options.itemsDragNDrop) {
-            let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
         }
     },
@@ -1938,10 +1958,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-
-            if (!this._options.virtualScrolling) {
-                this._children.scrollController.checkTriggerVisibilityWithTimeout();
-            }
+            this._children.scrollController.checkTriggerVisibilityWithTimeout();
         }
 
         if (this._restoredScroll !== null) {
@@ -2121,7 +2138,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _commitEditActionHandler: function() {
-        this._children.editInPlace.commitEdit();
+        if (this._options.task1178374430) {
+            this._children.editInPlace.commitAndMoveNextRow();
+        } else {
+            this._children.editInPlace.commitEdit();
+        }
     },
 
     _cancelEditActionHandler: function() {
@@ -2147,7 +2168,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._shouldUpdateItemActions = true;
+        this._updateItemActions();
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
@@ -2310,28 +2331,30 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseEnter: function(event, itemData, nativeEvent) {
-        var
-            dragPosition,
-            dragEntity = this._listViewModel.getDragEntity();
+        if (this._options.itemsDragNDrop) {
+            var
+                dragPosition,
+                dragEntity = this._listViewModel.getDragEntity();
 
-        if (dragEntity) {
-            dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+            if (dragEntity) {
+                dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
 
-            if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                this._listViewModel.setDragTargetPosition(dragPosition);
+                if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+                    this._listViewModel.setDragTargetPosition(dragPosition);
+                }
             }
         }
-        this._notify('itemMouseEnter', [itemData, nativeEvent]);
+        this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
-        this._notify('itemMouseMove', [itemData, nativeEvent]);
-        if (!this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData() && !this._showActions) {
+        this._notify('itemMouseMove', [itemData.item, nativeEvent]);
+        if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
-        this._notify('itemMouseLeave', [itemData, nativeEvent]);
+        this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
     },
     _sortingChanged: function(event, propName, sortingType) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);

@@ -34,7 +34,7 @@ export default interface ISource {
  * <pre>
  *    <Controls.list:View source="{{_source}}" keyProperty="key">
  *        <ws:itemTemplate>
- *            <ws:partial template="Controls/list:ItemTemplate">
+ *            <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
  *                <ws:contentTemplate>
  *                    <span>{{contentTemplate.itemData.item.title}}</span>
  *                </ws:contentTemplate>
@@ -92,7 +92,7 @@ export default interface ISource {
  * <pre>
  *    <Controls.list:View source="{{_source}}" keyProperty="key">
  *        <ws:itemTemplate>
- *            <ws:partial template="Controls/list:ItemTemplate">
+ *            <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
  *                <ws:contentTemplate>
  *                    <span>{{contentTemplate.itemData.item.title}}</span>
  *                </ws:contentTemplate>

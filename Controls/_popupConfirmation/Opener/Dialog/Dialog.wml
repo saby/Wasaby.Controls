@@ -1,3 +1,4 @@
+<Controls.form:PrimaryAction on:triggered="_onTriggerHandler()">
    <Controls._popupConfirmation.Template
       on:keydown="_keyDown()"
       on:keyup="_keyPressed()" ws-tab-cycling="true"
@@ -14,14 +15,13 @@
          </ws:partial>
       </ws:bodyContentTemplate>
       <ws:footerContentTemplate>
-         <ws:partial
-            template="{{_footerTemplate}}"
-            type="{{_options.type}}"
-            yesCaption="{{_options.yesCaption}}"
-            noCaption="{{_options.noCaption}}"
-            cancelCaption="{{_options.cancelCaption}}"
-            okCaption="{{_options.okCaption}}"
-            primaryAction="{{_options.primaryAction}}">
-         </ws:partial>
+          <Controls._popupConfirmation.Footer type="{{_options.type}}"
+                                             yesCaption="{{_options.yesCaption}}"
+                                             noCaption="{{_options.noCaption}}"
+                                             cancelCaption="{{_options.cancelCaption}}"
+                                             okCaption="{{_options.okCaption}}"
+                                             on:result="_sendResultHandler()"
+                                             primaryAction="{{_options.primaryAction}}" />
       </ws:footerContentTemplate>
    </Controls._popupConfirmation.Template>
+</Controls.form:PrimaryAction>

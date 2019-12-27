@@ -33,16 +33,17 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
     private _borderStyle: String;
     private _prepareBorderStyle(popupOptions: INotificationBaseOptions): String {
         switch (popupOptions.style) {
-        case 'warning':
-            return 'warning';
-        case 'success' :
-            return 'success';
-        case 'danger':
-            return 'danger';
-        default:
-            return 'secondary';
+            case 'warning':
+                return 'warning';
+            case 'success' :
+                return 'success';
+            case 'danger':
+                return 'danger';
+            default:
+                return 'secondary';
         }
     }
+
 
     protected _beforeMount(options: INotificationSimpleOptions): void {
         this._borderStyle = this._prepareBorderStyle(options);

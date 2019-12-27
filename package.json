@@ -9,6 +9,7 @@
       "Data/*",
       "Controls/*",
       "Controls-theme/*",
+      "Controls-default-theme/*",
       "Controls-demo/*",
       "SBIS3.CONTROLS/*"
    ],

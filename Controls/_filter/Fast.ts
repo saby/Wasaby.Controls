@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/Fast/Fast');
 import chain = require('Types/chain');
@@ -13,11 +14,13 @@ import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
 
-/**
-       * Контрол "Быстрый фильтр".
-       * Использует выпадающие списки для фильтрации данных.
-       *
-       * <a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+      /**
+       * Контрол "Быстрый фильтр". Использует выпадающие списки для выбора параметров фильтрации.
+       * 
+       * @remark
+       * См. <a href="/materials/demo-ws4-filter-search-new">демо-пример</a>
+       * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+       * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
        *
        * @class Controls/_filter/Fast
        * @extends Core/Control
@@ -26,7 +29,7 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
        * @demo Controls-demo/FastFilter/fastPG
        * @control
        * @public
-       * @deprecated Контрол устарел и в скором времени будет удалён, используйте {@link Controls/filter:View}.
+       * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
        * @author Герасимов А.М.
        */
 
@@ -311,6 +314,10 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
                   properties.filter = itemProperties.filter || {};
                   properties.filter[itemProperties.keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
+                     // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
+                     if (itemProperties.dataLoadCallback) {
+                        itemProperties.dataLoadCallback(items);
+                     }
                      _private.setItems(configs[index], items);
                   });
                   pDef.push(result);
@@ -413,6 +420,7 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
             var selectedKeys = getPropValue(this._items.at(index), 'value');
             var templateOptions = {
                items: this._configs[index].popupItems || this._configs[index]._items,
+               selectorItems: this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),

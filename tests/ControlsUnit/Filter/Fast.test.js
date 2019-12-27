@@ -635,6 +635,7 @@ define(
                vertical: 'adaptive'
             });
             assert.deepStrictEqual(expectedConfig.templateOptions.items, fastFilter._configs[0]._items);
+            assert.deepStrictEqual(expectedConfig.templateOptions.selectorItems, fastFilter._configs[0]._items);
             assert.strictEqual(expectedConfig.templateOptions.selectedKeys[0], 'Россия');
             assert.isTrue(isOpened);
 
@@ -751,7 +752,7 @@ define(
                newConfigItems.items[3].properties.dataLoadCallback = () => {isCallback = true};
                fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                   assert.equal(fastFilter._items.at(3).value, 'Великобритания');
-                  assert.isFalse(isCallback);
+                  assert.isTrue(isCallback);
                   done();
                });
             });

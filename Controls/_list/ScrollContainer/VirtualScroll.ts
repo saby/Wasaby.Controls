@@ -3,6 +3,7 @@ import {Record as entityRecord} from 'Types/entity';
 import {CollectionItem} from 'Controls/display';
 import {IObservable} from 'Types/collection';
 import * as getDimension from 'Controls/Utils/getDimensions';
+import {Collection} from 'Controls/display';
 
 const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
 const DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION = 1 / 4;
@@ -17,7 +18,7 @@ interface IVirtualScrollControllerOptions {
     placeholderChangedCallback: Function;
     saveScrollPositionCallback: Function;
     itemHeightProperty: string;
-    viewModel: unknown;
+    viewModel: Collection<entityRecord>;
     useNewModel: boolean;
     viewportHeight: number;
 }
@@ -32,7 +33,6 @@ export default class VirtualScrollController {
     private startIndex: number = 0;
     private stopIndex: number = 0;
     private savedStartIndex: number = 0;
-    private savedStopIndex: number = 0;
     private itemsHeights: IVirtualItem[] = [];
     private itemsOffsets: number[] = [];
     private _options: IVirtualScrollControllerOptions;
@@ -155,9 +155,24 @@ export default class VirtualScrollController {
             newStartIndex++;
         }
 
-        this._options.indexesChangedCallback(
-            this.startIndex = Math.max(newStartIndex - (Math.trunc(this._options.pageSize / 2)), 0),
-            this.stopIndex = Math.min(this.startIndex + this._options.pageSize, this.itemsCount));
+        this.startIndex = Math.max(newStartIndex - (Math.trunc(this._options.pageSize / 2)), 0);
+        this.stopIndex = Math.min(this.startIndex + this._options.pageSize, this.itemsCount);
+
+        // Если мы скроллим быстро к концу списка, startIndex может вычислиться такой,
+        // что число отрисовываемых записей будет меньше virtualPageSize (например если
+        // в списке из 100 записей по scrollTop вычисляется startIndex == 95, то stopIndex
+        // будет равен 100 при любом virtualPageSize >= 5.
+        // Нам нужно всегда рендерить virtualPageSize записей, если это возможно, т. е. когда
+        // в коллекции достаточно записей. Поэтому если мы находимся в конце списка, пробуем
+        // отодвинуть startIndex назад так, чтобы отрисовывалось нужное число записей.
+        if (this.stopIndex === this.itemsCount) {
+            const missingCount = this._options.pageSize - (this.stopIndex - this.startIndex);
+            if (missingCount > 0) {
+                this.startIndex = Math.max(this.startIndex - missingCount, 0);
+            }
+        }
+
+        this._options.indexesChangedCallback(this.startIndex, this.stopIndex);
         this._options.placeholderChangedCallback(this.calcPlaceholderSize());
 
     }
@@ -192,7 +207,6 @@ export default class VirtualScrollController {
 
     actualizeSavedIndexes(): void {
         this.savedStartIndex = this.startIndex;
-        this.savedStopIndex = this.stopIndex;
     }
 
     getRestoredScrollPosition(direction: IDirection): number {
@@ -254,35 +268,6 @@ export default class VirtualScrollController {
 
     getItemOffset(index: number): number {
         return this.itemsOffsets[index];
-    }
-
-    /**
-     * Проверяет что отображемые записи соответствуют текущему стейту видимых индексов
-     * @returns {boolean}
-     * @remark Иногда триггер может сообщить, что нужно совершить подгрузку, при этом предыдущая пачка записей еще не
-     * отрисовалась.
-     */
-    isLoaded(document?: Document): boolean {
-        let isLoaded = true;
-        let startChildrenIndex = 0;
-        let updateLength = this.stopIndex - this.startIndex;
-
-        for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
-            if (!this._itemsContainer.children[i].className.includes('ws-hidden')) {
-                startChildrenIndex = i;
-                break;
-            }
-        }
-
-        for (let i = 0; i < updateLength; i++) {
-            const child = this.itemsContainer.children[startChildrenIndex + i];
-
-            if (!child || child.className.includes('ws-hidden') || !document.body.contains(child)) {
-                isLoaded = false;
-            }
-        }
-
-        return isLoaded;
     }
 
     /**
@@ -361,7 +346,7 @@ export default class VirtualScrollController {
         this.itemsHeights.splice(itemIndex, itemsHeightsCount);
     }
 
-    private subscribeToModelChange(model: unknown, useNewModel: boolean) {
+    private subscribeToModelChange(model: Collection<entityRecord>, useNewModel: boolean) {
         if (useNewModel) {
             model.subscribe('onCollectionChange', (...args: unknown[]) => {
                 this.collectionChangedHandler.apply(this, [args[0], null, ...args.slice(1)]);
@@ -412,7 +397,6 @@ export default class VirtualScrollController {
 
             if (this.triggerVisibility[direction]) {
                 if (direction === 'up' && this.itemsFromLoadToDirection) {
-                    this.savedStopIndex += newItems.length;
                     this.savedStartIndex += newItems.length;
                     this.setStartIndex(this.startIndex + newItems.length);
                 }

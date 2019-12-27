@@ -14,14 +14,10 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @mixes Controls/interface/IOnlyPositive
  * @mixes Controls/interface/IInputNumber
  * @mixes Controls/_interface/INumberFormat
+ * @mixes Controls/_input/interface/INumberLength
  *
  * @public
- * @demo Controls-demo/Input/SizesAndHeights/Index
- * @demo Controls-demo/Input/FontStyles/Index
- * @demo Controls-demo/Input/TextAlignments/Index
- * @demo Controls-demo/Input/TagStyles/Index
- * @demo Controls-demo/Input/ValidationStatuses/Index
- * @demo Controls-demo/Input/SelectOnClick/Index
+ * @demo Controls-demo/Input/Number/Base/Index
  *
  * @author Красильников А.С.
  */
@@ -39,7 +35,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @mixes Controls/_input/interface/INumberLength
  *
  * @public
- * @demo Controls-demo/Input/Number/NumberPG
+ * @demo Controls-demo/Input/Number/Base/Index
  *
  * @author Красильников А.С.
  */

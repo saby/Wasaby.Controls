@@ -18,20 +18,19 @@
 
 /**
  * @name Controls/list:BaseItemTemplate#clickable
- * @cfg {Boolean} Когда опция установлена в значение true, элемент доступен для клика и используется {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursorкурсор} pointer.
- * В значении false элемент недоступен для клика, и используется курсор default.
+ * @cfg {Boolean} Когда опция установлена в значение true, элемент доступен для клика, и используется {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} pointer. В значении false элемент недоступен для клика, и используется курсор default.
  * @default true
  */
 
 /**
  * @typedef {String} ItemActionsClass
- * @variant controls-itemActionsV_position_bottomRight Опции записи отображаются в правом нижнем углу элемента. 
- * @variant controls-itemActionsV_position_topRight Опции записи отображаются в правом верхнем углу элемента.
+ * @variant controls-itemActionsV_position_bottomRight В правом нижнем углу элемента. 
+ * @variant controls-itemActionsV_position_topRight В правом верхнем углу элемента.
  */
 
 /**
  * @name Controls/list:BaseItemTemplate#itemActionsClass
- * @cfg {ItemActionsClass} Устанавливает положение {@link опций записи} относительно элемента.
+ * @cfg {ItemActionsClass} Задаёт расположение для панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опциями записи} внутри элемента.
  * @default controls-itemActionsV_position_bottomRight
  */
 
@@ -40,14 +39,13 @@
  * @cfg {String|Function|undefined} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
  * @default undefined
  * @remark
- * В области видимости шаблона доступен объект **itemData**.
- * Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
+ * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
  * 
- * Также в области видимости шаблона есть переменная **itemActionsTemplate** — шаблон, который позволяет отобразить панель {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опций записи} в шаблоне.
- * Шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
- * Работа с переменной показана в примере № 4.
+ * Также в области видимости шаблона есть переменная **itemActionsTemplate**, с помощью которой можно отобразить панель {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опций записи} в пользовательском шаблоне. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, что показано в примере № 4.
+ * 
  * @example
- * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/list:View}, однако тоже самое справедливо и для других списочных контролов.
+ * 
+ * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/list:View}, однако то же самое справедливо и для других {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочных контролов}.
  * В примерах №№ 1, 2 и 3 показано, как получить доступ к переменной itemData из области видимости шаблона.
  * 
  * **Пример 1.** Контрол и шаблон настроены в одном WML-файле.
@@ -55,7 +53,7 @@
  * <!-- file1.wml -->
  * <Controls.list:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate">
+ *       <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>
@@ -103,12 +101,12 @@
  * {{contentTemplate.itemData.item.title}}
  * </pre>
  * 
- * **Пример 4.** Для пользовательского шаблона задано отображение опций записи.
+ * **Пример 4.** Контрол и шаблон настроены в одном WML-файле. В пользовательском шаблоне задано отображение опций записи.
  * <pre class="brush: html; highlight: [7]">
  * <!-- file1.wml --> 
  * <Controls.list:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate">
+ *       <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *             <ws:partial template="{{contentTemplate.itemActionsTemplate}}" />

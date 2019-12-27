@@ -2,7 +2,6 @@
  * Библиотека, содержащая интерфейсы, которые используются в нескольких библиотеках.
  * @library Controls/interface
  * @includes ITooltip Controls/_interface/ITooltip
- * @includes IButton Controls/_interface/IButton
  * @includes IIconStyle Controls/_interface/IIconStyle
  * @includes ICaption Controls/_interface/ICaption
  * @includes IIcon Controls/_interface/IIcon
@@ -28,6 +27,7 @@
  * @includes IDateConstructor Controls/_interface/IDateConstructor
  * @includes IApplication Controls/_interface/IApplication
  * @includes IFilter Controls/_interface/IFilter
+ * @includes INavigation Controls/_interface/INavigation
  * @public
  * @author Крайнов Д.О.
  */
@@ -37,7 +37,6 @@
  */
 
 export {default as ITooltip, ITooltipOptions} from './_interface/ITooltip';
-export {default as IButton, IButtonOptions} from './_interface/IButton';
 export {default as IItemTemplate, IItemTemplateOptions} from './_interface/IItemTemplate';
 export {default as IIconStyle, IIconStyleOptions} from './_interface/IIconStyle';
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';
@@ -64,3 +63,4 @@ export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelec
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions} from './_interface/IFilter';
+export {default as INavigation, INavigationOptions, INavigationOptionValue} from './_interface/INavigation';

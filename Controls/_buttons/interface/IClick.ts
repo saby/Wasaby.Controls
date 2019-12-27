@@ -3,6 +3,7 @@
  *
  * @interface Controls/_buttons/interface/IClick
  * @public
+ * @author Красильников А.С.
  */
 
 /*
@@ -10,6 +11,7 @@
  *
  * @interface Controls/_buttons/interface/IClick
  * @public
+ * @author Красильников А.С.
  */
 export interface IClick {
    readonly '[Controls/_buttons/interface/IClick]': boolean;

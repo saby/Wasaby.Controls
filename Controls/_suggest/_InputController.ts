@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
-import emptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
 import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
@@ -8,10 +7,8 @@ import Env = require('Env/Env');
 import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
-import LoadService from './LoadService';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/suggest';
-
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -98,13 +95,13 @@ var _private = {
                filter[HISTORY_KEYS_FIELD] = self._historyKeys;
             }
 
-            _private.setFilter(self, filter);
+            _private.setFilter(self, filter, self._options);
             _private.open(self);
 
             return self._historyKeys;
          });
       } else {
-         _private.setFilter(self, self._options.filter);
+         _private.setFilter(self, self._options.filter, self._options);
          _private.open(self);
       }
    },
@@ -137,8 +134,8 @@ var _private = {
       }
       if (!error || !error.canceled) {
           return new Promise(function(resolve) {
-              requirejs(['tmpl!Controls/_suggest/_InputController/emptyError'], function(result) {
-                  self._emptyTemplate = result;
+              require(['Controls/suggestPopup'], function(result) {
+                  self._emptyTemplate = result.EmptyErrorTemplate;
                   self._children.indicator.hide();
                   resolve();
               });
@@ -186,19 +183,19 @@ var _private = {
          _private.close(self);
       }
    },
-   prepareFilter: function(self, filter, searchValue, tabId, historyKeys) {
+   prepareFilter: function(filter, searchParam, searchValue, minSearchLength, tabId, historyKeys) {
       var preparedFilter = clone(filter) || {};
       if (tabId) {
          preparedFilter.currentTab = tabId;
       }
-      if (self._searchValue.length < self._options.minSearchLength && historyKeys && historyKeys.length) {
+      if (searchValue.length < minSearchLength && historyKeys && historyKeys.length) {
          preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
       }
-      preparedFilter[self._options.searchParam] = searchValue;
+      preparedFilter[searchParam] = searchValue;
       return preparedFilter;
    },
-   setFilter: function(self, filter) {
-      self._filter = this.prepareFilter(self, filter, self._searchValue, self._tabsSelectedKey, self._historyKeys);
+   setFilter: function(self, filter, options) {
+      self._filter = this.prepareFilter(filter, options.searchParam, self._searchValue, options.minSearchLength, self._tabsSelectedKey, self._historyKeys);
    },
    getEmptyTemplate: function(emptyTemplate) {
       return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
@@ -209,7 +206,7 @@ var _private = {
       if (self._options.historyId && self._options.autoDropDown && !shouldSearch && !self._options.suggestState) {
          _private.openWithHistory(self);
       } else if (shouldSearch || self._options.autoDropDown && !self._options.suggestState) {
-         _private.setFilter(self, self._options.filter);
+         _private.setFilter(self, self._options.filter, self._options);
          _private.open(self);
       } else if (!self._options.autoDropDown) {
          //autoDropDown - close only on Esc key or deactivate
@@ -238,11 +235,16 @@ var _private = {
    },
    getHistoryService: function(self) {
       if (!self._historyServiceLoad) {
-         self._historyServiceLoad = LoadService({
-            historyId: self._options.historyId
+         self._historyServiceLoad = new Deferred();
+         require(['Controls/suggestPopup'], function(result) {
+            result.LoadService({
+               historyId: self._options.historyId
+            }).addCallback((result) => {
+               self._historyServiceLoad.callback(result);
+               return result;
+            });
          });
       }
-
       return self._historyServiceLoad;
    },
    getRecentKeys: function(self) {
@@ -293,7 +295,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @control
  * @private
  */
@@ -307,7 +309,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @control
  * @private
  */
@@ -346,9 +348,7 @@ var SuggestLayout = Control.extend({
       this._searchDelay = options.searchDelay;
       this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
-   },
-   _afterMount: function() {
-      _private.setFilter(this, this._options.filter);
+      _private.setFilter(this, options.filter, options);
    },
    _beforeUnmount: function() {
       this._searchResult = null;
@@ -380,7 +380,7 @@ var SuggestLayout = Control.extend({
       }
 
       if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
-         _private.setFilter(this, newOptions.filter);
+         _private.setFilter(this, newOptions.filter, newOptions);
       }
 
       if (!isEqual(this._options.emptyTemplate, newOptions.emptyTemplate)) {
@@ -423,7 +423,7 @@ var SuggestLayout = Control.extend({
       this._searchDelay = this._options.searchDelay;
 
       _private.setSearchValue(self, shouldSearch ? value : '');
-      _private.setFilter(self, self._options.filter);
+      _private.setFilter(self, self._options.filter, self._options);
       _private.updateSuggestState(this);
    },
    _inputActivated: function() {
@@ -448,7 +448,7 @@ var SuggestLayout = Control.extend({
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
       if (this._tabsSelectedKey !== key) {
-         this._filter = _private.prepareFilter(this, this._options.filter, this._searchValue, key, this._historyKeys);
+         this._filter = _private.prepareFilter(this._options.filter, this._options.searchParam, this._searchValue, this._options.minSearchLength, key, this._historyKeys);
       }
 
       // move focus from tabs to input, after change tab
@@ -577,7 +577,9 @@ SuggestLayout.getOptionTypes = function() {
 };
 SuggestLayout.getDefaultOptions = function() {
    return {
-      emptyTemplate: emptyTemplate,
+      emptyTemplate: {
+         templateName: 'Controls/suggestPopup:EmptyTemplate'
+      },
       footerTemplate: {
          templateName: 'Controls/suggestPopup:FooterTemplate'
       },

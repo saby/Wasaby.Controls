@@ -59,10 +59,12 @@ define([
                displayProperty: 'title'
             },
             model = new lists.ListViewModel(cfg),
-            item = model.getItemDataByItem(model.getItemById(1));
+            key = 1,
+            itemData = model.getItemDataByItem(model.getItemById(key)),
+            item = itemData.item;
 
          model._markedKey = 1;
-         version = model._calcItemVersion(item, item.key);
+         version = model._calcItemVersion(item, key);
          assert.include(version, 'MARKED');
 
          model.setDragEntity({
@@ -70,38 +72,64 @@ define([
                return [1, 2];
             }
          });
-         version = model._calcItemVersion(item, item.key);
+         version = model._calcItemVersion(item, key);
          assert.include(version, 'DRAG_ITEM');
 
          model._dragTargetPosition = {
-            item: item.item,
-            position: "AFTER"
+            item: item,
+            position: 'AFTER'
          };
-         version = model._calcItemVersion(item, item.key);
+         version = model._calcItemVersion(item, key);
          assert.include(version, 'DRAG_POSITION_AFTER');
 
          model._dragTargetPosition = {
-            item: item.item,
-            position: "BEFORE"
+            item: item,
+            position: 'BEFORE'
          };
-         version = model._calcItemVersion(item, item.key);
+         version = model._calcItemVersion(item, key);
          assert.include(version, 'DRAG_POSITION_BEFORE');
 
-         model._reloadedKeys[item.key] = true;
-         version = model._calcItemVersion(item, item.key);
+         model._reloadedKeys[key] = true;
+         version = model._calcItemVersion(item, key);
          assert.include(version, 'RELOADED');
 
          model.clearReloadedMarks();
-         version = model._calcItemVersion(item, item.key);
+         version = model._calcItemVersion(item, key);
          assert.notInclude(version, 'RELOADED');
 
-         model.setSwipeItem(item);
-         version = model._calcItemVersion(item, item.key);
+         model.setSwipeItem(itemData);
+         version = model._calcItemVersion(item, key);
          assert.include(version, 'SWIPE');
 
          model.setSwipeItem(null);
-         version = model._calcItemVersion(item, item.key);
+         version = model._calcItemVersion(item, key);
          assert.notInclude(version, 'SWIPE');
+
+         model.setItemActions(model._items.at(0), [{
+            id: 0,
+            title: 'first'
+         }]);
+         version = model._calcItemVersion(item, key);
+         assert.include(version, 'ITEM_ACTION_1');
+
+         model.setItemActions(model._items.at(0), [{
+            id: 0,
+            title: 'second'
+         }]);
+         version = model._calcItemVersion(item, key);
+         assert.include(version, 'ITEM_ACTION_2');
+
+         model.setItemActions(model._items.at(0), [{
+            id: 0,
+            title: 'second'
+         }]);
+         version = model._calcItemVersion(item, key);
+         assert.include(version, 'ITEM_ACTION_2');
+
+         assert.include(version, 'WITHOUT_EDITING');
+         model._setEditingItemData({ key: 21, item: {} });
+         version = model._calcItemVersion(item, key);
+         assert.include(version, 'WITH_EDITING');
       });
 
       it('getCurrent', function() {

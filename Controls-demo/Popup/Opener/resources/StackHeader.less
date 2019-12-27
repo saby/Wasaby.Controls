@@ -11,6 +11,7 @@
   align-items: flex-end;
   display: flex;
   height: 60px;
+  overflow: hidden;
 }
 
 .mr-CreateMerge__top {
@@ -27,15 +28,13 @@
 }
 
 .rowWithLabel_label {
-  height: 24px;
   padding-right: 8px;
   color: #8991A9;
-  font-size: 14px;
 }
 
 .rowWithLabel__row {
   flex: 1;
-  height: 20px;
+  font-size: inherit;
   border: 1px solid #EAEAEA;
   overflow: auto;
 }
@@ -44,4 +43,9 @@
   justify-content: center;
   align-items: center;
   display: flex;
+}
+
+//ширина панели по шаблону
+.customHeader {
+  width: 800px;
 }

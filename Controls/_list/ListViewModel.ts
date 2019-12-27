@@ -6,6 +6,7 @@ import entityLib = require('Types/entity');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
+import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
 import { CssClassList } from "../Utils/CssClassList";
@@ -91,6 +92,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _draggingItemData: null,
     _dragTargetPosition: null,
     _actions: null,
+    _actionsVersions: null,
     _selectedKeys: null,
     _markedKey: null,
     _hoveredItem: null,
@@ -100,6 +102,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     constructor: function(cfg) {
         var self = this;
         this._actions = {};
+        this._actionsVersions = {};
         ListViewModel.superclass.constructor.apply(this, arguments);
 
         if (this._items && cfg.markerVisibility !== 'hidden') {
@@ -236,11 +239,15 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._reloadedKeys[key]) {
             version = 'RELOADED_' + version;
         }
+        version = (this._editingItemData ? 'WITH_EDITING_' : 'WITHOUT_EDITING_') + version;
         if (this._editingItemData && this._editingItemData.key === key) {
             version = 'EDITING_' + version;
         }
         if (this._swipeItem && this._swipeItem.key === key) {
             version = 'SWIPE_' + version;
+        }
+        if (this._actionsVersions.hasOwnProperty(key)) {
+            version = 'ITEM_ACTION_' + this._actionsVersions[key] + version;
         }
 
         return version;
@@ -574,12 +581,19 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (item.get) {
             const id = item.get(this._options.keyProperty);
             if (this.hasItemById(id, this._options.keyProperty)) {
+               if (isEqual(this._actions[id], actions)) {
+                   return 'none';
+               }
+               const result = Object.keys(this._actions).length ? 'partial' : 'all';
                this._actions[id] = actions;
+               this._actionsVersions[id] = this._actionsVersions[id] ? ++this._actionsVersions[id] : 1;
                this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
+               return result;
             } else if (this._editingItemData && this._editingItemData.key === id) {
                 this._editingItemData.itemActions = actions;
                 this._editingItemData.drawActions = !!(actions && actions.all.length) ||
                    !!(this._options.editingConfig && this._options.editingConfig.toolbarVisibility);
+                return 'all';
             }
         }
     },

@@ -12,7 +12,7 @@ interface IValidateResult {
 
 /**
  * Контрол, регулирующий валидацию формы.
- * Валидация запускается при вызове метода submit ({@link Controls/_validate/FormController#submit})
+ * Валидация запускается при вызове метода {@link Controls/_validate/FormController#submit submit}.
  * @class Controls/_validate/Controller
  * @extends Core/Control
  * @control
@@ -111,8 +111,9 @@ export default Form;
  */
 
 /**
+ * Запускает валидацию.
  * @name Controls/_validate/Controller#submit
- * @description Запуск валидации.
+ * @function
  * @returns {Deferred}
  * @example
  * WML
@@ -178,12 +179,14 @@ export default Form;
  */
 
 /**
+ * Return the result of validation
  * @name Controls/_validate/Controller#isValid
- * @description Return the result of validation
+ * @function
  * @returns {Array}
  */
 /*
+ * Возвращает результат валидации. 
  * @name Controls/_validate/Controller#isValid
- * @description Возвращает результат валидации.
+ * @function
  * @returns {Array}
  */

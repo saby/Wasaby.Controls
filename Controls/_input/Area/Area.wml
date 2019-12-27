@@ -3,6 +3,7 @@
                         viewModel="{{_viewModel}}"
                         size="{{_options.size}}"
                         style="{{_options.style}}"
+                        validationStatus="{{_options.validationStatus}}"
                         multiline="{{_multiline}}"
                         tagStyle="{{_options.tagStyle}}"
                         fontStyle="{{_options.fontStyle}}"

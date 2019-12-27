@@ -142,9 +142,9 @@
 .controls-Grid__cell_fixed_theme-@{themeName} {
    z-index: 3;
    background-color: @background-color_Grid-row-sticky;
-   // stickyHeader считает что колонка не зафиксированна если повесить overflow-y: hidden;
+   // stickyHeader считает что колонка не зафиксированна если повесить overflow-y: hidden;, а без overflow-x: hidden оявляется горизонтальный скролл
    &:not(.controls-StickyHeader) {
-      overflow-y: hidden;
+      overflow: hidden;
    }
 }
 
@@ -205,6 +205,10 @@
          > .controls-itemActionsV {
             display: inline-block;
          }
+      }
+      .controls-BreadCrumbsView__menu__dots {
+         background-color: @background-color_Grid-row_hover;
+         box-shadow: -1px 0px 9px 14px @background-color_Grid-row_hover;
       }
    }
 
@@ -429,7 +433,7 @@
 }
 
 .controls-Grid__cell_spacingBackButton_with_multiSelection_theme-@{themeName} {
-   margin-left: -@width_CheckBox__clickArea;
+   margin-left: -@click-area_width_checkbox;
 }
 
 .controls-GridView__item_active_theme-@{themeName} {
@@ -439,8 +443,8 @@
 // Checkbox styles
 .controls-Grid__header-cell-checkbox_theme-@{themeName},
 .controls-Grid__row-cell-checkbox_theme-@{themeName} {
-   min-width: @width_CheckBox__clickArea;
-   max-width: @width_CheckBox__clickArea;
+   min-width: @click-area_width_checkbox;
+   max-width: @click-area_width_checkbox;
 }
 
 .controls-GridView__footer__paddingLeft_withCheckboxes_theme-@{themeName} {

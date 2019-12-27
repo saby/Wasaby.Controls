@@ -239,13 +239,14 @@ var
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
+    * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
-    * @mixes Controls/interface/INavigation
+    * @mixes Controls/_interface/INavigation
     * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
@@ -271,13 +272,14 @@ var
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
+    * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
-    * @mixes Controls/interface/INavigation
+    * @mixes Controls/_interface/INavigation
     * @mixes Controls/_interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList

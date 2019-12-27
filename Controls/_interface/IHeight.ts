@@ -29,6 +29,7 @@ export default interface IHeight {
  * @variant 2xl
  * @variant default
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
+ * @demo Controls-demo/Input/SizesAndHeights/Index
  * @remark
  * Высота задается константой из стандартного набора размеров, который определен для текущей темы оформления.
  * @example

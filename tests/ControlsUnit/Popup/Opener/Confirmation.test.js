@@ -1,13 +1,10 @@
 define([
-   'Controls/popup',
-   'Controls/popupTemplate',
-   'Core/Deferred',
-   'Core/polyfill/PromiseAPIDeferred'
-], (
+      'Controls/popup',
+      'Controls/popupTemplate',
+      'Core/polyfill/PromiseAPIDeferred'
+   ], (
    popup,
-   popupTemplate,
-   Deferred ) =>
-   {
+   popupTemplate) => {
       'use strict';
 
       var popupOpener;
@@ -19,10 +16,12 @@ define([
             dialog = new popupTemplate.ConfirmationDialog();
             popupOpener._beforeMount({});
             popupOpener._children.LoadingIndicator = {
-               toggleIndicator: () => {}
+               toggleIndicator: () => {
+               }
             };
             popupOpener._children.opener = {
-               open: () => {}
+               open: () => {
+               }
             };
          });
 
@@ -44,15 +43,16 @@ define([
             popupOpener._openPopup = () => Promise.resolve();
             let def = popupOpener.open({});
 
-            assert.equal(def instanceof Deferred, true);
+            assert.equal(def instanceof Promise, true);
          });
          it('getConfirmationConfig', () => {
             let templateOptions = {};
-            let popupOptions = popup.Confirmation._getConfirmationConfig(templateOptions, {});
+            let popupOptions = popup.Confirmation._getConfig(templateOptions, {});
             let config = {
                template: 'Controls/popupTemplate:ConfirmationDialog',
                modal: true,
                autofocus: true,
+               isCentered: true,
                className: 'controls-Confirmation_popup',
                templateOptions: {
                   closeHandler: {}

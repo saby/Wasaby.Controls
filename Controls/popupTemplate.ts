@@ -11,7 +11,8 @@
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes INotification Controls/_popupTemplate/Notification/interface/INotification
  * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
- * 
+ * @includes IPopupTemplateBaseOptions Controls/_popupTemplate/interface/IPopupTemplateBase
+ * @includes Sticky Controls/_popupTemplate/Sticky
  * @public
  * @author Крайнов Д.О.
  */
@@ -27,11 +28,12 @@
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes IPopupTemplate Controls/_popupTemplate/interface/IPopupTemplate
+ * @includes IPopupTemplateBaseOptions Controls/_popupTemplate/interface/IPopupTemplateBase
+ * @includes Sticky Controls/_popupTemplate/Sticky
  * @public
  * @author Крайнов Д.О.
  */
 
-import CloseButton = require('Controls/_popupTemplate/CloseButton');
 import Dialog = require('Controls/_popupTemplate/Dialog');
 import { Template as Confirmation, DialogTemplate as ConfirmationDialog } from 'Controls/popupConfirmation';
 import InfoBox = require('Controls/_popupTemplate/InfoBox');
@@ -39,8 +41,11 @@ export {default as Notification} from 'Controls/_popupTemplate/Notification/Base
 export {default as NotificationSimple} from 'Controls/_popupTemplate/Notification/Simple';
 export {default as StackHeader} from 'Controls/_popupTemplate/Stack/resources/Header';
 export {default as Stack} from 'Controls/_popupTemplate/Stack';
+export {default as Sticky} from 'Controls/_popupTemplate/Sticky';
 export {default as IPopupTemplate, IPopupTemplateOptions} from 'Controls/_popupTemplate/interface/IPopupTemplate';
 export {default as INotification, INotificationOptions} from 'Controls/_popupTemplate/Notification/interface/INotification';
+export {default as CloseButton} from 'Controls/_popupTemplate/CloseButton';
+export {default as IPopupTemplateBaseOptions} from 'Controls/_popupTemplate/interface/IPopupTemplateBase';
 
 import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 import DialogController = require('Controls/_popupTemplate/Dialog/Opener/DialogController');
@@ -56,7 +61,6 @@ import templateInfoBox = require('Controls/_popupTemplate/InfoBox/Opener/resourc
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
 
 export {
-   CloseButton,
    Dialog,
    Confirmation,
    InfoBox,

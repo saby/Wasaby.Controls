@@ -1,6 +1,6 @@
 <div attr:class="controls-demo__indicator_container">
-   <div attr:class="controls-demo__indicator_buttons">
-      <Controls.buttons:Button caption="Open (will be closed after 3s)" class="controls-demo__indicator_open" on:click="_open()"/>
+   <div attr:class="controls-demo__indicator_buttons" style="margin-bottom: 10px;">
+      <a attr:class="ws-link" on:click="_open(_options.time)">Open (Closes after 3 seconds.)</a>
    </div>
 
    <Controls.LoadingIndicator
@@ -17,22 +17,7 @@
    >
       <div>
          <div>
-            text
-         </div>
-         <div>
-            text
-         </div>
-         <div>
-            text
-         </div>
-         <div>
-            text
-         </div>
-         <div>
-            text
-         </div>
-         <div>
-            text
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
          </div>
       </div>
    </Controls.LoadingIndicator>

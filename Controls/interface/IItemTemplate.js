@@ -24,13 +24,13 @@ define('Controls/interface/IItemTemplate', [
     * @default Controls/list:ItemTemplate
     * @remark
     * См. <a href="/materials/demo-ws4-list-item-template">демо-пример</a>.
-    * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
+    * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
     * Шаблон может быть переопределён с помощью {@link Controls/interface/IItemTemplate#itemTemplateProperty itemTemplateProperty}.
     * @example
     * <pre class="brush: html">
     * <Controls.list:View>
     *    <ws:itemTemplate>
-    *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}"> 
+    *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}"> 
     *          <ws:contentTemplate>
     *             {{contentTemplate.itemData.item.title}}
     *          </ws:contentTemplate>
@@ -60,7 +60,7 @@ define('Controls/interface/IItemTemplate', [
     * <pre>
     *    <Controls.list:View>
     *       <ws:itemTemplate>
-    *          <ws:partial template="Controls/list:ItemTemplate">
+    *          <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}"> 
     *             <ws:contentTemplate>
     *                <span>{{contentTemplate.itemData.item.description}}</span>
     *             </ws:contentTemplate>

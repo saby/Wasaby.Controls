@@ -17,12 +17,12 @@
     </ws:if>
     <ws:else>
         <ws:if data="{{itemData.column.textOverflow}}">
-            <div class="controls-Grid__cell_{{itemData.column.textOverflow}} controls-Grid__editArrow-cellContent_theme-{{_options.theme}} controls-Grid__editArrow-overflow-{{itemData.column.textOverflow ? itemData.column.textOverflow}}_theme-{{_options.theme}}" title="{{itemData.column.template ? '' : itemData.item[itemData.column.displayProperty] }}">
+            <div class="controls-Grid__cell_{{itemData.column.textOverflow}} {{itemData.showEditArrow ? ('controls-Grid__editArrow-cellContent_theme-' + _options.theme + ' controls-Grid__editArrow-overflow-' + (itemData.column.textOverflow ? itemData.column.textOverflow + '_theme-' +_options.theme))}}" title="{{itemData.column.template ? '' : itemData.item[itemData.column.displayProperty] }}">
                 <ws:partial template="defaultCellContent"/>
             </div>
         </ws:if>
         <ws:else>
-            <ws:partial template="defaultCellContent" attr:class="controls-Grid__editArrow-cellContent_theme-{{_options.theme}} controls-Grid__editArrow-overflow-{{itemData.column.textOverflow ? itemData.column.textOverflow}}_theme-{{_options.theme}}"></ws:partial>
+            <ws:partial template="defaultCellContent" attr:class="{{itemData.showEditArrow ? 'controls-Grid__editArrow-cellContent_theme-' + _options.theme}}"></ws:partial>
         </ws:else>
         <ws:if data="{{itemData.showEditArrow && itemData.columnIndex === 0}}">
             <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>

@@ -159,7 +159,6 @@ var _private = {
             break;
          case 'footerClick':
             this._notify('footerClick', [result.event]);
-            _private.closeDropdownList(this);
       }
    },
 
@@ -234,7 +233,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IDropdownEmptyText
@@ -255,7 +254,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/interface/IDropdownEmptyText

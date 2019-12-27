@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ISlider, ISliderOptions} from './interface/ISlider';
+import SliderBase from './_SliderBase';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -59,7 +60,7 @@ const maxPercentValue = 100;
  */
 
 
-class Base extends Control<ISliderBaseOptions> implements ISlider {
+class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
@@ -96,13 +97,6 @@ class Base extends Control<ISliderBaseOptions> implements ISlider {
       }
    }
 
-   private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-      const targetX = Utils.getNativeEventPageX(event);
-      const box = this._children.area.getBoundingClientRect();
-      const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
-      return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
-   }
-
    private _setValue(val: number): void {
       this._notify('valueChanged', [val]);
    }
@@ -135,27 +129,6 @@ class Base extends Control<ISliderBaseOptions> implements ISlider {
       }
    }
 
-   private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
-      if (!this._options.readOnly) {
-         this._tooltipPosition = this._getValue(event);
-         this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
-            : this._tooltipPosition;
-      }
-   }
-
-   private _onMouseLeave(event: SyntheticEvent<MouseEvent>): void {
-      if (!this._options.readOnly) {
-         this._tooltipValue = null;
-         this._tooltipPosition = null;
-      }
-   }
-
-   private _onMouseUp(event: SyntheticEvent<MouseEvent>): void {
-      if (!this._options.readOnly) {
-         this._isDrag = false;
-      }
-   }
-
    private _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
@@ -168,32 +141,18 @@ class Base extends Control<ISliderBaseOptions> implements ISlider {
    static _theme: string[] = ['Controls/slider'];
 
    static getDefaultOptions(): object {
-      return {
+      return {...{
          theme: 'default',
-         size: 'm',
-         borderVisible: false,
-         minValue: undefined,
-         maxValue: undefined,
-         scaleStep: undefined,
-         value: undefined,
-         precision: 0
-      };
-   }
+         value: undefined
+      }, ...SliderBase.getDefaultOptions()};
 
-   static getOptionTypes(): object {
-      return {
-         size: EntityDescriptor(String).oneOf([
-            's',
-            'm'
-         ]),
-         borderVisible: EntityDescriptor(Boolean),
-         minValue: EntityDescriptor(Number).required,
-         maxValue: EntityDescriptor(Number).required,
-         scaleStep: EntityDescriptor(Number),
-         value: EntityDescriptor(Number),
-         precision: EntityDescriptor(Number)
-      };
    }
+   static getOptionTypes(): object {
+      return {...{
+         value: EntityDescriptor(Number)
+      }, ...SliderBase.getOptionTypes()};
+
+}
 }
 
 export default Base;

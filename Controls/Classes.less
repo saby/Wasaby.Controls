@@ -71,6 +71,10 @@
   fill: @icon-color;
   color: @icon-color;
 }
+.controls-icon_style-contrast_theme-@{themeName} {
+  fill: @contrast_icon-color;
+  color: @contrast_icon-color;
+}
 .controls-icon_style-readonly_theme-@{themeName} {
   fill: @readonly_color;
   color: @readonly_color;
@@ -167,15 +171,15 @@
 }
 .controls-invalidAccent-border_theme-@{themeName}{
   border: @border-thickness solid @invalid_border-color;
-  left: -@invalid_padding-horizontal;
-  bottom: -@invalid_padding-vertical;
+  left: -(@invalid_padding-horizontal + @border-thickness);
+  bottom: -(@invalid_padding-vertical + @border-thickness);
   padding: @invalid_padding-vertical @invalid_padding-horizontal;
   background-color: @invalid_focus_background-color;
 }
 .controls-invalid-border_theme-@{themeName}{
   border: @border-thickness solid @invalid_border-color;
-  left: -@invalid_padding-horizontal;
-  bottom: -@invalid_padding-vertical;
+  left: -(@invalid_padding-horizontal + @border-thickness);
+  bottom: -(@invalid_padding-vertical + @border-thickness);
   padding: @invalid_padding-vertical @invalid_padding-horizontal;
 }
 .controls-invalid-container{

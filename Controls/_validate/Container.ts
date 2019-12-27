@@ -15,8 +15,9 @@ export interface IValidateConfig {
 }
 
 /**
- * Контрол, регулирующий валидацию своего контента.
- * Валидация запускается вызовом метода validate ({@link Controls/_validate/Container#validate})
+ * Контрол, регулирующий валидацию своего контента. Валидация запускается вызовом метода {@link Controls/_validate/Container#validate validate}.
+ * @remark
+ * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/Container
  * @extends Core/Control
  * @control
@@ -208,7 +209,14 @@ class ValidateContainer extends Control {
 
         return resultDeferred;
     }
-
+    /**
+     * 
+     * Запускает валидацию.
+     * @function
+     * @name Controls/_validate/Container#validate
+     * @see setValidationResult
+     * @see isValid
+     */
     validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
@@ -219,15 +227,19 @@ class ValidateContainer extends Control {
     }
 
     /**
+     * Устанавливает результат валидации.
      * @name Controls/_validate/Container#setValidationResult
-     * @description Устанавливает значение validationResult.
-     * @param validationResult
+     * @function
+     * @param {null|Boolean|String} validationResult Результат валидации.
+     * @see isValid
+     * @see validate
      */
 
     /*
+     * Set the validationResult from the outside
      * @name Controls/_validate/Container#setValidationResult
-     * @description Set the validationResult from the outside
-     * @param validationResult
+     * @function
+     * @param {null|Boolean|String} validationResult
      */
     setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
         this._validationResult = validationResult;
@@ -242,14 +254,18 @@ class ValidateContainer extends Control {
     }
 
     /**
+     * Возвращает результат валидации.
      * @name Controls/_validate/Container#isValid
-     * @description Получает значение validationResult.
+     * @function
      * @returns {undefined|Array}
+     * @see setValidationResult
+     * @see validate
      */
 
     /*
+     * Get the validationResult
      * @name Controls/_validate/Container#isValid
-     * @description Get the validationResult
+     * @function
      * @returns {undefined|Array}
      */
     isValid(): ValidResult {
@@ -349,13 +365,13 @@ export default ValidateContainer;
  * @cfg {Content} The content to which the logic of validation is added.
  */
 
-/**
- * @name Controls/_validate/Container#validators
- * @cfg {Array} The function of validation.
- */
 /*
  * @name Controls/_validate/Container#validators
- * @cfg {Array} Функция (или массив функций) валидации.
+ * @cfg {Array.<Function>|Function} The function of validation.
+ */
+/**
+ * @name Controls/_validate/Container#validators
+ * @cfg {Array.<Function>|Function} Функция (или массив функций) валидации.
  */
 
 /**

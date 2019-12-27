@@ -6,16 +6,17 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
 
 /**
  * Хлебные крошки.
- * <a href="/materials/demo-ws4-breadcrumbs">Демо-пример</a>.
- *
+ * @remark
+ * См. <a href="/materials/demo-ws4-breadcrumbs">демо-пример</a>.
+ * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/ здесь}.
  * @class Controls/_breadcrumbs/Path
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
- * @mixes Controls/_breadcrumbs/BreadCrumbsStyles
  * @control
- * @private
+ * @public
  * @author Авраменко А.С.
  * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
+ * @see Controls/_breadcrumbs/HeadingPath
  */
 
 /*

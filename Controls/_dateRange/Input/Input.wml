@@ -42,21 +42,19 @@
       on:tagClick="_proxyEvent('endTagClick')"
       on:tagHover="_proxyEvent('endTagHover')">
    </Controls.input:DateBase>
-   <Controls.buttons:Button
-      attr:class="controls-Input-DateRange__button"
-      attr:tabindex="-1"
-      fontColorStyle="link"
-      viewMode="link"
-      icon="icon-Calendar2 controls-Input-DateRange__icon-size"
-      iconStyle="secondary"
-      readOnly="{{false}}"
-      on:click="_openDialog()"
-   />
+   <span class="controls-Input-DateRange__buttonWrapper" attr:tabindex="-1">
+      <span class="ws-flexbox ws-align-items-center controls-Input-DateRange__buttonBaseLine">
+         <span
+            attr:class="controls-Input-DateRange__button controls-icon icon-Calendar2 controls-icon_style-secondary_theme-{{_options.theme}}"
+            iconStyle="secondary"
+            on:click="_openDialog()">
+         </span>
+      </span>
+   </span>
    <Controls.popup:Sticky
       name="opener"
       closeOnOutsideClick="{{true}}"
       actionOnScroll="close"
-      _vdomOnOldPage="{{_isVdomDialog()}}"
    >
    </Controls.popup:Sticky>
 </div>

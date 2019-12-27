@@ -6,6 +6,7 @@
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
@@ -32,13 +33,13 @@
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
  * @includes Paging Controls/_paging/Paging
- * @includes VirtualScroll Controls/_list/Controllers/VirtualScroll
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -54,6 +55,7 @@ import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
+import ColumnsView = require('Controls/_list/Columns');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
@@ -87,6 +89,7 @@ import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
+import {IList} from './_list/interface/IList';
 
 import {Paging} from 'Controls/paging';
 
@@ -97,6 +100,7 @@ export {
     GroupTemplate,
     ItemTemplate,
     View,
+    ColumnsView,
     Mover,
     Remover,
     Paging,
@@ -129,5 +133,6 @@ export {
     ItemsViewModel,
     HotKeysContainer,
     InertialScrolling,
-    IVirtualScrollConfig
+    IVirtualScrollConfig,
+    IList
 };

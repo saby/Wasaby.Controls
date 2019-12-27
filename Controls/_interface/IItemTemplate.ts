@@ -26,9 +26,9 @@ export interface IItemTemplateOptions {
      * <pre>
      *    <Controls.list:View>
      *       <ws:itemTemplate>
-     *          <ws:partial template="Controls/list:ItemTemplate">
+     *          <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
      *             <ws:contentTemplate>
-     *                <span>{{itemTemplate.itemData.item.description}}</span>
+     *                <span>{{contentTemplate.itemData.item.description}}</span>
      *             </ws:contentTemplate>
      *          </ws:partial>
      *       </ws:itemTemplate>
@@ -42,7 +42,7 @@ export interface IItemTemplateOptions {
  * Интерфейс для контролов с возможностью настройки отображения элементов.
  *
  * @interface Controls/_interface/IItemTemplate
- * @public
+ * @private
  * @author Герасимов А.М.
  */
 interface IItemTemplate {

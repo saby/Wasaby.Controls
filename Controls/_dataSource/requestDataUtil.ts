@@ -11,16 +11,20 @@ import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 
 type HistoryItems = object[];
+type SortingObject = object[];
+type FilterObject = Record<string, unknown>;
 
 interface ISorting {
-   sorting: object[];
+   sorting: SortingObject;
 }
 interface IFilter {
-   filter: Record<string, unknown>;
+   filter: FilterObject;
    historyItems: HistoryItems;
 }
 export interface IRequestDataResult {
    data: RecordSet;
+   filter?: FilterObject;
+   sorting?: SortingObject;
    historyItems?: HistoryItems;
 }
 
@@ -30,8 +34,8 @@ export interface ISourceConfig {
    fastFilterSource?: SbisService;
    navigation?: object;
    historyId?: string;
-   filter?: object;
-   sorting?: object;
+   filter?: FilterObject;
+   sorting?: SortingObject;
    historyItems?: HistoryItems;
    propStorageId: string;
 }
@@ -51,12 +55,17 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    }
 
    return Promise.all([filterPromise, sortingPromise]).then(([filterObject, sortingObject]: [IFilter, ISorting]) => {
-      return sourceController.load(filterObject ? filterObject.filter : cfg.filter, sortingObject ? sortingObject.sorting : cfg.sorting).then((data: RecordSet) => {
-         let result = {data};
-         if (filterObject) {
-            result.historyItems = filterObject.historyItems;
-         }
-         return result;
+      const filter = filterObject ? filterObject.filter : cfg.filter;
+      const historyItems = filterObject ? filterObject.historyItems : null;
+      const sorting = sortingObject ? sortingObject.sorting : cfg.sorting;
+
+      return sourceController.load(filter, sorting).then((data: RecordSet) => {
+         return {
+            data,
+            filter,
+            sorting,
+            historyItems
+         };
       });
    });
 }

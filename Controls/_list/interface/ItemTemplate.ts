@@ -11,7 +11,7 @@
  * <pre class="brush: html">
  * <Controls.list:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}"> 
+ *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}"> 
  *          <ws:contentTemplate>
  *             {{contentTemplate.itemData.item.title}}
  *          </ws:contentTemplate>
@@ -20,14 +20,14 @@
  * </Controls.list:View>
  * </pre>
  * @remark
- * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
  */
 
 /**
  * @name Controls/list:ItemTemplate#displayProperty
  * @cfg {String} Устанавливает имя поля элемента, данные которого будут отображены в шаблоне.
  * @remark
- * Опцию не используют, если задан пользовательский шаблон в опции {@link Controls/list:BaseItemTemplate#contentTemplate}.
+ * Опцию не используют, если задан пользовательский шаблон в опции {@link Controls/list:BaseItemTemplate#contentTemplate contentTemplate}.
  * @default title
  */
 

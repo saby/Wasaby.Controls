@@ -8,7 +8,6 @@ import TemplateUtil = require('SBIS3.CONTROLS/Utils/TemplateUtil');
 import FilterPanelUtils = require('SBIS3.CONTROLS/Utils/FilterPanelUtils');
 import converterFilterStructure = require('Controls/_filterPopup/converterFilterStructure');
 import 'SBIS3.CONTROLS/Button/IconButton';
-import 'i18n!SBIS3.CONTROLS/Filter/Button';
 import 'css!SBIS3.CONTROLS/Filter/Button/FilterButton';
 
 

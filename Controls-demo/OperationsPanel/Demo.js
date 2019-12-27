@@ -6,14 +6,20 @@ define('Controls-demo/OperationsPanel/Demo', [
    'Controls-demo/OperationsPanel/Demo/Data',
    'Controls/list',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
-   'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
+   'wml!Controls-demo/OperationsPanel/Demo/PersonInfo',
+   'wml!Controls-demo/OperationsPanel/Demo/resources/filterButtonEngineTemplate',
+   'wml!Controls-demo/OperationsPanel/Demo/resources/filterPanelItemsTemplate'
 ], function(Control, template, source, TreeMemory, Data, lists) {
    'use strict';
 
    var filterButtonData = [{
       id: 'owner',
       resetValue: '0',
-      value: '0'
+      value: '0',
+      source: new source.Memory({
+         data: Data.owners,
+         keyProperty: 'owner'
+      })
    }];
 
    return Control.extend({
@@ -152,16 +158,6 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._children.remover.removeItems({
             selected: this._selectedKeys,
             excluded: this._excludedKeys
-         });
-      },
-
-      _afterItemsMove: function(event, items, target, position) {
-         this._children.operationsResultOpener.open({
-            templateOptions: {
-               operationsCount: items.length,
-               operationsSuccess: items.length,
-               title: 'Move items'
-            }
          });
       },
 

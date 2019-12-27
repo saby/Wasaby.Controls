@@ -3,7 +3,7 @@ import Deferred = require('Core/Deferred');
 import Env = require('Env/Env');
 import ScrollData = require('Controls/_scroll/Scroll/Context');
 import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
-import stickyHeaderUtils = require('Controls/_scroll/StickyHeader/Utils');
+import {isStickySupport} from 'Controls/_scroll/StickyHeader/Utils';
 import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
 import template = require('wml!Controls/_scroll/Scroll/Scroll');
@@ -49,14 +49,15 @@ import {Logger} from "UI/Utils";
  */
 
 /**
- * @event scroll Скроллируемая область.
- * @param {SyntheticEvent} eventObject.
- * @param {Number} scrollTop Скролл располагается сверху относительно контейнера.
+ * @event Происходит при скроллировании области.
+ * @name Controls/_scroll/Container#scroll 
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Number} scrollTop Смещение контента сверху относительно контейнера.
  */
 
 /*
  * @event scroll Scrolling content.
- * @param {SyntheticEvent} eventObject.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject.
  * @param {Number} scrollTop Top position of content relative to container.
  */
 
@@ -167,7 +168,7 @@ var
          // The scrollHeight returned by the browser is more, because of the invisible elements
          // that climbs outside of the fixed headers (shadow and observation targets).
          // We take this into account when calculating. 8 pixels is the height of the shadow.
-         if ((Env.detection.firefox || Env.detection.isIE) && stickyHeaderUtils.isStickySupport()) {
+         if ((Env.detection.firefox || Env.detection.isIE) && isStickySupport()) {
             scrollHeight -= _private.SHADOW_HEIGHT;
          }
 
@@ -235,7 +236,18 @@ var
       setScrollTop: function(self, scrollTop) {
          self._children.scrollWatcher.setScrollTop(scrollTop);
          self._scrollTop = _private.getScrollTop(self, self._children.content);
-         self._notify('scroll', [self._scrollTop]);
+         _private.notifyScrollEvents(self, scrollTop);
+      },
+
+      notifyScrollEvents: function(self, scrollTop) {
+         self._notify('scroll', [scrollTop]);
+         const eventCfg = {
+             type: 'scroll',
+             target: self._children.content,
+             currentTarget: self._children.content,
+             _bubbling: false
+         };
+         self._children.scrollDetect.start(new SyntheticEvent(null, eventCfg), scrollTop);
       },
 
       calcCanScroll: function(self) {
@@ -323,7 +335,7 @@ var
       proxyEvent: function(self, event, eventName, args) {
          // Forwarding bubbling events makes no sense.
          if (!event.propagating()) {
-            self._notify(eventName, args);
+            return self._notify(eventName, args);
          }
       }
    },
@@ -776,7 +788,7 @@ var
             // текущей, установим ее при окончании перетаскивания
             if (this._scrollTopAfterDragEnd !== this._scrollTop) {
                this._scrollTop = this._scrollTopAfterDragEnd;
-               this._notify('scroll', [this._scrollTop]);
+               _private.notifyScrollEvents(this, this._scrollTop);
             }
             this._scrollTopAfterDragEnd = undefined;
          }
@@ -884,7 +896,7 @@ var
       },
 
       itemClick: function(event) {
-         _private.proxyEvent(this, event, 'itemClick', Array.prototype.slice.call(arguments, 1));
+         return _private.proxyEvent(this, event, 'itemClick', Array.prototype.slice.call(arguments, 1));
       },
 
       _updatePlaceholdersSize: function(e, placeholdersSizes) {

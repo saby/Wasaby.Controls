@@ -11,9 +11,9 @@ import 'css!theme?Controls/list';
  * @control
  * @public
  * @author Красильников А.С.
- * @mixes Controls/_list/AddButton/Styles
- *
- *
+ */
+
+/**
  * @name Controls/_list/AddButton#caption
  * @cfg {String} Текст заголовка контрола.
  * @example

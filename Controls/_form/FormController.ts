@@ -1,3 +1,4 @@
+import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import cInstance = require('Core/core-instance');
 import tmpl = require('wml!Controls/_form/FormController/FormController');

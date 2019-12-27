@@ -301,11 +301,15 @@ define([
          };
 
          if (window) {
-            sinon.stub(window, 'getComputedStyle').returns({paddingLeft: '4px', borderLeftWidth: '1px'});
-            Lookup._private.initializeConstants(lookup);
-            lookup._openInfoBox(null, config);
+            try {
+               let stubGetComputedStyle = sinon.stub(window, 'getComputedStyle').returns({paddingLeft: '4px', borderLeftWidth: '1px'});
+               Lookup._private.initializeConstants(lookup);
+               lookup._openInfoBox(null, config);
 
-            assert.equal(config.offset.horizontal, -5);
+               assert.equal(config.offset.horizontal, -5);
+            } finally {
+               stubGetComputedStyle.restore();
+            }
          } else {
             lookup._openInfoBox(null, config);
 

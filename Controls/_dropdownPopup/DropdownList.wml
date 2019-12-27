@@ -53,7 +53,7 @@
                <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
                   <Controls._dropdownPopup.MoreButton attr:class="controls-DropdownList{{_options.multiSelect ? '_multiSelect'}}__hasMoreButton_theme_{{_options.theme}}"
                                                       caption="{{_options.moreButtonCaption}}"
-                                                      items="{{_options.items}}"
+                                                      items="{{_options.selectorItems || _options.items}}"
                                                       selectedKeys="{{_options.selectedKeys}}"
                                                       selectorTemplate="{{_options.selectorTemplate}}"
                                                       isCompoundTemplate="{{_options.isCompoundTemplate}}"
@@ -63,11 +63,12 @@
                </ws:if>
                <ws:if data="{{_needShowApplyButton}}">
                   <div class="controls-DropdownList__applyButton theme_{{_options.theme}}">
-                     <Controls.buttons:Button viewMode="toolButton"
+                     <Controls.buttons:Button viewMode="functionalButton"
                                               icon="icon-Yes"
                                               iconSize="m"
-                                              iconStyle="success"
+                                              iconStyle="contrast"
                                               buttonStyle="success"
+                                              inlineHeight="l"
                                               on:click="_applySelection()"/>
                   </div>
                </ws:if>
