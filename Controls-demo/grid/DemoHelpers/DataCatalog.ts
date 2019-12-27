@@ -204,15 +204,6 @@ function getCountriesStats() {
             },
         ],
 
-        getColumnsForLoad: () => [
-            {
-                displayProperty: 'id',
-            },
-            {
-                displayProperty: 'load',
-            },
-        ],
-
         getColumnsWithoutWidths: () => [
             {
                 displayProperty: 'number',

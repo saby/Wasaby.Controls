@@ -1,30 +1,25 @@
 .controls-Slider_big_withoutBorder_theme-@{themeName} {
-  padding-left: @Slider-big_point-size / 2;
-  padding-right: @Slider-big_point-size / 2;
+  padding: 0 @marker_l_size_slider / 2;
 }
 .controls-Slider_small_withoutBorder_theme-@{themeName} {
-  padding-left: @Slider-point-size / 2;
-  padding-right: @Slider-point-size / 2;
+  padding: 0 @marker_s_size_slider / 2;
 }
 .controls-Slider__withBorder_theme-@{themeName} {
-  border: @Slider-border-thickness solid @Slider-border-color;
-  border-radius: @Slider-border-heigth / 2;
-  padding-left: @Slider-border-side-padding - @Slider-border-thickness;
-  padding-right: @Slider-border-side-padding - @Slider-border-thickness;
+  border: @border-thickness_slider solid @border-color_slider;
+  border-radius: @border-radius_slider;
+  padding: 0 @padding-horizontal_slider - @border-thickness_slider;
 }
 
 .controls-Slider__mainSlider_small_theme-@{themeName} {
   position: relative;
-  height: @Slider-point-size;
-  margin-top: ( @Slider-border-heigth - @Slider-point-size ) / 2 - @Slider-border-thickness;
-  margin-bottom: ( @Slider-border-heigth - @Slider-point-size ) / 2 - @Slider-border-thickness;
+  height: @marker_s_size_slider;
+  margin: ( @height_slider - @marker_s_size_slider ) / 2 - @border-thickness_slider 0;
 }
 
 .controls-Slider__mainSlider_big_theme-@{themeName} {
   position: relative;
-  height: @Slider-big_point-size;
-  margin-top: ( @Slider-border-heigth - @Slider-big_point-size) / 2 - @Slider-border-thickness;
-  margin-bottom: ( @Slider-border-heigth - @Slider-big_point-size) / 2 - @Slider-border-thickness;
+  height: @marker_l_size_slider;
+  margin: ( @height_slider - @marker_l_size_slider) / 2 - @border-thickness_slider 0;
 
 }
 
@@ -32,60 +27,60 @@
   position: absolute;
   cursor: pointer;
   display: inline-block;
-  background-color: @Slider-point-background-color;
+  background-color: @marker_background-color_slider;
   z-index: 2;
 }
 
 .controls-Slider__point_enabled_theme-@{themeName} {
-  border: @Slider-point-border-thickness solid @Slider-point-border-color;
-  background-color: @Slider-point-background-color;
+  border: @marker_border-thickness_slider solid @marker_border-color_slider;
+  background-color: @marker_background-color_slider;
 }
 
 .controls-Slider__point_disabled_theme-@{themeName} {
-  border: @Slider-point-border-thickness solid @Slider-disabled_point-border-color;
+  border: @marker_border-thickness_slider solid @readonly_marker_border-color_slider;
   cursor: auto;
 }
 
 .controls-Slider__point_big_theme-@{themeName} {
-  width: @Slider-big_point-size - 2 * @Slider-point-border-thickness;
-  height: @Slider-big_point-size - 2 * @Slider-point-border-thickness;
-  margin-left: -@Slider-big_point-size / 2;
-  border-radius: @Slider-big_point-size / 2;
+  width: @marker_l_size_slider - 2 * @marker_border-thickness_slider;
+  height: @marker_l_size_slider - 2 * @marker_border-thickness_slider;
+  margin-left: -@marker_l_size_slider / 2;
+  border-radius: @marker_l_size_slider / 2;
 }
 
 .controls-Slider__point_small_theme-@{themeName} {
-  width: @Slider-point-size - 2 * @Slider-point-border-thickness;
-  height: @Slider-point-size - 2 * @Slider-point-border-thickness;
-  margin-left: -@Slider-point-size / 2;
-  border-radius: @Slider-point-size / 2;
+  width: @marker_s_size_slider - 2 * @marker_border-thickness_slider;
+  height: @marker_s_size_slider - 2 * @marker_border-thickness_slider;
+  margin-left: -@marker_s_size_slider / 2;
+  border-radius: @marker_s_size_slider / 2;
 }
 
 .controls-Slider__line_theme-@{themeName} {
   position: absolute;
-  height: @Slider-line-height;
+  height: @track_thickness_slider;
   width: 100%;
 }
 
 .controls-Slider__line_small_theme-@{themeName} {
-  margin-top: @Slider-point-size / 2 - 1;
+  margin-top: @marker_s_size_slider / 2 - 1;
 }
 
 .controls-Slider__line_big_theme-@{themeName} {
-  margin-top: @Slider-big_point-size / 2 - 1;
+  margin-top: @marker_l_size_slider / 2 - 1;
 }
 
 .controls-Slider__line__empty_enabled_theme-@{themeName} {
-  background-color: @Slider-line_empty-bg-color;
+  background-color: @unselected_track_color_slider;
 }
 
 .controls-Slider__line__full_enabled_theme-@{themeName} {
   z-index: 1;
-  background-color: @Slider-line_full-bg-color;
+  background-color: @track_color_slider;
 }
 
 .controls-Slider__line__empty_disabled_theme-@{themeName},
 .controls-Slider__line__full_disabled_theme-@{themeName} {
-  background-color: @Slider-disabled-color;
+  background-color: @readonly_track_color_slider;
 }
 
 .controls-Slider__line__wrapper_theme-@{themeName} {
@@ -100,16 +95,16 @@
 
 .controls-Slider__line__wrapper_big_theme-@{themeName} {
   width: 100%;
-  height: @Slider-big_point-size;
+  height: @marker_l_size_slider;
 }
 
 .controls-Slider__line__wrapper_small_theme-@{themeName} {
-  height: @Slider-point-size;
+  height: @marker_s_size_slider;
   width: 100%;
 }
 
 .controls-Slider__point_enabled_theme-@{themeName}:hover {
-  background-color: @Slider-point_hover-bg-color;
+  background-color: @marker_hover_background-color_slider;
 }
 
 .controls-Slider__scale {
@@ -127,7 +122,7 @@
   position: relative;
 }
 .controls-Slider__segment_theme-@{themeName} {
-  font-size: @Slider-segment-font-size;
+  font-size: @scale_font-size_slider;
 }
 .controls-Slider__segmentValue {
   flex-shrink: 0;
@@ -141,23 +136,23 @@
   display: block;
 }
 .controls-Slider__segment_theme-@{themeName}:after {
-  width: @Slider-segment-after-width;
-  height: @Slider-segment-after-height;
+  width: @tick_thickness_slider;
+  height: @tick_height_slider;
 
 }
 .controls-Slider__segment_enabled_theme-@{themeName} {
-  color: @Slider-segment-color;
+  color: @scale_text-color_slider;
 }
 .controls-Slider__segment_disabled_theme-@{themeName} {
-   color: @Slider-disabled-color;
+   color: @readonly_scale_text-color_slider;
  }
 
 .controls-Slider__segment_enabled_theme-@{themeName}:after {
-  background-color: @Slider-segment-color;
+  background-color: @tick_color_slider;
 }
 
 .controls-Slider__segment_disabled_theme-@{themeName}:after {
-  background-color: @Slider-disabled-color;
+  background-color: @readonly_tick_color_slider;
 }
 
 .controls-Slider__segment:first-child {
@@ -168,38 +163,35 @@
   align-items: flex-end;
 }
 .controls-Slider__segment_theme-@{themeName}:last-child:after {
-  left: -@Slider-segment-after-width;
+  left: -@tick_thickness_slider;
 }
 
 .controls-Slider__tooltipValue {
-  padding-top: @Slider-tooltip-padding-top-bottom;
-  padding-right: @Slider-tooltip-padding-left-right;
-  padding-bottom: @Slider-tooltip-padding-top-bottom;
-  padding-left: @Slider-tooltip-padding-left-right;
-  background-color: @Slider-point-background-color;
-  border-radius: @Slider-tooltip-border-radius;
-  box-shadow: @Slider-tooltip-box-shadow;
-  font-size: @Slider-tooltip-font-size;
+  padding: @tooltip_padding-vertical_slider @tooltip_padding-horizontal_slider;
+  background-color: @tooltip_background-color_slider;
+  border-radius: @tooltip_border-radius_slider;
+  box-shadow: @tooltip_box-shadow_slider;
+  font-size: @tooltip_font-size_slider;
   position: absolute;
   left: 50%;
   transform: translate(-50%);
 }
 .controls-Slider__point_big_tooltipValue {
-  bottom: @Slider-big_point-size + @Slider-tooltip-interval;
+  bottom: @marker_l_size_slider + @tooltip_offset_slider;
 }
 .controls-Slider__point_small_tooltipValue {
-  bottom: @Slider-point-size + @Slider-tooltip-interval;
+  bottom: @marker_s_size_slider + @tooltip_offset_slider;
 }
 .controls-Slider__point_tooltip {
-  border: @Slider-point-border-thickness solid @Slider-segment-color;
-  background-color: @Slider-point-background-color;
+  border: @marker_border-thickness_slider solid @marker_hover_border-color_slider;
+  background-color: @marker_background-color_slider;
   z-index: 2;
 }
 .controls-Slider__point_tooltip:hover {
-  background-color: @Slider-point-background-color;
+  background-color: @marker_background-color_slider;
 }
 .controls-Slider__point_hidden,
 .controls-Slider__point_hidden:hover {
-  border: @Slider-point-border-thickness solid transparent;
+  border: @marker_border-thickness_slider solid transparent;
   background: none;
 }

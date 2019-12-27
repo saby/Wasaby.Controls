@@ -11,9 +11,22 @@ import { isEqual } from 'Types/object';
 import { load } from 'Core/library';
 import { default as IContainer, IContainerConfig } from "Controls/_dataSource/_error/IContainer";
 
+/**
+ * @interface Controls/_dataSource/_error/Container/Config
+ * @extends Controls/_dataSource/_error/ViewConfig
+ */
 type Config = ViewConfig & {
+    /**
+     * @cfg {Boolean} [isShowed?]
+     */
     isShowed?: boolean;
+    /**
+     * @cfg {String} [templateName?]
+     */
     templateName?: string;
+    /**
+     * @cfg {any} [template?]
+     */
     template?: any;
 }
 let getTemplate = (template: string | Control): Promise<Control> => {
@@ -31,6 +44,10 @@ let getTemplate = (template: string | Control): Promise<Control> => {
  *
  */
 export default class Container extends Control implements IContainer {
+    /**
+     * @name Controls/_dataSource/_error/Container#viewConfig
+     * @cfg {Controls/_dataSource/_error/Container/Config} Режим отображения
+     */
     private __viewConfig: Config;
     private __lastShowedId: number;
     protected _template = template;

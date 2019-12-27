@@ -94,7 +94,6 @@ export default class Render extends Control<IRenderOptions> {
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         // this._notify('itemMouseEnter', [item, e]);
     }
-
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         // this._notify('itemMouseLeave', [item, e]);
     }
@@ -150,4 +149,6 @@ export default class Render extends Control<IRenderOptions> {
             this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChange);
         }
     }
+
+    static _theme: string[] = ['Controls/list_multi'];
 }
