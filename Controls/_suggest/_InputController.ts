@@ -402,6 +402,10 @@ var SuggestLayout = Control.extend({
       }
    },
 
+   inputReadyHandler(_: Event, input: Control): void {
+      this._input = input;
+   },
+
    // </editor-fold>
    // <editor-fold desc="handlers">
 
@@ -555,7 +559,11 @@ var SuggestLayout = Control.extend({
 
                // The container with list takes focus away to catch "enter", return focus to the input field.
                // toDO https://online.sbis.ru/opendoc.html?guid=66ae5218-b4ba-4d6f-9bfb-a90c1c1a7560
-               this.activate();
+               if (this._input) {
+                  this._input.activate();
+               } else {
+                  this.activate();
+               }
             }
          } else if (isInputKey) {
             if (eventKeyCode === Env.constants.key.esc) {
