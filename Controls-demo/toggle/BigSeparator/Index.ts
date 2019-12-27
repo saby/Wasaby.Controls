@@ -4,6 +4,7 @@ import 'css!Controls-demo/Controls-demo';
 
 class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
+    protected _expanded: boolean = false;
     static _theme: string[] = ['Controls/Classes'];
 }
 export default Index;
