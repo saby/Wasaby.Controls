@@ -299,7 +299,8 @@ define(
                POPUP_STATE_INITIALIZING: 'initializing'
             };
             let id = Manager.show({
-               closeOnOutsideClick: true
+               closeOnOutsideClick: true,
+               closeOnDeactivated: true
             }, controller);
 
             let item = Manager.find(id);
@@ -317,6 +318,7 @@ define(
 
             isDeactivated = false;
             item.popupOptions.closeOnOutsideClick = false;
+            item.popupOptions.closeOnDeactivated = false;
             Manager._popupDeactivated(id);
             assert.equal(isDeactivated, false);
 
@@ -404,17 +406,19 @@ define(
             Manager.remove = () => deactivatedCount++;
             Manager._isIgnoreActivationArea = () => false;
             Manager._isNewEnvironment = () => true;
-            Manager._needClosePopupByDeactivated = () => true;
+            Manager._needClosePopupByOutsideClick = () => true;
             let id1 = Manager.show({
                testOption: 'created',
-               autofocus: false
+               autofocus: false,
+               closeOnOutsideClick: true
             }, new BaseController());
             let id2 = Manager.show({
                testOption: 'created'
             }, new BaseController());
             let id3 = Manager.show({
                testOption: 'created',
-               autofocus: false
+               autofocus: false,
+               closeOnOutsideClick: true
             }, new BaseController());
             let event = {
                target: {
