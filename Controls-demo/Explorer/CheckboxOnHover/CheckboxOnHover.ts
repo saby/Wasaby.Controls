@@ -101,7 +101,7 @@ class Demo extends Control {
                     'parent': null,
                     'type': null,
                     title: 'Договор на поставку печатной продукции',
-                    image: ExplorerImages[0],
+                    image: ExplorerImages[1],
                     isDocument: true
                 },
                 {
@@ -185,7 +185,7 @@ class Demo extends Control {
                     'parent': null,
                     'type': null,
                     title: 'Договор на поставку печатной продукции',
-                    image: ExplorerImages[0],
+                    image: ExplorerImages[1],
                     isDocument: true,
                     width: 200
                 },

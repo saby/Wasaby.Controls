@@ -246,7 +246,7 @@ define('Controls-demo/Explorer/Explorer', [
                   'parent': null,
                   'parent@': null,
                   title: 'Договор на поставку печатной продукции',
-                  image: explorerImages[0],
+                  image: explorerImages[1],
                   isDocument: true
                }, {
                   id: 5,
