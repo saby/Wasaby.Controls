@@ -282,7 +282,7 @@ function getContactsCatalogWithActions() {
 interface  IGenerateDataOptions<TEntityData = {}> {
     count: number,
     keyProperty?: string,
-    entityTemplate?: Record<string, 'number'|'string'|'lorem'>,
+    entityTemplate?: Record<string, 'number'|'string'|'lorem'|'lorem_alter'>,
     beforeCreateItemCallback?: (item: TEntityData) => void | false
 }
 
@@ -311,6 +311,8 @@ function generateData<
                 item[key] = 0;
             } else if (entityTemplate[key] === 'lorem') {
                 item[key] = forLoremPseudoRandom % 3 === 0 ? `${LOREM.slice(0, 110)}.` : (forLoremPseudoRandom % 2 === 0 ? `${LOREM} ${LOREM}` : `${LOREM.slice(0, 50)}.`);
+            } else if (entityTemplate[key] === 'lorem_alter') {
+                item[key] = forLoremPseudoRandom % 5 === 0 ? `${LOREM.slice(0, 110)}.` : (forLoremPseudoRandom % 3 === 1 ? `${LOREM} ${LOREM}` : `${LOREM.slice(0, 50)}.`);
             } else {
                 item[key] = entityTemplate[key];
             }

@@ -1,0 +1,21 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__flexRow">
+      <div class="controlsDemo__cell controlsDemo__mr4">
+         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                  state="/Controls-demo/app/:app"
+                                  app="{{ 'Controls-demo/list_new/ColumnsView/Default/Index' }}">
+            <a href="{{content.href}}">Базовый шаблон</a>
+         </Router.router:Reference>
+         <Controls-demo.list_new.ColumnsView.Default.Index/>
+      </div>
+
+      <div class="controlsDemo__cell controlsDemo__mr4">
+         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                  state="/Controls-demo/app/:app"
+                                  app="{{ 'Controls-demo/list_new/ColumnsView/CustomTemplate/Index' }}">
+            <a href="{{content.href}}">Пользовательский шаблон</a>
+         </Router.router:Reference>
+         <Controls-demo.list_new.ColumnsView.CustomTemplate.Index/>
+      </div>
+   </div>
+</div>

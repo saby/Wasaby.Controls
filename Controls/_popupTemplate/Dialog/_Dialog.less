@@ -36,12 +36,11 @@
 }
 .controls-DialogTemplate__headerContentTemplate {
    position: relative;
-   overflow: hidden;
    display: flex;
    justify-content: flex-end;
    flex-grow: 1;
    flex-shrink: 1;
-   width: auto;
+   min-width: 0;
    height: 100%;
    align-items: center;
 }
@@ -76,7 +75,7 @@
 }
 .controls-DialogTemplate__caption {
    align-items: baseline;
-   flex-shrink: 10;
+   flex-shrink: 100;
    display: flex;
    overflow: hidden;
    cursor: default;
@@ -86,6 +85,7 @@
    min-width: @header_min-width_dialog;
    height: @header-min-height_dialog;
    margin-left: @header_padding-left_dialog;
+   margin-right: @header-content_padding-right_dialog;
    line-height: @line-height_dialogTemplate_caption; // the baseline is not centered
 }
 

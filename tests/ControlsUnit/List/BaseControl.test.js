@@ -4194,6 +4194,7 @@ define([
          it('hideActionsAfterDrag', async function() {
             var cfg = {
                   viewName: 'Controls/List/ListView',
+                  itemsDragNDrop: true,
                   viewConfig: {
                      idProperty: 'id'
                   },
