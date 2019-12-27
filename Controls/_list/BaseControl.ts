@@ -149,7 +149,8 @@ var _private = {
             _private.hideError(self);
 
             if (cfg.groupProperty && cfg.useNewGrouping) {
-                GroupingManager.prepareFilterCollapsedGroups(cfg.groupProperty, cfg.collapsedGroups, filter);
+                const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
+                GroupingManager.prepareFilterCollapsedGroups(collapsedGroups, filter);
             }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
@@ -506,7 +507,7 @@ var _private = {
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.groupProperty && self._options.useNewGrouping) {
-                GroupingManager.prepareFilterCollapsedGroups(self._options.groupProperty, self._options.collapsedGroups, filter);
+                GroupingManager.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
@@ -2103,12 +2104,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onGroupClick: function(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
-            GroupingManager.toggleGroup(this._listViewModel,
-                groupId,
-                this._options.useNewGrouping,
-                this._sourceController,
-                this._options.filter,
-                this._options.sorting);
+            if (this._options.useNewGrouping) {
+                const groupNavigation = {...this._options.navigation};
+                const groupSourceController = _private.getSourceController({
+                    source: this._options.source,
+                    navigation: {},
+                    keyProperty: this._options.keyProperty
+                });
+                GroupingManager.toggleGroup(this._listViewModel,
+                    groupId,
+                    groupSourceController,
+                    this._options.filter,
+                    this._options.sorting);
+            } else {
+                this._listViewModel.toggleGroup(groupId);
+            }
         }
     },
 

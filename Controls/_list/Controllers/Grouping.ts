@@ -6,6 +6,7 @@
 
 import {QueryWhere} from 'Types/source';
 import {RecordSet} from 'Types/collection';
+import {Controller as SourceController} from 'Controls/source';
 
 export type TGroupId = string|number;
 export type TArrayGroupId = TGroupId[];
@@ -42,18 +43,18 @@ function loadGroup(collection: IGroupingModel,
 
 export function toggleGroup(collection: IGroupingModel,
                             groupId: TGroupId,
-                            useNewGrouping: boolean,
                             sourceController: any,
                             filter: QueryWhere,
                             sorting?: object): void {
-    if (!useNewGrouping) {
-        collection.toggleGroup(groupId);
-    }
     const needExpandGroup = !collection.isGroupExpanded(groupId);
     if (needExpandGroup && !collection.isGroupLoaded(groupId)) {
+        filter = {...filter};
+        filter[collection.getGroupProperty()] = [groupId];
         loadGroup(collection, groupId, sourceController, filter, sorting).then(() => {
             collection.toggleGroup(groupId);
         });
+    } else {
+        collection.toggleGroup(groupId);
     }
 }
 
@@ -69,11 +70,9 @@ export function isAllGroupsCollapsed(collection: IGroupingModel): boolean {
     return collection.isAllGroupsCollapsed();
 }
 
-export function prepareFilterCollapsedGroups(groupProperty: string,
-                                             collapsedGroups: TArrayGroupId,
-                                             filter: QueryWhere): QueryWhere {
+export function prepareFilterCollapsedGroups(collapsedGroups: TArrayGroupId, filter: QueryWhere): QueryWhere {
     if (collapsedGroups) {
-        filter[groupProperty] = collapsedGroups;
+        filter.collapsedGroups = collapsedGroups;
     }
     return filter;
 }

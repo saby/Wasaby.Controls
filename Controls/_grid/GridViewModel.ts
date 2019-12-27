@@ -561,6 +561,10 @@ var
             this._options.keyProperty = keyProperty;
         },
 
+        isGroupExpanded(groupId: Grouping.TGroupId): boolean {
+            return this._model.isGroupExpanded(groupId);
+        },
+
         setGroupProperty(groupProperty: string): void {
             this._model.setGroupProperty(groupProperty);
         },
