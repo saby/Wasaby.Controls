@@ -7,7 +7,7 @@ import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelecto
 import getOptions from 'Controls/Utils/datePopupUtils';
 
 /**
- * Контрол позволяет пользователю выбрать даипазон дат с начальным и конечным значениями в календаре. Выбор происходит с помощью панели быстрого выбора периода.
+ * Контрол позволяет пользователю выбрать диапазон дат с начальным и конечным значениями в календаре. Выбор происходит с помощью панели быстрого выбора периода.
  *
  * @class Controls/_dateRange/LiteSelector
  * @extends Core/Control
