@@ -186,7 +186,10 @@ var _private = {
    startSearch: function(self, value, force) {
       if (self._options.source) {
          const searchValue = self._options.searchValueTrim ? value.trim() : value;
-         const shouldSearch = self._isSearchControllerLoading() ? searchValue !== self._inputSearchValue : _private.needStartSearch(self._inputSearchValue, searchValue);
+         const shouldSearch = self._isSearchControllerLoading() ?
+             _private.isInputSearchValueChanged(self, searchValue) :
+             _private.needStartSearch(self._inputSearchValue, searchValue);
+
          if (shouldSearch) {
             _private.getSearchController(self).search(searchValue, force);
          }
@@ -199,16 +202,20 @@ var _private = {
       self._inputSearchValue = value;
    },
 
-   isSearchValueChanged: function (self, searchValue) {
-      return self._options.searchValue !== searchValue && searchValue !== self._inputSearchValue;
+   isInputSearchValueChanged(self, searchValue: string): boolean {
+      return searchValue !== self._inputSearchValue;
    },
 
-   isInputSearchValueShort: function (self, searchValue) {
+   isSearchValueChanged(self, searchValue: string): boolean {
+      return self._options.searchValue !== searchValue && _private.isInputSearchValueChanged(self, searchValue);
+   },
+
+   isInputSearchValueShort(self, searchValue: string): boolean {
       return searchValue.length < self._options.minSearchLength;
    },
 
-   needStartSearch: function (inputSearchValue, searchValue) {
-      return inputSearchValue ? inputSearchValue.trim() || searchValue : searchValue;
+   needStartSearch(inputSearchValue: string, searchValue: string): string {
+      return inputSearchValue.trim() || searchValue;
    }
 };
 
@@ -270,6 +277,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _misspellValue: null,
    _root: null,
    _deepReload: undefined,
+   _inputSearchValue: '',
 
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);

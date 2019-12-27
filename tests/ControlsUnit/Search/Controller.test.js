@@ -132,8 +132,6 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
       it('private.needStartSearch', function() {
          var result;
-         result = searchMod.Controller._private.needStartSearch(undefined, '');
-         assert.isFalse(!!result);
 
          result = searchMod.Controller._private.needStartSearch('', '');
          assert.isFalse(!!result);
