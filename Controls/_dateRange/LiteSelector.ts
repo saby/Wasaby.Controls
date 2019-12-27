@@ -7,7 +7,7 @@ import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelecto
 import getOptions from 'Controls/Utils/datePopupUtils';
 
 /**
- * Кнопка-ссылка для отображения периода. Поддерживает смену периодов на смежные.
+ * Кнопка-ссылка для отображения быстрого выбора периода. Поддерживает смену периодов на смежные.
  *
  * @class Controls/_dateRange/LiteSelector
  * @extends Core/Control
