@@ -4,7 +4,6 @@
 import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../resources/linkDecorateUtils';
 
 /**
- *
  * Модуль содержит функцию, которая позволяет преобразовать обычную ссылку в декорированную. 
  * Декорации ссылки выполняется через Сервис декорирования ссылок. 
  * Функция предназначена для использования в контроле {@link Controls/decorator:Markup} в опции tagResolver.
