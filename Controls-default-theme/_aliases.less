@@ -1366,7 +1366,7 @@
 //цвет кнопки меню тулбара при наведении
 @icon-color_hover_toolbar:                                                  @link_hover_text-color;
 
-/*Combobox */
+//КОМБОБОКС
 // цвет иконки комбобокса
 @trigger-color_combobox:                           @secondary_icon-color_toggleSeparator;
 
@@ -1382,7 +1382,15 @@
 /* dropdown:Button ofsets*/
 @inline_height_default_link_button:                18px; // Высота текста link кнопки, чтобы посчитать offset переменную для меню
 
-// dropdown:Popup
+//ДРОПДАУН
+@height_dropdownSelector:                          @inline_height_default;
+@font-size_default_dropdownSelector:               @font-size_default;
+@invalid_border-thickness_dropdownSelector:        @border-thickness;
+@invalid_border-color_dropdownSelector:            @danger_color;
+@empty-item_text-color_dropdownSelector:           #CCC;
+@icon_offset_dropdownSelector:                     6px;
+
+//MENUPOPUP - ОКНО ВЫПАДАЮЩЕГО СПИСКА
 @popup_max-width_dropdown:                         700px;
 @popup_border-thickness_dropdown:                  @border-thickness;
 @popup_border-color_dropdown:                      #CCC;
@@ -1401,7 +1409,7 @@
 @footer_min-height_dropdown:                       32px;
 @apply-button_offset_dropdown:                     8px;
 
-/* Menu */
+//МЕНЮ
 @item_separator_color_menu:                        transparent;
 @item_separator_thickness_menu:                    0;
 @item_separator_padding-horizontal_menu:           0;
