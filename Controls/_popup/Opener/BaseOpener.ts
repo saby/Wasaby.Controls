@@ -538,6 +538,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             'isModal',
             'modal',
             'closeOnOutsideClick',
+            'closeOnDeactivated',
             'closeOnTargetScroll',
             'className',
             'template',

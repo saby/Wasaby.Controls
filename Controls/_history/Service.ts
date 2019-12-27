@@ -1,5 +1,5 @@
 import {SbisService, DataSet, ICrud} from 'Types/source';
-import {OptionsToPropertyMixin, SerializableMixin} from 'Types/entity';
+import {OptionsToPropertyMixin} from 'Types/entity';
 import CoreExtend = require('Core/core-extend');
 import Constants = require('Controls/_history/Constants');
 import Deferred = require('Core/Deferred');
@@ -256,7 +256,7 @@ var _private = {
  * false - BL return items without data
  */
 
-var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin, SerializableMixin], {
+var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin], {
    _historyDataSource: null,
    _historyId: null,
    _historyIds: null,

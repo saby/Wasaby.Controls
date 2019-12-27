@@ -620,22 +620,6 @@ export interface IList {
  */
 
 /**
- * @name Controls/_list/interface/IList#uniqueKeys
- * @cfg {Boolean} Определяет стратегию вставки элементов при загрузке с дублирующимися идентификаторами.
- * @remark
- * true - Merge, элементы с одинаковым идентификатором будут объединены в один.
- * false - Add, элементы с одинаковым идентификатором будут объединены в один.
- */
-
-/*
- * @name Controls/_list/interface/IList#uniqueKeys
- * @cfg {Boolean} Strategy for loading new list items.
- * @remark
- * true - Merge, items with the same identifier will be combined into one.
- * false - Add, items with the same identifier will be shown in the list.
- */
-
-/**
  * @name Controls/_list/interface/IList#itemsReadyCallback
  * @cfg {Function} Устанавливает функцию, которая вызывается, когда экземпляр данных получен из источника и подготовлен к дальнейшей обработке контролом.
  * Функция вызывается единожды в рамках {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.

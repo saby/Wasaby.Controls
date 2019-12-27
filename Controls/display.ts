@@ -54,3 +54,6 @@ export {default as TreeItem} from './_display/TreeItem';
 
 export {default as TileCollection} from './_display/TileCollection';
 export {default as TileCollectionItem} from './_display/TileCollectionItem';
+
+export {default as ColumnsCollection} from './_display/ColumnsCollection';
+export {default as ColumnsCollectionItem} from './_display/ColumnsCollectionItem';
