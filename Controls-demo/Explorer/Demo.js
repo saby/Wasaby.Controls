@@ -81,14 +81,14 @@ define('Controls-demo/Explorer/Demo', [
                   'parent': null,
                   'type': null,
                   title: 'Договор на поставку печатной продукции',
-                  image: explorerImages[3],
+                  image: explorerImages[0],
                   isDocument: true
                }, {
                   id: 5,
                   'parent': null,
                   'type': null,
                   title: 'Договор аренды помещения',
-                  image: explorerImages[3],
+                  image: explorerImages[1],
                   isDocument: true
                }, {
                   id: 6,
@@ -155,7 +155,7 @@ define('Controls-demo/Explorer/Demo', [
                   'parent': null,
                   'type': null,
                   title: 'Договор на поставку печатной продукции',
-                  image: explorerImages[3],
+                  image: explorerImages[0],
                   isDocument: true,
                   width: 200
                }, {
@@ -163,7 +163,7 @@ define('Controls-demo/Explorer/Demo', [
                   'parent': null,
                   'type': null,
                   title: 'Договор аренды помещения',
-                  image: explorerImages[3],
+                  image: explorerImages[1],
                   isDocument: true,
                   width: 200
                }, {

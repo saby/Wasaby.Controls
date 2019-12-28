@@ -1,6 +1,6 @@
 define('Controls-demo/Explorer/DemoLayout', [
    'Controls-demo/Explorer/Demo',
-   'Controls-demo/Explorer/ExplorerImagesLayout',
+   'Controls-demo/Explorer/ExplorerImages',
    'Types/source',
 ], function(Demo, explorerImagesLayout, source) {
    'use strict';
@@ -31,7 +31,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': 1,
                   'type': null,
                   title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-                  image: explorerImagesLayout[4],
+                  image: explorerImages[4],
                   isDocument: true
                }, {
                   id: 111,
@@ -43,7 +43,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': 11,
                   'type': null,
                   title: 'Сравнение систем по учету рабочего времени.xlsx',
-                  image: explorerImagesLayout[5],
+                  image: explorerImages[5],
                   isDocument: true
                }, {
                   id: 2,
@@ -55,14 +55,14 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': 2,
                   'type': null,
                   title: 'PandaDoc.docx',
-                  image: explorerImagesLayout[6],
+                  image: explorerImages[6],
                   isDocument: true
                }, {
                   id: 22,
                   'parent': 2,
                   'type': null,
                   title: 'SignEasy.docx',
-                  image: explorerImagesLayout[7],
+                  image: explorerImages[7],
                   isDocument: true
                }, {
                   id: 3,
@@ -74,28 +74,28 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': null,
                   'type': null,
                   title: 'Договор на поставку печатной продукции',
-                  image: explorerImagesLayout[0],
+                  image: explorerImages[0],
                   isDocument: true
                }, {
                   id: 5,
                   'parent': null,
                   'type': null,
                   title: 'Договор аренды помещения',
-                  image: explorerImagesLayout[3],
+                  image: explorerImages[1],
                   isDocument: true
                }, {
                   id: 6,
                   'parent': null,
                   'type': null,
                   title: 'Конфеты',
-                  image: explorerImagesLayout[3]
+                  image: explorerImages[3]
 
                }, {
                   id: 7,
                   'parent': null,
                   'type': null,
                   title: 'Скриншот от 25.12.16, 11-37-16',
-                  image: explorerImagesLayout[2],
+                  image: explorerImages[2],
                   isDocument: true
                }]
             });
@@ -107,7 +107,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': null,
                   'type': null,
                   title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-                  image: explorerImagesLayout[4],
+                  image: explorerImages[4],
                   isDocument: true,
                   hiddenGroup: true,
                   width: 200
@@ -116,7 +116,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': null,
                   'type': null,
                   title: 'Сравнение систем по учету рабочего времени.xlsx',
-                  image: explorerImagesLayout[5],
+                  image: explorerImages[5],
                   isDocument: true,
                   hiddenGroup: true,
                   width: 200
@@ -125,14 +125,14 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': null,
                   'type': null,
                   title: 'Конфеты копия',
-                  image: explorerImagesLayout[3],
+                  image: explorerImages[3],
                   width: 300
                }, {
                   id: 4,
                   'parent': null,
                   'type': null,
                   title: 'PandaDoc.docx',
-                  image: explorerImagesLayout[6],
+                  image: explorerImages[6],
                   isDocument: true,
                   width: 200
                }, {
@@ -140,7 +140,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': null,
                   'type': null,
                   title: 'SignEasy.docx',
-                  image: explorerImagesLayout[7],
+                  image: explorerImages[7],
                   isDocument: true,
                   width: 200
                }, {
@@ -148,7 +148,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': null,
                   'type': null,
                   title: 'Договор на поставку печатной продукции',
-                  image: explorerImagesLayout[0],
+                  image: explorerImages[0],
                   isDocument: true,
                   width: 200
                }, {
@@ -156,7 +156,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': null,
                   'type': null,
                   title: 'Договор аренды помещения',
-                  image: explorerImagesLayout[3],
+                  image: explorerImages[1],
                   isDocument: true,
                   width: 200
                }, {
@@ -164,14 +164,14 @@ define('Controls-demo/Explorer/DemoLayout', [
                   'parent': null,
                   'type': null,
                   title: 'Конфеты',
-                  image: explorerImagesLayout[3],
+                  image: explorerImages[3],
                   width: 300
                }, {
                   id: 9,
                   'parent': null,
                   'type': null,
                   title: 'Скриншот от 25.12.16, 11-37-16',
-                  image: explorerImagesLayout[2],
+                  image: explorerImages[2],
                   isDocument: true,
                   width: 200
                }]
