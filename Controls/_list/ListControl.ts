@@ -58,6 +58,21 @@ var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype
     scrollToItem(key: string|number, toBottom: boolean): void {
         return this._children.baseControl.scrollToItem(key, toBottom);
     },
+
+    _itemMouseEnter(event, itemData, nativeEvent) {
+        event.stopPropagation();
+        this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
+    },
+
+    _itemMouseMove: function(event, itemData, nativeEvent) {
+        event.stopPropagation();
+        this._notify('itemMouseMove', [itemData.item, nativeEvent]);
+    },
+
+    _onItemMouseLeave: function(event, itemData, nativeEvent) {
+        event.stopPropagation();
+        this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
+    }
 });
 
 ListControl.getDefaultOptions = function () {

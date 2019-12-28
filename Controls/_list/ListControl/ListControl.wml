@@ -1,5 +1,8 @@
 <Controls._list.BaseControl scope="{{_options}}"
-                           name="baseControl">
+                            name="baseControl"
+                            on:itemMouseMove="_itemMouseMove()"
+                            on:itemMouseLeave="_onItemMouseLeave()"
+                            on:itemMouseEnter="_onItemMouseEnter()">
    <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partail, потому что изменения только в замыкании функции-->
    <ws:partial template="{{content.viewTemplate}}" itemTemplate="{{_options.itemTemplate}}"/>
 </Controls._list.BaseControl>

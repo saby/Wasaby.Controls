@@ -1,6 +1,7 @@
 <!-- TODO remove ternary operator "_options.parentProperty !== undefined" by task https://online.sbis.ru/opendoc.html?guid=42946b92-381f-442d-ac44-b38b1663eefd -->
 <Controls.list:BaseControl on:itemMouseMove="_itemMouseMove()"
                            on:itemMouseLeave="_onItemMouseLeave()"
+                           on:itemMouseEnter="_onItemMouseEnter()"
                            on:dragEnd="_dragEnd()"
                            scope="{{_options}}"
                            name="baseControl"

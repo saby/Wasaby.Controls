@@ -158,5 +158,45 @@ define([
             list.reloadItem('test', {test: 'test'}, 'depth');
          });
       });
+      describe('proxy mouse events with right args', function () {
+         const listControl = new lists.ListControl({});
+         let isOriginStopped = false;
+         let isNotifiedWithRightArgs = false;
+         let fakeEvent = {
+            stopPropagation: () => {
+               isOriginStopped = true;
+            }
+         };
+         let fakeItemData = {
+            item: {}
+         };
+         let nativeEvent = {};
+         listControl._notify = (eName, eArgs) => {
+            if (eName === 'itemMouseEnter' || eName === 'itemMouseMove' || eName === 'itemMouseLeave') {
+               if (eArgs[0] === fakeItemData.item && eArgs[1] === nativeEvent) {
+                  isNotifiedWithRightArgs = true;
+               }
+            }
+         };
+         beforeEach(() => {
+            isOriginStopped = false;
+            isNotifiedWithRightArgs = false;
+         });
+         it('should itemMouseLeave', function () {
+            listControl._onItemMouseLeave(fakeEvent, fakeItemData, nativeEvent);
+            assert.isTrue(isOriginStopped);
+            assert.isTrue(isNotifiedWithRightArgs);
+         });
+         it('should itemMouseMove', function () {
+            listControl._onItemMouseMove(fakeEvent, fakeItemData, nativeEvent);
+            assert.isTrue(isOriginStopped);
+            assert.isTrue(isNotifiedWithRightArgs);
+         });
+         it('should itemMouseEnter', function () {
+            listControl._onItemMouseEnter(fakeEvent, fakeItemData, nativeEvent);
+            assert.isTrue(isOriginStopped);
+            assert.isTrue(isNotifiedWithRightArgs);
+         });
+      });
    });
 });

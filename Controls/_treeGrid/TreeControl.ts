@@ -561,18 +561,28 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._notify('markedKeyChanged', [key]);
     },
 
+    _itemMouseEnter(event, itemData, nativeEvent) {
+        event.stopPropagation();
+        this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
+    },
+
     _itemMouseMove: function(event, itemData, nativeEvent) {
         var model = this._children.baseControl.getViewModel();
 
         if ((model.getDragEntity() || model.getDragItemData()) && itemData.dispItem.isNode()) {
             this._nodeMouseMove(itemData, nativeEvent);
         }
+        event.stopPropagation();
+        this._notify('itemMouseMove', [itemData.item, nativeEvent]);
     },
 
-    _onItemMouseLeave: function() {
+    _onItemMouseLeave: function(event, itemData, nativeEvent) {
+        event.stopPropagation();
         this._clearTimeoutForExpandOnDrag(this);
         this._expandOnDragData = null;
+        this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
     },
+
     _dragEnd: function() {
         this._clearTimeoutForExpandOnDrag(this);
     },

@@ -280,21 +280,32 @@ define([
          let nodeMouseMoveCalled;
          let dragEntity;
          let dragItemData;
+         let item = {};
          let nodeItem = {
             dispItem: {
                isNode: function () {
                   return true;
                }
-            }
+            },
+            item: item
          };
          let leafItem = {
             dispItem: {
                isNode: function () {
                   return false;
                }
-            }
+            },
+            item: item
          };
          let model = tree._children.baseControl.getViewModel();
+         let fakeEvent;
+         let isNotified;
+         let _notify = (eName, eArgs) => {
+            if (eName === 'itemMouseEnter' || eName === 'itemMouseMove' || eName === 'itemMouseLeave') {
+               assert.equal(item, eArgs[0]);
+               isNotified = true;
+            }
+         };
          model.getDragEntity = function () {
             return dragEntity;
          };
@@ -304,30 +315,44 @@ define([
          tree._nodeMouseMove = function() {
             nodeMouseMoveCalled = true;
          };
+         tree._notify = _notify;
          beforeEach(function() {
             nodeMouseMoveCalled = false;
+            isNotified = false;
             dragItemData = null;
             dragEntity = null;
+            fakeEvent = {
+               stopped: false,
+               stopPropagation: () => {
+                  fakeEvent.stopped = true;
+               }
+            };
          });
          it('dragEntity', function() {
             dragEntity = {};
-            tree._itemMouseMove({}, leafItem, {});
+            tree._itemMouseMove(fakeEvent, leafItem, {});
             assert.isFalse(nodeMouseMoveCalled);
-            tree._itemMouseMove({}, nodeItem, {});
+            tree._itemMouseMove(fakeEvent, nodeItem, {});
             assert.isTrue(nodeMouseMoveCalled);
+            assert.isTrue(fakeEvent.stopped);
+            assert.isTrue(isNotified);
          });
          it('dragItemData', function() {
             dragItemData = {};
-            tree._itemMouseMove({}, leafItem, {});
+            tree._itemMouseMove(fakeEvent, leafItem, {});
             assert.isFalse(nodeMouseMoveCalled);
-            tree._itemMouseMove({}, nodeItem, {});
+            tree._itemMouseMove(fakeEvent, nodeItem, {});
             assert.isTrue(nodeMouseMoveCalled);
+            assert.isTrue(fakeEvent.stopped);
+            assert.isTrue(isNotified);
          });
          it('nothing', function() {
-            tree._itemMouseMove({}, leafItem, {});
+            tree._itemMouseMove(fakeEvent, leafItem, {});
             assert.isFalse(nodeMouseMoveCalled);
-            tree._itemMouseMove({}, nodeItem, {});
+            tree._itemMouseMove(fakeEvent, nodeItem, {});
             assert.isFalse(nodeMouseMoveCalled);
+            assert.isTrue(fakeEvent.stopped);
+            assert.isTrue(isNotified);
          });
 
       });
@@ -367,7 +392,7 @@ define([
             treeControl._setTimeoutForExpandOnDrag(itemData);
             assert.isFalse(toggleExpandedCalled);
             assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
-            treeControl._onItemMouseLeave();
+            treeControl._onItemMouseLeave({stopPropagation: () => {}}, {});
             assert.equal(treeControl._timeoutForExpandOnDrag, null);
             setTimeout(function() {
                assert.isFalse(toggleExpandedCalled);
