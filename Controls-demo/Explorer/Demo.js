@@ -81,7 +81,7 @@ define('Controls-demo/Explorer/Demo', [
                   'parent': null,
                   'type': null,
                   title: 'Договор на поставку печатной продукции',
-                  image: explorerImages[1],
+                  image: explorerImages[3],
                   isDocument: true
                }, {
                   id: 5,
@@ -155,7 +155,7 @@ define('Controls-demo/Explorer/Demo', [
                   'parent': null,
                   'type': null,
                   title: 'Договор на поставку печатной продукции',
-                  image: explorerImages[1],
+                  image: explorerImages[3],
                   isDocument: true,
                   width: 200
                }, {
