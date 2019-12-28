@@ -88,7 +88,7 @@ define('Controls-demo/Explorer/Demo', [
                   'parent': null,
                   'type': null,
                   title: 'Договор аренды помещения',
-                  image: explorerImages[1],
+                  image: explorerImages[3],
                   isDocument: true
                }, {
                   id: 6,
@@ -163,7 +163,7 @@ define('Controls-demo/Explorer/Demo', [
                   'parent': null,
                   'type': null,
                   title: 'Договор аренды помещения',
-                  image: explorerImages[1],
+                  image: explorerImages[3],
                   isDocument: true,
                   width: 200
                }, {
