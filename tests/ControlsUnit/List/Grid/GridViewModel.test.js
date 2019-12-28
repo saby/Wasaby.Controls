@@ -2085,6 +2085,15 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             GridLayoutUtil.getDefaultColumnWidth = nativeGetDefaultColumnWidth;
          });
 
+         it('isFixedLayout', function () {
+            model = new gridMod.GridViewModel({...cfg, columnScroll: true});
+            assert.isTrue(model.isFixedLayout());
+            model = new gridMod.GridViewModel({...cfg, columnScroll: false});
+            assert.isFalse(model.isFixedLayout());
+            model = new gridMod.GridViewModel({...cfg});
+            assert.isFalse(model.isFixedLayout());
+         });
+
          it('_prepareCrossBrowserColumn', function () {
             const initialColumns = [
                {title: 'first', width: ''},
