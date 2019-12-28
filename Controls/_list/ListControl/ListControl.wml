@@ -1,6 +1,6 @@
 <Controls._list.BaseControl scope="{{_options}}"
                             name="baseControl"
-                            on:itemMouseMove="_itemMouseMove()"
+                            on:itemMouseMove="_onItemMouseMove()"
                             on:itemMouseLeave="_onItemMouseLeave()"
                             on:itemMouseEnter="_onItemMouseEnter()">
    <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partail, потому что изменения только в замыкании функции-->

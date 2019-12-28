@@ -561,7 +561,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._notify('markedKeyChanged', [key]);
     },
 
-    _itemMouseEnter(event, itemData, nativeEvent) {
+    _onItemMouseEnter(event, itemData, nativeEvent) {
         event.stopPropagation();
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },

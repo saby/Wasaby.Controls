@@ -59,12 +59,12 @@ var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype
         return this._children.baseControl.scrollToItem(key, toBottom);
     },
 
-    _itemMouseEnter(event, itemData, nativeEvent) {
+    _onItemMouseEnter(event, itemData, nativeEvent) {
         event.stopPropagation();
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
-    _itemMouseMove: function(event, itemData, nativeEvent) {
+    _onItemMouseMove: function(event, itemData, nativeEvent) {
         event.stopPropagation();
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
     },
