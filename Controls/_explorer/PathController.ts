@@ -7,9 +7,10 @@ import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingP
 
 
    var _private = {
-      getHeader: function(self, options) {
+      getHeader: function(self, options, newBackButtonCaption) {
          var newHeader;
          if (options.items && options.header && options.header.length && !options.header[0].title && !options.header[0].template) {
+            self._backButtonCaption = newBackButtonCaption;
             newHeader = options.header.slice();
             newHeader[0] = {
                ...options.header[0],
@@ -19,7 +20,7 @@ import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingP
                   showActionButton: !!options.showActionButton,
                   showArrowOutsideOfBackButton: !!options.showActionButton,
                   backButtonStyle: options.backButtonStyle,
-                  backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
+                  backButtonCaption: newBackButtonCaption,
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
                },
 
@@ -33,7 +34,9 @@ import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingP
       needCrumbs: function(header, items, rootVisible) {
          return !!items && ((!header && items.length > 0) || items.length > 1) || !!rootVisible;
       },
-
+      getBackButtonCaption(options): string|null {
+         return options.items && options.items ? ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty) : null;
+      },
       needShadow: function(header, headerCfg) {
 
          //если есть заголовок, то тень будет под ним, и нам не нужно рисовать ее под хлебными крошками
@@ -46,16 +49,19 @@ import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingP
       _header: null,
       _needCrumbs: false,
       _needShadow: false,
+      _backButtonCaption: null,
 
       _beforeMount: function(options) {
-         this._header = _private.getHeader(this, options);
+         let newBackButtonCaption = _private.getBackButtonCaption(options);
+         this._header = _private.getHeader(this, options, newBackButtonCaption);
          this._needCrumbs = _private.needCrumbs(this._header, options.items);
          this._needShadow = _private.needShadow(this._header, options.header);
       },
 
       _beforeUpdate: function(newOptions) {
-         if (this._options.rootVisible !== newOptions.rootVisible || this._options.items !== newOptions.items || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
-            this._header = _private.getHeader(this, newOptions);
+         let newBackButtonCaption = _private.getBackButtonCaption(newOptions);
+         if (this._options.rootVisible !== newOptions.rootVisible || this._backButtonCaption !== newBackButtonCaption || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
+            this._header = _private.getHeader(this, newOptions, newBackButtonCaption);
             this._needCrumbs = _private.needCrumbs(this._header, newOptions.items, newOptions.rootVisible);
             this._needShadow = _private.needShadow(this._header, newOptions.header);
          }
