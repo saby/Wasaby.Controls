@@ -35,4 +35,8 @@
          </div>
       </ws:else>
    </ws:if>
+   <Controls.dropdown:Opener
+      name="menuOpener"
+      keyProperty="id"
+      menuStyle="cross" />
 </div>

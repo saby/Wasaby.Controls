@@ -6,6 +6,7 @@ import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection, EditInPlaceController } from 'Controls/display';
 import { constants } from 'Env/Env';
+import { Opener as DropdownOpener } from 'Controls/dropdown';
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -17,6 +18,7 @@ export interface IRenderOptions extends IControlOptions {
 
 export interface IRenderChildren {
     itemsContainer?: HTMLDivElement;
+    menuOpener?: DropdownOpener;
 }
 
 export default class Render extends Control<IRenderOptions> {
@@ -27,6 +29,8 @@ export default class Render extends Control<IRenderOptions> {
     protected _itemTemplate: TemplateFunction;
 
     protected _pendingResize: boolean = false;
+    protected _currentMenuConfig: unknown = null;
+
     protected _onCollectionChange = (_e: unknown, action: string) => {
         if (action !== 'ch') {
             // Notify resize when items are added, removed or replaced, or
@@ -46,6 +50,16 @@ export default class Render extends Control<IRenderOptions> {
         if (newOptions.listModel !== this._options.listModel) {
             this._subscribeToModelChanges(newOptions.listModel);
         }
+
+        const menuConfig = newOptions.listModel.getActionsMenuConfig();
+        if (menuConfig !== this._currentMenuConfig) {
+            if (menuConfig) {
+                this._children.menuOpener.open(menuConfig, this);
+            } else {
+                this._children.menuOpener.close();
+            }
+            this._currentMenuConfig = menuConfig;
+        }
     }
 
     protected _afterRender(): void {
@@ -57,6 +71,7 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _beforeUnmount(): void {
         this._unsubscribeFromModelChanges(this._options.listModel);
+        this._currentMenuConfig = null;
     }
 
     protected _afterMount(): void {
