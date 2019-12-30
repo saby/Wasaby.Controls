@@ -1,26 +1,26 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import template = require('wml!Controls/_grid/SortResources/HeaderSortButton');
+import template = require('wml!Controls/_grid/SortingResources/SortingButton');
 import 'css!theme?Controls/grid';
 
 /**
  * Контрол, используюемый для изменения сортировки внутри таблиц
  *
- * @class Controls/_grid/HeaderSortButton
+ * @class Controls/_grid/SortingButton
  * @extends Core/Control
- * @mixes Controls/_grid/HeaderSortButton/Styles
+ * @mixes Controls/_grid/SortingButton/Styles
  * @private
- * @see Controls/grid:SortMenu
+ * @see Controls/grid:SortingSelector
  */
 
 /**
- * @name Controls/_grid/HeaderSortButton#property
+ * @name Controls/_grid/SortingButton#property
  * @cfg {String} Поле для сортировки.
  */
 
-export interface IHeaderSortButtonOptions extends IControlOptions {
+export interface ISortingButtonOptions extends IControlOptions {
     property: string;
 }
-class HeaderSortButton extends Control<IHeaderSortButtonOptions> {
+class SortingButton extends Control<ISortingButtonOptions> {
     protected _template: TemplateFunction = template;
 
     protected _clickHandler(): void {
@@ -30,4 +30,4 @@ class HeaderSortButton extends Control<IHeaderSortButtonOptions> {
     static _theme: [string] = ['Controls/grid'];
 }
 
-export default HeaderSortButton;
+export default SortingButton;

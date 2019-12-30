@@ -9,13 +9,6 @@ export interface ISortingOptions {
  * @public
  * @author Авраменко А.С.
  */
-/*
- * Interface for controls that implement sorting.
- *
- * @interface Controls/_interface/ISorting
- * @public
- * @author Avramenko A.S.
- */
 export default interface ISorting {
    readonly '[Controls/_interface/ISorting]': boolean;
 }
@@ -84,5 +77,5 @@ export default interface ISorting {
  * ]
  * </pre>
  * Дополнительную информацию смотрите в разделе <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/#javascript">декларативный списочный метод</a>.
- * @see Controls/grid:SortButton
+ * @see Controls/grid:SortingSelector
  */

@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/grid/Sorting/SortButton/SortButton';
+import * as Template from 'wml!Controls-demo/grid/Sorting/SortingSelector/SortingSelector';
 
 import 'css!Controls-demo/Controls-demo';
 

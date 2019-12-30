@@ -1,26 +1,33 @@
-define(['Controls/grid'], function(grid) {
-   describe('Controls.grid:SortButton', function() {
+define(['Controls/grid', 'Types/source'], function(grid, TypesSource) {
+   describe('Controls.grid:SortingSelector', function() {
       const sortingParameters = [
          {
+            id: 1,
             parameterName: null,
             title: 'none'
          },
          {
+            id: 2,
             parameterName: 'F',
             title: 'first'
          },
          {
+            id: 3,
             parameterName: 'S',
             title: 'second'
          }];
+      const source = new TypesSource.Memory({
+         data: sortingParameters,
+         keyProperty: 'id',
+      });
       const sorting = [{ 'F': 'ASC' }];
-      const cfg = { sorting: sorting, sortingParameters: sortingParameters };
-      const SortButton = new grid.SortButton(cfg);
+      const cfg = { value: sorting, source: source, keyProperty: 'id', displayProperty: 'title', sortingParameterProperty: 'parameterName' };
+      const sortingSelector = new grid.SortingSelector(cfg);
       let menuClosed = false;
-      SortButton._notify = (eventName, args) => {
-         cfg.sorting = args[0];
+      sortingSelector._notify = (eventName, args) => {
+         cfg.value = args[0];
       };
-      SortButton._children = {
+      sortingSelector._children = {
          dropdown: {
             closeMenu: () => {
                menuClosed = true;
@@ -29,19 +36,19 @@ define(['Controls/grid'], function(grid) {
       };
 
       it('initial configurating', function() {
-         SortButton._beforeMount(cfg);
-         SortButton.saveOptions({...cfg});
-         assert.deepEqual(SortButton._selectedKeys, [1]);
-         assert.deepEqual(SortButton._currentParameterName, 'F');
-         assert.deepEqual(SortButton._currentValue, 'ASC');
+         sortingSelector._beforeMount(cfg);
+         sortingSelector.saveOptions({...cfg});
+         assert.deepEqual(sortingSelector._selectedKeys, [2]);
+         assert.deepEqual(sortingSelector._currentParameterName, 'F');
+         assert.deepEqual(sortingSelector._currentOrder, 'ASC');
       });
 
       it('_switchSorting', function() {
-         SortButton._switchSorting();
-         SortButton.__beforeUpdate(cfg);
-         assert.deepEqual(SortButton._selectedKeys, [1]);
-         assert.deepEqual(SortButton._currentParameterName, 'F');
-         assert.deepEqual(SortButton._currentValue, 'DESC');
+         sortingSelector._switchValue();
+         sortingSelector.__beforeUpdate(cfg);
+         assert.deepEqual(sortingSelector._selectedKeys, [2]);
+         assert.deepEqual(sortingSelector._currentParameterName, 'F');
+         assert.deepEqual(sortingSelector._currentOrder, 'DESC');
       });
 
       it('_itemArrowClick', function() {
@@ -53,20 +60,20 @@ define(['Controls/grid'], function(grid) {
             }
          };
          assert.isFalse(menuClosed);
-         SortButton._itemArrowClick({}, item, 'ASC');
-         SortButton.__beforeUpdate(cfg);
-         assert.deepEqual(SortButton._selectedKeys, [2]);
-         assert.deepEqual(SortButton._currentParameterName, 'S');
-         assert.deepEqual(SortButton._currentValue, 'ASC');
+         sortingSelector._itemArrowClick({}, item, 'ASC');
+         sortingSelector.__beforeUpdate(cfg);
+         assert.deepEqual(sortingSelector._selectedKeys, [3]);
+         assert.deepEqual(sortingSelector._currentParameterName, 'S');
+         assert.deepEqual(sortingSelector._currentOrder, 'ASC');
          assert.isTrue(menuClosed);
       });
       it('_selectedKeysChangedHandler', function() {
-         assert.isFalse(SortButton._selectedKeysChangedHandler({},[2]));
-         SortButton._selectedKeysChangedHandler({},[0]);
-         SortButton.__beforeUpdate(cfg);
-         assert.deepEqual(SortButton._selectedKeys, [0]);
-         assert.deepEqual(SortButton._currentParameterName, null);
-         assert.deepEqual(SortButton._currentValue, null);
+         assert.isFalse(sortingSelector._selectedKeysChangedHandler({},[2]));
+         sortingSelector._selectedKeysChangedHandler({},[1]);
+         sortingSelector.__beforeUpdate(cfg);
+         assert.deepEqual(sortingSelector._selectedKeys, [1]);
+         assert.deepEqual(sortingSelector._currentParameterName, null);
+         assert.deepEqual(sortingSelector._currentOrder, null);
       });
    });
 });
