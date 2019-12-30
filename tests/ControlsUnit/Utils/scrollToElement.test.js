@@ -119,6 +119,49 @@ define([
             assert.equal(element.parentElement.scrollTop, 55);
          });
 
+         it('should scroll only first parentElement', function () {
+            mockDOM();
+            let element = {
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 110,
+                  clientHeight: 100,
+                  top: 15,
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 0,
+                  className: '',
+                  parentElement: {
+                     overflowY: 'scroll',
+                     scrollHeight: 110,
+                     clientHeight: 100,
+                     top: 5,
+                     getBoundingClientRect: function() {
+                        return {
+                           top: this.top,
+                           height: this.clientHeight
+                        };
+                     },
+                     scrollTop: 0,
+                     className: ''
+                  }
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 25,
+                     height: 20
+                  };
+               }
+            };
+            scrollToElement(element, false, true);
+            assert.equal(element.parentElement.parentElement.scrollTop, 0);
+            assert.equal(element.parentElement.scrollTop, 10);
+         });
+
          it('to bottom with fractional coords', function() {
             mockDOM();
             var element = {
