@@ -6,7 +6,6 @@
         searchValue="{{ collection.getSearchValue() }}"
 
         attr:class="{{collection.isItemHidden(index) ? 'ws-hidden'}}"
-        attr:key="{{ keyPrefix }}-{{ item.getUid() }}"
 
         on:click="_onItemClick(item)"
         on:contextmenu="_onItemContextMenu(item)"
