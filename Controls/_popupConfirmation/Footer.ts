@@ -13,7 +13,7 @@ class Footer extends Control<IFooterOptions> implements IConfirmationFooter {
 export default Footer;
 
 /**
- * Базовый шаблон <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/'>футера окна диалога</a>.
+ * Базовый шаблон футера окна диалога</a>.
  * @class Controls/_popupConfirmation/Footer
  * @mixes Controls/_popup/interface/IConfirmationFooter
  * @extends Core/Control
