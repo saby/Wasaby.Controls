@@ -21,6 +21,7 @@ export default interface IFontSize {
 /**
  * @name Controls/_interface/IFontSize#fontSize
  * @cfg {Enum} Размер шрифта.
+ * @variant inherit
  * @variant xs
  * @variant s
  * @variant m
@@ -45,6 +46,7 @@ export default interface IFontSize {
 /*
  * @name Controls/_interface/IFontSize#fontSize
  * @cfg {Enum} Font size value
+ * @variant inherit
  * @variant xs
  * @variant s
  * @variant m
