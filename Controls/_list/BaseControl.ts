@@ -1948,6 +1948,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         _private.updateShadowMode(this);
+        this._loadedItems = null;
     },
 
     _beforeUpdate: function(newOptions) {
