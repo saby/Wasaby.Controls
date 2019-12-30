@@ -554,7 +554,6 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.equal(searchController._viewMode, "tile");
          });
-
       });
 
       describe('_beforeUnmount', function() {
