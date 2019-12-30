@@ -87,7 +87,6 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  * @mixes Controls/interface:IHierarchy
  * @mixes Controls/interface:IIconSize
  * @mixes Controls/interface:IItemTemplate
- * @mixes Controls/interface:ISource
  * @mixes Controls/toolbars:IToolbarOptions
  *
  * @public
@@ -95,7 +94,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  * @demo Controls-demo/Toolbar/ToolbarVdom
  */
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, ISource, IIconSize, IItemTemplate, IGrouped {
-    /**
+    /*
      * Used in template
      */
     protected _showType: IShowType = showType;
@@ -442,12 +441,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
  *             break;
  *    }
  * </pre>
- */
-
-/**
- * @name Controls/_toolbars/View#source
- * @remark
- * Элементы в источнике данных должны иметь {@link Controls/_toolbars/IToolbarSource/Item.typedef определенный тип}.
  */
 
 export default Toolbar;
