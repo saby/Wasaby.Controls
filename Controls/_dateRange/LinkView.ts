@@ -63,12 +63,7 @@ var _private = {
    _updateStyles: function(self, options, newOption) {
       var changed = false;
 
-      // TODO: remove style option https://online.sbis.ru/opendoc.html?guid=882c43d4-8f3c-4998-8660-bfa08fcef227
-      if (newOption.style && options.style !== newOption.style) {
-         self._viewMode = _private.styleMap[newOption.style].viewMode;
-         self._styleMode = _private.styleMap[newOption.style].styleMode;
-         changed = true;
-      } else if (options.viewMode !== newOption.viewMode || options.styleMode !== newOption.styleMode) {
+      if (options.viewMode !== newOption.viewMode || options.styleMode !== newOption.styleMode) {
          self._viewMode = newOption.viewMode;
          self._styleMode = newOption.styleMode || _private.defaultStyleMap[newOption.viewMode];
          changed = true;
@@ -132,7 +127,7 @@ var Component = BaseControl.extend({
       // clearButtonVisibility is option of clearButton visibility state
 
       if ((options.prevArrowVisibility && options.clearButtonVisibility) || (options.nextArrowVisibility && options.clearButtonVisibility)) {
-          Logger.error('LinkView: ' + rk('The Controls functional is not intended for showClearButton and showPrevArrow/showNextArrow options using in one time'), this);
+          Logger.error('LinkView: ' + rk('The Controls functional is not intended for showClearButton and prevArrowVisibility/nextArrowVisibility options using in one time'), this);
       }
    },
    _beforeUpdate: function(options) {
@@ -160,7 +155,7 @@ var Component = BaseControl.extend({
    },
 
    getDialogTarget () {
-       if (this._options.nextArrowVisibility || this._options.prevArrowVisibility || this._options.showNextArrow || this._options.showPrevArrow) {
+       if (this._options.nextArrowVisibility || this._options.prevArrowVisibility) {
            return this._children.openDialogTarget;
        }
       return this._container;
