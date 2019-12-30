@@ -321,6 +321,11 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          this._root = newOptions.root;
       }
 
+      if (this._viewMode !== newOptions.viewMode) {
+         this._previousViewMode = this._viewMode;
+         this._viewMode = newOptions.viewMode;
+      }
+
       if (this._searchController) {
          if (filter) {
             this._searchController.setFilter(clone(filter));
