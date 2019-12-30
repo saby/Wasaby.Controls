@@ -6,8 +6,10 @@
     "types": [
       "typedef",
       "wasaby-app",
+      "requirejs",
       "chai",
-      "mocha"
+      "mocha",
+      "sinon"
     ],
     "experimentalDecorators": true
   },
