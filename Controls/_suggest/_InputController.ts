@@ -402,6 +402,7 @@ var SuggestLayout = Control.extend({
       }
    },
 
+   // TODO Нужно удалить после https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
    inputReadyHandler(_: Event, input: Control): void {
       this._input = input;
    },
