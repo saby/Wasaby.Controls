@@ -88,6 +88,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  * @mixes Controls/interface:IIconSize
  * @mixes Controls/interface:IItemTemplate
  * @mixes Controls/toolbars:IToolbarOptions
+ * @mixes Controls/toolbars:IToolbarSource
  *
  * @public
  * @author Красильников А.С.
