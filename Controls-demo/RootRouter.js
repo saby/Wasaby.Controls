@@ -4,33 +4,54 @@
 define('Controls-demo/RootRouter', [
    'Core/Control',
    'wml!Controls-demo/RootRouter',
+   'Application/Initializer',
+   'Application/Env',
    'css!Controls-demo/RootRouter'
 ], function(BaseControl,
-   template) {
+            template,
+            AppInit,
+            AppEnv) {
    'use strict';
 
    var ModuleClass = BaseControl.extend(
       {
-          isReloading: false,
-          reload: function() {
-              this.isReloading = true;
-          },
+         _template: template,
+         isReloading: false,
+         _pathName: '/Controls-demo/app/Controls-demo%2FIndexOld',
+         reload: function() {
+            this.isReloading = true;
+         },
 
-          _afterMount: function() {
-              window.reloadDemo = this.reload.bind(this);
-          },
+         _afterMount: function() {
+            window.reloadDemo = this.reload.bind(this);
+         },
 
-          _afterUpdate: function() {
-              this.isReloading = false;
-          },
+         _afterUpdate: function() {
+            this.isReloading = false;
+         },
 
-          _template: template,
+         _isMenuButtonVisible: function() {
+            var location = this._getLocation();
+            if (location) {
+               return location.pathname !== this._pathName;
+            }
+            return null;
+         },
+
          backClickHdl: function() {
             window.history.back();
          },
 
          goHomeHandler: function() {
-             window.location = "/Controls-demo/app/Controls-demo%2FIndexOld";
+            window.location = this._pathName;
+         },
+         _getLocation: function() {
+            if (AppInit.isInit()) {
+               return AppEnv.location;
+            } if (typeof window !== 'undefined') {
+               return window.location;
+            }
+            return null;
          }
       }
    );

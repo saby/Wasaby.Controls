@@ -3,7 +3,7 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/grid/ColumnScroll/Base/Index' }}">
-            <a href="{{content.href}}">Без шапки и результатов</a>
+            <a href="{{content.href}}">Базовая настройка скрола колонок</a>
         </Router.router:Reference>
         <Controls-demo.grid.ColumnScroll.Base.Index/>
     </div>
