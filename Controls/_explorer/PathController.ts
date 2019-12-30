@@ -9,8 +9,8 @@ import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingP
    var _private = {
       getHeader: function(self, options, newBackButtonCaption) {
          var newHeader;
+         self._backButtonCaption = newBackButtonCaption;
          if (options.items && options.header && options.header.length && !options.header[0].title && !options.header[0].template) {
-            self._backButtonCaption = newBackButtonCaption;
             newHeader = options.header.slice();
             newHeader[0] = {
                ...options.header[0],
@@ -35,7 +35,7 @@ import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingP
          return !!items && ((!header && items.length > 0) || items.length > 1) || !!rootVisible;
       },
       getBackButtonCaption(options): string|null {
-         return options.items && options.items ? ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty) : null;
+         return options.items && options.items.length ? ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty) : null;
       },
       needShadow: function(header, headerCfg) {
 
