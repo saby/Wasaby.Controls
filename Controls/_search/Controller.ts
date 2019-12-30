@@ -304,7 +304,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          if (!_private.isInputSearchValueShort(this, options.searchValue)) {
             this._searchValue = options.searchValue;
 
-            if (_private.needUpdateViewMode(this, 'search') {
+            if (_private.needUpdateViewMode(this, 'search')) {
                _private.updateViewMode(this, 'search');
             }
          }
