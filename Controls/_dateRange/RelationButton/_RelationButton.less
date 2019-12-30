@@ -1,8 +1,5 @@
 .controls-DateRangeRelationButton_normal_theme-@{themeName} {
    color: @color_DateRangeRelationButton-normal;
-   &:hover {
-      color: @color_DateRangeRelationButton-normal_hovered;
-   }
 }
 
 .controls-DateRangeRelationButton {
@@ -12,7 +9,14 @@
 
 .controls-DateRangeRelationButton_byCapacity_theme-@{themeName} {
    color: @color_DateRangeRelationButton-byCapacity;
-   &:hover {
+}
+
+.ws-is-hover {
+   .controls-DateRangeRelationButton_byCapacity_theme-@{themeName}:hover {
       color: @color_DateRangeRelationButton-byCapacity_hovered;
+   }
+
+   .controls-DateRangeRelationButton_normal_theme-@{themeName}:hover {
+      color: @color_DateRangeRelationButton-normal_hovered;
    }
 }

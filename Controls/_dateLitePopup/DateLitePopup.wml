@@ -4,7 +4,7 @@
       <div class="controls-PeriodLiteDialog__bodyWrapper">
          <div class="controls-PeriodLiteDialog__yearWrapper {{_getYearWrapperCssClasses()}} {{(_yearHovered === _position.getFullYear())? ' controls-PeriodLiteDialog__yearHeader-background-hovered'}}"  title="{[Выбрать год]}">
             <div class="controls-PeriodLiteDialog__year-prev" title="{[Предыдущий год]}" on:click="_onPrevYearBtnClick()"></div>
-            <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}" title="{[Поставить текущий период]}">
+            <div class="controls-PeriodLiteDialog__home-wrapper{{!_options.chooseHalfyears ? '-lite' }}" title="{[Поставить текущий период]}">
                <Controls.buttons:Button
                        class="controls-PeriodLiteDialog__homeButton"
                        fontColorStyle="link"
