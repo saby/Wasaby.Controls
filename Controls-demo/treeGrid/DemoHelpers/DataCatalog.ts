@@ -1299,6 +1299,8 @@ export const DeepInside = {
         { id: 3, title: 'Скрытый узел 3', parent: null, nodeType: false },
         { id: 4, title: 'Скрытый узел 4', parent: null, nodeType: false },
         { id: 5, title: 'Лист 5', parent: null, nodeType: null },
-        { id: 6, title: 'Лист 6', parent: null, nodeType: null }
+        { id: 6, title: 'Лист 6', parent: null, nodeType: null },
+        { id: 7, title: 'Лист 7', parent: null, nodeType: null },
+        { id: 8, title: 'Лист 8', parent: null, nodeType: null }
     ])
 };

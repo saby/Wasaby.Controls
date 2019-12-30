@@ -2,6 +2,6 @@
             attr:class="js-controls-ListView__notEditable"
             itemData="{{itemData}}">
     <ws:contentTemplate>
-        <div></div>
+        <div>Не редактируемая ячейка</div>
     </ws:contentTemplate>
 </ws:partial>

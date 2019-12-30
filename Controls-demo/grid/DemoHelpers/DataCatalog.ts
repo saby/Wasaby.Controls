@@ -8,7 +8,7 @@ import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksReceived'
 import * as Images from 'Controls-demo/DragNDrop/Images';
 import * as itemTpl from  'wml!Controls-demo/grid/resources/CellTemplates/CellWithBgc';
 import * as itemCountr from 'wml!Controls-demo/grid/resources/CellTemplates/CountryTemp';
-
+import * as resTpl from 'wml!Controls-demo/grid/EditInPlace/EditingCell/resultsTpl';
 
 
 
@@ -773,59 +773,71 @@ function getEditing() {
                 id: '1',
                 title: 'Время',
                 description: 'Погода',
-                price: 1,
-                balance: 1,
-                balanceCostSumm: 2,
-                reserve: 2,
-                costPrice: 3
+                price: '1',
+                balance: '1',
+                balanceCostSumm: '2',
+                reserve: '2',
+                costPrice: '3'
             },
             {
                 id: '2',
                 title: 'Масса',
                 description: 'Скорость',
-                price: 1,
-                balance: 1,
-                balanceCostSumm: 2,
-                reserve: 2,
-                costPrice: 3
+                price: '1',
+                balance: '1',
+                balanceCostSumm: '2',
+                reserve: '2',
+                costPrice: '3'
             },
             {
                 id: '3',
                 title: 'Давление',
                 description: 'Плотность',
-                price: 1,
-                balance: 1,
-                balanceCostSumm: 2,
-                reserve: 2,
-                costPrice: 3
+                price: '1',
+                balance: '1',
+                balanceCostSumm: '2',
+                reserve: '2',
+                costPrice: '3'
             },
         ],
         getEditingColumns: () => [
             {
                 displayProperty: 'title',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor'
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
             },
             {
                 displayProperty: 'price',
-                width: '50px',
+                width: '100px',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
+                resultTemplate: resTpl,
+                results: 3
             },
             {
                 displayProperty: 'balance',
-                width: '50px',
+                width: '100px',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
+                resultTemplate: resTpl,
+                results: 3
             },
             {
                 displayProperty: 'description',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor'
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
             },
             {
                 displayProperty: 'costPrice',
-                width: '50px',
+                width: '100px',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
+                resultTemplate: resTpl,
+                results: 9
             },
             {
                 displayProperty: 'balanceCostSumm',
-                width: '50px',
+                width: '100px',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
+                resultTemplate: resTpl,
+                results: 6
             }
         ]
     };

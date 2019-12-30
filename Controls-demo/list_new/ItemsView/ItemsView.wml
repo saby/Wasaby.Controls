@@ -4,5 +4,4 @@
             <div>{{itemTemplate.itemData.item.title}}</div>
         </ws:itemTemplate>
     </Controls.list:ItemsView>
-
 </div>
