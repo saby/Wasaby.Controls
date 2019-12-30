@@ -368,6 +368,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(clearColumnScroll._contentSize, 500);
          assert.equal(clearColumnScroll._contentSizeForHScroll, 400);
 
+         clearColumnScroll._afterUpdate({...cfg, root: 2});
+         assert.equal(clearColumnScroll._contentSize, 0);
+         assert.equal(clearColumnScroll._contentContainerSize, 0);
       });
 
       it('no sticky columns', function() {
