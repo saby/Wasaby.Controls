@@ -1,8 +1,8 @@
 <div class="ControlsDemo-Page ws-flexbox ws-flex-column">
-   <a attr:class="ws-link" if="{{componentName !== 'Controls-demo/Index'}}"
+   <a attr:class="ws-link" if="{{_isMenuButtonVisible()}}"
                     attr:id="Back"
                     attr:style="width: 100px"
-                     on:click="backClickHdl()">&lt;&nbsp;Назад</a>
+                     on:click="goHomeHandler()">&lt;&nbsp;Меню</a>
    <Router.router:Route mask="app/:app">
       <Controls-demo.RootTemplateWrapper>
          <ws:if data="{{content.app && content.templateLoaded}}">

@@ -235,6 +235,10 @@ const
             _private.updateFixedColumnWidth(this);
             this._setOffsetForHScroll();
          }
+         if (oldOptions.root !== this._options.root) {
+             this._contentSize = 0;
+             this._contentContainerSize = 0;
+         }
       },
 
       updateShadowStyle() {
