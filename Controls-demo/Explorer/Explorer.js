@@ -246,14 +246,14 @@ define('Controls-demo/Explorer/Explorer', [
                   'parent': null,
                   'parent@': null,
                   title: 'Договор на поставку печатной продукции',
-                  image: explorerImages[0],
+                  image: explorerImages[3],
                   isDocument: true
                }, {
                   id: 5,
                   'parent': null,
                   'parent@': null,
                   title: 'Договор аренды помещения',
-                  image: explorerImages[1],
+                  image: explorerImages[3],
                   isDocument: true
                }, {
                   id: 6,
