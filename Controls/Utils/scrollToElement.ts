@@ -56,7 +56,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * Модуль возвращает функцию, которая позволяет проскроллить содержимое, находящееся внутри родительского скролл-контейнера, к выбранному элементу, сделав его видимым.
  *
  * <h2>Аргументы функции</h2>
- * 
+ *
  * * element: HTMLElement — DOM-элемент, к которому нужно проскроллить содержимое
  * * toBottom: boolean — определяет, должен ли быть виден нижний край контейнера
  * * force: boolean:
@@ -124,6 +124,9 @@ function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boole
          } else {
             elemToScroll.scrollTop += Math.floor(elemOffset.top - parentOffset.top - stickyHeaderHeight.top);
          }
+         // Принудительно скроллим в самый вверх или вниз, только первый родительский скролл контейнер,
+         // остальные скролл контейнер, скроллим только если элемент невидим
+         force = false;
       } else {
          if (parentOffset.top + stickyHeaderHeight.top > elemOffset.top) {
             if (toBottom) {

@@ -1133,6 +1133,18 @@ define(
                assert.deepEqual(resultMeta, {$_history: true});
             });
 
+            it('_private:reload', function(done) {
+               view._source[0].editorOptions.source = hSource;
+               filter.View._private.reload(view).addCallback((receivedState) => {
+                  assert.isUndefined(receivedState.configs.document.source);
+                  assert.isOk(receivedState.configs.state.source);
+
+                  assert.isOk(view._configs.document.source);
+                  assert.isOk(view._configs.state.source);
+                  done();
+               });
+            });
+
             it('_private:getPopupConfig historySource', function() {
                hSource.prepareItems = () => {
                   return new collection.RecordSet({ rawData: Clone(defaultItems[1]) });
