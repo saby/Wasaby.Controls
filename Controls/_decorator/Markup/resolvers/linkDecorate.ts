@@ -28,17 +28,17 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  * &#160;
  *                   // Ссылка, подходящая для декорирования, сразу в json
  *                   ["a",
- *                   {"href": "https://ya.ru
- *                   "},
- *                   "https://ya.ru"
+ *                      {"href": "https://ya.ru
+ *                      "},
+ *                      "https://ya.ru"
  *                   ]
  *                ],
  *                ["p", 
  * &#160;
  *                   // Ссылка, не подходящая для декорирования, сразу в json
  *                   ["a",
- *                   {"href": "http://www.google.com"},
- *                   "www.google.com"
+ *                      {"href": "http://www.google.com"},
+ *                      "www.google.com"
  *                   ]
  *                ],
  *                ["pre", 
@@ -50,7 +50,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *             ]
  *          ]
  *       });
- *    return ModuleClass;
+ *   return ModuleClass;
  * });
  * </pre>
  * Результат:
