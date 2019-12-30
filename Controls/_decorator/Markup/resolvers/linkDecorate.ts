@@ -92,14 +92,14 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  * @author Кондаков Р.Н.
  */
 export default function linkDecorate(value, parent) {
-	if (!parent) {
-		clearNeedDecorateGlobals();
-	}
-	let result;
-	if (needDecorate(value, parent)) {
-		result = getDecoratedLink(value);
-	} else {
-		result = value;
-	}
-	return result;
+    if (!parent) {
+        clearNeedDecorateGlobals();
+    }
+    let result;
+    if (needDecorate(value, parent)) {
+        result = getDecoratedLink(value);
+    } else {
+        result = value;
+    }
+    return result;
 };
