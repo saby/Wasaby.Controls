@@ -426,7 +426,6 @@ export default class ScrollContainer extends Control<IOptions> {
 
         if (this._options.virtualScrolling) {
             this.virtualScroll.viewportHeight = viewportHeight;
-            this.virtualScroll.triggerOffset = this.triggerOffset;
         }
 
         if (shouldNotify) {
@@ -559,6 +558,11 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private updateTriggerOffset(viewportSize: number, viewSize: number): void {
         this.triggerOffset = this.getTriggerOffset(viewportSize, viewSize);
+
+        if (this.virtualScroll) {
+            this.virtualScroll.triggerOffset = this.triggerOffset;
+        }
+
         this._notify('triggerOffsetChanged', [this.triggerOffset, this.triggerOffset]);
     }
 
