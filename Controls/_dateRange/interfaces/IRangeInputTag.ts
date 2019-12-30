@@ -1,7 +1,7 @@
 /**
  * Интерфейс для поддержки ввода тегов (цветные индикаторы в правом верхнем углу).
  *
- * @interface Controls/_dateRange/interfaces/IInputDateTag
+ * @interface Controls/_dateRange/interfaces/IRangeInputTag
  * @public
  * @author Красильников А.С.
  */
@@ -9,13 +9,13 @@
 /*
  * Interface for input tags (colored indicators in the right top corner).
  *
- * @interface Controls/_dateRange/interfaces/IInputDateTag
+ * @interface Controls/_dateRange/interfaces/IRangeInputTag
  * @public
  * @author Красильников А.С.
  */
 
 /**
- * @name Controls/_dateRange/interfaces/IInputDateTag#startTagStyle
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#startTagStyle
  * @cfg {String} Стиль индикатора в стартовом поле.
  * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @variant secondary
@@ -24,7 +24,7 @@
  * @variant danger
  * @variant info
  * @remark
- * Тег может использоваться для отображения информации о поле (например, если поле является обязательным). 
+ * Тег может использоваться для отображения информации о поле (например, если поле является обязательным).
  * Часто всплывающая подсказка отображается при клике или наведении курсора мыши на тег.
  * @example
  * В этом примере поле будет отображаться со стилем "danger", чтобы показать, что его заполнение необходимо.
@@ -54,7 +54,7 @@
  */
 
 /*
- * @name Controls/_dateRange/interfaces/IInputDateTag#startTagStyle
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#startTagStyle
  * @cfg {String} Style of the tag in start field (colored indicator shown at the top right corner of the field).
  * @variant secondary
  * @variant success
@@ -90,8 +90,8 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateTag#startTagClick Происходит при клике на индикатор в стартовом поле.
- * @param {Object} event Нативное событие. 
+ * @event Controls/_dateRange/interfaces/IRangeInputTag#startTagClick Происходит при клике на индикатор в стартовом поле.
+ * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
  * @example
@@ -121,7 +121,7 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IInputDateTag#startTagClick Occurs when tag in start field was clicked.
+ * @event Controls/_dateRange/interfaces/IRangeInputTag#startTagClick Occurs when tag in start field was clicked.
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
@@ -151,8 +151,8 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateTag#startTagHover Происходит при наведении курсора на индикатор в стартовом поле.
- * @param {Object} event Нативное событие. 
+ * @event Controls/_dateRange/interfaces/IRangeInputTag#startTagHover Происходит при наведении курсора на индикатор в стартовом поле.
+ * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
  * @example
@@ -182,7 +182,7 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IInputDateTag#startTagHover Occurs when tag in start field is hovered.
+ * @event Controls/_dateRange/interfaces/IRangeInputTag#startTagHover Occurs when tag in start field is hovered.
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
@@ -212,7 +212,7 @@
  */
 
 /**
- * @name Controls/_dateRange/interfaces/IInputDateTag#endTagStyle
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#endTagStyle
  * @cfg {String} Стиль индикатора в конечном поле (цветной индикатор, показанный в правом верхнем углу поля).
  * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @variant secondary
@@ -221,8 +221,8 @@
  * @variant danger
  * @variant info
  * @remark
- * Тег используется для отображения информации о поле (например, если поле является обязательным). 
- * Часто всплывающая подсказка отображается при клике или наведении курсора мыши на тег. 
+ * Тег используется для отображения информации о поле (например, если поле является обязательным).
+ * Часто всплывающая подсказка отображается при клике или наведении курсора мыши на тег.
  * @example
  * В этом примере поле будет отображаться со стилем "danger", чтобы показать, что его заполнение необходимо.
  * Когда вы кликните по тегу, появится всплывающая подсказка с сообщением "This field is required".
@@ -251,7 +251,7 @@
  */
 
 /*
- * @name Controls/_dateRange/interfaces/IInputDateTag#endTagStyle
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#endTagStyle
  * @cfg {String} Style of the tag in end field (colored indicator shown at the top right corner of the field).
  * @variant secondary
  * @variant success
@@ -287,9 +287,9 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateTag#endTagClick Происходит при клике по индикатору в конечном поле.
+ * @event Controls/_dateRange/interfaces/IRangeInputTag#endTagClick Происходит при клике по индикатору в конечном поле.
  * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
- * @param {Object} event Нативное событие. 
+ * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
  * @example
@@ -319,7 +319,7 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IInputDateTag#endTagClick Occurs when tag in end field was clicked.
+ * @event Controls/_dateRange/interfaces/IRangeInputTag#endTagClick Occurs when tag in end field was clicked.
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
@@ -349,7 +349,7 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateTag#endTagHover Происходит при наведении курсора на индикатор в конечном поле.
+ * @event Controls/_dateRange/interfaces/IRangeInputTag#endTagHover Происходит при наведении курсора на индикатор в конечном поле.
  * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
@@ -381,7 +381,7 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IInputDateTag#endTagHover Occurs when tag in end field is hovered.
+ * @event Controls/_dateRange/interfaces/IRangeInputTag#endTagHover Occurs when tag in end field is hovered.
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
