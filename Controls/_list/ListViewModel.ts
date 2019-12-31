@@ -101,6 +101,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _hoveredItem: null,
     _menuState: '',
     _reloadedKeys: null,
+    _singleItemReloadCount: 0,
 
     constructor: function(cfg) {
         var self = this;
@@ -260,7 +261,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             version = 'SELECTED_' + this._selectedKeys[key] + '_' + version;
         }
         if (this._reloadedKeys[key]) {
-            version = 'RELOADED_' + version;
+            version = `RELOADED_${this._reloadedKeys[key]}_` + version;
         }
         version = (this._editingItemData ? 'WITH_EDITING_' : 'WITHOUT_EDITING_') + version;
         if (this._editingItemData && this._editingItemData.key === key) {
@@ -685,7 +686,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._reloadedKeys = {};
     },
     markItemReloaded: function(key) {
-        this._reloadedKeys[key] = true;
+        this._reloadedKeys[key] = ++this._singleItemReloadCount;
     }
 });
 

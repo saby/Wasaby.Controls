@@ -132,6 +132,34 @@ define([
          assert.include(version, 'WITH_EDITING');
       });
 
+      it('markItemReloaded', () => {
+         var
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title'
+            },
+            model = new lists.ListViewModel(cfg),
+            key = 1,
+            itemData = model.getItemDataByItem(model.getItemById(key)),
+            item = itemData.item;
+
+         assert.notInclude(model._calcItemVersion(item, key), 'RELOADED');
+
+         model.markItemReloaded(key);
+         const firstReloadVersion = model._calcItemVersion(item, key);
+
+         model.markItemReloaded(key);
+         const secondReloadVersion = model._calcItemVersion(item, key);
+
+         assert.include(firstReloadVersion, 'RELOADED');
+         assert.include(secondReloadVersion, 'RELOADED');
+         assert.notStrictEqual(firstReloadVersion, secondReloadVersion);
+      });
+
       it('getCurrent', function() {
          var cfg = {
             items: new collection.RecordSet({
