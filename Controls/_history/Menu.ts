@@ -22,11 +22,6 @@ var _private = {
  * @author Герасимов А.М.
  * @category Menu
  * @demo Controls-demo/Menu/MenuVdom
- * @css @color_HistoryMenu-pin Pin icon color.
- * @css @color_HistoryMenu-pin_hovered  Pin icon color in hover state.
- * @css @icon-size_HistoryMenu-pin Pin icon size.
- * @css @spacing_HistoryMenu-between-itemCaption-rightBorder Spacing between item caption and right border.
- * @css @spacing_HistoryMenu-between-pin-rightBorder Spacing between pin icon and right border.
  */
 
 /*
@@ -41,11 +36,6 @@ var _private = {
  * @author Герасимов А.М.
  * @category Menu
  * @demo Controls-demo/Menu/MenuVdom
- * @css @color_HistoryMenu-pin Pin icon color.
- * @css @color_HistoryMenu-pin_hovered  Pin icon color in hover state.
- * @css @icon-size_HistoryMenu-pin Pin icon size.
- * @css @spacing_HistoryMenu-between-itemCaption-rightBorder Spacing between item caption and right border.
- * @css @spacing_HistoryMenu-between-pin-rightBorder Spacing between pin icon and right border.
  */
 
 var HistoryMenu = Menu.extend({

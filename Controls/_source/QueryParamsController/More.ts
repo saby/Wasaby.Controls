@@ -70,7 +70,8 @@ class More {
                     rawData: {
                         id: key,
                         nav_result: moreMeta
-                    }
+                    },
+                    adapter: this.more.getAdapter()
                 }));
             }
         } else {

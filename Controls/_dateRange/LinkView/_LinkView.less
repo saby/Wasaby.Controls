@@ -35,10 +35,6 @@
 
 .controls-DateLinkView__style-secondary_clickable_theme-@{themeName} {
    color: @color_DateLinkView-secondaryStyle;
-   cursor: pointer;
-   &:hover {
-      color: @color_DateLinkView-secondaryStyle_hover;
-   }
 }
 
 .controls-DateLinkView__style-info_theme-@{themeName} {
@@ -55,9 +51,11 @@
    color: @color_DateLinkView_readOnly;
 }
 
-.controls-DateLinkView__value-clickable {
-   &:hover {
+.ws-is-hover {
+   .controls-DateLinkView__style-secondary_clickable_theme-@{themeName}:hover {
       text-decoration: underline;
+      cursor: pointer;
+      color: @color_DateLinkView-secondaryStyle_hover;
    }
 }
 

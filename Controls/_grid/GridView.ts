@@ -250,11 +250,11 @@ var
                 .add(`controls-Grid_${this._options.style}_theme-${this._options.theme}`);
 
             if (!GridLayoutUtil.isFullGridSupport()) {
+                const isFixedLayout = this._listModel.isFixedLayout();
                 classes
                     .add('controls-Grid_table-layout')
-                    .add('controls-Grid_table-layout_fixed', this._listModel.isFixedLayout())
-                    .add('controls-Grid_table-layout_auto', !this._listModel.isFixedLayout())
-                    .add(this._listModel.isFixedLayout());
+                    .add('controls-Grid_table-layout_fixed', isFixedLayout)
+                    .add('controls-Grid_table-layout_auto', !isFixedLayout);
             }
             return classes.compile();
         },
