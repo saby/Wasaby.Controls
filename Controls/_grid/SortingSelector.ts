@@ -5,55 +5,52 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Record} from 'Types/entity';
 import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
-import {ISortingSelectorOptions} from 'Controls/interface/ISortingSelector';
+import {ISortingSelectorOptions, ISortingParam} from 'Controls/interface/ISortingSelector';
 
 class SortingSelector extends Control<ISortingSelectorOptions> {
     protected _template: TemplateFunction = template;
     private _selectedKeys: [number|string];
-    private _currentParameterName: string = null;
+    private _currentParamName: string = null;
     private _currentOrder: 'ASC'|'DESC' = null;
     private _source: Memory;
 
     protected _beforeMount(options: ISortingSelectorOptions): void {
-        this.updateConfig(options.source, options.value, options.sortingParameterProperty, options.keyProperty);
+        this.updateConfig(options.sortingParams, options.value);
     }
 
     protected  _beforeUpdate(newOptions: ISortingSelectorOptions): void {
         if (!isEqual(this._options.value, newOptions.value) ||
-            !isEqual(this._options.source, newOptions.source)) {
-            this.updateConfig(newOptions.source, newOptions.value, newOptions.sortingParameterProperty, newOptions.keyProperty);
+            !isEqual(this._options.sortingParams, newOptions.sortingParams)) {
+            this.updateConfig(newOptions.sortingParams, newOptions.value);
         }
     }
+    private updateConfig(sortingParams: [ISortingParam], value: [object]|undefined): void {
+        const data = [];
 
-    private updateConfig(source: Memory, value: [object]|undefined, sortingParameterProperty: string, keyProperty: string): void {
-        const data = [...source.data];
         if (value && value.length) {
-            this._currentParameterName = Object.keys(value[0])[0];
-            this._currentOrder = value[0][this._currentParameterName];
+            this._currentParamName = Object.keys(value[0])[0];
+            this._currentOrder = value[0][this._currentParamName];
         } else {
-            this._currentParameterName = null;
+            this._currentParamName = null;
             this._currentOrder = null;
         }
-        data.forEach((item) => {
-            item.value = '';
-            if (item[sortingParameterProperty] === this._currentParameterName) {
+        sortingParams.forEach((item: ISortingParam, i: number) => {
+            const dataElem = {...item, id: i, value: '', readOnly: true};
+            if (dataElem.paramName === this._currentParamName) {
                 if (this._currentOrder !== null) {
-                    item.value = this._currentOrder;
+                    dataElem.value = this._currentOrder;
                 }
-                this._selectedKeys = [item[keyProperty]];
+                this._selectedKeys = [i];
             }
 
             // Возможность клика должна быть только для пункта, который сбрасывает сортировку
-            if (item[sortingParameterProperty] === null) {
-                item.readOnly = false;
-            } else {
-                item.readOnly = true;
+            if (item.paramName === null) {
+                dataElem.readOnly = false;
             }
+            data.push(dataElem);
         });
-        this._source = new Memory({
-            data,
-            keyProperty
-        });
+
+        this._source = new Memory({data, keyProperty: 'id'});
     }
 
     private _resetValue(): void {
@@ -61,7 +58,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     }
 
     private _selectedKeysChangedHandler(e: SyntheticEvent<Event>, [key]: [number|string]): boolean | void {
-        if (this._options.source.data.findIndex((item) => item.id === key && item.parameterName === null) >= 0) {
+        if (this._options.sortingParam[key].paramName === null) {
             this._resetValue();
             this._selectedKeys = [key];
         } else {
@@ -76,11 +73,11 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     }
     private _switchValue(): void {
         const newValue: string = this._currentOrder === 'ASC' ? 'DESC' : 'ASC';
-        this._setValue(this._currentParameterName, newValue);
+        this._setValue(this._currentParamName, newValue);
     }
     private _itemArrowClick(e: SyntheticEvent<Event>, item: Record, order: 'ASC'|'DESC'): void {
-        const param = item.get(this._options.sortingParameterProperty);
-        this._selectedKeys = [item.get(this._options.keyProperty)];
+        const param = item.get('paramName');
+        this._selectedKeys = [item.get('id')];
         this._children.dropdown.closeMenu();
         this._setValue(param, order);
     }

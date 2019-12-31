@@ -7,10 +7,9 @@ import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _sortingParameters: object[] = [];
+    private _sortingParams: object[] = [];
     private _sorting: object[] = [];
     private _viewSource: Memory;
-    private _sortingSource: Memory;
     private _columns: object[] = getCountriesStats().getColumnsWithWidths();
 
     protected _beforeMount(): void {
@@ -18,27 +17,20 @@ export default class extends Control {
             keyProperty: 'id',
             data: getCountriesStats().getData()
         });
-        this._sortingParameters = [
+        this._sortingParams = [
             {
-                id: 1,
                 title: 'По населению',
-                parameterName: 'population'
+                paramName: 'population'
             },
             {
-                id: 2,
                 title: 'По площади',
-                parameterName: 'square'
+                paramName: 'square'
             },
             {
-                id: 3,
                 title: 'По плотности населения',
-                parameterName: 'populationDensity'
+                paramName: 'populationDensity'
             }
         ];
-        this._sortingSource = new Memory({
-            data: this._sortingParameters,
-            keyProperty: 'id'
-        });
         this._sorting.push({population: 'ASC'});
     }
 }
