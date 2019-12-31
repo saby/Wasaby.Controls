@@ -1,4 +1,4 @@
-import {DataSet} from 'Types/source';
+import {DataSet, QueryNavigationType} from 'Types/source';
 import ExtDataModel from 'Controls/_calendar/MonthList/ExtDataModel';
 
 describe('Controls/_calendar/MonthList/ExtDataModel', function() {
@@ -65,6 +65,7 @@ describe('Controls/_calendar/MonthList/ExtDataModel', function() {
 
                 assert.deepEqual(query._where, { 'id>=': test.where });
                 assert.equal(query._limit, test.limit);
+                assert.deepEqual(query._meta, { navigationType: QueryNavigationType.Position });
             });
         });
     });

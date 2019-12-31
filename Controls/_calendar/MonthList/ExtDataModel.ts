@@ -1,6 +1,6 @@
 import {factory as chainFactory} from 'Types/chain';
 import {Date as WSDate} from 'Types/entity';
-import {ICrud, Query, DataSet} from 'Types/source';
+import {ICrud, Query, DataSet, QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
@@ -74,6 +74,8 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
         }
         start.setMonth(start.getMonth() - 1);
 
+        query.meta({ navigationType: QueryNavigationType.Position });
+
         return query.where({'id>=': monthListUtils.dateToId(start)}).limit(length);
     }
 
@@ -88,7 +90,7 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
 
         if (this._viewMode === 'year') {
             chainFactory(items).each((item, index) => {
-                const year: number = parseInt(item.getId().split("-")[0], 10);
+                const year: number = parseInt(item.getId().split('-')[0], 10);
                 if (!extData[year]) {
                     extData[year] = [item.get('extData')];
                 } else {
