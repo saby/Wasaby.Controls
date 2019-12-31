@@ -1719,7 +1719,7 @@ var
         },
 
         isFixedLayout(): boolean {
-            return true;
+            return this._options.columnScroll === true;
         },
 
         _prepareWidthForTableColumn(column: IGridColumn): string {

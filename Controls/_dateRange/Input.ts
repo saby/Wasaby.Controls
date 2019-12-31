@@ -16,7 +16,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @extends Core/Control
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
- * @mixes Controls/_dateRange/interfaces/IInputDateTag
+ * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/interface/IDateMask
  *
  * @css @width_DateRange-dash Width of dash between input fields.
@@ -41,7 +41,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @extends Core/Control
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
- * @mixes Controls/_dateRange/interfaces/IInputDateTag
+ * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/interface/IDateMask
  *
  * @css @width_DateRange-dash Width of dash between input fields.

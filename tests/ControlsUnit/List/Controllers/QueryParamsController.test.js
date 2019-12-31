@@ -175,12 +175,12 @@ define(
                   position: 1
                });
 
-               assert.deepEqual({before: false, after: false}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: false}, pNav._getMore().getMoreMeta(), 'Calculate state: wrong _more value');
 
                //first query with direction: after
                dataRs.setMetaData({more: true});
                pNav.calculateState(dataRs);
-               assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: true}, pNav._getMore().getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([2], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
@@ -203,9 +203,9 @@ define(
                });
                dataRs.setMetaData({more: moreDataRs});
                pNav.calculateState(dataRs);
-               assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
-               assert.deepEqual({before: false, after: false}, pNav._more.getMoreMeta(2), 'Calculate state: wrong _more value');
-               assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(3), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: true}, pNav._getMore().getMoreMeta(), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: false}, pNav._getMore().getMoreMeta(2), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: true}, pNav._getMore().getMoreMeta(3), 'Calculate state: wrong _more value');
                assert.isTrue(pNav.hasMoreData('down'), 'Method hasMoreData returns incorrect value after reload');
                assert.isTrue(pNav.hasMoreData('down', 1), 'Method hasMoreData returns incorrect value for root "1" after reload');
                assert.isFalse(pNav.hasMoreData('down', 2), 'Method hasMoreData returns incorrect value for root "2" after reload');
@@ -223,7 +223,7 @@ define(
                //first query with direction: both and multiple "field" value
                dataRs.setMetaData({more: {after: true, before: false}});
                pNav.calculateState(dataRs);
-               assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: true}, pNav._getMore().getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([1, 1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([2, 4], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
             });
@@ -247,7 +247,7 @@ define(
                pNav.calculateState(dataRsbyLoad, 'down');
                assert.isFalse(pNav.hasMoreData('down'), 'Wrong hasMoreData result');
                assert.isUndefined(pNav.hasMoreData('down', 'testId'), 'Wrong hasMoredata for root');
-               assert.deepEqual({before: false, after: false}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: false}, pNav._getMore().getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([3], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
@@ -271,10 +271,34 @@ define(
                pNav.calculateState(dataRsbyLoad, 'up');
                assert.isTrue(pNav.hasMoreData('up'), 'Wrong hasMoreData result');
                assert.isUndefined(pNav.hasMoreData('up', 'testId'), 'Wrong hasMoredata for root');
-               assert.deepEqual({before: true, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
+               assert.deepEqual({before: true, after: true}, pNav._getMore().getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([3, 5], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([2, 4], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
+
+               //first query  with multiNavigation
+               pNav = new PositionNavigation.default({
+                  field: ['field', 'id'],
+                  direction: 'both',
+                  position: 1,
+                  limit: 100
+               });
+               let moreDataRs = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     {
+                        id: 1,
+                        nav_result: {
+                           after: true,
+                           before: false
+                        }
+                     }
+                  ]
+               });
+
+               dataRsbyLoad.setMetaData({ more: moreDataRs });
+               pNav.calculateState(dataRsbyLoad);
+               assert.deepStrictEqual(pNav._getMore().getMoreMeta(), { after: true, before: false });
             });
 
 
@@ -386,7 +410,6 @@ define(
                //first query with direction: both
                dataRs.setMetaData({more: {after: true, before: true}});
                pNav.calculateState(dataRs);
-
 
                params = pNav.prepareQueryParams('up');
                assert.deepEqual({filter : {'field<=' : 1, 'id<=' : 1}, limit: 100, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, params, 'Wrong query params');

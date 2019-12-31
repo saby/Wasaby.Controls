@@ -1730,6 +1730,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._options.itemsDragNDrop) {
             container.addEventListener('dragstart', this._nativeDragStart);
         }
+        this._loadedItems = null;
     },
 
     _beforeUpdate: function(newOptions) {
