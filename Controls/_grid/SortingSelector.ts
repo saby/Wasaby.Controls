@@ -58,7 +58,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     }
 
     private _selectedKeysChangedHandler(e: SyntheticEvent<Event>, [key]: [number|string]): boolean | void {
-        if (this._options.sortingParam[key].paramName === null) {
+        if (this._options.sortingParams[key].paramName === null) {
             this._resetValue();
             this._selectedKeys = [key];
         } else {
