@@ -66,28 +66,12 @@
       "required": true
     },
     {
-      "name": "SBIS3.CONTROLS",
-      "path": "./SBIS3.CONTROLS"
-    },
-    {
-      "name": "Examples",
-      "path": "./Examples"
-    },
-    {
       "name": "WSTest",
       "path": "./tests/WSTest"
     },
     {
-      "name": "ControlsSandbox",
-      "path": "./pages/sandbox"
-    },
-    {
       "name": "ControlsUnit",
       "path": "./tests/ControlsUnit"
-    },
-    {
-      "name": "SBIS3CONTROLSUnit",
-      "path": "./tests/SBIS3CONTROLSUnit"
     },
     {
       "name": "Application",
