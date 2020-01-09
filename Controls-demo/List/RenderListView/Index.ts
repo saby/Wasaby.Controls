@@ -148,7 +148,7 @@ export default class RenderListViewDemo extends Control {
         return {
             key,
             title: `${key} list element`,
-            group: Math.floor(key / 10).toString()
+            group: `Group ${Math.floor(key / 10)}`
         };
     }
 }

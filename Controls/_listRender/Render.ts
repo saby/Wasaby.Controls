@@ -98,6 +98,9 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemContextMenu(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+        if (item instanceof GroupItem) {
+            return;
+        }
         if (
             this._options.contextMenuEnabled !== false &&
             this._options.contextMenuVisibility !== false &&
@@ -108,6 +111,10 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>): void {
+        if (item instanceof GroupItem) {
+            return;
+        }
+
         e.stopPropagation();
 
         const itemContainer =
@@ -140,6 +147,9 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+        if (item instanceof GroupItem) {
+            return;
+        }
         this._notify('itemMouseMove', [item, e]);
     }
 
@@ -152,6 +162,9 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
+        if (item instanceof GroupItem) {
+            return;
+        }
         if (item.isEditing()) {
             // TODO Will probably be moved to EditInPlace container
             // keydown event should not bubble if processed here, but if we stop propagation
