@@ -1133,14 +1133,6 @@ var
             this._model.setCollapsedGroups(collapsedGroups);
         },
 
-        resetLoadedGroups(): void {
-            this._model.resetLoadedGroups();
-        },
-
-        isGroupLoaded(groupId: Grouping.TGroupId): boolean {
-            return this._model.isGroupLoaded(groupId);
-        },
-
         reset: function() {
             this._model.reset();
         },

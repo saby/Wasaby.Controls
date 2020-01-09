@@ -29,7 +29,8 @@ import {debounce} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
-import * as GroupingManager from 'Controls/_list/Controllers/Grouping';
+import * as GroupingController from 'Controls/_list/Controllers/Grouping';
+import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue} from 'Controls/interface';
 
@@ -150,7 +151,7 @@ var _private = {
 
             if (cfg.groupProperty) {
                 const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
-                GroupingManager.prepareFilterCollapsedGroups(collapsedGroups, filter);
+                GroupingController.prepareFilterCollapsedGroups(collapsedGroups, filter);
             }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
@@ -188,7 +189,7 @@ var _private = {
                         isActive = true;
                     }
                     if (self._options.groupProperty) {
-                        GroupingManager.resetLoadedGroups(listModel);
+                        self._groupingLoader.resetLoadedGroups(listModel);
                     }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
@@ -507,7 +508,7 @@ var _private = {
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.groupProperty) {
-                GroupingManager.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
+                GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
@@ -1449,6 +1450,8 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _groupingLoader: null,
+
     _isMounted: false,
 
     _savedStartIndex: 0,
@@ -1553,6 +1556,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             let viewModelConfig = cClone(newOptions);
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
+            }
+
+            if (newOptions.groupProperty) {
+                self._groupingLoader = new GroupingLoader({});
             }
 
             if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
@@ -1782,7 +1789,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
-            GroupingManager.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
+            GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
         }
 
         if (newOptions.keyProperty !== this._options.keyProperty) {
@@ -1922,6 +1929,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._sourceController) {
             this._sourceController.destroy();
+        }
+
+        if (this._groupingLoader) {
+            this._groupingLoader.destroy();
         }
 
         if (this._scrollPagingCtr) {
@@ -2106,15 +2117,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onGroupClick: function(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             if (this._options.groupProperty) {
-                const groupNavigation = {...this._options.navigation};
-                const groupSourceController = _private.getSourceController({
-                    source: this._options.source,
-                    navigation: {},
-                    keyProperty: this._options.keyProperty
-                });
-                GroupingManager.toggleGroup(this._listViewModel,
+                GroupingController.toggleGroup(this._listViewModel,
                     groupId,
-                    groupSourceController,
+                    this._groupingLoader,
+                    this._options.source,
                     this._options.filter,
                     this._options.sorting);
             } else {

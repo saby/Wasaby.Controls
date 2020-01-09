@@ -88,19 +88,11 @@ var _private = {
             filter.push(cfg.itemsFilterMethod);
         }
         return filter;
-    },
-    setGroupLoadState(loadedGroups, groupId, state) {
-        if (state) {
-            loadedGroups[groupId] = true;
-        } else {
-            delete loadedGroups[groupId];
-        }
     }
 };
 var ItemsViewModel = BaseViewModel.extend({
     _display: null,
     _items: null,
-    _loadedGroups: null,
     _itemDataCache: null,
     _curIndex: 0,
     _onCollectionChangeFnc: null,
@@ -112,7 +104,6 @@ var ItemsViewModel = BaseViewModel.extend({
     constructor: function(cfg) {
         this._prefixItemVersion = 0;
         this._itemDataCache = {};
-        this._loadedGroups = {};
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
         this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
@@ -306,7 +297,6 @@ var ItemsViewModel = BaseViewModel.extend({
             state = !this.isGroupExpanded(groupId);
         }
         if (state) {
-            _private.setGroupLoadState(this._loadedGroups, groupId, true);
             delete this._collapsedGroups[groupId];
         } else {
             this._collapsedGroups[groupId] = true;
@@ -318,14 +308,6 @@ var ItemsViewModel = BaseViewModel.extend({
             changeType: state ? 'expand' : 'collapse',
             collapsedGroups: _private.prepareCollapsedGroupsByObject(this._collapsedGroups)
         });
-    },
-
-    isGroupLoaded(groupId: Grouping.TGroupId): boolean {
-        return !!this._loadedGroups[groupId];
-    },
-
-    resetLoadedGroups(): void {
-        this._loadedGroups = {};
     },
 
     setFilter: function(filter) {
