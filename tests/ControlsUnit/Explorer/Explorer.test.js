@@ -587,7 +587,12 @@ define([
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
-            explorer._notify = _notify;
+            explorer._notify = (eName, eArgs) => {
+               if (eName === 'itemClick') {
+                  assert.equal(3, eArgs[2]);
+               }
+               return _notify(eName, eArgs);
+            };
             explorer._restoredMarkedKeys = {
                null: {
                   markedKey: null
@@ -624,7 +629,7 @@ define([
                }
             }, {
                nativeEvent: 123
-            });
+            }, 3);
             assert.isTrue(isEventResultReturns);
             assert.isTrue(cancelEditCalled);
             assert.deepEqual({

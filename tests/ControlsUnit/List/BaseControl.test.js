@@ -4741,6 +4741,7 @@ define([
             ctrl._container = {clientHeight: 100};
             ctrl._afterMount(cfg);
 
+            assert.isNull(ctrl._loadedItems);
             assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
             assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
 

@@ -1,5 +1,6 @@
 import {Service as HistoryService, FilterSource as HistorySource, Constants} from 'Controls/history';
 import {factory} from 'Types/chain';
+import * as CoreClone from 'Core/core-clone';
 
 import {Controller as SourceController} from 'Controls/source';
 import {factory as CollectionFactory} from 'Types/collection';
@@ -68,6 +69,16 @@ function isHistorySource(source) {
    return coreInstance.instanceOfModule(source, 'Controls/history:Source');
 }
 
+function deleteHistorySourceFromConfig(initConfig, sourceField) {
+   let configs = CoreClone(initConfig);
+   factory(configs).each((config) => {
+      if (isHistorySource(config[sourceField])) {
+         delete config[sourceField];
+      }
+   });
+   return configs;
+}
+
 function getUniqItems(items1, items2, keyProperty) {
    const uniqItems = factory(items2).filter((item) => {
       if (!items1.getRecordById(item.get(keyProperty))) {
@@ -112,5 +123,6 @@ export {
    destroyHistorySource,
    isHistorySource,
    getItemsWithHistory,
-   getUniqItems
+   getUniqItems,
+   deleteHistorySourceFromConfig
 };

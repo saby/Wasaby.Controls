@@ -7,7 +7,7 @@
             <br />
             <div style="display: inline-block; width: 300px;">Позиция, в которую добавится запись в списке</div> <Controls.input:Number attr:style="width:250px" bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}" class="demo-PopupEditOpener__addPosition"/>
             <br />
-            <div style="display: inline-block; width: 300px;">События, которые произошли в окне</div> <Controls.input:Text attr:style="width:250px" bind:value="_eventText" readOnly="{{true}}" class="demo-PopupEditOpener__eventText"/>
+            <div style="display: inline-block; width: 300px;">События, которые произошли в окне</div> <Controls.input:Text attr:style="width:250px" bind:value="_eventText" readOnly="{{true}}" attr:class="demo-PopupEditOpener__eventText"/>
          </div>
 
          <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="selected_record">

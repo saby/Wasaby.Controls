@@ -13,7 +13,7 @@ import {detection} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
-import {getItemsWithHistory, isHistorySource, getUniqItems} from 'Controls/_filter/HistoryUtils';
+import {getItemsWithHistory, isHistorySource, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
 import {hasResetValue} from 'Controls/_filter/resetFilterUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
@@ -327,13 +327,7 @@ var _private = {
 
                 // FIXME https://online.sbis.ru/opendoc.html?guid=0c3738a7-6e8f-4a12-8459-9c6a2034d927
                 // history.Source не умеет сериализоваться - удаляем его из receivedState
-                let configs = CoreClone(self._configs);
-                factory(configs).each((config) => {
-                    if (isHistorySource(config.source)) {
-                        delete config.source;
-                    }
-                });
-                return { configs };
+                return { configs: deleteHistorySourceFromConfig(self._configs, 'source') };
             });
         });
     },

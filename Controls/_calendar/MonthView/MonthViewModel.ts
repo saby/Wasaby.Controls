@@ -80,13 +80,14 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       obj.weekend = obj.dayOfWeek === 5 || obj.dayOfWeek === 6;
       obj.enabled = state.enabled;
+      obj.clickable = obj.mode === 'extended' || obj.isCurrentMonth;
 
       if (state.dayFormatter) {
          coreMerge(obj, state.dayFormatter(date) || {});
       }
 
       if (state.daysData) {
-         obj.extData = state.daysData[obj.day - 1];
+         obj.extData = state.daysData.at ? state.daysData.at(obj.day - 1) : state.daysData[obj.day - 1];
       }
 
       return obj;

@@ -1,10 +1,12 @@
 define([
    'Core/core-merge',
+   'Types/collection',
    'Controls/calendar',
    'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils'
 ], function(
    coreMerge,
+   collection,
    calendar,
    DateUtil,
    calendarTestUtils
@@ -48,6 +50,23 @@ define([
             );
 
             assert.equal(dayObj.extData, extData);
+         });
+
+         it('should create the object with correct days data if days data is RecordSet', function() {
+            let
+               dayData = { id: 0, data: 'data'},
+               daysData = new collection.RecordSet({
+                  rawData: [dayData]
+               }),
+               mvm, dayObj;
+
+            mvm = new calendar.MonthViewModel(config);
+            dayObj = mvm._getDayObject(
+               new Date(2018, 0, 1),
+               coreMerge({ daysData: daysData }, state, { preferSource: true })
+            );
+
+            assert.equal(dayObj.extData.get('data'), dayData.data);
          });
 
          it('should create correct lastDayOfMonth and firstDayOfMonth', function () {

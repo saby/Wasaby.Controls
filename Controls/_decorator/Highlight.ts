@@ -38,7 +38,7 @@ export interface IHighlightOptions extends IControlOptions {
     value: string;
     /**
      * Подсвечиваемый текст.
-     * @demo Controls-demo/Decorator/WrapURLs/highlightedValue/Index
+     * @demo Controls-demo/Decorator/Highlight/HighlightedValue/Index
      */
     highlightedValue: string;
     /**

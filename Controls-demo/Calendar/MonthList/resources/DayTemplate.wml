@@ -1,0 +1,8 @@
+<ws:partial template="Controls/calendar:MonthViewDayTemplate" value="{{value}}">
+    <ws:contentTemplate>
+        <div class="controlsDemo-MonthList__day
+               {{contentTemplate.value.extData.isMarked ? contentTemplate.value.extData.color === 'red' ? 'controlsDemo-MonthList__day-red' : 'controlsDemo-MonthList__day-blue'}}">
+         {{contentTemplate.value.day}}
+        </div>
+    </ws:contentTemplate>
+</ws:partial>

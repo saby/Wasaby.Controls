@@ -404,8 +404,8 @@ var
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _onItemClick: function(event, item, clickEvent): void {
-         const res = this._notify('itemClick', [item, clickEvent]);
+      _onItemClick: function(event, item, clickEvent, columnIndex?: number): void {
+         const res = this._notify('itemClick', [item, clickEvent, columnIndex]);
          if (res !== false) {
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
                 _private.setRestoredKeyObject(this, item.getId());

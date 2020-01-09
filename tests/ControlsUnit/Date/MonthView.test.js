@@ -61,11 +61,10 @@ define([
             let sandbox = sinon.sandbox.create(),
                mv = calendarTestUtils.createComponent(calendar.MonthView, config),
                item = 'item',
-               isCurrentMonth = false,
-               mode = 'current';
+               clickable= false;
 
             sandbox.stub(mv, '_notify');
-            mv._dayClickHandler({}, item, mode, isCurrentMonth);
+            mv._dayClickHandler({}, item, clickable);
 
             sinon.assert.notCalled(mv._notify);
             sandbox.restore();
@@ -92,29 +91,19 @@ define([
                mv = calendarTestUtils.createComponent(calendar.MonthView, config);
 
             sandbox.stub(mv, '_notify');
-            [{
-               isCurrentMonth: false,
-               mode: 'extended'
-            }, {
-               isCurrentMonth: true,
-               mode: 'current'
-            }].forEach(function (test) {
-               mv._mouseEnterHandler({}, item, test.mode, test.isCurrentMonth);
-               sinon.assert.calledWith(mv._notify, 'itemMouseEnter', [item]);
-            });
+            mv._mouseEnterHandler({}, item, true);
+            sinon.assert.calledWith(mv._notify, 'itemMouseEnter', [item]);
             sandbox.restore();
          });
 
          it('should\'t generate "itemMouseEnter" event', function () {
             let sandbox = sinon.sandbox.create(),
                item = 'item',
-               mv = calendarTestUtils.createComponent(calendar.MonthView, config),
-               isCurrentMonth = false,
-               mode = 'current';
+               mv = calendarTestUtils.createComponent(calendar.MonthView, config);
 
             sandbox.stub(mv, '_notify');
 
-            mv._mouseEnterHandler({}, item, mode, isCurrentMonth);
+            mv._mouseEnterHandler({}, item, false);
             sinon.assert.notCalled(mv._notify);
             sandbox.restore();
          });

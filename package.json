@@ -1,5 +1,5 @@
 {
-   "name": "sbis3-controls",
+   "name": "wasaby-controls",
    "version": "20.1000.0",
    "repository": {
       "type": "git",
@@ -10,8 +10,7 @@
       "Controls/*",
       "Controls-theme/*",
       "Controls-default-theme/*",
-      "Controls-demo/*",
-      "SBIS3.CONTROLS/*"
+      "Controls-demo/*"
    ],
    "scripts": {
       "build": "npm run builder && node build-app",
@@ -32,8 +31,7 @@
       "moduleType": "amd",
       "root": "application",
       "tests": [
-         "ControlsUnit",
-         "SBIS3CONTROLSUnit"
+         "ControlsUnit"
       ],
       "patchedRequire": true,
       "report": "./application/artifacts/xunit-report.xml",
@@ -46,7 +44,6 @@
    },
    "nyc": {
       "include": [
-         "application/SBIS3.CONTROLS/**/*.js",
          "application/Controls/**/*.js"
       ],
       "reporter": [
