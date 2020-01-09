@@ -65,7 +65,7 @@
  * @typedef {Object} FilterItem
  * @property {String} name Имя фильтра.
  * @property {*} value Текущее значение фильтра.
- * @property {*} resetValue Значение фильтра по умолчанию. Поле фильтра будет установлен в это значение при сбрасывании фильтра методом {@link Controls/_filter/View/interface/IFilterView#reset reset}.
+ * @property {*} resetValue Значение фильтра по умолчанию.
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста у кнопки фильтра.
  * @property {String} emptyText Текст пункта, значение которого является значением "по-умолчанию" для фильтра. Пункт будет добавлен в начало списка с заданным текстом.
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
