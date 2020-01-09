@@ -1,0 +1,63 @@
+<ws:template name="iconTemplate">
+   <ws:if data="{{item.get('icon') || iconPadding[item.get(parentProperty)]}}">
+      <div class="{{item.get(displayProperty || 'title') ?
+                     'controls-Menu__icon controls-Menu__icon-' + iconAlign + '_theme-' + _options.theme}}
+                     controls-icon_style-{{(item.get('readOnly') ? 'readonly' : itemData.iconStyle) + '_theme-' + _options.theme}}
+                     {{itemData.iconSize ? 'controls-icon_size-' + itemData.iconSize + '_theme-' + _options.theme}}
+                     {{iconPadding[item.get(parentProperty)]}} {{item.get('icon')}} theme_{{_options.theme}}"></div>
+   </ws:if>
+</ws:template>
+<div attr:class="controls-Menu__row controls-Menu__row_state_{{item.get('readOnly') ? 'readOnly' : 'default'}}
+                  {{isEmptyItem ? 'controls-Menu__emptyItem_theme-' + _options.theme}}
+                 {{marker !== false && itemData.isSelected() && (!multiSelect || isEmptyItem) ? 'controls-Menu__row_selected_theme-' + _options.theme}}
+                 {{itemData.getContentClasses()}}
+                 {{item.get('pinned') === true && !itemData.hasParent ?  'controls-Menu__row_pinned'}}
+                 controls-Menu__row_{{multiLine ? 'multiLine' : 'singleLine'}}_theme-{{_options.theme}}">
+   <ws:if data="{{multiSelectTpl && multiSelect}}">
+      <ws:partial template="{{multiSelectTpl}}" scope="{{_options}}" class="{{isEmptyItem ? 'controls-Menu__row-checkbox_invisible'}}"/>
+   </ws:if>
+   <ws:if data="{{contentTemplate}}">
+      <!--If contentTemplate is a string, then use Async to load required module-->
+      <ws:if data="{{(contentTemplate.charAt)}}">
+         <Controls.Container.Async templateName="{{contentTemplate}}">
+            <ws:partial
+                    template="{{content.resolvedTemplate}}"
+                    itemData="{{itemData}}"
+            />
+         </Controls.Container.Async>
+      </ws:if>
+      <ws:else>
+         <ws:partial
+                 template="{{contentTemplate}}"
+                 itemData="{{itemData}}"
+         />
+      </ws:else>
+   </ws:if>
+
+   <ws:else>
+      <div class="controls-Menu__content {{item.get('readOnly') ? 'controls-Menu__content-readOnly'}}
+                     controls-Menu__content_{{multiLine ? 'multiLine' : 'singleLine'}}"
+           title="{{item.get(displayProperty || 'title')}}">
+         <ws:if data="{{iconAlign !== 'right'}}">
+            <ws:partial template="iconTemplate" iconAlign="left"/>
+         </ws:if>
+         <div class="controls-Menu__content-wrapper">
+            {{item.get(displayProperty || 'title')}}
+            <ws:if data="{{iconAlign === 'right'}}">
+               <ws:partial template="iconTemplate" iconAlign="right" />
+            </ws:if>
+            <ws:if data="{{additionalTextTemplate}}">
+               <ws:partial template="{{additionalTextTemplate}}"
+                           class="controls-Menu__row-additionalText_theme-{{_options.theme}}"/>
+            </ws:if>
+         </div>
+      </div>
+   </ws:else>
+   <ws:if data="{{itemData.hasPinned && !itemData.hasChildren && !(item.get('pinned') === true && itemData.hasParent)}}">
+      <div    class="controls-Menu__iconPin_theme-{{_options.theme}} {{itemData.isSwiped ? 'controls-Menu__iconPin_swiped'}}
+                 {{item.get('pinned') === true ? 'controls-Menu__iconUnnpin icon-PinOff' : 'icon-PinNull'}}"></div>
+   </ws:if>
+   <div if="{{itemData.isNode()}}" class="controls-Menu__arrow_theme-{{_options.theme}}
+                                          controls-Menu__arrow_{{item.get('readOnly') ? 'readOnly' : 'default'}}_theme-{{_options.theme}}
+                                          icon-MarkCRightLight"></div>
+</div>
