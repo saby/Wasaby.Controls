@@ -16,9 +16,6 @@
  *                <div class="demo-title">{{contentTemplate.itemData.item.get('title')}}</div>
  *             </div>
  *          </ws:contentTemplate>
- *          <ws:additionalTextTemplate>
- *             <div class="demo-comment">{{contentTemplate.itemData.item.get('comment')}}</div>
- *          </ws:additionalTextTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
  * </Controls.dropdown:Button>
@@ -81,10 +78,10 @@
  * @remark
  * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
  * @example
- * 
+ *
  * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/dropdown:Input}, однако то же самое справедливо и для других {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/dropdown-menu/ выпадающих списков}.
  * В примерах №№ 1, 2 и 3 показано, как получить доступ к переменной itemData из области видимости шаблона.
- * 
+ *
  * **Пример 1.** Контрол и шаблон настроены в одном WML-файле.
  * <pre class="brush: html">
  * <!-- file1.wml -->
@@ -98,17 +95,17 @@
  *    </ws:itemTemplate>
  * </Controls.dropdown:Input>
  * </pre>
- * 
+ *
  * **Пример 2.** Контрол и шаблон itemTemplate настроены в отдельных WML-файлах.
  * <pre class="brush: html">
- * <!-- file1.wml --> 
+ * <!-- file1.wml -->
  * <Controls.dropdown:Input>
  *    <ws:itemTemplate>
  *       <ws:partial template="wml!file2" scope="{{itemTemplate}}"/>
  *    </ws:itemTemplate>
  * </Controls.dropdown:Input>
  * </pre>
- * 
+ *
  * <pre class="brush: html">
  * <!-- file2.wml -->
  * <ws:partial template="Controls/dropdown:ItemTemplate">
@@ -117,11 +114,11 @@
  *    </ws:contentTemplate>
  * </ws:partial>
  * </pre>
- * 
+ *
  * **Пример 3.** Контрол и шаблон contentTemplate настроены в отдельных WML-файлах.
- * 
+ *
  * <pre class="brush: html">
- * <!-- file1.wml --> 
+ * <!-- file1.wml -->
  * <Controls.dropdown:Input>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/dropdown:ItemTemplate">
@@ -132,7 +129,7 @@
  *    </ws:itemTemplate>
  * </Controls.dropdown:Input>
  * </pre>
- * 
+ *
  * <pre class="brush: html">
  * <!-- file2.wml -->
  * {{contentTemplate.itemData.item.title}}
@@ -147,14 +144,11 @@
  * <pre class="brush: html; highlight: [9,10,11]">
  * <Controls.dropdown:Button source="{{_source)}}">
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/dropdown:ItemTemplate" multiLine="{{true}}">
- *          <ws:contentTemplate>
- *             <div class="demo-menu__item">
- *                <div class="demo-title">{{contentTemplate.itemData.item.get('title')}}</div>
- *             </div>
- *          </ws:contentTemplate>
+ *       <ws:partial template="Controls/dropdown:ItemTemplate"
+ *                  multiLine="{{true}}"
+ *                  itemData="{{itemData}}">
  *          <ws:additionalTextTemplate>
- *             <div class="demo-comment">{{contentTemplate.itemData.item.get('comment')}}</div>
+ *             <div>{{itemTemplate.itemData.item.get('comment')}}</div>
  *          </ws:additionalTextTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>

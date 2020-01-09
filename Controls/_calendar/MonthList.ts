@@ -7,7 +7,7 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
 import {IMonthList, IMonthListOptions} from './interfaces/IMonthList';
 import {IMonthListVirtualPageSize, IMonthListVirtualPageSizeOptions} from './interfaces/IMonthListVirtualPageSize';
-import ExtDataModel from './MonthList/ExtDataModel';
+import ExtDataModel, {TItems} from './MonthList/ExtDataModel';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import ITEM_TYPES from './MonthList/ItemTypes';
@@ -19,10 +19,7 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
-import stubTemplate = require('wml!Controls/_calendar/MonthList/Stub');
 import {Logger} from 'UI/Utils';
-
-
 
 interface IModuleComponentOptions extends
     IControlOptions,
@@ -32,12 +29,16 @@ interface IModuleComponentOptions extends
     IDateConstructorOptions {
 }
 
-const
-    ITEM_BODY_SELECTOR = {
-        year: '.controls-MonthList__year-months',
-        month: '.controls-MonthList__month-body'
-    };
+const enum ITEM_BODY_SELECTOR {
+    year = '.controls-MonthList__year-months',
+    month = '.controls-MonthList__month-body',
+    day = '.controls-MonthViewVDOM__item'
+}
 
+const enum VIEW_MODE {
+    month = 'month',
+    year = 'year'
+}
 
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
@@ -80,8 +81,17 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _virtualPageSize: number;
 
-    protected _beforeMount(options: IModuleComponentOptions): void {
-        const position = options.startPosition || options.position || new WSDate();
+    protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
+                           Promise<TItems> | void {
+
+        const now = new WSDate();
+        let position = options.startPosition || options.position;
+
+        if (!position) {
+            position = options.viewMode === VIEW_MODE.year ?
+                dateUtils.getStartOfYear(now) : dateUtils.getStartOfMonth(now);
+        }
+
         if (options.startPosition) {
             Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
@@ -95,6 +105,15 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._positionToScroll = position;
         this._displayedPosition = position;
         this._lastNotifiedPositionChangedDate = position;
+
+        if (this._extData) {
+            if (receivedState) {
+                this._extData.updateData(receivedState);
+            } else {
+                this._displayedDates = this._getDisplayedRanges(position, options.virtualPageSize);
+                return this._extData.enrichItems(this._displayedDates);
+            }
+        }
     }
 
     protected _afterMount(): void {
@@ -152,11 +171,19 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
+    private  _getDisplayedRanges(position: Date, virtualPageSize: number): number[] {
+        const displayedRanges = [];
+        for (let i = 0; i < virtualPageSize; i++) {
+            displayedRanges.push(Date.parse(new Date(position.getFullYear(), position.getMonth() + i)));
+        }
+        return displayedRanges;
+    }
+
     private _updateItemTemplate(options: IModuleComponentOptions): void {
-        this._itemHeaderTemplate = options.viewMode === 'year' ?
+        this._itemHeaderTemplate = options.viewMode === VIEW_MODE.year ?
             options.yearHeaderTemplate : options.monthHeaderTemplate;
 
-        this._itemTemplate = options.viewMode === 'year' ?
+        this._itemTemplate = options.viewMode === VIEW_MODE.year ?
             options.yearTemplate : options.monthTemplate;
     }
     private _getTemplate(data): TemplateFunction {
@@ -177,7 +204,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 dateConstructor: options.dateConstructor,
                 displayedRanges: options.displayedRanges,
                 viewMode: options.viewMode,
-                order: options.order
+                order: options.order,
+                stubTemplate: options.stubTemplate
             });
         }
         if (!oldOptions || options.viewMode !== oldOptions.viewMode || options.source !== oldOptions.source) {
@@ -202,12 +230,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return;
         }
 
-        const newPosition = dateUtils.getStartOfMonth(position);
+        this._positionToScroll = position;
+        this._lastNotifiedPositionChangedDate = dateUtils.getStartOfMonth(position);
 
-        this._positionToScroll = newPosition;
-        this._lastNotifiedPositionChangedDate = newPosition;
-
-        if (this._container && this._canScroll(newPosition)) {
+        if (this._container && this._canScroll(position)) {
             // Update scroll position without waiting view modification
             this._updateScrollAfterViewModification();
         } else {
@@ -224,7 +250,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _normalizeStartPosition(date: Date): Date {
-        return this._options.viewMode === 'year' ?
+        return this._options.viewMode === VIEW_MODE.year ?
             dateUtils.getStartOfYear(date) : dateUtils.getStartOfMonth(date);
     }
 
@@ -264,7 +290,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                     // because a situation is possible when the container partially intersected from above, climbed up,
                     // persecuted, and the lower container approached the upper edge and its intersection did not change.
                     const delta: number = this._options.order === 'asc' ? 1 : -1;
-                    if (this._options.viewMode === 'year') {
+                    if (this._options.viewMode === VIEW_MODE.year) {
                         date = new this._options.dateConstructor(entryDate.getFullYear() + delta, entryDate.getMonth());
                     } else {
                         date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + delta);
@@ -357,7 +383,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         // then scroll to it unconditionally. In this case, the last month can be scrolled to the bottom
         // of the scrolled area. But this configuration is used only in a large selection of the period,
         // and there it is valid.
-        if ((this._options.viewMode === 'year' && date.getMonth() !== 0)) {
+        if ((this._options.viewMode === VIEW_MODE.year && date.getMonth() !== 0)) {
             return true;
         }
 
@@ -379,12 +405,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _findElementByDate(date: Date): HTMLElement {
         let element: HTMLElement;
 
-        if (this._options.viewMode === 'month' || date.getMonth() !== 0) {
-            element = this._getElementByDate(
-                ITEM_BODY_SELECTOR.month,
-                monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
+        if (date.getDate() !== 1) {
+            element = this._getElementByDate(ITEM_BODY_SELECTOR.day, monthListUtils.dateToId(date));
         }
-
+        if (!element && date.getMonth() !== 0) {
+            element = this._getElementByDate(
+                ITEM_BODY_SELECTOR.month, monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
+        }
         if (!element) {
             element = this._getElementByDate(
                 ITEM_BODY_SELECTOR.year,
@@ -420,12 +447,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         return monthListUtils.idToDate(dateId);
     }
 
+    static _ITEM_BODY_SELECTOR = ITEM_BODY_SELECTOR;
+
     static getDefaultOptions(): object {
         return {
-            viewMode: 'year',
+            viewMode: VIEW_MODE.year,
             yearTemplate,
             monthTemplate,
-            stubTemplate,
             // In most places where control is used, no more than 4 elements are displayed at the visible area.
             // Draw the elements above and below.
             virtualPageSize: 6,

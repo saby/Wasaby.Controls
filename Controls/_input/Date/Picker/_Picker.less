@@ -1,10 +1,24 @@
 .controls-Input-DatePicker {
-   display: inline-flex;
+   display: inline-block;
    white-space: nowrap;
 }
 
+.controls-Input-DatePicker__buttonWrapper {
+   padding-left: @trigger-offset_inputDate;
+   display: inline-block;
+}
+
+.controls-Input-DatePicker__buttonBaseLine::before {
+   content: "\200b";
+}
+
 .controls-Input-DatePicker__button {
-   margin-left: @trigger-offset_inputDate;
+   cursor: pointer;
+   font-size: @icon-size_s;
+   line-height: @icon-size_s;
+   width: @icon-size_s;
+   height: @icon-size_s;
+   font-family: @icon_font-family_s;
 }
 
 .controls-PeriodDialog__picker-withoutModeBtn {

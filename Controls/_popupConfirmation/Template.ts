@@ -24,6 +24,7 @@ export default Template;
  * @author Красильников А.С.
  * @mixes Controls/_popupConfirmation/Template/mixin
  * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG
+ * @demo Controls-demo/PopupTemplate/Confirmation/Footer/Index
  */
 
 /*
@@ -36,6 +37,7 @@ export default Template;
  * @author Красильников А.С.
  * @mixes Controls/_popupConfirmation/Template/mixin
  * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG
+ * @demo Controls-demo/PopupTemplate/Confirmation/Index
  */
 
 /**

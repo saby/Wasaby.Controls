@@ -6,9 +6,10 @@ import {detection} from 'Env/Env';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {throttle} from 'Types/function';
-import {descriptor} from 'Types/entity';
+import {descriptor, Record as entityRecord} from 'Types/entity';
 import {IDirection, IVirtualScrollConfig, IVirtualScrollMode} from './interface/IVirtualScroll';
 import {Logger} from 'UI/Utils';
+import {Collection} from 'Controls/display';
 
 const SCROLLMOVE_DELAY = 150;
 export const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
@@ -21,7 +22,7 @@ interface IDeprecatedOptions {
 }
 interface IOptions extends IControlOptions, IDeprecatedOptions {
     virtualScrollConfig: IVirtualScrollConfig;
-    viewModel: unknown;
+    viewModel: Collection<entityRecord>;
     useNewModel: boolean;
     virtualScrolling: boolean;
     observeScroll: boolean;
@@ -88,7 +89,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     // Стейт, хранящий ссылку на модель, нужен для сохранения индексов на _beforeMount, так как во время выполнения
     // _beforeMount модель не лежит в _options
-    private viewModel: unknown;
+    private viewModel: Collection<entityRecord>;
 
     // Коллбек, который нужно выполнить на следующую перерисовку
     private afterRenderCallback: Function;
@@ -111,6 +112,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _afterMount(): void {
         this.__mounted = true;
+        this.itemsChanged = false;
 
         if (this._options.observeScroll) {
             this.registerScroll();
@@ -209,8 +211,6 @@ export default class ScrollContainer extends Control<IOptions> {
 
     /**
      * Инициализация модели и подписка на ее изменения
-     * @param {unknown} model
-     * @param {boolean} useNewModel
      */
     private initModel(options: IOptions): void {
         this.viewModel = options.viewModel;
@@ -470,7 +470,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private updateViewWindow(direction: IDirection, params?: IScrollParams): void {
         this.changeTriggerVisibility(direction, true);
         if (this._options.virtualScrolling) {
-            if (this.virtualScroll.isLoaded(document)) {
+            if (!this.itemsChanged) {
                 if (params) {
                     this.virtualScroll.viewportHeight = params.clientHeight;
                 }
@@ -528,10 +528,11 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param {number} stopIndex
      * @returns {boolean}
      */
-    private applyIndexesToModel(model: unknown, startIndex: number, stopIndex: number): boolean {
+    private applyIndexesToModel(model: Collection<entityRecord>, startIndex: number, stopIndex: number): boolean {
         if (model.setViewIndices) {
             return model.setViewIndices(startIndex, stopIndex);
         } else {
+            // @ts-ignore
             return model.setIndexes(startIndex, stopIndex);
         }
     }

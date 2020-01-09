@@ -21,25 +21,9 @@ export type HighlightMode = 'word' | 'substring';
  * @author Красильников А.С.
  */
 export interface IHighlightOptions extends IControlOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     text?: string;
-    /**
-     * Опция устарела, используйте опцию {@link highlightedValue}.
-     * @deprecated
-     */
     highlight?: string;
-    /**
-     * Опция устарела, используйте опцию {@link className}.
-     * @deprecated
-     */
     class?: string;
-    /**
-     * Опция устарела, используйте опцию {@link highlightMode}.
-     * @deprecated
-     */
     searchMode?: HighlightMode
     /**
      * Класс обеспечивающий внешнее отображение подсветки.
@@ -54,7 +38,7 @@ export interface IHighlightOptions extends IControlOptions {
     value: string;
     /**
      * Подсвечиваемый текст.
-     * @demo Controls-demo/Decorator/WrapURLs/highlightedValue/Index
+     * @demo Controls-demo/Decorator/Highlight/HighlightedValue/Index
      */
     highlightedValue: string;
     /**

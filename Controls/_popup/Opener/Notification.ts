@@ -1,6 +1,6 @@
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
-import * as ManagerController from 'Controls/_popup/Manager/ManagerController';
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {INotificationPopupOptions, INotificationOpener} from '../interface/INotification';
 
 /**
@@ -51,6 +51,8 @@ const compatibleOpen = (popupOptions: INotificationPopupOptions): Promise<string
 const getCompatibleConfig = (BaseOpenerCompat: any, config: INotificationPopupOptions) => {
     const cfg = BaseOpenerCompat.prepareNotificationConfig(config);
     cfg.notHide = !cfg.autoClose;
+    // элемент проставляется из createControl в совместимости, удаляем его чтобы потом при мерже получить новый элемент
+    delete cfg.element;
     return cfg;
 };
 

@@ -15,7 +15,7 @@ const Component = BaseControl.extend({
         // when adding control arrows, set the minimum width of the block,
         // so that the arrows are always fixed and not shifted.
         // https://online.sbis.ru/opendoc.html?guid=ae195d05-0e33-4532-a77a-7bd8c9783ef1
-        if ((options.prevArrowVisibility && options.prevArrowVisibility) || (options.showPrevArrow && options.showNextArrow)) {
+        if (options.prevArrowVisibility && options.prevArrowVisibility) {
             return this._isMinWidth = true;
         }
     },

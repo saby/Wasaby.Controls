@@ -7,7 +7,7 @@ export interface IIntersectionObserverContainerOptions extends IControlOptions {
 }
 
 /**
- * Контейнер позволяющий отслеживать пересечение с внешним контенером.
+ * Контейнер, позволяющий отслеживать пересечение с внешним контейнером.
  *
  * @class Controls/_scroll/IntersectionObserver/Container
  * @control

@@ -13,7 +13,7 @@ import {detection} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
-import {getItemsWithHistory, isHistorySource, getUniqItems} from 'Controls/_filter/HistoryUtils';
+import {getItemsWithHistory, isHistorySource, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
 import {hasResetValue} from 'Controls/_filter/resetFilterUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
@@ -324,9 +324,10 @@ var _private = {
         return self._loadDeferred.addCallback(function() {
             return _private.loadSelectedItems(self._source, self._configs).addCallback(() => {
                 _private.updateText(self, self._source, self._configs);
-                return {
-                    configs: self._configs
-                };
+
+                // FIXME https://online.sbis.ru/opendoc.html?guid=0c3738a7-6e8f-4a12-8459-9c6a2034d927
+                // history.Source не умеет сериализоваться - удаляем его из receivedState
+                return { configs: deleteHistorySourceFromConfig(self._configs, 'source') };
             });
         });
     },
@@ -678,15 +679,16 @@ var Filter = Control.extend({
         this._children.StickyOpener.open(Merge(popupOptions, panelPopupOptions), this);
     },
 
-    _rangeChangedHandler: function(event, start, end) {
-       return import('Controls/dateRange').then((dateRange) => {
-          let dateRangeItem = _private.getDateRangeItem(this._source);
-          dateRangeItem.value = [start, end];
-          dateRangeItem.textValue = dateRange.Utils.formatDateRangeCaption(start, end,
-             this._dateRangeItem.editorOptions.emptyCaption || 'Не указан');
-          this._dateRangeItem = object.clone(dateRangeItem);
-          _private.notifyChanges(this, this._source);
-       });
+    _rangeTextChangedHandler: function(event, textValue) {
+        let dateRangeItem = _private.getDateRangeItem(this._source);
+        dateRangeItem.textValue = textValue;
+    },
+
+    _rangeValueChangedHandler: function(event, start, end) {
+        let dateRangeItem = _private.getDateRangeItem(this._source);
+        dateRangeItem.value = [start, end];
+        this._dateRangeItem = object.clone(dateRangeItem);
+        _private.notifyChanges(this, this._source);
     },
 
     _resultHandler: function(event, result) {

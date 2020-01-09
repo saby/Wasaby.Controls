@@ -1,9 +1,10 @@
 /**
  * Created by as.krasilnikov on 10.09.2018.
  */
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popup/Opener/Edit/Container');
 import {ContextOptions} from 'Controls/context';
+import {RecordSet} from 'Types/collection';
 
 /**
  * Контрол используют в качестве контейнера для {@link Controls/popup:Edit}. Он получает данные и передаёт их в Controls/popup:Edit.
@@ -19,27 +20,34 @@ import {ContextOptions} from 'Controls/context';
  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
  * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
  */
-let Container = Control.extend({
-    _template: template,
 
-    _beforeMount(options, context) {
+interface IContainerContext {
+    dataOptions: {
+        items: RecordSet
+    };
+}
+
+class Container extends Control<IControlOptions> {
+    protected _template: TemplateFunction = template;
+    protected _items: RecordSet;
+
+    _beforeMount(options: IControlOptions, context: IContainerContext): void {
         this._updateItems(context);
-    },
-    _beforeUpdate(options, context) {
+    }
+    _beforeUpdate(options: IControlOptions, context: IContainerContext): void {
         this._updateItems(context);
-    },
-    _updateItems(context) {
+    }
+    _updateItems(context: IContainerContext): void {
         if (context.dataOptions && context.dataOptions.items) {
             this._items = context.dataOptions.items;
         }
     }
-});
 
-Container.contextTypes = function() {
-    return {
-        dataOptions: ContextOptions
-    };
-};
+    static contextTypes(): IContainerContext {
+        return {
+            dataOptions: ContextOptions
+        };
+    }
+}
 
-export = Container;
-
+export default Container;

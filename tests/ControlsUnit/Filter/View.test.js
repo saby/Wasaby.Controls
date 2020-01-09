@@ -445,7 +445,7 @@ define(
             assert.deepStrictEqual(view._source[5].value, [new Date(2019, 5, 1), new Date(2019, 5, 31)]);
          });
 
-         it('_rangeChangedHandler', () => {
+         it('_rangeValueChangedHandler', () => {
             let source = [...defaultSource];
             let dateItem = {
                name: 'date',
@@ -468,18 +468,34 @@ define(
             };
             view._source = source;
             view._dateRangeItem = dateItem;
-            return new Promise(function(resolve) {
-               view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31)).addCallback(function () {
-                  assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
-                  assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");
-                  assert.deepStrictEqual(newFilter, {
-                     date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
-                     author: 'Ivanov K.K.',
-                     state: [1]
-                  });
-                  resolve();
-               })
-            })
+            view._rangeValueChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31));
+            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
+            assert.deepStrictEqual(newFilter, {
+               date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
+               author: 'Ivanov K.K.',
+               state: [1]
+            });
+         });
+
+         it('_rangeTextChangedHandler', () => {
+            let source = [...defaultSource];
+            let dateItem = {
+               name: 'date',
+               value: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               resetValue: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               editorOptions: {
+                  option1: '1',
+                  option2: '2'
+               },
+               type: 'dateRange',
+               viewMode: 'basic'
+            };
+            source.push(dateItem);
+            let view = getView(source);
+            view._source = source;
+            view._dateRangeItem = dateItem;
+            view._rangeTextChangedHandler('rangeChanged', 'Date textValue');
+            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, 'Date textValue');
          });
 
          it('_private:getDateRangeItem', () => {
@@ -1115,6 +1131,18 @@ define(
                filter.View._private.updateHistory(view, 'document', items);
                assert.deepEqual(resultHistoryItems, items);
                assert.deepEqual(resultMeta, {$_history: true});
+            });
+
+            it('_private:reload', function(done) {
+               view._source[0].editorOptions.source = hSource;
+               filter.View._private.reload(view).addCallback((receivedState) => {
+                  assert.isUndefined(receivedState.configs.document.source);
+                  assert.isOk(receivedState.configs.state.source);
+
+                  assert.isOk(view._configs.document.source);
+                  assert.isOk(view._configs.state.source);
+                  done();
+               });
             });
 
             it('_private:getPopupConfig historySource', function() {

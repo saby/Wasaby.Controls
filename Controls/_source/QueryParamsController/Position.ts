@@ -63,10 +63,6 @@ class PositionNavigation {
       if (this._options.limit === undefined) {
          throw new Error('Option limit is undefined in PositionNavigation');
       }
-
-      this._more = new More({
-         moreMeta: this._getDefaultMoreMeta()
-      });
    }
 
    private _resolveDirection(loadDirection: Direction, optDirection: DirectionCfg): DirectionCfg {
@@ -113,20 +109,20 @@ class PositionNavigation {
          if (typeof more === 'boolean') {
             if (loadDirection || this._options.direction !== 'both') {
                navDirection = this._resolveDirection(loadDirection, this._options.direction);
-               let newMore = this._more.getMoreMeta(key);
+               let newMore = this._getMore().getMoreMeta(key);
 
                if (!newMore) {
                   newMore = this._getDefaultMoreMeta();
                }
 
                newMore[navDirection] = more;
-               this._more.setMoreMeta(newMore, key);
+               this._getMore().setMoreMeta(newMore, key);
             } else {
                 Logger.error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
             }
          } else if (more instanceof Object) {
             if (!loadDirection &&  this._options.direction === 'both') {
-               this._more.setMoreMeta({...more}, key);
+               this._getMore().setMoreMeta({...more}, key);
             } else {
                 Logger.error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
             }
@@ -134,12 +130,37 @@ class PositionNavigation {
       };
 
       if (navResult && navResult.each) {
-         navResult.each((navRec) => {
-            process(navRec.get('nav_result'), navRec.get('id'));
-         });
+         if (!this._isMoreCreated()) {
+            this._createMore(navResult);
+         } else {
+            navResult.each((navRec) => {
+               process(navRec.get('nav_result'), navRec.get('id'));
+            });
+         }
       } else {
          process(navResult);
       }
+   }
+
+   private _isMoreCreated(): boolean {
+      return !!this._more;
+   }
+
+   private _createMore(meta?: HasMore): void {
+      this._more = new More({
+         moreMeta: meta || this._getDefaultMoreMeta()
+      });
+   }
+
+   private _getMore(): More {
+      if (!this._more) {
+         this._createMore();
+      }
+      return this._more;
+   }
+
+   private _destroyMore(): void {
+      this._more = null;
    }
 
    prepareQueryParams(loadDirection: Direction): IAdditionalQueryParams {
@@ -275,7 +296,7 @@ class PositionNavigation {
          navDirection = 'after';
       }
 
-      moreData = this._more.getMoreMeta(rootKey);
+      moreData = this._getMore().getMoreMeta(rootKey);
 
       // moreData can be undefined for root with rootKey, if method does not support multi-navigation.
       if (moreData) {
@@ -291,7 +312,7 @@ class PositionNavigation {
 
    destroy(): void {
       this._options = null;
-      this._more = null;
+      this._destroyMore();
       this._afterPosition = null;
       this._beforePosition = null;
       this._positionByMeta = null;

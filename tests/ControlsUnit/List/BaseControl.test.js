@@ -4194,6 +4194,7 @@ define([
          it('hideActionsAfterDrag', async function() {
             var cfg = {
                   viewName: 'Controls/List/ListView',
+                  itemsDragNDrop: true,
                   viewConfig: {
                      idProperty: 'id'
                   },
@@ -4215,7 +4216,7 @@ define([
             instance._dragEndHandler();
             assert.isFalse(instance._showActions);
 
-            instance._itemMouseMove();
+            instance._itemMouseMove({}, {});
             assert.isTrue(instance._showActions);
 
          });
@@ -4740,6 +4741,7 @@ define([
             ctrl._container = {clientHeight: 100};
             ctrl._afterMount(cfg);
 
+            assert.isNull(ctrl._loadedItems);
             assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
             assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
 
@@ -4768,14 +4770,16 @@ define([
                selectedKeysCount: 1
             };
             const instance = new lists.BaseControl(cfg);
-            const enterItemData = {};
+            const enterItemData = {
+               item: {}
+            };
             const enterNativeEvent = {};
             let called = false;
 
             instance._notify = (eName, args) => {
                if (eName === 'itemMouseEnter') {
                   called = true;
-                  assert.equal(args[0], enterItemData);
+                  assert.equal(args[0], enterItemData.item);
                   assert.equal(args[1], enterNativeEvent);
                }
             };

@@ -1,9 +1,10 @@
 define('Controls-demo/Date/MonthListSource', [
    'Core/Deferred',
+   'Types/collection',
    'Types/source',
    'Types/formatter',
    'Controls/Utils/Date'
-], function(Deferred, source, formatter, dateUtils) {
+], function(Deferred, collection, source, formatter, dateUtils) {
    'use strict';
 
    var CalendarSource = source.Memory.extend({

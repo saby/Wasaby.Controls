@@ -21,6 +21,25 @@ define(
             assert.equal(item.position.right, undefined);
             assert.equal(item.position.bottom, undefined);
          });
+         it('InfoBoxController: elementCreated', () => {
+            let prepareConfig = popupTemplate.InfoBoxController._prepareConfig;
+            popupTemplate.InfoBoxController._prepareConfig = () => true;
+            let container = {
+               style: {
+                  maxWidth: 100
+               }
+            };
+            popupTemplate.InfoBoxController.elementCreated({
+               position: {
+                  maxWidth: 20
+               },
+               popupOptions: {
+                  maxWidth: 50
+               }
+            }, container);
+            popupTemplate.InfoBoxController._prepareConfig = prepareConfig;
+            assert.equal(container.style.maxWidth, '');
+         });
 
          it('getCustomZIndex', () => {
             let popupList = new collection.List();
@@ -53,7 +72,7 @@ define(
             };
             let Infobox = new popup.InfoboxTarget(config);
             Infobox.saveOptions(config);
-            let newConfig = popup.InfoboxTarget._private.getCfg(Infobox);
+            let newConfig = Infobox._getConfig();
 
             assert.equal(newConfig.floatCloseButton, true);
             assert.equal(newConfig.style, 'error');
@@ -68,7 +87,7 @@ define(
             Infobox._closeId = 500;
             assert.equal(Infobox._closeId, 500);
             assert.equal(Infobox._openId, 300);
-            popup.InfoboxTarget._private.resetTimeOut(Infobox);
+            Infobox._resetTimeOut();
             assert.equal(Infobox._closeId, null);
             assert.equal(Infobox._openId, null);
          });

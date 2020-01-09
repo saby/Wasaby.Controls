@@ -335,7 +335,7 @@ var
       proxyEvent: function(self, event, eventName, args) {
          // Forwarding bubbling events makes no sense.
          if (!event.propagating()) {
-            self._notify(eventName, args);
+            return self._notify(eventName, args);
          }
       }
    },
@@ -896,7 +896,7 @@ var
       },
 
       itemClick: function(event) {
-         _private.proxyEvent(this, event, 'itemClick', Array.prototype.slice.call(arguments, 1));
+         return _private.proxyEvent(this, event, 'itemClick', Array.prototype.slice.call(arguments, 1));
       },
 
       _updatePlaceholdersSize: function(e, placeholdersSizes) {

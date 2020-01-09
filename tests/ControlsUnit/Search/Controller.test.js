@@ -65,6 +65,86 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          sandbox.restore();
       });
 
+      it('private.startSearch', function() {
+         var searchController = getSearchController();
+         var value;
+         var wasSearch = false;
+         searchController._dataOptions = defaultOptions;
+         searchController._options.searchValueTrim = true;
+
+         searchMod.Controller._private.getSearchController(searchController);
+
+         searchController._searchController.search = function(searchVal) {
+            value = searchVal;
+            wasSearch = true;
+         };
+         searchMod.Controller._private.startSearch(searchController, 'test');
+         assert.equal(value, 'test');
+         assert.isTrue(wasSearch);
+
+         searchController._isSearchControllerLoading = function() {
+            return true;
+         }
+         wasSearch = false;
+         searchController._inputSearchValue = 'test2'
+         searchMod.Controller._private.startSearch(searchController, '  test2  ');
+         assert.isFalse(wasSearch);
+
+         searchMod.Controller._private.startSearch(searchController, '');
+         assert.equal(value, '');
+         assert.isTrue(wasSearch);
+
+         value = '';
+         searchController._options.source = null;
+         searchMod.Controller._private.startSearch(searchController, 'test3');
+         assert.equal(value, '');
+      });
+
+
+      it('private.isSearchValueChanged', function() {
+         var searchController = getSearchController();
+         var result;
+         searchController._dataOptions = defaultOptions;
+
+         result = searchMod.Controller._private.isSearchValueChanged(searchController, 'test');
+         assert.isTrue(result);
+
+         searchMod.Controller._private.setInputSearchValue(searchController, 'test');
+         result = searchMod.Controller._private.isSearchValueChanged(searchController, 'test');
+         assert.isFalse(result);
+      });
+
+      it('private.isInputSearchValueShort', function() {
+         var searchController = getSearchController();
+         var result;
+         searchController._dataOptions = defaultOptions;
+
+         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'test');
+         assert.isFalse(result);
+
+         searchMod.Controller._private.setInputSearchValue(searchController, 'test');
+         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'testing');
+         assert.isFalse(result);
+
+         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'te');
+         assert.isTrue(result);
+      });
+
+      it('private.needStartSearch', function() {
+         var result;
+
+         result = searchMod.Controller._private.needStartSearch('', '');
+         assert.isFalse(!!result);
+
+         result = searchMod.Controller._private.needStartSearch('  ', '');
+         assert.isFalse(!!result);
+
+         result = searchMod.Controller._private.needStartSearch('', 'test');
+         assert.isTrue(!!result);
+
+         result = searchMod.Controller._private.needStartSearch('test', '');
+         assert.isTrue(!!result);
+      });
 
       it('_private.searchCallback', function() {
          var controller = getSearchController();
@@ -353,6 +433,14 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.equal(searchController._root, 'test2');
             assert.equal(searchController._previousViewMode, 'notSearch');
             assert.equal(searchController._viewMode, 'search');
+         });
+         it('with short searchValue', function() {
+            searchController._searchValue = '';
+            searchController._beforeMount({searchValue: 'te',  viewMode: 'notSearch'}, {});
+
+            assert.equal(searchController._inputSearchValue, 'te');
+            assert.equal(searchController._searchValue, '');
+            assert.equal(searchController._viewMode, 'notSearch');
          })
       });
 
@@ -458,6 +546,22 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
                assert.equal(value, 'test2');
             });
          });
+      });
+
+      describe('_beforeUnmount', function() {
+         it('abort', function() {
+            var aborted = false;
+            var searchController = getSearchController(defaultOptions);
+            searchController._beforeMount({filter: {test: 'testValue'}}, {dataOptions: defaultOptions});
+            searchMod.Controller._private.getSearchController(searchController);
+            searchController._searchController.abort = function(forced) {
+               if (forced) {
+                  aborted = true;
+               }
+            };
+            searchController._beforeUnmount();
+            assert.isTrue(aborted);
+         })
       });
 
       it('itemOpenHandler', function() {

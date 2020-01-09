@@ -2,6 +2,7 @@ import {detection, constants} from 'Env/Env';
 import {debounce, delay as runDelayed} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {IPopupOptions} from 'Controls/_popup/interface/IPopup';
 
 import * as template from 'wml!Controls/_popup/Manager/Popup';
 import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
@@ -10,29 +11,11 @@ const RESIZE_DELAY = 10;
 // on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
 const SCROLL_DELAY = detection.isMobileIOS ? 100 : 10;
 
-interface IPosition {
-    position: string;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-    width: number;
-    height: number;
-    maxWidth: number;
-    minWidth: number;
-    maxHeight: number;
-    minHeight: number;
-    hidden: boolean;
-}
-
-interface IPopupOptions extends IControlOptions {
-    hidden: boolean;
-    position: IPosition;
-}
+interface IPopupControlOptions extends IPopupOptions, IControlOptions {}
 
 type UpdateCallback = () => void;
 
-class Popup extends Control<IPopupOptions> {
+class Popup extends Control<IPopupControlOptions> {
 
     /**
      * Control Popup
@@ -57,7 +40,9 @@ class Popup extends Control<IPopupOptions> {
      */
 
     protected _template: TemplateFunction = template;
-    private _stringTemplate: boolean;
+    protected _stringTemplate: boolean;
+    protected waitForPopupCreated: boolean; // TODO: COMPATBILE
+    protected callbackCreated: Function|null; // TODO: COMPATBILE
 
     // Register the openers that initializing inside current popup
     // After updating the position of the current popup, calls the repositioning of popup from child openers
@@ -65,17 +50,23 @@ class Popup extends Control<IPopupOptions> {
 
     protected _isEscDown: boolean = false;
 
+    // _moduleName is assign in the callback of require.
+    // Private modules are not visible for this mechanism,
+    // _moduleName must be specified manually for them.
+    // It is necessary for checking relationship between popups.
+    protected _moduleName: string = 'Controls/_popup/Manager/Popup';
+
     private _closeByESC(event: SyntheticEvent<KeyboardEvent>): void {
         if (event.nativeEvent.keyCode === constants.key.esc) {
             this._close();
         }
     }
 
-    private _beforePaintOnMount(): void {
+    protected _beforePaintOnMount(): void {
         this._notify('popupBeforePaintOnMount', [this._options.id], {bubbling: true});
     }
 
-    protected _beforeMount(options): void {
+    protected _beforeMount(options: IPopupControlOptions): void {
         this._stringTemplate = typeof options.template === 'string';
     }
 
@@ -86,21 +77,21 @@ class Popup extends Control<IPopupOptions> {
         this._scrollHandler = debounce(this._scrollHandler.bind(this), SCROLL_DELAY);
 
         if (this.waitForPopupCreated) {
-            this.callbackCreated = (function () {
+            this.callbackCreated = (() => {
                 this.callbackCreated = null;
                 this._notify('popupCreated', [this._options.id], {bubbling: true});
-            }).bind(this);
+            });
         } else {
             this._notify('popupCreated', [this._options.id], {bubbling: true});
             this.activatePopup();
         }
     }
 
-    protected _beforeUpdate(options): void {
+    protected _beforeUpdate(options: IPopupControlOptions): void {
         this._stringTemplate = typeof options.template === 'string';
     }
 
-    protected _afterUpdate(oldOptions: IPopupOptions): void {
+    protected _afterRender(oldOptions: IPopupOptions): void {
         this._notify('popupAfterUpdated', [this._options.id], {bubbling: true});
 
         if (this._isResized(oldOptions, this._options)) {
@@ -145,8 +136,8 @@ class Popup extends Control<IPopupOptions> {
         this._notify('popupMouseLeave', [this._options.id, popupEvent], {bubbling: true});
     }
 
-    protected  _popupResizingLine(event: SyntheticEvent<Event>, offset: number): void {
-        this._notify('popupResizingLine', [this._options.id, offset], { bubbling: true });
+    protected _popupResizingLine(event: SyntheticEvent<Event>, offset: number): void {
+        this._notify('popupResizingLine', [this._options.id, offset], {bubbling: true});
     }
 
     protected _animated(event: SyntheticEvent<AnimationEvent>): void {
@@ -171,7 +162,7 @@ class Popup extends Control<IPopupOptions> {
         }
     }
 
-    _showIndicatorHandler(event: SyntheticEvent<MouseEvent>): void {
+    protected _showIndicatorHandler(event: SyntheticEvent<MouseEvent>): string {
         const args = Array.prototype.slice.call(arguments, 1);
         event.stopPropagation();
         const config = args[0];
@@ -179,7 +170,7 @@ class Popup extends Control<IPopupOptions> {
             config.popupId = this._options.id;
         }
         // catch showIndicator and add popupId property for Indicator.
-        return this._notify('showIndicator', args, {bubbling: true});
+        return this._notify('showIndicator', args, {bubbling: true}) as string;
     }
 
     protected _scrollHandler(): void {
@@ -247,6 +238,10 @@ class Popup extends Control<IPopupOptions> {
         }
     }
 
+    getPopupId(): string {
+        return this._options.id;
+    }
+
     private _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
         const {position: oldPosition, hidden: oldHidden}: IPopupOptions = oldOptions;
         const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
@@ -258,7 +253,7 @@ class Popup extends Control<IPopupOptions> {
         return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged || (hasHiddenChanged && newHidden === false);
     }
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): IPopupControlOptions {
         return {
             content: PopupContent,
             autofocus: true
@@ -266,9 +261,4 @@ class Popup extends Control<IPopupOptions> {
     }
 }
 
-// _moduleName is assign in the callback of require.
-// Private modules are not visible for this mechanism, _moduleName must be specified manually for them.
-// It is necessary for checking relationship between popups.
-Popup.prototype._moduleName = 'Controls/_popup/Manager/Popup';
-
-export = Popup;
+export default Popup;

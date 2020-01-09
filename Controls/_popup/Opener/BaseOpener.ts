@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import ManagerController = require('Controls/_popup/Manager/ManagerController');
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 import * as CoreMerge from 'Core/core-merge';
 import * as cInstance from 'Core/core-instance';
@@ -388,14 +388,15 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                     if (typeof cfg.id === 'string') {
                         cfg.id = null;
                     }
-                    if (!opener || (!opener._action && !cfg.id)) {
+                    // Если нет сохраненного dialogMixin'a
+                    if (!(opener && opener._action) && !cfg.id) {
                         action = new Action({
                             withIndicator: !isFormController,
                             closeByFocusOut: true,
                             dialogCreatedCallback: (newDialog) => openedDialog = newDialog
                         });
                     } else {
-                        action = opener._action || cfg.id;
+                        action = (opener && opener._action) || cfg.id;
                     }
 
                     const dialog = action.getDialog();
@@ -537,6 +538,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             'isModal',
             'modal',
             'closeOnOutsideClick',
+            'closeOnDeactivated',
             'closeOnTargetScroll',
             'className',
             'template',

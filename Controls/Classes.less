@@ -111,6 +111,9 @@
   color: @readonly_color;
 }
 //font-sizes
+.controls-fontsize-inherit {
+  font-size: inherit;
+}
 .controls-fontsize-xs_theme-@{themeName} {
   font-size: @font-size_xs;
 }
@@ -171,15 +174,15 @@
 }
 .controls-invalidAccent-border_theme-@{themeName}{
   border: @border-thickness solid @invalid_border-color;
-  left: -@invalid_padding-horizontal;
-  bottom: -@invalid_padding-vertical;
+  left: -(@invalid_padding-horizontal + @border-thickness);
+  bottom: -(@invalid_padding-vertical + @border-thickness);
   padding: @invalid_padding-vertical @invalid_padding-horizontal;
   background-color: @invalid_focus_background-color;
 }
 .controls-invalid-border_theme-@{themeName}{
   border: @border-thickness solid @invalid_border-color;
-  left: -@invalid_padding-horizontal;
-  bottom: -@invalid_padding-vertical;
+  left: -(@invalid_padding-horizontal + @border-thickness);
+  bottom: -(@invalid_padding-vertical + @border-thickness);
   padding: @invalid_padding-vertical @invalid_padding-horizontal;
 }
 .controls-invalid-container{

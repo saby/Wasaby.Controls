@@ -68,14 +68,14 @@ define(
             };
             PWInstance.saveOptions(options);
 
-            let config = PWInstance._private.getCfg(PWInstance);
+            let config = PWInstance._getConfig();
             assert.equal(config.targetPoint, targetPoint);
             assert.equal(config.direction, direction);
             assert.equal(config.isCompoundTemplate, true);
             assert.deepEqual(config.fittingMode, fittingMode);
 
             PWInstance.saveOptions({});
-            config = PWInstance._private.getCfg(PWInstance);
+            config = PWInstance._getConfig();
             let baseCorner = {
                vertical: 'bottom',
                horizontal: 'right'

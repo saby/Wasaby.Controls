@@ -1,5 +1,8 @@
 <div>
-   <Controls.scroll:Container attr:class="controlsDemo-StickyHeader controlsDemo-StickyHeader__border">
+   <Controls.scroll:Container 
+      attr:class="controlsDemo-StickyHeader controlsDemo-StickyHeader__border controlsDemo-StickyHeader__container1"
+      topShadowVisibility="hidden"
+      bottomShadowVisibility="hidden">
       <div>
          <p>
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
@@ -38,7 +41,10 @@
          </p>
       </div>
    </Controls.scroll:Container>
-   <Controls.scroll:Container attr:class="controlsDemo-StickyHeader controlsDemo-StickyHeader__border">
+   <Controls.scroll:Container 
+      attr:class="controlsDemo-StickyHeader controlsDemo-StickyHeader__border controlsDemo-StickyHeader__container2"
+      topShadowVisibility="hidden"
+      bottomShadowVisibility="hidden">
       <div>
          <p>
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.

@@ -5,9 +5,7 @@ export interface IToolbarSourceOptions {
 }
 
 /**
- * Интерфейс для доступа к источнику данных,
- * который возвращает данные в формате,
- * необходимом для контрола Toolbar или контролов, реализующих Toolbar (например Controls/operationsPanel).
+ * Интерфейс для доступа к источнику данных, который возвращает данные в формате, необходимом для контрола Toolbar или контролов, реализующих Toolbar (например Controls/operationsPanel).
  *
  * @interface Controls/_toolbars/IToolbarSource
  * @public
@@ -98,4 +96,10 @@ export default interface IToolbarSource {
  *        ]
  *    })
  * </pre>
+ */
+
+/**
+ * @name Controls/_toolbars/IToolbarSource#keyProperty
+ * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
+ * @remark Например, идентификатор может быть первичным ключом записи в базе данных.
  */

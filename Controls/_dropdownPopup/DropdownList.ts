@@ -139,7 +139,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          },
 
          prepareHeaderConfig: function(self, options) {
-            if (options.showHeader) {
+            if (options.showHeader || options.headerTemplate) {
                let headConfig;
                headConfig = options.headConfig || {};
                headConfig.caption = headConfig.caption || options.caption;
@@ -179,7 +179,6 @@ import {SyntheticEvent} from 'Vdom/Vdom'
        *
        * Контрол меню.
        * @control
-       * @mixes Controls/_dropdownPopup/DropdownListStyles
        * @public
        * @category Popup
        */
@@ -188,7 +187,6 @@ import {SyntheticEvent} from 'Vdom/Vdom'
        *
        * Template for controls, that opens dropdown list.
        * @control
-       * @mixes Controls/_dropdownPopup/DropdownListStyles
        * @public
        * @category Popup
        */

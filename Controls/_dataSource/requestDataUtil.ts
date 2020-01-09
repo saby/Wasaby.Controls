@@ -47,7 +47,7 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    });
    let sortingPromise;
    let filterPromise;
-   if (cfg.historyId && cfg.filterButtonSource && cfg.fastFilterSource && cfg.filter) {
+   if (cfg.historyId && cfg.filterButtonSource && cfg.filter) {
       filterPromise = FilterController.getCalculatedFilter(cfg);
    }
    if (cfg.propStorageId) {

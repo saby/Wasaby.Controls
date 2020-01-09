@@ -3,14 +3,14 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import getZIndex = require('Controls/Utils/getZIndex');
 import {DefaultOpenerFinder} from 'UI/Focus';
-import {IInfoBoxOptions, IInfoBoxOpener} from 'Controls/_popup/interface/IInfoBox';
+import {IInfoBoxPopupOptions, IInfoBoxOpener} from 'Controls/_popup/interface/IInfoBoxOpener';
 
 /**
  * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
  * @remark
  * Private control. This control uses Popup/Infobox and Application to open popup on openInfobox events
  * @class Controls/_popup/Opener/InfoBox
- * @mixes Controls/_popup/interface/IInfoBox
+ * @mixes Controls/_popup/interface/IInfoBoxOpener
  * @extends Core/Control
  *
  * @private
@@ -41,8 +41,8 @@ let InfoBoxId: string;
 let openId: number;
 let closeId: number;
 
-interface IInfoBoxOpenerOptions extends IInfoBoxOptions, IBaseOpenerOptions {
-    templateOptions?: IInfoBoxOptions;
+interface IInfoBoxOpenerOptions extends IInfoBoxPopupOptions, IBaseOpenerOptions {
+    templateOptions?: IInfoBoxPopupOptions;
 }
 
 class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpener {
@@ -53,7 +53,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         this.close(0);
     }
 
-    open(cfg: IInfoBoxOptions): void {
+    open(cfg: IInfoBoxPopupOptions): void {
         // Only one popup can be opened
         if (this.isOpened()) {
             this.close(0);
@@ -81,7 +81,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         this.close(0);
     }
 
-    private static _getInfoBoxConfig(cfg: IInfoBoxOptions): IInfoBoxOpenerOptions {
+    private static _getInfoBoxConfig(cfg: IInfoBoxPopupOptions): IInfoBoxOpenerOptions {
         // smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even
         // if value of second object will be undefined
         const newCfg = cClone(DEFAULT_CONFIG);
@@ -169,7 +169,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
     }
 
-    private static _open(callback: Function, cfg: IInfoBoxOptions): void {
+    private static _open(callback: Function, cfg: IInfoBoxPopupOptions): void {
         InfoBox._clearTimeout();
 
         const newCfg: IInfoBoxOpenerOptions = InfoBox._getInfoBoxConfig(cfg);
@@ -182,7 +182,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
     }
 
-    static  openPopup(config: IInfoBoxOptions): void {
+    static openPopup(config: IInfoBoxPopupOptions): void {
         InfoBox._open((newCfg) => {
             BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
                 BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {

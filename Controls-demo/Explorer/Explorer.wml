@@ -9,7 +9,7 @@
                <Controls.operations:Container>
                   <Controls.explorer:View
                      bind:root="_root"
-                     attr:class="demo-Explorer"
+                     attr:class="demo-Explorer ControlsDemo-Explorer"
                      keyProperty="id"
                      displayProperty="title"
                      parentProperty="parent"

@@ -13,10 +13,6 @@ import {phoneValue} from 'Controls/_decorator/ActualAPI';
  * @author Красильников А.С.
  */
 export interface IPhoneOptions extends IControlOptions {
-    /**
-     * Опция устарела, используйте опцию {@link value}.
-     * @deprecated
-     */
     number: string;
     /**
      * Декорируемый телефонный номер.

@@ -183,8 +183,39 @@ var _private = {
       return root;
    },
 
+   startSearch: function(self, value, force) {
+      if (self._options.source) {
+         const searchValue = self._options.searchValueTrim ? value.trim() : value;
+         const shouldSearch = self._isSearchControllerLoading() ?
+             _private.isInputSearchValueChanged(self, searchValue) :
+             _private.needStartSearch(self._inputSearchValue, searchValue);
+
+         if (shouldSearch) {
+            _private.getSearchController(self).search(searchValue, force);
+         }
+      } else {
+         Logger.error('search:Controller source is required for search', self);
+      }
+   },
+
    setInputSearchValue: function(self, value: string): void {
       self._inputSearchValue = value;
+   },
+
+   isInputSearchValueChanged(self, searchValue: string): boolean {
+      return searchValue !== self._inputSearchValue;
+   },
+
+   isSearchValueChanged(self, searchValue: string): boolean {
+      return self._options.searchValue !== searchValue && _private.isInputSearchValueChanged(self, searchValue);
+   },
+
+   isInputSearchValueShort(self, searchValue: string): boolean {
+      return searchValue.length < self._options.minSearchLength;
+   },
+
+   needStartSearch(inputSearchValue: string, searchValue: string): string {
+      return inputSearchValue.trim() || searchValue;
    }
 };
 
@@ -246,6 +277,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _misspellValue: null,
    _root: null,
    _deepReload: undefined,
+   _inputSearchValue: '',
 
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
@@ -259,11 +291,14 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
-         this._searchValue = options.searchValue;
 
-         if (this._viewMode !== 'search') {
-            this._previousViewMode = this._viewMode;
-            this._viewMode = 'search';
+         if (!_private.isInputSearchValueShort(this, options.searchValue)) {
+            this._searchValue = options.searchValue;
+
+            if (this._viewMode !== 'search') {
+               this._previousViewMode = this._viewMode;
+               this._viewMode = 'search';
+            }
          }
       }
 
@@ -304,29 +339,22 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
-         this._search(null, newOptions.searchValue);
+      if (_private.isSearchValueChanged(this, newOptions.searchValue)) {
+         _private.startSearch(this, newOptions.searchValue);
+         if (!_private.isInputSearchValueShort(this, newOptions.searchValue)) {
+            _private.setInputSearchValue(this, newOptions.searchValue);
+         }
       }
    },
 
    _search: function (event, value, force) {
-      if (this._options.source) {
-         const shouldSearch = this._isSearchControllerLoading() ? value !== this._inputSearchValue : true;
-         if (shouldSearch) {
-            const searchValue = this._options.searchValueTrim ? value.trim() : value;
-            if (searchValue !== '' || !this._options.searchValueTrim) {
-               _private.getSearchController(this).search(searchValue, force);
-            }
-         }
-      } else {
-         Logger.error('search:Controller source is required for search', this);
-      }
+      _private.startSearch(this, value, force);
       _private.setInputSearchValue(this, value);
    },
 
    _beforeUnmount: function () {
       if (this._searchController) {
-         this._searchController.abort();
+         this._searchController.abort(true);
          this._searchController = null;
       }
       this._dataOptions = null;

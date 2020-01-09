@@ -2,6 +2,7 @@ import Deferred = require('Core/Deferred');
 import {Date as WSDate} from 'Types/entity';
 import { Memory, Query, DataSet } from 'Types/source';
 import ITEM_TYPES from './ItemTypes';
+import {TemplateFunction} from 'UI/Base';
 import monthListUtils from './Utils';
 
 /**
@@ -29,10 +30,12 @@ export default class MonthsSource extends Memory {
     protected _displayedRanges: [];
     protected _viewMode: string;
     protected _order: string;
+    private _stubTemplate: TemplateFunction;
 
     constructor(options) {
         super(options);
         this._header = options.header;
+        this._stubTemplate = options.stubTemplate;
         this._dateConstructor = options.dateConstructor || WSDate;
         this._displayedRanges = options.displayedRanges;
         this._viewMode = options.viewMode;
@@ -92,13 +95,15 @@ export default class MonthsSource extends Memory {
                 } else {
                     period = this._getHiddenPeriod(month, delta);
                     // для заглешки от минус бесконечности до даты используем в качестве id дату конца(period[1])
-                    items.push({
-                        id: monthListUtils.dateToId(period[0] || period[1]),
-                        date: period[0] || period[1],
-                        startValue: period[0],
-                        endValue: period[1],
-                        type: ITEM_TYPES.stub
-                    });
+                    if (this._stubTemplate) {
+                        items.push({
+                            id: monthListUtils.dateToId(period[0] || period[1]),
+                            date: period[0] || period[1],
+                            startValue: period[0],
+                            endValue: period[1],
+                            type: ITEM_TYPES.stub
+                        });
+                    }
                     if (i === 0 && !period[0]) {
                         before = false;
                     }

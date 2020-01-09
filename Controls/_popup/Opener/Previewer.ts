@@ -1,8 +1,8 @@
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
-import * as ManagerController from 'Controls/_popup/Manager/ManagerController';
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as cClone from 'Core/core-clone';
-import {IPreviewerOpener, IPreviewerPopupOptions} from 'Controls/_popup/interface/IPreviewer';
+import {IPreviewerOpener, IPreviewerPopupOptions} from 'Controls/_popup/interface/IPreviewerOpener';
 
 interface IPreviewerOpenerOptions extends IPreviewerPopupOptions, IBaseOpenerOptions {}
 
@@ -105,7 +105,7 @@ class Previewer extends BaseOpener<IPreviewerOpenerOptions> implements IPreviewe
         cancel(this._currentConfig, action);
     }
 
-    static openPopup(config: IPreviewerPopupOptions, type?: string): Promise<string> {
+    static openPopup(config: IPreviewerPopupOptions, type?: string): Promise<IPreviewerPopupOptions> {
         return new Promise((resolve: Function) => {
             const newCfg: IPreviewerPopupOptions = prepareConfig(config);
             if (!newCfg.id) {

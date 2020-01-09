@@ -71,6 +71,8 @@ var _private = {
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/ITextValue
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
  * @control
  * @public
  * @author Золотова Э.Е.
@@ -234,6 +236,36 @@ var _private = {
  * </pre>
  */
 
+/**
+ * @event Controls/_dropdown/Input#selectedKeysChanged Происходит при изменении выбранных элементов.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Array.<Number|String>} keys Массив ключей выбранных элементов.
+ * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
+ * По умолчанию, когда выбран пункт с иерархией, выпадающий список закрывается.
+ * @example
+ * В следующем примере создается список и устанавливается опция selectedKeys со значением [1, 2, 3], а также показано, как изменить сообщение, выведенное пользователю на основе выбора.
+ * TMPL:
+ * <pre>
+ *    <Controls.dropdown:Input on:selectedKeysChanged="onSelectedKeysChanged()"
+ *                             selectedKeys="{{ _selectedKeys }}"/>
+ *    <h1>{{ _message }}</h1>
+ * </pre>
+ * JS:
+ * <pre>
+ *     _beforeMount: function() {
+ *       this._selectedKeys = [1, 2, 3];
+ *    },
+ *    onSelectedKeysChanged: function(e, keys) {
+ *       this._selectedKeys = keys; //We don't use binding in this example so we have to update state manually.
+ *       if (keys.length > 0) {
+ *          this._message = 'Selected ' + keys.length + ' items.';
+ *       } else {
+ *          this._message = 'You have not selected any items.';
+ *       }
+ *    }
+ * </pre>
+ */
+
 var Input = Control.extend({
    _template: template,
    _defaultContentTemplate: defaultContentTemplate,
@@ -280,7 +312,7 @@ var Input = Control.extend({
       }
    },
 
-   // Делаем через событие deactivated на Controller'e, 
+   // Делаем через событие deactivated на Controller'e,
    // т.к в Controller передается просто шаблон, а не контрол, который не обладает состоянием активности,
    // и подписка на _deactivated на это шаблоне работать не будет
    _deactivated: function () {

@@ -55,7 +55,7 @@ export function getButtonTemplate(): TemplateFunction {
 }
 
 /**
- * Интерфейс опций контрола {@link Control/toolbar:View}.
+ * Интерфейс опций контрола {@link Controls/toolbars:View}.
  * @interface Controls/_toolbars/IToolbarOptions
  * @public
  * @author Красильников А.С.
@@ -87,15 +87,15 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  * @mixes Controls/interface:IHierarchy
  * @mixes Controls/interface:IIconSize
  * @mixes Controls/interface:IItemTemplate
- * @mixes Controls/interface:ISource
  * @mixes Controls/toolbars:IToolbarOptions
+ * @mixes Controls/toolbars:IToolbarSource
  *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/ToolbarVdom
  */
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, ISource, IIconSize, IItemTemplate, IGrouped {
-    /**
+    /*
      * Used in template
      */
     protected _showType: IShowType = showType;
@@ -392,17 +392,17 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     static getDefaultOptions() {
         return {
             /**
-             * @name Control/_toolbars/View#popupClassName
+             * @name Controls/_toolbars/View#popupClassName
              * @default ''
              */
             popupClassName: '',
             /**
-             * @name Control/_toolbars/View#itemsSpacing
+             * @name Controls/_toolbars/View#itemsSpacing
              * @default 'medium'
              */
             itemsSpacing: 'medium',
             /**
-             * @name Control/_toolbars/View#itemTemplate
+             * @name Controls/_toolbars/View#itemTemplate
              * @default Controls/toolbars:ItemTemplate
              */
             itemTemplate: defaultItemTemplate
@@ -444,12 +444,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
  *             break;
  *    }
  * </pre>
- */
-
-/**
- * @name Controls/_toolbars/View#source
- * @remark
- * Элементы в источнике данных должны иметь {@link Controls/_toolbars/IToolbarSource/Item.typedef определенный тип}.
  */
 
 export default Toolbar;

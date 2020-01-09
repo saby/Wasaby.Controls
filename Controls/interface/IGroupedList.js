@@ -40,12 +40,13 @@ define('Controls/interface/IGroupedList', [
     * <Controls.list:View>
     *    <ws:groupTemplate>
     *       <ws:partial template="Controls/list:GroupTemplate"
-    *          separatorVisibility="{{ false }}"
-    *          expanderVisible="{{ false }}"
-    *          textAlign="left">
+    *          separatorVisibility="{{false}}"
+    *          expanderVisible="{{false}}"
+    *          textAlign="left"
+    *          scope="{{groupTemplate}}">
     *          <ws:contentTemplate>
-    *             <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
-    *             <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
+    *             <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
+    *             <ws:if data="{{contentTemplate.itemData.item === 'works'}}">Работы</ws:if>
     *          </ws:contentTemplate>
     *       </ws:partial>
     *    </ws:groupTemplate>
