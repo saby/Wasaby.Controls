@@ -3,11 +3,15 @@
    position: relative;
    display: inline-block;
    box-sizing: border-box;
-   border-style: solid;
 }
 
 .controls-Render_theme-@{themeName} {
+   border-style: @border-style_inputText;
    border-width: @border-thickness_inputText;
+
+   &:hover {
+      border-style: @border-style_hover_inputText;
+   }
 }
 
 /**
@@ -132,21 +136,25 @@
  * They will not apply!!!
  */
 .controls-Render_state-valid_theme-@{themeName}:focus-within {
+   border-style: @border-style_focus_inputText;
    border-color: @border-color_focus_inputText;
    background-color: @background-color_focus_inputText;
 }
 
 .controls-Render_state-invalid_theme-@{themeName}:focus-within {
+   border-style: @border-style_focus_inputText;
    border-color: @invalid_focus_border-color_inputText;
    background-color: @invalid_focus_background-color;
 }
 
 .controls-Render_state-valid-active_theme-@{themeName} {
+   border-style: @border-style_focus_inputText;
    border-color: @border-color_focus_inputText;
    background-color: @background-color_focus_inputText;
 }
 
 .controls-Render_state-invalid-active_theme-@{themeName} {
+   border-style: @border-style_focus_inputText;
    border-color: @invalid_focus_border-color_inputText;
    background-color: @invalid_focus_background-color;
 }
