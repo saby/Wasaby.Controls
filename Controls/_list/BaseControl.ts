@@ -148,7 +148,7 @@ var _private = {
             _private.showIndicator(self);
             _private.hideError(self);
 
-            if (cfg.groupProperty && cfg.useNewGrouping) {
+            if (cfg.groupProperty) {
                 const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
                 GroupingManager.prepareFilterCollapsedGroups(collapsedGroups, filter);
             }
@@ -187,7 +187,7 @@ var _private = {
                     if (self._isActive) {
                         isActive = true;
                     }
-                    if (self._options.useNewGrouping) {
+                    if (self._options.groupProperty) {
                         GroupingManager.resetLoadedGroups(listModel);
                     }
                     if (self._options.useNewModel) {
@@ -506,7 +506,7 @@ var _private = {
                 _private.getPortionedSearch(self).startSearch();
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
-            if (self._options.groupProperty && self._options.useNewGrouping) {
+            if (self._options.groupProperty) {
                 GroupingManager.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
@@ -2104,7 +2104,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onGroupClick: function(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
-            if (this._options.useNewGrouping) {
+            if (this._options.groupProperty) {
                 const groupNavigation = {...this._options.navigation};
                 const groupSourceController = _private.getSourceController({
                     source: this._options.source,
