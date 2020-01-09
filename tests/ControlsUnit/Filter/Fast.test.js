@@ -869,6 +869,17 @@ define(
                });
             });
 
+            it('_private:reload', function(done) {
+               filterMod.Fast._private.prepareItems(fastFilter, historyConfig.items);
+               fastFilter._configs = {};
+               filterMod.Fast._private.reload(fastFilter).addCallback((receivedState) => {
+                  assert.isUndefined(receivedState.configs[0]._source);
+
+                  assert.isOk(fastFilter._configs[0]._source);
+                  done();
+               });
+            });
+
          });
 
          function setTrue(assert) {

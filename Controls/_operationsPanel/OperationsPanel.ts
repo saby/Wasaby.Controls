@@ -80,7 +80,7 @@ var _private = {
  * @control
  * @public
  * @author Авраменко А.С.
- * @demo Controls-demo/OperationsPanel/OperationsPanel
+ * @demo Controls-demo/OperationsPanel/Panel
  *
  * @css @background-color_OperationsPanel Background color of the panel.
  * @css @height_OperationsPanel Height of the panel.
@@ -101,7 +101,7 @@ var _private = {
  * @control
  * @public
  * @author Авраменко А.С.
- * @demo Controls-demo/OperationsPanel/OperationsPanel
+ * @demo Controls-demo/OperationsPanel/Panel
  *
  * @css @background-color_OperationsPanel Background color of the panel.
  * @css @height_OperationsPanel Height of the panel.

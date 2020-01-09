@@ -14,6 +14,7 @@ const DialogTemplate = Control.extend({
      * @category Popup
      * @author Красильников А.С.
      * @implements Controls/_popupTemplate/interface/IPopupTemplate
+     * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
      * @demo Controls-demo/Popup/Templates/DialogTemplatePG
      */
 

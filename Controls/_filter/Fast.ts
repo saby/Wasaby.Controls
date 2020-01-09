@@ -12,7 +12,7 @@ import Merge = require('Core/core-merge');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
-import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
+import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
 
       /**
        * Контрол "Быстрый фильтр". Использует выпадающие списки для выбора параметров фильтрации.
@@ -144,8 +144,11 @@ import {getItemsWithHistory, getUniqItems} from 'Controls/_filter/HistoryUtils';
             // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
             return self._loadDeferred.addCallback(function() {
                return _private.loadNewItems(self, self._items, self._configs).addCallback(() => {
+
+                  // FIXME https://online.sbis.ru/opendoc.html?guid=0c3738a7-6e8f-4a12-8459-9c6a2034d927
+                  // history.Source не умеет сериализоваться - удаляем его из receivedState
                   return {
-                     configs: self._configs,
+                     configs: deleteHistorySourceFromConfig(self._configs, '_source'),
                      items: self._items
                   };
                });

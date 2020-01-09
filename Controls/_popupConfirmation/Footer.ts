@@ -3,8 +3,18 @@ import template = require('wml!Controls/_popupConfirmation/footer');
 import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import {IConfirmationFooterOptions, IConfirmationFooter} from 'Controls/popupConfirmation';
 
-export interface IFooterOptions extends IControlOptions, IConfirmationFooterOptions {
-}
+/**
+ * Базовый шаблон футера окна диалога</a>.
+ * @class Controls/_popupConfirmation/Footer
+ * @implements Controls/_popup/interface/IConfirmationFooter
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Бондарь А.В.
+ * @demo Controls-demo/PopupTemplate/Confirmation/Footer/Index
+ */
+
+export interface IFooterOptions extends IControlOptions, IConfirmationFooterOptions {}
 class Footer extends Control<IFooterOptions> implements IConfirmationFooter {
     protected _template: TemplateFunction = template;
     protected _tmplNotify: Function = tmplNotify;

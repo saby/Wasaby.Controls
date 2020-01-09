@@ -61,6 +61,7 @@ define([
             assert.equal(component._month.getMonth(), options.month.getMonth());
          });
          it('shouldn\'t throw error in _slideMonth', function() {
+            const MAX_MONTH_NUMBER = 11;
             let component = calendarTestUtils.createComponent(MonthSlider, defaultOptions),
                event = 'event',
                options = {
@@ -69,7 +70,7 @@ define([
                };
             component._beforeMount(options);
             component._slideMonth(event, -1);
-            assert.equal(component._month.getMonth(), options.month.getMonth() - 1);
+             assert.equal(component._month.getMonth(), options.month.getMonth() > 0 ? options.month.getMonth() - 1 : MAX_MONTH_NUMBER);
          });
          it('shouldn\'t throw error in _beforeMount', function() {
             let component = calendarTestUtils.createComponent(MonthSlider, defaultOptions),

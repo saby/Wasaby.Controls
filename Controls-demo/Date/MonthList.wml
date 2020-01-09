@@ -52,8 +52,11 @@
                      {{yearHeaderTemplate.date.getFullYear()}}
                   </div>
                </ws:yearHeaderTemplate>
-               <ws:yearTemplate>
-                  <ws:partial template="Controls/calendar:MonthListYearTemplate">
+               <ws:monthTemplate>
+                  <ws:partial template="Controls/calendar:MonthListMonthTemplate">
+                     <ws:headerTemplate>
+                        {{_formatMonth(headerTemplate.date)}}
+                     </ws:headerTemplate>
                      <ws:dayTemplate>
                         <ws:partial template="Controls/calendar:MonthViewDayTemplate">
                            <ws:contentTemplate>
@@ -61,13 +64,6 @@
                            </ws:contentTemplate>
                         </ws:partial>
                      </ws:dayTemplate>
-                  </ws:partial>
-               </ws:yearTemplate>
-               <ws:monthTemplate>
-                  <ws:partial template="Controls/calendar:MonthListMonthTemplate">
-                     <ws:headerTemplate>
-                        {{_formatMonth(headerTemplate.date)}}
-                     </ws:headerTemplate>
                   </ws:partial>
                </ws:monthTemplate>
             </Controls.calendar:MonthList>

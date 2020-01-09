@@ -1,0 +1,3 @@
+<div class="controlsDemo-MonthList__itemHeader">
+    {{date.getFullYear()}}
+</div>
