@@ -215,7 +215,7 @@ export function prepareActionsMenuConfig(
         clickEvent.preventDefault();
 
         // there was a fake target before, check if it is needed
-        const menuTarget = isContext ? null : clickEvent.target;
+        const menuTarget = isContext ? null : clickEvent.target?.closest('.controls-ListView__itemV');
         const closeHandler = _processActionsMenuClose.bind(null, collection);
         const menuRecordSet = new RecordSet({
             rawData: menuActions,

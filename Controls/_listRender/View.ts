@@ -227,7 +227,8 @@ export default class View extends Control<IViewOptions> {
         return {
             itemActionsPosition: 'inside',
             actionAlignment: 'horizontal',
-            actionCaptionPosition: 'none'
+            actionCaptionPosition: 'none',
+            style: 'default'
         };
     }
 }

@@ -17,10 +17,6 @@
    on:wheel="_onItemWheel(item)"
    on:keydown="_onItemKeyDown(item)"
 
-   itemActionsPosition="{{ itemActionsPosition }}"
-   itemActionsTemplate="{{ itemActionsTemplate }}"
-   itemActionsClass="{{ itemActionsClass }}"
-   swipeTemplate="{{ swipeTemplate }}"
    multiSelectTpl="{{ multiSelectTpl }}"
    isAdd="{{ isAdd }}">
    <ws:itemActionsTemplate>
