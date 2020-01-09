@@ -12,7 +12,7 @@
 
 1. Установите [Node.js](http://nodejs.org/) и [NPM](http://npmjs.com).
 
-1. Установите зависимости:
+1. Установите зависимостиb:
 
         npm install
 
