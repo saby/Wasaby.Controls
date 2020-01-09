@@ -4,7 +4,7 @@ import template = require('wml!Controls/_listRender/Render/Render');
 import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/ItemTemplateWrapper');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
-import { CollectionItem, Collection, EditInPlaceController } from 'Controls/display';
+import { CollectionItem, Collection, EditInPlaceController, GroupItem } from 'Controls/display';
 import { constants } from 'Env/Env';
 import { Opener as DropdownOpener } from 'Controls/dropdown';
 
@@ -86,8 +86,14 @@ export default class Render extends Control<IRenderOptions> {
         e: SyntheticEvent<MouseEvent> & { preventItemEvent?: boolean },
         item: CollectionItem<unknown>
     ): void {
-        if (!e.preventItemEvent && !item.isEditing()) {
-            this._notify('itemClick', [item.getContents(), e], { bubbling: true });
+        if (item instanceof GroupItem) {
+            if (e.target?.closest('.controls-ListView__groupExpander')) {
+                item.toggleExpanded();
+            }
+        } else {
+            if (!e.preventItemEvent && !item.isEditing()) {
+                this._notify('itemClick', [item.getContents(), e], { bubbling: true });
+            }
         }
     }
 

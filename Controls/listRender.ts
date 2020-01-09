@@ -4,6 +4,7 @@ import itemActionsTemplate = require('wml!Controls/_listRender/Render/resources/
 import swipeTemplate = require('wml!Controls/_listRender/Render/resources/SwipeTemplate');
 import TileItemTemplateWrapper = require('wml!Controls/_listRender/Tile/resources/ItemTemplateWrapper');
 import ColumnsItemTemplateWrapper = require('wml!Controls/_listRender/Columns/resources/ItemTemplate');
+import groupTemplate = require('wml!Controls/_listRender/Render/resources/GroupTemplate');
 
 export { default as Render, IRenderOptions, IRenderChildren } from 'Controls/_listRender/Render';
 
@@ -17,7 +18,8 @@ export {
     editingTemplate,
     itemTemplateWrapper,
     itemActionsTemplate,
-    swipeTemplate
+    swipeTemplate,
+    groupTemplate
 };
 
 import ListView = require('wml!Controls/_listRender/ListView');

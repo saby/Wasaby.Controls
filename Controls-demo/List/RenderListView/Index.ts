@@ -18,9 +18,26 @@ export default class RenderListViewDemo extends Control {
     protected _children: IRenderListViewChildren;
 
     private _items: RecordSet;
+
     private _nextKey: number = 1;
 
-    protected _itemActions: any[];
+    protected _itemActions: any[] = [
+        {
+            id: 1,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            style: 'success',
+            iconStyle: 'success',
+            showType: 0,
+            handler: (item) => alert(`phone clicked at ${item.getKey()}`)
+        },
+        {
+            id: 2,
+            icon: 'icon-Edit',
+            title: 'edit',
+            showType: 0
+        }
+    ];
 
     protected _isEditInPlace: boolean = false;
     protected _isAddInPlace: boolean = false;
@@ -28,24 +45,9 @@ export default class RenderListViewDemo extends Control {
 
     protected _collection: Collection<Model> = null;
 
+    protected _groupingKeyCallback: Function = (item) => item.get('group');
+
     protected _beforeMount(): void {
-        this._itemActions = [
-            {
-                id: 1,
-                icon: 'icon-PhoneNull',
-                title: 'phone',
-                style: 'success',
-                iconStyle: 'success',
-                showType: 0,
-                handler: (item) => alert(`phone clicked at ${item.getKey()}`)
-            },
-            {
-                id: 2,
-                icon: 'icon-Edit',
-                title: 'edit',
-                showType: 0
-            }
-        ];
         this._items = new RecordSet({
             rawData: this._generateListItems(100),
             keyProperty: 'key'
@@ -83,7 +85,8 @@ export default class RenderListViewDemo extends Control {
         const record = new Model({
             rawData: {
                 title: 'default',
-                key: 1000000000
+                key: 1000000000,
+                group: '-1'
             },
             keyProperty: 'key'
         });
@@ -144,7 +147,8 @@ export default class RenderListViewDemo extends Control {
         const key = this._nextKey++;
         return {
             key,
-            title: `${key} list element`
+            title: `${key} list element`,
+            group: Math.floor(key / 10).toString()
         };
     }
 }

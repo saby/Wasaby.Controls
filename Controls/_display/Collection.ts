@@ -33,6 +33,7 @@ import {Object as EventObject} from 'Env/Event';
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
+const VERSION_UPDATE_ITEM_PROPERTIES = ['editingContents', 'animated', 'canShowActions', 'expanded'];
 
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
@@ -48,7 +49,8 @@ type FilterFunction<S> = (
     index: number,
     collectionItem: CollectionItem<S>,
     collectionIndex: number,
-    hasMembers?: boolean
+    hasMembers?: boolean,
+    group?: GroupItem<S>
 ) => boolean;
 
 type GroupId = number | string | null;
@@ -667,6 +669,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         super(options);
         SerializableMixin.call(this);
         EventRaisingMixin.call(this, options);
+
         this._$filter = this._$filter || [];
         this._$sort = this._$sort || [];
         this._$importantItemProperties = this._$importantItemProperties || [];
@@ -674,6 +677,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         // Support of deprecated 'idProperty' option
         if (!this._$keyProperty && (options as any).idProperty) {
              this._$keyProperty = (options as any).idProperty;
+        }
+
+        // Support of 'groupingKeyCallback' option
+        if (!this._$group && (options as any).groupingKeyCallback) {
+            this._$group = (options as any).groupingKeyCallback;
         }
 
         if (!this._$collection) {
@@ -719,6 +727,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             setIndices: () => false,
             isItemAtIndexHidden: () => false
         };
+
+        if (this._isGrouped()) {
+            // TODO What's a better way of doing this?
+            this.addFilter(
+                (item, index, collectionItem, collectionIndex, hasMembers, groupItem) =>
+                    collectionItem instanceof GroupItem || groupItem.isExpanded()
+            );
+        }
     }
 
     destroy(): void {
@@ -1931,8 +1947,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         );
         this._notifyAfterCollectionChange();
 
-        // FIXME Make a list of properties that lead to version update
-        if (properties as String === 'editingContents' || properties as String === 'animated' || properties as String === 'canShowActions') {
+        if (VERSION_UPDATE_ITEM_PROPERTIES.indexOf(properties as unknown as string) >= 0) {
             this._nextVersion();
         }
     }
@@ -2752,7 +2767,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     index,
                     item,
                     position,
-                    hasMembers
+                    hasMembers,
+                    prevGroup
                 );
                 if (!result) {
                     break;

@@ -12,6 +12,7 @@ import {ISerializableState as IDefaultSerializableState} from 'Types/entity';
 import {IList} from 'Types/collection';
 import {register} from 'Types/di';
 import {mixin} from 'Types/util';
+import { TemplateFunction } from 'UI/Base';
 
 export interface IOptions<T> {
     contents?: T;
@@ -383,6 +384,10 @@ export default class CollectionItem<T> extends mixin<
 
     getContentClasses(): string {
         return `controls-ListView__itemContent ${this._getSpacingClasses()}`;
+    }
+
+    getItemTemplate(userTemplate: TemplateFunction|string): TemplateFunction|string {
+        return userTemplate;
     }
 
     protected _getSpacingClasses(): string {

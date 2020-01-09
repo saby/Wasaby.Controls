@@ -1,7 +1,7 @@
 <ws:partial
    template="wml!Controls/_listRender/Render/resources/ItemOutputWrapper"
    item="{{ item }}"
-   itemTemplate="{{ itemTemplate }}"
+   itemTemplate="{{ item.getItemTemplate(itemTemplate, groupTemplate) }}"
    multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
    searchValue="{{ collection.getSearchValue() }}"
 

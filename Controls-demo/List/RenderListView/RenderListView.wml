@@ -6,6 +6,7 @@
          items="{{ _items }}"
          multiSelectVisibility="hidden"
          itemActions="{{ _itemActions }}"
+         groupingKeyCallback="{{ _groupingKeyCallback }}"
 
          attr:name="listView"
          attr:class="listViewContainer">
