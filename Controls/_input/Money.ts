@@ -27,7 +27,7 @@ interface IMoneyOptions extends INumberLengthOptions {
 
 // TODO: generics https://online.sbis.ru/opendoc.html?guid=ef345c4d-0aee-4ba6-b380-a8ca7e3a557f
 /**
- * @name Controls/_input/interface/IValue#value
+ * @name Controls/_input/Money#value
  * @cfg {String  | Number | null} Значение поля ввода.
  * @remark
  * При установке опции value в контроле ввода, отображаемое значение всегда будет соответствовать её значению. В этом случае родительский контрол управляет отображаемым значением. Например, вы можете менять значение по событию {@link valueChanged}:
@@ -109,7 +109,7 @@ interface IMoneyOptions extends INumberLengthOptions {
  * @see inputCompleted
  */
 /**
- * @name Controls/_input/interface/IValue#valueChanged
+ * @name Controls/_input/Money#valueChanged
  * @event Происходит при изменении отображаемого значения контрола ввода.
  * @param {String | Number} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
@@ -150,7 +150,7 @@ interface IMoneyOptions extends INumberLengthOptions {
  * @see value
  */
 /**
- * @name Controls/_input/interface/IValue#inputCompleted
+ * @name Controls/_input/Money#inputCompleted
  * @event Происходит при завершении ввода. Завершение ввода — это контрол потерял фокус, или пользователь нажал клавишу "Enter".
  * @param {String | Number} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
