@@ -7,6 +7,7 @@ export interface IMonthListOptions {
    monthTemplate?: TemplateFunction;
    stubTemplate?: TemplateFunction;
    displayedRanges?: [];
+   animation: boolean;
 }
 
 /**
@@ -171,5 +172,16 @@ export interface IMonthList {
  * </pre>
  * <pre>
  * <Controls.calendar:MonthList on:enrichItems="_enrichItemsHandler()"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_calendar/interfaces/IMonthList#animation
+ * @cfg {Boolean} Включает анимированное переключение к дате при измении опции {@link Controls/_calendar/interfaces/IMonthList#position position}
+ * @default false
+ *
+ * @example
+ * <pre>
+ * <Controls.calendar:MonthList bind:position="_month" animation="{{true}}"/>
  * </pre>
  */
