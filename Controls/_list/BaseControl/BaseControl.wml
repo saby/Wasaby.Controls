@@ -253,7 +253,8 @@
                 listModel="{{ _listViewModel }}"
                 filter="{{ _options.filter }}"
                 source="{{ _options.source }}"
-                selectionStrategy="{{_options.selectionStrategy}}"
+                nodesSourceControllers="{{_options.nodesSourceControllers}}"
+                nodeConfig="{{_options.nodeConfig}}"
                 on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                 on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
             />
