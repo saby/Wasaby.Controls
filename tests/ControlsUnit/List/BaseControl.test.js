@@ -598,6 +598,7 @@ define([
          });
 
          var dataLoadFired = false;
+         var portionSearchCanceled = false;
 
          var beforeLoadToDirectionCalled = false;
 
@@ -629,20 +630,29 @@ define([
          };
 
          var ctrl = new lists.BaseControl(cfg);
-
-
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {clientHeight: 100};
          ctrl._afterMount(cfg);
 
+         ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
+         ctrl._portionedSearch._clearTimer = function () {
+            portionSearchCanceled = true;
+         };
+
          const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down');
          await loadPromise;
+         assert.isTrue(portionSearchCanceled);
          assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
+
+         ctrl._portionedSearch.shouldSearch = () => false;
+         portionSearchCanceled = false;
+         await lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.isFalse(portionSearchCanceled);
       });
 
       it('prepareFooter', function() {
@@ -1007,6 +1017,7 @@ define([
          assert.isFalse(notified);
 
          var myMarkedItem = { qwe: 123 };
+         var mockedEvent = { target: 'myTestTarget' };
          // With marker
          lists.BaseControl._private.enterHandler({
             getViewModel: function() {
@@ -1020,13 +1031,13 @@ define([
                   }
                };
             },
-            _notify: function(e, item, options) {
+            _notify: function(e, args, options) {
                notified = true;
                assert.equal(e, 'itemClick');
-               assert.deepEqual(item, [myMarkedItem]);
+               assert.deepEqual(args, [myMarkedItem, mockedEvent]);
                assert.deepEqual(options, { bubbling: true });
             }
-         });
+         }, mockedEvent);
          assert.isTrue(notified);
       });
 
@@ -4386,6 +4397,58 @@ define([
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 40);
          bc._children.listView.getResultsHeight = () => 30;
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 70);
+      });
+
+      it('_itemMouseMove: notify draggingItemMouseMove', async function() {
+         var cfg = {
+                viewName: 'Controls/List/ListView',
+                itemsDragNDrop: true,
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         let eName;
+         await instance._beforeMount(cfg);
+         instance.saveOptions(cfg);
+         instance._listViewModel.getDragItemData = () => ({});
+         instance._notify = (eventName) => {
+            eName = eventName;
+         };
+         instance._itemMouseMove({}, {});
+         assert.equal(eName, 'draggingItemMouseMove');
+      });
+
+      it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
+         var cfg = {
+                viewName: 'Controls/List/ListView',
+                itemsDragNDrop: true,
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         let eName;
+         await instance._beforeMount(cfg);
+         instance.saveOptions(cfg);
+         instance._notify = (eventName) => {
+            eName = eventName;
+         };
+         instance._listViewModel.getDragItemData = () => ({});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'draggingItemMouseLeave');
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {
