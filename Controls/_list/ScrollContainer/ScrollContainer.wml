@@ -1,6 +1,6 @@
 <div class="controls-ScrollController">
     <ws:if data="{{_options.observeScroll}}">
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 100px; background: red; height: 1px;"></div>
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 100px"></div>
         <div name="topLoadTrigger"></div>
     </ws:if>
     <ws:partial template="{{_options.content}}" listModel="{{_options.viewModel}}" on:itemsContainerReady="itemsContainerReadyHandler()" on:controlResize="viewResizeHandler()" scope="{{_options}}"/>
