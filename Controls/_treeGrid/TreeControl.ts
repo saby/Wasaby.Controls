@@ -665,8 +665,9 @@ TreeControl.getDefaultOptions = function() {
         expandByItemClick: false,
         root: null,
         columns: DEFAULT_COLUMNS_VALUE,
-        selectionStrategy: {
-            name: 'Controls/operations:DeepTreeSelectionStrategy'
+        nodeConfig: {
+            depthSelect: true,
+            reverseSelect: true
         }
     };
 };
