@@ -2116,16 +2116,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onGroupClick: function(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
+            const collection = this._listViewModel;
             if (this._options.groupProperty) {
-                GroupingController.toggleGroup(this._listViewModel,
-                    groupId,
-                    this._groupingLoader,
-                    this._options.source,
-                    this._options.filter,
-                    this._options.sorting);
-            } else {
-                this._listViewModel.toggleGroup(groupId);
+                const groupingLoader = this._groupingLoader;
+                const needExpandGroup = !collection.isGroupExpanded(groupId);
+                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                    const source = this._options.source;
+                    const filter = this._options.filter;
+                    const sorting = this._options.sorting;
+                    groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
+                        GroupingController.toggleGroup(collection, groupId);
+                    });
+                    return;
+                }
             }
+            GroupingController.toggleGroup(collection, groupId);
         }
     },
 

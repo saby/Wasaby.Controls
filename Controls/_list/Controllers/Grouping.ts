@@ -6,7 +6,6 @@
 
 import {QueryWhere} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import {ICrud} from 'Types/source';
 
 export type TGroupId = string|number;
 export type TArrayGroupId = TGroupId[];
@@ -25,20 +24,8 @@ export interface IGroupingModel extends IGroupingCollection {
     mergeItems: (items: RecordSet) => void;
 }
 
-export function toggleGroup(collection: IGroupingModel,
-                            groupId: TGroupId,
-                            groupingLoader: any,
-                            source: ICrud,
-                            filter: QueryWhere,
-                            sorting?: object): void {
-    const needExpandGroup = !collection.isGroupExpanded(groupId);
-    if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
-        groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
-            collection.toggleGroup(groupId);
-        });
-    } else {
-        collection.toggleGroup(groupId);
-    }
+export function toggleGroup(collection: IGroupingModel, groupId: TGroupId): void {
+    collection.toggleGroup(groupId);
 }
 
 export function setCollapsedGroups(collection: IGroupingModel, arrayGroupId: TArrayGroupId): void {
