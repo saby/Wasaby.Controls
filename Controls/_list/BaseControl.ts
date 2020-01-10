@@ -446,6 +446,9 @@ var _private = {
         const portionedSearch = _private.getPortionedSearch(self);
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
+                if (portionedSearch.shouldSearch()) {
+                    portionedSearch.reset();
+                }
                 self._loadedItems = addedItems;
             }
             if (self._options.serviceDataLoadCallback instanceof Function) {
@@ -505,9 +508,6 @@ var _private = {
                 //посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
                 //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
-                if (portionedSearch.shouldSearch()) {
-                    portionedSearch.reset();
-                }
                 const countCurrentItems = self._listViewModel.getCount();
 
                 if (direction === 'down') {
