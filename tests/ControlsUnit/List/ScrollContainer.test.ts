@@ -315,6 +315,10 @@ describe('Controls/_list/ScrollContainer', () => {
         const instance = new ScrollController();
         instance._options.virtualScrolling = true;
         instance.virtualScroll = {};
+        instance._children = {
+            topVirtualScrollTrigger: { style: {} },
+            bottomVirtualScrollTrigger: { style: {} }
+        };
 
         it('offset recalc, viewport set', () => {
             // @ts-ignore
