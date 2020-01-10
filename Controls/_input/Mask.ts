@@ -226,11 +226,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
             _maskWrapperCss: null,
 
             _beforeUpdate: function(newOptions) {
-               let oldValue = this._viewModel.value;
                Mask.superclass._beforeUpdate.apply(this, arguments);
-               if (newOptions.value !== oldValue) {
-                  this._viewModel.setCarriageDefaultPosition(0);
-               }
                this._autoWidth = !!newOptions.replacer;
             },
 
