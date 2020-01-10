@@ -993,6 +993,9 @@ define([
 
          // Without marker
          lists.BaseControl._private.enterHandler({
+            _options: {
+               useNewModel: false
+            },
             getViewModel: function() {
                return {
                   getMarkedItem: function() {
@@ -1009,6 +1012,9 @@ define([
          var myMarkedItem = { qwe: 123 };
          // With marker
          lists.BaseControl._private.enterHandler({
+            _options: {
+               useNewModel: false
+            },
             getViewModel: function() {
                return {
                   getMarkedItem: function() {
