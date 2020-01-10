@@ -443,6 +443,7 @@ var _private = {
     loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
+        const portionedSearch = _private.getPortionedSearch(self);
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
@@ -495,7 +496,7 @@ var _private = {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
             if (self._options.searchValue) {
-                _private.getPortionedSearch(self).startSearch();
+                portionedSearch.startSearch();
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
@@ -504,6 +505,9 @@ var _private = {
                 //посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
                 //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
+                if (portionedSearch.shouldSearch()) {
+                    portionedSearch.reset();
+                }
                 const countCurrentItems = self._listViewModel.getCount();
 
                 if (direction === 'down') {
