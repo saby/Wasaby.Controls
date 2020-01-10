@@ -74,14 +74,14 @@ export default class View extends Control<IViewOptions> {
             collectionRecreated = true;
         }
 
-        if (options.editingConfig !== this._options.editingConfig || collectionRecreated) {
+        if (options.editingConfig !== this._options.editingConfig || options.editingConfig && collectionRecreated) {
             this._collection.setEditingConfig(options.editingConfig);
         }
 
         if (
             options.itemActions !== this._options.itemActions ||
             options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
-            collectionRecreated
+            options.itemActions && collectionRecreated
         ) {
             ItemActionsController.resetActionsAssignment(this._collection);
 
