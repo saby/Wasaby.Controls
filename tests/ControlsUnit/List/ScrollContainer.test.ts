@@ -173,6 +173,10 @@ describe('Controls/_list/ScrollContainer', () => {
             instance._container = {
                 clientHeight: 20
             };
+            instance._children = {
+                topVirtualScrollTrigger: { style: {} },
+                bottomVirtualScrollTrigger: { style: {} }
+            };
             instance._options.observeScroll = true;
             instance.viewportHeight = 10;
             instance.viewResizeHandler();
