@@ -392,13 +392,13 @@ var _private = {
         _private.setMarkerAfterScroll(self, event);
     },
 
-    enterHandler: function(self) {
+    enterHandler: function(self, event) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
         }
         let markedItem = self.getViewModel().getMarkedItem();
         if (markedItem) {
-            self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
+            self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
         }
     },
     toggleSelection: function(self, event) {
@@ -443,8 +443,12 @@ var _private = {
     loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
+        const portionedSearch = _private.getPortionedSearch(self);
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
+                if (portionedSearch.shouldSearch()) {
+                    portionedSearch.reset();
+                }
                 self._loadedItems = addedItems;
             }
             if (self._options.serviceDataLoadCallback instanceof Function) {
@@ -495,7 +499,7 @@ var _private = {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
             if (self._options.searchValue) {
-                _private.getPortionedSearch(self).startSearch();
+                portionedSearch.startSearch();
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
@@ -1412,6 +1416,12 @@ var _private = {
     setHasMoreData(model, hasMoreData: boolean): boolean {
         if (model) {
             model.setHasMoreData(hasMoreData);
+        }
+    },
+    notifyIfDragging(self, eName, itemData, nativeEvent){
+        const model = self.getViewModel();
+        if (model.getDragEntity() || model.getDragItemData()) {
+            self._notify(eName, [itemData, nativeEvent]);
         }
     }
 };
@@ -2353,9 +2363,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
+        _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
+        _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
     },
     _sortingChanged: function(event, propName, sortingType) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
