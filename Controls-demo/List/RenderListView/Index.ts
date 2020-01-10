@@ -17,7 +17,7 @@ export default class RenderListViewDemo extends Control {
     protected _template: TemplateFunction = template;
     protected _children: IRenderListViewChildren;
 
-    private _items: RecordSet;
+    protected _items: RecordSet;
 
     private _nextKey: number = 1;
 

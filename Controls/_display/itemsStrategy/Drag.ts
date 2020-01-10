@@ -1,4 +1,5 @@
 import CollectionItem from '../CollectionItem';
+import GroupItem from '../GroupItem';
 import Collection from '../Collection';
 import { mixin } from 'Types/util';
 import { DestroyableMixin } from 'Types/entity';
@@ -148,6 +149,9 @@ export default class Drag<S, T extends CollectionItem<S> = CollectionItem<S>> ex
 
     protected _createItems(): T[] {
         const filteredItems = this.source.items.filter((item) => {
+            if (item instanceof GroupItem) {
+                return true;
+            }
             const key = item.getContents().getKey();
             return !this._options.draggedItemsKeys.includes(key);
         });
@@ -158,8 +162,8 @@ export default class Drag<S, T extends CollectionItem<S> = CollectionItem<S>> ex
     }
 
     protected _createAvatarItem(): T {
-        const protoItem = this.source.items.find(
-            (item) => item.getContents().getKey() === this._options.avatarItemKey
+        const protoItem = this.source.items.find((item) =>
+            !(item instanceof GroupItem) && item.getContents().getKey() === this._options.avatarItemKey
         );
         return this._createItem(protoItem?.getContents());
     }
@@ -168,7 +172,7 @@ export default class Drag<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         const item = this.options.display.createItem({
             contents
         }) as unknown as T;
-        item.setDragged(true);
+        item.setDragged(true, true);
         return item;
     }
 

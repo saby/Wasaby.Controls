@@ -732,7 +732,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             // TODO What's a better way of doing this?
             this.addFilter(
                 (item, index, collectionItem, collectionIndex, hasMembers, groupItem) =>
-                    collectionItem instanceof GroupItem || groupItem.isExpanded()
+                    collectionItem instanceof GroupItem || !groupItem || groupItem.isExpanded()
             );
         }
     }

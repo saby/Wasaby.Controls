@@ -139,7 +139,7 @@ export default class AddInPlace<S, T extends CollectionItem<S> = CollectionItem<
         const item = this.options.display.createItem({
             contents
         }) as unknown as T;
-        item.setEditing(true, contents);
+        item.setEditing(true, contents, true);
         return item;
     }
 
