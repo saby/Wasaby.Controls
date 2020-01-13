@@ -30,7 +30,7 @@ import {Logger} from "UI/Utils";
  * @category Container
  * @remark
  * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
- * При внедрении в старые реестры необходимо обернуть Controls/scroll:Container в обертку Controls/dragnDrop:Compound.
+ * При внедрении в не Wasaby страницу необходимо обернуть Controls/scroll:Container в обёртку Controls/dragnDrop:Compound.
  * @demo Controls-demo/Container/Scroll
  *
  */
