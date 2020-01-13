@@ -39,7 +39,7 @@ var _private = {
        * For example, this can happen if the user opens the panel and then immediately goes to another tab, making the tab with the panel hidden, and then goes back.
        * The only way to prevent this is to block recalculation of toolbar items if the panel is not visible.
        */
-      if (self._oldToolbarWidth !== newWidth && self._container.offsetParent !== null) {
+      if ((self._oldToolbarWidth !== newWidth || !self._toolbarSource) && self._container.offsetParent !== null) {
          self._oldToolbarWidth = newWidth;
          _private.recalculateToolbarItems(self, self._items, newWidth);
       }
@@ -253,7 +253,7 @@ var OperationsPanel = Control.extend({
    _itemClickHandler: function(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent) {
       this._notify('itemClick', [item, nativeEvent, {
          selected: this._options.selectedKeys,
-         excluded: this._options.excludedKeysd
+         excluded: this._options.excludedKeys
       }]);
    }
 });

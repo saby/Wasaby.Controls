@@ -1,16 +1,42 @@
 define(['Controls/operationsPanel'], function(operationsPanel) {
    'use strict';
    describe('Controls/_operationsPanel/Container', function() {
-      let containerInstance = new operationsPanel.Container.default();
+      describe('_getSelectedKeys', function() {
+         let containerInstance = new operationsPanel.Container.default();
 
-      containerInstance._options.listMarkedKey = null;
-      containerInstance._options.selectedKeys = [];
-      assert.deepEqual(containerInstance._getSelectedKeys(), []);
+         assert.deepEqual(containerInstance._getSelectedKeys({
+            listMarkedKey: null,
+            selectedKeys: []
+         }), []);
 
-      containerInstance._options.listMarkedKey = 1;
-      assert.deepEqual(containerInstance._getSelectedKeys(), [1]);
+         assert.deepEqual(containerInstance._getSelectedKeys({
+            listMarkedKey: 1,
+            selectedKeys: []
+         }), [1]);
 
-      containerInstance._options.selectedKeys = [2];
-      assert.deepEqual(containerInstance._getSelectedKeys(), [2]);
+         assert.deepEqual(containerInstance._getSelectedKeys({
+            listMarkedKey: 1,
+            selectedKeys: [2]
+         }), [2]);
+      });
+
+      describe('_beforeUpdate', function() {
+         let containerInstance = new operationsPanel.Container.default();
+
+         containerInstance._options.listMarkedKey = null;
+         containerInstance._options.selectedKeys = [];
+
+         containerInstance._beforeUpdate({
+            listMarkedKey: 1,
+            selectedKeys: []
+         });
+         assert.deepEqual(containerInstance._selectedKeys, [1]);
+
+         containerInstance._beforeUpdate({
+            listMarkedKey: 1,
+            selectedKeys: [2]
+         });
+         assert.deepEqual(containerInstance._selectedKeys, [2]);
+      });
    });
 });
