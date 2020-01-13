@@ -1,0 +1,65 @@
+<div class="controls-Menu {{_loadItemsDeferred && !_loadItemsDeferred.isReady() ? 'ws-hidden'}}">
+   <Controls.scroll:Container attr:class="controls-ScrollContainer__flex controls-Menu__scroll_theme-{{_options.theme}}"
+                              shadowVisible="{{false}}">
+      <Controls.listRender:Render
+              listModel="{{_listModel}}">
+         <ws:itemTemplate>
+            <ws:partial template="{{_options.itemTemplate}}"
+                        itemData="{{itemTemplate.item}}"
+                        item="{{itemTemplate.item.getContents()}}"
+                        isEmptyItem="{{_isEmptyItem(itemTemplate.item)}}"
+                        multiSelect="{{_options.multiSelect}}"
+                        on:mouseenter="_onItemMouseEnter(itemTemplate.item)"
+                        on:click="_onItemClick(itemTemplate.item)"
+            />
+         </ws:itemTemplate>
+         <ws:multiSelectTpl>
+            <Controls.Container.Async templateName="Controls/toggle:Checkbox"
+                                      on:valueChanged="_checkBoxClick()"
+                                      attr:class="controls-Menu__row-checkbox-{{checkBoxAlign === 'right' ? 'right' : 'left'}}_theme-{_options.theme}}
+                                                  controls-Menu__row-checkbox_{{multiSelectTpl.itemData.isSelected() ? 'active' : 'default'}}_theme-{{_options.theme}}">
+               <ws:templateOptions value="{{multiSelectTpl.itemData.isSelected()}}" />
+            </Controls.Container.Async>
+         </ws:multiSelectTpl>
+         <ws:footerTemplate>
+            <ws:if data="{{_applyButtonVisible || _moreButtonVisible || _expandButtonVisible}}">
+               <div class="controls-Menu__footer_theme-{{_options.theme}}" on:mouseenter="_closeSubMenu()">
+                  <ws:if data="{{_moreButtonVisible}}">
+                     <Controls.buttons:Button viewMode="link"
+                                              fontColorStyle="link"
+                                              caption="{{_options.moreButtonCaption}}"
+                                              on:click="_openSelectorDialog()"/>
+                  </ws:if>
+                  <ws:else data="{{_expandButtonVisible}}">
+                     <div class="controls-Menu__additional">
+                        <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
+                           <ws:partial template="{{content.resolvedTemplate}}"
+                                       bind:value="_expander"
+                                       on:valueChanged="_toggleExpanded()"/>
+                        </Controls.Container.Async>
+                     </div>
+                  </ws:else>
+                  <ws:if data="{{_applyButtonVisible}}">
+                     <div class="controls-Menu__applyButton_theme-{{_options.theme}}">
+                        <Controls.buttons:Button viewMode="functionalButton"
+                                                 icon="icon-Yes"
+                                                 iconSize="m"
+                                                 iconStyle="contrast"
+                                                 buttonStyle="success"
+                                                 inlineHeight="l"
+                                                 on:click="_applySelection()"/>
+                     </div>
+                  </ws:if>
+               </div>
+            </ws:if>
+         </ws:footerTemplate>
+      </Controls.listRender:Render>
+   </Controls.scroll:Container>
+   <Controls.popup:Sticky name="Sticky"
+                          actionOnScroll="close"
+                          closeOnOutsideClick="{{true}}"
+                          on:result="_subMenuResult()"
+                          on:close="_closeSubMenu()"
+                          template="Controls/popupTemplate:Sticky"
+                          className="controls-Menu__subMenu_margin_theme-{{_options.theme}}"/>
+</div>
