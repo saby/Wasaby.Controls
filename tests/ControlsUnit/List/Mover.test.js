@@ -539,23 +539,23 @@ define([
       it('getSiblingItem', function() {
          var siblingItem;
 
-         siblingItem = lists.default.Mover._private.getSiblingItem(mover, items.getRecordById(6), 'before');
+         siblingItem = mover.getSiblingItem(items.getRecordById(6), 'before');
          assert.equal(siblingItem.getId(), 3);
-         siblingItem = lists.default.Mover._private.getSiblingItem(mover, items.getRecordById(6), 'after');
+         siblingItem = mover.getSiblingItem(items.getRecordById(6), 'after');
          assert.isNull(siblingItem);
 
-         siblingItem = lists.default.Mover._private.getSiblingItem(mover, items.getRecordById(3), 'after');
+         siblingItem = mover.getSiblingItem(items.getRecordById(3), 'after');
          assert.equal(siblingItem.getId(), 6);
-         siblingItem = lists.default.Mover._private.getSiblingItem(mover, items.getRecordById(3), 'before');
+         siblingItem = mover.getSiblingItem(items.getRecordById(3), 'before');
          assert.equal(siblingItem.getId(), 2);
 
-         siblingItem = lists.default.Mover._private.getSiblingItem(mover, items.getRecordById(1), 'after');
+         siblingItem = mover.getSiblingItem(items.getRecordById(1), 'after');
          assert.equal(siblingItem.getId(), 2);
-         siblingItem = lists.default.Mover._private.getSiblingItem(mover, items.getRecordById(1), 'before');
+         siblingItem = mover.getSiblingItem(items.getRecordById(1), 'before');
          assert.isNull(siblingItem);
 
          mover._options.root = 1;
-         siblingItem = lists.default.Mover._private.getSiblingItem(mover, items.getRecordById(4), 'after');
+         siblingItem = mover.getSiblingItem(items.getRecordById(4), 'after');
          assert.equal(siblingItem.getId(), 5);
 
       });
