@@ -108,6 +108,9 @@ var _private = {
       return resultParams;
    }
 };
+/**
+ * @Deprecated
+ */
 var SourceController = cExtend.extend({
    _source: null,
    _queryParamsController: null,
