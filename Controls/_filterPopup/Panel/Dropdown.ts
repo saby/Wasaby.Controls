@@ -50,7 +50,6 @@ import 'css!theme?Controls/filterPopup';
 
    var FilterDropdown = Control.extend({
       _template: template,
-      _tmplNotify: tmplNotify,
 
       _selectedKeysChangedHandler: function(event, keys:Array):Boolean|undefined {
          return this._notify('selectedKeysChanged', [keys]);
