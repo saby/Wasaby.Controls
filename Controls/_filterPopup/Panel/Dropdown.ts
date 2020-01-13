@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Dropdown/Dropdown');
-import * as tmplNotify from 'Controls/Utils/tmplNotify';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!theme?Controls/filterPopup';
    /**
     * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки и используется на панели фильтров.
@@ -50,7 +50,6 @@ import 'css!theme?Controls/filterPopup';
 
    var FilterDropdown = Control.extend({
       _template: template,
-      _tmplNotify: tmplNotify,
 
       _selectedKeysChangedHandler: function(event, keys:Array):Boolean|undefined {
          return this._notify('selectedKeysChanged', [keys]);
@@ -62,6 +61,14 @@ import 'css!theme?Controls/filterPopup';
 
       _resetHandler: function() {
          this._notify('visibilityChanged', [false]);
+      },
+
+      _dropDownOpen(event: SyntheticEvent<Event>): void {
+         this._notify('dropDownOpen');
+      },
+
+      _dropDownClose(event: SyntheticEvent<Event>): void {
+         this._notify('dropDownClose');
       }
 
    });
