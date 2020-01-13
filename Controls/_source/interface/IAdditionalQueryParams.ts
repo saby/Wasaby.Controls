@@ -1,7 +1,4 @@
-import {QueryNavigationType} from 'Types/source';
-
-export type SortingObject = object[];
-export type FilterObject = Record<string, unknown>;
+import {QueryNavigationType, QueryOrderSelector, QueryWhere} from 'Types/source';
 
 export type Direction = 'up' | 'down';
 
@@ -15,6 +12,6 @@ export interface IAdditionalQueryParams {
    meta?: IAdditionQueryParamsMeta;
    limit?: number;
    offset?: number;
-   filter?: FilterObject;
-   sorting?: SortingObject;
+   filter?: QueryWhere;
+   sorting?: QueryOrderSelector;
 }

@@ -1,43 +1,86 @@
-import {Control} from 'UI/Base';
-import {ICrud, Query} from 'Types/source';
-import {INavigation, TNavigationSource, INavigationOptionValue} from 'Controls/interface';
-import {QueryNavigationType} from 'Types/source';
+import {ICrud, Query, DataSet, QueryOrderSelector, QueryWhere} from 'Types/source';
+import {RecordSet} from 'Types/collection';
+import {Record} from 'Types/entity';
+import {INavigationOptionValue} from 'Controls/interface';
+
 import {Logger} from 'saby-ui/UI/Utils';
 
 import * as cInstance from 'Core/core-instance';
-import * as Deferred from 'Core/Deferred';
 import * as cClone from 'Core/core-clone';
 
-import {IQueryParamsController} from './interface/IQueryParamsController';
-import {default as Page, IPageNavigationOptions} from './QueryParamsController/Page';
-import {default as Position, IPositionNavigationOptions} from './QueryParamsController/Position';
-import {RecordSet} from 'saby-types/Types/collection';
+import {IPaginationController} from './interface/IPaginationController';
+import PagePaginationController from './QueryParamsController/PagePaginationController';
+import PositionPaginationController from './QueryParamsController/PositionPaginationController';
+
 import {
     Direction,
-    FilterObject,
     IAdditionalQueryParams,
-    IAdditionQueryParamsMeta,
-    SortingObject
+    IAdditionQueryParamsMeta
 } from './interface/IAdditionalQueryParams';
 
+/**
+ * Вспомогательный интерфейс для определения типа typeof object
+ * @interface IType
+ * @private
+ * @author Аверкиев П.А.
+ */
+/*
+ * Additional interface to set typeof types
+ * @interface IType
+ * @private
+ * @author Аверкиев П.А.
+ */
 export interface IType<T> extends Function {
     new(...args: any[]): T;
 }
 
+/**
+ * Вспомогательный интерфейс для определения простых мапов {[key: string]: any}
+ * @interface IDictionary
+ * @private
+ * @author Аверкиев П.А.
+ */
+/*
+ * Additional interface to set types for simple {[key: string]: any} dictionaries
+ * @interface IDictionary
+ * @private
+ * @author Аверкиев П.А.
+ */
 export interface IDictionary<T> {
     [key: string]: T;
 }
 
 /**
- * Фабрика для создания контроллера
+ * Фабрика для создания экземпляра контроллера запроса навигации.
+ * @remark
+ * Поддерживает два варианта - 'page' и 'position'
+ * @class Controls/_source/NavigationControllerFactory
+ * @example
+ * const cName:INavigationOptionValue = {source: 'page'};
+ * const controller = NavigationControllerFactory.resolve(cName);
+ * @private
+ * @author Аверкиев П.А.
  */
+
+/*
+ * Navigation query controller instance Factory
+ * @remark
+ * Supports two variants of navigation query controllers - 'page' and 'position'
+ * @class Controls/_source/NavigationControllerFactory
+ * @example
+ * const cName:INavigationOptionValue = {source: 'page'};
+ * const controller = NavigationControllerFactory.resolve(cName);
+ * @private
+ * @author Аверкиев П.А.
+ */
+
 export class NavigationControllerFactory {
-    static factorySource: IDictionary<IType<IQueryParamsController>> = {
-        page: Page,
-        position: Position
+    static factorySource: IDictionary<IType<IPaginationController>> = {
+        page: PagePaginationController,
+        position: PositionPaginationController
     };
 
-    static resolve(navigationOptionValue: INavigationOptionValue): IQueryParamsController {
+    static resolve(navigationOptionValue: INavigationOptionValue): IPaginationController {
         if (!navigationOptionValue.source) {
             return;
         }
@@ -50,13 +93,42 @@ export class NavigationControllerFactory {
 }
 
 /**
- * Инициалайзер пакраметров запроса
- * @param options
+ * Строитель запроса.
+ * @remark
+ * Принимает набор опций фильтрации, сортировки и пейджинации и позволяет их вывести как список переданных свойств
+ * или как сформированный запрос Types/source:Query.
+ * Поддерживает merge с опциями IAdditionalQueryParams.
+ * @class Controls/_source/QueryParamsBuilder
+ * @example
+ * const params: IAdditionalQueryParams = {filter, sorting};
+ * const queryBuilder = new QueryParamsBuilder(params);
+ * const params2: IAdditionalQueryParams = {filter, meta, offset, limit};
+ * const queryBuilder2 = new QueryParamsBuilder(params);
+ * const query = queryBuilder.merge(queryBuilder2.raw()).build();
  * @private
+ * @author Аверкиев П.А.
  */
+
+/*
+ * Query builder.
+ * @remark
+ * Accept params for filtering, sorting and pagination and allows to output them as raw data
+ * or as Types/source:Query query.
+ * Maintains merge() method to merge internal options with passed IAdditionalQueryParams.
+ * @class Controls/_source/QueryParamsBuilder
+ * @example
+ * const params: IAdditionalQueryParams = {filter, sorting};
+ * const queryBuilder = new QueryParamsBuilder(params);
+ * const params2: IAdditionalQueryParams = {filter, meta, offset, limit};
+ * const queryBuilder2 = new QueryParamsBuilder(params);
+ * const query = queryBuilder.merge(queryBuilder2.raw()).build();
+ * @private
+ * @author Аверкиев П.А.
+ */
+
 export class QueryParamsBuilder {
-    private _filter: FilterObject;
-    private _sorting: SortingObject;
+    private _filter: QueryWhere;
+    private _sorting: QueryOrderSelector;
     private _limit: number;
     private _offset: number;
     private _meta: IAdditionQueryParamsMeta;
@@ -67,37 +139,24 @@ export class QueryParamsBuilder {
         }
     }
 
-    setFilter(filter: FilterObject): QueryParamsBuilder {
-        this._filter = filter;
-        return this;
-    }
-
-    setSorting(sorting: SortingObject): QueryParamsBuilder  {
-        this._sorting = sorting;
-        return this;
-    }
-
-    setLimit(limit: number): QueryParamsBuilder  {
-        this._limit = limit;
-        return this;
-    }
-
-    setOffset(offset: number): QueryParamsBuilder  {
-        this._offset = offset;
-        return this;
-    }
-
-    setMeta(meta: IAdditionQueryParamsMeta): QueryParamsBuilder  {
-        this._meta = meta;
-        return this;
-    }
-
+    /**
+     * Заменяет/объединяет текущие значения свойств фильтрации, сортировки и пейджинации.
+     * Обратите внимание на то, что фильтры не будут заменены, они всегда пытаются смёрджиться.
+     * @param params {IAdditionalQueryParams} набор опций фильтрации, сортировки и пейджинации
+     * @return QueryParamsBuilder текущий экземпляр класса
+     */
+    /*
+     * Reset/Merge current class properties values for filtering, sorting and pagination.
+     * Note, that filters will be only merged and won't be reset.
+     * @param params {IAdditionalQueryParams} params for filtering, sorting and pagination
+     * @return QueryParamsBuilder текущий экземпляр класса
+     */
     merge(params: IAdditionalQueryParams): QueryParamsBuilder {
         Object.keys(params).forEach((param) => {
             if (params[param]) {
                 if (param === 'filter') {
-                    const filter: FilterObject = this._filter ? cClone(this._filter) : {};
-                    this.setFilter({...filter, ...params[param]});
+                    const filter: QueryWhere = this._filter ? cClone(this._filter) : {};
+                    this._filter = ({...filter, ...params[param]});
                 } else {
                     this[`_${param}`] = params[param];
                 }
@@ -106,6 +165,12 @@ export class QueryParamsBuilder {
         return this;
     }
 
+    /**
+     * @return {IAdditionalQueryParams} текущее состояние объекта
+     */
+    /*
+     * @return {IAdditionalQueryParams} current object state
+     */
     raw(): IAdditionalQueryParams {
         return {
             filter: this._filter || {},
@@ -116,6 +181,14 @@ export class QueryParamsBuilder {
         };
     }
 
+    /**
+     * Собирает свойства текущего класса в запрос Types/source:Query
+     * @return {Types/source:Query} Объект Query, готовый для передачи в ICrud.query()
+     */
+    /*
+     * Builds current class properties to the Types/source:Query query
+     * @return {Types/source:Query} Query object ready to pass to ICrud.query()
+     */
     build(): Query {
         const query = new Query();
         query.where(this._filter)
@@ -128,19 +201,68 @@ export class QueryParamsBuilder {
 }
 
 export interface INavigationControllerOptions {
+    /**
+     * @name Controls/_source/NavigationController#source
+     * @cfg {Types/source:ICrud} Ресурс для запроса данных
+     */
+    /*
+     * @name Controls/_source/NavigationController#source
+     * @cfg {Types/source:ICrud} Source to request data
+     */
     source: ICrud;
+
+    /**
+     * @name Controls/_source/NavigationController#navigation
+     * @cfg {Types/source:INavigationOptionValue} Опции навигации
+     */
+    /*
+     * @name Controls/_source/NavigationController#navigation
+     * @cfg {Types/source:INavigationOptionValue} Navigation options
+     */
     navigation?: INavigationOptionValue;
+
+    /**
+     * @name Controls/_source/NavigationController#keyProperty
+     * @cfg {string} Название поля ключа для Types/source:DataSet
+     */
+    /*
+     * @name Controls/_source/NavigationController#keyProperty
+     * @cfg {string} Name of the key property for Types/source:DataSet
+     */
     keyProperty: string;
 }
 
 /**
+ * Контроллер загрузки данных с учётом постраничной навигации
+ * @remark
+ * Позволяет запросить данные из ресурса ICrud с учётом настроек навигации INavigationOptionValue
  *
+ * @class Controls/_source/NavigationController
+ * @implements IPaginationController
+ *
+ * @control
+ * @public
+ * @author Аверкиев П.А.
  */
-export default class NavigationController {
+
+/*
+ * Data loading and per-page navigation controller
+ * @remark
+ * Allows to request data from ICrud source, considering navigation options object (INavigationOptionValue)
+ *
+ * @class Controls/_source/NavigationController
+ * @implements Controls/_source/interface/IPaginationController
+ *
+ * @control
+ * @public
+ * @author Аверкиев П.А.
+ */
+
+export default class NavigationController implements IPaginationController {
     protected _options: INavigationControllerOptions | null;
-    private _loader: Deferred<RecordSet>;
+    private _loader: Promise<RecordSet>;
     private readonly _source: ICrud;
-    private readonly _navigationController: IQueryParamsController;
+    private readonly _navigationController: IPaginationController;
 
     constructor(cfg: INavigationControllerOptions) {
         this._options = cfg;
@@ -154,80 +276,199 @@ export default class NavigationController {
     }
 
     /**
-     * Загружает данные согласно фильтрации, сортировке и данным _navigationController
-     * @param filter
-     * @param sorting
-     * @param direction
+     * Строит запрос данных на основе переданных параметров filter и sorting и возвращает Promise<RecordSet>.
+     * Если в опцию navigation был передан объект INavigationOptionValue, его filter, sorting и настрйоки пейджинации
+     * также одбавляются в запрос.
+     * @param filter {Types/source:QueryWhere} Настрйоки фильтрации
+     * @param sorting {Types/source:QueryOrderSelector} Настрйки сортировки
+     * @param direction {Direction} Направление навигации
      */
-    load(filter?: FilterObject, sorting?: SortingObject, direction?: Direction): Deferred<RecordSet> {
+    /*
+     * Builds a query based on passed filter and sorting params and returns Promise<RecordSet>.
+     * If INavigationOptionValue is set into the class navigation property, its filter, sorting and pagination settings
+     * will also be added to query
+     * @param filter {Types/source:QueryWhere} filter settings
+     * @param sorting {Types/source:QueryOrderSelector} sorting settings
+     * @param direction {Direction} navigation direction
+     */
+    load(filter?: QueryWhere, sorting?: QueryOrderSelector, direction?: Direction): Promise<RecordSet> {
         const queryParams = new QueryParamsBuilder({filter, sorting});
         this._cancelLoading();
         if (this._navigationController) {
             queryParams.merge(NavigationController._getNavigationQueryParams(direction, this._navigationController));
         }
         this._loader = this._callQuery(this._source, this._options.keyProperty, queryParams.build())
-            .addCallback((list) => {
+            .then((list: RecordSet) => {
                 if (this._navigationController) {
                     this._navigationController.calculateState(list, direction);
                 }
                 return list;
             })
-            .addErrback((error) => {
+            .catch((error) => {
                 return error;
             });
         return this._loader;
     }
 
     /**
-     * Отменяет текущую загрузку данных
-     * @private
+     * Возвращает текущий объект INavigationOptionValue, если он был передан при инициализации объекта
      */
-    private _cancelLoading(): void {
-        if (this._loader && !this._loader.isReady()) {
-            this._loader.cancel();
-        }
-        this._loader = null;
+    /*
+     * Returns current INavigationOptionValue if it is set in the class navigation property
+     * TODO Вроде нигде не используется?
+     */
+    getNavigation(): INavigationOptionValue {
+        return this._options.navigation;
     }
 
-    // TODO спроси, query должен возвращать Promise или Deferred
-    private _callQuery(dataSource: ICrud, keyProperty: string, query: Query): Deferred<RecordSet> {
-        const queryDef = dataSource.query(query).addCallback(((dataSet) => {
-            if (keyProperty && keyProperty !== dataSet.idProperty) {
-                dataSet.setKeyProperty(keyProperty);
-            }
-            return dataSet.getAll ? dataSet.getAll() : dataSet;
-        }));
+    /**
+     * Проверяет, загружаются ли в данный момент данные
+     */
+    /*
+     * Checks if data is currently loading
+     */
+    isLoading(): boolean {
+        // return this._loader && !this._loader.isReady();;
+        return !!this._loader;
+    }
 
-        if (cInstance.instanceOfModule(dataSource, 'Types/source:Memory')) {
+    /**
+     * @see Types/_source/ICrud
+     */
+    create(meta?: object): Promise<Record> {
+        return this._source.create(meta);
+    }
 
-            /* Проблема в том что деферред с синхронным кодом статического источника выполняется сихронно.
-             в итоге в коолбэк релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций,
-             и не можем обратиться к this._options */
-            const queryDefAsync = new Deferred();
+    /**
+     * @see Types/_source/ICrud
+     */
+    update(data: Record | RecordSet, meta?: object): Promise<null> {
+        return this._source.update(data);
+    }
 
-            // deferred.fromTimer is not support canceling
-            setTimeout(() => {
-                if (!queryDefAsync.isReady()) {
-                    queryDefAsync.callback();
-                }
-            }, 0);
+    /**
+     * @see Types/_source/ICrud
+     */
+    read(key: number | string, meta?: object): Promise<Record> {
+        return this._source.read(key, meta);
+    }
 
-            queryDefAsync.addCallback(() => {
-                return queryDef;
-            });
-            return queryDefAsync;
-        } else {
-            return queryDef;
+    /**
+     * @see Controls/_source/interface/IPaginationController
+     */
+    getLoadedDataCount(): number {
+        if (this._navigationController) {
+            return this._navigationController.getLoadedDataCount();
         }
     }
 
     /**
+     * @see Controls/_source/interface/IPaginationController
+     */
+    getAllDataCount(rootKey?: string|number): boolean | number {
+        if (this._navigationController) {
+            return this._navigationController.getAllDataCount();
+        }
+    }
+
+    /**
+     * @see Controls/_source/interface/IPaginationController
+     */
+    hasMoreData(direction: Direction, key?: string | number): boolean {
+        if (this._navigationController) {
+            return this._navigationController.hasMoreData(direction, key);
+        }
+    }
+
+    /**
+     * @see Controls/_source/interface/IPaginationController
+     */
+    calculateState(list: RecordSet, direction?: Direction): void {
+        if (this._navigationController) {
+            this._navigationController.calculateState(list);
+        }
+    }
+
+    /**
+     * @see Controls/_source/interface/IPaginationController
+     */
+    setState(state: any): void {
+        if (this._navigationController) {
+            this._navigationController.setState(state);
+        }
+    }
+
+    /**
+     * @see Controls/_source/interface/IPaginationController
+     */
+    setEdgeState(direction: Direction): void {
+        if (this._navigationController) {
+            this._navigationController.setEdgeState(direction);
+        }
+    }
+
+    /**
+     * @see Controls/_source/interface/IPaginationController
+     */
+    destroy(): void {
+        if (this._navigationController) {
+            this._navigationController.destroy();
+        }
+        this._cancelLoading();
+        this._options = null;
+    }
+
+    /**
+     * TODO will work only w/o ability to cancel previous query
+     * Выполняет запрос данных DataSet методом ICrud.query()
+     * Возвращает Promise<RecordSet> с результатом выполнения DataSet.getAll()
+     * @param {Types/source:ICrud} dataSource Ресурс данных
+     * @param {string} keyProperty Свойство, используемое в качестве ключа в DataSet
+     * @param {Types/source:Query} query исполняемый запрос с учётом сортировки, фильтрации, параметров пейджинации
+     * @private
+     */
+    /*
+     * Performs the DataSet request using ICrud.query()
+     * and returns Promise<RecordSet> with result of calling DataSet.getAll()
+     * @param {Types/source:ICrud} dataSource Data source
+     * @param {string} keyProperty key property for DataSet
+     * @param {Types/source:Query} query A query built based on sorting, filter and pagination params
+     * @private
+     */
+    private _callQuery(dataSource: ICrud, keyProperty: string, query: Query): Promise<RecordSet> {
+        let sourceQuery: Promise<DataSet>;
+        if (cInstance.instanceOfModule(dataSource, 'Types/source:Memory')) {
+            sourceQuery = new Promise<DataSet>((resolve) => {
+                setTimeout(() => {
+                    resolve(dataSource.query(query));
+                }, 0);
+            });
+        } else {
+            sourceQuery = dataSource.query(query);
+        }
+
+        return sourceQuery.then(((dataSet) => {
+            if (keyProperty && keyProperty !== dataSet.getKeyProperty()) {
+                dataSet.setKeyProperty(keyProperty);
+            }
+            return Promise.resolve(dataSet.getAll());
+        }));
+    }
+
+    private _cancelLoading(): void {
+        // if (this._loader && !this._loader.isReady()) {
+        //     this._loader.cancel();
+        // }
+        this._loader = null;
+    }
+
+    /**
      * Получает QueryParams из paramsController
-     * @param direction
+     * @param {Direction} direction
      * @param paramsController
      * @private
      */
-    private static _getNavigationQueryParams(direction: Direction, paramsController: IQueryParamsController)
+    private static _getNavigationQueryParams(direction: Direction, paramsController: IPaginationController)
         : IAdditionalQueryParams {
         const {limit, offset, meta, filter} = paramsController.prepareQueryParams(direction);
         const queryParams = new QueryParamsBuilder({limit, offset, meta, filter});
@@ -236,8 +477,8 @@ export default class NavigationController {
 
     /**
      * Валидатор, позволяющий убедиться, что для source был точно передан Types/_source/ICrud
-     * TODO проверь, надо ли оно
-     * @param source
+     * TODO надо ли оно?
+     * @param {Types/source:ICrud} source
      * @private
      */
     private static _isValidCrudSource(source: ICrud): boolean {

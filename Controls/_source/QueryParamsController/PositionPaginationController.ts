@@ -2,7 +2,7 @@ import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {IAdditionalQueryParams, Direction, DirectionCfg} from '../interface/IAdditionalQueryParams';
-import {IQueryParamsController} from '../interface/IQueryParamsController';
+import {IPaginationController} from '../interface/IPaginationController';
 import {default as More} from './More';
 import {Logger} from 'UI/Utils';
 
@@ -25,12 +25,12 @@ declare type PositionBoth = Position | IPositionBoth;
 declare type HasMore = boolean | IPositionHasMore | RecordSet;
 
 // TODO use type from Types
-interface IListMetaForPositionNavigation {
+interface IListMetaForPositionPagination {
     more: HasMore;
     nextPosition?: PositionBoth;
 }
 
-export interface IPositionNavigationOptions {
+export interface IPositionPaginationControllerOptions {
     field: FieldCfg;
     position: PositionCfg;
     direction: DirectionCfg;
@@ -40,29 +40,29 @@ export interface IPositionNavigationOptions {
 /**
  * @author Крайнов Дмитрий
  */
-class PositionNavigation implements IQueryParamsController {
+class PositionPaginationController implements IPaginationController {
     protected _more: More;
     protected _beforePosition: Position = null;
     protected _afterPosition: Position = null;
-    protected _options: IPositionNavigationOptions;
+    protected _options: IPositionPaginationControllerOptions;
 
     // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
     protected _positionByMeta: boolean = null;
 
-    constructor(cfg: IPositionNavigationOptions) {
+    constructor(cfg: IPositionPaginationControllerOptions) {
         this._options = cfg;
 
         if (this._options.field === undefined) {
-            throw new Error('Option field is undefined in PositionNavigation');
+            throw new Error('Option field is undefined in PositionPaginationController');
         }
         if (this._options.position === undefined) {
-            throw new Error('Option position is undefined in PositionNavigation');
+            throw new Error('Option position is undefined in PositionPaginationController');
         }
         if (this._options.direction === undefined) {
-            throw new Error('Option direction is undefined in PositionNavigation');
+            throw new Error('Option direction is undefined in PositionPaginationController');
         }
         if (this._options.limit === undefined) {
-            throw new Error('Option limit is undefined in PositionNavigation');
+            throw new Error('Option limit is undefined in PositionPaginationController');
         }
     }
 
@@ -285,7 +285,7 @@ class PositionNavigation implements IQueryParamsController {
     }
 
     // TODO Not implemented
-    getAllDataCount(rootKey: string | number): boolean | number {
+    getAllDataCount(rootKey?: string | number): boolean | number {
         return undefined;
     }
 
@@ -329,4 +329,4 @@ class PositionNavigation implements IQueryParamsController {
     }
 }
 
-export default PositionNavigation;
+export default PositionPaginationController;

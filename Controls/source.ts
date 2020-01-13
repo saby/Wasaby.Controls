@@ -22,7 +22,7 @@ import Controller = require('Controls/_source/SourceController');
 
 export {default as NavigationController} from 'Controls/_source/NavigationController';
 export {IAdditionalQueryParams, Direction, DirectionCfg} from 'Controls/_source/interface/IAdditionalQueryParams';
-export {IQueryParamsController} from 'Controls/_source/interface/IQueryParamsController';
+export {IPaginationController} from 'Controls/_source/interface/IPaginationController';
 
 export {default as SelectedKey} from './_source/Adapter/SelectedKey';
 export {default as AdapterMask} from 'Controls/_source/Adapter/Mask';

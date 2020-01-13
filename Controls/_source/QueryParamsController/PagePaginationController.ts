@@ -1,10 +1,10 @@
 import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {IAdditionalQueryParams, Direction} from '../interface/IAdditionalQueryParams';
-import {IQueryParamsController} from '../interface/IQueryParamsController';
+import {IPaginationController} from '../interface/IPaginationController';
 import {default as More} from './More';
 
-export interface IPageNavigationOptions {
+export interface IPagePaginationOptions {
     page?: number;
     pageSize?: number;
     hasMore?: boolean;
@@ -13,14 +13,14 @@ export interface IPageNavigationOptions {
 /**
  * @author Крайнов Дмитрий
  */
-class PageNavigation implements IQueryParamsController {
+class PagePaginationController implements IPaginationController {
     protected _nextPage: number = 1;
     protected _prevPage: number = -1;
     protected _more: More = null;
     protected _page: number = 0;
-    protected _options: IPageNavigationOptions | null;
+    protected _options: IPagePaginationOptions | null;
 
-    constructor(cfg: IPageNavigationOptions) {
+    constructor(cfg: IPagePaginationOptions) {
         this._options = cfg;
         this._page = cfg.page || 0;
         if (this._page !== undefined) {
@@ -28,7 +28,7 @@ class PageNavigation implements IQueryParamsController {
             this._nextPage = this._page + 1;
         }
         if (!this._options.pageSize) {
-            throw new Error('Option pageSize is undefined in PageNavigation');
+            throw new Error('Option pageSize is undefined in PagePagination');
         }
     }
 
@@ -113,7 +113,7 @@ class PageNavigation implements IQueryParamsController {
         }
     }
 
-    getAllDataCount(rootKey: string | number): boolean | number {
+    getAllDataCount(rootKey?: string | number): boolean | number {
         const dataCount = this._getMore().getMoreMeta(rootKey);
         return dataCount as boolean | number;
     }
@@ -167,4 +167,4 @@ class PageNavigation implements IQueryParamsController {
     }
 }
 
-export default PageNavigation;
+export default PagePaginationController;

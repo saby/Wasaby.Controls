@@ -3,8 +3,8 @@ import cInstance = require('Core/core-instance');
 import sourceLib = require('Types/source');
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
-import Page from 'Controls/_source/QueryParamsController/Page';
-import Position from 'Controls/_source/QueryParamsController/Position';
+import Page from 'Controls/_source/QueryParamsController/PagePaginationController';
+import Position from 'Controls/_source/QueryParamsController/PositionPaginationController';
 import {Logger} from 'UI/Utils';
 
 var _private = {
