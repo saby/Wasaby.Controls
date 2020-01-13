@@ -69,7 +69,7 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-					template: HeadingPathBack,
+               template: HeadingPathBack,
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: undefined,
@@ -190,7 +190,7 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-					template: HeadingPathBack,
+               template: HeadingPathBack,
                templateOptions: {
                   backButtonStyle: undefined,
                   showArrowOutsideOfBackButton: false,
@@ -207,33 +207,104 @@ define([
             }]);
          });
 
+
+         it('new different items with same id', async function() {
+            let items = [{
+                  id: 0,
+                  title: 'first',
+                  counterCaption: 1
+               }, {
+                  id: 1,
+                  title: 'second',
+                  counterCaption: 2
+               }].map(function(item) {
+                  return new entity.Model({
+                     keyProperty: 'id',
+                     rawData: item
+                  });
+               }),
+               itemsNew = [{
+                  id: 0,
+                  title: 'first',
+                  counterCaption: 1
+               }, {
+                  id: 1,
+                  title: 'first',
+                  counterCaption: 2
+               }].map(function(item) {
+                  return new entity.Model({
+                     keyProperty: 'id',
+                     rawData: item
+                  });
+               }),
+               header = [{
+                  align: 'right',
+                  width: '100px'
+               }, {
+                  title: 'second'
+               }],
+               cfg = {
+                  items: items,
+                  header: header,
+                  displayProperty: 'title'
+               },
+               instance = new PathController();
+            await instance._beforeMount(cfg);
+            var headerInst = instance._header;
+            instance.saveOptions({
+               items: items
+            });
+            instance._beforeUpdate({
+               header: header,
+               items: itemsNew,
+               displayProperty: 'title'
+            });
+            assert.notEqual(instance._header, headerInst);
+            assert.deepEqual(instance._header, [{
+               template: HeadingPathBack,
+               templateOptions: {
+                  backButtonStyle: undefined,
+                  showArrowOutsideOfBackButton: false,
+                  showActionButton: false,
+                  backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
+                  backButtonCaption: 'first',
+                  counterCaption: 2
+               },
+               align: 'right',
+               width: '100px',
+               isBreadCrumbs: true
+            }, {
+               title: 'second'
+            }]);
+         });
+
          it('new different items with same title', async function() {
             let items = [{
-                   id: 0,
-                   title: 'first',
-                   counterCaption: 1
-                }, {
-                   id: 1,
-                   title: 'first',
-                   counterCaption: 2
-                }].map(function(item) {
-                   return new entity.Model({
-                      keyProperty: 'id',
-                      rawData: item
-                   });
-                }),
-                header = [{
-                   align: 'right',
-                   width: '100px'
-                }, {
-                   title: 'second'
-                }],
-                cfg = {
-                   items: items,
-                   header: header,
-                   displayProperty: 'title'
-                },
-                instance = new PathController();
+                  id: 0,
+                  title: 'first',
+                  counterCaption: 1
+               }, {
+                  id: 1,
+                  title: 'first',
+                  counterCaption: 2
+               }].map(function(item) {
+                  return new entity.Model({
+                     keyProperty: 'id',
+                     rawData: item
+                  });
+               }),
+               header = [{
+                  align: 'right',
+                  width: '100px'
+               }, {
+                  title: 'second'
+               }],
+               cfg = {
+                  items: items,
+                  header: header,
+                  displayProperty: 'title'
+               },
+               instance = new PathController();
             await instance._beforeMount(cfg);
             var headerInst = instance._header;
             instance.saveOptions({
