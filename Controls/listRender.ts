@@ -29,7 +29,3 @@ import TileView = require('wml!Controls/_listRender/TileView');
 import ColumnsView = require('wml!Controls/_listRender/ColumnsView');
 export { TileView };
 export { ColumnsView };
-
-// Если используется новый рендер, то используется новая модель. Грузим ее
-// здесь, чтобы не заморачиваться с асинхронной подгрузкой в BaseControl
-import 'Controls/display';
