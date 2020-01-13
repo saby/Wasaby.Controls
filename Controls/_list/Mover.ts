@@ -56,7 +56,7 @@ interface IMoveItemsParams {
  * @category List
  */
 
-export default class Mover extends BaseAction {
+export = class Mover extends BaseAction {
     _template = template;
     _moveDialogTemplate = null;
     _moveDialogOptions = null;

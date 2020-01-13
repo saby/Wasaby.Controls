@@ -74,7 +74,7 @@ let _private = {
  * @category List
  */
 
-export default class Remover extends BaseAction {
+export = class Remover extends BaseAction {
    static contextTypes() {
       return {
          dataOptions: dataOptions
