@@ -1467,7 +1467,8 @@ var _private = {
     },
     notifyIfDragging(self, eName, itemData, nativeEvent){
         const model = self.getViewModel();
-        if (model.getDragEntity() || model.getDragItemData()) {
+        // TODO Make available for new model as well
+        if (!self._options.useNewModel && (model.getDragEntity() || model.getDragItemData())) {
             self._notify(eName, [itemData, nativeEvent]);
         }
     }
