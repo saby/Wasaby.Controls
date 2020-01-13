@@ -1247,20 +1247,16 @@ var _private = {
         return result;
     },
 
-    getSortingOnChange: function(currentSorting, propName, sortingType) {
+    getSortingOnChange: function(currentSorting, propName) {
         var sorting = cClone(currentSorting || []);
-        var sortElemIndex = -1;
         var sortElem;
         var newSortElem = {};
 
-        //use same algorithm when sortingType is not 'single', if the number of properties is equal to one
-        if (sortingType !== 'single' || sorting.length === 1 && sorting[0][propName]) {
-            sorting.forEach(function(elem, index) {
-                if (elem.hasOwnProperty(propName)) {
-                    sortElem = elem;
-                    sortElemIndex = index;
-                }
-            });
+        if (sorting.length === 1 && sorting[0][propName]) {
+            const elem = sorting[0];
+            if (elem.hasOwnProperty(propName)) {
+                sortElem = elem;
+            }
         } else {
             sorting = [];
         }
@@ -1273,7 +1269,7 @@ var _private = {
             if (sortElem[propName] === 'DESC') {
                 sortElem[propName] = 'ASC';
             } else {
-                sorting.splice(sortElemIndex, 1);
+                sorting = [];
             }
         } else {
             newSortElem[propName] = 'DESC';
@@ -1710,7 +1706,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.onScrollHide(this);
     },
 
-    viewportResizeHandler(_: SyntheticEvent<Event>, viewportHeight: number, viewportRect): void {
+    viewportResizeHandler(_: SyntheticEvent<Event>, viewportHeight: number, viewportRect: number): void {
         const container = this._container[0] || this._container;
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
         this._viewPortSize = viewportHeight;
@@ -2451,8 +2447,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
     },
-    _sortingChanged: function(event, propName, sortingType) {
-        var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
+    _sortingChanged: function(event, propName) {
+        var newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
     },
