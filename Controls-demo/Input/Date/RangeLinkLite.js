@@ -20,8 +20,8 @@ define('Controls-demo/Input/Date/RangeLinkLite', [
       _endValueHalfYear: new Date(2017, 5, 30),
       _startValueYear: new Date(2017, 0, 1),
       _endValueYear: new Date(2017, 11, 31),
-      _checkedStart: new Date(2017, 3, 1),
-      _checkedEnd: new Date(2018, 3, 1)
+      _checkedStart: new Date(2019, 3, 1),
+      _checkedEnd: new Date(2020, 3, 1)
    });
    return ModuleClass;
 });

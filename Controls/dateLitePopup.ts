@@ -65,6 +65,8 @@ var Component = BaseControl.extend({
 
     _position: null,
 
+    iconsChecked: null,
+
     _yearHovered: null,
 
     _range: null,
@@ -94,6 +96,8 @@ var Component = BaseControl.extend({
         }
 
         this._range = options.range;
+
+        this.iconsChecked = this._getIconsChecked(options.checkedStart, options.checkedEnd);
     },
 
     _beforeUpdate: function (options) {
@@ -107,6 +111,10 @@ var Component = BaseControl.extend({
     setYear: function (year) {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
+    },
+
+    _getIconsChecked: function (checkedStart, checkedEnd) {
+        return checkedStart || checkedEnd;
     },
 
     _dateToDataString(date) {

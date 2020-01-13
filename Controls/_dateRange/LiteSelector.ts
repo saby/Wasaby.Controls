@@ -70,6 +70,7 @@ var Component = BaseSelector.extend({
                 chooseHalfyears: this._options.chooseHalfyears,
                 chooseYears: this._options.chooseYears,
 
+                checkedTemplate: this._options.checkedTemplate,
                 checkedStart: this._options.checkedStart,
                 checkedEnd: this._options.checkedEnd,
 
