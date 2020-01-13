@@ -29,6 +29,8 @@ import {debounce} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
+import * as GroupingController from 'Controls/_list/Controllers/Grouping';
+import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue} from 'Controls/interface';
 
@@ -149,6 +151,10 @@ var _private = {
             _private.showIndicator(self);
             _private.hideError(self);
 
+            if (cfg.groupProperty) {
+                const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
+                GroupingController.prepareFilterCollapsedGroups(collapsedGroups, filter);
+            }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
@@ -183,6 +189,9 @@ var _private = {
                 if (listModel) {
                     if (self._isActive) {
                         isActive = true;
+                    }
+                    if (self._options.groupProperty) {
+                        self._groupingLoader.resetLoadedGroups(listModel);
                     }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
@@ -399,7 +408,7 @@ var _private = {
         _private.setMarkerAfterScroll(self, event);
     },
 
-    enterHandler: function(self) {
+    enterHandler: function(self, event) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
         }
@@ -410,7 +419,7 @@ var _private = {
             markedItem = self.getViewModel().getMarkedItem();
         }
         if (markedItem) {
-            self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
+            self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
         }
     },
     toggleSelection: function(self, event) {
@@ -436,7 +445,7 @@ var _private = {
             loadedDataCount, allDataCount;
 
         if (_private.isDemandNavigation(navigation) && sourceController.hasMoreData('down')) {
-            self._shouldDrawFooter = self._options.groupingKeyCallback ? !self._listViewModel.isAllGroupsCollapsed() : true;
+            self._shouldDrawFooter = (self._options.groupingKeyCallback || self._options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
         }
@@ -455,8 +464,12 @@ var _private = {
     loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
+        const portionedSearch = _private.getPortionedSearch(self);
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
+                if (portionedSearch.shouldSearch()) {
+                    portionedSearch.reset();
+                }
                 self._loadedItems = addedItems;
             }
             if (self._options.serviceDataLoadCallback instanceof Function) {
@@ -507,9 +520,12 @@ var _private = {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
             if (self._options.searchValue) {
-                _private.getPortionedSearch(self).startSearch();
+                portionedSearch.startSearch();
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+            if (self._options.groupProperty) {
+                GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
+            }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 //до реализации функционала и проблемы из новости делаем решение по месту:
@@ -1147,6 +1163,7 @@ var _private = {
                         nodeProperty: 'parent@',
                         groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
                         groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
+                        groupProperty: self._options.contextMenuConfig && self._options.contextMenuConfig.groupProperty,
                         rootKey: action.id,
                         showHeader: true,
                         dropdownClassName: 'controls-itemActionsV__popup',
@@ -1451,6 +1468,12 @@ var _private = {
         if (model) {
             model.setHasMoreData(hasMoreData);
         }
+    },
+    notifyIfDragging(self, eName, itemData, nativeEvent){
+        const model = self.getViewModel();
+        if (model.getDragEntity() || model.getDragItemData()) {
+            self._notify(eName, [itemData, nativeEvent]);
+        }
     }
 };
 
@@ -1475,6 +1498,8 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _groupingLoader: null,
+
     _isMounted: false,
 
     _savedStartIndex: 0,
@@ -1579,6 +1604,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             let viewModelConfig = cClone(newOptions);
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
+            }
+
+            if (newOptions.groupProperty) {
+                self._groupingLoader = new GroupingLoader({});
             }
 
             if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
@@ -1808,7 +1837,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
-            this._listViewModel.setCollapsedGroups(newOptions.collapsedGroups);
+            GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
         }
 
         if (newOptions.keyProperty !== this._options.keyProperty) {
@@ -1948,6 +1977,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._sourceController) {
             this._sourceController.destroy();
+        }
+
+        if (this._groupingLoader) {
+            this._groupingLoader.destroy();
         }
 
         if (this._scrollPagingCtr) {
@@ -2134,9 +2167,23 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.reload(this, this._options).addCallback(getData);
     },
 
-    _onGroupClick: function(e, item, baseEvent) {
+    _onGroupClick: function(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
-            this._listViewModel.toggleGroup(item);
+            const collection = this._listViewModel;
+            if (this._options.groupProperty) {
+                const groupingLoader = this._groupingLoader;
+                const needExpandGroup = !collection.isGroupExpanded(groupId);
+                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                    const source = this._options.source;
+                    const filter = this._options.filter;
+                    const sorting = this._options.sorting;
+                    groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
+                        GroupingController.toggleGroup(collection, groupId);
+                    });
+                    return;
+                }
+            }
+            GroupingController.toggleGroup(collection, groupId);
         }
     },
 
@@ -2398,9 +2445,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
+        _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
+        _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
     },
     _sortingChanged: function(event, propName, sortingType) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
