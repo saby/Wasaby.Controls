@@ -114,6 +114,10 @@ class Base extends Control<IMasterDetail> {
         } else {
             this.initCurrentWidth(options.masterWidth);
         }
+
+        if (this._canResizing) {
+            this._updateOffset(options);
+        }
     }
 
     private initCurrentWidth(width: string|number): void {

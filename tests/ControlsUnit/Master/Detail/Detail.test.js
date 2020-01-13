@@ -20,6 +20,13 @@ define(['Controls/masterDetail'], function(masterDetail) {
             masterWidth: 200,
             masterMaxWidth: 299
          };
+
+         Control._beforeMount(options);
+         assert.equal(Control._minOffset, 100);
+         assert.equal(Control._maxOffset, 99);
+         assert.equal(Control._currentWidth, '200px');
+
+
          Control._beforeUpdate(options);
          assert.equal(Control._minOffset, 100);
          assert.equal(Control._maxOffset, 99);
