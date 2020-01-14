@@ -6,21 +6,10 @@
       <ws:partial template="{{multiSelectTpl}}" scope="{{_options}}" class="{{isEmptyItem ? 'controls-Menu__row-checkbox_invisible'}}"/>
    </ws:if>
    <ws:if data="{{contentTemplate}}">
-      <!--If contentTemplate is a string, then use Async to load required module-->
-      <ws:if data="{{(contentTemplate.charAt)}}">
-         <Controls.Container.Async templateName="{{contentTemplate}}">
-            <ws:partial
-                    template="{{content.resolvedTemplate}}"
-                    itemData="{{itemData}}"
-            />
-         </Controls.Container.Async>
-      </ws:if>
-      <ws:else>
-         <ws:partial
-                 template="{{contentTemplate}}"
-                 itemData="{{itemData}}"
-         />
-      </ws:else>
+      <ws:partial
+              template="{{contentTemplate}}"
+              itemData="{{itemData}}"
+      />
    </ws:if>
 
    <ws:else>
