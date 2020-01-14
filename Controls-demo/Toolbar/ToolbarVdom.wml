@@ -11,6 +11,7 @@
              popupClassName="controls-Toolbar_test_popupClassName"
              on:itemClick="_itemClick()"
              itemsSpacing="big"
+             footerTemplate="ddd"
           />
        </div>
        <div style="padding: 5px;">Пример тулбара из разных кнопок (links, buttons, toolButtons):
