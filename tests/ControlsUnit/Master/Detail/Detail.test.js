@@ -21,7 +21,8 @@ define(['Controls/masterDetail'], function(masterDetail) {
             masterMaxWidth: 299
          };
 
-         Control._beforeMount(options);
+         Control._canResizing = Control._isCanResizing(options);
+         Control._afterMount(options);
          assert.equal(Control._minOffset, 100);
          assert.equal(Control._maxOffset, 99);
          assert.equal(Control._currentWidth, '200px');

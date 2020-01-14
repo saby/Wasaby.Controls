@@ -114,10 +114,6 @@ class Base extends Control<IMasterDetail> {
         } else {
             this.initCurrentWidth(options.masterWidth);
         }
-
-        if (this._canResizing) {
-            this._updateOffset(options);
-        }
     }
 
     private initCurrentWidth(width: string|number): void {
@@ -129,7 +125,7 @@ class Base extends Control<IMasterDetail> {
     }
 
     protected _afterMount(options: IMasterDetail): void {
-        if (this._isPercentValue(options.masterWidth)) {
+        if (this._canResizing) {
             this._updateOffset(options);
         }
     }
