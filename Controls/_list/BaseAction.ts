@@ -10,8 +10,7 @@ export default Control.extend({
          resultValidate = false;
          Confirmation.openPopup({
             type: 'ok',
-            message: rk('Нет записей для обработки команды'),
-            style: 'danger'
+            message: rk('Нет записей для обработки команды')
          });
       }
 
