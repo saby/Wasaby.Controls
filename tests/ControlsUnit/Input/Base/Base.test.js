@@ -34,7 +34,8 @@ define(
                   selectionStart: 0,
                   selectionEnd: 0,
                   value: '',
-                  focus: function() {},
+                  focus: function() {
+                  },
                   setSelectionRange: function(start, end) {
                      this.selectionStart = start;
                      this.selectionEnd = end;
@@ -338,6 +339,22 @@ define(
                   name: 'notify',
                   arguments: ['inputCompleted', ['test value', 'test value']]
                }]);
+
+               ctrl._beforeUpdate({
+                  value: ''
+               });
+               ctrl._changeHandler();
+
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['inputCompleted', ['test value', 'test value']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['inputCompleted', ['', '']]
+                  }
+               ]);
             });
          });
          describe('Click event', function() {
@@ -534,7 +551,8 @@ define(
                ctrl._beforeMount({
                   value: ''
                });
-               event.stopPropagation = ProxyCall.apply(function() {}, 'stopPropagation', calls, true);
+               event.stopPropagation = ProxyCall.apply(function() {
+               }, 'stopPropagation', calls, true);
             });
             it('The home key', function() {
                event.keyCode = Env.constants.key.home;
