@@ -2,14 +2,13 @@
                                               maximizeButtonVisibility="{{true}}"
                                               stackWidth="{{_options.workspaceWidth}}"
                                               stackMinWidth="{{_options.stackMinWidth}}"
-                                              stackMaxWidth="{{_options.stackMaxWidth}}"
-                                              class="ControlsDemo-TestMaximizedStack__width">
+                                              stackMaxWidth="{{_options.stackMaxWidth}}">
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
         </div>
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
-        <Controls.input:Text value="width: {{_options.workspaceWidth}} | minWidth: {{_options.stackMinWidth}} | maxWidth: {{_options.stackMaxWidth}}" />
+        <Controls.input:Text class="ControlsDemo-TestMaximizedStack__width" value="width: {{_options.workspaceWidth}} | minWidth: {{_options.stackMinWidth}} | maxWidth: {{_options.stackMaxWidth}}" />
     </ws:bodyContentTemplate>
 </Controls.popupTemplate:Stack>
