@@ -1284,6 +1284,10 @@ var
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
             }
 
+            current.itemActionsDrawPosition =
+                this._options.disableColumnScrollCellStyles ? 'after' : 'before';
+            current.itemActionsColumnScrollDraw = this._options.columnScroll && this._options.disableColumnScrollCellStyles;
+
             current.columnIndex = 0;
 
             current.getVersion = function() {
@@ -1371,6 +1375,13 @@ var
                 } else {
                     currentColumn.gridCellStyles = '';
                 }
+
+                if (current.columnScroll && self._options.disableColumnScrollCellStyles) {
+                    currentColumn.itemActionsGridCellStyles =
+                        currentColumn.gridCellStyles +
+                        ' position: sticky; overflow: visible; display: inline-block; visibility: hidden; right: 0;';
+                }
+
                 return currentColumn;
             };
             return current;
