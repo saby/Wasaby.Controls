@@ -784,7 +784,7 @@ var
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs,
                 }, this._options.theme);
-                cellClasses += ` controls-Grid__header-cell_min-width_theme-${theme}`;
+                cellClasses += ' controls-Grid__header-cell_min-width';
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
