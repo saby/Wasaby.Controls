@@ -17,7 +17,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
 class MenuControl extends Control<IMenuOptions> {
     protected _template: TemplateFunction = ViewTemplate;
     protected _listModel: Tree;
-    protected _loadItemsDeferred: Deferred;
+    protected _loadItemsPromise: Promise;
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _applyButtonVisible: boolean = false;
@@ -39,7 +39,7 @@ class MenuControl extends Control<IMenuOptions> {
     protected _beforeUpdate(newOptions: IMenuOptions): void {
         if (newOptions.root !== this._options.root) {
             this._closeSubMenu();
-            this._loadItemsDeferred = this.loadItems(newOptions);
+            this._loadItemsPromise = this.loadItems(newOptions);
         }
     }
 
@@ -48,9 +48,11 @@ class MenuControl extends Control<IMenuOptions> {
             this._sourceController.cancelLoading();
             this._sourceController = null;
         }
+        this._listModel.destroy();
+        this._listModel = null;
     }
 
-    protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>) {
+    protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, target) {
         const needOpenDropDown = item.isNode() && !item.getContents().get('readOnly');
         const needCloseDropDown = this._subDropdownItem !== item;
         // Close the already opened sub menu. Installation of new data sets new size of the container.
@@ -62,7 +64,7 @@ class MenuControl extends Control<IMenuOptions> {
 
         if (needOpenDropDown) {
             this._subDropdownItem = item;
-            this.openSubDropdown(event.target, item);
+            this.openSubDropdown(target, item);
         }
     }
 
@@ -74,7 +76,7 @@ class MenuControl extends Control<IMenuOptions> {
 
             this._notify('selectedKeysChanged', [this.getSelectedKeys()]);
         } else {
-            this._notify('itemClick', [[item]]);
+            this._notify('itemClick', [item]);
         }
     }
 
@@ -117,7 +119,7 @@ class MenuControl extends Control<IMenuOptions> {
 
     private getSelectorDialogOptions(options: IMenuOptions): object {
         let self = this;
-        const selectorTemplate = this._options.selectorTemplate;
+        const selectorTemplate = options.selectorTemplate;
         const selectorDialogResult = options.selectorDialogResult;
         const selectorOpener = options.selectorOpener;
 
@@ -132,10 +134,10 @@ class MenuControl extends Control<IMenuOptions> {
         };
         Merge(templateConfig, selectorTemplate.templateOptions);
 
-        Merge({
+        return Merge({
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
-            isCompoundTemplate: this._options.isCompoundTemplate,
+            isCompoundTemplate: options.isCompoundTemplate,
             handlers: {
                 // Для совместимости.
                 // Старая система фокусов не знает про существование VDOM окна и не может восстановить на нем фокус после закрытия старой панели.

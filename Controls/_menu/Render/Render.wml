@@ -8,7 +8,7 @@
                   isEmptyItem="{{_isEmptyItem(itemTemplate.item)}}"
                   itemClassList="{{_getClassList(itemTemplate.item)}}"
                   multiSelect="{{_options.multiSelect}}"
-                  on:mouseenter="_proxyEvent('itemMouseEnter', itemTemplate.item)"
+                  on:mouseenter="_itemMouseEnter(itemTemplate.item)"
       />
    </ws:itemTemplate>
    <ws:multiSelectTpl>

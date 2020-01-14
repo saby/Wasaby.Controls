@@ -1,12 +1,13 @@
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {IRenderOptions} from 'Controls/listRender';
 import {Control, TemplateFunction} from 'UI/Base';
-import {IMenuOptions, TKeys} from 'Controls/interface';
+import {IMenuOptions} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
-import {Tree} from 'Controls/display';
+import {Tree, TreeItem} from 'Controls/display';
 import * as itemTemplate from 'wml!Controls/_menu/Render/itemTemplate';
 import ViewTemplate = require('wml!Controls/_menu/Render/Render');
 import {Model} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import {factory} from 'Types/chain';
 
 interface IMenuRenderOptions extends IMenuOptions, IRenderOptions {
@@ -24,6 +25,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
         if (newOptions.listModel !== this._options.listModel) {
             this.setListModelOptions(newOptions);
         }
+    }
+
+    protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: TreeItem) {
+        this._notify('itemMouseEnter', [item, event.target]);
     }
 
     protected _isEmptyItem(itemData) {

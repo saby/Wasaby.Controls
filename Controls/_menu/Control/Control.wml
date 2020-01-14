@@ -1,10 +1,10 @@
-<div class="controls-Menu {{_loadItemsDeferred && !_loadItemsDeferred.isReady() ? 'ws-hidden'}}">
+<div class="controls-Menu {{_loadItemsPromise && !_loadItemsPromise.isReady() ? 'ws-hidden'}}">
    <Controls.scroll:Container attr:class="controls-ScrollContainer__flex controls-Menu__scroll_theme-{{_options.theme}}"
                               shadowVisible="{{false}}">
       <Controls._menu.Render scope="{{_options}}"
                              listModel="{{_listModel}}"
                              on:itemClick="_itemClick()"
-                             on:itemMouseenter="_itemMouseEnter()"
+                             on:itemMouseEnter="_itemMouseEnter()"
                              on:checkBoxClick="_checkBoxClick()"
       >
          <ws:footerTemplate>
