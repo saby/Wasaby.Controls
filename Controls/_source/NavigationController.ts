@@ -235,6 +235,7 @@ export interface INavigationControllerOptions {
 /**
  * Контроллер загрузки данных с учётом постраничной навигации
  * @remark
+ * Хранит состояние навигации INavigationOptionValue и вычисляет на его основании параметры для вызова методов.
  * Позволяет запросить данные из ресурса ICrud с учётом настроек навигации INavigationOptionValue
  *
  * @class Controls/_source/NavigationController
@@ -248,6 +249,7 @@ export interface INavigationControllerOptions {
 /*
  * Data loading and per-page navigation controller
  * @remark
+ * Stores the navigation state and calculates methods calling params on its base
  * Allows to request data from ICrud source, considering navigation options object (INavigationOptionValue)
  *
  * @class Controls/_source/NavigationController
@@ -266,7 +268,7 @@ export default class NavigationController implements IPaginationController {
 
     constructor(cfg: INavigationControllerOptions) {
         this._options = cfg;
-        // TODO нужна ли эта проверка?
+        // TODO do we need this validation at all?
         if (NavigationController._isValidCrudSource(this._options.source)) {
             this._source = this._options.source;
         }
@@ -315,8 +317,8 @@ export default class NavigationController implements IPaginationController {
      */
     /*
      * Returns current INavigationOptionValue if it is set in the class navigation property
-     * TODO Вроде нигде не используется?
      */
+    // TODO never used anywhere?
     getNavigation(): INavigationOptionValue {
         return this._options.navigation;
     }
@@ -419,7 +421,6 @@ export default class NavigationController implements IPaginationController {
     }
 
     /**
-     * TODO will work only w/o ability to cancel previous query
      * Выполняет запрос данных DataSet методом ICrud.query()
      * Возвращает Promise<RecordSet> с результатом выполнения DataSet.getAll()
      * @param {Types/source:ICrud} dataSource Ресурс данных
@@ -435,6 +436,7 @@ export default class NavigationController implements IPaginationController {
      * @param {Types/source:Query} query A query built based on sorting, filter and pagination params
      * @private
      */
+    // TODO By default Promise does not have cancel or abort method
     private _callQuery(dataSource: ICrud, keyProperty: string, query: Query): Promise<RecordSet> {
         let sourceQuery: Promise<DataSet>;
         if (cInstance.instanceOfModule(dataSource, 'Types/source:Memory')) {
@@ -455,6 +457,11 @@ export default class NavigationController implements IPaginationController {
         }));
     }
 
+    /**
+     * Отменяет текущую загрузку данных
+     * @private
+     */
+    // TODO By default Promise does not have cancel or abort method
     private _cancelLoading(): void {
         // if (this._loader && !this._loader.isReady()) {
         //     this._loader.cancel();
@@ -477,10 +484,10 @@ export default class NavigationController implements IPaginationController {
 
     /**
      * Валидатор, позволяющий убедиться, что для source был точно передан Types/_source/ICrud
-     * TODO надо ли оно?
      * @param {Types/source:ICrud} source
      * @private
      */
+    // TODO do we need this method at all?
     private static _isValidCrudSource(source: ICrud): boolean {
         if (!cInstance.instanceOfMixin(source, 'Types/_source/ICrud')) {
             Logger.error('NavigationController: Source option has incorrect type');

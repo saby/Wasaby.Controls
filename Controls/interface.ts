@@ -63,4 +63,4 @@ export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelec
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions} from './_interface/IFilter';
-export {default as INavigation, INavigationOptions, INavigationOptionValue, TNavigationSource} from './_interface/INavigation';
+export {default as INavigation, INavigationOptions, INavigationOptionValue} from './_interface/INavigation';
