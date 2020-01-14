@@ -2,7 +2,7 @@ import {ICrud, Query, DataSet, QueryOrderSelector, QueryWhere} from 'Types/sourc
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {INavigationOptionValue} from 'Controls/interface';
-import {Logger} from 'saby-ui/UI/Utils';
+import {Logger} from 'UI/Utils';
 
 import * as cInstance from 'Core/core-instance';
 import * as cClone from 'Core/core-clone';
@@ -16,6 +16,12 @@ import {
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
 } from './interface/IAdditionalQueryParams';
+
+interface IExtendedPromise<T> extends Promise<T> {
+    addCallback: (callback: Function) => IExtendedPromise<T>;
+    addErrback: (callback: Function) => IExtendedPromise<T>;
+    addCallbacks: (callback: Function, errback: Function) => IExtendedPromise<T>;
+}
 
 /**
  * Вспомогательный интерфейс для определения типа typeof object
@@ -329,8 +335,8 @@ export default class NavigationController implements INavigationController {
      * Checks if data is currently loading
      */
     isLoading(): boolean {
-        // return this._loader && !this._loader.isReady();;
-        return !!this._loader;
+        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
+        return this._loader && !this._loader.isReady();
     }
 
     /**
@@ -438,12 +444,16 @@ export default class NavigationController implements INavigationController {
     private _callQuery(dataSource: ICrud, keyProperty: string, query: Query): Promise<RecordSet> {
         let sourceQuery: Promise<RecordSet>;
         // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
-        const queryDeferred = dataSource.query(query).addCallback((dataSet: DataSet) => {
-            if (keyProperty && keyProperty !== dataSet.getKeyProperty()) {
-                dataSet.setKeyProperty(keyProperty);
-            }
-            return dataSet.getAll ? dataSet.getAll() : dataSet;
-        });
+        const queryDeferred = dataSource.query(query)
+            .addCallback((dataSet: DataSet) => {
+                if (keyProperty && keyProperty !== dataSet.getKeyProperty()) {
+                    dataSet.setKeyProperty(keyProperty);
+                }
+                return dataSet.getAll ? dataSet.getAll() : dataSet;
+            })
+            .catch(() => {
+                Logger.error('NavigationController: Data is unable to be queried');
+            });
         /**
          * Deferred с синхронным кодом статического источника выполняется сихронно.
          * в итоге в callback релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций,

@@ -1,10 +1,13 @@
-import {assert} from 'chai';
+import 'Core/polyfill/PromiseAPIDeferred';
+
+import {assert, expect} from 'chai';
 import {NavigationController} from 'Controls/source';
 import {INavigationOptionValue} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
-import {ICrud, Query, DataSet, Memory} from 'Types/source';
+import {Remote, Query, DataSet, Memory} from 'Types/source';
 import {Record} from 'Types/entity';
 import {TNavigationSource, TNavigationView} from 'Controls/_interface/INavigation';
+import {IOptions} from 'Types/_source/Local';
 
 export const memoryData = [
     {
@@ -74,15 +77,22 @@ export const fakeNavigationControllerNavigation = (source: TNavigationSource, vi
             pagingMode: 'direct'
         },
         sourceConfig: {
+            limit: 10,
+            position: 2,
+            direction: 'after',
+            field: 'id',
             pageSize: 2,
-            page: 0
+            page: 0,
+            hasMore: false
         }
     };
 };
 
-export class FakeNavigationControllerSource implements ICrud {
+export class FakeNavigationControllerSource extends Remote {
 
-    readonly '[Types/_source/ICrud]': boolean;
+    constructor(options?: IOptions) {
+        super(options);
+    }
 
     create(meta?: object): Promise<Record> {
         return undefined;
@@ -114,49 +124,61 @@ export class FakeNavigationControllerSource implements ICrud {
     }
 }
 
+/**
+ * @see also tests/ControlsUnit/Controllers/SourceController.test.js
+ */
 describe('Controls/_source/NavigationController', () => {
-    let source: FakeNavigationControllerSource;
     const keyProperty: string = 'id';
-
-    beforeEach(() => {
-        source = new FakeNavigationControllerSource();
-    });
 
     describe('load', () => {
         it('Should load data (PagePaginatorController)', () => {
+            const source = new FakeNavigationControllerSource();
             const controller = new NavigationController({
                 source,
                 keyProperty,
                 navigation: fakeNavigationControllerNavigation('page', 'pages')
             });
-            controller.load().then((recordSet) => {
-                assert.deepEqual(recordSet, fakeNavigationControllerDataSet.getAll());
-            });
+            controller.load()
+                .then((recordSet) => {
+                    assert.deepEqual(recordSet, fakeNavigationControllerDataSet.getAll());
+                })
+                .catch((error) => {
+                    expect.fail('Data loading unsuccessful');
+                });
         });
         it('Should load data (PositionPaginatorController)', () => {
+            const source = new FakeNavigationControllerSource();
             const controller = new NavigationController({
                 source,
                 keyProperty,
                 navigation: fakeNavigationControllerNavigation('position', 'infinity')
             });
-            controller.load().then((recordSet) => {
-                assert.deepEqual(recordSet, fakeNavigationControllerDataSet.getAll());
-            });
+            controller.load()
+                .then((recordSet) => {
+                    assert.deepEqual(recordSet, fakeNavigationControllerDataSet.getAll());
+                })
+                .catch(() => {
+                    expect.fail('Data loading unsuccessful');
+                });
         });
-        it('Should work asynchronously with Types/source:Memory', () => {
-            const memorySource = new Memory({
+        it('Should work with Types/source:Memory', () => {
+            const source = new Memory({
                 keyProperty: 'key',
                 data: memoryData
             });
             const controller = new NavigationController({
-                source: memorySource,
+                source,
                 keyProperty: 'key',
                 navigation: fakeNavigationControllerNavigation('page', 'pages')
             });
-            controller.load().then((recordSet) => {
-                assert.equal(recordSet.at(0).get('key'), memoryData[0].key);
-                assert.equal(recordSet.at(1).get('key'), memoryData[1].key);
-            });
+            controller.load()
+                .then((recordSet) => {
+                    assert.equal(recordSet.at(0).get('key'), memoryData[0].key);
+                    assert.equal(recordSet.at(1).get('key'), memoryData[1].key);
+                })
+                .catch(() => {
+                    expect.fail('Data loading unsuccessful');
+                });
         });
     });
 });
