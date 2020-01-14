@@ -587,7 +587,7 @@ var
             if (this._expandedItems.indexOf(key) >= 0) {
                 version = 'EXPANDED_' + version;
             } else if (this._collapsedItems.indexOf(key) >= 0) {
-                version += 'COLLAPSED_' + version;
+                version = 'COLLAPSED_' + version;
             }
 
             return version;
