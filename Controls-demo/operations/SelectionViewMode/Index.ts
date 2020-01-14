@@ -1,7 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls-demo/operations/SelectionViewMode/SelectionViewMode';
 import Memory from 'Controls-demo/operations/SelectionViewMode/Memory';
-import employeesData from 'Controls-demo/resources/Data/Employees'
+import Data = require('Controls-demo/OperationsPanel/Demo/Data');
 import 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo';
 import 'css!Controls-demo/OperationsPanel/Demo/Demo';
 
@@ -17,12 +17,12 @@ export default class extends Control {
       }];
       this._viewSource = new Memory({
          keyProperty: 'id',
-         data: employeesData
+         data: Data.employees
       });
    }
 
    _dataLoadCallback() {
-      let entryPath = employeesData.map(function (employeeData) {
+      let entryPath = Data.employees.map(function (employeeData) {
          return {
             id: employeeData.id,
             parent: employeeData['Раздел']
