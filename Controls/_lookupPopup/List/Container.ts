@@ -270,11 +270,12 @@ var Container = Control.extend({
       Container.superclass.constructor.call(this, options);
    },
 
-   _beforeMount: function(options) {
-      this._selectedKeys = options.selectedKeys;
+   _beforeMount: function(options): void {
+      const selectedKeys =  options.selectedKeys;
+      this._selectedKeys = options.multiSelect ? selectedKeys : [];
 
-      if (this._selectedKeys.length === 1) {
-         this._markedKey = this._selectedKeys[0];
+      if (selectedKeys.length === 1) {
+         this._markedKey = selectedKeys[0];
       }
 
       this._itemActions = _private.getItemActions(options);
