@@ -3,7 +3,7 @@
                                               stackWidth="{{_options.workspaceWidth}}"
                                               stackMinWidth="{{_options.stackMinWidth}}"
                                               stackMaxWidth="{{_options.stackMaxWidth}}"
-                                              attr:class="ControlsDemo-TestMaximizedStack__width">
+                                              class="ControlsDemo-TestMaximizedStack__width">
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
             <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
