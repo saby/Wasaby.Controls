@@ -1,5 +1,5 @@
 define(['Controls/list'], function(lists) {
-   const BaseAction = lists.BaseAction.default;
+   const BaseAction = lists.BaseAction;
 
    describe('Controls.List.BaseAction', function() {
       it('validate', function() {
