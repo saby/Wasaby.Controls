@@ -473,7 +473,6 @@ const moduleClass = CompoundControl.extend({
          // https://online.sbis.ru/opendoc.html?guid=37e1cf9f-913d-4c96-b73a-effc3a5fba92
          setTimeout(function() {
             self._clearVdomProperties(vDomTemplateContainer);
-            self._vdomTemplate = null;
          }, 3000);
       }
    },
