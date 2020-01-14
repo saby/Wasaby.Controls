@@ -9,7 +9,8 @@ define([
    'wml!Controls/_dateLitePopup/ItemFull',
    'wml!Controls/_dateLitePopup/ItemMonths',
    'wml!Controls/_dateLitePopup/ItemQuarters',
-   'Controls/_dateLitePopup/bodyItem'
+   'Controls/_dateLitePopup/bodyItem',
+   'Types/entity'
 ], function(
    coreMerge,
    PeriodLiteDialog,
@@ -20,7 +21,8 @@ define([
    itemTmpl,
    itemTmplMonths,
    itemTmplQuarters,
-   bodyItem
+   bodyItem,
+   entity
 ) {
    'use strict';
 
@@ -38,7 +40,8 @@ define([
                const component = calendarTestUtils.createComponent(bodyItem, {
                   chooseHalfyears: test.chooseHalfyears,
                   chooseQuarters: test.chooseQuarters,
-                  chooseMonths: test.chooseMonths
+                  chooseMonths: test.chooseMonths,
+                  dateConstructor: entity.Date
                });
 
                assert.strictEqual(component._template, test.tmpl);
@@ -46,7 +49,7 @@ define([
          });
 
          it('should create correct month model', function() {
-            const component = calendarTestUtils.createComponent(bodyItem, {}),
+            const component = calendarTestUtils.createComponent(bodyItem, {dateConstructor: entity.Date}),
                year = (new Date()).getFullYear(),
                data = [{
                   name: 'I',
@@ -122,7 +125,7 @@ define([
 
             // Compare all but months.
             assert.deepEqual(
-               coreMerge({}, component._getYearModel(year), { ignoreRegExp: /^months$/, clone: true }),
+               coreMerge({}, component._getYearModel(year, entity.Date), { ignoreRegExp: /^months$/, clone: true }),
                coreMerge({}, data, { ignoreRegExp: /^months$/, clone: true })
             );
 
@@ -132,7 +135,7 @@ define([
                   for (let [monthIndex, month] of quarter.months.entries()) {
                      assert(
                         DateUtils.isDatesEqual(
-                            component._getYearModel(year)[halfyearIndex].quarters[quarterIndex].months[monthIndex].name, month.name
+                            component._getYearModel(year, entity.Date)[halfyearIndex].quarters[quarterIndex].months[monthIndex].name, month.name
                         )
                      );
                   }
@@ -205,7 +208,7 @@ define([
       describe('_onHalfYearClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1), dateConstructor: entity.Date});
             sandbox.stub(component, '_notify');
             component._onHalfYearClick(null, 0, 2000);
 
@@ -218,7 +221,7 @@ define([
       describe('_onQuarterClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1), dateConstructor: entity.Date});
             sandbox.stub(component, '_notify');
             component._onQuarterClick(null, 0, 2000);
 
@@ -231,7 +234,7 @@ define([
       describe('_onMonthClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1)});
+               component = calendarTestUtils.createComponent(bodyItem, {year: new Date(2000, 0, 1), dateConstructor: entity.Date});
             sandbox.stub(component, '_notify');
             component._onMonthClick(null, new Date(2000, 0, 1));
 
