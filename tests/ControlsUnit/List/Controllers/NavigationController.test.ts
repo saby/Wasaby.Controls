@@ -2,11 +2,42 @@ import {assert} from 'chai';
 import {NavigationController} from 'Controls/source';
 import {INavigationOptionValue} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
-import {ICrud, Query, DataSet} from 'Types/source';
+import {ICrud, Query, DataSet, Memory} from 'Types/source';
 import {Record} from 'Types/entity';
-
-// import * as Deferred from 'Core/Deferred';
 import {TNavigationSource, TNavigationView} from 'Controls/_interface/INavigation';
+
+export const memoryData = [
+    {
+        key: 1,
+        FIO: 'Шершов Митофан Степанович',
+        Address: 'г. Нелидово, ул. Нижнемасловский 2-й Переулок, дом 55',
+        Phone: '+79928213283'
+    },
+    {
+        key: 2,
+        FIO: 'Человечий Сергей Дмитриевич',
+        Address: 'г. Цивильск, ул. Новые Черемушки 24-25 Квартал, дом 34',
+        Phone: '+72715671535'
+    },
+    {
+        key: 3,
+        FIO: 'Трофимова Тамара Артемовна ',
+        Address: 'г. Мещовск, ул. Карачаровское Шоссе, дом 89',
+        Phone: '+74782498448'
+    },
+    {
+        key: 4,
+        FIO: 'Волков Никандр Эдуардович',
+        Address: 'г. Малояз, ул. Щербаковская, дом 69',
+        Phone: '+79267829532'
+    },
+    {
+        key: 5,
+        FIO: 'Петрова Алла Валентиновна ',
+        Address: 'г. Карсун, ул. Можайский 1-й Тупик, дом 87',
+        Phone: '+79744222066'
+    }
+];
 
 export const fakeNavigationControllerDataSet = new DataSet({
     rawData: {
@@ -98,8 +129,8 @@ describe('Controls/_source/NavigationController', () => {
                 keyProperty,
                 navigation: fakeNavigationControllerNavigation('page', 'pages')
             });
-            controller.load().then((dataSet) => {
-                assert.deepEqual(dataSet, fakeNavigationControllerDataSet.getAll());
+            controller.load().then((recordSet) => {
+                assert.deepEqual(recordSet, fakeNavigationControllerDataSet.getAll());
             });
         });
         it('Should load data (PositionPaginatorController)', () => {
@@ -108,8 +139,23 @@ describe('Controls/_source/NavigationController', () => {
                 keyProperty,
                 navigation: fakeNavigationControllerNavigation('position', 'infinity')
             });
-            controller.load().then((dataSet) => {
-                assert.deepEqual(dataSet, fakeNavigationControllerDataSet.getAll());
+            controller.load().then((recordSet) => {
+                assert.deepEqual(recordSet, fakeNavigationControllerDataSet.getAll());
+            });
+        });
+        it('Should work asynchronously with Types/source:Memory', () => {
+            const memorySource = new Memory({
+                keyProperty: 'key',
+                data: memoryData
+            });
+            const controller = new NavigationController({
+                source: memorySource,
+                keyProperty: 'key',
+                navigation: fakeNavigationControllerNavigation('page', 'pages')
+            });
+            controller.load().then((recordSet) => {
+                assert.equal(recordSet.at(0).get('key'), memoryData[0].key);
+                assert.equal(recordSet.at(1).get('key'), memoryData[1].key);
             });
         });
     });

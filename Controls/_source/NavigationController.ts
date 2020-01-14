@@ -2,15 +2,14 @@ import {ICrud, Query, DataSet, QueryOrderSelector, QueryWhere} from 'Types/sourc
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {INavigationOptionValue} from 'Controls/interface';
-
 import {Logger} from 'saby-ui/UI/Utils';
 
 import * as cInstance from 'Core/core-instance';
 import * as cClone from 'Core/core-clone';
 
-import {IPaginationController} from './interface/IPaginationController';
-import PagePaginationController from './QueryParamsController/PagePaginationController';
-import PositionPaginationController from './QueryParamsController/PositionPaginationController';
+import {INavigationController} from './interface/INavigationController';
+import PageNavigationController from './QueryParamsController/PageNavigationController';
+import PositionNavigationController from './QueryParamsController/PositionNavigationController';
 
 import {
     Direction,
@@ -75,12 +74,12 @@ export interface IDictionary<T> {
  */
 
 export class NavigationControllerFactory {
-    static factorySource: IDictionary<IType<IPaginationController>> = {
-        page: PagePaginationController,
-        position: PositionPaginationController
+    static factorySource: IDictionary<IType<INavigationController>> = {
+        page: PageNavigationController,
+        position: PositionNavigationController
     };
 
-    static resolve(navigationOptionValue: INavigationOptionValue): IPaginationController {
+    static resolve(navigationOptionValue: INavigationOptionValue): INavigationController {
         if (!navigationOptionValue.source) {
             return;
         }
@@ -239,7 +238,7 @@ export interface INavigationControllerOptions {
  * Позволяет запросить данные из ресурса ICrud с учётом настроек навигации INavigationOptionValue
  *
  * @class Controls/_source/NavigationController
- * @implements IPaginationController
+ * @implements INavigationController
  *
  * @control
  * @public
@@ -253,18 +252,18 @@ export interface INavigationControllerOptions {
  * Allows to request data from ICrud source, considering navigation options object (INavigationOptionValue)
  *
  * @class Controls/_source/NavigationController
- * @implements Controls/_source/interface/IPaginationController
+ * @implements Controls/_source/interface/INavigationController
  *
  * @control
  * @public
  * @author Аверкиев П.А.
  */
 
-export default class NavigationController implements IPaginationController {
+export default class NavigationController implements INavigationController {
     protected _options: INavigationControllerOptions | null;
     private _loader: Promise<RecordSet>;
     private readonly _source: ICrud;
-    private readonly _navigationController: IPaginationController;
+    private readonly _navigationController: INavigationController;
 
     constructor(cfg: INavigationControllerOptions) {
         this._options = cfg;
@@ -318,7 +317,7 @@ export default class NavigationController implements IPaginationController {
     /*
      * Returns current INavigationOptionValue if it is set in the class navigation property
      */
-    // TODO never used anywhere?
+    // TODO Is it used anywhere?
     getNavigation(): INavigationOptionValue {
         return this._options.navigation;
     }
@@ -356,7 +355,7 @@ export default class NavigationController implements IPaginationController {
     }
 
     /**
-     * @see Controls/_source/interface/IPaginationController
+     * @see Controls/_source/interface/INavigationController
      */
     getLoadedDataCount(): number {
         if (this._navigationController) {
@@ -365,7 +364,7 @@ export default class NavigationController implements IPaginationController {
     }
 
     /**
-     * @see Controls/_source/interface/IPaginationController
+     * @see Controls/_source/interface/INavigationController
      */
     getAllDataCount(rootKey?: string|number): boolean | number {
         if (this._navigationController) {
@@ -374,7 +373,7 @@ export default class NavigationController implements IPaginationController {
     }
 
     /**
-     * @see Controls/_source/interface/IPaginationController
+     * @see Controls/_source/interface/INavigationController
      */
     hasMoreData(direction: Direction, key?: string | number): boolean {
         if (this._navigationController) {
@@ -383,7 +382,7 @@ export default class NavigationController implements IPaginationController {
     }
 
     /**
-     * @see Controls/_source/interface/IPaginationController
+     * @see Controls/_source/interface/INavigationController
      */
     calculateState(list: RecordSet, direction?: Direction): void {
         if (this._navigationController) {
@@ -392,7 +391,7 @@ export default class NavigationController implements IPaginationController {
     }
 
     /**
-     * @see Controls/_source/interface/IPaginationController
+     * @see Controls/_source/interface/INavigationController
      */
     setState(state: any): void {
         if (this._navigationController) {
@@ -401,7 +400,7 @@ export default class NavigationController implements IPaginationController {
     }
 
     /**
-     * @see Controls/_source/interface/IPaginationController
+     * @see Controls/_source/interface/INavigationController
      */
     setEdgeState(direction: Direction): void {
         if (this._navigationController) {
@@ -410,7 +409,7 @@ export default class NavigationController implements IPaginationController {
     }
 
     /**
-     * @see Controls/_source/interface/IPaginationController
+     * @see Controls/_source/interface/INavigationController
      */
     destroy(): void {
         if (this._navigationController) {
@@ -436,37 +435,41 @@ export default class NavigationController implements IPaginationController {
      * @param {Types/source:Query} query A query built based on sorting, filter and pagination params
      * @private
      */
-    // TODO By default Promise does not have cancel or abort method
     private _callQuery(dataSource: ICrud, keyProperty: string, query: Query): Promise<RecordSet> {
-        let sourceQuery: Promise<DataSet>;
-        if (cInstance.instanceOfModule(dataSource, 'Types/source:Memory')) {
-            sourceQuery = new Promise<DataSet>((resolve) => {
-                setTimeout(() => {
-                    resolve(dataSource.query(query));
-                }, 0);
-            });
-        } else {
-            sourceQuery = dataSource.query(query);
-        }
-
-        return sourceQuery.then(((dataSet) => {
+        let sourceQuery: Promise<RecordSet>;
+        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
+        const queryDeferred = dataSource.query(query).addCallback((dataSet: DataSet) => {
             if (keyProperty && keyProperty !== dataSet.getKeyProperty()) {
                 dataSet.setKeyProperty(keyProperty);
             }
-            return Promise.resolve(dataSet.getAll());
-        }));
+            return dataSet.getAll ? dataSet.getAll() : dataSet;
+        });
+        /**
+         * Deferred с синхронным кодом статического источника выполняется сихронно.
+         * в итоге в callback релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций,
+         * и не можем обратиться к this._options.
+         */
+        if (cInstance.instanceOfModule(dataSource, 'Types/source:Memory')) {
+            sourceQuery = new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(queryDeferred);
+                }, 0);
+            });
+        } else {
+            sourceQuery = queryDeferred;
+        }
+        return sourceQuery;
     }
 
     /**
      * Отменяет текущую загрузку данных
      * @private
      */
-    // TODO By default Promise does not have cancel or abort method
     private _cancelLoading(): void {
-        // if (this._loader && !this._loader.isReady()) {
-        //     this._loader.cancel();
-        // }
-        this._loader = null;
+        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
+        if (this._loader && !this._loader.isReady()) {
+            this._loader.cancel();
+        }
     }
 
     /**
@@ -475,7 +478,7 @@ export default class NavigationController implements IPaginationController {
      * @param paramsController
      * @private
      */
-    private static _getNavigationQueryParams(direction: Direction, paramsController: IPaginationController)
+    private static _getNavigationQueryParams(direction: Direction, paramsController: INavigationController)
         : IAdditionalQueryParams {
         const {limit, offset, meta, filter} = paramsController.prepareQueryParams(direction);
         const queryParams = new QueryParamsBuilder({limit, offset, meta, filter});

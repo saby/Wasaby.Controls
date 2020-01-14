@@ -3,17 +3,17 @@ import {RecordSet} from 'Types/collection';
 
 /**
  * Интерфейс для работы с контроллерами пейджинации
- * @interface Controls/_source/interface/IPaginationController
+ * @interface Controls/_source/interface/INavigationController
  * @public
  * @author Аверкиев П.А.
  */
 /*
  * Pagination controller interface
- * @interface Controls/_source/interface/IPaginationController
+ * @interface Controls/_source/interface/INavigationController
  * @public
  * @author Аверкиев П.А.
  */
-export interface IPaginationController {
+export interface INavigationController {
     /**
      * Вычисляет текущее состояние контроллера, например, текущую и следующую страницу, или позицию для пейджинации
      * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
@@ -22,7 +22,7 @@ export interface IPaginationController {
     calculateState(list: RecordSet, direction?: Direction): void;
 
     /**
-     * Метод для разрушения текущего объекта IPaginationController
+     * Метод для разрушения текущего объекта INavigationController
      */
     destroy(): void;
 

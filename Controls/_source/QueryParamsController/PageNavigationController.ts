@@ -1,7 +1,7 @@
 import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {IAdditionalQueryParams, Direction} from '../interface/IAdditionalQueryParams';
-import {IPaginationController} from '../interface/IPaginationController';
+import {INavigationController} from '../interface/INavigationController';
 import {default as More} from './More';
 
 export interface IPagePaginationOptions {
@@ -13,7 +13,7 @@ export interface IPagePaginationOptions {
 /**
  * @author Крайнов Дмитрий
  */
-class PagePaginationController implements IPaginationController {
+class PageNavigationController implements INavigationController {
     protected _nextPage: number = 1;
     protected _prevPage: number = -1;
     protected _more: More = null;
@@ -167,4 +167,4 @@ class PagePaginationController implements IPaginationController {
     }
 }
 
-export default PagePaginationController;
+export default PageNavigationController;
