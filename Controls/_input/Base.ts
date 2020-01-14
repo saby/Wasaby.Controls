@@ -138,6 +138,10 @@ var _private = {
         return fieldValue !== '' && fieldValue !== modelValue;
     },
 
+    hasDisplayValueOfViewModelChanged: function(model: ViewModel): boolean {
+        return model.oldDisplayValue !== model.displayValue;
+    },
+
     isFieldFocused: function (self) {
         /**
          * A field in focus when it is the active element on the page.
@@ -161,7 +165,7 @@ var _private = {
     },
 
     callChangeHandler: function (self) {
-        if (self._viewModel.displayValue !== self._displayValueAfterFocusIn) {
+        if (self._viewModel.displayValue !== self._fixedDisplayValue) {
             self._changeHandler();
         }
     },
@@ -463,10 +467,13 @@ var Base = Control.extend({
     _numberSkippedSaveSelection: 0,
 
     /**
+     * Отображаемое значение зафиксированное пользователем.
+     * @remark
+     * Требуется для определения вызова события inputCompleted, было ли со стороны пользователя изменение значения.
      * @type {String}
      * @private
      */
-    _displayValueAfterFocusIn: '',
+    _fixedDisplayValue: null,
 
     _updateSelection: function (selection) {
         const field: HTMLInputElement = this._getField();
@@ -611,6 +618,7 @@ var Base = Control.extend({
             }
         }
 
+        this._fixedDisplayValue = this._viewModel.displayValue;
         /**
          * Placeholder is displayed in an empty field. To learn about the emptiness of the field
          * with AutoFill enabled is possible through css or the status value from <input>.
@@ -629,6 +637,10 @@ var Base = Control.extend({
         const newViewModelOptions = this._getViewModelOptions(newOptions);
 
         _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
+
+        if (_private.hasDisplayValueOfViewModelChanged(this._viewModel)) {
+            this._fixedDisplayValue = this._viewModel.displayValue;
+        }
     },
 
     /**
@@ -870,7 +882,6 @@ var Base = Control.extend({
 
         this._focusByMouseDown = false;
 
-        this._displayValueAfterFocusIn = this._viewModel.displayValue;
         MobileFocusController.focusHandler(event);
 
         /**
