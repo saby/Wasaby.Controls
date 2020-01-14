@@ -58,7 +58,7 @@ function getPropertyGridItems(editingObject: Object, source: IProperty[]): Prope
 
     let propertyGridItemDefault: IPropertyGridItem;
 
-    factory(source).each((config:IProperty) => {
+    factory(source).each((config: IProperty) => {
         propertyGridItemDefault = getPropertyItemDefault();
         propertyGridItemDefault.propertyValue = editingObject[config[PROPERTY_NAME_FIELD]];
 
