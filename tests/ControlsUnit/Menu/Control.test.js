@@ -116,7 +116,6 @@ define(
          it('getTemplateOptions', function() {
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
-            expectedOptions.horizontalAlign = defaultOptions.horizontalAlign;
             expectedOptions.footerTemplate = defaultOptions.nodeFooterTemplate;
             expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
             expectedOptions.closeButtonVisibility = false;

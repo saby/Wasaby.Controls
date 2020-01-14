@@ -24,13 +24,10 @@ class MenuControl extends Control<IMenuOptions> {
     private _sourceController: SourceController = null;
     private _subDropdownItem: TreeItem<Model>|null;
     private _selectionChanged: boolean = false;
-    private _horizontalAlign: string;
     private _expandedItems: RecordSet;
     private _itemsCount: number;
 
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
-        this._horizontalAlign = options.horizontalAlign;
-
         if (options.source) {
             return this.loadItems(options);
         }
@@ -253,10 +250,10 @@ class MenuControl extends Control<IMenuOptions> {
                 target,
                 autofocus: false,
             direction: {
-                horizontal: this._horizontalAlign
+                horizontal: 'right'
             },
             targetPoint: {
-                horizontal: this._horizontalAlign
+                horizontal: 'right'
             }
         };
     }
@@ -264,7 +261,6 @@ class MenuControl extends Control<IMenuOptions> {
     private getTemplateOptions(item: TreeItem<Model>): object {
         let templateOptions = Clone(this._options);
         templateOptions.root = item.getContents().get(this._options.keyProperty);
-        templateOptions.horizontalAlign = this._horizontalAlign;
         templateOptions.bodyContentTemplate = 'Controls/_menu/Control';
         templateOptions.footerTemplate = this._options.nodeFooterTemplate;
         templateOptions.closeButtonVisibility = false;
@@ -278,8 +274,6 @@ class MenuControl extends Control<IMenuOptions> {
             selectedKeys: [],
             root: null,
             emptyKey: null,
-            horizontalAlign: 'right',
-            stickyPosition: {},
             moreButtonCaption: rk('Еще') + '...'
         };
     }
