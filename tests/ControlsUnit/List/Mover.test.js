@@ -43,7 +43,7 @@ define([
             keyProperty: 'id',
             rawData: cClone(data)
          });
-         mover = new lists.default.Mover({});
+         mover = new lists.Mover({});
          mover._options.parentProperty = 'folder';
          mover._options.nodeProperty = 'folder@';
          mover._items = items;
@@ -539,23 +539,23 @@ define([
       it('getSiblingItem', function() {
          var siblingItem;
 
-         siblingItem = mover.getSiblingItem(items.getRecordById(6), 'before');
+         siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(6), 'before');
          assert.equal(siblingItem.getId(), 3);
-         siblingItem = mover.getSiblingItem(items.getRecordById(6), 'after');
+         siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(6), 'after');
          assert.isNull(siblingItem);
 
-         siblingItem = mover.getSiblingItem(items.getRecordById(3), 'after');
+         siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(3), 'after');
          assert.equal(siblingItem.getId(), 6);
-         siblingItem = mover.getSiblingItem(items.getRecordById(3), 'before');
+         siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(3), 'before');
          assert.equal(siblingItem.getId(), 2);
 
-         siblingItem = mover.getSiblingItem(items.getRecordById(1), 'after');
+         siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(1), 'after');
          assert.equal(siblingItem.getId(), 2);
-         siblingItem = mover.getSiblingItem(items.getRecordById(1), 'before');
+         siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(1), 'before');
          assert.isNull(siblingItem);
 
          mover._options.root = 1;
-         siblingItem = mover.getSiblingItem(items.getRecordById(4), 'after');
+         siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(4), 'after');
          assert.equal(siblingItem.getId(), 5);
 
       });

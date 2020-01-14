@@ -1,8 +1,8 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import Control = require('Core/Control');
 import {Confirmation} from 'Controls/popup';
 import {ISelectionObject} from 'Controls/interface';
 
-export default class BaseAction extends Control<IControlOptions> {
+export default Control.extend({
    validate(items: Array|ISelectionObject): boolean {
       let resultValidate: boolean = true;
 
@@ -17,4 +17,4 @@ export default class BaseAction extends Control<IControlOptions> {
 
       return resultValidate;
    }
-}
+});

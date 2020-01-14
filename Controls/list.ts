@@ -58,6 +58,9 @@ import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
 import ColumnsView = require('Controls/_list/Columns');
+import BaseAction from 'Controls/_list/BaseAction';
+import Mover = require('Controls/_list/Mover');
+import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
@@ -93,10 +96,6 @@ import {IList} from './_list/interface/IList';
 
 import {Paging} from 'Controls/paging';
 
-export {default as BaseAction} from 'Controls/_list/BaseAction';
-export {default as Mover} from 'Controls/_list/Mover';
-export {default as Remover} from 'Controls/_list/Remover';
-
 export {
     AddButton,
     Container,
@@ -105,6 +104,9 @@ export {
     ItemTemplate,
     View,
     ColumnsView,
+    BaseAction,
+    Mover,
+    Remover,
     Paging,
     DataContainer,
     _forTemplate,
