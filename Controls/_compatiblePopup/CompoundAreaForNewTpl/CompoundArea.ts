@@ -1,7 +1,6 @@
 /**
  * Created by as.krasilnikov on 13.04.2018.
  */
-// @ts-ignore
 
 import CompoundControl = require('Lib/Control/CompoundControl/CompoundControl');
 import template = require('wml!Controls/_compatiblePopup/CompoundAreaForNewTpl/CompoundArea');
