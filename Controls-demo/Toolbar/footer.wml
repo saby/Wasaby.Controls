@@ -1,9 +1,0 @@
-<div class="FooterTemplate" style="padding: 0 10px">
-    <div class="FooterTemplate__breadcrumbs" style="width:200px">
-        <Controls.breadcrumbs:Path items="{{items}}" keyProperty="id" />
-    </div>
-    <Controls.toggle:CheckboxGroup source="{{_sourceVertical}}"
-                                   direction="vertical"
-                                   bind:selectedKeys="_selectedKeysVertical"
-                                   keyProperty="{{_keyProperty}}"/>
-</div>

@@ -25,7 +25,6 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
 import {ButtonTemplate, cssStyleGeneration} from 'Controls/buttons';
-import {default as IFooterTemplate, IFooterTemplateOptions} from './interfaces/IFooterTemplate';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -48,7 +47,7 @@ export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
     cssStyleGeneration.call(cfg, {
         size, icon, style, viewMode, iconStyle, transparent, caption, readOnly, fontColorStyle, contrastBackground
     });
-    return cfg
+    return cfg;
 }
 
 export function getButtonTemplate(): TemplateFunction {
@@ -62,7 +61,7 @@ export function getButtonTemplate(): TemplateFunction {
  * @author Красильников А.С.
  */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
-    ISourceOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions, IFooterTemplateOptions {
+    ISourceOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions {
     /**
      * Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
      */
@@ -76,7 +75,12 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
     /**
      * Позволяет отобразить дополнительные элементы в меню.
      */
-    additionalProperty?: string
+    additionalProperty?: string;
+    /**
+     * Шаблон футера дополнительного меню тулбара.
+     * @demo Controls-demo/Toolbar/footerTemplate/Index
+     */
+    footerTemplate?: String | Function;
 }
 
 /**
@@ -95,7 +99,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/ToolbarVdom
  */
-class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, ISource, IIconSize, IItemTemplate, IGrouped, IFooterTemplate {
+class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, ISource, IIconSize, IItemTemplate, IGrouped {
     /*
      * Used in template
      */
@@ -110,16 +114,16 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
 
     protected _template: TemplateFunction = template;
 
-    _children: {
+    private _children = {
         menuTarget: HTMLElement,
         menuOpener: DropdownOpener
     };
 
-    readonly '[Controls/_interface/IHierarchy]' = true;
-    readonly '[Controls/_interface/ISource]' = true;
-    readonly '[Controls/_interface/IIconSize]' = true;
-    readonly '[Controls/_interface/IItemTemplate]' = true;
-    readonly '[Controls/_dropdown/interface/IGrouped]' = true;
+    readonly '[Controls/_interface/IHierarchy]': boolean = true;
+    readonly '[Controls/_interface/ISource]': boolean = true;
+    readonly '[Controls/_interface/IIconSize]': boolean = true;
+    readonly '[Controls/_interface/IItemTemplate]': boolean = true;
+    readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
 
     constructor(...args) {
         super(args);
