@@ -310,8 +310,8 @@ define(
                   limit: 100
                });
 
-               //first query with direction: after
-               dataRs.setMetaData({more: true, nextPosition:{before: [1], after: [7]}});
+               //first query with direction: both
+               dataRs.setMetaData({more: { after: true, before: false }, nextPosition:{before: [1], after: [7]}});
                pNav.calculateState(dataRs);
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');

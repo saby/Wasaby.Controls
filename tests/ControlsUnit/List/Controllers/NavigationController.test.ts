@@ -131,34 +131,32 @@ describe('Controls/_source/NavigationController', () => {
     const keyProperty: string = 'id';
 
     describe('load', () => {
-        it('Should load data (PagePaginatorController)', () => {
+        it('Should load data + PagePaginatorController', () => {
             const source = new FakeNavigationControllerSource();
             const controller = new NavigationController({
                 source,
                 keyProperty,
                 navigation: fakeNavigationControllerNavigation('page', 'pages')
             });
-            controller.load()
+            return controller.load()
                 .then((recordSet) => {
-                    assert.deepEqual(recordSet, fakeNavigationControllerDataSet.getAll());
-                })
-                .catch((error) => {
-                    expect.fail('Data loading unsuccessful');
+                    const expectedSet: RecordSet = fakeNavigationControllerDataSet.getAll();
+                    assert.equal(recordSet.at(0).get('key'), expectedSet.at(0).get('key'));
+                    assert.equal(recordSet.at(1).get('key'), expectedSet.at(1).get('key'));
                 });
         });
-        it('Should load data (PositionPaginatorController)', () => {
+        it('Should load data + PositionPaginatorController', () => {
             const source = new FakeNavigationControllerSource();
             const controller = new NavigationController({
                 source,
                 keyProperty,
                 navigation: fakeNavigationControllerNavigation('position', 'infinity')
             });
-            controller.load()
+            return controller.load()
                 .then((recordSet) => {
-                    assert.deepEqual(recordSet, fakeNavigationControllerDataSet.getAll());
-                })
-                .catch(() => {
-                    expect.fail('Data loading unsuccessful');
+                    const expectedSet: RecordSet = fakeNavigationControllerDataSet.getAll();
+                    assert.equal(recordSet.at(0).get('key'), expectedSet.at(0).get('key'));
+                    assert.equal(recordSet.at(1).get('key'), expectedSet.at(1).get('key'));
                 });
         });
         it('Should work with Types/source:Memory', () => {
@@ -171,13 +169,10 @@ describe('Controls/_source/NavigationController', () => {
                 keyProperty: 'key',
                 navigation: fakeNavigationControllerNavigation('page', 'pages')
             });
-            controller.load()
+            return controller.load()
                 .then((recordSet) => {
                     assert.equal(recordSet.at(0).get('key'), memoryData[0].key);
                     assert.equal(recordSet.at(1).get('key'), memoryData[1].key);
-                })
-                .catch(() => {
-                    expect.fail('Data loading unsuccessful');
                 });
         });
     });

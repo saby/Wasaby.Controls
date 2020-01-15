@@ -119,14 +119,14 @@ class PositionNavigationController implements INavigationController {
 
                     newMore[navDirection] = more;
                     this._getMore().setMoreMeta(newMore, key);
-                } else {
-                    Logger.error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
+                } else if (!loadDirection) {
+                    Logger.error('Wrong type of \"more\" value. Must be Object', 'Controls/_source/QueryParamsController/PositionNavigationController');
                 }
             } else if (more instanceof Object) {
                 if (!loadDirection && this._options.direction === 'both') {
                     this._getMore().setMoreMeta({...more}, key);
                 } else {
-                    Logger.error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
+                    Logger.error('Wrong type of \"more\" value. Must be boolean', 'Controls/_source/QueryParamsController/PositionNavigationController');
                 }
             }
         };
