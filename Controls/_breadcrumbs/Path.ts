@@ -38,10 +38,10 @@ var BreadCrumbs = Control.extend({
     _visibleItems: [],
     _viewUpdated: false,
 
-    _afterMount: function () {
-        if (this._options.items && this._options.items.length > 0) {
+    _beforeMount: function (options) {
+        if (options.items && options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
-                BreadCrumbsUtil.drawBreadCrumbs(this, this._options.items);
+                BreadCrumbsUtil.drawBreadCrumbs(this, options.items);
             }.bind(this));
         }
     },
