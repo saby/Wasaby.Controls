@@ -33,8 +33,8 @@ define([
          });
          model = new treeGrid.ViewModel({columns: [], items: recordSet});
          treeStrategy = new operations.TreeSelectionStrategy({
-            depthSelect: false,
-            reverseSelect: false
+            selectDescendants: false,
+            selectAncestors: false
          });
       });
 

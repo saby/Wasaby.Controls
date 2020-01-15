@@ -656,7 +656,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
 });
 TreeControl._theme = ['Controls/treeGrid'];
 
-TreeControl.getDefaultOptions = function() {
+TreeControl.getDefaultOptions = () => {
     return {
         uniqueKeys: true,
         filter: {},
@@ -664,10 +664,8 @@ TreeControl.getDefaultOptions = function() {
         expandByItemClick: false,
         root: null,
         columns: DEFAULT_COLUMNS_VALUE,
-        nodeConfig: {
-            depthSelect: true,
-            reverseSelect: true
-        }
+        selectDescendants: true,
+        selectAncestors: true
     };
 };
 

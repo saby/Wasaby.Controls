@@ -108,7 +108,8 @@ var _private = {
                     listModel: options.listModel,
                     selectionStrategy: new operations.TreeSelectionStrategy({
                        nodesSourceControllers: options.nodesSourceControllers,
-                       ...options.nodeConfig
+                       selectDescendants: options.selectDescendants,
+                       selectAncestors: options.selectAncestors
                     })
                  }));
               } else {

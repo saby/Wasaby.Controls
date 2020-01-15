@@ -254,7 +254,8 @@
                 filter="{{ _options.filter }}"
                 source="{{ _options.source }}"
                 nodesSourceControllers="{{_options.nodesSourceControllers}}"
-                nodeConfig="{{_options.nodeConfig}}"
+                selectDescendants="{{_options.selectDescendants}}"
+                selectAncestors="{{_options.selectAncestors}}"
                 on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                 on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
             />

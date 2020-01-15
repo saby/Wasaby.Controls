@@ -274,8 +274,8 @@ define([
             selectedKeys: [1],
             listModel: new treeGrid.ViewModel({columns: [], items: items}),
             selectionStrategy: new operations.TreeSelectionStrategy({
-               depthSelect: true,
-               reverseSelect: true
+               selectDescendants: true,
+               selectAncestors: true
             })
          });
          selectionInstance = new operations.Selection(cfg);
