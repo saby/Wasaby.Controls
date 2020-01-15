@@ -7,6 +7,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Opener as DropdownOpener} from 'Controls/dropdown';
 import {Controller as SourceController} from 'Controls/source';
 import {IShowType, showType, getMenuItems} from 'Controls/Utils/Toolbar';
+import {IStickyPopupOptions, IStickyPosition} from 'Controls/popup';
+import {IEventHandlers} from 'Controls/_popup/interface/IPopup';
 
 import {
     IButtonOptions,
@@ -47,11 +49,20 @@ export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
     cssStyleGeneration.call(cfg, {
         size, icon, style, viewMode, iconStyle, transparent, caption, readOnly, fontColorStyle, contrastBackground
     });
-    return cfg
+    return cfg;
 }
 
 export function getButtonTemplate(): TemplateFunction {
     return ButtonTemplate;
+}
+
+// Перейти на интерфейс выпадающих списков, когда он появится
+
+export interface IMenuOptions {
+    direction: IStickyPosition;
+    targetPoint: IStickyPosition;
+    eventHandlers: IEventHandlers;
+    templateOptions: any;
 }
 
 /**
@@ -134,7 +145,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
         this._closeHandler = this._closeHandler.bind(this);
     }
 
-    private _getMenuConfig(): object {
+    private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
         return {
             className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
@@ -155,7 +166,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
         };
     }
 
-    private _getMenuConfigByItem(item: TItem): object {
+    private _getMenuConfigByItem(item: TItem): IStickyPopupOptions {
         const options = this._options;
 
         return {
@@ -189,7 +200,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
         };
     }
 
-    private _getMenuOptions(): object {
+    private _getMenuOptions(): IMenuOptions {
         return {
             direction: {
                 horizontal: 'left'
