@@ -5,6 +5,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
    'css!Controls-demo/Toolbar/ToolbarVdom',
    'wml!Controls-demo/Toolbar/resources/itemTemplate',
    'wml!Controls-demo/Toolbar/resources/itemTemplateContent',
+   'wml!Controls-demo/Toolbar/footerTemplate'
 ], function(Control, source, template) {
    'use strict';
    var ModuleClass = Control.extend(
