@@ -35,11 +35,9 @@ define([
             items: rs,
             parentProperty: ListData.PARENT_PROPERTY,
             nodeProperty: ListData.NODE_PROPERTY,
-            nodeConfig: {
-               depthSelect: true,
-               reverseSelect: true,
-               nodesSourceControllers: {}
-            },
+            selectDescendants: true,
+            selectAncestors: true,
+            nodesSourceControllers: {},
             keyProperty: ListData.KEY_PROPERTY,
             listModel: new treeGrid.ViewModel({columns: [], items: rs})
          };
@@ -56,10 +54,8 @@ define([
             selectedKeys: [],
             excludedKeys: [],
             keyProperty: 'id',
-            nodeConfig: {
-               depthSelect: false,
-               reverseSelect: false
-            },
+            selectDescendants: false,
+            selectAncestors: false,
             listModel: new list.ListViewModel({items: rs})
          };
          var inst = new SelectionController();

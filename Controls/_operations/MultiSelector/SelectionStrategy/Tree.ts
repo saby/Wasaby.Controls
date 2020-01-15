@@ -21,14 +21,14 @@ import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISe
  */
 
 interface ITreeSelectionStrategyOptions {
-   depthSelect: boolean,
-   reverseSelect: boolean,
+   selectAncestors: boolean;
+   selectDescendants: boolean;
    nodesSourceControllers?: Object;
 }
 
 interface IEntryPath {
-   id: String|number|null,
-   parent: String|number|null
+   id: String|number|null;
+   parent: String|number|null;
 }
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
@@ -78,7 +78,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       let selectedNodes: TKeys = [];
 
       if (!this.isAllSelected(selection, rootId, model, hierarchyRelation) || this._isAllRootItemsLoaded(model, hierarchyRelation)) {
-         if (this._options.depthSelect) {
+         if (this._options.selectDescendants) {
             let items: RecordSet = getItems(model);
 
             for (let index = 0; index < selection.selected.length; index++) {
@@ -101,7 +101,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
          for (let index = 0; index < selectedNodes.length; index++) {
             let nodeKey: TKey = selectedNodes[index];
             let countItemsSelectedInNode: number|null = getSelectedChildrenCount(
-               nodeKey, selection, model, hierarchyRelation, this._options.depthSelect);
+               nodeKey, selection, model, hierarchyRelation, this._options.selectDescendants);
 
             if (countItemsSelectedInNode === null) {
                countItemsSelected = null;
@@ -118,16 +118,16 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    getSelectionForModel(selection: ISelection, model: TreeCollection|ViewModel, limit: number, keyProperty: string, hierarchyRelation: relation.Hierarchy): Map<TKey, boolean> {
-      let selectionResult: Map<TKey, boolean|null> = new Map();
-      let selectedKeysWithEntryPath: TKeys = this._mergeEntryPath(selection.selected, getItems(model));
+      const selectionResult = new Map();
+      const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, getItems(model));
 
       getItems(model).forEach((item) => {
-         let itemId: TKey = item.getId();
-         let parentId: TKey|undefined = this._getParentId(itemId, model, hierarchyRelation);
-         let isSelected: boolean|null = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
+         const itemId: TKey = item.getId();
+         const parentId = this._getParentId(itemId, model, hierarchyRelation);
+         let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
             this.isAllSelected(selection, parentId, model, hierarchyRelation));
 
-         if (this._options.reverseSelect && isNode(item, model, hierarchyRelation)) {
+         if (this._options.selectAncestors && isNode(item, model, hierarchyRelation)) {
             isSelected = this._getStateNode(itemId, isSelected, {
                selected: selectedKeysWithEntryPath,
                excluded: selection.excluded
@@ -147,7 +147,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    isAllSelected(selection: ISelection, nodeId: TKey, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): boolean {
-      if (this._options.depthSelect) {
+      if (this._options.selectDescendants) {
          return selection.selected.includes(nodeId) || !selection.excluded.includes(nodeId) &&
             this._hasSelectedParent(nodeId, selection, model, hierarchyRelation);
       } else {
@@ -158,7 +158,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
    protected _selectNode(selection: ISelection, nodeId: Tkey, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): void {
       this._selectLeaf(...arguments);
 
-      if (this._options.depthSelect) {
+      if (this._options.selectDescendants) {
          removeSelectionChildren(selection, nodeId, model, hierarchyRelation);
       }
    }
@@ -166,7 +166,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
    protected _unSelectNode(selection: ISelection, nodeId: Tkey, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): void {
       this._unSelectLeaf(...arguments);
 
-      if (this._options.depthSelect) {
+      if (this._options.selectDescendants) {
          removeSelectionChildren(selection, nodeId, model, hierarchyRelation);
       }
    }

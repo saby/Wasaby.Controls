@@ -20,8 +20,8 @@ define([
             keyProperty: ListData.KEY_PROPERTY,
             listModel: getListModel(),
             selectionStrategy: new TreeSelectionStrategy.default({
-               depthSelect: true,
-               reverseSelect: true,
+               selectDescendants: true,
+               selectAncestors: true,
                nodesSourceControllers: {}
             })
          }, config || {});

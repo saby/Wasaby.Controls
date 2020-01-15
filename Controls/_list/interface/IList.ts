@@ -71,11 +71,6 @@ interface IItemPadding {
     right?: THorizontalItemPadding;
 }
 
-interface INodeConfig {
-    depthSelect: boolean;
-    reverseSelect: boolean;
-}
-
 export interface IList {
     contextMenuVisibility?: boolean;
     contextMenuConfig?: IContextMenuConfig;
