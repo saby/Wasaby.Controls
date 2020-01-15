@@ -1,4 +1,5 @@
 import Control = require('Core/Control');
+import rk = require('i18n!Controls');
 import {Confirmation} from 'Controls/popup';
 import {ISelectionObject} from 'Controls/interface';
 
