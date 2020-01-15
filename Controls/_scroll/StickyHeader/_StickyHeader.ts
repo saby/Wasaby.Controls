@@ -79,8 +79,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     private _shadowVisible: boolean = true;
     private _stickyHeadersHeight: IOffset = {
-        top: 0,
-        bottom: 0
+        top: null,
+        bottom: null
     };
 
     private _index: number = null;
@@ -264,7 +264,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
 
-        if (this._options.position.indexOf('top') !== -1) {
+        if (this._options.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
             // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
             const offsetTop: number = this._options.offsetTop;
@@ -281,7 +281,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             style += 'top: ' + (top - (fixedPosition ? offset : 0)) + 'px;';
         }
 
-        if (this._options.position.indexOf('bottom') !== -1) {
+        if (this._options.position.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
             bottom = this._stickyHeadersHeight.bottom;
             const offsetBottom: number = this._options.offsetBottom;
             if (offsetBottom) {
@@ -399,8 +399,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
         return this._container.get ? this._container.get(0) : this._container;
     }
-
-    static _index: number = 1;
 
     static _isSafari13(): boolean {
         // TODO remove after complete https://online.sbis.ru/opendoc.html?guid=14d98228-de34-4ad3-92a3-4d7fe8770097

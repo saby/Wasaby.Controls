@@ -49,11 +49,14 @@ export default class Group extends Control<IControlOptions> {
         top: [],
         bottom: []
     };
+    protected _offset: IOffset = {
+        top: 0,
+        bottom: 0
+    };
     protected _shadowVisible: boolean = false;
 
     protected _headers: IHeadersMap = {};
     protected _isRegistry: boolean = false;
-    private _top: number;
 
     protected _beforeMount(options: IControlOptions): void {
         this._isStickySupport = isStickySupport();
@@ -68,7 +71,7 @@ export default class Group extends Control<IControlOptions> {
         this._notify('unregister', ['updateStickyShadow', this], {bubbling: true});
     }
 
-    getOffset(parentElement, position): number {
+    getOffset(parentElement: HTMLElement, position: POSITION): number {
         return getOffset(parentElement, this._container, position);
     }
 
@@ -79,16 +82,18 @@ export default class Group extends Control<IControlOptions> {
     }
 
     set top(value: number) {
-        for (var id in this._headers) {
-            this._headers[id].inst.top = value;
-        }
-        this._top = value;
+        this._setOffset(value, POSITION.top);
     }
 
     set bottom(value: number) {
+        this._setOffset(value, POSITION.bottom);
+    }
+
+    private _setOffset(value: number, position: string): void {
         for (let id in this._headers) {
-            this._headers[id].inst.bottom = value;
+            this._headers[id].inst[position] = this._headers[id][position] + value;
         }
+        this._offset[position] = value;
     }
 
     protected _fixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
@@ -106,13 +111,13 @@ export default class Group extends Control<IControlOptions> {
             this._fixed = true;
             this._notifyFixed(fixedHeaderData);
         } else if (!fixedHeaderData.fixedPosition && this._fixed &&
-            this._stickyHeadersIds.top.length === 0 && this._stickyHeadersIds.bottom.length === 0) {
+                this._stickyHeadersIds.top.length === 0 && this._stickyHeadersIds.bottom.length === 0) {
             this._fixed = false;
             this._notifyFixed(fixedHeaderData);
         }
     }
 
-    protected _updateStickyShadow(ids: []): void {
+    protected _updateStickyShadow(ids: number[]): void {
         if (ids.indexOf(this._index) !== -1) {
             this._shadowVisible = true;
 
@@ -123,12 +128,21 @@ export default class Group extends Control<IControlOptions> {
     protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
         event.stopImmediatePropagation();
         if (register) {
-            if (this._top) {
-                data.inst.top = this._top;
-            }
-            this._headers[data.id] = data;
+            let offset: number = 0;
 
-            // Register group after first header is registred
+            this._headers[data.id] = {
+                ...data,
+                top: 0,
+                bottom: 0
+            };
+
+            for (const position of [POSITION.top, POSITION.bottom]) {
+                offset = getOffset(this._container, data.inst._container, position);
+                this._headers[data.id][position] = offset;
+                data.inst[position] = this._offset[position] + offset;
+            }
+
+            // Register group after first header is registered
             if (!this._isRegistry) {
                 this._notify('stickyRegister', [{
                     id: this._index,
