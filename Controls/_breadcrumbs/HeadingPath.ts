@@ -129,11 +129,11 @@ var BreadCrumbsPath = Control.extend({
     _breadCrumbsClass: '',
     _viewUpdated: false,
 
-    _beforeMount: function (options) {
-        if (options.items && options.items.length > 0) {
+    _afterMount: function () {
+        if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
-                    _private.drawItems(this, options);
+                    _private.drawItems(this, this._options);
                 }.bind(this));
             }.bind(this));
         }
