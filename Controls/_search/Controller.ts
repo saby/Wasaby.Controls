@@ -211,7 +211,7 @@ var _private = {
    },
 
    isInputSearchValueShort(self, searchValue: string): boolean {
-      return searchValue ? searchValue.length < self._options.minSearchLength : true;
+      return !searchValue || searchValue.length < self._options.minSearchLength;
    },
 
    needStartSearch(inputSearchValue: string, searchValue: string): string {
