@@ -75,7 +75,13 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
     /**
      * Позволяет отобразить дополнительные элементы в меню.
      */
-    additionalProperty?: string
+    additionalProperty?: string;
+    /**
+     * Шаблон футера дополнительного меню тулбара.
+     * @demo Controls-demo/Toolbar/footerTemplate/Index
+     */
+    footerTemplate?: String | Function;
+
 }
 
 /**
@@ -114,11 +120,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
         menuOpener: DropdownOpener
     };
 
-    readonly '[Controls/_interface/IHierarchy]' = true;
-    readonly '[Controls/_interface/ISource]' = true;
-    readonly '[Controls/_interface/IIconSize]' = true;
-    readonly '[Controls/_interface/IItemTemplate]' = true;
-    readonly '[Controls/_dropdown/interface/IGrouped]' = true;
+    readonly '[Controls/_interface/IHierarchy]': boolean = true;
+    readonly '[Controls/_interface/ISource]': boolean = true;
+    readonly '[Controls/_interface/IIconSize]': boolean = true;
+    readonly '[Controls/_interface/IItemTemplate]': boolean = true;
+    readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
+
 
     constructor(...args) {
         super(args);
@@ -141,7 +148,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
                 groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
                 additionalProperty: options.additionalProperty,
-                itemTemplateProperty: options.itemTemplateProperty
+                itemTemplateProperty: options.itemTemplateProperty,
+                footerTemplate: options.footerTemplate
             },
             target: this._children.menuTarget
         };
