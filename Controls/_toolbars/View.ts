@@ -114,7 +114,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
 
     protected _template: TemplateFunction = template;
 
-    private _children = {
+    _children: {
         menuTarget: HTMLElement,
         menuOpener: DropdownOpener
     };
