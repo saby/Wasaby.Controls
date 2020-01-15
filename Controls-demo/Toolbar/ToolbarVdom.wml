@@ -11,13 +11,7 @@
                     popupClassName="controls-Toolbar_test_popupClassName"
                     on:itemClick="_itemClick()"
                     itemsSpacing="big"
-            >
-                <ws:footerTemplate>
-                    <div class="ControlsDemo-InputDropdown-footerTpl">
-                        <Controls.buttons:Button caption="+ New template" size="l" viewMode="link"/>
-                    </div>
-                </ws:footerTemplate>
-            </Controls.toolbars:View>
+             />
         </div>
         <div style="padding: 5px;">Пример тулбара из разных кнопок (links, buttons, toolButtons):
             <Controls.toolbars:View
@@ -31,6 +25,7 @@
                     popupClassName="controls-Toolbar_test_popupClassName"
                     on:itemClick="_itemClick()"
                     itemsSpacing="big"
+
             />
         </div>
         <div style="padding: 5px;">Пример тулбара из toolButtons:
@@ -43,6 +38,23 @@
                     on:itemClick="_itemClick()"
             />
             контент идущий за Toolbar'ом
+        </div>
+        <div style="padding: 5px;">Пример тулбара c footerTemplate для выпадающего списка:
+            <Controls.toolbars:View
+                    name="myToolbar"
+                    attr:id="Toolbar_3"
+                    parentProperty="parent"
+                    nodeProperty="@parent"
+                    keyProperty="id"
+                    source="{{_getMemorySource(_defaultItemsWithoutToolbutton)}}"
+                    popupClassName="controls-Toolbar_test_popupClassName"
+                    on:itemClick="_itemClick()"
+                    itemsSpacing="big"
+            >
+                <ws:footerTemplate>
+                    <Controls-demo.Toolbar.Footer />
+                </ws:footerTemplate>
+            </Controls.toolbars:View>
         </div>
     </div>
     <div style="padding: 5px;" name="toolbarAnswer">{{_currentClick}}</div>

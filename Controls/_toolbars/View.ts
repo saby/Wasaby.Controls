@@ -25,6 +25,7 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
 import {ButtonTemplate, cssStyleGeneration} from 'Controls/buttons';
+import {default as IFooterTemplate, IFooterTemplateOptions} from './interfaces/IFooterTemplate';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -61,7 +62,7 @@ export function getButtonTemplate(): TemplateFunction {
  * @author Красильников А.С.
  */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
-    ISourceOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions {
+    ISourceOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions, IFooterTemplateOptions {
     /**
      * Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
      */
@@ -94,7 +95,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/ToolbarVdom
  */
-class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, ISource, IIconSize, IItemTemplate, IGrouped {
+class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, ISource, IIconSize, IItemTemplate, IGrouped, IFooterTemplate {
     /*
      * Used in template
      */
