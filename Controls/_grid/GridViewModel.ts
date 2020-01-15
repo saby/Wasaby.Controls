@@ -522,7 +522,8 @@ var
                     (
                         action === collection.IObservable.ACTION_ADD ||
                         action === collection.IObservable.ACTION_REMOVE
-                    )
+                    ) &&
+                    !this._options.disableColumnScrollCellStyles
                 ) {
                     event.setResult('updatePrefix');
                 }
@@ -1361,7 +1362,7 @@ var
                 }
 
                 // TODO: Проверить. https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-                if (current.columnScroll) {
+                if (current.columnScroll && !self._options.disableColumnScrollCellStyles) {
                     currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles({
                         rowStart: current.rowIndex,
                         columnStart: currentColumn.columnIndex
@@ -1738,7 +1739,8 @@ var
         },
 
         isFixedLayout(): boolean {
-            return this._options.columnScroll === true;
+            // TODO: Может быть при columnScroll сделать авто ширину?
+            return true;
         },
 
         _prepareWidthForTableColumn(column: IGridColumn): string {
