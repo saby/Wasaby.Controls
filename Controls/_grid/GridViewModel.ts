@@ -685,7 +685,7 @@ var
             return shouldAddActionsCell({
                 disableCellStyles: this._options.disableColumnScrollCellStyles,
                 hasColumnScroll: this._options.columnScroll,
-                shouldUseTableLayout: this._shouldUseTableLayout
+                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport()
             });
         },
         getResultOffset: function() {
@@ -944,7 +944,7 @@ var
                 this._resultsColumns = columns;
             }
 
-            if (this._options.columnScroll && this._options.disableColumnScrollCellStyles && !this._shouldUseTableLayout) {
+            if (this._shouldAddActionsCell()) {
                 this._resultsColumns = this._resultsColumns.concat([{}]);
             }
 
