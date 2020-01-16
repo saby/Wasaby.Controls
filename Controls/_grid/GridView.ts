@@ -91,7 +91,8 @@ var
             return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
         },
 
-        getMultiHeaderHeight(headerContainer: HTMLElement): number {
+        // uDimensions for unit tests
+        getMultiHeaderHeight(headerContainer: HTMLElement, uDimensions: Function = getDimensions): number {
             const cells = headerContainer.children;
             if (cells.length === 0) {
                 return 0;
@@ -101,7 +102,7 @@ var
                 max: Number.MIN_VALUE
             };
             Array.prototype.forEach.call(cells, (cell) => {
-                const dimensions = getDimensions(cell);
+                const dimensions = uDimensions(cell);
                 bounds.min = bounds.min < dimensions.top ? bounds.min : dimensions.top;
                 bounds.max = bounds.max > dimensions.bottom ? bounds.max : dimensions.bottom
             });
