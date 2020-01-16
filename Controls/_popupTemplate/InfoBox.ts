@@ -11,25 +11,25 @@ import {IStickyPopupPosition, vertical, horizontal} from './Sticky/StickyControl
  * @author Красильников А.С.
  */
 
-type arrowPosition = 'start' | 'end' | 'center';
-type style = 'default' | 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary';
-type styleType = 'marker' | 'outline';
+type TArrowPosition = 'start' | 'end' | 'center';
+type TStyle = 'default' | 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary';
+type TStyleType = 'marker' | 'outline';
 
 export interface IInfoboxTemplateOptions extends IControlOptions {
-    stickyPosition: IStickyPopupPosition;
-    template: TemplateFunction;
-    templateOptions: object;
-    styleType: styleType;
+    stickyPosition?: IStickyPopupPosition;
+    template?: TemplateFunction;
+    templateOptions?: object;
+    styleType: TStyleType;
     //TODO: https://online.sbis.ru/opendoc.html?guid=04f68286-535f-4002-9e11-5b6343016edd
-    style: style;
-    floatCloseButton: boolean;
+    style: TStyle;
+    floatCloseButton?: boolean;
     closeButtonVisibility: boolean;
 }
 
 export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _template: TemplateFunction = template;
     protected _arrowSide: horizontal | vertical;
-    protected _arrowPosition: arrowPosition;
+    protected _arrowPosition: TArrowPosition;
     protected _beforeMount(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
     }
@@ -53,7 +53,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
         }
     }
 
-    private _getArrowPosition(side: vertical | horizontal): arrowPosition {
+    private _getArrowPosition(side: vertical | horizontal): TArrowPosition {
         if (side === 'left' || side === 'top') {
             return 'end';
         }
@@ -67,7 +67,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
         this._notify('close', [], { bubbling: true });
     }
 
-    static getDefaultOptions(): object {
+    static getDefaultOptions(): IInfoboxTemplateOptions {
         return {
             closeButtonVisibility: true,
             styleType: 'marker',

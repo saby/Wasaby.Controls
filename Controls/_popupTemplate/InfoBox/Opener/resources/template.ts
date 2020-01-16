@@ -8,7 +8,7 @@ import {IInfoboxTemplateOptions} from 'Controls/_popupTemplate/InfoBox';
 export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
    protected _template: TemplateFunction = template;
 
-   protected _beforeMount(options: IInfoboxTemplateOptions): Promise<Function> {
+   protected _beforeMount(options: IInfoboxTemplateOptions): Promise<TemplateFunction> | void {
       if (typeof window !== 'undefined' && this._needRequireModule(options.template)) {
          return load(options.template);
       }
