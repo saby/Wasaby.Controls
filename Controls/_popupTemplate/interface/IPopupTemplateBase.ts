@@ -28,10 +28,14 @@
  */
 
 import {TemplateFunction} from 'UI/Base';
+
 export interface IPopupTemplateBaseOptions {
     headerContentTemplate?: TemplateFunction;
     bodyContentTemplate?: TemplateFunction;
     footerContentTemplate?: TemplateFunction;
+    headingCaption?: string;
+    headingStyle?: string;
+    headingSize?: string;
     closeButtonVisibility?: boolean;
 }
 
