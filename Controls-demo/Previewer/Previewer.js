@@ -17,7 +17,7 @@ define('Controls-demo/Previewer/Previewer', [
       _value: true,
       _selectedTrigger: 'hoverAndClick',
       _images: null,
-      _text: 'Previewer не открывался',
+      _text: 'Previewer has not opened yet',
       _theme: ['Controls/Classes'],
 
       _getMemorySource: function(items) {
@@ -27,7 +27,7 @@ define('Controls-demo/Previewer/Previewer', [
          });
       },
       _closeHandler: function() {
-         this._text='Previewer закрылся';
+         this._text='Previewer closed';
       },
 
 
