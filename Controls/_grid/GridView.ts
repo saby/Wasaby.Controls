@@ -30,7 +30,7 @@ import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil'
 
 var
     _private = {
-        checkDeprecated: function(cfg) {
+        checkDeprecated: function(cfg, self) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             if (cfg.showRowSeparator !== undefined) {
                 Logger.warn('IGridControl: Option "showRowSeparator" is deprecated and removed in 19.200. Use option "rowSeparatorVisibility".', self);

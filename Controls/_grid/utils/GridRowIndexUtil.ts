@@ -322,6 +322,8 @@ function getRowsArray(array, hasMultiselect, isMultiHeader, actionsCell) {
         result[0] = [{}, ...result[0]];
     }
     if (actionsCell) {
+        // We have to calculate at least the endColumn for this one because
+        // ColumnScroll ScrollWrapper uses it to determine the number of columns
         const firstRow = result[0];
         result[0] = [
             ...firstRow,
