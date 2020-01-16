@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/InfoBox/InfoBox');
-import {IStickyPopupPosition, vertical, horizontal} from './Sticky/StickyController';
+import {IStickyPopupPosition, TVertical, THorizontal} from './Sticky/StickyController';
 
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
@@ -28,7 +28,7 @@ export interface IInfoboxTemplateOptions extends IControlOptions {
 
 export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _template: TemplateFunction = template;
-    protected _arrowSide: horizontal | vertical;
+    protected _arrowSide: THorizontal | TVertical;
     protected _arrowPosition: TArrowPosition;
     protected _beforeMount(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
@@ -53,7 +53,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
         }
     }
 
-    private _getArrowPosition(side: vertical | horizontal): TArrowPosition {
+    private _getArrowPosition(side: TVertical | THorizontal): TArrowPosition {
         if (side === 'left' || side === 'top') {
             return 'end';
         }
