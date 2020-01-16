@@ -59,10 +59,17 @@ var
 
             return version;
         },
+        isActionsColumn(itemData, currentColumn, colspan) {
+            return (
+                itemData.getLastColumnIndex() === currentColumn.columnIndex ||
+                (
+                    colspan &&
+                    currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1)
+                )
+            );
+        },
         isDrawActions: function(itemData, currentColumn, colspan) {
-            return itemData.drawActions &&
-                (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
-                colspan && currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1));
+            return itemData.drawActions && _private.isActionsColumn(itemData, currentColumn, colspan);
         },
         getCellStyle: function(self, itemData, currentColumn, colspan) {
            var
@@ -917,6 +924,10 @@ var
                 this._resultsColumns = columns;
             }
 
+            if (this._options.columnScroll && this._options.disableColumnScrollCellStyles && !this._shouldUseTableLayout) {
+                this._resultsColumns = this._resultsColumns.concat([{}]);
+            }
+
             this.resetResultsColumns();
         },
 
@@ -1313,6 +1324,7 @@ var
                 }
             };
             current.isDrawActions = _private.isDrawActions;
+            current.isActionsColumn = _private.isActionsColumn;
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
 
             current.getCurrentColumnKey = function() {
@@ -1379,7 +1391,7 @@ var
                 if (current.columnScroll && self._options.disableColumnScrollCellStyles) {
                     currentColumn.itemActionsGridCellStyles =
                         currentColumn.gridCellStyles +
-                        ' position: sticky; overflow: visible; display: inline-block; visibility: hidden; right: 0;';
+                        ' position: sticky; overflow: visible; display: inline-block; right: 0;';
                 }
 
                 return currentColumn;

@@ -65,8 +65,13 @@
          <ws:partial template="columnContentWrapper"/>
       </div>
    </ws:else>
-   <ws:if data="{{ itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan) && itemData.itemActionsDrawPosition === 'after' }}">
-      <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.itemActionsGridCellStyles}}"/>
+   <ws:if data="{{ itemData.columnScroll && itemData.itemActionsDrawPosition === 'after' }}">
+      <ws:if data="{{ itemData.isDrawActions(itemData, currentColumn, colspan) }}">
+         <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.itemActionsGridCellStyles}}"/>
+      </ws:if>
+      <ws:else data="{{ itemData.isActionsColumn(itemData, currentColumn, colspan || colspanCurrentNode) }}">
+         <div></div>
+      </ws:else>
    </ws:if>
 </ws:template>
 <ws:template name="stickyCell">
@@ -81,8 +86,13 @@
                           attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
       <ws:partial template="columnContentWrapper"/>
    </Controls.scroll:StickyHeader>
-   <ws:if data="{{ itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan) && itemData.itemActionsDrawPosition === 'after' }}">
-      <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{itemData.itemActionsGridCellStyles}}"/>
+   <ws:if data="{{ itemData.columnScroll && itemData.itemActionsDrawPosition === 'after' }}">
+      <ws:if data="{{ itemData.isDrawActions(itemData, currentColumn, colspan) }}">
+         <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{itemData.itemActionsGridCellStyles}}"/>
+      </ws:if>
+      <ws:else data="{{ itemData.isActionsColumn(itemData, currentColumn, colspan || colspanCurrentNode) }}">
+         <div></div>
+      </ws:else>
    </ws:if>
 </ws:template>
 
