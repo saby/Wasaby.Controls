@@ -7,12 +7,12 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
 import * as cInstance from 'Core/core-instance';
 
-export type vertical = 'top' | 'bottom' | 'center';
-export type horizontal = 'left' | 'right' | 'center';
+export type TVertical = 'top' | 'bottom' | 'center';
+export type THorizontal = 'left' | 'right' | 'center';
 
 export interface IStickyAlignment {
-    vertical?: vertical;
-    horizontal?: horizontal;
+    vertical?: TVertical;
+    horizontal?: THorizontal;
 }
 
 export interface IStickyOffset {
