@@ -46,7 +46,7 @@ var
             columnsWidths = columnsWidths.concat(columns.map(((column) => column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH)));
             if (shouldAddActionsCell({
                 hasColumnScroll: self._options.columnScroll,
-                shouldUseTableLayout: self._shouldUseTableLayout,
+                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport(),
                 disableCellStyles: self._options.disableColumnScrollCellStyles
             })) {
                 columnsWidths = columnsWidths.concat(['0px']);
