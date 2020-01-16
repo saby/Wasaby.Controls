@@ -30,7 +30,7 @@ import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil'
 
 var
     _private = {
-        checkDeprecated: function(cfg) {
+        checkDeprecated: function(cfg, self) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             if (cfg.showRowSeparator !== undefined) {
                 Logger.warn('IGridControl: Option "showRowSeparator" is deprecated and removed in 19.200. Use option "rowSeparatorVisibility".', self);
@@ -43,7 +43,7 @@ var
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
             // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             let columnsWidths: string[] = hasMultiSelect ? ['max-content'] : [];
-            columnsWidths = columnsWidths.concat(columns.map(((column) => column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH)));
+            columnsWidths = columnsWidths.concat(columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth())));
             if (shouldAddActionsCell({
                 hasColumnScroll: self._options.columnScroll,
                 shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport(),
