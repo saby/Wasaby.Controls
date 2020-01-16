@@ -43,7 +43,7 @@ var _private = {
 
     _getYearListPosition: function (options, dateConstructor) {
 
-        let start = options.startValue,
+        let start = options.year || options.startValue,
             currentDate = new dateConstructor(),
             startValueYear = start ? start.getFullYear() : null;
 

@@ -65,6 +65,7 @@ var Component = BaseSelector.extend({
                 popupClassName: this._options.popupClassName,
                 startValue: this._rangeModel.startValue,
                 endValue: this._rangeModel.endValue,
+                year: this._options.year,
 
                 chooseMonths: this._options.chooseMonths,
                 chooseQuarters: this._options.chooseQuarters,
