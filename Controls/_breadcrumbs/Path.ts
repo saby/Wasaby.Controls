@@ -40,7 +40,7 @@ var BreadCrumbs = Control.extend({
 
     _beforeMount: function (options) {
         if (options.items && options.items.length > 0) {
-                BreadCrumbsUtil.drawBreadCrumbs(this, options.items);
+            BreadCrumbsUtil.drawBreadCrumbs(this, options.items);
         }
     },
     _beforeUpdate: function (newOptions) {
