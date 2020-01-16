@@ -3,8 +3,8 @@ import cInstance = require('Core/core-instance');
 import sourceLib = require('Types/source');
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
-import PageNavigationController from 'Controls/_source/QueryParamsController/PageNavigationController';
-import PositionNavigationController from 'Controls/_source/QueryParamsController/PositionNavigationController';
+import PageQueryParamsController from 'Controls/_source/QueryParamsController/PageQueryParamsController';
+import PositionQueryParamsController from 'Controls/_source/QueryParamsController/PositionQueryParamsController';
 import {Logger} from 'UI/Utils';
 
 var _private = {
@@ -64,13 +64,13 @@ var _private = {
 
       switch (type) {
          case 'page':
-            cntCtr = PageNavigationController;
+            cntCtr = PageQueryParamsController;
             break;
          case 'offset':
             cntCtr = Offset;
             break;
          case 'position':
-            cntCtr = PositionNavigationController;
+            cntCtr = PositionQueryParamsController;
             break;
          default:
              Logger.error('SourceController: Undefined navigation source type "' + type + '"');
@@ -235,4 +235,3 @@ var SourceController = cExtend.extend({
 SourceController._private = _private;
 
 export = SourceController;
-

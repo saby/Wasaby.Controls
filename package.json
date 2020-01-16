@@ -31,7 +31,7 @@
       "moduleType": "amd",
       "root": "application",
       "tests": [
-         "ControlsUnit"
+         "ControlsUnit/source"
       ],
       "patchedRequire": true,
       "report": "./application/artifacts/xunit-report.xml",

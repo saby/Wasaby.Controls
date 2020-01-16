@@ -2,7 +2,7 @@ import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {IAdditionalQueryParams, Direction, DirectionCfg} from '../interface/IAdditionalQueryParams';
-import {INavigationController} from '../interface/INavigationController';
+import {IQueryParamsController} from '../interface/IQueryParamsController';
 import {default as More} from './More';
 import {Logger} from 'UI/Utils';
 
@@ -24,7 +24,7 @@ interface IPositionBoth {
 declare type PositionBoth = Position | IPositionBoth;
 declare type HasMore = boolean | IPositionHasMore | RecordSet;
 
-export interface IPositionNavigationControllerOptions {
+export interface IPositionQueryParamsControllerOptions {
     field: FieldCfg;
     position: PositionCfg;
     direction: DirectionCfg;
@@ -34,29 +34,29 @@ export interface IPositionNavigationControllerOptions {
 /**
  * @author Крайнов Дмитрий
  */
-class PositionNavigationController implements INavigationController {
+class PositionQueryParamsController implements IQueryParamsController {
     protected _more: More;
     protected _beforePosition: Position = null;
     protected _afterPosition: Position = null;
-    protected _options: IPositionNavigationControllerOptions;
+    protected _options: IPositionQueryParamsControllerOptions;
 
     // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
     protected _positionByMeta: boolean = null;
 
-    constructor(cfg: IPositionNavigationControllerOptions) {
+    constructor(cfg: IPositionQueryParamsControllerOptions) {
         this._options = cfg;
 
         if (this._options.field === undefined) {
-            throw new Error('Option field is undefined in PositionNavigationController');
+            throw new Error('Option field is undefined in PositionQueryParamsController');
         }
         if (this._options.position === undefined) {
-            throw new Error('Option position is undefined in PositionNavigationController');
+            throw new Error('Option position is undefined in PositionQueryParamsController');
         }
         if (this._options.direction === undefined) {
-            throw new Error('Option direction is undefined in PositionNavigationController');
+            throw new Error('Option direction is undefined in PositionQueryParamsController');
         }
         if (this._options.limit === undefined) {
-            throw new Error('Option limit is undefined in PositionNavigationController');
+            throw new Error('Option limit is undefined in PositionQueryParamsController');
         }
     }
 
@@ -120,13 +120,13 @@ class PositionNavigationController implements INavigationController {
                     newMore[navDirection] = more;
                     this._getMore().setMoreMeta(newMore, key);
                 } else if (!loadDirection) {
-                    Logger.error('Wrong type of \"more\" value. Must be Object', 'Controls/_source/QueryParamsController/PositionNavigationController');
+                    Logger.error('Wrong type of \"more\" value. Must be Object', 'Controls/_source/QueryParamsController/PositionQueryParamsController');
                 }
             } else if (more instanceof Object) {
                 if (!loadDirection && this._options.direction === 'both') {
                     this._getMore().setMoreMeta({...more}, key);
                 } else {
-                    Logger.error('Wrong type of \"more\" value. Must be boolean', 'Controls/_source/QueryParamsController/PositionNavigationController');
+                    Logger.error('Wrong type of \"more\" value. Must be boolean', 'Controls/_source/QueryParamsController/PositionQueryParamsController');
                 }
             }
         };
@@ -323,4 +323,4 @@ class PositionNavigationController implements INavigationController {
     }
 }
 
-export default PositionNavigationController;
+export default PositionQueryParamsController;

@@ -7,21 +7,15 @@ import {Logger} from 'UI/Utils';
 import * as cInstance from 'Core/core-instance';
 import * as cClone from 'Core/core-clone';
 
-import {INavigationController} from './interface/INavigationController';
-import PageNavigationController from './QueryParamsController/PageNavigationController';
-import PositionNavigationController from './QueryParamsController/PositionNavigationController';
+import {IQueryParamsController} from './interface/IQueryParamsController';
+import PageQueryParamsController from './QueryParamsController/PageQueryParamsController';
+import PositionQueryParamsController from './QueryParamsController/PositionQueryParamsController';
 
 import {
     Direction,
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
 } from './interface/IAdditionalQueryParams';
-
-interface IExtendedPromise<T> extends Promise<T> {
-    addCallback: (callback: Function) => IExtendedPromise<T>;
-    addErrback: (callback: Function) => IExtendedPromise<T>;
-    addCallbacks: (callback: Function, errback: Function) => IExtendedPromise<T>;
-}
 
 /**
  * Вспомогательный интерфейс для определения типа typeof object
@@ -35,7 +29,7 @@ interface IExtendedPromise<T> extends Promise<T> {
  * @private
  * @author Аверкиев П.А.
  */
-export interface IType<T> extends Function {
+interface IType<T> extends Function {
     new(...args: any[]): T;
 }
 
@@ -51,7 +45,7 @@ export interface IType<T> extends Function {
  * @private
  * @author Аверкиев П.А.
  */
-export interface IDictionary<T> {
+interface IDictionary<T> {
     [key: string]: T;
 }
 
@@ -66,7 +60,6 @@ export interface IDictionary<T> {
  * @private
  * @author Аверкиев П.А.
  */
-
 /*
  * Navigation query controller instance Factory
  * @remark
@@ -78,14 +71,13 @@ export interface IDictionary<T> {
  * @private
  * @author Аверкиев П.А.
  */
-
-export class NavigationControllerFactory {
-    static factorySource: IDictionary<IType<INavigationController>> = {
-        page: PageNavigationController,
-        position: PositionNavigationController
+class NavigationControllerFactory {
+    static factorySource: IDictionary<IType<IQueryParamsController>> = {
+        page: PageQueryParamsController,
+        position: PositionQueryParamsController
     };
 
-    static resolve(navigationOptionValue: INavigationOptionValue): INavigationController {
+    static resolve(navigationOptionValue: INavigationOptionValue): IQueryParamsController {
         if (!navigationOptionValue.source) {
             return;
         }
@@ -113,7 +105,6 @@ export class NavigationControllerFactory {
  * @private
  * @author Аверкиев П.А.
  */
-
 /*
  * Query builder.
  * @remark
@@ -130,8 +121,7 @@ export class NavigationControllerFactory {
  * @private
  * @author Аверкиев П.А.
  */
-
-export class QueryParamsBuilder {
+class QueryParamsBuilder {
     private _filter: QueryWhere;
     private _sorting: QueryOrderSelector;
     private _limit: number;
@@ -243,42 +233,37 @@ export interface INavigationControllerOptions {
  * Хранит состояние навигации INavigationOptionValue и вычисляет на его основании параметры для вызова методов.
  * Позволяет запросить данные из ресурса ICrud с учётом настроек навигации INavigationOptionValue
  *
- * @class Controls/_source/NavigationController
- * @implements INavigationController
+ * @class Controls/source/NavigationController
  *
  * @control
  * @public
  * @author Аверкиев П.А.
  */
-
 /*
  * Data loading and per-page navigation controller
  * @remark
  * Stores the navigation state and calculates methods calling params on its base
  * Allows to request data from ICrud source, considering navigation options object (INavigationOptionValue)
  *
- * @class Controls/_source/NavigationController
- * @implements Controls/_source/interface/INavigationController
+ * @class Controls/source/NavigationController
  *
  * @control
  * @public
  * @author Аверкиев П.А.
  */
-
-export default class NavigationController implements INavigationController {
+export default class NavigationController {
     protected _options: INavigationControllerOptions | null;
     private _loader: Promise<RecordSet>;
     private readonly _source: ICrud;
-    private readonly _navigationController: INavigationController;
+    private readonly _queryParamsController: IQueryParamsController;
 
     constructor(cfg: INavigationControllerOptions) {
         this._options = cfg;
-        // TODO do we need this validation at all?
         if (NavigationController._isValidCrudSource(this._options.source)) {
             this._source = this._options.source;
         }
         if (this._options.navigation) {
-            this._navigationController = NavigationControllerFactory.resolve(this._options.navigation);
+            this._queryParamsController = NavigationControllerFactory.resolve(this._options.navigation);
         }
     }
 
@@ -301,13 +286,13 @@ export default class NavigationController implements INavigationController {
     load(filter?: QueryWhere, sorting?: QueryOrderSelector, direction?: Direction): Promise<RecordSet> {
         const queryParams = new QueryParamsBuilder({filter, sorting});
         this._cancelLoading();
-        if (this._navigationController) {
-            queryParams.merge(NavigationController._getNavigationQueryParams(direction, this._navigationController));
+        if (this._queryParamsController) {
+            queryParams.merge(NavigationController._getNavigationQueryParams(direction, this._queryParamsController));
         }
         this._loader = this._callQuery(this._source, this._options.keyProperty, queryParams.build())
             .then((list: RecordSet) => {
-                if (this._navigationController) {
-                    this._navigationController.calculateState(list, direction);
+                if (this._queryParamsController) {
+                    this._queryParamsController.calculateState(list, direction);
                 }
                 return list;
             })
@@ -315,17 +300,6 @@ export default class NavigationController implements INavigationController {
                 return error;
             });
         return this._loader;
-    }
-
-    /**
-     * Возвращает текущий объект INavigationOptionValue, если он был передан при инициализации объекта
-     */
-    /*
-     * Returns current INavigationOptionValue if it is set in the class navigation property
-     */
-    // TODO Is it used anywhere?
-    getNavigation(): INavigationOptionValue {
-        return this._options.navigation;
     }
 
     /**
@@ -340,6 +314,9 @@ export default class NavigationController implements INavigationController {
     }
 
     /**
+     * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
+     * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
+     * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - созданную запись, в случае ошибки - Error.
      * @see Types/_source/ICrud
      */
     create(meta?: object): Promise<Record> {
@@ -347,6 +324,10 @@ export default class NavigationController implements INavigationController {
     }
 
     /**
+     * Обновляет запись в источнике данных
+     * @param data Обновляемая запись или рекордсет
+     * @param [meta] Дополнительные мета данные
+     * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки - Error.
      * @see Types/_source/ICrud
      */
     update(data: Record | RecordSet, meta?: object): Promise<null> {
@@ -354,6 +335,10 @@ export default class NavigationController implements INavigationController {
     }
 
     /**
+     * Читает запись из источника данных
+     * @param key Первичный ключ записи
+     * @param [meta] Дополнительные мета данные
+     * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - прочитанную запись, в случае ошибки - Error.
      * @see Types/_source/ICrud
      */
     read(key: number | string, meta?: object): Promise<Record> {
@@ -361,65 +346,103 @@ export default class NavigationController implements INavigationController {
     }
 
     /**
-     * @see Controls/_source/interface/INavigationController
+     * Считает число записей, загружаемых за один запрос
+     */
+    /*
+     * Calculates count of records loaded per request
      */
     getLoadedDataCount(): number {
-        if (this._navigationController) {
-            return this._navigationController.getLoadedDataCount();
+        if (this._queryParamsController) {
+            return this._queryParamsController.getLoadedDataCount();
         }
     }
 
     /**
-     * @see Controls/_source/interface/INavigationController
+     * Считает количество записей всего по мета информации из текущего состояния контроллера и ключу DataSet
+     * @param rootKey свойство key в DataSet
+     */
+    /*
+     * Calculates total records count by meta information from current controller state and DataSet key
+     * @param rootKey DataSet key property
      */
     getAllDataCount(rootKey?: string|number): boolean | number {
-        if (this._navigationController) {
-            return this._navigationController.getAllDataCount();
+        if (this._queryParamsController) {
+            return this._queryParamsController.getAllDataCount();
         }
     }
 
     /**
-     * @see Controls/_source/interface/INavigationController
+     * Проверяет, есть ли ещё данные для загрузки
+     * @param direction {Direction} nav direction ('up' или 'down')
+     * @param rootKey свойство key в DataSet
+     */
+    /*
+     * Checks if there any more data to load
+     * @param direction {Direction} nav direction ('up' or 'down')
+     * @param rootKey DataSet key property
      */
     hasMoreData(direction: Direction, key?: string | number): boolean {
-        if (this._navigationController) {
-            return this._navigationController.hasMoreData(direction, key);
+        if (this._queryParamsController) {
+            return this._queryParamsController.hasMoreData(direction, key);
         }
     }
 
     /**
-     * @see Controls/_source/interface/INavigationController
+     * Вычисляет текущее состояние контроллера, например, текущую и следующую страницу, или позицию для навигации
+     * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
+     * @param direction {Direction} направление навигации ('up' или 'down')
+     */
+    /*
+     * Calculates current controller state, i.e. current and next page, or position for navigation
+     * @param list {Types/collection:RecordSet} object containing meta information for current request
+     * @param direction {Direction} nav direction ('up' or 'down')
      */
     calculateState(list: RecordSet, direction?: Direction): void {
-        if (this._navigationController) {
-            this._navigationController.calculateState(list);
+        if (this._queryParamsController) {
+            this._queryParamsController.calculateState(list);
         }
     }
 
     /**
-     * @see Controls/_source/interface/INavigationController
+     * Позволяет вручную установить текущее состояние контроллера, например, текущую и следующую страницу, или позицию
+     * для навигации
+     * @param state
+     * TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+     */
+    /*
+     * Allows manual set of current controller state, i.e. current and next page, or position for navigation
+     * @param state
      */
     setState(state: any): void {
-        if (this._navigationController) {
-            this._navigationController.setState(state);
+        if (this._queryParamsController) {
+            this._queryParamsController.setState(state);
         }
     }
 
     /**
-     * @see Controls/_source/interface/INavigationController
+     * Устанавливает текущую страницу в контроллере
+     * при прокрутке при помощи скроллпэйджинга в самое начало или самый конец списка.
+     * @param direction {Direction} направление навигации ('up' или 'down')
+     */
+    /*
+     * Set current page in controller when scrolling with "scrollpaging" to the top or bottom of the list
+     * @param direction {Direction} nav direction ('up' or 'down')
      */
     setEdgeState(direction: Direction): void {
-        if (this._navigationController) {
-            this._navigationController.setEdgeState(direction);
+        if (this._queryParamsController) {
+            this._queryParamsController.setEdgeState(direction);
         }
     }
 
     /**
-     * @see Controls/_source/interface/INavigationController
+     * Отменяет загрузку данных и разрушает IQueryParamsController
+     */
+    /*
+     * Cancel data loading and destroy current IQueryParamsController
      */
     destroy(): void {
-        if (this._navigationController) {
-            this._navigationController.destroy();
+        if (this._queryParamsController) {
+            this._queryParamsController.destroy();
         }
         this._cancelLoading();
         this._options = null;
@@ -488,7 +511,7 @@ export default class NavigationController implements INavigationController {
      * @param paramsController
      * @private
      */
-    private static _getNavigationQueryParams(direction: Direction, paramsController: INavigationController)
+    private static _getNavigationQueryParams(direction: Direction, paramsController: IQueryParamsController)
         : IAdditionalQueryParams {
         const {limit, offset, meta, filter} = paramsController.prepareQueryParams(direction);
         const queryParams = new QueryParamsBuilder({limit, offset, meta, filter});
@@ -500,7 +523,6 @@ export default class NavigationController implements INavigationController {
      * @param {Types/source:ICrud} source
      * @private
      */
-    // TODO do we need this method at all?
     private static _isValidCrudSource(source: ICrud): boolean {
         if (!cInstance.instanceOfMixin(source, 'Types/_source/ICrud')) {
             Logger.error('NavigationController: Source option has incorrect type');
