@@ -19,10 +19,11 @@ type TChangeSelectionType = 'selectAll'|'unselectAll'|'toggleAll';
 var _private = {
     notifyAndUpdateSelection: function(self, options) {
         let
-            oldSelectedKeys = self._options.selectedKeys,
-            oldExcludedKeys = self._options.excludedKeys,
-            newSelectedKeys = self._multiselection.selectedKeys,
-            newExcludedKeys = self._multiselection.excludedKeys,
+            itemsSelectedCount = self._multiselection.getCount(),
+            oldSelectedKeys = options.selectedKeys,
+            oldExcludedKeys = options.excludedKeys,
+            newSelectedKeys = itemsSelectedCount === 0 ? [] : self._multiselection.selectedKeys,
+            newExcludedKeys = itemsSelectedCount === 0 ? [] : self._multiselection.excludedKeys,
             selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
             excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
 
@@ -54,7 +55,7 @@ var _private = {
          4) Прокидывать событие в Container/Scroll.
          Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
          */
-       self._notify('listSelectedKeysCountChanged', [self._multiselection.getCount()], {bubbling: true});
+       self._notify('listSelectedKeysCountChanged', [itemsSelectedCount], {bubbling: true});
        self._multiselection.updateSelectionForRender();
     },
 
