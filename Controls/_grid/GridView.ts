@@ -26,31 +26,10 @@ import * as ColumnTpl from 'wml!Controls/_grid/Column';
 import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
+import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
+
 var
     _private = {
-        shouldAddActionsCell(self, cfg) {
-            return !GridLayoutUtil.isFullGridSupport() && cfg.columnScroll && cfg.disableColumnScrollCellStyles;
-        },
-
-        getActionsHeaderCellConfig(header) {
-            let minStartRow = Number.MAX_VALUE;
-            let maxEndRow = 0;
-            let maxEndColumn = 0;
-
-            header.forEach((cell) => {
-                minStartRow = cell.startRow < minStartRow ? cell.startRow : minStartRow;
-                maxEndRow = cell.endRow > maxEndRow ? cell.endRow : maxEndRow;
-                maxEndColumn = cell.endColumn > maxEndColumn ? cell.endColumn : maxEndColumn;
-            });
-
-            return {
-                startRow: minStartRow,
-                endRow: maxEndRow,
-                startColumn: maxEndColumn,
-                endColumn: maxEndColumn + 1
-            };
-        },
-
         checkDeprecated: function(cfg) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             if (cfg.showRowSeparator !== undefined) {
@@ -63,19 +42,17 @@ var
 
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
             // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-            const columnsWidths: string[] =
-                (hasMultiSelect ? ['max-content'] : [])
-                .concat(columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth())))
-                .concat(_private.shouldAddActionsCell(self, self._options) ? ['0px'] : []);
-            return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
-        },
-
-        getGridHeaderColumns(self, header, cfg) {
-            if (header && _private.shouldAddActionsCell(self, cfg)) {
-                return header.concat([_private.getActionsHeaderCellConfig(header)]);
-            } else {
-                return header;
+            let columnsWidths: string[] = hasMultiSelect ? ['max-content'] : [];
+            columnsWidths = columnsWidths.concat(columns.map(((column) => column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH)));
+            if (shouldAddActionsCell({
+                hasColumnScroll: self._options.columnScroll,
+                shouldUseTableLayout: self._shouldUseTableLayout,
+                disableCellStyles: self._options.disableColumnScrollCellStyles
+            })) {
+                columnsWidths = columnsWidths.concat(['0px']);
             }
+
+            return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
         getQueryForHeaderCell(isSafari: boolean, cur, multiselectVisibility: number): string {
@@ -150,11 +127,6 @@ var
             this._setResultsTemplate(cfg);
             this._listModel.headerInEmptyListVisible = cfg.headerInEmptyListVisible;
 
-            const header = _private.getGridHeaderColumns(this, cfg.header, cfg);
-            if (header !== cfg.header) {
-                this._listModel.setHeader(header);
-            }
-
             return resultSuper;
         },
 
@@ -177,8 +149,7 @@ var
                 if (this._listModel._isMultiHeader) {
                     _private._resetScroll(this);
                 }
-                const header = _private.getGridHeaderColumns(this, newCfg.header, newCfg);
-                this._listModel.setHeader(header);
+                this._listModel.setHeader(newCfg.header);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
                 this._listModel.setStickyColumn(newCfg.stickyColumn);
@@ -236,7 +207,7 @@ var
             // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             const container = this._container.length !== undefined ? this._container[0] : this._container;
             const multiselectVisibility = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
-            const cellsArray = _private.prepareHeaderCells(this._listModel.getHeader(), container, multiselectVisibility);
+            const cellsArray = _private.prepareHeaderCells(this._options.header, container, multiselectVisibility);
             const newColumns = cellsArray.map((cur) => {
                     const upperCellsOffset = _private.getHeaderCellOffset(cellsArray, cur);
                     return {
