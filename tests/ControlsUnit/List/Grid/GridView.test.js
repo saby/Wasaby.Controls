@@ -70,9 +70,9 @@ define(['Controls/grid'], function(gridMod) {
 
    describe('Controls.List.Grid.GridView', function() {
       it('GridView.prepareGridTemplateColumns', function() {
-         assert.equal(preparedColumnsWithMultiselect, gridMod.GridView._private.getGridTemplateColumns(gridColumns, true),
+         assert.equal(preparedColumnsWithMultiselect, gridMod.GridView._private.getGridTemplateColumns({}, gridColumns, true),
             'Incorrect result "prepareGridTemplateColumns with checkbox".');
-         assert.equal(preparedColumnsWithoutMiltiselect, gridMod.GridView._private.getGridTemplateColumns(gridColumns, false),
+         assert.equal(preparedColumnsWithoutMiltiselect, gridMod.GridView._private.getGridTemplateColumns({}, gridColumns, false),
             'Incorrect result "prepareGridTemplateColumns without checkbox".');
       });
       it('Footer', function() {
@@ -211,8 +211,8 @@ define(['Controls/grid'], function(gridMod) {
                 {displayProperty: 'field3'},
              ];
 
-         assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, true), 'grid-template-columns: max-content 1fr auto 1fr;');
-         assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, false), 'grid-template-columns: 1fr auto 1fr;');
+         assert.equal(gridMod.GridView._private.getGridTemplateColumns({}, columns, true), 'grid-template-columns: max-content 1fr auto 1fr;');
+         assert.equal(gridMod.GridView._private.getGridTemplateColumns({}, columns, false), 'grid-template-columns: 1fr auto 1fr;');
       });
 
       it('getUpperCells', function () {
