@@ -7,8 +7,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Opener as DropdownOpener} from 'Controls/dropdown';
 import {Controller as SourceController} from 'Controls/source';
 import {IShowType, showType, getMenuItems} from 'Controls/Utils/Toolbar';
-import {IStickyPopupOptions, IStickyPosition} from 'Controls/popup';
-import {IEventHandlers} from 'Controls/_popup/interface/IPopup';
+import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
 import {
     IButtonOptions,
