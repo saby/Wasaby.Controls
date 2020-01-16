@@ -63,7 +63,6 @@ const
 
 const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
-const ITEMACTIONS_UNLOCK_DELAY = 200;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 
 const MIN_SCROLL_PAGING_PROPORTION = 2;
@@ -185,9 +184,6 @@ var _private = {
                 self._cachedPagingState = null;
 
                 if (listModel) {
-                    if (self._isActive) {
-                        isActive = true;
-                    }
                     if (self._options.groupProperty) {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
@@ -212,9 +208,6 @@ var _private = {
                             self._markedKeyForRestoredScroll = nextKey;
                         }
                         self._items = listModel.getItems();
-                    }
-                    if (isActive === true) {
-                        self._children.listView.activate();
                     }
 
                     if (self._sourceController) {
@@ -884,7 +877,6 @@ var _private = {
                 });
             }
         }
-        self._scrollPageLocked = false;
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -941,7 +933,6 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
-        self._scrollPageLocked = false;
     },
 
     getPortionedSearch(self): PortionedSearch {
@@ -1740,14 +1731,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return this._sourceController;
     },
 
-    _onActivated: function() {
-        this._isActive = true;
-    },
-
-    _onDeactivated: function() {
-        this._isActive = false;
-    },
-
     _afterMount: function() {
         this._isMounted = true;
         const container = this._container[0] || this._container;
@@ -2506,9 +2489,6 @@ BaseControl.getDefaultOptions = function() {
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
         stickyHeader: true,
-        selectionStrategy: {
-           name: 'Controls/operations:FlatSelectionStrategy'
-        },
         virtualScrollMode: 'remove'
     };
 };

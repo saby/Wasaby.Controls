@@ -522,7 +522,8 @@ var
                     (
                         action === collection.IObservable.ACTION_ADD ||
                         action === collection.IObservable.ACTION_REMOVE
-                    )
+                    ) &&
+                    !this._options.disableColumnScrollCellStyles
                 ) {
                     event.setResult('updatePrefix');
                 }
@@ -761,7 +762,7 @@ var
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
-                cellClasses += ' controls-Grid__header-cell-checkbox' + `_theme-${theme}`;
+                cellClasses += ' controls-Grid__header-cell-checkbox' + `_theme-${theme}` + ` controls-Grid__header-cell-checkbox_min-width_theme-${theme}`;
 
                 // В grid-layout хлебные крошки нельзя расположить в первой ячейке, если в таблице включен множественный выбор,
                 // т.к. крошки растянут колонку, поэтому размещаем крошки во второй колонке и задаем отрицательный margin слева.
@@ -784,6 +785,7 @@ var
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs,
                 }, this._options.theme);
+                cellClasses += ' controls-Grid__header-cell_min-width';
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
@@ -1361,7 +1363,7 @@ var
                 }
 
                 // TODO: Проверить. https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-                if (current.columnScroll) {
+                if (current.columnScroll && !self._options.disableColumnScrollCellStyles) {
                     currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles({
                         rowStart: current.rowIndex,
                         columnStart: currentColumn.columnIndex
