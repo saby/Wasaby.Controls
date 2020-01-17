@@ -15,7 +15,8 @@ class FooterTemplate extends Control<IControlOptions> {
     private _defaultItems = [
         {
             id: '1',
-            icon: 'icon-Print icon-medium',
+            icon: 'icon-Print',
+            iconSize: 'm',
             title: 'Распечатать',
             '@parent': false,
             parent: null
@@ -23,7 +24,8 @@ class FooterTemplate extends Control<IControlOptions> {
         {
             id: '2',
             viewMode: 'icon',
-            icon: 'icon-Link icon-medium',
+            icon: 'icon-Link',
+            iconSize: 'm',
             title: 'Скопировать в буфер',
             '@parent': false,
             parent: null
@@ -51,7 +53,8 @@ class FooterTemplate extends Control<IControlOptions> {
         },
         {
             id: '6',
-            icon: 'icon-medium icon-EmptyMessage',
+            icon: 'icon-EmptyMessage',
+            iconSize: 'm',
             fontColorStyle: 'secondary',
             showHeader: true,
             viewMode: 'link',
