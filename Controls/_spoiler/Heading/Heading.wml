@@ -8,8 +8,9 @@
                   controls-SpoilerHeading__icon_{{_view}}_theme-{{_options.theme}}"></div>
       </div>
       <div class="controls-SpoilerHeading__caption
+                  controls-SpoilerHeading__caption_{{_view}}
                   controls-SpoilerHeading__caption_{{_view}}_theme-{{_options.theme}}
-                  controls-SpoilerHeading__caption_fontsize-{{_options.fontSize}}_theme-{{_options.theme}}
-                  controls-SpoilerHeading__caption_captionPosition-{{_options.captionPosition}}">{{_caption}}</div>
+                  controls-SpoilerHeading__caption_captionPosition-{{_options.captionPosition}}
+                  controls-fontsize-{{_options.fontSize}}_theme-{{_options.theme}}">{{_caption}}</div>
    </div>
 </div>

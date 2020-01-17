@@ -3,7 +3,7 @@ import {isEqual} from 'Types/object';
 import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {IExpandable, IExpandableOptions} from 'Controls/interface';
+import {IExpandable, IExpandableOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
 
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
@@ -19,7 +19,7 @@ type TIcon = 'ExpandLight' | 'CollapseLight';
  * @public
  * @author Красильников А.С.
  */
-export interface IHeadingOptions extends IControlOptions, IExpandableOptions {
+export interface IHeadingOptions extends IControlOptions, IExpandableOptions, IFontSizeOptions {
     /**
      * Заголовок.
      * @type string | string[]
@@ -39,17 +39,9 @@ export interface IHeadingOptions extends IControlOptions, IExpandableOptions {
      * @demo Controls-demo/Spoiler/Heading/CaptionPosition/Index
      */
     captionPosition: 'left' | 'right';
-    /**
-     * Размер шрифта.
-     * @default m
-     * @remark
-     * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
-     * @demo Controls-demo/Spoiler/Heading/FontSize/Index
-     */
-    fontSize: 'm' | 'l';
 }
 
-export interface IHeading extends IExpandable {
+export interface IHeading extends IExpandable, IFontSize {
     readonly '[Controls/_spoiler/IHeading]': boolean;
 }
 
@@ -76,6 +68,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     protected _template: TemplateFunction = template;
 
     readonly '[Controls/_spoiler/IHeading]': boolean = true;
+    readonly '[Controls/_interface/IFontSize]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
 
     private _needChangeCaption(options: IHeadingOptions): boolean {
@@ -93,23 +86,13 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         return expanded !== this._options.expanded;
     }
 
-    private _setCaption({captions, expanded}: IHeadingOptions): void {
-        if (captions instanceof Array) {
-            const requiredCountCaptions: number = 2;
-
-            if (captions.length !== requiredCountCaptions) {
-                Logger.error('Неверное количество заголовков.');
-            }
-            const caption: string | undefined = expanded ? captions[0] : captions[1];
-            this._caption = Heading._calcCaption(caption);
-        } else {
-            this._caption = captions;
-        }
+    private _setCaption(options: IHeadingOptions): void {
+        this._caption = Heading._calcCaption(options);
     }
 
     private _setStateByExpanded(expanded: boolean): void {
-        this._icon = expanded ? 'CollapseLight' : 'ExpandLight';
-        this._view = expanded ? 'expanded' : 'collapsed';
+        this._icon = Heading._calcIcon(expanded);
+        this._view = Heading._calcView(expanded);
     }
 
     protected _beforeMount(options?: IHeadingOptions, contexts?: object, receivedState?: void): Promise<void> | void {
@@ -134,12 +117,34 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
 
     static _theme: string[] = ['Controls/spoiler', 'Controls/Classes'];
 
-    private static _calcCaption(caption?: string): string {
+    private static _captionToString(caption?: string): string {
         if (typeof caption === 'string') {
             return  caption;
         }
 
         return '';
+    }
+
+    private static _calcCaption({captions, expanded}: IHeadingOptions): string {
+        if (captions instanceof Array) {
+            const requiredCountCaptions: number = 2;
+
+            if (captions.length !== requiredCountCaptions) {
+                Logger.error('Неверное количество заголовков.');
+            }
+            const caption: string | undefined = expanded ? captions[0] : captions[1];
+            return Heading._captionToString(caption);
+        } else {
+            return captions;
+        }
+    }
+
+    private static _calcView(expanded: boolean): TView {
+        return expanded ? 'expanded' : 'collapsed';
+    }
+
+    private static _calcIcon(expanded: boolean): TIcon {
+        return expanded ? 'CollapseLight' : 'ExpandLight';
     }
 
     static getDefaultOptions(): Partial<IHeadingOptions> {
@@ -153,9 +158,9 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
 
     static getOptionTypes(): Partial<IHeadingOptions> {
         return {
+            fontSize: descriptor(String),
             expanded: descriptor(Boolean),
             captions: descriptor(String, Array),
-            fontSize: descriptor(String).oneOf(['m', 'l']),
             captionPosition: descriptor(String).oneOf(['left', 'right'])
         };
     }
