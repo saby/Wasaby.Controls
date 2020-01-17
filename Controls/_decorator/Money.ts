@@ -139,7 +139,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
 
     private _getStyleOptions(options: IMoneyOptions) {
         const actualOptions = moneyStyle(options);
-        
+
     }
 
     private _changeState(options: IMoneyOptions, useLogging: boolean): boolean {
@@ -225,7 +225,6 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
     static getDefaultOptions() {
         return {
             value: null,
-            style: 'default',
             useGrouping: true,
             showEmptyDecimals: true,
             fontColorStyle: 'default',
@@ -235,11 +234,6 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
 
     static getOptionTypes() {
         return {
-            style: descriptor(String).oneOf([
-                'default', 'accentResults', 'noAccentResults',
-                'group', 'basicRegistry', 'noBasicRegistry',
-                'accentRegistry', 'noAccentRegistry', 'error'
-            ]),
             fontColorStyle: descriptor(String).oneOf([
                 'default', 'secondary', 'noAccent', 'error', 'done', 'primary', 'attention', 'disabled'
             ]),
