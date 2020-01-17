@@ -870,8 +870,8 @@ var _private = {
                     };
                 }
                 self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
-                self._hasLoadedData = false;
             }
+            self._hasLoadedData = false;
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
