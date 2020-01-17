@@ -128,6 +128,9 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'te');
          assert.isTrue(result);
+
+         result = searchMod.Controller._private.isInputSearchValueShort(searchController, undefined);
+         assert.isTrue(result);
       });
 
       it('private.needStartSearch', function() {
@@ -545,6 +548,13 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
                searchController._beforeUpdate({searchValue: 'test2'}, {});
                assert.equal(value, 'test2');
             });
+         });
+         it('viewMode is changed', function() {
+            var options = getDefaultOptions();
+
+            options.viewMode = "tile";
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            assert.equal(searchController._viewMode, "tile");
          });
       });
 

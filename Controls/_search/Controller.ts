@@ -211,22 +211,31 @@ var _private = {
    },
 
    isInputSearchValueShort(self, searchValue: string): boolean {
-      return searchValue.length < self._options.minSearchLength;
+      return !searchValue || searchValue.length < self._options.minSearchLength;
    },
 
    needStartSearch(inputSearchValue: string, searchValue: string): string {
       return inputSearchValue.trim() || searchValue;
+   },
+
+   needUpdateViewMode(self, newViewMode: string): boolean {
+      return self._options.viewMode !== newViewMode && self._viewMode !== newViewMode;
+   },
+
+   updateViewMode(self, newViewMode: string): void {
+      self._previousViewMode = self._viewMode;
+      self._viewMode = newViewMode;
    }
 };
 
 /**
- * Контрол используют в качестве контроллера для организации поиска в реестрах. 
+ * Контрол используют в качестве контроллера для организации поиска в реестрах.
  * Он обеспечивает связь между {@link Controls/search:InputContainer} и {@link Controls/list:Container} — контейнерами для строки поиска и списочного контрола соответветственно. 
  * С помощью этого контрола можно настроить: временную задержку между вводом символа и началом поиска, количество символов, с которых начинается поиск, параметры фильтрации и другое.
  * @remark
  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
  * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
- * 
+ *
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/interface/ISearch
@@ -263,7 +272,7 @@ var _private = {
  * @author Герасимов А.М.
  * @control
  * @public
- */ 
+ */
 
 var Container = Control.extend(/** @lends Controls/_search/Container.prototype */{
 
@@ -295,9 +304,8 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          if (!_private.isInputSearchValueShort(this, options.searchValue)) {
             this._searchValue = options.searchValue;
 
-            if (this._viewMode !== 'search') {
-               this._previousViewMode = this._viewMode;
-               this._viewMode = 'search';
+            if (_private.needUpdateViewMode(this, 'search')) {
+               _private.updateViewMode(this, 'search');
             }
          }
       }
@@ -319,6 +327,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (this._options.root !== newOptions.root) {
          this._root = newOptions.root;
+      }
+
+      if (_private.needUpdateViewMode(this, newOptions.viewMode)) {
+         _private.updateViewMode(this, newOptions.viewMode);
       }
 
       if (this._searchController) {

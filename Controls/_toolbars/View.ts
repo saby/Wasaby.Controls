@@ -87,8 +87,8 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  * @mixes Controls/interface:IHierarchy
  * @mixes Controls/interface:IIconSize
  * @mixes Controls/interface:IItemTemplate
- * @mixes Controls/toolbars:IToolbarOptions
- * @mixes Controls/toolbars:IToolbarSource
+ * @mixes Controls/_toolbars/IToolbarOptions
+ * @mixes Controls/_toolbars/IToolbarSource
  *
  * @public
  * @author Красильников А.С.
@@ -138,6 +138,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
                 groupTemplate: options.groupTemplate,
+                groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
                 additionalProperty: options.additionalProperty,
                 itemTemplateProperty: options.itemTemplateProperty
@@ -163,6 +164,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
                 items: this._items,
                 rootKey: item.get(options.keyProperty),
                 groupTemplate: options.groupTemplate,
+                groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
                 keyProperty: options.keyProperty,
                 parentProperty: options.parentProperty,

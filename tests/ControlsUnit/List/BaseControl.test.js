@@ -220,12 +220,10 @@ define([
          const emptySorting = [];
          const sortingASC = [{ test: 'ASC' }];
          const sortingDESC = [{ test: 'DESC' }];
-         const multiSorting = [{ test: 'DESC' }, { test2: 'DESC' }];
 
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(emptySorting, 'test'), sortingDESC);
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingDESC, 'test'), sortingASC);
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
-         assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
 
       it('_private::isItemsSelectionAllowed', () => {
@@ -598,7 +596,8 @@ define([
          });
 
          var dataLoadFired = false;
-
+         var portionSearchTimerReseted = false;
+         var portionSearchReseted = false;
          var beforeLoadToDirectionCalled = false;
 
          var cfg = {
@@ -621,28 +620,41 @@ define([
             navigation: {
                source: 'page',
                sourceConfig: {
-                  pageSize: 3,
+                  pageSize: 2,
                   page: 0,
                   hasMore: false
                }
-            }
+            },
+            searchValue: 'test'
          };
 
          var ctrl = new lists.BaseControl(cfg);
-
-
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {clientHeight: 100};
          ctrl._afterMount(cfg);
 
-         const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
+         ctrl._portionedSearch.resetTimer = () => {
+            portionSearchTimerReseted = true;
+         };
+         ctrl._portionedSearch.reset = () => {
+            portionSearchReseted = true;
+         };
+
+         let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down');
          await loadPromise;
-         assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+         assert.isTrue(portionSearchTimerReseted);
+         assert.isFalse(portionSearchReseted);
+         assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
+
+         loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         await loadPromise;
+         assert.isTrue(portionSearchReseted);
       });
 
       it('prepareFooter', function() {
@@ -1007,6 +1019,7 @@ define([
          assert.isFalse(notified);
 
          var myMarkedItem = { qwe: 123 };
+         var mockedEvent = { target: 'myTestTarget' };
          // With marker
          lists.BaseControl._private.enterHandler({
             getViewModel: function() {
@@ -1020,13 +1033,13 @@ define([
                   }
                };
             },
-            _notify: function(e, item, options) {
+            _notify: function(e, args, options) {
                notified = true;
                assert.equal(e, 'itemClick');
-               assert.deepEqual(item, [myMarkedItem]);
+               assert.deepEqual(args, [myMarkedItem, mockedEvent]);
                assert.deepEqual(options, { bubbling: true });
             }
-         });
+         }, mockedEvent);
          assert.isTrue(notified);
       });
 
@@ -1359,6 +1372,13 @@ define([
                bottom: 0
             });
             assert.deepEqual({top: 'visible', bottom: 'visible'}, control.lastNotifiedArguments[0]);
+            control._sourceController._hasMoreData = {up: false, down: true};
+            control._showContinueSearchButton = true;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
          });
          it('with demand navigation', () => {
             control._options.navigation.view = 'maxCount';
@@ -1499,14 +1519,11 @@ define([
          setTimeout(function() {
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            ctrl._scrollPageLocked = true;
             // прокручиваем к низу, проверяем состояние пэйджинга
             lists.BaseControl._private.handleListScroll(ctrl, {
                scrollTop: 300,
                position: 'down'
             });
-
-            assert.isFalse(ctrl._scrollPageLocked);
 
             assert.deepEqual({
                stateBegin: 'normal',
@@ -4386,6 +4403,58 @@ define([
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 40);
          bc._children.listView.getResultsHeight = () => 30;
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 70);
+      });
+
+      it('_itemMouseMove: notify draggingItemMouseMove', async function() {
+         var cfg = {
+                viewName: 'Controls/List/ListView',
+                itemsDragNDrop: true,
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         let eName;
+         await instance._beforeMount(cfg);
+         instance.saveOptions(cfg);
+         instance._listViewModel.getDragItemData = () => ({});
+         instance._notify = (eventName) => {
+            eName = eventName;
+         };
+         instance._itemMouseMove({}, {});
+         assert.equal(eName, 'draggingItemMouseMove');
+      });
+
+      it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
+         var cfg = {
+                viewName: 'Controls/List/ListView',
+                itemsDragNDrop: true,
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         let eName;
+         await instance._beforeMount(cfg);
+         instance.saveOptions(cfg);
+         instance._notify = (eventName) => {
+            eName = eventName;
+         };
+         instance._listViewModel.getDragItemData = () => ({});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'draggingItemMouseLeave');
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {

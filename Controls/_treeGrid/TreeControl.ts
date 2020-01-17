@@ -561,15 +561,14 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._notify('markedKeyChanged', [key]);
     },
 
-    _itemMouseMove: function(event, itemData, nativeEvent) {
-        var model = this._children.baseControl.getViewModel();
-
-        if ((model.getDragEntity() || model.getDragItemData()) && itemData.dispItem.isNode()) {
-            this._nodeMouseMove(itemData, nativeEvent);
+    _draggingItemMouseMove(e, itemData, nativeEvent){
+        e.stopPropagation();
+        if (itemData.dispItem.isNode()) {
+            this._nodeMouseMove(itemData, nativeEvent)
         }
     },
 
-    _onItemMouseLeave: function() {
+    _draggingItemMouseLeave: function() {
         this._clearTimeoutForExpandOnDrag(this);
         this._expandOnDragData = null;
     },
@@ -657,7 +656,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
 });
 TreeControl._theme = ['Controls/treeGrid'];
 
-TreeControl.getDefaultOptions = function() {
+TreeControl.getDefaultOptions = () => {
     return {
         uniqueKeys: true,
         filter: {},
@@ -665,9 +664,8 @@ TreeControl.getDefaultOptions = function() {
         expandByItemClick: false,
         root: null,
         columns: DEFAULT_COLUMNS_VALUE,
-        selectionStrategy: {
-            name: 'Controls/operations:DeepTreeSelectionStrategy'
-        }
+        selectDescendants: true,
+        selectAncestors: true
     };
 };
 

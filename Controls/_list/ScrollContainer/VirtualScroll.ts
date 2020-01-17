@@ -68,7 +68,7 @@ export default class VirtualScrollController {
 
     constructor(options: IVirtualScrollControllerOptions) {
         const pageSize = options.pageSize || DEFAULT_VIRTUAL_PAGE_SIZE;
-        const segmentSize = Math.ceil(pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION);
+        const segmentSize = options.segmentSize || Math.ceil(pageSize * DEFAULT_PAGE_SIZE_TO_SEGMENT_RELATION);
         this._options = {
             ...options,
             pageSize, segmentSize
@@ -464,7 +464,7 @@ export default class VirtualScrollController {
         let sum = 0;
 
         for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
-            if (this._itemsContainer.children[i].className.indexOf('ws-hidden') === -1) {
+            if (this._itemsContainer.children[i].className.indexOf('controls-ListView__hiddenContainer') === -1) {
                 startChildrenIndex = i;
                 break;
             }

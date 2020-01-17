@@ -29,6 +29,8 @@ import {debounce} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
+import * as GroupingController from 'Controls/_list/Controllers/Grouping';
+import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue} from 'Controls/interface';
 
@@ -61,7 +63,6 @@ const
 
 const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
-const ITEMACTIONS_UNLOCK_DELAY = 200;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 
 const MIN_SCROLL_PAGING_PROPORTION = 2;
@@ -147,6 +148,10 @@ var _private = {
             _private.showIndicator(self);
             _private.hideError(self);
 
+            if (cfg.groupProperty) {
+                const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
+                GroupingController.prepareFilterCollapsedGroups(collapsedGroups, filter);
+            }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
@@ -179,8 +184,8 @@ var _private = {
                 self._cachedPagingState = null;
 
                 if (listModel) {
-                    if (self._isActive) {
-                        isActive = true;
+                    if (self._options.groupProperty) {
+                        self._groupingLoader.resetLoadedGroups(listModel);
                     }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
@@ -203,9 +208,6 @@ var _private = {
                             self._markedKeyForRestoredScroll = nextKey;
                         }
                         self._items = listModel.getItems();
-                    }
-                    if (isActive === true) {
-                        self._children.listView.activate();
                     }
 
                     if (self._sourceController) {
@@ -392,13 +394,13 @@ var _private = {
         _private.setMarkerAfterScroll(self, event);
     },
 
-    enterHandler: function(self) {
+    enterHandler: function(self, event) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
         }
         let markedItem = self.getViewModel().getMarkedItem();
         if (markedItem) {
-            self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
+            self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
         }
     },
     toggleSelection: function(self, event) {
@@ -424,7 +426,7 @@ var _private = {
             loadedDataCount, allDataCount;
 
         if (_private.isDemandNavigation(navigation) && sourceController.hasMoreData('down')) {
-            self._shouldDrawFooter = self._options.groupingKeyCallback ? !self._listViewModel.isAllGroupsCollapsed() : true;
+            self._shouldDrawFooter = (self._options.groupingKeyCallback || self._options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
         }
@@ -454,6 +456,10 @@ var _private = {
                 userCallback(addedItems, direction);
             }
             _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
+
+            if (self._options.searchValue) {
+                _private.loadToDirectionWithSearchValueEnded(self, addedItems);
+            }
 
             if (self._options.virtualScrolling && self._isMounted) {
                 self._children.scrollController.itemsFromLoadToDirection = true;
@@ -495,9 +501,12 @@ var _private = {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
             if (self._options.searchValue) {
-                _private.getPortionedSearch(self).startSearch();
+                _private.loadToDirectionWithSearchValueStarted(self);
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+            if (self._options.groupProperty) {
+                GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
+            }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 //до реализации функционала и проблемы из новости делаем решение по месту:
@@ -550,6 +559,9 @@ var _private = {
             }
             if (self._loadTriggerVisibility.down || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'down', filter);
+            }
+            if (self._options.searchValue) {
+                _private.checkPortionedSearchByScrollTriggerVisibility(self, self._loadTriggerVisibility.down);
             }
         } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
             _private.loadToDirectionIfNeed(self, 'down', filter);
@@ -868,7 +880,6 @@ var _private = {
                 });
             }
         }
-        self._scrollPageLocked = false;
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -925,7 +936,6 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
-        self._scrollPageLocked = false;
     },
 
     getPortionedSearch(self): PortionedSearch {
@@ -945,6 +955,29 @@ var _private = {
                 self._sourceController.cancelLoading();
             }
         }));
+    },
+
+    loadToDirectionWithSearchValueStarted(self): void {
+        _private.getPortionedSearch(self).startSearch();
+    },
+
+    loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
+        const portionedSearch = _private.getPortionedSearch(self);
+        if (!self._sourceController.hasMoreData('down')) {
+            portionedSearch.reset();
+        } else if (loadedItems.getCount()) {
+            portionedSearch.resetTimer();
+        }
+    },
+
+    checkPortionedSearchByScrollTriggerVisibility(self, scrollTriggerVisibility: boolean): void {
+        if (!scrollTriggerVisibility) {
+            _private.getPortionedSearch(self).resetTimer();
+        }
+    },
+
+    needShowShadowByPortionedSearch(self): boolean {
+        return !self._showContinueSearchButton;
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -1122,6 +1155,7 @@ var _private = {
                         nodeProperty: 'parent@',
                         groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
                         groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
+                        groupProperty: self._options.contextMenuConfig && self._options.contextMenuConfig.groupProperty,
                         rootKey: action.id,
                         showHeader: true,
                         dropdownClassName: 'controls-itemActionsV__popup',
@@ -1197,20 +1231,16 @@ var _private = {
         return result;
     },
 
-    getSortingOnChange: function(currentSorting, propName, sortingType) {
+    getSortingOnChange: function(currentSorting, propName) {
         var sorting = cClone(currentSorting || []);
-        var sortElemIndex = -1;
         var sortElem;
         var newSortElem = {};
 
-        //use same algorithm when sortingType is not 'single', if the number of properties is equal to one
-        if (sortingType !== 'single' || sorting.length === 1 && sorting[0][propName]) {
-            sorting.forEach(function(elem, index) {
-                if (elem.hasOwnProperty(propName)) {
-                    sortElem = elem;
-                    sortElemIndex = index;
-                }
-            });
+        if (sorting.length === 1 && sorting[0][propName]) {
+            const elem = sorting[0];
+            if (elem.hasOwnProperty(propName)) {
+                sortElem = elem;
+            }
         } else {
             sorting = [];
         }
@@ -1223,7 +1253,7 @@ var _private = {
             if (sortElem[propName] === 'DESC') {
                 sortElem[propName] = 'ASC';
             } else {
-                sorting.splice(sortElemIndex, 1);
+                sorting = [];
             }
         } else {
             newSortElem[propName] = 'DESC';
@@ -1413,6 +1443,12 @@ var _private = {
         if (model) {
             model.setHasMoreData(hasMoreData);
         }
+    },
+    notifyIfDragging(self, eName, itemData, nativeEvent){
+        const model = self.getViewModel();
+        if (model.getDragEntity() || model.getDragItemData()) {
+            self._notify(eName, [itemData, nativeEvent]);
+        }
     }
 };
 
@@ -1437,6 +1473,8 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _groupingLoader: null,
+
     _isMounted: false,
 
     _savedStartIndex: 0,
@@ -1543,6 +1581,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
             }
 
+            if (newOptions.groupProperty) {
+                self._groupingLoader = new GroupingLoader({});
+            }
+
             if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
                 self._viewModelConstructor = newOptions.viewModelConstructor;
                 if (receivedData) {
@@ -1643,7 +1685,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.onScrollHide(this);
     },
 
-    viewportResizeHandler(_: SyntheticEvent<Event>, viewportHeight: number, viewportRect): void {
+    viewportResizeHandler(_: SyntheticEvent<Event>, viewportHeight: number, viewportRect: number): void {
         const container = this._container[0] || this._container;
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
         this._viewPortSize = viewportHeight;
@@ -1665,10 +1707,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const itemsCount = this._listViewModel && this._listViewModel.getCount();
         const hasMoreData = (direction) => this._sourceController && this._sourceController.hasMoreData(direction);
         const showShadowByNavigation = _private.needShowShadowByNavigation(this._options.navigation, itemsCount);
+        const showShadowByPortionedSearch = _private.needShowShadowByPortionedSearch(this);
 
         this._notify('updateShadowMode', [{
             top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || showShadowByNavigation && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+            bottom: (placeholderSizes.bottom || showShadowByNavigation && showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -1713,14 +1756,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     getSourceController: function() {
         return this._sourceController;
-    },
-
-    _onActivated: function() {
-        this._isActive = true;
-    },
-
-    _onDeactivated: function() {
-        this._isActive = false;
     },
 
     _afterMount: function() {
@@ -1770,7 +1805,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
-            this._listViewModel.setCollapsedGroups(newOptions.collapsedGroups);
+            GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
         }
 
         if (newOptions.keyProperty !== this._options.keyProperty) {
@@ -1910,6 +1945,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._sourceController) {
             this._sourceController.destroy();
+        }
+
+        if (this._groupingLoader) {
+            this._groupingLoader.destroy();
         }
 
         if (this._scrollPagingCtr) {
@@ -2091,9 +2130,23 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.reload(this, this._options).addCallback(getData);
     },
 
-    _onGroupClick: function(e, item, baseEvent) {
+    _onGroupClick: function(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
-            this._listViewModel.toggleGroup(item);
+            const collection = this._listViewModel;
+            if (this._options.groupProperty) {
+                const groupingLoader = this._groupingLoader;
+                const needExpandGroup = !collection.isGroupExpanded(groupId);
+                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                    const source = this._options.source;
+                    const filter = this._options.filter;
+                    const sorting = this._options.sorting;
+                    groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
+                        GroupingController.toggleGroup(collection, groupId);
+                    });
+                    return;
+                }
+            }
+            GroupingController.toggleGroup(collection, groupId);
         }
     },
 
@@ -2353,12 +2406,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
+        _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
+        _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
     },
-    _sortingChanged: function(event, propName, sortingType) {
-        var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
+    _sortingChanged: function(event, propName) {
+        var newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
     },
@@ -2461,9 +2516,6 @@ BaseControl.getDefaultOptions = function() {
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
         stickyHeader: true,
-        selectionStrategy: {
-           name: 'Controls/operations:FlatSelectionStrategy'
-        },
         virtualScrollMode: 'remove'
     };
 };
