@@ -18,12 +18,14 @@ type TChangeSelectionType = 'selectAll'|'unselectAll'|'toggleAll';
 
 var _private = {
     notifyAndUpdateSelection: function(self, options) {
-        let
-            itemsSelectedCount = self._multiselection.getCount(),
+        const
+            selectionCount = self._multiselection.getCount(),
             oldSelectedKeys = options.selectedKeys,
             oldExcludedKeys = options.excludedKeys,
-            newSelectedKeys = itemsSelectedCount === 0 ? [] : self._multiselection.selectedKeys,
-            newExcludedKeys = itemsSelectedCount === 0 ? [] : self._multiselection.excludedKeys,
+            // selectionCount будет равен нулю, если в списке не отмечено ни одного элемента
+            // или после выделения всех записей через "отметить всё", пользователь руками снял чекбоксы со всех записей
+            newSelectedKeys = selectionCount === 0 ? [] : self._multiselection.selectedKeys,
+            newExcludedKeys = selectionCount === 0 ? [] : self._multiselection.excludedKeys,
             selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
             excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
 
@@ -55,7 +57,7 @@ var _private = {
          4) Прокидывать событие в Container/Scroll.
          Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
          */
-       self._notify('listSelectedKeysCountChanged', [itemsSelectedCount], {bubbling: true});
+       self._notify('listSelectedKeysCountChanged', [selectionCount], {bubbling: true});
        self._multiselection.updateSelectionForRender();
     },
 
