@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
-import {moneyOptions, moneyUseGrouping, moneyValue} from 'Controls/_decorator/ActualAPI';
+import {moneyOptions, moneyUseGrouping, moneyValue, moneyStyle} from 'Controls/_decorator/ActualAPI';
 import numberToString from 'Controls/Utils/Formatting/numberToString';
 import splitIntoTriads from 'Controls/Utils/splitIntoTriads';
 //@ts-ignore
@@ -135,6 +135,11 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         }
 
         return this._parsedNumber.number;
+    }
+
+    private _getStyleOptions(options: IMoneyOptions) {
+        const actualOptions = moneyStyle(options);
+        
     }
 
     private _changeState(options: IMoneyOptions, useLogging: boolean): boolean {
