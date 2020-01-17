@@ -650,6 +650,7 @@ var _private = {
                self._options.dataLoadErrback,
                filter
             );
+            self._hasLoadedData = true;
         }
     },
 
@@ -864,11 +865,12 @@ var _private = {
                 // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                 if (self._sourceController) {
                     hasMoreData = {
-                        up: self._sourceController.hasMoreData('up'),
-                        down: self._sourceController.hasMoreData('down')
+                        up: self._sourceController.hasMoreData('up') || self._hasLoadedData,
+                        down: self._sourceController.hasMoreData('down') || self._hasLoadedData
                     };
                 }
                 self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
+                self._hasLoadedData = false;
             }
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
@@ -1507,6 +1509,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _resetScrollAfterReload: false,
     _scrollPageLocked: false,
+    _hasLoadedData: false,
 
     _itemReloaded: false,
     _itemActionsInitialized: false,
