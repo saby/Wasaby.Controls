@@ -3,6 +3,7 @@ import Deferred = require('Core/Deferred');
 import Constants = require('Controls/Constants');
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
+import {delay} from 'Types/function';
 import 'css!theme?Controls/editableArea';
 import 'css!theme?Controls/list';
 
@@ -61,6 +62,15 @@ var
             });
          }
          self._editObject.acceptChanges();
+      },
+      /**
+       * Завершить редактирование и сохранить изменения дождавшись синхронизации VDOM.
+       * @remark
+       * В поле ввода данные могут измениться, на момент завершения редактирования. Чтобы
+       * данные были актуальны требуется отложить завершение редактирования.
+       */
+      delayCommitEdit: function (self): void {
+         delay(self.commitEdit.bind(self));
       }
    };
 
@@ -124,7 +134,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
 
    _onDeactivatedHandler: function () {
       if (!this._options.readOnly && this._isEditing && !this._options.toolbarVisibility) {
-         this.commitEdit();
+         _private.delayCommitEdit(this);
       }
    },
 
@@ -132,7 +142,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       if (this._isEditing) {
          switch (event.nativeEvent.keyCode) {
             case 13: // Enter
-               this.commitEdit();
+               _private.delayCommitEdit(this);
                break;
             case 27: // Esc
                this.cancelEdit();
