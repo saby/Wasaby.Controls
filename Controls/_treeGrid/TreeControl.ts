@@ -412,6 +412,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _updateExpandedItemsAfterReload: false,
     _notifyHandler: tmplNotify,
     constructor: function(cfg) {
+        this._nodesSourceControllers = _private.getNodesSourceControllers(this);
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
         if (typeof cfg.root !== 'undefined') {
             this._root = cfg.root;
