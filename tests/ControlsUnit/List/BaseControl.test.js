@@ -620,11 +620,12 @@ define([
             navigation: {
                source: 'page',
                sourceConfig: {
-                  pageSize: 3,
+                  pageSize: 2,
                   page: 0,
                   hasMore: false
                }
-            }
+            },
+            searchValue: 'test'
          };
 
          var ctrl = new lists.BaseControl(cfg);
@@ -645,12 +646,13 @@ define([
          assert.equal(ctrl._loadingState, 'down');
          await loadPromise;
          assert.isTrue(portionSearchTimerReseted);
-         assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+         assert.isFalse(portionSearchReseted);
+         assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
 
-         loadPromise = assert.equal(ctrl._loadingState, 'down');
+         loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
          assert.isTrue(portionSearchReseted);
       });
