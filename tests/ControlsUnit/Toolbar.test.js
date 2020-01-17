@@ -352,7 +352,7 @@ define(
                         groupTemplate: 'groupTemplate',
                         groupingKeyCallback: 'groupingKeyCallback',
                         groupProperty: undefined,
-                        footerTemplate: undefined
+                        menuFooterTemplate: undefined
                      }
                   };
                assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf), config);
