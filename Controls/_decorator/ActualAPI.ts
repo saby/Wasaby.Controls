@@ -49,11 +49,9 @@ export function moneyUseGrouping(delimiters?: boolean, useGrouping?: boolean, us
 
     return useGrouping;
 }
-export function moneyStyle(options: {style?: string, fontSize?: string, fontColorStyle?: string}, useLogging: boolean = false): {fontColorStyle?: string, fontSize?: string} {
+export function moneyStyle(options: {style?: string, fontSize?: string, fontColorStyle?: string}): {fontColorStyle?: string, fontSize?: string} {
     if ('style' in options) {
-        if (useLogging) {
-            Logger.warn('Controls.decorator:Money - опция style устарела, используйте опции fontSize и fontColorStyle.');
-        }
+        Logger.warn('Controls.decorator:Money - опция style устарела, используйте опции fontSize и fontColorStyle.');
         return styleOptions(options.style);
     }
     return {fontColorStyle: options.fontColorStyle, fontSize: options.fontSize};
