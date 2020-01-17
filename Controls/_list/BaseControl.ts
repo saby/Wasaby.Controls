@@ -458,7 +458,7 @@ var _private = {
             _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
 
             if (self._options.searchValue) {
-                _private.loadToDirectionWithSearchValueEnded(self);
+                _private.loadToDirectionWithSearchValueEnded(self, addedItems);
             }
 
             if (self._options.virtualScrolling && self._isMounted) {
@@ -961,11 +961,11 @@ var _private = {
         _private.getPortionedSearch(self).startSearch();
     },
 
-    loadToDirectionWithSearchValueEnded(self): void {
+    loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
         const portionedSearch = _private.getPortionedSearch(self);
         if (!self._sourceController.hasMoreData('down')) {
             portionedSearch.reset();
-        } else {
+        } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
         }
     },
