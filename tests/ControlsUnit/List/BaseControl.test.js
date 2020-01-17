@@ -4647,6 +4647,12 @@ define([
          };
          let instance = new lists.BaseControl(cfg);
          let cfgClone = { ...cfg };
+         let portionSearchReseted = false;
+
+         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
+         instance._portionedSearch.reset = () => {
+            portionSearchReseted = true;
+         };
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
@@ -4661,13 +4667,16 @@ define([
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
 
+         portionSearchReseted = false;
          cfgClone = { ...cfg };
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
       });
 
       it('_beforeMount with PrefetchProxy in source', function() {
