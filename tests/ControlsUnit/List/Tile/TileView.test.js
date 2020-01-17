@@ -531,8 +531,7 @@ define(['Controls/_tile/TileView/TileView',
 
       it('_onItemMouseMove', function() {
          var
-            isTouch,
-            shouldProcessHover = true,
+            shouldProcessHover,
             count = 0,
             event = {},
             originFn = tileView._calculateHoveredItemPosition;
@@ -541,13 +540,10 @@ define(['Controls/_tile/TileView/TileView',
             count++;
          };
 
-         TileView._private.isTouch = function() {
-            return isTouch;
-         };
          TileView._private.shouldProcessHover = () => shouldProcessHover;
 
          tileView._listModel.setHoveredItem({key: 1});
-         isTouch = false;
+         shouldProcessHover = true;
          tileView._onItemMouseMove(event, {key: 1});
          assert.equal(count, 0);
          assert.equal(tileView._listModel.getHoveredItem().key, 1);
@@ -556,25 +552,17 @@ define(['Controls/_tile/TileView/TileView',
          assert.equal(count, 1);
 
          tileView._listModel.setHoveredItem(null);
-         isTouch = true;
+         shouldProcessHover = false;
          tileView._onItemMouseMove({}, {key: 2});
          assert.equal(count, 1);
          assert.isNull(tileView._listModel.getHoveredItem());
 
          tileView._listModel.setHoveredItem(null);
-         isTouch = false;
+         shouldProcessHover = true;
          tileView._onItemMouseMove({}, {key: 3});
          assert.equal(count, 2);
          tileView._onItemMouseMove({}, {key: 3});
          assert.equal(count, 3);
-
-         tileView._listModel.setHoveredItem(null);
-         isTouch = false;
-         shouldProcessHover = false;
-         tileView._onItemMouseMove({}, {key: 3});
-         assert.equal(count, 1);
-         tileView._onItemMouseMove({}, {key: 3});
-         assert.equal(count, 1);
 
          tileView._calculateHoveredItemPosition = originFn;
       });
