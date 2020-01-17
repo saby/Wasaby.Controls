@@ -48,6 +48,7 @@ class View extends Control<IViewOptions> implements IView {
 
     readonly '[Controls/_spoiler/IView]': boolean = true;
     readonly '[Controls/_spoiler/IHeading]': boolean = true;
+    readonly '[Controls/_interface/IFontSize]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
 
     static getDefaultOptions(): Partial<IViewOptions> {
