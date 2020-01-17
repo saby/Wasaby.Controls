@@ -86,27 +86,20 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         return expanded !== this._options.expanded;
     }
 
-    private _setCaption(options: IHeadingOptions): void {
-        this._caption = Heading._calcCaption(options);
-    }
-
-    private _setStateByExpanded(expanded: boolean): void {
-        this._icon = Heading._calcIcon(expanded);
-        this._view = Heading._calcView(expanded);
-    }
-
     protected _beforeMount(options?: IHeadingOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._setCaption(options);
-        this._setStateByExpanded(options.expanded);
+        this._caption = Heading._calcCaption(options);
+        this._icon = Heading._calcIcon(options.expanded);
+        this._view = Heading._calcView(options.expanded);
         return super._beforeMount(options, contexts, receivedState);
     }
 
     protected _beforeUpdate(options?: IHeadingOptions, contexts?: any): void {
         if (this._needChangeCaption(options)) {
-            this._setCaption(options);
+            this._caption = Heading._calcCaption(options);
         }
         if (this._needChangeStateByExpanded(options.expanded)) {
-            this._setStateByExpanded(options.expanded);
+            this._icon = Heading._calcIcon(options.expanded);
+            this._view = Heading._calcView(options.expanded);
         }
         super._beforeUpdate(options, contexts);
     }
