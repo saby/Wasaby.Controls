@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls-demo/Toolbar/menuFooterTemplate/menuFooterTemplate');
+import template = require('wml!Controls-demo/Toolbar/popupFooterTemplate/popupFooterTemplate');
 import 'css!Controls-demo/Controls-demo';
 import source = require('Types/source');
 

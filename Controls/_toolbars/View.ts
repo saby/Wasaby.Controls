@@ -87,11 +87,11 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
      */
     additionalProperty?: string;
     /**
-     * @name Controls/_toolbars/IToolbarOptions#menuFooterTemplate
+     * @name Controls/_toolbars/IToolbarOptions#popupFooterTemplate
      * @cfg {String|Function} Шаблон футера дополнительного меню тулбара.
-     * @demo Controls-demo/Toolbar/menuFooterTemplate/Index
+     * @demo Controls-demo/Toolbar/popupFooterTemplate/Index
      */
-    menuFooterTemplate?: String | Function;
+    popupFooterTemplate?: String | Function;
 
 }
 
@@ -160,7 +160,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
                 groupingKeyCallback: options.groupingKeyCallback,
                 additionalProperty: options.additionalProperty,
                 itemTemplateProperty: options.itemTemplateProperty,
-                footerTemplate: options.menuFooterTemplate
+                footerTemplate: options.popupFooterTemplate
             },
             target: this._children.menuTarget
         };
