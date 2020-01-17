@@ -32,6 +32,22 @@ type TStyle =
     | 'noAccentRegistry'
     | 'error';
 
+type TFontColorStyle =
+    'default'
+    | 'secondary'
+    | 'noAccent'
+    | 'error'
+    | 'done'
+    | 'primary'
+    | 'attention'
+    | 'disabled';
+
+type IFontSize =
+    'm'
+    | 's'
+    | 'l'
+    | 'lb';
+
 interface IPaths {
     integer: string;
     fraction: string;
@@ -61,6 +77,18 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
      * @demo Controls-demo/Decorator/Money/Style/Index
      */
     style: TStyle;
+    /**
+     * Стиль цвета числа в денежном формате
+     * @type TFontColorStyle
+     * @default default
+     */
+    fontColorStyle: TFontColorStyle;
+    /**
+     * Размер шрифта
+     * @type IFontSize
+     * @default m
+     */
+    fontSize: IFontSize;
 }
 
 /**
@@ -84,6 +112,9 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
     private _useGrouping: boolean;
     private _tooltip: string;
     private _parsedNumber: IPaths;
+    private _fontColorStyle: string;
+    private _fontSize: string;
+
 
     readonly '[Controls/_interface/ITooltip]' = true;
     readonly '[Controls/_interface/INumberFormat]' = true;
@@ -191,7 +222,9 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
             value: null,
             style: 'default',
             useGrouping: true,
-            showEmptyDecimals: true
+            showEmptyDecimals: true,
+            fontColorStyle: 'default',
+            fontSize: 'm'
         };
     }
 
@@ -202,13 +235,19 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
                 'group', 'basicRegistry', 'noBasicRegistry',
                 'accentRegistry', 'noAccentRegistry', 'error'
             ]),
+            fontColorStyle: descriptor(String).oneOf([
+                'default', 'secondary', 'noAccent', 'error', 'done', 'primary', 'attention', 'disabled'
+            ]),
+            fontSize: descriptor(String).oneOf([
+                'm', 's', 'l', 'lb'
+            ]),
             useGrouping: descriptor(Boolean),
             showEmptyDecimals: descriptor(Boolean),
             value: descriptor(String, Number, null)
         };
     }
 
-    static _theme = ['Controls/decorator']
+    static _theme = ['Controls/decorator'];
 }
 
 export default Money;

@@ -49,6 +49,16 @@ export function moneyUseGrouping(delimiters?: boolean, useGrouping?: boolean, us
 
     return useGrouping;
 }
+export function moneyStyle(options: {style?: string, fontSize?: string, fontColorStyle?: string}, useLogging: boolean = false): string {
+    if ('style' in options) {
+        if (useLogging) {
+            Logger.warn('Controls.decorator:Money - опция style устарела, используйте опции fontSize и fontColorStyle.');
+        }
+        return {
+            tooltip: options.title
+        }
+    }
+}
 
 export function moneyValue(number: number, value?: string | number | null, useLogging: boolean = false): string | number | null {
     if (typeof number === 'number') {
