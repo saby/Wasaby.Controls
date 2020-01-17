@@ -9,6 +9,7 @@
                 source="{{_getMemorySource(_defaultItems)}}"
                 popupClassName="controls-Toolbar_test_popupClassName"
                 itemsSpacing="big"
+                iconSize="m"
         >
             <ws:popupFooterTemplate>
                 <div class="controls-text-label_theme-{{_options.theme}}"

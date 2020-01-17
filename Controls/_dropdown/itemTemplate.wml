@@ -3,7 +3,7 @@
       <div class="{{itemData.getPropValue(itemData.item, displayProperty || 'title') ?
                      'controls-DropdownList__icon controls-DropdownList__icon-' + iconAlign + '_theme-' + _options.theme}}
                      controls-icon_style-{{(itemData.getPropValue(itemData.item, 'readOnly') ? 'readonly' : itemData.iconStyle) + '_theme-' + _options.theme}}
-                     {{itemData.item.iconSize ? 'controls-icon_size-' + itemData.item.iconSize + '_theme-' + _options.theme}}
+                     {{itemData.iconSize ? 'controls-icon_size-' + itemData.iconSize + '_theme-' + _options.theme}}
                      {{iconPadding[itemData.getPropValue(itemData.item, parentProperty)]}} {{itemData.icon}} theme_{{_options.theme}}"></div>
    </ws:if>
 </ws:template>
