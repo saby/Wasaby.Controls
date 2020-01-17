@@ -532,6 +532,7 @@ define(['Controls/_tile/TileView/TileView',
       it('_onItemMouseMove', function() {
          var
             isTouch,
+            shouldProcessHover = true,
             count = 0,
             event = {},
             originFn = tileView._calculateHoveredItemPosition;
@@ -543,6 +544,8 @@ define(['Controls/_tile/TileView/TileView',
          TileView._private.isTouch = function() {
             return isTouch;
          };
+         TileView._private.shouldProcessHover = () => shouldProcessHover;
+
          tileView._listModel.setHoveredItem({key: 1});
          isTouch = false;
          tileView._onItemMouseMove(event, {key: 1});
@@ -564,6 +567,14 @@ define(['Controls/_tile/TileView/TileView',
          assert.equal(count, 2);
          tileView._onItemMouseMove({}, {key: 3});
          assert.equal(count, 3);
+
+         tileView._listModel.setHoveredItem(null);
+         isTouch = false;
+         shouldProcessHover = false;
+         tileView._onItemMouseMove({}, {key: 3});
+         assert.equal(count, 1);
+         tileView._onItemMouseMove({}, {key: 3});
+         assert.equal(count, 1);
 
          tileView._calculateHoveredItemPosition = originFn;
       });
