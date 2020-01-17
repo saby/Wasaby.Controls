@@ -76,22 +76,33 @@ export default class HierarchySelection extends Selection {
 
    selectAll(): void {
       let rootId: TKey = this._getRoot();
+      let rootInExcluded = this._excludedKeys.includes(rootId);
 
       this.select([rootId]);
       this._removeSelectionChildren(rootId);
-      this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
+
+      if (!rootInExcluded) {
+         this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [rootId]);
+      }
    }
 
    unselectAll(): void {
-      let rootId: TKey = this._getRoot();
-      let metaData: Object = this._getItems().getMetaData();
-
-      if (metaData[FIELD_ENTRY_PATH]) {
-         this.unselect([rootId]);
-         this._removeSelectionChildren(rootId);
-         this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
+      if (this._withEntryPath()) {
+         this._unselectAllInRoot();
       } else {
          super.unselectAll();
+      }
+   }
+
+   private _unselectAllInRoot() {
+      let rootId: TKey = this._getRoot();
+      let rootInExcluded = this._excludedKeys.includes(rootId);
+
+      this.unselect([rootId]);
+      this._removeSelectionChildren(rootId);
+
+      if (rootInExcluded) {
+         this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
       }
    }
 
@@ -103,14 +114,16 @@ export default class HierarchySelection extends Selection {
          childrenIdsRoot: TKeys = getChildrenIds(rootId, this._listModel, this._hierarchyRelation);
 
       if (this._selectionStrategy.isAllSelected(this.getSelection(), rootId, this._listModel, this._hierarchyRelation)) {
-         this.unselect([rootId]);
-         this._removeSelectionChildren(rootId);
-         this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
+         this._unselectAllInRoot();
          this.select(ArraySimpleValuesUtil.getIntersection(childrenIdsRoot, oldExcludedKeys));
       } else {
          this.selectAll();
-         // toDO Надо делать через getIntersection, если пришел ENTRY_PATH
-         this.unselect(oldSelectedKeys);
+         if (this._withEntryPath()) {
+            // Если используется entryPath, то в childrenIdsRoot будут все выбранные дети, даже не загруженные
+            this.unselect(ArraySimpleValuesUtil.getIntersection(childrenIdsRoot, oldSelectedKeys));
+         } else {
+            this.unselect(oldSelectedKeys);
+         }
       }
    }
 
@@ -128,5 +141,9 @@ export default class HierarchySelection extends Selection {
 
    private _removeSelectionChildren(nodeId: Tkey): void {
       removeSelectionChildren(this.getSelection(), nodeId, this._listModel, this._hierarchyRelation);
+   }
+
+   private _withEntryPath(): boolean {
+      return FIELD_ENTRY_PATH in this._getItems().getMetaData();
    }
 }
