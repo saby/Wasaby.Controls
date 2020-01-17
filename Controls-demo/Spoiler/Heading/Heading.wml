@@ -1,11 +1,5 @@
 <div class="controlsDemo__wrapper">
    <div class="controlsDemo__cell">
-      <Controls.spoiler:Heading captions="Заголовок" expanded="{{true}}"/>
-   </div>
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:Heading captions="Заголовок" expanded="{{false}}"/>
-   </div>
-   <div class="controlsDemo__cell">
       <Controls.spoiler:Heading captions="Заголовок" bind:expanded="_expanded1"/>
    </div>
    <div class="controlsDemo__cell">
@@ -14,17 +8,12 @@
    </div>
    <div class="controlsDemo__cell">
       <Controls.spoiler:Heading captions="Заголовок" bind:expanded="_expanded3"
-                                captionPosition="right"/>
-   </div>
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:Heading captions="Заголовок" bind:expanded="_expanded4"
-                                fontSize="m"/>
-   </div>
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:Heading captions="Заголовок" bind:expanded="_expanded5"
                                 fontSize="l"/>
    </div>
    <div class="controlsDemo__cell">
-      <Controls.spoiler:Heading captions="{{['Свернуть', 'Развернуть']}}" bind:expanded="_expanded6"/>
+      <Controls.spoiler:Heading captions="{{['Свернуть', 'Развернуть']}}" bind:expanded="_expanded4"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.spoiler:Heading bind:expanded="_expanded5"/>
    </div>
 </div>

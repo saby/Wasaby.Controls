@@ -1,46 +1,29 @@
 <div class="controlsDemo__wrapper">
    <div class="controlsDemo__cell">
-      <Controls.spoiler:View captions="Заголовок" expanded="{{true}}">
-         <div>Первая контентная область</div>
-      </Controls.spoiler:View>
-   </div>
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:View captions="Заголовок" expanded="{{false}}">
-         <div>Вторая контентная область</div>
-      </Controls.spoiler:View>
-   </div>
-   <div class="controlsDemo__cell">
       <Controls.spoiler:View captions="Заголовок" bind:expanded="_expanded1">
-         <div>Третья контентная область</div>
+         <div>Первая контентная область</div>
       </Controls.spoiler:View>
    </div>
    <div class="controlsDemo__cell">
       <Controls.spoiler:View captions="Заголовок" bind:expanded="_expanded2"
                                 captionPosition="left">
-         <div>Четвертая контентная область</div>
+         <div>Вторая контентная область</div>
       </Controls.spoiler:View>
    </div>
    <div class="controlsDemo__cell">
       <Controls.spoiler:View captions="Заголовок" bind:expanded="_expanded3"
-                                captionPosition="right">
-         <div>Пятая контентная область</div>
-      </Controls.spoiler:View>
-   </div>
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:View captions="Заголовок" bind:expanded="_expanded4"
-                                fontSize="m">
-         <div>Шестая контентная область</div>
-      </Controls.spoiler:View>
-   </div>
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:View captions="Заголовок" bind:expanded="_expanded5"
                                 fontSize="l">
-         <div>Седьмая контентная область</div>
+         <div>Третья контентная область</div>
       </Controls.spoiler:View>
    </div>
    <div class="controlsDemo__cell">
-      <Controls.spoiler:View captions="{{['Свернуть', 'Развернуть']}}" bind:expanded="_expanded6">
-         <div>Восьмая контентная область</div>
+      <Controls.spoiler:View captions="{{['Свернуть', 'Развернуть']}}" bind:expanded="_expanded4">
+         <div>Четвертая контентная область</div>
+      </Controls.spoiler:View>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.spoiler:View bind:expanded="_expanded5">
+         <div>Пятая контентная область</div>
       </Controls.spoiler:View>
    </div>
 </div>
