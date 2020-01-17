@@ -1,4 +1,5 @@
 import {Logger} from 'UI/Utils';
+import {isEqual} from 'Types/object';
 import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
@@ -77,8 +78,15 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     readonly '[Controls/_spoiler/IHeading]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
 
-    private _needChangeCaption({captions: newCaptions}: IHeadingOptions): boolean {
-        return newCaptions !== this._options.captions;
+    private _needChangeCaption(options: IHeadingOptions): boolean {
+        const {captions, expanded} = options;
+        const {captions: oldCaptions} = this._options;
+
+        if (captions instanceof Array && oldCaptions instanceof Array) {
+            return !isEqual(captions, oldCaptions) || this._needChangeStateByExpanded(expanded);
+        } else {
+            return captions !== oldCaptions;
+        }
     }
 
     private _needChangeStateByExpanded(expanded: boolean): boolean {
@@ -91,10 +99,9 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
 
             if (captions.length !== requiredCountCaptions) {
                 Logger.error('Неверное количество заголовков.');
-                this._caption = '';
-                return;
             }
-            this._caption = expanded ? captions[0] : captions[1];
+            const caption: string | undefined = expanded ? captions[0] : captions[1];
+            this._caption = Heading._calcCaption(caption);
         } else {
             this._caption = captions;
         }
@@ -126,6 +133,14 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     }
 
     static _theme: string[] = ['Controls/spoiler', 'Controls/Classes'];
+
+    private static _calcCaption(caption?: string): string {
+        if (typeof caption === 'string') {
+            return  caption;
+        }
+
+        return '';
+    }
 
     static getDefaultOptions(): Partial<IHeadingOptions> {
         return {

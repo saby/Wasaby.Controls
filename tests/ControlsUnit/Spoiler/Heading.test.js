@@ -56,19 +56,29 @@ define(
                assert.equal(ctrl._caption, '');
             });
             it('Test6', function() {
+               options.expanded = false;
+               options.captions = [];
+               ctrl._beforeMount(options);
+
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
+               assert.equal(ctrl._caption, '');
+            });
+            it('Test7', function() {
                options.captions = ['Заголовок1'];
                ctrl._beforeMount(options);
 
                assert.equal(ctrl._icon, 'CollapseLight');
                assert.equal(ctrl._view, 'expanded');
-               assert.equal(ctrl._caption, '');
+               assert.equal(ctrl._caption, 'Заголовок1');
             });
             it('Test7', function() {
-               options.captions = ['Заголовок1', 'Заголовок2', 'Заголовок3'];
+               options.expanded = false;
+               options.captions = ['Заголовок1'];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'CollapseLight');
-               assert.equal(ctrl._view, 'expanded');
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
          });
