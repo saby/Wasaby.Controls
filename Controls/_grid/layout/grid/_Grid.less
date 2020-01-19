@@ -81,6 +81,10 @@
    align-items: baseline; //baseline align by default;
 }
 
+.controls-Grid__sorting-button {
+   display: inline-flex;
+}
+
 .controls-Grid__row-header__content_baseline_theme-@{themeName}:before {
    content: '\200b';
    font-size: @font-size_Grid-header-cell-baseline;
@@ -207,11 +211,12 @@
       > .controls-itemActionsV__container {
          > .controls-itemActionsV {
             display: inline-block;
+            visibility: visible;
          }
       }
       .controls-BreadCrumbsView__menu__dots {
          background-color: @background-color_Grid-row_hover;
-         box-shadow: -1px 0px 9px 14px @background-color_Grid-row_hover;
+         box-shadow: -15px 2px 4px -6px @background-color_Grid-row_hover;
       }
    }
 

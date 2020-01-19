@@ -16,10 +16,12 @@
         <ws:partial template="loadingIndicator"/>
     </ws:if>
     <ws:if data="{{_showContinueSearchButton}}">
-        <div class="controls-BaseControl__continueSearch" on:click="_continueSearch()">
-            <div class="controls-BaseControl__continueSearch_caption">
+        <div class="controls-BaseControl__continueSearch ws-flexbox ws-align-items-center">
+            <div class="controls-BaseControl__continueSearch_wrapper ws-inline-flexbox" on:click="_continueSearch()">
                 <div class="controls-BaseControl__continueSearch_icon controls-icon icon-Search2 controls-icon_size-m_theme-{{_options.theme}}"></div>
-                {[Продолжить поиск]}
+                <div class="controls-BaseControl__continueSearch_caption">
+                    {[Продолжить поиск]}
+                </div>
             </div>
         </div>
     </ws:if>
@@ -107,6 +109,49 @@
             viewModel="{{_listViewModel}}"
             observeScroll="{{_needScrollCalculation}}"
             scope="{{_options}}">
+        <Controls._list.EditInPlace
+                name="editInPlace"
+                editingConfig="{{_options.editingConfig}}"
+                on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+                on:afterBeginEdit="_onAfterBeginEdit()"
+                on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+                on:afterEndEdit="_onAfterEndEdit()"
+                listModel="{{_listViewModel}}"
+                multiSelectVisibility="{{_options.multiSelectVisibility}}"
+                errorController="{{ __errorController }}"
+                source="{{_sourceController}}"
+                useNewModel="{{ _options.useNewModel }}">
+        <Controls._list.ItemActions.ItemActionsControl
+                on:commitActionClick="_commitEditActionHandler()"
+                on:cancelActionClick="_cancelEditActionHandler()"
+                on:menuActionsClick="_showActionsMenu()"
+                on:menuActionClick="_showActionMenu()"
+                on:actionClick="_notifyHandler('actionClick')"
+                toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
+                name="itemActions"
+                style="{{_options.style}}"
+                listModel="{{_listViewModel}}"
+                menuIsShown="{{_menuIsShown}}"
+                fix1177894367="{{_options.fix1177894367}}"
+                actionMenuIsShown="{{_actionMenuIsShown}}"
+                itemPadding="{{_options.itemPadding}}"
+                itemActions="{{_options.itemActions}}"
+                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+                itemActionsProperty="{{_options.itemActionsProperty}}"
+                itemActionsPosition="{{_options.itemActionsPosition}}"
+                useNewModel="{{ _options.useNewModel }}">
+        <Controls._list.Swipe.SwipeControl
+                on:menuActionsClick="_showActionsMenu()"
+                on:closeSwipe="_closeSwipe()"
+                showEditArrow="{{_options.showEditArrow}}"
+                editArrowVisibilityCallback="{{_options.editArrowVisibilityCallback}}"
+                actionAlignment="{{_options.actionAlignment}}"
+                actionCaptionPosition="{{_options.actionCaptionPosition}}"
+                viewName="{{ _options.viewName }}"
+                listModel="{{_listViewModel}}"
+                itemActions="{{_options.itemActions}}"
+                name="swipeControl"
+                useNewModel="{{ _options.useNewModel }}">
         <ws:partial
                 name="{{name}}"
                 template="{{ _options.content }}"
@@ -142,6 +187,9 @@
                 <ws:partial template="emptyTemplateIf"/>
             </ws:emptyTemplate>
         </ws:partial>
+        </Controls._list.Swipe.SwipeControl>
+        </Controls._list.ItemActions.ItemActionsControl>
+        </Controls._list.EditInPlace>
     </Controls._list.ScrollContainer>
 </ws:template>
 <ws:template name="fullView">
@@ -175,52 +223,6 @@
 
             <ws:partial template="fullView" name="listView" attr:class="{{_showActions ? 'controls-BaseControl_showActions'}}"/>
 
-            <Controls._list.EditInPlace
-                ws:content="listView"
-                name="editInPlace"
-                editingConfig="{{_options.editingConfig}}"
-                on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-                on:afterBeginEdit="_onAfterBeginEdit()"
-                on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-                on:afterEndEdit="_onAfterEndEdit()"
-                listModel="{{_listViewModel}}"
-                multiSelectVisibility="{{_options.multiSelectVisibility}}"
-                errorController="{{ __errorController }}"
-                source="{{_sourceController}}"
-                useNewModel="{{ _options.useNewModel }}"/>
-            <Controls._list.ItemActions.ItemActionsControl
-                ws:content="listView"
-                on:commitActionClick="_commitEditActionHandler()"
-                on:cancelActionClick="_cancelEditActionHandler()"
-                on:menuActionsClick="_showActionsMenu()"
-                on:menuActionClick="_showActionMenu()"
-                on:actionClick="_notifyHandler('actionClick')"
-                toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
-                name="itemActions"
-                style="{{_options.style}}"
-                listModel="{{_listViewModel}}"
-                menuIsShown="{{_menuIsShown}}"
-                fix1177894367="{{_options.fix1177894367}}"
-                actionMenuIsShown="{{_actionMenuIsShown}}"
-                itemPadding="{{_options.itemPadding}}"
-                itemActions="{{_options.itemActions}}"
-                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-                itemActionsProperty="{{_options.itemActionsProperty}}"
-                itemActionsPosition="{{_options.itemActionsPosition}}"
-                useNewModel="{{ _options.useNewModel }}"/>
-            <Controls._list.Swipe.SwipeControl
-                ws:content="listView"
-                on:menuActionsClick="_showActionsMenu()"
-                on:closeSwipe="_closeSwipe()"
-                showEditArrow="{{_options.showEditArrow}}"
-                editArrowVisibilityCallback="{{_options.editArrowVisibilityCallback}}"
-                actionAlignment="{{_options.actionAlignment}}"
-                actionCaptionPosition="{{_options.actionCaptionPosition}}"
-                viewName="{{ _options.viewName }}"
-                listModel="{{_listViewModel}}"
-                itemActions="{{_options.itemActions}}"
-                name="swipeControl"
-                useNewModel="{{ _options.useNewModel }}"/>
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
 
@@ -232,12 +234,13 @@
                 <Controls.paging:Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" scope1="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.paging:Paging>
             </div>
         </ws:if>
-        <Controls.dropdown:Opener
+        <Controls.popup:Sticky
             name="itemActionsOpener"
-            keyProperty="id"
-            menuStyle="cross">
+            template="Controls/dropdownPopup:List"
+            closeOnOutsideClick="{{true}}"
+            actionOnScroll="close">
             <ws:fittingMode vertical="overflow"/>
-        </Controls.dropdown:Opener>
+        </Controls.popup:Sticky>
         <ws:if data="{{ _items && _needSelectionController }}">
             <!--TODO: нельзя сюда добавлять Container.Async, т.к. события перестают стрелять. Ошибка на эту тему: https://online.sbis.ru/opendoc.html?guid=e3ad3d85-8cfc-4dc4-84dd-84b08db05e26-->
             <Controls._list.BaseControl.SelectionController
@@ -253,7 +256,9 @@
                 listModel="{{ _listViewModel }}"
                 filter="{{ _options.filter }}"
                 source="{{ _options.source }}"
-                selectionStrategy="{{_options.selectionStrategy}}"
+                nodesSourceControllers="{{_options.nodesSourceControllers}}"
+                selectDescendants="{{_options.selectDescendants}}"
+                selectAncestors="{{_options.selectAncestors}}"
                 on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                 on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
             />
