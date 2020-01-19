@@ -161,6 +161,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.isTrue(instance.canScrollToItem(1));
             assert.isFalse(instance.canScrollToItem(18));
             assert.isTrue(instance.canScrollToItem(19));
+            assert.isTrue(instance.canScrollToItem(20));
             assert.isFalse(instance.canScrollToItem(21));
         });
         it('recalcFromScrollTop', () => {

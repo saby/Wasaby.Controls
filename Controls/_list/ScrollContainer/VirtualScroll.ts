@@ -222,7 +222,9 @@ export default class VirtualScrollController {
     canScrollToItem(index: number): boolean {
         let canScroll = false;
 
-        if (this.startIndex <= index && this.stopIndex > index) {
+        if (this.stopIndex === this.itemsCount) {
+            canScroll = true;
+        } else if (this.startIndex <= index && this.stopIndex > index) {
             if (this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index] ||
                 this.itemsCount - 1 === index) {
                 canScroll = true;
