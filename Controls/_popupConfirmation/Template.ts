@@ -47,10 +47,11 @@ import * as template from 'wml!Controls/_popupConfirmation/template';
  */
 
 type TStyle = 'default' | 'danger' | 'secondary' | 'success' ;
+type TSize = 's' | 'l';
 interface IConfirmationTemplate extends IControlOptions {
    bodyContentTemplate?: TemplateFunction;
    footerContentTemplate?: TemplateFunction;
-   size: 's' | 'l' | 'm' | string;
+   size: TSize | string;
    style: TStyle;
 }
 
