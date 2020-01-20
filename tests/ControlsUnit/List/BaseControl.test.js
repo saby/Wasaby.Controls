@@ -4464,6 +4464,9 @@ define([
          };
          instance._itemMouseMove({}, {});
          assert.equal(eName, 'draggingItemMouseMove');
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
@@ -4490,6 +4493,10 @@ define([
          instance._listViewModel.getDragItemData = () => ({});
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'draggingItemMouseLeave');
+         eName = null;
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {
