@@ -1,4 +1,4 @@
-import {IConfirmationFooterOptions} from 'Controls/_popup/interface/IConfirmationFooter';
+import {IConfirmationFooterOptions, IConfirmationFooter} from 'Controls/_popup/interface/IConfirmationFooter';
 import {IControlOptions} from 'UI/Base';
 
 /**
@@ -17,7 +17,7 @@ export interface IConfirmationOptions extends IConfirmationFooterOptions, IContr
     zIndex?: number; //todo: Compatible
 }
 
-export interface IConfirmationOpener {
+export interface IConfirmationOpener extends IConfirmationFooter {
     open(templateOptions: IConfirmationOptions): Promise<boolean | undefined>;
     readonly '[Controls/_popup/interface/IConfirmationOpener]': boolean;
 }
