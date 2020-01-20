@@ -596,8 +596,8 @@ define([
          });
 
          var dataLoadFired = false;
-         var portionSearchCanceled = false;
-
+         var portionSearchTimerReseted = false;
+         var portionSearchReseted = false;
          var beforeLoadToDirectionCalled = false;
 
          var cfg = {
@@ -620,11 +620,12 @@ define([
             navigation: {
                source: 'page',
                sourceConfig: {
-                  pageSize: 3,
+                  pageSize: 2,
                   page: 0,
                   hasMore: false
                }
-            }
+            },
+            searchValue: 'test'
          };
 
          var ctrl = new lists.BaseControl(cfg);
@@ -634,23 +635,26 @@ define([
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
-         ctrl._portionedSearch._clearTimer = function () {
-            portionSearchCanceled = true;
+         ctrl._portionedSearch.resetTimer = () => {
+            portionSearchTimerReseted = true;
+         };
+         ctrl._portionedSearch.reset = () => {
+            portionSearchReseted = true;
          };
 
-         const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down');
          await loadPromise;
-         assert.isTrue(portionSearchCanceled);
-         assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+         assert.isTrue(portionSearchTimerReseted);
+         assert.isFalse(portionSearchReseted);
+         assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
 
-         ctrl._portionedSearch.shouldSearch = () => false;
-         portionSearchCanceled = false;
-         await lists.BaseControl._private.loadToDirection(ctrl, 'down');
-         assert.isFalse(portionSearchCanceled);
+         loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         await loadPromise;
+         assert.isTrue(portionSearchReseted);
       });
 
       it('prepareFooter', function() {
@@ -1368,6 +1372,13 @@ define([
                bottom: 0
             });
             assert.deepEqual({top: 'visible', bottom: 'visible'}, control.lastNotifiedArguments[0]);
+            control._sourceController._hasMoreData = {up: false, down: true};
+            control._showContinueSearchButton = true;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
          });
          it('with demand navigation', () => {
             control._options.navigation.view = 'maxCount';
@@ -1531,6 +1542,41 @@ define([
                stateNext: 'normal',
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+            // Прокрутили в конец списка, sourceController только что загрузил последнюю пачку данных
+            // (hasMoreData возвращает false),
+            // то кнопки пейджинга в этот момент дизейблить не нужно: до конца еще не до сколлили
+            ctrl._sourceController.hasMoreData = () => false;
+            ctrl._hasLoadedData = true;
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'normal',
+               stateEnd: 'normal'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+            // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
+            // и еще раз доскроллили до конца, то самое время блокировать кнопки.
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 400,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'disabled',
+               stateEnd: 'disabled'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'middle'
+            });
 
             lists.BaseControl._private.onScrollHide(ctrl);
             assert.deepEqual({
@@ -4647,6 +4693,12 @@ define([
          };
          let instance = new lists.BaseControl(cfg);
          let cfgClone = { ...cfg };
+         let portionSearchReseted = false;
+
+         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
+         instance._portionedSearch.reset = () => {
+            portionSearchReseted = true;
+         };
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
@@ -4661,13 +4713,16 @@ define([
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
 
+         portionSearchReseted = false;
          cfgClone = { ...cfg };
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
       });
 
       it('_beforeMount with PrefetchProxy in source', function() {
