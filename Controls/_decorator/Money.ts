@@ -9,35 +9,23 @@ import splitIntoTriads from 'Controls/Utils/splitIntoTriads';
 import * as template from 'wml!Controls/_decorator/Money/Money';
 
 type TValue = string | number | null;
-/**
- * @typedef TStyle
- * @variant default
- * @variant accentResults
- * @variant noAccentResults
- * @variant group
- * @variant basicRegistry
- * @variant noBasicRegistry
- * @variant accentRegistry
- * @variant noAccentRegistry
- * @variant error
- */
-type TStyle =
-    'default'
-    | 'accentResults'
-    | 'noAccentResults'
-    | 'group'
-    | 'basicRegistry'
-    | 'noBasicRegistry'
-    | 'accentRegistry'
-    | 'noAccentRegistry'
-    | 'error';
 
 interface IPaths {
     integer: string;
     fraction: string;
     number: string;
 }
-
+/**
+ * @typedef TFontColorStyle
+ * @variant default
+ * @variant secondary
+ * @variant noAccent
+ * @variant error
+ * @variant done
+ * @variant primary
+ * @variant attention
+ * @variant disabled
+ */
 type TFontColorStyle =
     'default'
     | 'secondary'
@@ -47,12 +35,16 @@ type TFontColorStyle =
     | 'primary'
     | 'attention'
     | 'disabled';
-
+/**
+ * @typedef IFontSize
+ * @variant l
+ * @variant m
+ * @variant s
+ */
 type IFontSize =
     'm'
     | 's'
-    | 'l'
-    | 'lb';
+    | 'l';
 
 /**
  * @interface Controls/_decorator/Money/IMoneyOptions
@@ -71,22 +63,17 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
      */
     value: TValue;
     /**
-     * Стиль отображения числа в денежном формате.
-     * @type TStyle
-     * @default default
-     * @demo Controls-demo/Decorator/Money/Style/Index
-     */
-    style: TStyle;
-    /**
      * Стиль цвета числа в денежном формате
      * @type TFontColorStyle
      * @default default
+     * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
      */
     fontColorStyle: TFontColorStyle;
     /**
      * Размер шрифта
      * @type IFontSize
      * @default m
+     * @demo Controls-demo/Decorator/Money/FontSize/Index
      */
     fontSize: IFontSize;
 
