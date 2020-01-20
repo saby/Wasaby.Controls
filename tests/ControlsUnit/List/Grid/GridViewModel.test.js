@@ -1,4 +1,4 @@
-define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone', 'Controls/_grid/utils/GridLayoutUtil', 'Env/Env'], function(gridMod, cMerge, collection, entity, clone, GridLayoutUtil, Env) {
+define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 'Core/core-clone', 'Controls/_grid/utils/GridLayoutUtil', 'Env/Env', 'ControlsUnit/CustomAssert'], function(gridMod, cMerge, collection, entity, clone, GridLayoutUtil, Env, customAssert) {
    var
       theme = 'default',
       gridData = [
@@ -345,7 +345,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                paramsWithoutMultiselect = {
                   columns: gridColumns,
-                  multiSelectVisibility: false,
+                  multiSelectVisibility: 'hidden',
                   itemPadding: {
                      left: 'XL',
                      right: 'L',
@@ -357,7 +357,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                },
                paramsWithMultiselect = {
                   columns: [{}].concat(gridColumns),
-                  multiSelectVisibility: true,
+                  multiSelectVisibility: 'visible',
                   itemPadding: {
                      left: 'XL',
                      right: 'L',
@@ -378,35 +378,60 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                   ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                   ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_null_theme-default controls-Grid__cell_spacingBackButton_with_multiSelection_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default'];
-            assert.equal(expectedResultWithoutMultiselect[0],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
-            assert.equal(expectedResultWithoutMultiselect[1],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 1}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
-            assert.equal(expectedResultWithoutMultiselect[2],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2, rowIndex: 0}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
-            assert.equal(expectedResultWithoutMultiselect[3],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
 
-            assert.equal(expectedResultWithMultiselect[0],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
-            assert.equal(expectedResultWithMultiselect[1],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1, rowIndex: 0}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
-            assert.equal(expectedResultWithMultiselect[2],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2, rowIndex: 0}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
-            assert.equal(expectedResultWithMultiselect[3],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3, rowIndex: 0}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
-            assert.equal(expectedResultWithMultiselect[4],
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0}), theme),
+                expectedResultWithoutMultiselect[0],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
 
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 1}), theme),
+                expectedResultWithoutMultiselect[1],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2, rowIndex: 0}), theme),
+                expectedResultWithoutMultiselect[2],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true}), theme),
+                expectedResultWithoutMultiselect[3],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0}), theme),
+                expectedResultWithMultiselect[0],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1, rowIndex: 0}), theme),
+                expectedResultWithMultiselect[1],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2, rowIndex: 0}), theme),
+                expectedResultWithMultiselect[2],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3, rowIndex: 0}), theme),
+                expectedResultWithMultiselect[3],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true}), theme),
+                expectedResultWithMultiselect[4],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
          });
          it('getPaddingCellClasses for breadCrumbs in table layout should not add margin class', function () {
             const columnsWithMultiSelect = [{}].concat(clone(gridColumns));
@@ -414,7 +439,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             const paramsWithMultiselect = {
                columns: columnsWithMultiSelect,
-               multiSelectVisibility: true,
+               multiSelectVisibility: 'visible',
                isBreadCrumbs: true,
                isTableLayout: true,
                itemPadding: {
@@ -807,19 +832,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                      'controls-Grid__row-cell_selected__first-default_theme-default'
                };
             current.isNotFullGridSupport = true;
-
-            assert.equal(expected.withMarker,
-               gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
-
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+                expected.withMarker,
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
             current.markerVisibility = 'hidden';
             current.resetColumnIndex();
 
-            assert.equal(expected.withoutMarker,
-               gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
-
-
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+                expected.withoutMarker,
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
          });
          it('should update last item after append items', function () {
             var
@@ -955,26 +980,41 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'controls-Grid__row-cell_withRowSeparator_notLastRow_theme-default controls-Grid__cell_spacingLeft_theme-default ' +
                   'controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__row-cell_rowSpacingTop_l_theme-default ' +
                   'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'];
-            assert.equal(expectedResult[0],
-               gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+                expectedResult[0],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
             current.goToNextColumn();
-            assert.equal(expectedResult[1],
-               gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+                expectedResult[1],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
             current.goToNextColumn();
-            assert.equal(expectedResult[2],
-               gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+                expectedResult[2],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
             current.goToNextColumn();
-            assert.equal(expectedResult[3],
-               gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+                expectedResult[3],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
 
             current.isSelected = false;
-            assert.equal(expectedResult[4],
-               gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+
+            customAssert.isClassesEqual(
+                gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+                expectedResult[4],
+                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+            );
          });
       });
       describe('getCurrent', function() {
@@ -988,10 +1028,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             assert.deepEqual({
-               left: 'XL',
-               right: 'L',
-               top: 'L',
-               bottom: 'L'
+               left: 'xl',
+               right: 'l',
+               top: 'l',
+               bottom: 'l'
             }, current.itemPadding, 'Incorrect value "current.itemPadding".');
             assert.isTrue(current.rowSeparatorVisibility, 'Incorrect value "current.rowSeparatorVisibility".');
          });
@@ -1023,7 +1063,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                assert.equal(expectedData.item[expectedData.displayProperty],
                   checkedColumn.getPropValue(checkedColumn.item, expectedData.displayProperty), 'Incorrect value "" when checking columns.');
                assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
-               assert.equal(expectedData.cellClasses, checkedColumn.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
+               customAssert.isClassesEqual(checkedColumn.cellClasses, expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
             }
 
             var gridColumn;
@@ -1628,44 +1668,45 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
             const offset = gridViewModel._maxEndRow ? (gridViewModel._maxEndRow - 1 ) * gridViewModel._headerCellMinHeight : 0;
-            assert.deepEqual({
+            const assertColumn = (columnData, params) => {
+               assert.equal(columnData.index, params.index);
+               assert.deepEqual(columnData.column, params.column);
+               customAssert.isClassesEqual(columnData.cellClasses, params.cellClasses);
+            };
+
+            assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: {},
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__results-cell-checkbox_theme-default',
                index: 0,
-            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value first call "getCurrentResultsColumn()".');
-
+            });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after first call "getCurrentResultsColumn()".');
             gridViewModel.goToNextResultsColumn();
 
-            assert.deepEqual({
+            assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: gridColumns[0],
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default',
                index: 1
-            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value second call "getCurrentResultsColumn()".');
-
+            });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after second call "getCurrentResultsColumn()".');
             gridViewModel.goToNextResultsColumn();
 
-            assert.deepEqual({
+            assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: gridColumns[1],
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__row-cell__content_halign_right controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default',
                index: 2
-            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value third call "getCurrentResultsColumn()".');
-
+            });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after third call "getCurrentResultsColumn()".');
             gridViewModel.goToNextResultsColumn();
 
-            assert.deepEqual({
+            assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: gridColumns[2],
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__row-cell__content_halign_right controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l_theme-default',
                index: 3
-            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value fourth call "getCurrentResultsColumn()".');
-
+            });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after fourth call "getCurrentResultsColumn()".');
-
             gridViewModel.goToNextResultsColumn();
-            assert.equal(false, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after last call "getCurrentResultsColumn()".');
 
+            assert.equal(false, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after last call "getCurrentResultsColumn()".');
             assert.equal(4, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" before "resetResultsColumns()".');
             gridViewModel.resetResultsColumns();
             assert.equal(0, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" after "resetResultsColumns()".');
@@ -1955,16 +1996,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
 
          });
-         it('getPaddingForCheckBox', function() {
-            const itemPadding = {
-                  top: 'L',
-                  bottom: 'L'
-               }
-            const resultTop = ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
-            const resultBottom = ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
-            assert.equal(resultTop + resultBottom, gridMod.GridViewModel._private.getPaddingForCheckBox({ theme, itemPadding }));
-         })
-
 
          it('getColumnAlignGroupStyles', function () {
 
