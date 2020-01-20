@@ -36,7 +36,7 @@ export function styleOptions(style: string): { fontColorStyle?: string, fontSize
             return {
                 fontColorStyle: 'noAccent', fontSize: 'l'
             };
-        case ' error':
+        case 'error':
             return {
                 fontColorStyle: 'error', fontSize: 'm'
             };
