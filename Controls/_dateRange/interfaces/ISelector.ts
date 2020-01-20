@@ -24,3 +24,8 @@
        * @see Documentation: Inputs
        * @see Documentation: bind
    */
+
+   /**
+    * @name Controls/dateLitePopup/IDateLitePopup#popupClassName
+    * @cfg {String} Класс, который навешивается на всплывающее окно.
+    */

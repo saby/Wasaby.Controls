@@ -87,6 +87,7 @@ var Component = BaseSelector.extend({
             className,
             templateOptions: {
                 ...getOptions.getTemplateOptions(this),
+                popupClassName: this._options.popupClassName,
                 headerType: 'link',
                 captionFormatter: this._options.captionFormatter,
                 emptyCaption: this._options.emptyCaption,
