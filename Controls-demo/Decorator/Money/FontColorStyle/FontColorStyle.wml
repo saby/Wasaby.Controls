@@ -1,0 +1,34 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=default</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="default"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=secondary</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="secondary"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=noAccent</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="noAccent"/>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=error</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="error" />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=done</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="done" />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=primary</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="primary" />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=attention</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="attention" />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=disabled</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="disabled" />
+    </div>
+</div>

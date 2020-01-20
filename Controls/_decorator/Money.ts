@@ -245,7 +245,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         };
     }
 
-    static _theme = ['Controls/decorator']
+    static _theme = ['Controls/decorator'];
 }
 
 export default Money;
