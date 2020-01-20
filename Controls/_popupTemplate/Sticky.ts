@@ -14,6 +14,7 @@ import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from "./interf
  * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
  * @demo Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/Index
  * @demo Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/Index
+ * @demo Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/Index
  */
 
 class StickyTemplate extends Control<IPopupTemplateBaseOptions> implements IPopupTemplateBase {
