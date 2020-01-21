@@ -353,7 +353,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
       if (_private.isSearchValueChanged(this, newOptions.searchValue)) {
          _private.startSearch(this, newOptions.searchValue);
-         if (!_private.isInputSearchValueShort(this, this._inputSearchValue)) {
+         if (this._searchValue !== newOptions.searchValue) {
             _private.setInputSearchValue(this, newOptions.searchValue);
          }
       }
