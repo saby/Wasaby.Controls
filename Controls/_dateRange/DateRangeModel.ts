@@ -7,7 +7,6 @@ import DateUtil = require('Controls/Utils/Date');
  * Модель для контролов, предназначенных для ввода диапазона дат.
  * @author Красильников А.С.
  * @public
- * @noShow
  */
 
 /*
