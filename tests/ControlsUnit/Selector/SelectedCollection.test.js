@@ -30,6 +30,7 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection'], function(lookup,
          let isOpenedInfoBox = false;
          let isNotifyCloseInfoBox = false;
 
+         collection._getCounterWidth = () => 0;
          collection._children = {
             infoBox: {
                isOpened: () => isOpenedInfoBox
