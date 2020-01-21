@@ -224,7 +224,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
                 'default', 'secondary', 'noAccent', 'error', 'done', 'primary', 'attention', 'disabled'
             ]),
             fontSize: descriptor(String).oneOf([
-                'm', 's', 'l', 'lb'
+                'm', 's', 'l'
             ]),
             useGrouping: descriptor(Boolean),
             showEmptyDecimals: descriptor(Boolean),
