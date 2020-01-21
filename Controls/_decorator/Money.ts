@@ -19,13 +19,16 @@ interface IPaths {
 interface IFontSize {
     fontSize?: string;
 }
+interface IFontWeight {
+    fontWeight?: string;
+}
 
 /**
  * @interface Controls/_decorator/Money/IMoneyOptions
  * @public
  * @author Красильников А.С.
  */
-export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontColorStyleOptions {
+export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontColorStyleOptions, IFontWeight, IFontSize {
     number: number;
     delimiters: boolean;
     title: string;
@@ -38,14 +41,24 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
     value: TValue;
     /**
      * @name Controls/_decorator/Money#fontSize
+     * @cfg {String} Размер шрифта.
      * @variant l
      * @variant m
      * @variant s
+     * @default m
      * @demo Controls-demo/Decorator/Money/FontSize/Index
      */
     /**
      * @name Controls/_interface/IFontColorStyle#fontColorStyle
      * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
+     */
+    /**
+     * @name Controls/_decorator/Money#fontWeight
+     * @cfg {String} Начертание шрифта.
+     * @variant bold
+     * @variant normal
+     * @default normal
+     * @demo Controls-demo/Decorator/Money/FontWeight/Index
      */
 }
 
@@ -61,6 +74,7 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
  * @mixes Controls/interface:INumberFormat
  * @mixes Controls/_decorator/Money/IMoneyOptions
  * @implements Controls/_decorator/Money/IFontSize
+ * @implements Controls/_decorator/Money/IFontWeight
  *
  * @public
  * @demo Controls-demo/Decorator/Money/Index
@@ -75,6 +89,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
     private _fontColorStyle: string;
     private _fontSize: string;
     private _readOnly: boolean;
+    private _fontWeight: string;
     private _styleOptions: IMoneyOptions;
 
     readonly '[Controls/_interface/ITooltip]' = true;
@@ -143,6 +158,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         this._tooltip = this._getTooltip(options);
         this._fontSize = this._getStyle(options).fontSize;
         this._fontColorStyle = this._getStyle(options).fontColorStyle;
+        this._fontWeight = this._getStyle(options).fontWeight;
         this._readOnly = this._getStyle(options).readOnly;
     }
 
@@ -153,6 +169,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         this._tooltip = this._getTooltip(newOptions);
         this._fontSize = this._getStyle(newOptions).fontSize;
         this._fontColorStyle = this._getStyle(newOptions).fontColorStyle;
+        this._fontWeight = this._getStyle(newOptions).fontWeight;
         this._readOnly = this._getStyle(newOptions).readOnly;
     }
 
@@ -195,6 +212,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
             value: null,
             fontColorStyle: 'default',
             fontSize: 'm',
+            fontWeight: 'normal',
             useGrouping: true,
             showEmptyDecimals: true
         };
@@ -204,6 +222,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         return {
             fontColorStyle: descriptor(String),
             fontSize: descriptor(String),
+            fontWeight: descriptor(String),
             useGrouping: descriptor(Boolean),
             showEmptyDecimals: descriptor(Boolean),
             value: descriptor(String, Number, null)

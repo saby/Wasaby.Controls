@@ -1,6 +1,8 @@
 <span class="controls-DecoratorMoney_theme_{{_options.theme}}" title="{{_tooltip}}">
-    <span class="controls-DecoratorMoney__integer_theme_{{_options.theme}}_fontSize_{{_fontSize}} controls-DecoratorMoney__integer_theme_{{_options.theme}}_fontColorStyle_{{_fontColorStyle}}
-    controls-DecoratorMoney__integer_theme_{{_options.theme}}_readonly_{{_readOnly}}">
+    <span class="controls-DecoratorMoney__integer_theme_{{_options.theme}}_fontSize_{{_fontSize}}
+     controls-DecoratorMoney__integer_theme_{{_options.theme}}_fontWeight_{{_fontWeight}}
+     controls-DecoratorMoney__integer_theme_{{_options.theme}}_fontColorStyle_{{_fontColorStyle}}
+     controls-DecoratorMoney__integer_theme_{{_options.theme}}_readonly_{{_readOnly}}">
         {{_parsedNumber.integer}}
     </span>
     <ws:if data="{{_isDisplayFractionPath(_parsedNumber.fraction, _options.showEmptyDecimals)}}">
