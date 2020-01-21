@@ -653,6 +653,7 @@ var _private = {
                self._options.dataLoadErrback,
                filter
             );
+            self._hasLoadedData = true;
         }
     },
 
@@ -867,12 +868,13 @@ var _private = {
                 // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                 if (self._sourceController) {
                     hasMoreData = {
-                        up: self._sourceController.hasMoreData('up'),
-                        down: self._sourceController.hasMoreData('down')
+                        up: self._sourceController.hasMoreData('up') || self._hasLoadedData,
+                        down: self._sourceController.hasMoreData('down') || self._hasLoadedData
                     };
                 }
                 self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
             }
+            self._hasLoadedData = false;
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
@@ -977,7 +979,7 @@ var _private = {
     },
 
     needShowShadowByPortionedSearch(self): boolean {
-        return !self._showContinueSearchButton;
+        return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -1533,6 +1535,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _resetScrollAfterReload: false,
     _scrollPageLocked: false,
+    _hasLoadedData: false,
 
     _itemReloaded: false,
     _itemActionsInitialized: false,
@@ -1853,8 +1856,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
+            _private.getPortionedSearch(self).reset();
 
-            //return result here is for unit tests
+            // return result here is for unit tests
             return _private.reload(self, newOptions);
         }
 
@@ -2406,11 +2410,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
-        _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
+        if (this._options.itemsDragNDrop) {
+            _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
+        }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
-        _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+        if (this._options.itemsDragNDrop) {
+            _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+        }
     },
     _sortingChanged: function(event, propName) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName);

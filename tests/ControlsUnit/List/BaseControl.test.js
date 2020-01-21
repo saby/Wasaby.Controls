@@ -1372,13 +1372,6 @@ define([
                bottom: 0
             });
             assert.deepEqual({top: 'visible', bottom: 'visible'}, control.lastNotifiedArguments[0]);
-            control._sourceController._hasMoreData = {up: false, down: true};
-            control._showContinueSearchButton = true;
-            updateShadowModeHandler.call(control, event, {
-               top: 0,
-               bottom: 0
-            });
-            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
          });
          it('with demand navigation', () => {
             control._options.navigation.view = 'maxCount';
@@ -1391,6 +1384,30 @@ define([
             assert.deepEqual({top: 'auto', bottom: 'visible'}, control.lastNotifiedArguments[0]);
 
             control._listViewModel.count = 12;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
+         });
+
+         it('depend on portionedSearch', () => {
+            control._sourceController._hasMoreData = {up: false, down: true};
+            control._showContinueSearchButton = true;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
+
+            control._showContinueSearchButton = false;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'visible'}, control.lastNotifiedArguments[0]);
+
+            control._portionedSearch.abortSearch();
             updateShadowModeHandler.call(control, event, {
                top: 0,
                bottom: 0
@@ -1542,6 +1559,41 @@ define([
                stateNext: 'normal',
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+            // Прокрутили в конец списка, sourceController только что загрузил последнюю пачку данных
+            // (hasMoreData возвращает false),
+            // то кнопки пейджинга в этот момент дизейблить не нужно: до конца еще не до сколлили
+            ctrl._sourceController.hasMoreData = () => false;
+            ctrl._hasLoadedData = true;
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'normal',
+               stateEnd: 'normal'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+            // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
+            // и еще раз доскроллили до конца, то самое время блокировать кнопки.
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 400,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'disabled',
+               stateEnd: 'disabled'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'middle'
+            });
 
             lists.BaseControl._private.onScrollHide(ctrl);
             assert.deepEqual({
@@ -4429,6 +4481,9 @@ define([
          };
          instance._itemMouseMove({}, {});
          assert.equal(eName, 'draggingItemMouseMove');
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
@@ -4455,6 +4510,10 @@ define([
          instance._listViewModel.getDragItemData = () => ({});
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'draggingItemMouseLeave');
+         eName = null;
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {
@@ -4658,6 +4717,12 @@ define([
          };
          let instance = new lists.BaseControl(cfg);
          let cfgClone = { ...cfg };
+         let portionSearchReseted = false;
+
+         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
+         instance._portionedSearch.reset = () => {
+            portionSearchReseted = true;
+         };
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
@@ -4672,13 +4737,16 @@ define([
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
 
+         portionSearchReseted = false;
          cfgClone = { ...cfg };
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
       });
 
       it('_beforeMount with PrefetchProxy in source', function() {
