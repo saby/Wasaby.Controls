@@ -15,8 +15,17 @@ interface IPaths {
     fraction: string;
     number: string;
 }
+interface IFontColorStyle {
+    fontColorStyle?: string;
+}
 /**
- * @typedef TFontColorStyle
+ * Интерфейс для поддержки разных цветов текста.
+ *
+ * @interface Controls/_decorator/Money/IFontColorStyle
+ * @public
+ */
+/**
+ * @name Controls/_decorator/Money/IFontColorStyle#fontColorStyle
  * @variant default
  * @variant secondary
  * @variant noAccent
@@ -25,33 +34,32 @@ interface IPaths {
  * @variant primary
  * @variant attention
  * @variant disabled
+ * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
  */
-type TFontColorStyle =
-    'default'
-    | 'secondary'
-    | 'noAccent'
-    | 'error'
-    | 'done'
-    | 'primary'
-    | 'attention'
-    | 'disabled';
+
+interface IFontSize {
+    fontSize?: string;
+}
 /**
- * @typedef IFontSize
+ * Интерфейс размера шрифта.
+ *
+ * @interface Controls/_decorator/Money/IFontSize
+ * @public
+ */
+/**
+ * @name Controls/_decorator/Money/IFontSize#fontSize
  * @variant l
  * @variant m
  * @variant s
+ * @demo Controls-demo/Decorator/Money/FontSize/Index
  */
-type IFontSize =
-    'm'
-    | 's'
-    | 'l';
 
 /**
  * @interface Controls/_decorator/Money/IMoneyOptions
  * @public
  * @author Красильников А.С.
  */
-export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions {
+export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontSize, IFontColorStyle {
     number: number;
     delimiters: boolean;
     title: string;
@@ -62,21 +70,6 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
      * @demo Controls-demo/Decorator/Money/Value/Index
      */
     value: TValue;
-    /**
-     * Стиль цвета числа в денежном формате
-     * @type TFontColorStyle
-     * @default default
-     * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
-     */
-    fontColorStyle: TFontColorStyle;
-    /**
-     * Размер шрифта
-     * @type IFontSize
-     * @default m
-     * @demo Controls-demo/Decorator/Money/FontSize/Index
-     */
-    fontSize: IFontSize;
-
 }
 
 /**
@@ -220,12 +213,8 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
 
     static getOptionTypes() {
         return {
-            fontColorStyle: descriptor(String).oneOf([
-                'default', 'secondary', 'noAccent', 'error', 'done', 'primary', 'attention', 'disabled'
-            ]),
-            fontSize: descriptor(String).oneOf([
-                'm', 's', 'l'
-            ]),
+            fontColorStyle: descriptor(String),
+            fontSize: descriptor(String),
             useGrouping: descriptor(Boolean),
             showEmptyDecimals: descriptor(Boolean),
             value: descriptor(String, Number, null)
