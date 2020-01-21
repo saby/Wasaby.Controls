@@ -979,7 +979,7 @@ var _private = {
     },
 
     needShowShadowByPortionedSearch(self): boolean {
-        return !self._showContinueSearchButton;
+        return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -2410,11 +2410,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
-        _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
+        if (this._options.itemsDragNDrop) {
+            _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
+        }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
-        _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+        if (this._options.itemsDragNDrop) {
+            _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+        }
     },
     _sortingChanged: function(event, propName) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName);

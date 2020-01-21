@@ -1372,13 +1372,6 @@ define([
                bottom: 0
             });
             assert.deepEqual({top: 'visible', bottom: 'visible'}, control.lastNotifiedArguments[0]);
-            control._sourceController._hasMoreData = {up: false, down: true};
-            control._showContinueSearchButton = true;
-            updateShadowModeHandler.call(control, event, {
-               top: 0,
-               bottom: 0
-            });
-            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
          });
          it('with demand navigation', () => {
             control._options.navigation.view = 'maxCount';
@@ -1391,6 +1384,30 @@ define([
             assert.deepEqual({top: 'auto', bottom: 'visible'}, control.lastNotifiedArguments[0]);
 
             control._listViewModel.count = 12;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
+         });
+
+         it('depend on portionedSearch', () => {
+            control._sourceController._hasMoreData = {up: false, down: true};
+            control._showContinueSearchButton = true;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
+
+            control._showContinueSearchButton = false;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'visible'}, control.lastNotifiedArguments[0]);
+
+            control._portionedSearch.abortSearch();
             updateShadowModeHandler.call(control, event, {
                top: 0,
                bottom: 0
@@ -4464,6 +4481,9 @@ define([
          };
          instance._itemMouseMove({}, {});
          assert.equal(eName, 'draggingItemMouseMove');
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
@@ -4490,6 +4510,10 @@ define([
          instance._listViewModel.getDragItemData = () => ({});
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'draggingItemMouseLeave');
+         eName = null;
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {
