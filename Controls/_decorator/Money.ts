@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip} from 'Controls/interface';
+import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip, IFontColorStyle, IFontColorStyleOptions} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
 import {moneyOptions, moneyUseGrouping, moneyValue, moneyStyle} from 'Controls/_decorator/ActualAPI';
@@ -15,43 +15,20 @@ interface IPaths {
     fraction: string;
     number: string;
 }
-/**
- * @typedef TFontColorStyle
- * @variant default
- * @variant secondary
- * @variant noAccent
- * @variant error
- * @variant done
- * @variant primary
- * @variant attention
- * @variant disabled
- */
-type TFontColorStyle =
-    'default'
-    | 'secondary'
-    | 'noAccent'
-    | 'error'
-    | 'done'
-    | 'primary'
-    | 'attention'
-    | 'disabled';
-/**
- * @typedef IFontSize
- * @variant l
- * @variant m
- * @variant s
- */
-type IFontSize =
-    'm'
-    | 's'
-    | 'l';
+
+interface IFontSize {
+    fontSize?: string;
+}
+interface IFontWeight {
+    fontWeight?: string;
+}
 
 /**
  * @interface Controls/_decorator/Money/IMoneyOptions
  * @public
  * @author Красильников А.С.
  */
-export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions {
+export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontColorStyleOptions, IFontWeight, IFontSize {
     number: number;
     delimiters: boolean;
     title: string;
@@ -63,20 +40,26 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
      */
     value: TValue;
     /**
-     * Стиль цвета числа в денежном формате
-     * @type TFontColorStyle
-     * @default default
-     * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
-     */
-    fontColorStyle: TFontColorStyle;
-    /**
-     * Размер шрифта
-     * @type IFontSize
+     * @name Controls/_decorator/Money#fontSize
+     * @cfg {String} Размер шрифта.
+     * @variant l
+     * @variant m
+     * @variant s
      * @default m
      * @demo Controls-demo/Decorator/Money/FontSize/Index
      */
-    fontSize: IFontSize;
-
+    /**
+     * @name Controls/_interface/IFontColorStyle#fontColorStyle
+     * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
+     */
+    /**
+     * @name Controls/_decorator/Money#fontWeight
+     * @cfg {String} Начертание шрифта.
+     * @variant bold
+     * @variant normal
+     * @default normal
+     * @demo Controls-demo/Decorator/Money/FontWeight/Index
+     */
 }
 
 /**
@@ -87,8 +70,11 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
  * @extends UI/Base:Control
  *
  * @mixes Controls/interface:ITooltip
+ * @mixes Controls/interface:IFontColorStyle
  * @mixes Controls/interface:INumberFormat
  * @mixes Controls/_decorator/Money/IMoneyOptions
+ * @implements Controls/_decorator/Money/IFontSize
+ * @implements Controls/_decorator/Money/IFontWeight
  *
  * @public
  * @demo Controls-demo/Decorator/Money/Index
@@ -102,6 +88,9 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
     private _parsedNumber: IPaths;
     private _fontColorStyle: string;
     private _fontSize: string;
+    private _readOnly: boolean;
+    private _fontWeight: string;
+    private _styleOptions: IMoneyOptions;
 
     readonly '[Controls/_interface/ITooltip]' = true;
     readonly '[Controls/_interface/INumberFormat]' = true;
@@ -114,6 +103,12 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         return showEmptyDecimals || value !== '.00';
     }
 
+    private _getStyle(options: IMoneyOptions) {
+       if (!this._styleOptions) {
+           this._styleOptions = moneyStyle(options);
+       }
+       return this._styleOptions;
+    }
     private _getTooltip(options: IMoneyOptions): string {
         const actualOptions = moneyOptions(options);
 
@@ -161,8 +156,10 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         this._changeState(options, true);
         this._parsedNumber = this._parseNumber();
         this._tooltip = this._getTooltip(options);
-        this._fontSize = moneyStyle(options).fontSize;
-        this._fontColorStyle  = moneyStyle(options).fontColorStyle;
+        this._fontSize = this._getStyle(options).fontSize;
+        this._fontColorStyle = this._getStyle(options).fontColorStyle;
+        this._fontWeight = this._getStyle(options).fontWeight;
+        this._readOnly = this._getStyle(options).readOnly;
     }
 
     protected _beforeUpdate(newOptions): void {
@@ -170,8 +167,10 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
             this._parsedNumber = this._parseNumber();
         }
         this._tooltip = this._getTooltip(newOptions);
-        this._fontSize = moneyStyle(newOptions).fontSize;
-        this._fontColorStyle  = moneyStyle(newOptions).fontColorStyle;
+        this._fontSize = this._getStyle(newOptions).fontSize;
+        this._fontColorStyle = this._getStyle(newOptions).fontColorStyle;
+        this._fontWeight = this._getStyle(newOptions).fontWeight;
+        this._readOnly = this._getStyle(newOptions).readOnly;
     }
 
     private static FRACTION_LENGTH = 2;
@@ -213,6 +212,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
             value: null,
             fontColorStyle: 'default',
             fontSize: 'm',
+            fontWeight: 'normal',
             useGrouping: true,
             showEmptyDecimals: true
         };
@@ -220,12 +220,9 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
 
     static getOptionTypes() {
         return {
-            fontColorStyle: descriptor(String).oneOf([
-                'default', 'secondary', 'noAccent', 'error', 'done', 'primary', 'attention', 'disabled'
-            ]),
-            fontSize: descriptor(String).oneOf([
-                'm', 's', 'l'
-            ]),
+            fontColorStyle: descriptor(String),
+            fontSize: descriptor(String),
+            fontWeight: descriptor(String),
             useGrouping: descriptor(Boolean),
             showEmptyDecimals: descriptor(Boolean),
             value: descriptor(String, Number, null)

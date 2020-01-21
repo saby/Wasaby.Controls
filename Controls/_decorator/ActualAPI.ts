@@ -6,19 +6,19 @@
 import {Logger} from 'UI/Utils';
 import {IHighlightOptions} from 'Controls/_decorator/Highlight';
 
-export function styleOptions(style: string): { fontColorStyle?: string, fontSize?: string } {
+export function styleOptions(style: string): { fontColorStyle?: string, fontSize?: string, readOnly?: boolean, fontWeight?: string } {
     switch (style) {
         case 'accentResults':
             return {
-                fontColorStyle: 'secondary', fontSize: 'l'
+                fontColorStyle: 'secondary', fontSize: 'l', fontWeight: 'bold'
             };
         case 'noAccentResults':
             return {
-                fontColorStyle: 'noAccent', fontSize: 'l'
+                fontColorStyle: 'unaccented', fontSize: 'l', fontWeight: 'bold'
             };
         case 'group':
             return {
-                fontColorStyle: 'disabled', fontSize: 'm'
+                readOnly: true, fontSize: 'm'
             };
         case 'basicRegistry':
             return {
@@ -26,19 +26,19 @@ export function styleOptions(style: string): { fontColorStyle?: string, fontSize
             };
         case 'noBasicRegistry':
             return {
-                fontColorStyle: 'noAccent', fontSize: 'm'
+                fontColorStyle: 'unaccented', fontSize: 'm'
             };
         case 'accentRegistry':
             return {
-                fontColorStyle: 'secondary', fontSize: 'l'
+                fontColorStyle: 'secondary', fontSize: 'l', fontWeight: 'bold'
             };
         case 'noAccentRegistry':
             return {
-                fontColorStyle: 'noAccent', fontSize: 'l'
+                fontColorStyle: 'unaccented', fontSize: 'l', fontWeight: 'bold'
             };
         case 'error':
             return {
-                fontColorStyle: 'error', fontSize: 'm'
+                fontColorStyle: 'danger', fontSize: 'm', fontWeight: 'bold'
             };
         case 'default':
             return {
@@ -51,15 +51,14 @@ export function styleOptions(style: string): { fontColorStyle?: string, fontSize
     }
 }
 
-export function moneyStyle(options: {style?: string, fontSize?: string, fontColorStyle?: string}):
-    {fontColorStyle?: string, fontSize?: string} {
+export function moneyStyle(options: {style?: string, fontSize?: string, fontColorStyle?: string, fontWeight?: string, readOnly?: boolean}):
+    {fontColorStyle?: string, fontSize?: string, readOnly?: boolean, fontWeight?: string } {
     if ('style' in options) {
         Logger.warn('Controls.decorator:Money - опция style устарела, используйте опции fontSize и fontColorStyle.');
         return styleOptions(options.style);
     }
-    return {fontColorStyle: options.fontColorStyle, fontSize: options.fontSize};
+    return {fontColorStyle: options.fontColorStyle, fontSize: options.fontSize, readOnly: options.readOnly, fontWeight: options.fontWeight};
 }
-
 
 export function wrapURLsValue(text?: string, value?: string, useLogging: boolean = false): string {
     if (typeof text === 'string') {
