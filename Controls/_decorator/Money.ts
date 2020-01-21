@@ -87,11 +87,11 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         return showEmptyDecimals || value !== '.00';
     }
 
-    private getStyle(options: IMoneyOptions) {
+    /*private getStyle(options: IMoneyOptions) {
        let actualstyles = moneyStyle(options);
        return actualstyles;
 
-    }
+    }*/
     private _getTooltip(options: IMoneyOptions): string {
         const actualOptions = moneyOptions(options);
 
@@ -139,8 +139,8 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         this._changeState(options, true);
         this._parsedNumber = this._parseNumber();
         this._tooltip = this._getTooltip(options);
-        this._fontSize = this.getStyle(options).fontSize;
-        this._fontColorStyle = this.getStyle(options).fontColorStyle;
+        this._fontSize = moneyStyle(options).fontSize;
+        this._fontColorStyle = moneyStyle(options).fontColorStyle;
         this._readOnly = moneyStyle(options).readOnly;
     }
 
