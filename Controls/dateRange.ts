@@ -27,7 +27,6 @@ export {IDateRangeSelectable};
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
  * @includes IInput Controls/_dateRange/interfaces/IInput
- * @includes IInputDateTag Controls/_dateRange/interfaces/IInputDateTag
  * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
@@ -38,6 +37,7 @@ export {IDateRangeSelectable};
  * @includes RangeSelectionController Controls/_dateRange/Controllers/RangeSelectionController
  * @includes DateRangeSelectionController Controls/_dateRange/Controllers/DateRangeSelectionController
  * @includes DateRangeModel Controls/_dateRange/DateRangeModel
+ * @includes IRangeSelectable Controls/_dateRange/interfaces/IRangeSelectable
  *
  * @public
  * @author Красильников А.С.
@@ -53,7 +53,6 @@ export {IDateRangeSelectable};
  * @includes RelationWrapper Controls/_dateRange/RelationWrapper
  * @includes RelationButton Controls/_dateRange/RelationButton
  * @includes IInput Controls/_dateRange/interfaces/IInput
- * @includes IInputDateTag Controls/_dateRange/interfaces/IInputDateTag
  * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
@@ -63,6 +62,7 @@ export {IDateRangeSelectable};
  * @includes RangeSelectionController Controls/_dateRange/Controllers/RangeSelectionController
  * @includes DateRangeSelectionController Controls/_dateRange/Controllers/DateRangeSelectionController
  * @includes DateRangeModel Controls/_dateRange/DateRangeModel
+ * @includes IRangeSelectable Controls/_dateRange/interfaces/IRangeSelectable
  *
  * @public
  * @author Красильников А.С.
