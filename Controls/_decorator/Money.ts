@@ -75,6 +75,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
     private _fontColorStyle: string;
     private _fontSize: string;
     private _readOnly: boolean;
+    private _styleOptions: IMoneyOptions;
 
     readonly '[Controls/_interface/ITooltip]' = true;
     readonly '[Controls/_interface/INumberFormat]' = true;
@@ -87,11 +88,12 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         return showEmptyDecimals || value !== '.00';
     }
 
-    /*private getStyle(options: IMoneyOptions) {
-       let actualstyles = moneyStyle(options);
-       return actualstyles;
-
-    }*/
+    private _getStyle(options: IMoneyOptions) {
+       if (!this._styleOptions) {
+           this._styleOptions = moneyStyle(options);
+       }
+       return this._styleOptions;
+    }
     private _getTooltip(options: IMoneyOptions): string {
         const actualOptions = moneyOptions(options);
 
@@ -139,9 +141,9 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         this._changeState(options, true);
         this._parsedNumber = this._parseNumber();
         this._tooltip = this._getTooltip(options);
-        this._fontSize = moneyStyle(options).fontSize;
-        this._fontColorStyle = moneyStyle(options).fontColorStyle;
-        this._readOnly = moneyStyle(options).readOnly;
+        this._fontSize = this._getStyle(options).fontSize;
+        this._fontColorStyle = this._getStyle(options).fontColorStyle;
+        this._readOnly = this._getStyle(options).readOnly;
     }
 
     protected _beforeUpdate(newOptions): void {
@@ -149,9 +151,9 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
             this._parsedNumber = this._parseNumber();
         }
         this._tooltip = this._getTooltip(newOptions);
-        this._fontSize = moneyStyle(newOptions).fontSize;
-        this._fontColorStyle  = moneyStyle(newOptions).fontColorStyle;
-        this._readOnly = moneyStyle(newOptions).readOnly;
+        this._fontSize = this._getStyle(newOptions).fontSize;
+        this._fontColorStyle = this._getStyle(newOptions).fontColorStyle;
+        this._readOnly = this._getStyle(newOptions).readOnly;
     }
 
     private static FRACTION_LENGTH = 2;
