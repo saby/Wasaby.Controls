@@ -8,7 +8,7 @@
    font-weight: @font-weight_DecoratorMoney-fractional;
 }
 .controls-DecoratorMoney__integer_theme_@{themeName}_fontColorStyle {
-   @variantsColor: default, secondary, noAccent, error, done, primary, attention, disabled;
+   @variantsColor: default, secondary, primary, success, warning, danger, unaccented, link, label;
 
    .for(@variantsColor, { &_@{_item} {
       color: ~"@{color_DecoratorMoney-integer_fontColorStyle_@{_item}}";
@@ -35,4 +35,6 @@
 }
 
 
-
+.controls-DecoratorMoney__integer_theme_@{themeName}_readonly_true {
+   color: @color_DecoratorMoney-integer_readonly;
+}
