@@ -57,7 +57,7 @@
 }
 
 .controls-Search__field_theme_@{themeName}_margin {
-   margin: 0 @reset-button_offset-left_searchInput 0 @padding-left_searchInput;
+   margin: 0 @reset-button_offset-left_searchInput 0 (@padding-left_searchInput - @border-thickness_inputText);
 }
 
 .controls-Search__buttons {
@@ -112,7 +112,7 @@
 }
 
 .controls-Search__searchButton_theme_@{themeName}_position {
-   margin-right: @padding-right_searchInput;
+   margin-right: @padding-right_searchInput - @border-thickness_inputText;
 }
 
 .controls-Search__resetButton_theme_@{themeName}_position {
