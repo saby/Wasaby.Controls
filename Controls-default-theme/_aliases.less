@@ -953,12 +953,28 @@
 @header_min-height_sticky:                                                  32px;
 
 //цвет фона шапки прилипающего блока.
-@header_background-color_sticky:                                            #F8F8F8;
+@header_background-color_sticky:                                            #F4F4F4;
 
 //толщина нижней границы шапки прилипающего блока.
 @header_bottom-border-thickness_sticky:                                     @border-thickness;
-//отступы для крестика закрытия прилипающего блока.
-@close-button_padding_sticky:                                               4px;
+
+// размер шрифта шапки выпадающего списка
+@header_font-size_sticky:                                                   @font-size_l;
+
+// минимальная высота шапки выпадающего списка
+@header_min-height_sticky:                                                  32px;
+
+// горизонтальный отступ в шапке выпадающего списка
+@header_padding-horizontal_sticky:                                          12px;
+
+// отступ между кнопкой закрытия и верхней границей выпадающего списка
+@close-button_offset-top_sticky:                                            6px;
+
+// отступ между кнопкой закрытия и правой границей выпадающего списка
+@close-button_offset-right_sticky:                                          6px;
+
+// отступ между кнопкой закрытия и текстом в заголовке выпадающего списка
+@close-button_offset-left_sticky:                                           0;
 
 //КНОПКИ С ЗАЛИПАНИЕМ
 //Общие стили для кнопок с залипанием
@@ -1527,11 +1543,11 @@
 // отступ между иконкой иерарзии и текстом в меню
 @hierarchy_icon_offset-left_menu:                  6px;
 // отступ между кнопкой закрытия и верхней границей меню
-@close-button_offset-top_menu:                     6px;
+@close-button_offset-top_menu:                     6px; // должно переехать в sticky
 // отступ между кнопкой закрытия и правой границей меню
-@close-button_offset-right_menu:                   6px;
+@close-button_offset-right_menu:                   6px; // должно переехать в sticky
 // отступ между кнопкой закрытия и текстом в меню
-@close-button_offset-left_menu:                    0;
+@close-button_offset-left_menu:                    0; // должно переехать в sticky
 // размер иконки запинивания меню
 @pin-button_icon-size_menu:                        @icon-size_s;
 // отступ между кнопкой запинивания и правой границей меню
@@ -1911,4 +1927,55 @@
 //цвет иконки сброса фильтра при нажатии
 @reset-button_active_icon-color_filterView:                                 @reset-button_icon-color_filterView;
 
+//Окно подтверждения CONFIRMATION
+//толщина цветного маркера окна подтверждения
+@marker_thickness_confirmation:                                             3px;
+
+//дополнительный цвет маркера
+@secondary_marker_color_confirmation:                                       @link_text-color;
+
+//внутренние отступы диалога подтверждения
+@content_padding_confirmation:                                              32px;
+
+//внутренние отступы подвала диалога подтверждения
+@footer-content_padding_confirmation:                                       16px;
+
+//цвет фона подвала диалога подтверждения
+@footer_background-color_confirmation:                                      @footer_background-color_dialog;
+
+//толщина верхней границы подвала окна подтверждения
+@footer_top-border-thickness_confirmation:                                  @footer_top-border-thickness_dialog;
+
+//цвет верхней границы подвала окна подтверждения
+@footer_top-border-color_confirmation:                                      @footer_top-border-color_dialog;
+
+//ширина окна подтверждения размера s
+@width_s_confirmation:                                                      350px;
+
+//ширина окна подтверждения размера l
+@width_l_confirmation:                                                      440px;
+
+//размер шрифта основого текста окна подтверждения
+@message_font-size_confirmation:                                            @font-size_3xl;
+
+//цвет основного текста окна подтверждения
+@message_text-color_confirmation:                                           @text-color;
+
+//размер шрифта дополнительного текста окна подтверждения
+@details_font-size_confirmation:                                            @font-size_m;
+
+//цвет дополнительного текста окна подтверждения
+@details_text-color_confirmation:                                           @text-color;
+
+//отступ между основным и дополнительным текстом
+@details_offset_confirmation:                                               8px;
+
+//ширина кнопок в подвале размера s
+@min-width_button_s_confirmation:                                           80px;
+
+//ширина кнопок в подвале размера l
+@min-width_button_l_confirmation:                                           86px;
+
+//отступ между кнопками в подвале
+@offset_button_confirmation:                                                8px;
 //last line
