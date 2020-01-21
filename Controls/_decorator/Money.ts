@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip} from 'Controls/interface';
+import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip, IFontColorStyle, IFontColorStyleOptions} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
 import {moneyOptions, moneyUseGrouping, moneyValue, moneyStyle} from 'Controls/_decorator/ActualAPI';
@@ -15,27 +15,6 @@ interface IPaths {
     fraction: string;
     number: string;
 }
-interface IFontColorStyle {
-    fontColorStyle?: string;
-}
-/**
- * Интерфейс для поддержки разных цветов текста.
- *
- * @interface Controls/_decorator/Money/IFontColorStyle
- * @public
- */
-/**
- * @name Controls/_decorator/Money/IFontColorStyle#fontColorStyle
- * @variant default
- * @variant secondary
- * @variant noAccent
- * @variant error
- * @variant done
- * @variant primary
- * @variant attention
- * @variant disabled
- * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
- */
 
 interface IFontSize {
     fontSize?: string;
@@ -59,7 +38,7 @@ interface IFontSize {
  * @public
  * @author Красильников А.С.
  */
-export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontSize, IFontColorStyle {
+export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontSize, IFontColorStyleOptions {
     number: number;
     delimiters: boolean;
     title: string;
@@ -70,6 +49,7 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
      * @demo Controls-demo/Decorator/Money/Value/Index
      */
     value: TValue;
+
 }
 
 /**
@@ -80,8 +60,10 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
  * @extends UI/Base:Control
  *
  * @mixes Controls/interface:ITooltip
+ * @mixes Controls/interface:IFontColorStyle
  * @mixes Controls/interface:INumberFormat
  * @mixes Controls/_decorator/Money/IMoneyOptions
+ * @implements Controls/_decorator/Money/IFontSize
  *
  * @public
  * @demo Controls-demo/Decorator/Money/Index
