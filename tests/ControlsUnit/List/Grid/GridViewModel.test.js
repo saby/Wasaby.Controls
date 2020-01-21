@@ -403,35 +403,113 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
             );
 
-            customAssert.isClassesEqual(
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0}), theme),
-                expectedResultWithMultiselect[0],
-                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
-            );
+            let headerWitchActionCell = [
+               {
+                  title: '',
+                  style: 'default',
+                  startRow: 1,
+                  endRow: 2,
+                  startColumn: 1,
+                  endColumn: 2
+               },
+               {
+                  title: 'Цена',
+                  align: 'right',
+                  style: 'default',
+                  sortingProperty: 'price',
+                  startRow: 1,
+                  endRow: 2,
+                  startColumn: 2,
+                  endColumn: 3
+               },
+               {
+                  title: 'Остаток',
+                  align: 'right',
+                  style: 'default',
+                  startRow: 1,
+                  endRow: 2,
+                  startColumn: 3,
+                  endColumn: 4
+               },
+               {
+                  actionCell: true,
+                  startRow: 1,
+                  endRow: 2,
+                  startColumn: 4,
+                  endColumn: 5
+               }
+            ];
 
-            customAssert.isClassesEqual(
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1, rowIndex: 0}), theme),
-                expectedResultWithMultiselect[1],
-                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
-            );
+            //------ with actionCell ----
+            var paramsWithActionCell = {
+                  columns: headerWitchActionCell,
+                  multiSelectVisibility: false,
+                  itemPadding: {
+                     left: 'XL',
+                     right: 'L',
+                     top: 'L',
+                     bottom: 'L'
+                  },
+                  cell: {},
+                  style: 'default',
+                  maxEndColumn: 5,
+                  hasActionCell: true
+               };
 
-            customAssert.isClassesEqual(
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2, rowIndex: 0}), theme),
-                expectedResultWithMultiselect[2],
-                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
-            );
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses({ ...paramsWithActionCell, cell: headerWitchActionCell[0], rowIndex: 0, columnIndex: 0 }, theme),
+                 expectedResultWithoutMultiselect[0],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
 
-            customAssert.isClassesEqual(
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3, rowIndex: 0}), theme),
-                expectedResultWithMultiselect[3],
-                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
-            );
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses({ ...paramsWithActionCell, cell: headerWitchActionCell[1], rowIndex: 0, columnIndex: 1 }, theme),
+                 expectedResultWithoutMultiselect[1],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
 
-            customAssert.isClassesEqual(
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true}), theme),
-                expectedResultWithMultiselect[4],
-                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
-            );
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses({ ...paramsWithActionCell, cell: headerWitchActionCell[2], rowIndex: 0, columnIndex: 2 }, theme),
+                 expectedResultWithoutMultiselect[2],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
+
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses({ ...paramsWithActionCell, cell: headerWitchActionCell[3], rowIndex: 0, columnIndex: 3 }, theme),
+                 expectedResultWithoutMultiselect[3],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
+
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0}), theme),
+                 expectedResultWithMultiselect[0],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
+
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 1, rowIndex: 0}), theme),
+                 expectedResultWithMultiselect[1],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
+
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 2, rowIndex: 0}), theme),
+                 expectedResultWithMultiselect[2],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
+
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3, rowIndex: 0}), theme),
+                 expectedResultWithMultiselect[3],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
+
+             customAssert.isClassesEqual(
+                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true}), theme),
+                 expectedResultWithMultiselect[4],
+                 'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".'
+             );
+
          });
          it('getPaddingCellClasses for breadCrumbs in table layout should not add margin class', function () {
             const columnsWithMultiSelect = [{}].concat(clone(gridColumns));
