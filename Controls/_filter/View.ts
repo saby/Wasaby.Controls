@@ -307,8 +307,19 @@ var _private = {
         return filter;
     },
 
+    clearConfigs: function(source, configs) {
+        let newConfigs = CoreClone(configs);
+        factory(newConfigs).each((config, name) => {
+            const item = _private.getItemByName(source, name);
+            if (!item || !_private.isFrequentItem(item)) {
+                delete configs[name];
+            }
+        });
+    },
+
     reload: function(self) {
         var pDef = new ParallelDeferred();
+        _private.clearConfigs(self._source, self._configs);
         factory(self._source).each(function(item) {
             if (_private.isFrequentItem(item)) {
                 var result = _private.loadItems(self, item);
