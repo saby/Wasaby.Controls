@@ -56,11 +56,13 @@ var _private = {
         return nodeSourceControllers.get(node);
     },
     clearSourceControllersForNotExpandedNodes(self, oldExpanded, newExpanded): void {
-        oldExpanded.forEach((oldExpandedKey) => {
-           if (!newExpanded.includes(oldExpandedKey)) {
-               _private.clearNodeSourceController(self, oldExpandedKey);
-           }
-        });
+        if (oldExpanded) {
+            oldExpanded.forEach((oldExpandedKey) => {
+                if (!newExpanded.includes(oldExpandedKey)) {
+                    _private.clearNodeSourceController(self, oldExpandedKey);
+                }
+            });
+        }
     },
     toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
         listViewModel.toggleExpanded(dispItem, expanded);
