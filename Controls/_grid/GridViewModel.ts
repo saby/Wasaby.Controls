@@ -267,7 +267,8 @@ var
         getItemColumnCellClassesSeparated(current, theme, editingItem): {
             base: string,
             padding: string,
-            columnScroll: string
+            columnScroll: string,
+            all: string
         } {
             const isFirst = current.columnIndex === 0;
             const isLast = current.columnIndex === current.getLastColumnIndex();
@@ -275,7 +276,7 @@ var
             const currentStyle = current.style || 'default';
 
             // === Базовые классы ячейки ===
-            const baseClasses = CssClassList.add('controls-Grid__row-cell')
+            const baseClassList = CssClassList.add('controls-Grid__row-cell')
                 .add(`controls-Grid__row-cell_theme-${theme}`)
                 .add(`controls-Grid__row-cell-background-editing_theme-${theme}`, !!current.isEditing)
                 .add(`controls-Grid__row-cell-background-hover_theme-${theme}`, !current.isEditing)
@@ -284,39 +285,40 @@ var
                 .add(_private.prepareRowSeparatorClasses(current, theme, editingItem));
 
             if (current.isSelected) {
-                baseClasses
-                    .add('controls-Grid__row-cell_selected')
+                baseClassList.add('controls-Grid__row-cell_selected')
                     .add(`controls-Grid__row-cell_selected-${currentStyle}_theme-${theme}`)
                     .add(`controls-Grid__row-cell_selected__first-${currentStyle}_theme-${theme}`, isFirst)
                     .add('controls-Grid__row-cell_selected__last', isLast)
                     .add(`controls-Grid__row-cell_selected__last-${currentStyle}_theme-${theme}`, isLast);
             } else {
-                baseClasses
-                    .add('controls-Grid__row-cell__last', isLast)
+                baseClassList.add('controls-Grid__row-cell__last', isLast)
                     .add(`controls-Grid__row-cell__last-${currentStyle}_theme-${theme}`, isLast);
             }
 
             // === Классы, определяющие отступы внутри ячеек ===
-            const paddingClasses = new CssClassList();
+            const paddingClassList = new CssClassList();
 
             if (isCheckBoxCell) {
-                paddingClasses
-                    .add(`controls-Grid__row-cell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`)
+                paddingClassList.add(`controls-Grid__row-cell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`)
                     .add(`controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`);
             } else {
-                paddingClasses.add(_private.getPaddingCellClasses(current, theme));
+                paddingClassList.add(_private.getPaddingCellClasses(current, theme));
             }
 
+            const columnScrollClasses = current.columnScroll ? _private.getColumnScrollCellClasses(current, theme) : '';
+            const baseClasses = baseClassList.compile();
+            const paddingClasses = paddingClassList.compile();
+
             return {
-                base: baseClasses.compile(),
-                padding: paddingClasses.compile(),
-                columnScroll: current.columnScroll ? _private.getColumnScrollCellClasses(current, theme) : ''
+                base: baseClasses,
+                padding: paddingClasses,
+                columnScroll: columnScrollClasses,
+                all: `${baseClasses} ${paddingClasses} ${columnScrollClasses}`
             };
         },
 
         getItemColumnCellClasses: function(current, theme, editingItem) {
-            const separatedClasses = _private.getItemColumnCellClassesSeparated(current, theme, editingItem);
-            return `${separatedClasses.base} ${separatedClasses.padding} ${separatedClasses.columnScroll}`;
+            return _private.getItemColumnCellClassesSeparated(current, theme, editingItem).all;
         },
 
         getStickyColumn: function(cfg) {
@@ -1400,9 +1402,10 @@ var
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
-                        _preferVersionAPI: true
-                    };
-                currentColumn.cellClasses = current.getItemColumnCellClasses(current, self._options.theme, self.getEditingItemData());
+                        _preferVersionAPI: true,
+                        classList: _private.getItemColumnCellClassesSeparated(current, self._options.theme, self.getEditingItemData())
+            };
+                currentColumn.cellClasses = currentColumn.classList.all;
 
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
