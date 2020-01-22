@@ -32,7 +32,7 @@ export interface ICrudControlOption extends IControlOptions {
 }
 
 export interface ICrudControlChildren {
-    errorController: ErrorModule.Container;
+    errorContainer: ErrorModule.Container;
 }
 
 export enum CRUD_METHODS {
@@ -140,7 +140,7 @@ export default class SourceControl extends Control<ICrudControlOption, ISourceCo
     protected _template: TemplateFunction = template;
     protected _options: ICrudControlOption | null;
     protected _children: ICrudControlChildren;
-    private _error: ErrorModule.ViewConfig;
+    private _errorViewConfig: ErrorModule.ViewConfig;
 
     private readonly _source: ICrud;
     private readonly _errorController: ErrorModule.Controller;
@@ -178,6 +178,7 @@ export default class SourceControl extends Control<ICrudControlOption, ISourceCo
 
     /**
      * Вызывает метод CRUD в source по его имени и с указанными параметрами
+     * Если выполнение метода падает, то в catch отлавливает ошибку и передаёт её процессору
      * @param methodName Название метода CRUD
      * @param args аргументы для передачи в метод
      * @param errorConfig Конфигурация отображения ошибки
@@ -195,6 +196,12 @@ export default class SourceControl extends Control<ICrudControlOption, ISourceCo
             });
     }
 
+    /**
+     * Процессор ошибки. Выполняет отображение страницы ошибки
+     * @param error
+     * @param mode
+     * @private
+     */
     _processError(error: Error, mode?: ErrorModule.Mode): Promise<ISourceControlState> {
         return this._errorController.process({
             error,
@@ -214,7 +221,7 @@ export default class SourceControl extends Control<ICrudControlOption, ISourceCo
      * @private
      */
     private _showError(config: ErrorModule.ViewConfig): void {
-        this._error = config;
+        this._errorViewConfig = config;
     }
 
     /**
@@ -222,8 +229,8 @@ export default class SourceControl extends Control<ICrudControlOption, ISourceCo
      * @private
      */
     private _hideError(): void {
-        if (this._error) {
-            this._error = null;
+        if (this._errorViewConfig) {
+            this._errorViewConfig = null;
         }
     }
 
