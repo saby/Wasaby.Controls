@@ -384,6 +384,11 @@ export default class VirtualScrollController {
             if (action === IObservable.ACTION_RESET) {
                 this.reset();
             }
+
+            // Даже если у нас не произошли никакие перерисовки необходимо обновить индексы под текущие индексы
+            // виртуального скролла, так как модель ставит у себя индексы с первого до последнего элемента.
+            // Вследствие этого не работает виртуальный скролл
+            this._options.indexesChangedCallback(this.startIndex, this.stopIndex);
         }
     }
 
