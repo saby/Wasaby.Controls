@@ -79,7 +79,7 @@ export default class HierarchySelection extends Selection {
       let rootInExcluded = this._excludedKeys.includes(rootId);
 
       this.select([rootId]);
-      this._removeSelectionChildren(rootId);
+      this._removeChildrenIdsFromSelection(rootId);
 
       if (!rootInExcluded) {
          this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [rootId]);
@@ -99,7 +99,7 @@ export default class HierarchySelection extends Selection {
       let rootInExcluded = this._excludedKeys.includes(rootId);
 
       this.unselect([rootId]);
-      this._removeSelectionChildren(rootId);
+      this._removeChildrenIdsFromSelection(rootId);
 
       if (rootInExcluded) {
          this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
@@ -111,16 +111,16 @@ export default class HierarchySelection extends Selection {
          rootId: TKey = this._getRoot(),
          oldSelectedKeys: TKeys = this._selectedKeys.slice(),
          oldExcludedKeys: TKeys = this._excludedKeys.slice(),
-         childrenIdsRoot: TKeys = getChildrenIds(rootId, this._listModel, this._hierarchyRelation);
+         childrenIdsInRoot: TKeys = getChildrenIds(rootId, this._listModel, this._hierarchyRelation);
 
       if (this._selectionStrategy.isAllSelected(this.getSelection(), rootId, this._listModel, this._hierarchyRelation)) {
          this._unselectAllInRoot();
-         this.select(ArraySimpleValuesUtil.getIntersection(childrenIdsRoot, oldExcludedKeys));
+         this.select(ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldExcludedKeys));
       } else {
          this.selectAll();
          if (this._withEntryPath()) {
-            // Если используется entryPath, то в childrenIdsRoot будут все выбранные дети, даже не загруженные
-            this.unselect(ArraySimpleValuesUtil.getIntersection(childrenIdsRoot, oldSelectedKeys));
+            // Если используется entryPath, то в childrenIdsInRoot будут все выбранные дети, даже не загруженные
+            this.unselect(ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldSelectedKeys));
          } else {
             this.unselect(oldSelectedKeys);
          }
@@ -139,7 +139,7 @@ export default class HierarchySelection extends Selection {
       return this._listModel.getRoot().getContents();
    }
 
-   private _removeSelectionChildren(nodeId: Tkey): void {
+   private _removeChildrenIdsFromSelection(nodeId: Tkey): void {
       removeSelectionChildren(this.getSelection(), nodeId, this._listModel, this._hierarchyRelation);
    }
 
