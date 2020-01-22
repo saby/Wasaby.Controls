@@ -15,6 +15,11 @@ import template = require('wml!Controls/_search/Misspell/Container');
 export = Control.extend({
    _template: template,
 
+   /**
+    * @name Controls/_search/Misspell/Container#misspellClass
+    * @cfg {String} Класс, который будет установлен на подсказку изменения раскладки.
+    */
+
    _misspellClick: function () {
       this._notify('misspellCaptionClick', [], {bubbling: true});
    }
