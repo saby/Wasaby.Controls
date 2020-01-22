@@ -6,15 +6,15 @@
 import {Logger} from 'UI/Utils';
 import {IHighlightOptions} from 'Controls/_decorator/Highlight';
 
-export function styleOptions(style: string): { fontColorStyle?: string, fontSize?: string, readOnly?: boolean, fontWeight?: string } {
+export function styleOptions(style: string, readonly: boolean): { fontColorStyle?: string, fontSize?: string, readOnly?: boolean, fontWeight?: string } {
     switch (style) {
         case 'accentResults':
             return {
-                fontColorStyle: 'secondary', fontSize: 'l', fontWeight: 'bold'
+                fontColorStyle: 'secondary', fontSize: 'l', fontWeight: 'bold', readOnly: readonly
             };
         case 'noAccentResults':
             return {
-                fontColorStyle: 'unaccented', fontSize: 'l', fontWeight: 'bold'
+                fontColorStyle: 'unaccented', fontSize: 'l', fontWeight: 'bold', readOnly: readonly
             };
         case 'group':
             return {
@@ -22,31 +22,31 @@ export function styleOptions(style: string): { fontColorStyle?: string, fontSize
             };
         case 'basicRegistry':
             return {
-                fontColorStyle: 'default', fontSize: 'm'
+                fontColorStyle: 'default', fontSize: 'm', readOnly: readonly
             };
         case 'noBasicRegistry':
             return {
-                fontColorStyle: 'unaccented', fontSize: 'm'
+                fontColorStyle: 'unaccented', fontSize: 'm', readOnly: readonly
             };
         case 'accentRegistry':
             return {
-                fontColorStyle: 'secondary', fontSize: 'l', fontWeight: 'bold'
+                fontColorStyle: 'secondary', fontSize: 'l', fontWeight: 'bold', readOnly: readonly
             };
         case 'noAccentRegistry':
             return {
-                fontColorStyle: 'unaccented', fontSize: 'l', fontWeight: 'bold'
+                fontColorStyle: 'unaccented', fontSize: 'l', fontWeight: 'bold', readOnly: readonly
             };
         case 'error':
             return {
-                fontColorStyle: 'danger', fontSize: 'm', fontWeight: 'bold'
+                fontColorStyle: 'danger', fontSize: 'm', fontWeight: 'bold', readOnly: readonly
             };
         case 'default':
             return {
-                fontColorStyle: 'default', fontSize: 'm'
+                fontColorStyle: 'default', fontSize: 'm', readOnly: readonly
             };
         default:
             return {
-                fontColorStyle: 'default', fontSize: 'm'
+                fontColorStyle: 'default', fontSize: 'm', readOnly: readonly
             };
     }
 }
@@ -55,7 +55,7 @@ export function moneyStyle(options: {style?: string, fontSize?: string, fontColo
     {fontColorStyle?: string, fontSize?: string, readOnly?: boolean, fontWeight?: string } {
     if ('style' in options) {
         Logger.warn('Controls.decorator:Money - опция style устарела, используйте опции fontSize и fontColorStyle.');
-        return styleOptions(options.style);
+        return styleOptions(options.style, options.readOnly);
     }
     return {fontColorStyle: options.fontColorStyle, fontSize: options.fontSize, readOnly: options.readOnly, fontWeight: options.fontWeight};
 }
