@@ -383,6 +383,9 @@ var
          }
          this._dragOnBreadCrumbs = false;
       },
+      _documentDragEnter: function(event, dragObject) {
+         this._notify('dragEnter');
+      },
       _documentDragStart: function(event, dragObject) {
          //TODO: Sometimes at the end of dnd, the parameter is not reset. Will be fixed by: https://online.sbis.ru/opendoc.html?guid=85cea965-2aa6-4f1b-b2a3-1f0d65477687
          this._hoveredBreadCrumb = undefined;

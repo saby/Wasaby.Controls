@@ -988,6 +988,10 @@ import 'css!Controls/_dragnDrop/Container';
             }
          },
 
+         _documentDragEnter: function(dragObject) {
+            this._notify('documentDragEnter', [dragObject]);
+         },
+
          _documentDragStart: function(dragObject) {
             if (this._insideDragging) {
                this._notify('dragStart', [dragObject]);
@@ -1055,6 +1059,7 @@ import 'css!Controls/_dragnDrop/Container';
          },
 
          _afterMount: function() {
+            this._notify('register', ['documentDragEnter', this, this._documentDragEnter], {bubbling: true});
             this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
             this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
          },
