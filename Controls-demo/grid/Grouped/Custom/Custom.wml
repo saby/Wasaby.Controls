@@ -1,11 +1,25 @@
-<Controls.grid:View
-        attr:class="controlsDemo__wrapper controlsDemo_fixedWidth500"
-        keyProperty="id"
-        source="{{_viewSource}}"
-        rowSeparatorVisibility="{{true}}"
-        columns="{{_columns}}"
-        groupingKeyCallback="{{_groupingKeyCallback}}">
-    <ws:groupTemplate>
-        <ws:partial template="Controls/grid:GroupTemplate" itemData="{{itemData}}" expanderAlign="right"/>
-    </ws:groupTemplate>
-</Controls.grid:View>
+<div class="controlsDemo__wrapper controlDemo__grid-header-sticky">
+    <Controls.scroll:Container attr:style="height: 150px; width: fit-content;">
+        <Controls.operations:Container>
+            <Controls.grid:View
+                    attr:class=""
+                    keyProperty="id"
+                    source="{{_viewSource}}"
+                    rowSeparatorVisibility="{{true}}"
+                    columns="{{_columns}}"
+                    groupingKeyCallback="{{_groupingKeyCallback}}">
+                <ws:groupTemplate>
+                    <ws:partial template="Controls/grid:GroupTemplate" itemData="{{itemData}}" expanderAlign="right" stickyGroup="{{true}}" columnAlignGroup="{{2}}">
+                        <ws:rightTemplate>
+                            <ws:partial template="Controls/list:GroupContentResultsTemplate" itemData="{{itemData}}">
+                                <ws:contentTemplate>
+                                    <Controls.decorator:Money value="1111" style="group" useGrouping="{{false}}"/>
+                                </ws:contentTemplate>
+                            </ws:partial>
+                        </ws:rightTemplate>
+                    </ws:partial>
+                </ws:groupTemplate>
+            </Controls.grid:View>
+        </Controls.operations:Container>
+    </Controls.scroll:Container>
+</div>
