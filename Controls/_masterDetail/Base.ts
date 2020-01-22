@@ -206,6 +206,7 @@ class Base extends Control<IMasterDetail> {
     }
 
     private _resizeHandler(): void {
+        // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
         // Не запускаем реакцию на ресайз, если контрол скрыт (к примеру лежит внутри скпытой области switchableArea)
         if (!this._container.closest('.ws-hidden')) {
             this._containerWidth = null;
