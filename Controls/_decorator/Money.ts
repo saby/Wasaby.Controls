@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip, IFontColorStyle, IFontColorStyleOptions} from 'Controls/interface';
+import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip, IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions, IFontWeight, IFontWeightOptions} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
 import {moneyOptions, moneyUseGrouping, moneyValue, moneyStyle} from 'Controls/_decorator/ActualAPI';
@@ -16,19 +16,13 @@ interface IPaths {
     number: string;
 }
 
-interface IFontSize {
-    fontSize?: string;
-}
-interface IFontWeight {
-    fontWeight?: string;
-}
 
 /**
  * @interface Controls/_decorator/Money/IMoneyOptions
  * @public
  * @author Красильников А.С.
  */
-export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontColorStyleOptions, IFontWeight, IFontSize {
+export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontColorStyleOptions, IFontWeightOptions, IFontSizeOptions {
     number: number;
     delimiters: boolean;
     title: string;
@@ -48,18 +42,6 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
      * @default m
      * @demo Controls-demo/Decorator/Money/FontSize/Index
      */
-    /**
-     * @name Controls/_interface/IFontColorStyle#fontColorStyle
-     * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
-     */
-    /**
-     * @name Controls/_decorator/Money#fontWeight
-     * @cfg {String} Начертание шрифта.
-     * @variant bold
-     * @variant normal
-     * @default normal
-     * @demo Controls-demo/Decorator/Money/FontWeight/Index
-     */
 }
 
 /**
@@ -71,10 +53,11 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
  *
  * @mixes Controls/interface:ITooltip
  * @mixes Controls/interface:IFontColorStyle
+ * @mixes Control/interface:IFontWeight
+ * @mixes Control/interface:IFontSize
  * @mixes Controls/interface:INumberFormat
  * @mixes Controls/_decorator/Money/IMoneyOptions
  * @implements Controls/_decorator/Money/IFontSize
- * @implements Controls/_decorator/Money/IFontWeight
  *
  * @public
  * @demo Controls-demo/Decorator/Money/Index
@@ -90,7 +73,6 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
     private _fontSize: string;
     private _readOnly: boolean;
     private _fontWeight: string;
-    private _styleOptions: IMoneyOptions;
 
     readonly '[Controls/_interface/ITooltip]' = true;
     readonly '[Controls/_interface/INumberFormat]' = true;
@@ -103,12 +85,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         return showEmptyDecimals || value !== '.00';
     }
 
-    private _getStyle(options: IMoneyOptions) {
-       if (!this._styleOptions) {
-           this._styleOptions = moneyStyle(options);
-       }
-       return this._styleOptions;
-    }
+
     private _getTooltip(options: IMoneyOptions): string {
         const actualOptions = moneyOptions(options);
 
@@ -152,14 +129,19 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         };
     }
 
+    private _getStyle(options: { fontColorStyle?: string, fontSize?: string, readOnly?: boolean, fontWeight?: string }): void {
+        this._fontSize = options.fontSize;
+        this._fontColorStyle = options.fontColorStyle;
+        this._fontWeight = options.fontWeight;
+        this._readOnly = options.readOnly;
+    }
+
     protected _beforeMount(options: IMoneyOptions): void {
         this._changeState(options, true);
         this._parsedNumber = this._parseNumber();
         this._tooltip = this._getTooltip(options);
-        this._fontSize = this._getStyle(options).fontSize;
-        this._fontColorStyle = this._getStyle(options).fontColorStyle;
-        this._fontWeight = this._getStyle(options).fontWeight;
-        this._readOnly = this._getStyle(options).readOnly;
+        const styles = moneyStyle(options);
+        this._getStyle(styles);
     }
 
     protected _beforeUpdate(newOptions): void {
@@ -167,10 +149,8 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
             this._parsedNumber = this._parseNumber();
         }
         this._tooltip = this._getTooltip(newOptions);
-        this._fontSize = this._getStyle(newOptions).fontSize;
-        this._fontColorStyle = this._getStyle(newOptions).fontColorStyle;
-        this._fontWeight = this._getStyle(newOptions).fontWeight;
-        this._readOnly = this._getStyle(newOptions).readOnly;
+        const styles = moneyStyle(newOptions);
+        this._getStyle(styles);
     }
 
     private static FRACTION_LENGTH = 2;
