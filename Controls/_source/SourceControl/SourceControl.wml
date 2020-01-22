@@ -1,0 +1,5 @@
+<Controls.dataSource:error.Container name="errorContainer" viewConfig="{{ _error }}">
+   <ws:if data="{{_options.content}}">
+      <ws:partial template="{{ _options.content }}" scope="{{_options}}"/>
+   </ws:if>
+</Controls.dataSource:error.Container>
