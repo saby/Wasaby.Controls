@@ -18,6 +18,12 @@ export = Control.extend({
    /**
     * @name Controls/_search/Misspell/Container#misspellClass
     * @cfg {String} Класс, который будет установлен на подсказку изменения раскладки.
+    * @example
+    * <pre class="brush: html">
+    * <Controls.search:MisspellContainer misspellClass="demoMisspellClass">
+    * ...
+    * </Controls.search:MisspellContainer>
+    * </pre>
     */
 
    _misspellClick: function () {
