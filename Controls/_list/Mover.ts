@@ -134,9 +134,9 @@ var _private = {
         const isNewLogic = !items.forEach && !items.selected;
         if (isNewLogic) {
             if (self._source.call) {
-                return import('Controls/operations').then((selectionToRecord) => {
+                return import('Controls/operations').then((operations) => {
                     const callFilter = {
-                        selection: selectionToRecord({
+                        selection: operations.selectionToRecord({
                             selected: items.selectedKeys,
                             excluded: items.excludedKeys
                         }, self._source.getAdapter()), ...items.filter
