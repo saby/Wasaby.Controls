@@ -206,8 +206,11 @@ class Base extends Control<IMasterDetail> {
     }
 
     private _resizeHandler(): void {
-        this._containerWidth = null;
-        this._updateOffsetDebounced(this._options);
+        // Не запускаем реакцию на ресайз, если контрол скрыт (к примеру лежит внутри скпытой области switchableArea)
+        if (!this._container.closest('.ws-hidden')) {
+            this._containerWidth = null;
+            this._updateOffsetDebounced(this._options);
+        }
     }
 }
 
