@@ -128,19 +128,19 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
         };
     }
 
-    private _getStyle(options: { fontColorStyle?: string, fontSize?: string, readOnly?: boolean, fontWeight?: string }): void {
-        this._fontSize = options.fontSize;
-        this._fontColorStyle = options.fontColorStyle;
-        this._fontWeight = options.fontWeight;
-        this._readOnly = options.readOnly;
+    private _getStyle(options: IMoneyOptions): void {
+        const styles = moneyStyle(options);
+        this._fontSize = styles.fontSize;
+        this._fontColorStyle = styles.fontColorStyle;
+        this._fontWeight = styles.fontWeight;
+        this._readOnly = styles.readOnly;
     }
 
     protected _beforeMount(options: IMoneyOptions): void {
         this._changeState(options, true);
         this._parsedNumber = this._parseNumber();
         this._tooltip = this._getTooltip(options);
-        const styles = moneyStyle(options);
-        this._getStyle(styles);
+        this._getStyle(options);
     }
 
     protected _beforeUpdate(newOptions): void {
@@ -148,8 +148,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
             this._parsedNumber = this._parseNumber();
         }
         this._tooltip = this._getTooltip(newOptions);
-        const styles = moneyStyle(newOptions);
-        this._getStyle(styles);
+        this._getStyle(newOptions);
     }
 
     private static FRACTION_LENGTH = 2;
