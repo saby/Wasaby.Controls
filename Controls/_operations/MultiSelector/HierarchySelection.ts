@@ -109,22 +109,18 @@ export default class HierarchySelection extends Selection {
    toggleAll(): void {
       let
          rootId: TKey = this._getRoot(),
-         oldSelectedKeys: TKeys = this._selectedKeys.slice(),
-         oldExcludedKeys: TKeys = this._excludedKeys.slice(),
-         childrenIdsInRoot: TKeys = getChildrenIds(rootId, this._listModel, this._hierarchyRelation);
+         childrenIdsInRoot: TKeys = getChildrenIds(rootId, this._listModel, this._hierarchyRelation),
+         intersectionChildIdsWithSelectedKeys = ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, this._selectedKeys),
+         intersectionChildIdsWithExcludedKeys = ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, this._excludedKeys);
 
       if (this._selectionStrategy.isAllSelected(this.getSelection(), rootId, this._listModel, this._hierarchyRelation)) {
          this._unselectAllInRoot();
-         this.select(ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldExcludedKeys));
       } else {
          this.selectAll();
-         if (this._withEntryPath()) {
-            // Если используется entryPath, то в childrenIdsInRoot будут все выбранные дети, даже не загруженные
-            this.unselect(ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldSelectedKeys));
-         } else {
-            this.unselect(oldSelectedKeys);
-         }
       }
+
+      this._selectedKeys = ArraySimpleValuesUtil.addSubArray(this._selectedKeys, intersectionChildIdsWithExcludedKeys);
+      this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, intersectionChildIdsWithSelectedKeys);
    }
 
    getCount(): number|null {

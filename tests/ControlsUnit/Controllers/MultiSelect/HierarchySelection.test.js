@@ -502,6 +502,21 @@ define([
       });
 
       describe('toggleAll', function() {
+         it('toggle all in initial root, with children in selected and excluded', function() {
+            cfg = getConfig({
+               selectedKeys: [2],
+               excludedKeys: [3]
+            });
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance.toggleAll();
+            assert.deepEqual([null, 3], selectionInstance.selectedKeys);
+            assert.deepEqual([null, 2], selectionInstance.excludedKeys);
+
+            selectionInstance.toggleAll();
+            assert.deepEqual([2], selectionInstance.selectedKeys);
+            assert.deepEqual([3], selectionInstance.excludedKeys);
+         });
+
          it('selectedKeys with key, that is not from collection + toggleAll', function() {
             cfg = getConfig({
                selectedKeys: [1, 2, 4, 5, 6, 7]
@@ -511,12 +526,12 @@ define([
 
 
             assert.deepEqual([null], selectionInstance.selectedKeys);
-            assert.deepEqual([null, 1, 6, 7], selectionInstance.excludedKeys);
+            assert.deepEqual([null, 1, 2, 4, 5, 6, 7], selectionInstance.excludedKeys);
 
             selectionInstance.toggleAll();
 
 
-            assert.deepEqual([1, 6, 7], selectionInstance.selectedKeys);
+            assert.deepEqual([1, 2, 4, 5, 6, 7], selectionInstance.selectedKeys);
             assert.deepEqual([], selectionInstance.excludedKeys);
          });
 
