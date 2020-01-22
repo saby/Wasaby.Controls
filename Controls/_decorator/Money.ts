@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip, IFontColorStyle, IFontColorStyleOptions} from 'Controls/interface';
+import {INumberFormatOptions, INumberFormat, ITooltipOptions, ITooltip, IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions, IFontWeight, IFontWeightOptions} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
 import {moneyOptions, moneyUseGrouping, moneyValue, moneyStyle} from 'Controls/_decorator/ActualAPI';
@@ -16,19 +16,13 @@ interface IPaths {
     number: string;
 }
 
-interface IFontSize {
-    fontSize?: string;
-}
-interface IFontWeight {
-    fontWeight?: string;
-}
 
 /**
  * @interface Controls/_decorator/Money/IMoneyOptions
  * @public
  * @author Красильников А.С.
  */
-export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontColorStyleOptions, IFontWeight, IFontSize {
+export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions, IFontColorStyleOptions, IFontWeightOptions, IFontSizeOptions {
     number: number;
     delimiters: boolean;
     title: string;
@@ -52,14 +46,6 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
      * @name Controls/_interface/IFontColorStyle#fontColorStyle
      * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
      */
-    /**
-     * @name Controls/_decorator/Money#fontWeight
-     * @cfg {String} Начертание шрифта.
-     * @variant bold
-     * @variant normal
-     * @default normal
-     * @demo Controls-demo/Decorator/Money/FontWeight/Index
-     */
 }
 
 /**
@@ -71,10 +57,10 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
  *
  * @mixes Controls/interface:ITooltip
  * @mixes Controls/interface:IFontColorStyle
+ * @mixes Control/interface:IFontWeight
+ * @mixes Control/interface:IFontSize
  * @mixes Controls/interface:INumberFormat
  * @mixes Controls/_decorator/Money/IMoneyOptions
- * @implements Controls/_decorator/Money/IFontSize
- * @implements Controls/_decorator/Money/IFontWeight
  *
  * @public
  * @demo Controls-demo/Decorator/Money/Index
@@ -122,6 +108,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip {
     private _changeState(options: IMoneyOptions, useLogging: boolean): boolean {
         const value = moneyValue(options.number, options.value, useLogging);
         const useGrouping = moneyUseGrouping(options.delimiters, options.useGrouping, useLogging);
+        const fontSize = moneyStyle(options)
 
         if (this._value !== value || this._useGrouping !== useGrouping) {
             this._value = value;
