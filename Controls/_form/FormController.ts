@@ -290,6 +290,7 @@ import dataSource = require('Controls/dataSource');
       _beforeUnmount: function() {
          if (this._pendingPromise) {
             this._pendingPromise.callback();
+            this._pendingPromise = null;
          }
          // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
          this._tryDeleteNewRecord();
