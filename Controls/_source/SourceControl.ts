@@ -20,30 +20,16 @@ interface ISSRSourceControlState {
     errorConfig?: ErrorModule.ViewConfig;
 }
 
-export type ISourceControlState = ISSRSourceControlState | DataSet | Record;
-
-export interface ICrudControlOption extends IControlOptions {
-    source: ICrud;
-    initialMethod: CRUD_METHODS;
-    initialMethodArgs: any[];
-    content?: TemplateFunction;
-    errorController?: ErrorModule.Controller;
-    errorConfig: IErrorConfig;
-}
-
-export interface ICrudControlChildren {
+interface ICrudControlChildren {
     errorContainer: ErrorModule.Container;
 }
 
-export enum CRUD_METHODS {
-    create = 'create',
-    read = 'read',
-    update = 'update',
-    delete = 'delete',
-    query = 'query'
-}
-
-export class SourceControlCrudFactory implements ICrud {
+/**
+ * Реализует ICrud и выполняет методы переданного source при помощи call
+ * @implements Types/source/ICrud
+ * @private
+ */
+class SourceControlCrudFactory implements ICrud {
     readonly '[Types/_source/ICrud]': true;
     private _source: ICrud;
 
@@ -109,7 +95,7 @@ export class SourceControlCrudFactory implements ICrud {
      * @param args
      * @private
      */
-    call(methodName: CRUD_METHODS, args: any[]): Promise<DataSet | Record> {
+    call(methodName: CRUD_METHOD, args: any[]): Promise<DataSet | Record> {
         if (typeof this[methodName] === undefined) {
             Logger.error('You are trying to call non-CRUD method. Correct methods are create, read, update, destroy and query', 'Controls/source/SourceControl');
         }
@@ -117,22 +103,72 @@ export class SourceControlCrudFactory implements ICrud {
     }
 }
 
+export interface ICrudControlOption extends IControlOptions {
+    /**
+     * @name Controls/_source/SourceControl#source
+     * @cfg {Types/source:ICrud} Ресурс для запроса данных
+     */
+    source: ICrud;
+
+    /**
+     * @name Controls/_source/SourceControl#initialMethod
+     * @cfg {Controls/source/CRUD_METHOD} Название метода, для выпаолнения в _beforeMount
+     */
+    initialMethod: CRUD_METHOD;
+
+    /**
+     * @name Controls/_source/SourceControl#initialMethodArgs
+     * @cfg {any[]} Массив аргументов для передачи в initialMethod
+     */
+    initialMethodArgs: any[];
+
+    /**
+     * @name Controls/_source/SourceControl#errorConfig
+     * @cfg {any[]} Настройка отображения заглушки с ошибкой для передачи в initialMethod
+     */
+    errorConfig: IErrorConfig;
+
+    /**
+     * @name Controls/_source/SourceControl#content
+     * @cfg {UI/Base/TemplateFunction} Контент, который должен отобразиться в случае успешной загрзуки
+     */
+    content?: TemplateFunction;
+
+    /**
+     * @name Controls/_source/SourceControl#errorController
+     * @cfg {Controls/dataSource:error.Controller} Контроллер ошибки, например, c настроекнными Handlers
+     */
+    errorController?: ErrorModule.Controller;
+}
+
 /**
- * Source:Control
+ * Набор названий методов, которые можно передать в SourceControl для выпаолнения в _beforeMount
+ */
+export enum CRUD_METHOD {
+    create = 'create',
+    read = 'read',
+    update = 'update',
+    delete = 'delete',
+    query = 'query'
+}
+
+export type ISourceControlState = ISSRSourceControlState | DataSet | Record;
+
+/**
  * Контрол который показывает либо загруженный контент, либо картинку с ошибкой, если запрос отработал с ошибокй.
- *
- *  Этот контрол должен вставляться везде где есть работа с сорсом, т.е. в
+ * @remark
+ * Этот контрол должен вставляться везде где есть работа с сорсом, т.е. в
  *  • Списках (Controls/_list/List.ts and Controls/_list/ListView.ts)
  *  • formController (Controls/_form/FormController.ts)
  *  • dataSource/error/DataLoader (Controls/_dataSource/_error/DataLoader.ts and Controls/_dataSource/requestDataUtil.ts)
  *
- *  Он принимает на вход source: ICrud, к которому обращается и сам обладает crudApi.
+ * Он принимает на вход source: ICrud, к которому обращается. Не обладает CrudApi.
  *
- *  При возникновении ошибок показывает заглушку сконфигурированную при помощи
- *  Controls.dataSource:error.Container
- *
- *  • Судя по всему в NavigationController всегда вместо ICrud будет попадать CrudControl
- *  TODO Controls/_list/BaseControl.ts выводит ошибку, вызывая _showError, полученную в beforeMount в ReceivedState. Я смогу её получить тут, если использую beforeMount?
+ * При возникновении ошибок показывает заглушку сконфигурированную при помощи
+ * Controls.dataSource:error.Container
+ * @control
+ * @public
+ * @author Аверкиев П.А.
  */
 export default class SourceControl extends Control<ICrudControlOption, ISourceControlState> implements IErrorController {
     readonly '[Controls/_interface/IErrorController]': true;
@@ -182,9 +218,9 @@ export default class SourceControl extends Control<ICrudControlOption, ISourceCo
      * @param methodName Название метода CRUD
      * @param args аргументы для передачи в метод
      * @param errorConfig Конфигурация отображения ошибки
-     * @private
+     * @public
      */
-    private _callCrudMethod(methodName: CRUD_METHODS, args: any[], errorConfig: IErrorConfig): Promise<ISourceControlState>  {
+    callCrudMethod(methodName: CRUD_METHOD, args: any[], errorConfig: IErrorConfig): Promise<ISourceControlState>  {
         this._hideError();
         const crudControllerFactory = new SourceControlCrudFactory(this._source);
         return crudControllerFactory.call(methodName, args)
