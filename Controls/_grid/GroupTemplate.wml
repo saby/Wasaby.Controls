@@ -33,8 +33,7 @@
 <ws:template name="groupRightStickyTemplate">
       <Controls.scroll:StickyHeader
         attr:class="controls-ListView__groupContent"
-        fixedZIndex="{{4}}"
-        mode="{{stickyMode === 'stackable' ? 'stackable' : 'replaceable'}}">
+        fixedZIndex="{{4}}">
          <div class="controls-ListView__groupSeparator-right">&nbsp;</div>
          <ws:if data="{{!!rightTemplate}}">
             <ws:partial template="{{rightTemplate}}" attr:class="controls-ListView__groupContent-rightTemplate" itemData="{{itemData}}"/>
@@ -46,8 +45,7 @@
         attr:class="controls-ListView__groupContent
                {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
                controls-ListView__groupContent_align-{{textAlign || 'left'}}"
-        fixedZIndex="{{4}}"
-        mode="{{stickyMode === 'stackable' ? 'stackable' : 'replaceable'}}">
+        fixedZIndex="{{4}}">
    <ws:partial template="groupContentTemplate" itemData="{{itemData}}"/>
 </Controls.scroll:StickyHeader>
 </ws:template>
@@ -63,7 +61,7 @@
 <ws:if data="{{itemData.isFullGridSupport()}}">
    <div class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}"
         key="group-{{itemData.item}}">
-      <ws:if data="{{stickyGroup}}">
+      <ws:if data="{{itemData.isStickyHeader}}">
          <Controls.scroll:Group>
            <div style="display: contents;">
               <ws:partial template="groupContentStickyWrapper" attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}}"/>
