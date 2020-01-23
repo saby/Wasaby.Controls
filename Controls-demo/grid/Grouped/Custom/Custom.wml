@@ -5,7 +5,6 @@
                     attr:class=""
                     keyProperty="id"
                     source="{{_viewSource}}"
-                    header="{{header}}"
                     rowSeparatorVisibility="{{true}}"
                     columns="{{_columns}}"
                     groupingKeyCallback="{{_groupingKeyCallback}}">
