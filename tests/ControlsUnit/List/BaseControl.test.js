@@ -635,17 +635,18 @@ define([
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
-         ctrl._portionedSearch.resetTimer = () => {
+         ctrl._portionedSearch._clearTimer = () => {
             portionSearchTimerReseted = true;
          };
-         ctrl._portionedSearch.reset = () => {
+         ctrl._portionedSearch._options.searchResetCallback = () => {
             portionSearchReseted = true;
          };
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down');
+         ctrl._portionedSearch.continueSearch();
          await loadPromise;
-         assert.isTrue(portionSearchTimerReseted);
+         assert.isFalse(portionSearchTimerReseted);
          assert.isFalse(portionSearchReseted);
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
@@ -654,6 +655,7 @@ define([
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
+         assert.isTrue(portionSearchTimerReseted);
          assert.isTrue(portionSearchReseted);
       });
 
@@ -2448,7 +2450,28 @@ define([
             .at(2), ctrl._listViewModel.getMarkedItem()
             .getContents());
       });
-      it ('needFooterPadding', function() {
+      it('_needBottomPadding after reload in beforeMount', async function() {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            itemActionsPosition: 'outside',
+            keyProperty: 'id',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            source: source,
+         };
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.isTrue(ctrl._needBottomPadding);
+
+      });
+      it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
          };
