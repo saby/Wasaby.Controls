@@ -242,7 +242,7 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
          options.multiSelect = false;
          listContainer._beforeMount(options);
          assert.deepEqual(listContainer._selectedKeys, []);
-         assert.equal(listContainer._markedKey, null);
+         assert.equal(listContainer._markedKey, 1);
       });
 
    });
