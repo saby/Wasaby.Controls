@@ -20,6 +20,7 @@
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
  * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
+ * @includes IInfoBox Controls/_popup/interface/IInfoBox
  * @public
  * @author Крайнов Д.О.
  */
@@ -46,6 +47,7 @@
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
  * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
+ * @includes IInfoBox Controls/_popup/interface/IInfoBox
  * @public
  * @author Крайнов Д.О.
  */
