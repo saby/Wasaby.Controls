@@ -2,7 +2,7 @@
     <div class="controls-DateLinkView-wrapper">
         <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
            <span
-              class="controls-DateLinkView__prev {{ _styleClass }}_theme-{{_options.theme}}"
+              class="controls-DateLinkView__prev {{ _styleClass }}_theme-{{_options.theme}} controls-DateLinkView__arrow"
               on:click="shiftBack()">
            </span>
         </ws:if>
@@ -39,7 +39,7 @@
         </ws:if>
         <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
            <span
-              class="controls-DateLinkView__next {{ _styleClass }}_theme-{{_options.theme}}"
+              class="controls-DateLinkView__next {{ _styleClass }}_theme-{{_options.theme}} controls-DateLinkView__arrow"
               on:click="shiftForward()">
            </span>
         </ws:if>
