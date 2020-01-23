@@ -12,6 +12,36 @@ export default class extends Control {
     private _groupingKeyCallback = (item) => {
         return item.get('fullName');
     }
+    private header = [
+        {
+            title: '',
+            startRow: 1,
+            endRow: 3,
+            startColumn: 1,
+            endColumn: 2
+        },
+        {
+            title: '2',
+            startRow: 2,
+            endRow: 3,
+            startColumn: 2,
+            endColumn: 3
+        },
+        {
+            title: '3',
+            startRow: 2,
+            endRow: 3,
+            startColumn: 3,
+            endColumn: 4
+        },
+        {
+            title: '1',
+            startRow: 1,
+            endRow: 2,
+            startColumn: 2,
+            endColumn: 4
+        }
+    ]
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
