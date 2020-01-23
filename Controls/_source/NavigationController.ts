@@ -251,7 +251,7 @@ export interface INavigationControllerOptions {
  * @public
  * @author Аверкиев П.А.
  */
-export default class NavigationController {
+export class NavigationController {
     protected _options: INavigationControllerOptions | null;
     private _loader: Promise<RecordSet>;
     private readonly _source: ICrud;
@@ -319,6 +319,12 @@ export default class NavigationController {
      * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - созданную запись, в случае ошибки - Error.
      * @see Types/_source/ICrud
      */
+    /*
+     * Creates empty Record using current storage (without saving to the storage)
+     * @param [meta] Additional meta data to create a Record
+     * @return Promise resolving created Record {@link Types/_entity/Record} and rejecting an Error.
+     * @see Types/_source/ICrud
+     */
     create(meta?: object): Promise<Record> {
         return this._source.create(meta);
     }
@@ -330,6 +336,13 @@ export default class NavigationController {
      * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки - Error.
      * @see Types/_source/ICrud
      */
+    /*
+     * Updates existing Record or RecordSet in current storage
+     * @param data Updating Record or RecordSet
+     * @param [meta] Additional meta data
+     * @return Promise resolving nothing and rejecting an Error.
+     * @see Types/_source/ICrud
+     */
     update(data: Record | RecordSet, meta?: object): Promise<null> {
         return this._source.update(data);
     }
@@ -339,6 +352,13 @@ export default class NavigationController {
      * @param key Первичный ключ записи
      * @param [meta] Дополнительные мета данные
      * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - прочитанную запись, в случае ошибки - Error.
+     * @see Types/_source/ICrud
+     */
+    /*
+     * Reads a Record from current storage
+     * @param key Record's primary key
+     * @param [meta] Additional meta data
+     * @return Promise resolving created Record {@link Types/_entity/Record} and rejecting an Error.
      * @see Types/_source/ICrud
      */
     read(key: number | string, meta?: object): Promise<Record> {
