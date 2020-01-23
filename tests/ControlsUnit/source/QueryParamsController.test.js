@@ -176,7 +176,7 @@ define(
                   position: 1
                });
 
-               assert.isFalse(pNav.hasMoreData('down'));
+               assert.isFalse(!!pNav.hasMoreData('down'));
                assert.isFalse(pNav._isMoreCreated(), '_more created before meta set');
                assert.deepEqual({before: false, after: false}, pNav._getMore().getMoreMeta(), 'Calculate state: wrong _more value');
 
