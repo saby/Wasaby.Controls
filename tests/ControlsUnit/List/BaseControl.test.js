@@ -1576,6 +1576,19 @@ define([
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
+            ctrl._abortSearch();
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'disabled',
+               stateEnd: 'disabled'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            lists.BaseControl._private.getPortionedSearch(ctrl).reset();
+
             // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
             // и еще раз доскроллили до конца, то самое время блокировать кнопки.
             lists.BaseControl._private.handleListScroll(ctrl, {
@@ -2435,7 +2448,28 @@ define([
             .at(2), ctrl._listViewModel.getMarkedItem()
             .getContents());
       });
-      it ('needFooterPadding', function() {
+      it('_needBottomPadding after reload in beforeMount', async function() {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            itemActionsPosition: 'outside',
+            keyProperty: 'id',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            source: source,
+         };
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.isTrue(ctrl._needBottomPadding);
+
+      });
+      it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
          };
@@ -4481,6 +4515,9 @@ define([
          };
          instance._itemMouseMove({}, {});
          assert.equal(eName, 'draggingItemMouseMove');
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
@@ -4507,6 +4544,10 @@ define([
          instance._listViewModel.getDragItemData = () => ({});
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'draggingItemMouseLeave');
+         eName = null;
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {
