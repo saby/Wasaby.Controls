@@ -16,7 +16,7 @@
               selectedKeys="{{_selectedKeys}}"
               selectorDialogResult="{{_resultSingleSelect}}"
               navigation="{{_navigation}}">
-         <ws:selectorTemplate templateName="Controls-demo/Menu/MenuView/SelectorTemplate/StackTemplate">
+         <ws:selectorTemplate templateName="Controls-demo/Menu/Control/SelectorTemplate/StackTemplate">
             <ws:templateOptions multiSelect="{{false}}" items="{{_items}}"/>
          </ws:selectorTemplate>
       </Controls.menu:Control>
@@ -31,7 +31,7 @@
               multiSelect="{{true}}"
               selectorDialogResult="{{_resultMultiSelect}}"
               navigation="{{_navigation}}">
-         <ws:selectorTemplate templateName="Controls-demo/Menu/MenuView/SelectorTemplate/StackTemplate">
+         <ws:selectorTemplate templateName="Controls-demo/Menu/Control/SelectorTemplate/StackTemplate">
             <ws:templateOptions multiSelect="{{true}}" items="{{_items}}"/>
          </ws:selectorTemplate>
       </Controls.menu:Control>

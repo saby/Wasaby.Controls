@@ -1,6 +1,6 @@
-define('Controls-demo/Menu/MenuView/SelectorTemplate/StackTemplate', [
+define('Controls-demo/Menu/Control/SelectorTemplate/StackTemplate', [
    'Core/Control',
-   'wml!Controls-demo/Menu/MenuView/SelectorTemplate/StackTemplate',
+   'wml!Controls-demo/Menu/Control/SelectorTemplate/StackTemplate',
    'Types/source',
    'css!Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector'
 

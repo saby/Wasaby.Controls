@@ -1,9 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Menu/MenuView/SelectorTemplate/Index');
+import controlTemplate = require('wml!Controls-demo/Menu/Control/SelectorTemplate/Index');
 import {Memory} from 'Types/source';
 import {factory} from 'Types/chain';
 import 'css!Controls-demo/Controls-demo';
-import 'css!Controls-demo/Menu/MenuView/Menu';
+import 'css!Controls-demo/Menu/Control/Menu';
 
 class SelectorTemplate extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
