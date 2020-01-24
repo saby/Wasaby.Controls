@@ -421,7 +421,7 @@ var _Controller = Control.extend({
             },
             target: this._container,
             targetPoint: this._options.targetPoint,
-            opener: this._options.dropDownOpener,
+            opener: this._options.dropDownOpener || this,
             autofocus: false,
             closeOnOutsideClick: true
          };
