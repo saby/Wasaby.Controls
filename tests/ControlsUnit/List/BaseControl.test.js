@@ -635,18 +635,13 @@ define([
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
-         ctrl._portionedSearch.resetTimer = () => {
-            portionSearchTimerReseted = true;
-         };
-         ctrl._portionedSearch.reset = () => {
-            portionSearchReseted = true;
-         };
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down');
+         ctrl._portionedSearch.continueSearch();
          await loadPromise;
-         assert.isTrue(portionSearchTimerReseted);
-         assert.isFalse(portionSearchReseted);
+         assert.isTrue(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
@@ -654,7 +649,8 @@ define([
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
-         assert.isTrue(portionSearchReseted);
+         assert.isFalse(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
       });
 
       it('prepareFooter', function() {
@@ -2448,7 +2444,28 @@ define([
             .at(2), ctrl._listViewModel.getMarkedItem()
             .getContents());
       });
-      it ('needFooterPadding', function() {
+      it('_needBottomPadding after reload in beforeMount', async function() {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            itemActionsPosition: 'outside',
+            keyProperty: 'id',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            source: source,
+         };
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.isTrue(ctrl._needBottomPadding);
+
+      });
+      it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
          };
@@ -5173,7 +5190,7 @@ define([
                let expectedSourceConfig = {};
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
-               baseControl._recreateSourceController = function(newSource, newNavigation) {
+               baseControl.recreateSourceController = function(newSource, newNavigation) {
                   assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
                };
                expectedSourceConfig.page = 0;

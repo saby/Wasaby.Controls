@@ -945,18 +945,25 @@ var _private = {
 
     getPortionedSearch(self): PortionedSearch {
         return self._portionedSearch || (self._portionedSearch = new PortionedSearch({
+            searchStartCallback: () => {
+               self._portionedSearchInProgress = true;
+            },
             searchStopCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._showContinueSearchButton = true;
                 self._sourceController.cancelLoading();
             },
             searchResetCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._showContinueSearchButton = false;
             },
             searchContinueCallback: () => {
+                self._portionedSearchInProgress = true;
                 self._showContinueSearchButton = false;
                 _private.loadToDirectionIfNeed(self, 'down');
             },
             searchAbortCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._sourceController.cancelLoading();
             }
         }));
@@ -1543,6 +1550,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _itemReloaded: false,
     _itemActionsInitialized: false,
 
+    _portionedSearch: null,
+    _portionedSearchInProgress: null,
+    _showContinueSearchButton: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1657,6 +1668,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
                     }
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, result.data, self._listViewModel);
+
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
@@ -1837,7 +1850,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
         if (recreateSource) {
-            this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
+            this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
 
             //Нужно обновлять опции записи не только при наведении мыши,
             //так как запись может поменяться в то время, как курсор находится на ней
@@ -2446,12 +2459,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             newNavigation.sourceConfig.page = params.page - 1;
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
-        this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
+        this.recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
         _private.reload(this, this._options);
         this._shouldRestoreScrollPosition = true;
     },
 
-    _recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
+    recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
 
         if (this._sourceController) {
             this._sourceController.destroy();
