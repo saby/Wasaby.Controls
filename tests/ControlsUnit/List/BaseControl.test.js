@@ -635,18 +635,13 @@ define([
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
-         ctrl._portionedSearch.resetTimer = () => {
-            portionSearchTimerReseted = true;
-         };
-         ctrl._portionedSearch.reset = () => {
-            portionSearchReseted = true;
-         };
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down');
+         ctrl._portionedSearch.continueSearch();
          await loadPromise;
-         assert.isTrue(portionSearchTimerReseted);
-         assert.isFalse(portionSearchReseted);
+         assert.isTrue(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
@@ -654,7 +649,8 @@ define([
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
-         assert.isTrue(portionSearchReseted);
+         assert.isFalse(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
       });
 
       it('prepareFooter', function() {
@@ -5194,7 +5190,7 @@ define([
                let expectedSourceConfig = {};
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
-               baseControl._recreateSourceController = function(newSource, newNavigation) {
+               baseControl.recreateSourceController = function(newSource, newNavigation) {
                   assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
                };
                expectedSourceConfig.page = 0;
