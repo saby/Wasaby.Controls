@@ -20,6 +20,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
     * @mixes Controls/interface/IInputTag
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
+    * @mixes Controls/_interface/IOpenPopup
     *
     * @css @spacing_DatePicker-between-input-button Расстояние между полем ввода и кнопкой календаря.
     *
@@ -64,7 +65,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
       // _beforeUnmount: function() {
       // },
 
-      _openDialog: function(event) {
+      openPopup: function(event) {
           var cfg = {
             ...getOptions.getCommonOptions(this),
             target: this._container,
