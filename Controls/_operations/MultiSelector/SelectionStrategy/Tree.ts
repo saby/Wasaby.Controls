@@ -196,13 +196,15 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
    private _isAllRootItemsLoaded(model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): boolean {
       let hasMore: boolean = true;
       let items: RecordSet = getItems(model);
-      let more: number|boolean|undefined = items.getMetaData().more;
+      let more: any = items.getMetaData().more;
 
       if (typeof more === 'number') {
          let rootId: string|number|null = this._getRoot(model);
          let itemsCountRoot: number = getChildren(rootId, model, hierarchyRelation).length;
 
          hasMore = more !== itemsCountRoot;
+      } else if (typeof more === 'object') {
+         hasMore = more.after || more.before;
       } else {
          hasMore = more !== false;
       }
