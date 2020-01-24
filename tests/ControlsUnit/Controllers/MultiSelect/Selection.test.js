@@ -111,6 +111,7 @@ define([
             excludedKeys: [2, 3]
          });
          selectionInstance = new operations.Selection(cfg);
+         selectionInstance._listModel.getItems().setMetaData({more: false});
          selectionInstance.select([2, 4]);
          selectionInstance.updateSelectionForRender();
 
@@ -159,6 +160,7 @@ define([
             selectedKeys: [null]
          });
          selectionInstance = new operations.Selection(cfg);
+         selectionInstance._listModel.getItems().setMetaData({more: false});
          selectionInstance.unselect([1, 2, 3]);
          selectionInstance.updateSelectionForRender();
 
@@ -187,6 +189,7 @@ define([
             excludedKeys: [2, 3, 4]
          });
          selectionInstance = new operations.Selection(cfg);
+         selectionInstance._listModel.getItems().setMetaData({more: false});
          selectionInstance.remove([1, 2, 4]);
          selectionInstance.updateSelectionForRender();
 

@@ -86,7 +86,9 @@ define([
       });
 
       it('getCount with isAllItemsLoaded == true', async function() {
-         await instance._beforeMount(cfg);
+         let newConfig = {...cfg};
+         newConfig.listModel.getItems().setMetaData({more: false});
+         await instance._beforeMount(newConfig);
          const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
          assert.equal(instance._multiselection.getCount(), 7);

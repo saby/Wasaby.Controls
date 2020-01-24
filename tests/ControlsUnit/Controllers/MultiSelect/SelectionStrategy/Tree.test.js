@@ -113,8 +113,22 @@ define([
          it('select root', function() {
             selection.selected = [null];
             selection.excluded = [null];
+            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), null);
+
             model.getItems().setMetaData({more: false});
             assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 3);
+
+            model.getItems().setMetaData({more: {
+               after: false,
+               before: false
+            }});
+            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 3);
+
+            model.getItems().setMetaData({more: {
+               after: false,
+               before: true
+            }});
+            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), null);
          });
 
          it('select root with excluded', function() {

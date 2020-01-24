@@ -94,8 +94,16 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
    private _isAllItemsLoaded(items: RecordSet|List, limit: number): boolean {
       let
          itemsCount: number = items.getCount(),
-         more: number|boolean|undefined = items.getMetaData().more,
+         more: any = items.getMetaData().more,
          hasMore: boolean|undefined = typeof more === 'number' ? more > itemsCount : more;
+
+      if (typeof more === 'number') {
+         hasMore = more > itemsCount;
+      } else if (typeof more === 'object') {
+         hasMore = more.after || more.before;
+      } else {
+         hasMore = more !== false;
+      }
 
       return !hasMore || (limit && itemsCount >= limit);
    }
