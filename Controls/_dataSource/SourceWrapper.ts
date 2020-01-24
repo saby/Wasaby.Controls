@@ -1,8 +1,8 @@
 import {Query, ICrud, DataSet} from 'Types/source';
 import {Record, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import {error as ErrorModule} from 'Controls/dataSource';
-import {IErrorController} from '../interface';
+import {IErrorController} from 'Controls/interface';
+import * as ErrorModule from 'Controls/_dataSource/error';
 
 /**
  * Конфигурация для ошибки, которую можно получить в catch
@@ -17,21 +17,21 @@ export interface ISourceErrorData {
  */
 export interface ISourceErrorConfig {
     /**
-     * @name Controls/source/ISourceErrorConfig#mode
+     * @name Controls/dataSource/ISourceErrorConfig#mode
      * @cfg {Controls/dataSource:error.Mode} Перечисляемое множество возможных способов отображения парковочного шаблона ошибки
      * @see Controls/_dataSource/_error/Mode
      */
     mode?: ErrorModule.Mode;
 
     /**
-     * @name Controls/source/ISourceErrorConfig#onBeforeProcessError
+     * @name Controls/dataSource/ISourceErrorConfig#onBeforeProcessError
      * @cfg {Controls/dataSource:error.Mode} Коллбек для выполнения до обработчика ошибки
      */
     onBeforeProcessError?: (error: Error) => any;
 }
 
 /**
- * @name Controls/_source/SourceErrorInterceptor#source
+ * @name Controls/dataSource/SourceWrapper#source
  * @cfg {Types/source:ICrud} Ресурс для запроса данных
  * @example
  * const source = new Memory({
@@ -40,7 +40,7 @@ export interface ISourceErrorConfig {
  * });
  */
 /*
- * @name Controls/_source/SourceErrorInterceptor#source
+ * @name Controls/dataSource/SourceWrapper#source
  * @cfg {Types/source:ICrud} Data source
  * @example
  * const source = new Memory({
@@ -50,8 +50,8 @@ export interface ISourceErrorConfig {
  */
 
 /**
- * @name Controls/_source/SourceErrorInterceptor#errorConfig
- * @cfg {Controls/source/ISourceErrorConfig} Настройка отображения ошибки и коллбек
+ * @name Controls/dataSource/SourceWrapper#errorConfig
+ * @cfg {Controls/dataSource/ISourceErrorConfig} Настройка отображения ошибки и коллбек
  * @example
  *  const errorConfig: ISourceErrorConfig = {
  *     mode: error.Mode.include,
@@ -61,8 +61,8 @@ export interface ISourceErrorConfig {
  * }
  */
 /*
- * @name Controls/_source/SourceErrorInterceptor#errorConfig
- * @cfg {Controls/source/ISourceErrorConfig} Error displaying settings with callback
+ * @name Controls/dataSource/SourceWrapper#errorConfig
+ * @cfg {Controls/dataSource/ISourceErrorConfig} Error displaying settings with callback
  * @example
  *  const errorConfig: ISourceErrorConfig = {
  *     mode: error.Mode.include,
@@ -73,7 +73,7 @@ export interface ISourceErrorConfig {
  */
 
 /**
- * @name Controls/_source/SourceErrorInterceptor#errorController
+ * @name Controls/dataSource/SourceWrapper#errorController
  * @cfg {Controls/dataSource:error.Controller} Контроллер ошибки c предварительно настроенными Handlers
  * @example
  * const handlers = {
@@ -95,7 +95,7 @@ export interface ISourceErrorConfig {
  * const errorController = new error.Controller(handlers);
  */
 /*
- * @name Controls/_source/SourceErrorInterceptor#errorController
+ * @name Controls/dataSource/SourceWrapper#errorController
  * @cfg {Controls/dataSource:error.Controller} Error controller instance with previously configured handlers
  * @example
  * const handlers = {
@@ -118,13 +118,14 @@ export interface ISourceErrorConfig {
  */
 
 /**
- * Обёртка для source: ICrud, которая позволяет перехватывать ошибку загрузки и возвращать в catch конфиг для отображения ошибки
+ * Обёртка для source: ICrud, которая позволяет перехватывать ошибку загрузки и возвращать в catch
+ * ISourceErrorData конфиг для отображения ошибки
  * @remark
  * Этота обёртка должен вставляться везде где есть работа с сорсом, т.е. в
- *  • Списках (Controls/_list/List.ts and Controls/_list/ListView.ts)
- *  • formController (Controls/_form/FormController.ts)
- *  • dataSource/error/DataLoader (Controls/_dataSource/_error/DataLoader.ts and Controls/_dataSource/requestDataUtil.ts)
- * @class Controls/source/ErrorInterceptor
+ *  • Списках ({@link Controls/_list/List.ts} and {@link Controls/_list/ListView.ts})
+ *  • formController ({@link Controls/_form/FormController.ts})
+ *  • dataSource/error/DataLoader ({@link Controls/_dataSource/_error/DataLoader.ts} and {@link Controls/_dataSource/requestDataUtil.ts})
+ * @class Controls/dataSource/SourceWrapper
  * @implements Types/source/ICrud
  * @example
  * const source = new Memory({
@@ -169,10 +170,10 @@ export interface ISourceErrorConfig {
  * source: ICrud wrapper that intercepts API error and returns error.ViewConfig while Promise rejection
  * @remark
  * This wrapper should be used anywhere to work with API source, e.g.
- *  • in Lists (Controls/_list/List.ts and Controls/_list/ListView.ts)
- *  • in particular record view/edit Control (Controls/_form/FormController.ts)
- *  • in data multi-source loader (Controls/_dataSource/_error/DataLoader.ts and Controls/_dataSource/requestDataUtil.ts)
- * @class Controls/source/ErrorInterceptor
+ *  • in Lists ({@link Controls/_list/List.ts} and {@link Controls/_list/ListView.ts})
+ *  • in particular record view/edit Control ({@link Controls/_form/FormController.ts})
+ *  • in data multi-source loader ({@link Controls/_dataSource/_error/DataLoader.ts} and {@link Controls/_dataSource/requestDataUtil.ts})
+ * @class Controls/dataSource/SourceWrapper
  * @implements Types/source/ICrud
  * @example
  * const source = new Memory({
@@ -213,7 +214,7 @@ export interface ISourceErrorConfig {
  * @public
  * @author Аверкиев П.А.
  */
-export class SourceErrorInterceptor implements ICrud, IErrorController {
+export class SourceWrapper implements ICrud, IErrorController {
     readonly '[Types/_source/ICrud]': boolean = true;
     readonly '[Controls/_interface/IErrorController]': boolean = true;
 

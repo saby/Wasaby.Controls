@@ -21,7 +21,6 @@ import {default as EnumAdapter} from './_source/Adapter/Enum';
 import Controller = require('Controls/_source/SourceController');
 
 export {NavigationController} from 'Controls/_source/NavigationController';
-export {SourceErrorInterceptor, ISourceErrorConfig, ISourceErrorData} from 'Controls/_source/SourceErrorInterceptor';
 
 export {default as SelectedKey} from './_source/Adapter/SelectedKey';
 export {default as AdapterMask} from 'Controls/_source/Adapter/Mask';
