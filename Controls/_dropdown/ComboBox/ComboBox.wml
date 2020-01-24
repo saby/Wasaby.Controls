@@ -11,7 +11,7 @@
         open="{{_onOpen}}"
         selectedItemsChangedCallback="{{_setText}}"
         theme="{{_options.theme}}"
-        dropDownOpener="{{_children.content}}"
+        _dropDownOpener="{{_children.content}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         attr:class="controls-ComboBox {{_isOpen ? 'controls-ComboBox__opened'}}">
    <ws:itemPadding right="xs" left="xs"/>
