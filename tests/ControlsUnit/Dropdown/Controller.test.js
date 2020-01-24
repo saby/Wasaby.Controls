@@ -63,7 +63,7 @@ define(
             }),
             nodeProperty: 'node',
             itemTemplateProperty: 'itemTemplate',
-            dropDownOpener: 'testOpener'
+            _dropDownOpener: 'testOpener'
 
          };
 
