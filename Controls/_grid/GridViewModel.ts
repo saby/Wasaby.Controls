@@ -95,11 +95,15 @@ var
             var
                 preparedClasses = '';
 
+            if (columns[columnIndex].actionCell) {
+                return preparedClasses;
+            }
+            const arrayLengthOffset = params.hasActionCell ? 2 : 1;
             // Колонки
             if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
                 preparedClasses += (cellPadding && cellPadding.left ? ` controls-Grid__cell_spacingLeft_${cellPadding.left}` : ' controls-Grid__cell_spacingLeft') + `_theme-${theme}`;
             }
-            if (params.columnIndex < params.columns.length - 1) {
+            if (params.columnIndex < params.columns.length - arrayLengthOffset) {
                 preparedClasses += (cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight') + `_theme-${theme}`;
             }
 
@@ -117,7 +121,7 @@ var
             preparedClasses += ' controls-Grid__cell_' + (params.style || 'default');
 
             // Отступ для последней колонки
-            if (params.columnIndex === params.columns.length - 1) {
+            if (params.columnIndex === params.columns.length - arrayLengthOffset) {
                 preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.itemPadding.right || 'default').toLowerCase() + `_theme-${theme}`;
             }
             if (!params.isHeader && !params.isResult) {
@@ -138,7 +142,13 @@ var
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
-                rowIndex, itemPadding, isBreadCrumbs, style, maxEndColumn, cell: { endColumn } } = params;
+                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn } } = params;
+            if (params.cell.actionCell) {
+                return preparedClasses;
+            }
+            const actionCellOffset = params.hasActionCell ? 1 : 0;
+            const maxEndColumn = params.maxEndColumn - actionCellOffset;
+            const columnsLengthExcludedActionCell = columns.length - actionCellOffset;
             if (rowIndex === 0) {
                 if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
                     preparedClasses += ' controls-Grid__cell_spacingLeft' + `_theme-${theme}`;
@@ -147,7 +157,7 @@ var
                 preparedClasses += ' controls-Grid__cell_spacingLeft' + `_theme-${theme}`;
             }
 
-            if (columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
+            if (columnIndex < (columnsLengthExcludedActionCell - 1) || (maxEndColumn && endColumn < maxEndColumn)) {
                 preparedClasses += ' controls-Grid__cell_spacingRight' + `_theme-${theme}`;
             }
             // Отступ для последней колонки
@@ -158,7 +168,7 @@ var
                     preparedClasses += lastColClass;
                 }
             } else {
-                if (columnIndex === columns.length - 1) {
+                if (columnIndex === columnsLengthExcludedActionCell - 1) {
                     preparedClasses += lastColClass;
                 }
             }
@@ -237,6 +247,13 @@ var
 
         getColumnScrollCellClasses: function(params, theme) {
            return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
+        },
+
+        getClassesLadderHeading(itemData, theme): String {
+            let result = 'controls-Grid__row-ladder-cell__content controls-Grid__row-ladder-cell__content_';
+            result += itemData.itemPadding && itemData.itemPadding.top ? itemData.itemPadding.top : 'default';
+            result += '_theme-' + theme;
+            return result;
         },
 
         getItemColumnCellClasses: function(current, theme, editingItem) {
@@ -811,6 +828,7 @@ var
                     maxEndColumn: this._maxEndColumn,
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs,
+                    hasActionCell: this._shouldAddActionsCell(),
                 }, this._options.theme);
                 cellClasses += ' controls-Grid__header-cell_min-width';
             }
@@ -945,7 +963,7 @@ var
             }
 
             if (this._shouldAddActionsCell()) {
-                this._resultsColumns = this._resultsColumns.concat([{}]);
+                this._resultsColumns = this._resultsColumns.concat([{ actionCell: true }]);
             }
 
             this.resetResultsColumns();
@@ -994,7 +1012,8 @@ var
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
-                    isResult: true
+                    isResult: true,
+                    hasActionCell: this._shouldAddActionsCell(),
                 }, this._options.theme);
             }
             resultsColumn.cellClasses = cellClasses;
@@ -1343,6 +1362,7 @@ var
                     return current.getLastColumnIndex() >= current.columnIndex;
                 }
             };
+            current.getClassesLadderHeading = _private.getClassesLadderHeading;
             current.isDrawActions = _private.isDrawActions;
             current.isActionsColumn = _private.isActionsColumn;
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
@@ -1783,8 +1803,7 @@ var
         },
 
         isFixedLayout(): boolean {
-            // TODO: Может быть при columnScroll сделать авто ширину?
-            return true;
+            return this._options.columnScroll !== true;
         },
 
         _prepareWidthForTableColumn(column: IGridColumn): string {

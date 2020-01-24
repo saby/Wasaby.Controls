@@ -3,7 +3,7 @@
         <ws:if data="{{_showLoadingIndicatorImage}}">
             <div class="controls-BaseControl__loadingIndicatorImg-wrapper">
                 <div class="controls-BaseControl__loadingIndicatorImg"></div>
-                <ws:if data="{{_options.searchValue}}">
+                <ws:if data="{{_portionedSearchInProgress}}">
                     <div class="controls-BaseControl__abortSearch" on:click="_abortSearch()">{[Прервать поиск]}</div>
                 </ws:if>
             </div>
@@ -14,16 +14,6 @@
 <ws:template name="footerTemplateIf">
     <ws:if data="{{_loadingIndicatorState && _loadingIndicatorState !== 'up'}}">
         <ws:partial template="loadingIndicator"/>
-    </ws:if>
-    <ws:if data="{{_showContinueSearchButton}}">
-        <div class="controls-BaseControl__continueSearch ws-flexbox ws-justify-content-center">
-            <div class="controls-BaseControl__continueSearch_wrapper ws-inline-flexbox ws-align-items-center" on:click="_continueSearch()">
-                <div class="controls-BaseControl__continueSearch_icon controls-icon icon-Search2 controls-icon_size-m_theme-{{_options.theme}}"></div>
-                <div class="controls-BaseControl__continueSearch_caption">
-                    {[Продолжить поиск]}
-                </div>
-            </div>
-        </div>
     </ws:if>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content">
@@ -224,6 +214,17 @@
             <ws:partial template="fullView" name="listView" attr:class="{{_showActions ? 'controls-BaseControl_showActions'}}"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
+        </ws:if>
+
+        <ws:if data="{{_showContinueSearchButton}}">
+            <div class="controls-BaseControl__continueSearch ws-flexbox ws-justify-content-center">
+                <div class="controls-BaseControl__continueSearch_wrapper ws-inline-flexbox ws-align-items-center" on:click="_continueSearch()">
+                    <div class="controls-BaseControl__continueSearch_icon controls-icon icon-Search2 controls-icon_size-m_theme-{{_options.theme}}"></div>
+                    <div class="controls-BaseControl__continueSearch_caption">
+                        {[Продолжить поиск]}
+                    </div>
+                </div>
+            </div>
         </ws:if>
 
         <ws:if data="{{_pagingVisible}}">
