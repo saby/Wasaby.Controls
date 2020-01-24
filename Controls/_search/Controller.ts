@@ -112,12 +112,16 @@ var _private = {
       self._loading = true;
    },
 
-   needUpdateSearchController: function (options, newOptions) {
+   isNeedRecreateSearchControllerOnOptionsChanged(options, newOptions): boolean {
       return !isEqual(options.navigation, newOptions.navigation) ||
-         options.searchDelay !== newOptions.searchDelay ||
-         _private.getOriginSource(options.source) !== _private.getOriginSource(newOptions.source) ||
-         options.searchParam !== newOptions.searchParam ||
-         options.minSearchLength !== newOptions.minSearchLength;
+             options.searchDelay !== newOptions.searchDelay ||
+             options.minSearchLength !== newOptions.minSearchLength ||
+             _private.isNeedAbortSearchOnOptionsChanged(options, newOptions);
+   },
+
+   isNeedAbortSearchOnOptionsChanged(options, newOptions): boolean {
+      return options.searchParam !== newOptions.searchParam ||
+             _private.getOriginSource(options.source) !== _private.getOriginSource(newOptions.source);
    },
 
    prepareExpandedItems(searchRoot, expandedItemKey, items, parentProperty) {
@@ -188,7 +192,7 @@ var _private = {
          const searchValue = self._options.searchValueTrim ? value.trim() : value;
          const shouldSearch = self._isSearchControllerLoading() ?
              _private.isInputSearchValueChanged(self, searchValue) :
-             _private.needStartSearch(self._inputSearchValue, searchValue);
+             _private.needStartSearch(self, self._inputSearchValue, searchValue);
 
          if (shouldSearch) {
             _private.getSearchController(self).search(searchValue, force);
@@ -214,8 +218,8 @@ var _private = {
       return !searchValue || searchValue.length < self._options.minSearchLength;
    },
 
-   needStartSearch(inputSearchValue: string, searchValue: string): string {
-      return inputSearchValue.trim() || searchValue;
+   needStartSearch(self, inputSearchValue: string, searchValue: string): string {
+      return (self._options.searchValueTrim ? inputSearchValue.trim() : inputSearchValue) || searchValue;
    },
 
    needUpdateViewMode(self, newViewMode: string): boolean {
@@ -338,13 +342,17 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setFilter(clone(filter));
          }
 
-         if (_private.needUpdateSearchController(currentOptions, this._dataOptions) ||
-             _private.needUpdateSearchController(this._options, newOptions)) {
+         if (_private.isNeedAbortSearchOnOptionsChanged(currentOptions, this._dataOptions) ||
+             _private.isNeedAbortSearchOnOptionsChanged(this._options, newOptions)) {
             if (this._searchValue) {
                this._searchController.abort(true);
             }
-            this._searchController = null;
             _private.setInputSearchValue(this, '');
+         }
+
+         if (_private.isNeedRecreateSearchControllerOnOptionsChanged(currentOptions, this._dataOptions) ||
+             _private.isNeedRecreateSearchControllerOnOptionsChanged(this._options, newOptions)) {
+            this._searchController = null;
          }
 
          if (!isEqual(this._options.sorting, newOptions.sorting)) {
