@@ -5,6 +5,7 @@ import {IAdditionalQueryParams, Direction, DirectionCfg} from '../interface/IAdd
 import {IQueryParamsController} from '../interface/IQueryParamsController';
 import {default as More} from './More';
 import {Logger} from 'UI/Utils';
+import {IPagePaginationOptions} from './PageQueryParamsController';
 
 interface IPositionHasMore {
     before: boolean;
@@ -44,20 +45,7 @@ class PositionQueryParamsController implements IQueryParamsController {
     protected _positionByMeta: boolean = null;
 
     constructor(cfg: IPositionQueryParamsControllerOptions) {
-        this._options = cfg;
-
-        if (this._options.field === undefined) {
-            throw new Error('Option field is undefined in PositionQueryParamsController');
-        }
-        if (this._options.position === undefined) {
-            throw new Error('Option position is undefined in PositionQueryParamsController');
-        }
-        if (this._options.direction === undefined) {
-            throw new Error('Option direction is undefined in PositionQueryParamsController');
-        }
-        if (this._options.limit === undefined) {
-            throw new Error('Option limit is undefined in PositionQueryParamsController');
-        }
+        this.rebuildState(cfg);
     }
 
     private _getMore(): More {
@@ -220,10 +208,43 @@ class PositionQueryParamsController implements IQueryParamsController {
         }
     }
 
+    /**
+     * Запустить перестроение состояния контроллера
+     * @remark
+     * Метод полезен при использовании постраничнеой навигации при клике на конкретную страницу
+     * Позволяет не создавать новый экземпляр контроллера навигации
+     * @param cfg конфигурация, по типу аналогичная конфинурации в кронструкторе
+     */
+    /*
+     * Forces rebuild controller state
+     * @remark
+     * This method is very useful while using Page type navigation when user clicks to the particular
+     * page link.
+     * It allows to not re-create an instance for the controller
+     * @param cfg a configuration with the the same type as in controller constructor
+     */
+    rebuildState(cfg: IPositionQueryParamsControllerOptions): void {
+        this._options = cfg;
+
+        if (this._options.field === undefined) {
+            throw new Error('Option field is undefined in PositionQueryParamsController');
+        }
+        if (this._options.position === undefined) {
+            throw new Error('Option position is undefined in PositionQueryParamsController');
+        }
+        if (this._options.direction === undefined) {
+            throw new Error('Option direction is undefined in PositionQueryParamsController');
+        }
+        if (this._options.limit === undefined) {
+            throw new Error('Option limit is undefined in PositionQueryParamsController');
+        }
+    }
+
     calculateState(list: RecordSet, loadDirection: Direction): void {
         let metaNextPosition: PositionBoth;
         let more: HasMore;
 
+        // Look at the Types/source:DataSet there is a remark "don't use 'more' anymore"...
         let edgeElem: Record;
         const meta = list.getMetaData();
         more = meta.more;

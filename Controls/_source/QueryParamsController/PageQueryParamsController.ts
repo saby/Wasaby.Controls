@@ -5,8 +5,8 @@ import {IQueryParamsController} from '../interface/IQueryParamsController';
 import {default as More} from './More';
 
 export interface IPagePaginationOptions {
+    pageSize: number;
     page?: number;
-    pageSize?: number;
     hasMore?: boolean;
 }
 
@@ -21,15 +21,7 @@ class PageQueryParamsController implements IQueryParamsController {
     protected _options: IPagePaginationOptions | null;
 
     constructor(cfg: IPagePaginationOptions) {
-        this._options = cfg;
-        this._page = cfg.page || 0;
-        if (this._page !== undefined) {
-            this._prevPage = this._page - 1;
-            this._nextPage = this._page + 1;
-        }
-        if (!this._options.pageSize) {
-            throw new Error('Option pageSize is undefined in PagePagination');
-        }
+        this.rebuildState(cfg);
     }
 
     private _getMore(): More {
@@ -94,9 +86,37 @@ class PageQueryParamsController implements IQueryParamsController {
         // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
     }
 
+    /**
+     * Запустить перестроение состояния контроллера
+     * @remark
+     * Метод полезен при использовании постраничнеой навигации при клике на конкретную страницу
+     * Позволяет не создавать новый экземпляр контроллера навигации
+     * @param cfg конфигурация, по типу аналогичная конфинурации в кронструкторе
+     */
+    /*
+     * Forces rebuild controller state
+     * @remark
+     * This method is very useful while using Page type navigation when user clicks to the particular
+     * page link.
+     * It allows to not re-create an instance for the controller
+     * @param cfg a configuration with the the same type as in controller constructor
+     */
+    rebuildState(cfg: IPagePaginationOptions): void {
+        this._options = cfg;
+        this._page = cfg.page || 0;
+        if (this._page !== undefined) {
+            this._prevPage = this._page - 1;
+            this._nextPage = this._page + 1;
+        }
+        if (!this._options.pageSize) {
+            throw new Error('Option pageSize is undefined in PagePagination');
+        }
+    }
+
     calculateState(list: RecordSet, direction: Direction): void {
         const meta = list.getMetaData();
 
+        // Look at the Types/source:DataSet there is a remark "don't use 'more' anymore"...
         this.validateNavigation(meta.more);
         this._getMore().setMoreMeta(meta.more);
 

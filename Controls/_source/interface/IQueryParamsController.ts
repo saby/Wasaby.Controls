@@ -77,6 +77,23 @@ export interface IQueryParamsController {
     setState(state: any): void;
 
     /**
+     * Запустить перестроение состояния контроллера
+     * @remark
+     * Метод полезен при использовании постраничнеой навигации при клике на конкретную страницу
+     * Позволяет не создавать новый экземпляр контроллера навигации
+     * @param cfg конфигурация, по типу аналогичная конфинурации в кронструкторе
+     */
+    /*
+     * Forces rebuild controller state
+     * @remark
+     * This method is very useful while using Page type navigation when user clicks to the particular
+     * page link.
+     * It allows to not re-create an instance for the controller
+     * @param cfg a configuration with the the same type as in controller constructor
+     */
+    rebuildState(cfg: object): void;
+
+    /**
      * Устанавливает текущую страницу в контроллере
      * при прокрутке при помощи скроллпэйджинга в самое начало или самый конец списка.
      * @param direction {Direction} направление навигации ('up' или 'down')

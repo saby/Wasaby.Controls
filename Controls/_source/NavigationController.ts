@@ -292,12 +292,13 @@ export class NavigationController {
         this._loader = this._callQuery(this._source, this._options.keyProperty, queryParams.build())
             .then((list: RecordSet) => {
                 if (this._queryParamsController) {
-                    this._queryParamsController.calculateState(list, direction);
+                    try {
+                        this._queryParamsController.calculateState(list, direction);
+                    } catch (e) {
+                        return Promise.reject(e);
+                    }
                 }
                 return list;
-            })
-            .catch((error) => {
-                return error;
             });
         return this._loader;
     }
@@ -440,6 +441,27 @@ export class NavigationController {
     }
 
     /**
+     * Запустить перестроение состояния контроллера
+     * @remark
+     * Метод полезен при использовании постраничнеой навигации при клике на конкретную страницу
+     * Позволяет не создавать новый экземпляр контроллера навигации
+     * @param cfg конфигурация, по типу аналогичная конфинурации в кронструкторе
+     */
+    /*
+     * Forces rebuild controller state
+     * @remark
+     * This method is very useful while using Page type navigation when user clicks to the particular
+     * page link.
+     * It allows to not re-create an instance for the controller
+     * @param cfg a configuration with the the same type as in controller constructor
+     */
+    rebuildState(cfg: object): void {
+        if (this._queryParamsController) {
+            this._queryParamsController.rebuildState(cfg);
+        }
+    }
+
+    /**
      * Устанавливает текущую страницу в контроллере
      * при прокрутке при помощи скроллпэйджинга в самое начало или самый конец списка.
      * @param direction {Direction} направление навигации ('up' или 'down')
@@ -544,10 +566,12 @@ export class NavigationController {
      * @private
      */
     private static _isValidCrudSource(source: ICrud): boolean {
-        if (!cInstance.instanceOfMixin(source, 'Types/_source/ICrud')) {
+        if (!cInstance.instanceOfModule(source, 'Types/_source/ICrud') && !cInstance.instanceOfMixin(source, 'Types/_source/ICrud')) {
             Logger.error('NavigationController: Source option has incorrect type');
             return false;
         }
         return true;
     }
+
+    private static _check
 }
