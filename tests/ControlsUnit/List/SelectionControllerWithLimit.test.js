@@ -86,20 +86,17 @@ define([
       });
 
       it('getCount with isAllItemsLoaded == true', async function() {
-         let newConfig = {...cfg};
-         newConfig.listModel.getItems().setMetaData({more: false});
-         await instance._beforeMount(newConfig);
+         await instance._beforeMount(cfg);
          const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
          assert.equal(instance._multiselection.getCount(), 7);
       });
 
       it('getCount with isAllItemsLoaded == false', async function() {
-         await instance._beforeMount(cfg);
+         let newConfig = {...cfg};
+         newConfig.listModel.getHasMoreData = () => true;
+         await instance._beforeMount(newConfig);
          const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
-         instance._multiselection._selectionStrategy._isAllItemsLoaded = function() {
-            return false;
-         };
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
          assert.equal(instance._multiselection.getCount(), 100);
       });
