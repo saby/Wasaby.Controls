@@ -75,7 +75,7 @@ describe('Controls/_display/controllers/VirtualScrollHide', () => {
             }
 
             collection._$count = items.length;
-            collection.at = makeHideItem();
+            collection.at = () => makeHideItem();
 
             const startIndex = 5;
             const stopIndex = 8;
