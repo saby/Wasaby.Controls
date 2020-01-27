@@ -1,0 +1,6 @@
+<div attr:style="display: flex; justify-content: space-around; flex-direction: column;">
+   <Controls.scroll:Container scn="1" attr:style="width: 50%; height: 600px;">
+      <Controls.listRender:GridView
+         items="{{ _items }}" />
+   </Controls.scroll:Container>
+</div>

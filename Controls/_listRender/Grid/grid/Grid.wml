@@ -1,0 +1,25 @@
+<div>
+   <!-- Заголовок таблицы -->
+   <!-- Результаты сверху -->
+   <!-- Скроллбар горизонтального скролла -->
+
+   <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
+      <ws:partial
+         template="wml!Controls/_list/resources/For"
+         listModel="{{_listModel}}"
+         itemTemplate="{{_itemTemplate}}"
+         multiSelectTpl="{{_options.multiSelectTpl}}"
+         editingItemData="{{_options.editingItemData}}"
+         isAdd="{{_options.isAdd}}"
+         itemActionsTemplate="{{_options.itemActionsTemplate}}"
+         groupTemplate="{{_groupTemplate}}"
+         itemActionsPosition="{{_options.itemActionsPosition}}"
+         itemOutputWrapper="{{_itemOutputWrapper}}"
+         swipeTemplate="{{_options.swipeTemplate}}"/>
+   </div>
+
+   <!-- Отступ под последней записью вслучае, если в таблице есть операции над записью "вне строки" -->
+   <!-- Шаблон пустой таблицы -->
+   <!-- Результаты снизу -->
+   <!-- Подвал таблицы -->
+</div>

@@ -22,7 +22,6 @@ export default class ColumnsCollection<
 Object.assign(ColumnsCollection.prototype, {
     '[Controls/_display/ColumnsCollection]': true,
     _moduleName: 'Controls/display:ColumnsCollection',
-    _instancePrefix: 'columns-item-',
     _itemModule: 'Controls/display:ColumnsCollectionItem'
 });
 

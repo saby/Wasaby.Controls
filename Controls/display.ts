@@ -58,6 +58,9 @@ export {default as TileCollectionItem} from './_display/TileCollectionItem';
 export {default as ColumnsCollection} from './_display/ColumnsCollection';
 export {default as ColumnsCollectionItem} from './_display/ColumnsCollectionItem';
 
+export {default as GridCollection} from './_display/GridCollection';
+export {default as GridCollectionItem} from './_display/GridCollectionItem';
+
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
 export { EditInPlaceController };
 
