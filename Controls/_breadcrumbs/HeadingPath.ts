@@ -26,9 +26,6 @@ var _private = {
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
         }
-        if (options.header) {
-            self._backButtonClass = 'controls-BreadCrumbsPath__breadCrumbs_with_header';
-        }
         self._viewUpdated = true;
     }
 };
