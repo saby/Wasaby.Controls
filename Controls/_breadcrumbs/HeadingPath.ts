@@ -12,7 +12,9 @@ import 'Controls/heading';
 
 var _private = {
    drawItems: function (self, options) {
-       //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
+        self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty);
+
+        //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
         if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
             BreadCrumbsUtil.drawBreadCrumbs(self, self._breadCrumbsItems);
