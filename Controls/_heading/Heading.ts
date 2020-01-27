@@ -89,7 +89,8 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
 
    static getOptionTypes(): object {
       return {
-         caption: EntityDescriptor(String),
+         //Caption задается текстом, либо шаблоном, либо разметкой. Разметка приходит в виде объекта
+         caption: EntityDescriptor(Object, String)
       };
    }
 
