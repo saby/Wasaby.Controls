@@ -66,7 +66,7 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
     protected _maximizeButtonVisibility: boolean = false;
 
     protected _beforeMount(options: IStackTemplateOptions): void {
-        this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть')}`;
+        this._maximizeButtonTitle = `${rk('Свернуть')}/${rk('Развернуть', 'окно')}`;
         this._updateMaximizeButton(options);
         this._prepareTheme();
     }
@@ -122,7 +122,7 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
             headingStyle: 'secondary',
             closeButtonVisibility: true,
             headingSize: 'l',
-            closeButtonViewMode: 'popup',
+            closeButtonViewMode: 'toolButton',
             closeButtonTransparent: true,
             headerBorderVisible: true,
         };

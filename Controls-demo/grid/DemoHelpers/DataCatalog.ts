@@ -1,10 +1,13 @@
-import * as simpleResultTpl from 'wml!Controls-demo/grid/resources/ResultCellTemplates/Simple'
-import * as numberResultTpl from 'wml!Controls-demo/grid/resources/ResultCellTemplates/Number'
-import * as countryRatingNumber from 'wml!Controls-demo/grid/resources/CellTemplates/CountryRatingNumber'
-import {constants} from 'Env/Env'
-import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksPhoto'
-import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksDescription'
-import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksReceived'
+import * as simpleResultTpl from 'wml!Controls-demo/grid/resources/ResultCellTemplates/Simple';
+import * as numberResultTpl from 'wml!Controls-demo/grid/resources/ResultCellTemplates/Number';
+import * as countryRatingNumber from 'wml!Controls-demo/grid/resources/CellTemplates/CountryRatingNumber';
+import {constants} from 'Env/Env';
+import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksPhoto';
+import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksDescription';
+import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksReceived';
+import * as moneyEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/moneyEditor';
+import * as numberEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/numberEditor';
+import * as defaultEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/defaultEditor';
 import * as Images from 'Controls-demo/DragNDrop/Images';
 import * as itemTpl from  'wml!Controls-demo/grid/resources/CellTemplates/CellWithBgc';
 import * as itemCountr from 'wml!Controls-demo/grid/resources/CellTemplates/CountryTemp';
@@ -261,7 +264,7 @@ function getCountriesStats() {
                 width: '120px'
             }
         ],
-        getColumnsWithWidthsForSoringDemo: () => [
+        getColumnsWithWidthsForSortingDemo: () => [
             {
                 displayProperty: 'number',
                 width: '40px',
@@ -316,14 +319,14 @@ function getCountriesStats() {
                 width: 'max-content',
                 result: 12423523,
                 resultTemplate: resultCellTpl,
-                compatibleWidth: '81px'
+                compatibleWidth: '83px'
             },
             {
                 displayProperty: 'populationDensity',
                 width: 'max-content',
                 result: 5.8,
                 resultTemplate: resultCellTpl,
-                compatibleWidth: '60px'
+                compatibleWidth: '175px'
             }
         ],
         getColumnsWithAlign: () => [
@@ -354,7 +357,8 @@ function getCountriesStats() {
             },
             {
                 displayProperty: 'populationDensity',
-                width: 'max-content'
+                width: 'max-content',
+                compatibleWidth: '60px'
             }
         ],
         getColumnsWithValign: () => [
@@ -555,6 +559,7 @@ function getCountriesStats() {
             {
                 displayProperty: 'number',
                 width: 'max-content',
+                compatibleWidth: '44px',
                 template: countryRatingNumber
             },
             {
@@ -575,7 +580,8 @@ function getCountriesStats() {
             },
             {
                 displayProperty: 'populationDensity',
-                width: 'max-content'
+                width: 'max-content',
+                compatibleWidth: '60px'
             }
         ],
     }
@@ -692,7 +698,7 @@ function getTasks() {
             },
             {
                 template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksReceived',
-                width: 'auto'
+                width: '200px'
             }
         ],
         getDefaultColumns: () => [
@@ -832,7 +838,7 @@ function getEditing() {
                 balanceCostSumm: '2',
                 reserve: '2',
                 costPrice: '3'
-            },
+            }
         ],
         getEditingColumns: () => [
             {
@@ -872,6 +878,56 @@ function getEditing() {
                 template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
                 resultTemplate: resTpl,
                 results: 6
+            }
+        ],
+        getDecoratedEditingData: () => [
+            {
+                id: 1,
+                title: 'Новороссийский морской торговый порт',
+                documentSign: 145465097,
+                taxBase: 17215.00,
+                document: 'б/н'
+            },
+            {
+                id: 2,
+                title: 'Морской порт Санкт-Петербург',
+                documentSign: 1015108104,
+                taxBase: 21015.00,
+                document: '48000560-ABCC'
+            },
+            {
+                id: 3,
+                title: 'Морской торговый порт Усть-Луга',
+                documentSign: 2418052,
+                taxBase: 890145.04,
+                document: '456990005'
+            }
+        ],
+        getDecoratedEditingHeader: () => [
+            { title: 'Порт прибытия' },
+            { title: 'Цена по накладной' },
+            { title: 'Номер накладной' },
+            { title: 'Код накладной' },
+        ],
+        getDecoratedEditingColumns: () => [
+            {
+                displayProperty: 'title',
+                width: '300px'
+            },
+            {
+                displayProperty: 'taxBase',
+                width: '200px',
+                template: moneyEditor
+            },
+            {
+                displayProperty: 'documentSign',
+                width: '150px',
+                template: numberEditor
+            },
+            {
+                displayProperty: 'document',
+                width: '150px',
+                template: defaultEditor
             }
         ]
     };
@@ -931,23 +987,28 @@ function forShowWidths() {
                 },
                 {
                     displayProperty: 'maxContent',
-                    width: 'max-content'
+                    width: 'max-content',
+                    compatibleWidth: '147px'
                 },
                 {
                     displayProperty: 'fr1of3',
-                    width: '1fr'
+                    width: '1fr',
+                    compatibleWidth: '30%'
                 },
                 {
                     displayProperty: 'fr2of3',
-                    width: '2fr'
+                    width: '2fr',
+                    compatibleWidth: '60%'
                 },
                 {
                     displayProperty: 'auto',
-                    width: 'auto'
+                    width: 'auto',
+                    compatibleWidth: '139px'
                 },
                 {
                     displayProperty: 'minMax',
-                    width: 'minmax(50px, 200px)'
+                    width: 'minmax(50px, 200px)',
+                    compatibleWidth: '200px'
                 }
             ]
         },
