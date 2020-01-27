@@ -475,7 +475,7 @@ var ItemsViewModel = BaseViewModel.extend({
             this.setIndexes(0, this.getCount());
             this._nextModelVersion();
 
-            // Необходимо нотифицировать о ресете модели иначе отсюда, иначе никто этого не сделает
+            // Необходимо нотифицировать о ресете модели отсюда, иначе никто этого не сделает
             // и об изменениях модели никто не узнает. Вследствие этого скакнет virtualScroll
             // https://online.sbis.ru/opendoc.html?guid=569a3c15-462f-4765-b624-c913baed1a57
             this._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET);
