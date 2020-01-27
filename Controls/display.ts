@@ -60,6 +60,7 @@ export {default as ColumnsCollectionItem} from './_display/ColumnsCollectionItem
 
 export {default as GridCollection} from './_display/GridCollection';
 export {default as GridCollectionItem} from './_display/GridCollectionItem';
+export {default as GridColumn} from './_display/GridColumn';
 
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
 export { EditInPlaceController };

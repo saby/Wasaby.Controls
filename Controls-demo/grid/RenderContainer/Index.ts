@@ -7,6 +7,14 @@ export default class GridRenderContainerDemo extends Control {
     protected _template: TemplateFunction = template;
 
     protected _items: RecordSet = this._generateItems(100);
+    protected _columns = [
+        {
+            template: 'abc'
+        },
+        {
+            template: 'def'
+        }
+    ];
 
     private _generateItems(count: number) {
         const rawData = [];

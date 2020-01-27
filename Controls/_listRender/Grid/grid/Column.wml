@@ -1,0 +1,1 @@
+<div>{{ column.getTemplate() }}</div>
