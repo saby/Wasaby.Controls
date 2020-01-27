@@ -29,6 +29,7 @@ export interface IViewOptions extends IControlOptions {
     itemActions?: any[];
     itemActionVisibilityCallback?: (action, item) => boolean;
     itemActionsPosition?: string;
+    itemActionsProperty?: string;
     style?: string;
 
     actionAlignment?: string;
@@ -81,15 +82,16 @@ export default class View extends Control<IViewOptions> {
         if (
             options.itemActions !== this._options.itemActions ||
             options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
-            options.itemActions && collectionRecreated
+            options.itemActionsProperty !== this._options.itemActionsProperty ||
+            (options.itemActions || options.itemActionsProperty) && collectionRecreated
         ) {
             ItemActionsController.resetActionsAssignment(this._collection);
 
             // TODO Only reassign actions if Render is hovered. Otherwise wait
             // for mouseenter or touchstart to recalc the items
-            ItemActionsController.assignActions(
-                this._collection,
+            this._assignItemActions(
                 options.itemActions,
+                options.itemActionsProperty,
                 options.itemActionVisibilityCallback
             );
         }
@@ -113,17 +115,17 @@ export default class View extends Control<IViewOptions> {
     }
 
     protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
-        ItemActionsController.assignActions(
-            this._collection,
+        this._assignItemActions(
             this._options.itemActions,
+            this._options.itemActionsProperty,
             this._options.itemActionVisibilityCallback
         );
     }
 
     protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        ItemActionsController.assignActions(
-            this._collection,
+        this._assignItemActions(
             this._options.itemActions,
+            this._options.itemActionsProperty,
             this._options.itemActionVisibilityCallback
         );
     }
@@ -221,6 +223,22 @@ export default class View extends Control<IViewOptions> {
         collectionOptions: IViewOptions
     ): Collection<Model> {
         return diCreate(module, { ...collectionOptions, collection: items });
+    }
+
+    protected _assignItemActions(
+        itemActions: any[],
+        itemActionsProperty: string,
+        itemActionsVisibilityCallback: (action, item) => boolean
+    ): void {
+        const actionsGetter =
+            itemActionsProperty
+            ? (item) => item.getContents().get(itemActionsProperty)
+            : () => itemActions;
+        ItemActionsController.assignActions(
+            this._collection,
+            actionsGetter,
+            itemActionsVisibilityCallback
+        );
     }
 
     static getDefaultOptions(): Partial<IViewOptions> {

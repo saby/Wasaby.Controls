@@ -49,6 +49,7 @@ describe('Controls/_display/controllers/VirtualScrollHide', () => {
     describe('setup()', () => {
         it('sets view iterator with required fields', () => {
             const collection = makeCollection();
+            collection.at = () => makeHideItem();
 
             VirtualScrollHideController.setup(collection);
 
@@ -74,12 +75,14 @@ describe('Controls/_display/controllers/VirtualScrollHide', () => {
             }
 
             collection._$count = items.length;
-            collection.at = (index) => items[index];
+            collection.at = makeHideItem();
 
             const startIndex = 5;
             const stopIndex = 8;
 
             VirtualScrollHideController.setup(collection);
+            collection.at = (index) => items[index];
+
             VirtualScrollHideController.setIndices(collection, startIndex, stopIndex);
 
             items.forEach((item, index) => {
@@ -99,9 +102,11 @@ describe('Controls/_display/controllers/VirtualScrollHide', () => {
             }
 
             collection._$count = items.length;
-            collection.at = (index) => items[index];
+            collection.at = () => makeHideItem();
 
             VirtualScrollHideController.setup(collection);
+            collection.at = (index) => items[index];
+
             VirtualScrollHideController.setIndices(collection, 5, 8);
             VirtualScrollHideController.setIndices(collection, 1, 3);
 

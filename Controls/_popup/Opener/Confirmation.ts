@@ -14,6 +14,7 @@ import {IConfirmationOpener, IConfirmationOptions} from 'Controls/_popup/interfa
  * @class Controls/_popup/Opener/Confirmation
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IConfirmation
+ * @mixes Controls/_popup/interface/IConfirmationFooter
  * @implements Controls/_popup/interface/IConfirmationFooter
  * @control
  * @public
@@ -38,9 +39,9 @@ class Confirmation extends Control<IControlOptions> implements IConfirmationOpen
     }
 
     open(templateOptions: IConfirmationOptions = {}): Promise<boolean | undefined> {
-        // TODO В engine задают templateOptions, нужно выписать им задачу
-        const options: IConfirmationOptions = {...templateOptions, ...this._options.templateOptions};
+        const options: IConfirmationOptions = {...templateOptions};
         options.opener = this;
+        options.theme = this._options.theme;
         return Confirmation.openPopup(options);
     }
 

@@ -94,6 +94,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     editingConfig: any;
     unique?: boolean;
     importantItemProperties?: string[];
+    itemActionsProperty?: string;
 }
 
 export interface ICollectionCounters {
@@ -564,6 +565,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$contextMenuConfig: any;
 
     protected _$compatibleReset: boolean;
+
+    protected _$itemActionsProperty: string;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -1366,6 +1369,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const session = this._startUpdateSession();
         this._reFilter();
         this._finishUpdateSession(session);
+        this._nextVersion();
     }
 
     /**
@@ -1422,6 +1426,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const session = this._startUpdateSession();
         this._reFilter();
         this._finishUpdateSession(session);
+        this._nextVersion();
     }
 
     /**
@@ -1483,6 +1488,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const session = this._startUpdateSession();
         this._reFilter();
         this._finishUpdateSession(session);
+        this._nextVersion();
 
         return true;
     }
@@ -2215,6 +2221,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
             this.nextVersion();
         }
+    }
+
+    getItemActionsProperty(): string {
+        return this._$itemActionsProperty;
     }
 
     // region SerializableMixin
@@ -3307,6 +3317,7 @@ Object.assign(Collection.prototype, {
     _$hasMoreData: false,
     _$compatibleReset: false,
     _$contextMenuConfig: null,
+    _$itemActionsProperty: '',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,

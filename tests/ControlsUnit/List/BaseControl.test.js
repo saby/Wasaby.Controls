@@ -596,8 +596,8 @@ define([
          });
 
          var dataLoadFired = false;
-         var portionSearchCanceled = false;
-
+         var portionSearchTimerReseted = false;
+         var portionSearchReseted = false;
          var beforeLoadToDirectionCalled = false;
 
          var cfg = {
@@ -620,11 +620,12 @@ define([
             navigation: {
                source: 'page',
                sourceConfig: {
-                  pageSize: 3,
+                  pageSize: 2,
                   page: 0,
                   hasMore: false
                }
-            }
+            },
+            searchValue: 'test'
          };
 
          var ctrl = new lists.BaseControl(cfg);
@@ -634,23 +635,22 @@ define([
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
-         ctrl._portionedSearch._clearTimer = function () {
-            portionSearchCanceled = true;
-         };
 
-         const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down');
+         ctrl._portionedSearch.continueSearch();
          await loadPromise;
-         assert.isTrue(portionSearchCanceled);
-         assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+         assert.isTrue(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
 
-         ctrl._portionedSearch.shouldSearch = () => false;
-         portionSearchCanceled = false;
-         await lists.BaseControl._private.loadToDirection(ctrl, 'down');
-         assert.isFalse(portionSearchCanceled);
+         loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         await loadPromise;
+         assert.isFalse(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
       });
 
       it('prepareFooter', function() {
@@ -1392,6 +1392,30 @@ define([
             });
             assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
          });
+
+         it('depend on portionedSearch', () => {
+            control._sourceController._hasMoreData = {up: false, down: true};
+            control._showContinueSearchButton = true;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
+
+            control._showContinueSearchButton = false;
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'visible'}, control.lastNotifiedArguments[0]);
+
+            control._portionedSearch.abortSearch();
+            updateShadowModeHandler.call(control, event, {
+               top: 0,
+               bottom: 0
+            });
+            assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
+         });
       });
 
       it('scrollToEdge_load', function(done) {
@@ -1509,19 +1533,17 @@ define([
          ctrl._children = triggers;
          // эмулируем появление скролла
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
+         ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
 
          // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            ctrl._scrollPageLocked = true;
             // прокручиваем к низу, проверяем состояние пэйджинга
             lists.BaseControl._private.handleListScroll(ctrl, {
                scrollTop: 300,
                position: 'down'
             });
-
-            assert.isFalse(ctrl._scrollPageLocked);
 
             assert.deepEqual({
                stateBegin: 'normal',
@@ -1540,6 +1562,62 @@ define([
                stateNext: 'normal',
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+            // Прокрутили в конец списка, sourceController только что загрузил последнюю пачку данных
+            // (hasMoreData возвращает false),
+            // то кнопки пейджинга в этот момент дизейблить не нужно: до конца еще не до сколлили
+            ctrl._sourceController.hasMoreData = () => false;
+            ctrl._hasLoadedData = true;
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'normal',
+               stateEnd: 'normal'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+            ctrl._pagingVisible = true;
+            ctrl._abortSearch();
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'disabled',
+               stateEnd: 'disabled'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'disabled',
+               stateEnd: 'disabled'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            lists.BaseControl._private.getPortionedSearch(ctrl).reset();
+
+            // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
+            // и еще раз доскроллили до конца, то самое время блокировать кнопки.
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 400,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'disabled',
+               stateEnd: 'disabled'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+
+
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'middle'
+            });
 
             lists.BaseControl._private.onScrollHide(ctrl);
             assert.deepEqual({
@@ -1561,6 +1639,59 @@ define([
             }, 100);
 
          }, 100);
+      });
+
+      it('abortSearch', async () => {
+         const heightParams = {
+            scrollHeight: 400,
+            clientHeight: 1000
+         };
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            navigation: {
+               view: 'infinity',
+               source: 'page',
+               viewConfig: {
+                  pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  hasMore: false
+               }
+            },
+         };
+         const ctrl = new lists.BaseControl(cfg);
+         let shadowMode;
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         lists.BaseControl._private.onScrollShow(ctrl, heightParams);
+         ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+         ctrl._pagingVisible = true;
+         ctrl._pagingCfg = {};
+         ctrl._notify = (eventName, eventResult) => {
+            if (eventName === 'updateShadowMode') {
+               shadowMode = eventResult[0];
+            }
+         };
+         ctrl._abortSearch();
+
+         assert.deepEqual(ctrl._pagingCfg, {stateNext: 'disabled', stateEnd: 'disabled'});
+         assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
       });
 
       it('scrollHide/scrollShow base control state', function() {
@@ -2381,7 +2512,28 @@ define([
             .at(2), ctrl._listViewModel.getMarkedItem()
             .getContents());
       });
-      it ('needFooterPadding', function() {
+      it('_needBottomPadding after reload in beforeMount', async function() {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            itemActionsPosition: 'outside',
+            keyProperty: 'id',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            source: source,
+         };
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.isTrue(ctrl._needBottomPadding);
+
+      });
+      it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
          };
@@ -4427,6 +4579,9 @@ define([
          };
          instance._itemMouseMove({}, {});
          assert.equal(eName, 'draggingItemMouseMove');
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
@@ -4453,6 +4608,10 @@ define([
          instance._listViewModel.getDragItemData = () => ({});
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'draggingItemMouseLeave');
+         eName = null;
+         instance.saveOptions({...cfg, itemsDragNDrop: false});
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'itemMouseLeave');
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {
@@ -4656,6 +4815,12 @@ define([
          };
          let instance = new lists.BaseControl(cfg);
          let cfgClone = { ...cfg };
+         let portionSearchReseted = false;
+
+         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
+         instance._portionedSearch.reset = () => {
+            portionSearchReseted = true;
+         };
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
@@ -4670,13 +4835,16 @@ define([
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
 
+         portionSearchReseted = false;
          cfgClone = { ...cfg };
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
       });
 
       it('_beforeMount with PrefetchProxy in source', function() {
@@ -5090,7 +5258,7 @@ define([
                let expectedSourceConfig = {};
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
-               baseControl._recreateSourceController = function(newSource, newNavigation) {
+               baseControl.recreateSourceController = function(newSource, newNavigation) {
                   assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
                };
                expectedSourceConfig.page = 0;

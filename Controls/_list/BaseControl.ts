@@ -65,7 +65,6 @@ const
 
 const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
-const ITEMACTIONS_UNLOCK_DELAY = 200;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 
 const MIN_SCROLL_PAGING_PROPORTION = 2;
@@ -187,9 +186,6 @@ var _private = {
                 self._cachedPagingState = null;
 
                 if (listModel) {
-                    if (self._isActive) {
-                        isActive = true;
-                    }
                     if (self._options.groupProperty) {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
@@ -214,9 +210,6 @@ var _private = {
                             self._markedKeyForRestoredScroll = nextKey;
                         }
                         self._items = listModel.getItems();
-                    }
-                    if (isActive === true) {
-                        self._children.listView.activate();
                     }
 
                     if (self._sourceController) {
@@ -464,12 +457,8 @@ var _private = {
     loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
-        const portionedSearch = _private.getPortionedSearch(self);
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
-                if (portionedSearch.shouldSearch()) {
-                    portionedSearch.reset();
-                }
                 self._loadedItems = addedItems;
             }
             if (self._options.serviceDataLoadCallback instanceof Function) {
@@ -479,6 +468,10 @@ var _private = {
                 userCallback(addedItems, direction);
             }
             _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
+
+            if (self._options.searchValue) {
+                _private.loadToDirectionWithSearchValueEnded(self, addedItems);
+            }
 
             if (self._options.virtualScrolling && self._isMounted) {
                 self._children.scrollController.itemsFromLoadToDirection = true;
@@ -520,7 +513,7 @@ var _private = {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
             if (self._options.searchValue) {
-                portionedSearch.startSearch();
+                _private.loadToDirectionWithSearchValueStarted(self);
             }
             _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.groupProperty) {
@@ -578,6 +571,9 @@ var _private = {
             }
             if (self._loadTriggerVisibility.down || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'down', filter);
+            }
+            if (self._options.searchValue) {
+                _private.checkPortionedSearchByScrollTriggerVisibility(self, self._loadTriggerVisibility.down);
             }
         } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
             _private.loadToDirectionIfNeed(self, 'down', filter);
@@ -669,6 +665,7 @@ var _private = {
                self._options.dataLoadErrback,
                filter
             );
+            self._hasLoadedData = true;
         }
     },
 
@@ -882,13 +879,17 @@ var _private = {
             } else {
                 // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                 if (self._sourceController) {
+                    const hasMoreDataUp = self._sourceController.hasMoreData('up');
+                    const hasMoreDataDown = self._sourceController.hasMoreData('down');
+
                     hasMoreData = {
-                        up: self._sourceController.hasMoreData('up'),
-                        down: self._sourceController.hasMoreData('down')
+                        up: hasMoreDataUp || self._hasLoadedData,
+                        down: (hasMoreDataDown || self._hasLoadedData) && _private.allowLoadMoreByPortionedSearch(self)
                     };
                 }
                 self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
             }
+            self._hasLoadedData = false;
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
@@ -896,7 +897,6 @@ var _private = {
                 });
             }
         }
-        self._scrollPageLocked = false;
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -958,26 +958,81 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
-        self._scrollPageLocked = false;
     },
 
     getPortionedSearch(self): PortionedSearch {
         return self._portionedSearch || (self._portionedSearch = new PortionedSearch({
+            searchStartCallback: () => {
+               self._portionedSearchInProgress = true;
+            },
             searchStopCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._showContinueSearchButton = true;
                 self._sourceController.cancelLoading();
             },
             searchResetCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._showContinueSearchButton = false;
             },
             searchContinueCallback: () => {
+                self._portionedSearchInProgress = true;
                 self._showContinueSearchButton = false;
                 _private.loadToDirectionIfNeed(self, 'down');
             },
             searchAbortCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._sourceController.cancelLoading();
+
+                _private.disablePagingNextButtons(self);
+
+                if (self._isScrollShown) {
+                    _private.updateShadowMode(self, self._placeholderSizes);
+                }
             }
         }));
+    },
+
+    disablePagingNextButtons(self): void {
+        if (self._pagingVisible) {
+            self._pagingCfg = {...self._pagingCfg};
+            self._pagingCfg.stateNext = 'disabled';
+            self._pagingCfg.stateEnd = 'disabled';
+        }
+    },
+
+    loadToDirectionWithSearchValueStarted(self): void {
+        _private.getPortionedSearch(self).startSearch();
+    },
+
+    loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
+        const portionedSearch = _private.getPortionedSearch(self);
+        if (!self._sourceController.hasMoreData('down')) {
+            portionedSearch.reset();
+        } else if (loadedItems.getCount()) {
+            portionedSearch.resetTimer();
+        }
+    },
+
+    checkPortionedSearchByScrollTriggerVisibility(self, scrollTriggerVisibility: boolean): void {
+        if (!scrollTriggerVisibility) {
+            _private.getPortionedSearch(self).resetTimer();
+        }
+    },
+
+    allowLoadMoreByPortionedSearch(self): boolean {
+        return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
+    },
+
+    updateShadowMode(self, placeholderSizes: {top: number, bottom: number}): void {
+        const itemsCount = self._listViewModel && self._listViewModel.getCount();
+        const hasMoreData = (direction) => self._sourceController && self._sourceController.hasMoreData(direction);
+        const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
+        const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
+
+        self._notify('updateShadowMode', [{
+            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+            bottom: (placeholderSizes.bottom || showShadowByNavigation && showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+        }], {bubbling: true});
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -1501,6 +1556,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _savedStartIndex: 0,
     _savedStopIndex: 0,
+    _placeholderSizes: null,
 
     _template: BaseControlTpl,
     iWantVDOM: true,
@@ -1555,9 +1611,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _resetScrollAfterReload: false,
     _scrollPageLocked: false,
+    _hasLoadedData: false,
 
     _itemReloaded: false,
     _itemActionsInitialized: false,
+
+    _portionedSearch: null,
+    _portionedSearchInProgress: null,
+    _showContinueSearchButton: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1673,6 +1734,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
                     }
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, result.data, self._listViewModel);
+
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
@@ -1726,14 +1789,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     updateShadowModeHandler(_: SyntheticEvent<Event>, placeholderSizes: {top: number, bottom: number}): void {
-        const itemsCount = this._listViewModel && this._listViewModel.getCount();
-        const hasMoreData = (direction) => this._sourceController && this._sourceController.hasMoreData(direction);
-        const showShadowByNavigation = _private.needShowShadowByNavigation(this._options.navigation, itemsCount);
-
-        this._notify('updateShadowMode', [{
-            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || showShadowByNavigation && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
-        }], {bubbling: true});
+        this._placeholderSizes = placeholderSizes;
+        _private.updateShadowMode(this, placeholderSizes);
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDireciton): void {
@@ -1777,14 +1834,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     getSourceController: function() {
         return this._sourceController;
-    },
-
-    _onActivated: function() {
-        this._isActive = true;
-    },
-
-    _onDeactivated: function() {
-        this._isActive = false;
     },
 
     _afterMount: function() {
@@ -1860,7 +1909,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
         if (recreateSource) {
-            this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
+            this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
 
             //Нужно обновлять опции записи не только при наведении мыши,
             //так как запись может поменяться в то время, как курсор находится на ней
@@ -1882,8 +1931,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
+            _private.getPortionedSearch(self).reset();
 
-            //return result here is for unit tests
+            // return result here is for unit tests
             return _private.reload(self, newOptions);
         }
 
@@ -2442,11 +2492,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if ((!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) && !this._showActions) {
             this._showActions = true;
         }
-        _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
+        if (this._options.itemsDragNDrop) {
+            _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
+        }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
-        _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+        if (this._options.itemsDragNDrop) {
+            _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+        }
     },
     _sortingChanged: function(event, propName) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName);
@@ -2471,12 +2525,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             newNavigation.sourceConfig.page = params.page - 1;
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
-        this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
+        this.recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
         _private.reload(this, this._options);
         this._shouldRestoreScrollPosition = true;
     },
 
-    _recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
+    recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
 
         if (this._sourceController) {
             this._sourceController.destroy();
@@ -2555,9 +2609,6 @@ BaseControl.getDefaultOptions = function() {
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
         stickyHeader: true,
-        selectionStrategy: {
-           name: 'Controls/operations:FlatSelectionStrategy'
-        },
         virtualScrollMode: 'remove'
     };
 };

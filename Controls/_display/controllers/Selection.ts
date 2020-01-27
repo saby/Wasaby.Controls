@@ -3,7 +3,7 @@ import { Model } from 'Types/entity';
 
 export interface ISelectionItem {
     getContents(): Model;
-    setSelected(selected: boolean): void;
+    setSelected(selected: boolean, silent?: boolean): void;
     isSelected(): boolean;
 }
 
@@ -25,7 +25,19 @@ export function selectItems(
             selected = selection.get(itemId);
         }
 
-        item.setSelected(selected);
+        item.setSelected(selected, true);
     });
     collection.nextVersion();
+}
+
+export function selectItem(
+    collection: ISelectionCollection,
+    key: TItemKey,
+    state: boolean
+): void {
+    const item = collection.getItemBySourceKey(key);
+    if (item) {
+        item.setSelected(state, true);
+        collection.nextVersion();
+    }
 }

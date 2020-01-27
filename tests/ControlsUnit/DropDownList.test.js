@@ -54,8 +54,12 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
       };
    };
 
-   var getDropDownListWithConfig = function(config) {
+   var getDropDownListWithConfig = function(config, openCallback, closeCallback) {
       var dropDownList = new dropdownPopup.List(config);
+      dropDownList._children.subDropdownOpener = {
+         open: openCallback,
+         close: closeCallback
+      };
       dropDownList.saveOptions(config);
       return dropDownList;
    };
@@ -67,15 +71,25 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
          it('_itemMouseEnter', function() {
             var dropDownConfig, dropDownList;
             var opened = false;
+            var closed = false;
 
             dropDownConfig = getDropDownConfig();
-            dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList = getDropDownListWithConfig(
+               dropDownConfig,
+               () => {
+                  opened = true;
+                  closed = false;
+               },
+               () => {
+                  opened = false;
+                  closed = true;
+               }
+            );
 
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig);
 
             //moch child opener
-            dropDownList._children = { subDropdownOpener: { close: function() {opened = false;}, open: function() {opened = true;} } };
             dropDownList._hasHierarchy = false;
             dropDownList._subDropdownItem = null;
 
@@ -139,10 +153,19 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
          });
 
          it('check hierarchy', function() {
-            var dropDownConfig, dropDownList;
+            let dropDownConfig, dropDownList;
+            let closed = false;
 
             dropDownConfig = getDropDownConfig();
-            dropDownList = getDropDownListWithConfig(dropDownConfig);
+            dropDownList = getDropDownListWithConfig(
+               dropDownConfig,
+               () => {
+                  closed = false;
+               },
+               () => {
+                  closed = true;
+               }
+            );
 
             dropDownList._beforeMount(dropDownConfig);
             dropDownList._beforeUpdate(dropDownConfig);
@@ -155,6 +178,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropDownConfig.rootKey = 1;
             dropDownList._beforeUpdate(dropDownConfig);
 
+            assert.isTrue(closed);
             assert.isTrue(dropDownList._hasHierarchy);
 
             dropDownConfig = getDropDownConfig();
@@ -272,19 +296,21 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             ddlConfig = {...ddlConfig, ...config2};
             let ddl = getDropDownListWithConfig(ddlConfig);
             ddl._beforeMount(ddlConfig);
-            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.icon, 'icon-add');
             assert.equal(ddl._headConfig.caption, 'Caption');
 
             ddlConfig.iconSize = 's';
             ddl._headConfig = {};
             ddl._beforeMount(ddlConfig);
-            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.icon, 'icon-add');
+            assert.equal(ddl._headConfig.iconSize, 's');
             assert.equal(ddl._headConfig.caption, 'Caption');
 
             ddlConfig.iconSize = 's';
             ddlConfig.rootKey = undefined;
             ddl._beforeMount(ddlConfig);
-            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.icon, 'icon-add');
+            assert.equal(ddl._headConfig.iconSize, 's');
             assert.equal(ddl._headConfig.caption, 'Caption');
          });
          it('check list view model', function() {
@@ -334,7 +360,42 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropDownList._beforeMount(dropDownConfig);
             assert.isTrue(dropDownList._popupOptions !== undefined);
          });
+         it('check iconPadding', function() {
+            let config2 = {
+               showHeader: true,
+               icon: 'icon-add icon-medium',
+               parentProperty: 'parent',
+               rootKey: null,
+               caption: 'Caption'
+            };
+            let ddlConfig = getDropDownConfig();
+            ddlConfig = {...ddlConfig, ...config2};
+            let ddl = getDropDownListWithConfig(ddlConfig);
+            ddl._beforeMount(ddlConfig);
+            assert.deepEqual(ddl._iconPadding, { 'null': 'icon-medium' });
 
+            ddlConfig.iconSize = 's';
+            ddl._beforeMount(ddlConfig);
+            assert.deepEqual(ddl._iconPadding, { 'null': 'icon-small' });
+
+            ddlConfig.showHeader = false;
+            ddl._beforeMount(ddlConfig);
+            assert.deepEqual(ddl._iconPadding, {});
+
+            ddlConfig.iconSize = 'm';
+            ddlConfig.items = new collection.RecordSet({
+               rawData: [
+                  { id: 'first', '@parent': true },
+                  { id: '2' },
+                  { id: '3', icon: 'icon-add', parent: 'first' },
+                  { id: '4' }
+               ],
+               keyProperty: 'key'
+            });
+            ddl._beforeMount(ddlConfig);
+            ddl.root = 'first';
+            assert.deepEqual(ddl._iconPadding, { 'first': 'icon-medium' });
+         });
       });
 
       describe('DropdownList::_private.getSubMenuOptions', function() {

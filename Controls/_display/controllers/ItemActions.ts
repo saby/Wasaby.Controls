@@ -11,6 +11,8 @@ import { SwipeVerticalMeasurer, SwipeHorizontalMeasurer } from 'Controls/list';
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
 
+type TActionsGetterFunction = (item) => TItemAction[];
+
 export type TItemActionVisibilityCallback = (
     action: TItemAction,
     item: unknown
@@ -58,7 +60,7 @@ const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
 
 export function assignActions(
     collection: IItemActionsCollection,
-    actions: TItemAction[],
+    actionsGetter: TActionsGetterFunction,
     visibilityCallback: TItemActionVisibilityCallback = () => true
 ): void {
     if (collection.areActionsAssigned()) {
@@ -66,13 +68,13 @@ export function assignActions(
     }
 
     const supportsEventRaising = typeof collection.setEventRaising === 'function';
-    const fixedActions = actions.map(_fixActionIcon);
 
     if (supportsEventRaising) {
         collection.setEventRaising(false, true);
     }
 
     collection.each((item) => {
+        const fixedActions = actionsGetter(item).map(_fixActionIcon);
         const actionsForItem = fixedActions.filter((action) =>
             visibilityCallback(action, item.getContents())
         );

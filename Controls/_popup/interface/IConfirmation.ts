@@ -1,4 +1,5 @@
 import {IConfirmationFooterOptions} from 'Controls/_popup/interface/IConfirmationFooter';
+import {IControlOptions} from 'UI/Base';
 
 /**
  * Интерфейс для опций окон подтверждения.
@@ -7,7 +8,7 @@ import {IConfirmationFooterOptions} from 'Controls/_popup/interface/IConfirmatio
  * @public
  * @author Красильников А.С.
  */
-export interface IConfirmationOptions extends IConfirmationFooterOptions {
+export interface IConfirmationOptions extends IConfirmationFooterOptions, IControlOptions {
     style?: string;
     size?: string;
     message?: string;
@@ -38,12 +39,6 @@ export interface IConfirmationOpener {
 /**
  * @name Controls/_popup/interface/IConfirmation#details
  * @cfg {String} Дополнительный текст диалога подтверждения
- */
-
-/**
- * @name Controls/_popup/interface/IConfirmation#isOpened
- * @function
- * @description Возвращает информацию о том, открыто ли всплывающее окно.
  */
 
 /**
