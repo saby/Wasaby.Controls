@@ -1328,6 +1328,9 @@ var
 
             if (current.isGroup) {
                 current.groupPaddingClasses = _private.getGroupPaddingClasses(current, this._options.theme);
+                current.shouldFixGroupOnColumn = (columnAlignGroup?: number) => {
+                    return columnAlignGroup !== undefined && columnAlignGroup < current.columns.length - (current.hasMultiSelect ? 1 : 0)
+                };
                 return current;
             }
 
