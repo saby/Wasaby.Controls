@@ -47,7 +47,7 @@ export {default as IIcon, IIconOptions} from './_interface/IIcon';
 export {default as IIconSize, IIconSizeOptions} from './_interface/IIconSize';
 export {default as IFontColorStyle, IFontColorStyleOptions} from './_interface/IFontColorStyle';
 export {default as IFontSize, IFontSizeOptions} from './_interface/IFontSize';
-export {default as IFontWeight, IFontWeightOptions} from './_interface/IFontWeight';
+export {default as IFontWeight, IFontWeightOptions, TFontWeight, getFontWeightTypes} from './_interface/IFontWeight';
 export {default as IHeight, IHeightOptions} from './_interface/IHeight';
 export {default as ISingleSelectable, ISingleSelectableOptions} from './_interface/ISingleSelectable';
 export {default as IMultiSelectable, IMultiSelectableOptions} from './_interface/IMultiSelectable';
