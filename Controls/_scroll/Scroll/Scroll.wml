@@ -15,7 +15,6 @@
                            {{_displayState.hasScroll ? 'controls-Scroll__content_possibleScroll'}}
                            {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}
                            {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
-                 on:controlResize="_resizeHandler()"
                  on:scroll="_scrollHandler()">
                <ws:partial template="{{_options.content}}"
                            scope="{{_options}}"
@@ -45,6 +44,7 @@
 <div class="controls-Scroll ws-flexbox ws-flex-column" on:keydown="_keydownHandler()">
       <ws:partial template="content"
                attr:class="{{_pagingState.visible ? 'controls-Scroll__content_paging'}}"
+               on:controlResize="_contentResizeHandler()"
                   on:scrollMove="_scrollMoveHandler()"/>
 
    <ws:if data="{{_scrollbarVisibility()}}">

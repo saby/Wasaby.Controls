@@ -634,6 +634,11 @@ var
          }
       },
 
+      _contentResizeHandler: function(event: SyntheticEvent<Event>): void {
+         event.stopPropagation();
+         this._resizeHandler();
+      },
+
       _resizeHandler: function() {
          const displayState = _private.calcDisplayState(this);
 
