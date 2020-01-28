@@ -1,11 +1,11 @@
 import rk = require('i18n!Controls');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_operations/__MultiSelector';
-import {Memory, Rpc} from 'Types/source';
+import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {TKeysSelection, TSelectionRecord, ISelectionObject} from 'Controls/interface';
-import * as selectionToRecord from 'Controls/_operations/MultiSelector/selectionToRecord';
+import {TKeysSelection, ISelectionObject} from 'Controls/interface';
+import {default as getCountUtil, IGetCountCallParams} from 'Controls/_operations/MultiSelector/getCount';
 
 const DEFAULT_ITEMS = [
    {
@@ -32,19 +32,13 @@ const SHOW_ALL_ITEM =  {
 
 type TCount = null|number|void;
 
-export interface ISelectedCountConfig {
-   rpc: Rpc;
-   data: object;
-   command: string;
-}
-
 export interface IMultiSelectorOptions extends IControlOptions {
    selectedKeys: TKeysSelection;
    excludedKeys: TKeysSelection;
    selectedKeysCount: TCount;
    root?: number|string;
    selectionViewMode?: 'all'|'selected';
-   selectedCountConfig?: ISelectedCountConfig;
+   selectedCountConfig?: IGetCountCallParams;
 }
 
 export default class MultiSelector extends Control<IMultiSelectorOptions> {
@@ -134,34 +128,14 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
          countResult = count === undefined ? selection.selected.length : count;
          methodResult = Promise.resolve(countResult);
       } else {
-         methodResult = this._getCountByMethodCall(selection);
+         this._children.countIndicator.show();
+         methodResult = getCountUtil.getCount(selection, this._options.selectedCountConfig).then((count) => {
+            this._children.countIndicator.hide();
+            return count;
+         });
       }
 
       return methodResult;
-   }
-
-   private _getCountByMethodCall(selection: ISelectionObject): Promise<TCount> {
-      const selectionCountConfig = this._options.selectedCountConfig;
-      const data = this._getDataForCallWithSelection(selection);
-
-      this._children.countIndicator.show();
-      return selectionCountConfig.rpc.call(selectionCountConfig.command, data).then((dataSet) => {
-         this._children.countIndicator.hide();
-         return dataSet.getScalar('count') as number;
-      });
-   }
-
-   private _getDataForCallWithSelection(selection: ISelectionObject): object {
-      const selectionCountConfig = this._options.selectedCountConfig;
-      const data = {...selectionCountConfig.data || {}};
-      const filter = {...(data.filter || {})};
-      Object.assign(filter, {selection: this._getSelectionRecord(selection, selectionCountConfig.rpc)});
-      data.filter = filter;
-      return data;
-   }
-
-   private _getSelectionRecord(selection: ISelectionObject, rpc: Rpc): TSelectionRecord {
-      return selectionToRecord(selection, rpc.getAdapter());
    }
 
    private _getSelection(selectedKeys: TKeysSelection, excludedKeys: TKeysSelection): ISelectionObject {
