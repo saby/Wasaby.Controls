@@ -2,23 +2,29 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {ICrud} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
+import {create as diCreate} from 'Types/di';
 
 import {NavigationController} from 'Controls/_source/NavigationController';
 import {
-    INavigationOptionValue, INavigationPageSourceConfig
+    INavigationOptionValue, INavigationPageSourceConfig, INavigationPositionSourceConfig
 } from 'Controls/_interface/INavigation';
 import {ViewConfig, Controller as ErrorController} from 'Controls/_dataSource/error';
 import {SourceWrapper, ISourceErrorData, ISourceErrorConfig} from 'Controls/_dataSource/SourceWrapper';
 import {IPagingOptions} from 'Controls/_paging/Paging';
+import {IViewOptions} from 'Controls/_listRender/View';
+import {default as Collection} from 'Controls/_display/Collection';
 
-import * as Template from 'wml!Controls/_listRender/SourceControl/SourceControl';
+import {IDirection} from './interface/IVirtualScroll';
+
+import * as Template from 'wml!Controls/_list/SourceControl/SourceControl';
 
 /**
  * Настройки для страницы по умолчанию
  */
 const INITIAL_PAGES_COUNT = 1;
 const INITIAL_PAGE_NUMBER = 1;
-const INITIAL_PER_PAGE = 10;
+const INITIAL_PER_PAGE = 100;
 const DEFAULT_KEY_PROPERTY = 'id';
 
 /**
@@ -55,7 +61,9 @@ const initNavigationOptions = (navigationOptions: INavigationOptionValue): INavi
     return options;
 };
 
-export interface ISourceControlOptions extends IControlOptions {
+// TODO наследование от IViewOptions это костыль, т.к. установка collection происхожит
+//  в дочерних контролах, которые extends View
+export interface ISourceControlOptions extends IViewOptions {
     /**
      * @name Controls/_listRender/SourceControl#content
      * @cfg {Types/source:ICrud} код шаблона, обёрнутый контролом SourceControl
@@ -156,39 +164,35 @@ export interface ISourceControlOptions extends IControlOptions {
 export default class SourceControl extends Control<ISourceControlOptions> {
     protected _template: TemplateFunction = Template;
 
-    /**
-     * Полученные записи
-     */
+    // Полученные записи
     protected _items: RecordSet;
 
-    /**
-     * Текущая ошибка
-     */
+    // Текущая ошибка
     protected _error: ViewConfig;
 
-    /**
-     * Ресурс данных с перехватчиком ошибок
-     */
+    // Ресурс данных с перехватчиком ошибок
     private _itemsSource: ICrud;
 
-    /**
-     * Экземпляр контроллера, управляющего навигацией по записям
-     */
+    // Экземпляр контроллера, управляющего навигацией по записям
     protected _navigationController: NavigationController;
 
-    /**
-     * Конфигурация навигации для передачи в контроллер
-     */
+    // Конфигурация навигации для передачи в контроллер
     protected _navigationOptions: INavigationOptionValue;
 
-    /**
-     * Настройки пейджинатора
-     */
+    // Настройки пейджинатора
     protected _pagingOptions: IPagingOptions;
+
+    // Коллекцияя со списком записей. Управляется ScrollContainer
+    // TODO это костыль, т.к. это же самое происходит в дочерних контролах, которые extends View
+    protected _collection: Collection<Model>;
 
     protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
         this._options = options;
         this._items = new RecordSet();
+
+        // TODO это костыль, т.к. это же самое происходит в дочерних контролах, которые extends View
+        this._collection = this._createCollection(this._options.collection, this._items, this._options);
+
         this._itemsSource = new SourceWrapper(
             this._options.source,
             this._options.errorConfig,
@@ -237,14 +241,27 @@ export default class SourceControl extends Control<ISourceControlOptions> {
     }
 
     /**
+     * Обработчик события "Загрузить ещё"
+     * @param e
+     * @param direction
+     * @private
+     */
+    protected _loadMore(e: SyntheticEvent<Event>, direction: IDirection): void {
+        this._collection.setHasMoreData(this._navigationController.hasMoreData(direction));
+        this._load(direction);
+    }
+
+    /**
      * Загружаем данные списка через контроллер навигации
      * @private
      */
-    protected _load(): Promise<void> {
+    protected _load(direction?: IDirection): Promise<void> {
+        const filter = {};
+        const sorting = [{id: true}];
         this._hideError();
-        return this._navigationController.load()
+        return this._navigationController.load(filter, sorting, direction)
             .then((recordSet: RecordSet) => {
-                this._items = recordSet;
+                this._updateCollection(recordSet);
                 if (!this._pagingOptions) {
                     this._pagingOptions = this._calculatePagingOptions(this._items);
                 }
@@ -255,19 +272,46 @@ export default class SourceControl extends Control<ISourceControlOptions> {
     }
 
     /**
+     * Обновляет набор отображаемых записей
+     * @param recordSet
+     * @private
+     */
+    private _updateCollection(recordSet: RecordSet): void {
+        this._items = recordSet;
+        if (this._collection) {
+            this._collection.destroy();
+        }
+        this._collection = this._createCollection(this._options.collection, this._items, this._options);
+    }
+
+    /**
      * Считает кол-во страниц для пейджера, основываясь на pageSize и RecordSet.meta.total
-     * TODO Пока считает только на основе PerPage paging
      * @private
      */
     private _calculatePagingOptions(items: RecordSet): IPagingOptions {
-        const pageSize = (this._navigationOptions.sourceConfig as INavigationPageSourceConfig).pageSize;
         const metaData = items.getMetaData();
         const count = metaData.total;
-        const pagesCount = Math.ceil(count / pageSize);
+        let pagesCount: number;
+        if ('pageSize' in this._navigationOptions.sourceConfig) {
+            const pageSize = (this._navigationOptions.sourceConfig as INavigationPageSourceConfig).pageSize;
+            pagesCount = Math.ceil(count / pageSize);
+        } else if ('position' in this._navigationOptions.sourceConfig) {
+            const limit = (this._navigationOptions.sourceConfig as INavigationPositionSourceConfig).limit;
+            pagesCount = Math.ceil(count / limit);
+        }
         return initPagingOptions({
             ...this._options.pagingOptions,
             pagesCount
         });
+    }
+
+    // TODO это костыль, т.к. это же самое происходит в дочерних контролах, которые extends View
+    private _createCollection(
+        module: string,
+        items: RecordSet,
+        collectionOptions: IViewOptions
+    ): Collection<Model> {
+        return diCreate(module, { ...collectionOptions, collection: items });
     }
 
     private _showError(errorConfig: ViewConfig): void {

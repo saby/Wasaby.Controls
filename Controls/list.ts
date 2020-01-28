@@ -144,3 +144,5 @@ export {
     IVirtualScrollConfig,
     IList
 };
+
+export {default as SourceControl} from 'Controls/_list/SourceControl';
