@@ -211,6 +211,24 @@ define(
             });
          });
 
+         describe('_contentResizeHandler', function() {
+            it('should stop event propagation.', function() {
+               const oldDisplayState = scroll._displayState,
+                  event = { stopPropagation: sinon.fake() };
+
+               scroll._pagingState = {};
+               scroll._children.content = {
+                  scrollTop: 100,
+                  scrollHeight: 200,
+                  clientHeight: 100
+               };
+
+               scroll._contentResizeHandler(event);
+               assert.notStrictEqual(scroll._displayState, oldDisplayState);
+               sinon.assert.calledOnce(event.stopPropagation);
+            });
+         });
+
          describe('_scrollbarTaken', function() {
             it('Should generate scrollbarTaken event if scrollbar displayed', function() {
                const sandbox = sinon.sandbox.create();
