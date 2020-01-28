@@ -14,6 +14,7 @@ export { default as Tile } from 'Controls/_listRender/Tile';
 export { default as Columns } from 'Controls/_listRender/Columns';
 export { TileItemTemplateWrapper };
 export { ColumnsItemTemplateWrapper as ColumnsItemTemplate};
+export { default as SourceControl } from 'Controls/_listRender/SourceControl';
 
 export { default as View } from 'Controls/_listRender/View';
 export {

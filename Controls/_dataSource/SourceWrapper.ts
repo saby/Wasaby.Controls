@@ -13,7 +13,7 @@ export interface ISourceErrorData {
 }
 
 /**
- * Конфигурация для интерсептора ошибки
+ * Конфигурация для отображения ошибки
  */
 export interface ISourceErrorConfig {
     /**

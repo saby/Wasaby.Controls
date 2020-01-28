@@ -1,27 +1,25 @@
 <div attr:style="display: flex; justify-content: space-around; flex-direction: column;">
-   <Controls.dataSource:error.Container name="errorContainer" viewConfig="{{ _error }}">
-      <div class="Controls-demo_listRender_ColumnsView">
-         <Controls.listRender:ColumnsView
-            items="{{ _items }}"
-            itemActions="{{ _itemActions }}"
-            actionAlignment="vertical"
-            keyProperty="id"
-            displayProperty="title"
-            imageProperty="image"
-            multiSelectVisibility="hidden"
-            contextMenuEnabled="false"
-            contextMenuVisibility="false">
-         </Controls.listRender:ColumnsView>
-         <div class="Controls-demo_listRender__pagingContainer">
-            <!-- scope1 нужен потому что без него dirtyChecking не смотрит на scope при вычислении изменений https://online.sbis.ru/opendoc.html?guid=83c8c334-0e38-413e-9ef0-640d63408c01-->
-            <Controls.paging:Paging
-               attr:class="controls-listRender__scrollPaging"
-               scope="{{_pagingCfg}}"
-               scope1="{{_pagingCfg}}"
-               on:onArrowClick="_onPagingArrowClick()"
-               on:selectedPageChanged="_onPagingChangePage()"
-            ></Controls.paging:Paging>
-         </div>
-      </div>
-   </Controls.dataSource:error.Container>
+    <Controls.listRender:SourceControl
+            attr:name="sourceControl"
+            source="{{ _itemsSource }}"
+    >
+        <ws:content>
+            <div class="Controls-demo_listRender_ColumnsView">
+                <Controls.listRender:ColumnsView
+                        items="{{ items }}"
+                        itemActions="{{ _itemActions }}"
+                        actionAlignment="vertical"
+                        keyProperty="id"
+                        displayProperty="title"
+                        imageProperty="image"
+                        multiSelectVisibility="hidden"
+                        contextMenuEnabled="false"
+                        contextMenuVisibility="false">
+                </Controls.listRender:ColumnsView>
+            </div>
+        </ws:content>
+        <ws:navigation source="page" view="page">
+            <ws:sourceConfig pageSize="{{50}}" page="{{0}}" hasMore="{{false}}"/>
+        </ws:navigation>
+    </Controls.listRender:SourceControl>
 </div>
