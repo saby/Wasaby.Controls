@@ -34,6 +34,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _afterMount(newOptions: IMenuOptions): void {
+        // удалится по https://online.sbis.ru/opendoc.html?guid=48f59429-2ba5-431f-a895-3d11913c3d01
         this._notify('sendResult', [this._container, 'menuOpened'], {bubbling: true});
     }
 
