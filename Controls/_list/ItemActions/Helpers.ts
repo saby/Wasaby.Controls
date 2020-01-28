@@ -89,8 +89,8 @@ var helpers = {
 
     /*
      * Helper to display up/down item actions.
-     * @function Controls/_list/ItemActions/Helpers
-     * @name reorderMoveActionsVisibility
+     * @function 
+     * @name Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
      * @param {MoveDirection} direction
      * @param {Types/entity:Record} item Instance of the item whose action is being processed.
      * @param {Types/collection:RecordSet} items List of all items.
