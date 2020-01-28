@@ -1,1 +1,7 @@
-<div>{{ column.getTemplate() }}</div>
+<div
+   attr:class="{{ column.getCellClasses(highlightOnHover) }}"
+   attr:style="{{ column.getCellStyles() }}">
+   <ws:partial
+      template="{{ column.getTemplate() }}"
+      item="{{ column }}" />
+</div>

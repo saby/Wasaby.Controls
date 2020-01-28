@@ -3,16 +3,23 @@ import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/grid/RenderContainer/RenderContainer');
 import { RecordSet } from 'Types/collection';
 
+import titleColumnTpl = require('wml!Controls-demo/grid/RenderContainer/titleColumn');
+import subtitleColumnTpl = require('wml!Controls-demo/grid/RenderContainer/subtitleColumn');
+
 export default class GridRenderContainerDemo extends Control {
     protected _template: TemplateFunction = template;
 
     protected _items: RecordSet = this._generateItems(100);
     protected _columns = [
         {
-            template: 'abc'
+            template: titleColumnTpl,
+            width: '2fr'
         },
         {
-            template: 'def'
+            template: subtitleColumnTpl
+        },
+        {
+            template: subtitleColumnTpl
         }
     ];
 

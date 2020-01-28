@@ -1,0 +1,3 @@
+<div attr:style="padding-left: 1em; font-weight: bold;">
+   {{ item.getContents().title }}
+</div>

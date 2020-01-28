@@ -11,6 +11,7 @@ import { register } from 'Types/di';
 
 export interface IColumnConfig {
     template: TemplateFunction|string;
+    width?: string;
 }
 
 export interface IOptions<T> {
@@ -38,8 +39,47 @@ export default class GridColumn<T> extends mixin<
         OptionsToPropertyMixin.call(this, options);
     }
 
+    getCellClasses(templateHighlightOnHover: boolean): string {
+        // GridViewModel -> getItemColumnCellClasses
+        let classes = 'controls-Grid__row-cell controls-Grid__row-cell_theme-default js-controls-SwipeControl__actionsContainer';
+
+        // if !checkBoxCell
+        classes += ' controls-Grid__cell_fit';
+
+        if (this._$owner.isEditing()) {
+            classes += ' controls-Grid__row-cell-background-editing_theme-default';
+        } else {
+            classes += ' controls-Grid__row-cell-background-hover_theme-default';
+        }
+        if (this._$owner.isActive() && templateHighlightOnHover !== false) {
+            classes += ' controls-GridView__item_active_theme-default';
+        }
+        if (this._$owner.isDragged()) {
+            classes += ' controls-ListView__item_dragging';
+        }
+
+        classes += ' controls-Grid__cell_default';
+
+        // getPaddingCellClasses
+        // row separators
+        // if checkBoxCell
+        // if isSelected
+        // if getLastColumnIndex
+
+        return classes;
+    }
+
+    getCellStyles(): string {
+        // There's a lot
+        return undefined;
+    }
+
     getTemplate(): TemplateFunction|string {
         return this._$column.template;
+    }
+
+    getContents(): T {
+        return this._$owner.getContents();
     }
 }
 

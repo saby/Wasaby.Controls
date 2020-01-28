@@ -16,6 +16,10 @@ export default class GridCollection<
 > extends Collection<S, T> {
     protected _$columns: IColumnConfig[];
 
+    getColumns(): IColumnConfig[] {
+        return this._$columns;
+    }
+
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: IGridCollectionItemOptions<S>): T {
