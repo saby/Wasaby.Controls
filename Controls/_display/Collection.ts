@@ -2178,6 +2178,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
+    setHoveredItem(item: CollectionItem<S>): void {
+        this._hoverManager.setHoveredItem(item);
+        this._nextVersion();
+    }
+
     getSwipeConfig(): ISwipeConfig {
         return this._swipeConfig;
     }
