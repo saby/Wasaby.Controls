@@ -4,11 +4,12 @@
          <Controls._scroll.StickyHeader.Controller
             name="stickyController"
             on:fixed="_fixedHandler()">
-            <!--Реализация области блоков требует наличия следующей структуры controls-BlockLayout > controls-BlockLayout__blockGroup.
-            Добавляем класс controls-BlockLayout__blockGroup, для того чтобы была облюдена структура если использовать controls-BlockLayout на контейнере.
+            <!--Реализация области блоков требует наличия следующей структуры: controls-BlockLayout > controls-BlockLayout__blockGroup.
+            Добавляем класс controls-BlockLayout__blockGroup, для того чтобы была соблюдена структура, когда используется controls-BlockLayout на контейнере.
             Таким образом мы избавляемся от лишней вложенности.
+            Контент являтся единственной группой в пределах контейнера. Для этого тип HTML элемента должен отличаться от остальных(div).
             https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ws3/ready-solutions/blocks/-->
-            <div name="content"
+            <span name="content"
                  style="{{_displayState.heightFix ? '' : _contentStyles}}"
                  class="controls-Scroll__content controls-BlockLayout__blockGroup
                            {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
@@ -35,7 +36,7 @@
                            on:checkboxClick="_tmplNotify('checkboxClick')"
                            on:actionClick="_tmplNotify('actionClick')"
                            on:editArrowClick="_tmplNotify('editArrowClick')"/>
-            </div>
+            </span>
          </Controls._scroll.StickyHeader.Controller>
       </Controls.event:Register>
    </Controls._scroll.Scroll.Watcher>
