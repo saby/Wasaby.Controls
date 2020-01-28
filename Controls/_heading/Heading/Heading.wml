@@ -5,5 +5,7 @@
                   controls-Header__caption_style-{{_fontColorStyle}}{{_options.readOnly ? '':'_hovered'}}_theme_{{_options.theme}}"
       attr:title="{{_options.tooltip}}"
 >
+    <span>
     <ws:partial template="{{_options.caption}}"/>
+    </span>
 </span>
