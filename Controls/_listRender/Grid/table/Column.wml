@@ -1,0 +1,6 @@
+<td>
+   <ws:partial
+      template="{{ column.getTemplate() }}"
+      item="{{ column }}" />
+   <!-- valign, halign -->
+</td>
