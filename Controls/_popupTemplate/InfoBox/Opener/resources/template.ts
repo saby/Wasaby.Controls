@@ -1,4 +1,4 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/InfoBox/Opener/resources/template');
 import Utils = require('View/Executor/Utils');
 import {load} from 'Core/library';

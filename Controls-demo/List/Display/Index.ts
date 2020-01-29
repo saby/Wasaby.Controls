@@ -6,6 +6,7 @@ import { Memory as MemorySource } from 'Types/source';
 import { Model } from 'Types/entity';
 import { MaskResolver } from 'Router/router';
 
+// @ts-ignore
 import { View as ListViewOld } from 'Controls/list';
 import DisplayList from 'Controls-demo/List/Display/DisplayList';
 

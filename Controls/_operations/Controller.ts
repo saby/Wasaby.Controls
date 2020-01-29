@@ -1,4 +1,4 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_operations/Controller/Controller');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 

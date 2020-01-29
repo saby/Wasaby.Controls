@@ -2,7 +2,6 @@ import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/List/Render/Render');
 
 import { Memory } from 'Types/source';
-import { SyntheticEvent } from 'Vdom/Vdom';
 
 interface IListItem {
     key: number;

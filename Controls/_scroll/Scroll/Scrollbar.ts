@@ -194,7 +194,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
      */
     private _setSizes(contentSize: number): boolean {
         const verticalDirection = this._options.direction === 'vertical';
-        const horizontalDirection = this._options.direction === 'horizontal';
         const scrollbar = this._children.scrollbar;
         if (!Scrollbar._isScrollBarVisible(scrollbar as HTMLElement)) {
             return false;
@@ -308,7 +307,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
      */
     private _wheelHandler(event: SyntheticEvent<Event>): void {
         let newPosition = this._position + Scrollbar._calcWheelDelta(detection.firefox, event.nativeEvent.deltaY);
-        const minPosition = 0;
         const maxPosition = this._options.contentSize - this._scrollBarSize;
         if (newPosition < 0) {
             newPosition = 0;

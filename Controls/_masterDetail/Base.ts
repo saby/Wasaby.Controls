@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_masterDetail/Base/Base';
 import 'css!theme?Controls/masterDetail';
 import {debounce} from 'Types/function';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
-import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
+import {IPropStorageOptions} from 'Controls/interface';
 
 /**
  * Контрол, который обеспечивает связь между двумя контролами для отображения подробной информации по выбранному элементу.

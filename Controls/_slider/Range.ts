@@ -1,4 +1,4 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ISlider, ISliderOptions} from './interface/ISlider';

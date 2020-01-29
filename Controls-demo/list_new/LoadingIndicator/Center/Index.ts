@@ -22,7 +22,6 @@ export default class extends Control {
 
     private _slowDownSource(source: Memory, timeMs: number) {
         const originalQuery = source.query;
-        const self = this;
 
         source.query = function() {
             const args = arguments;

@@ -9,7 +9,6 @@ const defaultColors = [
    'controls-StateIndicator__sector2',
    'controls-StateIndicator__sector3'
 ];
-const DEFAULT_EMPTY_COLOR_CLASS = 'controls-StateIndicator__emptySector';
 const defaultScaleValue = 10;
 const maxPercentValue = 100;
 

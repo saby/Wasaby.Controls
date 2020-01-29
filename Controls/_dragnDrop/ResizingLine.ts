@@ -1,6 +1,7 @@
 import template = require('wml!Controls/_dragnDrop/ResizingLine/ResizingLine');
 
 import {descriptor} from 'Types/entity';
+// @ts-ignore
 import {Container} from 'Controls/dragnDrop';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';

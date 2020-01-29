@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from "UI/Base";
 import {Memory} from 'Types/source';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/EmptyTemplate');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/SuggestTemplate');
-import emptyTemplate = require('wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/EmptyTemplate');
+import 'wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/EmptyTemplate';
 import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/Suggest_new/Index';
 

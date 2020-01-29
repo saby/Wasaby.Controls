@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/grid/CellPadding/CellPadding"
 import {Memory} from "Types/source"
-import {cellPadding, getCountriesStats} from "../DemoHelpers/DataCatalog"
+import {cellPadding} from "../DemoHelpers/DataCatalog"
 
 import 'css!Controls-demo/Controls-demo'
 

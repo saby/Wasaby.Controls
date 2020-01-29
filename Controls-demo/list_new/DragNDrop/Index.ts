@@ -1,6 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/DragNDrop/DragNDrop';
-import * as ListEntity from 'Controls-demo/DragNDrop/ListEntity';
 import {Memory} from 'Types/source';
 import {getFewCategories as getData} from '../DemoHelpers/DataCatalog';
 

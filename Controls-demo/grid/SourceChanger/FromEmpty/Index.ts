@@ -11,7 +11,6 @@ class demoSource extends Memory {
     queryNumber: number = 0;
     pending: Promise<any>;
     private query(query) {
-        const self = this;
         const args = arguments;
         return this.pending.then(() => {
             return super.query.apply(this, args).addCallback((items) => {
@@ -35,7 +34,6 @@ export default class extends Control {
     private _resolve = null;
 
     protected _beforeMount() {
-        const self = this;
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: []

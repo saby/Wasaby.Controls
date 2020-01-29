@@ -1,7 +1,6 @@
 import {Control, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/treeGrid/VirtualScroll/Default/Default"
 import {Memory} from "Types/source"
-import {generateData} from "../../../list_new/DemoHelpers/DataCatalog";
 import 'css!Controls-demo/Controls-demo';
 import {Gadgets, VirtualScrollHasMore} from '../../DemoHelpers/DataCatalog';
 
