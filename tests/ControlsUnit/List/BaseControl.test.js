@@ -2157,16 +2157,10 @@ define([
             baseControl._initItemActions();
             assert.equal(actionsUpdateCount, 1);
          });
-         it('itemsChanged', async function() {
-            baseControl._itemsChanged = true;
-            await baseControl._beforeUpdate(cfg);
-            baseControl._afterUpdate(cfg);
-            assert.equal(actionsUpdateCount, 2);
-         });
          it('_onAfterEndEdit', function() {
             baseControl._onAfterEndEdit({}, {});
             baseControl._afterUpdate(cfg);
-            assert.equal(actionsUpdateCount, 3);
+            assert.equal(actionsUpdateCount, 2);
          });
          it('update on recreating source', async function() {
             let newSource = new sourceLib.Memory({
@@ -4844,6 +4838,42 @@ define([
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(portionSearchReseted);
+      });
+
+      it('_beforeUpdate with new searchValue', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source
+         };
+         let instance = new lists.BaseControl(cfg);
+         let cfgClone = { ...cfg };
+         let portionSearchReseted = false;
+
+         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
+         instance._portionedSearch.reset = () => {
+            portionSearchReseted = true;
+         };
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         assert.isFalse(portionSearchReseted);
+
+
+         cfgClone.searchValue = 'test';
+         instance._beforeUpdate(cfgClone);
+
          assert.isTrue(portionSearchReseted);
       });
 
