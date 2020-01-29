@@ -193,7 +193,6 @@ import {Logger} from 'UI/Utils';
                         }
                         if (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue'))) {
                            validResult = true;
-                           break;
                         }
                      }
                   }
