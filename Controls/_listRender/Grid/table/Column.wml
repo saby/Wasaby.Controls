@@ -1,4 +1,7 @@
 <td>
+   <ws:if data="{{ column.shouldDisplayMarker() }}">
+      <div attr:class="{{ column.getMarkerClasses() }}"></div>
+   </ws:if>
    <ws:partial
       template="{{ column.getTemplate() }}"
       item="{{ column }}" />

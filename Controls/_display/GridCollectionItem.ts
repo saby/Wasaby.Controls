@@ -25,6 +25,22 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         return this._$columnItems;
     }
 
+    getColumnsCount(): number {
+        return this._$columns.length;
+    }
+
+    getColumnIndex(column: IColumnConfig): number {
+        return this._$columns.indexOf(column);
+    }
+
+    getItemSpacing(): { left: string, right: string, row: string } {
+        return {
+            left: this._$owner.getLeftSpacing().toLowerCase(),
+            right: this._$owner.getRightSpacing().toLowerCase(),
+            row: this._$owner.getRowSpacing().toLowerCase()
+        };
+    }
+
     protected _getColumnsFactory(): (options: Partial<IGridColumnOptions<T>>) => GridColumn<T> {
         return (options) => {
             options.owner = this;

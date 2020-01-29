@@ -12,6 +12,7 @@ import { register } from 'Types/di';
 export interface IColumnConfig {
     template: TemplateFunction|string;
     width?: string;
+    cellPadding?: { left: string; right: string; };
 }
 
 export interface IOptions<T> {
@@ -58,10 +59,11 @@ export default class GridColumn<T> extends mixin<
             classes += ' controls-ListView__item_dragging';
         }
 
-        classes += ' controls-Grid__cell_default';
+        // prepareRowSeparatorClasses, rowSeparatorVisibility
+        classes += ' controls-Grid__row-cell_withoutRowSeparator_theme-default';
 
-        // getPaddingCellClasses
-        // row separators
+        classes += ' ' + this._getCellPaddingClasses();
+
         // if checkBoxCell
         // if isSelected
         // if getLastColumnIndex
@@ -80,6 +82,65 @@ export default class GridColumn<T> extends mixin<
 
     getContents(): T {
         return this._$owner.getContents();
+    }
+
+    getColumnIndex(): number {
+        return this._$owner.getColumnIndex(this._$column);
+    }
+
+    isFirstColumn(): boolean {
+        return this.getColumnIndex() === 0;
+    }
+
+    isLastColumn(): boolean {
+        return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
+    }
+
+    shouldDisplayMarker(): boolean {
+        return this._$owner.isMarked() && this.isFirstColumn();
+    }
+
+    getMarkerClasses(): string {
+        return `
+        controls-ListView__itemV_marker
+        controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-default
+        controls-GridView-without-rowSeparator_item_marker_theme-default
+        `;
+    }
+
+    protected _getCellPaddingClasses(): string {
+        // GridViewModel -> getPaddingCellClasses
+        const itemSpacing = this._$owner.getItemSpacing();
+        let classes = 'controls-Grid__cell_default';
+
+        // left <-> right
+        const cellPadding = this._$column.cellPadding;
+
+        if (!this.isFirstColumn()) {
+            classes += ' controls-Grid__cell_spacingLeft';
+            if (cellPadding?.left) {
+                classes += `_${cellPadding.left}`;
+            }
+            classes += '_theme-default';
+        } else {
+            classes += ` controls-Grid__cell_spacingFirstCol_${itemSpacing.left}_theme-default`;
+        }
+
+        if (!this.isLastColumn()) {
+            classes += ' controls-Grid__cell_spacingRight';
+            if (cellPadding?.right) {
+                classes += `_${cellPadding.right}`;
+            }
+            classes += '_theme-default';
+        } else {
+            classes += ` controls-Grid__cell_spacingLastCol_${itemSpacing.right}_theme-default`;
+        }
+
+        // top <-> bottom
+        classes += ` controls-Grid__row-cell_rowSpacingTop_${itemSpacing.row}_theme-default`;
+        classes += ` controls-Grid__row-cell_rowSpacingBottom_${itemSpacing.row}_theme-default`;
+
+        return classes;
     }
 }
 

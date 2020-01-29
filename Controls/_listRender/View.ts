@@ -230,6 +230,9 @@ export default class View extends Control<IViewOptions> {
         itemActionsProperty: string,
         itemActionsVisibilityCallback: (action, item) => boolean
     ): void {
+        if (!itemActions && !itemActionsProperty) {
+            return;
+        }
         const actionsGetter =
             itemActionsProperty
             ? (item) => item.getContents().get(itemActionsProperty)
