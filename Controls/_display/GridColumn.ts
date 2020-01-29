@@ -3,7 +3,9 @@ import {
     OptionsToPropertyMixin,
     DestroyableMixin,
     InstantiableMixin,
-    IInstantiable
+    VersionableMixin,
+    IInstantiable,
+    IVersionable
 } from 'Types/entity';
 import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
@@ -23,12 +25,14 @@ export interface IOptions<T> {
 export default class GridColumn<T> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
-    InstantiableMixin
+    InstantiableMixin,
+    VersionableMixin
 >(
     DestroyableMixin,
     OptionsToPropertyMixin,
-    InstantiableMixin
-) implements IInstantiable {
+    InstantiableMixin,
+    VersionableMixin
+) implements IInstantiable, IVersionable {
     readonly '[Types/_entity/IInstantiable]': boolean;
     getInstanceId: () => string;
 
@@ -106,6 +110,10 @@ export default class GridColumn<T> extends mixin<
         controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-default
         controls-GridView-without-rowSeparator_item_marker_theme-default
         `;
+    }
+
+    nextVersion(): void {
+        this._nextVersion();
     }
 
     protected _getCellPaddingClasses(): string {

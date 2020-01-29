@@ -41,6 +41,18 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         };
     }
 
+    // region overrides
+
+    setMarked(marked: boolean, silent?: boolean): void {
+        const changed = marked !== this.isMarked();
+        super.setMarked(marked, silent);
+        if (changed) {
+            this._$columnItems[0].nextVersion();
+        }
+    }
+
+    // endregion
+
     protected _getColumnsFactory(): (options: Partial<IGridColumnOptions<T>>) => GridColumn<T> {
         return (options) => {
             options.owner = this;
