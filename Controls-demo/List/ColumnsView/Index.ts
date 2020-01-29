@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {Memory, ICrud} from 'Types/source';
-import {SourceControl} from 'Controls/listRender';
+import {SourceControl} from 'Controls/list';
+
 import * as Template from 'wml!Controls-demo/List/ColumnsView/ColumnsView';
 
 const NUMBER_OF_ITEMS = 100;

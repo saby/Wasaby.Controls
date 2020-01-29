@@ -1,13 +1,12 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {ICrud, DataSet, Query} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
 import {Logger} from 'UI/Utils';
 
 import {NavigationController} from 'Controls/_source/NavigationController';
 import {
-    INavigationOptionValue, INavigationPageSourceConfig, INavigationPositionSourceConfig
+    INavigationOptionValue, INavigationPageSourceConfig
 } from 'Controls/_interface/INavigation';
 import {ViewConfig, Controller as ErrorController} from 'Controls/_dataSource/error';
 import {
@@ -124,7 +123,7 @@ export interface ISourceControlOptions extends IControlOptions {
  * NavigationControl для управления состояния навигации и SourceCrudInterlayer для обработки ошибки загрузки данных.
  * В случае ошибки загрузки данных показывает стран6ицу с ошибкой
  *
- * @class Controls/_listRender/SourceControl
+ * @class Controls/list:SourceControl
  *
  * @control
  * @public
@@ -137,7 +136,7 @@ export interface ISourceControlOptions extends IControlOptions {
  * using NavigationControl to handle navigation state and SourceCrudInterlayer to catch data loading error.
  * It the case of error shows error page
  *
- * @class Controls/_listRender/SourceControl
+ * @class Controls/list:SourceControl
  *
  * @control
  * @public
