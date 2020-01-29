@@ -1,10 +1,9 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {Memory, ICrud} from 'Types/source';
-import {SourceControl} from '../Controls/listRender';
+import {SourceControl} from 'Controls/listRender';
+import * as Template from 'wml!Controls-demo/List/ColumnsView/ColumnsView';
 
-import * as Template from 'wml!Controls-demo/listRender/ColumnsView/ColumnsView';
-
-const NUMBER_OF_ITEMS = 900;
+const NUMBER_OF_ITEMS = 100;
 
 /**
  * Генератор данных

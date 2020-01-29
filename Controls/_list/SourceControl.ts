@@ -25,27 +25,8 @@ import * as Template from 'wml!Controls/_list/SourceControl/SourceControl';
 /**
  * Настройки для страницы по умолчанию
  */
-const INITIAL_PAGES_COUNT = 1;
 const INITIAL_PAGE_NUMBER = 1;
 const INITIAL_PER_PAGE = 100;
-const DEFAULT_KEY_PROPERTY = 'id';
-
-/**
- * Функция-помощник для инициализации настроек контрола пейджера
- * @param pagingOptions
- */
-const initPagingOptions = (pagingOptions: IPagingOptions): IPagingOptions => {
-    return {
-        pagesCount: INITIAL_PAGES_COUNT,
-        showDigits: true,
-        selectedPage: INITIAL_PAGE_NUMBER,
-        stateBegin: 'disabled',
-        stateEnd: 'disabled',
-        stateNext: 'normal',
-        statePrev: 'normal',
-        ...pagingOptions
-    };
-};
 
 /**
  * Функция-помощник для инициализации настроек контроллера навигации
@@ -180,9 +161,6 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     // Конфигурация навигации для передачи в контроллер
     protected _navigationOptions: INavigationOptionValue;
 
-    // Настройки пейджинатора
-    protected _pagingOptions: IPagingOptions;
-
     // текущая загрузка
     private _request: Promise<void | RecordSet>;
 
@@ -194,62 +172,12 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
         this._navigationController = new NavigationController({
             navigation: this._navigationOptions
         });
-        if (!this._options.keyProperty) {
-            this._options.keyProperty = DEFAULT_KEY_PROPERTY;
-        }
         return this._load();
     }
 
     destroy(): void {
         super.destroy();
         this._navigationController.destroy();
-    }
-
-    /**
-     * Нажата страница в контроле навигации
-     * @param e
-     * @param page
-     * @private
-     */
-    protected _onPagingChangePage(e: SyntheticEvent<Event>, page: number): void {
-        this._pagingOptions.selectedPage = page;
-        let to = page ? page - 1 : 0;
-        if ('page' in this._navigationOptions.sourceConfig) {
-            (this._navigationOptions.sourceConfig as INavigationPageSourceConfig).page = to;
-
-        } else if ('position' in this._navigationOptions.sourceConfig) {
-            const limit = (this._navigationOptions.sourceConfig as INavigationPositionSourceConfig).limit;
-            to = to * limit;
-            (this._navigationOptions.sourceConfig as INavigationPositionSourceConfig).position = to;
-        }
-        this._navigationController.updatePage(to);
-        this._load();
-    }
-
-    /**
-     * Нажата стрелка в контроле навигации
-     * @param e
-     * @param btnName
-     * @private
-     */
-    protected _onPagingArrowClick(e: SyntheticEvent<Event>, btnName: string): void {
-        if (btnName === 'Next') {
-            this._navigationController.calculateState(this._items, 'down');
-
-        } else if (btnName === 'Prev') {
-            this._navigationController.calculateState(this._items, 'up');
-        }
-        this._load();
-    }
-
-    /**
-     * Обработчик события "Загрузить ещё"
-     * @param e
-     * @param direction
-     * @private
-     */
-    protected _loadMore(e: SyntheticEvent<Event>, direction: IDirection): void {
-        this._load(direction);
     }
 
     /**
@@ -278,9 +206,6 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
             .then((recordSet: RecordSet) => {
                 this._navigationController.calculateState(recordSet, direction);
                 this._items = recordSet;
-                if (!this._pagingOptions) {
-                    this._pagingOptions = this._calculatePagingOptions(this._items);
-                }
                 return this._items;
             })
             .catch((error: ISourceErrorData) => {
@@ -353,28 +278,6 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
             sourceQuery = queryDeferred;
         }
         return sourceQuery;
-    }
-
-    /**
-     * Считает кол-во страниц для пейджера, основываясь на pageSize и RecordSet.meta.total
-     * @private
-     */
-    private _calculatePagingOptions(items: RecordSet): IPagingOptions {
-        const metaData = items.getMetaData();
-        const count = metaData.total;
-        let pagesCount: number;
-        if ('pageSize' in this._navigationOptions.sourceConfig) {
-            const pageSize = (this._navigationOptions.sourceConfig as INavigationPageSourceConfig).pageSize;
-            pagesCount = Math.ceil(count / pageSize);
-
-        } else if ('position' in this._navigationOptions.sourceConfig) {
-            const limit = (this._navigationOptions.sourceConfig as INavigationPositionSourceConfig).limit;
-            pagesCount = Math.ceil(count / limit);
-        }
-        return initPagingOptions({
-            ...this._options.pagingOptions,
-            pagesCount
-        });
     }
 
     private _showError(errorConfig: ViewConfig): void {

@@ -4,13 +4,6 @@
         <div class="Controls_listRender-SourceControl__pagingContainer">
             <!-- scope1 нужен потому что без него dirtyChecking не смотрит на scope при вычислении изменений
              https://online.sbis.ru/opendoc.html?guid=83c8c334-0e38-413e-9ef0-640d63408c01 -->
-            <Controls.paging:Paging
-                    attr:class="controls-listRender__scrollPaging"
-                    scope="{{ _pagingOptions }}"
-                    scope1="{{ _pagingOptions }}"
-                    on:onArrowClick="_onPagingArrowClick()"
-                    on:selectedPageChanged="_onPagingChangePage()"
-            ></Controls.paging:Paging>
         </div>
     </div>
 </Controls.dataSource:error.Container>

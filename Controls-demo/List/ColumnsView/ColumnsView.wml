@@ -18,8 +18,5 @@
                 </Controls.listRender:ColumnsView>
             </div>
         </ws:content>
-        <ws:navigation source="page" view="page">
-            <ws:sourceConfig pageSize="{{50}}" page="{{0}}" hasMore="{{false}}"/>
-        </ws:navigation>
     </Controls.list:SourceControl>
 </div>
