@@ -3,8 +3,10 @@ import {RecordSet} from 'Types/collection';
 import {IAdditionalQueryParams, Direction} from '../interface/IAdditionalQueryParams';
 import {IQueryParamsController} from '../interface/IQueryParamsController';
 import {default as More} from './More';
+import {Collection} from '../../display';
+import {Record} from 'Types/entity';
 
-export interface IPagePaginationOptions {
+export interface IPageQueryParamsControllerOptions {
     pageSize: number;
     page?: number;
     hasMore?: boolean;
@@ -18,10 +20,14 @@ class PageQueryParamsController implements IQueryParamsController {
     protected _prevPage: number = -1;
     protected _more: More = null;
     protected _page: number = 0;
-    protected _options: IPagePaginationOptions | null;
+    protected _options: IPageQueryParamsControllerOptions | null;
 
-    constructor(cfg: IPagePaginationOptions) {
-        this.rebuildState(cfg);
+    constructor(cfg: IPageQueryParamsControllerOptions) {
+        this._options = cfg;
+        this._setPageNumbers(cfg.page);
+        if (!this._options.pageSize) {
+            throw new Error('Option pageSize is undefined in PagePagination');
+        }
     }
 
     private _getMore(): More {
@@ -56,6 +62,19 @@ class PageQueryParamsController implements IQueryParamsController {
         }
     }
 
+    /**
+     * Устанавливает текущую страницу
+     * @param page
+     * @private
+     */
+    private _setPageNumbers(page: number): void {
+        this._page = page || 0;
+        if (this._page !== undefined) {
+            this._prevPage = this._page - 1;
+            this._nextPage = this._page + 1;
+        }
+    }
+
     prepareQueryParams(direction: Direction): IAdditionalQueryParams {
         const addParams: IAdditionalQueryParams = {};
         let neededPage: number;
@@ -82,35 +101,32 @@ class PageQueryParamsController implements IQueryParamsController {
         return addParams;
     }
 
-    setState(state: any): void {
+    /**
+     * Позволяет установить параметры контроллера из Collection<Record>
+     * @param model
+     * TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+     */
+    /*
+     * Allows manual set of current controller state using Collection<Record>
+     * @param model
+     */
+    setStateByCollection(model: Collection<Record>): void {
         // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
     }
 
     /**
-     * Запустить перестроение состояния контроллера
+     * Устанавливает текущую позицию или страницу
      * @remark
-     * Метод полезен при использовании постраничнеой навигации при клике на конкретную страницу
-     * Позволяет не создавать новый экземпляр контроллера навигации
-     * @param cfg конфигурация, по типу аналогичная конфинурации в кронструкторе
+     * @param to номер страницы или позиция для перехода
      */
     /*
-     * Forces rebuild controller state
+     * Set current page or position
      * @remark
-     * This method is very useful while using Page type navigation when user clicks to the particular
-     * page link.
-     * It allows to not re-create an instance for the controller
-     * @param cfg a configuration with the the same type as in controller constructor
+     * @param to page number or position to go to
      */
-    rebuildState(cfg: IPagePaginationOptions): void {
-        this._options = cfg;
-        this._page = cfg.page || 0;
-        if (this._page !== undefined) {
-            this._prevPage = this._page - 1;
-            this._nextPage = this._page + 1;
-        }
-        if (!this._options.pageSize) {
-            throw new Error('Option pageSize is undefined in PagePagination');
-        }
+    navigateTo(to: number | any): void {
+        this._options.page = to;
+        this._setPageNumbers(to);
     }
 
     calculateState(list: RecordSet, direction: Direction): void {

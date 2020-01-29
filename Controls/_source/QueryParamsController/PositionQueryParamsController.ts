@@ -5,7 +5,8 @@ import {IAdditionalQueryParams, Direction, DirectionCfg} from '../interface/IAdd
 import {IQueryParamsController} from '../interface/IQueryParamsController';
 import {default as More} from './More';
 import {Logger} from 'UI/Utils';
-import {IPagePaginationOptions} from './PageQueryParamsController';
+
+import { Collection } from 'Controls/display';
 
 interface IPositionHasMore {
     before: boolean;
@@ -45,7 +46,20 @@ class PositionQueryParamsController implements IQueryParamsController {
     protected _positionByMeta: boolean = null;
 
     constructor(cfg: IPositionQueryParamsControllerOptions) {
-        this.rebuildState(cfg);
+        this._options = cfg;
+
+        if (this._options.field === undefined) {
+            throw new Error('Option field is undefined in PositionQueryParamsController');
+        }
+        if (this._options.position === undefined) {
+            throw new Error('Option position is undefined in PositionQueryParamsController');
+        }
+        if (this._options.direction === undefined) {
+            throw new Error('Option direction is undefined in PositionQueryParamsController');
+        }
+        if (this._options.limit === undefined) {
+            throw new Error('Option limit is undefined in PositionQueryParamsController');
+        }
     }
 
     private _getMore(): More {
@@ -193,9 +207,16 @@ class PositionQueryParamsController implements IQueryParamsController {
         };
     }
 
-    // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
-    // TODO argument type
-    setState(model: any): void {
+    /**
+     * Позволяет установить параметры контроллера из Collection<Record>
+     * @param model
+     * TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+     */
+    /*
+     * Allows manual set of current controller state using Collection<Record>
+     * @param model
+     */
+    setStateByCollection(model: Collection<Record>): void {
         if (!this._positionByMeta) {
             const beforePosition = model.getFirstItem();
             const afterPosition = model.getLastItem();
@@ -209,35 +230,17 @@ class PositionQueryParamsController implements IQueryParamsController {
     }
 
     /**
-     * Запустить перестроение состояния контроллера
+     * Устанавливает текущую позицию или страницу
      * @remark
-     * Метод полезен при использовании постраничнеой навигации при клике на конкретную страницу
-     * Позволяет не создавать новый экземпляр контроллера навигации
-     * @param cfg конфигурация, по типу аналогичная конфинурации в кронструкторе
+     * @param to номер страницы или позиция для перехода
      */
     /*
-     * Forces rebuild controller state
+     * Set current page or position
      * @remark
-     * This method is very useful while using Page type navigation when user clicks to the particular
-     * page link.
-     * It allows to not re-create an instance for the controller
-     * @param cfg a configuration with the the same type as in controller constructor
+     * @param to page number or position to go to
      */
-    rebuildState(cfg: IPositionQueryParamsControllerOptions): void {
-        this._options = cfg;
-
-        if (this._options.field === undefined) {
-            throw new Error('Option field is undefined in PositionQueryParamsController');
-        }
-        if (this._options.position === undefined) {
-            throw new Error('Option position is undefined in PositionQueryParamsController');
-        }
-        if (this._options.direction === undefined) {
-            throw new Error('Option direction is undefined in PositionQueryParamsController');
-        }
-        if (this._options.limit === undefined) {
-            throw new Error('Option limit is undefined in PositionQueryParamsController');
-        }
+    navigateTo(to: number | any): void {
+        this._options.position = to;
     }
 
     calculateState(list: RecordSet, loadDirection: Direction): void {

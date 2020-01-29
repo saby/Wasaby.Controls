@@ -220,8 +220,16 @@ export default class SourceControl extends Control<ISourceControlOptions> {
      */
     protected _onPagingChangePage(e: SyntheticEvent<Event>, page: number): void {
         this._pagingOptions.selectedPage = page;
-        (this._navigationOptions.sourceConfig as INavigationPageSourceConfig).page = page ? page - 1 : 0;
-        this._navigationController.rebuildState(this._navigationOptions.sourceConfig);
+        let to = page ? page - 1 : 0;
+        if ('page' in this._navigationOptions.sourceConfig) {
+            (this._navigationOptions.sourceConfig as INavigationPageSourceConfig).page = to;
+
+        } else if ('position' in this._navigationOptions.sourceConfig) {
+            const limit = (this._navigationOptions.sourceConfig as INavigationPositionSourceConfig).limit;
+            to = to * limit;
+            (this._navigationOptions.sourceConfig as INavigationPositionSourceConfig).position = to;
+        }
+        this._navigationController.navigateTo(to);
         this._load();
     }
 

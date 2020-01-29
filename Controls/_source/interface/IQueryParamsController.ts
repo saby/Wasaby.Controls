@@ -1,5 +1,7 @@
 import {IAdditionalQueryParams, Direction} from './IAdditionalQueryParams';
 import {RecordSet} from 'Types/collection';
+import {Record} from 'Types/entity';
+import {Collection} from '../../display';
 
 /**
  * Интерфейс для работы с контроллерами пейджинации
@@ -65,33 +67,27 @@ export interface IQueryParamsController {
     hasMoreData(direction: Direction, rootKey: string|number): boolean|undefined;
 
     /**
-     * Позволяет вручную установить текущее состояние контроллера, например, текущую и следующую страницу, или позицию
-     * для навигации
-     * @param state
+     * Позволяет установить параметры контроллера из Collection<Record>
+     * @param model
      * TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
      */
     /*
-     * Allows manual set of current controller state, i.e. current and next page, or position for navigation
-     * @param state
+     * Allows manual set of current controller state using Collection<Record>
+     * @param model
      */
-    setState(state: any): void;
+    setStateByCollection(model: Collection<Record>): void;
 
     /**
-     * Запустить перестроение состояния контроллера
+     * Устанавливает текущую позицию или страницу
      * @remark
-     * Метод полезен при использовании постраничнеой навигации при клике на конкретную страницу
-     * Позволяет не создавать новый экземпляр контроллера навигации
-     * @param cfg конфигурация, по типу аналогичная конфинурации в кронструкторе
+     * @param to номер страницы или позиция для перехода
      */
     /*
-     * Forces rebuild controller state
+     * Set current page or position
      * @remark
-     * This method is very useful while using Page type navigation when user clicks to the particular
-     * page link.
-     * It allows to not re-create an instance for the controller
-     * @param cfg a configuration with the the same type as in controller constructor
+     * @param to page number or position to go to
      */
-    rebuildState(cfg: object): void;
+    navigateTo(to: number | any): void;
 
     /**
      * Устанавливает текущую страницу в контроллере
