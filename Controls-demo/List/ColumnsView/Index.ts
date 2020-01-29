@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {Memory, ICrud} from 'Types/source';
-import {SourceControl} from 'Controls/listRender';
+import {SourceControl} from '../Controls/listRender';
 
 import * as Template from 'wml!Controls-demo/listRender/ColumnsView/ColumnsView';
 
@@ -23,7 +23,7 @@ const generateRawData = (n: number): any[] => {
 
 /**
  * http://localhost:3000/Controls-demo/app/Controls-demo%2FList%2FRenderContainer%2FIndex
- * http://localhost:3000/Controls-demo/app/Controls-demo%2FlistRender%2FColumnsView%2FIndex
+ * http://localhost:3000/Controls-demo/app/Controls-demo%2Flist%2FColumnsView%2FIndex
  */
 export default class RenderColumnsViewContainerDemo extends Control {
     protected _template: TemplateFunction = Template;

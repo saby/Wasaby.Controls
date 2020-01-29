@@ -239,7 +239,7 @@ class PositionQueryParamsController implements IQueryParamsController {
      * @remark
      * @param to page number or position to go to
      */
-    navigateTo(to: number | any): void {
+    updatePage(to: number | any): void {
         this._options.position = to;
     }
 

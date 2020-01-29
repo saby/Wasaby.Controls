@@ -1,19 +1,22 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import {ICrud} from 'Types/source';
+import {ICrud, DataSet, Query} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model} from 'Types/entity';
-import {create as diCreate} from 'Types/di';
+import * as cInstance from 'Core/core-instance';
+import {Logger} from 'UI/Utils';
 
 import {NavigationController} from 'Controls/_source/NavigationController';
 import {
     INavigationOptionValue, INavigationPageSourceConfig, INavigationPositionSourceConfig
 } from 'Controls/_interface/INavigation';
 import {ViewConfig, Controller as ErrorController} from 'Controls/_dataSource/error';
-import {SourceWrapper, ISourceErrorData, ISourceErrorConfig} from 'Controls/_dataSource/SourceWrapper';
+import {
+    SourceCrudInterlayer,
+    ISourceErrorData,
+    ISourceErrorConfig,
+    ISourceCrudInterlayerOptions
+} from 'Controls/_dataSource/SourceCrudInterlayer';
 import {IPagingOptions} from 'Controls/_paging/Paging';
-import {IViewOptions} from 'Controls/_listRender/View';
-import {default as Collection} from 'Controls/_display/Collection';
 
 import {IDirection} from './interface/IVirtualScroll';
 
@@ -61,73 +64,73 @@ const initNavigationOptions = (navigationOptions: INavigationOptionValue): INavi
     return options;
 };
 
-export interface ISourceControlOptions {
+export interface ISourceControlOptions extends IControlOptions {
     /**
-     * @name Controls/_listRender/SourceControl#content
+     * @name Controls/_list/SourceControl#content
      * @cfg {Types/source:ICrud} код шаблона, обёрнутый контролом SourceControl
      */
     /*
-     * @name Controls/_listRender/SourceControl#content
+     * @name Controls/_list/SourceControl#content
      * @cfg {Types/source:ICrud} template code, wrapped by control SourceControl
      */
     content: TemplateFunction;
 
     /**
-     * @name Controls/_listRender/SourceControl#source
+     * @name Controls/_list/SourceControl#source
      * @cfg {Types/source:ICrud} Ресурс для запроса данных
      */
     /*
-     * @name Controls/_listRender/SourceControl#source
+     * @name Controls/_list/SourceControl#source
      * @cfg {Types/source:ICrud} Source to request data
      */
     source: ICrud;
 
     /**
-     * @name Controls/_listRender/SourceControl#navigation
+     * @name Controls/_list/SourceControl#navigation
      * @cfg {Types/source:INavigationOptionValue} Опции навигации
      */
     /*
-     * @name Controls/_listRender/SourceControl#navigation
+     * @name Controls/_list/SourceControl#navigation
      * @cfg {Types/source:INavigationOptionValue} Navigation options
      */
     navigation?: INavigationOptionValue;
 
     /**
-     * @name Controls/_listRender/SourceControl#errorConfig
-     * @cfg {Controls/_dataSource/SourceWrapper:ISourceErrorConfig} настройки для отображения ошибки
+     * @name Controls/_list/SourceControl#errorConfig
+     * @cfg {Controls/_dataSource/SourceCrudInterlayer:ISourceErrorConfig} настройки для отображения ошибки
      */
     /*
-     * @name Controls/_listRender/SourceControl#errorConfig
-     * @cfg {Controls/_dataSource/SourceWrapper:ISourceErrorConfig} error display configuration
+     * @name Controls/_list/SourceControl#errorConfig
+     * @cfg {Controls/_dataSource/SourceCrudInterlayer:ISourceErrorConfig} error display configuration
      */
     errorConfig?: ISourceErrorConfig;
 
     /**
-     * @name Controls/_listRender/SourceControl#errorController
+     * @name Controls/_list/SourceControl#errorController
      * @cfg {Controls/_dataSource/error:ErrorController} Экземпляр контроллера ошибки, инициализированный с собственными хандлерами
      */
     /*
-     * @name Controls/_listRender/SourceControl#errorController
+     * @name Controls/_list/SourceControl#errorController
      * @cfg {Controls/_dataSource/error:ErrorController} Error controller instance, initialized with Custom handlers
      */
     errorController?: ErrorController;
 
     /**
-     * @name Controls/_listRender/SourceControl#pagingOptions
+     * @name Controls/_list/SourceControl#pagingOptions
      * @cfg {Controls/_paging/Paging:IPagingOptions} Настройки для постраничного пейджера
      */
     /*
-     * @name Controls/_listRender/SourceControl#pagingOptions
+     * @name Controls/_list/SourceControl#pagingOptions
      * @cfg {Controls/_paging/Paging:IPagingOptions} Configuration for Per-page Pager
      */
     pagingOptions?: IPagingOptions;
 
     /**
-     * @name Controls/_listRender/SourceControl#keyProperty
+     * @name Controls/_list/SourceControl#keyProperty
      * @cfg {string} Название поля ключа для Types/source:DataSet
      */
     /*
-     * @name Controls/_listRender/SourceControl#keyProperty
+     * @name Controls/_list/SourceControl#keyProperty
      * @cfg {string} Name of the key property for Types/source:DataSet
      */
     keyProperty?: string;
@@ -137,7 +140,7 @@ export interface ISourceControlOptions {
  * Контрол, который предоставляет возможность загрузить данные для списков и перемещаться по ним, использую навигацию Page/Position.
  * @remark
  * Принимает настройки для постраничной навигации и загружает данные, используя
- * NavigationControl для управления состояния навигации и SourceWrapper для обработки ошибки загрузки данных.
+ * NavigationControl для управления состояния навигации и SourceCrudInterlayer для обработки ошибки загрузки данных.
  * В случае ошибки загрузки данных показывает стран6ицу с ошибкой
  *
  * @class Controls/_listRender/SourceControl
@@ -150,7 +153,7 @@ export interface ISourceControlOptions {
  * Control, that provides ability to load data from source and to navigate through them using per-page/scroll navigation.
  * @remark
  * Accepts settings for per-page/scroll navigation and loads data from source,
- * using NavigationControl to handle navigation state and SourceWrapper to catch data loading error.
+ * using NavigationControl to handle navigation state and SourceCrudInterlayer to catch data loading error.
  * It the case of error shows error page
  *
  * @class Controls/_listRender/SourceControl
@@ -159,7 +162,7 @@ export interface ISourceControlOptions {
  * @public
  * @author Аверкиев П.А.
  */
-export default class SourceControl extends Control<ISourceControlOptions> {
+export default class SourceControl extends Control<ISourceControlOptions, RecordSet | void> {
     protected _template: TemplateFunction = Template;
 
     // Полученные записи
@@ -180,21 +183,20 @@ export default class SourceControl extends Control<ISourceControlOptions> {
     // Настройки пейджинатора
     protected _pagingOptions: IPagingOptions;
 
-    protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+    // текущая загрузка
+    private _request: Promise<void | RecordSet>;
+
+    protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: RecordSet | void): Promise<RecordSet | void> | void {
         this._options = options;
         this._items = new RecordSet();
-
-        this._itemsSource = new SourceWrapper(
-            this._options.source,
-            this._options.errorConfig,
-            this._options.errorController
-        );
+        this._itemsSource = new SourceCrudInterlayer(this._options as ISourceCrudInterlayerOptions);
         this._navigationOptions = initNavigationOptions(this._options.navigation);
         this._navigationController = new NavigationController({
-            keyProperty: this._options.keyProperty || DEFAULT_KEY_PROPERTY,
-            source: this._itemsSource,
             navigation: this._navigationOptions
         });
+        if (!this._options.keyProperty) {
+            this._options.keyProperty = DEFAULT_KEY_PROPERTY;
+        }
         return this._load();
     }
 
@@ -220,7 +222,7 @@ export default class SourceControl extends Control<ISourceControlOptions> {
             to = to * limit;
             (this._navigationOptions.sourceConfig as INavigationPositionSourceConfig).position = to;
         }
-        this._navigationController.navigateTo(to);
+        this._navigationController.updatePage(to);
         this._load();
     }
 
@@ -251,23 +253,106 @@ export default class SourceControl extends Control<ISourceControlOptions> {
     }
 
     /**
-     * Загружаем данные списка через контроллер навигации
-     * @private
+     * Строит запрос данных на основе переданных параметров filter и sorting и возвращает Promise<RecordSet>.
+     * Если в опцию navigation был передан объект INavigationOptionValue, его filter, sorting и настрйоки пейджинации
+     * также одбавляются в запрос.
+     * @param filter {Types/source:QueryWhere} Настрйоки фильтрации
+     * @param sorting {Types/source:QueryOrderSelector} Настрйки сортировки
+     * @param direction {Direction} Направление навигации
      */
-    protected _load(direction?: IDirection): Promise<void> {
+    /*
+     * Builds a query based on passed filter and sorting params and returns Promise<RecordSet>.
+     * If INavigationOptionValue is set into the class navigation property, its filter, sorting and pagination settings
+     * will also be added to query
+     * @param filter {Types/source:QueryWhere} filter settings
+     * @param sorting {Types/source:QueryOrderSelector} sorting settings
+     * @param direction {Direction} navigation direction
+     */
+    protected _load(direction?: IDirection): Promise<void | RecordSet> {
         const filter = {};
         const sorting = [{id: true}];
         this._hideError();
-        return this._navigationController.load(filter, sorting, direction)
+        this._cancelLoading();
+        const query = this._navigationController.buildQuery(direction, filter, sorting);
+        this._request = this._callQuery(query)
             .then((recordSet: RecordSet) => {
+                this._navigationController.calculateState(recordSet, direction);
                 this._items = recordSet;
                 if (!this._pagingOptions) {
                     this._pagingOptions = this._calculatePagingOptions(this._items);
                 }
+                return this._items;
             })
             .catch((error: ISourceErrorData) => {
                 this._showError(error.errorConfig);
             });
+        return this._request;
+    }
+
+    /**
+     * Проверяет, загружаются ли в данный момент данные
+     */
+    /*
+     * Checks if data is currently loading
+     */
+    isLoading(): boolean {
+        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
+        return this._request && !this._request.isReady();
+    }
+
+    /**
+     * Отменяет текущую загрузку данных
+     * @private
+     */
+    private _cancelLoading(): void {
+        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
+        if (this._request && !this._request.isReady()) {
+            this._request.cancel();
+        }
+    }
+
+    /**
+     * Выполняет запрос данных DataSet методом ICrud.query()
+     * Возвращает Promise<RecordSet> с результатом выполнения DataSet.getAll()
+     * @param {string} keyProperty Свойство, используемое в качестве ключа в DataSet
+     * @param {Types/source:Query} query исполняемый запрос с учётом сортировки, фильтрации, параметров пейджинации
+     * @private
+     */
+    /*
+     * Performs the DataSet request using ICrud.query()
+     * and returns Promise<RecordSet> with result of calling DataSet.getAll()
+     * @param {string} keyProperty key property for DataSet
+     * @param {Types/source:Query} query A query built based on sorting, filter and pagination params
+     * @private
+     */
+    private _callQuery(query: Query): Promise<RecordSet> {
+        let sourceQuery: Promise<RecordSet>;
+        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
+        const queryDeferred = this._itemsSource.query(query)
+            .addCallback((dataSet: DataSet) => {
+                if (this._options.keyProperty && this._options.keyProperty !== dataSet.getKeyProperty()) {
+                    dataSet.setKeyProperty(this._options.keyProperty);
+                }
+                return dataSet.getAll ? dataSet.getAll() : dataSet;
+            })
+            .catch(() => {
+                Logger.error('NavigationController: Data is unable to be queried');
+            });
+        /**
+         * Deferred с синхронным кодом статического источника выполняется сихронно.
+         * в итоге в callback релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций,
+         * и не можем обратиться к this._options.
+         */
+        if (cInstance.instanceOfModule(this._itemsSource, 'Types/source:Memory')) {
+            sourceQuery = new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(queryDeferred);
+                }, 0);
+            });
+        } else {
+            sourceQuery = queryDeferred;
+        }
+        return sourceQuery;
     }
 
     /**
