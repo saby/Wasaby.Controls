@@ -53,7 +53,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       const currOpts = this._options;
       const selectionIsChanged = currOpts.selectedKeys !== options.selectedKeys || currOpts.excludedKeys !== options.excludedKeys;
 
-      if (selectionIsChanged || currOpts.selectedKeysCount !== options.selectedKeysCount) {
+      if (selectionIsChanged || currOpts.selectedKeysCount !== options.selectedKeysCount || currOpts.isAllSelected !== options.isAllSelected) {
          this._updateSelection(options.selectedKeys, options.excludedKeys, options.selectedKeysCount, options.isAllSelected);
       }
 
