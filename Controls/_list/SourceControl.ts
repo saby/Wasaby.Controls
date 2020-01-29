@@ -61,9 +61,7 @@ const initNavigationOptions = (navigationOptions: INavigationOptionValue): INavi
     return options;
 };
 
-// TODO наследование от IViewOptions это костыль, т.к. установка collection происхожит
-//  в дочерних контролах, которые extends View
-export interface ISourceControlOptions extends IViewOptions {
+export interface ISourceControlOptions {
     /**
      * @name Controls/_listRender/SourceControl#content
      * @cfg {Types/source:ICrud} код шаблона, обёрнутый контролом SourceControl
@@ -182,16 +180,9 @@ export default class SourceControl extends Control<ISourceControlOptions> {
     // Настройки пейджинатора
     protected _pagingOptions: IPagingOptions;
 
-    // Коллекцияя со списком записей. Управляется ScrollContainer
-    // TODO это костыль, т.к. это же самое происходит в дочерних контролах, которые extends View
-    protected _collection: Collection<Model>;
-
     protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
         this._options = options;
         this._items = new RecordSet();
-
-        // TODO это костыль, т.к. это же самое происходит в дочерних контролах, которые extends View
-        this._collection = this._createCollection(this._options.collection, this._items, this._options);
 
         this._itemsSource = new SourceWrapper(
             this._options.source,
@@ -242,6 +233,7 @@ export default class SourceControl extends Control<ISourceControlOptions> {
     protected _onPagingArrowClick(e: SyntheticEvent<Event>, btnName: string): void {
         if (btnName === 'Next') {
             this._navigationController.calculateState(this._items, 'down');
+
         } else if (btnName === 'Prev') {
             this._navigationController.calculateState(this._items, 'up');
         }
@@ -255,7 +247,6 @@ export default class SourceControl extends Control<ISourceControlOptions> {
      * @private
      */
     protected _loadMore(e: SyntheticEvent<Event>, direction: IDirection): void {
-        this._collection.setHasMoreData(this._navigationController.hasMoreData(direction));
         this._load(direction);
     }
 
@@ -269,7 +260,7 @@ export default class SourceControl extends Control<ISourceControlOptions> {
         this._hideError();
         return this._navigationController.load(filter, sorting, direction)
             .then((recordSet: RecordSet) => {
-                this._updateCollection(recordSet);
+                this._items = recordSet;
                 if (!this._pagingOptions) {
                     this._pagingOptions = this._calculatePagingOptions(this._items);
                 }
@@ -277,19 +268,6 @@ export default class SourceControl extends Control<ISourceControlOptions> {
             .catch((error: ISourceErrorData) => {
                 this._showError(error.errorConfig);
             });
-    }
-
-    /**
-     * Обновляет набор отображаемых записей
-     * @param recordSet
-     * @private
-     */
-    private _updateCollection(recordSet: RecordSet): void {
-        this._items = recordSet;
-        if (this._collection) {
-            this._collection.destroy();
-        }
-        this._collection = this._createCollection(this._options.collection, this._items, this._options);
     }
 
     /**
@@ -303,6 +281,7 @@ export default class SourceControl extends Control<ISourceControlOptions> {
         if ('pageSize' in this._navigationOptions.sourceConfig) {
             const pageSize = (this._navigationOptions.sourceConfig as INavigationPageSourceConfig).pageSize;
             pagesCount = Math.ceil(count / pageSize);
+
         } else if ('position' in this._navigationOptions.sourceConfig) {
             const limit = (this._navigationOptions.sourceConfig as INavigationPositionSourceConfig).limit;
             pagesCount = Math.ceil(count / limit);
@@ -311,15 +290,6 @@ export default class SourceControl extends Control<ISourceControlOptions> {
             ...this._options.pagingOptions,
             pagesCount
         });
-    }
-
-    // TODO это костыль, т.к. это же самое происходит в дочерних контролах, которые extends View
-    private _createCollection(
-        module: string,
-        items: RecordSet,
-        collectionOptions: IViewOptions
-    ): Collection<Model> {
-        return diCreate(module, { ...collectionOptions, collection: items });
     }
 
     private _showError(errorConfig: ViewConfig): void {
