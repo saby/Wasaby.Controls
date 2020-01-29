@@ -10,8 +10,6 @@
 }
 
 .controls-Area__realField {
-   top: 0;
-   left: 0;
    overflow: hidden;
    position: absolute;
 }
@@ -66,6 +64,22 @@
     * Presumably the problem is in the font. Error written https://online.sbis.ru/opendoc.html?guid=1e389bc5-8be7-4394-abdd-231e3ec040a8
     */
    margin: @padding-vertical_inputArea - 1 @padding-horizontal_inputText @padding-vertical_inputArea + 1 @padding-horizontal_inputText;
+}
+
+/**
+ * Увеличиваем кликабельную область <textarea> до границ поля.
+ * Смещаем её относительно контейнера, чтобы не нарушить выравнивание текста.
+ */
+.controls-Area__realField_theme-@{themeName} {
+   top: -@padding-vertical_inputArea;
+   left: -@padding-horizontal_inputText;
+   padding: @padding-vertical_inputArea @padding-horizontal_inputText;
+}
+
+.ws-is-firefox .controls-Area__realField_theme-@{themeName} {
+   top: -(@padding-vertical_inputArea - 1);
+   left: -@padding-horizontal_inputText;
+   padding: @padding-vertical_inputArea - 1 @padding-horizontal_inputText @padding-vertical_inputArea + 1 @padding-horizontal_inputText;
 }
 
 .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
