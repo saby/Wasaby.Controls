@@ -1,6 +1,6 @@
 define('Controls/Container/Async',
    [
-      'Core/Control',
+      'UI/Base',
       'Application/Env',
       'Env/Env',
       'wml!Controls/Container/Async/Async',
@@ -75,7 +75,7 @@ define('Controls/Container/Async',
 
       var moduleLoader = new ModuleLoader();
 
-      var Async = Base.extend({
+      var Async = Base.Control.extend({
          _template: template,
          optionsForComponent: {},
          canUpdate: true,
@@ -83,7 +83,7 @@ define('Controls/Container/Async',
             var result;
             var self = this;
             if (!self._isServer()) {
-               if (self._isLoaded(options.templateName) || (!this._isCompat() && receivedState)) {
+               if (moduleLoader.isLoaded(options.templateName) || (!this._isCompat() && receivedState)) {
                   self._loadContentSync(options.templateName, options.templateOptions, false);
                } else {
                   result = self._loadContentAsync(options.templateName, options.templateOptions, true);
@@ -109,7 +109,7 @@ define('Controls/Container/Async',
                this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate,
                   opts.templateOptions,
                   opts.templateName);
-            } else if (this._isLoaded(opts.templateName)) {
+            } else if (moduleLoader.isLoaded(opts.templateName)) {
                this._loadContentSync(opts.templateName, opts.templateOptions);
             }
          },
@@ -135,7 +135,7 @@ define('Controls/Container/Async',
 
          _loadContentSync: function(name, options, serverSide) {
             var self = this;
-            var loaded = this._loadFileSync(name);
+            var loaded = moduleLoader.loadSync(name);
             if (!this._checkLoadedError(loaded)) {
                self._updateOptionsForComponent(loaded, options, name);
                if (serverSide) {
@@ -210,18 +210,6 @@ define('Controls/Container/Async',
                result = false;
             }
             return result;
-         },
-
-         _loadFileAsync: function(name) {
-            return moduleLoader.loadAsync(name);
-         },
-
-         _loadFileSync: function(name) {
-            return moduleLoader.loadSync(name);
-         },
-
-         _isLoaded: function(name) {
-            return moduleLoader.isLoaded(name);
          },
 
          _isServer: function() {
