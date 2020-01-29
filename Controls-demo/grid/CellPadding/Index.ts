@@ -7,9 +7,9 @@ import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
-    private _columns = cellPadding().getCollumns();
-    private _header = cellPadding().getCellPaddingHeader();
+    protected _viewSource: Memory;
+    protected _columns = cellPadding().getCollumns();
+    protected _header = cellPadding().getCellPaddingHeader();
 
     protected _beforeMount() {
         this._viewSource = new Memory({

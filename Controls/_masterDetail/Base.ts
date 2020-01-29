@@ -140,7 +140,7 @@ class Base extends Control<IMasterDetail> {
         }
     }
 
-    private _selectedMasterValueChangedHandler(event: Event, value: boolean): void {
+    protected _selectedMasterValueChangedHandler(event: Event, value: boolean): void {
         this._selected = value;
         event.stopPropagation();
     }
@@ -171,7 +171,7 @@ class Base extends Control<IMasterDetail> {
         return !!canResizing;
     }
 
-    private _offsetHandler(event: Event, offset: number): void {
+    protected _offsetHandler(event: Event, offset: number): void {
         if (offset !== 0) {
             const width = parseInt(this._currentWidth, 10) + offset;
             this._currentWidth = width + 'px';
@@ -205,7 +205,7 @@ class Base extends Control<IMasterDetail> {
         return this._containerWidth;
     }
 
-    private _resizeHandler(): void {
+    protected _resizeHandler(): void {
         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
         // Не запускаем реакцию на ресайз, если контрол скрыт (к примеру лежит внутри скпытой области switchableArea)
         if (!this._container.closest('.ws-hidden')) {

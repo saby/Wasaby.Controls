@@ -35,8 +35,8 @@ const ERROR_ON_TIMEOUT = 504;
 
 export default class DataLoader extends Control<IErrorContainerOptions> {
    protected _template: TemplateFunction = template;
-   private _sources: ISourceConfig[];
-   private _errorViewConfig: ErrorViewConfig;
+   protected _sources: ISourceConfig[];
+   protected _errorViewConfig: ErrorViewConfig;
    private _errorController: Controller = new Controller({});
 
    protected _beforeMount({sources, errorHandlingEnabled, requestTimeout}: IErrorContainerOptions,

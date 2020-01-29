@@ -152,7 +152,7 @@ class ResizingLine extends Control<IResizingLineOptions> {
     }
 
     // Use in template.
-    private _isResizing(minOffset: number, maxOffset: number): boolean {
+    protected _isResizing(minOffset: number, maxOffset: number): boolean {
         return minOffset !== 0 || maxOffset !== 0;
     }
 

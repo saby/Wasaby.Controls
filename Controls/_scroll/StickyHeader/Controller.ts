@@ -5,7 +5,7 @@ import {TRegisterEventData} from './Utils';
 // @ts-ignore
 
 class Component extends Control {
-    private _template: Function = template;
+    protected _template: Function = template;
 
     // Register of all registered headers. Stores references to instances of headers.
     private _headers: object;

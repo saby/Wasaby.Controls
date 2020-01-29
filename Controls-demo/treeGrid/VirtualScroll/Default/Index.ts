@@ -6,8 +6,8 @@ import {Gadgets, VirtualScrollHasMore} from '../../DemoHelpers/DataCatalog';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
-   private _viewSource: Memory;
-   private _columns = Gadgets.getGridColumnsForFlat();
+   protected _viewSource: Memory;
+   protected _columns = Gadgets.getGridColumnsForFlat();
 
    protected _beforeMount() {
       this._viewSource = new Memory({

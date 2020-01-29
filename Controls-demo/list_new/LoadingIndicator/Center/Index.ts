@@ -15,7 +15,7 @@ export default class extends Control {
         });
     }
 
-    private _reloadList(): void {
+    protected _reloadList(): void {
         this._slowDownSource(this._viewSource, 3000);
         this._children.list.reload();
     }
