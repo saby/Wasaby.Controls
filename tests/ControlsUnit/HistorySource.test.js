@@ -233,7 +233,7 @@ define(
                   historyDef.addCallback(function(data) {
                      let records = data.getAll();
                      assert.isTrue(records.at(0).get('pinned'));
-                     assert.isTrue(hSource._history.pinned.getCount(), 1);
+                     assert.equal(hSource._history.pinned.getCount(), 1);
 
                      hSource.historySource = errorSource;
                      historyDef = hSource.query(query);
