@@ -6,6 +6,5 @@
                     iconSize="m"
                     caption="Menu"
                     source="{{_source}}"/>
-        </div>
     </div>
 </div>
