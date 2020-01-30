@@ -152,7 +152,8 @@ export default class SwipeControl extends Control {
    }
    private _updateActionsOnCurrentItem(): void {
       this._setMeasurer(this._options.actionAlignment);
-
+      const showMenuButtonAnyway = !!(this._options.contextMenuConfig && (this._options.contextMenuConfig.footerTemplate
+                                   || this._options.contextMenuConfig.headerTemplate));
       const itemActions = this._options.useNewModel
          ? (this._currentItemData.getActions().all ? this._currentItemData.getActions().all : [])
          : (this._currentItemData.itemActions ? this._currentItemData.itemActions.all : []);
@@ -174,7 +175,8 @@ export default class SwipeControl extends Control {
       this._swipeConfig = this._measurer.getSwipeConfig(
           itemActions,
           this._actionsHeight,
-          this._options.actionCaptionPosition
+          this._options.actionCaptionPosition,
+
       );
       if (this._needHorizontalRecalc(this._swipeConfig)) {
          this._setMeasurer('horizontal');

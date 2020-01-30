@@ -80,7 +80,8 @@ const VerticalMeasurer: IMeasurer = {
    getSwipeConfig(
       actions: IItemAction[],
       rowHeight: number,
-      actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
+      actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition'],
+      showMenuButtonAnyway: boolean = false
    ): ISwipeConfig {
       let columnsCount = 1;
       let itemActions = getActualActions(actions);
@@ -98,7 +99,7 @@ const VerticalMeasurer: IMeasurer = {
             columnsCount = 2;
          }
       }
-      if (columnsCount * countOfActions !== actions.length) {
+      if (columnsCount * countOfActions !== actions.length || showMenuButtonAnyway) {
          itemActions = itemActions.slice(0, columnsCount * countOfActions - 1);
          itemActions.push({
             icon: 'icon-SwipeMenu',
