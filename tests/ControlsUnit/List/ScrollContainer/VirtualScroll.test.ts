@@ -158,10 +158,11 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.itemsContainerHeight = 600;
             instance.viewportHeight = 400;
 
+            instance.stopIndex = 19;
             assert.isTrue(instance.canScrollToItem(1));
             assert.isFalse(instance.canScrollToItem(18));
-            assert.isTrue(instance.canScrollToItem(19));
-            assert.isFalse(instance.canScrollToItem(21));
+            instance.stopIndex = 20;
+            assert.isTrue(instance.canScrollToItem(20));
         });
         it('recalcFromScrollTop', () => {
             // @ts-ignore
@@ -279,8 +280,10 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         it('itemsRemovedHandler', () => {
             // @ts-ignore
             const instance = new VirtualScroll(defaultOptions);
+            instance._options.viewModel.getStartIndex = () => instance.startIndex;
             instance.itemsCount = 20;
             instance.reset();
+            instance.itemsChanged = false;
             instance.itemsContainer = itemsContainer;
             instance.itemsCount = 19;
             instance.itemsRemovedHandler(19, {length: 1} as object[]);

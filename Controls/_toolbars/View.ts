@@ -43,11 +43,12 @@ export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
     const fontColorStyle = item.get('fontColorStyle');
     const contrastBackground = item.get('contrastBackground');
     const cfg = {};
+    cfg.readOnly = readOnly;
     cfg._hoverIcon = true;
     cssStyleGeneration.call(cfg, {
         size, icon, style, viewMode, iconStyle, transparent, caption, readOnly, fontColorStyle, contrastBackground
     });
-    return cfg
+    return cfg;
 }
 
 export function getButtonTemplate(): TemplateFunction {
@@ -73,7 +74,8 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
      */
     itemsSpacing: TItemsSpacing;
     /**
-     * Позволяет отобразить дополнительные элементы в меню.
+     * @name Controls/_toolbars/View#additionalProperty
+     * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню. Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
      */
     additionalProperty?: string
 }

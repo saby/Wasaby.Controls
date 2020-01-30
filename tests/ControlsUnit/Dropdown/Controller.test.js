@@ -62,7 +62,9 @@ define(
                data: items
             }),
             nodeProperty: 'node',
-            itemTemplateProperty: 'itemTemplate'
+            itemTemplateProperty: 'itemTemplate',
+            _dropDownOpener: 'testOpener'
+
          };
 
          let configLazyLoad = {
@@ -297,6 +299,43 @@ define(
                   assert.equal(dropdownController._items.getCount(), updatedItems.length);
                   assert.isTrue(cInstance.instanceOfModule(dropdownController._source, 'Types/source:Base'));
                   assert.isFalse(opened);
+                  resolve();
+               });
+            });
+         });
+
+         it('_beforeUpdate source and selectedKeys', () => {
+            let dropdownController = getDropdownController(config),
+               opened = false;
+            let updatedItems = Clone(items);
+            updatedItems.push({
+               id: '9',
+               title: 'Запись 9'
+            });
+            dropdownController._items = itemsRecords;
+            dropdownController._source = true;
+            dropdownController._children = {
+               DropdownOpener: {
+                  open: function() {
+                     opened = true;
+                  },
+                  isOpened: function() {
+                     return opened;
+                  }
+               }
+            };
+            let stub = sandbox.stub(dropdown._Controller._private, 'updateSelectedItems');
+            return new Promise((resolve) => {
+               dropdownController._beforeUpdate({
+                  selectedKeys: [3],
+                  keyProperty: 'id',
+                  source: new sourceLib.Memory({
+                     keyProperty: 'id',
+                     data: updatedItems
+                  })
+               }).addCallback(() => {
+                  assert.equal(dropdownController._items.getCount(), updatedItems.length);
+                  sinon.assert.calledOnce(stub);
                   resolve();
                });
             });
@@ -872,6 +911,7 @@ define(
 
             dropdownController.openMenu({ testOption: 'testValue' });
             assert.equal(openConfig.testOption, 'testValue');
+            assert.equal(openConfig.opener, 'testOpener');
 
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',

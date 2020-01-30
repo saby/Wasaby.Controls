@@ -212,7 +212,7 @@ define([
                         height: 10
                      }
                   }
-               }
+               };
             });
             it('Header with id equal to "sticky" stops being fixed', function() {
                component._fixedHandler(event, coreMerge({
@@ -249,6 +249,21 @@ define([
 
                assert.isEmpty(component._fixedHeadersStack.top);
                assert.isEmpty(component._fixedHeadersStack.bottom);
+            });
+            it('Header with id equal to "sticky" fixed to another position', function() {
+               component._fixedHandler(event, {
+                  id: 'sticky1',
+                  fixedPosition: 'top',
+                  prevPosition: ''
+               });
+               component._fixedHandler(event, {
+                  id: 'sticky1',
+                  fixedPosition: 'bottom',
+                  prevPosition: 'top'
+               });
+
+               assert.isEmpty(component._fixedHeadersStack.top);
+               assert.include(component._fixedHeadersStack.bottom, 'sticky1');
             });
             it('Header with id equal to "sticky1" fixed, Header with id equal to "sticky2" stop being fixed', function() {
                component._fixedHandler(event, {
@@ -339,6 +354,29 @@ define([
                   height: 10
                });
             assert.equal(component.getHeadersHeight('top'), 10);
+            assert.equal(component.getHeadersHeight('bottom'), 0);
+         });
+
+         it('should return the correct height after a new header is not at the very top has been registered and fixed.', function () {
+            const data = {
+               id: 2,
+               position: 'top',
+               mode: 'stackable',
+               inst: {
+                  getOffset: function() {
+                     return 10;
+                  },
+                  height: 10
+               }
+            };
+            component._stickyRegisterHandler(event, data, true);
+            component._fixedHandler(event, {
+               id: data.id,
+               fixedPosition: 'top',
+               prevPosition: '',
+               height: 10
+            });
+            assert.equal(component.getHeadersHeight('top'), 0);
             assert.equal(component.getHeadersHeight('bottom'), 0);
          });
 
