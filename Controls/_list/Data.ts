@@ -12,6 +12,8 @@ import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {ICrud, PrefetchProxy} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 
+import {error as dataSourceError} from 'Controls/dataSource';
+
 type GetSourceResult = {
    data?: RecordSet;
    error?: Error;
@@ -165,6 +167,8 @@ type GetSourceResult = {
       var Data = Control.extend(/** @lends Controls/_list/Data.prototype */{
 
          _template: template,
+         _error: null,
+         _errorController: new dataSourceError.Controller(),
          _loading: false,
 
          _beforeMount: function(options, context, receivedState:RecordSet|undefined):Deferred<GetSourceResult>|void {
@@ -222,6 +226,20 @@ type GetSourceResult = {
                _private.updateDataOptions(this, this._dataOptionsContext);
                this._dataOptionsContext.updateConsumers();
             }
+         },
+
+         _showError: function(viewConfig) {
+            if (viewConfig) {
+               viewConfig.mode = dataSourceError.Mode.dialog;
+            }
+
+            this._error = viewConfig;
+         },
+
+         _onItemsChangeError: function(event, error) {
+            this._errorController.process(error).then((errorViewConfig) => {
+               this._showError(errorViewConfig);
+            });
          },
 
          _filterChanged: function(event, filter) {
