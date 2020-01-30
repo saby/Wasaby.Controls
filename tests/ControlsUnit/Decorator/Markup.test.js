@@ -142,10 +142,16 @@ define([
 
    describe('Controls.Decorator.Markup.Converter', function() {
       var fromNode = typeof document === 'undefined';
+      var oldWindow;
+      var oldDocument;
+      var oldNode;
       before(function() {
          if (fromNode) {
             return new Promise(function (resolve) {
                require(['jsdom'], function (jsdom) {
+                  oldDocument = global.document;
+                  oldWindow = global.window;
+                  oldNode = global.Node;
                   var browser = new jsdom.JSDOM('', {pretendToBeVisual: true});
                   global.window = browser.window;
                   global.document = window.document;
@@ -158,9 +164,9 @@ define([
 
       after(function() {
          if (fromNode) {
-            global.window = undefined;
-            global.document = undefined;
-            global.Node = undefined;
+            global.window = oldWindow;
+            global.document = oldDocument;
+            global.Node = oldNode;
          }
       });
 
