@@ -101,6 +101,7 @@ function createLinkNode(href: string, text: string = href, isEmail: boolean = fa
         href: isEmail ? 'mailto:' + href : href
     };
     if (!isEmail) {
+        attributes.class = 'asLink';
         attributes.target = '_blank';
         attributes.rel = 'noreferrer noopener';
     }
@@ -223,7 +224,7 @@ export function getUndecoratedLink(linkNode) {
    const newLinkAttributes = objectMerge({}, linkAttributes, { clone: true });
 
    // Save all link attributes, replace only special class name on usual.
-   newLinkAttributes.class = linkAttributes.class.replace(getClasses().link, '');
+   newLinkAttributes.class = linkAttributes.class.replace(getClasses().link, 'asLink');
    return ['a', newLinkAttributes, newLinkAttributes.href];
 }
 
@@ -342,7 +343,7 @@ export function getDecoratedLink(jsonNode): any[]|string {
    const newLinkAttributes = objectMerge({}, linkAttributes, { clone: true });
    const decoratedLinkClasses = getClasses();
 
-   newLinkAttributes.class = ((newLinkAttributes.class ? newLinkAttributes.class + ' ' : '') +
+   newLinkAttributes.class = ((newLinkAttributes.class ? newLinkAttributes.class.replace('asLink', '') + ' ' : '') +
       decoratedLinkClasses.link).trim();
    newLinkAttributes.target = '_blank';
 
