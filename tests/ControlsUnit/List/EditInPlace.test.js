@@ -1687,10 +1687,8 @@ define([
             }
          };
 
-         it('register and cancel pending events should bubble', function () {
-            let
-                isPendingStarted = false,
-                isPendingCanceled = false;
+         it('register pending event should bubbles', function () {
+            let isPendingStarted = false;
 
             eip.saveOptions({
                listModel: listModel
@@ -1700,10 +1698,6 @@ define([
                if (eName === 'registerPending') {
                   assert.isTrue(params.bubbling);
                   isPendingStarted = true;
-               }
-               if (eName === 'cancelFinishingPending') {
-                  assert.isTrue(params.bubbling);
-                  isPendingCanceled = true;
                }
             };
 
@@ -1717,95 +1711,8 @@ define([
             eip._onPendingFail(undefined, new Deferred());
 
             assert.isTrue(isPendingStarted);
-            assert.isTrue(isPendingCanceled);
          });
-         it('dont close popup if validation failed', function () {
-            let
-                isPendingStarted = false,
-                isPendingCanceled = false;
 
-            eip.saveOptions({
-               listModel: listModel
-            });
-
-            eip._notify = (eName, args, params) => {
-               if (eName === 'registerPending') {
-                  assert.isTrue(params.bubbling);
-                  assert.equal(args[0], eip._pendingDeferred);
-                  isPendingStarted = true;
-               }
-               if (eName === 'cancelFinishingPending') {
-                  assert.isTrue(params.bubbling);
-                  isPendingCanceled = true;
-               }
-            };
-
-            assert.isNull(eip._pendingDeferred);
-
-            eip.beginAdd({
-               item: newItem
-            });
-
-            assert.isTrue(eip._pendingDeferred instanceof Deferred);
-
-            eip._children.formController = failedValidationFormController;
-            eip._editingItem.isChanged = () => true;
-
-            // Emulate closing popup. It will call _onPendingFail;
-            let result = new Deferred();
-            eip._onPendingFail(undefined, result);
-
-            assert.isTrue(isPendingStarted);
-            assert.isFalse(result.isReady());
-            assert.isTrue(isPendingCanceled);
-         });
-         it('commit changes and close popup if validation passed', async function () {
-            let
-                isPendingStarted = false,
-                isPendingCanceled = false,
-                isPendingDeferredFired = false;
-
-            eip.saveOptions({
-               listModel: listModel
-            });
-
-            eip._notify = (eName, args, params) => {
-               if (eName === 'registerPending') {
-                  assert.isTrue(params.bubbling);
-                  assert.equal(args[0], eip._pendingDeferred);
-                  isPendingStarted = true;
-               }
-               if (eName === 'cancelFinishingPending') {
-                  assert.isTrue(params.bubbling);
-                  isPendingCanceled = true;
-               }
-            };
-
-            assert.isNull(eip._pendingDeferred);
-
-            await eip.beginAdd({
-               item: newItem
-            });
-
-            assert.isTrue(eip._pendingDeferred instanceof Deferred);
-            const nativeCallback = eip._pendingDeferred.callback;
-            eip._pendingDeferred.callback = () => {
-               nativeCallback.apply(eip._pendingDeferred, arguments);
-               isPendingDeferredFired = true;
-            };
-
-            eip._children.formController = successValidationFormController;
-            eip._editingItem.isChanged = () => true;
-
-            // Emulate closing popup. It will call _onPendingFail;
-            eip._onPendingFail(undefined, eip._pendingDeferred);
-
-            assert.isTrue(isPendingStarted);
-            assert.isTrue(!!listModel.getItemById(4));
-            assert.isTrue(isPendingDeferredFired);
-            assert.isNull(eip._pendingDeferred);
-            assert.isFalse(isPendingCanceled);
-         });
          it('unregister pending if editing has been canceled', async function () {
             let
                 isPendingStarted = false,

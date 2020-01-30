@@ -675,20 +675,8 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         e.stopPropagation();
     },
 
-    _onPendingFail(forceFinishValue: boolean, pendingDeferred: Promise<boolean>): void {
-        const cancelPending = () => this._notify('cancelFinishingPending', [], {bubbling: true});
-
-        if (this._editingItem && this._editingItem.isChanged()) {
-            this.commitEdit().addCallback((result = {}) => {
-                if (result.validationFailed) {
-                    cancelPending();
-                }
-            }).addErrback(() => {
-                cancelPending();
-            });
-        } else {
-            this.cancelEdit();
-        }
+    _onPendingFail(): void {
+        this.cancelEdit();
     },
 
     _beforeUnmount: function () {
