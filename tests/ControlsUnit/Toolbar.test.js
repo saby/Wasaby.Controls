@@ -287,6 +287,7 @@ define(
                         groupProperty: undefined,
                         groupingKeyCallback: 'groupingKeyCallback',
                         iconSize: 'm',
+                        itemTemplateProperty: undefined,
                         keyProperty: 'keyProperty',
                         nodeProperty: '@parent',
                         parentProperty: 'parent',
