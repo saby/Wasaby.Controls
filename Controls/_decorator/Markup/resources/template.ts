@@ -70,7 +70,7 @@ import 'css!theme?Controls/decorator';
             const f = (function() {
                const event = arguments[0];
                event.result = thelpers.getter(this, [handlerName]).apply(this, arguments);
-            }).bind(self);
+            }).bind(self);Controls/Pending
             f.control = self;
             f.isControlEvent = false;
             return f;
