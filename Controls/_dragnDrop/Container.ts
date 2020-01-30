@@ -924,7 +924,9 @@ import 'css!Controls/_dragnDrop/Container';
          },
 
          _onMouseMove: function(event) {
-            //Поставлена защита на event.nativeEvent=null
+            // В яндекс браузере каким то образом пришел nativeEvent === null, после чего
+            // упала ошибка в коде ниже и страница стала некликабельной. Повторить ошибку не получилось
+            // добавляем защиту на всякий случай.
             if (event.nativeEvent) {
                if (Env.detection.isIE) {
                   this._onMouseMoveIEFix(event);
