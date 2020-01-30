@@ -75,41 +75,47 @@ define('Controls/Container/Async',
 
       var moduleLoader = new ModuleLoader();
 
+      function generateErrorMsg(template, msg) {
+         return 'Couldn\'t load module ' +
+            template + ' ' +
+            (msg || '');
+      }
+
       var Async = Base.Control.extend({
          _template: template,
          optionsForComponent: {},
          canUpdate: true,
          _beforeMount: function(options, ctx, receivedState) {
-            var result;
             var self = this;
-            if (!self._isServer()) {
-               if (moduleLoader.isLoaded(options.templateName) || (!this._isCompat() && receivedState)) {
-                  self._loadContentSync(options.templateName, options.templateOptions, false);
-               } else {
-                  result = self._loadContentAsync(options.templateName, options.templateOptions, true);
-               }
-            } else {
-               self._loadContentSync(options.templateName, options.templateOptions, true);
-               result = new Promise(function(resolve, reject) {
-                  if (self.error) {
-                     reject(self.error);
-                  } else {
-                     resolve(true);
-                  }
-               });
+            if (!self._isServer() && (!moduleLoader.isLoaded(options.templateName) || this._isCompat() || !receivedState)) {
+               return self._loadContentAsync(options.templateName, options.templateOptions, true);
             }
-            return result;
+
+            self.error = self._loadContentSync(options.templateName, options.templateOptions);
+            if (self.error) {
+               return Promise.reject(self.error);
+            }
+
+            return Promise.resolve(true);
          },
 
+         /**
+          * Если можем подставить данные при изменении синхронно, то делаем это до обновления
+          * @param {*} opts
+          */
          _beforeUpdate: function(opts) {
             if (!this.canUpdate) {
                return;
             }
+
             if (opts.templateName === this._options.templateName) {
-               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate,
+               // поменялись только опции шаблона
+               return this._insertComponent(this.optionsForComponent.resolvedTemplate,
                   opts.templateOptions,
                   opts.templateName);
-            } else if (moduleLoader.isLoaded(opts.templateName)) {
+            }
+
+            if (moduleLoader.isLoaded(opts.templateName)) {
                this._loadContentSync(opts.templateName, opts.templateOptions);
             }
          },
@@ -118,53 +124,45 @@ define('Controls/Container/Async',
             if (!this.canUpdate) {
                return;
             }
-            if (this.currentTemplateName !== this._options.templateName) {
-               this._loadContentAsync(this._options.templateName, this._options.templateOptions);
+            if (this.currentTemplateName === this._options.templateName) {
+               return;
             }
-         },
 
-         _setErrorState: function(errorState, message) {
-            if (errorState) {
-               this.error = 'Couldn\'t load module ' +
-                  this._options.templateName + ' ' +
-                  (message || '');
-            } else {
-               this.error = null;
-            }
-         },
-
-         _loadContentSync: function(name, options, serverSide) {
             var self = this;
+            this._loadContentAsync(this._options.templateName, this._options.templateOptions).then(function () {
+               self._forceUpdate();
+            });
+         },
+
+         _loadContentSync: function(name, options) {
             var loaded = moduleLoader.loadSync(name);
-            if (!this._checkLoadedError(loaded)) {
-               self._updateOptionsForComponent(loaded, options, name);
-               if (serverSide) {
-                  self._pushDepToHeadData(library.parse(name).name);
-               }
-               return loaded;
+            if (loaded === null) {
+               return generateErrorMsg(this._options.templateName);
             }
-            return null;
+
+            this._insertComponent(loaded, options, name);
+            this._pushDepToHeadData(library.parse(name).name);
          },
 
-         _loadContentAsync: function(name, options, noUpdate) {
+         _loadContentAsync: function(name, options) {
             var self = this;
-            var promise = this._loadFileAsync(name);
+            var promise = moduleLoader.loadAsync(name);
 
             // Need this flag to prevent setting new options for content
             // that wasn't loaded yet
             self.canUpdate = false;
-            promise = promise.then(function(res) {
+            promise = promise.then(function(loaded) {
                self.canUpdate = true;
-               if (!self._checkLoadedError(res)) {
-                  self._updateOptionsForComponent(res, options, name);
-                  if (!noUpdate) {
-                     self._forceUpdate();
-                  }
+               if (loaded === null) {
+                  self.error = generateErrorMsg(self._options.templateName, err);
+                  return true;
                }
+
+               self._insertComponent(loaded, options, name);
                return true;
             }, function(err) {
                self.canUpdate = true;
-               self._setErrorState(true, err);
+               self.error = generateErrorMsg(self._options.templateName, err);
                return err;
             });
             return promise;
@@ -175,6 +173,10 @@ define('Controls/Container/Async',
          },
 
          _pushDepToHeadData: function(dep) {
+            if (!this._isServer()) {
+               return;
+            }
+
             try {
                var headData = this._getHeadData();
                headData.pushDepComponent(dep, true);
@@ -185,7 +187,7 @@ define('Controls/Container/Async',
             }
          },
 
-         _updateOptionsForComponent: function(tpl, opts, templateName) {
+         _insertComponent: function(tpl, opts, templateName) {
             this.currentTemplateName = templateName;
             this.optionsForComponent = {};
             for (var key in opts) {
@@ -193,23 +195,11 @@ define('Controls/Container/Async',
                   this.optionsForComponent[key] = opts[key];
                }
             }
-            if (tpl && tpl.__esModule) {
-               this.optionsForComponent.resolvedTemplate = tpl.default;
-            } else {
-               this.optionsForComponent.resolvedTemplate = tpl;
-            }
-         },
 
-         _checkLoadedError: function(loaded) {
-            var result;
-            if (loaded === null) {
-               this._setErrorState(true);
-               result = true;
-            } else {
-               this._setErrorState(false);
-               result = false;
+            if (tpl && tpl.__esModule) {
+               return this.optionsForComponent.resolvedTemplate = tpl.default;
             }
-            return result;
+            this.optionsForComponent.resolvedTemplate = tpl;
          },
 
          _isServer: function() {
