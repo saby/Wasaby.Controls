@@ -924,6 +924,7 @@ import 'css!Controls/_dragnDrop/Container';
          },
 
          _onMouseMove: function(event) {
+            //Поставлена защита на event.nativeEvent=null
             if (event.nativeEvent) {
                if (Env.detection.isIE) {
                   this._onMouseMoveIEFix(event);
