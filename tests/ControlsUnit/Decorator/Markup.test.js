@@ -144,11 +144,14 @@ define([
       var fromNode = typeof document === 'undefined';
       before(function() {
          if (fromNode) {
-            return require(['jsdom'], function(jsdom) {
-               var browser = new jsdom.JSDOM('', { pretendToBeVisual: true });
-               global.window = browser.window;
-               global.document = window.document;
-               global.Node = window.Node;
+            return new Promise(function (resolve) {
+               require(['jsdom'], function (jsdom) {
+                  var browser = new jsdom.JSDOM('', {pretendToBeVisual: true});
+                  global.window = browser.window;
+                  global.document = window.document;
+                  global.Node = window.Node;
+                  resolve();
+               });
             });
          }
       });
