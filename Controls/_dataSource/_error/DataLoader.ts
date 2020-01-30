@@ -28,6 +28,7 @@ interface IErrorContainerOptions extends IControlOptions {
  * @implements Controls/_interface/IErrorController
  * @control
  * @public
+ * @demo Controls-demo/dataSource/error/DataLoader/Index
  * @author Сухоручкин А.С
  */
 

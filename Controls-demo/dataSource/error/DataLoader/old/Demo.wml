@@ -1,0 +1,33 @@
+<Controls.Application title="Demo Controls/_dataSource/_error/DataLoader">
+    <h1>Controls/_dataSource/_error/DataLoader</h1>
+    <h2>Страница тестирования DataLoader</h2>
+    <ws:if data="{{ _ready }}">
+       <div id="page-ready">Готово</div>
+    </ws:if>
+ 
+    <div class="ws-flexbox demo-content">
+       <!-- <div class="ws-flexbox ws-flex-column">
+          Controls.input:Label caption="Режим" />
+          <Controls.dropdown:Combobox source='{{ mode }}' keyProperty="id" displayProperty="title" bind:selectedKey='selectedMode' />
+ 
+          <Controls.input:Label caption="Код ошибки" />
+          <Controls.dropdown:Combobox source='{{ code }}' keyProperty="id" displayProperty="title" bind:selectedKey='selectedCode' />
+ 
+          <Controls.buttons:Button caption="{[Сгенерировать ошибку]}" on:click='throwError()' class="buttonThrow" />
+          <Controls.buttons:Button caption="{[Сбросить]}" on:click='clearError()' class="buttonThrow" />
+ 
+          
+       </div> -->
+ 
+       <div class="ws-flexbox ws-flex-column">
+          <!-- <Controls.input:Label caption="Размер компонента" />
+          <Controls.dropdown:Combobox source='{{ sizes }}' on:selectedKeyChanged="changeSize()"
+             keyProperty="id" displayProperty="title" bind:selectedKey='selectedSize' /> -->
+ 
+          <div class="componentContainer ws-flex-column">
+             <Controls.list:View source='{{ proverbs }}' keyProperty='id' />
+          </div>
+       </div>
+    </div>
+ </Controls.Application>
+ 

@@ -1,0 +1,19 @@
+<div class="controlsDemo__wrapper">
+    <h1>Controls/_dataSource/_error/DataLoader</h1>
+    <h2>Страница тестирования DataLoader</h2>
+
+    <div class="controlsDemo__cell">
+        <Controls.buttons:Button caption="{[Сгенерировать ошибку]}" on:click='throwError()' class="buttonThrow" />
+        <!-- <Controls.list:View source='{{ _sources[0].source }}' keyProperty='id' /> -->
+        <Controls.dataSource:error.DataLoader sources="{{_sources}}" errorController="{{_errorController}}">
+            <Controls.masterDetail:Base>
+                <ws:master>
+                    <Controls.list:View source='{{ content.sources[0].source }}' keyProperty='id' />
+                </ws:master>
+                <ws:detail>
+                    <Controls.list:View source='{{ content.sources[1].source }}' keyProperty='id' />
+                </ws:detail>
+            </Controls.masterDetail:Base>
+        </Controls.dataSource:error.DataLoader>
+    </div>
+</div>
