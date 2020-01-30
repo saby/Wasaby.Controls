@@ -600,8 +600,11 @@ var
       _updateShadowMode(event, shadowVisibleObject): void {
          // _shadowVisibilityByInnerComponents не используется в шаблоне,
          // поэтому св-во не является реактивным и для обновления надо позвать _forceUpdate
-         this._shadowVisibilityByInnerComponents = shadowVisibleObject;
-         this._forceUpdate();
+         // Не запускаем перерисовываемся, если контрол скрыт
+         if (!this._container.closest('.ws-hidden')) {
+            this._shadowVisibilityByInnerComponents = shadowVisibleObject;
+            this._forceUpdate();
+         }
       },
 
       setShadowMode: function(shadowVisibleObject) {
