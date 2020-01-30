@@ -61,7 +61,7 @@ define([
                selectedKeys: selectedKeys,
                excludedKeys: excludedKeys,
                selectedKeysCount: selectedKeysCount,
-               isAllSelected: false
+               isAllSelected: true
             });
             assert.equal(instance._menuCaption, 'Отмечено всё');
          });
