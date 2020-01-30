@@ -635,8 +635,9 @@ define(['Controls/_tile/TileView/TileView',
                }
             };
 
-         tileView._setHoveredItem = function() {
+         tileView._setHoveredItem = function(itemData, position, startPosition, noZoom) {
             setHoveredItemCalled = true;
+            assert.isTrue(noZoom);
          };
          let itemData = {
             dispItem: {

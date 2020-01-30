@@ -211,7 +211,7 @@ var TileView = ListView.extend({
                 }
                 const position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
                 const documentRect = documentObject.documentElement.getBoundingClientRect();
-                this._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect, true), position);
+                this._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect, true), position, true);
             } else {
                 this._setHoveredItem(itemData);
             }
@@ -247,10 +247,10 @@ var TileView = ListView.extend({
         return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP ? ZOOM_COEFFICIENT : 1;
     },
 
-    _setHoveredItem: function (itemData, position, startPosition) {
+    _setHoveredItem: function (itemData, position, startPosition, noZoom) {
         this._listModel.setHoveredItem({
             key: itemData.key,
-            canShowActions: !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
+            canShowActions: noZoom || !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
             zoomCoefficient: this._getZoomCoefficient(),
             position: _private.getPositionStyle(startPosition || position),
             endPosition: _private.getPositionStyle(position)
