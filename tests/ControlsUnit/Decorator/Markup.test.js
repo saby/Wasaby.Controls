@@ -19,7 +19,6 @@ define([
    'use strict';
 
    var global = (function() { return this || (0,eval)('this') })();
-   var fromNode = typeof document === 'undefined';
 
    // В окружении юнит тестирования на сервере нет объекта contents, а для теста headJson там должен быть Controls.
    if (!global.contents) {
@@ -142,17 +141,15 @@ define([
       }
 
    describe('Controls.Decorator.Markup.Converter', function() {
-      before(function(done) {
+      var fromNode = typeof document === 'undefined';
+      before(function() {
          if (fromNode) {
-            require(['jsdom'], function(jsdom) {
+            return require(['jsdom'], function(jsdom) {
                var browser = new jsdom.JSDOM('', { pretendToBeVisual: true });
                global.window = browser.window;
                global.document = window.document;
                global.Node = window.Node;
-               done();
             });
-         } else {
-            done();
          }
       });
 
