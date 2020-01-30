@@ -162,7 +162,7 @@ import {Logger} from 'UI/Utils';
       filterHistoryItems: function(self, items: object[]): object[] {
          function getOriginalItem(self, historyItem: object): object {
             return find(self._items, (originalItem) => {
-               return originalItem.id.includes(historyItem.id);
+               return originalItem.id === historyItem.id || originalItem.value[historyItem.id];
             });
          }
 
