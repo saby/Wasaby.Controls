@@ -58,23 +58,36 @@ define([
          Env.constants.compat = oldCompat;
       });
 
+      it('Loading synchronous client-side faild', function () {
+         var options = {
+            templateName: 'ControlsUnit/Async/Fail/TestControlSync',
+            templateOptions: {}
+         };
+
+         var async = new Async(options);
+         return async._beforeMount(options).then(function () {
+            async._beforeUpdate(options);
+
+            assert.equal(async.error, "Couldn\'t load module ControlsUnit/Async/Fail/TestControlSync ");
+            assert.strictEqual(async.optionsForComponent.resolvedTemplate, undefined);
+         });
+      }).timeout(4000);
+
       it('Loading asynchronous client-side', function () {
-         let options = {
+         var options = {
             templateName: 'ControlsUnit/Async/TestControlAsync',
             templateOptions: {}
          };
 
-         let async = new Async(options);
-         async._beforeMount(options);
-         async._beforeUpdate(options);
-         async._afterUpdate();
+         var async = new Async(options);
+         var promise = async._beforeMount(options).then(function () {
+            async._beforeUpdate(options);
+            async._afterUpdate();
 
-         return new Promise(function (resolve, reject) {
-            setTimeout(resolve, 1500);
-         }).then(function () {
             assert.isNotOk(async.error, "Error message should be empty");
             assert.strictEqual(async.optionsForComponent.resolvedTemplate, require('ControlsUnit/Async/TestControlAsync'));
          });
+         return promise;
       }).timeout(3000);
 
       it('Loading asynchronous client-side faild', function () {
