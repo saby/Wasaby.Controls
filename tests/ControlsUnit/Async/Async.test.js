@@ -39,6 +39,21 @@ define([
          assert.equal(async.optionsForComponent.resolvedTemplate, TestControlSync);
       });
 
+      typeof window === 'undefined' && it('Loading synchronous server-side faild', function () {
+         var options = {
+            templateName: 'ControlsUnit/Async/Fail/TestControlSync',
+            templateOptions: {}
+         };
+
+         var async = new Async(options);
+         return async._beforeMount(options).then(function () {
+            async._beforeUpdate(options);
+
+            assert.equal(async.error, "Couldn\'t load module ControlsUnit/Async/Fail/TestControlSync ");
+            assert.strictEqual(async.optionsForComponent.resolvedTemplate, undefined);
+         });
+      }).timeout(4000);
+
       it('Loading synchronous client-side', function () {
          let options = {
             templateName: 'ControlsUnit/Async/TestControlSync',
