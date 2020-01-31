@@ -6,24 +6,22 @@ import { fetch } from 'Browser/Transport';
 import * as ErrorController from 'Controls/Utils/ErrorController';
 import { getBaseTemplateForMode } from 'SbisEnvUI/_Maintains/Parking/templates';
 import { Error as RPCError } from 'Browser/_Transport/RPC';
-import {SbisService} from 'Types/source';
+import { SbisService } from 'Types/source';
 // import { Handler } from "Controls/_dataSource/error";
 
-const handlerEmployee = ({mode, error}) => {
-    if (
-       error instanceof RPCError &&
-       error.methodName === 'Employee.method'
-    ) {
-       return {
-          template: getBaseTemplateForMode(mode),
-          options: {
-             message: 'К сожалению функционал для вас недоступен.',
-             details: 'Оформите подписку и повторите попытку',
-             image: 'https://i.pinimg.com/474x/54/5a/0f/545a0f6074c7a8eeeb396082c768952.jpg'
-          }
-       }
+const handlerEmployee = ({ mode, error }) => {
+    console.log('[handler]', error);
+    if (error.url === 'some/employee/url') {
+        return {
+            template: getBaseTemplateForMode(mode),
+            options: {
+                message: 'К сожалению функционал для вас недоступен.',
+                details: 'Оформите подписку и повторите попытку',
+                image: '/cdn/Maintenance/1.0.0/img/EXCLUSIVE.png'
+            }
+        };
     }
- };
+};
 
 class ViewModes extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
@@ -67,13 +65,12 @@ class ViewModes extends Control<IControlOptions> {
     throwError(): void {
         const error = new fetch.Errors.HTTP({
             httpError: 500,
-            url: 'some/url',
+            url: 'some/employee/url',
             message: 'some error message',
             details: 'some details'
         });
-        /* this._errorController.process({ error, mode: 'include' }).then((config) => {
-            console.log('ErrorConfig:', config);
-        }); */
+        // @ts-ignore
+        this._errorController.process({ error, mode: 'include' });
     }
 }
 export default ViewModes;
