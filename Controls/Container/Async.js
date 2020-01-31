@@ -93,7 +93,7 @@ define('Controls/Container/Async',
 
             self.error = self._loadContentSync(options.templateName, options.templateOptions);
             if (self.error) {
-               return Promise.reject(self.error);
+               return Promise.resolve(self.error);
             }
 
             return Promise.resolve(true);
@@ -137,7 +137,7 @@ define('Controls/Container/Async',
          _loadContentSync: function(name, options) {
             var loaded = moduleLoader.loadSync(name);
             if (loaded === null) {
-               return generateErrorMsg(this._options.templateName);
+               return generateErrorMsg(name);
             }
 
             this._insertComponent(loaded, options, name);
