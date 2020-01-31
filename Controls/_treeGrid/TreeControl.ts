@@ -55,6 +55,15 @@ var _private = {
         }
         return nodeSourceControllers.get(node);
     },
+    clearSourceControllersForNotExpandedNodes(self, oldExpanded, newExpanded): void {
+        if (oldExpanded) {
+            oldExpanded.forEach((oldExpandedKey) => {
+                if (!newExpanded.includes(oldExpandedKey)) {
+                    _private.clearNodeSourceController(self, oldExpandedKey);
+                }
+            });
+        }
+    },
     toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
         listViewModel.toggleExpanded(dispItem, expanded);
         self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [dispItem.getContents()]);
@@ -433,9 +442,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _beforeUpdate: function(newOptions) {
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
+            const baseControl = this._children.baseControl;
+
             this._root = newOptions.root;
             this._updatedRoot = true;
-            this._children.baseControl.cancelEdit();
+
+            baseControl.cancelEdit();
+            baseControl.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
         //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
         if (newOptions.expandedItems) {
@@ -444,9 +457,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
-            
+
             if (newOptions.expandedItems !== this._options.expandedItems) {
-                _private.clearNodesSourceControllers(this);
+                _private.clearSourceControllersForNotExpandedNodes(this, this._options.expadedItems, newOptions.expanded);
             }
         }
         if (newOptions.collapsedItems) {
@@ -478,8 +491,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (this._updatedRoot) {
             this._updatedRoot = false;
             _private.clearNodesSourceControllers(this);
-            var self = this;
-            // При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть и мы загрузим много лишних данных.
+            // При смене корне, не надо запрашивать все открытые папки,
+            // т.к. их может не быть и мы загрузим много лишних данных.
             this._needResetExpandedItems = true;
             // If filter or source was changed, do not need to reload again, baseControl reload list in beforeUpdate
             if (isEqual(this._options.filter, oldOptions.filter) && this._options.source === oldOptions.source) {

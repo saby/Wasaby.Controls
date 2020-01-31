@@ -69,7 +69,7 @@ var _private = {
 };
 
 
-/**
+/*
  * Контрол, предназначенный для операций над множеством записей списка.
  * Подробное описание и инструкцию по настройке читайте <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
  * <a href="/materials/demo-ws4-operations-panel">Демо-пример</a>.
@@ -194,7 +194,49 @@ var _private = {
  *    });
  * </pre>
  * <pre>
- *    <Controls.operationsPanel:OperationsPanel bind:selectionViewMode="_selectionViewMode"/>
+ *    <Controls.operations:Panel bind:selectionViewMode="_selectionViewMode"/>
+ * </pre>
+ */
+
+/**
+ * @typedef {Object} ISelectedCountConfig
+ * @property {Types/_source/IRpc} rpc источник данных, поддерживающий RPC
+ * @property {String} command Имя вызываемого метода
+ * @property {Object} data Параметры вызываемого метода
+ */
+
+/**
+ * @name Controls/_operationsPanel/OperationsPanel#selectedCountConfig
+ * @cfg {ISelectedCountConfig} Конфигурация для получения счётчика отмеченных записей.
+ * @example
+ * TS:
+ * <pre>
+ *    import {SbisService} from 'Types/source';
+ *
+ *    private _filter: object = null;
+ *    private _selectedCountConfig: object = null;
+ *
+ *    _beforeMount():void {
+ *        this._filter = {};
+ *        this._selectedCountConfig = this._getSelectedCountConfig();
+ *    }
+ *
+ *    private _getSelectedCountConfig() {
+ *        return {
+ *            rpc: new SbisService({
+ *                endpoint: 'Employee'
+ *            }),
+ *            command: 'employeeCount',
+ *            data: {
+ *                filter: this._filter
+ *            }
+ *        }
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.operations:Panel selectedCountConfig="{{_selectedCountConfig}}"/>
  * </pre>
  */
 

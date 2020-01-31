@@ -635,18 +635,13 @@ define([
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
-         ctrl._portionedSearch.resetTimer = () => {
-            portionSearchTimerReseted = true;
-         };
-         ctrl._portionedSearch.reset = () => {
-            portionSearchReseted = true;
-         };
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down');
+         ctrl._portionedSearch.continueSearch();
          await loadPromise;
-         assert.isTrue(portionSearchTimerReseted);
-         assert.isFalse(portionSearchReseted);
+         assert.isTrue(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
@@ -654,7 +649,8 @@ define([
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
-         assert.isTrue(portionSearchReseted);
+         assert.isFalse(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
       });
 
       it('prepareFooter', function() {
@@ -1531,6 +1527,7 @@ define([
          ctrl._children = triggers;
          // эмулируем появление скролла
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
+         ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
 
          // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
@@ -1576,6 +1573,27 @@ define([
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
+            ctrl._pagingVisible = true;
+            ctrl._abortSearch();
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'disabled',
+               stateEnd: 'disabled'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'down'
+            });
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'disabled',
+               stateEnd: 'disabled'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            lists.BaseControl._private.getPortionedSearch(ctrl).reset();
+
             // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
             // и еще раз доскроллили до конца, то самое время блокировать кнопки.
             lists.BaseControl._private.handleListScroll(ctrl, {
@@ -1615,6 +1633,59 @@ define([
             }, 100);
 
          }, 100);
+      });
+
+      it('abortSearch', async () => {
+         const heightParams = {
+            scrollHeight: 400,
+            clientHeight: 1000
+         };
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            navigation: {
+               view: 'infinity',
+               source: 'page',
+               viewConfig: {
+                  pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  hasMore: false
+               }
+            },
+         };
+         const ctrl = new lists.BaseControl(cfg);
+         let shadowMode;
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         lists.BaseControl._private.onScrollShow(ctrl, heightParams);
+         ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+         ctrl._pagingVisible = true;
+         ctrl._pagingCfg = {};
+         ctrl._notify = (eventName, eventResult) => {
+            if (eventName === 'updateShadowMode') {
+               shadowMode = eventResult[0];
+            }
+         };
+         ctrl._abortSearch();
+
+         assert.deepEqual(ctrl._pagingCfg, {stateNext: 'disabled', stateEnd: 'disabled'});
+         assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
       });
 
       it('scrollHide/scrollShow base control state', function() {
@@ -2080,16 +2151,10 @@ define([
             baseControl._initItemActions();
             assert.equal(actionsUpdateCount, 1);
          });
-         it('itemsChanged', async function() {
-            baseControl._itemsChanged = true;
-            await baseControl._beforeUpdate(cfg);
-            baseControl._afterUpdate(cfg);
-            assert.equal(actionsUpdateCount, 2);
-         });
          it('_onAfterEndEdit', function() {
             baseControl._onAfterEndEdit({}, {});
             baseControl._afterUpdate(cfg);
-            assert.equal(actionsUpdateCount, 3);
+            assert.equal(actionsUpdateCount, 2);
          });
          it('update on recreating source', async function() {
             let newSource = new sourceLib.Memory({
@@ -2435,7 +2500,28 @@ define([
             .at(2), ctrl._listViewModel.getMarkedItem()
             .getContents());
       });
-      it ('needFooterPadding', function() {
+      it('_needBottomPadding after reload in beforeMount', async function() {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            itemActionsPosition: 'outside',
+            keyProperty: 'id',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            source: source,
+         };
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.isTrue(ctrl._needBottomPadding);
+
+      });
+      it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
          };
@@ -4749,6 +4835,42 @@ define([
          assert.isTrue(portionSearchReseted);
       });
 
+      it('_beforeUpdate with new searchValue', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source
+         };
+         let instance = new lists.BaseControl(cfg);
+         let cfgClone = { ...cfg };
+         let portionSearchReseted = false;
+
+         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
+         instance._portionedSearch.reset = () => {
+            portionSearchReseted = true;
+         };
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._beforeUpdate(cfg);
+         instance._afterUpdate(cfg);
+
+         assert.isFalse(portionSearchReseted);
+
+
+         cfgClone.searchValue = 'test';
+         instance._beforeUpdate(cfgClone);
+
+         assert.isTrue(portionSearchReseted);
+      });
+
       it('_beforeMount with PrefetchProxy in source', function() {
          let prefetchSource = new sourceLib.PrefetchProxy({
             target: source,
@@ -5160,7 +5282,7 @@ define([
                let expectedSourceConfig = {};
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
-               baseControl._recreateSourceController = function(newSource, newNavigation) {
+               baseControl.recreateSourceController = function(newSource, newNavigation) {
                   assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
                };
                expectedSourceConfig.page = 0;

@@ -10,7 +10,9 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
 import getOptions from 'Controls/Utils/datePopupUtils';
 
 /**
- * Контрол позволяет пользователю выбрать диапазон дат с начальным и конечным значениями в календаре. Выбор происходит с помощью панели большого выбора периода.
+ * Контрол позволяет пользователю выбрать диапазон дат с начальным и конечным значениями в календаре. 
+ * Выбор происходит с помощью панели большого выбора периода.
+ * В отличии от {@link Controls/_dateRange/LiteSelector быстрого выбора периода} позволяет выбирать произвольный диапазон дат.
  *
  * @class Controls/_dateRange/Selector
  * @extends Core/Control
@@ -28,8 +30,9 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  */
 
 /**
- * @event Событие происходит при изменении диапазона.
+ * @event Происходит при изменении диапазона.
  * @name Controls/_dateRange/Selector#rangeChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} startValue верхняя граница диапазона дат
  * @param {Date} endValue нижняя граница диапазона дат
  */

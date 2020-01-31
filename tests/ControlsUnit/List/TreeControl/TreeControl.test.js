@@ -817,6 +817,7 @@ define([
             setTimeout(function() {
                treeControl._options.root = undefined;
                treeControl._root = 12;
+               let sourceController = treeControl._children.baseControl._sourceController;
                treeControl._afterUpdate({filter: {}, source: source});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
@@ -834,6 +835,28 @@ define([
          });
 
 
+      });
+
+      it('clearSourceControllersForNotExpandedNodes', function() {
+         const getSourceController = () => {
+            return {
+               destroy: () => {}
+            };
+         };
+         const oldExpandedItems = [1, 2, 3];
+         const newExpandedItems = [3, 4, 5];
+         const self = {};
+         self._nodesSourceControllers = new Map();
+
+         oldExpandedItems.forEach((key) => {
+            self._nodesSourceControllers.set(key, getSourceController());
+         });
+         newExpandedItems.forEach((key) => {
+            self._nodesSourceControllers.set(key, getSourceController());
+         });
+
+         treeGrid.TreeControl._private.clearSourceControllersForNotExpandedNodes(self, oldExpandedItems, newExpandedItems);
+         assert.equal(self._nodesSourceControllers.size, 3);
       });
 
       it('TreeControl.afterReloadCallback resets expanded items and hasMoreStorage on set root', function () {
@@ -1087,7 +1110,7 @@ define([
                data: [],
                keyProperty: 'id'
             }),
-            treeControl = correctCreateTreeControl({
+            config = {
                columns: [],
                source: source,
                items: new collection.RecordSet({
@@ -1096,7 +1119,8 @@ define([
                }),
                keyProperty: 'id',
                parentProperty: 'parent'
-            }),
+            },
+            treeControl = correctCreateTreeControl(config),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
             reloadOriginal = treeControl._children.baseControl.reload;
 
@@ -1137,14 +1161,17 @@ define([
             };
             treeControl._children.baseControl._sourceController._loader.addCallback(function(result) {
                treeControl._children.baseControl.reload().addCallback(function(res) {
-                  var newFilter = {
+                  const newFilter = {
                      parent: null
                   };
-                  treeControl._beforeUpdate({root: 'testRoot'});
+                  const configClone = {...config};
+                  configClone.root = 'testRoot';
+                  treeControl._beforeUpdate(configClone);
                   treeControl._options.root = 'testRoot';
                   try {
                      assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
                      assert.deepEqual(filterOnOptionChange, newFilter);
+                     assert.isTrue(isSourceControllerDestroyed);
                   } catch (e) {
                      reject(e);
                   }

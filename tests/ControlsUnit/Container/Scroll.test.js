@@ -55,6 +55,8 @@ define(
                top: 'auto',
                bottom: 'auto'
             };
+
+            scroll._isMounted = true;
          });
 
          describe('_shadowVisible', function() {
@@ -83,15 +85,11 @@ define(
 
             describe('ipad', function() {
                beforeEach(function () {
-                  if (typeof window === 'undefined') {
-                     Env.detection['test::isMobileIOS'] = true;
-                  } else {
-                     Env.detection.isMobileIOS = true;
-                  }
+                  Env.detection.isMobileIOS = true;
                });
                afterEach(function () {
                   if (typeof window === 'undefined') {
-                     Env.detection['test::isMobileIOS'] = undefined;
+                     Env.detection.isMobileIOS = undefined;
                   } else {
                      Env.detection.isMobileIOS = false;
                   }
@@ -116,6 +114,12 @@ define(
                         return false;
                      }
                   };
+
+                  assert.isFalse(scroll._shadowVisible('top'));
+               });
+
+               it('should not display top shadow on initial build.', function () {
+                  scroll._children = {};
 
                   assert.isFalse(scroll._shadowVisible('top'));
                });
@@ -207,6 +211,20 @@ define(
                scroll._resizeHandler();
                assert.strictEqual(scroll._displayState, oldDisplayState);
             });
+
+            it('should not update _displayState if the function was called before the control was fully initialized.', function() {
+               let oldDisplayState = scroll._displayState;
+               scroll._pagingState = {};
+               scroll._children.content = {
+                  scrollTop: 100,
+                  scrollHeight: 200,
+                  clientHeight: 100
+               };
+
+               scroll._isMounted = false;
+               scroll._resizeHandler();
+               assert.strictEqual(scroll._displayState, oldDisplayState);
+            });
          });
 
          describe('_scrollbarTaken', function() {
@@ -274,9 +292,9 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<div class="controls-Scroll__content controls-BlockLayout__blockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
+                                       '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
                                           '<div class="controls-Scroll__userContent">test</div>' +
-                                       '</div>' +
+                                       '</span>' +
                                        '<div></div>' +
                                     '</div>');
 
@@ -284,9 +302,9 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<div class="controls-Scroll__content controls-BlockLayout__blockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll" style="margin-right: -15px;">' +
+                                       '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll" style="margin-right: -15px;">' +
                                           '<div class="controls-Scroll__userContent">test</div>' +
-                                       '</div>' +
+                                       '</span>' +
                                        '<div></div>' +
                                     '</div>');
             });

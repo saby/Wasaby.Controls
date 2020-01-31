@@ -24,16 +24,16 @@ export interface IHighlightOptions extends IControlOptions {
     text?: string;
     highlight?: string;
     class?: string;
-    searchMode?: HighlightMode
+    searchMode?: HighlightMode;
     /**
      * Класс обеспечивающий внешнее отображение подсветки.
      * @default controls-Highlight_highlight
-     * @demo Controls-demo/Decorator/WrapURLs/ClassName/Index
+     * @demo Controls-demo/Decorator/Highlight/ClassName/Index
      */
     className: string;
     /**
      * Декорируемый текст.
-     * @demo Controls-demo/Decorator/WrapURLs/Value/Index
+     * @demo Controls-demo/Decorator/Highlight/Value/Index
      */
     value: string;
     /**
@@ -45,7 +45,7 @@ export interface IHighlightOptions extends IControlOptions {
      * Режим подсветки.
      * @type HighlightMode
      * @default substring
-     * @demo @demo Controls-demo/Decorator/WrapURLs/HighlightMode/Index
+     * @demo @demo Controls-demo/Decorator/Highlight/HighlightMode/Index
      */
     highlightMode: HighlightMode;
 }
@@ -145,6 +145,10 @@ class Highlight extends Control<IHighlightOptions> {
             Logger.warn('When searching there is a problem, there are no ' +
                 'words in the highlight option. Perhaps the control is not used for its intended purpose or ' +
                 'is not required now.', this);
+            return [{
+                value,
+                type: 'plain'
+            }];
         }
 
         const regexp: RegExp = this._calculateRegExp(words, highlightMode);
@@ -153,8 +157,8 @@ class Highlight extends Control<IHighlightOptions> {
         if (highlightSearchResult.length === 0) {
             if (by === 'or') {
                 return [{
-                    type: 'plain',
-                    value: value
+                    value,
+                    type: 'plain'
                 }];
             }
 

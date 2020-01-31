@@ -867,9 +867,12 @@ var _private = {
             } else {
                 // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                 if (self._sourceController) {
+                    const hasMoreDataUp = self._sourceController.hasMoreData('up');
+                    const hasMoreDataDown = self._sourceController.hasMoreData('down');
+
                     hasMoreData = {
-                        up: self._sourceController.hasMoreData('up') || self._hasLoadedData,
-                        down: self._sourceController.hasMoreData('down') || self._hasLoadedData
+                        up: hasMoreDataUp || self._hasLoadedData,
+                        down: (hasMoreDataDown || self._hasLoadedData) && _private.allowLoadMoreByPortionedSearch(self)
                     };
                 }
                 self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
@@ -942,21 +945,42 @@ var _private = {
 
     getPortionedSearch(self): PortionedSearch {
         return self._portionedSearch || (self._portionedSearch = new PortionedSearch({
+            searchStartCallback: () => {
+               self._portionedSearchInProgress = true;
+            },
             searchStopCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._showContinueSearchButton = true;
                 self._sourceController.cancelLoading();
             },
             searchResetCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._showContinueSearchButton = false;
             },
             searchContinueCallback: () => {
+                self._portionedSearchInProgress = true;
                 self._showContinueSearchButton = false;
                 _private.loadToDirectionIfNeed(self, 'down');
             },
             searchAbortCallback: () => {
+                self._portionedSearchInProgress = false;
                 self._sourceController.cancelLoading();
+
+                _private.disablePagingNextButtons(self);
+
+                if (self._isScrollShown) {
+                    _private.updateShadowMode(self, self._placeholderSizes);
+                }
             }
         }));
+    },
+
+    disablePagingNextButtons(self): void {
+        if (self._pagingVisible) {
+            self._pagingCfg = {...self._pagingCfg};
+            self._pagingCfg.stateNext = 'disabled';
+            self._pagingCfg.stateEnd = 'disabled';
+        }
     },
 
     loadToDirectionWithSearchValueStarted(self): void {
@@ -978,8 +1002,20 @@ var _private = {
         }
     },
 
-    needShowShadowByPortionedSearch(self): boolean {
+    allowLoadMoreByPortionedSearch(self): boolean {
         return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
+    },
+
+    updateShadowMode(self, placeholderSizes: {top: number, bottom: number}): void {
+        const itemsCount = self._listViewModel && self._listViewModel.getCount();
+        const hasMoreData = (direction) => self._sourceController && self._sourceController.hasMoreData(direction);
+        const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
+        const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
+
+        self._notify('updateShadowMode', [{
+            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+            bottom: (placeholderSizes.bottom || showShadowByNavigation && showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+        }], {bubbling: true});
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -1024,6 +1060,11 @@ var _private = {
             newModelChanged
         ) {
             self._itemsChanged = true;
+            // Update item actions, but only if they were already initialized.
+            // If they were not, they will be updated during initialization anyway.
+            if (self._itemActionsInitialized) {
+                self._updateItemActions();
+            }
         }
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
@@ -1481,6 +1522,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _savedStartIndex: 0,
     _savedStopIndex: 0,
+    _placeholderSizes: null,
 
     _template: BaseControlTpl,
     iWantVDOM: true,
@@ -1539,6 +1581,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemReloaded: false,
     _itemActionsInitialized: false,
+
+    _portionedSearch: null,
+    _portionedSearchInProgress: null,
+    _showContinueSearchButton: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1654,6 +1700,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
                     }
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, result.data, self._listViewModel);
+
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
@@ -1707,15 +1755,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     updateShadowModeHandler(_: SyntheticEvent<Event>, placeholderSizes: {top: number, bottom: number}): void {
-        const itemsCount = this._listViewModel && this._listViewModel.getCount();
-        const hasMoreData = (direction) => this._sourceController && this._sourceController.hasMoreData(direction);
-        const showShadowByNavigation = _private.needShowShadowByNavigation(this._options.navigation, itemsCount);
-        const showShadowByPortionedSearch = _private.needShowShadowByPortionedSearch(this);
-
-        this._notify('updateShadowMode', [{
-            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || showShadowByNavigation && showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
-        }], {bubbling: true});
+        this._placeholderSizes = placeholderSizes;
+        _private.updateShadowMode(this, placeholderSizes);
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDireciton): void {
@@ -1825,16 +1866,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (newOptions.searchValue !== this._options.searchValue) {
             this._listViewModel.setSearchValue(newOptions.searchValue);
-
-            if (!newOptions.searchValue) {
-                _private.getPortionedSearch(self).reset();
-            }
+            _private.getPortionedSearch(self).reset();
         }
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
         if (recreateSource) {
-            this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
+            this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
 
             //Нужно обновлять опции записи не только при наведении мыши,
             //так как запись может поменяться в то время, как курсор находится на ней
@@ -1864,7 +1902,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
-            this._shouldUpdateItemActions = true;
         }
 
         if (this._loadedItems) {
@@ -2443,12 +2480,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             newNavigation.sourceConfig.page = params.page - 1;
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
-        this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
+        this.recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
         _private.reload(this, this._options);
         this._shouldRestoreScrollPosition = true;
     },
 
-    _recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
+    recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
 
         if (this._sourceController) {
             this._sourceController.destroy();

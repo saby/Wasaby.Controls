@@ -183,12 +183,12 @@ define([
                selectionInstance = new operations.HierarchySelection(cfg);
                assert.deepEqual([], selectionInstance.selectedKeys);
                assert.deepEqual([], selectionInstance.excludedKeys);
-               selectionInstance.select([null]);
+               selectionInstance.selectAll();
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([], selectionInstance.excludedKeys);
+               assert.deepEqual([null], selectionInstance.excludedKeys);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(7, selectionInstance.getCount());
             });
 
             it('select root in flat list', function() {
@@ -197,7 +197,6 @@ define([
                });
                selectionInstance = new operations.HierarchySelection(cfg);
                selectionInstance.select([null]);
-               flatData.setMetaData({ more: 3 });
 
                assert.deepEqual([null], selectionInstance.selectedKeys);
                assert.deepEqual([], selectionInstance.excludedKeys);
@@ -213,28 +212,28 @@ define([
             it('select previously excluded child', function() {
                cfg = getConfig({
                   selectedKeys: [null],
-                  excludedKeys: [2, 5]
+                  excludedKeys: [null, 2, 5]
                });
                selectionInstance = new operations.HierarchySelection(cfg);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([2, 5], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 2, 5], selectionInstance.excludedKeys);
                assert.deepEqual({1: null, 6: true, 7: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(3, selectionInstance.getCount());
 
                selectionInstance.select([2]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([5], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 5], selectionInstance.excludedKeys);
                assert.deepEqual({1: null, 2: true, 3: true, 4: true, 6: true, 7: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(6, selectionInstance.getCount());
 
                selectionInstance.select([5]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([], selectionInstance.excludedKeys);
+               assert.deepEqual([null], selectionInstance.excludedKeys);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(7, selectionInstance.getCount());
             });
 
             it('select hidden node', function() {
@@ -332,16 +331,16 @@ define([
             it('unselect root with excluded nested children', function() {
                cfg = getConfig({
                   selectedKeys: [null],
-                  excludedKeys: [3]
+                  excludedKeys: [null, 3]
                });
                selectionInstance = new operations.HierarchySelection(cfg);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([3], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 3], selectionInstance.excludedKeys);
                assert.deepEqual({1: null, 2: null, 4: true, 5: true, 6: true, 7: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(6, selectionInstance.getCount());
 
-               selectionInstance.unselect([null]);
+               selectionInstance.unselectAll();
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([], selectionInstance.selectedKeys);
                assert.deepEqual([], selectionInstance.excludedKeys);
@@ -377,63 +376,64 @@ define([
 
             it('sequentially unselect all children inside selected root', function() {
                cfg = getConfig({
-                  selectedKeys: [null]
+                  selectedKeys: [null],
+                  excludedKeys: [null]
                });
                selectionInstance = new operations.HierarchySelection(cfg);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([], selectionInstance.excludedKeys);
+               assert.deepEqual([null], selectionInstance.excludedKeys);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(7, selectionInstance.getCount());
 
                selectionInstance.unselect([7]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([7], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 7], selectionInstance.excludedKeys);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(6, selectionInstance.getCount());
 
                selectionInstance.unselect([6]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([7, 6], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 7, 6], selectionInstance.excludedKeys);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(5, selectionInstance.getCount());
 
                selectionInstance.unselect([5]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([7, 6, 5], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 7, 6, 5], selectionInstance.excludedKeys);
                assert.deepEqual({1: null, 2: true, 3: true, 4: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(4, selectionInstance.getCount());
 
                selectionInstance.unselect([4]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([7, 6, 5, 4], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 7, 6, 5, 4], selectionInstance.excludedKeys);
                assert.deepEqual({1: null, 2: null, 3: true}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(3, selectionInstance.getCount());
 
                selectionInstance.unselect([3]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([7, 6, 5, 4, 3], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 7, 6, 5, 4, 3], selectionInstance.excludedKeys);
                assert.deepEqual({1: null, 2: null}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(2, selectionInstance.getCount());
 
                selectionInstance.unselect([2]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([7, 6, 5, 2], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 7, 6, 5, 2], selectionInstance.excludedKeys);
                assert.deepEqual({1: null}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(1, selectionInstance.getCount());
 
                selectionInstance.unselect([1]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([7, 6, 1], selectionInstance.excludedKeys);
+               assert.deepEqual([null, 7, 6, 1], selectionInstance.excludedKeys);
                assert.deepEqual({}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(null, selectionInstance.getCount());
+               assert.equal(0, selectionInstance.getCount());
             });
 
             it('unselect removed item', function() {
@@ -502,6 +502,21 @@ define([
       });
 
       describe('toggleAll', function() {
+         it('toggle all in initial root, with children in selected and excluded', function() {
+            cfg = getConfig({
+               selectedKeys: [2],
+               excludedKeys: [3]
+            });
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance.toggleAll();
+            assert.deepEqual([null, 3], selectionInstance.selectedKeys);
+            assert.deepEqual([null, 2], selectionInstance.excludedKeys);
+
+            selectionInstance.toggleAll();
+            assert.deepEqual([2], selectionInstance.selectedKeys);
+            assert.deepEqual([3], selectionInstance.excludedKeys);
+         });
+
          it('selectedKeys with key, that is not from collection + toggleAll', function() {
             cfg = getConfig({
                selectedKeys: [1, 2, 4, 5, 6, 7]
@@ -511,16 +526,16 @@ define([
 
 
             assert.deepEqual([null], selectionInstance.selectedKeys);
-            assert.deepEqual([null, 1, 6, 7], selectionInstance.excludedKeys);
+            assert.deepEqual([null, 1, 2, 4, 5, 6, 7], selectionInstance.excludedKeys);
 
             selectionInstance.toggleAll();
 
 
-            assert.deepEqual([1, 6, 7], selectionInstance.selectedKeys);
+            assert.deepEqual([1, 2, 4, 5, 6, 7], selectionInstance.selectedKeys);
             assert.deepEqual([], selectionInstance.excludedKeys);
          });
 
-         /* toDo До исправления https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
+
          it('toggleAll with root', function() {
             cfg = getConfig({
                selectedKeys: [1, 4, 6],
@@ -528,8 +543,10 @@ define([
             });
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance._listModel._model.setRoot(2);
+            selectionInstance._listModel.getItems().setMetaData({
+               ENTRY_PATH: getEntryPath()
+            });
             selectionInstance.toggleAll();
-
 
             // 2 выходит из исключений, а ее дочерний эл-т который был выбран, наоборот.
             assert.deepEqual([1, 6], selectionInstance.selectedKeys);
@@ -537,11 +554,10 @@ define([
 
             selectionInstance.toggleAll();
 
-
             // Вернулись к начальному
             assert.deepEqual([1, 6, 4], selectionInstance.selectedKeys);
             assert.deepEqual([5, 2], selectionInstance.excludedKeys);
-         });*/
+         });
 
          it('toggle all with id folder, which when cast to a boolean type, returns false', function() {
             let items = [
@@ -590,7 +606,7 @@ define([
 
             assert.deepEqual([1], selectionInstance.selectedKeys);
             assert.deepEqual([1], selectionInstance.excludedKeys);
-            assert.equal(null, selectionInstance.getCount());
+            assert.equal(4, selectionInstance.getCount());
 
             selectionInstance.unselectAll();
             assert.deepEqual([], selectionInstance.selectedKeys);
