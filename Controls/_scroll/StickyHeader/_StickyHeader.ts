@@ -70,7 +70,7 @@ var _private = {
 // For android, use a large patch, because 1 pixel is not enough. For all platforms we use the minimum values since
 // there may be layout problems if the headers will have paddings, margins, etc.
 const
-    ANDROID_GAP_FIX_OFFSET = 2,
+    ANDROID_GAP_FIX_OFFSET = 3,
     MOBILE_GAP_FIX_OFFSET = 1;
 
 var StickyHeader = Control.extend({
