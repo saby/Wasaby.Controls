@@ -27,12 +27,12 @@ const HorizontalMeasurer: IMeasurer = {
       actions: IItemAction[],
       rowHeight: number,
       actionCaptionPosition: ActionCaptionPosition,
-      showMenuButtonAnyway: boolean = false
+      menuButtonVisibility: 'visible'|'adaptive'
    ): ISwipeConfig {
 
       let itemActions = getActualActions(actions);
 
-      if (itemActions.length > MAX_ACTIONS_COUNT || showMenuButtonAnyway) {
+      if (itemActions.length > MAX_ACTIONS_COUNT || menuButtonVisibility === 'visible') {
          itemActions = itemActions.slice(0, MAX_ACTIONS_COUNT);
          itemActions.push({
             icon: 'icon-SwipeMenu',
