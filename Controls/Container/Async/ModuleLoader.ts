@@ -59,12 +59,19 @@ class ModuleLoader {
             IoC.resolve("ILogger").error("Couldn't load module " + parsedInfo.name, e);
             return null;
         }
+        if (!loaded) {
+            return null;
+        }
         return this.getFromLib(loaded, parsedInfo);
     };
 
     private isLoaded(name: string): boolean {
         let parsedInfo: IParsedName = libHelper.parse(name);
-        return !!require(parsedInfo.name);
+        try {
+            return !!require(parsedInfo.name);
+        } catch (_) {
+            return false;
+        }
     };
 
     private isCached(name: string): boolean {

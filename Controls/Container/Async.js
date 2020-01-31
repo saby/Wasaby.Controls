@@ -154,7 +154,7 @@ define('Controls/Container/Async',
             promise = promise.then(function(loaded) {
                self.canUpdate = true;
                if (loaded === null) {
-                  self.error = generateErrorMsg(self._options.templateName, err);
+                  self.error = generateErrorMsg(name);
                   return true;
                }
 
@@ -162,7 +162,7 @@ define('Controls/Container/Async',
                return true;
             }, function(err) {
                self.canUpdate = true;
-               self.error = generateErrorMsg(self._options.templateName, err);
+               self.error = generateErrorMsg(name);
                return err;
             });
             return promise;

@@ -1,26 +1,15 @@
 define([
+   'require',
    'Controls/Container/Async/ModuleLoader',
    'Core/IoC',
    'ControlsUnit/Async/TestModuleSync'
 ], function(
+   require,
    ModuleLoader,
    IoC,
    TestModuleSync
 ) {
-
-   function checkError(logErrors, errorMessage, message, originErrorMessage) {
-      assert.isTrue(logErrors.length !== 0);
-      if (logErrors && logErrors.length) {
-         var logged = logErrors.shift();
-
-         logged.error && logged.error.message && assert.isTrue(!!~logged.error.message.indexOf(errorMessage));
-         logged.message && logged.message.indexOf && assert.isTrue(!!~logged.message.indexOf(message));
-         logged.originError && logged.originError.message && assert.isTrue(!!~logged.originError.message.indexOf(originErrorMessage));
-      }
-   }
-
    describe('Controls/Container/Async/ModuleLoader', function() {
-      var ml;
       var logErrors = [];
       var originalLogger = IoC.resolve('ILogger');
       beforeEach(function() {
@@ -52,21 +41,41 @@ define([
       it('loadSync faild', function () {
          var ml = new ModuleLoader();
          var error = ml.loadSync('ControlsUnit/Async/TestModuleSyncFail');
-         assert.strictEqual(error, undefined, 'Failed loaded module must be undefined');
+         assert.strictEqual(error, null, 'Failed loaded module must be null');
       });
 
-      it('loadAsync success', function (done) {
+      it('loadAsync success', function () {
          var ml = new ModuleLoader();
          ml.loadAsync('ControlsUnit/Async/TestModule').then(function (res) {
             assert.notEqual(res, undefined, 'Module not loaded async');
-            done();
+         }, function() {
+            assert.fail('Should not promise faild');
          });
       });
 
-      it('loadAsync faild', function (done) {
+      /* Хак. Потому что сломан require в юнит тестах
+         @link https://online.sbis.ru/opendoc.html?guid=b2f93ecc-5b43-4bf1-a2c0-684cc621c314
+      */
+      require(['ControlsUnit/Async/Fail/TestModule'], function(){}, function(){});
+
+      it('loadAsync faild', function () {
          var ml = new ModuleLoader();
-         ml.loadAsync('ControlsUnit/Async/TestModuleFail').catch(function (err) {
+         return ml.loadAsync('ControlsUnit/Async/Fail/TestModule').then(function () {
+            assert.fail('Should not resolved promise successfull');
+         }, function (err) {
+            assert.equal(err.message, 'Couldn\'t load module ControlsUnit/Async/Fail/TestModule', 'Error message is wrong');
+            assert.equal(logErrors.length, 1);
+         });
+      });
+
+      it('loadAsync faild found export control', function (done) {
+         var ml = new ModuleLoader();
+         ml.loadAsync('ControlsUnit/Async/TestModule:NotFound').then(function(res) {
+            assert.notEqual(res, null, 'Старое поведение, когда возвращался модуль, если е найдено свойство из библиотеки');
+            done();
+         }, function (err) {
             assert.equal(err.message, 'Couldn\'t load module ControlsUnit/Async/TestModuleFail', 'Error message is wrong');
+            assert.equal(logErrors.length, 1);
             done();
          });
       });
