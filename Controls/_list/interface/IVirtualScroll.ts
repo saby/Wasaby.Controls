@@ -4,6 +4,7 @@ export interface IVirtualScrollConfig {
     segmentSize: number;
     itemHeightProperty: string;
     viewportHeight: number;
+    mode: 'hide'|'remove';
 }
 
 /**
@@ -43,21 +44,21 @@ export interface IVirtualScrollConfig {
  * @cfg {Boolean} Turns on and off virtual scrolling in the list.
  * @remark
  * It is also necessary to set the view navigation to 'infinity'
- */ 
+ */
 
 /**
- * 
+ *
  * @name Controls/_list/interface/IVirtualScroll#virtualPageSize
  * @cfg {Number} Размер виртуальной страницы. Указывает максимальное количество одновременно отображаемых элементов в списке.
  * @default 100
  * @remark
  * Оптимальное значение параметра virtualPageSize можно рассчитать по формуле: <b>virtualPageSize = M + (2 * S)</b>, где
- * 
+ *
  * * M - максимальное количество элементов в клиентской области списка;
  * * S - количество элементов, которые будут добавлены/удалены по достижении конца списка отображаемых элементов.
- * 
+ *
  * Для Controls/grid:View и Controls/treeGrid:View значение опции virtualPageSize должно быть меньше 1000/общее количество столбцов в таблице.
- * @deprecated
+ * @deprecated Опция устарела, используйте опцию {@link virtualScrollConfig}.
  */
 
 /*
@@ -74,11 +75,11 @@ export interface IVirtualScrollConfig {
  */
 
 /**
- * 
+ *
  * @name Controls/_list/interface/IVirtualScroll#virtualSegmentSize
  * @cfg {number} Количество подгружаемых элементов при скроллировании.
  * @remark Если опция не задана, то virtualSegmentSize высчитывается по формуле virtualPageSize / 4.
- * @deprecated
+ * @deprecated Опция устарела, используйте опцию {@link virtualScrollConfig}.
  */
 
 /**
@@ -89,11 +90,11 @@ export interface IVirtualScrollConfig {
 export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
- * 
+ *
  * @name Controls/_list/interface/IVirtualScroll#virtualScrollMode
  * @cfg {IVirtualScrollMode} Режим скрытия записей в виртуальном скроллинге.
  * @default remove
- * @deprecated
+ * @deprecated Опция устарела, используйте опцию {@link virtualScrollConfig}.
  */
 
 /**

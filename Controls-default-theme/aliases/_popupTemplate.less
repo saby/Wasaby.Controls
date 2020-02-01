@@ -2,14 +2,23 @@
 //тень кнопки закрытия
 @box-shadow_closeButton_toolButton:                                         @box-shadow_button_toolButton;
 
-//фон кнопки закрытия
-@background-color_closeButton_toolButton:                                    @background-color_button_toolButton;
+//фон кнопки закрытия transparent = true
+@background-color_closeButton_toolButton:                                   @background-color_button_toolButton;
 
-//фон кнопки закрытия при наведении
+//фон кнопки закрытия при наведении transparent = true
 @background-color_hover_closeButton_toolButton:                             @background-color_hover_button_toolButton;
 
-//фон кнопки закрытия при нажатии
+//фон кнопки закрытия при нажатии transparent = true
 @background-color_active_closeButton_toolButton:                            @background-color_active_button_toolButton;
+
+//фон кнопки закрытия transparent = false
+@contrast_background-color_closeButton_toolButton:                          @background-color_contrast_button_toolButton;
+
+//фон кнопки закрытия при наведении transparent = false
+@contrast_hover_background-color_closeButton_toolButton:                    @background-color_contrast_hover_button_toolButton;
+
+//фон кнопки закрытия при нажатии transparent = false
+@contrast_active_background-color_closeButton_toolButton:                   @background-color_contrast_active_button_toolButton;
 
 //размер иконки кнопки закрытия
 @icon-size_closeButton_toolButton:                                          12px;
@@ -29,8 +38,35 @@
 //цвет обводки кнопки закрытия при нажатии
 @border-color_active_closeButton_toolButton:                                #CCCCCC;
 
+//высота кнопки закрытия
+@height_closeButton_toolButton:                                             @inline_height_l;
+
+//ширина кнопки закрытия
+@width_closeButton_toolButton:                                              36px;
+
 //ширина кнопки закрытия в режиме ссылки
 @width_closeButton_link:                                                    @inline_height_m;
+
+//высота кнопки закрытия в режиме ссылки
+@height_closeButton_link:                                                   @inline_height_m;
+
+//толщина обводки кнопки закрытия
+@border-thickness_closeButton_toolButton:                                   @border-thickness_button 0 @border-thickness_button @border-thickness_button;
+
+//радиус скругления обводки кнопки закрытия
+@border-radius_closeButton_toolButton:                                      @border-radius_button_toolButton 0 0 @border-radius_button_toolButton;
+
+//тень кнопки закрытия
+@box-shadow_closeButton_toolButton:                                         @box-shadow_button_toolButton;
+
+//иконка кнопки закрытия в режиме ссылки
+@icon_background-image_closeButton_link:                                    url('../../Controls-default-theme/img/LightCloseIcon.svg');
+
+//иконка кнопки закрытия в режиме ссылки при наведении
+@icon_hovered_background-image_closeButton_link:                            url('../../Controls-default-theme/img/CloseIconHovered.svg');
+
+//размер иконки кнопки закрытия в режиме ссылки
+@icon-size_closeButton_link:                                                @icon-size_closeButton_toolButton;
 
 //ПРИЛИПАЮЩЕЕ ОКНО
 //Переменные, использующиеся для темизации прилипающих окон.
@@ -281,8 +317,11 @@
 //толщина цветного маркера окна подтверждения
 @marker_thickness_confirmation:                                             3px;
 
-//дополнительный цвет маркера
+//основной цвет маркера
 @secondary_marker_color_confirmation:                                       @link_text-color;
+
+//дополнительный цвет маркера
+@primary_marker_color_confirmation:                                         @primary_text-color;
 
 //внутренние отступы диалога подтверждения
 @content_padding_confirmation:                                              32px;
@@ -328,3 +367,55 @@
 
 //отступ между кнопками в подвале
 @offset_button_confirmation:                                                8px;
+
+//Нотификационное окно
+//толщина маркера уведомления
+@marker_thickness_notification:                                             @marker_thickness_confirmation;
+
+//цвет маркера уведомления
+@secondary_marker_color_notification:                                       @secondary_marker_color_confirmation;
+
+//тень уведомления
+@box-shadow_notification:                                                   0 0 6px 0 rgba(0,0,0,0.35);
+
+//минимальная высота уведомления
+@min-height_notification:                                                   40px;
+
+//минимальная ширина уведомления
+@min-width_notification:                                                    40px;
+
+//вертикальный отступ от правого нижнего угла экрана до уведомления
+@offset-vertical_notification:                                              16px;
+
+//горизонтальный отступ от правого нижнего угла экрана до уведомления
+@offset-horizontal_notification:                                            16px;
+
+//цвет фона уведомления
+@background-color_notification:                                             @background-color;
+
+//толщина обводки уведомления
+@border-thickness_notification:                                             0;
+
+//цвет обводки уведомления
+@border-color_notification:                                                 transparent;
+
+//внутренние отступы уведомления
+@content_padding_notification:                                              8px;
+
+//размер шрифта текста уведомления
+@font-size_notification:                                                    @font-size_l;
+
+//расстояние между верхним краем уведомления и кнопкой закрытия
+@close-button_offset-top_notification:                                      8px;
+
+//расстояние между верхним краем уведомления и кнопкой закрытия
+@close-button_offset-right_notification:                                    8px;
+
+//расстояние между иконкой и текстом уведомления
+@icon_offset_notification:                                                  8px;
+
+//высота базовой линии текста уведомлении
+@text_line-height_notification:                                             18px;
+
+//размер иконки уведомления
+@icon-size_notification:                                                    @icon-size_m;

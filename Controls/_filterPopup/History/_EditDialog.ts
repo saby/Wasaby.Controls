@@ -28,9 +28,9 @@ class EditDialog extends Control<IEditDialog> {
     private _textValue: string;
     private _placeholder: string;
     private _isClient: boolean;
-    private _globalSource = globalConfig;
+    protected _globalSource = globalConfig;
     private _selectedFilters: string[];
-    private _source: Memory;
+    protected _source: Memory;
 
     private isDisplayItem(item: object): boolean {
         return item.hasOwnProperty('value') && item.value && item.value.length !== 0 && item.textValue && item.visibility !== false;
@@ -110,7 +110,7 @@ class EditDialog extends Control<IEditDialog> {
         factory(resultItems).each((item) => {
             if (!selectedFilters.includes(item.id) && this.isDisplayItem(item)) {
                 item.textValue = '';
-                delete item.value;
+                item.value = null;
             }
         });
         return resultItems;

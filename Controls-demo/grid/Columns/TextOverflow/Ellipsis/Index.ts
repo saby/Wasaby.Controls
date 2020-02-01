@@ -7,10 +7,10 @@ import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
+    protected _viewSource: Memory;
 
-    private _header = getCountriesStats().getDefaultHeader().slice(1, 4);
-    private _columns = [
+    protected _header = getCountriesStats().getDefaultHeader().slice(1, 4);
+    protected _columns = [
         {
             displayProperty: 'country',
             width: '100px',
@@ -18,11 +18,11 @@ export default class extends Control {
         },
         {
             displayProperty: 'capital',
-            width: 'max-content'
+            width: '200px'
         },
         {
             displayProperty: 'population',
-            width: 'max-content'
+            width: '200px'
         }
     ];
 

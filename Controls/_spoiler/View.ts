@@ -33,6 +33,7 @@ export interface IView extends IHeading {
  *
  * @class Controls/_spoiler/View
  * @extends UI/Base:Control
+ * @mixes Controls/interface:IFontSize
  * @mixes Controls/interface:IExpandable
  * @mixes Controls/spoiler:IHeadingOptions
  * @mixes Controls/spoiler:IViewOptions
@@ -42,7 +43,7 @@ export interface IView extends IHeading {
  * @demo Controls-demo/Spoiler/View/Index
  */
 class View extends Control<IViewOptions> implements IView {
-    private _notifyHandler: Function = tmplNotify;
+    protected _notifyHandler: Function = tmplNotify;
 
     protected _template: TemplateFunction = template;
 

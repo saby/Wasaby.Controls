@@ -53,6 +53,7 @@ export interface IHeading extends IExpandable, IFontSize {
  *
  * @class Controls/_spoiler/Heading
  * @extends UI/Base:Control
+ * @mixes Controls/interface:IFontSize
  * @mixes Controls/interface:IExpandable
  * @mixes Controls/spoiler:IHeadingOptions
  *
@@ -61,9 +62,9 @@ export interface IHeading extends IExpandable, IFontSize {
  * @demo Controls-demo/Spoiler/Heading/Index
  */
 class Heading extends Control<IHeadingOptions> implements IHeading {
-    private _icon: TIcon;
-    private _view: TView;
-    private _caption: string;
+    protected _icon: TIcon;
+    protected _view: TView;
+    protected _caption: string;
 
     protected _template: TemplateFunction = template;
 

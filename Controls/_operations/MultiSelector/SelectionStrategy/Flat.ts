@@ -5,6 +5,7 @@ import clone = require('Core/core-clone');
 import { Map } from 'Types/shim';
 
 import { Collection } from 'Controls/display';
+// @ts-ignore
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
@@ -79,7 +80,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       let itemsCount: number = items.getCount();
 
       if (this.isAllSelected(selection)) {
-         if (this._isAllItemsLoaded(items, limit) && (!limit || itemsCount <= limit)) {
+         if (!model.getHasMoreData() && (!limit || itemsCount <= limit)) {
             countItemsSelected = itemsCount - selection.excluded.length;
          } else if (limit) {
             countItemsSelected = limit - selection.excluded.length;
@@ -89,14 +90,5 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       }
 
       return countItemsSelected;
-   }
-
-   private _isAllItemsLoaded(items: RecordSet|List, limit: number): boolean {
-      let
-         itemsCount: number = items.getCount(),
-         more: number|boolean|undefined = items.getMetaData().more,
-         hasMore: boolean|undefined = typeof more === 'number' ? more > itemsCount : more;
-
-      return !hasMore || (limit && itemsCount >= limit);
    }
 }

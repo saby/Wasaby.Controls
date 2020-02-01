@@ -951,6 +951,68 @@ define([
                eip.commitEdit();
             });
          });
+
+         describe('update model', function () {
+            let
+                source,
+                sourceUpdated;
+
+            beforeEach(function () {
+               sourceUpdated = false;
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
+               source.update = () => {
+                  sourceUpdated = true;
+                  return Deferred.success({})
+               };
+            });
+
+            it('existing item, nothing changed', function() {
+               eip.saveOptions({
+                  listModel: listModel,
+                  source: source
+               });
+
+               eip.beginEdit({ item: listModel.at(0).getContents() });
+               eip.commitEdit();
+               assert.isFalse(sourceUpdated);
+            });
+
+            it('existing item, has changed', function() {
+               eip.saveOptions({
+                  listModel: listModel,
+                  source: source
+               });
+               eip.beginEdit({ item: listModel.at(0).getContents() });
+               eip._editingItem.isChanged = () => true;
+               eip.commitEdit();
+               assert.isTrue(sourceUpdated);
+            });
+
+            it('added item, nothing changed', function() {
+               eip.saveOptions({
+                  listModel: listModel,
+                  source: source
+               });
+
+               eip.beginAdd({ item: newItem });
+               eip.commitEdit();
+               assert.isTrue(sourceUpdated);
+            });
+
+            it('added item, has changed', function() {
+               eip.saveOptions({
+                  listModel: listModel,
+                  source: source
+               });
+               eip.beginAdd({ item: newItem });
+               eip._editingItem.isChanged = () => true;
+               eip.commitEdit();
+               assert.isTrue(sourceUpdated);
+            });
+         });
       });
 
       describe('cancelEdit', function() {
@@ -1712,7 +1774,7 @@ define([
             });
 
             eip._children.formController = failedValidationFormController;
-
+            eip._editingItem.isChanged = () => true;
             // Emulate closing popup. It will call _onPendingFail;
             eip._onPendingFail(undefined, new Deferred());
 
@@ -1749,6 +1811,7 @@ define([
             assert.isTrue(eip._pendingDeferred instanceof Deferred);
 
             eip._children.formController = failedValidationFormController;
+            eip._editingItem.isChanged = () => true;
 
             // Emulate closing popup. It will call _onPendingFail;
             let result = new Deferred();
@@ -1761,7 +1824,8 @@ define([
          it('commit changes and close popup if validation passed', async function () {
             let
                 isPendingStarted = false,
-                isPendingCanceled = false;
+                isPendingCanceled = false,
+                isPendingDeferredFired = false;
 
             eip.saveOptions({
                listModel: listModel
@@ -1786,17 +1850,22 @@ define([
             });
 
             assert.isTrue(eip._pendingDeferred instanceof Deferred);
+            const nativeCallback = eip._pendingDeferred.callback;
+            eip._pendingDeferred.callback = () => {
+               nativeCallback.apply(eip._pendingDeferred, arguments);
+               isPendingDeferredFired = true;
+            };
 
             eip._children.formController = successValidationFormController;
-
+            eip._editingItem.isChanged = () => true;
 
             // Emulate closing popup. It will call _onPendingFail;
-            let result = new Deferred();
-            eip._onPendingFail(undefined, result);
+            eip._onPendingFail(undefined, eip._pendingDeferred);
 
             assert.isTrue(isPendingStarted);
             assert.isTrue(!!listModel.getItemById(4));
-            assert.isTrue(result.isReady());
+            assert.isTrue(isPendingDeferredFired);
+            assert.isNull(eip._pendingDeferred);
             assert.isFalse(isPendingCanceled);
          });
          it('unregister pending if editing has been canceled', async function () {
@@ -1833,6 +1902,38 @@ define([
             assert.isTrue(isPendingStarted);
             assert.isFalse(isPendingCanceled);
             assert.isNull(eip._pendingDeferred);
+         });
+         it('cancel edit if there is no changes', function () {
+            let
+                isPendingStarted = false,
+                isPendingCanceled = false;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip._notify = (eName, args, params) => {
+               if (eName === 'registerPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingStarted = true;
+               }
+               if (eName === 'cancelFinishingPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingCanceled = true;
+               }
+            };
+
+            eip.beginAdd({
+               item: newItem
+            });
+
+            eip._children.formController = failedValidationFormController;
+            eip._editingItem.isChanged = () => false;
+            // Emulate closing popup. It will call _onPendingFail;
+            eip._onPendingFail(undefined, new Deferred());
+
+            assert.isTrue(isPendingStarted);
+            assert.isFalse(isPendingCanceled);
          });
       });
 

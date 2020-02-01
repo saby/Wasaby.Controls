@@ -1056,10 +1056,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             assert.deepEqual({
-               left: 'XL',
-               right: 'L',
-               top: 'L',
-               bottom: 'L'
+               left: 'xl',
+               right: 'l',
+               top: 'l',
+               bottom: 'l'
             }, current.itemPadding, 'Incorrect value "current.itemPadding".');
             assert.isTrue(current.rowSeparatorVisibility, 'Incorrect value "current.rowSeparatorVisibility".');
          });
@@ -1456,7 +1456,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellContentClasses: '',
                cellStyles: '',
                shadowVisibility: 'visible',
-               offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
             headerRow = gridViewModel.getCurrentHeaderRow();
@@ -1465,12 +1464,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__header-cell-checkbox_theme-default controls-Grid__header-cell-checkbox_min-width_theme-default',
                index: 0,
-               colSpan: 1,
-               rowSpan: 1,
                cellContentClasses: '',
                cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: 'visible',
-               offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
 
@@ -1484,7 +1480,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 1,
                shadowVisibility: "visible",
-               offsetTop: 0,
                cellContentClasses: "",
                cellStyles: 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
@@ -1508,7 +1503,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellContentClasses: " controls-Grid__header-cell_justify_content_right",
                cellStyles: 'grid-column-start: 3; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: "visible",
-               offsetTop: 0
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
             assert.equal(
@@ -1529,7 +1523,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellContentClasses: " controls-Grid__header-cell_justify_content_right",
                cellStyles: 'grid-column-start: 4; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: "visible",
-               offsetTop: 0
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
 
             assert.equal(
@@ -1554,12 +1547,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__header-cell-checkbox_theme-default controls-Grid__header-cell-checkbox_min-width_theme-default',
                index: 0,
-               rowSpan: 1,
-               colSpan: 1,
                cellContentClasses: '',
                cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: 'visible',
-               offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
             headerRow.goToNextHeaderColumn();
@@ -1571,7 +1561,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 1,
                shadowVisibility: "visible",
-               offsetTop: 0,
                cellContentClasses: "",
                cellStyles: 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
@@ -1934,6 +1923,29 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             );
 
          });
+
+         it('getItemDataByItem: groupPaddingClasses', function () {
+            const groupedVM = new gridMod.GridViewModel({
+               ...cfg,
+               items: new collection.RecordSet({
+                  rawData: [ { id: 1, group: 'once'} ],
+                  keyProperty: 'id'
+               }),
+               groupingKeyCallback: (item) => {
+                  return item.get('group')
+               }
+            });
+            const groupItem = groupedVM.getCurrent();
+            assert.deepEqual(
+                groupItem.groupPaddingClasses,
+                {
+                   left: 'controls-Grid__groupContent__spacingLeft_withCheckboxes_theme-default',
+                   right: 'controls-Grid__groupContent__spacingRight_l_theme-default'
+                }
+            );
+
+         });
+
          it('isFixedCell', function() {
             var testCases = [
                {
@@ -2031,8 +2043,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             const resultTop = ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
             const resultBottom = ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
             assert.equal(resultTop + resultBottom, gridMod.GridViewModel._private.getPaddingForCheckBox({ theme, itemPadding }));
-         })
+         });
 
+         it('getBottomPaddingStyles', function() {
+            assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 10; grid-row-end: 11;', gridViewModel.getBottomPaddingStyles());
+         });
 
          it('getColumnAlignGroupStyles', function () {
 
@@ -2126,7 +2141,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             };
             gridModel.setMultiSelectVisibility('visible');
             assert.isFalse(isMultiHeader);
-            gridModel._cachaedHeaderColumns = [[{}, {}], [{}]];
+            gridModel._header = [[{}, {}], [{}]];
             gridModel._isMultiHeader = true;
             gridModel.setMultiSelectVisibility('visible');
             assert.isTrue(isMultiHeader);
@@ -2185,6 +2200,24 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                );
             }
 
+         });
+
+         it('should rowspan checkbox th if multiheader', function () {
+            model._headerRows = [
+                [ /* Первая строка шапки */
+                   {
+                      /* Checkbox */
+                      startRow: 0,
+                      startColumn: 0
+                   },
+                   { startColumn: 1 }
+                ],
+                [ /* Вторая строка шапки */ ]
+            ];
+            model._maxEndRow = 3;
+            const checkboxCell = model.getCurrentHeaderColumn(0, 0);
+            assert.equal(checkboxCell.rowSpan, 2);
+            assert.equal(checkboxCell.colSpan, 1);
          });
 
       });

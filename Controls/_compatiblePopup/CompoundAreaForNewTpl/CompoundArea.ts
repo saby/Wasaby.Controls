@@ -91,6 +91,11 @@ const moduleClass = CompoundControl.extend({
          ];
 
          // Совместимость используется только на онлайне. Могу напрямую зарекваерить контроллер Лобастова для получения конфига
+         const isBilling = document.body.classList.contains('billing-page');
+         // Совместимость есть на онлайне и в биллинге. В биллинге нет ViewSettings и движения границ
+         if (isBilling) {
+            this._options._popupOptions.propStorageId = null;
+         }
          if (this._options._popupOptions.propStorageId) {
             deps.push(import('ViewSettings/controller'));
          }
@@ -394,7 +399,16 @@ const moduleClass = CompoundControl.extend({
                 containerWidth: this._container.width()
             }
         };
-        return StackStrategy.getPosition(coords, item);
+        const strategyPosition = StackStrategy.getPosition(coords, item);
+        const MINIMAL_PANEL_DISTANCE = 117;
+        // Минимальный отступ слева у floatArea больше на 17px, чем в вдомных окнах (там 100)
+        // Не стал тащить сюда FloatAreaManager для явных расчетов, захардкодил отступ.
+        const floatAreaMaxWidth = document.body.clientWidth - MINIMAL_PANEL_DISTANCE;
+
+        if (floatAreaMaxWidth < strategyPosition.maxWidth) {
+           strategyPosition.maxWidth = floatAreaMaxWidth;
+        }
+        return strategyPosition;
     },
 
    _onMaximizedHandler(): void {
