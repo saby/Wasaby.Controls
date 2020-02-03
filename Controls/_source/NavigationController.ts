@@ -1,4 +1,4 @@
-import {Query, QueryOrderSelector, QueryWhere} from 'Types/source';
+import {QueryOrderSelector, QueryWhere} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {INavigationOptionValue} from 'Controls/interface';
@@ -101,7 +101,7 @@ class NavigationControllerFactory {
  * const queryBuilder = new QueryParamsBuilder(params);
  * const params2: IAdditionalQueryParams = {filter, meta, offset, limit};
  * const queryBuilder2 = new QueryParamsBuilder(params);
- * const query = queryBuilder.merge(queryBuilder2.raw()).build();
+ * const query = queryBuilder.merge(queryBuilder2.raw()).raw();
  * @private
  * @author Аверкиев П.А.
  */
@@ -175,24 +175,6 @@ class QueryParamsBuilder {
             meta: this._meta
         };
     }
-
-    /**
-     * Собирает свойства текущего класса в запрос Types/source:Query
-     * @return {Types/source:Query} Объект Query, готовый для передачи в ICrud.query()
-     */
-    /*
-     * Builds current class properties to the Types/source:Query query
-     * @return {Types/source:Query} Query object ready to pass to ICrud.query()
-     */
-    build(): Query {
-        const query = new Query();
-        query.where(this._filter)
-            .offset(this._offset)
-            .limit(this._limit)
-            .orderBy(this._sorting)
-            .meta(this._meta);
-        return query;
-    }
 }
 
 export interface INavigationControllerOptions {
@@ -259,12 +241,12 @@ export class NavigationController {
      * @param filter {Types/source:QueryWhere} filter settings
      * @param sorting {Types/source:QueryOrderSelector} sorting settings
      */
-    buildQuery(direction?: Direction, filter?: QueryWhere, sorting?: QueryOrderSelector): Query {
+    getQueryParams(direction?: Direction, filter?: QueryWhere, sorting?: QueryOrderSelector): IAdditionalQueryParams {
         const queryParams = new QueryParamsBuilder({filter, sorting});
         if (this._queryParamsController) {
             queryParams.merge(NavigationController._getNavigationQueryParams(direction, this._queryParamsController));
         }
-        return queryParams.build();
+        return queryParams.raw();
     }
 
     /**
@@ -350,7 +332,7 @@ export class NavigationController {
      * @remark
      * @param to page number or position to go to
      */
-    updatePage(to: number | any): void {
+    setPageNumber(to: number | any): void {
         if (this._queryParamsController) {
             this._queryParamsController.setPageNumber(to);
         }

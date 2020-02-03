@@ -82,23 +82,25 @@ describe('Controls/_source/NavigationController', () => {
         it('Should build query using PagePaginatorController', () => {
             const navigation = fakeNavigationControllerNavigation('page', 'pages', 'after', false);
             const controller = new NavigationController({navigation});
-            const query = controller.buildQuery();
-            const meta = query.getMeta();
+            const query = controller.getQueryParams();
+            const meta = query.meta;
             assert.equal(meta.navigationType, 'Page');
-            assert.equal(query.getLimit(), (navigation.sourceConfig as INavigationPageSourceConfig).pageSize);
-            assert.equal(query.getOffset(), 0);
+            assert.equal(query.limit, (navigation.sourceConfig as INavigationPageSourceConfig).pageSize);
+            assert.equal(query.offset, 0);
 
             // TODO change page!
         });
         it('Should build query using PositionPaginatorController', () => {
             const navigation = fakeNavigationControllerNavigation('position', 'infinity', 'after', false);
             const controller = new NavigationController({navigation});
-            const query = controller.buildQuery();
-            const meta = query.getMeta();
+            const query = controller.getQueryParams();
+            const meta = query.meta;
             assert.equal(meta.navigationType, 'Position');
-            assert.equal(query.getLimit(), (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
-            assert.equal(query.getOffset(), 0);
-            const where = query.getWhere();
+            assert.equal(query.limit, (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
+            assert.equal(query.offset, 0);
+            const where = query.filter;
+
+            // TODO CHECK
             assert.equal(where['key>='], (navigation.sourceConfig as INavigationPositionSourceConfig).position);
 
             // TODO change page!
@@ -111,12 +113,14 @@ describe('Controls/_source/NavigationController', () => {
             const recordSet: RecordSet = DataSetFaker.instance().query().getAll();
             recordSet.setMetaData({more: {after: true, before: false}, nextPosition: {before: [1], after: [7]}});
             controller.calculateState(recordSet);
-            const query = controller.buildQuery();
-            const meta = query.getMeta();
+            const query = controller.getQueryParams();
+            const meta = query.meta;
             assert.equal(meta.navigationType, 'Position');
-            assert.equal(query.getLimit(), (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
-            assert.equal(query.getOffset(), 0);
-            const where = query.getWhere();
+            assert.equal(query.limit, (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
+            assert.equal(query.offset, 0);
+            const where = query.filter;
+
+            // TODO CHECK
             assert.equal(where['key~'], (navigation.sourceConfig as INavigationPositionSourceConfig).position);
 
             // TODO change page!

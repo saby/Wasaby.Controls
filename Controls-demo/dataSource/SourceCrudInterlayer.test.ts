@@ -17,15 +17,17 @@ const NUMBER_OF_ITEMS = 100;
  * @param n
  */
 const generateRawData = (n: number): any[] => {
-    const rawData = [];
+    const _rawData = [];
     for (let i = 0; i < n; i++) {
-        rawData.push({
+        _rawData.push({
             id: i,
             title: `${i} item`
         });
     }
-    return rawData;
+    return _rawData;
 };
+
+const rawData = generateRawData(NUMBER_OF_ITEMS);
 
 class SourceFaker extends Remote {
 
@@ -75,7 +77,7 @@ class SourceFaker extends Remote {
                     });
                 } else {
                     resolve(new DataSet({
-                        rawData: generateRawData(NUMBER_OF_ITEMS),
+                        rawData,
                         keyProperty: 'id'
                     }));
                 }
@@ -166,8 +168,8 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
         };
         source = SourceFaker.instance({}, false);
         fallingSource = SourceFaker.instance({}, true);
-        sourceCrudInterlayer = new SourceCrudInterlayer(source, errorConfig);
-        fallingSourceCrudInterlayer = new SourceCrudInterlayer(fallingSource, errorConfig);
+        sourceCrudInterlayer = new SourceCrudInterlayer({source, errorConfig});
+        fallingSourceCrudInterlayer = new SourceCrudInterlayer({source: fallingSource, errorConfig});
     });
 
     describe('create', () => {
@@ -180,8 +182,7 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                      assert.equal(record.get('title'), 'Запись 666');
                  })
                  .catch((errorData: ISourceErrorData) => {
-                     assert.not
-                     assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                  });
         });
 
@@ -191,7 +192,7 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 title: 'Запись 666'
             })
                 .then((record: Record) => {
-                    assert.equal(record.get('title'), 'Запись 666');
+                    assert.isNotTrue(true, 'This call should throw an exception');
                 })
                 .catch((errorData: ISourceErrorData) => {
                     assert.equal(errorData.errorConfig.mode, errorConfig.mode);
@@ -199,15 +200,99 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
         });
     });
     describe('read', () => {
+        const _record = new Record();
+        _record.setRawData(rawData[4]);
+        it('should return Promise<Record>', () => {
+            sourceCrudInterlayer.read(5)
+                .then((record: Record) => {
+                    assert.equal(record.get('id'), _record.get('id'));
+                })
+                .catch((errorData: ISourceErrorData) => {
+                    assert.isNotTrue(true, 'This call should not throw any exceptions');
+                });
+        });
 
+        it('should return Promise<Error>', () => {
+            fallingSourceCrudInterlayer.read(5)
+                .then((record: Record) => {
+                    assert.isNotTrue(true, 'This call should throw an exception');
+                })
+                .catch((errorData: ISourceErrorData) => {
+                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                });
+        });
     });
     describe('update', () => {
+        const record = new Record();
+        record.setRawData(rawData[4]);
+        it('should return Promise<null>', () => {
+            sourceCrudInterlayer.update(record)
+                .then((nulled: unknown) => {
+                    assert.isNull(nulled);
+                })
+                .catch((errorData: ISourceErrorData) => {
+                    assert.isNotTrue(true, 'This call should not throw any exceptions');
+                });
+        });
 
+        it('should return Promise<Error>', () => {
+            fallingSourceCrudInterlayer.update(record)
+                .then((nulled: unknown) => {
+                    assert.isNotTrue(true, 'This call should throw an exception');
+                })
+                .catch((errorData: ISourceErrorData) => {
+                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                });
+        });
     });
     describe('query', () => {
+        const record = new Record();
+        record.setRawData(rawData[4]);
+        it('should return Promise<DataSet>', () => {
+            sourceCrudInterlayer.query({
+                filter: {},
+                sorting: [{id: true}]
+            })
+                .then((dataSet: DataSet) => {
+                    assert.equal(dataSet.getAll().at(4).get('id'), record.get('id'));
+                })
+                .catch((errorData: ISourceErrorData) => {
+                    assert.isNotTrue(true, 'This call should not throw any exceptions');
+                });
+        });
 
+        it('should return Promise<Error>', () => {
+            fallingSourceCrudInterlayer.query({
+                filter: {},
+                sorting: [{id: true}]
+            })
+                .then((dataSet: DataSet) => {
+                    assert.isNotTrue(true, 'This call should throw an exception');
+                })
+                .catch((errorData: ISourceErrorData) => {
+                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                });
+        });
     });
     describe('destroy', () => {
+        it('should return Promise<null>', () => {
+            sourceCrudInterlayer.destroy(5)
+                .then((nulled: unknown) => {
+                    assert.isNull(nulled);
+                })
+                .catch((errorData: ISourceErrorData) => {
+                    assert.isNotTrue(true, 'This call should not throw any exceptions');
+                });
+        });
 
+        it('should return Promise<Error>', () => {
+            fallingSourceCrudInterlayer.destroy(5)
+                .then((nulled: unknown) => {
+                    assert.isNotTrue(true, 'This call should throw an exception');
+                })
+                .catch((errorData: ISourceErrorData) => {
+                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                });
+        });
     });
 });

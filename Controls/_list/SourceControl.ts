@@ -21,6 +21,7 @@ import {IDirection} from './interface/IVirtualScroll';
 
 import * as Template from 'wml!Controls/_list/SourceControl/SourceControl';
 import {QueryOrderSelector, QueryWhere} from 'saby-types/Types/source';
+import {Direction, IAdditionalQueryParams} from '../_source/interface/IAdditionalQueryParams';
 
 /**
  * Настройки для страницы по умолчанию
@@ -159,7 +160,7 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     protected _error: ViewConfig;
 
     // Ресурс данных с перехватчиком ошибок
-    private _itemsSource: ICrud;
+    private _itemsSource: SourceCrudInterlayer;
 
     // Экземпляр контроллера, управляющего навигацией по записям
     protected _navigationController: NavigationController;
@@ -200,10 +201,10 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     protected _load(params?: ISourceControlQueryParams): Promise<void | RecordSet> {
         const filter = params && params.filter || {};
         const sorting = params && params.sorting || [{[this._options.keyProperty]: true}];
-        const direction = params && params.direction || {};
+        const direction: Direction = params && params.direction || undefined;
         this._hideError();
         this._cancelLoading();
-        const query = this._navigationController.buildQuery(direction, filter, sorting);
+        const query = this._navigationController.getQueryParams(direction, filter, sorting);
         this._request = this._callQuery(query)
             .then((recordSet: RecordSet) => {
                 this._navigationController.calculateState(recordSet, direction);
@@ -252,7 +253,7 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
      * @param {Types/source:Query} query A query built based on sorting, filter and pagination params
      * @private
      */
-    private _callQuery(query: Query): Promise<RecordSet> {
+    private _callQuery(query: IAdditionalQueryParams): Promise<RecordSet> {
         let sourceQuery: Promise<RecordSet>;
         // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
         const queryDeferred = this._itemsSource.query(query)

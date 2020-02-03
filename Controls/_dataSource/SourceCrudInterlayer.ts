@@ -7,6 +7,7 @@ import {IErrorController} from 'Controls/interface';
 import * as ErrorModule from 'Controls/_dataSource/error';
 import {Logger} from 'UI/Utils';
 import {Controller as ErrorController} from 'Controls/_dataSource/error';
+import {IAdditionalQueryParams} from '../_source/interface/IAdditionalQueryParams';
 
 /**
  * Конфигурация для ошибки, которую можно получить в catch
@@ -154,15 +155,16 @@ export interface ISourceCrudInterlayerOptions {
  */
 
 /**
- * Обёртка для source: ICrud, которая позволяет перехватывать ошибку загрузки и возвращать в catch
+ * Обёртка для source: Types/_source/ICrud, которая позволяет перехватывать ошибку загрузки и возвращать в catch
  * ISourceErrorData конфиг для отображения ошибки
  * @remark
  * Этота обёртка должен вставляться везде где есть работа с сорсом, т.е. в
  *  • Списках ({@link Controls/_list/List.ts} and {@link Controls/_list/ListView.ts})
  *  • formController ({@link Controls/_form/FormController.ts})
  *  • dataSource/error/DataLoader ({@link Controls/_dataSource/_error/DataLoader.ts} and {@link Controls/_dataSource/requestDataUtil.ts})
+ * НЕ РЕАЛИЗУЕТ интерфейс Types/_source/ICrud, т.к. метод query должен принимать параметры filter, sorting, offset, limit
  * @class Controls/dataSource/SourceCrudInterlayer
- * @implements Types/source/ICrud
+ * @implements Controls/interface/IErrorController
  * @example
  * const source = new Memory({
  *     keyProperty: 'id',
@@ -209,8 +211,9 @@ export interface ISourceCrudInterlayerOptions {
  *  • in Lists ({@link Controls/_list/List.ts} and {@link Controls/_list/ListView.ts})
  *  • in particular record view/edit Control ({@link Controls/_form/FormController.ts})
  *  • in data multi-source loader ({@link Controls/_dataSource/_error/DataLoader.ts} and {@link Controls/_dataSource/requestDataUtil.ts})
+ * Not implements Types/_source/ICrud interface, because query() should have signature  должен принимать параметры filter, sorting, offset, limit
  * @class Controls/dataSource/SourceCrudInterlayer
- * @implements Types/source/ICrud
+ * @implements Controls/interface/IErrorController
  * @example
  * const source = new Memory({
  *     keyProperty: 'id',
@@ -250,8 +253,7 @@ export interface ISourceCrudInterlayerOptions {
  * @public
  * @author Аверкиев П.А.
  */
-export class SourceCrudInterlayer implements ICrud, IErrorController {
-    readonly '[Types/_source/ICrud]': boolean = true;
+export class SourceCrudInterlayer implements IErrorController {
     readonly '[Controls/_interface/IErrorController]': boolean = true;
 
     private readonly _source: ICrud;
@@ -273,13 +275,11 @@ export class SourceCrudInterlayer implements ICrud, IErrorController {
      * Создает пустую запись через источник данных (при этом она не сохраняется в хранилище)
      * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
      * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - созданную запись, в случае ошибки - Error.
-     * @see Types/_source/ICrud
      */
     /*
      * Creates empty Record using current storage (without saving to the storage)
      * @param [meta] Additional meta data to create a Record
      * @return Promise resolving created Record {@link Types/_entity/Record} and rejecting an Error.
-     * @see Types/_source/ICrud
      */
     create(meta?: object): Promise<Record> {
         return this._source.create(meta).catch(this._boundPromiseCatchCallback);
@@ -290,14 +290,12 @@ export class SourceCrudInterlayer implements ICrud, IErrorController {
      * @param key Первичный ключ записи
      * @param [meta] Дополнительные мета данные
      * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_entity/Record} - прочитанную запись, в случае ошибки - Error.
-     * @see Types/_source/ICrud
      */
     /*
      * Reads a Record from current storage
      * @param key Primary key for Record
      * @param [meta] Additional meta data
      * @return Promise resolving created Record {@link Types/_entity/Record} and rejecting an Error.
-     * @see Types/_source/ICrud
      */
     read(key: number | string, meta?: object): Promise<Record> {
         return this._source.read(key, meta).catch(this._boundPromiseCatchCallback);
@@ -308,14 +306,12 @@ export class SourceCrudInterlayer implements ICrud, IErrorController {
      * @param data Обновляемая запись или рекордсет
      * @param [meta] Дополнительные мета данные
      * @return Асинхронный результат выполнения: в случае успеха ничего не вернет, в случае ошибки - Error.
-     * @see Types/_source/ICrud
      */
     /*
      * Updates existing Record or RecordSet in current storage
      * @param data Updating Record or RecordSet
      * @param [meta] Additional meta data
      * @return Promise resolving nothing and rejecting an Error.
-     * @see Types/_source/ICrud
      */
     update(data: Record | RecordSet<Model>, meta?: object): Promise<null> {
         return this._source.update(data, meta).catch(this._boundPromiseCatchCallback);
@@ -323,18 +319,16 @@ export class SourceCrudInterlayer implements ICrud, IErrorController {
 
     /**
      * Выполняет запрос на выборку
-     * @param [query] Запрос
+     * @param [queryParams] Параметры для фыормирования запроса Query {@link Types/source/Query}
      * @return Асинхронный результат выполнения: в случае успеха вернет {@link Types/_source/DataSet} - прочитаннные данные, в случае ошибки - Error.
-     * @see Types/source/ICrud#query
      */
     /*
      * Runs query to get a party of records
-     * @param [query] A Query {@link Types/source/Query} to run
+     * @param [queryParams] Params to build Query {@link Types/source/Query}
      * @return Promise resolving created Record {@link Types/_entity/Record} and rejecting an Error.
-     * @see Types/_source/ICrud
      */
-    query(query?: Query): Promise<DataSet> {
-        return this._source.query(query).catch(this._boundPromiseCatchCallback);
+    query(queryParams: IAdditionalQueryParams): Promise<DataSet> {
+        return this._source.query(this._buildQuery(queryParams)).catch(this._boundPromiseCatchCallback);
     }
 
     /**
@@ -353,6 +347,36 @@ export class SourceCrudInterlayer implements ICrud, IErrorController {
      */
     destroy(keys: number | string | number[] | string[], meta?: object): Promise<null> {
         return this._source.destroy(keys, meta).catch(this._boundPromiseCatchCallback);
+    }
+
+    /**
+     * Собирает свойства текущего класса в запрос Types/source:Query
+     * @param queryParams параметры для формирования запроса
+     * @return {Types/source:Query} Объект Query, готовый для передачи в ICrud.query()
+     */
+    /*
+     * Builds current class properties to the Types/source:Query query
+     * @param queryParams Params to build Query {@link Types/source/Query}
+     * @return {Types/source:Query} Query object ready to pass to ICrud.query()
+     */
+    private _buildQuery(queryParams: IAdditionalQueryParams): Query {
+        let query = new Query();
+        if (queryParams.filter) {
+            query = query.where(queryParams.filter);
+        }
+        if (queryParams.offset) {
+            query = query.offset(queryParams.offset);
+        }
+        if (queryParams.limit) {
+            query = query.limit(queryParams.limit);
+        }
+        if (queryParams.sorting) {
+            query = query.orderBy(queryParams.sorting);
+        }
+        if (queryParams.meta) {
+            query = query.meta(queryParams.meta);
+        }
+        return query;
     }
 
     /**
