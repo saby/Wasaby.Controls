@@ -87,7 +87,7 @@ export interface IQueryParamsController {
      * @remark
      * @param to page number or position to go to
      */
-    updatePage(to: number | any): void;
+    setPageNumber(to: number | any): void;
 
     /**
      * Устанавливает текущую страницу в контроллере

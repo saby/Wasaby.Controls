@@ -352,7 +352,7 @@ export class NavigationController {
      */
     updatePage(to: number | any): void {
         if (this._queryParamsController) {
-            this._queryParamsController.updatePage(to);
+            this._queryParamsController.setPageNumber(to);
         }
     }
 

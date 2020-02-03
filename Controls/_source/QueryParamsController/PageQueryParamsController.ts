@@ -124,7 +124,7 @@ class PageQueryParamsController implements IQueryParamsController {
      * @remark
      * @param to page number or position to go to
      */
-    updatePage(to: number | any): void {
+    setPageNumber(to: number | any): void {
         this._options.page = to;
         this._setPageNumbers(to);
     }
