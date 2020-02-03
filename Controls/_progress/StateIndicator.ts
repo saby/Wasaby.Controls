@@ -195,7 +195,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       });
 
       // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то прибавим сектор к наибольшему значению.
-      if (totalSectorsUsed < _numSectors && sum === 100 ) {
+      if (totalSectorsUsed < _numSectors && sum === maxPercentValue) {
          colorValues.splice(longestValueStart, 0,  colorValues[longestValueStart]);
       }
       return colorValues;
