@@ -23,6 +23,24 @@ export default class GridRenderContainerDemo extends Control {
         }
     ];
 
+    protected _itemActions: any[] = [
+        {
+            id: 1,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            style: 'success',
+            iconStyle: 'success',
+            showType: 0,
+            handler: (item) => alert(`phone clicked at ${item.getKey()}`)
+        },
+        {
+            id: 2,
+            icon: 'icon-Edit',
+            title: 'edit',
+            showType: 0
+        }
+    ];
+
     private _generateItems(count: number) {
         const rawData = [];
         for (let i = 0; i < count; i++) {

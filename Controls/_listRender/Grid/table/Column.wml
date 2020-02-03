@@ -13,5 +13,4 @@
    <ws:else>
       {{ column.getContents()[column.getDisplayProperty()] }}
    </ws:else>
-</td
->
+</td>

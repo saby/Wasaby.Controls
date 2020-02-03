@@ -47,11 +47,33 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         const changed = marked !== this.isMarked();
         super.setMarked(marked, silent);
         if (changed) {
-            this._$columnItems[0].nextVersion();
+            this._redrawColumns('first');
+        }
+    }
+
+    setActive(active: boolean, silent?: boolean): void {
+        const changed = active !== this.isActive();
+        super.setActive(active, silent);
+        if (changed) {
+            this._redrawColumns('all');
         }
     }
 
     // endregion
+
+    protected _redrawColumns(target: 'first'|'last'|'all'): void {
+        switch (target) {
+            case 'first':
+                this._$columnItems[0].nextVersion();
+                break;
+            case 'last':
+                this._$columnItems[this.getColumnsCount() - 1].nextVersion();
+                break;
+            case 'all':
+                this._$columnItems.forEach((column) => column.nextVersion());
+                break;
+        }
+    }
 
     protected _getColumnsFactory(): (options: Partial<IGridColumnOptions<T>>) => GridColumn<T> {
         return (options) => {

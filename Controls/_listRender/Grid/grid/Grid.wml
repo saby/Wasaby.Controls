@@ -21,4 +21,9 @@
    <!-- Шаблон пустой таблицы -->
    <!-- Результаты снизу -->
    <!-- Подвал таблицы -->
+
+   <Controls.dropdown:Opener
+      name="menuOpener"
+      keyProperty="id"
+      menuStyle="cross" />
 </div>
