@@ -630,10 +630,10 @@ var _private = {
         if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
             _private.setHasMoreData(self._listViewModel, sourceController.hasMoreData(direction));
             _private.loadToDirection(
-               self, direction,
-               self._options.dataLoadCallback,
-               self._options.dataLoadErrback,
-               filter
+                self, direction,
+                self._options.dataLoadCallback,
+                self._options.dataLoadErrback,
+                filter
             );
         }
     },
@@ -1680,11 +1680,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     changeIndicatorStateHandler(_: SyntheticEvent<Event>, state: boolean, indicatorName: 'top' | 'bottom'): void {
-          if (state) {
-              this._children[`${indicatorName}LoadingIndicator`].style.display = '';
-          } else {
-              this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
-          }
+        if (state) {
+            this._children[`${indicatorName}LoadingIndicator`].style.display = '';
+        } else {
+            this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
+        }
     },
 
     _viewResize(): void {
@@ -2238,6 +2238,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.getPortionedSearch(this).abortSearch();
     },
 
+    _onItemsChangeError(event: unknown, error: Error): void {
+        _private.processError(this, {
+            error,
+            mode: dataSourceError.Mode.dialog
+        });
+    },
+
     _nativeDragStart: function(event) {
         // preventDefault нужно делать именно на нативный dragStart:
         // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
@@ -2448,7 +2455,7 @@ BaseControl.getDefaultOptions = function() {
         markedKey: null,
         stickyHeader: true,
         selectionStrategy: {
-           name: 'Controls/operations:FlatSelectionStrategy'
+            name: 'Controls/operations:FlatSelectionStrategy'
         },
         virtualScrollMode: 'remove'
     };
