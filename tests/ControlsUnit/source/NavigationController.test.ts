@@ -71,15 +71,15 @@ class DataSetFaker {
 
     static instance = (query?: Query): DataSetFaker => {
         return new DataSetFaker(query);
-    };
+    }
 }
 
 /**
  * @see also tests/ControlsUnit/Controllers/SourceController.test.js
  */
 describe('Controls/_source/NavigationController', () => {
-    describe('load', () => {
-        it('Should build query using PagePaginatorController', () => {
+    describe('getQueryParams', () => {
+        it('Should build query using PagePaginatorController + view="pages"', () => {
             const navigation = fakeNavigationControllerNavigation('page', 'pages', 'after', false);
             const controller = new NavigationController({navigation});
             const query = controller.getQueryParams();
@@ -88,7 +88,22 @@ describe('Controls/_source/NavigationController', () => {
             assert.equal(query.limit, (navigation.sourceConfig as INavigationPageSourceConfig).pageSize);
             assert.equal(query.offset, 0);
 
-            // TODO change page!
+            // TODO change page to next!
+            // TODO change page to prev!
+            // TODO change page to particular page!
+        });
+        it('Should build query using PagePaginatorController + view="infinity"', () => {
+            const navigation = fakeNavigationControllerNavigation('page', 'infinity', 'after', false);
+            const controller = new NavigationController({navigation});
+            const query = controller.getQueryParams();
+            const meta = query.meta;
+            assert.equal(meta.navigationType, 'Page');
+            assert.equal(query.limit, (navigation.sourceConfig as INavigationPageSourceConfig).pageSize);
+            assert.equal(query.offset, 0);
+
+            // TODO change page to next!
+            // TODO change page to prev!
+            // TODO change page to particular page!
         });
         it('Should build query using PositionPaginatorController', () => {
             const navigation = fakeNavigationControllerNavigation('position', 'infinity', 'after', false);
@@ -97,13 +112,12 @@ describe('Controls/_source/NavigationController', () => {
             const meta = query.meta;
             assert.equal(meta.navigationType, 'Position');
             assert.equal(query.limit, (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
-            assert.equal(query.offset, 0);
             const where = query.filter;
-
-            // TODO CHECK
             assert.equal(where['key>='], (navigation.sourceConfig as INavigationPositionSourceConfig).position);
 
-            // TODO change page!
+            // TODO change page to next!
+            // TODO change page to prev!
+            // TODO change page to particular position!
         });
 
         it('Should correctly merge query params', () => {
@@ -117,14 +131,12 @@ describe('Controls/_source/NavigationController', () => {
             const meta = query.meta;
             assert.equal(meta.navigationType, 'Position');
             assert.equal(query.limit, (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
-            assert.equal(query.offset, 0);
             const where = query.filter;
-
-            // TODO CHECK
             assert.equal(where['key~'], (navigation.sourceConfig as INavigationPositionSourceConfig).position);
 
-            // TODO change page!
-
+            // TODO change page to next!
+            // TODO change page to prev!
+            // TODO change page to particular!
         });
     });
 });

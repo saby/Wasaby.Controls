@@ -148,7 +148,7 @@ class QueryParamsBuilder {
      */
     merge(params: IAdditionalQueryParams): QueryParamsBuilder {
         Object.keys(params).forEach((param) => {
-            if (params[param]) {
+            if (params[param] !== undefined && params[param] !== null) {
                 if (param === 'filter') {
                     const filter: QueryWhere = this._filter ? cClone(this._filter) : {};
                     this._filter = ({...filter, ...params[param]});
@@ -229,7 +229,7 @@ export class NavigationController {
      * Строит запрос данных на основе переданных параметров filter и sorting
      * Если в опцию navigation был передан объект INavigationOptionValue, его filter, sorting и настрйоки пейджинации
      * также одбавляются в запрос.
-     * @param direction {Direction} Направление навигации
+     * @param direction {Direction} Направление навигации.
      * @param filter {Types/source:QueryWhere} Настрйоки фильтрации
      * @param sorting {Types/source:QueryOrderSelector} Настрйки сортировки
      */
