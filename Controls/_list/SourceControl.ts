@@ -263,7 +263,7 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
                 return dataSet.getAll ? dataSet.getAll() : dataSet;
             })
             .catch(() => {
-                Logger.error('NavigationController: Data is unable to be queried');
+                Logger.error('SourceControl: Data is unable to be queried');
             });
         /**
          * Deferred с синхронным кодом статического источника выполняется сихронно.

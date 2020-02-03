@@ -211,7 +211,7 @@ export interface INavigationControllerOptions {
  * Контроллер загрузки данных с учётом постраничной навигации
  * @remark
  * Хранит состояние навигации INavigationOptionValue и вычисляет на его основании параметры для вызова методов.
- * Позволяет запросить данные из ресурса ICrud с учётом настроек навигации INavigationOptionValue
+ * Позволяет сформировать запрос для ICrud с учётом настроек навигации INavigationOptionValue
  *
  * @class Controls/source/NavigationController
  *
@@ -223,7 +223,7 @@ export interface INavigationControllerOptions {
  * Data loading and per-page navigation controller
  * @remark
  * Stores the navigation state and calculates methods calling params on its base
- * Allows to request data from ICrud source, considering navigation options object (INavigationOptionValue)
+ * Allows to combine a valid query for ICrud, considering navigation options object (INavigationOptionValue)
  *
  * @class Controls/source/NavigationController
  *
@@ -334,9 +334,9 @@ export class NavigationController {
      * Allows manual set of current controller state using Collection<Record>
      * @param model
      */
-    setStateByCollection(model: Collection<Record>): void {
+    setState(model: Collection<Record>): void {
         if (this._queryParamsController) {
-            this._queryParamsController.setStateByCollection(model);
+            this._queryParamsController.setState(model);
         }
     }
 

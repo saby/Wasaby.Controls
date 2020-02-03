@@ -216,7 +216,7 @@ class PositionQueryParamsController implements IQueryParamsController {
      * Allows manual set of current controller state using Collection<Record>
      * @param model
      */
-    setStateByCollection(model: Collection<Record>): void {
+    setState(model: Collection<Record>): void {
         if (!this._positionByMeta) {
             const beforePosition = model.getFirstItem();
             const afterPosition = model.getLastItem();

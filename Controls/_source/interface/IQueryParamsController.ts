@@ -75,7 +75,7 @@ export interface IQueryParamsController {
      * Allows manual set of current controller state using Collection<Record>
      * @param model
      */
-    setStateByCollection(model: Collection<Record>): void;
+    setState(model: Collection<Record>): void;
 
     /**
      * Устанавливает текущую позицию или страницу

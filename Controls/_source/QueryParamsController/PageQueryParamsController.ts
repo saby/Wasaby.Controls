@@ -110,7 +110,7 @@ class PageQueryParamsController implements IQueryParamsController {
      * Allows manual set of current controller state using Collection<Record>
      * @param model
      */
-    setStateByCollection(model: Collection<Record>): void {
+    setState(model: Collection<Record>): void {
         // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
     }
 
