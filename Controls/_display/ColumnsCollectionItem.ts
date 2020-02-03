@@ -10,9 +10,7 @@ export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
     protected _$columnProperty: string;
     protected _$column: number = 0;
     protected _$owner: ColumnsCollection<T>;
-    getFixedColumn(): number {
-        return this.getContents().get && this.getContents().get(this._$columnProperty || 'column') || 0;
-    }
+
     getColumn(): number {
         return this._$column;
     }
