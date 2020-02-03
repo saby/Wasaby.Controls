@@ -13,8 +13,8 @@
          </div>
          <div>
             <span>Отображаемый месяц: </span>
-            <Controls.buttons:Button caption="-1 месяц" on:click="_changeMonth(-1)" attr:class="controlsDemo-Month__prev" />
-            <Controls.buttons:Button caption="+1 месяц" on:click="_changeMonth(1)" attr:class="controlsDemo-Month__next"/>
+            <Controls.buttons:Button caption="-1 месяц" on:click="_changeMonth(-1)"/>
+            <Controls.buttons:Button caption="+1 месяц" on:click="_changeMonth(1)"/>
          </div>
       </div>
    </div>
@@ -28,7 +28,7 @@
 
    <div class="PageBlock">
       <div class="PageBlock__title">Without days and title</div>
-      <div class="PageBlock__componentWrap controlsDemo-Month__default">
+      <div class="PageBlock__componentWrap">
          <Controls.calendar:Month month="{{_month}}" showWeekdays="{{ false }}" selectionType="range"/>
       </div>
    </div>
