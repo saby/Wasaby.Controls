@@ -26,20 +26,17 @@ class ModuleLoader {
     };
 
     public loadAsync(name: string): Promise<Module> {
-        let parsedInfo: IParsedName = libHelper.parse(name);
-
-        if (this.isLoaded(parsedInfo.name)) {
-            return Promise.resolve(this.getFromLib(this.requireSync(parsedInfo.name), parsedInfo));
+        if (this.isLoaded(name)) {
+            return Promise.resolve(this.loadSync(name));
         }
 
+        let parsedInfo: IParsedName = libHelper.parse(name);
         if (this.isCached(parsedInfo.name)) {
             return cache[parsedInfo.name];
         }
 
         let promiseResult = this.requireAsync(parsedInfo.name);
-        cache[parsedInfo.name] = promiseResult;
-
-        return promiseResult.then((res) => {
+        cache[parsedInfo.name] = promiseResult = promiseResult.then((res) => {
             let module = this.getFromLib(res, parsedInfo);
             delete cache[parsedInfo.name];
             return module;
@@ -49,6 +46,8 @@ class ModuleLoader {
             IoC.resolve("ILogger").error(errorMessage, e);
             throw new Error(errorMessage);
         });
+
+        return promiseResult;
     };
 
     public loadSync(name: string): Module {

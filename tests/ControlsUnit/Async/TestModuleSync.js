@@ -1,5 +1,8 @@
 define(function() {
     return {
-        value: 'value'
+        value: 'value',
+        exportSyncFunction: function (echo) {
+            return echo;
+        }
     };
 });

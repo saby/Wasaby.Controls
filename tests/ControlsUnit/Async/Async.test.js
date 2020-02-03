@@ -95,12 +95,31 @@ define([
          };
 
          var async = new Async(options);
+         async._options = options;  // Хак: Почему-то нет опций после конструктора
          var promise = async._beforeMount(options).then(function () {
             async._beforeUpdate(options);
             async._afterUpdate();
 
             assert.isNotOk(async.error, "Error message should be empty");
             assert.strictEqual(async.optionsForComponent.resolvedTemplate, require('ControlsUnit/Async/TestControlAsync'));
+         });
+         return promise;
+      }).timeout(3000);
+
+      it('Loading asynchronous from library client-side', function () {
+         var options = {
+            templateName: 'ControlsUnit/Async/TestLibraryAsync:ExportControl',
+            templateOptions: {}
+         };
+
+         var async = new Async(options);
+         async._options = options;  // Хак: Почему-то нет опций после конструктора
+         var promise = async._beforeMount(options).then(function () {
+            async._beforeUpdate(options);
+            async._afterUpdate();
+
+            assert.isNotOk(async.error, "Error message should be empty");
+            assert.strictEqual(async.optionsForComponent.resolvedTemplate, require('ControlsUnit/Async/TestLibraryAsync').ExportControl);
          });
          return promise;
       }).timeout(3000);
