@@ -1,6 +1,6 @@
-<Controls.dataSource:error.Container
-   name="errorContainer"
-   viewConfig="{{_error}}"
+<Controls.event:Register
+   name="itemsErrorRegistrar"
+   register="itemsChangeError"
 >
    <ws:partial template="{{_options.content}}"
                on:filterChanged="_filterChanged()"
@@ -11,4 +11,4 @@
                scope="{{_options}}"
                items="{{_items}}"
                filter="{{_filter}}"/>
-</Controls.dataSource:error.Container>
+</Controls.event:Register>
