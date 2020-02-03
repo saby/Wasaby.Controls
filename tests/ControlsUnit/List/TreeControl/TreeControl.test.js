@@ -824,7 +824,6 @@ define([
                   assert.equal(12, treeViewModel._model._root);
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
-                  assert.isTrue(sourceController !== treeControl._children.baseControl._sourceController);
                   assert.isTrue(sourceControllersCleared);
                   assert.deepEqual(reloadFilter, {testParentProperty: 12});
                   treeControl._beforeUpdate({root: treeControl._root});
@@ -1111,7 +1110,7 @@ define([
                data: [],
                keyProperty: 'id'
             }),
-            treeControl = correctCreateTreeControl({
+            config = {
                columns: [],
                source: source,
                items: new collection.RecordSet({
@@ -1120,7 +1119,8 @@ define([
                }),
                keyProperty: 'id',
                parentProperty: 'parent'
-            }),
+            },
+            treeControl = correctCreateTreeControl(config),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
             reloadOriginal = treeControl._children.baseControl.reload;
 
@@ -1161,14 +1161,17 @@ define([
             };
             treeControl._children.baseControl._sourceController._loader.addCallback(function(result) {
                treeControl._children.baseControl.reload().addCallback(function(res) {
-                  var newFilter = {
+                  const newFilter = {
                      parent: null
                   };
-                  treeControl._beforeUpdate({root: 'testRoot'});
+                  const configClone = {...config};
+                  configClone.root = 'testRoot';
+                  treeControl._beforeUpdate(configClone);
                   treeControl._options.root = 'testRoot';
                   try {
                      assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
                      assert.deepEqual(filterOnOptionChange, newFilter);
+                     assert.isTrue(isSourceControllerDestroyed);
                   } catch (e) {
                      reject(e);
                   }
@@ -1435,7 +1438,7 @@ define([
          treeControl.reload();
          assert.deepEqual([2246, 452815, 457244, 471641], treeControl._children.baseControl.getViewModel().getExpandedItems());
       });
-      it('Expand all', function(done) {
+      it('Expand all', function() {
          var
             treeControl = correctCreateTreeControl({
                source: new sourceLib.Memory({
@@ -1453,16 +1456,26 @@ define([
                expandedItems: [null]
             }),
             treeGridViewModel = treeControl._children.baseControl.getViewModel();
-         setTimeout(function () {
-            assert.deepEqual([null], treeGridViewModel._model._expandedItems);
-            assert.deepEqual([], treeGridViewModel._model._collapsedItems);
-            treeGridViewModel.toggleExpanded(treeGridViewModel._model._display.at(0));
-            setTimeout(function() {
-               assert.deepEqual([null], treeGridViewModel._model._expandedItems);
-               assert.deepEqual([1], treeGridViewModel._model._collapsedItems);
-               done();
+         return new Promise(function(resolve, reject) {
+            setTimeout(function () {
+               try {
+                  assert.deepEqual([null], treeGridViewModel._model._expandedItems);
+                  assert.deepEqual([], treeGridViewModel._model._collapsedItems);
+                  treeGridViewModel.toggleExpanded(treeGridViewModel._model._display.at(0));
+               } catch(e) {
+                  reject(e);
+               }
+               setTimeout(function() {
+                  try {
+                     assert.deepEqual([null], treeGridViewModel._model._expandedItems);
+                     assert.deepEqual([1], treeGridViewModel._model._collapsedItems);
+                     resolve();
+                  } catch(e) {
+                     reject(e);
+                  }
+               }, 10);
             }, 10);
-         }, 10);
+         });
       });
 
       it('expandedItems bindind 1', function(done){
