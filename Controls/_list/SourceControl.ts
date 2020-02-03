@@ -165,7 +165,6 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
 
     protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: RecordSet | void): Promise<RecordSet | void> | void {
         this._options = options;
-        this._items = new RecordSet();
         this._itemsSource = new SourceCrudInterlayer(this._options as ISourceCrudInterlayerOptions);
         this._navigationOptions = initNavigationOptions(this._options.navigation);
         this._navigationController = new NavigationController({
