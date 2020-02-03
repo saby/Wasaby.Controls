@@ -15,6 +15,7 @@ export interface IColumnConfig {
     template: TemplateFunction|string;
     width?: string;
     cellPadding?: { left: string; right: string; };
+    displayProperty?: string;
 }
 
 export interface IOptions<T> {
@@ -84,7 +85,15 @@ export default class GridColumn<T> extends mixin<
         return this._$column.template;
     }
 
+    getDisplayProperty(): string {
+        return this._$column.displayProperty;
+    }
+
     getContents(): T {
+        return this._$owner.getContents();
+    }
+
+    get contents(): T {
         return this._$owner.getContents();
     }
 
