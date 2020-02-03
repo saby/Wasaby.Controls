@@ -20,6 +20,7 @@ import {IPagingOptions} from 'Controls/_paging/Paging';
 import {IDirection} from './interface/IVirtualScroll';
 
 import * as Template from 'wml!Controls/_list/SourceControl/SourceControl';
+import {QueryOrderSelector, QueryWhere} from 'saby-types/Types/source';
 
 /**
  * Настройки для страницы по умолчанию
@@ -43,6 +44,12 @@ const initNavigationOptions = (navigationOptions: INavigationOptionValue): INavi
     options.sourceConfig = navigationOptions && navigationOptions.sourceConfig || defaultPagesSourceConfig;
     return options;
 };
+
+export interface ISourceControlQueryParams {
+    direction?: IDirection;
+    filter?: QueryWhere;
+    sorting?: QueryOrderSelector;
+}
 
 export interface ISourceControlOptions extends IControlOptions {
     /**
@@ -182,21 +189,18 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
      * Строит запрос данных на основе переданных параметров filter и sorting и возвращает Promise<RecordSet>.
      * Если в опцию navigation был передан объект INavigationOptionValue, его filter, sorting и настрйоки пейджинации
      * также одбавляются в запрос.
-     * @param filter {Types/source:QueryWhere} Настрйоки фильтрации
-     * @param sorting {Types/source:QueryOrderSelector} Настрйки сортировки
-     * @param direction {Direction} Направление навигации
+     * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} пакраметры построения запроса
      */
     /*
      * Builds a query based on passed filter and sorting params and returns Promise<RecordSet>.
      * If INavigationOptionValue is set into the class navigation property, its filter, sorting and pagination settings
      * will also be added to query
-     * @param filter {Types/source:QueryWhere} filter settings
-     * @param sorting {Types/source:QueryOrderSelector} sorting settings
-     * @param direction {Direction} navigation direction
+     * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} query params
      */
-    protected _load(direction?: IDirection): Promise<void | RecordSet> {
-        const filter = {};
-        const sorting = [{id: true}];
+    protected _load(params?: ISourceControlQueryParams): Promise<void | RecordSet> {
+        const filter = params && params.filter || {};
+        const sorting = params && params.sorting || [{[this._options.keyProperty]: true}];
+        const direction = params && params.direction || {};
         this._hideError();
         this._cancelLoading();
         const query = this._navigationController.buildQuery(direction, filter, sorting);
