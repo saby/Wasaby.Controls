@@ -2122,6 +2122,9 @@ define([
                data: data
             }),
             cfg = {
+               editingConfig: {
+                  item: { id: 1 }
+               },
                viewName: 'Controls/List/ListView',
                source: source,
                keyProperty: 'id',
@@ -2145,14 +2148,18 @@ define([
                }
             }
          };
-         baseControl._container = {clientHeight: 100};
-         baseControl._afterMount(cfg);
+         baseControl._container = { clientHeight: 100 };
 
          afterEach(() => {
             actionsUpdateCount = 0;
          });
+         it('afterMount with editing item', function() {
+            baseControl._afterMount(cfg);
+            assert.equal(actionsUpdateCount, 1);
+         });
 
          it('_initItemActions', function() {
+            baseControl._itemActionsInitialized = false;
             baseControl._initItemActions();
             assert.equal(actionsUpdateCount, 1);
          });
