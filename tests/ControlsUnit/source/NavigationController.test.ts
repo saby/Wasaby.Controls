@@ -4,26 +4,22 @@ import {assert} from 'chai';
 import {NavigationController} from 'Controls/source';
 import {INavigationOptionValue} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
-import {Query, DataSet} from 'Types/source';
+import {DataSet} from 'Types/source';
 import {
     INavigationPageSourceConfig, INavigationPositionSourceConfig,
     TNavigationDirection,
-    TNavigationSource,
-    TNavigationView
+    TNavigationSource
 } from 'Controls/_interface/INavigation';
 import {
+    Direction,
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
 } from '../../../Controls/_source/interface/IAdditionalQueryParams';
 import {getGridData, SourceFaker} from 'Controls-demo/List/Utils/listDataGenerator';
 
-const fakeNavigationControllerNavigation = (source: TNavigationSource, view: TNavigationView, direction: TNavigationDirection, hasMore: boolean): INavigationOptionValue => {
+const fakeNavigationControllerNavigation = (source: TNavigationSource, direction?: TNavigationDirection, hasMore?: boolean): INavigationOptionValue => {
     return {
         source,
-        view,
-        viewConfig: {
-            pagingMode: 'direct'
-        },
         sourceConfig: {
             limit: 5,
             position: 2,
@@ -31,7 +27,7 @@ const fakeNavigationControllerNavigation = (source: TNavigationSource, view: TNa
             field: 'key',
             pageSize: 3,
             page: 0,
-            hasMore
+            hasMore: hasMore !== undefined ? hasMore : false;
         }
     };
 };
@@ -54,22 +50,39 @@ const source = SourceFaker.instance({}, new DataSet({
     keyProperty: 'key'
 }), false);
 
+/*
+ * Это действие в контролах производится контролом пейджера при нажатии на кнопку >> или <<
+ * @param currentPage
+ * @param direction
+ */
+const pagerFaker = (currentPage: number): (direction: Direction) => number => {
+    let page = currentPage;
+    return (direction: Direction) => {
+        if (direction === 'down') {
+            page++;
+        } else if (direction === 'up') {
+            page--;
+        }
+        return page;
+    };
+};
+
 /**
  * @see also tests/ControlsUnit/Controllers/SourceController.test.js
  */
 describe('Controls/_source/NavigationController', () => {
-    describe('getQueryParams + view="pages" + source="pages"', () => {
+    describe('getQueryParams + source="page"', () => {
         let navigation: INavigationOptionValue;
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
         let queryMeta: IAdditionQueryParamsMeta;
 
         beforeEach(() => {
-            navigation = fakeNavigationControllerNavigation('page', 'pages', 'after', false);
+            navigation = fakeNavigationControllerNavigation('page');
             controller = new NavigationController({navigation});
         });
 
-        it('should build query using PagePaginatorController', () => {
+        it('should build query using PageQueryParamsController', () => {
             query = controller.getQueryParams();
             queryMeta = query.meta;
             assert.equal(queryMeta.navigationType, 'Page');
@@ -84,71 +97,83 @@ describe('Controls/_source/NavigationController', () => {
             assert.equal(query.offset, query.limit);
         });
 
-        it('should correctly go to the next page', () => {
+        it('should correctly calculate next page params', () => {
             query = controller.getQueryParams('down');
             queryMeta = query.meta;
             assert.equal(query.offset, query.limit);
         });
 
-        // it('should correctly go to the previous page', () => {
-        //     const dataSet = source.querySync();
-        //     const recordSet = dataSet.getAll();
-        //     recordSet.setMetaData({
-        //         more: 100 // valid when INavigationOptionValue.hasMore === false
-        //     });
-        //     controller.calculateState(recordSet);
-        //     query = controller.getQueryParams('down');
-        //
-        //     controller.calculateState(recordSet, 'down');
-        //     query = controller.getQueryParams('down');
-        //
-        //     controller.calculateState(recordSet, 'down');
-        //     query = controller.getQueryParams('up');
-        //
-        //     queryMeta = query.meta;
-        //     assert.equal(query.offset, query.limit);
-        // });
-        // TODO change page to prev!
+        it('should previous page params', () => {
+            const pager = pagerFaker(0);
 
-    });
-    describe('getQueryParams', () => {
-        it('Should build query using PagePaginatorController + view="infinity"', () => {
-            const navigation = fakeNavigationControllerNavigation('page', 'infinity', 'after', false);
-            const controller = new NavigationController({navigation});
-            const query = controller.getQueryParams();
-            const meta = query.meta;
-            assert.equal(meta.navigationType, 'Page');
-            assert.equal(query.limit, (navigation.sourceConfig as INavigationPageSourceConfig).pageSize);
+            // query params for page 0;
+            query = controller.getQueryParams();
+
+            // click >>
+            query = controller.getQueryParams('down');
+            controller.setPageNumber(pager('down'));
+
+            // click <<
+            query = controller.getQueryParams('up');
+
+            queryMeta = query.meta;
             assert.equal(query.offset, 0);
-
-            // TODO change page to next!
-            // TODO change page to prev!
-            // TODO change page to particular page!
         });
-        it('Should build query using PositionPaginatorController', () => {
-            const navigation = fakeNavigationControllerNavigation('position', 'infinity', 'after', false);
-            const controller = new NavigationController({navigation});
-            const query = controller.getQueryParams();
-            const meta = query.meta;
-            assert.equal(meta.navigationType, 'Position');
+    });
+
+    describe('getQueryParams + source="position"', () => {
+        let navigation: INavigationOptionValue;
+        let controller: NavigationController;
+        let query: IAdditionalQueryParams;
+        let queryMeta: IAdditionQueryParamsMeta;
+
+        beforeEach(() => {
+            navigation = fakeNavigationControllerNavigation('position', 'after', false);
+            controller = new NavigationController({navigation});
+        });
+
+        it('should build query using PositionQueryParamsController', () => {
+            query = controller.getQueryParams();
+            queryMeta = query.meta;
+            assert.equal(queryMeta.navigationType, 'Position');
             assert.equal(query.limit, (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
             const where = query.filter;
             assert.equal(where['key>='], (navigation.sourceConfig as INavigationPositionSourceConfig).position);
-
-            // TODO change page to next!
-            // TODO change page to prev!
-            // TODO change page to particular position!
         });
 
+        it('should correctly calculate next page params', () => {
+            const recordSet = source.querySync().getAll();
+            recordSet.setMetaData({
+                more: 100, // valid when INavigationOptionValue.hasMore === false
+                total: recordSet.getRawData().length
+            });
+
+            // query = controller.getQueryParams('down');
+            // queryMeta = query.meta;
+
+            // TODO change page to next!
+
+            // console.log(query);
+
+           // assert.equal(query.offset, query.limit);
+        });
+
+        it('should previous page params', () => {
+            // TODO change page to prev!
+        });
+
+    });
+
+    describe('Should correctly merge query params', () => {
         it('Should correctly merge query params', () => {
-            const navigation = fakeNavigationControllerNavigation('position', 'infinity', 'both', true);
+            const navigation = fakeNavigationControllerNavigation('position', 'both', true);
             // инициализируем контроллер
             const controller = new NavigationController({navigation});
             return source.query()
                 .then((data) => {
                     const recordSet: RecordSet = data.getAll();
                     recordSet.setMetaData({more: {after: true, before: false}, nextPosition: {before: [1], after: [7]}});
-                    controller.calculateState(recordSet);
+                    controller.calculateState(recordSet, null);
 
                     const query = controller.getQueryParams();
                     const meta = query.meta;
