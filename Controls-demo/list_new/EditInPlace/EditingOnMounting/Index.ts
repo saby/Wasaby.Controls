@@ -12,7 +12,6 @@ export default class extends Control {
     private _newData = getData().slice(0, 1);
     private _editingConfig = null;
     private _showActions(): boolean {
-        debugger;
         return true;
     }
     protected _beforeMount() {
