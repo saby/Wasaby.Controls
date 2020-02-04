@@ -12,8 +12,8 @@
 }
 
 .controls-SimplePanel__scroll_theme_@{themeName} {
-   margin-top: @padding-top_sticky;
-   margin-bottom: @padding-bottom_sticky;
+   margin-top: @content_padding-top_sticky;
+   margin-bottom: @content_padding-bottom_sticky;
 }
 
 .controls-SimplePanel__block_separator_theme_@{themeName} {
@@ -56,7 +56,7 @@
    font-weight: bold;
 }
 
-@shift-top_default-SimplePanel-popup: -((@item_height_menu - @inline_height_default_link_button) / 2 + @border-thickness_sticky + @padding-top_sticky);
+@shift-top_default-SimplePanel-popup: -((@item_height_menu - @inline_height_default_link_button) / 2 + @border-thickness_sticky + @content_padding-top_sticky);
 
 .controls-FilterView-SimplePanel-popup {
    margin-top: @shift-top_default-SimplePanel-popup;

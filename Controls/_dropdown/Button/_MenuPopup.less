@@ -59,16 +59,16 @@
 
 @padding-horizontal_duplicate-head: @item_padding-horizontal_l_menu + @border-thickness_sticky;
 .controls-MenuButton_link_iconSize-small_duplicate_popup.theme_@{themeName} {
-   margin-top: -(@padding-top_sticky + @border-thickness_sticky + (@item_height_menu - @inline_height_default_link_button) / 2);
+   margin-top: -(@content_padding-top_sticky + @border-thickness_sticky + (@item_height_menu - @inline_height_default_link_button) / 2);
    margin-left: -@padding-horizontal_duplicate-head;
 }
 
 .control-MenuButton-duplicate-head_small.theme_@{themeName} {
-   top: @padding-top_sticky + @border-thickness_sticky + (@item_height_menu - @icon-size_s) / 2;
+   top: @content_padding-top_sticky + @border-thickness_sticky + (@item_height_menu - @icon-size_s) / 2;
    left: @padding-horizontal_duplicate-head;
 }
 
-@padding-vertical_duplicate-head-medium: @padding-top_sticky + @border-thickness_sticky + (@item_height_menu - @icon-size_m) / 2;
+@padding-vertical_duplicate-head-medium: @content_padding-top_sticky + @border-thickness_sticky + (@item_height_menu - @icon-size_m) / 2;
 .controls-MenuButton_link_iconSize-medium_duplicate_popup.theme_@{themeName} {
    margin-top: -@padding-vertical_duplicate-head-medium;
    margin-left: -@padding-horizontal_duplicate-head;

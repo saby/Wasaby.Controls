@@ -71,9 +71,9 @@ export interface IStateIndicatorOptions extends IControlOptions {
 
 /**
  * @typedef {Object} IndicatorCategory
- * @property {Number} value=0 Процент от соответствующей категории.
- * @property {String} className='' Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
- * @property {String} title='' Название категории.
+ * @property {Number} [value=0] Процент от соответствующей категории.
+ * @property {String} [className=''] Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
+ * @property {String} [title=''] Название категории.
  */
 
 /*
