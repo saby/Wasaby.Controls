@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import { ICrud, DataSet, Query, Remote } from 'Types/source';
+import { ICrud, DataSet} from 'Types/source';
 import {Record} from 'Types/entity';
 import {
     error as ErrorModule,
@@ -7,162 +7,28 @@ import {
     ISourceErrorData,
     SourceCrudInterlayer
 } from 'Controls/dataSource';
-import {IOptions as ILocalSourceOptions} from 'Types/_source/Local';
-import {RecordSet} from 'Types/collection';
-import {Handler, HandlerConfig, ViewConfig} from 'Controls/_dataSource/error';
-import {fetch} from 'Browser/Transport';
-import ErrorController from 'Controls/_dataSource/_error/Controller';
+// import {Handler} from 'Controls/_dataSource/error';
+// import ErrorController from 'Controls/_dataSource/_error/Controller';
+import {getGridData, SourceFaker} from 'Controls-demo/List/Utils/listDataGenerator';
 
 const NUMBER_OF_ITEMS = 100;
 
-/**
- * Генератор данных
- * @param n
- */
-const generateRawData = (n: number): any[] => {
-    const _rawData = [];
-    for (let i = 0; i < n; i++) {
-        _rawData.push({
-            id: i,
-            title: `${i} item`
-        });
+const rawData = getGridData(NUMBER_OF_ITEMS, {
+    title: 'Заголовок',
+    text: {
+        type: 'string',
+        randomData: true
     }
-    return _rawData;
-};
+});
 
-const rawData = generateRawData(NUMBER_OF_ITEMS);
-
-class SourceFaker extends Remote {
-
-    private _failed: boolean;
-    private _timeOut: number;
-
-    constructor(options?: ILocalSourceOptions) {
-        super(options);
-        this._timeOut = 1000;
-    }
-
-    create(meta?: object): Promise<Record> {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (this._failed) {
-                    reject(this._generateError('create'));
-                } else {
-                    const _record = new Record();
-                    _record.setRawData(meta);
-                    resolve(_record);
-                }
-            }, this._timeOut);
-        });
-    }
-
-    destroy(keys: number | string | number[] | string[], meta?: object): Promise<null> {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (this._failed) {
-                    reject(this._generateError('destroy'));
-                } else {
-                    resolve(null);
-                }
-            }, this._timeOut);
-        });
-    }
-
-    query(query?: Query): Promise<DataSet> {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (this._failed) {
-                    reject(this._generateError('query'));
-                } else {
-                    resolve(new DataSet({
-                        rawData,
-                        keyProperty: 'id'
-                    }));
-                }
-            }, this._timeOut);
-        });
-    }
-
-    read(key: number | string, meta?: object): Promise<Record> {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (this._failed) {
-                    reject(this._generateError('read'));
-                } else {
-                    const _record = new Record();
-                    _record.setRawData(rawData[4]);
-                    resolve(_record);
-                }
-            }, this._timeOut);
-        });
-    }
-
-    update(data: Record | RecordSet, meta?: object): Promise<null> {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (this._failed) {
-                    reject(this._generateError('update'));
-                } else {
-                    resolve(null);
-                }
-            }, this._timeOut);
-        });
-    }
-
-    setFailed(failed: boolean): void {
-        this._failed = failed;
-    }
-
-    private _generateError(action: string): fetch.Errors.HTTP {
-        return new fetch.Errors.HTTP({
-            url: `localhost/${action}`,
-            httpError: 403,
-            name: '403 Access Restricted',
-            message: 'Доступ ограничен'
-        });
-    }
-
-    static instance(options?: ILocalSourceOptions, failed?: boolean): SourceFaker {
-        const faker = new SourceFaker(options);
-        faker.setFailed(failed);
-        return faker;
-    }
-}
-
-/*
- * const handlers = {
- *    handlers: [
- *        (config: HandlerConfig): error.ViewConfig) => ({
- *            template: LockedErrorTemplate,
- *            options: {
- *                // ...
- *            }
- *        })
- *        (config: HandlerConfig): error.ViewConfig) => ({
- *            template: LockedErrorTemplate,
- *            options: {
- *                // ...
- *            }
- *        })
- *    ]
- * }
- * const errorController = new error.Controller({handlers});
- * sourceCrudInterlayer.create(...)
- *     .then((record: Record) => {
- *         // ...
- *     })
- *     .catch((record: ISourceErrorData) => {
- *         this._showError(record.errorConfig);
- *     })
- */
 describe('Controls/_dataSource/SourceCrudInterlayer', () => {
     let errorConfig: ISourceErrorConfig;
     let source: ICrud;
     let sourceCrudInterlayer: SourceCrudInterlayer;
     let fallingSource: ICrud;
     let fallingSourceCrudInterlayer: SourceCrudInterlayer;
-    let handler: Handler;
-    let errorController: ErrorController;
+    // let handler: Handler;
+    // let errorController: ErrorController;
 
     beforeEach(() => {
         errorConfig = {
@@ -171,8 +37,8 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 assert.isNotEmpty(error.message);
             }
         };
-        source = SourceFaker.instance({}, false);
-        fallingSource = SourceFaker.instance({}, true);
+        source = SourceFaker.instance({}, rawData, false);
+        fallingSource = SourceFaker.instance({}, rawData, true);
         sourceCrudInterlayer = new SourceCrudInterlayer({source, errorConfig});
         // handler = ({ error, mode }) => {
         //     return {
@@ -187,10 +53,9 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
         // errorController = new ErrorController({
         //     handlers: [handler]
         // });
-        // fallingSourceCrudInterlayer = new SourceCrudInterlayer({source: fallingSource, errorConfig, errorController});
+        // fallingSourceCrudInterlayer = new SourceCrudInterlayer({source: fallingSource, errorConfig,
+        // errorController});
         fallingSourceCrudInterlayer = new SourceCrudInterlayer({source: fallingSource, errorConfig});
-
-
     });
 
     describe('create', () => {
