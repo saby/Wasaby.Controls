@@ -37,7 +37,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this.loadItems(newOptions);
         }
 
-        if (newOptions.selectedKeys !== this._options.selectedKeys) {
+        if (this.isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this.setSelectedItems(this._listModel, newOptions.selectedKeys);
         }
     }
@@ -84,8 +84,12 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         this._selectionChanged = true;
     }
 
-    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, items) {
-        this._notify('sendResult', [items], {bubbling: true});
+    protected _applySelection(): void {
+        this._notify('applyClick', [this.getSelectedItems()]);
+    }
+
+    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName: string, data) {
+        this._notify(eventName, [data]);
         this._closeSubMenu();
     }
 
@@ -113,18 +117,22 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _openSelectorDialog(): void {
-        this._children.selectorOpener.open(this.getSelectorDialogOptions(this._options));
+        const selectedItems = new List({
+            items: this.getSelectedItems()
+        });
+
+        this._options.selectorOpener.open(this.getSelectorDialogOptions(this._options, selectedItems));
+        this._notify('moreButtonClick', [selectedItems]);
     }
 
-    private getSelectorDialogOptions(options: IMenuOptions): object {
+    private getSelectorDialogOptions(options: IMenuOptions, selectedItems: object[]): object {
         let self = this;
         const selectorTemplate = options.selectorTemplate;
         const selectorDialogResult = options.selectorDialogResult;
         const selectorOpener = options.selectorOpener;
 
-        const selectedItems = factory(this._listModel.getSelectedItems()).map((item) => item.getContents()).value();
         let templateConfig = {
-            selectedItems: new List({ items: selectedItems }),
+            selectedItems,
             handlers: {
                 onSelectComplete: (event, result) => {
                     selectorDialogResult(event, result);
@@ -159,11 +167,25 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return selectedKeys;
     }
 
+    private getSelectedItems(): object[] {
+        return factory(this._listModel.getSelectedItems()).map((item) => item.getContents()).reverse().value();
+    }
+
+    private getSelectedItemsByKeys(listModel: Tree, selectedKeys: TKeys) {
+        let items = [];
+        factory(selectedKeys).each((key) => {
+            if (listModel.getItemBySourceKey(key)) {
+                items.push(listModel.getItemBySourceKey(key).getContents());
+            }
+        });
+        return items;
+    }
+
     private expandedItemsFilter(item: TreeItem<Model>, index: number) {
         return index <= this._itemsCount;
     }
 
-    private needShowApplyButton(newKeys: TKeys, oldKeys: TKeys): boolean {
+    private isSelectedKeysChanged(newKeys: TKeys, oldKeys: TKeys): boolean {
         const diffKeys = factory(newKeys).filter((key) => !oldKeys.includes(key)).value();
         return newKeys.length !== oldKeys.length || !!diffKeys.length;
     }
@@ -174,7 +196,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         const newSelectedKeys = factory(this._listModel.getSelectedItems()).map(item => {
             return item.getContents().get(self._options.keyProperty);
         }).value();
-        this._applyButtonVisible = this.needShowApplyButton(newSelectedKeys, this._options.selectedKeys);
+        this._applyButtonVisible = this.isSelectedKeysChanged(newSelectedKeys, this._options.selectedKeys);
 
         if (this._applyButtonVisible !== isApplyButtonVisible) {
             scheduleCallbackAfterRedraw(this, () => {
@@ -189,17 +211,25 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private getCollection(items: RecordSet, options: IMenuOptions): Tree {
-        return new Tree({
+        let listModel = new Tree({
             collection: items,
             keyProperty: options.keyProperty,
             nodeProperty: options.nodeProperty,
             parentProperty: options.parentProperty,
             root: options.root
         });
+        if (options.groupProperty) {
+            listModel.setGroup(this.groupMethod.bind(this));
+        }
+        return listModel;
+    }
+
+    private groupMethod(item, index, colectionItem) {
+        return item.get(this._options.groupProperty);
     }
 
     private setSelectedItems(listModel: Tree, keys: TKeys): void {
-        listModel.setSelectedItems(this.getSelectedItems(listModel, keys), true);
+        listModel.setSelectedItems(this.getSelectedItemsByKeys(listModel, keys), true);
     }
 
     private getSourceController({source, navigation, keyProperty}: {source: ICrud, navigation: object, keyProperty: string}): SourceController {
@@ -211,16 +241,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             });
         }
         return this._sourceController;
-    }
-
-    private getSelectedItems(listModel: Tree, selectedKeys: TKeys) {
-        let items = [];
-        factory(selectedKeys).each((key) => {
-            if (listModel.getItemBySourceKey(key)) {
-                items.push(listModel.getItemBySourceKey(key).getContents());
-            }
-        });
-        return items;
     }
 
     private loadExpandedItems(options: IMenuOptions): void {
@@ -257,8 +277,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     private getPopupOptions(target: HTMLDivElement, item: TreeItem<Model>): object {
         return {
             templateOptions: this.getTemplateOptions(item),
-                target,
-                autofocus: false,
+            target,
+            autofocus: false,
             direction: {
                 horizontal: 'right'
             },
@@ -277,7 +297,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return templateOptions;
     }
 
-    static _theme: string[] = ['Controls/menu'];
+    static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
 
     static getDefaultOptions(): object {
         return {

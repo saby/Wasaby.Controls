@@ -19,6 +19,11 @@
    position: relative;
    .flexbox();
    .align-items(center);
+
+   &::before {
+      content: '\200b';
+      line-height: 32px;
+   }
 }
 
 .controls-Menu__row_state_default_theme-@{themeName} {
@@ -27,6 +32,19 @@
 
 .controls-Menu__row_state_readOnly_theme-@{themeName} {
    cursor: default;
+}
+
+.controls-Menu__row-separator_theme-@{themeName} {
+   &::after {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      background-color: @item_separator_color_menu;
+      height: @item_separator_thickness_menu;
+      left: @item_separator_padding-horizontal_menu;
+      right: @item_separator_padding-horizontal_menu;
+      bottom: 0;
+   }
 }
 
 .controls-Menu__row_selected_theme-@{themeName} {
@@ -68,7 +86,7 @@
    right: 0;
 }
 
-.controls-Menu__row-checkbox_invisible {
+.controls-Menu__row-checkbox_invisible_theme-@{themeName} {
    visibility: hidden;
 }
 
@@ -89,6 +107,11 @@
    flex-shrink: 1;
 }
 
+.controls-Menu__defaultItem_theme-@{themeName},
+.controls-Menu__emptyItem_theme-@{themeName} {
+   font-size: @item_font-size_menu;
+}
+
 .controls-Menu__content_default_theme-@{themeName} {
    color: @item_text-color_menu;
 }
@@ -97,10 +120,16 @@
    color: @readonly_item_text-color_menu;
 }
 
-.controls-Menu__content_singleLine {
+.controls-Menu__content_singleLine_theme-@{themeName} {
    display: flex;
    align-items: center;
    .text-overflow();
+}
+
+.controls-Menu__content_padding_theme-@{themeName} {
+   display: flex;
+   padding-top: @item_padding-top_menu;
+   padding-bottom: @item_padding-bottom_menu;
 }
 
 .controls-Menu__content-wrapper {
@@ -213,13 +242,13 @@
    .controls-Menu__row_state_default_theme-@{themeName}:hover {
       background: @item_hover_background-color_menu;
 
-      .controls-Menu__row-checkbox_default {
+      .controls-Menu__row-checkbox_default_theme-@{themeName} {
          visibility: visible;
       }
    }
 }
 .ws-is-no-touch {
-   .controls-Menu__row-checkbox_default {
+   .controls-Menu__row-checkbox_default_theme-@{themeName} {
       visibility: hidden;
    }
 }
