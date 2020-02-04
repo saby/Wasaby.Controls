@@ -11,6 +11,11 @@ import {
     TNavigationSource,
     TNavigationView
 } from 'Controls/_interface/INavigation';
+import {
+    IAdditionalQueryParams,
+    IAdditionQueryParamsMeta
+} from '../../../Controls/_source/interface/IAdditionalQueryParams';
+import {getGridData, SourceFaker} from 'Controls-demo/List/Utils/listDataGenerator';
 
 const fakeNavigationControllerNavigation = (source: TNavigationSource, view: TNavigationView, direction: TNavigationDirection, hasMore: boolean): INavigationOptionValue => {
     return {
@@ -31,67 +36,82 @@ const fakeNavigationControllerNavigation = (source: TNavigationSource, view: TNa
     };
 };
 
-const dataFaker = (query?: Query): Array<{ [p: string]: string | number }> => {
-    return [
-        {key: 1, buyerId: 1, date: '2016-06-01 12:12:45', amount: 96},
-        {key: 2, buyerId: 2, date: '2016-06-02 09:01:12', amount: 174},
-        {key: 3, buyerId: 1, date: '2016-06-03 10:24:28', amount: 475},
-        {key: 4, buyerId: 1, date: '2016-06-02 14:12:45', amount: 96},
-        {key: 5, buyerId: 2, date: '2016-06-02 16:01:12', amount: 174},
-        {key: 6, buyerId: 1, date: '2016-06-04 13:24:28', amount: 475},
-        {key: 7, buyerId: 1, date: '2016-06-05 14:12:45', amount: 96},
-        {key: 8, buyerId: 2, date: '2016-06-05 16:01:12', amount: 174},
-        {key: 9, buyerId: 1, date: '2016-06-06 17:24:28', amount: 475}
-    ];
-};
+const NUMBER_OF_ITEMS = 100;
 
-class DataSetFaker {
-    private readonly _query: Query;
-
-    constructor(query: Query) {
-        this._query = query;
+const rawData = getGridData(NUMBER_OF_ITEMS, {
+    buyerId: {
+        value: 0,
+        type: 'number'
+    },
+    amount: {
+        value: 96,
+        type: 'number'
     }
+}, 'key');
 
-    query(): DataSet {
-        return new DataSet({
-            rawData: {
-                orders: dataFaker(this._query),
-                buyers: [],
-                total: {
-                    dateFrom: '2016-06-01 00:00:00',
-                    dateTo: '2016-07-01 00:00:00',
-                    amount: 9
-                },
-                executeDate: '2016-06-27 11:34:57'
-            },
-            itemsProperty: 'orders',
-            keyProperty: 'key'
-        });
-    }
-
-    static instance = (query?: Query): DataSetFaker => {
-        return new DataSetFaker(query);
-    }
-}
+const source = SourceFaker.instance({}, new DataSet({
+    rawData,
+    keyProperty: 'key'
+}), false);
 
 /**
  * @see also tests/ControlsUnit/Controllers/SourceController.test.js
  */
 describe('Controls/_source/NavigationController', () => {
-    describe('getQueryParams', () => {
-        it('Should build query using PagePaginatorController + view="pages"', () => {
-            const navigation = fakeNavigationControllerNavigation('page', 'pages', 'after', false);
-            const controller = new NavigationController({navigation});
-            const query = controller.getQueryParams();
-            const meta = query.meta;
-            assert.equal(meta.navigationType, 'Page');
+    describe('getQueryParams + view="pages" + source="pages"', () => {
+        let navigation: INavigationOptionValue;
+        let controller: NavigationController;
+        let query: IAdditionalQueryParams;
+        let queryMeta: IAdditionQueryParamsMeta;
+
+        beforeEach(() => {
+            navigation = fakeNavigationControllerNavigation('page', 'pages', 'after', false);
+            controller = new NavigationController({navigation});
+        });
+
+        it('should build query using PagePaginatorController', () => {
+            query = controller.getQueryParams();
+            queryMeta = query.meta;
+            assert.equal(queryMeta.navigationType, 'Page');
             assert.equal(query.limit, (navigation.sourceConfig as INavigationPageSourceConfig).pageSize);
             assert.equal(query.offset, 0);
-
-            // TODO change page to next!
-            // TODO change page to prev!
-            // TODO change page to particular page!
         });
+
+        it('should correctly set particular page number', () => {
+            controller.setPageNumber(1);
+            query = controller.getQueryParams();
+            queryMeta = query.meta;
+            assert.equal(query.offset, query.limit);
+        });
+
+        it('should correctly go to the next page', () => {
+            query = controller.getQueryParams('down');
+            queryMeta = query.meta;
+            assert.equal(query.offset, query.limit);
+        });
+
+        // it('should correctly go to the previous page', () => {
+        //     const dataSet = source.querySync();
+        //     const recordSet = dataSet.getAll();
+        //     recordSet.setMetaData({
+        //         more: 100 // valid when INavigationOptionValue.hasMore === false
+        //     });
+        //     controller.calculateState(recordSet);
+        //     query = controller.getQueryParams('down');
+        //
+        //     controller.calculateState(recordSet, 'down');
+        //     query = controller.getQueryParams('down');
+        //
+        //     controller.calculateState(recordSet, 'down');
+        //     query = controller.getQueryParams('up');
+        //
+        //     queryMeta = query.meta;
+        //     assert.equal(query.offset, query.limit);
+        // });
+        // TODO change page to prev!
+
+    });
+    describe('getQueryParams', () => {
         it('Should build query using PagePaginatorController + view="infinity"', () => {
             const navigation = fakeNavigationControllerNavigation('page', 'infinity', 'after', false);
             const controller = new NavigationController({navigation});
@@ -124,19 +144,26 @@ describe('Controls/_source/NavigationController', () => {
             const navigation = fakeNavigationControllerNavigation('position', 'infinity', 'both', true);
             // инициализируем контроллер
             const controller = new NavigationController({navigation});
-            const recordSet: RecordSet = DataSetFaker.instance().query().getAll();
-            recordSet.setMetaData({more: {after: true, before: false}, nextPosition: {before: [1], after: [7]}});
-            controller.calculateState(recordSet);
-            const query = controller.getQueryParams();
-            const meta = query.meta;
-            assert.equal(meta.navigationType, 'Position');
-            assert.equal(query.limit, (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
-            const where = query.filter;
-            assert.equal(where['key~'], (navigation.sourceConfig as INavigationPositionSourceConfig).position);
+            return source.query()
+                .then((data) => {
+                    const recordSet: RecordSet = data.getAll();
+                    recordSet.setMetaData({more: {after: true, before: false}, nextPosition: {before: [1], after: [7]}});
+                    controller.calculateState(recordSet);
 
-            // TODO change page to next!
-            // TODO change page to prev!
-            // TODO change page to particular!
+                    const query = controller.getQueryParams();
+                    const meta = query.meta;
+                    assert.equal(meta.navigationType, 'Position');
+                    assert.equal(query.limit, (navigation.sourceConfig as INavigationPositionSourceConfig).limit);
+                    const where = query.filter;
+                    assert.equal(where['key~'], (navigation.sourceConfig as INavigationPositionSourceConfig).position);
+
+                    // TODO change page to next!
+                    // TODO change page to prev!
+                    // TODO change page to particular!
+                })
+                .catch((e) => {
+                    assert.isNotTrue(true, 'This query should not throw any errors!');
+                });
         });
     });
 });

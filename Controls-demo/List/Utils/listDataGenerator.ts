@@ -106,7 +106,7 @@ export class SourceFaker extends Remote {
 
     private readonly _timeOut: number;
     private _failed: boolean;
-    private _rawData: any[];
+    private _rawData: any[] | DataSet;
 
     constructor(options?: ILocalSourceOptions) {
         super(options);
@@ -145,10 +145,7 @@ export class SourceFaker extends Remote {
                 if (this._failed) {
                     reject(this._generateError('query'));
                 } else {
-                    resolve(new DataSet({
-                        rawData: this._rawData,
-                        keyProperty: 'id'
-                    }));
+                    resolve(this.querySync());
                 }
             }, this._timeOut);
         });
@@ -161,7 +158,8 @@ export class SourceFaker extends Remote {
                     reject(this._generateError('read'));
                 } else {
                     const _record = new Record();
-                    _record.setRawData(this._rawData[4]);
+                    const _data = this.getRawData();
+                    _record.setRawData(_data[4]);
                     resolve(_record);
                 }
             }, this._timeOut);
@@ -180,12 +178,43 @@ export class SourceFaker extends Remote {
         });
     }
 
+    /*
+     * Устанавливает флаг "Всегда возвращать ошибку"
+     * @param failed
+     */
     setFailed(failed: boolean): void {
         this._failed = failed;
     }
 
-    setData(data: any[]): void {
+    /*
+     * Устанавливает данные в "чистом" виде или DataSet
+     * @param data
+     */
+    setData(data: any[] | DataSet): void {
         this._rawData = data;
+    }
+
+    /*
+     * Синхронно возвращает DataSet
+     */
+    querySync(): DataSet {
+        if (this._rawData instanceof DataSet) {
+            return this._rawData;
+        }
+        return new DataSet({
+            rawData: this._rawData,
+            keyProperty: 'id'
+        });
+    }
+
+    /*
+     * Синхронно возвращает данные в "чистом" виде
+     */
+    getRawData(): any[] {
+        if (this._rawData instanceof DataSet) {
+            return this._rawData.getRawData();
+        }
+        return this._rawData;
     }
 
     private _generateError(action: string): fetch.Errors.HTTP {
@@ -199,11 +228,19 @@ export class SourceFaker extends Remote {
 
     /*
      * Используйте этот метод вместо конструктора
-     * @param options
-     * @param data
-     * @param failed
+     * @param options {
+     *      filter:  (item: adapter.IRecord, query: object) => boolean;
+     *      options: {debug: boolean};
+     *      adapter?: string | adapter.IAdapter;
+     *      model?: string | Function;
+     *      listModule?: string | Function;
+     *      keyProperty?: string;
+     *      dataSetMetaProperty?: string;
+     * }
+     * @param data данные в "чистом" виде или DataSet
+     * @param failed флаг "Всегда возвращать ошибку"
      */
-    static instance(options?: ILocalSourceOptions, data?: any[], failed?: boolean): SourceFaker {
+    static instance(options?: ILocalSourceOptions, data?: any[] | DataSet, failed?: boolean): SourceFaker {
         const faker = new SourceFaker(options);
         faker.setData(data || getListData(100, {
             title: {
