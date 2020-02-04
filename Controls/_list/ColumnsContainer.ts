@@ -3,17 +3,18 @@ import ColumnsController from './Controllers/ColumnsController';
 import { TemplateFunction, Control } from 'UI/Base';
 import {IList} from 'Controls/_list/interface/IList';
 import { ColumnsCollection as Collection, ColumnsCollectionItem as CollectionItem} from 'Controls/display';
-import { Memory } from 'Types/source';
+import { ICrudPlus } from 'Types/source';
 import { SyntheticEvent } from 'Vdom/Vdom';
+import { constants } from 'Env/Env';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
 export interface IColumnsContainerOptions extends IList {
-    minWidth: number;
-    maxWidth: number;
+    columnMinWidth: number;
+    columnMaxWidth: number;
     listModel: Collection<unknown>;
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
-    source: Memory;
+    source: ICrudPlus;
 }
 
 const SPACING = 16;
@@ -21,41 +22,29 @@ const DEFAULT_MIN_WIDTH = 270;
 const DEFAULT_MAX_WIDTH = 400;
 const DEFAULT_COLUMNS_COUNT = 2;
 
-const KEY_CODES = {
-    37: 'Left',
-    38: 'Up',
-    39: 'Right',
-    40: 'Down'
-};
-
 export default class ColumnsContainer extends Control {
     _template: TemplateFunction = template;
     private _itemsContainer: HTMLDivElement;
     private _columnsCount: number = DEFAULT_COLUMNS_COUNT;
     private _minWidth: number = DEFAULT_MIN_WIDTH;
     private _maxWidth: number = DEFAULT_MAX_WIDTH;
-    private columnsController: ColumnsController;
+    private _columnsController: ColumnsController;
     private _columnsIndexes: number[][];
+    private _model: Collection<unknown>;
 
     protected _options: IColumnsContainerOptions;
 
     protected _beforeMount(options: IColumnsContainerOptions): void {
-        if (options.columnsMode === 'fixed' && options.columnsCount) {
+        if (options.columnsCount) {
             this._columnsCount = options.columnsCount;
         }
-        if (options.minWidth) {
-            this._minWidth = options.minWidth;
-        }
-        if (options.maxWidth) {
-            this._maxWidth = options.maxWidth;
-        }
 
-        this.columnsController = new ColumnsController({columnsMode: options.columnsMode});
+        this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
         this._onCollectionChange = this._onCollectionChange.bind(this);
         this._subscribeToModelChanges(options.listModel);
         this._resizeHandler = this._resizeHandler.bind(this);
-
-        this.updateColumns(options.listModel);
+        this._model = options.listModel;
+        this.updateColumns();
     }
 
     protected _afterMount(): void {
@@ -66,11 +55,8 @@ export default class ColumnsContainer extends Control {
         if (options.columnsMode === 'fixed' &&  options.columnsCount !== this._options.columnsCount) {
             this._columnsCount = options.columnsCount;
         }
-        if (options.minWidth !== this._options.minWidth) {
-            this._minWidth = options.minWidth;
-        }
-        if (options.maxWidth !== this._options.maxWidth) {
-            this._maxWidth = options.maxWidth;
+        if (this._model !== options.listModel) {
+            this._model = options.listModel;
         }
     }
     private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainer: HTMLDivElement): void {
@@ -79,51 +65,51 @@ export default class ColumnsContainer extends Control {
     protected _resizeHandler(): void {
         if (this._options.columnsMode === 'auto') {
             const width = this._itemsContainer.getBoundingClientRect().width;
-            this._columnsCount = Math.floor(width / (this._options.minWidth || DEFAULT_MIN_WIDTH + SPACING));
+            this._columnsCount = Math.floor(width / (this._options.columnMinWidth || DEFAULT_MIN_WIDTH + SPACING));
+            this.updateColumns();
         }
-        this.updateColumns(this._options.listModel);
     }
-    private updateColumns(model: Collection<unknown>): void {
+    private setColumnOnItem(item: CollectionItem<unknown>, index: number): void {
+        const model = this._model;
+        const column = this._columnsController.calcColumn(model, model.getStartIndex() + index, this._columnsCount);
+        item.setColumn(column);
+        this._columnsIndexes[column].push(index);
+    }
+    private updateColumns(): void {
         this._columnsIndexes = new Array<[number]>(this._columnsCount);
         for (let i = 0; i < this._columnsCount; i++) {
             this._columnsIndexes[i] = [];
         }
-        const setColumns = (item: CollectionItem<unknown>, index: number) => {
-            const column = this.columnsController.getColumn(model, model.getStartIndex() + index, this._columnsCount);
-            item.setColumn(column);
-            this._columnsIndexes[column].push(index);
-        };
-        model.each(setColumns);
+        this._model.each(this.setColumnOnItem.bind(this));
     }
 
+    private processRemoving(removedItemsIndex: number): void {
+        const collection = this._options.listModel.getCollection();
+        const source = this._options.source;
+        const total = collection.getCount(removedItemsIndex);
+        if (this._options.columnsMode === 'auto') {
+            let currIndex = removedItemsIndex;
+            while (currIndex + this._columnsCount - 1 < total) {
+                collection.move(currIndex + this._columnsCount - 1, currIndex);
+                source.move([currIndex + this._columnsCount - 1], currIndex);
+                currIndex += this._columnsCount;
+            }
+        }
+    }
     protected _onCollectionChange(_e: unknown,
                                   action: string,
                                   newItems: [CollectionItem<unknown>],
                                   newItemsIndex: number,
                                   removedItems: [CollectionItem<unknown>],
                                   removedItemsIndex: number): void {
-        const collection = this._options.listModel.getCollection();
-        const source = this._options.source;
-        const total = collection.getCount();
         if (action === 'rm') {
-            if (this._options.columnsMode === 'auto') {
-                let currIndex = removedItemsIndex;
-                while (currIndex + this._columnsCount - 1 < total) {
-                    collection.move(currIndex + this._columnsCount - 1, currIndex);
-                    source.move(currIndex + this._columnsCount - 1, currIndex);
-                    currIndex += this._columnsCount;
-                }
-            }
+            this.processRemoving(removedItemsIndex);
         }
         if (action === 'a') {
-            newItems.forEach((item, index) => {
-                item.setColumn(this.columnsController.getColumn(this._options.listModel,
-                                                                newItemsIndex + index,
-                                                                this._columnsCount));
-            });
+            newItems.forEach(this.setColumnOnItem.bind(this));
         }
         if (action !== 'ch') {
-            this.updateColumns(this._options.listModel);
+            this.updateColumns();
         }
     }
 
@@ -237,11 +223,25 @@ export default class ColumnsContainer extends Control {
         }
     }
     protected _keyDownHandler(e: SyntheticEvent<KeyboardEvent>): void {
-        const direction = KEY_CODES[e.nativeEvent.keyCode];
+        let direction = '';
+        switch (e.nativeEvent.keyCode) {
+            case constants.key.left: direction = 'Left'; break;
+            case constants.key.up: direction = 'Up'; break;
+            case constants.key.right: direction = 'Right'; break;
+            case constants.key.down: direction = 'Down'; break;
+        }
         if (direction) {
             this.moveMarker(direction);
             e.stopPropagation();
             e.preventDefault();
         }
+    }
+    static getDefaultOptions(): Partial<IColumnsContainerOptions> {
+        return {
+            columnMinWidth: DEFAULT_MIN_WIDTH,
+            columnMaxWidth: DEFAULT_MAX_WIDTH,
+            columnsMode: 'auto',
+            columnsCount: DEFAULT_COLUMNS_COUNT
+        };
     }
 }

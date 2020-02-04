@@ -9,7 +9,8 @@ import {default as BaseRender, IRenderOptions} from './Render';
 import {IColumnsContainerOptions} from "../_list/ColumnsContainer";
 
 export interface IColumnsRenderOptions extends IRenderOptions {
-    minWidth: number;
+    columnMinWidth: number;
+    columnMaxWidth: number;
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
 }
@@ -27,12 +28,6 @@ export default class Columns extends BaseRender {
         this._templateKeyPrefix = `columns-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
         if (options.columnsCount) {
-            this._columnsCount = options.columnsCount;
-        }
-    }
-
-    protected _beforeUpdate(options: IColumnsContainerOptions): void {
-        if (options.columnsCount !== this._options.columnsCount) {
             this._columnsCount = options.columnsCount;
         }
     }

@@ -17,6 +17,9 @@ export default class ColumnsCollection<
             return superFactory.call(this, options);
         };
     }
+    getColumnProperty(): string {
+        return this._$columnProperty;
+    }
 }
 
 Object.assign(ColumnsCollection.prototype, {
