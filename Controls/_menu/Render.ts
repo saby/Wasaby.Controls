@@ -1,13 +1,15 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {IRenderOptions} from 'Controls/listRender';
 import {IMenuOptions} from 'Controls/_menu/interface/IMenuControl';
-import {Tree} from 'Controls/display';
+import {Tree, SelectionController} from 'Controls/display';
 import * as itemTemplate from 'wml!Controls/_menu/Render/itemTemplate';
+import * as multiSelectTpl from 'wml!Controls/_menu/Render/multiSelectTpl';
 import ViewTemplate = require('wml!Controls/_menu/Render/Render');
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {factory} from 'Types/chain';
 import {ActualApi} from 'Controls/buttons';
+import {ItemsUtil} from 'Controls/list';
 
 interface IMenuRenderOptions extends IMenuOptions, IRenderOptions {
 }
@@ -31,22 +33,52 @@ class MenuRender extends Control<IMenuRenderOptions> {
         return this._options.emptyText && itemData.getContents().getId() === this._options.emptyKey;
     }
 
-    protected _getClassList(itemData): string {
-        const item = itemData.getContents();
-        let classes = itemData.getContentClasses();
-        classes += ' controls-Menu__row_state_' + (item.get('readOnly')  ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
-        if (this._isEmptyItem(itemData)) {
-            classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
-        }
-        if (item.get('pinned') === true && !itemData.hasParent) {
-            classes += ' controls-Menu__row_pinned';
-        }
-        return classes;
+    protected _getItemData(item): object {
+        return {
+            item: item.getContents(),
+            itemClassList: this.getClassList(item),
+            iconSpacing: this._iconSpacing,
+            iconSize: this._options.iconSize,
+            multiSelect: this._options.multiSelect,
+            isEmptyItem: this._isEmptyItem(item),
+            getPropValue: ItemsUtil.getPropertyValue,
+            index: this._options.listModel.getIndex(item),
+            isSelected: item.isSelected(),
+            hasChildren: item.isNode(),
+            hasPinned: this._options.hasIconPin && item.getContents().has('pinned'),
+            multiSelectTpl
+        };
     }
 
     protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string, item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
         this._notify(eventName, [item, sourceEvent]);
+    }
+
+    private getClassList(itemData): string {
+        const item = itemData.getContents();
+        let classes = itemData.getContentClasses();
+        classes += ' controls-Menu__row_state_' + (item.get('readOnly')  ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
+        if (this._isEmptyItem(itemData) && !this._options.multiSelect) {
+            classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
+        } else {
+            classes += ' controls-Menu__defaultItem_theme-' + this._options.theme;
+        }
+        if (item.get('pinned') === true && !itemData.hasParent) {
+            classes += ' controls-Menu__row_pinned';
+        }
+        if (this._options.listModel.getLast() !== itemData) {
+            classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
+        }
+        return classes;
+    }
+
+    private getItemPropertyValue(item, property) {
+        let result = ItemsUtil.getPropertyValue(item, property);
+        if (!result) {
+            result = ItemsUtil.getPropertyValue(this.getContents && this.getContents(), property);
+        }
+        return result;
     }
 
     private setListModelOptions(options: IMenuRenderOptions) {
@@ -68,6 +100,9 @@ class MenuRender extends Control<IMenuRenderOptions> {
             keyProperty: options.keyProperty,
             rawData: data
         })]);
+        if (options.selectedKeys.includes(options.emptyKey)) {
+            SelectionController.selectItem(listModel, options.emptyKey, true);
+        }
     }
 
     private getLeftSpacing(options: IMenuRenderOptions): string {

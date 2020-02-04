@@ -1,9 +1,9 @@
 <div attr:class="controls-Menu__row
-                 {{itemClassList}}
-                 {{marker !== false && itemData.isSelected() && (!multiSelect || isEmptyItem) ? 'controls-Menu__row_selected_theme-' + _options.theme}}
+                 {{itemData.itemClassList}}
+                 {{marker !== false && itemData.isSelected && (!itemData.multiSelect || itemData.isEmptyItem) ? 'controls-Menu__row_selected_theme-' + _options.theme}}
                  controls-Menu__row_{{multiLine ? 'multiLine' : 'singleLine'}}_theme-{{_options.theme}}">
-   <ws:if data="{{multiSelectTpl && multiSelect}}">
-      <ws:partial template="{{multiSelectTpl}}" scope="{{_options}}" class="{{isEmptyItem ? 'controls-Menu__row-checkbox_invisible'}}"/>
+   <ws:if data="{{itemData.multiSelectTpl && itemData.multiSelect}}">
+      <ws:partial template="{{itemData.multiSelectTpl}}" scope="{{_options}}" class="{{itemData.isEmptyItem ? 'controls-Menu__row-checkbox_invisible'}}"/>
    </ws:if>
    <ws:if data="{{contentTemplate}}">
       <ws:partial
@@ -15,11 +15,12 @@
    <ws:else>
       <ws:partial template="wml!Controls/_menu/Render/contentTemplate" scope="{{_options}}" />
    </ws:else>
-   <ws:if data="{{itemData.hasPinned && !itemData.hasChildren && !(item.get('pinned') === true && itemData.hasParent)}}">
+   <ws:if data="{{itemData.hasPinned && !itemData.hasChildren && !(itemData.item.get('pinned') === true && itemData.hasParent)}}">
       <div    class="controls-Menu__iconPin_theme-{{_options.theme}} {{itemData.isSwiped ? 'controls-Menu__iconPin_swiped'}}
-                 {{item.get('pinned') === true ? 'controls-Menu__iconUnnpin icon-PinOff' : 'icon-PinNull'}}"></div>
+                 {{itemData.item.get('pinned') === true ? 'controls-Menu__iconUnnpin icon-PinOff' : 'icon-PinNull'}}"></div>
    </ws:if>
-   <div if="{{itemData.isNode()}}" class="controls-Menu__arrow_theme-{{_options.theme}}
-                                          controls-Menu__arrow_{{item.get('readOnly') ? 'readOnly' : 'default'}}_theme-{{_options.theme}}
+   <div if="{{itemData.hasChildren}}" class="controls-Menu__arrow_theme-{{_options.theme}}
+                                          controls-Menu__arrow_{{itemData.item.get('readOnly') ? 'readOnly' : 'default'}}_theme-{{_options.theme}}
                                           icon-MarkCRightLight"></div>
 </div>
+<div if="{{itemData.hasSeparator}}" class="controls-DropdownList__group_separator theme_{{_options.theme}}"></div>
