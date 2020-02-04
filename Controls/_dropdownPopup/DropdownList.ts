@@ -270,7 +270,8 @@ import {SyntheticEvent} from 'Vdom/Vdom';
                   itemPadding: newOptions.itemPadding,
                   hasClose: newOptions.showClose,
                   iconSize: newOptions.iconSize,
-                  hasIconPin: newOptions.hasIconPin
+                  hasIconPin: newOptions.hasIconPin,
+                  theme: newOptions.theme
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
@@ -460,7 +461,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
          };
       };
 
-      DropdownList._theme = ['Controls/dropdownPopup', 'Controls/Classes'];
+      DropdownList._theme = ['Controls/dropdownPopup', 'Controls/Classes', 'Controls/menu'];
 
       export = DropdownList;
 

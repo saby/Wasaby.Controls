@@ -13,8 +13,8 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
-   defaultFilter = {},
-   defaultSelectedKeys = [];
+    defaultFilter = {},
+    defaultSelectedKeys = [];
 
 var _private = {
    createSourceController: function(self, options) {
@@ -28,30 +28,30 @@ var _private = {
    },
 
    getSourceController: function (self, options) {
-        return historyUtils.getSource(options.source, options.historyId).addCallback((source) => {
-            self._source = source;
-            return _private.createSourceController(self, options);
-        });
+      return historyUtils.getSource(options.source, options.historyId).addCallback((source) => {
+         self._source = source;
+         return _private.createSourceController(self, options);
+      });
    },
 
    loadItems: function (self, options) {
       return _private.getSourceController(self, options)
-         .addCallback((sourceController) => {
-            self._filter = historyUtils.getSourceFilter(options.filter, self._source);
-            return sourceController.load(self._filter).addCallback((items) => {
-               self._setItems(items);
-               if (options.dataLoadCallback) {
-                  options.dataLoadCallback(items);
-               }
-               _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
-               return items;
-            });
-         })
-         .addErrback((error) => {
-            if (self._options.dataLoadErrback) {
-               self._options.dataLoadErrback(error);
-            }
-         });
+          .addCallback((sourceController) => {
+             self._filter = historyUtils.getSourceFilter(options.filter, self._source);
+             return sourceController.load(self._filter).addCallback((items) => {
+                self._setItems(items);
+                if (options.dataLoadCallback) {
+                   options.dataLoadCallback(items);
+                }
+                _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
+                return items;
+             });
+          })
+          .addErrback((error) => {
+             if (self._options.dataLoadErrback) {
+                self._options.dataLoadErrback(error);
+             }
+          });
    },
 
    getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
@@ -76,10 +76,10 @@ var _private = {
       };
 
       if (!selectedKeys.length || selectedKeys[0] === null) {
-        if (emptyText) {
-           selectedItems.push(null);
-        } else {
-           addToSelected(null);
+         if (emptyText) {
+            selectedItems.push(null);
+         } else {
+            addToSelected(null);
          }
       } else {
          chain.factory(selectedKeys).each( (key) => {
@@ -135,36 +135,40 @@ var _private = {
       }
    },
 
-   onResult: function (event, result) {
-      switch (result.action) {
+   onResult: function (event, action, data, popupId) {
+      switch (action) {
          case 'pinClick':
-            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
-            this._notify('pinClick', [result.data]);
+            data[0] = _private.prepareItem(data[0], this._options.keyProperty, this._source);
+            this._notify('pinClick', [data]);
             this._setItems(this._source.getItems());
             this._open();
             break;
          case 'applyClick':
-            this._notify('selectedItemsChanged', [result.data]);
-            _private.updateHistory(this, result.data);
+            this._notify('selectedItemsChanged', [data]);
+            _private.updateHistory(this, data);
             _private.closeDropdownList(this);
             break;
          case 'itemClick':
-            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
-            var res = this._notify('selectedItemsChanged', [result.data]);
+            data = _private.prepareItem(data, this._options.keyProperty, this._source);
+            var res = this._notify('selectedItemsChanged', [[data]]);
 
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
-               _private.updateHistory(this, result.data[0]);
+               _private.updateHistory(this, data);
                _private.closeDropdownList(this);
             }
             break;
          case 'selectorResult':
-            _private.onSelectorResult(this, result.data);
-            this._notify('selectedItemsChanged', [result.data]);
+            _private.onSelectorResult(this, data);
+            this._notify('selectedItemsChanged', [data]);
+            break;
+         case 'selectorDialogOpened':
+            this._initSelectorItems = data;
+            this._popupSelectorId = popupId;
             _private.closeDropdownList(this);
             break;
          case 'footerClick':
-            this._notify('footerClick', [result.event]);
+            this._notify('footerClick', [sourceEvent]);
       }
    },
 
@@ -214,8 +218,8 @@ var _private = {
 
    getItemsTemplates: function(self, options) {
       let
-         templates = {},
-         itemTemplateProperty = options.itemTemplateProperty;
+          templates = {},
+          itemTemplateProperty = options.itemTemplateProperty;
 
       if (itemTemplateProperty) {
          self._items.each(function(item) {
@@ -407,15 +411,16 @@ var _Controller = Control.extend({
          const config = {
             templateOptions: {
                items: this._items,
+               source: this._options.source,
+               popupSelectorId: this._popupSelectorId,
                // FIXME self._container[0] delete after
                // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                width: this._options.width !== undefined ?
-                        (this._container[0] || this._container).offsetWidth :
-                        undefined,
+                   (this._container[0] || this._container).offsetWidth :
+                   undefined,
                hasMoreButton: this._sourceController.hasMoreData('down'),
                selectorOpener: this._children.selectorOpener,
-               selectorDialogResult: this._onSelectorTemplateResult.bind(this),
-               afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this)
+               selectorDialogResult: this._onSelectorTemplateResult.bind(this)
             },
             target: this._container,
             targetPoint: this._options.targetPoint,
@@ -452,14 +457,9 @@ var _Controller = Control.extend({
       }
    },
 
-   _onSelectorTemplateResult: function(event, selectedItems) {
+   _onSelectorTemplateResult: function(selectedItems) {
       let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
-      this._onResult(event, {action: 'selectorResult', data: result});
-   },
-
-   _afterSelectorOpenCallback: function(selectedItems) {
-      this._initSelectorItems = selectedItems;
-      _private.closeDropdownList(this);
+      this._onResult(event, 'selectorResult', result);
    },
 
    _clickHandler: function(event) {
