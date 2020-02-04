@@ -407,7 +407,6 @@ export default class ScrollContainer extends Control<IOptions> {
 
             if (this.triggerVisibility.up) {
                 this.updateViewWindow('up');
-
             }
         }
 
