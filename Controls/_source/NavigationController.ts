@@ -1,6 +1,5 @@
 import {QueryOrderSelector, QueryWhere} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import {Record} from 'Types/entity';
 import {INavigationOptionValue} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 
@@ -15,7 +14,6 @@ import {
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
 } from './interface/IAdditionalQueryParams';
-import {Collection} from '../display';
 
 /**
  * Вспомогательный интерфейс для определения типа typeof object
@@ -190,10 +188,9 @@ export interface INavigationControllerOptions {
 }
 
 /**
- * Контроллер загрузки данных с учётом постраничной навигации
+ * Контроллер постраничной навигации
  * @remark
- * Хранит состояние навигации INavigationOptionValue и вычисляет на его основании параметры для вызова методов.
- * Позволяет сформировать запрос для ICrud с учётом настроек навигации INavigationOptionValue
+ * Хранит состояние навигации INavigationOptionValue и вычисляет на его основании параметры для построения запроса Query
  *
  * @class Controls/source/NavigationController
  *
@@ -202,10 +199,9 @@ export interface INavigationControllerOptions {
  * @author Аверкиев П.А.
  */
 /*
- * Data loading and per-page navigation controller
+ * Per-page navigation controller
  * @remark
- * Stores the navigation state and calculates methods calling params on its base
- * Allows to combine a valid query for ICrud, considering navigation options object (INavigationOptionValue)
+ * Stores the navigation state and calculates on its base params to build Query
  *
  * @class Controls/source/NavigationController
  *
@@ -225,6 +221,7 @@ export class NavigationController {
             this._queryParamsController = NavigationControllerFactory.resolve(this._options.navigation);
         }
     }
+
     /**
      * Строит запрос данных на основе переданных параметров filter и sorting
      * Если в опцию navigation был передан объект INavigationOptionValue, его filter, sorting и настрйоки пейджинации
@@ -244,51 +241,11 @@ export class NavigationController {
     getQueryParams(direction?: Direction, filter?: QueryWhere, sorting?: QueryOrderSelector): IAdditionalQueryParams {
         const queryParams = new QueryParamsBuilder({filter, sorting});
         if (this._queryParamsController) {
-            queryParams.merge(NavigationController._getNavigationQueryParams(direction, this._queryParamsController));
+            const queryParamsBuilderOptions = this._queryParamsController.prepareQueryParams(direction);
+            const controllerQueryParams = new QueryParamsBuilder(queryParamsBuilderOptions);
+            queryParams.merge(controllerQueryParams.raw());
         }
         return queryParams.raw();
-    }
-
-    /**
-     * Считает число записей, загружаемых за один запрос
-     */
-    /*
-     * Calculates count of records loaded per request
-     */
-    getLoadedDataCount(): number {
-        if (this._queryParamsController) {
-            return this._queryParamsController.getLoadedDataCount();
-        }
-    }
-
-    /**
-     * Считает количество записей всего по мета информации из текущего состояния контроллера и ключу DataSet
-     * @param rootKey свойство key в DataSet
-     */
-    /*
-     * Calculates total records count by meta information from current controller state and DataSet key
-     * @param rootKey DataSet key property
-     */
-    getAllDataCount(rootKey?: string|number): boolean | number {
-        if (this._queryParamsController) {
-            return this._queryParamsController.getAllDataCount();
-        }
-    }
-
-    /**
-     * Проверяет, есть ли ещё данные для загрузки
-     * @param direction {Direction} nav direction ('up' или 'down')
-     * @param rootKey свойство key в DataSet
-     */
-    /*
-     * Checks if there any more data to load
-     * @param direction {Direction} nav direction ('up' or 'down')
-     * @param rootKey DataSet key property
-     */
-    hasMoreData(direction: Direction, key?: string | number): boolean {
-        if (this._queryParamsController) {
-            return this._queryParamsController.hasMoreData(direction, key);
-        }
     }
 
     /**
@@ -303,22 +260,7 @@ export class NavigationController {
      */
     calculateState(list: RecordSet, direction?: Direction): void {
         if (this._queryParamsController) {
-            this._queryParamsController.calculateState(list);
-        }
-    }
-
-    /**
-     * Позволяет установить параметры контроллера из Collection<Record>
-     * @param model
-     * TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
-     */
-    /*
-     * Allows manual set of current controller state using Collection<Record>
-     * @param model
-     */
-    setState(model: Collection<Record>): void {
-        if (this._queryParamsController) {
-            this._queryParamsController.setState(model);
+            this._queryParamsController.calculateState(list, direction);
         }
     }
 
@@ -339,43 +281,15 @@ export class NavigationController {
     }
 
     /**
-     * Устанавливает текущую страницу в контроллере
-     * при прокрутке при помощи скроллпэйджинга в самое начало или самый конец списка.
-     * @param direction {Direction} направление навигации ('up' или 'down')
+     * разрушает IQueryParamsController
      */
     /*
-     * Set current page in controller when scrolling with "scrollpaging" to the top or bottom of the list
-     * @param direction {Direction} nav direction ('up' or 'down')
-     */
-    setEdgeState(direction: Direction): void {
-        if (this._queryParamsController) {
-            this._queryParamsController.setEdgeState(direction);
-        }
-    }
-
-    /**
-     * Отменяет загрузку данных и разрушает IQueryParamsController
-     */
-    /*
-     * Cancel data loading and destroy current IQueryParamsController
+     * destroy current IQueryParamsController
      */
     destroy(): void {
         if (this._queryParamsController) {
             this._queryParamsController.destroy();
         }
         this._options = null;
-    }
-
-    /**
-     * Получает QueryParams из paramsController
-     * @param {Direction} direction
-     * @param paramsController
-     * @private
-     */
-    private static _getNavigationQueryParams(direction: Direction, paramsController: IQueryParamsController)
-        : IAdditionalQueryParams {
-        const {limit, offset, meta, filter} = paramsController.prepareQueryParams(direction);
-        const queryParams = new QueryParamsBuilder({limit, offset, meta, filter});
-        return queryParams.raw();
     }
 }
