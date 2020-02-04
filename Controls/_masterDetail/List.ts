@@ -2,11 +2,12 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_masterDetail/List/List');
 
 /**
- * Контрол используют в качестве контейнера для любого списочного контрола, который добавлен в шаблон master. Такой контейнер умеет порождать событие markedKeyChanged при смене выбранной записи списка.
+ * Контрол используют в качестве контейнера для любого списочного контрола, который добавлен в шаблон {@link Controls/masterDetail:Base#master master}. Такой контейнер умеет порождать событие markedKeyChanged при смене выбранной записи списка.
  * @class Controls/_masterDetail/List
  * @extends UI/Base:Control
  * @public
  * @author Авраменко А.С.
+ * @demo Controls-demo/MasterDetail/Demo
  */
 
 /**
