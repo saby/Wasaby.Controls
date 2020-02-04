@@ -41,7 +41,7 @@ function getListData(itemsCount: number, itemProto: IItemPrototype = null, idPro
  */
 function _createItemByProto(itemProto: IItemPrototype, id: number, idProperty: string = 'id'): {[p: string]: any} {
     const outItem: {[p: string]: any} = {};
-    const isNeedId = itemProto && (typeof itemProto[idProperty] === undefined);
+    const isNeedId = itemProto && (itemProto[idProperty] === undefined);
 
     Object.keys(itemProto).forEach((key) => {
         const item: IField | string | number = itemProto[key];
