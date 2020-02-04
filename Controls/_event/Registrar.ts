@@ -7,6 +7,8 @@ var _private = {
 var Registrar = cExtend.extend({
 
    _registry: null,
+   _startOverRegistry: null,
+   _overRegistry: [],
 
    constructor: function(cfg) {
       Registrar.superclass.constructor.apply(this, arguments);
@@ -19,10 +21,21 @@ var Registrar = cExtend.extend({
          component: component,
          callback: callback
       };
+      this._startOverRegistry = true;
+      if (this._startOverRegistry) {
+         this._overRegistry.push(component.getInstanceId());
+      }
       event.stopPropagation();
    },
    unregister: function(event, component) {
       delete this._registry[component.getInstanceId()];
+      if (this._startOverRegistry) {
+         for (let key in this._overRegistry) {
+            delete this._registry[this._overRegistry[key]];
+         }
+         this._startOverRegistry = false;
+         this._overRegistry = [];
+      }
       event.stopPropagation();
    },
    start: function() {
