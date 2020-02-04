@@ -1,5 +1,5 @@
 <Controls.scroll:IntersectionObserverController
-      threshold="{{[0, 0.01, 0.99, 1]}}"
+      threshold="{{_threshold}}"
       observerName="monthList"
       on:intersect="_intersectHandler()">
    <Controls.scroll:Container
@@ -18,6 +18,7 @@
          markerVisibility="hidden"
          virtualScrolling="{{true}}"
          virtualPageSize="{{_virtualPageSize}}"
+         useNewModel="{{ true }}"
          on:drawItems="_drawItemsHandler()"
          >
          <ws:itemPadding left="null" right="null" bottom="null" top="null"/>
@@ -27,19 +28,18 @@
 
          <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate"
-                        itemData="{{itemTemplate.itemData}}"
                         highlightOnHover="{{false}}"
                         attr:class="controls-MonthList__item">
                <ws:contentTemplate>
                   <Controls.scroll:IntersectionObserverContainer
                         observerName="monthList"
-                        data="{{ itemTemplate.itemData.item.getRawData() }}">
+                        data="{{ contentTemplate.item.getContents().getRawData() }}">
                      <ws:partial
-                           template="{{_getTemplate(itemTemplate.itemData.item)}}"
-                           date="{{_idToDate(itemTemplate.itemData.item.id)}}"
-                           extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
-                           startValue="{{itemTemplate.itemData.item.startValue}}"
-                           endValue="{{itemTemplate.itemData.item.endValue}}"
+                           template="{{_getTemplate(itemTemplate.item.getContents())}}"
+                           date="{{_idToDate(itemTemplate.item.getContents().id)}}"
+                           extData="{{ _extData.getData(itemTemplate.item.getContents().id) }}"
+                           startValue="{{itemTemplate.item.getContents().startValue}}"
+                           endValue="{{itemTemplate.item.getContents().endValue}}"
                            _extDataVersion="{{_extData._version}}"
                            monthTemplate="{{_options.monthTemplate}}"
                            dayTemplate="{{_options.dayTemplate}}"
