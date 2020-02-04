@@ -42,7 +42,7 @@
          <ws:partial
             template="{{ _options.render }}"
             listModel="{{ _collection }}"
-            scope="{{ _options }}">
+            scope="{{ _getSafeScope(_options) }}">
          </ws:partial>
       </ws:contentTemplate>
    </ws:partial>
