@@ -84,6 +84,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _virtualPageSize: number;
 
+    private _threshold: number[] = [0, 0.01, 0.99, 1];
+
     protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
                            Promise<TItems> | void {
 
