@@ -24,12 +24,12 @@ var EventRegistrator = Control.extend({
    },
    _registerIt: function(event, registerType, component, callback) {
       if (registerType === this._options.register) {
-         this._registrar.register.apply(this, event, component, callback);
+         this._registrar.register.apply(this._registrar, event, component, callback);
       }
    },
    _unRegisterIt: function(event, registerType, component) {
       if (registerType === this._options.register) {
-         this._registrar.unregister.apply(this, event, component);
+         this._registrar.unregister.apply(this._registrar, event, component);
       }
    },
    start: function() {
