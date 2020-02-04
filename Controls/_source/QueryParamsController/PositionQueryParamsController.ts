@@ -34,6 +34,12 @@ export interface IPositionQueryParamsControllerOptions {
 }
 
 /**
+ * Навигация по курсору
+ * @remark
+ * Механизм ускоренной выборки записей из таблицы БД относительно т.н. курсора
+ * (фиксированной записи списка).
+ * Функционал может применяться для режима бесконечной подгрузки данных,
+ * где курсором считается первая или последняя запись списка на странице при скролле вверх или вниз соответственно
  * @author Крайнов Дмитрий
  */
 class PositionQueryParamsController implements IQueryParamsController {
@@ -41,6 +47,8 @@ class PositionQueryParamsController implements IQueryParamsController {
     protected _beforePosition: Position = null;
     protected _afterPosition: Position = null;
     protected _options: IPositionQueryParamsControllerOptions;
+
+    private _legacyMode: boolean;
 
     // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
     protected _positionByMeta: boolean = null;
@@ -106,7 +114,7 @@ class PositionQueryParamsController implements IQueryParamsController {
         };
     }
 
-    private _processMoreByType(navResult: HasMore, loadDirection: Direction): void {
+    private _processMoreByType(navResult: HasMore, loadDirection?: Direction): void {
         let navDirection: DirectionCfg;
 
         const process = (more, key?) => {
@@ -133,7 +141,7 @@ class PositionQueryParamsController implements IQueryParamsController {
             }
         };
 
-        if (navResult && navResult.each) {
+        if (navResult && (navResult instanceof RecordSet)) {
             if (!this._isMoreCreated()) {
                 this._createMore(navResult);
             } else {
@@ -239,17 +247,17 @@ class PositionQueryParamsController implements IQueryParamsController {
      * @remark
      * @param to page number or position to go to
      */
-    setPageNumber(to: number | any): void {
+    setPageNumber(to: number | unknown): void {
         this._options.position = to;
     }
 
-    calculateState(list: RecordSet, loadDirection: Direction): void {
+    calculateState(list?: RecordSet | {[p: string]: unknown}, loadDirection?: Direction): void {
         let metaNextPosition: PositionBoth;
         let more: HasMore;
 
         // Look at the Types/source:DataSet there is a remark "don't use 'more' anymore"...
         let edgeElem: Record;
-        const meta = list.getMetaData();
+        const meta = (list as RecordSet).getMetaData();
         more = meta.more;
         metaNextPosition = meta.nextPosition;
 
@@ -289,13 +297,13 @@ class PositionQueryParamsController implements IQueryParamsController {
             }
 
         } else {
-            if (list.getCount()) {
+            if ((list as RecordSet).getCount()) {
                 if (loadDirection !== 'down') {
-                    edgeElem = list.at(0);
+                    edgeElem = (list as RecordSet).at(0);
                     this._beforePosition = this._resolvePosition(edgeElem, this._options.field);
                 }
                 if (loadDirection !== 'up') {
-                    edgeElem = list.at(list.getCount() - 1);
+                    edgeElem = (list as RecordSet).at((list as RecordSet).getCount() - 1);
                     this._afterPosition = this._resolvePosition(edgeElem, this._options.field);
                 }
             }
@@ -346,6 +354,17 @@ class PositionQueryParamsController implements IQueryParamsController {
         this._afterPosition = null;
         this._beforePosition = null;
         this._positionByMeta = null;
+    }
+
+    /**
+     * Включает у контроллера IQueryParamsController режим совместимости с SourceController
+     */
+    /*
+     * Will set IQueryParamsController to legacy mode for SourceController
+     */
+    legacyModeOn(): IQueryParamsController {
+        this._legacyMode = true;
+        return this;
     }
 }
 

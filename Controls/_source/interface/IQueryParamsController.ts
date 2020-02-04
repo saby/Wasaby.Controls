@@ -1,7 +1,7 @@
 import {IAdditionalQueryParams, Direction} from './IAdditionalQueryParams';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
-import {Collection} from '../../display';
+import { Collection } from 'Controls/display';
 
 /**
  * Интерфейс для работы с контроллерами пейджинации
@@ -17,18 +17,6 @@ import {Collection} from '../../display';
  */
 export interface IQueryParamsController {
     /**
-     * Вычисляет текущее состояние контроллера, например, текущую и следующую страницу, или позицию для навигации
-     * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
-     * @param direction {Direction} направление навигации ('up' или 'down')
-     */
-    /*
-     * Calculates current controller state, i.e. current and next page, or position for navigation
-     * @param list {Types/collection:RecordSet} object containing meta information for current request
-     * @param direction {Direction} nav direction ('up' or 'down')
-     */
-    calculateState(list: RecordSet, direction?: Direction): void;
-
-    /**
      * Устанавливает текущую позицию или страницу
      * @remark
      * @param to номер страницы или позиция для перехода
@@ -38,7 +26,7 @@ export interface IQueryParamsController {
      * @remark
      * @param to page number or position to go to
      */
-    setPageNumber(to: number | any): void;
+    setPageNumber(to: number | unknown): void;
 
     /**
      * Собирает параметры текущего состояния пейджинации для передачи их в Query
@@ -57,6 +45,26 @@ export interface IQueryParamsController {
      * Destroy current object IQueryParamsController
      */
     destroy(): void;
+
+    /**
+     * Включает у контроллера IQueryParamsController режим совместимости с SourceController
+     */
+    /*
+     * Will set IQueryParamsController to legacy mode for SourceController
+     */
+    legacyModeOn(): IQueryParamsController;
+
+    /**
+     * Вычисляет следующее состояние контроллера, например, текущую и следующую страницу, или позицию для навигации
+     * @param direction {Direction} направление навигации ('up' или 'down')
+     * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
+     */
+    /*
+     * Calculates current controller state, i.e. current and next page, or position for navigation
+     * @param direction {Direction} nav direction ('up' or 'down')
+     * @param list {Types/collection:RecordSet} object containing meta information for current request
+     */
+    calculateState(list?: RecordSet  | {[p: string]: unknown}, direction?: Direction): void;
 
     /**
      * Считает количество записей всего по мета информации из текущего состояния контроллера и ключу DataSet

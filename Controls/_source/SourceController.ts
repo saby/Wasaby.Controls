@@ -78,7 +78,7 @@ var _private = {
       if (cntCtr) {
          cntInstance = new cntCtr(cfg);
       }
-      return cntInstance;
+      return cntInstance.legacyModeOn();
    },
 
    modifyQueryParamsWithNavigation: function(cleanParams, direction, paramsController) {
@@ -190,7 +190,7 @@ var SourceController = cExtend.extend({
 
    calculateState: function(list) {
       if (this._queryParamsController) {
-         this._queryParamsController.calculateState(list);
+         this._queryParamsController.calculateState(list, null);
       }
    },
 

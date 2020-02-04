@@ -258,7 +258,7 @@ export class NavigationController {
      * @param list {Types/collection:RecordSet} object containing meta information for current request
      * @param direction {Direction} nav direction ('up' or 'down')
      */
-    calculateState(list: RecordSet, direction?: Direction): void {
+    calculateState(list?: RecordSet, direction?: Direction): void {
         if (this._queryParamsController) {
             this._queryParamsController.calculateState(list, direction);
         }
