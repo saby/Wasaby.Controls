@@ -1,4 +1,4 @@
-@Library('pipeline@feature/bls/new_modules') _
+@Library('pipeline@feature/bls/new_libs') _
 
 def version = '20.3000'
 
