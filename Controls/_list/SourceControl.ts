@@ -1,56 +1,21 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import {ICrud, DataSet} from 'Types/source';
+import {ICrud} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import * as cInstance from 'Core/core-instance';
-import {Logger} from 'UI/Utils';
-
-import {NavigationController} from 'Controls/_source/NavigationController';
 import {
     INavigationOptionValue, INavigationPageSourceConfig, INavigationPositionSourceConfig
 } from 'Controls/_interface/INavigation';
 import {ViewConfig, Controller as ErrorController} from 'Controls/_dataSource/error';
 import {
     SourceCrudInterlayer,
-    ISourceErrorData,
     ISourceErrorConfig,
     ISourceCrudInterlayerOptions
 } from 'Controls/_dataSource/SourceCrudInterlayer';
 import {IPagingOptions} from 'Controls/_paging/Paging';
+import {Direction} from 'Controls/_source/interface/IAdditionalQueryParams';
 
-import {IDirection} from './interface/IVirtualScroll';
+import {ListSourceLoader} from './SourceControl/ListSourceLoader';
 
 import * as Template from 'wml!Controls/_list/SourceControl/SourceControl';
-import {QueryOrderSelector, QueryWhere} from 'saby-types/Types/source';
-import {Direction, IAdditionalQueryParams} from '../_source/interface/IAdditionalQueryParams';
-
-/**
- * Настройки для страницы по умолчанию
- */
-const INITIAL_PAGE_NUMBER = 1;
-const INITIAL_PER_PAGE = 100;
-
-/**
- * Функция-помощник для инициализации настроек контроллера навигации
- * @param navigationOptions
- */
-const initNavigationOptions = (navigationOptions: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>): INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> => {
-    const options: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> = {};
-    const defaultPagesSourceConfig: INavigationPageSourceConfig = {
-        hasMore: false,
-        page: INITIAL_PAGE_NUMBER - 1,
-        pageSize: INITIAL_PER_PAGE
-    };
-    options.source = navigationOptions && navigationOptions.source || 'page';
-    options.view = navigationOptions && navigationOptions.view || 'pages';
-    options.sourceConfig = navigationOptions && navigationOptions.sourceConfig || defaultPagesSourceConfig;
-    return options;
-};
-
-export interface ISourceControlQueryParams {
-    direction?: IDirection;
-    filter?: QueryWhere;
-    sorting?: QueryOrderSelector;
-}
 
 export interface ISourceControlOptions extends IControlOptions {
     /**
@@ -162,125 +127,44 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     // Ресурс данных с перехватчиком ошибок
     private _itemsSource: SourceCrudInterlayer;
 
-    // Экземпляр контроллера, управляющего навигацией по записям
-    protected _navigationController: NavigationController;
-
-    // Конфигурация навигации для передачи в контроллер
-    protected _navigationOptions: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>;
-
-    // текущая загрузка
-    private _request: Promise<void | RecordSet>;
+    // Контроллер загрузки данных в список
+    private _listSourceLoader: ListSourceLoader;
 
     protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: RecordSet | void): Promise<RecordSet | void> | void {
         this._options = options;
         this._itemsSource = new SourceCrudInterlayer(this._options as ISourceCrudInterlayerOptions);
-        this._navigationOptions = initNavigationOptions(this._options.navigation);
-        this._navigationController = new NavigationController({
-            navigation: this._navigationOptions
+        this._listSourceLoader = new ListSourceLoader({
+            keyProperty: this._options.keyProperty,
+            navigation: this._options.navigation,
+            source: this._itemsSource
+        });
+        this._listSourceLoader.subscribe('loadStarted', () => {
+            this._hideError();
+        });
+        this._listSourceLoader.subscribe('loadError', (errorConfig: ViewConfig) => {
+            this._showError(errorConfig);
         });
         return this._load();
     }
 
+    /**
+     * Загрузка данных с учётом направления
+     * @param direction
+     * @private
+     */
+    private _load(direction?: Direction): Promise<void | RecordSet> {
+        // {
+        //     sorting: {}, // TODO implement external List/Grid sorting
+        //     filter: [], // TODO implement external List/Grid filter
+        // }
+        return this._listSourceLoader.load({
+            direction
+        });
+    }
+
     destroy(): void {
+        this._listSourceLoader.destroy();
         super.destroy();
-        this._navigationController.destroy();
-    }
-
-    /**
-     * Строит запрос данных на основе переданных параметров filter и sorting и возвращает Promise<RecordSet>.
-     * Если в опцию navigation был передан объект INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>, его filter, sorting и настрйоки пейджинации
-     * также одбавляются в запрос.
-     * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} пакраметры построения запроса
-     */
-    /*
-     * Builds a query based on passed filter and sorting params and returns Promise<RecordSet>.
-     * If INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> is set into the class navigation property, its filter, sorting and pagination settings
-     * will also be added to query
-     * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} query params
-     */
-    protected _load(params?: ISourceControlQueryParams): Promise<void | RecordSet> {
-        const filter = params && params.filter || {};
-        const sorting = params && params.sorting || [{[this._options.keyProperty]: true}];
-        const direction: Direction = params && params.direction || undefined;
-        this._hideError();
-        this._cancelLoading();
-        const query = this._navigationController.getQueryParams(direction, filter, sorting);
-        this._request = this._callQuery(query)
-            .then((recordSet: RecordSet) => {
-                this._navigationController.calculateState(recordSet, direction);
-                this._items = recordSet;
-                return this._items;
-            })
-            .catch((error: ISourceErrorData) => {
-                this._showError(error.errorConfig);
-            });
-        return this._request;
-    }
-
-    /**
-     * Проверяет, загружаются ли в данный момент данные
-     */
-    /*
-     * Checks if data is currently loading
-     */
-    isLoading(): boolean {
-        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
-        return this._request && !this._request.isReady();
-    }
-
-    /**
-     * Отменяет текущую загрузку данных
-     * @private
-     */
-    private _cancelLoading(): void {
-        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
-        if (this._request && !this._request.isReady()) {
-            this._request.cancel();
-        }
-    }
-
-    /**
-     * Выполняет запрос данных DataSet методом ICrud.query()
-     * Возвращает Promise<RecordSet> с результатом выполнения DataSet.getAll()
-     * @param {string} keyProperty Свойство, используемое в качестве ключа в DataSet
-     * @param {Types/source:Query} query исполняемый запрос с учётом сортировки, фильтрации, параметров пейджинации
-     * @private
-     */
-    /*
-     * Performs the DataSet request using ICrud.query()
-     * and returns Promise<RecordSet> with result of calling DataSet.getAll()
-     * @param {string} keyProperty key property for DataSet
-     * @param {Types/source:Query} query A query built based on sorting, filter and pagination params
-     * @private
-     */
-    private _callQuery(query: IAdditionalQueryParams): Promise<RecordSet> {
-        let sourceQuery: Promise<RecordSet>;
-        // Promise в проекте работает как Deferred (@see WS.Core/core/polyfill/PromiseAPIDeferred).
-        const queryDeferred = this._itemsSource.query(query)
-            .addCallback((dataSet: DataSet) => {
-                if (this._options.keyProperty && this._options.keyProperty !== dataSet.getKeyProperty()) {
-                    dataSet.setKeyProperty(this._options.keyProperty);
-                }
-                return dataSet.getAll ? dataSet.getAll() : dataSet;
-            })
-            .catch(() => {
-                Logger.error('SourceControl: Data is unable to be queried');
-            });
-        /**
-         * Deferred с синхронным кодом статического источника выполняется сихронно.
-         * в итоге в callback релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций,
-         * и не можем обратиться к this._options.
-         */
-        if (cInstance.instanceOfModule(this._itemsSource, 'Types/source:Memory')) {
-            sourceQuery = new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve(queryDeferred);
-                }, 0);
-            });
-        } else {
-            sourceQuery = queryDeferred;
-        }
-        return sourceQuery;
     }
 
     private _showError(errorConfig: ViewConfig): void {
