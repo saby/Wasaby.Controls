@@ -4,7 +4,6 @@
             keyProperty="Document"
             editingConfig="{{_editingConfig}}"
             itemActions="{{_itemActions}}"
-            itemActionVisibilityCallback="{{_showActions}}"
             source="{{_viewSource}}">
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
