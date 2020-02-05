@@ -24,10 +24,11 @@ interface IItemPrototype {
  * @param itemsCount кол-во записей
  * @param itemProto шаблон для создания элементов
  * @param idProperty название ключевого поля
+ * @param startIndex первый ключ для счётчика
  */
-function getListData(itemsCount: number, itemProto: IItemPrototype = null, idProperty: string = 'id'): any[] {
+function getListData(itemsCount: number, itemProto: IItemPrototype = null, idProperty: string = 'id', startIndex: number = 0): any[] {
     const data = [];
-    for (let i = 0; i < itemsCount; i++) {
+    for (let i = startIndex; i < (itemsCount + startIndex); i++) {
         data.push(itemProto === null ? {[idProperty]: i} : _createItemByProto(itemProto, i, idProperty));
     }
     return data;
@@ -104,13 +105,12 @@ export const generateRawData = (n: number): any[] => {
  */
 export class SourceFaker extends Remote {
 
-    private readonly _timeOut: number;
+    private _timeOut: number;
     private _failed: boolean;
     private _rawData: any[] | DataSet;
 
     constructor(options?: ILocalSourceOptions) {
         super(options);
-        this._timeOut = 500;
     }
 
     create(meta?: object): Promise<Record> {
@@ -195,6 +195,14 @@ export class SourceFaker extends Remote {
     }
 
     /*
+     * Устанавливает время до возврата DataSet
+     * @param timeOut
+     */
+    setTimeOut(timeOut: number): void {
+        this._timeOut = timeOut;
+    }
+
+    /*
      * Синхронно возвращает DataSet
      */
     querySync(): DataSet {
@@ -240,8 +248,9 @@ export class SourceFaker extends Remote {
      * @param data данные в "чистом" виде или DataSet
      * @param failed флаг "Всегда возвращать ошибку"
      */
-    static instance(options?: ILocalSourceOptions, data?: any[] | DataSet, failed?: boolean): SourceFaker {
+    static instance(options?: ILocalSourceOptions, data?: any[] | DataSet, failed?: boolean, timeout: number = 500): SourceFaker {
         const faker = new SourceFaker(options);
+        faker.setTimeOut(timeout);
         faker.setData(data || getListData(100, {
             title: {
                 value: 'Заголовок',
