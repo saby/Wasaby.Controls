@@ -11,9 +11,6 @@ export default class extends Control {
     private _viewSource: Memory;
     private _newData = getData().slice(0, 1);
     private _editingConfig = null;
-    private _showActions(): boolean {
-        return true;
-    }
     protected _beforeMount() {
         this._newData[0].id = 1;
 
