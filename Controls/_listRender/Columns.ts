@@ -15,21 +15,15 @@ export interface IColumnsRenderOptions extends IRenderOptions {
     columnsCount: number;
 }
 
-const DEFAULT_COLUMNS_COUNT = 2;
-
 export default class Columns extends BaseRender {
     protected _options: IColumnsRenderOptions;
     protected _template: TemplateFunction = template;
     protected _itemTemplate: TemplateFunction;
-    private _columnsCount: number = DEFAULT_COLUMNS_COUNT;
 
     protected _beforeMount(options: IColumnsRenderOptions): void {
         super._beforeMount.apply(this, arguments);
         this._templateKeyPrefix = `columns-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
-        if (options.columnsCount) {
-            this._columnsCount = options.columnsCount;
-        }
     }
 
     protected _beforeUnmount(): void {
