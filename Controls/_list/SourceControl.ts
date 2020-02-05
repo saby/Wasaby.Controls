@@ -1,12 +1,12 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import {ICrud, DataSet, Query} from 'Types/source';
+import {ICrud, DataSet} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import * as cInstance from 'Core/core-instance';
 import {Logger} from 'UI/Utils';
 
 import {NavigationController} from 'Controls/_source/NavigationController';
 import {
-    INavigationOptionValue, INavigationPageSourceConfig
+    INavigationOptionValue, INavigationPageSourceConfig, INavigationPositionSourceConfig
 } from 'Controls/_interface/INavigation';
 import {ViewConfig, Controller as ErrorController} from 'Controls/_dataSource/error';
 import {
@@ -33,8 +33,8 @@ const INITIAL_PER_PAGE = 100;
  * Функция-помощник для инициализации настроек контроллера навигации
  * @param navigationOptions
  */
-const initNavigationOptions = (navigationOptions: INavigationOptionValue): INavigationOptionValue => {
-    const options: INavigationOptionValue = {};
+const initNavigationOptions = (navigationOptions: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>): INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> => {
+    const options: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> = {};
     const defaultPagesSourceConfig: INavigationPageSourceConfig = {
         hasMore: false,
         page: INITIAL_PAGE_NUMBER - 1,
@@ -75,13 +75,13 @@ export interface ISourceControlOptions extends IControlOptions {
 
     /**
      * @name Controls/_list/SourceControl#navigation
-     * @cfg {Types/source:INavigationOptionValue} Опции навигации
+     * @cfg {Types/source:INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>} Опции навигации
      */
     /*
      * @name Controls/_list/SourceControl#navigation
-     * @cfg {Types/source:INavigationOptionValue} Navigation options
+     * @cfg {Types/source:INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>} Navigation options
      */
-    navigation?: INavigationOptionValue;
+    navigation?: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>;
 
     /**
      * @name Controls/_list/SourceControl#errorConfig
@@ -166,7 +166,7 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     protected _navigationController: NavigationController;
 
     // Конфигурация навигации для передачи в контроллер
-    protected _navigationOptions: INavigationOptionValue;
+    protected _navigationOptions: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>;
 
     // текущая загрузка
     private _request: Promise<void | RecordSet>;
@@ -188,13 +188,13 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
 
     /**
      * Строит запрос данных на основе переданных параметров filter и sorting и возвращает Promise<RecordSet>.
-     * Если в опцию navigation был передан объект INavigationOptionValue, его filter, sorting и настрйоки пейджинации
+     * Если в опцию navigation был передан объект INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>, его filter, sorting и настрйоки пейджинации
      * также одбавляются в запрос.
      * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} пакраметры построения запроса
      */
     /*
      * Builds a query based on passed filter and sorting params and returns Promise<RecordSet>.
-     * If INavigationOptionValue is set into the class navigation property, its filter, sorting and pagination settings
+     * If INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> is set into the class navigation property, its filter, sorting and pagination settings
      * will also be added to query
      * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} query params
      */

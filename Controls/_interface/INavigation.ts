@@ -153,15 +153,15 @@ export interface INavigationViewConfig {
  * @property {PositionSourceConfig|PageSourceConfig} sourceConfig Configuration for data source.
  * @property {NavigationViewConfig} viewConfig Configuration for navigation view.
  */
-export interface INavigationOptionValue {
+export interface INavigationOptionValue<U> {
    source?: TNavigationSource;
    view?: TNavigationView;
-   sourceConfig?: INavigationPageSourceConfig | INavigationPositionSourceConfig;
+   sourceConfig?: U;
    viewConfig?: INavigationViewConfig;
 }
 
-export interface INavigationOptions {
-   navigation?: INavigationOptionValue;
+export interface INavigationOptions<U> {
+   navigation?: INavigationOptionValue<U>;
 }
 
 /**

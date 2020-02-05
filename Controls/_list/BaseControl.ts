@@ -597,7 +597,7 @@ var _private = {
         return  result;
     },
 
-    needLoadByMaxCountNavigation(listViewModel, navigation: INavigationOptionValue): boolean {
+    needLoadByMaxCountNavigation(listViewModel, navigation: INavigationOptionValue<unknown>): boolean {
         let result = false;
 
         if (_private.isMaxCountNavigation(navigation) && _private.isMaxCountNavigationConfiguredCorrect(navigation)) {
@@ -610,15 +610,15 @@ var _private = {
         return result;
     },
 
-    getMaxCountFromNavigation(navigation: INavigationOptionValue): number {
+    getMaxCountFromNavigation(navigation: INavigationOptionValue<unknown>): number {
         return navigation.viewConfig.maxCountValue;
     },
 
-    isMaxCountNavigation(navigation: INavigationOptionValue): boolean {
+    isMaxCountNavigation(navigation: INavigationOptionValue<unknown>): boolean {
         return navigation && navigation.view === 'maxCount';
     },
 
-    isMaxCountNavigationConfiguredCorrect(navigation: INavigationOptionValue): boolean {
+    isMaxCountNavigationConfiguredCorrect(navigation: INavigationOptionValue<unknown>): boolean {
         return navigation.viewConfig && typeof navigation.viewConfig.maxCountValue === 'number';
     },
 
@@ -626,11 +626,11 @@ var _private = {
         return navigationMaxCount >  itemsCount;
     },
 
-    isDemandNavigation(navigation: INavigationOptionValue): boolean {
+    isDemandNavigation(navigation: INavigationOptionValue<unknown>): boolean {
         return navigation && navigation.view === 'demand';
     },
 
-    needShowShadowByNavigation(navigation: INavigationOptionValue, itemsCount: number): boolean {
+    needShowShadowByNavigation(navigation: INavigationOptionValue<unknown>, itemsCount: number): boolean {
         const isDemand = _private.isDemandNavigation(navigation);
         const isMaxCount = _private.isMaxCountNavigation(navigation);
         let result = true;
