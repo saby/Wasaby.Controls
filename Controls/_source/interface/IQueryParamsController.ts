@@ -17,16 +17,16 @@ import { Collection } from 'Controls/display';
  */
 export interface IQueryParamsController {
     /**
-     * Устанавливает текущую позицию или страницу
+     * Позволяет устанавить конфиг для контроллера навигации
      * @remark
-     * @param to номер страницы или позиция для перехода
+     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
      */
     /*
-     * Set current page or position
+     * Allows to set navigation controller config
      * @remark
-     * @param to page number or position to go to
+     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
      */
-    setPageNumber(to: number | unknown): void;
+    setConfig(config: {[p: string]: any}): void;
 
     /**
      * Собирает параметры текущего состояния пейджинации для передачи их в Query
@@ -47,22 +47,14 @@ export interface IQueryParamsController {
     destroy(): void;
 
     /**
-     * Включает у контроллера IQueryParamsController режим совместимости с SourceController
-     */
-    /*
-     * Will set IQueryParamsController to legacy mode for SourceController
-     */
-    legacyModeOn(): IQueryParamsController;
-
-    /**
-     * Вычисляет следующее состояние контроллера, например, текущую и следующую страницу, или позицию для навигации
+     * Вычисляет следующее состояние контроллера, например, предыдущую или следующую страницу/позицию
+     * @param list {Types/collection:RecordSet} RecordSet записей, содержащий метаданные текущего запроса
      * @param direction {Direction} направление навигации ('up' или 'down')
-     * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
      */
     /*
-     * Calculates current controller state, i.e. current and next page, or position for navigation
+     * Calculates next controller state, i.e. previous or next page/position
+     * @param list {Types/collection:RecordSet} RecordSet of items containing meta information for current request
      * @param direction {Direction} nav direction ('up' or 'down')
-     * @param list {Types/collection:RecordSet} object containing meta information for current request
      */
     calculateState(list?: RecordSet  | {[p: string]: unknown}, direction?: Direction): void;
 

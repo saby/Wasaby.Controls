@@ -22,8 +22,6 @@ class PageQueryParamsController implements IQueryParamsController {
     protected _page: number = 0;
     protected _options: IPageQueryParamsControllerOptions | null;
 
-    private _legacyMode: boolean;
-
     constructor(cfg: IPageQueryParamsControllerOptions) {
         this._options = cfg;
         this._setPageNumbers(cfg.page);
@@ -117,20 +115,25 @@ class PageQueryParamsController implements IQueryParamsController {
     }
 
     /**
-     * Устанавливает текущую позицию или страницу
+     * Позволяет устанавить конфиг для контроллера навигации
      * @remark
-     * @param to номер страницы или позиция для перехода
+     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
      */
     /*
-     * Set current page or position
+     * Allows to set navigation controller config
      * @remark
-     * @param to page number or position to go to
+     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
      */
-    setPageNumber(to: number | unknown): void {
-        this._options.page = to as number;
-        this._setPageNumbers(to as number);
+    setConfig(config: IPageQueryParamsControllerOptions): void {
+        this._options = config;
+        this._setPageNumbers(config.page);
     }
 
+    /**
+     * Автоматический расчёт номера следующей или предыдущей страницы
+     * @param list
+     * @param direction
+     */
     calculateState(list?: RecordSet | {[p: string]: unknown}, direction?: Direction): void {
         const meta = (list as RecordSet).getMetaData();
 
@@ -202,17 +205,6 @@ class PageQueryParamsController implements IQueryParamsController {
 
     destroy(): void {
         this._options = null;
-    }
-
-    /**
-     * Включает у контроллера IQueryParamsController режим совместимости с SourceController
-     */
-    /*
-     * Will set IQueryParamsController to legacy mode for SourceController
-     */
-    legacyModeOn(): IQueryParamsController {
-        this._legacyMode = true;
-        return this;
     }
 }
 

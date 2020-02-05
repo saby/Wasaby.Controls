@@ -16,6 +16,11 @@ interface IPositionHasMore {
 declare type FieldCfg = any;
 declare type Field = any[];
 declare type PositionCfg = any;
+
+/**
+ * Позиция, от которой нужно начинать скролл
+ * Является массивом из любых типов (number, date, string и тд)
+ */
 declare type Position = any[];
 
 interface IPositionBoth {
@@ -47,8 +52,6 @@ class PositionQueryParamsController implements IQueryParamsController {
     protected _beforePosition: Position = null;
     protected _afterPosition: Position = null;
     protected _options: IPositionQueryParamsControllerOptions;
-
-    private _legacyMode: boolean;
 
     // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
     protected _positionByMeta: boolean = null;
@@ -238,17 +241,17 @@ class PositionQueryParamsController implements IQueryParamsController {
     }
 
     /**
-     * Устанавливает текущую позицию или страницу
+     * Позволяет устанавить конфиг для контроллера навигации
      * @remark
-     * @param to номер страницы или позиция для перехода
+     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
      */
     /*
-     * Set current page or position
+     * Allows to set navigation controller config
      * @remark
-     * @param to page number or position to go to
+     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
      */
-    setPageNumber(to: number | unknown): void {
-        this._options.position = to;
+    setConfig(config: IPositionQueryParamsControllerOptions): void {
+        this._options = config;
     }
 
     calculateState(list?: RecordSet | {[p: string]: unknown}, loadDirection?: Direction): void {
@@ -354,17 +357,6 @@ class PositionQueryParamsController implements IQueryParamsController {
         this._afterPosition = null;
         this._beforePosition = null;
         this._positionByMeta = null;
-    }
-
-    /**
-     * Включает у контроллера IQueryParamsController режим совместимости с SourceController
-     */
-    /*
-     * Will set IQueryParamsController to legacy mode for SourceController
-     */
-    legacyModeOn(): IQueryParamsController {
-        this._legacyMode = true;
-        return this;
     }
 }
 

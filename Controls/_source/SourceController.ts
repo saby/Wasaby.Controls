@@ -78,7 +78,7 @@ var _private = {
       if (cntCtr) {
          cntInstance = new cntCtr(cfg);
       }
-      return cntInstance.legacyModeOn();
+      return cntInstance;
    },
 
    modifyQueryParamsWithNavigation: function(cleanParams, direction, paramsController) {
