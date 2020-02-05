@@ -2,6 +2,7 @@ import {IAdditionalQueryParams, Direction} from './IAdditionalQueryParams';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import { Collection } from 'Controls/display';
+import {INavigationPageSourceConfig, INavigationPositionSourceConfig} from 'Controls/_interface/INavigation';
 
 /**
  * Интерфейс для работы с контроллерами пейджинации
@@ -19,14 +20,14 @@ export interface IQueryParamsController {
     /**
      * Позволяет устанавить конфиг для контроллера навигации
      * @remark
-     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
+     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
      */
     /*
      * Allows to set navigation controller config
      * @remark
-     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
+     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
      */
-    setConfig(config: {[p: string]: any}): void;
+    setConfig(config: INavigationPageSourceConfig | INavigationPositionSourceConfig): void;
 
     /**
      * Собирает параметры текущего состояния пейджинации для передачи их в Query

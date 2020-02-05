@@ -243,12 +243,12 @@ class PositionQueryParamsController implements IQueryParamsController {
     /**
      * Позволяет устанавить конфиг для контроллера навигации
      * @remark
-     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
+     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
      */
     /*
      * Allows to set navigation controller config
      * @remark
-     * @param config IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions
+     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
      */
     setConfig(config: IPositionQueryParamsControllerOptions): void {
         this._options = config;

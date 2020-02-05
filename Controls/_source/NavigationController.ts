@@ -6,8 +6,8 @@ import {Logger} from 'UI/Utils';
 import * as cClone from 'Core/core-clone';
 
 import {IQueryParamsController} from './interface/IQueryParamsController';
-import PageQueryParamsController, {IPageQueryParamsControllerOptions} from './QueryParamsController/PageQueryParamsController';
-import PositionQueryParamsController, {IPositionQueryParamsControllerOptions} from './QueryParamsController/PositionQueryParamsController';
+import PageQueryParamsController from './QueryParamsController/PageQueryParamsController';
+import PositionQueryParamsController from './QueryParamsController/PositionQueryParamsController';
 
 import {
     Direction,
@@ -274,16 +274,16 @@ export class NavigationController {
     }
 
     /**
-     * Устанавливает текущую позицию или страницу
+     * Позволяет устанавить конфиг для контроллера навигации
      * @remark
-     * @param to номер страницы или позиция для перехода
+     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
      */
     /*
-     * Set current page or position
+     * Allows to set navigation controller config
      * @remark
-     * @param to page number or position to go to
+     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
      */
-    setConfig(config: IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions): void {
+    setConfig(config: INavigationPageSourceConfig | INavigationPositionSourceConfig): void {
         if (this._queryParamsController) {
             this._queryParamsController.setConfig(config);
         }
