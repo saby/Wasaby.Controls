@@ -1561,7 +1561,6 @@ define([
             // (hasMoreData возвращает false),
             // то кнопки пейджинга в этот момент дизейблить не нужно: до конца еще не до сколлили
             ctrl._sourceController.hasMoreData = () => false;
-            ctrl._hasLoadedData = true;
             lists.BaseControl._private.handleListScroll(ctrl, {
                scrollTop: 200,
                position: 'down'
