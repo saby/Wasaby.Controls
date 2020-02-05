@@ -130,6 +130,10 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     // Контроллер загрузки данных в список
     private _listSourceLoader: ListSourceLoader;
 
+    private _loadStartedSbt: (event: string) => void;
+    private _loadSuccessSbt: (event: string) => void;
+    private _loadErrorSbt: (event: string, errorConfig: ViewConfig) => void;
+
     protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: RecordSet | void): Promise<RecordSet | void> | void {
         this._options = options;
         this._itemsSource = new SourceCrudInterlayer(this._options as ISourceCrudInterlayerOptions);
@@ -138,12 +142,7 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
             navigation: this._options.navigation,
             source: this._itemsSource
         });
-        this._listSourceLoader.subscribe('loadStarted', () => {
-            this._hideError();
-        });
-        this._listSourceLoader.subscribe('loadError', (errorConfig: ViewConfig) => {
-            this._showError(errorConfig);
-        });
+        this._subscribeEvents();
         return this._load();
     }
 
@@ -159,10 +158,15 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
         // }
         return this._listSourceLoader.load({
             direction
+        }).then((recordSet: RecordSet) => {
+            this._items = recordSet;
         });
     }
 
     destroy(): void {
+        this._listSourceLoader.unsubscribe('loadStarted', this._loadStartedSbt);
+        this._listSourceLoader.unsubscribe('loadSuccess', this._loadSuccessSbt);
+        this._listSourceLoader.unsubscribe('loadError', this._loadErrorSbt);
         this._listSourceLoader.destroy();
         super.destroy();
     }
@@ -175,5 +179,24 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
         if (this._error) {
             this._error = null;
         }
+    }
+
+    /**
+     * Подписка на события
+     * @private
+     */
+    private _subscribeEvents(): void {
+        this._loadStartedSbt = (event) => {
+            this._hideError();
+        };
+        this._loadSuccessSbt = (event) => {
+
+        };
+        this._loadErrorSbt = (event, errorConfig: ViewConfig) => {
+            this._showError(errorConfig);
+        };
+        this._listSourceLoader.subscribe('loadStarted', this._loadStartedSbt);
+        this._listSourceLoader.subscribe('loadSuccess', this._loadSuccessSbt);
+        this._listSourceLoader.subscribe('loadError', this._loadErrorSbt);
     }
 }

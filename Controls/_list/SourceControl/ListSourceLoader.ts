@@ -140,6 +140,7 @@ export class ListSourceLoader extends mixin<ObservableMixin>(ObservableMixin) {
         this._navigationController = new NavigationController({
             navigation: this._navigationOptions
         });
+        this._source = cfg.source;
     }
 
     /**

@@ -8,9 +8,9 @@ import {getListData, SourceFaker} from '../Utils/listDataGenerator';
 const NUMBER_OF_ITEMS = 100;
 
 const rawData = getListData(NUMBER_OF_ITEMS, {
-    id: 'Id',
     title: {
         type: 'string',
+        value: 'title',
         addId: true
     }
 });
