@@ -6,14 +6,15 @@ import {Logger} from 'UI/Utils';
 import * as cClone from 'Core/core-clone';
 
 import {IQueryParamsController} from './interface/IQueryParamsController';
-import PageQueryParamsController from './QueryParamsController/PageQueryParamsController';
-import PositionQueryParamsController from './QueryParamsController/PositionQueryParamsController';
+import PageQueryParamsController, {IPageQueryParamsControllerOptions} from './QueryParamsController/PageQueryParamsController';
+import PositionQueryParamsController, {IPositionQueryParamsControllerOptions} from './QueryParamsController/PositionQueryParamsController';
 
 import {
     Direction,
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
 } from './interface/IAdditionalQueryParams';
+import {INavigationPageSourceConfig, INavigationPositionSourceConfig} from 'Controls/_interface/INavigation';
 
 /**
  * Вспомогательный интерфейс для определения типа typeof object
@@ -53,7 +54,7 @@ interface IDictionary<T> {
  * Поддерживает два варианта - 'page' и 'position'
  * @class Controls/_source/NavigationControllerFactory
  * @example
- * const cName:INavigationOptionValue = {source: 'page'};
+ * const cName:INavigationOptionValue<INavigationPageSourceConfig> = {source: 'page'};
  * const controller = NavigationControllerFactory.resolve(cName);
  * @private
  * @author Аверкиев П.А.
@@ -64,7 +65,7 @@ interface IDictionary<T> {
  * Supports two variants of navigation query controllers - 'page' and 'position'
  * @class Controls/_source/NavigationControllerFactory
  * @example
- * const cName:INavigationOptionValue = {source: 'page'};
+ * const cName:INavigationOptionValue<INavigationPageSourceConfig> = {source: 'page'};
  * const controller = NavigationControllerFactory.resolve(cName);
  * @private
  * @author Аверкиев П.А.
@@ -75,7 +76,7 @@ class NavigationControllerFactory {
         position: PositionQueryParamsController
     };
 
-    static resolve(navigationOptionValue: INavigationOptionValue): IQueryParamsController {
+    static resolve(navigationOptionValue: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>): IQueryParamsController {
         if (!navigationOptionValue.source) {
             return;
         }
@@ -150,6 +151,14 @@ class QueryParamsBuilder {
                 if (param === 'filter') {
                     const filter: QueryWhere = this._filter ? cClone(this._filter) : {};
                     this._filter = ({...filter, ...params[param]});
+                } else if (param === 'sorting') {
+                    if (!this._sorting) {
+                        this._sorting = params[param];
+                    } else if (Array.isArray(this._sorting) && Array.isArray(params[param])) {
+                        this._sorting = this._sorting.concat(params[param]);
+                    } else {
+                        this._sorting = params[param];
+                    }
                 } else {
                     this[`_${param}`] = params[param];
                 }
@@ -178,19 +187,19 @@ class QueryParamsBuilder {
 export interface INavigationControllerOptions {
     /**
      * @name Controls/_source/NavigationController#navigation
-     * @cfg {Types/source:INavigationOptionValue} Опции навигации
+     * @cfg {Types/source:INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>} Опции навигации
      */
     /*
      * @name Controls/_source/NavigationController#navigation
      * @cfg {Types/source:INavigationOptionValue} Navigation options
      */
-    navigation?: INavigationOptionValue;
+    navigation?: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>;
 }
 
 /**
  * Контроллер постраничной навигации
  * @remark
- * Хранит состояние навигации INavigationOptionValue и вычисляет на его основании параметры для построения запроса Query
+ * Хранит состояние навигации INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> и вычисляет на его основании параметры для построения запроса Query
  *
  * @class Controls/source/NavigationController
  *
@@ -224,7 +233,7 @@ export class NavigationController {
 
     /**
      * Строит запрос данных на основе переданных параметров filter и sorting
-     * Если в опцию navigation был передан объект INavigationOptionValue, его filter, sorting и настрйоки пейджинации
+     * Если в опцию navigation был передан объект INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>, его filter, sorting и настрйоки пейджинации
      * также одбавляются в запрос.
      * @param direction {Direction} Направление навигации.
      * @param filter {Types/source:QueryWhere} Настрйоки фильтрации
@@ -232,7 +241,7 @@ export class NavigationController {
      */
     /*
      * Builds a query based on passed filter and sorting params
-     * If INavigationOptionValue is set into the class navigation property, its filter, sorting and pagination settings
+     * If INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> is set into the class navigation property, its filter, sorting and pagination settings
      * will also be added to query
      * @param direction {Direction} navigation direction
      * @param filter {Types/source:QueryWhere} filter settings
@@ -274,9 +283,9 @@ export class NavigationController {
      * @remark
      * @param to page number or position to go to
      */
-    setPageNumber(to: number | any): void {
+    setConfig(config: IPositionQueryParamsControllerOptions | IPageQueryParamsControllerOptions): void {
         if (this._queryParamsController) {
-            this._queryParamsController.setPageNumber(to);
+            this._queryParamsController.setConfig(config);
         }
     }
 
