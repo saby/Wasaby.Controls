@@ -211,9 +211,10 @@ var TileView = ListView.extend({
                 } else {
                     itemSize = ItemSizeUtils.getItemSize(itemContainer, 1, this._options.tileMode);
                 }
-                const position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
+                let position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
                 const documentRect = documentObject.documentElement.getBoundingClientRect();
-                this._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect, true), position, true);
+                position = _private.getPositionInDocument(position, containerRect, documentRect, true);
+                this._setHoveredItem(itemData, position, position, true);
             } else {
                 this._setHoveredItem(itemData);
             }
