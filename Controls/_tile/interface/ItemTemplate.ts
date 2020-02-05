@@ -22,6 +22,7 @@
  * @remark
  * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/templates/item/ здесь}.
  * @public
+ * @demo Controls-demo/Tile/CustomTemplate/Index
  */
 
 export default interface IItemTemplateOptions {
@@ -54,11 +55,9 @@ export default interface IItemTemplateOptions {
    itemWidth?: number;
    /**
     * @name Controls/tile:ItemTemplate#staticHeight
-    * @cfg {Number} Высота плитки или папки. Значение задаётся в px.
-    * @see itemWidth
-    * @see folderWidth
+    * @cfg {Number} Будет ли автоматически изменяться высота плитки, когда плитка отображается со статической шириной, т.е. опция {@link tileMode} установлена в значение static.
     */
-   staticHeight?: number;
+   staticHeight?: boolean;
    /**
     * @name Controls/tile:ItemTemplate#folderWidth
     * @cfg {Number} Ширина папки. Значение задаётся в px.
