@@ -31,23 +31,25 @@ class ModuleLoader {
         }
 
         let parsedInfo: IParsedName = libHelper.parse(name);
+        var loadFromModule = (res) => {
+            return this.getFromLib(res, parsedInfo);
+        };
         if (this.isCached(parsedInfo.name)) {
-            return cache[parsedInfo.name];
+            return cache[parsedInfo.name].then(loadFromModule);
         }
 
         let promiseResult = this.requireAsync(parsedInfo.name);
-        cache[parsedInfo.name] = promiseResult = promiseResult.then((res) => {
-            let module = this.getFromLib(res, parsedInfo);
+        cache[parsedInfo.name] = promiseResult = promiseResult.then((res)=>{
             delete cache[parsedInfo.name];
-            return module;
-        }, (e) => {
+            return res;
+        },(e) => {
             delete cache[parsedInfo.name];
             let errorMessage = "Couldn't load module " + parsedInfo.name;
             IoC.resolve("ILogger").error(errorMessage, e);
             throw new Error(errorMessage);
         });
 
-        return promiseResult;
+        return promiseResult.then(loadFromModule);
     };
 
     public loadSync(name: string): Module {
