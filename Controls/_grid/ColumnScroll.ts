@@ -220,6 +220,7 @@ const
          if (oldOptions.root !== this._options.root) {
              this._contentSize = 0;
              this._contentContainerSize = 0;
+             // TODO: Remove after execution https://online.sbis.ru/opendoc.html?guid=23a81552-092f-4880-bce7-96ca09ee4705
              // обнулить топ при смене рута,
              // после построения заголовков, stickyHeader выставил верный топ.
              _private.setTopToZero(this._children.content);
