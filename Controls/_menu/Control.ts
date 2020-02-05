@@ -89,7 +89,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventResult, eventType) {
-        switch eventType {
+        switch (eventType) {
             case 'menuOpened':
                 this.subMenu = eventResult;
                 break;
