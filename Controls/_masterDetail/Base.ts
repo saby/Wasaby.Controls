@@ -146,7 +146,7 @@ class Base extends Control<IMasterDetail> {
     }
 
     private _updateOffset(options: IMasterDetail): void {
-        if (options.masterWidth && options.masterMaxWidth && options.masterMinWidth) {
+        if (options.masterWidth !== undefined && options.masterMaxWidth !== undefined && options.masterMinWidth !== undefined) {
             let currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
             this._currentWidth = currentWidth + 'px';
             this._maxOffset = this._getOffsetValue(options.masterMaxWidth) - currentWidth;
