@@ -2894,7 +2894,6 @@ define([
             commitDef = cDeferred.success();
             commitAndMoveDef = cDeferred.success();
 
-            ctrl._options.task1178374430 = true;
             ctrl._commitEditActionHandler();
             assert.equal(commitAndMoveDef, result);
          });
