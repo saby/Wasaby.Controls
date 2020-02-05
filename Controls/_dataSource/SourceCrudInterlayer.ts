@@ -7,7 +7,7 @@ import {IErrorController} from 'Controls/interface';
 import * as ErrorModule from 'Controls/_dataSource/error';
 import {Logger} from 'UI/Utils';
 import {Controller as ErrorController} from 'Controls/_dataSource/error';
-import {IAdditionalQueryParams} from '../_source/interface/IAdditionalQueryParams';
+import {IAdditionalQueryParams} from 'Controls/_source/interface/IAdditionalQueryParams';
 
 /**
  * Конфигурация для ошибки, которую можно получить в catch
