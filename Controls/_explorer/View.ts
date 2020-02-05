@@ -404,17 +404,20 @@ var
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _onItemClick: function(event, item, clickEvent, columnIndex?: number): void {
+      _onItemClick(event, item, clickEvent, columnIndex?: number): boolean {
          const res = this._notify('itemClick', [item, clickEvent, columnIndex]);
-         if (res !== false) {
-            if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-                _private.setRestoredKeyObject(this, item.getId());
-                _private.setRoot(this, item.getId());
-                this._isGoingFront = true;
-                this.cancelEdit();
-            }
-         }
          event.stopPropagation();
+         if (res !== false && item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
+            this.commitEdit().addCallback((res = {}) => {
+               if (!res.validationFailed) {
+                  _private.setRestoredKeyObject(this, item.getId());
+                  _private.setRoot(this, item.getId());
+                  this._isGoingFront = true;
+               }
+            });
+            // Проваливание не должно вызывать разворот узла.
+            return false;
+         }
          return res;
       },
       _onBreadCrumbsClick: function(event, item) {
