@@ -250,16 +250,6 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
       }
    }
 
-   // Удалено в 20.1100
-   protected _isTemplate(icon: TemplateFunction | string): boolean {
-      if (typeof icon === 'function') {
-         Logger.error('Controls.toggle:Checkbox: Опция icon должна иметь тип string.', this);
-         return true;
-      }
-
-      return false;
-   }
-
    static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
 
    static getDefaultOptions(): object {
