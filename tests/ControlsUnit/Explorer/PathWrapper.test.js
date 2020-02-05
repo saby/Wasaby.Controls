@@ -1,23 +1,22 @@
 define([
-   'Controls/_explorer/PathWrapper',
-   'Core/Deferred'
+   'Controls/_explorer/PathWrapper'
 ], function(
-   PathWrapper,
-   Deferred
+   PathWrapper
 ) {
    describe('Controls.Explorer._PathController', function() {
       describe('_beforeMount', function() {
          it('returns deferred, and sets items from callback', function(done) {
             let pathWrapper = new PathWrapper();
-            let itemsPromise = new Deferred();
+            let resolver;
+            let itemsPromise = new Promise((res) => { resolver = res; });
             let result = pathWrapper._beforeMount({itemsPromise: itemsPromise});
             let items = [1, 2, 3];
-            assert.isTrue(!!(result.addCallback), 'must return Deferred');
-            result.addCallback(() => {
+            assert.isTrue(!!(result.then), 'must return Promise');
+            result.then(() => {
                assert.strictEqual(items, pathWrapper._items);
                done();
             });
-            itemsPromise.callback(items);
+            resolver(items);
 
          });
       });
