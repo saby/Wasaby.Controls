@@ -36,7 +36,7 @@
                         itemData="{{currentColumn}}"/>
         </ws:else>
     </ws:else>
-    <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+    <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
         <ws:partial template="itemActionsTemplateChooser"/>
     </ws:if>
 </ws:template>
