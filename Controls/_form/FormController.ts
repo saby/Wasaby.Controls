@@ -1,10 +1,28 @@
 import rk = require('i18n!Controls');
-import Control = require('Core/Control');
-import cInstance = require('Core/core-instance');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import * as cInstance from 'Core/core-instance';
 import tmpl = require('wml!Controls/_form/FormController/FormController');
-import Deferred = require('Core/Deferred');
+import * as Deferred from 'Core/Deferred';
 import {Logger} from 'UI/Utils';
 import dataSource = require('Controls/dataSource');
+import { error as dataSourceError } from 'Controls/dataSource';
+
+
+type ReceivedState =  {
+   data?: any;
+   errorConfig?: dataSourceError.ViewConfig;
+}
+
+type CrudResult = ReceivedState & {
+   error: Error;
+}
+
+interface IAdditionalData {
+   key?: string;
+   record?: object;
+   isNewRecord?: boolean;
+   error: Error;
+}
 
 
    /**
@@ -67,7 +85,7 @@ import dataSource = require('Controls/dataSource');
     * @param {CrudResult} crudResult
     * @return {ReceivedState}
     */
-   var getState = function(crudResult) {
+   let getState = (crudResult: CrudResult): ReceivedState => {
       delete crudResult.error;
       return crudResult;
    };
@@ -84,7 +102,7 @@ import dataSource = require('Controls/dataSource');
     * @param {CrudResult} [crudResult]
     * @return {Promise}
     */
-   var getData = function(crudResult) {
+   let getData = (crudResult: CrudResult): Promise<any> =>{
       if (!crudResult) {
          return Promise.resolve();
       }
@@ -94,7 +112,7 @@ import dataSource = require('Controls/dataSource');
       return Promise.reject(crudResult.error);
    };
 
-   var _private = {
+   let _private = {
       checkRecordType: function(record) {
          return cInstance.instanceOfModule(record, 'Types/entity:Record');
       },
@@ -161,58 +179,68 @@ import dataSource = require('Controls/dataSource');
       }
    };
 
-   var FormController = Control.extend({
-      _template: tmpl,
-      _record: null,
-      _isNewRecord: false,
-      _createMetaDataOnUpdate: null,
-      _errorContainer: dataSource.error.Container,
 
-      constructor: function(options) {
+
+   class FormController extends Control<IControlOptions> {
+      protected _template: TemplateFunction = tmpl;
+      _record = null;
+      _isNewRecord: boolean = false;
+      _createMetaDataOnUpdate = null;
+      _errorContainer = dataSourceError.Container;
+
+      constructor(options) {
+         super(options);
+         options = options || {};
+         this.__errorController = options.errorController || new dataSourceError.Controller({});
+      }
+
+     /* constructor: function(options) {
          FormController.superclass.constructor.apply(this, arguments);
          options = options || {};
-         this.__errorController = options.errorController || new dataSource.error.Controller({});
-      },
-      _beforeMount: function(cfg, _, receivedState) {
-         this._source = cfg.source || cfg.dataSource;
-         if (cfg.dataSource) {
+         this.__errorController = options.errorController || new dataSourceError.Controller({});
+      }*/
+
+      protected _beforeMount(options, context, receivedState: ReceivedState): void {
+         this._source = options.source || options.dataSource;
+         if (options.dataSource) {
              Logger.warn('FormController: Use option "source" instead of "dataSource"', this);
          }
-         if (cfg.initValues) {
+         if (options.initValues) {
              Logger.warn('FormController: Use option "createMetaData" instead of "initValues"', this);
          }
-         if (cfg.destroyMeta) {
+         if (options.destroyMeta) {
              Logger.warn('FormController: Use option "destroyMetaData " instead of "destroyMeta"', this);
          }
-         if (cfg.idProperty) {
+         if (options.idProperty) {
              Logger.warn('FormController: Use option "keyProperty " instead of "idProperty"', this);
          }
 
          receivedState = receivedState || {};
-         var receivedError = receivedState.errorConfig;
-         var receivedData = receivedState.data;
+         let receivedError = receivedState.errorConfig;
+         let receivedData = receivedState.data;
 
          if (receivedError) {
             return this._showError(receivedError);
          }
-         var record = receivedData || cfg.record;
+         let record = receivedData || options.record;
 
          // use record
          if (record && _private.checkRecordType(record)) {
             this._setRecord(record);
-            this._isNewRecord = !!cfg.isNewRecord;
+            this._isNewRecord = !!options.isNewRecord;
 
             // If there is a key - read the record. Not waiting for answer BL
-            if (cfg.key !== undefined && cfg.key !== null) {
-               _private.readRecordBeforeMount(this, cfg);
+            if (options.key !== undefined && options.key !== null) {
+               _private.readRecordBeforeMount(this, options);
             }
-         } else if (cfg.key !== undefined && cfg.key !== null) {
-            return _private.readRecordBeforeMount(this, cfg);
+         } else if (options.key !== undefined && options.key !== null) {
+            return _private.readRecordBeforeMount(this, options);
          } else {
-            return _private.createRecordBeforeMount(this, cfg);
+            return _private.createRecordBeforeMount(this, options);
          }
-      },
-      _afterMount: function() {
+      }
+
+      protected _afterMount(): void {
          // если рекорд был создан во время beforeMount, уведомим об этом
          if (this._createdInMounting) {
             _private.createRecordBeforeMountNotify(this);
@@ -224,8 +252,9 @@ import dataSource = require('Controls/dataSource');
          }
          this._createChangeRecordPending();
          this._isMount = true;
-      },
-      _beforeUpdate: function(newOptions) {
+      }
+
+      protected _beforeUpdate(newOptions): void {
          let self = this;
          if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
@@ -277,8 +306,9 @@ import dataSource = require('Controls/dataSource');
                this._isNewRecord = newOptions.isNewRecord;
             }
          }
-      },
-      _afterUpdate: function() {
+      }
+
+      protected _afterUpdate(): void {
          if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
             this._children.validation.setValidationResult(null);
@@ -286,41 +316,42 @@ import dataSource = require('Controls/dataSource');
             this._wasRead = false;
             this._wasDestroyed = false;
          }
-      },
-      _beforeUnmount: function() {
+      }
+      protected _beforeUnmount(): void {
          if (this._pendingPromise) {
             this._pendingPromise.callback();
             this._pendingPromise = null;
          }
          // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
          this._tryDeleteNewRecord();
-      },
-      _setRecord: function(record) {
+      }
+      _setRecord(record): void {
          if (!record || _private.checkRecordType(record)) {
             this._record = record;
          }
-      },
-      _getRecordId: function() {
+      }
+
+      _getRecordId() {
          if (!this._record.getId && !this._options.idProperty && !this._options.keyProperty) {
              Logger.error('FormController: Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда', this);
              return null;
          }
-         var keyProperty = this._options.idProperty || this._options.keyProperty;
+         let keyProperty = this._options.idProperty || this._options.keyProperty;
          return keyProperty ? this._record.get(keyProperty) : this._record.getId();
-      },
+      }
 
-      _tryDeleteNewRecord: function() {
+      _tryDeleteNewRecord() {
          if (this._needDestroyRecord()) {
             return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
          }
          return (new Deferred()).callback();
-      },
-      _needDestroyRecord: function() {
+      }
+      _needDestroyRecord() {
          // Destroy record when:
          // 1. The record obtained by the method "create"
          // 2. The "create" method returned the key
          return this._record && this._isNewRecord && this._getRecordId();
-      },
+      }
 
       _createChangeRecordPending(): void {
          const self = this;
@@ -334,7 +365,7 @@ import dataSource = require('Controls/dataSource');
                self._showConfirmDialog(deferred, forceFinishValue);
             }
          }], { bubbling: true });
-      },
+      }
 
       _confirmDialogResult(answer: boolean, def: Promise<boolean>): void {
          if (answer === true) {
@@ -364,7 +395,7 @@ import dataSource = require('Controls/dataSource');
             // if user press 'cancel' button, then cancel finish pendings
             this._notify('cancelFinishingPending', [], {bubbling: true});
          }
-      },
+      }
 
       _showConfirmDialog(def: Promise<boolean>, forceFinishValue: boolean): void {
          if (forceFinishValue !== undefined) {
@@ -375,7 +406,7 @@ import dataSource = require('Controls/dataSource');
                return answer;
             });
          }
-      },
+      }
 
       _showConfirmPopup(type: string, details: string): Promise<string> {
          return this._children.popupOpener.open({
@@ -383,45 +414,45 @@ import dataSource = require('Controls/dataSource');
             details,
             type
          });
-      },
+      }
 
-      create: function(createMetaData) {
+      create(createMetaData) {
          createMetaData = createMetaData || this._options.initValues || this._options.createMetaData;
          return this._children.crud.create(createMetaData).addCallbacks(
             this._createHandler.bind(this),
             this._crudErrback.bind(this)
          );
-      },
-      _createHandler: function(record) {
+      }
+      _createHandler(record) {
          this._updateIsNewRecord(true);
          this._wasCreated = true;
          this._forceUpdate();
          return record;
-      },
-      read: function(key, readMetaData) {
+      }
+      read(key, readMetaData) {
          readMetaData = readMetaData || this._options.readMetaData;
          return this._children.crud.read(key, readMetaData).addCallbacks(
             this._readHandler.bind(this),
             this._crudErrback.bind(this)
          );
-      },
-      _readHandler: function(record) {
+      }
+      _readHandler(record) {
          this._wasRead = true;
          this._updateIsNewRecord(false);
          this._forceUpdate();
          this._hideError();
          return record;
-      },
+      }
 
-      update: function() {
-         var updateResult = new Deferred(),
+      update() {
+         let updateResult = new Deferred(),
             self = this;
 
          function updateCallback(result) {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
-               var res = self._update().addCallback(getData);
+               let res = self._update().addCallback(getData);
                updateResult.dependOn(res);
             } else {
                updateResult.callback(true);
@@ -430,10 +461,10 @@ import dataSource = require('Controls/dataSource');
          }
 
          // maybe anybody want to do custom update. check it.
-         var result = this._notify('requestCustomUpdate', [], { bubbling: true });
+         let result = this._notify('requestCustomUpdate', [], { bubbling: true });
 
          // pending waiting while update process finished
-         var def = new Deferred();
+         let def = new Deferred();
          self._notify('registerPending', [def, { showLoadingIndicator: false }], { bubbling: true });
          def.dependOn(updateResult);
 
@@ -449,19 +480,20 @@ import dataSource = require('Controls/dataSource');
             updateCallback(result);
          }
          return updateResult;
-      },
-      _update: function() {
-         var self = this,
+      }
+
+      _update() {
+         let self = this,
             record = this._record,
             updateDef = new Deferred();
 
          // запускаем валидацию
-         var validationDef = this._children.validation.submit();
+         let validationDef = this._children.validation.submit();
          validationDef.addCallback(function(results) {
             if (!results.hasErrors) {
                // при успешной валидации пытаемся сохранить рекорд
                self._notify('validationSuccessed', [], { bubbling: true });
-               var res = self._children.crud.update(record, self._isNewRecord);
+               let res = self._children.crud.update(record, self._isNewRecord);
 
                // fake deferred used for code refactoring
                if (!(res && res.addCallback)) {
@@ -476,11 +508,11 @@ import dataSource = require('Controls/dataSource');
                });
                res.addErrback((error: Error) => {
                   updateDef.errback(error);
-                  return self._processError(error, dataSource.error.Mode.dialog);
+                  return self._processError(error, dataSourceError.Mode.dialog);
                });
             } else {
                // если были ошибки валидации, уведомим о них
-               var validationErrors = self._children.validation.isValid();
+               let validationErrors = self._children.validation.isValid();
                self._notify('validationFailed', [validationErrors], { bubbling: true });
                updateDef.callback({
                   data: {
@@ -494,11 +526,12 @@ import dataSource = require('Controls/dataSource');
             return e;
          });
          return updateDef;
-      },
-      delete: function(destroyMetaData) {
+      }
+
+      delete(destroyMetaData) {
          destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
-         var self = this;
-         var resultDef = this._children.crud.delete(this._record, destroyMetaData);
+         let self = this;
+         let resultDef = this._children.crud.delete(this._record, destroyMetaData);
 
          resultDef.addCallbacks(function(record) {
             self._setRecord(null);
@@ -507,14 +540,14 @@ import dataSource = require('Controls/dataSource');
             self._forceUpdate();
             return record;
          }, function(error) {
-            return self._crudErrback(error, dataSource.error.Mode.dialog);
+            return self._crudErrback(error, dataSourceError.Mode.dialog);
          });
          return resultDef;
-      },
+      }
 
-      validate: function() {
+      validate() {
          return this._children.validation.submit();
-      },
+      }
 
       /**
        *
@@ -523,16 +556,16 @@ import dataSource = require('Controls/dataSource');
        * @return {Promise<*>}
        * @private
        */
-      _crudErrback: function(error, mode) {
+      _crudErrback(error, mode) {
          return this._processError(error, mode).then(getData);
-      },
+      }
 
-      _updateIsNewRecord: function(value) {
+      _updateIsNewRecord(value): void {
          if (this._isNewRecord !== value) {
             this._isNewRecord = value;
             this._notify('isNewRecordChanged', [value]);
          }
-      },
+      }
 
       /**
        * @param {Error} error
@@ -540,11 +573,11 @@ import dataSource = require('Controls/dataSource');
        * @return {Promise.<CrudResult>}
        * @private
        */
-      _processError: function(error, mode) {
-         var self = this;
+      _processError(error, mode) {
+         let self = this;
          return self.__errorController.process({
             error: error,
-            mode: mode || dataSource.error.Mode.include
+            mode: mode || dataSourceError.Mode.include
          }).then(function(errorConfig) {
             self._showError(errorConfig);
             return {
@@ -552,41 +585,41 @@ import dataSource = require('Controls/dataSource');
                errorConfig: errorConfig
             };
          });
-      },
+      }
 
       /**
        * @private
        */
-      _showError: function(errorConfig) {
+      _showError(errorConfig : dataSourceError.ViewConfig): void {
          this.__error = errorConfig;
-      },
+      }
 
-      _hideError: function() {
+      _hideError(): void{
          if (this.__error) {
             this.__error = null;
          }
-      },
+      }
 
-      _onCloseErrorDialog: function() {
+      _onCloseErrorDialog(): void{
          if (!this._record) {
             this._notify('close', [], { bubbling: true });
          }
-      },
+      }
 
-      _crudHandler: function(event) {
-         var eventName = event.type;
-         var args = Array.prototype.slice.call(arguments, 1);
+      _crudHandler(event): void {
+         const eventName: string = event.type;
+         const args = Array.prototype.slice.call(arguments, 1);
          event.stopPropagation(); // FC the notification event by itself
          this._notifyHandler(eventName, args);
-      },
+      }
 
-      _notifyHandler: function(eventName, args) {
+      _notifyHandler(eventName: string, args): void{
          this._notifyToOpener(eventName, args);
          this._notify(eventName, args, { bubbling: true });
-      },
+      }
 
-      _notifyToOpener: function(eventName, args) {
-         var handlers = {
+      _notifyToOpener(eventName: string, args): void {
+         const handlers = {
             'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
             'createsuccessed': '_getCreateSuccessedData',
@@ -594,56 +627,55 @@ import dataSource = require('Controls/dataSource');
             'deletesuccessed': '_getDeleteSuccessedData',
             'updatefailed': '_getUpdateFailedData'
          };
-         var resultDataHandlerName = handlers[eventName.toLowerCase()];
+         const resultDataHandlerName = handlers[eventName.toLowerCase()];
          if (this[resultDataHandlerName]) {
-            var resultData = this[resultDataHandlerName].apply(this, args);
+            let resultData = this[resultDataHandlerName].apply(this, args);
             this._notify('sendResult', [resultData], { bubbling: true });
          }
-      },
+      }
 
        _getUpdateStartedData(record, key) {
           let config = this._getUpdateSuccessedData(record, key);
           config.formControllerEvent = 'updateStarted';
           return config;
-       },
+       }
 
-      _getUpdateSuccessedData: function(record, key) {
-         var additionalData = {
+      _getUpdateSuccessedData(record, key: string) {
+         let additionalData: IAdditionalData = {
             key: key,
             isNewRecord: this._isNewRecord
          };
          return this._getResultData('update', record, additionalData);
-      },
+      }
 
-      _getDeleteSuccessedData: function(record) {
+      _getDeleteSuccessedData(record) {
          return this._getResultData('delete', record);
-      },
+      }
 
-      _getCreateSuccessedData: function(record) {
+      _getCreateSuccessedData(record) {
          return this._getResultData('create', record);
-      },
+      }
 
-      _getReadSuccessedData: function(record) {
+      _getReadSuccessedData(record) {
          return this._getResultData('read', record);
-      },
+      }
 
-      _getUpdateFailedData: function(error, record) {
-         var additionalData = {
+      _getUpdateFailedData(error: Error, record) {
+         let additionalData: IAdditionalData = {
             record: record,
             error: error,
             isNewRecord: this._isNewRecord
          };
          return this._getResultData('updateFailed', record, additionalData);
-      },
-      _getResultData: function(eventName, record, additionalData) {
+      }
+      _getResultData(eventName: string, record, additionalData: IAdditionalData) {
          return {
             formControllerEvent: eventName,
             record: record,
             additionalData: additionalData || {}
          };
       }
-   });
+   }
 
-   FormController._private = _private;
-   export = FormController;
-
+FormController._private = _private;
+export default FormController;
