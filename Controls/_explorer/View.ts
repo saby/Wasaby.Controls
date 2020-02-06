@@ -407,19 +407,29 @@ var
       _onItemClick(event, item, clickEvent, columnIndex?: number): boolean {
          const res = this._notify('itemClick', [item, clickEvent, columnIndex]);
          event.stopPropagation();
+
+         const changeRoot = () => {
+            _private.setRestoredKeyObject(this, item.getId());
+            _private.setRoot(this, item.getId());
+            this._isGoingFront = true;
+         };
+
          if (res !== false && item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-            this.commitEdit().addCallback((res = {}) => {
-               if (!res.validationFailed) {
-                  _private.setRestoredKeyObject(this, item.getId());
-                  _private.setRoot(this, item.getId());
-                  this._isGoingFront = true;
-               }
-            });
+            if (!this._options.editingConfig) {
+               changeRoot();
+            } else {
+               this.commitEdit().addCallback((res = {}) => {
+                  if (!res.validationFailed) {
+                     changeRoot();
+                  }
+               });
+            }
 
             // Проваливание в папку и попытка проваливания в папку не должны вызывать разворот узла.
             // Мы не можем провалиться в папку, пока на другом элементе списка запущено редактирование.
             return false;
          }
+
          return res;
       },
       _onBreadCrumbsClick: function(event, item) {

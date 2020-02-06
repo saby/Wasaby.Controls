@@ -586,11 +586,15 @@ define([
             let commitEditResult = successfulCommit;
 
             var
-               explorer = new explorerMod.View({}),
+               explorer = new explorerMod.View({
+                  editingConfig: {}
+               }),
                isEventResultReturns = false,
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
-            explorer.saveOptions({});
+            explorer.saveOptions({
+               editingConfig: {}
+            });
             explorer._notify = (eName, eArgs) => {
                if (eName === 'itemClick') {
                   assert.equal(3, eArgs[2]);
