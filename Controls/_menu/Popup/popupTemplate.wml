@@ -1,7 +1,8 @@
 <Controls.popupTemplate:Sticky
+        attr:class="controls-Menu__popup_theme-{{_options.theme}}"
         headingCaption="{{_options.headingCaption}}"
         headingIcon="{{_options.headingIcon}}"
-        headingIconSize="{{_options.headingIconSize}}"
+        headingIconSize="{{_options.iconSize}}"
         headerContentTemplate="{{_options.headerTemplate}}"
         footerContentTemplate="{{_options.footerTemplate}}"
         closeButtonVisibility="{{_options.closeButtonVisibility}}">

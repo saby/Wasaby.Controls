@@ -20,6 +20,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _applyButtonVisible: boolean = false;
+    protected _loadingPromise: Promise = null;
     private _sourceController: SourceController = null;
     private _subDropdownItem: TreeItem<Model>|null;
     private _selectionChanged: boolean = false;
@@ -28,7 +29,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
 
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         if (options.source) {
-            return this.loadItems(options);
+            this._loadingPromise = this.loadItems(options);
+            return this._loadingPromise;
         }
     }
 
@@ -41,7 +43,12 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         if (newOptions.root !== this._options.root) {
             this.loadItems(newOptions);
         }
-
+        if (this._loadingPromise) {
+            this._loadingPromise.addCallback(() => {
+                this._notify('controlResize', [], {bubbling: true});
+                this._loadingPromise = null;
+            });
+        }
         if (this.isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this.setSelectedItems(this._listModel, newOptions.selectedKeys);
         }
