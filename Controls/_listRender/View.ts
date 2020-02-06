@@ -62,6 +62,14 @@ export default class View extends Control<IViewOptions> {
         }
     }
 
+    protected _getSafeScope(unsafeScope: object): object {
+        return {
+            ...unsafeScope,
+            swipeTemplate: undefined,
+            itemActionsTemplate: undefined
+        };
+    }
+
     private _createCollection(
         module: string,
         items: RecordSet,
