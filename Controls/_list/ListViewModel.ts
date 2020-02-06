@@ -23,11 +23,13 @@ var _private = {
         self._stopIndex = stopIndex;
     },
     getItemPadding: function(cfg) {
-        return cfg.itemPadding || {
-            left: 'default',
-            right: 'default',
-            top: 'default',
-            bottom: 'default'
+        const itemPadding = cfg.itemPadding || {};
+        const getPadding = (side) => itemPadding && itemPadding[side] ? itemPadding[side].toLowerCase() : 'default';
+        return {
+            left: getPadding('left'),
+            right: getPadding('right'),
+            top: getPadding('top'),
+            bottom: getPadding('bottom')
         };
     },
     getSpacingClassList: function(cfg) {
