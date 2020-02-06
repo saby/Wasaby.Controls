@@ -30,7 +30,6 @@ export default class TileRender extends BaseRender {
     protected _beforeMount(options: ITileRenderOptions): void {
         super._beforeMount(options);
         this._templateKeyPrefix = `tile-render-${this.getInstanceId()}`;
-        this._itemTemplate = options.itemTemplate || defaultItemTemplate;
 
         this._debouncedSetHoveredItem = debounce(
             this._setHoveredItem.bind(this),
@@ -188,6 +187,12 @@ export default class TileRender extends BaseRender {
             !this._context.isTouch.isTouch &&
             !document.body.classList.contains('ws-is-drag')
         );
+    }
+
+    static getDefaultOptions(): Partial<ITileRenderOptions> {
+        return {
+            itemTemplate: defaultItemTemplate
+        };
     }
 
     static contextTypes() {
