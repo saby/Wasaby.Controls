@@ -22,6 +22,7 @@ import ControlsConstants = require('Controls/Constants');
 import collection = require('Types/collection');
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
+import {createClassListCollection} from "../Utils/CssClassList";
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -92,51 +93,52 @@ var
         getPaddingCellClasses: function(params, theme) {
             const { columns, columnIndex } = params;
             const { cellPadding } = columns[columnIndex];
-            var
-                preparedClasses = '';
+            let preparedClasses = '';
 
             if (columns[columnIndex].actionCell) {
                 return preparedClasses;
             }
             const arrayLengthOffset = params.hasActionCell ? 2 : 1;
+            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side]}` : '';
+
+            // Стиль колонки
+            preparedClasses += `controls-Grid__cell_${params.style || 'default'}`;
+
             // Колонки
-            if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
-                preparedClasses += (cellPadding && cellPadding.left ? ` controls-Grid__cell_spacingLeft_${cellPadding.left}` : ' controls-Grid__cell_spacingLeft') + `_theme-${theme}`;
+            if (params.hasMultiSelect ? params.columnIndex > 1 : params.columnIndex > 0) {
+                preparedClasses += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
             }
             if (params.columnIndex < params.columns.length - arrayLengthOffset) {
-                preparedClasses += (cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight') + `_theme-${theme}`;
+                preparedClasses += ` controls-Grid__cell_spacingRight${getCellPadding('right')}_theme-${theme}`;
             }
 
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (params.columnIndex === 0 && !params.multiSelectVisibility) {
-                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase() + `_theme-${theme}`;
+            if (params.columnIndex === 0 && !params.hasMultiSelect) {
+                preparedClasses += ` controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme}`;
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (params.isBreadCrumbs) {
-               preparedClasses += ' controls-Grid__cell_spacingFirstCol_null' + `_theme-${theme}`;
+               preparedClasses += ` controls-Grid__cell_spacingFirstCol_null_theme-${theme}`;
             }
-
-            // Стиль колонки
-            preparedClasses += ' controls-Grid__cell_' + (params.style || 'default');
 
             // Отступ для последней колонки
             if (params.columnIndex === params.columns.length - arrayLengthOffset) {
-                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.itemPadding.right || 'default').toLowerCase() + `_theme-${theme}`;
+                preparedClasses += ` controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
             }
             if (!params.isHeader && !params.isResult) {
-                preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
-                preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
+                preparedClasses += ` controls-Grid__row-cell_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
+                preparedClasses += ` controls-Grid__row-cell_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme}`;
             }
 
             return preparedClasses;
         },
 
-        getPaddingForCheckBox: function({ theme, itemPadding }) {
-            let preparedClasses = '';
-            preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
-            preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
-            return preparedClasses;
+        getPaddingForCheckBox: function(itemPadding, theme) {
+            return (
+                `controls-Grid__row-cell_rowSpacingTop_${itemPadding.top}_theme-${theme}` +
+                ` controls-Grid__row-cell_rowSpacingBottom_${itemPadding.bottom}_theme-${theme}`
+            );
         },
 
         getPaddingHeaderCellClasses: function(params, theme) {
@@ -201,7 +203,7 @@ var
                 return itemIndex === rowCount - 1;
             }
         },
-        prepareRowSeparatorClasses: function (current, theme, editingItem) {
+        prepareRowSeparatorClasses: function (current, theme) {
             let result = ' ';
             if (current.rowSeparatorVisibility) {
                 result += `controls-Grid__row-cell_withRowSeparator_theme-${theme}`;
@@ -242,49 +244,49 @@ var
             return result;
         },
 
-        getItemColumnCellClasses: function(current, theme, editingItem) {
-            const cellClasses = `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} `;
+        getItemColumnCellClasses: function(current, theme) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
+            const classLists = createClassListCollection('base', 'padding', 'columnScroll');
+            const style = current.style || 'default';
+
+            classLists.base += `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme}`;
+            classLists.base += _private.prepareRowSeparatorClasses(current, theme);
 
             if (current.columnScroll) {
-                cellClasses += _private.getColumnScrollCellClasses(current, theme);
+                classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
             } else if (!checkBoxCell) {
-                cellClasses += ' controls-Grid__cell_fit';
+                classLists.base += ' controls-Grid__cell_fit';
             }
-            cellClasses += (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover') + `_theme-${theme}`;
 
-            var currentStyle = current.style || 'default';
+            if (current.isEditing) {
+                classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
+            } else {
+                classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`
+            }
 
-            cellClasses += _private.prepareRowSeparatorClasses(current, theme, editingItem);
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (checkBoxCell) {
-                cellClasses += ' controls-Grid__row-cell-checkbox' + `_theme-${theme}`;
-                cellClasses += _private.getPaddingForCheckBox({ theme, itemPadding: current.itemPadding});
+                classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
+                classLists.padding += ` ${_private.getPaddingForCheckBox(current.itemPadding, theme)}`;
             } else {
-                cellClasses += _private.getPaddingCellClasses({
-                    columns: current.columns,
-                    style: current.style,
-                    columnIndex: current.columnIndex,
-                    multiSelectVisibility: current.multiSelectVisibility !== 'hidden',
-                    itemPadding: current.itemPadding,
-                }, theme);
+                classLists.padding += ` ${_private.getPaddingCellClasses(current, theme)}`;
             }
 
             if (current.isSelected) {
-                cellClasses += ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-' + currentStyle + `_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 if (current.columnIndex === 0) {
-                    cellClasses += ' controls-Grid__row-cell_selected__first-' + currentStyle + `_theme-${theme}`;
+                    classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
                 }
                 if (current.columnIndex === current.getLastColumnIndex()) {
-                    cellClasses += ' controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-' + currentStyle + `_theme-${theme}`;
+                    classLists.base += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
                 }
             } else if (current.columnIndex === current.getLastColumnIndex()) {
-                cellClasses += ' controls-Grid__row-cell__last controls-Grid__row-cell__last-' + currentStyle + `_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
             }
 
-            return cellClasses;
+            return classLists;
         },
         getStickyColumn: function(cfg) {
             var
@@ -977,11 +979,11 @@ var
             if ((this._options.multiSelectVisibility !== 'hidden') && columnIndex === 0) {
                 cellClasses += ' controls-Grid__results-cell-checkbox' + `_theme-${this._options.theme}`;
             } else {
-                cellClasses += _private.getPaddingCellClasses({
+                cellClasses += ' ' + _private.getPaddingCellClasses({
                     style: this._options.style,
                     columns: this._resultsColumns,
                     columnIndex: columnIndex,
-                    multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
+                    hasMultiSelect: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
                     isResult: true,
                     hasActionCell: this._shouldAddActionsCell(),
@@ -1364,7 +1366,7 @@ var
                         },
                         _preferVersionAPI: true
                     };
-                currentColumn.cellClasses = current.getItemColumnCellClasses(current, self._options.theme, self.getEditingItemData());
+                currentColumn.cellClasses = current.getItemColumnCellClasses(current, self._options.theme);
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                 if (self._isSupportLadder(self._options.ladderProperties)) {

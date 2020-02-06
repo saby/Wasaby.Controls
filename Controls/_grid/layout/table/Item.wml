@@ -76,7 +76,7 @@
     <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
         <ws:partial template="colTpl"
                     currentColumn="{{itemData.getCurrentColumn()}}"
-                    attr:class="{{itemData.getCurrentColumn().cellClasses}} js-controls-SwipeControl__actionsContainer
+                    attr:class="{{itemData.getCurrentColumn().cellClasses.base}} {{itemData.getCurrentColumn().cellClasses.columnScroll}} js-controls-SwipeControl__actionsContainer
                         {{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
                         {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                         {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}

@@ -168,6 +168,27 @@ class CssClassList {
     }
 }
 
+
+function getAll(classListCollection: Record<string, string>): string {
+    let classes = '';
+    for (const classListName in classListCollection) {
+        if (classListName !== 'getAll') {
+            classes += `${classListCollection[classListName].trim()} `;
+        }
+    }
+    return classes.trim();
+}
+
+function createClassListCollection(...classListNames: string[]) {
+    const classListCollection = { getAll: null };
+    classListNames.forEach((classListName) => {
+        classListCollection[classListName] = '';
+    });
+    classListCollection.getAll = getAll.bind(null, classListCollection);
+    return classListCollection;
+}
+
 export {
-    CssClassList
+    CssClassList,
+    createClassListCollection
 }
