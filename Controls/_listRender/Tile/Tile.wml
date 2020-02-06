@@ -9,13 +9,13 @@
       swipeTemplate="{{ _options.swipeTemplate }}"
       multiSelectTpl="{{ _options.multiSelectTpl }}"
       isAdd="{{ _options.isAdd }}"
-      itemTemplate="{{ _itemTemplate }}" />
+      itemTemplate="{{ _options.itemTemplate }}" />
    <!-- TODO Only dynamic tile is supported at the moment -->
    <!--ws:if data="{{ _options.tileMode === 'static' && _options.listModel.getCount() > 0 }}">
       <ws:partial
          template="wml!Controls/_tile/TileView/resources/InvisibleFor"
          type="leaf"
-         itemTemplate="{{ _itemTemplate }}"
+         itemTemplate="{{ _options.itemTemplate }}"
          listModel="{{ _options.listModel }}" />
    </ws:if-->
    <ws:if data="{{ _options.emptyTemplate }}">

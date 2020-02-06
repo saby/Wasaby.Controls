@@ -160,7 +160,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         if (this.isAnimated()) {
             classes += ' controls-TileView__item_animated';
         }
-        if (templateMarker !== false && this.isMarked()) {
+        if (this.shouldDisplayMarker(templateMarker)) {
             classes += ' controls-TileView__item_withMarker';
         } else {
             classes += ' controls-TileView__item_withoutMarker';

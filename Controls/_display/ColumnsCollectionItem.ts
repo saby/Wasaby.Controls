@@ -15,7 +15,7 @@ export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
     getWrapperClasses(templateHighlightOnHover: boolean = true, marker: boolean = true): string {
         let result: string = super.getWrapperClasses.apply(this, arguments);
         result += ' controls-ColumnsView__itemV';
-        if (marker && this.isMarked()) {
+        if (this.shouldDisplayMarker(marker)) {
             result += ' controls-ColumnsView__item_marked';
         }
         return result;
