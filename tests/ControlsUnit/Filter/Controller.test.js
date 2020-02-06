@@ -796,6 +796,11 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
 
          var filterButtonItems = [];
          let self = {};
+         self._notify = function(eventName) {
+            if (eventName === 'historySave') {
+
+            }
+         };
          Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID_2');
          assert.isOk(self._sourceController);
          Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
