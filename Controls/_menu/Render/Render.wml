@@ -1,12 +1,16 @@
 <Controls.listRender:Render
         listModel="{{_options.listModel}}"
+        groupTemplate="{{_options.groupTemplate}}"
         multiselectVisibility="{{_options.multiSelect ? 'onhover' : 'hidden'}}"
+        multiSelectTpl="{{_multiSelectTpl}}"
         footerTemplate="{{_options.footerTemplate}}"
         on:itemMouseEnter="_proxyEvent('itemMouseEnter')"
         on:itemClick="_proxyEvent('itemClick')">
    <ws:itemTemplate>
       <ws:partial template="{{_options.itemTemplate}}"
+                  attr:class="{{_getClassList(itemTemplate.item)}}"
                   itemData="{{_getItemData(itemTemplate.item)}}"
+                  item="{{itemTemplate.item}}"
       />
    </ws:itemTemplate>
 </Controls.listRender:Render>

@@ -17,6 +17,8 @@ export interface IMenuOptions extends IControlOptions, ISourceOptions, IFilter {
     nodeFooterTemplate: TemplateFunction;
     nodeProperty?: string;
     parentProperty?: string;
+    groupProperty?: string;
+    groupTemplate?: TemplateFunction;
     root?: string|number|null;
     selectedKeys?: TKeys;
     selectorTemplate?: object;

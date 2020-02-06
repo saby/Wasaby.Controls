@@ -10,12 +10,6 @@ import * as mStubs from 'Core/moduleStubs';
 import {descriptor, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {PrefetchProxy} from 'Types/source';
-
-// TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
-var
-    defaultFilter = {},
-    defaultSelectedKeys = [];
 
 var _private = {
    createSourceController: function(self, options) {
@@ -26,15 +20,6 @@ var _private = {
          });
       }
       return self._sourceController;
-   },
-
-   createPrefetchSource: function(self, source, items) {
-      self._prefetchSource = new PrefetchProxy({
-         target: source,
-         data: {
-            query: items
-         }
-      });
    },
 
    getSourceController: function (self, options) {
@@ -49,7 +34,6 @@ var _private = {
           .addCallback((sourceController) => {
              self._filter = historyUtils.getSourceFilter(options.filter, self._source);
              return sourceController.load(self._filter).addCallback((items) => {
-                _private.createPrefetchSource(self, options.source, items);
                 self._setItems(items);
                 if (options.dataLoadCallback) {
                    options.dataLoadCallback(items);
@@ -516,8 +500,8 @@ var _Controller = Control.extend({
 
 _Controller.getDefaultOptions = function getDefaultOptions() {
    return {
-      filter: defaultFilter,
-      selectedKeys: defaultSelectedKeys
+      filter: {},
+      selectedKeys: []
    };
 };
 
