@@ -4,7 +4,6 @@ import {assert} from 'chai';
 import {NavigationController} from 'Controls/source';
 import {INavigationOptionValue} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
-import {DataSet} from 'Types/source';
 import {
     INavigationPageSourceConfig, INavigationPositionSourceConfig,
     TNavigationDirection
@@ -14,7 +13,7 @@ import {
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
 } from 'Controls/_source/interface/IAdditionalQueryParams';
-import {getGridData, SourceFaker} from 'Controls-demo/List/Utils/listDataGenerator';
+import {DataFaker} from 'Controls-demo/List/Utils/listDataGenerator';
 
 const fakePageNavigationConfig = (hasMore?: boolean): INavigationOptionValue<INavigationPageSourceConfig> => {
     return {
@@ -40,48 +39,6 @@ const fakePositionNavigationConfig = (direction?: TNavigationDirection): INaviga
 };
 
 const NUMBER_OF_ITEMS = 50;
-
-class DataFaker {
-    _rawData: any[];
-    _source: SourceFaker;
-
-    constructor() {
-        this._rawData = this._initRawData(0);
-        this._source = this._initSource(this._rawData);
-    }
-
-    private _initRawData(startIndex: number = 0): any[] {
-        return getGridData(NUMBER_OF_ITEMS, {
-            buyerId: {
-                value: 0,
-                type: 'number'
-            },
-            amount: {
-                value: 0,
-                type: 'number'
-            }
-        }, 'key', startIndex);
-    }
-
-    private _initSource(rawData: any[]): SourceFaker {
-        return SourceFaker.instance({}, new DataSet({
-            rawData,
-            keyProperty: 'key'
-        }), false);
-    }
-
-    getRawData(): any[] {
-        return this._rawData;
-    }
-
-    getSource(reset?: boolean, startIndex: number = 0): SourceFaker {
-        if (reset) {
-            this._rawData = this._initRawData(startIndex);
-            this._source = this._initSource(this._rawData);
-        }
-        return this._source;
-    }
-}
 
 /*
  * Это действие в контролах производится контролом пейджера при нажатии на кнопку >> или <<
@@ -120,7 +77,7 @@ describe('Controls/_source/NavigationController', () => {
     let more2RecordSet: RecordSet;
 
     beforeEach(() => {
-        source = new DataFaker();
+        source = new DataFaker(NUMBER_OF_ITEMS);
         recordSet = source.getSource().querySync().getAll();
         moreRecordSet = source.getSource(true, lastKey(recordSet, 'up')).querySync().getAll();
         more2RecordSet = source.getSource(true, lastKey(moreRecordSet, 'up')).querySync().getAll();
@@ -159,7 +116,7 @@ describe('Controls/_source/NavigationController', () => {
             assert.equal(query.offset, query.limit);
         });
 
-        it('should previous page params', () => {
+        it('should  correctly calculate previous page params', () => {
             const pager = pagerFaker(0);
 
             // query params for page 0;
