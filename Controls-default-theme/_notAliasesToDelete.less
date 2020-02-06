@@ -49,26 +49,6 @@
 @height_control_l:            @inline_height_xl; // дублирует стиль новой спецификации, удаляем
 @height_control_xl:           @inline_height_2xl; // дублирует стиль новой спецификации, удаляем
 
-// Button
-@border-radius-ToolButton_val:                                    @border-radius_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@min-width_Button_common_val:                                     @min-width_button_button; // дублирует стиль новой спецификации, удаляем
-@box-shadow-ToolButton_val:                                       @box-shadow_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@text-shadow_Button_readOnly_val:                                 @text-shadow_button; // дублирует стиль новой спецификации, удаляем
-@text-shadow_Button_button_val:                                   @text-shadow_button; // дублирует стиль новой спецификации, удаляем
-@box-shadow_Button_common_val:                                    @box-shadow_button; // дублирует стиль новой спецификации, удаляем
-@box-shadow_Button_active_val:                                    @box-shadow_button; // дублирует стиль новой спецификации, удаляем
-@box-shadow-ToolButton_activated_val:                             @box-shadow_button; // дублирует стиль новой спецификации, удаляем
-@text-shadow_ToolButton_val:                                      @text-shadow_button; // дублирует стиль новой спецификации, удаляем
-@text-shadow_ToolButton_readOnly_val:                             @text-shadow_button; // дублирует стиль новой спецификации, удаляем
-@background-color-ToolButton_transparent_val:                     @background-color_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@border-color-ToolButton_val:                                     @border-color_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@border-color-ToolButton_readOnly_val:                            @readonly_border-color_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@background-color-ToolButton_val:                                 @background-color_contrast_button_toolButton; // дублирует стиль новой спецификации, удаляем
-@background_Button_button_primary_hovered_val:                    @primary_hover_background-color_button; // дублирует стиль новой спецификации, удаляем
-@background_Button_secondary_active_val:                          @secondary_active_background-color_button; // дублирует стиль новой спецификации, удаляем
-@background_Button_button_primary_active_val:                     @primary_active_background-color_button; // дублирует стиль новой спецификации, удаляем
-@background_Button:                                               @primary_background-color_button; // дублирует стиль новой спецификации, удаляем
-
 //Heading
 @color_Heading_primary:                                 @primary_text-color_heading; // дублирует стиль новой спецификации, удаляем
 @color_Heading_secondary:                               @secondary_text-color_heading; // дублирует стиль новой спецификации, удаляем
@@ -172,106 +152,6 @@
 @font-weight_StackTemplate-caption_info:                      @font-weight_StackTemplate-caption_info_val; // вообще не нужно, удаляем
 @background-color_StackTemplate-footer:                        @footer_background-color_stack; // вообще не нужно, удаляем
 
-
-//Buttons
-
-//Эти стили переехали из кнопки. Т.к. в кнопках они больше не нужны а тоггл их использует
-@color_Link_secondary: @color_link;
-@color_Link_secondary_hovered:                         @link_hover_text-color;
-@color_Link_success: @success_color;
-@color_Link_danger: @danger_color;
-@color_Link_info: @color_unselected;
-@color_Link_warning: @warning_color;
-@color_Link_primary: @color_primary;
-@spacing_Button-between-icon-and-text: 6px;
-
-//Link
-//sizes
-@font-size_Link-s:                                     @font-size_xs;
-@font-size_Link-m:                                     @font-size_m;
-@font-size_Link-default:                               @font-size_l;
-@font-size_Link-l:                                     @font-size_l;
-@font-size_Link-xl:                                    @font-size_3xl;
-@font-size_Button_size_s:                              @font-size_m;
-@font-size_Button_size_m:                              @font-size_m;
-@font-size_Button_size_default:                        @font-size_m;
-@font-size_Button_size_l:                              @font-size_xl;
-@color-ToolButton_readOnly:                            @readonly_color;
-
-
-@border-color_Button_button_primary:                   @primary_color;
-@border-color_Button_button_primary_hovered:           @border-color_Button_button_primary;
-
-@border-color_Button_secondary:                        @secondary_color;
-@border-color_Button_secondary_hovered:                @secondary_color;
-
-@color-ToolButton__border_iconStyle-secondary_hovered: #ccc;
-
-@border-color_Button_readOnly:                         @readonly_color;
-@border-width-ToolButton:                              @thickness_border_default;
-@border-style-ToolButton:                              solid;
-@border-color-ToolButton:                              @border-color-ToolButton_val;
-@border-color-ToolButton_readOnly:                     @border-color-ToolButton_readOnly_val;
-
-@text-shadow_ToolButton:                               @text-shadow_ToolButton_val;
-@text-shadow_ToolButton_readOnly:                      @text-shadow_ToolButton_readOnly_val;
-@text-shadow_Button_button:                            @text-shadow_Button_button_val;
-@text-shadow_Button_readOnly:                          @text-shadow_Button_readOnly_val;
-
-@box-shadow_Button_common:                             @box-shadow_Button_common_val;
-@box-shadow_Button_active:                             @box-shadow_Button_active_val;
-@box-shadow-ToolButton:                                @box-shadow-ToolButton_val;
-@box-shadow-ToolButton_activated:                      @box-shadow-ToolButton_activated_val;
-
-
-@background_Button_button_primary:                     @background_Button;
-@background_Button_button_primary_hovered:             @background_Button_button_primary_hovered_val;
-@background_Button_button_primary_active:              @background_Button_button_primary_active_val;
-@background_Button-primary_readOnly:                   @background_Button;
-
-@background_Button_secondary:                          @background_Button;
-@background_Button_secondary_hovered:                  @secondary_hover_background-color_button;
-@background_Button_secondary_active:                   @background_Button_secondary_active_val;
-@background_Button-secondary_readOnly:                 @background_Button;
-
-@background-color-ToolButton:                          @background-color-ToolButton_val;
-@background-color-ToolButton_transparent:              @background-color-ToolButton_transparent_val;
-@background-color-ToolButton_hovered:                  @background-color-ToolButton;
-@background-color-IconButton_transparent_hovered:      @background-color-ToolButton_transparent;
-
-@height_Button_size_s:                                 @inline_height_default;
-@height_Button_size_m:                                 @inline_height_default;
-@height_Button_size_default:                           @inline_height_default;
-@height_Button_size_l:                                 @inline_height_2xl;
-
-@height-ToolButton_size-s:                             @inline_height_default;
-@height-ToolButton_size-m:                             @inline_height_m;
-@height-ToolButton_size-default:                       @inline_height_m;
-@height-ToolButton_size-l:                            @icon-size_l;
-
-@border-radius_Button_size_s:                          @border-radius_m_button;
-@border-radius_Button_size_m:                          @border-radius_m_button;
-@border-radius_Button_size_default:                    @border-radius_default_button;
-@border-radius_Button_size_l:                          @border-radius_2xl_button;
-@border-radius-ToolButton:                             @border-radius-ToolButton_val;
-
-@width-ToolButton_size-s:                              @height-ToolButton_size-s;
-@width-ToolButton_size-m:                              @height-ToolButton_size-m;
-@width-ToolButton_size-default:                        @height-ToolButton_size-m;
-@width-ToolButton_size-l:                              @height-ToolButton_size-l;
-
-@min-width_Button_common:                              @min-width_Button_common_val;
-
-//common
-@thickness_Button__border:                             @border-thickness;
-
-@padding_Button-wrapper_size_s:                        0 12px - @thickness_Button__border;
-@padding_Button-wrapper_size_m:                        0 12px - @thickness_Button__border;
-@padding_Button-wrapper_size_default:                  0 12px - @thickness_Button__border;
-@padding_Button__wrapper_size_l:                       0 24px - @thickness_Button__border;
-
-//for support link with magic color, delete when complete https://online.sbis.ru/opendoc.html?guid=b8228090-19fe-454b-992f-bf31d9e96ca5
-@color_Link_magic:                                     @color_Link_magic_val;
 
 //Combobox
 @margin-top_ComboBox-popup:                     -@border-thickness_inputText;
