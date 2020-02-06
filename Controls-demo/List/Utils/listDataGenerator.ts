@@ -267,6 +267,50 @@ export class SourceFaker extends Remote {
     }
 }
 
+export class DataFaker {
+    _rawData: any[];
+    _source: SourceFaker;
+    _perPage: number;
+
+    constructor(perPage: number = 100) {
+        this._perPage = perPage;
+        this._rawData = this._initRawData(0);
+        this._source = this._initSource(this._rawData);
+    }
+
+    private _initRawData(startIndex: number = 0): any[] {
+        return getListData(this._perPage, {
+            buyerId: {
+                value: 0,
+                type: 'number'
+            },
+            amount: {
+                value: 0,
+                type: 'number'
+            }
+        }, 'key', startIndex);
+    }
+
+    private _initSource(rawData: any[]): SourceFaker {
+        return SourceFaker.instance({}, new DataSet({
+            rawData,
+            keyProperty: 'key'
+        }), false);
+    }
+
+    getRawData(): any[] {
+        return this._rawData;
+    }
+
+    getSource(reset?: boolean, startIndex: number = 0): SourceFaker {
+        if (reset) {
+            this._rawData = this._initRawData(startIndex);
+            this._source = this._initSource(this._rawData);
+        }
+        return this._source;
+    }
+}
+
 export {
     IField,
     IItemPrototype,
