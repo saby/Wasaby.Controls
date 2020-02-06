@@ -20,7 +20,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _applyButtonVisible: boolean = false;
-    protected _loadingPromise: Promise = null;
     private _sourceController: SourceController = null;
     private _subDropdownItem: TreeItem<Model>|null;
     private _selectionChanged: boolean = false;
@@ -29,25 +28,18 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
 
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         if (options.source) {
-            this._loadingPromise = this.loadItems(options);
-            return this._loadingPromise;
+            return this.loadItems(options);
         }
     }
 
     protected _afterMount(newOptions: IMenuOptions): void {
         // удалится по https://online.sbis.ru/opendoc.html?guid=48f59429-2ba5-431f-a895-3d11913c3d01
-        this._notify('sendResult', [this._container, 'menuOpened'], {bubbling: true});
+        this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
     }
 
     protected _beforeUpdate(newOptions: IMenuOptions): void {
         if (newOptions.root !== this._options.root) {
             this.loadItems(newOptions);
-        }
-        if (this._loadingPromise) {
-            this._loadingPromise.addCallback(() => {
-                this._notify('controlResize', [], {bubbling: true});
-                this._loadingPromise = null;
-            });
         }
         if (this.isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this.setSelectedItems(this._listModel, newOptions.selectedKeys);
@@ -99,15 +91,12 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         this._notify('applyClick', [this.getSelectedItems()]);
     }
 
-    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventResult, eventType) {
-        switch (eventType) {
-            case 'menuOpened':
-                this.subMenu = eventResult;
-                break;
-            default:
-                this._notify('sendResult', [eventResult], {bubbling: true});
-                this._closeSubMenu();
-                break;
+    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName, eventResult) {
+        if (eventName === 'menuOpened') {
+            this.subMenu = eventResult;
+        } else {
+            this._notify(eventName, [eventResult]);
+            this._closeSubMenu();
         }
     }
 
@@ -313,11 +302,13 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         });
         if (options.groupProperty) {
             listModel.setGroup(this.groupMethod.bind(this));
+        } else if (options.groupingKeyCallback) {
+            listModel.setGroup(options.groupingKeyCallback);
         }
         return listModel;
     }
 
-    private groupMethod(item, index, colectionItem) {
+    private groupMethod(item: Model): string {
         return item.get(this._options.groupProperty);
     }
 
@@ -367,7 +358,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         }
     }
 
-    private getPopupOptions(target: HTMLDivElement, item: TreeItem<Model>): object {
+    private getPopupOptions(target: EventTarget, item: TreeItem<Model>): object {
         return {
             templateOptions: this.getTemplateOptions(item),
             target,
@@ -387,6 +378,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.bodyContentTemplate = 'Controls/_menu/Control';
         templateOptions.footerTemplate = this._options.nodeFooterTemplate;
         templateOptions.closeButtonVisibility = false;
+        delete templateOptions.headingCaption;
         return templateOptions;
     }
 
