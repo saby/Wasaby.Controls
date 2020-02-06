@@ -16,6 +16,7 @@ interface IMenuRenderOptions extends IMenuOptions, IRenderOptions {
 
 class MenuRender extends Control<IMenuRenderOptions> {
     protected _template: TemplateFunction = ViewTemplate;
+    protected _multiSelectTpl: TemplateFunction = multiSelectTpl;
     protected _iconSpacing: string;
 
     protected _beforeMount(options: IMenuRenderOptions): void {
@@ -36,17 +37,16 @@ class MenuRender extends Control<IMenuRenderOptions> {
     protected _getItemData(item): object {
         return {
             item: item.getContents(),
-            itemClassList: this.getClassList(item),
             iconSpacing: this._iconSpacing,
             iconSize: this._options.iconSize,
             multiSelect: this._options.multiSelect,
+            multiSelectTpl,
             isEmptyItem: this._isEmptyItem(item),
-            getPropValue: ItemsUtil.getPropertyValue,
-            index: this._options.listModel.getIndex(item),
-            isSelected: item.isSelected(),
-            hasChildren: item.isNode(),
-            hasPinned: this._options.hasIconPin && item.getContents().has('pinned'),
-            multiSelectTpl
+            isSelected: item.isSelected.bind(item),
+            isNode: item.isNode.bind(item),
+            isSwiped: item.isSwiped.bind(item),
+            isRoot: item.isRoot.bind(item),
+            hasPinned: item.getContents().has('pinned')
         };
     }
 
@@ -55,10 +55,13 @@ class MenuRender extends Control<IMenuRenderOptions> {
         this._notify(eventName, [item, sourceEvent]);
     }
 
-    private getClassList(itemData): string {
+    protected _getClassList(itemData): string {
         const item = itemData.getContents();
         let classes = itemData.getContentClasses();
         classes += ' controls-Menu__row_state_' + (item.get('readOnly')  ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
+        if (itemData.isHovered() && !item.get('readOnly')) {
+            classes += ' controls-Menu__row_hovered_theme-' + this._options.theme;
+        }
         if (this._isEmptyItem(itemData) && !this._options.multiSelect) {
             classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
         } else {
