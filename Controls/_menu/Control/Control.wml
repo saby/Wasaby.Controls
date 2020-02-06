@@ -1,4 +1,4 @@
-<div class="controls-Menu"
+<div class="controls-Menu {{_loadingPromise && !_loadingPromise.isReady() ? 'ws-invisible'}}"
      attr:ws-no-focus="true">
    <Controls.scroll:Container attr:class="controls-ScrollContainer__flex controls-Menu__scroll_theme-{{_options.theme}}"
                               topShadowVisibility="hidden"
