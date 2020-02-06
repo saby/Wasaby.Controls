@@ -538,6 +538,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$itemActionsProperty: string;
 
+    protected _$markerVisibility: string;
+
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
@@ -2180,6 +2182,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$itemActionsProperty;
     }
 
+    getMarkerVisibility(): string {
+        return this._$markerVisibility;
+    }
+
     // region SerializableMixin
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, T> {
@@ -3269,6 +3275,7 @@ Object.assign(Collection.prototype, {
     _$hasMoreData: false,
     _$compatibleReset: false,
     _$itemActionsProperty: '',
+    _$markerVisibility: 'onactivated',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
