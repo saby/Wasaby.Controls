@@ -1,4 +1,4 @@
-import * as template from 'wml!Controls/_list/ColumnsContainer';
+import * as template from 'wml!Controls/_list/ColumnsInnerView';
 import ColumnsController from './Controllers/ColumnsController';
 import { TemplateFunction, Control } from 'UI/Base';
 import {IList} from 'Controls/_list/interface/IList';
@@ -8,7 +8,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { constants } from 'Env/Env';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
-export interface IColumnsContainerOptions extends IList {
+export interface IColumnsInnerViewOptions extends IList {
     columnMinWidth: number;
     columnMaxWidth: number;
     listModel: Collection<unknown>;
@@ -22,7 +22,7 @@ const DEFAULT_MIN_WIDTH = 270;
 const DEFAULT_MAX_WIDTH = 400;
 const DEFAULT_COLUMNS_COUNT = 2;
 
-export default class ColumnsContainer extends Control {
+export default class ColumnsInnerView extends Control {
     _template: TemplateFunction = template;
     private _itemsContainer: HTMLDivElement;
     private _columnsCount: number = DEFAULT_COLUMNS_COUNT;
@@ -32,9 +32,9 @@ export default class ColumnsContainer extends Control {
     private _columnsIndexes: number[][];
     private _model: Collection<unknown>;
 
-    protected _options: IColumnsContainerOptions;
+    protected _options: IColumnsInnerViewOptions;
 
-    protected _beforeMount(options: IColumnsContainerOptions): void {
+    protected _beforeMount(options: IColumnsInnerViewOptions): void {
         if (options.columnsCount) {
             this._columnsCount = options.columnsCount;
         }
@@ -51,7 +51,7 @@ export default class ColumnsContainer extends Control {
        this._resizeHandler();
     }
 
-    protected _beforeUpdate(options: IColumnsContainerOptions): void {
+    protected _beforeUpdate(options: IColumnsInnerViewOptions): void {
         if (options.columnsMode === 'fixed' &&  options.columnsCount !== this._options.columnsCount) {
             this._columnsCount = options.columnsCount;
         }
@@ -236,7 +236,7 @@ export default class ColumnsContainer extends Control {
             e.preventDefault();
         }
     }
-    static getDefaultOptions(): Partial<IColumnsContainerOptions> {
+    static getDefaultOptions(): Partial<IColumnsInnerViewOptions> {
         return {
             columnMinWidth: DEFAULT_MIN_WIDTH,
             columnMaxWidth: DEFAULT_MAX_WIDTH,
