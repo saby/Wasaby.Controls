@@ -653,6 +653,72 @@ define([
          assert.isFalse(ctrl._showContinueSearchButton);
       });
 
+      it('loadToDirection indicator triggerVisibility', () => {
+         var source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+
+         var dataLoadFired = false;
+         var portionSearchTimerReseted = false;
+         var portionSearchReseted = false;
+         var beforeLoadToDirectionCalled = false;
+
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            beforeLoadToDirectionCallback: function() {
+               beforeLoadToDirectionCalled = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            navigation: {
+               source: 'infinity',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
+            },
+            searchValue: 'test'
+         };
+
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         ctrl._container = {clientHeight: 100};
+         ctrl._afterMount(cfg);
+         ctrl._loadTriggerVisibility = {
+            up: false,
+            down: true
+         };
+
+         ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
+
+         let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.equal(ctrl._loadingState, 'down');
+         ctrl._portionedSearch.continueSearch();
+         await loadPromise;
+         assert.isNotNull(ctrl._loadingIndicatorState);
+
+         // Up trigger became visible, no changes to indicator
+         ctrl.triggerVisibilityChangedHandler(null, 'up', true);
+         assert.isNotNull(ctrl._loadingIndicatorState);
+
+         // Down trigger became hidden, hide the indicator
+         ctrl.triggerVisibilityChangedHandler(null, 'down', false);
+         assert.isNull(ctrl._loadingIndicatorState);
+      });
+
       it('prepareFooter', function() {
          var
             baseControl = {
