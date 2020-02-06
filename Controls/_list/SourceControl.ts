@@ -5,15 +5,11 @@ import {
     INavigationOptionValue, INavigationPageSourceConfig, INavigationPositionSourceConfig
 } from 'Controls/_interface/INavigation';
 import {ViewConfig, Controller as ErrorController} from 'Controls/_dataSource/error';
-import {
-    SourceCrudInterlayer,
-    ISourceErrorConfig,
-    ISourceCrudInterlayerOptions
-} from 'Controls/_dataSource/SourceCrudInterlayer';
+import {ISourceErrorConfig, ISourceErrorData} from 'Controls/_dataSource/SourceCrudInterlayer';
 import {IPagingOptions} from 'Controls/_paging/Paging';
 import {Direction} from 'Controls/_source/interface/IAdditionalQueryParams';
 
-import {ListSourceLoader} from './SourceControl/ListSourceLoader';
+import {ListSourceLoadingController} from './SourceControl/ListSourceLoadingController';
 
 import * as Template from 'wml!Controls/_list/SourceControl/SourceControl';
 
@@ -124,26 +120,26 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     // Текущая ошибка
     protected _error: ViewConfig;
 
-    // Ресурс данных с перехватчиком ошибок
-    private _itemsSource: SourceCrudInterlayer;
-
     // Контроллер загрузки данных в список
-    private _listSourceLoader: ListSourceLoader;
-
-    private _loadStartedSbt: (event: string) => void;
-    private _loadSuccessSbt: (event: string) => void;
-    private _loadErrorSbt: (event: string, errorConfig: ViewConfig) => void;
+    private _listSourceLoader: ListSourceLoadingController;
 
     protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: RecordSet | void): Promise<RecordSet | void> | void {
         this._options = options;
-        this._itemsSource = new SourceCrudInterlayer(this._options as ISourceCrudInterlayerOptions);
-        this._listSourceLoader = new ListSourceLoader({
+        this._listSourceLoader = new ListSourceLoadingController({
             keyProperty: this._options.keyProperty,
             navigation: this._options.navigation,
-            source: this._itemsSource
+            source: this._options.source
         });
-        this._subscribeEvents();
         return this._load();
+    }
+
+    protected _onClickLoadMore(event: Event) {
+        return this._load('down');
+    }
+
+    destroy(): void {
+        this._listSourceLoader.destroy();
+        super.destroy();
     }
 
     /**
@@ -156,19 +152,14 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
         //     sorting: {}, // TODO implement external List/Grid sorting
         //     filter: [], // TODO implement external List/Grid filter
         // }
-        return this._listSourceLoader.load({
-            direction
-        }).then((recordSet: RecordSet) => {
-            this._items = recordSet;
-        });
-    }
-
-    destroy(): void {
-        this._listSourceLoader.unsubscribe('loadStarted', this._loadStartedSbt);
-        this._listSourceLoader.unsubscribe('loadSuccess', this._loadSuccessSbt);
-        this._listSourceLoader.unsubscribe('loadError', this._loadErrorSbt);
-        this._listSourceLoader.destroy();
-        super.destroy();
+        this._hideError();
+        return this._listSourceLoader.load({direction})
+            .then((recordSet: RecordSet) => {
+                this._items = recordSet;
+            })
+            .catch((error: ISourceErrorData) => {
+                this._showError(error.errorConfig);
+            });
     }
 
     private _showError(errorConfig: ViewConfig): void {
@@ -179,24 +170,5 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
         if (this._error) {
             this._error = null;
         }
-    }
-
-    /**
-     * Подписка на события
-     * @private
-     */
-    private _subscribeEvents(): void {
-        this._loadStartedSbt = (event) => {
-            this._hideError();
-        };
-        this._loadSuccessSbt = (event) => {
-
-        };
-        this._loadErrorSbt = (event, errorConfig: ViewConfig) => {
-            this._showError(errorConfig);
-        };
-        this._listSourceLoader.subscribe('loadStarted', this._loadStartedSbt);
-        this._listSourceLoader.subscribe('loadSuccess', this._loadSuccessSbt);
-        this._listSourceLoader.subscribe('loadError', this._loadErrorSbt);
     }
 }
