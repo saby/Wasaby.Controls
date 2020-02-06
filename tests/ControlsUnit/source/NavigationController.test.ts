@@ -5,7 +5,7 @@ import {NavigationController} from 'Controls/source';
 import {INavigationOptionValue} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {
-    INavigationPageSourceConfig, INavigationPositionSourceConfig,
+    INavigationPageSourceConfig, INavigationPositionSourceConfig, INavigationSourceConfig,
     TNavigationDirection
 } from 'Controls/_interface/INavigation';
 import {
@@ -158,11 +158,11 @@ describe('Controls/_source/NavigationController', () => {
             recordSet.setMetaData({
                 /*
                  * valid when INavigationOptionValue.direction !== 'both'
-                 * OR calculateState.direction is set
+                 * OR updateCalculationParams.direction is set
                  */
                 more: true
             });
-            controller.calculateState(recordSet, null);
+            controller.updateCalculationParams(recordSet, null);
             query = controller.getQueryParams();
             const where = query.filter;
             assert.equal(where['key>='], navigation.sourceConfig.position);
@@ -175,7 +175,7 @@ describe('Controls/_source/NavigationController', () => {
                  */
                 more: more2RecordSet
             });
-            controller.calculateState(recordSet, 'down');
+            controller.updateCalculationParams(recordSet, 'down');
             query = controller.getQueryParams('down');
             const where = query.filter;
             assert.equal(where['key>='], more2RecordSet.getCount() - 1);
@@ -198,12 +198,12 @@ describe('Controls/_source/NavigationController', () => {
                 more: {
                     /*
                      * valid when INavigationOptionValue.direction === 'both'
-                     * and calculateState.direction isn't set
+                     * and updateCalculationParams.direction isn't set
                      */
                     after: true, before: true
                 }
             });
-            controller.calculateState(moreRecordSet, null);
+            controller.updateCalculationParams(moreRecordSet, null);
 
             // when we want to go next before current position
             query = controller.getQueryParams('up');
@@ -226,20 +226,20 @@ describe('Controls/_source/NavigationController', () => {
                 more: {
                     /*
                      * valid when INavigationOptionValue.direction === 'both'
-                     * and calculateState.direction isn't set
+                     * and updateCalculationParams.direction isn't set
                      */
                     after: true, before: true
                 }
             });
-            controller.calculateState(moreRecordSet, null);
+            controller.updateCalculationParams(moreRecordSet, null);
             more2RecordSet.setMetaData({
                 /*
                  * valid when INavigationOptionValue.direction !== 'both'
-                 * OR calculateState.direction is set
+                 * OR updateCalculationParams.direction is set
                  */
                 more: true
             });
-            controller.calculateState(more2RecordSet, 'up');
+            controller.updateCalculationParams(more2RecordSet, 'up');
             query = controller.getQueryParams('up');
             const where = query.filter;
             assert.equal(where['key<='], lastKey(moreRecordSet, 'up'));
@@ -247,7 +247,7 @@ describe('Controls/_source/NavigationController', () => {
     });
 
     describe('getQueryParams + filter + sort', () => {
-        let navigation: INavigationOptionValue<INavigationPositionSourceConfig | INavigationPageSourceConfig>;
+        let navigation: INavigationOptionValue<INavigationSourceConfig>;
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
 
@@ -257,11 +257,11 @@ describe('Controls/_source/NavigationController', () => {
             recordSet.setMetaData({
                 /*
                  * valid when INavigationOptionValue.direction !== 'both'
-                 * OR calculateState.direction is set
+                 * OR updateCalculationParams.direction is set
                  */
                 more: true
             });
-            controller.calculateState(recordSet, null);
+            controller.updateCalculationParams(recordSet, null);
             const sorting = [{amount: false}, {buyerId: true}];
             query = controller.getQueryParams(null, {
                 'buyerId>': 2

@@ -4,8 +4,10 @@ import {assert} from 'chai';
 import {Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 
+import * as ErrorModule from 'Controls/_dataSource/error';
 import {ListSourceLoadingController} from 'Controls/_list/SourceControl/ListSourceLoadingController';
 import {getGridData, SourceFaker, DataFaker} from 'Controls-demo/List/Utils/listDataGenerator';
+
 
 const NUMBER_OF_ITEMS = 50;
 
@@ -22,7 +24,6 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
 
     describe ('load', () => {
 
-
         it('should load first portion of data', () => {
             instance = new ListSourceLoadingController({
                 source: SourceFaker.instance({}, rawData, false),
@@ -30,8 +31,8 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
             });
             const _record = new Record({rawData: rawData[4]});
             return instance.load()
-                .then((recordSet: RecordSet) => {
-                    assert.equal(recordSet.at(4).get('id'), _record.get('id'));
+                .then((response: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
+                    assert.equal(response.data.at(4).get('id'), _record.get('id'));
                 });
         });
 
@@ -51,14 +52,14 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
             });
             const _record = new Record({rawData: rawData[4]});
             return instance.load()
-                .then((recordSet: RecordSet) => {
-                    assert.equal(recordSet.at(4).get('id'), _record.get('id'));
-                    return recordSet;
+                .then((response: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
+                    assert.equal(response.data.at(4).get('id'), _record.get('id'));
+                    return response.data;
                 })
                 .then((recordSet: RecordSet) => {
                     return instance.load({direction: 'down'})
-                        .then((recordSet2: RecordSet) => {
-                            console.log(recordSet2.getRawData());
+                        .then((response2: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
+                            console.log(response2.data.getRawData());
                         });
                 });
         });

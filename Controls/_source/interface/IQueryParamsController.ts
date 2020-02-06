@@ -1,8 +1,8 @@
 import {IAdditionalQueryParams, Direction} from './IAdditionalQueryParams';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
-import { Collection } from 'Controls/display';
-import {INavigationPageSourceConfig, INavigationPositionSourceConfig} from 'Controls/_interface/INavigation';
+import {Collection} from 'Controls/display';
+import {INavigationSourceConfig} from 'Controls/_interface/INavigation';
 
 /**
  * Интерфейс для работы с контроллерами пейджинации
@@ -20,14 +20,14 @@ export interface IQueryParamsController {
     /**
      * Позволяет устанавить конфиг для контроллера навигации
      * @remark
-     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
+     * @param config INavigationSourceConfig
      */
     /*
      * Allows to set navigation controller config
      * @remark
-     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
+     * @param config INavigationSourceConfig
      */
-    setConfig(config: INavigationPageSourceConfig | INavigationPositionSourceConfig): void;
+    setConfig(config: INavigationSourceConfig): void;
 
     /**
      * Собирает параметры текущего состояния пейджинации для передачи их в Query
@@ -48,16 +48,16 @@ export interface IQueryParamsController {
     destroy(): void;
 
     /**
-     * Вычисляет следующее состояние контроллера, например, предыдущую или следующую страницу/позицию
-     * @param list {Types/collection:RecordSet} RecordSet записей, содержащий метаданные текущего запроса
+     * Вычисляет следующее состояние контроллера параметров запроса: следующую страницу, или позицию
+     * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
      * @param direction {Direction} направление навигации ('up' или 'down')
      */
     /*
-     * Calculates next controller state, i.e. previous or next page/position
-     * @param list {Types/collection:RecordSet} RecordSet of items containing meta information for current request
+     * Calculates next query params controller state: next page, or position
+     * @param list {Types/collection:RecordSet} object containing meta information for current request
      * @param direction {Direction} nav direction ('up' or 'down')
      */
-    calculateState(list?: RecordSet  | {[p: string]: unknown}, direction?: Direction): void;
+    updateCalculationParams(list?: RecordSet  | {[p: string]: unknown}, direction?: Direction): void;
 
     /**
      * Считает количество записей всего по мета информации из текущего состояния контроллера и ключу DataSet

@@ -5,16 +5,15 @@ import {Logger} from 'UI/Utils';
 
 import {IDirection} from 'Controls/_list/interface/IVirtualScroll';
 import {NavigationController} from 'Controls/_source/NavigationController';
-import {
-    INavigationOptionValue,
-    INavigationPageSourceConfig,
-    INavigationPositionSourceConfig
-} from 'Controls/_interface/INavigation';
+import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/_interface/INavigation';
 
 import {
     SourceCrudInterlayer,
     ISourceCrudInterlayerOptions
 } from 'Controls/_dataSource/SourceCrudInterlayer';
+
+import {NavigationOptionsResolver} from './NavigationOptionsResolver';
+import * as ErrorModule from 'Controls/_dataSource/error';
 
 /**
  * Настройки для страницы по умолчанию
@@ -28,95 +27,16 @@ export interface ISourceControlQueryParams {
     sorting?: QueryOrderSelector;
 }
 
-/**
- * Резолвер настроек контроллера навигации
- *
- * @class Controls/_list/SourceControl/ListSourceLoadingController:NavigationOptionsResolver
- *
- * @private
- * @author Аверкиев П.А.
- */
-/*
- * Navigation controller options resolver
- *
- * @class Controls/_list/SourceControl/ListSourceLoadingController:NavigationOptionsResolver
- *
- * @private
- * @author Аверкиев П.А.
- */
-export class NavigationOptionsResolver {
-    private readonly _cfg: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>;
-    private readonly _keyProperty: string;
-
-    constructor(cfg: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>, keyProperty?: string) {
-        this._cfg = cfg;
-        this._keyProperty = keyProperty;
-    }
-
-    /**
-     * Возвращает опции по умолчанию для контроллера навигации в зависимости от выбранного
-     * алгоритма работы с источником данных (source)
-     * @remark
-     * По умолчанию возвращает настройки для "Page" алгоритма
-     * @param page
-     * @param pageSize
-     */
-    /*
-     * Returns default options for navigation controller depending on chosen data source managing algorithm (source)
-     * @remark
-     * By default returns options for "Page" data source managing algorithm
-     * @param page
-     * @param pageSize
-     */
-    resolve(page: number | unknown[] | unknown, pageSize: number): INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> {
-        const options: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig> = {};
-        options.source = this._cfg && this._cfg.source || 'page';
-        if (this._cfg && this._cfg.sourceConfig) {
-            options.sourceConfig = this._cfg.sourceConfig;
-        } else {
-            options.sourceConfig = (options.source === 'position' ?
-                this._resolveDefaultPositionConfig(page, pageSize) :
-                this._resolveDefaultPageConfig(page as number, pageSize));
-        }
-        if (this._cfg && this._cfg.view) {
-            options.view = this._cfg.view;
-        } else {
-            options.view = options.source === 'position' ? 'infinity' : 'demand';
-        }
-        if (this._cfg && this._cfg.viewConfig) {
-            options.viewConfig = this._cfg.viewConfig;
-        }
-        return options;
-    }
-
-    private _resolveDefaultPositionConfig(position: unknown[] | unknown, limit: number): INavigationPositionSourceConfig {
-        return {
-            position,
-            limit,
-            direction: 'after',
-            field: this._keyProperty
-        };
-    }
-
-    private _resolveDefaultPageConfig(page: number, pageSize: number): INavigationPageSourceConfig {
-        return {
-            hasMore: false,
-            page,
-            pageSize
-        };
-    }
-}
-
 export interface IListSourceLoaderOptions extends ISourceCrudInterlayerOptions {
     /**
      * @name Controls/_list/SourceControl/ListSourceLoader:IListSourceLoaderOptions#navigation
-     * @cfg {Types/source:INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>} Опции навигации
+     * @cfg {Types/source:INavigationOptionValue<INavigationSourceConfig>} Опции навигации
      */
     /*
      * @name Controls/_list/SourceControl/ListSourceLoader:IListSourceLoaderOptions#navigation
-     * @cfg {Types/source:INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>} Navigation options
+     * @cfg {Types/source:INavigationOptionValue<INavigationSourceConfig>} Navigation options
      */
-    navigation?: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>;
+    navigation?: INavigationOptionValue<INavigationSourceConfig>;
 
     /**
      * @name Controls/_list/SourceControl/ListSourceLoader:IListSourceLoaderOptions#keyProperty
@@ -151,12 +71,16 @@ export interface IListSourceLoaderOptions extends ISourceCrudInterlayerOptions {
  */
 export class ListSourceLoadingController {
 
+    // Контроллер навигации
     private readonly _navigationController: NavigationController;
 
-    private readonly _navigationOptions: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>;
+    // Опции для контроллера навигации
+    private readonly _navigationOptions: INavigationOptionValue<INavigationSourceConfig>;
 
+    // Ключевое свойство RecordSet
     private readonly _keyProperty: string;
 
+    // Прослойке с ресурсом, возвращающая конфиг для ошибки
     private readonly _source: SourceCrudInterlayer;
 
     // текущая загрузка
@@ -181,27 +105,30 @@ export class ListSourceLoadingController {
      * Requests data from source using params filter, sorting, direction
      * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} query params
      */
-    load(params?: ISourceControlQueryParams): Promise<void | RecordSet> {
+    load(params?: ISourceControlQueryParams): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
         const filter = params && params.filter || {};
         const sorting = params && params.sorting || [{[this._keyProperty]: true}];
         const direction: IDirection = params && params.direction || undefined;
 
         this.cancelLoading();
-
         const query = this._navigationController.getQueryParams(direction, filter, sorting);
-        this._request = this._source.query(query).then((dataSet: DataSet) => {
-            if (this._keyProperty && this._keyProperty !== dataSet.getKeyProperty()) {
-                dataSet.setKeyProperty(this._keyProperty);
-            }
-            if (!dataSet || !('getAll' in dataSet)) {
-                Logger.error('ListSourceLoader: Wrong data received', 'Controls/_list/SourceControl/ListSourceLoader');
-            }
-            const recordSet = dataSet.getAll();
-            this._navigationController.calculateState(recordSet, direction);
 
-            return recordSet;
-        });
-        return this._request;
+        this._request = this._source.query(query)
+            .then((dataSet: DataSet) => {
+                if (this._keyProperty && this._keyProperty !== dataSet.getKeyProperty()) {
+                    dataSet.setKeyProperty(this._keyProperty);
+                }
+                if (!dataSet || !('getAll' in dataSet)) {
+                    Logger.error('ListSourceLoader: Wrong data received', 'Controls/_list/SourceControl/ListSourceLoader');
+                }
+                const recordSet = dataSet.getAll();
+                this._navigationController.updateCalculationParams(recordSet, direction);
+
+                return recordSet;
+            });
+        return this._request
+            .then((data: RecordSet) => ({data, error: null}))
+            .catch((error: ErrorModule.ViewConfig) => Promise.resolve({data: null, error}));
     }
 
     /**

@@ -243,18 +243,28 @@ class PositionQueryParamsController implements IQueryParamsController {
     /**
      * Позволяет устанавить конфиг для контроллера навигации
      * @remark
-     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
+     * @param config INavigationSourceConfig
      */
     /*
      * Allows to set navigation controller config
      * @remark
-     * @param config INavigationPageSourceConfig | INavigationPositionSourceConfig
+     * @param config INavigationSourceConfig
      */
     setConfig(config: IPositionQueryParamsControllerOptions): void {
         this._options = config;
     }
 
-    calculateState(list?: RecordSet | {[p: string]: unknown}, loadDirection?: Direction): void {
+    /**
+     * Вычисляет следующее состояние контроллера параметров запроса: следующую страницу, или позицию
+     * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
+     * @param direction {Direction} направление навигации ('up' или 'down')
+     */
+    /*
+     * Calculates next query params controller state: next page, or position
+     * @param list {Types/collection:RecordSet} object containing meta information for current request
+     * @param direction {Direction} nav direction ('up' or 'down')
+     */
+    updateCalculationParams(list?: RecordSet | {[p: string]: unknown}, loadDirection?: Direction): void {
         let metaNextPosition: PositionBoth;
         let more: HasMore;
 

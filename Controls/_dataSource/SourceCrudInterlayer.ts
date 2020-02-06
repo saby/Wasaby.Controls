@@ -10,14 +10,6 @@ import {Controller as ErrorController} from 'Controls/_dataSource/error';
 import {IAdditionalQueryParams} from 'Controls/_source/interface/IAdditionalQueryParams';
 
 /**
- * Конфигурация для ошибки, которую можно получить в catch
- */
-export interface ISourceErrorData {
-    data: any;
-    errorConfig?: ErrorModule.ViewConfig;
-}
-
-/**
  * Конфигурация для отображения ошибки
  */
 export interface ISourceErrorConfig {
@@ -79,11 +71,6 @@ export interface ISourceCrudInterlayerOptions {
 /*
  * @name Controls/dataSource/SourceCrudInterlayer#source
  * @cfg {Types/source:ICrud} Data source
- * @example
- * const source = new Memory({
- *     keyProperty: 'id',
- *     data: data
- * });
  */
 
 /**
@@ -100,13 +87,6 @@ export interface ISourceCrudInterlayerOptions {
 /*
  * @name Controls/dataSource/SourceCrudInterlayer#errorConfig
  * @cfg {Controls/dataSource/ISourceErrorConfig} Error displaying settings with callback
- * @example
- *  const errorConfig: ISourceErrorConfig = {
- *     mode: error.Mode.include,
- *     onBeforeProcessError: (error: Error) => {
- *         console.log(error);
- *     }
- * }
  */
 
 /**
@@ -134,84 +114,17 @@ export interface ISourceCrudInterlayerOptions {
 /*
  * @name Controls/dataSource/SourceCrudInterlayer#errorController
  * @cfg {Controls/dataSource:error.Controller} Error controller instance with previously configured handlers
- * @example
- * const handlers = {
- *    handlers: [
- *        (config: HandlerConfig): error.ViewConfig) => ({
- *            template: LockedErrorTemplate,
- *            options: {
- *                // ...
- *            }
- *        })
- *        (config: HandlerConfig): error.ViewConfig) => ({
- *            template: LockedErrorTemplate,
- *            options: {
- *                // ...
- *            }
- *        })
- *    ]
- * }
- * const errorController = new error.Controller(handlers);
  */
 
 /**
- * Обёртка для source: Types/_source/ICrud, которая позволяет перехватывать ошибку загрузки и возвращать в catch
- * ISourceErrorData конфиг для отображения ошибки
+ * Прослойка между контролом и source: Types/_source/ICrud, которая позволяет перехватывать ошибку загрузки и возвращать в catch
+ * ErrorModule.ViewConfig конфиг для отображения ошибки
  * @remark
  * Этота обёртка должен вставляться везде где есть работа с сорсом, т.е. в
  *  • Списках ({@link Controls/_list/List.ts} and {@link Controls/_list/ListView.ts})
  *  • formController ({@link Controls/_form/FormController.ts})
  *  • dataSource/error/DataLoader ({@link Controls/_dataSource/_error/DataLoader.ts} and {@link Controls/_dataSource/requestDataUtil.ts})
  * НЕ РЕАЛИЗУЕТ интерфейс Types/_source/ICrud, т.к. метод query должен принимать параметры filter, sorting, offset, limit
- * @class Controls/dataSource/SourceCrudInterlayer
- * @implements Controls/interface/IErrorController
- * @example
- * const source = new Memory({
- *     keyProperty: 'id',
- *     data: data
- * });
- * const handlers = {
- *    handlers: [
- *        (config: HandlerConfig): error.ViewConfig) => ({
- *            template: LockedErrorTemplate,
- *            options: {
- *                // ...
- *            }
- *        })
- *        (config: HandlerConfig): error.ViewConfig) => ({
- *            template: LockedErrorTemplate,
- *            options: {
- *                // ...
- *            }
- *        })
- *    ]
- * }
- * const errorController = new error.Controller(handlers);
- * const errorConfig: ISourceErrorConfig = {
- *     mode: error.Mode.include,
- *     onBeforeProcessError: (error: Error) => {
- *         console.log(error);
- *     }
- * }
- * const SourceCrudInterlayer = new SourceCrudInterlayer(source, errorConfig, errorController)
- * SourceCrudInterlayer.create(...)
- *     .then((record: Record) => {
- *         // ...
- *     })
- *     .catch((record: ISourceErrorData) => {
- *         this._showError(record.errorConfig);
- *     })
- * @public
- * @author Аверкиев П.А.
- */
-/*
- * source: ICrud wrapper that intercepts API error and returns error.ViewConfig while Promise rejection
- * @remark
- * This wrapper should be used anywhere to work with API source, e.g.
- *  • in Lists ({@link Controls/_list/List.ts} and {@link Controls/_list/ListView.ts})
- *  • in particular record view/edit Control ({@link Controls/_form/FormController.ts})
- *  • in data multi-source loader ({@link Controls/_dataSource/_error/DataLoader.ts} and {@link Controls/_dataSource/requestDataUtil.ts})
- * Not implements Types/_source/ICrud interface, because query() should have signature  должен принимать параметры filter, sorting, offset, limit
  * @class Controls/dataSource/SourceCrudInterlayer
  * @implements Controls/interface/IErrorController
  * @example
@@ -247,9 +160,22 @@ export interface ISourceCrudInterlayerOptions {
  *     .then((record: Record) => {
  *         // ...
  *     })
- *     .catch((record: ISourceErrorData) => {
- *         this._showError(record.errorConfig);
+ *     .catch((error: ErrorModule.ViewConfig) => {
+ *         this._showError(error);
  *     })
+ * @public
+ * @author Аверкиев П.А.
+ */
+/*
+ * An interlayer between source: ICrud and data viewing control, that intercepts API error and returns error.ViewConfig while Promise rejection
+ * @remark
+ * This wrapper should be used anywhere to work with API source, e.g.
+ *  • in Lists ({@link Controls/_list/List.ts} and {@link Controls/_list/ListView.ts})
+ *  • in particular record view/edit Control ({@link Controls/_form/FormController.ts})
+ *  • in data multi-source loader ({@link Controls/_dataSource/_error/DataLoader.ts} and {@link Controls/_dataSource/requestDataUtil.ts})
+ * Not implements Types/_source/ICrud interface, because query() should have signature  должен принимать параметры filter, sorting, offset, limit
+ * @class Controls/dataSource/SourceCrudInterlayer
+ * @implements Controls/interface/IErrorController
  * @public
  * @author Аверкиев П.А.
  */
@@ -328,7 +254,23 @@ export class SourceCrudInterlayer implements IErrorController {
      * @return Promise resolving created Record {@link Types/_entity/Record} and rejecting an Error.
      */
     query(queryParams: IAdditionalQueryParams): Promise<DataSet> {
-        return this._source.query(this._buildQuery(queryParams)).catch(this._boundPromiseCatchCallback);
+        let query = new Query();
+        if (queryParams.filter) {
+            query = query.where(queryParams.filter);
+        }
+        if (queryParams.offset) {
+            query = query.offset(queryParams.offset);
+        }
+        if (queryParams.limit) {
+            query = query.limit(queryParams.limit);
+        }
+        if (queryParams.sorting) {
+            query = query.orderBy(queryParams.sorting);
+        }
+        if (queryParams.meta) {
+            query = query.meta(queryParams.meta);
+        }
+        return this._source.query(query).catch(this._boundPromiseCatchCallback);
     }
 
     /**
@@ -350,36 +292,6 @@ export class SourceCrudInterlayer implements IErrorController {
     }
 
     /**
-     * Собирает свойства текущего класса в запрос Types/source:Query
-     * @param queryParams параметры для формирования запроса
-     * @return {Types/source:Query} Объект Query, готовый для передачи в ICrud.query()
-     */
-    /*
-     * Builds current class properties to the Types/source:Query query
-     * @param queryParams Params to build Query {@link Types/source/Query}
-     * @return {Types/source:Query} Query object ready to pass to ICrud.query()
-     */
-    private _buildQuery(queryParams: IAdditionalQueryParams): Query {
-        let query = new Query();
-        if (queryParams.filter) {
-            query = query.where(queryParams.filter);
-        }
-        if (queryParams.offset) {
-            query = query.offset(queryParams.offset);
-        }
-        if (queryParams.limit) {
-            query = query.limit(queryParams.limit);
-        }
-        if (queryParams.sorting) {
-            query = query.orderBy(queryParams.sorting);
-        }
-        if (queryParams.meta) {
-            query = query.meta(queryParams.meta);
-        }
-        return query;
-    }
-
-    /**
      * Реджектит в Promise результат с конфигурацией для показа ошибки. Этот результат можно будет отловить в catch
      * Перед обработкой ошибки вызывает внешний коллбек onError
      * @param error
@@ -389,7 +301,7 @@ export class SourceCrudInterlayer implements IErrorController {
         if (this._errorConfig.onBeforeProcessError instanceof Function) {
             this._errorConfig.onBeforeProcessError(error);
         }
-        return this._processError(error, this._errorConfig.mode).then((errorConf: ISourceErrorData) => {
+        return this._processError(error, this._errorConfig.mode).then((errorConf: ErrorModule.ViewConfig) => {
             return Promise.reject(errorConf);
         });
     }
@@ -400,15 +312,10 @@ export class SourceCrudInterlayer implements IErrorController {
      * @param mode
      * @private
      */
-    private _processError(error: Error, mode?: ErrorModule.Mode): Promise<ISourceErrorData> {
+    private _processError(error: Error, mode?: ErrorModule.Mode): Promise<void | ErrorModule.ViewConfig> {
         return this._errorController.process({
             error,
             mode: mode || ErrorModule.Mode.include
-        }).then((errorViewConfig: ErrorModule.ViewConfig) => {
-            return {
-                errorConfig: errorViewConfig,
-                data: error
-            };
         });
     }
 

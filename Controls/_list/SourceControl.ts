@@ -1,11 +1,9 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import {ICrud} from 'Types/source';
+import {ICrud, QueryOrderSelector, QueryWhere} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import {
-    INavigationOptionValue, INavigationPageSourceConfig, INavigationPositionSourceConfig
-} from 'Controls/_interface/INavigation';
+import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/_interface/INavigation';
 import {ViewConfig, Controller as ErrorController} from 'Controls/_dataSource/error';
-import {ISourceErrorConfig, ISourceErrorData} from 'Controls/_dataSource/SourceCrudInterlayer';
+import {ISourceErrorConfig} from 'Controls/_dataSource/SourceCrudInterlayer';
 import {IPagingOptions} from 'Controls/_paging/Paging';
 import {Direction} from 'Controls/_source/interface/IAdditionalQueryParams';
 
@@ -36,13 +34,13 @@ export interface ISourceControlOptions extends IControlOptions {
 
     /**
      * @name Controls/_list/SourceControl#navigation
-     * @cfg {Types/source:INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>} Опции навигации
+     * @cfg {Types/source:INavigationOptionValue<INavigationSourceConfig>} Опции навигации
      */
     /*
      * @name Controls/_list/SourceControl#navigation
-     * @cfg {Types/source:INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>} Navigation options
+     * @cfg {Types/source:INavigationOptionValue<INavigationSourceConfig>} Navigation options
      */
-    navigation?: INavigationOptionValue<INavigationPageSourceConfig | INavigationPositionSourceConfig>;
+    navigation?: INavigationOptionValue<INavigationSourceConfig>;
 
     /**
      * @name Controls/_list/SourceControl#errorConfig
@@ -123,6 +121,12 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     // Контроллер загрузки данных в список
     private _listSourceLoader: ListSourceLoadingController;
 
+    // Фильтрация данных
+    private _filter: QueryWhere;
+
+    // Сортировка
+    private _sorting: QueryOrderSelector;
+
     protected _beforeMount(options?: ISourceControlOptions, contexts?: object, receivedState?: RecordSet | void): Promise<RecordSet | void> | void {
         this._options = options;
         this._listSourceLoader = new ListSourceLoadingController({
@@ -130,11 +134,12 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
             navigation: this._options.navigation,
             source: this._options.source
         });
-        return this._load();
-    }
+        // TODO implement external List/Grid sorting
+        this._sorting = [];
+        // TODO implement external List/Grid filter
+        this._filter = {};
 
-    protected _onClickLoadMore(event: Event) {
-        return this._load('down');
+        return this._load();
     }
 
     destroy(): void {
@@ -143,32 +148,41 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     }
 
     /**
-     * Загрузка данных с учётом направления
-     * @param direction
+     * Загрузка и установка данных на странице без учёта направления (вниз/вверх)
      * @private
      */
-    private _load(direction?: Direction): Promise<void | RecordSet> {
-        // {
-        //     sorting: {}, // TODO implement external List/Grid sorting
-        //     filter: [], // TODO implement external List/Grid filter
-        // }
-        this._hideError();
-        return this._listSourceLoader.load({direction})
-            .then((recordSet: RecordSet) => {
-                this._items = recordSet;
-            })
-            .catch((error: ISourceErrorData) => {
-                this._showError(error.errorConfig);
-            });
-    }
-
-    private _showError(errorConfig: ViewConfig): void {
-        this._error = errorConfig;
-    }
-
-    private _hideError(): void {
+    private _load(): Promise<void | RecordSet> {
         if (this._error) {
             this._error = null;
         }
+        return this._listSourceLoader.load({filter: this._filter, sorting: this._sorting})
+            .then((response: {data: RecordSet, error: ViewConfig}) => {
+                this._items = response.data;
+                this._error = response.error;
+            });
+    }
+
+    /**
+     * Загрузка данных следующей страницы в указанном направлении (вниз/вверх)
+     * @remark
+     * Вызывается по событию "Загрузить ещё" отображаемого в шаблоне списка/таблицы
+     * @param direction
+     * @private
+     */
+    protected _loadToDirection(direction?: Direction) {
+        if (this._error) {
+            this._error = null;
+        }
+        return this._listSourceLoader.load({direction, filter: this._filter, sorting: this._sorting})
+            .then((response: {data: RecordSet, error: ViewConfig}) => {
+                if (response.data) {
+                    if (!this._items) {
+                        this._items = response.data;
+                    } else {
+                        this._items.append(response.data);
+                    }
+                }
+                this._error = response.error;
+            });
     }
 }
