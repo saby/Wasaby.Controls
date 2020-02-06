@@ -34,7 +34,7 @@ define([
 
       it('loadAsync success', function () {
          var ml = new ModuleLoader();
-         var syncModule = ml.loadAsync('ControlsUnit/Async/TestLibraryAsync').then(function (res) {
+         return ml.loadAsync('ControlsUnit/Async/TestLibraryAsync').then(function (res) {
             assert.notEqual(res, undefined, 'Module not loaded async');
          }, function () {
             assert.fail('Should not promise faild');
@@ -43,7 +43,7 @@ define([
 
       it('loadAsync from library success', function () {
          var ml = new ModuleLoader();
-         ml.loadAsync('ControlsUnit/Async/TestModuleAsync:exportFunction').then(function (exportFunction) {
+         return ml.loadAsync('ControlsUnit/Async/TestModuleAsync:exportFunction').then(function (exportFunction) {
             assert.notEqual(exportFunction, undefined, 'Module not loaded async');
             assert.equal(exportFunction('test'), 'test', 'Import from module is broken');
          }, function() {
@@ -56,12 +56,34 @@ define([
        */
       it('loadAsync from library second is success', function () {
          var ml = new ModuleLoader();
-         ml.loadAsync('ControlsUnit/Async/TestModuleAsync:exportFunction').then(function (exportFunction) {
+         return ml.loadAsync('ControlsUnit/Async/TestModuleAsync:exportFunction').then(function (exportFunction) {
             assert.notEqual(exportFunction, undefined, 'Module not loaded async');
             assert.equal(exportFunction('test'), 'test', 'Import from module is broken');
          }, function() {
             assert.fail('Should not promise faild');
          });
+      });
+      /**
+       * Проверяем что загрузка модуля по другому пути в библиотеке загружает корректный модуль.
+       */
+      it('loadAsync from library another path', function () {
+         var ml = new ModuleLoader();
+         var one = ml.loadAsync('ControlsUnit/Async/TestModuleAsyncTwice:exportFunction').then(function (exportFunction) {
+            assert.notEqual(exportFunction, undefined, 'Module not loaded async');
+            assert.equal(exportFunction('test'), 'test', 'Import from module is broken');
+         }, function() {
+            // если в юнитах упали по таймауту, то см ниже, баг в require под nodejs
+            assert.fail('Should not promise faild');
+         });
+         var two =  ml.loadAsync('ControlsUnit/Async/TestModuleAsyncTwice:exportFunctionTwice').then(function (exportFunction) {
+            assert.notEqual(exportFunction, undefined, 'Module not loaded async');
+            assert.equal(exportFunction('test'), 'testtest', 'Import from module is broken');
+         }, function () {
+            // если в юнитах упали по таймауту, то см ниже, баг в require под nodejs
+            assert.fail('Should not promise faild');
+         });
+
+         return Promise.all([one, two]);
       });
 
       /* Хак. Потому что сломан require в юнит тестах
