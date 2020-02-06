@@ -1,0 +1,7 @@
+<Controls.Container.Async templateName="Controls/toggle:Checkbox"
+                          on:valueChanged="_proxyEvent('checkBoxClick')"
+                          attr:class="controls-Menu__row-checkbox-{{checkBoxAlign === 'right' ? 'right' : 'left'}}_theme-{{_options.theme}}
+                                                  controls-Menu__row-checkbox_{{itemData.isEmptyItem ? 'invisible' :
+                                                   itemData.isSelected ? 'active' : 'default'}}_theme-{{_options.theme}}">
+   <ws:templateOptions value="{{itemData.isSelected}}" />
+</Controls.Container.Async>

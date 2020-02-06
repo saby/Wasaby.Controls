@@ -16,9 +16,6 @@
                                               fontColorStyle="link"
                                               caption="{{_options.moreButtonCaption}}"
                                               on:click="_openSelectorDialog()"/>
-                     <Controls.Container.Async templateName="Controls/lookup:Opener">
-                        <ws:partial template="{{ content.resolvedTemplate }}" name="selectorOpener"/>
-                     </Controls.Container.Async>
                   </ws:if>
                   <ws:else data="{{_expandButtonVisible}}">
                      <div class="controls-Menu__additional">
@@ -50,6 +47,6 @@
                           closeOnOutsideClick="{{true}}"
                           on:result="_subMenuResult()"
                           on:close="_closeSubMenu()"
-                          template="Controls/popupTemplate:Sticky"
+                          template="Controls/_menu/Popup"
                           className="controls-Menu__subMenu_margin_theme-{{_options.theme}}"/>
 </div>

@@ -1,4 +1,7 @@
 <Controls.popupTemplate:Sticky
+        headingCaption="{{_options.headingCaption}}"
+        headingIcon="{{_options.headingIcon}}"
+        headingIconSize="{{_options.headingIconSize}}"
         headerContentTemplate="{{_options.headerTemplate}}"
         footerContentTemplate="{{_options.footerTemplate}}"
         closeButtonVisibility="{{_options.closeButtonVisibility}}">
@@ -7,6 +10,8 @@
               scope="{{_options}}"
               on:selectedKeysChanged="_sendResult('selectedKeysChanged')"
               on:itemClick="_sendResult('itemClick')"
+              on:applyClick="_sendResult('applyClick')"
+              on:moreButtonClick="_sendResult('selectorDialogOpened')"
       />
    </ws:bodyContentTemplate>
 </Controls.popupTemplate:Sticky>
