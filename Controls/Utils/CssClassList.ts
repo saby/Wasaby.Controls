@@ -173,7 +173,12 @@ function getAll(classListCollection: Record<string, string>): string {
     let classes = '';
     for (const classListName in classListCollection) {
         if (classListName !== 'getAll') {
-            classes += `${classListCollection[classListName].trim()} `;
+            const value = classListCollection[classListName];
+            if (typeof value === 'string') {
+                classes += `${classListCollection[classListName].trim()} `;
+            } else if (typeof value === 'object' && !!value.getAll) {
+                classes += `${value.getAll()} `;
+            }
         }
     }
     return classes.trim();

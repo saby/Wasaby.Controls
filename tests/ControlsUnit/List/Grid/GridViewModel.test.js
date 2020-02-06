@@ -929,7 +929,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                assert.equal(expectedData.item[expectedData.displayProperty],
                   checkedColumn.getPropValue(checkedColumn.item, expectedData.displayProperty), 'Incorrect value "" when checking columns.');
                assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
-               cAssert.isClassesEqual(checkedColumn.cellClasses.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
+               cAssert.isClassesEqual(checkedColumn.classList.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
             }
 
             var gridColumn;
@@ -1873,12 +1873,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
             assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
 
-         });
-         it('getPaddingForCheckBox', function() {
-            assert.equal(
-                gridMod.GridViewModel._private.getPaddingForCheckBox({ top: 'l', bottom: 'l' }, theme),
-                'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default'
-            );
          });
 
          it('getBottomPaddingStyles', function() {
