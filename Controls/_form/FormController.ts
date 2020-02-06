@@ -4,7 +4,6 @@ import * as cInstance from 'Core/core-instance';
 import tmpl = require('wml!Controls/_form/FormController/FormController');
 import * as Deferred from 'Core/Deferred';
 import {Logger} from 'UI/Utils';
-import dataSource = require('Controls/dataSource');
 import {error as dataSourceError} from 'Controls/dataSource';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
