@@ -88,21 +88,6 @@
     position: relative;
   }
 
-  .controls-Grid__row-cell_withoutRowSeparator_theme-@{themeName} {
-    // В таблицах функцию min-height выполняет height
-    height: @min-height_Grid-row;
-  }
-
-  .controls-Grid__row-cell_withRowSeparator_notLastRow_theme-@{themeName} {
-    // В таблицах функцию min-height выполняет height
-    height: @min-height_Grid-row;
-  }
-
-  .controls-Grid__row-cell_withRowSeparator_lastRow_theme-@{themeName} {
-    // В таблицах функцию min-height выполняет height
-    height: @min-height_Grid-row + @height_Grid-row-separator;
-  }
-
   .controls-Grid__row-cell__contentWrapper {
     display: inline-flex;
     width: 100%;
@@ -121,10 +106,6 @@
     // Не понятно для чего этот стиль, если понядобится, то нужен коментарий
     // Отключил, потому что во всех браузерах появляется рыжая обводка у строки
     //box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
-  }
-
-  .controls-Grid__cell_master {
-    border-top-width: 0;
   }
 
   .controls-Grid__header-cell__content__innerWrapper {
