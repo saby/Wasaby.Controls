@@ -73,9 +73,6 @@ export class ListSourceLoadingController {
     // текущая загрузка
     private _request: Promise<void | RecordSet>;
 
-    // Данные, загруженные при помощи loade
-    private _items: RecordSet;
-
     constructor(cfg: IListSourceLoaderOptions) {
         ObservableMixin.call(this, cfg);
         this._keyProperty = cfg.keyProperty;
@@ -103,10 +100,7 @@ export class ListSourceLoadingController {
      */
     load(filter?: QueryWhere, sorting?: QueryOrderSelector): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
         return this._loadInner(filter, sorting)
-            .then((data: RecordSet) => {
-                this._items = data;
-                return {data: this._items, error: null};
-            })
+            .then((data: RecordSet) => ({data, error: null}))
             .catch((error: ErrorModule.ViewConfig) => Promise.resolve({data: null, error}));
     }
 
@@ -127,14 +121,7 @@ export class ListSourceLoadingController {
      */
     loadToDirection(direction: IDirection, filter?: QueryWhere, sorting?: QueryOrderSelector): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
         return this._loadInner(filter, sorting, direction)
-            .then((data: RecordSet) => {
-                if (direction === 'down') {
-                    this._items.append(data);
-                } else if (direction === 'up') {
-                    this._items.prepend(data);
-                }
-                return {data, error: null};
-            })
+            .then((data: RecordSet) => ({data, error: null}))
             .catch((error: ErrorModule.ViewConfig) => Promise.resolve({data: null, error}));
     }
 
