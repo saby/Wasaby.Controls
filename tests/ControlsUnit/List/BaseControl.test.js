@@ -2128,6 +2128,9 @@ define([
                data: data
             }),
             cfg = {
+               editingConfig: {
+                  item: { id: 1 }
+               },
                viewName: 'Controls/List/ListView',
                source: source,
                keyProperty: 'id',
@@ -2151,14 +2154,18 @@ define([
                }
             }
          };
-         baseControl._container = {clientHeight: 100};
-         baseControl._afterMount(cfg);
+         baseControl._container = { clientHeight: 100 };
 
          afterEach(() => {
             actionsUpdateCount = 0;
          });
+         it('afterMount with editing item', function() {
+            baseControl._afterMount(cfg);
+            assert.equal(actionsUpdateCount, 1);
+         });
 
          it('_initItemActions', function() {
+            baseControl._itemActionsInitialized = false;
             baseControl._initItemActions();
             assert.equal(actionsUpdateCount, 1);
          });
@@ -2873,28 +2880,17 @@ define([
                   }
                }
             };
-            let commitDef = cDeferred.success();
             let commitAndMoveDef = cDeferred.success();
             let result;
 
-            var ctrl = new lists.BaseControl(cfg);
+            const ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
-                  commitEdit: function() {
-                     result = commitDef;
-                  },
                   commitAndMoveNextRow: function () {
                      result = commitAndMoveDef;
                   }
                }
             };
-            ctrl._commitEditActionHandler();
-            assert.equal(commitDef, result);
-
-            commitDef = cDeferred.success();
-            commitAndMoveDef = cDeferred.success();
-
-            ctrl._options.task1178374430 = true;
             ctrl._commitEditActionHandler();
             assert.equal(commitAndMoveDef, result);
          });

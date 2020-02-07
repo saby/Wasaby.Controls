@@ -1855,6 +1855,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._isMounted = true;
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
+
+        // при создании списка с редактируемой записью, нужно проинициализировать itemActions.
+        // это нельзя сделать до afterMount из-за того, что ItemActionsControl является ребенком BaseControl и
+        // мы не можем к нему обратиться до того, как контролы будут построены.
+        if (this._options.editingConfig && this._options.editingConfig.item) {
+            this._initItemActions();
+        }
         if (this._options.itemsDragNDrop) {
             container.addEventListener('dragstart', this._nativeDragStart);
         }
@@ -2290,11 +2297,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _commitEditActionHandler: function() {
-        if (this._options.task1178374430) {
-            this._children.editInPlace.commitAndMoveNextRow();
-        } else {
-            this._children.editInPlace.commitEdit();
-        }
+        this._children.editInPlace.commitAndMoveNextRow();
     },
 
     _cancelEditActionHandler: function() {
