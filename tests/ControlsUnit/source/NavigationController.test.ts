@@ -13,7 +13,7 @@ import {
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
 } from 'Controls/_source/interface/IAdditionalQueryParams';
-import {DataFaker} from 'Controls-demo/List/Utils/listDataGenerator';
+import {SourceFaker} from 'Controls-demo/List/Utils/listDataGenerator';
 
 const fakePageNavigationConfig = (hasMore?: boolean): INavigationOptionValue<INavigationPageSourceConfig> => {
     return {
@@ -70,17 +70,17 @@ const lastKey = (rs: RecordSet, direction?: Direction): number => {
  * @see also tests/ControlsUnit/Controllers/SourceController.test.js
  */
 describe('Controls/_source/NavigationController', () => {
-    let source: DataFaker;
+    let source: SourceFaker;
 
     let recordSet: RecordSet;
     let moreRecordSet: RecordSet;
     let more2RecordSet: RecordSet;
 
     beforeEach(() => {
-        source = new DataFaker(NUMBER_OF_ITEMS);
-        recordSet = source.getSource().querySync().getAll();
-        moreRecordSet = source.getSource(true, lastKey(recordSet, 'up')).querySync().getAll();
-        more2RecordSet = source.getSource(true, lastKey(moreRecordSet, 'up')).querySync().getAll();
+        source = new SourceFaker({perPage: NUMBER_OF_ITEMS, keyProperty: 'key'});
+        recordSet = source.querySync().getAll();
+        moreRecordSet = source.resetSource(lastKey(recordSet, 'up')).querySync().getAll();
+        more2RecordSet = source.resetSource(lastKey(moreRecordSet, 'up')).querySync().getAll();
     });
 
     describe('getQueryParams + source="page"', () => {

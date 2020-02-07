@@ -99,18 +99,58 @@ export const generateRawData = (n: number): any[] => {
     });
 };
 
+export interface ISourceFakerOptions extends ILocalSourceOptions {
+    data?: any[] | DataSet;
+    failed?: boolean;
+    timeout?: number;
+    startIndex?: number;
+    perPage?: number;
+}
+
 /**
  * Генератор фейковых данных с поддержкой принудительного возврата ошибки 403
  * SourceFaker.instance(options: ILocalSourceOptions, rawData: any[], mustFall: boolean)
+ * @param options {
+ *      filter:  (item: adapter.IRecord, query: object) => boolean;
+ *      options: {debug: boolean};
+ *      adapter?: string | adapter.IAdapter;
+ *      model?: string | Function;
+ *      listModule?: string | Function;
+ *      keyProperty?: string;
+ *      dataSetMetaProperty?: string;
+ *      data?: any[] | DataSet;
+ *      failed?: boolean;
+ *      timeout?: number;
+ *      startIndex?: number;
+ *      perPage?: number;
+ * }
+ * @param data данные в "чистом" виде или DataSet
+ * @param failed флаг "Всегда возвращать ошибку"
  */
 export class SourceFaker extends Remote {
-
+    private _rawData: any[] | DataSet;
     private _timeOut: number;
     private _failed: boolean;
-    private _rawData: any[] | DataSet;
+    private _offset: number;
+    private readonly _cfg: ISourceFakerOptions;
 
-    constructor(options?: ILocalSourceOptions) {
+    constructor(options?: ISourceFakerOptions) {
         super(options);
+        this._cfg = options;
+        this._offset = this._cfg.startIndex;
+        if (!this._cfg.perPage) {
+            this._cfg.perPage = 100;
+        }
+        if (this._cfg.data) {
+            this.setData(new DataSet({
+                rawData: this._initRawData(this._cfg.startIndex || 0),
+                keyProperty: this.getKeyProperty()
+            }));
+        } else {
+            this.resetSource( this._cfg.startIndex || 0);
+        }
+        this.setTimeOut(this._cfg && this._cfg.timeout || 100);
+        this.setFailed(this._cfg && this._cfg.failed);
     }
 
     create(meta?: object): Promise<Record> {
@@ -145,7 +185,7 @@ export class SourceFaker extends Remote {
                 if (this._failed) {
                     reject(this._generateError('query'));
                 } else {
-                    resolve(this.querySync());
+                    resolve(this.querySync(query));
                 }
             }, this._timeOut);
         });
@@ -157,10 +197,8 @@ export class SourceFaker extends Remote {
                 if (this._failed) {
                     reject(this._generateError('read'));
                 } else {
-                    const _record = new Record();
-                    const _data = this.getRawData();
-                    _record.setRawData(_data[4]);
-                    resolve(_record);
+                    const _source = this.querySync().getAll();
+                    resolve(_source.getRecordById(key));
                 }
             }, this._timeOut);
         });
@@ -205,13 +243,16 @@ export class SourceFaker extends Remote {
     /*
      * Синхронно возвращает DataSet
      */
-    querySync(): DataSet {
+    querySync(query?: Query): DataSet {
+        if (query && query.getOffset() !== this._offset) {
+            this.resetSource(query.getOffset());
+        }
         if (this._rawData instanceof DataSet) {
             return this._rawData;
         }
         return new DataSet({
             rawData: this._rawData,
-            keyProperty: 'id'
+            keyProperty: this.getKeyProperty()
         });
     }
 
@@ -225,6 +266,32 @@ export class SourceFaker extends Remote {
         return this._rawData;
     }
 
+    /**
+     * Переустанавливает значения в ресурсе
+     * @param startIndex
+     */
+    resetSource(startIndex: number = 0): SourceFaker {
+        this._offset = startIndex;
+        this.setData(new DataSet({
+            rawData: this._initRawData(startIndex),
+            keyProperty: this.getKeyProperty()
+        }));
+        return this;
+    }
+
+    private _initRawData(startIndex: number = 0): any[] {
+        return getListData(this._cfg.perPage, {
+            buyerId: {
+                value: 0,
+                type: 'number'
+            },
+            amount: {
+                value: 0,
+                type: 'number'
+            }
+        }, this.getKeyProperty(), startIndex);
+    }
+
     private _generateError(action: string): fetch.Errors.HTTP {
         return new fetch.Errors.HTTP({
             url: `localhost/${action}`,
@@ -234,80 +301,8 @@ export class SourceFaker extends Remote {
         });
     }
 
-    /*
-     * Используйте этот метод вместо конструктора
-     * @param options {
-     *      filter:  (item: adapter.IRecord, query: object) => boolean;
-     *      options: {debug: boolean};
-     *      adapter?: string | adapter.IAdapter;
-     *      model?: string | Function;
-     *      listModule?: string | Function;
-     *      keyProperty?: string;
-     *      dataSetMetaProperty?: string;
-     * }
-     * @param data данные в "чистом" виде или DataSet
-     * @param failed флаг "Всегда возвращать ошибку"
-     */
-    static instance(options?: ILocalSourceOptions, data?: any[] | DataSet, failed?: boolean, timeout: number = 500): SourceFaker {
-        const faker = new SourceFaker(options);
-        faker.setTimeOut(timeout);
-        faker.setData(data || getListData(100, {
-            title: {
-                value: 'Заголовок',
-                type: 'string',
-                addId: true
-            },
-            text: {
-                type: 'string',
-                randomData: true
-            }
-        }));
-        faker.setFailed(failed);
-        return faker;
-    }
-}
-
-export class DataFaker {
-    _rawData: any[];
-    _source: SourceFaker;
-    _perPage: number;
-
-    constructor(perPage: number = 100) {
-        this._perPage = perPage;
-        this._rawData = this._initRawData(0);
-        this._source = this._initSource(this._rawData);
-    }
-
-    private _initRawData(startIndex: number = 0): any[] {
-        return getListData(this._perPage, {
-            buyerId: {
-                value: 0,
-                type: 'number'
-            },
-            amount: {
-                value: 0,
-                type: 'number'
-            }
-        }, 'key', startIndex);
-    }
-
-    private _initSource(rawData: any[]): SourceFaker {
-        return SourceFaker.instance({}, new DataSet({
-            rawData,
-            keyProperty: 'key'
-        }), false);
-    }
-
-    getRawData(): any[] {
-        return this._rawData;
-    }
-
-    getSource(reset?: boolean, startIndex: number = 0): SourceFaker {
-        if (reset) {
-            this._rawData = this._initRawData(startIndex);
-            this._source = this._initSource(this._rawData);
-        }
-        return this._source;
+    static instance(options?: ISourceFakerOptions): SourceFaker {
+        return new SourceFaker(options);
     }
 }
 

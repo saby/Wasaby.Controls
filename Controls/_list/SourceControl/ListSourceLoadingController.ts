@@ -15,12 +15,6 @@ import {
 import {NavigationOptionsResolver} from './NavigationOptionsResolver';
 import * as ErrorModule from 'Controls/_dataSource/error';
 
-/**
- * Настройки для страницы по умолчанию
- */
-const INITIAL_PAGE_NUMBER = 1;
-const INITIAL_PER_PAGE = 100;
-
 export interface ISourceControlQueryParams {
     direction?: IDirection;
     filter?: QueryWhere;
@@ -90,7 +84,7 @@ export class ListSourceLoadingController {
         ObservableMixin.call(this, cfg);
         this._keyProperty = cfg.keyProperty;
         const navigationOptionsResolver = new NavigationOptionsResolver(cfg.navigation, this._keyProperty);
-        this._navigationOptions = navigationOptionsResolver.resolve(INITIAL_PAGE_NUMBER - 1, INITIAL_PER_PAGE);
+        this._navigationOptions = navigationOptionsResolver.resolve();
         this._navigationController = new NavigationController({
             navigation: this._navigationOptions
         });

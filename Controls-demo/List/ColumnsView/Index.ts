@@ -31,7 +31,7 @@ export default class RenderColumnsViewContainerDemo extends Control {
     protected _itemActions: any[];
 
     protected _beforeMount(options?: {}, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._itemsSource = SourceFaker.instance({}, rawData, false);
+        this._itemsSource = new SourceFaker({data: rawData, failed: false, keyProperty: 'id'});
         this._itemActions = [
             {
                 id: 1,

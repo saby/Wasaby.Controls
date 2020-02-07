@@ -4,11 +4,8 @@ import {Record} from 'Types/entity';
 import {
     error as ErrorModule,
     ISourceErrorConfig,
-    ISourceErrorData,
     SourceCrudInterlayer
 } from 'Controls/dataSource';
-// import {Handler} from 'Controls/_dataSource/error';
-// import ErrorController from 'Controls/_dataSource/_error/Controller';
 import {getGridData, SourceFaker} from 'Controls-demo/List/Utils/listDataGenerator';
 
 const NUMBER_OF_ITEMS = 100;
@@ -27,8 +24,6 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
     let sourceCrudInterlayer: SourceCrudInterlayer;
     let fallingSource: ICrud;
     let fallingSourceCrudInterlayer: SourceCrudInterlayer;
-    // let handler: Handler;
-    // let errorController: ErrorController;
 
     beforeEach(() => {
         errorConfig = {
@@ -37,24 +32,9 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 assert.isNotEmpty(error.message);
             }
         };
-        source = SourceFaker.instance({}, rawData, false);
-        fallingSource = SourceFaker.instance({}, rawData, true);
+        source = new SourceFaker({data: rawData, failed: false, keyProperty: 'id'});
+        fallingSource = new SourceFaker({data: rawData, failed: true, keyProperty: 'id'});
         sourceCrudInterlayer = new SourceCrudInterlayer({source, errorConfig});
-        // handler = ({ error, mode }) => {
-        //     return {
-        //         template: 'SbisEnvUI/Maintains:Parking.handlers.internal',
-        //         options: {
-        //             message: 'К сожалению функционал для вас недоступен.',
-        //             details: 'Оформите подписку и повторите попытку',
-        //             image: 'https://i.pinimg.com/474x/54/5a/0f/545a0f6074c7a8eeeb396082c768952.jpg'
-        //         }
-        //     };
-        // };
-        // errorController = new ErrorController({
-        //     handlers: [handler]
-        // });
-        // fallingSourceCrudInterlayer = new SourceCrudInterlayer({source: fallingSource, errorConfig,
-        // errorController});
         fallingSourceCrudInterlayer = new SourceCrudInterlayer({source: fallingSource, errorConfig});
     });
 
@@ -67,7 +47,7 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                  .then((record: Record) => {
                      assert.equal(record.get('title'), 'Запись 666');
                  })
-                 .catch((errorData: ISourceErrorData) => {
+                 .catch((errorData: ErrorModule.ViewConfig) => {
                      assert.isNotTrue(true, 'This call should not throw any exceptions');
                  });
         });
@@ -80,20 +60,20 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 .then((record: Record) => {
                     assert.isNotTrue(true, 'This call should throw an exception');
                 })
-                .catch((errorData: ISourceErrorData) => {
-                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                .catch((errorData: ErrorModule.ViewConfig) => {
+                    assert.equal(errorData.mode, errorConfig.mode);
                 });
         });
     });
     describe('read', () => {
-        const _record = new Record();
-        _record.setRawData(rawData[4]);
         it('should return Promise<Record>', () => {
-            return sourceCrudInterlayer.read(5)
+            const _record = new Record();
+            _record.setRawData(rawData[4]);
+            return sourceCrudInterlayer.read(4)
                 .then((record: Record) => {
                     assert.equal(record.get('id'), _record.get('id'));
                 })
-                .catch((errorData: ISourceErrorData) => {
+                .catch((errorData: ErrorModule.ViewConfig) => {
                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                 });
         });
@@ -103,20 +83,25 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 .then((record: Record) => {
                     assert.isNotTrue(true, 'This call should throw an exception');
                 })
-                .catch((errorData: ISourceErrorData) => {
-                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                .catch((errorData: ErrorModule.ViewConfig) => {
+                    assert.equal(errorData.mode, errorConfig.mode);
                 });
         });
     });
     describe('update', () => {
-        const record = new Record();
-        record.setRawData(rawData[4]);
+        let record: Record;
+
+        beforeEach(() => {
+            record = new Record();
+            record.setRawData(rawData[4]);
+        });
+
         it('should return Promise<null>', () => {
             return sourceCrudInterlayer.update(record)
                 .then((nulled: unknown) => {
                     assert.isNull(nulled);
                 })
-                .catch((errorData: ISourceErrorData) => {
+                .catch((errorData: ErrorModule.ViewConfig) => {
                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                 });
         });
@@ -126,15 +111,15 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 .then((nulled: unknown) => {
                     assert.isNotTrue(true, 'This call should throw an exception');
                 })
-                .catch((errorData: ISourceErrorData) => {
-                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                .catch((errorData: ErrorModule.ViewConfig) => {
+                    assert.equal(errorData.mode, errorConfig.mode);
                 });
         });
     });
     describe('query', () => {
-        const record = new Record();
-        record.setRawData(rawData[4]);
         it('should return Promise<DataSet>', () => {
+            const record = new Record();
+            record.setRawData(rawData[4]);
             return sourceCrudInterlayer.query({
                 filter: {},
                 sorting: [{id: true}]
@@ -142,7 +127,7 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 .then((dataSet: DataSet) => {
                     assert.equal(dataSet.getAll().at(4).get('id'), record.get('id'));
                 })
-                .catch((errorData: ISourceErrorData) => {
+                .catch((errorData: ErrorModule.ViewConfig) => {
                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                 });
         });
@@ -155,8 +140,8 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 .then((dataSet: DataSet) => {
                     assert.isNotTrue(true, 'This call should throw an exception');
                 })
-                .catch((errorData: ISourceErrorData) => {
-                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                .catch((errorData: ErrorModule.ViewConfig) => {
+                    assert.equal(errorData.mode, errorConfig.mode);
                 });
         });
     });
@@ -166,7 +151,7 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 .then((nulled: unknown) => {
                     assert.isNull(nulled);
                 })
-                .catch((errorData: ISourceErrorData) => {
+                .catch((errorData: ErrorModule.ViewConfig) => {
                     assert.isNotTrue(true, 'This call should not throw any exceptions');
                 });
         });
@@ -176,8 +161,8 @@ describe('Controls/_dataSource/SourceCrudInterlayer', () => {
                 .then((nulled: unknown) => {
                     assert.isNotTrue(true, 'This call should throw an exception');
                 })
-                .catch((errorData: ISourceErrorData) => {
-                    assert.equal(errorData.errorConfig.mode, errorConfig.mode);
+                .catch((errorData: ErrorModule.ViewConfig) => {
+                    assert.equal(errorData.mode, errorConfig.mode);
                 });
         });
     });
