@@ -71,8 +71,11 @@
    right: 0;
 }
 
-.controls-TileView__item_unfixed {
+.controls-TileView__item_unfixed, .controls-TileView__item_unscaleable {
    max-height: 100%;
+}
+.controls-TileView__item:hover > .controls-TileView__item_unscaleable {
+   max-height: none;
 }
 
 .controls-TileView__item_animated .controls-itemActionsV {
