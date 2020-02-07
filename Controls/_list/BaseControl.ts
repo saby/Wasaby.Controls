@@ -779,6 +779,7 @@ var _private = {
     onScrollHide: function(self) {
         if (self._pagingVisible) {
             self._pagingVisible = false;
+            self._cachedPagingState = false;
             self._forceUpdate();
         }
         self._isScrollShown = false;
