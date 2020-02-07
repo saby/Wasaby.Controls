@@ -10,7 +10,7 @@
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/tile:ItemTemplate">
  *          <ws:contentTemplate>
- *             <img src="{{contentTemplate.itemData.item.Image}}">
+ *             <img src="{{contentTemplate.itemData.item.Image}}"/>
  *             <div title="{{contentTemplate.itemData.item.Name}}">
  *                {{contentTemplate.itemData.item.Name}}
  *             </div>

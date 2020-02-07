@@ -404,12 +404,12 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private checkTriggerVisibility(): void {
         if (!this.applyScrollTopCallback) {
-            if (this.triggerVisibility.up) {
-                this.updateViewWindow('up');
-            }
-
             if (this.triggerVisibility.down) {
                 this.updateViewWindow('down');
+            }
+
+            if (this.triggerVisibility.up) {
+                this.updateViewWindow('up');
             }
         }
 
@@ -454,7 +454,7 @@ export default class ScrollContainer extends Control<IOptions> {
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (!this.afterRenderCallback && !this.fakeScroll) {
+            if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {
