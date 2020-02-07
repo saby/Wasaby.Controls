@@ -55,7 +55,7 @@ import 'Controls/popupTemplate';
          }
 
       });
-      List._theme = ['Controls/suggestPopup'];
+      List._theme = ['Controls/suggest', 'Controls/suggestPopup'];
       export = List;
 
 

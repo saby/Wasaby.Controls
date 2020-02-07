@@ -77,8 +77,7 @@ var __PopupContent = BaseLayer.extend({
       }
    }
 });
-
-__PopupContent._theme = ['Controls/suggest'];
+__PopupContent._theme = ['Controls/suggest', 'Controls/suggestPopup'];
 __PopupContent._private = _private;
 
 export default __PopupContent;

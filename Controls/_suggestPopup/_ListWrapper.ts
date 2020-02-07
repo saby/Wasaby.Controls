@@ -30,5 +30,5 @@ import 'Controls/Container/Async';
       });
 
 
-      _ListWrapper._theme = ['Controls/suggest'];
+      _ListWrapper._theme = ['Controls/suggest', 'Controls/suggestPopup'];
       export = _ListWrapper;

@@ -98,7 +98,7 @@ var __PopupLayer = Control.extend({
    }
 });
 
-__PopupLayer._theme = ['Controls/suggest'];
+__PopupLayer._theme = ['Controls/suggest', 'Controls/suggestPopup'];
 __PopupLayer._private = _private;
 
 export default __PopupLayer;

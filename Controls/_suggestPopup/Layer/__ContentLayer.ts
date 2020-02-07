@@ -129,7 +129,7 @@ var __ContentLayer = BaseLayer.extend({
 
 });
 
-__ContentLayer._theme = ['Controls/suggest'];
+__ContentLayer._theme = ['Controls/suggest', 'Controls/suggestPopup'];
 __ContentLayer._private = _private;
 
 export default __ContentLayer;
