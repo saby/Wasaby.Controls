@@ -147,6 +147,7 @@ class Previewer extends BaseOpener<IPreviewerOpenerOptions> implements IPreviewe
         baseOptions._vdomOnOldPage = true;
         return baseOptions;
     }
+    static _theme = ['Controls/popup'];
 }
 
 export default Previewer;

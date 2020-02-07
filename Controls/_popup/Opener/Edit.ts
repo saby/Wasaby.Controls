@@ -164,5 +164,6 @@ class Edit extends Control<IEditOpenerOptions> implements IEditOpener {
             mode: 'stack'
         };
     }
+    static _theme = ['Controls/popup'];
 }
 export default Edit;

@@ -72,6 +72,7 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
         // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
         return {...BaseOpener.getDefaultOptions(), ...{_vdomOnOldPage: true}};
     }
+    static _theme = ['Controls/popup'];
 }
 
 export default Sticky;

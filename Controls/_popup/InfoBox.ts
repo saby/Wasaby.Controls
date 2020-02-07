@@ -233,6 +233,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
             trigger: 'hover'
         };
     }
+    static _theme = ['Controls/popup'];
 }
 
 export default InfoboxTarget;

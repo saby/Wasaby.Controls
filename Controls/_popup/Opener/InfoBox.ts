@@ -205,6 +205,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         options._vdomOnOldPage = true; // Open vdom popup in the old environment
         return options;
     }
+    static _theme = ['Controls/popup'];
 }
 
 export default InfoBox;

@@ -127,6 +127,7 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
     static getDefaultOptions(): INotificationOpenerOptions {
         return {...BaseOpener.getDefaultOptions(), ...BASE_OPTIONS};
     }
+    static _theme = ['Controls/popup'];
 }
 
 export default Notification;
