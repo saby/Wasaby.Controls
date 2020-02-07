@@ -110,6 +110,7 @@ var StickyHeader = Control.extend({
    _notifyHandler: tmplNotify,
 
    _bottomShadowStyle: '',
+   _topShadowStyle: '',
 
    constructor: function() {
       StickyHeader.superclass.constructor.apply(this, arguments);
@@ -382,8 +383,10 @@ var StickyHeader = Control.extend({
          // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
          // There's no container at first building of template.
          if (container) {
-            this._bottomShadowStyle = 'bottom: unset; right: unset; top:' + container.offsetHeight + 'px;' +
-                'width:' + container.offsetWidth + 'px;';
+            const offsetWidth = container.offsetWidth;
+            this._bottomShadowStyle =
+                `bottom: unset; right: unset; top:${container.offsetHeight}px; width:${offsetWidth}px;`;
+            this._topShadowStyle = `right: unset; width:${offsetWidth}px;`;
          }
       }
    },

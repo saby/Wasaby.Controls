@@ -36,13 +36,13 @@
    </ws:else>
 </ws:template>
 
-<div class="controls-BaseControl controls-BaseControl__renderContainer">
+<div class="controls-BaseControl controls-BaseControl_showActions controls-BaseControl__renderContainer">
    <ws:partial template="conditionalItemActions">
       <ws:contentTemplate>
          <ws:partial
             template="{{ _options.render }}"
             listModel="{{ _collection }}"
-            scope="{{ _options }}">
+            scope="{{ _getSafeScope(_options) }}">
          </ws:partial>
       </ws:contentTemplate>
    </ws:partial>
