@@ -1,22 +1,37 @@
 <div attr:style="display: flex; justify-content: space-around; flex-direction: column;">
     <Controls.list:SourceControl
-            attr:name="sourceControl"
+            name="sourceControl"
             source="{{ _itemsSource }}"
     >
         <ws:content>
-            <div class="Controls-demo_listRender_ColumnsView">
-                <Controls.listRender:ColumnsView
-                        items="{{ items }}"
-                        itemActions="{{ _itemActions }}"
-                        actionAlignment="vertical"
-                        keyProperty="id"
-                        displayProperty="title"
-                        imageProperty="image"
-                        multiSelectVisibility="hidden"
-                        contextMenuEnabled="false"
-                        contextMenuVisibility="false">
-                </Controls.listRender:ColumnsView>
-            </div>
+            <Controls.listRender:ColumnsView
+                    items="{{ items }}"
+                    itemActions="{{ _itemActions }}"
+                    actionAlignment="vertical"
+                    keyProperty="id"
+                    displayProperty="title"
+                    imageProperty="image"
+                    multiSelectVisibility="hidden"
+                    contextMenuEnabled="false"
+                    contextMenuVisibility="false">
+            </Controls.listRender:ColumnsView>
         </ws:content>
+        <ws:navigation source="page" view="infinite">
+            <ws:sourceConfig pageSize="{{_pageSize}}" page="{{0}}" hasMore="{{false}}"/>
+        </ws:navigation>
     </Controls.list:SourceControl>
+    <Controls.buttons:Button
+            attr:class="controls-BaseControl__loadMore"
+            viewMode="link"
+            fontColorStyle="link"
+            caption="Сгенерировать ещё"
+            on:click="_onLoadMoreClick()"
+            readOnly="{{false}}"/>
+    <Controls.buttons:Button
+            attr:class="controls-BaseControl__loadMore"
+            viewMode="link"
+            fontColorStyle="link"
+            caption="{{_needToFail ? 'не' : ''}} выдавать ошибку"
+            on:click="_onNeedToFailToggleClick()"
+            readOnly="{{false}}"/>
 </div>

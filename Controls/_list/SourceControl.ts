@@ -148,6 +148,16 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
     }
 
     /**
+     * Овнешний вызов "Загрузить ещё"
+     */
+    /**
+     * External call of "Load More"
+     */
+    loadMore(): void {
+        this._loadToDirection('down');
+    }
+
+    /**
      * Загрузка и установка данных на странице без учёта направления (вниз/вверх)
      * @private
      */

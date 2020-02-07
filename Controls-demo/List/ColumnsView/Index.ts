@@ -3,17 +3,9 @@ import {ICrud} from 'Types/source';
 import {SourceControl} from 'Controls/list';
 
 import * as Template from 'wml!Controls-demo/List/ColumnsView/ColumnsView';
-import {getListData, SourceFaker} from '../Utils/listDataGenerator';
+import {SourceFaker} from '../Utils/listDataGenerator';
 
-const NUMBER_OF_ITEMS = 100;
-
-const rawData = getListData(NUMBER_OF_ITEMS, {
-    title: {
-        type: 'string',
-        value: 'title',
-        addId: true
-    }
-});
+const NUMBER_OF_ITEMS = 50;
 
 /**
  * http://localhost:3000/Controls-demo/app/Controls-demo%2FList%2FRenderContainer%2FIndex
@@ -26,12 +18,32 @@ export default class RenderColumnsViewContainerDemo extends Control {
         sourceControl: SourceControl
     };
 
-    protected _itemsSource: ICrud;
+    protected _itemsSource: SourceFaker;
 
     protected _itemActions: any[];
 
+    protected _pageSize: number;
+
+    protected _page: number;
+
+    protected _needToFail: boolean;
+
     protected _beforeMount(options?: {}, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._itemsSource = new SourceFaker({data: rawData, failed: false, keyProperty: 'id'});
+        this._needToFail = false;
+        this._pageSize = NUMBER_OF_ITEMS;
+        this._page = 0;
+        this._itemsSource = new SourceFaker({
+            startIndex: 0,
+            perPage: NUMBER_OF_ITEMS,
+            failed: this._needToFail,
+            keyProperty: 'id',
+            itemModel: {
+                title: {
+                    type: 'string',
+                    value: 'title',
+                    addId: true
+                }
+            }});
         this._itemActions = [
             {
                 id: 1,
@@ -51,5 +63,14 @@ export default class RenderColumnsViewContainerDemo extends Control {
                 showType: 0
             }
         ];
+    }
+
+    protected _onLoadMoreClick() {
+        this._children.sourceControl.loadMore();
+    }
+
+    protected _onNeedToFailToggleClick() {
+        this._needToFail = !this._needToFail;
+        this._itemsSource.setFailed(this._needToFail);
     }
 }

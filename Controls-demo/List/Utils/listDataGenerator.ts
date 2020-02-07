@@ -105,6 +105,7 @@ export interface ISourceFakerOptions extends ILocalSourceOptions {
     timeout?: number;
     startIndex?: number;
     perPage?: number;
+    itemModel?: IItemPrototype;
 }
 
 /**
@@ -132,6 +133,7 @@ export class SourceFaker extends Remote {
     private _timeOut: number;
     private _failed: boolean;
     private _offset: number;
+    private readonly _itemModel: IItemPrototype;
     private readonly _cfg: ISourceFakerOptions;
 
     constructor(options?: ISourceFakerOptions) {
@@ -140,6 +142,25 @@ export class SourceFaker extends Remote {
         this._offset = this._cfg.startIndex;
         if (!this._cfg.perPage) {
             this._cfg.perPage = 100;
+        }
+        if (this._cfg.itemModel) {
+            this._itemModel = this._cfg.itemModel;
+        } else {
+            this._itemModel = {
+                title: {
+                    type: 'string',
+                    value: 'Item',
+                    addId: true
+                },
+                buyerId: {
+                    value: 0,
+                    type: 'number'
+                },
+                amount: {
+                    value: 0,
+                    type: 'number'
+                }
+            };
         }
         if (this._cfg.data) {
             this.setData(new DataSet({
@@ -280,16 +301,7 @@ export class SourceFaker extends Remote {
     }
 
     private _initRawData(startIndex: number = 0): any[] {
-        return getListData(this._cfg.perPage, {
-            buyerId: {
-                value: 0,
-                type: 'number'
-            },
-            amount: {
-                value: 0,
-                type: 'number'
-            }
-        }, this.getKeyProperty(), startIndex);
+        return getListData(this._cfg.perPage, this._itemModel, this.getKeyProperty(), startIndex);
     }
 
     private _generateError(action: string): fetch.Errors.HTTP {
