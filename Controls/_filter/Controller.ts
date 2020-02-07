@@ -162,7 +162,7 @@ const _private = {
 
             function update() {
                 let historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
-                self._notify('historySave', historyData, filterButtonItems);
+                self._notify('historySave', [historyData, filterButtonItems]);
 
                historyUtils.getHistorySource({historyId: historyId}).update(historyData, meta);
             }
