@@ -25,7 +25,7 @@
 .controls-InfoBoxTemplate__arrow_theme-@{themeName} {
    width: @arrow_side_length_infobox;
    height: @arrow_side_length_infobox;
-   border-width: @border-thickness_infobox;
+   border-width: @marker-thickness_infobox;
    background: @background-color_infobox;
 }
 
@@ -116,7 +116,7 @@
      border-top: @marker-thickness_infobox solid @border-color_infobox;
    }
    &help_theme-@{themeName}{
-      border-bottom: @marker-thickness_infobox solid @help_border-color_infobox;
+     border-top: @marker-thickness_infobox solid @help_border-color_infobox;
    }
  }
 
@@ -170,7 +170,7 @@
     border-left: @marker-thickness_infobox solid @border-color_infobox;
   }
   &help_theme-@{themeName}{
-    border-top: @marker-thickness_infobox solid @help_border-color_infobox;
+    border-left: @marker-thickness_infobox solid @help_border-color_infobox;
   }
 }
 
