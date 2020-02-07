@@ -25,6 +25,7 @@ export interface IMenuOptions extends IControlOptions, ISourceOptions, IFilter {
     selectorOpener?: object;
     selectorDialogResult?: Function;
     isCompoundTemplate?: boolean;
+    groupingKeyCallback?: Function;
 }
 
 export interface IHistoryConfig {

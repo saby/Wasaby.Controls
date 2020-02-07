@@ -119,12 +119,12 @@ var Button = Control.extend({
       return handlerResult;
    },
 
-   _onPinClickHandler: function (event, items) {
+   _onPinClickHandler: function (event, item) {
       var self = this;
       const meta =  {
-         $_pinned: !items[0].get('pinned')
+         $_pinned: !item.get('pinned')
       };
-      this._options.source.update(items[0].clone(), meta).addCallback(function (result) {
+      this._options.source.update(item.clone(), meta).addCallback(function (result) {
          if (!result) {
             self._children.notificationOpener.open({
                template: 'Controls/popupTemplate:NotificationSimple',
