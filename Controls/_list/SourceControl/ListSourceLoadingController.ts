@@ -85,42 +85,42 @@ export class ListSourceLoadingController {
     }
 
     /**
-     * Запрашивает данные из ресурса данных, используя параметры filter, sorting.
+     * Запрашивает данные из ресурса данных, с учётом направления (вверх/вниз), используя параметры filter, sorting.
      * @remark
      * Заменяет ранее загруженные данные новыми
      * @param filter {Types/source:QueryWhere} параметры фильтрации
      * @param sorting {Types/source:DataSet:QueryOrderSelector} параметры сортировки
-     */
-    /*
-     * Requests data from source using params filter, sorting
-     * @remark
-     * Replaces previously loaded data with new ones
-     * @param filter {Types/source:QueryWhere} filtering params
-     * @param sorting {Types/source:DataSet:QueryOrderSelector} sorting params
-     */
-    load(filter?: QueryWhere, sorting?: QueryOrderSelector): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
-        return this._loadInner(filter, sorting)
-            .then((data: RecordSet) => ({data, error: null}))
-            .catch((error: ErrorModule.ViewConfig) => Promise.resolve({data: null, error}));
-    }
-
-    /**
-     * Запрашивает данные из ресурса данных с учётом направления (вверх/вниз), используя параметры filter, sorting.
-     * @remark
-     * В зависимости от направления добавляет записи в конец или в начало.
-     * Для загрузки в указанном направлении всегда предполагается, что начальная порция данных уже загружена
-     * @param filter {Types/source:QueryWhere} параметры фильтрации
-     * @param sorting {Types/source:DataSet:QueryOrderSelector} параметры сортировки
+     * @param direction {Types/source:DataSet:QueryOrderSelector} направление навигации
      */
     /*
      * Requests data from source considering direction (up/down) with params filter, sorting
      * @remark
-     * Depending on direction adds records to the end or to the top of previously loaded items list
+     * Replaces previously loaded data with new ones
      * @param filter {Types/source:QueryWhere} filtering params
      * @param sorting {Types/source:DataSet:QueryOrderSelector} sorting params
+     * @param direction {Types/source:DataSet:QueryOrderSelector} navigation direction
      */
-    loadToDirection(direction: IDirection, filter?: QueryWhere, sorting?: QueryOrderSelector): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
-        return this._loadInner(filter, sorting, direction)
+    load(filter?: QueryWhere, sorting?: QueryOrderSelector, direction?: IDirection): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
+        const _filter = filter || {};
+        const _sorting = sorting || [];
+        const _direction = direction || undefined;
+
+        this.cancelLoading();
+        const query = this._navigationController.getQueryParams(_direction, _filter, _sorting);
+
+        this._request = this._source.query(query)
+            .then((dataSet: DataSet) => {
+                let recordSet: RecordSet;
+                if (this._keyProperty && this._keyProperty !== dataSet.getKeyProperty()) {
+                    dataSet.setKeyProperty(this._keyProperty);
+                }
+                if ('getAll' in dataSet) {
+                    recordSet = dataSet.getAll();
+                    this._navigationController.updateQueryProperties(recordSet, _direction);
+                }
+                return recordSet;
+            });
+        return this._request
             .then((data: RecordSet) => ({data, error: null}))
             .catch((error: ErrorModule.ViewConfig) => Promise.resolve({data: null, error}));
     }
@@ -144,28 +144,5 @@ export class ListSourceLoadingController {
 
     destroy(): void {
         this._navigationController.destroy();
-    }
-
-    private _loadInner(filter?: QueryWhere, sorting?: QueryOrderSelector, direction?: IDirection): Promise<void | RecordSet> {
-        const _filter = filter || {};
-        const _sorting = sorting || [];
-        const _direction = direction || undefined;
-
-        this.cancelLoading();
-        const query = this._navigationController.getQueryParams(_direction, _filter, _sorting);
-
-        this._request = this._source.query(query)
-            .then((dataSet: DataSet) => {
-                let recordSet: RecordSet;
-                if (this._keyProperty && this._keyProperty !== dataSet.getKeyProperty()) {
-                    dataSet.setKeyProperty(this._keyProperty);
-                }
-                if ('getAll' in dataSet) {
-                    recordSet = dataSet.getAll();
-                    this._navigationController.updateQueryProperties(recordSet, _direction);
-                }
-                return recordSet;
-            });
-        return this._request;
     }
 }

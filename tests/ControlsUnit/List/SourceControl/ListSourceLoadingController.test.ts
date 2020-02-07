@@ -66,7 +66,7 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
                 })
                 .then((recordSet: RecordSet) => {
                     recordSet.setMetaData({more: true});
-                    return instance.loadToDirection('down')
+                    return instance.load({}, [], 'down')
                         .then((response2: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
                             assert.equal(response2.data.at(0).get('id'), NUMBER_OF_ITEMS);
                         });
@@ -96,7 +96,7 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
                 })
                 .then((recordSet: RecordSet) => {
                     recordSet.setMetaData({more: true});
-                    return instance.loadToDirection('up')
+                    return instance.load({}, [], 'up')
                         .then((response2: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
                             assert.equal(response2.data.at(0).get('id'), 0);
                         });

@@ -179,7 +179,7 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
      * @private
      */
     protected _loadToDirection(direction: Direction): Promise<void | RecordSet> {
-        return this._listSourceLoader.loadToDirection(direction, this._filter, this._sorting)
+        return this._listSourceLoader.load(this._filter, this._sorting, direction)
             .then(({data, error}) => {
                 // @TODO Для контрола нет юнит-тестов того, добавлены items append/prepend или нет
                 // Не вынесено ListSourceLoader, чтобы избежать "магии" изменения this._items
