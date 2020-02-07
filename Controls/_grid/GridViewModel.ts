@@ -1331,6 +1331,8 @@ var
             current.isActionsColumn = _private.isActionsColumn;
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
 
+            current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
+
             current.getCurrentColumnKey = function() {
                 return self._columnsVersion + '_' +
                     (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
@@ -1358,7 +1360,6 @@ var
                         _preferVersionAPI: true
                     };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
-                currentColumn.ladderCellClasses = currentColumn.classList.getAll();
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                 if (self._isSupportLadder(self._options.ladderProperties)) {
