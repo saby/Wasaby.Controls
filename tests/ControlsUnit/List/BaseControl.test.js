@@ -5335,6 +5335,7 @@ define([
                assert.isFalse(baseControl._pagingNavigation);
             });
             it('page navigation', function() {
+               let scrollPagingDestroyed = false;
                cfg.navigation = {
                   view: 'pages',
                   source: 'page',
@@ -5347,7 +5348,12 @@ define([
                      hasMore: false
                   }
                };
+               baseControl._scrollPagingCtr = {
+                  destroy:() => { scrollPagingDestroyed = true }
+               };
                lists.BaseControl._private.initializeNavigation(baseControl, cfg);
+               assert.isTrue(scrollPagingDestroyed);
+               assert.isNull(baseControl._scrollPagingCtr);
                assert.isFalse(baseControl._needScrollCalculation);
                assert.isTrue(baseControl._pagingNavigation);
             });
