@@ -13,10 +13,8 @@ interface IReceivedState {
     errorConfig?: dataSourceError.ViewConfig;
 }
 
-interface ICrudResult {
+interface ICrudResult extends IReceivedState {
     error: Error;
-    data?: any;
-    errorConfig?: dataSourceError.ViewConfig;
 }
 
 interface IAdditionalData {

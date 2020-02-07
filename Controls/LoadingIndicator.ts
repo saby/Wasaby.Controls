@@ -139,7 +139,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions>/** @lends Contr
     }
 
     // Indicator is opened above existing popups.
-    protected _updateZIndex(config: ILoadingIndicatorOptions) {
+    protected _updateZIndex(config) {
         const popupItem = ManagerController && ManagerController.find((config || {}).popupId);
         if (popupItem) {
             this._zIndex = popupItem.currentZIndex;
