@@ -942,7 +942,7 @@ var
         getCurrentResultsColumn: function() {
             var
                 columnIndex = this._curResultsColumnIndex,
-                cellClasses = `controls-Grid__results-cell controls-Grid__results-cell_theme-${this._options.theme}`,
+                cellClasses = `controls-Grid__results-cell controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`,
                 resultsColumn = {
                     column: this._resultsColumns[columnIndex],
                     index: columnIndex
