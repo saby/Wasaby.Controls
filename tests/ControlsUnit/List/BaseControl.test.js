@@ -1557,21 +1557,6 @@ define([
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
-            // Прокрутили в конец списка, sourceController только что загрузил последнюю пачку данных
-            // (hasMoreData возвращает false),
-            // то кнопки пейджинга в этот момент дизейблить не нужно: до конца еще не до сколлили
-            ctrl._sourceController.hasMoreData = () => false;
-            lists.BaseControl._private.handleListScroll(ctrl, {
-               scrollTop: 200,
-               position: 'down'
-            });
-            assert.deepEqual({
-               stateBegin: 'normal',
-               statePrev: 'normal',
-               stateNext: 'normal',
-               stateEnd: 'normal'
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
-
             ctrl._pagingVisible = true;
             ctrl._abortSearch();
             assert.deepEqual({
