@@ -6,7 +6,6 @@ import { ColumnsCollection as Collection, ColumnsCollectionItem as CollectionIte
 import { ICrudPlus } from 'Types/source';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { constants } from 'Env/Env';
-import * as VirtualScrollController from 'Controls/_display/controllers/VirtualScroll';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
 export interface IColumnsInnerViewOptions extends IList {
@@ -72,7 +71,7 @@ export default class ColumnsInnerView extends Control {
     }
     private setColumnOnItem(item: CollectionItem<unknown>, index: number): void {
         const model = this._model;
-        const column = this._columnsController.calcColumn(model, VirtualScrollController.getStartIndex(model) + index, this._columnsCount);
+        const column = this._columnsController.calcColumn(model, model.getStartIndex() + index, this._columnsCount);
         item.setColumn(column);
         this._columnsIndexes[column].push(index);
     }
