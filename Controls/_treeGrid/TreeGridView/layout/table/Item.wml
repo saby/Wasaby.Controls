@@ -32,7 +32,7 @@
        </ws:else>
    </ws:if>
    <ws:if data="{{colspan}}">
-       <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
+       <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}" attr:class="{{currentColumn.classList.padding.top}} {{currentColumn.classList.padding.bottom}}"/>
    </ws:if>
    <ws:else>
        <ws:partial template="{{currentColumn.template}}"
@@ -73,7 +73,9 @@
 </ws:template>
 
 <ws:template name="colTpl">
-   <td class="{{currentColumn.cellClasses}}
+   <td class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
+              {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}
+              {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
               {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
               {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}

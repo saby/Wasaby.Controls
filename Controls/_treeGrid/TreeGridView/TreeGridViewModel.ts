@@ -158,6 +158,10 @@ var
                     currentColumn.classList.base += ` controls-TreeGrid__row-cell__item_theme-${theme}`;
                 }
 
+                if (currentColumn.columnIndex === 0 && !current.hasMultiSelect) {
+                    currentColumn.classList.padding.left += ' controls-TreeGrid__row-cell__firstColumn__contentSpacing_null';
+                }
+
                 return currentColumn;
             };
 
