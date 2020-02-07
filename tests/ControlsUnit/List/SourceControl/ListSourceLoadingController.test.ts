@@ -65,7 +65,7 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
                 })
                 .then((recordSet: RecordSet) => {
                     recordSet.setMetaData({more: true});
-                    return instance.load({direction: 'down'})
+                    return instance.loadToDirection('down')
                         .then((response2: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
                             assert.equal(response2.data.at(0).get('id'), NUMBER_OF_ITEMS);
                         });

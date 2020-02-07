@@ -1,7 +1,6 @@
 import {RecordSet} from 'Types/collection';
 import {DataSet, QueryOrderSelector, QueryWhere} from 'Types/source';
 import {ObservableMixin} from 'Types/entity';
-import {Logger} from 'UI/Utils';
 
 import {IDirection} from 'Controls/_list/interface/IVirtualScroll';
 import {NavigationController} from 'Controls/_source/NavigationController';
@@ -14,12 +13,6 @@ import {
 
 import {NavigationOptionsResolver} from './NavigationOptionsResolver';
 import * as ErrorModule from 'Controls/_dataSource/error';
-
-export interface ISourceControlQueryParams {
-    direction?: IDirection;
-    filter?: QueryWhere;
-    sorting?: QueryOrderSelector;
-}
 
 export interface IListSourceLoaderOptions extends ISourceCrudInterlayerOptions {
     /**
@@ -80,6 +73,9 @@ export class ListSourceLoadingController {
     // текущая загрузка
     private _request: Promise<void | RecordSet>;
 
+    // Данные, загруженные при помощи loade
+    private _items: RecordSet;
+
     constructor(cfg: IListSourceLoaderOptions) {
         ObservableMixin.call(this, cfg);
         this._keyProperty = cfg.keyProperty;
@@ -92,36 +88,53 @@ export class ListSourceLoadingController {
     }
 
     /**
-     * Запрашивает данные из ресурса данных, используя параметры filter, sorting, direction.
-     * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} параметры построения запроса
+     * Запрашивает данные из ресурса данных, используя параметры filter, sorting.
+     * @remark
+     * Заменяет ранее загруженные данные новыми
+     * @param filter {Types/source:QueryWhere} параметры фильтрации
+     * @param sorting {Types/source:DataSet:QueryOrderSelector} параметры сортировки
      */
     /*
-     * Requests data from source using params filter, sorting, direction
-     * @param params {Controls/_list/SourceControl:ISourceControlQueryParams} query params
+     * Requests data from source using params filter, sorting
+     * @remark
+     * Replaces previously loaded data with new ones
+     * @param filter {Types/source:QueryWhere} filtering params
+     * @param sorting {Types/source:DataSet:QueryOrderSelector} sorting params
      */
-    load(params?: ISourceControlQueryParams): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
-        const filter = params && params.filter || {};
-        const sorting = params && params.sorting || [{[this._keyProperty]: true}];
-        const direction: IDirection = params && params.direction || undefined;
+    load(filter?: QueryWhere, sorting?: QueryOrderSelector): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
+        return this._loadInner(filter, sorting)
+            .then((data: RecordSet) => {
+                this._items = data;
+                return {data: this._items, error: null};
+            })
+            .catch((error: ErrorModule.ViewConfig) => Promise.resolve({data: null, error}));
+    }
 
-        this.cancelLoading();
-        const query = this._navigationController.getQueryParams(direction, filter, sorting);
-
-        this._request = this._source.query(query)
-            .then((dataSet: DataSet) => {
-                if (this._keyProperty && this._keyProperty !== dataSet.getKeyProperty()) {
-                    dataSet.setKeyProperty(this._keyProperty);
+    /**
+     * Запрашивает данные из ресурса данных с учётом направления (вверх/вниз), используя параметры filter, sorting.
+     * @remark
+     * В зависимости от направления добавляет записи в конец или в начало.
+     * Для загрузки в указанном направлении всегда предполагается, что начальная порция данных уже загружена
+     * @param filter {Types/source:QueryWhere} параметры фильтрации
+     * @param sorting {Types/source:DataSet:QueryOrderSelector} параметры сортировки
+     */
+    /*
+     * Requests data from source considering direction (up/down) with params filter, sorting
+     * @remark
+     * Depending on direction adds records to the end or to the top of previously loaded items list
+     * @param filter {Types/source:QueryWhere} filtering params
+     * @param sorting {Types/source:DataSet:QueryOrderSelector} sorting params
+     */
+    loadToDirection(direction: IDirection, filter?: QueryWhere, sorting?: QueryOrderSelector): Promise<{data: RecordSet; error: ErrorModule.ViewConfig}> {
+        return this._loadInner(filter, sorting, direction)
+            .then((data: RecordSet) => {
+                if (direction === 'down') {
+                    this._items.append(data);
+                } else if (direction === 'up') {
+                    this._items.prepend(data);
                 }
-                if (!dataSet || !('getAll' in dataSet)) {
-                    Logger.error('ListSourceLoader: Wrong data received', 'Controls/_list/SourceControl/ListSourceLoader');
-                }
-                const recordSet = dataSet.getAll();
-                this._navigationController.updateCalculationParams(recordSet, direction);
-
-                return recordSet;
-            });
-        return this._request
-            .then((data: RecordSet) => ({data, error: null}))
+                return {data, error: null};
+            })
             .catch((error: ErrorModule.ViewConfig) => Promise.resolve({data: null, error}));
     }
 
@@ -144,5 +157,28 @@ export class ListSourceLoadingController {
 
     destroy(): void {
         this._navigationController.destroy();
+    }
+
+    private _loadInner(filter?: QueryWhere, sorting?: QueryOrderSelector, direction?: IDirection): Promise<void | RecordSet> {
+        const _filter = filter || {};
+        const _sorting = sorting || [];
+        const _direction = direction || undefined;
+
+        this.cancelLoading();
+        const query = this._navigationController.getQueryParams(_direction, _filter, _sorting);
+
+        this._request = this._source.query(query)
+            .then((dataSet: DataSet) => {
+                let recordSet: RecordSet;
+                if (this._keyProperty && this._keyProperty !== dataSet.getKeyProperty()) {
+                    dataSet.setKeyProperty(this._keyProperty);
+                }
+                if ('getAll' in dataSet) {
+                    recordSet = dataSet.getAll();
+                    this._navigationController.updateCalculationParams(recordSet, _direction);
+                }
+                return recordSet;
+            });
+        return this._request;
     }
 }

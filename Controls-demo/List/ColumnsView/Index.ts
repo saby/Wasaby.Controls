@@ -65,10 +65,18 @@ export default class RenderColumnsViewContainerDemo extends Control {
         ];
     }
 
+    /**
+     * Кликаем по кнопке "Загрузить ещё"
+     * @private
+     */
     protected _onLoadMoreClick() {
         this._children.sourceControl.loadMore();
     }
 
+    /**
+     * Кликаем по кнопке "Показывать ошибку"
+     * @private
+     */
     protected _onNeedToFailToggleClick() {
         this._needToFail = !this._needToFail;
         this._itemsSource.setFailed(this._needToFail);

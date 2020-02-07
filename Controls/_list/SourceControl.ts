@@ -149,9 +149,11 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
 
     /**
      * Овнешний вызов "Загрузить ещё"
+     * @TODO Временный метод для тестирования
      */
-    /**
+    /*
      * External call of "Load More"
+     * @TODO Временный метод для тестирования
      */
     loadMore(): void {
         this._loadToDirection('down');
@@ -162,13 +164,10 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
      * @private
      */
     private _load(): Promise<void | RecordSet> {
-        if (this._error) {
-            this._error = null;
-        }
-        return this._listSourceLoader.load({filter: this._filter, sorting: this._sorting})
-            .then((response: {data: RecordSet, error: ViewConfig}) => {
-                this._items = response.data;
-                this._error = response.error;
+        return this._listSourceLoader.load(this._filter, this._sorting)
+            .then(({data, error}) => {
+                this._items = data;
+                this._error = error;
             });
     }
 
@@ -179,20 +178,10 @@ export default class SourceControl extends Control<ISourceControlOptions, Record
      * @param direction
      * @private
      */
-    protected _loadToDirection(direction?: Direction) {
-        if (this._error) {
-            this._error = null;
-        }
-        return this._listSourceLoader.load({direction, filter: this._filter, sorting: this._sorting})
-            .then((response: {data: RecordSet, error: ViewConfig}) => {
-                if (response.data) {
-                    if (!this._items) {
-                        this._items = response.data;
-                    } else {
-                        this._items.append(response.data);
-                    }
-                }
-                this._error = response.error;
+    protected _loadToDirection(direction: Direction): Promise<void | RecordSet> {
+        return this._listSourceLoader.loadToDirection(direction, this._filter, this._sorting)
+            .then(({error}) => {
+                this._error = error;
             });
     }
 }

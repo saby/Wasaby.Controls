@@ -85,26 +85,36 @@ function repeatText(count: number): string {
     return result.trim();
 }
 
-/**
- * Генератор n данных вида {id, title}
- * @param n
- */
-export const generateRawData = (n: number): any[] => {
-    return getListData(n, {
-        id: 'Id',
-        title: {
-            type: 'string',
-            addId: true
-        }
-    });
-};
-
 export interface ISourceFakerOptions extends ILocalSourceOptions {
+
+    /**
+     * Сформированный внешне DataSet или массив объектов
+     */
     data?: any[] | DataSet;
+
+    /**
+     * Должна ли принудитнельно генерироваться ошибка при любом запросе
+     */
     failed?: boolean;
+
+    /**
+     * Время до срабатывания Promise resolve/reject
+     */
     timeout?: number;
+
+    /**
+     * Настроййка для генератора: Индекс, начиная с которого необходимо генерировать данные
+     */
     startIndex?: number;
+
+    /**
+     * Сколько записей необходимо сгенерировать
+     */
     perPage?: number;
+
+    /**
+     * Прототип для генерации данных
+     */
     itemModel?: IItemPrototype;
 }
 
@@ -125,8 +135,6 @@ export interface ISourceFakerOptions extends ILocalSourceOptions {
  *      startIndex?: number;
  *      perPage?: number;
  * }
- * @param data данные в "чистом" виде или DataSet
- * @param failed флаг "Всегда возвращать ошибку"
  */
 export class SourceFaker extends Remote {
     private _rawData: any[] | DataSet;
