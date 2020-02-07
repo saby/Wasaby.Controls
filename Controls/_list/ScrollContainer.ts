@@ -454,7 +454,7 @@ export default class ScrollContainer extends Control<IOptions> {
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (!this.afterRenderCallback && !this.fakeScroll) {
+            if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {
