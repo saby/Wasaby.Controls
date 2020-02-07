@@ -1,4 +1,6 @@
+// @ts-ignore
 import Control = require('Core/Control');
+// @ts-ignore
 import template = require('wml!Controls/_dropdown/_Controller');
 import chain = require('Types/chain');
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
@@ -10,6 +12,7 @@ import * as mStubs from 'Core/moduleStubs';
 import {descriptor, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import * as cInstance from 'Core/core-instance';
 
 var _private = {
    createSourceController: function(self, options) {
@@ -22,31 +25,66 @@ var _private = {
       return self._sourceController;
    },
 
-   getSourceController: function (self, options) {
-      return historyUtils.getSource(options.source, options.historyId).addCallback((source) => {
+   isLocalSource(source): boolean {
+     return cInstance.instanceOfModule(source, 'Types/source:Local');
+   },
+
+   loadError(self, error: Error): void {
+      if (self._options.dataLoadErrback) {
+         self._options.dataLoadErrback(error);
+      }
+   },
+
+   prepareFilterForQuery(self, options): object {
+      let filter = options.filter;
+
+      if (options.historyId) {
+         if (_private.isLocalSource(options.source)) {
+            filter = historyUtils.getSourceFilter(options.filter, self._source);
+         } else {
+            filter.historyIds = [options.historyId];
+         }
+      }
+
+      return filter;
+   },
+
+   getSourceController(self, options): Promise<SourceController> {
+      let sourcePromise;
+
+      if (options.historyId &&  _private.isLocalSource(options.source)) {
+         sourcePromise = historyUtils.getSource(options.source, options.historyId);
+      } else {
+         sourcePromise = Promise.resolve(options.source);
+      }
+      return sourcePromise.then((source) => {
          self._source = source;
          return _private.createSourceController(self, options);
       });
    },
 
    loadItems: function (self, options) {
-      return _private.getSourceController(self, options)
-          .addCallback((sourceController) => {
-             self._filter = historyUtils.getSourceFilter(options.filter, self._source);
+      return _private.getSourceController(self, options).then(
+          (sourceController) => {
+             self._filter = _private.prepareFilterForQuery(self, options);
+
              return sourceController.load(self._filter).addCallback((items) => {
                 self._setItems(items);
                 if (options.dataLoadCallback) {
                    options.dataLoadCallback(items);
                 }
-                _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
+                _private.updateSelectedItems(self,
+                    options.emptyText,
+                    options.selectedKeys,
+                    options.keyProperty,
+                    options.selectedItemsChangedCallback);
                 return items;
              });
-          })
-          .addErrback((error) => {
-             if (self._options.dataLoadErrback) {
-                self._options.dataLoadErrback(error);
-             }
-          });
+          },
+          (error) => {
+             _private.loadError(self, error);
+          }
+      );
    },
 
    getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
@@ -133,7 +171,7 @@ var _private = {
    onResult: function (event, action, data, popupId) {
       switch (action) {
          case 'pinClick':
-            data[0] = _private.prepareItem(data[0], this._options.keyProperty, this._source);
+            data = _private.prepareItem(data, this._options.keyProperty, this._source);
             this._notify('pinClick', [data]);
             this._setItems(this._source.getItems());
             this._open();

@@ -8,6 +8,10 @@ class Popup extends Control<IControlOptions> {
         this._notify('sendResult', [action, data], {bubbling: true});
     }
 
+    protected  _afterMount(options?: IControlOptions): void {
+        this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
+    }
+
     static _theme: string[] = ['Controls/menu'];
 }
 

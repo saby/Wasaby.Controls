@@ -191,18 +191,6 @@
    .inline-flexbox();
 }
 
-.ws-is-hover {
-   .controls-Menu__row:hover {
-      .controls-Menu__iconPin {
-         .inline-flexbox();
-      }
-   }
-
-   .controls-Menu__iconPin_theme-@{themeName}:hover {
-      color: @pin-button_hover_icon-color_menu;
-   }
-}
-
 .controls-ListView__item-rightPadding_menu-expander {
    padding-right: @hierarchy_icon_offset-right_menu + @hierarchy_icon-size_menu + @hierarchy_icon_offset-left_menu;
 }
@@ -249,6 +237,13 @@
       .controls-Menu__row-checkbox_default_theme-@{themeName} {
          visibility: visible;
       }
+
+      .controls-Menu__iconPin {
+         .inline-flexbox();
+      }
+   }
+   .controls-Menu__iconPin_theme-@{themeName}:hover {
+      color: @pin-button_hover_icon-color_menu;
    }
 }
 .ws-is-no-touch {

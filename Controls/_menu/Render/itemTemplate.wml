@@ -4,22 +4,23 @@
    <ws:if data="{{(multiSelectTpl || itemData.multiSelectTpl) && itemData.multiSelect}}">
       <ws:partial template="{{multiSelectTpl || itemData.multiSelectTpl}}" scope="{{_options}}" class="{{itemData.isEmptyItem ? 'controls-Menu__row-checkbox_invisible'}}"/>
    </ws:if>
+
    <ws:if data="{{contentTemplate}}">
-      <ws:partial
-              template="{{contentTemplate}}"
-              itemData="{{itemData}}"
-      />
+      <ws:partial template="{{contentTemplate}}"
+                  itemData="{{itemData}}"/>
    </ws:if>
 
    <ws:else>
       <ws:partial template="wml!Controls/_menu/Render/contentTemplate" scope="{{_options}}" />
    </ws:else>
-   <ws:if data="{{itemData.hasPinned && !item.isNode() && !(item.get('pinned') === true && item.isRoot())}}">
-      <div    class="controls-Menu__iconPin_theme-{{_options.theme}} {{item.isSwiped() ? 'controls-Menu__iconPin_swiped'}}
-                 {{item.get('pinned') === true ? 'controls-Menu__iconUnnpin icon-PinOff' : 'icon-PinNull'}}"></div>
+<!--   <ws:if data="{{item.item.has('pinned') && !item.isNode() && !(item.item.get('pinned') === true && item.isRoot())}}">-->
+      <ws:partial template="wml!Controls/_menu/Render/pinTemplate" scope="{{_options}}"/>
+<!--   </ws:if>-->
+
+   <ws:if data="{{item.isNode()}}">
+      <ws:partial template="wml!Controls/_menu/Render/expanderTemplate" scope="{{_options}}"/>
    </ws:if>
-   <div if="{{item.isNode()}}" class="controls-Menu__arrow_theme-{{_options.theme}}
-                                          controls-Menu__arrow_{{itemData.item.get('readOnly') ? 'readOnly' : 'default'}}_theme-{{_options.theme}}
-                                          icon-MarkCRightLight"></div>
 </div>
-<div if="{{itemData.hasSeparator}}" class="controls-DropdownList__group_separator theme_{{_options.theme}}"></div>
+<ws:if data="{{itemData.hasSeparator}}">
+   <div class="controls-DropdownList__group_separator theme_{{_options.theme}}"></div>
+</ws:if>

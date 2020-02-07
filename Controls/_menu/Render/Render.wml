@@ -11,6 +11,7 @@
                   attr:class="{{_getClassList(itemTemplate.item)}}"
                   itemData="{{_getItemData(itemTemplate.item)}}"
                   item="{{itemTemplate.item}}"
+                  scope="{{_options}}"
       />
    </ws:itemTemplate>
 </Controls.listRender:Render>

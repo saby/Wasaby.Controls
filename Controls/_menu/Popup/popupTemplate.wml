@@ -13,6 +13,8 @@
               on:itemClick="_sendResult('itemClick')"
               on:applyClick="_sendResult('applyClick')"
               on:moreButtonClick="_sendResult('selectorDialogOpened')"
+              on:pinClick="_sendResult('pinClick')"
+              on:menuOpened="_sendResult('menuOpened')"
       />
    </ws:bodyContentTemplate>
 </Controls.popupTemplate:Sticky>
