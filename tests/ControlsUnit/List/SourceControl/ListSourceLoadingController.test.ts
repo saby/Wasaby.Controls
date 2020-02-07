@@ -16,13 +16,9 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
     let rawData: any[];
 
     describe ('load', () => {
-
-        beforeEach(() => {
+        it('should load first portion of data', () => {
             source = new SourceFaker({perPage: NUMBER_OF_ITEMS, keyProperty: 'id'});
             rawData = source.getRawData();
-        });
-
-        it('should load first portion of data', () => {
             instance = new ListSourceLoadingController({
                 source,
                 keyProperty: 'id',
@@ -38,12 +34,17 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
             });
             const _record = new Record({rawData: rawData[4]});
             return instance.load()
-                .then((response: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
+                .then((response: { data: RecordSet, error: ErrorModule.ViewConfig }) => {
                     assert.equal(response.data.at(4).get('id'), _record.get('id'));
                 });
         });
 
+    });
+
+    describe('loadToDirection', () => {
         it('should change page on demand', () => {
+            source = new SourceFaker({perPage: NUMBER_OF_ITEMS, keyProperty: 'id'});
+            rawData = source.getRawData();
             instance = new ListSourceLoadingController({
                 source,
                 keyProperty: 'id',
@@ -68,6 +69,36 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
                     return instance.loadToDirection('down')
                         .then((response2: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
                             assert.equal(response2.data.at(0).get('id'), NUMBER_OF_ITEMS);
+                        });
+                });
+        });
+
+        it('should load previous page on demand', () => {
+            source = new SourceFaker({perPage: NUMBER_OF_ITEMS, keyProperty: 'id');
+            rawData = source.getRawData();
+            instance = new ListSourceLoadingController({
+                source,
+                keyProperty: 'id',
+                navigation: {
+                    source: 'page',
+                    view: 'demand',
+                    sourceConfig: {
+                        page: 1,
+                        pageSize: NUMBER_OF_ITEMS,
+                        hasMore: false
+                    }
+                }
+            });
+            return instance.load()
+                .then((response: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
+                    assert.equal(response.data.at(0).get('id'), NUMBER_OF_ITEMS);
+                    return response.data;
+                })
+                .then((recordSet: RecordSet) => {
+                    recordSet.setMetaData({more: true});
+                    return instance.loadToDirection('up')
+                        .then((response2: {data: RecordSet, error: ErrorModule.ViewConfig}) => {
+                            assert.equal(response2.data.at(0).get('id'), 0);
                         });
                 });
         });
