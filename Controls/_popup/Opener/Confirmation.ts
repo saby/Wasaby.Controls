@@ -77,7 +77,6 @@ class Confirmation extends Control<IControlOptions> implements IConfirmationOpen
             });
         });
     }
-    static _theme = ['Controls/popup'];
 }
 
 export default Confirmation;

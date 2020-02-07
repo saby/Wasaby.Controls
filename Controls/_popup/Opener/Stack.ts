@@ -73,7 +73,6 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
     static closePopup(popupId: string): void {
         BaseOpener.closeDialog(popupId);
     }
-    static _theme = ['Controls/popup'];
 }
 
 export default Stack;

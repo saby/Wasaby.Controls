@@ -78,7 +78,6 @@ class Dialog extends BaseOpener<IDialogOpenerOptions> implements IDialogOpener {
         // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
         return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
     }
-    static _theme = ['Controls/popup'];
 }
 
 export default Dialog;

@@ -150,6 +150,5 @@ const Global = Control.extend({
 
    _private
 });
-Global._theme = ['Controls/popup'];
 
 export default Global;

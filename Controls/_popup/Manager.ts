@@ -678,7 +678,6 @@ class Manager extends Control<IManagerOptions> {
             this._redrawItems();
         }
     }
-    static _theme = ['Controls/popup'];
 }
 
 export default Manager;
