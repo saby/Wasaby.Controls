@@ -36,7 +36,7 @@
    </ws:else>
 </ws:template>
 
-<div class="controls-BaseControl controls-BaseControl__renderContainer">
+<div class="controls-BaseControl controls-BaseControl_showActions controls-BaseControl__renderContainer">
    <ws:partial template="conditionalItemActions">
       <ws:contentTemplate>
          <ws:partial
