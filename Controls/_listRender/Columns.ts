@@ -18,7 +18,7 @@ export default class Columns extends BaseRender {
     protected _options: IColumnsRenderOptions;
     protected _template: TemplateFunction = template;
 
-    protected _beforeMount(options: IRenderOptions): void {
+    protected _beforeMount(options: IColumnsRenderOptions): void {
         super._beforeMount(options);
         this._templateKeyPrefix = `columns-render-${this.getInstanceId()}`;
     }
