@@ -68,6 +68,10 @@
     border-right-color: @border-color_infobox;
     border-bottom-color: @border-color_infobox;
   }
+  &-help_theme-@{themeName}{
+    border-right-color: @help_border-color_infobox;
+    border-bottom-color: @help_border-color_infobox;
+  }
 }
 
 .controls-InfoBoxTemplate_style_outline_danger_theme-@{themeName} {
@@ -84,6 +88,7 @@
 
 .controls-InfoBoxTemplate_style_marker_theme-@{themeName} {
   background: @background-color_infobox;
+  border-radius: @border-radius_infobox;
   box-shadow: @box-shadow-color_infobox @box-shadow-offset_infobox;
   border: @border-thickness_infobox solid @border-color_infobox;
 }
@@ -110,6 +115,9 @@
    &default_theme-@{themeName}{
      border-top: @marker-thickness_infobox solid @border-color_infobox;
    }
+   &help_theme-@{themeName}{
+      border-bottom: @marker-thickness_infobox solid @help_border-color_infobox;
+   }
  }
 
 .controls-InfoBoxTemplate_style_marker-bottom_ {
@@ -133,6 +141,9 @@
   }
   &default_theme-@{themeName}{
     border-bottom: @marker-thickness_infobox solid @border-color_infobox;
+  }
+  &help_theme-@{themeName}{
+    border-bottom: @marker-thickness_infobox solid @help_border-color_infobox;
   }
 }
 
@@ -158,6 +169,9 @@
   &default_theme-@{themeName}{
     border-left: @marker-thickness_infobox solid @border-color_infobox;
   }
+  &help_theme-@{themeName}{
+    border-top: @marker-thickness_infobox solid @help_border-color_infobox;
+  }
 }
 
 .controls-InfoBoxTemplate_style_marker-right_ {
@@ -181,6 +195,9 @@
   }
   &default_theme-@{themeName}{
     border-right: @marker-thickness_infobox solid @border-color_infobox;
+  }
+  &help_theme-@{themeName}{
+    border-right: @marker-thickness_infobox solid @help_border-color_infobox;
   }
 }
 
