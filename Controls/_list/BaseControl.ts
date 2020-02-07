@@ -1428,7 +1428,16 @@ var _private = {
     initializeNavigation: function(self, cfg) {
         self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
-
+        if (!self._needScrollCalculation) {
+            if (self._scrollPagingCtr) {
+                self._scrollPagingCtr.destroy();
+                self._scrollPagingCtr = null;
+            }
+            self._pagingCfg = null;
+            if (self._pagingVisible) {
+                self._pagingVisible = false;
+            }
+        }
         if (self._pagingNavigation) {
             _private.resetPagingNavigation(self, cfg.navigation);
             self._pageSizeSource = new Memory({
