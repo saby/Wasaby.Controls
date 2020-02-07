@@ -175,6 +175,7 @@ List.contextTypes = function() {
    };
 };
 
+List._theme = ['Controls/suggest'];;
 List._private = _private;
 
 export = List;
