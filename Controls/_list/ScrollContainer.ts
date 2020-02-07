@@ -140,8 +140,10 @@ export default class ScrollContainer extends Control<IOptions> {
             }
         }
 
-        if (this._options.observeScroll) {
+        if (options.observeScroll) {
             this.registerScroll();
+        } else {
+            this.scrollRegistered = false;
         }
 
         if (this.indicatorState) {
