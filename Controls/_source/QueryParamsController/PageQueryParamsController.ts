@@ -139,7 +139,7 @@ class PageQueryParamsController implements IQueryParamsController {
      * @param list {Types/collection:RecordSet} object containing meta information for current request
      * @param direction {Direction} nav direction ('up' or 'down')
      */
-    updateCalculationParams(list?: RecordSet | {[p: string]: unknown}, direction?: Direction): void {
+    updateQueryProperties(list?: RecordSet | {[p: string]: unknown}, direction?: Direction): void {
         const meta = (list as RecordSet).getMetaData();
 
         // Look at the Types/source:DataSet there is a remark "don't use 'more' anymore"...

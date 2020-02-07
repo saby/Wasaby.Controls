@@ -264,7 +264,7 @@ class PositionQueryParamsController implements IQueryParamsController {
      * @param list {Types/collection:RecordSet} object containing meta information for current request
      * @param direction {Direction} nav direction ('up' or 'down')
      */
-    updateCalculationParams(list?: RecordSet | {[p: string]: unknown}, loadDirection?: Direction): void {
+    updateQueryProperties(list?: RecordSet | {[p: string]: unknown}, loadDirection?: Direction): void {
         let metaNextPosition: PositionBoth;
         let more: HasMore;
 

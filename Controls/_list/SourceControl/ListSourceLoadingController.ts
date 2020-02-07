@@ -175,7 +175,7 @@ export class ListSourceLoadingController {
                 }
                 if ('getAll' in dataSet) {
                     recordSet = dataSet.getAll();
-                    this._navigationController.updateCalculationParams(recordSet, _direction);
+                    this._navigationController.updateQueryProperties(recordSet, _direction);
                 }
                 return recordSet;
             });

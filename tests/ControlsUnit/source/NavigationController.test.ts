@@ -158,11 +158,11 @@ describe('Controls/_source/NavigationController', () => {
             recordSet.setMetaData({
                 /*
                  * valid when INavigationOptionValue.direction !== 'both'
-                 * OR updateCalculationParams.direction is set
+                 * OR updateQueryProperties.direction is set
                  */
                 more: true
             });
-            controller.updateCalculationParams(recordSet, null);
+            controller.updateQueryProperties(recordSet, null);
             query = controller.getQueryParams();
             const where = query.filter;
             assert.equal(where['key>='], navigation.sourceConfig.position);
@@ -175,7 +175,7 @@ describe('Controls/_source/NavigationController', () => {
                  */
                 more: more2RecordSet
             });
-            controller.updateCalculationParams(recordSet, 'down');
+            controller.updateQueryProperties(recordSet, 'down');
             query = controller.getQueryParams('down');
             const where = query.filter;
             assert.equal(where['key>='], more2RecordSet.getCount() - 1);
@@ -198,12 +198,12 @@ describe('Controls/_source/NavigationController', () => {
                 more: {
                     /*
                      * valid when INavigationOptionValue.direction === 'both'
-                     * and updateCalculationParams.direction isn't set
+                     * and updateQueryProperties.direction isn't set
                      */
                     after: true, before: true
                 }
             });
-            controller.updateCalculationParams(moreRecordSet, null);
+            controller.updateQueryProperties(moreRecordSet, null);
 
             // when we want to go next before current position
             query = controller.getQueryParams('up');
@@ -226,20 +226,20 @@ describe('Controls/_source/NavigationController', () => {
                 more: {
                     /*
                      * valid when INavigationOptionValue.direction === 'both'
-                     * and updateCalculationParams.direction isn't set
+                     * and updateQueryProperties.direction isn't set
                      */
                     after: true, before: true
                 }
             });
-            controller.updateCalculationParams(moreRecordSet, null);
+            controller.updateQueryProperties(moreRecordSet, null);
             more2RecordSet.setMetaData({
                 /*
                  * valid when INavigationOptionValue.direction !== 'both'
-                 * OR updateCalculationParams.direction is set
+                 * OR updateQueryProperties.direction is set
                  */
                 more: true
             });
-            controller.updateCalculationParams(more2RecordSet, 'up');
+            controller.updateQueryProperties(more2RecordSet, 'up');
             query = controller.getQueryParams('up');
             const where = query.filter;
             assert.equal(where['key<='], lastKey(moreRecordSet, 'up'));
@@ -257,11 +257,11 @@ describe('Controls/_source/NavigationController', () => {
             recordSet.setMetaData({
                 /*
                  * valid when INavigationOptionValue.direction !== 'both'
-                 * OR updateCalculationParams.direction is set
+                 * OR updateQueryProperties.direction is set
                  */
                 more: true
             });
-            controller.updateCalculationParams(recordSet, null);
+            controller.updateQueryProperties(recordSet, null);
             const sorting = [{amount: false}, {buyerId: true}];
             query = controller.getQueryParams(null, {
                 'buyerId>': 2
