@@ -293,7 +293,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();
         if (BaseOpener.isNewEnvironment() || cfg._vdomOnOldPage) {
-            const openOptions: IControlOptions = (opener || cfg.opener)._options;
+            const openOptions: IControlOptions = (opener || cfg?.opener)?._options;
             if (!BaseOpener.isNewEnvironment()) {
                 BaseOpener.getManager(openOptions).then(() => {
                     BaseOpener.getZIndexUtil().addCallback((getZIndex) => {
@@ -351,7 +351,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             // Нужно чтобы managerWrapper был построен до совместимости в панели, т.к. в нем
             // регистрируются Listener'ы, лежащие внутри шаблона. Не торможу построение ожиданием Deferred'a,
             // т.к. после выполняется еще несколько асинхронных операций, ожидающих в том числе этих же зависимостией.
-            BaseOpener.getManager((opener || cfg.opener)._options);
+            BaseOpener.getManager((opener || cfg?.opener)?._options);
 
             requirejs(deps, (compatiblePopup, Action, Tpl) => {
                 try {
@@ -639,7 +639,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     // TODO Compatible
-    static getManager(_options: IControlOptions): Promise<void> {
+    static getManager(_options: IControlOptions = {}): Promise<void> {
         if (!ManagerWrapperCreatingPromise) {
             if (!isNewEnvironment()) {
                 const managerContainer = document.createElement('div');
