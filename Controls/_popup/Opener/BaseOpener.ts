@@ -293,8 +293,9 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();
         if (BaseOpener.isNewEnvironment() || cfg._vdomOnOldPage) {
+            const openOptions: IControlOptions = (opener || cfg.opener)._options;
             if (!BaseOpener.isNewEnvironment()) {
-                BaseOpener.getManager().then(() => {
+                BaseOpener.getManager(openOptions).then(() => {
                     BaseOpener.getZIndexUtil().addCallback((getZIndex) => {
                         const popupOpener = opener || cfg.opener;
                         if (popupOpener) {
@@ -313,7 +314,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                     });
                 });
             } else if (BaseOpener.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-                BaseOpener.getManager().then(() => {
+                BaseOpener.getManager(openOptions).then(() => {
                     BaseOpener._openPopup(cfg, controller, def);
                 });
             } else {
