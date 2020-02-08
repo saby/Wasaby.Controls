@@ -350,7 +350,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             // Нужно чтобы managerWrapper был построен до совместимости в панели, т.к. в нем
             // регистрируются Listener'ы, лежащие внутри шаблона. Не торможу построение ожиданием Deferred'a,
             // т.к. после выполняется еще несколько асинхронных операций, ожидающих в том числе этих же зависимостией.
-            BaseOpener.getManager();
+            BaseOpener.getManager(opener._options);
 
             requirejs(deps, (compatiblePopup, Action, Tpl) => {
                 try {
@@ -638,7 +638,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     // TODO Compatible
-    static getManager(): Promise<void> {
+    static getManager(_options: IControlOptions): Promise<void> {
         if (!ManagerWrapperCreatingPromise) {
             if (!isNewEnvironment()) {
                 const managerContainer = document.createElement('div');
@@ -647,7 +647,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
                 ManagerWrapperCreatingPromise = new Promise((resolve) => {
                     require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
-                        Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
+                        Creator(compatiblePopup.ManagerWrapper, { theme: _options.theme }, managerContainer).then(resolve);
                     });
                 });
             } else {
