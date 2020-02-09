@@ -36,7 +36,14 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _beforeUpdate(newOptions: IMenuOptions): void {
-        if (newOptions.root !== this._options.root) {
+        const rootChanged = newOptions.root !== this._options.root;
+        const sourceChanged = newOptions.source !== this._options.source;
+
+        if (sourceChanged) {
+            this._sourceController = null;
+        }
+
+        if (rootChanged || sourceChanged) {
             this.loadItems(newOptions);
         }
         if (this.isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
