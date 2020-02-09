@@ -13,6 +13,7 @@ import {descriptor, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
+import {PrefetchProxy} from 'Types/source';
 
 var _private = {
    createSourceController: function(self, options) {
@@ -23,6 +24,10 @@ var _private = {
          });
       }
       return self._sourceController;
+   },
+
+   hasHistory(options): boolean {
+      return options.historyIds || historyUtils.isHistorySource(options.source);
    },
 
    isLocalSource(source): boolean {
@@ -38,8 +43,8 @@ var _private = {
    prepareFilterForQuery(self, options): object {
       let filter = options.filter;
 
-      if (options.historyId) {
-         if (_private.isLocalSource(options.source)) {
+      if (_private.hasHistory(options)) {
+         if (_private.isLocalSource(options.source) || !options.historyNew) {
             filter = historyUtils.getSourceFilter(options.filter, self._source);
          } else {
             filter.historyIds = [options.historyId];
@@ -49,10 +54,17 @@ var _private = {
       return filter;
    },
 
+   pinClick(self, item): void {
+      const preparedItem = _private.prepareItem(item, self._options.keyProperty, self._source);
+      self._notify('pinClick', [preparedItem]);
+      self._setItems(null);
+      self._open();
+   },
+
    getSourceController(self, options): Promise<SourceController> {
       let sourcePromise;
 
-      if (options.historyId &&  _private.isLocalSource(options.source)) {
+      if (_private.hasHistory(options) && _private.isLocalSource(options.source) && !options.historyNew) {
          sourcePromise = historyUtils.getSource(options.source, options.historyId);
       } else {
          sourcePromise = Promise.resolve(options.source);
@@ -171,10 +183,7 @@ var _private = {
    onResult: function (event, action, data, popupId) {
       switch (action) {
          case 'pinClick':
-            data = _private.prepareItem(data, this._options.keyProperty, this._source);
-            this._notify('pinClick', [data]);
-            this._setItems(this._source.getItems());
-            this._open();
+            _private.pinClick(this, data);
             break;
          case 'applyClick':
             this._notify('selectedItemsChanged', [data]);
@@ -366,8 +375,8 @@ var _Controller = Control.extend({
       _private.setHandlers(this, options);
       if (!options.lazyItemsLoading) {
          if (receivedState) {
-            this._setItems(receivedState.items);
             result = _private.getSourceController(this, options).addCallback((sourceController) => {
+               this._setItems(receivedState.items);
                sourceController.calculateState(this._items);
 
                if (receivedState.history) {
@@ -375,12 +384,13 @@ var _Controller = Control.extend({
                   this._setItems(this._source.prepareItems(this._items));
                }
 
+               _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
+               if (options.dataLoadCallback) {
+                  options.dataLoadCallback(this._items);
+               }
+
                return sourceController;
             });
-            _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
-            if (options.dataLoadCallback) {
-               options.dataLoadCallback(this._items);
-            }
          } else if (options.source) {
             result = _private.loadItems(this, options).addCallback((items) => {
                const beforeMountResult = {};
@@ -444,7 +454,7 @@ var _Controller = Control.extend({
          const config = {
             templateOptions: {
                items: this._items,
-               source: this._options.source,
+               source: this._menuSource,
                popupSelectorId: this._popupSelectorId,
                // FIXME self._container[0] delete after
                // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
@@ -519,6 +529,14 @@ var _Controller = Control.extend({
    },
 
    _setItems: function(items) {
+      if (items) {
+         this._menuSource = new PrefetchProxy({
+            target: this._source,
+            data: {
+               query: items
+            }
+         });
+      }
       this._items = items;
       this._depsDeferred = null;
    },
