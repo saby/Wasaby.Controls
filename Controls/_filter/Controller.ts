@@ -97,7 +97,11 @@ const _private = {
             }
 
             if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
-                minimizedItem.textValue = getPropValue(item, 'textValue');
+                if (isEqual(value, getPropValue(item, 'resetValue'))) {
+                    minimizedItem.textValue = '';
+                } else {
+                    minimizedItem.textValue = getPropValue(item, 'textValue');
+                }
             }
 
             if (getPropValue(item, 'id')) {
