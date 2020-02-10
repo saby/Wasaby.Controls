@@ -178,6 +178,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
+            itemsModelCurrent.virtualScrolling = this._options.virtualScrolling;
         }
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
