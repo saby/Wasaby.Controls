@@ -154,16 +154,12 @@ define([
       describe('htmlToJson', function() {
          var isNode = typeof document === 'undefined';
 
-         before(function(done) {
+         before(function() {
             if (isNode) {
-               require(['jsdom'], function(jsdom) {
-                  var browser = new jsdom.JSDOM('', { pretendToBeVisual: false });
-                  global.window = browser.window;
-                  global.document = window.document;
-                  global.Node = window.Node;
-                  done();
-               });
-            } else {
+               var browser = new jsdom.JSDOM('', { pretendToBeVisual: false });
+               global.window = browser.window;
+               global.document = window.document;
+               global.Node = window.Node;
                done();
             }
          });
