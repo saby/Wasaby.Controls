@@ -210,7 +210,6 @@ class Base extends Control<IMasterDetail> {
         // Не запускаем реакцию на ресайз, если контрол скрыт (к примеру лежит внутри скпытой области switchableArea)
         if (!this._container.closest('.ws-hidden')) {
             this._containerWidth = null;
-            //this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
             this._updateOffsetDebounced(this._options);
         }
     }
