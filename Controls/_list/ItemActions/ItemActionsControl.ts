@@ -11,6 +11,7 @@ import { constants } from 'Env/Env';
 import 'css!theme?Controls/list';
 
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
+import {IItemAction} from 'Controls/_list/interface/IList';
 
 let displayLib: typeof import('Controls/display');
 
@@ -20,7 +21,12 @@ const POSITION_CLASSES = {
     bottomRight: 'controls-itemActionsV_position_bottomRight',
     topRight: 'controls-itemActionsV_position_topRight'
 }
-
+export const actionDisplayMode = {
+    ICON: 'icon',
+    TITLE: 'title',
+    BOTH: 'both',
+    AUTO: 'auto',
+}
 var _private = {
     fillItemAllActions: function(item, options) {
         var actions = [];
@@ -242,7 +248,19 @@ var ItemActionsControl = Control.extend({
             this._options.listModel.nextModelVersion(true, ACTION_TYPE);
         }
     },
-
+    needShowIcon(action: IItemAction): boolean {
+        return !!action.icon && (action.displayMode !== actionDisplayMode.TITLE);
+    },
+    needShowTitle(action: IItemAction): boolean {
+        return !!action.title && (action.displayMode === actionDisplayMode.TITLE ||
+                                  action.displayMode === actionDisplayMode.BOTH || (
+                                     action.displayMode === actionDisplayMode.AUTO ||
+                                     !action.displayMode) &&
+                                     !action.icon);
+    },
+    getTooltip(action: IItemAction): string|undefined {
+        return action.tooltip || action.title;
+    },
     updateActions(): void {
         _private.updateActions(this, this._options);
     },
