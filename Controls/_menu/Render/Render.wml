@@ -14,5 +14,8 @@
                   treeItem="{{itemTemplate.item}}"
                   scope="{{_options}}"
       />
+      <ws:if data="{{itemTemplate.item.getContents().get('HistoryId') && !itemTemplate.item.getOwner().getNext(itemTemplate.item).getContents().get('HistoryId')}}">
+         <div class="controls-DropdownList__group_separator theme_{{_options.theme}}" attr:key="{{itemTemplate.item.getUid()}} + '_separator'"></div>
+      </ws:if>
    </ws:itemTemplate>
 </Controls.listRender:Render>
