@@ -26,8 +26,7 @@ import buttonLib = require('Controls/buttons');
    }
 
    function cssStyleGeneration(options) {
-      let menuStyle = options.headConfig && options.headConfig.menuStyle,
-         currentButtonClass;
+      let currentButtonClass;
 
       currentButtonClass = buttonLib.ActualApi.styleToViewMode(options.style);
 
@@ -43,11 +42,10 @@ import buttonLib = require('Controls/buttons');
          // поэтому необходимо это учесть при сдвиге
          offsetClassName += '_iconSize-' + getIconSize(options) || 'medium';
       }
-      offsetClassName += (((menuStyle === 'duplicateHead' && options.showHeader) || (!options.headerTemplate && !options.showHeader)) ? '_duplicate' : '') + '_popup';
+      offsetClassName += '_popup';
       return offsetClassName;
    }
 
    export = {
-      cssStyleGeneration: cssStyleGeneration
+      cssStyleGeneration
    };
-
