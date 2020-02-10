@@ -1,5 +1,5 @@
 <div attr:class="{{ item.getWrapperClasses(highlightOnHover, marker) }}">
-   <ws:if data="{{marker !== false && item.isMarked()}}">
+   <ws:if data="{{item.shouldDisplayMarker(marker)}}">
       <div class="controls-ColumnsView__item_marker"></div>
    </ws:if>
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
