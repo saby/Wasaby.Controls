@@ -15,12 +15,12 @@ import {
 } from 'Controls/_source/interface/IAdditionalQueryParams';
 import {SourceFaker} from 'Controls-demo/List/Utils/listDataGenerator';
 
-const fakePageNavigationConfig = (hasMore?: boolean): INavigationOptionValue<INavigationPageSourceConfig> => {
+const fakePageNavigationConfig = (hasMore?: boolean, page: number = 0): INavigationOptionValue<INavigationPageSourceConfig> => {
     return {
         source: 'page',
         sourceConfig: {
             pageSize: 3,
-            page: 0,
+            page,
             hasMore: hasMore !== undefined ? hasMore : false
         } as INavigationPageSourceConfig
     };
@@ -83,7 +83,7 @@ describe('Controls/_source/NavigationController', () => {
         more2RecordSet = source.resetSource(lastKey(moreRecordSet, 'up')).querySync().getAll();
     });
 
-    describe('getQueryParams + source="page"', () => {
+    describe('getQueryParams with source="page" and hasMore=false', () => {
         let navigation: INavigationOptionValue<INavigationPageSourceConfig>;
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
@@ -110,13 +110,7 @@ describe('Controls/_source/NavigationController', () => {
             assert.equal(query.offset, query.limit);
         });
 
-        it('should correctly calculate next page params', () => {
-            query = controller.getQueryParams('down');
-            queryMeta = query.meta;
-            assert.equal(query.offset, query.limit);
-        });
-
-        it('should  correctly calculate previous page params', () => {
+        it('should correctly calculate next and then previous page params', () => {
             const pager = pagerFaker(0);
 
             // query params for page 0;
@@ -130,12 +124,147 @@ describe('Controls/_source/NavigationController', () => {
             // click <<
             query = controller.getQueryParams('up');
 
-            queryMeta = query.meta;
             assert.equal(query.offset, 0);
         });
     });
 
-    describe('getQueryParams + source="position" + direction="after"', () => {
+    describe('getQueryParams with "page" navigation in Old-BaseControl-style', () => {
+        let navigation: INavigationOptionValue<INavigationPageSourceConfig>;
+        let controller: NavigationController;
+        let query: IAdditionalQueryParams;
+
+        // Please consider, that QueryParamsController can not calculate 'up' after 'down' or
+        // 'down' after 'up' w/o resetting current pager config :(
+        describe('should correctly calculate query params with hasMore=false', () => {
+            it('should correctly calculate next page params w/o setting particular page', () => {
+                navigation = fakePageNavigationConfig(false, 0);
+                controller = new NavigationController({navigation});
+                recordSet.setMetaData({
+                    /*
+                     * valid when INavigationOptionValue.hasMore === false
+                     */
+                    more: NUMBER_OF_ITEMS
+                });
+                query = controller.getQueryParams();
+                assert.equal(query.offset, 0);
+
+                // click >> (correctly calculates the first query params exactly with this direction values ...)
+                controller.updateQueryProperties(recordSet, null);
+                query = controller.getQueryParams('down');
+
+                assert.equal(query.offset, query.limit);
+
+                moreRecordSet.setMetaData({
+                    /*
+                     * valid when INavigationOptionValue.direction !== false'
+                     */
+                    more: NUMBER_OF_ITEMS
+                });
+
+                // click >>
+                controller.updateQueryProperties(moreRecordSet, 'down');
+                query = controller.getQueryParams('down');
+
+                assert.equal(query.offset, query.limit * 2);
+            });
+
+            it('should correctly calculate previous page params w/o setting particular page', () => {
+                navigation = fakePageNavigationConfig(false, 2);
+                controller = new NavigationController({navigation});
+                recordSet.setMetaData({
+                    /*
+                     * valid when INavigationOptionValue.hasMore === false
+                     */
+                    more: NUMBER_OF_ITEMS
+                });
+
+                // click << (correctly calculates the first query params exactly with this direction values ...)
+                controller.updateQueryProperties(moreRecordSet, null);
+                query = controller.getQueryParams('up');
+
+                assert.equal(query.offset, query.limit);
+
+                moreRecordSet.setMetaData({
+                    /*
+                     * valid when INavigationOptionValue.direction !== false'
+                     */
+                    more: NUMBER_OF_ITEMS
+                });
+
+                // click <<
+                controller.updateQueryProperties(moreRecordSet, 'up');
+                query = controller.getQueryParams('up');
+
+                assert.equal(query.offset, 0);
+            });
+        });
+
+        describe('should correctly calculate query params with hasMore=true', () => {
+            it('should correctly calculate next page params w/o setting particular page', () => {
+                navigation = fakePageNavigationConfig(true, 0);
+                controller = new NavigationController({navigation});
+                recordSet.setMetaData({
+                    /*
+                     * valid when INavigationOptionValue.hasMore === false
+                     */
+                    more: true
+                });
+                query = controller.getQueryParams();
+                assert.equal(query.offset, 0);
+
+                // click >> (correctly calculates the first query params exactly with this direction values ...)
+                controller.updateQueryProperties(recordSet, null);
+                query = controller.getQueryParams('down');
+
+                assert.equal(query.offset, query.limit);
+
+                moreRecordSet.setMetaData({
+                    /*
+                     * valid when INavigationOptionValue.direction !== false'
+                     */
+                    more: true
+                });
+
+                // click >>
+                controller.updateQueryProperties(moreRecordSet, 'down');
+                query = controller.getQueryParams('down');
+
+                assert.equal(query.offset, query.limit * 2);
+            });
+
+            it('should correctly calculate previous page params w/o setting particular page', () => {
+                navigation = fakePageNavigationConfig(true, 2);
+                controller = new NavigationController({navigation});
+                recordSet.setMetaData({
+                    /*
+                     * valid when INavigationOptionValue.hasMore === false
+                     */
+                    more: true
+                });
+
+                // click << (correctly calculates the first query params exactly with this direction values ...)
+                controller.updateQueryProperties(moreRecordSet, null);
+                query = controller.getQueryParams('up');
+
+                assert.equal(query.offset, query.limit);
+
+                moreRecordSet.setMetaData({
+                    /*
+                     * valid when INavigationOptionValue.direction !== false'
+                     */
+                    more: true
+                });
+
+                // click <<
+                controller.updateQueryProperties(moreRecordSet, 'up');
+                query = controller.getQueryParams('up');
+
+                assert.equal(query.offset, 0);
+            });
+        });
+    });
+
+    describe('getQueryParams with source="position" and direction="after"', () => {
         let navigation: INavigationOptionValue<INavigationPositionSourceConfig>;
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
@@ -182,7 +311,7 @@ describe('Controls/_source/NavigationController', () => {
         });
     });
 
-    describe('getQueryParams + source="position" + direction="both"', () => {
+    describe('getQueryParams with source="position" and direction="both"', () => {
         let navigation: INavigationOptionValue<INavigationPositionSourceConfig>;
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
@@ -246,7 +375,7 @@ describe('Controls/_source/NavigationController', () => {
         });
     });
 
-    describe('getQueryParams + filter + sort', () => {
+    describe('getQueryParams with user defined filter and sort', () => {
         let navigation: INavigationOptionValue<INavigationSourceConfig>;
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
