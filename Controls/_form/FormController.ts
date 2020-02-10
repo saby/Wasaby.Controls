@@ -380,7 +380,7 @@ class FormController extends Control<IFormController> {
         }
     }
 
-    protected _showConfirmPopup(type: string, details?: string) {
+    protected _showConfirmPopup(type: string, details?: string): Promise<boolean | undefined> {
         return this._children.popupOpener.open({
             message: rk('Сохранить изменения?'),
             details,
