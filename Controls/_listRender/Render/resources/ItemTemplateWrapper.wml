@@ -4,7 +4,7 @@
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
       </ws:partial>
    </ws:if>
-   <ws:if data="{{ marker !== false && item.isMarked() }}">
+   <ws:if data="{{ item.shouldDisplayMarker(marker) }}">
       <div class="controls-ListView__itemV_marker"></div>
    </ws:if>
    <ws:if data="{{ contentTemplate }}">

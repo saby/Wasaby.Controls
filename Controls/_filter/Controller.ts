@@ -160,12 +160,14 @@ const _private = {
                $_addFromData: true
             };
 
-            function update() {
-               historyUtils.getHistorySource({historyId: historyId}).update(
-                   _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams),
-                   meta
-               );
-            }
+             function update() {
+                 let historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
+
+                 // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
+                 self?._notify('historySave', [historyData, filterButtonItems]);
+
+                 historyUtils.getHistorySource({historyId: historyId}).update(historyData, meta);
+             }
 
             if (!historyUtils.getHistorySource({historyId: historyId})._history) {
                // Getting history before updating if it hasn’t already done
@@ -712,6 +714,13 @@ const _private = {
        * @cfg {Array|Types/collection:IList} You can prepare filter items from history by your self,
        * this items will applied/merged to filterButtonItems and fastFilterItem. Filter history will not loading, if this option setted.
        */
+
+/**
+ * @event Происходит перед сохранением фильтра в историю
+ * @name Controls/_filter/Controller#historySave
+ * @param {Env/Event.Object} event Дескриптор события.
+ * @param {Array|Function|Types/collection:IList} historyItems Список полей фильтра и их конфигурация, которая будет сохранена в историю.
+ */
 
 const Container = Control.extend(/** @lends Controls/_filter/Container.prototype */{
 

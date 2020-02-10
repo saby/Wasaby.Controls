@@ -29,12 +29,10 @@ export default class Render extends Control<IRenderOptions> {
     protected _children: IRenderChildren;
 
     protected _templateKeyPrefix: string;
-    protected _itemTemplate: TemplateFunction;
 
     protected _pendingResize: boolean = false;
     protected _currentMenuConfig: unknown = null;
-
-    protected _onCollectionChange = (_e: unknown, action: string) => {
+    protected _onCollectionChange(_e: unknown, action: string): void {
         if (action !== 'ch') {
             // Notify resize when items are added, removed or replaced, or
             // when the recordset is reset
@@ -44,8 +42,7 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _beforeMount(options: IRenderOptions): void {
         this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
-        this._itemTemplate = options.itemTemplate || defaultItemTemplate;
-
+        this._onCollectionChange = this._onCollectionChange.bind(this);
         this._subscribeToModelChanges(options.listModel);
     }
 
@@ -214,4 +211,10 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     static _theme: string[] = ['Controls/list_multi'];
+
+    static getDefaultOptions(): Partial<IRenderOptions> {
+        return {
+            itemTemplate: defaultItemTemplate
+        };
+    }
 }
