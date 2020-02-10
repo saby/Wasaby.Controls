@@ -145,7 +145,7 @@ define([
          assert.deepEqual(['listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Not send edge positions without observer');
       });
 
-      it('onResizeContainer: notify \'viewPortResize\' if need', function () {
+      it.skip('onResizeContainer: notify \'viewPortResize\' if need', function () {
          var ins = new scrollMod.Watcher();
          ins._registrar = registrarMock;
          const nativeMockStart = ins._registrar.start;

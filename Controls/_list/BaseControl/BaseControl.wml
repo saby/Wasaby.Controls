@@ -83,7 +83,7 @@
 <ws:template name="viewTpl">
     <Controls._list.ScrollContainer
             name="scrollController"
-            on:scrollMoveSync="scrollMoveSyncHandler()"
+            on:scrollPositionChanged="scrollMoveSyncHandler()"
             on:scrollMove="scrollMoveHandler()"
             on:loadMore="loadMore()"
             on:viewportResize="viewportResizeHandler()"
@@ -96,8 +96,7 @@
             on:activeElementChanged="_notifyHandler('activeElementChanged')"
             on:viewResize="_viewResize()"
             on:changeIndicatorState="changeIndicatorStateHandler()"
-            viewModel="{{_listViewModel}}"
-            observeScroll="{{_needScrollCalculation}}"
+            collection="{{_listViewModel}}"
             scope="{{_options}}">
         <Controls._list.EditInPlace
                 name="editInPlace"
