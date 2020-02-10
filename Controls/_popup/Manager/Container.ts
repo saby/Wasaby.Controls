@@ -89,7 +89,6 @@ class Container extends Control<IControlOptions> {
 
     // To calculate the zIndex in a compatible notification Manager
     static POPUP_ZINDEX_STEP: number = POPUP_ZINDEX_STEP;
-    static _theme: string[] = ['Controls/popup'];
 }
 
 export default Container;
