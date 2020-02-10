@@ -144,9 +144,8 @@
    contentTemplate?: string;
 
     /**
-     * @cfg {String|Function} Устанавливает пользовательский шаблон для отображения содержимого ячейки.
      * @name Controls/grid:ColumnTemplate#clickable
-     * @cfg {Boolean} Когда опция установлена в значение true, элемент доступен для клика, и используется {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} pointer. В значении false элемент недоступен для клика, и используется курсор default.
+     * @cfg {Boolean} Определяет, будет ли меняться {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} на pointer при наведении мыши на ячейку.
      * @default true
      */
     clickable?: boolean;
