@@ -66,7 +66,7 @@ var CompoundArea = CompoundContainer.extend([
       this._childPendingOperations = [];
       this._producedPendingOperations = [];
 
-      this._className = 'controls-CompoundArea ws-sticky-header__scrollable-container';
+      this._className = 'controls-CompoundArea';
       if (_options.type !== 'base') {
          this._className += (_options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
       }
