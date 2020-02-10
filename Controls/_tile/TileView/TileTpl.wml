@@ -6,6 +6,7 @@
 
 <ws:template name="defaultContentTpl">
    <div attr:class="controls-TileView__itemContent {{titleStyle === 'accent' ? 'controls-TileView__itemContent_accent'}}
+               {{highlightOnHover === true ? ' controls-TileView__itemContent_highlightOnHover'}}
                js-controls-SwipeControl__actionsContainer
                {{!!itemData.isActive ? ' controls-TileView__item_active'}}
                {{!!itemData.isSwiped ? ' controls-TileView__item_swiped'}}

@@ -258,6 +258,14 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
+    shouldDisplayMarker(templateMarker: boolean = true): boolean {
+        return (
+            templateMarker &&
+            this._$owner.getMarkerVisibility() !== 'hidden' &&
+            this.isMarked()
+        );
+    }
+
     increaseCounter(name: string): number {
         if (typeof this._counters[name] === 'undefined') {
             this._counters[name] = 0;
