@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import tmpl = require('wml!Controls/_LoadingIndicator/LoadingIndicator');
 import randomId = require('Core/helpers/Number/randomId');
 import collection = require('Types/collection');
+import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /*
  * @name Controls/LoadingIndicator#isGlobal
@@ -515,5 +516,5 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         }
     }
 });
-module._theme = ['Controls/_LoadingIndicator/LoadingIndicator'];
+
 export = module;
