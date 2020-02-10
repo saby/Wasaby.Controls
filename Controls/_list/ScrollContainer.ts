@@ -140,12 +140,6 @@ export default class ScrollContainer extends Control<IOptions> {
             }
         }
 
-        if (options.observeScroll) {
-            this.registerScroll();
-        } else {
-            this.scrollRegistered = false;
-        }
-
         if (this.indicatorState) {
             this.indicatorTimeout = setTimeout(() => {
                 this._notify('changeIndicatorState', [true, this.indicatorState]);
@@ -192,6 +186,14 @@ export default class ScrollContainer extends Control<IOptions> {
             this.saveScrollPosition = false;
             this.savedScrollDirection = null;
             this.checkTriggerVisibilityWithTimeout();
+        }
+    }
+
+    protected _afterUpdate(): void {
+        if (this._options.observeScroll) {
+            this.registerScroll();
+        } else {
+            this.scrollRegistered = false;
         }
     }
 
