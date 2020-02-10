@@ -257,11 +257,24 @@
    color: @hierarchy_icon-color_menu;
 }
 
-.controls-DropdownList-cross.theme_@{themeName} {
+.controls-DropdownList-cross {
    position: absolute;
-   right: @close-button_offset-right_menu + @popup_border-thickness_menuPopup;
-   top: @close-button_offset-top_menu + @popup_border-thickness_menuPopup;
    z-index: 2;
+}
+
+.ws-is-no-touch {
+   .controls-DropdownList-cross_theme_@{themeName} {
+      right: @close-button_offset-right_menu + @popup_border-thickness_menuPopup;
+      top: @close-button_offset-top_menu + @popup_border-thickness_menuPopup;
+   }
+}
+
+.ws-is-touch {
+   .controls-DropdownList-cross_theme_@{themeName} {
+      right: 0;
+      top: 0;
+      padding: @close-button_offset-top_menu + @popup_border-thickness_menuPopup @close-button_offset-right_menu + @popup_border-thickness_menuPopup;
+   }
 }
 
 .controls-DropdownList-header.theme_@{themeName} {

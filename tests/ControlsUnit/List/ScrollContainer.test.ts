@@ -32,6 +32,21 @@ describe('Controls/_list/ScrollContainer', () => {
             assert.isTrue(instance.__scrollRegistered);
         });
     });
+    describe('_beforeUpdate', () => {
+        const instance = new ScrollController({});
+        it('register and unregister scroll', () => {
+            instance._children = {
+                scrollEmitter: {
+                    // Mocked
+                    startRegister(): void { return; }
+                }
+            };
+            instance._beforeUpdate({observeScroll: true});
+            assert.isTrue(instance.scrollRegistered, 'scroll must be registred');
+            instance._beforeUpdate({observeScroll: false});
+            assert.isFalse(instance.scrollRegistered, 'scroll must be not registred');
+        });
+    });
     describe('_beforeRender', () => {
         it('saveScrollPosition notified correctly', () => {
             // @ts-ignore
