@@ -677,7 +677,6 @@ var _private = {
                self._options.dataLoadErrback,
                filter
             );
-            self._hasLoadedData = true;
         }
     },
 
@@ -896,13 +895,12 @@ var _private = {
                     const hasMoreDataDown = self._sourceController.hasMoreData('down');
 
                     hasMoreData = {
-                        up: hasMoreDataUp || self._hasLoadedData,
-                        down: (hasMoreDataDown || self._hasLoadedData) && _private.allowLoadMoreByPortionedSearch(self)
+                        up: hasMoreDataUp,
+                        down: hasMoreDataDown && _private.allowLoadMoreByPortionedSearch(self)
                     };
                 }
                 self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
             }
-            self._hasLoadedData = false;
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
@@ -1646,7 +1644,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _resetScrollAfterReload: false,
     _scrollPageLocked: false,
-    _hasLoadedData: false,
 
     _itemReloaded: false,
     _itemActionsInitialized: false,
