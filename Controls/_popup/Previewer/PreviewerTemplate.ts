@@ -16,7 +16,7 @@ interface IPreviewerOptions extends IControlOptions {
 
 class PreviewerTemplate extends Control<IPreviewerOptions> {
     _template: TemplateFunction = template;
-    static _theme: string[] = ['Controls/popup'];
+
     protected _beforeMount(options: IPreviewerOptions): void|Promise<void> {
         if (typeof window !== 'undefined' && this._needRequireModule(options.template)) {
             return load(options.template as string);

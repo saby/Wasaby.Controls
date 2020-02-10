@@ -10,8 +10,6 @@ const POPUP_ZINDEX_STEP: number = 10;
 
 class Container extends Control<IControlOptions> {
 
-    static _theme: string[] = ['Controls/popup'];
-
     /**
      * Container for displaying popups
      * @class Controls/_popup/Manager/Container
@@ -91,6 +89,7 @@ class Container extends Control<IControlOptions> {
 
     // To calculate the zIndex in a compatible notification Manager
     static POPUP_ZINDEX_STEP: number = POPUP_ZINDEX_STEP;
+    static _theme: string[] = ['Controls/popup'];
 }
 
 export default Container;
