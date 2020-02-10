@@ -34,13 +34,16 @@ class MenuRender extends Control<IMenuRenderOptions> {
         return this._options.emptyText && itemData.getContents().getId() === this._options.emptyKey;
     }
 
+    // FIXME
     protected _getItemData(item): object {
         return {
             item: item.getContents(),
+            treeItem: item,
             iconSpacing: this._iconSpacing,
             iconSize: this._options.iconSize,
             multiSelect: this._options.multiSelect,
             multiSelectTpl,
+            getPropValue: ItemsUtil.getPropertyValue,
             isEmptyItem: this._isEmptyItem(item),
             isSelected: item.isSelected.bind(item),
             isNode: item.isNode.bind(item),
@@ -55,33 +58,25 @@ class MenuRender extends Control<IMenuRenderOptions> {
         this._notify(eventName, [item, sourceEvent]);
     }
 
-    protected _getClassList(itemData): string {
-        const item = itemData.getContents();
-        let classes = itemData.getContentClasses();
+    protected _getClassList(treeItem): string {
+        const item = treeItem.getContents();
+        let classes = treeItem.getContentClasses();
         classes += ' controls-Menu__row_state_' + (item.get('readOnly')  ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
-        if (itemData.isHovered() && !item.get('readOnly')) {
+        if (treeItem.isHovered() && !item.get('readOnly')) {
             classes += ' controls-Menu__row_hovered_theme-' + this._options.theme;
         }
-        if (this._isEmptyItem(itemData) && !this._options.multiSelect) {
+        if (this._isEmptyItem(treeItem) && !this._options.multiSelect) {
             classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
         } else {
             classes += ' controls-Menu__defaultItem_theme-' + this._options.theme;
         }
-        if (item.get('pinned') === true && !itemData.hasParent) {
+        if (item.get('pinned') === true && !treeItem.isRoot()) {
             classes += ' controls-Menu__row_pinned';
         }
-        if (this._options.listModel.getLast() !== itemData) {
+        if (this._options.listModel.getLast() !== treeItem) {
             classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
         }
         return classes;
-    }
-
-    private getItemPropertyValue(item, property) {
-        let result = ItemsUtil.getPropertyValue(item, property);
-        if (!result) {
-            result = ItemsUtil.getPropertyValue(this.getContents && this.getContents(), property);
-        }
-        return result;
     }
 
     private setListModelOptions(options: IMenuRenderOptions) {
