@@ -47,8 +47,6 @@ const BaseOpener = {
          cfg.isDefaultOpener = true;
       }
 
-      this._preparePopupCfgFromOldToNew(cfg);
-
       if (cfg.hoverTarget) {
          cfg.templateOptions.hoverTarget = cfg.hoverTarget;
       }
