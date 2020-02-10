@@ -140,8 +140,10 @@ export default class ScrollContainer extends Control<IOptions> {
             }
         }
 
-        if (this._options.observeScroll) {
+        if (options.observeScroll) {
             this.registerScroll();
+        } else {
+            this.scrollRegistered = false;
         }
 
         if (this.indicatorState) {
@@ -454,7 +456,7 @@ export default class ScrollContainer extends Control<IOptions> {
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (!this.afterRenderCallback && !this.fakeScroll) {
+            if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {
