@@ -59,7 +59,7 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * Графический контрол, который предоставляет пользователю возможность простого запуска события при нажатии на него.
  * @remark
  * Кнопки могут отображаться в нескольких режимах, отличающихся друга от друга внешне.
- * Более подробное описание можно найти <a href='/doc/platform/developmentapl/interface-development/controls/buttons/'>здесь</a>
+ * Более подробное описание можно найти <a href='/doc/platform/developmentapl/interface-development/controls/buttons-switches/buttons-links/'>здесь</a>
  *
  * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
  *

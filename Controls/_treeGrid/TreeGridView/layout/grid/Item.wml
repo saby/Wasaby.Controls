@@ -83,10 +83,10 @@
 
 <ws:template name="colTpl">
    <ws:partial template="stickyLadderTpl" currentColumn="{{currentColumn}}"/>
-   <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode) && itemData.itemActionsDrawPosition === 'before' }}">
-      <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}_actions"/>
-   </ws:if>
    <ws:if data="{{itemData.columnScroll && colspan && (itemData.hasMultiSelect ? currentColumn.columnIndex !== 0 : true)}}">
+      <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode) && itemData.itemActionsDrawPosition === 'before' }}">
+         <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}} {{itemData.getColspanForColumnScroll().actions}}" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}_actions"/>
+      </ws:if>
       <div style="display: contents">
          <div attr:class="{{currentColumn.cellClasses.replace('controls-Grid__cell_fixed', '')}}
                           {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
@@ -104,6 +104,9 @@
       </div>
    </ws:if>
    <ws:else>
+      <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode) && itemData.itemActionsDrawPosition === 'before' }}">
+         <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}_actions"/>
+      </ws:if>
       <div attr:class="{{currentColumn.cellClasses}}
                           {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}

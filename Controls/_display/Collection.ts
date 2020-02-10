@@ -568,6 +568,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$itemActionsProperty: string;
 
+    protected _$markerVisibility: string;
+
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
@@ -2178,6 +2180,24 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
+    setHoveredItem(item: T): void {
+        if (this._hoveredItem === item) {
+            return;
+        }
+        if (this._hoveredItem) {
+            this._hoveredItem.setHovered(false);
+        }
+        if (item) {
+            item.setHovered(true);
+        }
+        this._hoveredItem = item;
+        this._nextVersion();
+    }
+
+    getHoveredItem(): T {
+        return this._hoveredItem;
+    }
+
     getSwipeConfig(): ISwipeConfig {
         return this._swipeConfig;
     }
@@ -2225,6 +2245,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getItemActionsProperty(): string {
         return this._$itemActionsProperty;
+    }
+
+    getMarkerVisibility(): string {
+        return this._$markerVisibility;
     }
 
     // region SerializableMixin
@@ -3318,6 +3342,7 @@ Object.assign(Collection.prototype, {
     _$compatibleReset: false,
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
+    _$markerVisibility: 'onactivated',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,

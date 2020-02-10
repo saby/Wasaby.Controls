@@ -114,6 +114,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _afterMount(): void {
         this.__mounted = true;
+        this.viewSize = this._container.clientHeight;
 
         if (this._options.virtualScrolling) {
             this.virtualScroll.itemsChanged = false;
@@ -139,8 +140,10 @@ export default class ScrollContainer extends Control<IOptions> {
             }
         }
 
-        if (this._options.observeScroll) {
+        if (options.observeScroll) {
             this.registerScroll();
+        } else {
+            this.scrollRegistered = false;
         }
 
         if (this.indicatorState) {
@@ -403,12 +406,12 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private checkTriggerVisibility(): void {
         if (!this.applyScrollTopCallback) {
-            if (this.triggerVisibility.up) {
-                this.updateViewWindow('up');
-            }
-
             if (this.triggerVisibility.down) {
                 this.updateViewWindow('down');
+            }
+
+            if (this.triggerVisibility.up) {
+                this.updateViewWindow('up');
             }
         }
 
@@ -453,7 +456,7 @@ export default class ScrollContainer extends Control<IOptions> {
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (!this.afterRenderCallback && !this.fakeScroll) {
+            if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {

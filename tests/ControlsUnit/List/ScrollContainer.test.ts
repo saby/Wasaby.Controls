@@ -7,9 +7,13 @@ describe('Controls/_list/ScrollContainer', () => {
         const instance = new ScrollController();
         instance._options = {};
         instance.virtualScroll = {};
-        it('flag inited', () => {
+        instance._container = {
+            clientHeight: 100
+        };
+        it('flag inited and viewSize saved', () => {
             instance._afterMount();
             assert.isTrue(instance.__mounted);
+            assert.equal(instance.viewSize, 100);
         });
         it('scroll registered correctly', () => {
             instance._children = {
@@ -26,6 +30,21 @@ describe('Controls/_list/ScrollContainer', () => {
             instance._options = {observeScroll: true};
             instance._afterMount();
             assert.isTrue(instance.__scrollRegistered);
+        });
+    });
+    describe('_beforeUpdate', () => {
+        const instance = new ScrollController({});
+        it('register and unregister scroll', () => {
+            instance._children = {
+                scrollEmitter: {
+                    // Mocked
+                    startRegister(): void { return; }
+                }
+            };
+            instance._beforeUpdate({observeScroll: true});
+            assert.isTrue(instance.scrollRegistered, 'scroll must be registred');
+            instance._beforeUpdate({observeScroll: false});
+            assert.isFalse(instance.scrollRegistered, 'scroll must be not registred');
         });
     });
     describe('_beforeRender', () => {
