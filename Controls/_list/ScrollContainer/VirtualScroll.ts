@@ -143,7 +143,7 @@ export default class VirtualScroll {
      * @param direction
      */
     shiftRange(direction: IDirection): IRangeShiftResult {
-        this._oldRange = this._range;
+        this._oldRange = {...this._range};
         this._savedDirection = direction;
         const itemsHeightsData = this._itemsHeightData;
         const itemsCount = this._itemsCount;
@@ -414,7 +414,7 @@ export default class VirtualScroll {
 
     private _updateStartIndex(index: number): void {
         const start = Math.max(0, index);
-        const stop = Math.min(this._itemsCount, this._range.start + this._options.pageSize);
+        const stop = Math.min(this._itemsCount, start + this._options.pageSize);
 
         this._range = {
             start,
@@ -443,14 +443,16 @@ export default class VirtualScroll {
 
     private _shiftRangeBySegment(direction: IDirection, segmentSize: number): IRange {
         this._savedDirection = direction;
-        this._oldRange = this._range;
+        this._oldRange = {...this._range};
+        const fixedSegmentSize = Math
+            .min(segmentSize, Math.max(this._options.pageSize - (this._range.stop - this._range.start), 0));
         const itemsCount = this._itemsCount;
         let {start, stop} = this._range;
 
         if (direction === 'up') {
-            start = Math.max(0, start - segmentSize);
+            start = Math.max(0, start - fixedSegmentSize);
         } else {
-            stop = Math.min(Math.max(start + segmentSize, stop), itemsCount);
+            stop = Math.min(Math.max(start + fixedSegmentSize, stop), itemsCount);
         }
 
         return {

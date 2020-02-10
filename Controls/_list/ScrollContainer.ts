@@ -60,10 +60,10 @@ export default class ScrollContainer extends Control<IOptions> {
     private _virtualScroll: VirtualScroll;
     private _itemsContainer: HTMLElement;
 
-    private _viewHeight: number;
-    private _viewportHeight: number;
-    private _triggerOffset: number;
-    private _lastScrollTop: number;
+    private _viewHeight: number = 0;
+    private _viewportHeight: number = 0;
+    private _triggerOffset: number = 0;
+    private _lastScrollTop: number = 0;
     private _placeholders: IPlaceholders;
 
     private _triggerVisibility: {
@@ -307,10 +307,6 @@ export default class ScrollContainer extends Control<IOptions> {
 
         this._notify('scrollPositionChanged', [this._lastScrollTop]);
 
-        const activeElementIndex = this._virtualScroll.getActiveElementIndex(
-            this._lastScrollTop
-        );
-
         if (!this._restoreScrollResolve && !this._fakeScroll && !this._virtualScroll.rangeChanged) {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
 
@@ -414,6 +410,17 @@ export default class ScrollContainer extends Control<IOptions> {
         this._fakeScroll = false;
     }
 
+    /**
+     * Обработчик изменений в коллекции
+     * @param event
+     * @param changesType
+     * @param action
+     * @param newItems
+     * @param newItemsIndex
+     * @param removedItems
+     * @param removedItemsIndex
+     * @private
+     */
     private _collectionChangedHandler = (event: string,
                                          changesType: string,
                                          action: string,
