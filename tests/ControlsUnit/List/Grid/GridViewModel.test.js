@@ -1272,16 +1272,31 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                9: { date: { } }
             },
             resultStickyLadder = {
-               0: { ladderLength: 3, headingStyle: 'grid-area: 1 / 1 / span 3 / span 1;' },
-               1: { },
-               2: { },
-               3: { ladderLength: 1 },
-               4: { ladderLength: 4, headingStyle: 'grid-area: 5 / 1 / span 4 / span 1;' },
-               5: { },
-               6: { },
-               7: { },
-               8: { ladderLength: 1 },
-               9: { ladderLength: 1 }
+               "0": {
+                  "ladderLength": 3,
+                  "headingStyle": "grid-row: span 3"
+               },
+               "1": {},
+               "2": {},
+               "3": {
+                  "ladderLength": 1,
+                  "headingStyle": "grid-row: span 1"
+               },
+               "4": {
+                  "ladderLength": 4,
+                  "headingStyle": "grid-row: span 4"
+               },
+               "5": {},
+               "6": {},
+               "7": {},
+               "8": {
+                  "ladderLength": 1,
+                  "headingStyle": "grid-row: span 1"
+               },
+               "9": {
+                  "ladderLength": 1,
+                  "headingStyle": "grid-row: span 1"
+               }
             },
             ladderViewModel = new gridMod.GridViewModel({
                items: new collection.RecordSet({
@@ -1321,9 +1336,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                2: { date: { } }
             },
             newResultStickyLadder = {
-               0: { ladderLength: 3, headingStyle: 'grid-area: 1 / 1 / span 3 / span 1;' },
-               1: { },
-               2: { }
+               "0": {
+                  "ladderLength": 3,
+                  "headingStyle": "grid-row: span 3"
+               },
+               "1": {},
+               "2": {}
             };
 
          ladderViewModel.setItems(newItems);
@@ -1749,7 +1767,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                    styleForLadder: 'LADDER_STYLE;',
                    columnIndex: 0
                 }, false, false),
-                'LADDER_STYLE;'
+                ''
             );
 
             assert.equal(
@@ -1764,7 +1782,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                    styleForLadder: 'LADDER_STYLE;',
                    columnIndex: 0
                 }, true, false),
-                'LADDER_STYLE;grid-column-start: 1; grid-column-end: 3;'
+                'grid-column-start: 1; grid-column-end: 3;'
             );
          });
 
