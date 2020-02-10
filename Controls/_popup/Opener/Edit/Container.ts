@@ -30,7 +30,6 @@ interface IContainerContext {
 class Container extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _items: RecordSet;
-    static _theme: string[] = ['Controls/popup'];
 
     _beforeMount(options: IControlOptions, context: IContainerContext): void {
         this._updateItems(context);

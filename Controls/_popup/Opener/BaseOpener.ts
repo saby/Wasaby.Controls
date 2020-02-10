@@ -39,7 +39,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     extends Control<TBaseOpenerOptions> implements IOpener, IBaseOpener {
 
     readonly '[Controls/_popup/interface/IBaseOpener]': boolean;
-    static _theme: string[] = ['Controls/popup'];
     protected _template: TemplateFunction = Template;
     private _actionOnScroll: string = 'none';
     private _popupId: string = '';
@@ -504,6 +503,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
         return ManagerWrapperCreatingPromise;
     }
+    static _theme: string[] = ['Controls/popup'];
 }
 
 export default BaseOpener;

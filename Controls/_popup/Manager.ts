@@ -39,8 +39,6 @@ class Manager extends Control<IManagerOptions> {
     _contextIsTouch: boolean = false;
     _popupItems: List<IPopupItem> = new List();
 
-    static _theme: string[] = ['Controls/popup'];
-
     protected _afterMount(options: IManagerOptions, context: IManagerTouchContext): void {
         this._updateContext(context);
         ManagerController.setManager(this);

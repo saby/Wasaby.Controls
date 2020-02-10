@@ -10,8 +10,6 @@ const POPUP_ZINDEX_STEP: number = 10;
 
 class Container extends Control<IControlOptions> {
 
-    static _theme: string[] = ['Controls/popup'];
-
     /**
      * Container for displaying popups
      * @class Controls/_popup/Manager/Container

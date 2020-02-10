@@ -231,7 +231,6 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
             trigger: 'hoverAndClick'
         };
     }
-    static _theme: string[] = ['Controls/popup'];
 }
 
 export default PreviewerTarget;
