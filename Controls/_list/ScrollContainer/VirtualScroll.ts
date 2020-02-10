@@ -119,7 +119,8 @@ export default class VirtualScroll {
         this._insertItemHeights(addIndex, count);
 
         if (direction === 'up') {
-            this._updateStartIndex(this._range.start + count, this._itemsHeightData.itemsHeights.length);
+            this._oldRange.start += count;
+            this._updateStartIndex(this._range.start + count);
         }
 
         return this._setRange(this._shiftRangeBySegment(direction, count));
@@ -288,6 +289,10 @@ export default class VirtualScroll {
         return this._range.start <= itemIndex && this._range.stop > itemIndex;
     }
 
+    /**
+     * Получает размеры распорок исходя из текущего range
+     * @private
+     */
     private _getPlaceholders(): IPlaceholders {
         return {
             top: this._getItemsHeightsSum(
@@ -303,6 +308,11 @@ export default class VirtualScroll {
         };
     }
 
+    /**
+     * Обновляет данные о высотах элементов
+     * @param container
+     * @private
+     */
     private _updateItemsHeights(container: HTMLElement): void {
         let sum = 0;
         let startChildrenIndex = 0;
@@ -402,11 +412,14 @@ export default class VirtualScroll {
         return this._setRange({start, stop});
     }
 
-    private _updateStartIndex(index: number, itemsCount: number): void {
+    private _updateStartIndex(index: number): void {
         const start = Math.max(0, index);
-        const stop = Math.min(itemsCount, this._range.start + this._options.pageSize);
-        this._range.start = Math.max(0, index);
-        this._range.stop = Math.min(itemsCount, this._range.start + this._options.pageSize);
+        const stop = Math.min(this._itemsCount, this._range.start + this._options.pageSize);
+
+        this._range = {
+            start,
+            stop
+        };
     }
 
     private _insertItemHeights(insertIndex: number, length: number): void {
@@ -429,18 +442,15 @@ export default class VirtualScroll {
     }
 
     private _shiftRangeBySegment(direction: IDirection, segmentSize: number): IRange {
+        this._savedDirection = direction;
+        this._oldRange = this._range;
         const itemsCount = this._itemsCount;
-        const fixedSegmentSize = Math
-            .min(
-                this._options.pageSize - (this._range.stop - this._range.start),
-                segmentSize,
-                0);
         let {start, stop} = this._range;
 
         if (direction === 'up') {
-            start = Math.max(0, start - fixedSegmentSize);
+            start = Math.max(0, start - segmentSize);
         } else {
-            stop = Math.min(Math.max(start + fixedSegmentSize, stop), itemsCount);
+            stop = Math.min(Math.max(start + segmentSize, stop), itemsCount);
         }
 
         return {

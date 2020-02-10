@@ -57,7 +57,7 @@ export default class ScrollContainer extends Control<IOptions> {
         topLoadTrigger: HTMLElement;
         bottomLoadTrigger: HTMLElement;
     };
-    private _virtualScroll: VirtualScroll = new VirtualScroll({}, {});
+    private _virtualScroll: VirtualScroll;
     private _itemsContainer: HTMLElement;
 
     private _viewHeight: number;
@@ -86,6 +86,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
     protected _beforeMount(options: IOptions): void {
+        this._initModelObserving(options);
         this._initVirtualScroll(options);
     }
 
@@ -98,6 +99,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _beforeUpdate(options: IOptions): void {
         if (this._options.collection !== options.collection) {
+            this._initModelObserving(options);
             this._initVirtualScroll(options);
         }
 
@@ -220,11 +222,17 @@ export default class ScrollContainer extends Control<IOptions> {
 
     }
 
+    private _initModelObserving(options: IOptions): void {
+        this._subscribeToCollectionChange(options.collection, options.useNewModel);
+
+        if (options.useNewModel) {
+            ScrollContainer._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+        }
+    }
+
     private _initVirtualScroll(options: IOptions): void {
         const virtualScrollOptions = ScrollContainer._getVirtualScrollOptions(options);
-        this._virtualScroll.setOptions(
-            virtualScrollOptions
-        );
+        this._virtualScroll = new VirtualScroll(virtualScrollOptions, {});
 
         let itemsHeights: Partial<IItemsHeights>;
 
@@ -245,12 +253,6 @@ export default class ScrollContainer extends Control<IOptions> {
                     .getContents()
                     .get(options.virtualScrollConfig.itemHeightProperty);
             });
-        }
-
-        this._subscribeToCollectionChange(options.collection, options.useNewModel);
-
-        if (options.useNewModel) {
-            ScrollContainer._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
         }
 
         const rangeShiftResult = this._virtualScroll
@@ -320,6 +322,11 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
+    /**
+     * Обработчик передвижения скроллбара
+     * @param params
+     * @private
+     */
     private _scrollBarPositionChanged(params: IScrollParams): void {
         this._applyScrollTopCallback = params.applyScrollTopCallback;
         this._throttledPositionChanged(params);
