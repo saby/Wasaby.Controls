@@ -160,7 +160,6 @@ define([
                global.window = browser.window;
                global.document = window.document;
                global.Node = window.Node;
-               done();
             }
          });
 
