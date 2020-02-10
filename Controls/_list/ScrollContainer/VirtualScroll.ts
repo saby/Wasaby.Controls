@@ -20,7 +20,7 @@ export default class VirtualScroll {
     rangeChanged: boolean;
 
     readonly get isNeedToRestorePosition(): boolean {
-        return Boolean(this._savedDirection || this._savedScrollIndex);
+        return typeof (this._savedDirection || this._savedScrollIndex) !== 'undefined';
     }
 
     constructor(
@@ -81,7 +81,8 @@ export default class VirtualScroll {
         const itemsCount = this._itemsCount;
         const triggerHeight = this._containerHeightsData.trigger;
 
-        let start = 0, stop;
+        let start = 0;
+        let stop: number;
         let tempPlaceholderSize = 0;
 
         while (tempPlaceholderSize + itemsHeights[start] <= virtualScrollPosition - triggerHeight) {
@@ -208,15 +209,15 @@ export default class VirtualScroll {
         const itemsHeights = this._itemsHeightData.itemsHeights;
         let savedPosition: number;
 
-        if (this._savedDirection) {
+        if (typeof this._savedDirection !== 'undefined') {
             savedPosition = this._savedDirection === 'up' ?
                 scrollTop + this._getItemsHeightsSum(this._range.start, this._oldRange.start, itemsHeights) :
                 scrollTop - this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights);
-        } else if (this._savedScrollIndex) {
+        } else if (typeof this._savedScrollIndex !== 'undefined') {
             savedPosition = itemsOffsets[this._savedScrollIndex];
         }
 
-        this._savedDirection = this._savedScrollIndex = null;
+        this._savedDirection = this._savedScrollIndex = undefined;
 
         return savedPosition;
     }
@@ -261,9 +262,9 @@ export default class VirtualScroll {
         if (!this._itemsCount) {
             return undefined;
         } else if (this.isRangeOnEdge('up') && scrollTop === 0) {
-            return this._range.stop - 1;
-        } else if (this.isRangeOnEdge('down') && scrollTop + viewport === scroll) {
             return this._range.start;
+        } else if (this.isRangeOnEdge('down') && scrollTop + viewport === scroll) {
+            return this._range.stop - 1;
         } else {
             let itemIndex;
             const {itemsOffsets} = this._itemsHeightData;
@@ -359,10 +360,11 @@ export default class VirtualScroll {
             }
         }
 
-        if (stop === itemsCount - 1) {
+        if (typeof stop === 'undefined' || stop === itemsCount - 1) {
+            stop = itemsCount - 1;
             sumHeight = 0;
 
-            for (let i = itemsCount - 1; i > 0; i--) {
+            for (let i = stop; i > 0; i--) {
                 const itemHeight = itemsHeights[i];
 
                 if (sumHeight + itemHeight <= viewportHeight) {
@@ -438,7 +440,7 @@ export default class VirtualScroll {
     }
 
     private _removeItemHeights(removeIndex: number, length: number): void {
-        this._itemsHeightData.itemsHeights = this._itemsHeightData.itemsHeights.splice(removeIndex + 1, length);
+        this._itemsHeightData.itemsHeights.splice(removeIndex + 1, length);
     }
 
     private _shiftRangeBySegment(direction: IDirection, segmentSize: number): IRange {
@@ -452,7 +454,7 @@ export default class VirtualScroll {
         if (direction === 'up') {
             start = Math.max(0, start - fixedSegmentSize);
         } else {
-            stop = Math.min(Math.max(start + fixedSegmentSize, stop), itemsCount);
+            stop = Math.min(stop + fixedSegmentSize, itemsCount);
         }
 
         return {
@@ -524,8 +526,10 @@ export default class VirtualScroll {
 
     private _getItemsHeightsSum(startIndex: number, stopIndex: number, itemsHeights: number[]): number {
         let sum = 0;
+        const fixedStartIndex = Math.max(startIndex, 0);
+        const fixedStopIndex = Math.min(stopIndex, itemsHeights.length);
 
-        for (let i = startIndex; i < stopIndex; i++) {
+        for (let i = fixedStartIndex; i < fixedStopIndex; i++) {
             sum += itemsHeights[i];
         }
 
