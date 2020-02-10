@@ -653,7 +653,7 @@ define([
          assert.isFalse(ctrl._showContinueSearchButton);
       });
 
-      it('loadToDirection indicator triggerVisibility', () => {
+      it('loadToDirection indicator triggerVisibility', async () => {
          var source = new sourceLib.Memory({
             keyProperty: 'id',
             data: data
@@ -704,11 +704,8 @@ define([
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
-         let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
-         assert.equal(ctrl._loadingState, 'down');
-         ctrl._portionedSearch.continueSearch();
-         await loadPromise;
-         assert.isNotNull(ctrl._loadingIndicatorState);
+         ctrl._loadingIndicatorState = 'down';
+         ctrl._hideIndicatorOnTriggerHideDirection = 'down';
 
          // Up trigger became visible, no changes to indicator
          ctrl.triggerVisibilityChangedHandler(null, 'up', true);
@@ -719,7 +716,7 @@ define([
          assert.isNull(ctrl._loadingIndicatorState);
       });
 
-      it('loadToDirection hides indicator with false navigation', () => {
+      it('loadToDirection hides indicator with false navigation', async () => {
          var source = new sourceLib.Memory({
             keyProperty: 'id',
             data: data
