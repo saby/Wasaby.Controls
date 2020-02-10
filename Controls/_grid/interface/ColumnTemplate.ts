@@ -145,7 +145,7 @@
 
     /**
      * @name Controls/grid:ColumnTemplate#clickable
-     * @cfg {Boolean} Определяет, будет ли меняться {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} на pointer при наведении мыши на ячейку.
+     * @cfg {Boolean} Определяет, будет ли меняться {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсор} на pointer при наведении указателя мыши на ячейку.
      * @default true
      */
     clickable?: boolean;
