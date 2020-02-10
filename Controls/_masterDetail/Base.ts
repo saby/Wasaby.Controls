@@ -95,7 +95,7 @@ class Base extends Control<IMasterDetail> {
     protected _updateOffsetDebounced: Function;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: number): Promise<number> | void {
-      //  this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
+        this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
         this._canResizing = this._isCanResizing(options);
         if (receivedState) {
             this._currentWidth = receivedState + 'px';
@@ -126,7 +126,6 @@ class Base extends Control<IMasterDetail> {
 
     protected _afterMount(options: IMasterDetail): void {
         if (this._canResizing) {
-           // this._updateOffset(options);
             this._currentWidth = this._updateOffset(options);
         }
     }
@@ -163,7 +162,6 @@ class Base extends Control<IMasterDetail> {
                 this._minOffset = 0;
             }
             return currentWidth + 'px';
-           // this._currentWidth = currentWidth + 'px';
         }
     }
 
@@ -212,7 +210,7 @@ class Base extends Control<IMasterDetail> {
         // Не запускаем реакцию на ресайз, если контрол скрыт (к примеру лежит внутри скпытой области switchableArea)
         if (!this._container.closest('.ws-hidden')) {
             this._containerWidth = null;
-            this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
+            //this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
             this._updateOffsetDebounced(this._options);
         }
     }
