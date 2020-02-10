@@ -143,7 +143,9 @@ import {SyntheticEvent} from "Vdom/Vdom"
             var sizeCache = _private.getSizeCache(self, container);
 
              const newScrollTop = container.scrollTop;
-
+             if (container.scrollLeft) {
+                 container.scrollLeft = 0;
+             }
              if (newScrollTop === self._scrollTopCache) {
                  return;
              }
