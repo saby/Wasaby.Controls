@@ -3,7 +3,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {default as IMenuControl, IMenuOptions, TKeys} from 'Controls/_menu/interface/IMenuControl';
 import {Controller as SourceController} from 'Controls/source';
 import {RecordSet, List} from 'Types/collection';
-import {ICrud} from 'Types/source';
+import {ICrud, PrefetchProxy} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
 import {Tree, TreeItem, GroupItem, SelectionController} from 'Controls/display';
@@ -29,7 +29,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
-    private _item: Model;
 
     // @ts-ignore
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
@@ -346,11 +345,11 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
     }
 
-    private additionalFilter(options: IMenuOptions, item: Model) {
+    private additionalFilter(options: IMenuOptions, item: Model): boolean {
         return this._expandValue || (!item.get || !item.get(options.additionalProperty) || this.isHistoryItem(item));
     }
 
-    private displayFilter(options: IMenuOptions, item: Model, index, treeItem): boolean {
+    private displayFilter(options: IMenuOptions, item: Model, index: number, treeItem: TreeItem<Model>): boolean {
         let isVisible = true;
         if (treeItem instanceof GroupItem) {
             let collection = treeItem.getOwner();
@@ -399,7 +398,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return this.getSourceController(options).load(filter).addCallback((items) => {
             self.createViewModel(items, options);
             self._moreButtonVisible = options.selectorTemplate && self.getSourceController(options).hasMoreData('down');
-            self._expandButtonVisible = self.getSourceController(options).hasMoreData('down') || options.additionalProperty;
+            self._expandButtonVisible = options.additionalProperty;
             return items;
         });
     }
@@ -433,7 +432,23 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.footerTemplate = this._options.nodeFooterTemplate;
         templateOptions.closeButtonVisibility = false;
         templateOptions.showHeader = false;
+
+        templateOptions.source = this.getSourceSubMenu(templateOptions.root);
         return templateOptions;
+    }
+
+    private getSourceSubMenu(root) {
+        let source = this._options.source;
+        const collection = this._listModel.getCollection();
+        if (collection.getIndexByValue(this._options.parentProperty, root) !== -1) {
+            source = new PrefetchProxy({
+                target: this._options.source,
+                data: {
+                    query: collection
+                }
+            });
+        }
+        return source;
     }
 
     static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];

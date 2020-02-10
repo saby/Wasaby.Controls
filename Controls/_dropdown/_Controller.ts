@@ -206,7 +206,6 @@ var _private = {
             break;
          case 'selectorDialogOpened':
             this._initSelectorItems = data;
-            this._popupSelectorId = popupId;
             _private.closeDropdownList(this);
             break;
          case 'footerClick':
@@ -455,7 +454,7 @@ var _Controller = Control.extend({
             templateOptions: {
                items: this._items,
                source: this._menuSource,
-               popupSelectorId: this._popupSelectorId,
+               filter: this._filter,
                // FIXME self._container[0] delete after
                // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                width: this._options.width !== undefined ?

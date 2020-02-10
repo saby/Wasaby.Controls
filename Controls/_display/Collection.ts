@@ -2183,10 +2183,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             return;
         }
         if (this._hoveredItem) {
-            this._hoveredItem.setHovered(false);
+            this._hoveredItem.setHovered(false, true);
         }
         if (item) {
-            item.setHovered(true);
+            item.setHovered(true, true);
         }
         this._hoveredItem = item;
         this._nextVersion();

@@ -20,6 +20,10 @@ class Popup extends Control<IControlOptions> {
         this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
     }
 
+    protected _close(): void {
+        this._notify('close', [], {bubbling: true});
+    }
+
     static _theme: string[] = ['Controls/menu'];
 }
 

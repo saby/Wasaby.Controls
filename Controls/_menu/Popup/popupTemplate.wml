@@ -5,7 +5,8 @@
         headingIconSize="{{_options.iconSize}}"
         headerContentTemplate="{{_headerTemplate}}"
         footerContentTemplate="{{_options.footerTemplate}}"
-        closeButtonVisibility="{{_options.closeButtonVisibility}}">
+        closeButtonVisibility="{{_options.closeButtonVisibility}}"
+        on:headerClick="_close()">
    <ws:bodyContentTemplate>
       <Controls._menu.Control
               scope="{{_options}}"
