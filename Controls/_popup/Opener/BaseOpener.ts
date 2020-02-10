@@ -671,6 +671,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
         return ManagerWrapperCreatingPromise;
     }
+    static _theme: string[] = ['Controls/popup'];
 }
 
 export default BaseOpener;
