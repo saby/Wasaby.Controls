@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/SelectedCollection/Popup');
 import 'css!theme?Controls/popup';
+
 /**
  *
  * Показывает коллекцию элементов в две колонки в всплывающем окне.
@@ -45,5 +46,6 @@ import 'css!theme?Controls/popup';
             this._options.clickCallback('crossClick', item);
          }
       });
+      
       export = itemHiddenTemplate;
 
