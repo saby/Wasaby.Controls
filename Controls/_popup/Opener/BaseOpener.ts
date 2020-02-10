@@ -648,7 +648,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
                 ManagerWrapperCreatingPromise = new Promise((resolve, reject) => {
                     require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
-                        Creator(compatiblePopup.ManagerWrapper, { theme: _options.theme }, managerContainer).then(resolve);
+                        const cfg = _options.theme ? { theme: _options.theme } : {};
+                        Creator(compatiblePopup.ManagerWrapper, cfg, managerContainer).then(resolve);
                     }, reject);
                 });
             } else {
