@@ -5,11 +5,33 @@ import tmpl = require('wml!Controls/_form/FormController/FormController');
 import * as Deferred from 'Core/Deferred';
 import {Logger} from 'UI/Utils';
 import {error as dataSourceError} from 'Controls/dataSource';
+import {IContainerConstructor, Controller} from 'Controls/_dataSource/error';
 import {Model} from 'Types/entity';
+import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {IErrorControllerOptions} from 'Controls/_interface/IErrorController';
+
+interface IFormController extends IControlOptions {
+    createMetaData?: object;
+    destroyMetaData?: object;
+    errorContainer?: IContainerConstructor;
+    isNewRecord?: boolean;
+    key?: string;
+    keyProperty?: string;
+    readMetaData?: object;
+    record?: Model;
+    errorController?: IErrorControllerOptions;
+    source?: Memory;
+
+    //удалить при переходе на новые опции
+    dataSource?: Memory;
+    initValues?: object;
+    destroyMeta?: object;
+    idProperty?: string;
+}
 
 interface IReceivedState {
-    data?: any;
+    data?: Model;
     errorConfig?: dataSourceError.ViewConfig;
 }
 
@@ -28,6 +50,16 @@ interface IResultData {
     formControllerEvent: string;
     record: Model;
     additionalData: IAdditionalData;
+}
+
+interface IDataValid {
+    data: {
+        validationErrors: undefined| Array<string>
+    };
+}
+interface IValidateResult {
+    [key: number]: boolean;
+    hasErrors?: boolean;
 }
 
 /**
@@ -107,7 +139,7 @@ const getState = (crudResult: ICrudResult): IReceivedState => {
  * @param {CrudResult} [crudResult]
  * @return {Promise}
  */
-const getData = (crudResult: ICrudResult): Promise<any> => {
+const getData = (crudResult: ICrudResult): Promise<undefined | Model> => {
     if (!crudResult) {
         return Promise.resolve();
     }
@@ -117,25 +149,25 @@ const getData = (crudResult: ICrudResult): Promise<any> => {
     return Promise.reject(crudResult.error);
 }
 
-class FormController extends Control<IControlOptions> {
+class FormController extends Control<IFormController> {
     protected _template: TemplateFunction = tmpl;
-    protected _record: Model = null;
+    protected _record: Model;
     protected _isNewRecord: boolean = false;
-    protected _createMetaDataOnUpdate: any = null;
-    protected _errorContainer: any;
-    protected __errorController: any;
-    protected _source: any = null;
-    protected _createdInMounting: any = null;
+    protected _createMetaDataOnUpdate: any;
+    protected _errorContainer: IContainerConstructor;
+    protected __errorController: IErrorControllerOptions | Controller;
+    protected _source: Memory;
+    protected _createdInMounting: any
     protected _isMount: boolean;
-    protected _readInMounting: any = null;
+    protected _readInMounting: any;
     protected _wasCreated: boolean;
     protected _wasRead: boolean;
     protected _wasDestroyed: boolean;
     protected _pendingPromise: any;
-    protected _options: any;
-    protected __error: Error;
+    protected _options: IFormController;
+    protected __error: dataSourceError.ViewConfig;
 
-    protected _beforeMount(options, context: object, receivedState: IReceivedState): void {
+    protected _beforeMount(options: IFormController, context: object, receivedState: IReceivedState): Promise<ICrudResult> | void {
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._errorContainer = dataSourceError.Container;
         this._source = options.source || options.dataSource;
@@ -191,7 +223,7 @@ class FormController extends Control<IControlOptions> {
         this._isMount = true;
     }
 
-    protected _beforeUpdate(newOptions): void {
+    protected _beforeUpdate(newOptions: IFormController): void {
         let self = this;
         if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
@@ -207,9 +239,9 @@ class FormController extends Control<IControlOptions> {
         }
         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
             if (newOptions.record && newOptions.record.isChanged()) {
-                this._showConfirmPopup('yesno').addCallback(function (answer) {
+                this._showConfirmPopup('yesno').addCallback((answer) => {
                     if (answer === true) {
-                        self.update().addCallback(function (res) {
+                        self.update().addCallback((res) => {
                             self.read(newOptions.key, newOptions.readMetaData);
                             return res;
                         });
@@ -232,7 +264,7 @@ class FormController extends Control<IControlOptions> {
         // Нельзя чтобы контрол ддосил БЛ.
         if (newOptions.key === undefined && !newOptions.record && this._createMetaDataOnUpdate !== createMetaData) {
             this._createMetaDataOnUpdate = createMetaData;
-            this.create(newOptions.initValues || newOptions.createMetaData).addCallback(function () {
+            this.create(newOptions.initValues || newOptions.createMetaData).addCallback(() => {
                 if (newOptions.hasOwnProperty('isNewRecord')) {
                     self._isNewRecord = newOptions.isNewRecord;
                 }
@@ -279,14 +311,14 @@ class FormController extends Control<IControlOptions> {
         return keyProperty ? this._record.get(keyProperty) : this._record.getId();
     }
 
-    protected _tryDeleteNewRecord(): Promise<any> {
+    protected _tryDeleteNewRecord(): Promise<undefined> {
         if (this._needDestroyRecord()) {
             return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
         }
         return (new Deferred()).callback();
     }
 
-    protected _needDestroyRecord() {
+    protected _needDestroyRecord(): number | string {
         // Destroy record when:
         // 1. The record obtained by the method "create"
         // 2. The "create" method returned the key
@@ -348,7 +380,7 @@ class FormController extends Control<IControlOptions> {
         }
     }
 
-    protected _showConfirmPopup(type: string, details: string): Promise<string> {
+    protected _showConfirmPopup(type: string, details?: string) {
         return this._children.popupOpener.open({
             message: rk('Сохранить изменения?'),
             details,
@@ -356,7 +388,7 @@ class FormController extends Control<IControlOptions> {
         });
     }
 
-    create(createMetaData: any): Promise<any> {
+    create(createMetaData: object): Promise<undefined | Model> {
         createMetaData = createMetaData || this._options.initValues || this._options.createMetaData;
         return this._children.crud.create(createMetaData).addCallbacks(
             this._createHandler.bind(this),
@@ -371,7 +403,7 @@ class FormController extends Control<IControlOptions> {
         return record;
     }
 
-    read(key: string, readMetaData: any): Promise<any> {
+    read(key: string, readMetaData: object): Promise<Model> {
         readMetaData = readMetaData || this._options.readMetaData;
         return this._children.crud.read(key, readMetaData).addCallbacks(
             this._readHandler.bind(this),
@@ -387,11 +419,11 @@ class FormController extends Control<IControlOptions> {
         return record;
     }
 
-    update(): Promise<any> {
+    update(): Promise<undefined | Model> {
         let updateResult = new Deferred(),
             self = this;
 
-        function updateCallback(result) {
+        function updateCallback(result): void {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                 self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
@@ -412,10 +444,10 @@ class FormController extends Control<IControlOptions> {
         def.dependOn(updateResult);
 
         if (result && result.then) {
-            result.then(function (defResult) {
+            result.then((defResult) => {
                 updateCallback(defResult);
                 return defResult;
-            }, function (err) {
+            }, (err) => {
                 updateResult.errback(err);
                 return err;
             });
@@ -425,7 +457,7 @@ class FormController extends Control<IControlOptions> {
         return updateResult;
     }
 
-    protected _update(): Promise<any> {
+    protected _update(): Promise<IDataValid> {
         let self = this,
             record = this._record,
             updateDef = new Deferred();
@@ -464,31 +496,31 @@ class FormController extends Control<IControlOptions> {
                 });
             }
         });
-        validationDef.addErrback(function (e) {
+        validationDef.addErrback((e) => {
             updateDef.errback(e);
             return e;
         });
         return updateDef;
     }
 
-    delete(destroyMetaData): Promise<any> {
+    delete(destroyMetaData: object): Promise<Model | undefined> {
         destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
         let self = this;
         let resultDef = this._children.crud.delete(this._record, destroyMetaData);
 
-        resultDef.addCallbacks(function (record) {
+        resultDef.addCallbacks((record) => {
             self._setRecord(null);
             self._wasDestroyed = true;
             self._updateIsNewRecord(false);
             self._forceUpdate();
             return record;
-        }, function (error) {
+        },  (error) => {
             return self._crudErrback(error, dataSourceError.Mode.dialog);
         });
         return resultDef;
     }
 
-    validate() {
+    validate(): Promise<IValidateResult | Error> {
         return this._children.validation.submit();
     }
 
@@ -499,7 +531,7 @@ class FormController extends Control<IControlOptions> {
      * @return {Promise<*>}
      * @private
      */
-    protected _crudErrback(error: Error, mode: dataSourceError.Mode): Promise<any> {
+    protected _crudErrback(error: Error, mode: dataSourceError.Mode): Promise<undefined | Model> {
         return this._processError(error, mode).then(getData);
     }
 
@@ -516,7 +548,7 @@ class FormController extends Control<IControlOptions> {
      * @return {Promise.<CrudResult>}
      * @private
      */
-    protected _processError(error: Error, mode: dataSourceError.Mode): Promise<any> {
+    protected _processError(error: Error, mode: dataSourceError.Mode): Promise<ICrudResult> {
         let self = this;
         return self.__errorController.process({
             error: error,
@@ -533,7 +565,7 @@ class FormController extends Control<IControlOptions> {
     /**
      * @private
      */
-    protected _showError(errorConfig): void {
+    protected _showError(errorConfig: dataSourceError.ViewConfig): void {
         this.__error = errorConfig;
     }
 
@@ -561,7 +593,7 @@ class FormController extends Control<IControlOptions> {
         this._notify(eventName, args, {bubbling: true});
     }
 
-    protected _notifyToOpener(eventName: string, args): void {
+    protected _notifyToOpener(eventName: string, args: [Model, string | number]): void {
         const handlers = {
             'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
@@ -621,11 +653,11 @@ class FormController extends Control<IControlOptions> {
     }
 
     //private
-    private _checkRecordType(record: Model) {
+    private _checkRecordType(record: Model): boolean {
         return cInstance.instanceOfModule(record, 'Types/entity:Record');
     }
 
-    private _readRecordBeforeMount(instance, cfg) {
+    private _readRecordBeforeMount(instance, cfg: IFormController): Promise<ICrudResult> {
         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
         return instance._source.read(cfg.key, cfg.readMetaData).then((record) => {
@@ -645,7 +677,7 @@ class FormController extends Control<IControlOptions> {
         });
     }
 
-    private _readRecordBeforeMountNotify(instance) {
+    private _readRecordBeforeMountNotify(instance: any): void {
         if (!instance._readInMounting.isError) {
             instance._notifyHandler('readSuccessed', [instance._readInMounting.result]);
 
@@ -657,7 +689,7 @@ class FormController extends Control<IControlOptions> {
         instance._readInMounting = null;
     }
 
-    private _createRecordBeforeMount(instance, cfg) {
+    private _createRecordBeforeMount(instance, cfg: IFormController): Promise<ICrudResult> {
         // если ни рекорда, ни ключа, создаем новый рекорд и используем его
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
         return instance._source.create(cfg.initValues || cfg.createMetaData).then(function (record) {
@@ -670,13 +702,13 @@ class FormController extends Control<IControlOptions> {
             return {
                 data: record
             };
-        }, function (e) {
+        }, (e) => {
             instance._createdInMounting = {isError: true, result: e};
             return instance._processError(e).then(getState);
         });
     }
 
-    private _createRecordBeforeMountNotify(instance: any) {
+    private _createRecordBeforeMountNotify(instance: any): void {
         if (!instance._createdInMounting.isError) {
             instance._notifyHandler('createSuccessed', [instance._createdInMounting.result]);
 
