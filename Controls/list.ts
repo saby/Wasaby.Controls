@@ -21,6 +21,7 @@
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScroll Controls/_list/interface/IVirtualScroll
+ * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @public
@@ -49,6 +50,7 @@
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScroll Controls/_list/interface/IVirtualScroll
+ * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @public
@@ -71,6 +73,7 @@ import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resourc
 
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
+import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
 import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/MoneyChooser');
 import NumberEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/NumberChooser');
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
@@ -120,6 +123,7 @@ export {
 
     GridLayoutUtil,
     EditingTemplate,
+    BaseEditingTemplate,
     MoneyEditingTemplate,
     NumberEditingTemplate,
     ItemActionsHelpers,

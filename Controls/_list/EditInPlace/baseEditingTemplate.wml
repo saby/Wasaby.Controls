@@ -10,7 +10,7 @@
                 controls-EditingTemplateText_style_{{style ? style : 'default'}}
                 {{itemData.isActive && !itemData.isMenuShown ? 'controls-EditingTemplateText_active'}}">
             <div class="controls-EditingTemplateText__inner">
-                <ws:partial template="{{ notEditingTemplate }}" />
+                <ws:partial template="{{ viewTemplate }}" />
             </div>
         </div>
     </ws:else>
