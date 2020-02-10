@@ -186,8 +186,8 @@ const _private = {
 
         const styles = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
         return {
-            top: parseInt(styles.marginTop, 10),
-            left: parseInt(styles.marginLeft, 10)
+            top: parseFloat(styles.marginTop),
+            left: parseFloat(styles.marginLeft)
         };
     },
 
