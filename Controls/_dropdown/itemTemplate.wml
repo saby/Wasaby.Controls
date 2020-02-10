@@ -2,6 +2,6 @@
    <ws:partial
            template="{{content.resolvedTemplate}}"
            scope="{{_options}}"
-           item="{{itemData}}"
+           treeItem="{{itemData.treeItem}}"
    />
 </Controls.Container.Async>

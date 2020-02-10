@@ -1,9 +1,9 @@
 <Controls.popupTemplate:Sticky
         attr:class="controls-Menu__popup_theme-{{_options.theme}}"
-        headingCaption="{{_options.headingCaption}}"
-        headingIcon="{{_options.headingIcon}}"
+        headingCaption="{{_headingCaption}}"
+        headingIcon="{{_headingIcon}}"
         headingIconSize="{{_options.iconSize}}"
-        headerContentTemplate="{{_options.headerTemplate}}"
+        headerContentTemplate="{{_headerTemplate}}"
         footerContentTemplate="{{_options.footerTemplate}}"
         closeButtonVisibility="{{_options.closeButtonVisibility}}">
    <ws:bodyContentTemplate>

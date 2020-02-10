@@ -1,18 +1,18 @@
 <ws:template name="iconTemplate">
-   <ws:if data="{{itemData.item.get('icon') || itemData.iconSpacing}}">
+   <ws:if data="{{item.get('icon') || itemData.iconSpacing}}">
       <ws:partial template="wml!Controls/_menu/Render/iconTemplate" scope="{{_options}}"/>
    </ws:if>
 </ws:template>
 
-<div class="controls-Menu__content {{itemData.item.get('readOnly') ? 'controls-Menu__content-readOnly'}}
+<div class="controls-Menu__content {{item.get('readOnly') ? 'controls-Menu__content-readOnly'}}
                      controls-Menu__content_{{multiLine ? 'multiLine' : 'singleLine'}}_theme-{{_options.theme}}
                      controls-Menu__content_{{additionalTextTemplate ? 'padding'}}_theme-{{_options.theme}}"
-     title="{{itemData.item.get(displayProperty || 'title')}}">
+     title="{{item.get(displayProperty || 'title')}}">
    <ws:if data="{{iconAlign !== 'right'}}">
       <ws:partial template="iconTemplate" iconAlign="left"/>
    </ws:if>
    <div class="controls-Menu__content-wrapper">
-      {{itemData.item.get(displayProperty || 'title')}}
+      {{item.get(displayProperty || 'title')}}
       <ws:if data="{{iconAlign === 'right'}}">
          <ws:partial template="iconTemplate" iconAlign="right" />
       </ws:if>

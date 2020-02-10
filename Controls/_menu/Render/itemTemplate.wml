@@ -1,23 +1,22 @@
 <div attr:class="controls-Menu__row
-                 {{marker !== false && item.isSelected() && (!itemData.multiSelect || itemData.isEmptyItem) ? 'controls-Menu__row_selected_theme-' + _options.theme}}
+                 {{marker !== false && treeItem.isSelected() && (!itemData.multiSelect || itemData.isEmptyItem) ? 'controls-Menu__row_selected_theme-' + _options.theme}}
                  controls-Menu__row_{{multiLine ? 'multiLine' : 'singleLine'}}_theme-{{_options.theme}}">
    <ws:if data="{{(multiSelectTpl || itemData.multiSelectTpl) && itemData.multiSelect}}">
       <ws:partial template="{{multiSelectTpl || itemData.multiSelectTpl}}" scope="{{_options}}" class="{{itemData.isEmptyItem ? 'controls-Menu__row-checkbox_invisible'}}"/>
    </ws:if>
-
    <ws:if data="{{contentTemplate}}">
       <ws:partial template="{{contentTemplate}}"
                   itemData="{{itemData}}"/>
    </ws:if>
 
    <ws:else>
-      <ws:partial template="wml!Controls/_menu/Render/contentTemplate" scope="{{_options}}" />
+      <ws:partial template="wml!Controls/_menu/Render/contentTemplate" scope="{{_options}}" item="{{treeItem.getContents()}}" />
    </ws:else>
-<!--   <ws:if data="{{item.item.has('pinned') && !item.isNode() && !(item.item.get('pinned') === true && item.isRoot())}}">-->
+   <ws:if data="{{_options.allowPin !== false && treeItem.getContents().has('pinned') && !treeItem.isNode() && !(treeItem.getContents().get('pinned') === true && treeItem.isRoot())}}">
       <ws:partial template="wml!Controls/_menu/Render/pinTemplate" scope="{{_options}}"/>
-<!--   </ws:if>-->
+   </ws:if>
 
-   <ws:if data="{{item.isNode()}}">
+   <ws:if data="{{treeItem.isNode()}}">
       <ws:partial template="wml!Controls/_menu/Render/expanderTemplate" scope="{{_options}}"/>
    </ws:if>
 </div>

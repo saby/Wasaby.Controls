@@ -4,6 +4,14 @@ import PopupTemplate = require('wml!Controls/_menu/Popup/popupTemplate');
 class Popup extends Control<IControlOptions> {
     protected _template: TemplateFunction = PopupTemplate;
 
+    protected _beforeMount(options: IControlOptions): void {
+        if (options.showHeader) {
+            this._headerTemplate = options.headerTemplate;
+            this._headingCaption = options.headingCaption;
+            this._headingIcon = options.headingIcon;
+        }
+    }
+
     protected _sendResult(event, action, data): void {
         this._notify('sendResult', [action, data], {bubbling: true});
     }

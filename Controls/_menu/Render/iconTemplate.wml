@@ -1,6 +1,6 @@
-<div class="{{itemData.item.get(displayProperty || 'title') ?
+<div class="{{item.get(displayProperty || 'title') ?
                   'controls-Menu__icon controls-Menu__icon-' + iconAlign + '_theme-' + _options.theme}}
-                  controls-icon_style-{{(itemData.item.get('readOnly') ? 'readonly' : (itemData.item.get('iconStyle') || 'secondary')) + '_theme-' + _options.theme}}
+                  controls-icon_style-{{(item.get('readOnly') ? 'readonly' : (item.get('iconStyle') || 'secondary')) + '_theme-' + _options.theme}}
                   controls-icon_size-{{itemData.iconSize || iconSpacing}}_theme-{{_options.theme}}
                   controls-icon
-                  {{itemData.item.get('icon')}}"></div>
+                  {{item.get('icon')}}"></div>
