@@ -70,7 +70,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
         } else {
             classes += ' controls-Menu__defaultItem_theme-' + this._options.theme;
         }
-        if (item.get('pinned') === true && !treeItem.isRoot()) {
+        if (item.get('pinned') === true && treeItem.getParent().getContents() === null) {
             classes += ' controls-Menu__row_pinned';
         }
         if (this._options.listModel.getLast() !== treeItem) {

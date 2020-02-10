@@ -13,7 +13,10 @@
       <ws:partial template="wml!Controls/_menu/Render/contentTemplate" scope="{{_options}}" item="{{treeItem.getContents()}}" />
    </ws:else>
 
-   <ws:if data="{{_options.allowPin !== false && treeItem.getContents().has('pinned') && !treeItem.isNode() && !(treeItem.getContents().get('pinned') === true && treeItem.isRoot())}}">
+   <ws:if data="{{_options.allowPin !== false &&
+                  treeItem.getContents().has('pinned') &&
+                  !treeItem.isNode() &&
+                  !(treeItem.getContents().get('pinned') === true && treeItem.getParent().getContents() !== null)}}">
       <ws:partial template="wml!Controls/_menu/Render/pinTemplate" scope="{{_options}}"/>
    </ws:if>
 
@@ -21,6 +24,3 @@
       <ws:partial template="wml!Controls/_menu/Render/expanderTemplate" scope="{{_options}}"/>
    </ws:if>
 </div>
-<ws:if data="{{itemData.hasSeparator}}">
-   <div class="controls-DropdownList__group_separator theme_{{_options.theme}}"></div>
-</ws:if>
