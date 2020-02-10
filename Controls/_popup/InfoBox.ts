@@ -33,7 +33,7 @@ interface IInfoBoxTouchContext {
 
 class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
     readonly '[Controls/_popup/interface/IInfoBox]': boolean;
-
+    static _theme: string[] = ['Controls/popup'];
     _template: TemplateFunction = template;
     _isNewEnvironment: Function = InfoBoxOpener.isNewEnvironment;
     _openId: number;
