@@ -32,7 +32,7 @@ describe('Controls/_list/ScrollContainer', () => {
             assert.isTrue(instance.__scrollRegistered);
         });
     });
-    describe('_beforeUpdate', () => {
+    describe('_afterUpdate', () => {
         const instance = new ScrollController({});
         it('register and unregister scroll', () => {
             instance._children = {
@@ -41,9 +41,11 @@ describe('Controls/_list/ScrollContainer', () => {
                     startRegister(): void { return; }
                 }
             };
-            instance._beforeUpdate({observeScroll: true});
+            instance.saveOptions({observeScroll: true});
+            instance._afterUpdate();
             assert.isTrue(instance.scrollRegistered, 'scroll must be registred');
-            instance._beforeUpdate({observeScroll: false});
+            instance.saveOptions({observeScroll: false});
+            instance._afterUpdate();
             assert.isFalse(instance.scrollRegistered, 'scroll must be not registred');
         });
     });
