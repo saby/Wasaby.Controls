@@ -33,6 +33,10 @@ class StickyTemplate extends Control<IPopupTemplateBaseOptions> implements IPopu
         this._notify('close', [], {bubbling: true});
     }
 
+    protected _headerClick(): void {
+        this._notify('headerClick');
+    }
+
     private _getTheme(): string {
         return ManagerController.getPopupHeaderTheme();
     }

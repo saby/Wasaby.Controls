@@ -18,7 +18,6 @@
               headingIcon="{{_options.headingIcon}}"
               headingIconSize="{{_options.headingIconSize}}"
               navigation="{{_options.navigation}}"
-              filter="{{_options.filter}}"
               keyProperty="{{_options.keyProperty}}"
               displayProperty="{{_options.displayProperty}}"
               parentProperty="{{_options.parentProperty}}"

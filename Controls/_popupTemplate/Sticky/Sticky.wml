@@ -4,7 +4,9 @@
                     scope="{{_options}}"
                     close="{{close}}"
                     theme="{{_headerTheme}}"
-                    stickyOptions="{{_options}}"/>
+                    stickyOptions="{{_options}}"
+                    on:click="_headerClick()"
+        />
     </ws:if>
     <ws:else>
        <ws:if data="{{_options.closeButtonVisibility}}">
