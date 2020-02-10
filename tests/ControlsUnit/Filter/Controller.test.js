@@ -906,10 +906,10 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       it('updateFilterHistory', function(done) {
          if (Env.constants.isServerSide) { return done(); }
          let fastFilterItems = [],
-            filterButtonItems = [];
+            filterButtonItems = [{name: 'testName', value: 'testValue'}];
          Filter.updateFilterHistory({historyId: 'TEST_HISTORY_ID', filterButtonItems: filterButtonItems, fastFilterItems: fastFilterItems});
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
-            assert.deepEqual(items, {});
+            assert.deepEqual(items, [{name: 'testName', value: 'testValue'}]);
             done();
          });
 

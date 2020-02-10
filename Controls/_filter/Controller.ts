@@ -160,12 +160,14 @@ const _private = {
                $_addFromData: true
             };
 
-            function update() {
-                let historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
-                self._notify('historySave', [historyData, filterButtonItems]);
+             function update() {
+                 let historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
 
-               historyUtils.getHistorySource({historyId: historyId}).update(historyData, meta);
-            }
+                 // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
+                 self?._notify('historySave', [historyData, filterButtonItems]);
+
+                 historyUtils.getHistorySource({historyId: historyId}).update(historyData, meta);
+             }
 
             if (!historyUtils.getHistorySource({historyId: historyId})._history) {
                // Getting history before updating if it hasn’t already done
