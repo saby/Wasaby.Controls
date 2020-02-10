@@ -6,7 +6,7 @@ import {RecordSet, List} from 'Types/collection';
 import {ICrud} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
-import {Tree, TreeItem, SelectionController} from 'Controls/display';
+import {Tree, TreeItem, GroupItem, SelectionController} from 'Controls/display';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -27,12 +27,23 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     private _itemsCount: number;
     private _handleCurrentItemTimeout: number = null;
     private _isMouseInOpenedItemArea: boolean = false;
+    private _expandedItemsFilter: Function;
+    private _additionalFilter: Function;
+    private _item: Model;
 
     // @ts-ignore
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
+        this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
+        this._additionalFilter = this.additionalFilter.bind(this, options);
+
         if (options.source) {
             return this.loadItems(options);
         }
+    }
+
+    protected _afterMount(newOptions: IMenuOptions): void {
+        // удалится по https://online.sbis.ru/opendoc.html?guid=48f59429-2ba5-431f-a895-3d11913c3d01
+        this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
     }
 
     protected _beforeUpdate(newOptions: IMenuOptions): void {
@@ -126,15 +137,16 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _toggleExpanded(event: SyntheticEvent<MouseEvent>, value: boolean): void {
+        this._expandValue = value;
         if (value) {
             if (this._expandedItems) {
-                this._listModel.setFilter();
+                this._listModel.removeFilter(this._expandedItemsFilter);
             } else {
                 this._itemsCount = this._listModel.getCount();
                 this.loadExpandedItems(this._options);
             }
         } else {
-            this._listModel.setFilter(this.expandedItemsFilter.bind(this));
+            this._listModel.addFilter(this._expandedItemsFilter);
         }
     }
 
@@ -316,14 +328,38 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             keyProperty: options.keyProperty,
             nodeProperty: options.nodeProperty,
             parentProperty: options.parentProperty,
-            root: options.root
+            root: options.root,
+            filter: this.displayFilter.bind(this, options)
         });
         if (options.groupProperty) {
             listModel.setGroup(this.groupMethod.bind(this));
         } else if (options.groupingKeyCallback) {
             listModel.setGroup(options.groupingKeyCallback);
         }
+        if (options.additionalProperty) {
+            listModel.addFilter(this._additionalFilter);
+        }
         return listModel;
+    }
+
+    private isHistoryItem(item: Model): boolean {
+        return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
+    }
+
+    private additionalFilter(options: IMenuOptions, item: Model) {
+        return this._expandValue || (!item.get || !item.get(options.additionalProperty) || this.isHistoryItem(item));
+    }
+
+    private displayFilter(options: IMenuOptions, item: Model, index, treeItem): boolean {
+        let isVisible = true;
+        if (treeItem instanceof GroupItem) {
+            let collection = treeItem.getOwner();
+            let itemsGroupCount = collection.getGroupItems(item).length;
+            isVisible = itemsGroupCount !== 0 && itemsGroupCount !== collection.getCount(true);
+        } else if (options.parentProperty) {
+            isVisible = item.get(options.parentProperty) === options.root;
+        }
+        return isVisible;
     }
 
     private groupMethod(item: Model): string {
@@ -363,7 +399,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return this.getSourceController(options).load(filter).addCallback((items) => {
             self.createViewModel(items, options);
             self._moreButtonVisible = options.selectorTemplate && self.getSourceController(options).hasMoreData('down');
-            self._expandButtonVisible = self._expandButtonVisible || self.getSourceController(options).hasMoreData('down');
+            self._expandButtonVisible = self.getSourceController(options).hasMoreData('down') || options.additionalProperty;
             return items;
         });
     }
@@ -396,7 +432,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.bodyContentTemplate = 'Controls/_menu/Control';
         templateOptions.footerTemplate = this._options.nodeFooterTemplate;
         templateOptions.closeButtonVisibility = false;
-        delete templateOptions.headingCaption;
+        templateOptions.showHeader = false;
         return templateOptions;
     }
 
