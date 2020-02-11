@@ -16,13 +16,14 @@ define(
             { key: 3, title: 'Великобритания' }
          ];
 
-         let getListModel = function(items) {
+         let getListModel = function(items, nodeProperty) {
             return new display.Tree({
                collection: new collection.RecordSet({
                   rawData: Clone(items || defaultItems),
                   keyProperty: 'key'
                }),
-               keyProperty: 'key'
+               keyProperty: 'key',
+               nodeProperty
             });
          };
 
@@ -57,7 +58,8 @@ define(
          it('getLeftSpacing', function() {
             let menuRender = getRender();
             let renderOptions = {
-               listModel: getListModel()
+               listModel: getListModel(),
+               itemPadding: {}
             };
             let leftSpacing = menuRender.getLeftSpacing(renderOptions);
             assert.equal(leftSpacing, 'l');
@@ -66,7 +68,7 @@ define(
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
             assert.equal(leftSpacing, 'null');
 
-            renderOptions.leftSpacing = 'xs';
+            renderOptions.itemPadding.left = 'xs';
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
             assert.equal(leftSpacing, 'xs');
          });
@@ -74,19 +76,19 @@ define(
          it('getRightSpacing', function() {
             let menuRender = getRender();
             let renderOptions = {
-               listModel: getListModel()
+               listModel: getListModel(),
+               itemPadding: {}
             };
             let rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'l');
 
-            renderOptions.nodeProperty = 'node';
             let items = Clone(defaultItems);
             items[0].node = true;
-            renderOptions.listModel = getListModel(items);
+            renderOptions.listModel = getListModel(items, 'node');
             rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'menu-expander');
 
-            renderOptions.rightSpacing = 'xs';
+            renderOptions.itemPadding.right = 'xs';
             rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'xs');
          });
@@ -116,7 +118,7 @@ define(
          });
 
 
-         it('getIconSpacing', function() {
+         it('getIconPadding', function() {
             let menuRender = getRender();
             let iconItems = [
                { key: 0, title: 'все страны' },
@@ -128,8 +130,8 @@ define(
                listModel: getListModel(iconItems),
                iconSize: 'm'
             };
-            let iconSpacing = menuRender.getIconSpacing(renderOptions);
-            assert.equal(iconSpacing, 'm');
+            let iconPadding = menuRender.getIconPadding(renderOptions);
+            assert.equal(iconPadding, 'm');
 
             iconItems = [
                { key: 0, title: 'все страны', node: true },
@@ -140,8 +142,8 @@ define(
             renderOptions.listModel = getListModel(iconItems);
             renderOptions.parentProperty = 'parent';
             renderOptions.nodeProperty = 'node';
-            iconSpacing = menuRender.getIconSpacing(renderOptions);
-            assert.equal(iconSpacing, '');
+            iconPadding = menuRender.getIconPadding(renderOptions);
+            assert.equal(iconPadding, '');
          });
 
       });

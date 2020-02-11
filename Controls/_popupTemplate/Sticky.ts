@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Sticky/Sticky';
 import {Controller as ManagerController} from 'Controls/popup';
-import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from "./interface/IPopupTemplateBase";
+import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from './interface/IPopupTemplateBase';
 
 /**
  * Базовый шаблон для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ прилипающих блоков}.
@@ -33,8 +33,8 @@ class StickyTemplate extends Control<IPopupTemplateBaseOptions> implements IPopu
         this._notify('close', [], {bubbling: true});
     }
 
-    protected _headerClick(): void {
-        this._notify('headerClick');
+    protected _proxyEvent(event, eventName): void {
+        this._notify(eventName, [event]);
     }
 
     private _getTheme(): string {

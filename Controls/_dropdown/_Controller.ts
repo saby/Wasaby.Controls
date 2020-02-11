@@ -91,12 +91,10 @@ var _private = {
                     options.keyProperty,
                     options.selectedItemsChangedCallback);
                 return items;
+             }).addErrback((error) => {
+                _private.loadError(self, error);
              });
-          },
-          (error) => {
-             _private.loadError(self, error);
-          }
-      );
+          });
    },
 
    getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
@@ -209,7 +207,7 @@ var _private = {
             _private.closeDropdownList(this);
             break;
          case 'footerClick':
-            this._notify('footerClick', [sourceEvent]);
+            this._notify('footerClick', [data]);
       }
    },
 
@@ -499,7 +497,7 @@ var _Controller = Control.extend({
       }
    },
 
-   _onSelectorTemplateResult: function(selectedItems) {
+   _onSelectorTemplateResult: function(event, selectedItems) {
       let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
       this._onResult(event, 'selectorResult', result);
    },
@@ -532,12 +530,20 @@ var _Controller = Control.extend({
          this._menuSource = new PrefetchProxy({
             target: this._source,
             data: {
-               query: items
+               query: items.clone()
             }
          });
       }
       this._items = items;
       this._depsDeferred = null;
+   },
+
+   _hasHistory(): boolean {
+      return _private.hasHistory(this._options);
+   },
+
+   _deactivated(): void {
+      this.closeMenu();
    },
 
    openMenu(popupOptions?: object): void {
@@ -552,7 +558,8 @@ var _Controller = Control.extend({
 _Controller.getDefaultOptions = function getDefaultOptions() {
    return {
       filter: {},
-      selectedKeys: []
+      selectedKeys: [],
+      allowPin: true
    };
 };
 

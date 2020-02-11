@@ -128,6 +128,8 @@ define(
             expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showHeader = false;
+            expectedOptions.headerTemplate = null;
+            expectedOptions.additionalProperty = null;
 
             let menuControl = getMenu();
             menuControl._listModel = getListModel();

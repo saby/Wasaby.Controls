@@ -1,6 +1,5 @@
 <Controls.listRender:Render
         listModel="{{_options.listModel}}"
-        groupTemplate="{{_options.groupTemplate}}"
         multiselectVisibility="{{_options.multiSelect ? 'onhover' : 'hidden'}}"
         multiSelectTpl="{{_multiSelectTpl}}"
         footerTemplate="{{_options.footerTemplate}}"
@@ -8,14 +7,19 @@
         on:itemMouseEnter="_proxyEvent('itemMouseEnter')"
         on:itemClick="_proxyEvent('itemClick')">
    <ws:itemTemplate>
-      <ws:partial template="{{_options.itemTemplate}}"
+      <ws:partial template="{{itemTemplate.item.getContents().get(_options.itemTemplateProperty) || _options.itemTemplate}}"
                   attr:class="{{_getClassList(itemTemplate.item)}}"
                   itemData="{{_getItemData(itemTemplate.item)}}"
                   treeItem="{{itemTemplate.item}}"
                   scope="{{_options}}"
       />
-      <ws:if data="{{itemTemplate.item.getContents().get('HistoryId') && !itemTemplate.item.getOwner().getNext(itemTemplate.item).getContents().get('HistoryId')}}">
-         <div class="controls-DropdownList__group_separator theme_{{_options.theme}}" attr:key="{{itemTemplate.item.getUid()}} + '_separator'"></div>
+      <ws:if data="{{_options.allowPin && _isVisibleSeparator(itemTemplate.item)}}">
+         <div class="controls-Menu__group_separator_theme-{{_options.theme}}" attr:key="{{itemTemplate.item.getUid()}} + '_separator'"></div>
       </ws:if>
    </ws:itemTemplate>
+   <ws:groupTemplate>
+      <ws:if data="{{_options.groupTemplate && _isGroupVisible(groupTemplate.item)}}">
+         <ws:partial template="{{_options.groupTemplate}}" />
+      </ws:if>
+   </ws:groupTemplate>
 </Controls.listRender:Render>
