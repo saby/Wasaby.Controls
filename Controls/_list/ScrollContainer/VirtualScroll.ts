@@ -36,7 +36,7 @@ export default class VirtualScroll {
         let segmentSize: number = options.segmentSize;
 
         if (!segmentSize) {
-            segmentSize = Math.ceil(pageSize / 4);
+            segmentSize = pageSize ? Math.ceil(pageSize / 4) : 0;
         }
 
         this._options = {...this._options, ...{segmentSize, pageSize}};
@@ -124,7 +124,7 @@ export default class VirtualScroll {
             this._updateStartIndex(this._range.start + count);
         }
 
-        return this._setRange(this._shiftRangeBySegment(direction, count));
+        return this._setRange(this._shiftRangeBySegment(direction, this.rangeChanged ? 0 : count));
     }
 
     /**
@@ -136,7 +136,7 @@ export default class VirtualScroll {
         const direction = removeIndex < this._range.start ? 'up' : 'down';
         this._removeItemHeights(removeIndex, count);
 
-        return this._setRange(this._shiftRangeBySegment(direction, count));
+        return this._setRange(this._shiftRangeBySegment(direction, this.rangeChanged ? 0 : count));
     }
 
     /**
@@ -325,7 +325,7 @@ export default class VirtualScroll {
             }
         }
 
-        for (let i = 0; i < this._range.stop - this._range.start; i++) {
+        for (let i = 0, len = Math.min(container.children.length, this._range.stop - this._range.start); i < len; i++) {
             const itemHeight = container.children[startChildrenIndex + i].getBoundingClientRect().height;
 
             this._itemsHeightData.itemsHeights[this._range.start + i] = itemHeight;

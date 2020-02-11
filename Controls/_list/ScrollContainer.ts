@@ -182,7 +182,7 @@ export default class ScrollContainer extends Control<IOptions> {
     scrollToItem(key: string): Promise<void> {
         const index = this._options.collection.getIndexByKey(key);
 
-        if (index) {
+        if (index !== -1) {
             return new Promise((resolve) => {
                 if (this._virtualScroll.canScrollToItem(index)) {
                     this._scrollToPosition(this._virtualScroll.getItemOffset(index));
@@ -511,7 +511,7 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {
-        require('Controls/display');
+        displayLib = require('Controls/display');
 
         switch (mode) {
             case 'hide':

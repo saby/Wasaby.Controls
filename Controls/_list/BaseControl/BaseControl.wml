@@ -94,7 +94,6 @@
             on:triggerVisibilityChanged="triggerVisibilityChangedHandler()"
             on:triggerOffsetChanged="triggerOffsetChangedHandler()"
             on:activeElementChanged="_notifyHandler('activeElementChanged')"
-            on:viewResize="_viewResize()"
             on:changeIndicatorState="changeIndicatorStateHandler()"
             collection="{{_listViewModel}}"
             scope="{{_options}}">
@@ -162,6 +161,7 @@
                 on:itemMouseMove="_itemMouseMove()"
                 on:itemMouseLeave="_itemMouseLeave()"
                 on:hoveredItemChanged="_onHoveredItemChanged()"
+                on:controlResize="_viewResize()"
                 on:itemSwipe="_listSwipe()"
         >
             <ws:viewTemplate>
