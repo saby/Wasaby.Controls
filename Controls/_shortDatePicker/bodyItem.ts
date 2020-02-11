@@ -1,7 +1,7 @@
 import BaseControl = require('Core/Control');
 import {date as formatDate} from 'Types/formatter';
 import dateUtils = require('Controls/Utils/Date');
-import 'css!theme?Controls/_shortDatePicker/DateLitePopup';
+import 'css!theme?Controls/shortDatePicker';
 import itemMonthsTmpl = require('wml!Controls/_shortDatePicker/ItemMonths');
 import MonthCaption = require('wml!Controls/_shortDatePicker/MonthCaption');
 import itemFullTmpl = require('wml!Controls/_shortDatePicker/ItemFull');

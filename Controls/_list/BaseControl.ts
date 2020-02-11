@@ -471,7 +471,8 @@ var _private = {
             if (
                 self._loadingState === 'all' ||
                 !_private.needScrollCalculation(navigation) ||
-                !self._loadTriggerVisibility[self._loadingState]
+                !self._loadTriggerVisibility[self._loadingState] ||
+                !self._sourceController.hasMoreData(self._loadingState)
             ) {
                 _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
             } else {
@@ -677,7 +678,6 @@ var _private = {
                self._options.dataLoadErrback,
                filter
             );
-            self._hasLoadedData = true;
         }
     },
 
@@ -791,6 +791,7 @@ var _private = {
     onScrollHide: function(self) {
         if (self._pagingVisible) {
             self._pagingVisible = false;
+            self._cachedPagingState = false;
             self._forceUpdate();
         }
         self._isScrollShown = false;
@@ -896,13 +897,12 @@ var _private = {
                     const hasMoreDataDown = self._sourceController.hasMoreData('down');
 
                     hasMoreData = {
-                        up: hasMoreDataUp || self._hasLoadedData,
-                        down: (hasMoreDataDown || self._hasLoadedData) && _private.allowLoadMoreByPortionedSearch(self)
+                        up: hasMoreDataUp,
+                        down: hasMoreDataDown && _private.allowLoadMoreByPortionedSearch(self)
                     };
                 }
                 self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
             }
-            self._hasLoadedData = false;
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
@@ -1646,7 +1646,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _resetScrollAfterReload: false,
     _scrollPageLocked: false,
-    _hasLoadedData: false,
 
     _itemReloaded: false,
     _itemActionsInitialized: false,
