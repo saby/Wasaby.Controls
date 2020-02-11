@@ -422,7 +422,9 @@ export default class VirtualScroll {
         const start = Math.max(0, index);
         const stop = Math.min(this._itemsCount, start + this._options.pageSize);
 
-        this._setRange({start, stop});
+        this._range = {
+            start, stop
+        };
     }
 
     private _insertItemHeights(insertIndex: number, length: number): void {
