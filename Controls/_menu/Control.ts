@@ -14,6 +14,19 @@ import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 
+/**
+ * Контрол меню.
+ * @control
+ * @public
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/_interface/IIconSize
+ * @mixes Controls/_dropdown/interface/IDropdownSource
+ * @mixes Controls/_interface/INavigation
+ * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @category Popup
+ */
+
 class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     protected _template: TemplateFunction = ViewTemplate;
     protected _listModel: Tree;

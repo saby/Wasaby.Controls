@@ -1,6 +1,22 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import PopupTemplate = require('wml!Controls/_menu/Popup/template');
 
+/**
+ * Базовый шаблон для {@link Controls/menu:Control}, отображаемого в прилипающем блоке.
+ * @class Controls/_menu/Popup
+ * @extends Controls/_popupTemplate/Sticky
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/_interface/IIconSize
+ * @mixes Controls/_dropdown/interface/IDropdownSource
+ * @mixes Controls/_interface/INavigation
+ * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @control
+ * @public
+ * @category Popup
+ * @author Герасимов А.м.
+ */
+
 class Popup extends Control<IControlOptions> {
     protected _template: TemplateFunction = PopupTemplate;
     protected _headerTemplate: TemplateFunction;
