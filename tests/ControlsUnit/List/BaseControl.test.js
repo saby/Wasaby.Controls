@@ -1728,6 +1728,7 @@ define([
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
+            assert.isFalse(ctrl._cachedPagingState, 'Wrong state _cachedPagingState after scrollHide');
 
             lists.BaseControl._private.handleListScroll(ctrl, {
                scrollTop: 200,
