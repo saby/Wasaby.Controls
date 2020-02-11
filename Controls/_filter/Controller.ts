@@ -97,7 +97,11 @@ const _private = {
             }
 
             if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
-                minimizedItem.textValue = getPropValue(item, 'textValue');
+                if (isEqual(value, getPropValue(item, 'resetValue'))) {
+                    minimizedItem.textValue = '';
+                } else {
+                    minimizedItem.textValue = getPropValue(item, 'textValue');
+                }
             }
 
             if (getPropValue(item, 'id')) {
@@ -164,7 +168,7 @@ const _private = {
                  let historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
 
                  // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
-                 self?._notify('historySave', [historyData, filterButtonItems]);
+                 self._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
 
                  historyUtils.getHistorySource({historyId: historyId}).update(historyData, meta);
              }

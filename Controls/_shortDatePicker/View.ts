@@ -8,7 +8,7 @@ import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_shortDatePicker/DateLitePopup');
 import listTmpl = require('wml!Controls/_shortDatePicker/List');
 import ItemWrapper = require('wml!Controls/_shortDatePicker/ItemWrapper');
-import 'css!theme?Controls/_shortDatePicker/DateLitePopup';
+import 'css!theme?Controls/shortDatePicker';
 import {date as formatDate} from 'Types/formatter';
 import monthTmpl = require('wml!Controls/_shortDatePicker/monthTemplate');
 import {Logger} from 'UI/Utils';
