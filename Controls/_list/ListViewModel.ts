@@ -10,6 +10,7 @@ import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
 import { CssClassList } from "../Utils/CssClassList";
+import {Logger} from 'UI/Utils';
 
 /**
  *
@@ -228,8 +229,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemsModelCurrent;
     },
 
-    _calcCursorClasses: function(clickable) {
-        return ` controls-ListView__itemV ${clickable === false ? 'controls-ListView__itemV_cursor-default' : 'controls-ListView__itemV_cursor-pointer'}`;
+    _calcCursorClasses: function(clickable, cursor) {
+        const cursorStyle = cursor || (clickable === false ? 'default' : 'pointer');
+        if (typeof clickable !== 'undefined') {
+            Logger.error('Controls/list:BaseItemTemplate', 'Option "clickable" is deprecated and will be removed in 20.3000. Use option "cursor" with value "default".');
+        }
+        return ` controls-ListView__itemV controls-ListView__itemV_cursor-${cursorStyle}`;
     },
 
     _calcItemVersion: function(item, key) {
