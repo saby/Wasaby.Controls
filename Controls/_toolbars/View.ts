@@ -10,7 +10,6 @@ import {IShowType, showType, getMenuItems} from 'Controls/Utils/Toolbar';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
 import {
-    IButtonOptions,
     IHierarchy,
     IHierarchyOptions,
     IIconSize,
@@ -20,6 +19,7 @@ import {
     ISource,
     ISourceOptions
 } from 'Controls/interface';
+import {IButtonOptions} from 'Controls/buttons';
 import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 
 import * as template from 'wml!Controls/_toolbars/View';
@@ -245,7 +245,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
             this._setStateByItems(items);
 
             return items;
-        })
+        });
     }
 
     private _needChangeState(newOptions: IToolbarOptions): boolean {
@@ -310,7 +310,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     protected _itemClickHandler(event: SyntheticEvent<MouseEvent>, item: TItem): void {
         const readOnly: boolean = item.get('readOnly');
 
-        if (readOnly) {
+        if (readOnly || this._options.readOnly) {
             event.stopPropagation();
             return;
         }
@@ -346,8 +346,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     }
 
     protected _showMenu(event: SyntheticEvent<UIEvent>): void {
-        this._notify('menuOpened', [], {bubbling: true});
-        this._openMenu(this._getMenuConfig());
+        if (!this._options.readOnly) {
+            this._notify('menuOpened', [], {bubbling: true});
+            this._openMenu(this._getMenuConfig());
+        }
         /**
          * Stop bubbling of 'click' after opening the menu.
          * Nobody should have to catch the 'click'', if toolbar handled it.
