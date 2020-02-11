@@ -51,7 +51,7 @@ import {Logger} from "UI/Utils";
 
 /**
  * @event Происходит при скроллировании области.
- * @name Controls/_scroll/Container#scroll 
+ * @name Controls/_scroll/Container#scroll
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} scrollTop Смещение контента сверху относительно контейнера.
  */
@@ -410,6 +410,8 @@ var
             Logger.warn('Controls/scroll:Container: Опция shadowVisible устарела, используйте topShadowVisibility и bottomShadowVisibility.', self);
          }
 
+         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+         this._resizeHandler = this._resizeHandler.bind(this);
          this._shadowVisibilityByInnerComponents = {
             top: SHADOW_VISIBILITY.AUTO,
             bottom: SHADOW_VISIBILITY.AUTO
@@ -557,11 +559,9 @@ var
             this._forceUpdate();
          }
 
-          //TODO Compatibility на старых страницах нет Register, который скажет controlResize
-          this._resizeHandler = this._resizeHandler.bind(this);
-          if (!newEnv() && window) {
-              window.addEventListener('resize', this._resizeHandler);
-          }
+         if (!newEnv() && window) {
+            window.addEventListener('resize', this._resizeHandler);
+         }
 
           this._isMounted = true;
       },
