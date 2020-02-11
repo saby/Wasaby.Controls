@@ -28,6 +28,24 @@ define(['Controls/masterDetail'], function (masterDetail) {
          Control._beforeMount(options).then((result) => {
             assert.equal(result, '300px');
             Control.destroy();
+         });
+
+         // width = 0
+         const Control2 = new masterDetail.Base();
+         Control2._getSettings = () => {
+            return Promise.resolve({'2': 0});
+         };
+
+         let options2 = {
+            propStorageId: '2',
+            masterMinWidth: 0,
+            masterWidth: 0,
+            masterMaxWidth: 0
+         };
+
+         Control2._beforeMount(options2).then((result) => {
+            assert.equal(result, '0px');
+            Control.destroy();
             done();
          });
 

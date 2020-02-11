@@ -95,7 +95,7 @@ class Base extends Control<IMasterDetail> {
     protected _updateOffsetDebounced: Function;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
-        this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
+        this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
         this._canResizing = this._isCanResizing(options);
         if (receivedState) {
             this._currentWidth = receivedState;
@@ -124,7 +124,7 @@ class Base extends Control<IMasterDetail> {
     private initCurrentWidth(width: string|number): void {
         if (this._isPercentValue(width)) {
             this._currentWidth = String(width);
-        } else if (width) {
+        } else if (width !== undefined) {
             this._currentWidth = width + 'px';
         }
     }
@@ -156,6 +156,10 @@ class Base extends Control<IMasterDetail> {
     protected _selectedMasterValueChangedHandler(event: Event, value: boolean): void {
         this._selected = value;
         event.stopPropagation();
+    }
+
+    private _updateOffsetDebounced(): void {
+        this._updateOffset(this._options);
     }
 
     private _updateOffset(options: IMasterDetail): void {
