@@ -33,6 +33,11 @@ interface IGridColumn {
     compatibleWidth?: string;
 }
 
+interface IGridItemData {
+    hasMultiSelect: boolean;
+    columns: any[];
+}
+
 interface IColgroupColumn {
     classes: string;
     style: string;
@@ -441,27 +446,26 @@ var
         /**
          * Производит пересчёт групп объединяемых колонок для заголовков (разделителей) записей
          * @param itemData информация о записи
-         * @param columnAlignGroup число колонок в группе (или номер последней колонки)
+         * @param leftSideItemsCount число колонок в группе (или номер последней колонки)
          * @private
          */
-        getColumnAlignGroupStyles(itemData: IGridItemData, columnAlignGroup: number = 0): {
+        getColumnAlignGroupStyles(itemData: IGridItemData, leftSideItemsCount: number = 0): {
             left: string
             right: string
         } {
+            const additionalTerm = (itemData.hasMultiSelect ? 1 : 0);
             const result = {left: '', right: ''};
             const start = 1;
-            const stop = itemData.columns.length + 1; // {Вычисляем номер самой последней колонки}
+            const end = itemData.columns.length + 1;
 
-            if (columnAlignGroup) {
-                // Автоматический расчёт правой части сделан для того, чтобы избежать "дёргания" этого метода
-                // каждый раз при отображении столбца MultiSelect
-                const center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1;
-                const rightStart = itemData.columns.length - columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0);
-                const negativeCenter = columnAlignGroup * -1;
-                result.left = `grid-column: ${start} / ${negativeCenter}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
-                result.right = `grid-column: span ${rightStart}; -ms-grid-column: ${center}; -ms-grid-column-span: ${rightStart};`;
+            if (leftSideItemsCount > 0) {
+                const center = leftSideItemsCount + additionalTerm + 1;
+                result.left = `grid-column: ${start} / ${center - end - 1}; -ms-grid-column: ${start}; -ms-grid-column-span: ${(center - 1)};`;
+                // Расчёт был изменён из-за того, что в случае установки колонки MultiSelect необходимо делать перерасчёт размеров,
+                // но getColumnAlignGroupStyles при добавлении колонки MultiSelect не вызывается
+                result.right = `grid-column: span ${(end - center)} / auto; -ms-grid-column: ${center}; -ms-grid-column-span: ${(end - center)};`;
             } else {
-                result.left = `grid-column: ${start} / ${stop}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stop - 1};`;
+                result.left = `grid-column: ${start} / ${end}; -ms-grid-column: ${start}; -ms-grid-column-span: ${end - 1};`;
             }
             return result;
         },
@@ -1269,7 +1273,9 @@ var
             current.style = this._options.style;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
 
-            current.getColumnAlignGroupStyles = (columnAlignGroup: number) => _private.getColumnAlignGroupStyles(current, columnAlignGroup);
+            current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
+                _private.getColumnAlignGroupStyles(current, columnAlignGroup)
+            );
 
             const superShouldDrawMarker = current.shouldDrawMarker;
             current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
