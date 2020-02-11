@@ -19,7 +19,7 @@ define(
          let getListModel = function(items) {
             return new display.Tree({
                collection: new collection.RecordSet({
-                  rawData: items || defaultItems,
+                  rawData: Clone(items || defaultItems),
                   keyProperty: 'key'
                }),
                keyProperty: 'key'
@@ -91,16 +91,30 @@ define(
             assert.equal(rightSpacing, 'xs');
          });
 
-         it('addEmptyItem', function() {
-            let menuRender = getRender();
-            let renderOptions = {
-               listModel: getListModel(),
-               emptyText: 'Not selected',
-               emptyKey: null
-            };
-            menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
-            assert.equal(renderOptions.listModel.getCollection().getCount(), 5);
+         describe('addEmptyItem', function() {
+            let menuRender, renderOptions;
+            beforeEach(function() {
+               menuRender = getRender();
+               renderOptions = {
+                  listModel: getListModel(),
+                  emptyText: 'Not selected',
+                  emptyKey: null,
+                  keyProperty: 'key',
+                  selectedKeys: []
+               };
+            });
+
+            it('check items count', function() {
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.equal(renderOptions.listModel.getCount(), 5);
+            });
+            it('check selected empty item', function() {
+               renderOptions.selectedKeys = [null];
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
+            });
          });
+
 
          it('getIconSpacing', function() {
             let menuRender = getRender();

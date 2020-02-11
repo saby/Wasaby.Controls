@@ -270,8 +270,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
                   itemPadding: newOptions.itemPadding,
                   hasClose: newOptions.showClose,
                   iconSize: newOptions.iconSize,
-                  hasIconPin: newOptions.hasIconPin,
-                  theme: newOptions.theme
+                  hasIconPin: newOptions.hasIconPin
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();

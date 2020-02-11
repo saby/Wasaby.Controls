@@ -1,6 +1,6 @@
 /**
  * Библиотека меню
- * @library Controls/Menu
+ * @library Controls/menu
  * @public
  * @author Крайнов Д.О.
  */

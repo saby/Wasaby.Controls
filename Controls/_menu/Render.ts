@@ -45,11 +45,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             multiSelectTpl,
             getPropValue: ItemsUtil.getPropertyValue,
             isEmptyItem: this._isEmptyItem(item),
-            isSelected: item.isSelected.bind(item),
-            isNode: item.isNode.bind(item),
-            isSwiped: item.isSwiped.bind(item),
-            isRoot: item.isRoot.bind(item),
-            hasPinned: item.getContents().has('pinned')
+            isSelected: item.isSelected.bind(item)
         };
     }
 
