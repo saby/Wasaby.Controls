@@ -39,9 +39,9 @@ const correctTopLevelDomainNames = [
 const protocolLinkPrefixPattern = `(?:${protocolNames.join('|')})`.replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`);
 const simpleLinkPrefixPattern = '([\\w\\-]+(?:\\.[a-zA-Z]+)*\\.([a-zA-Z]+)(?::[0-9]+)?)';
 const linkPrefixPattern = `(?:${protocolLinkPrefixPattern}|${simpleLinkPrefixPattern})`;
-const linkPattern = `(${linkPrefixPattern}(?:[^\\s()]*))`;
-const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]+@[^\\s@()]+\\.([\\wа-яёА-ЯЁ]+))';
-const endingPattern = '([^.,:\\s()])';
+const linkPattern = `(${linkPrefixPattern}(?:[^\\s()\\ud800-\\udfff]*))`;
+const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]+@[^\\s@()\\ud800-\\udfff]+\\.([\\wа-яёА-ЯЁ]+))';
+const endingPattern = '([^.,:\\s()\\ud800-\\udfff])';
 const characterRegExp = /[\wа-яёА-ЯЁ]/;
 const linkParseRegExp = new RegExp(`(?:(?:${emailPattern}|${linkPattern})${endingPattern})|(.|\\s)`, 'g');
 
@@ -384,7 +384,8 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
 
             let nodeToPush: any[]|string;
             if (link) {
-                if (link === simpleLinkPrefix) {
+                const isEndingPartOfDomain = characterRegExp.test(ending) && link === simpleLinkPrefix;
+                if (isEndingPartOfDomain) {
                     simpleLinkDomain += ending;
                 }
                 const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
@@ -394,7 +395,7 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
                     (simpleLinkPrefix ? 'http://' : '') + link,
                     link
                 );
-            } else if(email) {
+            } else if (email) {
                 const isEndingPartOfEmail = characterRegExp.test(ending);
                 if (isEndingPartOfEmail) {
                     emailDomain += ending;
