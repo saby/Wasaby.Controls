@@ -1289,6 +1289,21 @@ define([
             ]];
             assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
+
+         it('need decorate uncoded href', function() {
+            var href = 'https://pre-test-online.sbis.ru/call/user/любитель_взг/';
+            var parentNode = ['div', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: decodeURI(href),
+                  target: '_blank'
+               },
+               href
+            ]];
+            assert.ok(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+
          it('need decorate with capital letters in protocol', function() {
             var parentNode = ['div', ['a',
                {
