@@ -91,24 +91,25 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         let instance: controller;
 
         beforeEach(() => {
-            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 600});
+            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
+            instance.resetRange(0, 5);
             // @ts-ignore
-            instance.resetRange(0, 10, {itemsHeights: [60, 60, 60, 60, 60, 60, 60, 60, 60, 60]});
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
         });
 
         it('at begining', () => {
-            instance.updateItemsCount(12);
-            assert.deepEqual({range: {start: 2, stop: 7}, placeholders: {top: 60, bottom: 300}},
+            instance.updateItemsCount(7);
+            assert.deepEqual({range: {start: 2, stop: 7}, placeholders: {top: 60, bottom: 0}},
                 instance.insertItems(0, 2));
         });
         it('at middle', () => {
-            instance.updateItemsCount(12);
-            assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 300}},
+            instance.updateItemsCount(7);
+            assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 0}},
                 instance.insertItems(5, 2));
         });
         it('at ending', () => {
-            instance.updateItemsCount(11);
-            assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 360}},
+            instance.updateItemsCount(6);
+            assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 60}},
                 instance.insertItems(3, 1));
         });
     });
@@ -116,27 +117,29 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         let instance: controller;
 
         beforeEach(() => {
-            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 600});
-            instance.resetRange(0, 10, {itemsHeights: [60, 60, 60, 60, 60, 60, 60, 60, 60, 60]});
+            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
+            instance.resetRange(0, 5);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
         });
 
         it('at begining', () => {
-            instance.updateItemsCount(9);
+            instance.updateItemsCount(4);
 
-            assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 240}},
+            assert.deepEqual({range: {start: 0, stop: 4}, placeholders: {top: 0, bottom: 0}},
                 instance.removeItems(0, 1));
         });
         it('at middle', () => {
-            instance.updateItemsCount(9);
+            instance.updateItemsCount(4);
 
-            assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 240}},
-                instance.removeItems(3, 1));
+            assert.deepEqual({range: {start: 0, stop: 4}, placeholders: {top: 0, bottom: 0}},
+                instance.removeItems(2, 1));
         });
         it('at ending', () => {
-            instance.updateItemsCount(9);
+            instance.updateItemsCount(4);
 
-            assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 240}},
-                instance.removeItems(5, 1));
+            assert.deepEqual({range: {start: 0, stop: 4}, placeholders: {top: 0, bottom: 0}},
+                instance.removeItems(3, 1));
         });
     });
     describe('.shiftRange', () => {
