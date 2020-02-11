@@ -228,6 +228,7 @@ var _private = {
       self._onClose = function(event, args) {
          self._isOpened = false;
          self._notify('dropDownClose');
+         self._setItems(self._items);
          if (typeof (options.close) === 'function') {
             options.close(args);
          }
