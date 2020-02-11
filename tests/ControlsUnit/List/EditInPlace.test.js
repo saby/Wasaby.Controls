@@ -212,6 +212,7 @@ define([
                item: listModel.at(0).getContents()
             });
             assert.isTrue(result.isSuccessful());
+            assert.isNull(eip._pendingDeferred);
          });
 
          it('Without handler', function() {
