@@ -335,21 +335,21 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
 
       if (this._searchController) {
+         const isNeedAbortSearch = _private.isNeedAbortSearchOnOptionsChanged(currentOptions, this._dataOptions) ||
+             _private.isNeedAbortSearchOnOptionsChanged(this._options, newOptions);
          if (filter) {
             this._searchController.setFilter(clone(filter));
          }
 
-         if (_private.isNeedAbortSearchOnOptionsChanged(currentOptions, this._dataOptions) ||
-             _private.isNeedAbortSearchOnOptionsChanged(this._options, newOptions)) {
-            if (this._searchValue && !newOptions.searchValue) {
-               this._searchController.abort(true);
-            }
-            _private.setInputSearchValue(this, '');
+         if (isNeedAbortSearch && this._searchValue) {
+            this._searchController.abort(true);
          }
-
          if (_private.isNeedRecreateSearchControllerOnOptionsChanged(currentOptions, this._dataOptions) ||
              _private.isNeedRecreateSearchControllerOnOptionsChanged(this._options, newOptions)) {
             this._searchController = null;
+            if (isNeedAbortSearch) {
+               _private.startSearch(this, this._inputSearchValue);
+            }
          }
 
          if (!isEqual(this._options.sorting, newOptions.sorting)) {
