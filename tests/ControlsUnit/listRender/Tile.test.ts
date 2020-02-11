@@ -360,7 +360,7 @@ describe('Controls/_listRender/Tile', () => {
             cfg.listModel.getItemContainerPositionInDocument = () => {
                 return false;
             };
-            cfg.tileScalingMode = 'inside';
+            cfg.listModel.getTileScalingMode = () => 'inside';
 
             const tile = new Tile(cfg);
             tile.saveOptions(cfg);
@@ -377,7 +377,7 @@ describe('Controls/_listRender/Tile', () => {
         });
 
         it('none scaling mode', () => {
-            cfg.tileScalingMode = 'none';
+            cfg.listModel.getTileScalingMode = () => 'none';
 
             const tile = new Tile(cfg);
             tile.saveOptions(cfg);
@@ -400,7 +400,7 @@ describe('Controls/_listRender/Tile', () => {
             cfg.listModel.getItemContainerStartPosition = () => {
                 return { _startPosition: 1 };
             };
-            cfg.tileScalingMode = 'inside';
+            cfg.listModel.getTileScalingMode = () => 'inside';
 
             const tile = new Tile(cfg);
             tile.saveOptions(cfg);

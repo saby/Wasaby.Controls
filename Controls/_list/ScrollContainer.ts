@@ -114,6 +114,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _afterMount(): void {
         this.__mounted = true;
+        this.viewSize = this._container.clientHeight;
 
         if (this._options.virtualScrolling) {
             this.virtualScroll.itemsChanged = false;
@@ -137,10 +138,6 @@ export default class ScrollContainer extends Control<IOptions> {
                     this.scrollToItem(options.activeElement);
                 };
             }
-        }
-
-        if (this._options.observeScroll) {
-            this.registerScroll();
         }
 
         if (this.indicatorState) {
@@ -189,6 +186,14 @@ export default class ScrollContainer extends Control<IOptions> {
             this.saveScrollPosition = false;
             this.savedScrollDirection = null;
             this.checkTriggerVisibilityWithTimeout();
+        }
+    }
+
+    protected _afterUpdate(): void {
+        if (this._options.observeScroll) {
+            this.registerScroll();
+        } else {
+            this.scrollRegistered = false;
         }
     }
 
@@ -401,12 +406,12 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private checkTriggerVisibility(): void {
         if (!this.applyScrollTopCallback) {
-            if (this.triggerVisibility.up) {
-                this.updateViewWindow('up');
-            }
-
             if (this.triggerVisibility.down) {
                 this.updateViewWindow('down');
+            }
+
+            if (this.triggerVisibility.up) {
+                this.updateViewWindow('up');
             }
         }
 
@@ -451,7 +456,7 @@ export default class ScrollContainer extends Control<IOptions> {
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (!this.afterRenderCallback && !this.fakeScroll) {
+            if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {

@@ -72,9 +72,6 @@ var _private = {
       if (self._viewMode === 'search') {
          self._searchValue = '';
          self._misspellValue = '';
-         self._viewMode = self._previousViewMode;
-         self._previousViewMode = null;
-
          if (self._options.parentProperty) {
             _private.deleteServiceFilters(filter);
          }
@@ -346,7 +343,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
          if (_private.isNeedAbortSearchOnOptionsChanged(currentOptions, this._dataOptions) ||
              _private.isNeedAbortSearchOnOptionsChanged(this._options, newOptions)) {
-            if (this._searchValue) {
+            if (this._searchValue && !newOptions.searchValue) {
                this._searchController.abort(true);
             }
             _private.setInputSearchValue(this, '');

@@ -8,7 +8,6 @@ import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import 'css!theme?Controls/suggest';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -131,6 +130,7 @@ var _private = {
       //aborting of the search may be caused before the search start, because of the delay before searching
       if (self._loading !== null) {
          self._loading = false;
+         self._forceUpdate();
       }
       if (!error || !error.canceled) {
           return new Promise(function(resolve) {
@@ -599,6 +599,7 @@ SuggestLayout.getDefaultOptions = function() {
 };
 
 // </editor-fold>
+SuggestLayout._theme = ['Controls/suggest'];
 SuggestLayout._private = _private;
 export = SuggestLayout;
 

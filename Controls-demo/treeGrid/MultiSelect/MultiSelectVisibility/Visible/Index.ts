@@ -9,9 +9,12 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;
     private _columns = Gadgets.getGridColumnsForFlat();
-    private _selectedKeys: Array<number> = [];
+    private _selectedKeys: number[] = null;
+    private _excludedKeys: number[] = null;
 
     protected _beforeMount() {
+        this._selectedKeys = [];
+        this._excludedKeys = [];
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: Gadgets.getFlatData()

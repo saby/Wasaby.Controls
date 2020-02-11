@@ -121,8 +121,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._reloadedKeys = {};
     },
     setEditingConfig: function(editingConfig) {
-        this._options.editingConfig = editingConfig;
-        this._nextModelVersion();
+        if (!isEqual(editingConfig, this._options.editingConfig)) {
+            this._options.editingConfig = editingConfig;
+            this._nextModelVersion();
+        }
     },
     setItemPadding: function(itemPadding) {
         this._options.itemPadding = itemPadding;
@@ -169,6 +171,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
+            itemsModelCurrent.virtualScrolling = this._options.virtualScrolling;
         }
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
