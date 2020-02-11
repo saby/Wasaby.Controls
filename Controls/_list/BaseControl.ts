@@ -471,7 +471,8 @@ var _private = {
             if (
                 self._loadingState === 'all' ||
                 !_private.needScrollCalculation(navigation) ||
-                !self._loadTriggerVisibility[self._loadingState]
+                !self._loadTriggerVisibility[self._loadingState] ||
+                !self._sourceController.hasMoreData(self._loadingState)
             ) {
                 _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
             } else {
