@@ -115,6 +115,7 @@ export interface IItemActionsTemplateConfig {
     itemActionsPosition?: string;
     actionAlignment?: string;
     actionCaptionPosition?: 'right'|'bottom'|'none';
+    itemActionsClass?: string;
 }
 
 export interface ISwipeConfig {
