@@ -94,26 +94,31 @@ class Base extends Control<IMasterDetail> {
     protected _containerWidth: number;
     protected _updateOffsetDebounced: Function;
 
-    protected _beforeMount(options: IMasterDetail, context: object, receivedState: number): Promise<number> | void {
+    protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
         this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
         this._canResizing = this._isCanResizing(options);
         if (receivedState) {
-            this._currentWidth = receivedState + 'px';
+            this._currentWidth = receivedState;
         } else if (options.propStorageId) {
             return new Promise((resolve) => {
-                getSettings([options.propStorageId]).then((storage) => {
+                this._getSettings(options).then((storage) => {
                     const width = storage && storage[options.propStorageId];
                     if (width) {
                         this._currentWidth = width + 'px';
+                        this._updateOffset(options);
                     } else {
                         this.initCurrentWidth(options.masterWidth);
                     }
-                    resolve(width);
+                    resolve(this._currentWidth);
                 });
             });
         } else {
             this.initCurrentWidth(options.masterWidth);
         }
+    }
+
+    private _getSettings(options: IMasterDetail): Promise<object> {
+        return getSettings([options.propStorageId]);
     }
 
     private initCurrentWidth(width: string|number): void {
@@ -131,13 +136,21 @@ class Base extends Control<IMasterDetail> {
     }
 
     protected _beforeUpdate(options: IMasterDetail): void {
-        if (options.masterMinWidth !== this._options.masterMinWidth ||
-            options.masterWidth !== this._options.masterWidth ||
-            options.masterMaxWidth !== this._options.masterMaxWidth) {
+        // Если изменилась текущая ширина, то сбросим состояние, иначе работаем с тем, что выставил пользователь
+        if (options.masterWidth !== this._options.masterWidth) {
             this._currentWidth = null;
+        }
+
+        if (this._isSizeOptionsChanged(options, this._options)) {
             this._canResizing = this._isCanResizing(options);
             this._updateOffset(options);
         }
+    }
+
+    private _isSizeOptionsChanged(oldOptions: IMasterDetail, newOptions: IMasterDetail): boolean {
+        return oldOptions.masterMinWidth !== newOptions.masterMinWidth ||
+            oldOptions.masterWidth !== newOptions.masterWidth ||
+            oldOptions.masterMaxWidth !== newOptions.masterMaxWidth;
     }
 
     protected _selectedMasterValueChangedHandler(event: Event, value: boolean): void {
@@ -146,7 +159,9 @@ class Base extends Control<IMasterDetail> {
     }
 
     private _updateOffset(options: IMasterDetail): void {
-        if (options.masterWidth !== undefined && options.masterMaxWidth !== undefined && options.masterMinWidth !== undefined) {
+        if (options.masterWidth !== undefined &&
+            options.masterMaxWidth !== undefined &&
+            options.masterMinWidth !== undefined) {
             let currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
             this._currentWidth = currentWidth + 'px';
             this._maxOffset = this._getOffsetValue(options.masterMaxWidth) - currentWidth;
@@ -198,9 +213,7 @@ class Base extends Control<IMasterDetail> {
 
     private _getContainerWidth(): number {
         if (!this._containerWidth) {
-            // FIXME: https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            const container = this._container[0] || this._container;
-            this._containerWidth = container.getBoundingClientRect().width;
+            this._containerWidth = this._container ? this._container.getBoundingClientRect().width : 0;
         }
         return this._containerWidth;
     }
