@@ -2160,6 +2160,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
+    nextVersion(): void {
+        this._nextVersion();
+    }
+
     getHasMoreData(): boolean {
         return this._$hasMoreData;
     }
