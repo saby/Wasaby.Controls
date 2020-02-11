@@ -28,6 +28,7 @@ export interface IItemActionsTemplateOptions {
     itemActionsPosition: string;
     actionAlignment?: string;
     actionCaptionPosition: 'right'|'bottom'|'none';
+    itemActionsClass?: string;
 }
 
 export interface IItemActionsItem {
@@ -117,7 +118,8 @@ export function calculateActionsTemplateConfig(
         size: editingConfig ? 's' : 'm',
         itemActionsPosition: options.itemActionsPosition,
         actionAlignment: options.actionAlignment,
-        actionCaptionPosition: options.actionCaptionPosition
+        actionCaptionPosition: options.actionCaptionPosition,
+        itemActionsClass: options.itemActionsClass
     });
 }
 
