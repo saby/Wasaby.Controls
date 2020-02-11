@@ -124,7 +124,9 @@ export default class VirtualScroll {
             this._updateStartIndex(this._range.start + count);
         }
 
-        return this._setRange(this._shiftRangeBySegment(direction, this.rangeChanged ? 0 : count));
+        return this._setRange(
+            this.rangeChanged ? this._range : this._shiftRangeBySegment(direction, count)
+        );
     }
 
     /**
@@ -136,7 +138,9 @@ export default class VirtualScroll {
         const direction = removeIndex < this._range.start ? 'up' : 'down';
         this._removeItemHeights(removeIndex, count);
 
-        return this._setRange(this._shiftRangeBySegment(direction, this.rangeChanged ? 0 : count));
+        return this._setRange(
+            this.rangeChanged ? this._range : this._shiftRangeBySegment(direction, count)
+        );
     }
 
     /**
