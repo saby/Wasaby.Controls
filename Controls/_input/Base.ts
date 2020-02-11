@@ -1144,7 +1144,7 @@ Base.getOptionTypes = function () {
             'warning'
         ]),
         tagStyle: entity.descriptor(String).oneOf([
-            'info',
+            'unaccented',
             'danger',
             'primary',
             'success',

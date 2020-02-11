@@ -40,7 +40,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.input:Text tagStyle="info"
+                  <Controls.input:Text tagStyle="unaccented"
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox('info')"

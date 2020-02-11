@@ -178,14 +178,10 @@
 }
 
 .controls-Render__tagStyle_style- {
-   @variants: danger, primary, success, secondary, warning;
+   @variants: danger, primary, success, secondary, warning, unaccented;
    .for(@variants, { &@{_item}_theme-@{themeName} {
       fill: ~"@{@{_item}_color}";
    } });
-}
-
-.controls-Render__tagStyle_style-info_theme-@{themeName} {
-   fill: @unaccented_color;
 }
 
 .controls-Render_textAlign {

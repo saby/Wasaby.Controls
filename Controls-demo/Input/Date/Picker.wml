@@ -36,7 +36,7 @@
          <Controls.input:Date
                  value="{{_date}}"
                  mask="{{mask}}"
-                 tagStyle="{{'info'}}"/>
+                 tagStyle="{{'unaccented'}}"/>
       </div>
 
       <h3>With custom day renderer</h3>

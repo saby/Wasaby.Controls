@@ -34,7 +34,7 @@
                     bind:startValue="_startDate"
                     bind:endValue="_endDate"
                     mask="{{mask}}"
-                    startTagStyle="{{'info'}}"/>
+                    startTagStyle="{{'unaccented'}}"/>
          </div>
          <div class="controlsDemo-Input-DateRange__row-item">
             <Controls.dateRange:Input

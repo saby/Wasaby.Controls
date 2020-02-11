@@ -1,13 +1,13 @@
 /**
  * @typedef {String} TagStyle
- * @variant info
+ * @variant unaccented
  * @variant danger
  * @variant primary
  * @variant success
  * @variant warning
  * @variant secondary
  */
-export type TagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 'secondary';
+export type TagStyle = 'unaccented' | 'danger' | 'primary' | 'success' | 'warning' | 'secondary';
 
 /**
  * Интерфейс тега (цветной индикатор, который отображается в правом верхнем углу поля).
