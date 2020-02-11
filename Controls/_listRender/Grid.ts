@@ -1,11 +1,11 @@
-import BaseRender from './Render';
+import BaseRender, { IRenderOptions } from './Render';
 
-import { TemplateFunction, IControlOptions } from 'UI/Base';
+import { TemplateFunction } from 'UI/Base';
 import { detection } from 'Env/Env';
 import { GridCollection } from 'Controls/display';
 import { Model } from 'Types/entity';
 
-export interface IGridRenderOptions extends IControlOptions {
+export interface IGridRenderOptions extends IRenderOptions {
     listModel: GridCollection<Model>;
 
     style?: string;
@@ -30,11 +30,20 @@ export default class GridRender extends BaseRender {
                 `wml!Controls/_listRender/Grid/${layout}/Item`
             ], (template, itemTemplate) => {
                 this._template = template;
+
+                // We can't use getDefaultOptions to set default item template,
+                // because it depends on the kind of layout the browser supports
                 this._itemTemplate = options.itemTemplate || itemTemplate;
 
                 resolve();
             });
         });
+    }
+
+    protected _beforeUpdate(options): void {
+        if (options.itemTemplate !== this._options.itemTemplate) {
+            this._itemTemplate = options.itemTemplate;
+        }
     }
 
     protected _getGridClasses(): string {
@@ -70,4 +79,8 @@ export default class GridRender extends BaseRender {
     }
 
     static _theme: string[] = ['Controls/grid'];
+
+    static getDefaultOptions(): Partial<IGridRenderOptions> {
+        return {};
+    }
 }

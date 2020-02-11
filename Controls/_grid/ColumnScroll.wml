@@ -10,7 +10,6 @@
 
            position="{{_scrollPosition}}"
            contentSize="{{_contentSizeForHScroll}}"
-           topOffset="{{_offsetForHScroll}}"
            positionChangeHandler="{{_positionHandler}}"
            bind:scrollWidth="_scrollWidth"
            bind:containerSize="_contentContainerSize"
@@ -36,6 +35,7 @@
            on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
            on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
            on:sortingChanged="_notifyHandler('sortingChanged')"
+           on:focusIn="_onFocusInEditingCell()"
    />
    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>
