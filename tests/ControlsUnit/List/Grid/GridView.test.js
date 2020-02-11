@@ -68,7 +68,13 @@ define(['Controls/grid'], function(gridMod) {
       preparedColumnsWithMultiselect = 'grid-template-columns: max-content 1fr auto 100px 1fr;',
       preparedColumnsWithoutMiltiselect = 'grid-template-columns: 1fr auto 100px 1fr;',
       fakeSelf = {
-         _options: {}
+         _options: {
+            listModel: {
+               getDragItemData: function() {
+                  return null;
+               }
+            }
+         }
       };
 
    describe('Controls.List.Grid.GridView', function() {
