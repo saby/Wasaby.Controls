@@ -2562,13 +2562,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let styles = '';
         const indicatorState = state || this._loadingIndicatorState;
 
-        if (indicatorState === 'all') {
-            if (this._loadingIndicatorContainerHeight) {
-                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-            }
-            if (this._loadingIndicatorContainerOffsetTop) {
-                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
-            }
+        if ((indicatorState === 'down' || indicatorState === 'all') && this._loadingIndicatorContainerHeight) {
+            styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+        }
+
+        if (indicatorState === 'all' && this._loadingIndicatorContainerOffsetTop) {
+            styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
         }
         return styles;
     },
