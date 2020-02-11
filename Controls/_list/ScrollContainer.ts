@@ -131,9 +131,11 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     protected _viewResize(): void {
-        this._viewHeight = this._itemsContainer.offsetHeight;
+        this._viewHeight = this._container.offsetHeight;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
-        this._virtualScroll.resizeView(this._itemsContainer.offsetHeight, this._triggerOffset, this._itemsContainer);
+        this._virtualScroll.resizeView(this._viewHeight, this._triggerOffset, this._itemsContainer);
+        // TODO Совместимость необходимо удалить после переписывания baseControl
+        this._notify('viewResize');
     }
 
     protected _observeScrollHandler(
@@ -214,11 +216,11 @@ export default class ScrollContainer extends Control<IOptions> {
     private _checkTriggerVisibility(): void {
         if (!this._applyScrollTopCallback) {
             if (this._triggerVisibility.down) {
-                this._triggerVisibilityChanged('down', true);
+                this._recalcToDirection('down');
             }
 
             if (this._triggerVisibility.up) {
-                this._triggerVisibilityChanged('up', true);
+                this._recalcToDirection('up');
             }
         }
 
@@ -294,7 +296,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param triggerVisible
      */
     private _triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean): void {
-        if (triggerVisible && !this._virtualScroll.rangeChanged) {
+        if (triggerVisible) {
             this._recalcToDirection(triggerName);
         }
 
@@ -354,18 +356,20 @@ export default class ScrollContainer extends Control<IOptions> {
      * @private
      */
     private _recalcToDirection(direction: IDirection): void {
-        if (this._virtualScroll.isRangeOnEdge(direction)) {
-            this._notifyLoadMore(direction);
-        } else {
-            this._inertialScrolling.callAfterScrollStopped(() => {
-                const rangeShiftResult = this._virtualScroll.shiftRange(direction);
-                this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-                this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+        if (!this._virtualScroll.rangeChanged) {
+            if (this._virtualScroll.isRangeOnEdge(direction)) {
+                this._notifyLoadMore(direction);
+            } else {
+                this._inertialScrolling.callAfterScrollStopped(() => {
+                    const rangeShiftResult = this._virtualScroll.shiftRange(direction);
+                    this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
+                    this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
 
-                if (this._virtualScroll.isRangeOnEdge(direction)) {
-                    this._notifyLoadMore(direction);
-                }
-            });
+                    if (this._virtualScroll.isRangeOnEdge(direction)) {
+                        this._notifyLoadMore(direction);
+                    }
+                });
+            }
         }
     }
 
@@ -436,7 +440,9 @@ export default class ScrollContainer extends Control<IOptions> {
                                          newItemsIndex: number,
                                          removedItems: object[],
                                          removedItemsIndex: number) => {
-        if (changesType === 'collectionChanged' && action) {
+        const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
+
+        if (changesType === 'collectionChanged' && action || newModelChanged) {
             if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
                 this._itemsAddedHandler(newItemsIndex, newItems);
             }

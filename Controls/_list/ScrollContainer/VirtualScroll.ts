@@ -124,9 +124,15 @@ export default class VirtualScroll {
             this._updateStartIndex(this._range.start + count);
         }
 
-        return this._setRange(
-            this.rangeChanged ? this._range : this._shiftRangeBySegment(direction, count)
-        );
+        // TODO Поправить после исправления
+        // https://online.sbis.ru/opendoc.html?guid=63490db6-53f7-411a-9603-0fcbe5838b9a
+        if (!this._options.pageSize) {
+            return this._setRange({start: 0, stop: this._itemsCount});
+        } else {
+            return this._setRange(
+                this.rangeChanged ? this._range : this._shiftRangeBySegment(direction, count)
+            );
+        }
     }
 
     /**
