@@ -7,7 +7,7 @@ interface IStickyColumnsParams {
 }
 
 interface IPrepareLadderParams extends IStickyColumnsParams{
-    ladderProperties: [];
+    ladderProperties: string[];
     startIndex: number;
     stopIndex: number;
     display: any;
