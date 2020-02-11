@@ -438,24 +438,31 @@ var
             return version;
         },
 
+        /**
+         * Производит пересчёт групп объединяемых колонок для заголовков (разделителей) записей
+         * @param itemData информация о записи
+         * @param columnAlignGroup число колонок в группе (или номер последней колонки)
+         * @private
+         */
         getColumnAlignGroupStyles(itemData: IGridItemData, columnAlignGroup: number = 0): {
             left: string
             right: string
         } {
-
-            let
-                start = 1,
-                center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1,
-                stop = itemData.columns.length + 1,
-                result = {right: '', left: ''};
+            const result = {left: '', right: ''};
+            const start = 1;
+            const stop = itemData.columns.length + 1; // {Вычисляем номер самой последней колонки}
 
             if (columnAlignGroup) {
-                result.left = `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
-                result.right = `grid-column: ${center} / ${stop}; -ms-grid-column: ${center}; -ms-grid-column-span: ${stop - center};`;
+                // Автоматический расчёт правой части сделан для того, чтобы избежать "дёргания" этого метода
+                // каждый раз при отображении столбца MultiSelect
+                const center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1;
+                const rightStart = itemData.columns.length - columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0);
+                const negativeCenter = columnAlignGroup * -1;
+                result.left = `grid-column: ${start} / ${negativeCenter}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
+                result.right = `grid-column: span ${rightStart}; -ms-grid-column: ${center}; -ms-grid-column-span: ${rightStart};`;
             } else {
                 result.left = `grid-column: ${start} / ${stop}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stop - 1};`;
             }
-
             return result;
         },
 
@@ -1073,8 +1080,7 @@ var
         },
 
         setMultiSelectVisibility: function(multiSelectVisibility) {
-            var
-                hasMultiSelect = multiSelectVisibility !== 'hidden';
+            const hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
             this._prepareColgroupColumns(this._columns, hasMultiSelect);
             if (this._cachaedHeaderColumns && this._isMultiHeader) {
