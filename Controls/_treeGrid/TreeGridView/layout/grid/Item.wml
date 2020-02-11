@@ -161,18 +161,6 @@
    </ws:if>
 </ws:template>
 
-<ws:if data="{{itemData.styleLadderHeading}}">
-   {{itemData.resetColumnIndex();}}
-   <div attr:class="controls-Grid__row-ladder-cell js-controls-SwipeControl__actionsContainer
-                  {{ itemData.getItemColumnCellClasses(itemData, _options.theme).base }}
-                  {{ itemData.getItemColumnCellClasses(itemData, _options.theme).columnScroll }}
-                  {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-                  {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
-        attr:key="{{itemData.key + '_ladder'}}"
-        attr:style="{{itemData.styleLadderHeading}}">
-      <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{itemData.getClassesLadderHeading(itemData.getCurrentColumn(), _options.theme)}}"/>
-   </div>
-</ws:if>
 <ws:if data="{{itemData.isSticky}}">
    <Controls.scroll:Group>
       <div class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}">
