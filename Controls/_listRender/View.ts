@@ -31,6 +31,7 @@ export interface IViewOptions extends IControlOptions {
     itemActionsPosition?: string;
     itemActionsProperty?: string;
     style?: string;
+    itemActionsClass?: string;
 
     actionAlignment?: string;
     actionCaptionPosition?: 'right'|'bottom'|'none';
@@ -57,7 +58,8 @@ export default class View extends Control<IViewOptions> {
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.style,
                 actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition
+                actionCaptionPosition: options.actionCaptionPosition,
+                itemActionsClass: options.itemActionsClass
             }
         );
 
@@ -102,7 +104,8 @@ export default class View extends Control<IViewOptions> {
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.style,
                 actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition
+                actionCaptionPosition: options.actionCaptionPosition,
+                itemActionsClass: options.itemActionsClass
             }
         );
     }
