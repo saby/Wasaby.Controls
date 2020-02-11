@@ -136,9 +136,9 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
 
          // Заглушка, чтобы демка не ломилась не сервис истории
          hs.historySource.update = function(item, meta) {
-            let pinned = srcData.getRow().get('pinned');
+            var pinned = srcData.getRow().get('pinned');
             if (meta['$_pinned']) {
-               let historyItem = new entity.Model({
+               var historyItem = new entity.Model({
                   rawData: {
                      d: [String(item.getId()), item.getId()],
                      s: [{ n: 'ObjectId', t: 'Строка' },

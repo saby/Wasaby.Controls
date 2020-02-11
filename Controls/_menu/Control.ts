@@ -119,22 +119,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         this._notify('applyClick', [this.getSelectedItems()]);
     }
 
-    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node) {
-        if (eventName === 'menuOpened') {
-            this.subMenu = eventResult;
-        } else {
-            this._notify(eventName, [eventResult]);
-            this._closeSubMenu();
-        }
-    }
-
-    protected _closeSubMenu(): void {
-        if (this._children.Sticky) {
-            this._children.Sticky.close();
-            this._subDropdownItem = null;
-        }
-    }
-
     protected _toggleExpanded(event: SyntheticEvent<MouseEvent>, value: boolean): void {
         this._expandValue = value;
         if (value) {
@@ -162,7 +146,23 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         this._notify('moreButtonClick', [selectedItems]);
     }
 
-    private setItemParamsonHandle(item, target, nativeEvent): void {
+    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node) {
+        if (eventName === 'menuOpened') {
+            this.subMenu = eventResult;
+        } else {
+            this._notify(eventName, [eventResult]);
+            this._closeSubMenu();
+        }
+    }
+
+    protected _closeSubMenu(): void {
+        if (this._children.Sticky) {
+            this._children.Sticky.close();
+            this._subDropdownItem = null;
+        }
+    }
+
+    private setItemParamsOnHandle(item, target, nativeEvent): void {
         this._hoveredItem = item;
         this._hoveredTarget = target;
         this._enterEvent = nativeEvent;
@@ -178,7 +178,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     private handleCurrentItem(item: TreeItem<Model>, target, nativeEvent): void {
         const needOpenDropDown = item.isNode() && !item.getContents().get('readOnly');
         const needCloseDropDown = this._subDropdownItem && this._subDropdownItem !== item;
-        this.setItemParamsonHandle(item, target, nativeEvent);
+        this.setItemParamsOnHandle(item, target, nativeEvent);
 
         if (needCloseDropDown) {
             this.setSubMenuPosition();
@@ -237,7 +237,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private getSelectorDialogOptions(options: IMenuOptions, selectedItems: object[]): object {
-        let self = this;
+        const self = this;
         const selectorTemplate = options.selectorTemplate;
         const selectorDialogResult = options.selectorDialogResult;
         const selectorOpener = options.selectorOpener;
