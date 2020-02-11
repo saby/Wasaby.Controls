@@ -23,7 +23,6 @@ var
     ],
     _private = {
         beginEdit: function (self, options, isAdd) {
-            _private.registerPending(self);
             var result = self._notify('beforeBeginEdit', [options, !!isAdd]);
             if (!isAdd) {
                 self._originalItem = options.item;
@@ -50,19 +49,21 @@ var
 
             if (eventResult === Constants.editing.CANCEL) {
                 result = Deferred.success({cancelled: true});
-            } else if (eventResult && eventResult.addBoth) {
-                var id = self._notify('showIndicator', [{}], {bubbling: true});
-                eventResult.addBoth(function (defResult) {
-                    self._notify('hideIndicator', [id], {bubbling: true});
-                    return defResult;
-                });
-                result = eventResult;
-            } else if ((eventResult && eventResult.item instanceof entity.Record) || (options && options.item instanceof entity.Record)) {
-                result = Deferred.success(eventResult || options);
-            } else if (isAdd) {
-                result = _private.createModel(self, eventResult || options);
+            } else {
+                _private.registerPending(self);
+                if (eventResult && eventResult.addBoth) {
+                    var id = self._notify('showIndicator', [{}], {bubbling: true});
+                    eventResult.addBoth(function (defResult) {
+                        self._notify('hideIndicator', [id], {bubbling: true});
+                        return defResult;
+                    });
+                    result = eventResult;
+                } else if ((eventResult && eventResult.item instanceof entity.Record) || (options && options.item instanceof entity.Record)) {
+                    result = Deferred.success(eventResult || options);
+                } else if (isAdd) {
+                    result = _private.createModel(self, eventResult || options);
+                }
             }
-
             return result;
         },
 
