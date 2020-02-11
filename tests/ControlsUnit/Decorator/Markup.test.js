@@ -223,18 +223,20 @@ define([
 
       describe('jsonToHtml', function() {
          var ILogger;
-         var errorFunction;
+         var errorStub;
          var errorArray;
+
+         function errorFunction(){
+            errorArray.push(arguments);
+         }
+
          before(function() {
             ILogger = Env.IoC.resolve('ILogger');
-            errorFunction = ILogger.error;
-            ILogger.error = function() {
-               errorArray.push(arguments);
-            };
+            errorStub = sinon.stub(ILogger, 'error').callsFake(errorFunction);
             errorArray = [];
          });
          after(function() {
-            Env.IoC.resolve('ILogger').error = errorFunction;
+            errorStub.restore();
          });
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
@@ -406,7 +408,7 @@ define([
                      'class': 'testClass',
                      colspan: 'testColspan',
                      config: 'testConfig',
-                     'data-bind': 'testDataOne',
+                     'data-vdomignore': 'true',
                      'data-random-ovdmxzme': 'testDataTwo',
                      'data-some-id': 'testDataThree',
                      hasmarkup: 'testHasmarkup',
@@ -459,7 +461,7 @@ define([
                '</body>' +
                '</html>' +
                '</p>' +
-               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://www.testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="./testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
+               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-vdomignore="true" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://www.testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="./testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
             equalsHtml(decorator.Converter.jsonToHtml(json), html);
          });
@@ -882,6 +884,42 @@ define([
             assert.deepEqual(goodResultNode, checkResultNode);
          });
 
+         it('with emoji and protocol', function() {
+            var parentNode = ['p', 'https://ya.ru/😊'];
+            var goodResultNode = [[],
+               ['a',
+                  {
+                     'class': 'asLink',
+                     rel: 'noreferrer noopener',
+                     href: 'https://ya.ru/',
+                     target: '_blank'
+                  },
+                  'https://ya.ru/'
+               ],
+               '😊'
+            ];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('with emoji and without protocol', function() {
+            var parentNode = ['p', 'vk.com/😊'];
+            var goodResultNode = [[],
+               ['a',
+                  {
+                     'class': 'asLink',
+                     rel: 'noreferrer noopener',
+                     href: 'http://vk.com/',
+                     target: '_blank'
+                  },
+                  'vk.com/'
+               ],
+               '😊'
+            ];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
          it('with \\n characters', function() {
             var parentNode = ['p', 'https://ya.ru\nsome\ntext'];
             var goodResultNode = [[],
@@ -1081,6 +1119,13 @@ define([
          it('email with wrong domain', function() {
             var parentNode = ['p', 'rn.kondakov@tensor.rux'];
             var goodResultNode = 'rn.kondakov@tensor.rux';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('email with an emoji', function() {
+            var parentNode = ['p', 'rn.kondakov@tensor😊.ru'];
+            var goodResultNode = 'rn.kondakov@tensor😊.ru';
             var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
             assert.deepEqual(goodResultNode, checkResultNode);
          });
