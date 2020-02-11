@@ -440,11 +440,13 @@ export default class VirtualScrollController {
         this.actualizeSavedIndexes();
         let startIndex = this.startIndex;
         let stopIndex = this.stopIndex;
+        const fixedSegmentSize = Math
+            .min(segment, Math.max(this._options.pageSize - (this.stopIndex - this.startIndex), 0));
 
         if (direction === 'up') {
-            startIndex = Math.max(startIndex - segment, 0);
+            startIndex = Math.max(startIndex - fixedSegmentSize, 0);
         } else {
-            stopIndex = Math.min(stopIndex + segment, this.itemsCount);
+            stopIndex = Math.min(stopIndex + fixedSegmentSize, this.itemsCount);
         }
 
         this.checkIndexesChanged(startIndex, stopIndex, direction);

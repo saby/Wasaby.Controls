@@ -254,7 +254,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.itemsCount = 40;
             instance.itemsAddedHandler(0, {length: 20});
             assert.equal(instance.stopIndex, 40);
-            assert.equal(instance.startIndex, 0);
+            assert.equal(instance.startIndex, 20);
         });
         it('itemsRemovedHandler', () => {
             // @ts-ignore
