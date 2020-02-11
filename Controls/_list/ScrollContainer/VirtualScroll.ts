@@ -398,7 +398,7 @@ export default class VirtualScroll {
         let start;
         let stop;
 
-        if (pageSize < itemsCount || !pageSize) {
+        if (pageSize && pageSize < itemsCount) {
             start = startIndex;
             stop = start + pageSize;
 
@@ -418,10 +418,7 @@ export default class VirtualScroll {
         const start = Math.max(0, index);
         const stop = Math.min(this._itemsCount, start + this._options.pageSize);
 
-        this._range = {
-            start,
-            stop
-        };
+        this._setRange({start, stop});
     }
 
     private _insertItemHeights(insertIndex: number, length: number): void {

@@ -234,7 +234,13 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _initVirtualScroll(options: IOptions): void {
         const virtualScrollOptions = ScrollContainer._getVirtualScrollOptions(options);
-        this._virtualScroll = new VirtualScroll(virtualScrollOptions, {});
+        this._virtualScroll = new VirtualScroll(
+            virtualScrollOptions,
+            {
+                viewport: this._viewportHeight,
+                scroll: this._viewHeight,
+                trigger: this._triggerOffset
+            });
 
         let itemsHeights: Partial<IItemsHeights>;
 

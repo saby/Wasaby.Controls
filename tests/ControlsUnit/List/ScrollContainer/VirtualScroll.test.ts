@@ -41,6 +41,11 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
                 assert.deepEqual({range: {start: 0, stop: 3}, placeholders: resetPlaceholdersValue},
                     instance.resetRange(0, 3));
             });
+            it('page size not specified', () => {
+                instance = new controller({}, {});
+                assert.deepEqual({range: {start: 0, stop: 10}, placeholders: resetPlaceholdersValue},
+                    instance.resetRange(0, 10));
+            });
         });
         describe('by item height property', () => {
             let instance: controller;
