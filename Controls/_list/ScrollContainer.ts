@@ -140,10 +140,6 @@ export default class ScrollContainer extends Control<IOptions> {
             }
         }
 
-        if (this._options.observeScroll) {
-            this.registerScroll();
-        }
-
         if (this.indicatorState) {
             this.indicatorTimeout = setTimeout(() => {
                 this._notify('changeIndicatorState', [true, this.indicatorState]);
@@ -190,6 +186,14 @@ export default class ScrollContainer extends Control<IOptions> {
             this.saveScrollPosition = false;
             this.savedScrollDirection = null;
             this.checkTriggerVisibilityWithTimeout();
+        }
+    }
+
+    protected _afterUpdate(): void {
+        if (this._options.observeScroll) {
+            this.registerScroll();
+        } else {
+            this.scrollRegistered = false;
         }
     }
 
@@ -454,7 +458,7 @@ export default class ScrollContainer extends Control<IOptions> {
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (!this.afterRenderCallback && !this.fakeScroll) {
+            if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {
