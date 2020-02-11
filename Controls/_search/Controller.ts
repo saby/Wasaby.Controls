@@ -113,10 +113,10 @@ var _private = {
       return !isEqual(options.navigation, newOptions.navigation) ||
              options.searchDelay !== newOptions.searchDelay ||
              options.minSearchLength !== newOptions.minSearchLength ||
-             _private.isNeedAbortSearchOnOptionsChanged(options, newOptions);
+             _private.isNeedRestartSearchOnOptionsChanged(options, newOptions);
    },
 
-   isNeedAbortSearchOnOptionsChanged(options, newOptions): boolean {
+   isNeedRestartSearchOnOptionsChanged(options, newOptions): boolean {
       return options.searchParam !== newOptions.searchParam ||
              _private.getOriginSource(options.source) !== _private.getOriginSource(newOptions.source);
    },
@@ -321,6 +321,9 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       var filter;
 
       this._dataOptions = context.dataOptions;
+      const isNeedRestartSearch = _private.isNeedRestartSearchOnOptionsChanged(currentOptions, this._dataOptions) ||
+          _private.isNeedRestartSearchOnOptionsChanged(this._options, newOptions);
+      const searchValue = isNeedRestartSearch ? this._inputSearchValue : newOptions.searchValue;
 
       if (!isEqual(this._options.filter, newOptions.filter)) {
          filter = newOptions.filter;
@@ -335,31 +338,26 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
 
       if (this._searchController) {
-         const isNeedAbortSearch = _private.isNeedAbortSearchOnOptionsChanged(currentOptions, this._dataOptions) ||
-             _private.isNeedAbortSearchOnOptionsChanged(this._options, newOptions);
          if (filter) {
             this._searchController.setFilter(clone(filter));
          }
 
-         if (isNeedAbortSearch && this._searchValue) {
+         if (isNeedRestartSearch && this._searchValue) {
             this._searchController.abort(true);
          }
          if (_private.isNeedRecreateSearchControllerOnOptionsChanged(currentOptions, this._dataOptions) ||
              _private.isNeedRecreateSearchControllerOnOptionsChanged(this._options, newOptions)) {
             this._searchController = null;
-            if (isNeedAbortSearch) {
-               _private.startSearch(this, this._inputSearchValue);
-            }
          }
 
          if (!isEqual(this._options.sorting, newOptions.sorting)) {
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (_private.isSearchValueChanged(this, newOptions.searchValue)) {
-         _private.startSearch(this, newOptions.searchValue);
-         if (this._searchValue !== newOptions.searchValue) {
-            _private.setInputSearchValue(this, newOptions.searchValue);
+      if (_private.isSearchValueChanged(this, searchValue) || searchValue && isNeedRestartSearch) {
+         _private.startSearch(this, searchValue);
+         if (this._searchValue !== searchValue) {
+            _private.setInputSearchValue(this, searchValue);
          }
       }
    },
