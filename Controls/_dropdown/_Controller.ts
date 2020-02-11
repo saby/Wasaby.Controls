@@ -27,7 +27,7 @@ var _private = {
    },
 
    hasHistory(options): boolean {
-      return options.historyIds || historyUtils.isHistorySource(options.source);
+      return options.historyId || historyUtils.isHistorySource(options.source);
    },
 
    isLocalSource(source): boolean {
