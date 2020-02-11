@@ -38,13 +38,14 @@
               headConfig="{{_options.headConfig}}"
               showHeader="{{_options.showHeader}}"
               selectedKeys="{{_options.selectedKeys}}"
+              marker="{{_options.marker}}"
               emptyText="{{_getEmptyText()}}"
               icon="{{_options.icon}}"
               iconSize="{{_options.iconSize}}"
               caption="{{_options.caption}}"
               typeShadow="{{_options.typeShadow}}"
               itemPadding="{{_options.itemPadding}}"
-              allowPin="{{_options.allowPin}}"
+              allowPin="{{_options.allowPin && _hasHistory()}}"
               theme="{{_options.theme}}"/>
    </Controls.popup:Sticky>
    <ws:if data="{{_options.selectorTemplate}}">

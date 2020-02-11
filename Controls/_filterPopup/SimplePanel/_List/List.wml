@@ -1,17 +1,4 @@
 <div>
-   <Controls.menu:Render
-           listModel="{{_listModel}}"
-           selectedKeys="{{_options.selectedKeys}}"
-           displayProperty="{{_options.displayProperty}}"
-           nodeProperty="{{_options.nodeProperty}}"
-           itemTemplate="{{_options.itemTemplate}}"
-           multiSelect="{{_options.multiSelect}}"
-           checkBoxAlign="right"
-           showClose="{{true}}"
-           defaultItemTemplate="{{_defaultItemTemplate}}"
-           emptyTemplate="{{_emptyItemTemplate}}">
-
-   </Controls.menu:Render>
    <ws:partial template="Controls/dropdownPopup:_ForTemplate"
                listModel="{{_listModel}}"
                selectedKeys="{{_options.selectedKeys}}"

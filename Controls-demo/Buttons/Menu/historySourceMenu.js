@@ -137,8 +137,10 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
          // Заглушка, чтобы демка не ломилась не сервис истории
          hs.historySource.update = function(item, meta) {
             var pinned = srcData.getRow().get('pinned');
+            var recent = srcData.getRow().get('recent');
+            var historyItem;
             if (meta['$_pinned']) {
-               var historyItem = new entity.Model({
+               historyItem = new entity.Model({
                   rawData: {
                      d: [String(item.getId()), item.getId()],
                      s: [{ n: 'ObjectId', t: 'Строка' },
@@ -146,9 +148,19 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
                   },
                   adapter: pinned.getAdapter()
                });
-               pinned.prepend([historyItem]);
-            } else {
+               pinned.append([historyItem]);
+            } else if (meta['$_pinned'] === false) {
                pinned.remove(pinned.getRecordById(item.getId()));
+            } else if (meta['$_history'] && !recent.getRecordById(item.getId())) {
+               historyItem = new entity.Model({
+                  rawData: {
+                     d: [String(item.getId()), item.getId()],
+                     s: [{ n: 'ObjectId', t: 'Строка' },
+                        { n: 'HistoryId', t: 'Строка' }]
+                  },
+                  adapter: pinned.getAdapter()
+               });
+               recent.prepend([historyItem]);
             }
             srcData = createDataSet(frequentData, pinned.getRawData(), recentData);
             return {};

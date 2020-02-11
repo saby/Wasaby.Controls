@@ -6,7 +6,7 @@ import {RecordSet, List} from 'Types/collection';
 import {ICrud, PrefetchProxy} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
-import {Tree, TreeItem, GroupItem, SelectionController} from 'Controls/display';
+import {Collection, Tree, TreeItem, GroupItem, SelectionController} from 'Controls/display';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -42,6 +42,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
+    private _hoveredItemIndex: number|null = null;
 
     // @ts-ignore
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
@@ -51,11 +52,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         if (options.source) {
             return this.loadItems(options);
         }
-    }
-
-    protected _afterMount(newOptions: IMenuOptions): void {
-        // удалится по https://online.sbis.ru/opendoc.html?guid=48f59429-2ba5-431f-a895-3d11913c3d01
-        this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
     }
 
     protected _beforeUpdate(newOptions: IMenuOptions): void {
@@ -84,6 +80,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private _mouseOutHandler(event: SyntheticEvent<MouseEvent>): void {
+        this._hoveredItemIndex = null;
         this._listModel.setHoveredItem(null);
         clearTimeout(this._handleCurrentItemTimeout);
     }
@@ -99,6 +96,9 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, nativeEvent: MouseEvent): void {
+        if (item.get('readOnly')) {
+            return;
+        }
         const key = item.getKey();
         const treeItem = this._listModel.getItemBySourceKey(key);
 
@@ -133,17 +133,22 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _toggleExpanded(event: SyntheticEvent<MouseEvent>, value: boolean): void {
-        this._expandValue = value;
         if (value) {
-            if (this._expandedItems) {
-                this._listModel.removeFilter(this._expandedItemsFilter);
-            } else {
-                this._itemsCount = this._listModel.getCount();
-                this.loadExpandedItems(this._options);
-            }
+            this._listModel.removeFilter(this._additionalFilter);
         } else {
-            this._listModel.addFilter(this._expandedItemsFilter);
+            this._listModel.addFilter(this._additionalFilter);
         }
+        // TODO after deleting additionalProperty option
+        // if (value) {
+        //     if (this._expandedItems) {
+        //         this._listModel.removeFilter(this._expandedItemsFilter);
+        //     } else {
+        //         this._itemsCount = this._listModel.getCount();
+        //         this.loadExpandedItems(this._options);
+        //     }
+        // } else {
+        //     this._listModel.addFilter(this._expandedItemsFilter);
+        // }
     }
 
     protected _isEmptyItem(itemData) {
@@ -189,8 +194,9 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private handleCurrentItem(item: TreeItem<Model>, target, nativeEvent): void {
+        this._hoveredItemIndex = this._listModel.getIndex(item);
         const needOpenDropDown = item.isNode() && !item.getContents().get('readOnly');
-        const needCloseDropDown = this._subDropdownItem && this._subDropdownItem !== item;
+        const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
         this.setItemParamsOnHandle(item, target, nativeEvent);
 
         if (needCloseDropDown) {
@@ -270,9 +276,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: options.isCompoundTemplate,
-            eventHandlers: {
-                onResult: selectorDialogResult
-            },
             handlers: {
                 // Для совместимости.
                 // Старая система фокусов не знает про существование VDOM окна и не может восстановить на нем фокус после закрытия старой панели.
@@ -343,6 +346,9 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             root: options.root,
             filter: this.displayFilter.bind(this, options)
         });
+        if (this._hoveredItemIndex !== null) {
+            listModel.setHoveredItem(listModel.at(this._hoveredItemIndex));
+        }
         if (options.groupProperty) {
             listModel.setGroup(this.groupMethod.bind(this));
         } else if (options.groupingKeyCallback) {
@@ -358,17 +364,13 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
     }
 
-    private additionalFilter(options: IMenuOptions, item: Model): boolean {
-        return this._expandValue || (!item.get || !item.get(options.additionalProperty) || this.isHistoryItem(item));
+    private additionalFilter(options: IMenuOptions, item: Model, index: number, treeItem: TreeItem<Model>): boolean {
+        return (!item.get || !item.get(options.additionalProperty) || this.isHistoryItem(item));
     }
 
     private displayFilter(options: IMenuOptions, item: Model, index: number, treeItem: TreeItem<Model>): boolean {
         let isVisible = true;
-        if (treeItem instanceof GroupItem) {
-            let collection = treeItem.getOwner();
-            let itemsGroupCount = collection.getGroupItems(item).length;
-            isVisible = itemsGroupCount !== 0 && itemsGroupCount !== collection.getCount(true);
-        } else if (options.parentProperty) {
+        if (item.get && options.parentProperty) {
             isVisible = item.get(options.parentProperty) === options.root;
         }
         return isVisible;
@@ -405,22 +407,37 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private loadItems(options: IMenuOptions): Deferred<RecordSet> {
-        let self = this;
         let filter = Clone(options.filter) || {};
         filter[options.parentProperty] = options.root;
         return this.getSourceController(options).load(filter).addCallback((items) => {
-            self.createViewModel(items, options);
-            self._moreButtonVisible = options.selectorTemplate && self.getSourceController(options).hasMoreData('down');
-            self._expandButtonVisible = options.additionalProperty;
+            this.createViewModel(items, options);
+            this._moreButtonVisible = options.selectorTemplate && this.getSourceController(options).hasMoreData('down');
+            this._expandButtonVisible = this.isExpandButtonVisible(items, options.additionalProperty, options.root);
             return items;
         });
+    }
+
+    private isExpandButtonVisible(items: RecordSet, additionalProperty: string, root: string): boolean {
+        let self = this;
+        let hasAdditional = false;
+
+        if (additionalProperty && root === null) {
+            items.each((item) => {
+                if (!hasAdditional) {
+                    hasAdditional = item.get(additionalProperty) && !self.isHistoryItem(item);
+                }
+            });
+        }
+        return hasAdditional;
     }
 
     private openSubDropdown(target: EventTarget, item: TreeItem<Model>): void {
         // _openSubDropdown is called by debounce and a function call can occur when the control is destroyed,
         // just check _children to make sure, that the control isnt destroyed
         if (item && this._children.Sticky && this._subDropdownItem) {
-            this._children.Sticky.open(this.getPopupOptions(target, item), this);
+            let popupOptions = this.getPopupOptions(target, item);
+            this._notify('beforeSubMenuOpen', [popupOptions]);
+            this._children.Sticky.open(popupOptions, this);
         }
     }
 
@@ -445,6 +462,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.footerTemplate = this._options.nodeFooterTemplate;
         templateOptions.closeButtonVisibility = false;
         templateOptions.showHeader = false;
+        templateOptions.headerTemplate = null;
+        templateOptions.additionalProperty = null;
 
         templateOptions.source = this.getSourceSubMenu(templateOptions.root);
         return templateOptions;

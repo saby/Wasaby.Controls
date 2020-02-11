@@ -1,5 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import PopupTemplate = require('wml!Controls/_menu/Popup/template');
+import * as headerTemplate from 'wml!Controls/_menu/Popup/headerTemplate';
 
 /**
  * Базовый шаблон для {@link Controls/menu:Control}, отображаемого в прилипающем блоке.
@@ -22,12 +23,42 @@ class Popup extends Control<IControlOptions> {
     protected _headerTemplate: TemplateFunction;
     protected _headingCaption: string;
     protected _headingIcon: string;
+    protected _itemPadding: object;
+    protected _verticalDirection: string = 'bottom';
+    protected _horizontalDirection: string = 'right';
 
     protected _beforeMount(options: IControlOptions): void {
-        if (options.showHeader) {
-            this._headerTemplate = options.headerTemplate;
-            this._headingCaption = options.headConfig && options.headConfig.caption || options.headingCaption;
-            this._headingIcon = options.headingIcon;
+        if (options.showHeader && options.headerTemplate !== null || options.headerTemplate) {
+            if (options.headConfig) {
+                this._headingCaption = options.headConfig.caption;
+            } else {
+                this._headingCaption = options.headingCaption;
+            }
+            this._headingIcon = !options.headConfig?.menuStyle ? (options.headConfig?.icon || options.headingIcon) : '';
+
+            if (this._headingIcon && !options.headerTemplate) {
+                this._headerTemplate = headerTemplate;
+            } else {
+                this._headerTemplate = options.headerTemplate;
+            }
+        }
+        if (options.itemPadding) {
+            this._itemPadding = options.itemPadding;
+        } else if (options.closeButtonVisibility) {
+            this._itemPadding = {
+                right: 'menu-close'
+            };
+        } else if (options.allowPin) {
+            this._itemPadding = {
+                right: 'menu-pin'
+            };
+        }
+    }
+
+    protected _beforeUpdate(newOptions: IControlOptions): void {
+        if (newOptions.stickyPosition.direction && this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
+            this._verticalDirection = newOptions.stickyPosition.direction.vertical;
+            this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
         }
     }
 
@@ -41,6 +72,18 @@ class Popup extends Control<IControlOptions> {
 
     protected _close(): void {
         this._notify('close', [], {bubbling: true});
+    }
+
+    protected _footerClick(event, sourceEvent): void {
+        this._notify('sendResult', ['footerClick', sourceEvent], {bubbling: true});
+    }
+
+    protected _prepareSubMenuConfig(event, popupOptions) {
+        // The first level of the popup is always positioned on the right by standard
+        if (this._options.root) {
+            popupOptions.direction.horizontal = this._horizontalDirection;
+            popupOptions.targetPoint.horizontal = this._horizontalDirection;
+        }
     }
 
     static _theme: string[] = ['Controls/menu'];
