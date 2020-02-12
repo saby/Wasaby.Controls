@@ -1,4 +1,4 @@
-import display = require('Types/display');
+import display = require('Controls/display');
 import entity = require('Types/entity');
 import isPlainObject = require('Core/helpers/Object/isPlainObject');
 

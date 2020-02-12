@@ -8,7 +8,7 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
-import { CollectionItem } from 'Types/display';
+import { CollectionItem } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 
 /**

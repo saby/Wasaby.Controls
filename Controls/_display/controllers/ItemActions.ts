@@ -1,12 +1,14 @@
 import { IBaseCollection, TItemKey } from '../interface';
 import { IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig } from '../Collection';
-import { showType } from 'Controls/Utils/Toolbar';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 
-// TODO Move these measurers to listRender, maybe rewrite them
-import { SwipeVerticalMeasurer, SwipeHorizontalMeasurer } from 'Controls/list';
+const showType = {
+    MENU: 0,
+    MENU_TOOLBAR: 1,
+    TOOLBAR: 2
+};
 
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
@@ -363,6 +365,9 @@ function _calculateSwipeConfig(
     actionsContainerHeight: number,
     actionCaptionPosition: 'right'|'bottom'|'none'
 ): ISwipeConfig {
+    // TODO Move these measurers to listRender, maybe rewrite them
+    const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('Controls/list');
+
     const measurer =
         actionAlignment === 'vertical'
         ? SwipeVerticalMeasurer.default
