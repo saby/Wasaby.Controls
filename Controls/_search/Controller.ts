@@ -213,8 +213,8 @@ var _private = {
       return self._options.searchValue !== searchValue && _private.isInputSearchValueChanged(self, searchValue);
    },
 
-   isInputSearchValueShort(self, searchValue: string): boolean {
-      return !searchValue || searchValue.length < self._options.minSearchLength;
+   isInputSearchValueShort(minSearchLength, searchValue: string): boolean {
+      return !searchValue || searchValue.length < minSearchLength;
    },
 
    needStartSearch(self, inputSearchValue: string, searchValue: string): string {
@@ -303,8 +303,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
-
-         if (!_private.isInputSearchValueShort(this, options.searchValue)) {
+         if (!_private.isInputSearchValueShort(options.minSearchLength, options.searchValue)) {
             this._searchValue = options.searchValue;
 
             if (_private.needUpdateViewMode(this, 'search')) {
