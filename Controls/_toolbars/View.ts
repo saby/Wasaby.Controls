@@ -308,7 +308,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     }
 
     protected _itemClickHandler(event: SyntheticEvent<MouseEvent>, item: TItem): void {
-        const readOnly: boolean = item.get('readOnly');
+        const readOnly: boolean = item.get('readOnly') || this._options.readOnly;
 
         if (readOnly || this._options.readOnly) {
             event.stopPropagation();
