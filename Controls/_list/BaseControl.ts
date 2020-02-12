@@ -460,7 +460,8 @@ var _private = {
             if (
                 self._loadingState === 'all' ||
                 !_private.needScrollCalculation(navigation) ||
-                !self._loadTriggerVisibility[self._loadingState]
+                !self._loadTriggerVisibility[self._loadingState] ||
+                !self._sourceController.hasMoreData(self._loadingState)
             ) {
                 _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
             } else {
@@ -779,6 +780,7 @@ var _private = {
     onScrollHide: function(self) {
         if (self._pagingVisible) {
             self._pagingVisible = false;
+            self._cachedPagingState = false;
             self._forceUpdate();
         }
         self._isScrollShown = false;
@@ -2560,13 +2562,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let styles = '';
         const indicatorState = state || this._loadingIndicatorState;
 
-        if (indicatorState === 'all') {
-            if (this._loadingIndicatorContainerHeight) {
-                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-            }
-            if (this._loadingIndicatorContainerOffsetTop) {
-                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
-            }
+        if ((indicatorState === 'down' || indicatorState === 'all') && this._loadingIndicatorContainerHeight) {
+            styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+        }
+
+        if (indicatorState === 'all' && this._loadingIndicatorContainerOffsetTop) {
+            styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
         }
         return styles;
     },

@@ -49,7 +49,7 @@
                template="{{ itemActionsTemplate }}"
                highlightOnHover="{{ highlightOnHover }}"
                item="{{ item }}"
-               itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight" />
+               itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight {{ itemActionsClass }}" />
          </ws:else>
       </ws:if>
    </div>
