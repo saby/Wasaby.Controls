@@ -47,6 +47,7 @@ var
               displayProperties.rootEnumerable = true;
            }
            displayProperties.root = root;
+           displayProperties.compatibleReset = true;
            return displayProperties;
         },
         getDefaultDisplayTree: function (items, cfg, filter) {
