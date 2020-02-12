@@ -69,6 +69,7 @@ export function assignActions(
     }
 
     const supportsEventRaising = typeof collection.setEventRaising === 'function';
+    let hasChanges = false;
 
     if (supportsEventRaising) {
         collection.setEventRaising(false, true);
@@ -79,7 +80,8 @@ export function assignActions(
         const actionsForItem = fixedActions.filter((action) =>
             visibilityCallback(action, item.getContents())
         );
-        _setItemActions(item, _wrapActionsInContainer(actionsForItem));
+        const itemChanged = _setItemActions(item, _wrapActionsInContainer(actionsForItem));
+        hasChanges = hasChanges || itemChanged;
     });
 
     if (supportsEventRaising) {
@@ -88,7 +90,9 @@ export function assignActions(
 
     collection.setActionsAssigned(true);
 
-    collection.nextVersion();
+    if (hasChanges) {
+        collection.nextVersion();
+    }
 }
 
 export function resetActionsAssignment(collection: IItemActionsCollection): void {
@@ -417,11 +421,13 @@ function _processActionsMenuClose(
 function _setItemActions(
     item: IItemActionsItem,
     actions: IItemActionsContainer
-): void {
+): boolean {
     const oldActions = item.getActions();
     if (!oldActions || (actions && !_isMatchingActions(oldActions, actions))) {
         item.setActions(actions);
+        return true;
     }
+    return false;
 }
 
 function _fixActionIcon(action: TItemAction): TItemAction {
