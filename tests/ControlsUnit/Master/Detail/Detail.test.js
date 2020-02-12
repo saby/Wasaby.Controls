@@ -28,27 +28,21 @@ define(['Controls/masterDetail'], function (masterDetail) {
          Control._beforeMount(options).then((result) => {
             assert.equal(result, '300px');
             Control.destroy();
+            done();
          });
+      });
 
-         // width = 0
-         const Control2 = new masterDetail.Base();
-         Control2._getSettings = () => {
-            return Promise.resolve({'2': 0});
-         };
-
-         let options2 = {
-            propStorageId: '2',
+      it('initCurrentWidth', () => {
+         let Control = new masterDetail.Base();
+         let options = {
+            propStorageId: '1',
             masterMinWidth: 0,
             masterWidth: 0,
             masterMaxWidth: 0
          };
-
-         Control2._beforeMount(options2).then((result) => {
-            assert.equal(result, '0px');
-            Control.destroy();
-            done();
-         });
-
+         Control.initCurrentWidth(options.masterWidth);
+         assert.equal(Control._currentWidth, '0px');
+         Control.destroy();
       });
 
       it('update offset', () => {
