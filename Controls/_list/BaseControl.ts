@@ -2561,8 +2561,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
         const indicatorState = state || this._loadingIndicatorState;
+        const itemsCount = this._listViewModel && this._listViewModel.getCount();
 
-        if ((indicatorState === 'down' || indicatorState === 'all') && this._loadingIndicatorContainerHeight) {
+        if ((!itemsCount && indicatorState === 'down' || indicatorState === 'all') && this._loadingIndicatorContainerHeight) {
             styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
         }
 
