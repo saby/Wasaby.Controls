@@ -322,7 +322,7 @@ const BaseOpener = {
          }
       }
 
-      if (cfg.hasOwnProperty('direction')) {
+      if (cfg.hasOwnProperty('direction') && typeof cfg.direction !== 'object') {
          const newDirection = {
             horizontal: 'right',
             vertical: 'bottom'
