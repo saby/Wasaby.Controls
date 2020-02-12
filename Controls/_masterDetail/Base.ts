@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_masterDetail/Base/Base';
 import 'css!theme?Controls/masterDetail';
 import {debounce} from 'Types/function';
+import { SyntheticEvent } from 'Vdom/Vdom';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
 
@@ -90,6 +91,7 @@ class Base extends Control<IMasterDetail> {
     protected _canResizing: boolean = false;
     protected _minOffset: number;
     protected _maxOffset: number;
+    protected _prevCurrentWidth: string;
     protected _currentWidth: string;
     protected _containerWidth: number;
     protected _updateOffsetDebounced: Function;
@@ -149,6 +151,22 @@ class Base extends Control<IMasterDetail> {
             this._canResizing = this._isCanResizing(options);
             this._updateOffset(options);
         }
+    }
+
+    protected _afterRender(): void {
+        if (this._prevCurrentWidth !== this._currentWidth) {
+            this._prevCurrentWidth = this._currentWidth;
+            this._startResizeRegister();
+        }
+    }
+
+    private _startResizeRegister(): void {
+        const eventCfg = {
+            type: 'controlResize',
+            target: this._container,
+            _bubbling: true
+        };
+        this._children.resizeDetect.start(new SyntheticEvent(null, eventCfg));
     }
 
     private _isSizeOptionsChanged(oldOptions: IMasterDetail, newOptions: IMasterDetail): boolean {
@@ -228,6 +246,10 @@ class Base extends Control<IMasterDetail> {
         if (!this._container.closest('.ws-hidden')) {
             this._containerWidth = null;
             this._updateOffsetDebounced(this._options);
+            // Нужно чтобы лисенеры, лежащие внутри нашего регистратора, реагировали на ресайз страницы.
+            // Код можно будет убрать, если в регистраторах дадут возможность не стопать событие регистрации лисенера,
+            // чтобы лисенер мог регистрироваться в 2х регистраторах.
+            this._startResizeRegister();
         }
     }
 }

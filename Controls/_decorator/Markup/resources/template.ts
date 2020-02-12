@@ -41,7 +41,7 @@ import 'css!theme?Controls/decorator';
       ],
       goodLinkAttributeRegExp = new RegExp(`^(${startOfGoodLinks.join('|')})`
          .replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`)),
-      dataAttributeRegExp = /^data-(?!component$)([\w-]*[\w])+$/,
+      dataAttributeRegExp = /^data-(?!component$|bind$)([\w-]*[\w])+$/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 
@@ -57,8 +57,7 @@ import 'css!theme?Controls/decorator';
            strNode = '"Невалидный Json узел"';
        }
 
-       Logger.error('View/Executor/TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`);
-       // Logger.error(`Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}\n`, control, {});
+       Logger.error('View/Executor/TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`, control);
    }
 
    function generateEventSubscribeObject(handlerName) {

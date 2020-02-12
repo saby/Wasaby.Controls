@@ -138,7 +138,6 @@ export default class VirtualScrollController {
             this.checkIndexesChanged(newStartIndex, newStopIndex, direction);
         }
 
-
         if (needToLoadMore && shouldLoad) {
             this._options.loadMoreCallback(direction);
         }
@@ -329,9 +328,9 @@ export default class VirtualScrollController {
      * @param {number} itemsHeightsCount
      */
     private insertItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
-        let topItemsHeight = this.itemsHeights.slice(0, itemIndex),
-            insertedItemsHeights = [],
-            bottomItemsHeight = this.itemsHeights.slice(itemIndex);
+        const topItemsHeight = this.itemsHeights.slice(0, itemIndex);
+        const insertedItemsHeights = [];
+        const bottomItemsHeight = this.itemsHeights.slice(itemIndex);
 
         for (let i = 0; i < itemsHeightsCount; i++) {
             insertedItemsHeights[i] = 0;
@@ -369,8 +368,8 @@ export default class VirtualScrollController {
      * @param {CollectionItem<entityRecord>[]} removedItems
      * @param {number} removedItemsIndex
      */
-    private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: CollectionItem<entityRecord>[],
-                                        newItemsIndex: number, removedItems: CollectionItem<entityRecord>[], removedItemsIndex: number): void => {
+    private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: Array<CollectionItem<entityRecord>>,
+                                        newItemsIndex: number, removedItems: Array<CollectionItem<entityRecord>>, removedItemsIndex: number): void => {
         const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
 
         if ((changesType === 'collectionChanged' || newModelChanged) && action) {
@@ -404,6 +403,11 @@ export default class VirtualScrollController {
                 this.savedStartIndex += newItems.length;
                 this.setStartIndex(this.startIndex + newItems.length);
             }
+
+            if (!this.itemsChanged) {
+                this.shiftRangeBySegment(direction, newItems.length);
+                this._options.saveScrollPositionCallback(direction);
+            }
         }
     }
 
@@ -414,10 +418,26 @@ export default class VirtualScrollController {
         // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
         // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
         if (this.itemsContainer && !this.itemsChanged) {
-            this.recalcRangeToDirection(
-                removedItemsIndex < this._options.viewModel.getStartIndex() ? 'up' : 'down', false
-            );
+            const direction = removedItemsIndex < this._options.viewModel.getStartIndex() ? 'up' : 'down';
+            this.shiftRangeBySegment(direction, removedItems.length);
+            this._options.saveScrollPositionCallback(direction);
         }
+    }
+
+    private shiftRangeBySegment(direction: IDirection, segment: number): void {
+        this.actualizeSavedIndexes();
+        let startIndex = this.startIndex;
+        let stopIndex = this.stopIndex;
+        const fixedSegmentSize = Math
+            .min(segment, Math.max(this._options.pageSize - (this.stopIndex - this.startIndex), 0));
+
+        if (direction === 'up') {
+            startIndex = Math.max(startIndex - fixedSegmentSize, 0);
+        } else {
+            stopIndex = Math.min(stopIndex + fixedSegmentSize, this.itemsCount);
+        }
+
+        this.checkIndexesChanged(startIndex, stopIndex, direction);
     }
 
     private isScrolledToBottom(): boolean {
@@ -500,7 +520,6 @@ export default class VirtualScrollController {
             let startIndex = this.startIndex;
             let sumHeight = 0;
             const offsetDistance = this.scrollTop - this.triggerOffset - this._options.viewportHeight;
-
 
             while (sumHeight + items[startIndex] < offsetDistance) {
                 sumHeight += items[startIndex];
