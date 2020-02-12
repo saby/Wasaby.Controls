@@ -265,9 +265,12 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
                 ManagerController.setIndicator(self);
             });
         }
+        this._createOverlay();
+        this._redrawOverlay();
     },
     _beforeUpdate(cfg) {
         this._updateProperties(cfg);
+        this._redrawOverlay();
     },
     _updateProperties(cfg) {
         if (cfg.isGlobal !== undefined) {
@@ -514,6 +517,83 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         } else {
             this._isMessageVisible = false;
         }
+    },
+
+    _createOverlay(): void {
+        const overlayDiv = document.createElement('div');
+        overlayDiv.setAttribute('data-vdomignore', 'true');
+        overlayDiv.setAttribute('tabindex', '1');
+
+        const messageDiv = document.createElement('div');
+        messageDiv.innerText = 'TODO';
+        overlayDiv.appendChild(messageDiv);
+
+        this._container.appendChild(overlayDiv);
+
+        this._overlayDiv = overlayDiv;
+        this._messageDiv = messageDiv;
+    },
+
+    _redrawOverlay(): void {
+        const overlayDiv = this._overlayDiv;
+        const messageDiv = this._messageDiv;
+
+        const newOverlayClassName = this._calculateOverlayClassName();
+        if (overlayDiv.className !== newOverlayClassName) {
+            overlayDiv.className = newOverlayClassName;
+        }
+        if (this._zIndex) {
+            overlayDiv.setAttribute('style', 'z-index: ' + this._zIndex);
+        }
+
+        const newMessageClassName = this._calculateMessageClassName();
+        if (messageDiv.className !== newMessageClassName) {
+            messageDiv.className = newMessageClassName;
+        }
+        if (messageDiv.innerText !== this.message) {
+            messageDiv.innerText = this.message;
+        }
+    },
+
+    _calculateOverlayClassName(): string {
+        const classList = ['controls-loading-indicator', 'controls-Popup__isolatedFocusingContext'];
+
+        classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
+
+        if (this.message) {
+            classList.push('controls-loading-indicator_text');
+        }
+        if (this.scroll) {
+            classList.push('controls-loading-indicator_scroll');
+            classList.push('controls-loading-indicator_sided controls-loading-indicator_sided-' + this.scroll);
+        }
+        if (this.small) {
+            classList.push('controls-loading-indicator_small');
+            if (this.small !== 'yes') {
+                classList.push('controls-loading-indicator_sided controls-loading-indicator_sided-' + this.small);
+            }
+        }
+        if (this.overlay) {
+            classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay));
+        }
+        if (this?.mods?.length) {
+            classList.concat(this.mods.map((mod) => 'controls-loading-indicator_mod-' + mod));
+        }
+        if (!this._isOverlayVisible) {
+            classList.unshift('ws-hidden');
+        }
+
+        return classList.join(' ');
+    },
+
+    _calculateMessageClassName(): string {
+        const classList = ['controls-loading-indicator-in'];
+
+        if (!this._isMessageVisible) {
+            classList.unshift('ws-hidden');
+        }
+
+        return classList.join(' ');
     }
 });
 
