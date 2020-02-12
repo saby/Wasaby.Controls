@@ -80,7 +80,7 @@ var helpers = {
     /**
      * Хелпер для отображения панели с {@link /doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опциями записи} наверху/внизу.
      * @function Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
-     * @param {MoveDirection} direction Направление
+     * @param {MoveDirection} direction Направление.
      * @param {Types/entity:Record} item Экземпляр элемента, действие которого обрабатывается.
      * @param {Types/collection:RecordSet} items Список всех элементов.
      * @param {String} parentProperty Имя поля, содержащего сведения о родительском узле.
