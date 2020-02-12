@@ -92,7 +92,7 @@
    </td>
 </ws:template>
 
-<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
+<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable, cursor)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
             {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
        {{itemData.resetColumnIndex();}}
