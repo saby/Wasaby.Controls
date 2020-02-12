@@ -10,6 +10,7 @@ import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
 import { CssClassList } from "../Utils/CssClassList";
+import {Logger} from 'UI/Utils';
 
 /**
  *
@@ -23,11 +24,13 @@ var _private = {
         self._stopIndex = stopIndex;
     },
     getItemPadding: function(cfg) {
-        return cfg.itemPadding || {
-            left: 'default',
-            right: 'default',
-            top: 'default',
-            bottom: 'default'
+        const itemPadding = cfg.itemPadding || {};
+        const normalizeValue = (side) => (itemPadding[side] || 'default').toLowerCase();
+        return {
+            left: normalizeValue('left'),
+            right: normalizeValue('right'),
+            top: normalizeValue('top'),
+            bottom: normalizeValue('bottom'),
         };
     },
     getSpacingClassList: function(cfg) {
@@ -83,6 +86,11 @@ var _private = {
         } else {
             return !!(drawnActions && drawnActions.length);
         }
+    },
+    getGroupPaddingClasses(current): { left: string; right: string } {
+        const right = `controls-ListView__groupContent__rightPadding_${current.itemPadding.right}`;
+        const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}`;
+        return {right, left};
     }
 };
 
@@ -162,7 +170,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
+        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master' && !this._options.virtualScrolling;
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -185,6 +193,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (itemsModelCurrent.itemActions) {
            drawnActions = itemsModelCurrent.itemActions.showed;
+        }
+
+        if (itemsModelCurrent.isGroup) {
+            itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent);
         }
 
         itemsModelCurrent.drawActions = _private.needToDrawActions(this._editingItemData, itemsModelCurrent, this._options.editingConfig, drawnActions);
@@ -219,8 +231,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemsModelCurrent;
     },
 
-    _calcCursorClasses: function(clickable) {
-        return ` controls-ListView__itemV ${clickable === false ? 'controls-ListView__itemV_cursor-default' : 'controls-ListView__itemV_cursor-pointer'}`;
+    _calcCursorClasses: function(clickable, cursor) {
+        const cursorStyle = cursor || (clickable === false ? 'default' : 'pointer');
+        if (typeof clickable !== 'undefined') {
+            Logger.error('Controls/list:BaseItemTemplate', 'Option "clickable" is deprecated and will be removed in 20.3000. Use option "cursor" with value "default".');
+        }
+        return ` controls-ListView__itemV controls-ListView__itemV_cursor-${cursorStyle}`;
     },
 
     _calcItemVersion: function(item, key) {
