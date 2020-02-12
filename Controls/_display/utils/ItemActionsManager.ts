@@ -24,6 +24,7 @@ export interface IItemActionsManageableItem {
     getActions(): IItemActionsContainer;
     getContents(): unknown;
     setActions(actions: IItemActionsContainer): void;
+    isActive(): boolean;
     setActive(active: boolean): void;
 }
 
@@ -44,10 +45,12 @@ export default class ItemActionsManager extends BaseManager<IVirtualScrollManage
             this._collection.setEventRaising(false, true);
         }
         this._collection.each((item) => {
-            const actions = actionsGetter(item).map(this._fixActionIcon);
-            const assignedActions = actions.filter((action) => visibilityCallback(action, item.getContents()));
-            const itemChanged = this.setItemActions(item, this._wrapActionsInContainer(assignedActions));
-            hasChanges = hasChanges || itemChanged;
+            if (!item.isActive()) {
+                const actions = actionsGetter(item).map(this._fixActionIcon);
+                const assignedActions = actions.filter((action) => visibilityCallback(action, item.getContents()));
+                const itemChanged = this.setItemActions(item, this._wrapActionsInContainer(assignedActions));
+                hasChanges = hasChanges || itemChanged;
+            }
         });
         if (supportsEventPause) {
             this._collection.setEventRaising(true, true);
