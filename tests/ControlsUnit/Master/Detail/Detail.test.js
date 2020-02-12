@@ -107,5 +107,20 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(Control._isCanResizing(options), false);
          Control.destroy();
       });
+
+      it('afterRender', () => {
+         const Control = new masterDetail.Base();
+         let isStartRegister = false;
+         Control._startResizeRegister = () => isStartRegister = true;
+
+         Control._afterRender();
+         assert.equal(isStartRegister, false);
+
+         Control._currentWidth = 1;
+         Control._afterRender();
+         assert.equal(isStartRegister, true);
+
+         Control.destroy();
+      })
    });
 });
