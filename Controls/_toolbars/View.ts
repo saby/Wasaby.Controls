@@ -43,7 +43,7 @@ export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
     const readOnly = item.get('readOnly');
     const fontColorStyle = item.get('fontColorStyle');
     const contrastBackground = item.get('contrastBackground');
-    const cfg = {};
+    const cfg: IButtonOptions = {};
     cfg.readOnly = readOnly;
     cfg._hoverIcon = true;
     cssStyleGeneration.call(cfg, {
@@ -342,6 +342,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     }
 
     protected _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
+        if (this._options.readOnly) {
+            item.set('readOnly', true);
+        }
         return getButtonTemplateOptionsByItem(item);
     }
 
@@ -443,7 +446,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
         };
     }
 
-    static _theme = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
 }
 
 /**

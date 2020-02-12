@@ -154,6 +154,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   id: '1',
                   icon: 'icon-Print icon-medium',
                   title: 'Распечатать',
+                  readOnly: false,
                   '@parent': false,
                   parent: null
                },
