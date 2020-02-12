@@ -725,14 +725,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                };
             current.isNotFullGridSupport = true;
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(),
                 expected.withMarker,
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
 
             current.markerVisibility = 'hidden';
             current.resetColumnIndex();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme),
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(),
                 expected.withoutMarker,
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
          });
@@ -867,19 +867,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'
                ];
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme), expectedResult[0]);
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[0]);
             current.goToNextColumn();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme), expectedResult[1]);
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[1]);
             current.goToNextColumn();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme), expectedResult[2]);
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[2]);
             current.goToNextColumn();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme), expectedResult[3]);
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[3]);
 
             current.isSelected = false;
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme), expectedResult[4]);
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
 
          });
       });
@@ -929,7 +929,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                assert.equal(expectedData.item[expectedData.displayProperty],
                   checkedColumn.getPropValue(checkedColumn.item, expectedData.displayProperty), 'Incorrect value "" when checking columns.');
                assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
-               cAssert.isClassesEqual(checkedColumn.cellClasses, expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
+               cAssert.isClassesEqual(checkedColumn.classList.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
             }
 
             var gridColumn;
@@ -1539,39 +1539,42 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
             const offset = gridViewModel._maxEndRow ? (gridViewModel._maxEndRow - 1 ) * gridViewModel._headerCellMinHeight : 0;
-            assert.deepEqual({
+
+            function assertColumn(actual, expected) {
+               assert.deepEqual(actual.column, expected.column);
+               assert.equal(actual.index, expected.index);
+               cAssert.isClassesEqual(actual.cellClasses, expected.cellClasses);
+            }
+
+            assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: {},
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__results-cell-checkbox_theme-default',
-               index: 0,
-            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value first call "getCurrentResultsColumn()".');
-
+               index: 0
+            });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after first call "getCurrentResultsColumn()".');
             gridViewModel.goToNextResultsColumn();
 
-            assert.deepEqual({
+            assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: gridColumns[0],
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default',
                index: 1
-            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value second call "getCurrentResultsColumn()".');
-
+            });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after second call "getCurrentResultsColumn()".');
             gridViewModel.goToNextResultsColumn();
 
-            assert.deepEqual({
+            assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: gridColumns[1],
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__row-cell__content_halign_right controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default',
                index: 2
-            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value third call "getCurrentResultsColumn()".');
-
+            });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after third call "getCurrentResultsColumn()".');
             gridViewModel.goToNextResultsColumn();
 
-            assert.deepEqual({
+            assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: gridColumns[2],
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__row-cell__content_halign_right controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l_theme-default',
                index: 3
-            }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value fourth call "getCurrentResultsColumn()".');
-
+            });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after fourth call "getCurrentResultsColumn()".');
 
             gridViewModel.goToNextResultsColumn();
@@ -1888,15 +1891,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
             assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
 
-         });
-         it('getPaddingForCheckBox', function() {
-            const itemPadding = {
-                  top: 'L',
-                  bottom: 'L'
-               }
-            const resultTop = ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
-            const resultBottom = ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
-            assert.equal(resultTop + resultBottom, gridMod.GridViewModel._private.getPaddingForCheckBox({ theme, itemPadding }));
          });
 
          it('getBottomPaddingStyles', function() {
