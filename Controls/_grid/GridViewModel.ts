@@ -204,7 +204,7 @@ var
         prepareRowSeparatorClasses: function (current, theme, editingItem) {
             let result = ' ';
             if (current.rowSeparatorVisibility) {
-                result += ` controls-Grid__row-cell_withRowSeparator${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'm' ? '-m' : ''}_theme-${theme} `;
+                result += ` controls-Grid__row-cell_withRowSeparator${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? '-l' : ''}_theme-${theme} `;
                 if (current.isFirstInGroup && !current.isInHiddenGroup) {
                     result += ' controls-Grid__row-cell_first-row-in-group';
                 }
@@ -243,7 +243,7 @@ var
         },
 
         getItemColumnCellClasses: function(current, theme, editingItem) {
-            const rowSeparatorSize = ` controls-Grid__row-cell_rowSeparatorSize-${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'm' ? 'm' : 's'}_theme-${theme} `;
+            const rowSeparatorSize = ` controls-Grid__row-cell_rowSeparatorSize-${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? 'l' : 's'}_theme-${theme} `;
             const cellClasses = `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme}` +  rowSeparatorSize;
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
 

@@ -4,8 +4,8 @@
    border-top-width: @height_Grid-row-separator;
 }
 
-.controls-Grid__row-cell_rowSeparatorSize-m_theme-@{themeName} {
-   border-top-width: @border-thickness-m;
+.controls-Grid__row-cell_rowSeparatorSize-l_theme-@{themeName} {
+   border-top-width: @border-thickness-l;
 }
 
 .controls-Grid__row-cell_theme-@{themeName} {
@@ -23,8 +23,8 @@
    min-height: @min-height_Grid-row;
 }
 
-.controls-Grid__row-cell_withRowSeparator-m_theme-@{themeName} {
-   border-top-color: @border-color_Grid-row-separator-m;
+.controls-Grid__row-cell_withRowSeparator-l_theme-@{themeName} {
+   border-top-color: @border-color_Grid-row-separator-l;
    min-height: @min-height_Grid-row;
 }
 
@@ -41,15 +41,15 @@
 }
 
 // Первая строка в таблице с включенным разделителем
-.controls-GridViewV__itemsContainer .controls-Grid__row:first-child .controls-Grid__row-cell_withRowSeparator-m_theme-@{themeName} {
-   border-top-color: @border-color_Grid-row-separator-m;
+.controls-GridViewV__itemsContainer .controls-Grid__row:first-child .controls-Grid__row-cell_withRowSeparator-l_theme-@{themeName} {
+   border-top-color: @border-color_Grid-row-separator-l;
 }
 // Последняя строка в таблице с включенным разделителем
-.controls-GridViewV__itemsContainer .controls-Grid__row:last-child .controls-Grid__row-cell_withRowSeparator-m_theme-@{themeName} {
-   border-bottom-width: @border-thickness-m;
+.controls-GridViewV__itemsContainer .controls-Grid__row:last-child .controls-Grid__row-cell_withRowSeparator-l_theme-@{themeName} {
+   border-bottom-width: @border-thickness-l;
    border-bottom-style: solid;
-   border-bottom-color: @border-color_Grid-row-separator-m;
-   min-height: @min-height_Grid-row + @border-thickness-m;
+   border-bottom-color: @border-color_Grid-row-separator-l;
+   min-height: @min-height_Grid-row + @border-thickness-l;
 }
 
 
