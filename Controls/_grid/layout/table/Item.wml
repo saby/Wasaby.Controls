@@ -49,7 +49,7 @@
     <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
 
-<ws:template name="colTpl">
+<ws:template name="colTplInner">
     <ws:if data="{{itemData.columnScroll && colspan}}">
         <td colspan="{{itemData.getColspanFor('fixedColumnOfColumnScroll')}}" attr:key="{{itemData.getCurrentColumnKey()}}_fixed">
             <ws:partial template="columnContentWrapper"/>
@@ -71,16 +71,20 @@
     </ws:else>
 </ws:template>
 
-<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable, cursor)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
-           {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
-    <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
-        <ws:partial template="colTpl"
-                    currentColumn="{{itemData.getCurrentColumn()}}"
-                    attr:class="{{itemData.getCurrentColumn().cellClasses}} js-controls-SwipeControl__actionsContainer
-                        {{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
+<ws:template name="colTpl">
+    <ws:partial template="colTplInner" attr:class="js-controls-SwipeControl__actionsContainer
+                        {{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
+                        {{itemData.hasMultiSelect && itemData.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
+                        {{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
                         {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                         {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                         {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
                         {{className || ''}}"/>
+</ws:template>
+
+<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable, cursor)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
+           {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
+    <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
+        <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
     </ws:for>
 </tr>
