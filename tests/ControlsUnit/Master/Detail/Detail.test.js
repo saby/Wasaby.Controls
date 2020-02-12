@@ -1,14 +1,36 @@
-define(['Controls/masterDetail'], function(masterDetail) {
+define(['Controls/masterDetail'], function (masterDetail) {
    'use strict';
-   describe('Controls.Container.MasterDetail', function() {
+   describe('Controls.Container.MasterDetail', function () {
       it('selected master value changed', () => {
          let Control = new masterDetail.Base();
          let event = {
-            stopPropagation: () => {}
+            stopPropagation: () => {
+            }
          };
          Control._selectedMasterValueChangedHandler(event, 'newValue');
          assert.equal(Control._selected, 'newValue');
          Control.destroy();
+      });
+
+      it('beforeMount', (done) => {
+         const Control = new masterDetail.Base();
+         Control._getSettings = () => {
+            return Promise.resolve({'1': 500});
+         };
+
+         let options = {
+            propStorageId: '1',
+            masterMinWidth: 100,
+            masterWidth: 200,
+            masterMaxWidth: 300
+         };
+
+         Control._beforeMount(options).then((result) => {
+            assert.equal(result, '300px');
+            Control.destroy();
+            done();
+         });
+
       });
 
       it('update offset', () => {
