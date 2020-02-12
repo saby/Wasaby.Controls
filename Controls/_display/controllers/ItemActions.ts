@@ -76,12 +76,14 @@ export function assignActions(
     }
 
     collection.each((item) => {
-        const fixedActions = actionsGetter(item).map(_fixActionIcon);
-        const actionsForItem = fixedActions.filter((action) =>
-            visibilityCallback(action, item.getContents())
-        );
-        const itemChanged = _setItemActions(item, _wrapActionsInContainer(actionsForItem));
-        hasChanges = hasChanges || itemChanged;
+        if (!item.isActive()) {
+            const fixedActions = actionsGetter(item).map(_fixActionIcon);
+            const actionsForItem = fixedActions.filter((action) =>
+                visibilityCallback(action, item.getContents())
+            );
+            const itemChanged = _setItemActions(item, _wrapActionsInContainer(actionsForItem));
+            hasChanges = hasChanges || itemChanged;
+        }
     });
 
     if (supportsEventRaising) {
