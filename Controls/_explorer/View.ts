@@ -342,6 +342,10 @@ var
       _itemsPromise: null,
       _itemsResolver: null,
 
+      _resolveItemsPromise() {
+         this._itemsResolver();
+      },
+
       _beforeMount: function(cfg) {
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
@@ -351,7 +355,9 @@ var
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
 
          this._itemsPromise = new Promise((res) => { this._itemsResolver = res; });
-
+         if (!cfg.source) {
+            this._resolveItemsPromise();
+         }
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
          [root]: {
