@@ -30,7 +30,19 @@ define(['Controls/masterDetail'], function (masterDetail) {
             Control.destroy();
             done();
          });
+      });
 
+      it('initCurrentWidth', () => {
+         let Control = new masterDetail.Base();
+         let options = {
+            propStorageId: '1',
+            masterMinWidth: 0,
+            masterWidth: 0,
+            masterMaxWidth: 0
+         };
+         Control.initCurrentWidth(options.masterWidth);
+         assert.equal(Control._currentWidth, '0px');
+         Control.destroy();
       });
 
       it('update offset', () => {
