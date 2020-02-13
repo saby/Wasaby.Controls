@@ -1835,7 +1835,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
-        _private.loadToDirectionIfNeed(this, direction, this._options.filter);
+        if (this._options?.navigation?.view === 'infinity') {
+            _private.loadToDirectionIfNeed(this, direction, this._options.filter);
+        }
     },
 
     triggerVisibilityChangedHandler(_: SyntheticEvent<Event>, direction: IDirection, state: boolean): void {
