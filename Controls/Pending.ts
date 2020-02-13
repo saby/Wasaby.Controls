@@ -202,6 +202,10 @@ import ParallelDeferred = require('Core/ParallelDeferred');
          });
       },
 
+      _finishPendingHandler: function(event, forceFinishValue) {
+         return this.finishP1endingOperations(forceFinishValue);
+      },
+
       /**
        * Метод вернет завершенный Promise, когда все пендинги будут завершены.
        * Функции обратного вызова Promise с массивом результатов пендингов.
