@@ -2,7 +2,8 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_masterDetail/List/List');
 
 /**
- * Контрол используют в качестве контейнера для любого списочного контрола, который добавлен в шаблон {@link Controls/masterDetail:Base#master master}. Такой контейнер умеет порождать событие markedKeyChanged при смене выбранной записи списка.
+ * Контрол используют в качестве контейнера для любого списочного контрола, который добавлен в шаблон {@link Controls/masterDetail/Base/options/master/ master}.
+ * Он обеспечивает передачу текущей отмеченной записи в списке между списком и master'ом через всплывающее событие selectedMasterValueChanged.
  * @class Controls/_masterDetail/List
  * @extends UI/Base:Control
  * @public
@@ -12,7 +13,7 @@ import template = require('wml!Controls/_masterDetail/List/List');
 
 /**
  * @event Происходит при смене выбранной записи.
- * @name Controls/_masterDetail/List#markedKeyChanged
+ * @name Controls/_masterDetail/List#selectedMasterValueChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key  Ключ выбранного элемента.
  */
