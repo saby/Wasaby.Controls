@@ -11,7 +11,16 @@ export type Config = {
     configField: string;
 };
 
-export const loadHandlers = (handlers: Handler[]): Array<Promise<Handler>> => handlers.map(getHandler);
+/**
+ * Загружает модули обработчиков обшибок.
+ * Названия модулей обработчиков берутся из поля ApplicationConfig[handlersField].
+ * Функция может быть использована для предварительной загрузки обработчиков.
+ * Например, это может понадобиться для случая показа ошибки при разрыве соединения.
+ * @param handlersField
+ */
+export const loadHandlers = (handlersField: string): Array<Promise<Handler>> => {
+    return getApplicationHandlers(handlersField).map(getHandler);
+};
 
 const getDefaultConfig = (): Partial<Config> => {
     return {
