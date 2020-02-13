@@ -275,7 +275,12 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         this._redrawOverlay();
     },
     _beforeUnmount() {
-        this._overlayDiv.outerHTML = '';
+        if (this._overlayDiv.parentElement) {
+            this._container.removeChild(this._overlayDiv);
+        }
+        if (this._messageDiv.parentElement) {
+            this._overlayDiv.removeChild(this._messageDiv);
+        }
         this._overlayDiv = null;
         this._messageDiv = null;
     },
@@ -552,6 +557,15 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         if (this._zIndex) {
             overlayDiv.setAttribute('style', 'z-index: ' + this._zIndex);
         }
+        const currentOverlayVisibility = !!overlayDiv.parentElement;
+        const nextOverlayVisibility = this._isOverlayVisible;
+        if (currentOverlayVisibility !== nextOverlayVisibility) {
+            if (nextOverlayVisibility) {
+                this._container.appendChild(overlayDiv);
+            } else {
+                this._container.removeChild(overlayDiv);
+            }
+        }
 
         const newMessageClassName = this._calculateMessageClassName();
         if (messageDiv.className !== newMessageClassName) {
@@ -560,13 +574,18 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         if (messageDiv.innerText !== this.message) {
             messageDiv.innerText = this.message;
         }
+        const currentMessageVisibility = !!messageDiv.parentElement;
+        const nextMessageVisibility = this._isMessageVisible;
+        if (currentMessageVisibility !== nextMessageVisibility) {
+            if (nextMessageVisibility) {
+                overlayDiv.appendChild(messageDiv);
+            } else {
+                overlayDiv.removeChild(messageDiv);
+            }
+        }
     },
 
     _calculateOverlayClassName(): string {
-        if (!this._isOverlayVisible) {
-            return 'ws-hidden';
-        }
-
         const classList = ['controls-loading-indicator', 'controls-Popup__isolatedFocusingContext'];
 
         classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
@@ -595,9 +614,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     },
 
     _calculateMessageClassName(): string {
-        if (!this._isMessageVisible) {
-            return 'ws-hidden';
-        }
         return 'controls-loading-indicator-in';
     }
 });
