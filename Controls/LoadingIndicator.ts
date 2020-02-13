@@ -548,15 +548,17 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
 
         const currentOverlayVisibility = !!overlayDiv.parentElement;
         const nextOverlayVisibility = this._isOverlayVisible;
+        if (nextOverlayVisibility) {
+            const newOverlayClassName = this._calculateOverlayClassName();
+            if (overlayDiv.className !== newOverlayClassName) {
+                overlayDiv.className = newOverlayClassName;
+            }
+            if (this._zIndex) {
+                overlayDiv.setAttribute('style', 'z-index: ' + this._zIndex);
+            }
+        }
         if (currentOverlayVisibility !== nextOverlayVisibility) {
             if (nextOverlayVisibility) {
-                const newOverlayClassName = this._calculateOverlayClassName();
-                if (overlayDiv.className !== newOverlayClassName) {
-                    overlayDiv.className = newOverlayClassName;
-                }
-                if (this._zIndex) {
-                    overlayDiv.setAttribute('style', 'z-index: ' + this._zIndex);
-                }
                 this._container.appendChild(overlayDiv);
             } else {
                 this._container.removeChild(overlayDiv);
@@ -565,15 +567,17 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
 
         const currentMessageVisibility = !!messageDiv.parentElement;
         const nextMessageVisibility = this._isMessageVisible;
+        if (nextMessageVisibility) {
+            const newMessageClassName = this._calculateMessageClassName();
+            if (messageDiv.className !== newMessageClassName) {
+                messageDiv.className = newMessageClassName;
+            }
+            if (messageDiv.innerText !== this.message) {
+                messageDiv.innerText = this.message;
+            }
+        }
         if (currentMessageVisibility !== nextMessageVisibility) {
             if (nextMessageVisibility) {
-                const newMessageClassName = this._calculateMessageClassName();
-                if (messageDiv.className !== newMessageClassName) {
-                    messageDiv.className = newMessageClassName;
-                }
-                if (messageDiv.innerText !== this.message) {
-                    messageDiv.innerText = this.message;
-                }
                 overlayDiv.appendChild(messageDiv);
             } else {
                 overlayDiv.removeChild(messageDiv);
