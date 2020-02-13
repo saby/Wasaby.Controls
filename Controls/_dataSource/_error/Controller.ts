@@ -1,5 +1,5 @@
 /// <amd-module name="Controls/_dataSource/_error/Controller" />
-import { Controller as ParkingController } from 'Controls/_dataSource/parking';
+import { Controller as ParkingController, loadHandlers } from 'Controls/_dataSource/parking';
 import {
     Handler,
     HandlerConfig,
@@ -8,6 +8,7 @@ import {
 import Mode from 'Controls/_dataSource/_error/Mode';
 import { fetch } from 'Browser/Transport';
 import { IVersionable } from 'Types/entity';
+import {constants} from 'Env/Env';
 
 const { Errors } = fetch;
 const { Abort } = Errors;
@@ -91,6 +92,7 @@ let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): Han
 export default class ErrorController {
     private __controller: ParkingController;
     constructor(config: Config) {
+        loadHandlers(constants.ApplicationConfig.errorHandlers);
         this.__controller = new ParkingController({
             configField: 'errorHandlers',
             ...config

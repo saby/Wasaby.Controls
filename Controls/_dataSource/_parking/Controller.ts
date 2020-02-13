@@ -11,9 +11,7 @@ export type Config = {
     configField: string;
 };
 
-setTimeout(() => {
-    import('SbisEnvUI/Maintains');
-});
+export const loadHandlers = (handlers: Handler[]): Array<Promise<Handler>> => handlers.map(getHandler);
 
 const getDefaultConfig = (): Partial<Config> => {
     return {
