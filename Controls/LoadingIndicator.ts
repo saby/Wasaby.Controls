@@ -267,6 +267,9 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
                 ManagerController.setIndicator(self);
             });
         }
+
+        // TODO Откатить DOM-решение или доказать невозмодность другого в задаче по ссылке ниже.
+        // https://online.sbis.ru/opendoc.html?guid=2bd41176-8896-4a0a-a04d-a93b8a4c3a2d
         this._createOverlay();
         this._redrawOverlay();
     },
@@ -537,6 +540,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         overlayDiv.setAttribute('tabindex', '1');
 
         const messageDiv = document.createElement('div');
+        messageDiv.className = 'controls-loading-indicator-in';
 
         this._overlayDiv = overlayDiv;
         this._messageDiv = messageDiv;
@@ -567,14 +571,8 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
 
         const currentMessageVisibility = !!messageDiv.parentElement;
         const nextMessageVisibility = this._isMessageVisible;
-        if (nextMessageVisibility) {
-            const newMessageClassName = this._calculateMessageClassName();
-            if (messageDiv.className !== newMessageClassName) {
-                messageDiv.className = newMessageClassName;
-            }
-            if (messageDiv.innerText !== this.message) {
-                messageDiv.innerText = this.message;
-            }
+        if (nextMessageVisibility && messageDiv.innerText !== this.message) {
+            messageDiv.innerText = this.message;
         }
         if (currentMessageVisibility !== nextMessageVisibility) {
             if (nextMessageVisibility) {
@@ -611,10 +609,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         }
 
         return classList.join(' ');
-    },
-
-    _calculateMessageClassName(): string {
-        return 'controls-loading-indicator-in';
     }
 });
 
