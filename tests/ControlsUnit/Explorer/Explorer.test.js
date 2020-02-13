@@ -400,32 +400,56 @@ define([
          assert.isTrue(itemsPromiseResolved);
       });
 
-      it('_beforeUpdate', function() {
-         const cfg = { viewMode: 'tree', root: null };
-         const cfg2 = { viewMode: 'search' , root: null };
-         const instance = new explorerMod.View(cfg);
-         let resetExpandedItemsCalled = false;
-         instance._children = {
-            treeControl: {
-               resetExpandedItems: () => resetExpandedItemsCalled = true
-            }
-         };
+      describe('_beforeUpdate', function() {
+         it('collapses and expands items as needed', () => {
+            const cfg = { viewMode: 'tree', root: null };
+            const cfg2 = { viewMode: 'search' , root: null };
+            const instance = new explorerMod.View(cfg);
+            let resetExpandedItemsCalled = false;
+            instance._children = {
+               treeControl: {
+                  resetExpandedItems: () => resetExpandedItemsCalled = true
+               }
+            };
 
-         instance._viewMode = cfg.viewMode;
+            instance.saveOptions(cfg);
+            instance._viewMode = cfg.viewMode;
 
-         instance._beforeUpdate(cfg2);
-         assert.isTrue(resetExpandedItemsCalled);
+            instance._beforeUpdate(cfg2);
+            assert.isTrue(resetExpandedItemsCalled);
 
-         resetExpandedItemsCalled = false;
-         instance._viewMode = cfg2.viewMode;
+            resetExpandedItemsCalled = false;
+            instance._viewMode = cfg2.viewMode;
 
-         instance._beforeUpdate(cfg2);
-         assert.isFalse(resetExpandedItemsCalled);
+            instance._beforeUpdate(cfg2);
+            assert.isFalse(resetExpandedItemsCalled);
 
-         instance._isGoingFront = true;
-         instance.saveOptions(cfg);
-         instance._beforeUpdate(cfg2);
-         assert.isFalse(instance._isGoingFront);
+            instance._isGoingFront = true;
+            instance.saveOptions(cfg);
+            instance._beforeUpdate(cfg2);
+            assert.isFalse(instance._isGoingFront);
+         });
+
+         it('changes viewMode on items set if both viewMode and root changed', () => {
+            const cfg = { viewMode: 'tree', root: null };
+            const cfg2 = { viewMode: 'search' , root: 'abc' };
+            const instance = new explorerMod.View(cfg);
+            instance._children = {
+               treeControl: {
+                  resetExpandedItems: () => null
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._viewMode = 'tree';
+
+            instance._beforeUpdate(cfg2);
+            instance.saveOptions(cfg2);
+            assert.strictEqual(instance._viewMode, 'tree');
+
+            explorerMod.View._private.itemsSetCallback(instance);
+            assert.strictEqual(instance._viewMode, 'search');
+         });
       });
 
       it('_onBreadCrumbsClick', function() {
