@@ -529,6 +529,19 @@ define([
          assert.deepEqual(ctrl._loadedItems, loadedItems);
       });
 
+      it('_private.checkPortionedSearchByScrollTriggerVisibility', () => {
+         const self = {};
+         lists.BaseControl._private.checkPortionedSearchByScrollTriggerVisibility(self, false);
+
+         assert.isTrue(!self._portionedSearch);
+
+         self._portionedSearchInProgress = true;
+         lists.BaseControl._private.checkPortionedSearchByScrollTriggerVisibility(self, false);
+
+         assert.isTrue(self._portionedSearch._searchTimer !== null);
+         self._portionedSearch._clearTimer();
+      });
+
       it('_needScrollCalculation', function(done) {
          var source = new sourceLib.Memory({
             keyProperty: 'id',
@@ -590,17 +603,15 @@ define([
       });
 
       it('loadToDirection down', async function() {
-         var source = new sourceLib.Memory({
+         const source = new sourceLib.Memory({
             keyProperty: 'id',
             data: data
          });
 
-         var dataLoadFired = false;
-         var portionSearchTimerReseted = false;
-         var portionSearchReseted = false;
-         var beforeLoadToDirectionCalled = false;
+         let dataLoadFired = false;
+         let beforeLoadToDirectionCalled = false;
 
-         var cfg = {
+         const cfg = {
             viewName: 'Controls/List/ListView',
             dataLoadCallback: function() {
                dataLoadFired = true;
@@ -652,6 +663,58 @@ define([
          assert.isFalse(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
       });
+
+      it('loadToDirection down with portioned load', async function() {
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+
+         let metaData;
+
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            beforeLoadToDirectionCallback: function() {
+               beforeLoadToDirectionCalled = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
+            }
+         };
+
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         ctrl._container = {clientHeight: 100};
+         ctrl._afterMount(cfg);
+         ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
+
+         metaData = ctrl._items.getMetaData();
+         metaData.iterative = true;
+         ctrl._items.setMetaData(metaData);
+
+         await lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.isTrue(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
+      });
+
 
       it('loadToDirection indicator triggerVisibility', async () => {
          var source = new sourceLib.Memory({
@@ -5047,18 +5110,34 @@ define([
 
       it('_getLoadingIndicatorStyles', function() {
          const baseControl = new lists.BaseControl();
+         let itemsCount;
+         baseControl._listViewModel = {
+            getCount: () => itemsCount
+         };
 
          assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), '');
 
          baseControl._loadingIndicatorContainerHeight = 32;
+         itemsCount = 0;
          assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'min-height: 32px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
 
+         itemsCount = 10;
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+
          baseControl._loadingIndicatorContainerOffsetTop = 48;
+         itemsCount = 0;
          assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'min-height: 32px;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+
+         itemsCount = 10;
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
       });
