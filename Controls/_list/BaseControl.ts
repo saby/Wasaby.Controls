@@ -328,7 +328,6 @@ var _private = {
             const currentItemIndex = self._listViewModel.getItems().getIndexByValue(self._options.keyProperty, self._markedKeyForRestoredScroll);
             const nodeElement = self._children.listView.getItemsContainer().children[currentItemIndex].children[0];
             scrollToElement(nodeElement, true);
-            // _private.scrollToItem(self, self._markedKeyForRestoredScroll);
             self._markedKeyForRestoredScroll = null;
         }
     },
