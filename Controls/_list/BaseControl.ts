@@ -1035,7 +1035,7 @@ var _private = {
     },
 
     checkPortionedSearchByScrollTriggerVisibility(self, scrollTriggerVisibility: boolean): void {
-        if (!scrollTriggerVisibility) {
+        if (!scrollTriggerVisibility && self._portionedSearchInProgress) {
             _private.getPortionedSearch(self).resetTimer();
         }
     },
