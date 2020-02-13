@@ -390,8 +390,14 @@ define([
          assert.deepEqual({ 1: { markedKey: null } }, instance._restoredMarkedKeys);
 
          path.clear();
+
+         let itemsPromiseResolved = false;
+         instance._resolveItemsPromise = function() {
+            itemsPromiseResolved = true;
+         };
          instance._beforeMount(cfg);
          assert.equal(instance._breadCrumbsItems, null);
+         assert.isTrue(itemsPromiseResolved);
       });
 
       describe('_beforeUpdate', function() {
