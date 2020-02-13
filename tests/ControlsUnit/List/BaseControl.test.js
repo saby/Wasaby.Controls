@@ -5052,18 +5052,34 @@ define([
 
       it('_getLoadingIndicatorStyles', function() {
          const baseControl = new lists.BaseControl();
+         let itemsCount;
+         baseControl._listViewModel = {
+            getCount: () => itemsCount
+         };
 
          assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), '');
 
          baseControl._loadingIndicatorContainerHeight = 32;
+         itemsCount = 0;
          assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'min-height: 32px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
 
+         itemsCount = 10;
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+
          baseControl._loadingIndicatorContainerOffsetTop = 48;
+         itemsCount = 0;
          assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'min-height: 32px;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+
+         itemsCount = 10;
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
       });

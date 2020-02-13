@@ -46,10 +46,11 @@ const
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
          _private.setDispalyNoneForScroll(self._children.content);
          _private.drawTransform(self, 0);
+         const isFullSupport = isFullGridSupport();
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
             newContentContainerSize = null;
-         if (!isFullGridSupport()) {
+         if (!isFullSupport) {
             newContentContainerSize = self._children.content.offsetWidth;
          } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
@@ -73,7 +74,7 @@ const
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
             self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
          }
-         self._contentSizeForHScroll = self._contentSize - self._fixedColumnsWidth;
+         self._contentSizeForHScroll = isFullSupport ? self._contentSize - self._fixedColumnsWidth : self._contentSize;
          _private.drawTransform(self, self._scrollPosition);
          // после расчетов убираем display: none
          _private.removeDisplayFromScroll(self._children.content);
