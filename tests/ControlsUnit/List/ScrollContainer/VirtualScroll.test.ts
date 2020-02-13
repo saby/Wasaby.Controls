@@ -184,7 +184,6 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         // @ts-ignore
         instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60, 60, 60, 60, 60, 60]));
 
-
         it('can`t scroll', () => {
             assert.isFalse(instance.canScrollToItem(6, false, true), 'Item is out of range');
             assert.isFalse(instance.canScrollToItem(5, false, true), 'Item offset > viewport offset');
@@ -193,6 +192,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.isTrue(instance.canScrollToItem(0, false, true));
             assert.isTrue(instance.canScrollToItem(4, true, false));
             assert.isTrue(instance.canScrollToItem(4, false, false));
+            assert.isTrue(instance.canScrollToItem(4, true, true));
             instance.resetRange(0, 5);
             assert.isTrue(instance.canScrollToItem(5, false, true));
         });
@@ -257,6 +257,105 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
             instance.removeItems(0, 1);
             assert.equal(0, instance.getPositionToRestore(0));
+        });
+    });
+    describe('.updateItemsHeights()', () => {
+        it('range changed switch off', () => {
+            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
+            instance.resetRange(0, 5);
+            assert.isTrue(instance.rangeChanged);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
+            assert.isFalse(instance.rangeChanged);
+        });
+    });
+    describe('.resizeView()', () => {
+        let instance: controller;
+
+        beforeEach(() => {
+            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 200});
+        });
+
+        it('range changed keeps value', () => {
+            instance.resetRange(0, 5);
+
+            assert.isTrue(instance.rangeChanged);
+            // @ts-ignore
+            instance.resizeView(300, 0, generateContainer([60, 60, 60, 60, 60]));
+            assert.isTrue(instance.rangeChanged);
+        });
+        it('correct shift range, after view resized', () => {
+            instance.setOptions({pageSize: 3});
+            instance.resetRange(3, 5);
+            // @ts-ignore
+            instance.resizeView(180, 0, generateContainer([60, 60, 60]));
+            assert.deepEqual({range: {start: 1, stop: 5}, placeholders: {top: 0, bottom: 0}},
+                instance.shiftRange('up'));
+        });
+    });
+    describe('.resizeViewport()', () => {
+        let instance: controller;
+
+        beforeEach(() => {
+            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
+        });
+
+        it('range changed keeps value', () => {
+            instance.resetRange(0, 5);
+
+            assert.isTrue(instance.rangeChanged);
+            // @ts-ignore
+            instance.resizeViewport(300, 0, generateContainer([60, 60, 60, 60, 60]));
+            assert.isTrue(instance.rangeChanged);
+        });
+        it('correct shift range, after viewport resized', () => {
+            instance.setOptions({pageSize: 3});
+            instance.resetRange(0, 5);
+            // @ts-ignore
+            instance.resizeViewport(80, 0, generateContainer([60, 60, 60]));
+            assert.deepEqual({range: {start: 2, stop: 4}, placeholders: {top: 120, bottom: 0}},
+                instance.shiftRange('down'));
+        });
+    });
+    describe('.isRangeOnEdge()', () => {
+        let instance: controller;
+
+        beforeEach(() => {
+            instance = new controller({pageSize: 5, segmentSize: 1}, {});
+        });
+
+        it('on top edge', () => {
+            instance.resetRange(0, 10);
+
+            assert.isTrue(instance.isRangeOnEdge('up'));
+
+            instance.resetRange(1, 10);
+
+            assert.isFalse(instance.isRangeOnEdge('up'));
+        });
+        it('on bottom edge', () => {
+            instance.resetRange(10, 10);
+
+            assert.isTrue(instance.isRangeOnEdge('down'));
+
+            instance.resetRange(4, 10);
+
+            assert.isFalse(instance.isRangeOnEdge('down'));
+        });
+    });
+    describe('.getItemContainerByIndex()', () => {
+        const instance = new controller({pageSize: 5, segmentSize: 1}, {});
+        instance.resetRange(2, 10);
+
+        it('get correct value', () => {
+            const itemsContainer = generateContainer([60, 60, 60, 60, 60, 60]);
+
+            // @ts-ignore
+            assert.equal(itemsContainer.children[0], instance.getItemContainerByIndex(2, itemsContainer));
+            // @ts-ignore
+            assert.isUndefined(instance.getItemContainerByIndex(0, itemsContainer));
+            // @ts-ignore
+            assert.isUndefined(instance.getItemContainerByIndex(10, itemsContainer));
         });
     });
 });
