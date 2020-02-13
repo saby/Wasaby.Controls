@@ -248,6 +248,8 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     small: '',
     overlay: 'default',
     mods: null,
+    _overlayDiv: null,
+    _messageDiv: null,
 
     _beforeMount(cfg) {
         this.mods = [];
@@ -271,6 +273,11 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     _beforeUpdate(cfg) {
         this._updateProperties(cfg);
         this._redrawOverlay();
+    },
+    _beforeUnmount() {
+        this._overlayDiv.outerHTML = '';
+        this._overlayDiv = null;
+        this._messageDiv = null;
     },
     _updateProperties(cfg) {
         if (cfg.isGlobal !== undefined) {
@@ -556,6 +563,10 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     },
 
     _calculateOverlayClassName(): string {
+        if (!this._isOverlayVisible) {
+            return 'ws-hidden';
+        }
+
         const classList = ['controls-loading-indicator', 'controls-Popup__isolatedFocusingContext'];
 
         classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
@@ -579,21 +590,15 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         if (this?.mods?.length) {
             classList.concat(this.mods.map((mod) => 'controls-loading-indicator_mod-' + mod));
         }
-        if (!this._isOverlayVisible) {
-            classList.unshift('ws-hidden');
-        }
 
         return classList.join(' ');
     },
 
     _calculateMessageClassName(): string {
-        const classList = ['controls-loading-indicator-in'];
-
         if (!this._isMessageVisible) {
-            classList.unshift('ws-hidden');
+            return 'ws-hidden';
         }
-
-        return classList.join(' ');
+        return 'controls-loading-indicator-in';
     }
 });
 
