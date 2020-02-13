@@ -1,16 +1,18 @@
 <div class="controls-LoadingIndicator">
    <ws:partial template="{{_options.content}}" scope="{{ _options }}" on:showIndicator="_showHandler()" on:hideIndicator="_hideHandler()"
                attr:class="controls-loading-indicator_content"/>
-   <div class="ws-hidden">
-      For the reactivity
-      {{_isOverlayVisible}}
-      {{_isMessageVisible}}
-      {{_zIndex}}
-      {{isGlobal}}
-      {{message}}
-      {{scroll}}
-      {{small}}
-      {{overlay}}
-      {{mods}}
-   </div>
+   <ws:if data="{{ '' }}">
+      <div>
+         For the reactivity
+         {{_isOverlayVisible}}
+         {{_isMessageVisible}}
+         {{_zIndex}}
+         {{isGlobal}}
+         {{message}}
+         {{scroll}}
+         {{small}}
+         {{overlay}}
+         {{mods}}
+      </div>
+   </ws:if>
 </div>
