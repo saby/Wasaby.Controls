@@ -537,10 +537,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         overlayDiv.setAttribute('tabindex', '1');
 
         const messageDiv = document.createElement('div');
-        messageDiv.innerText = 'TODO';
-        overlayDiv.appendChild(messageDiv);
-
-        this._container.appendChild(overlayDiv);
 
         this._overlayDiv = overlayDiv;
         this._messageDiv = messageDiv;
@@ -550,15 +546,17 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         const overlayDiv = this._overlayDiv;
         const messageDiv = this._messageDiv;
 
-        const newOverlayClassName = this._calculateOverlayClassName();
-        if (overlayDiv.className !== newOverlayClassName) {
-            overlayDiv.className = newOverlayClassName;
-        }
-        if (this._zIndex) {
-            overlayDiv.setAttribute('style', 'z-index: ' + this._zIndex);
-        }
         const currentOverlayVisibility = !!overlayDiv.parentElement;
         const nextOverlayVisibility = this._isOverlayVisible;
+        if (nextOverlayVisibility) {
+            const newOverlayClassName = this._calculateOverlayClassName();
+            if (overlayDiv.className !== newOverlayClassName) {
+                overlayDiv.className = newOverlayClassName;
+            }
+            if (this._zIndex) {
+                overlayDiv.setAttribute('style', 'z-index: ' + this._zIndex);
+            }
+        }
         if (currentOverlayVisibility !== nextOverlayVisibility) {
             if (nextOverlayVisibility) {
                 this._container.appendChild(overlayDiv);
@@ -567,15 +565,17 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
             }
         }
 
-        const newMessageClassName = this._calculateMessageClassName();
-        if (messageDiv.className !== newMessageClassName) {
-            messageDiv.className = newMessageClassName;
-        }
-        if (messageDiv.innerText !== this.message) {
-            messageDiv.innerText = this.message;
-        }
         const currentMessageVisibility = !!messageDiv.parentElement;
         const nextMessageVisibility = this._isMessageVisible;
+        if (nextMessageVisibility) {
+            const newMessageClassName = this._calculateMessageClassName();
+            if (messageDiv.className !== newMessageClassName) {
+                messageDiv.className = newMessageClassName;
+            }
+            if (messageDiv.innerText !== this.message) {
+                messageDiv.innerText = this.message;
+            }
+        }
         if (currentMessageVisibility !== nextMessageVisibility) {
             if (nextMessageVisibility) {
                 overlayDiv.appendChild(messageDiv);
