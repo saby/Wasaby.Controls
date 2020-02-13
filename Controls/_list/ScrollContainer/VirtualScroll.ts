@@ -14,13 +14,12 @@ export default class VirtualScroll {
     private _range: IRange = {start: 0, stop: 0};
     private _oldRange: IRange = {start: 0, stop: 0};
     private _savedDirection: IDirection;
-    private _savedScrollIndex: number;
     private _itemsCount: number;
 
     rangeChanged: boolean;
 
     readonly get isNeedToRestorePosition(): boolean {
-        return typeof (this._savedDirection || this._savedScrollIndex) !== 'undefined';
+        return Boolean(this._savedDirection);
     }
 
     constructor(
@@ -46,10 +45,6 @@ export default class VirtualScroll {
         this._containerHeightsData = {...this._containerHeightsData, ...containerData};
     }
 
-    updateItemsCount(count: number): void {
-        this._itemsCount = count;
-    }
-
     /**
      * Создает новый диапазон видимых индексов
      * @remark Используется при инициализации
@@ -58,8 +53,7 @@ export default class VirtualScroll {
      * @param itemsHeights Высоты элементов
      */
     resetRange(startIndex: number, itemsCount: number, itemsHeights?: Partial<IItemsHeights>): IRangeShiftResult {
-        this._savedScrollIndex = startIndex;
-        this.updateItemsCount(itemsCount);
+        this._itemsCount = itemsCount;
 
         if (itemsHeights) {
             this._itemsHeightData = {...this._itemsHeightData, ...itemsHeights};
@@ -117,6 +111,7 @@ export default class VirtualScroll {
      */
     insertItems(addIndex: number, count: number): IRangeShiftResult {
         const direction = addIndex <= this._range.start ? 'up' : 'down';
+        this._itemsCount += count;
         this._insertItemHeights(addIndex, count);
 
         if (direction === 'up') {
@@ -127,6 +122,7 @@ export default class VirtualScroll {
         // TODO Поправить после исправления
         // https://online.sbis.ru/opendoc.html?guid=63490db6-53f7-411a-9603-0fcbe5838b9a
         if (!this._options.pageSize) {
+            this._oldRange = {...this._range};
             return this._setRange({start: 0, stop: this._itemsCount});
         } else {
             return this._setRange(
@@ -142,6 +138,7 @@ export default class VirtualScroll {
      */
     removeItems(removeIndex: number, count: number): IRangeShiftResult {
         const direction = removeIndex < this._range.start ? 'up' : 'down';
+        this._itemsCount -= count;
         this._removeItemHeights(removeIndex, count);
 
         return this._setRange(
@@ -215,25 +212,31 @@ export default class VirtualScroll {
      * @param scrollTop
      */
     getPositionToRestore(scrollTop: number): number {
-        const itemsOffsets = this._itemsHeightData.itemsOffsets;
         const itemsHeights = this._itemsHeightData.itemsHeights;
         let savedPosition: number;
 
-        if (typeof this._savedDirection !== 'undefined') {
+        if (this._savedDirection) {
             savedPosition = this._savedDirection === 'up' ?
                 scrollTop + this._getItemsHeightsSum(this._range.start, this._oldRange.start, itemsHeights) :
                 scrollTop - this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights);
-        } else if (typeof this._savedScrollIndex !== 'undefined') {
-            savedPosition = itemsOffsets[this._savedScrollIndex];
         }
 
-        this._savedDirection = this._savedScrollIndex = undefined;
+        this._savedDirection = undefined;
 
         return savedPosition;
     }
 
-    getItemOffset(index: number): number {
-        return this._itemsHeightData.itemsOffsets[index];
+    getItemContainerByIndex(index: number, itemsContainer: HTMLElement): HTMLElement {
+        let startChildrenIndex = 0;
+
+        for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
+            if (itemsContainer.children[i].className.indexOf('controls-ListView__hiddenContainer') === -1) {
+                startChildrenIndex = i;
+                break;
+            }
+        }
+
+        return itemsContainer.children[startChildrenIndex + index - this._range.start] as HTMLElement;
     }
 
     /**
@@ -245,10 +248,12 @@ export default class VirtualScroll {
     }
 
     /**
-     * Проверяет возможность подскроллить к верхней границе элемента
+     * Проверяет возможность подскроллить к элементу
      * @param itemIndex
+     * @param toBottom
+     * @param force
      */
-    canScrollToItem(itemIndex: number): boolean {
+    canScrollToItem(itemIndex: number, toBottom: boolean, force: boolean): boolean {
         let canScroll = false;
         const {viewport, scroll: scrollHeight} = this._containerHeightsData;
         const itemOffset = this._itemsHeightData.itemsOffsets[itemIndex];
@@ -256,7 +261,7 @@ export default class VirtualScroll {
         if (this._range.stop === this._itemsCount) {
             canScroll = true;
         } else if (this._isItemInRange(itemIndex) &&
-            viewport < scrollHeight - itemOffset) {
+            (toBottom || !force || (viewport < scrollHeight - itemOffset))) {
             canScroll = true;
         }
 
@@ -269,16 +274,29 @@ export default class VirtualScroll {
      */
     getActiveElementIndex(scrollTop: number): number {
         const {viewport, scroll} = this._containerHeightsData;
+        let fixedScrollTop: number;
+
+        // На тач устройствах scroll может заходить за пределы границ контейнера,
+        // такие ситуации нужно корректировать под крайние максимальные и минимальные значения
+        // scrollTop
+        if (scrollTop < 0) {
+            fixedScrollTop = 0;
+        } else if (viewport + scrollTop > scroll) {
+            fixedScrollTop = scroll - viewport;
+        } else {
+            fixedScrollTop = scrollTop;
+        }
+
         if (!this._itemsCount) {
             return undefined;
-        } else if (this.isRangeOnEdge('up') && scrollTop === 0) {
+        } else if (this.isRangeOnEdge('up') && fixedScrollTop === 0) {
             return this._range.start;
-        } else if (this.isRangeOnEdge('down') && scrollTop + viewport === scroll) {
+        } else if (this.isRangeOnEdge('down') && fixedScrollTop + viewport === scroll) {
             return this._range.stop - 1;
         } else {
             let itemIndex;
             const {itemsOffsets} = this._itemsHeightData;
-            const viewportCenter = scrollTop + viewport / 2;
+            const viewportCenter = fixedScrollTop + viewport / 2;
 
             for (let i = this._range.start ; i < this._range.stop; i++) {
                 if (itemsOffsets[i] < viewportCenter) {

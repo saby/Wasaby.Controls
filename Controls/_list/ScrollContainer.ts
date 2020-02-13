@@ -16,6 +16,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
+import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 const SCROLLMOVE_DELAY = 150;
 const TRIGGER_VISIBILITY_DELAY = 101;
@@ -86,6 +87,12 @@ export default class ScrollContainer extends Control<IOptions> {
 
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
+
+    private _throttledPositionChanged: Function = throttle((params) => {
+        const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
+        this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
+        this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+    }, SCROLLMOVE_DELAY, true);
 
     protected _beforeMount(options: IOptions): void {
         this._initModelObserving(options);
@@ -178,22 +185,35 @@ export default class ScrollContainer extends Control<IOptions> {
     /**
      * Функция подскролла к элементу
      * @param {string | number} key
+     * @param {boolean} toBottom
+     * @param {boolean} force
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
-    scrollToItem(key: string): Promise<void> {
+    scrollToItem(key: string|number, toBottom: boolean = true, force: boolean = false): Promise<void> {
         const index = this._options.collection.getIndexByKey(key);
 
         if (index !== -1) {
             return new Promise((resolve) => {
-                if (this._virtualScroll.canScrollToItem(index)) {
-                    this._scrollToPosition(this._virtualScroll.getItemOffset(index));
+                const scrollCallback = () => {
+                    const itemContainer = this._virtualScroll.getItemContainerByIndex(index, this._itemsContainer);
+
+                    if (itemContainer) {
+                        scrollToElement(itemContainer, toBottom, force);
+                    }
+
                     resolve();
-                } else {
+                };
+
+                if (this._virtualScroll.canScrollToItem(index, toBottom, force)) {
+                    scrollCallback();
+                } else if (force) {
                     const rangeShiftResult = this._virtualScroll.resetRange(index, this._options.collection.getCount());
                     this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
                     this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
-                    this._restoreScrollResolve = resolve;
+                    this._restoreScrollResolve = scrollCallback;
+                } else {
+                    resolve();
                 }
             });
         } else {
@@ -269,6 +289,12 @@ export default class ScrollContainer extends Control<IOptions> {
             .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
         this._setCollectionIndices(options.collection, rangeShiftResult.range);
+
+        if (options.activeElement) {
+            this._restoreScrollResolve = () => {
+                this.scrollToItem(options.activeElement, false, true);
+            };
+        }
     }
 
     private _subscribeToCollectionChange(collection: Collection<Record>, useNewModel: boolean): void {
@@ -338,12 +364,6 @@ export default class ScrollContainer extends Control<IOptions> {
         this._throttledPositionChanged(params);
     }
 
-    private _throttledPositionChanged: Function = throttle((params) => {
-        const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
-        this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
-    }, SCROLLMOVE_DELAY, true);
-
     private _viewportResize(params: IScrollParams): void {
         this._viewportHeight = params.clientHeight;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
@@ -393,25 +413,13 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         if (this._virtualScroll.isNeedToRestorePosition) {
-            this._restoreScrollPosition();
-        }
-    }
-
-    /**
-     * Восстанавливает корректную позицию скролла
-     * @private
-     */
-    private _restoreScrollPosition(): void {
-        this._scrollToPosition(this._virtualScroll.getPositionToRestore(this._lastScrollTop));
-
-        if (this._restoreScrollResolve) {
+            this._scrollToPosition(this._virtualScroll.getPositionToRestore(this._lastScrollTop));
+            this.checkTriggerVisibilityWithTimeout();
+        } else if (this._restoreScrollResolve) {
             this._restoreScrollResolve();
-            this._restoreScrollResolve = null;
+            this.checkTriggerVisibilityWithTimeout();
         }
-
-        this.checkTriggerVisibilityWithTimeout();
     }
-
     /**
      * Нотифицирует скролл контейнеру о том, что нужно подскролить к переданной позиции
      * @param position
@@ -464,7 +472,6 @@ export default class ScrollContainer extends Control<IOptions> {
      * @private
      */
     private _itemsAddedHandler(addIndex: number, items: object[]): void {
-        this._virtualScroll.updateItemsCount(this._options.collection.getCount());
         const rangeShiftResult = this._virtualScroll.insertItems(addIndex, items.length);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
@@ -477,7 +484,6 @@ export default class ScrollContainer extends Control<IOptions> {
      * @private
      */
     private _itemsRemovedHandler(removeIndex: number, items: object[]): void {
-        this._virtualScroll.updateItemsCount(this._options.collection.getCount());
         const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
