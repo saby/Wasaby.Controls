@@ -539,6 +539,7 @@ define([
          lists.BaseControl._private.checkPortionedSearchByScrollTriggerVisibility(self, false);
 
          assert.isTrue(self._portionedSearch._searchTimer !== null);
+         self._portionedSearch._clearTimer();
       });
 
       it('_needScrollCalculation', function(done) {
