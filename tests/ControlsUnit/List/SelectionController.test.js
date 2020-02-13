@@ -214,6 +214,9 @@ define([
          config.selectedKeys = ['testId'];
          config.excludedKeys = ['testId'];
          instance.saveOptions(config);
+         instance.getRoot = () => {
+            return null;
+         };
          await instance._beforeMount(config);
          instance._afterMount();
          const stubNotify = sandbox.stub(instance, '_notify');
@@ -225,8 +228,7 @@ define([
          assert.equal(numHandlersCollectionChange, cfg.items.getEventHandlers('onCollectionChange').length);
          assert.isNull(instance._onCollectionChangeHandler);
          assert.isTrue(stubNotify.withArgs('unregister', ['selectedTypeChanged', instance], { bubbling: true }).calledOnce);
-         assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[], [], ['testId']]).calledOnce);
-         assert.isTrue(stubNotify.withArgs('excludedKeysChanged', [[], [], ['testId']]).calledOnce);
+         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).calledOnce);
       });
 
       it('_private.selectedTypeChangedHandler', async function() {
