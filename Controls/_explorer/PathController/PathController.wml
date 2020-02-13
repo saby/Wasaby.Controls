@@ -5,7 +5,6 @@
               name="Path"
               needShadow="{{_needShadow}}"
               header="{{ _header }}"
-              attr:class="controls-Explorer__Path {{_options.style == 'master' ? 'controls-Explorer__Path_style_master'}}"
               on:backButtonClick="_notifyHandler('backButtonClick')"
               on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
               on:arrowActivated="_notifyHandler('arrowActivated')"
