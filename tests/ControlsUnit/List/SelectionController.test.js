@@ -209,8 +209,15 @@ define([
       });
 
       it('_beforeUnmount', async function() {
-         const numHandlersCollectionChange = cfg.items.getEventHandlers('onCollectionChange').length;
-         await instance._beforeMount(cfg);
+         const config = {...cfg};
+         const numHandlersCollectionChange = config.items.getEventHandlers('onCollectionChange').length;
+         config.selectedKeys = ['testId'];
+         config.excludedKeys = ['testId'];
+         instance.saveOptions(config);
+         instance.getRoot = () => {
+            return null;
+         };
+         await instance._beforeMount(config);
          instance._afterMount();
          const stubNotify = sandbox.stub(instance, '_notify');
          instance._options.listModel.updateSelection = sandbox.stub();
@@ -221,6 +228,8 @@ define([
          assert.equal(numHandlersCollectionChange, cfg.items.getEventHandlers('onCollectionChange').length);
          assert.isNull(instance._onCollectionChangeHandler);
          assert.isTrue(stubNotify.withArgs('unregister', ['selectedTypeChanged', instance], { bubbling: true }).calledOnce);
+         assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[], [], ['testId']]).calledOnce);
+         assert.isTrue(stubNotify.withArgs('excludedKeysChanged', [[], [], ['testId']]).calledOnce);
       });
 
       it('_private.selectedTypeChangedHandler', async function() {

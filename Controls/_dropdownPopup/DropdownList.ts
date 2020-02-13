@@ -454,7 +454,8 @@ import {SyntheticEvent} from 'Vdom/Vdom';
             menuStyle: 'defaultHead',
             typeShadow: 'default',
             moreButtonCaption: rk('Еще') + '...',
-            itemPadding: {}
+            itemPadding: {},
+            iconSize: 'm'
          };
       };
 

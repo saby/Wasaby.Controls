@@ -51,7 +51,7 @@ import {Logger} from "UI/Utils";
 
 /**
  * @event Происходит при скроллировании области.
- * @name Controls/_scroll/Container#scroll 
+ * @name Controls/_scroll/Container#scroll
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} scrollTop Смещение контента сверху относительно контейнера.
  */
@@ -410,6 +410,8 @@ var
             Logger.warn('Controls/scroll:Container: Опция shadowVisible устарела, используйте topShadowVisibility и bottomShadowVisibility.', self);
          }
 
+         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+         this._resizeHandler = this._resizeHandler.bind(this);
          this._shadowVisibilityByInnerComponents = {
             top: SHADOW_VISIBILITY.AUTO,
             bottom: SHADOW_VISIBILITY.AUTO
@@ -469,10 +471,13 @@ var
                self._useNativeScrollbar = useNativeScrollbar;
 
                //  Сразу же устанавливаем contentStyles как '' на платформах, в которых скрол бар прячется нативными
-               //  средсвами а не маргинами. Иначе по умолчаниюе он равен undefined, а после инициализации
+               //  средсвами а не маргинами(_styleHideScrollbar === '').
+               //  Иначе по умолчаниюе он равен undefined, а после инициализации
                //  устанавливается в ''. Это приводит к forceUpdate. Код этой логики грязный, нужен рефакторинг.
-               // https://online.sbis.ru/opendoc.html?guid=0cb8e81e-ba7f-4f98-8384-aa52d200f8c8
-               if (!self._styleHideScrollbar) {
+               //  https://online.sbis.ru/opendoc.html?guid=0cb8e81e-ba7f-4f98-8384-aa52d200f8c8
+               //  TODO: Нельзя делать проверку if(!_styleHideScrollbar){...}. Свойство _styleHideScrollbar может быть равным undefined.
+               //  Например, в firefox на сервере нельзя определить ширину скролла. Потому что из-за зума она меняется.
+               if (self._styleHideScrollbar === '') {
                   self._contentStyles = '';
                }
 
@@ -557,11 +562,9 @@ var
             this._forceUpdate();
          }
 
-          //TODO Compatibility на старых страницах нет Register, который скажет controlResize
-          this._resizeHandler = this._resizeHandler.bind(this);
-          if (!newEnv() && window) {
-              window.addEventListener('resize', this._resizeHandler);
-          }
+         if (!newEnv() && window) {
+            window.addEventListener('resize', this._resizeHandler);
+         }
 
           this._isMounted = true;
       },
