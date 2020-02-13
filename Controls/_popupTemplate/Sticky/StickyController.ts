@@ -265,7 +265,6 @@ class StickyController extends BaseController {
 
             /* end: We remove the set values that affect the size and positioning to get the real size of the content */
 
-
             this.prepareConfig(item, container);
 
             /* start: Return all values to the node. Need for vdom synchronizer */
@@ -282,8 +281,10 @@ class StickyController extends BaseController {
             if (item.popupOptions.resizeCallback instanceof Function) {
                 item.popupOptions.resizeCallback();
             }
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     resizeInner(item, container): Boolean {
