@@ -11,9 +11,16 @@ export type Config = {
     configField: string;
 };
 
-setTimeout(() => {
-    import('SbisEnvUI/Maintains');
-});
+/**
+ * Загружает модули обработчиков обшибок.
+ * Названия модулей обработчиков берутся из поля ApplicationConfig[configField].
+ * Функция может быть использована для преждевременной загрузки обработчиков.
+ * Например, это может понадобиться для случая показа ошибки при разрыве соединения.
+ * @param configField
+ */
+export const loadHandlers = (configField: string): Array<Promise<Handler>> => {
+    return constants.ApplicationConfig[configField].map(getHandler);
+};
 
 const getDefaultConfig = (): Partial<Config> => {
     return {
