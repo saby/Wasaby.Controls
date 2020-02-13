@@ -152,8 +152,11 @@ var
             var dataRoot = _private.getDataRoot(self);
             var result;
 
-            if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
-               _private.setRoot(self, dataRoot);
+            if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
+               self._breadCrumbsItems = null;
+               if (dataRoot !== currentRoot) {
+                  _private.setRoot(self, dataRoot);
+               }
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
