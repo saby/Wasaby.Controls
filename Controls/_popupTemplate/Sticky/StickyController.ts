@@ -257,7 +257,8 @@ class StickyController extends BaseController {
     elementAfterUpdated(item, container) {
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
         const width = container.style.width;
-        container.style.maxHeight = '100vh';
+        const maxHeight = container.style.maxHeight;
+        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '100vh';
         container.style.width = 'auto';
         container.style.height = 'auto';
 
