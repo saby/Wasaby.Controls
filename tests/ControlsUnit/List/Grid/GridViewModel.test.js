@@ -420,7 +420,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   endColumn: 4
                },
                {
-                  actionCell: true,
+                  isActionCell: true,
                   startRow: 1,
                   endRow: 2,
                   startColumn: 4,

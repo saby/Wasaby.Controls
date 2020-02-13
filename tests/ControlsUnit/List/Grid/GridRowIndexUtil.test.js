@@ -95,13 +95,13 @@ define([
             });
          });
 
-         describe('getRowsArray', function () {
-            it('getRowsArray without multiheader', function () {
+         describe('getHeaderRowsArray', function () {
+            it('getHeaderRowsArray without multiheader', function () {
                gridModel = createModel({resultsPosition: 'top', columnScroll: true});
-               var headerRows = RowUtil.getRowsArray(gridHeader, false, false)
+               var headerRows = RowUtil.getHeaderRowsArray(gridHeader, false, false)
                assert.deepEqual([gridHeader], headerRows)
             });
-            it('getRowsArray with multiheader', function () {
+            it('getHeaderRowsArray with multiheader', function () {
                gridModel = createModel({resultsPosition: 'top', columnScroll: true});
                var header = [
                   {
@@ -137,7 +137,7 @@ define([
                      title: "Общие",
                   }
                ]
-               var headerRows = RowUtil.getRowsArray(header, false, true)
+               var headerRows = RowUtil.getHeaderRowsArray(header, false, true)
                assert.deepEqual([[header[0], header[1]], [header[2], header[3]]], headerRows)
             });
          });

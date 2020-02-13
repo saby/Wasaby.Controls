@@ -13,7 +13,7 @@ import {
     getIndexByItem,
     getMaxEndRow,
     getResultsIndex,
-    getRowsArray,
+    getHeaderRowsArray,
     getTopOffset,
     IBaseGridRowIndexOptions
 } from 'Controls/_grid/utils/GridRowIndexUtil';
@@ -100,7 +100,7 @@ var
             var
                 preparedClasses = '';
 
-            if (columns[columnIndex].actionCell) {
+            if (columns[columnIndex].isActionCell) {
                 return preparedClasses;
             }
             const arrayLengthOffset = params.hasActionCell ? 2 : 1;
@@ -148,7 +148,7 @@ var
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
                 rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn } } = params;
-            if (params.cell.actionCell) {
+            if (params.cell.isActionCell) {
                 return preparedClasses;
             }
             const actionCellOffset = params.hasActionCell ? 1 : 0;
@@ -667,7 +667,7 @@ var
         _prepareHeaderColumns: function(columns, multiSelectVisibility, actionsCell) {
             if (columns && columns.length) {
                 this._isMultiHeader = this.isMultiHeader(columns);
-                this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell);
+                this._headerRows = getHeaderRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell);
                 [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
@@ -683,7 +683,7 @@ var
         setHeaderCellMinHeight: function(data) {
             const multiSelectVisibility = this._options.multiSelectVisibility !== 'hidden';
             const actionsCell = this._shouldAddActionsCell();
-            const headerRows = getRowsArray(
+            const headerRows = getHeaderRowsArray(
                 data[0],
                 multiSelectVisibility,
                 false,
@@ -964,7 +964,7 @@ var
             }
 
             if (this._shouldAddActionsCell()) {
-                this._resultsColumns = this._resultsColumns.concat([{ actionCell: true }]);
+                this._resultsColumns = this._resultsColumns.concat([{ isActionCell: true }]);
             }
 
             this.resetResultsColumns();
