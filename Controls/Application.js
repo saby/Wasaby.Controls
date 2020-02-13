@@ -376,7 +376,7 @@ define('Controls/Application',
          };
       };
 
-      Page._theme = ['Controls/application'];
+      Page._theme = ['Controls/application', 'Controls/BlockLayout'];
 
       return Page;
    });
