@@ -4,7 +4,6 @@ import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_list/BaseControl/SelectionController');
 import {isEqual} from 'Types/object';
-import merge = require('Core/core-merge');
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -201,8 +200,6 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
 
     _beforeUnmount: function () {
         this._options.listModel.updateSelection({});
-        this._notify('selectedKeysChanged', [[], [], this._multiselection.selectedKeys]);
-        this._notify('excludedKeysChanged', [[], [], this._multiselection.excludedKeys]);
         this._notify('listSelectedKeysCountChanged', [0], {bubbling: true});
         this._multiselection = null;
         this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
