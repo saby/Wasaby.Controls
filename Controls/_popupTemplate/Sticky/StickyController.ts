@@ -282,9 +282,8 @@ class StickyController extends BaseController {
                 item.popupOptions.resizeCallback();
             }
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     resizeInner(item, container): Boolean {
