@@ -529,6 +529,18 @@ define([
          assert.deepEqual(ctrl._loadedItems, loadedItems);
       });
 
+      it('_private.checkPortionedSearchByScrollTriggerVisibility', () => {
+         const self = {};
+         lists.BaseControl._private.checkPortionedSearchByScrollTriggerVisibility(self, false);
+
+         assert.isTrue(!self._portionedSearch);
+
+         self._portionedSearchInProgress = true;
+         lists.BaseControl._private.checkPortionedSearchByScrollTriggerVisibility(self, false);
+
+         assert.isTrue(self._portionedSearch._searchTimer !== null);
+      });
+
       it('_needScrollCalculation', function(done) {
          var source = new sourceLib.Memory({
             keyProperty: 'id',
