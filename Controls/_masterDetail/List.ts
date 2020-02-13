@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_masterDetail/List/List');
 
 /**
- * Контрол используют в качестве контейнера для любого списочного контрола, который добавлен в шаблон {@link Controls/masterDetail/Base/options/master/ master}.
+ * Контрол используют в качестве контейнера для списочного контрола, который добавлен в шаблон {@link Controls/masterDetail/Base/options/master/ master}.
  * Он обеспечивает передачу текущей отмеченной записи в списке между списком и master'ом через всплывающее событие selectedMasterValueChanged.
  * @class Controls/_masterDetail/List
  * @extends UI/Base:Control
