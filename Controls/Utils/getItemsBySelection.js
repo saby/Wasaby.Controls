@@ -31,7 +31,7 @@ define('Controls/Utils/getItemsBySelection', [
          return result;
       };
 
-   return function(selection, dataSource, items, filter) {
+   return function(selection, dataSource, items, filter, limit) {
       var
          item,
          query,
@@ -53,7 +53,9 @@ define('Controls/Utils/getItemsBySelection', [
 
          var filterClone = filter ? cClone(filter) : {};
          filterClone.selection = selectionToRecord(selection, 'adapter.sbis');
-
+         if (limit) {
+            query.limit(limit);
+         }
          result = dataSource.query(query.where(filterClone)).addCallback(function(list) {
             return chain.factory(list.getAll()).toArray().map(function(curItem) {
                return curItem.getId();
