@@ -537,10 +537,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         overlayDiv.setAttribute('tabindex', '1');
 
         const messageDiv = document.createElement('div');
-        messageDiv.innerText = 'TODO';
-        overlayDiv.appendChild(messageDiv);
-
-        this._container.appendChild(overlayDiv);
 
         this._overlayDiv = overlayDiv;
         this._messageDiv = messageDiv;
