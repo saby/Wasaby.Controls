@@ -590,17 +590,15 @@ define([
       });
 
       it('loadToDirection down', async function() {
-         var source = new sourceLib.Memory({
+         const source = new sourceLib.Memory({
             keyProperty: 'id',
             data: data
          });
 
-         var dataLoadFired = false;
-         var portionSearchTimerReseted = false;
-         var portionSearchReseted = false;
-         var beforeLoadToDirectionCalled = false;
+         let dataLoadFired = false;
+         let beforeLoadToDirectionCalled = false;
 
-         var cfg = {
+         const cfg = {
             viewName: 'Controls/List/ListView',
             dataLoadCallback: function() {
                dataLoadFired = true;
@@ -652,6 +650,58 @@ define([
          assert.isFalse(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
       });
+
+      it('loadToDirection down with portioned load', async function() {
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+
+         let metaData;
+
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            beforeLoadToDirectionCallback: function() {
+               beforeLoadToDirectionCalled = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
+            }
+         };
+
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         ctrl._container = {clientHeight: 100};
+         ctrl._afterMount(cfg);
+         ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
+
+         metaData = ctrl._items.getMetaData();
+         metaData.iterative = true;
+         ctrl._items.setMetaData(metaData);
+
+         await lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.isTrue(ctrl._portionedSearchInProgress);
+         assert.isFalse(ctrl._showContinueSearchButton);
+      });
+
 
       it('loadToDirection indicator triggerVisibility', async () => {
          var source = new sourceLib.Memory({
