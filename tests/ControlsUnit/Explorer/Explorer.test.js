@@ -292,6 +292,12 @@ define([
             root: 'rootNode',
             virtualScrolling: true
          };
+         var newCfg3 = {
+            viewMode: 'search',
+            root: 'rootNode',
+            virtualScrolling: true,
+            searchStartingWith: 'root'
+         };
          var instance = new explorerMod.View(cfg);
          var rootChanged = false;
 
@@ -349,6 +355,9 @@ define([
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
                assert.isFalse(rootChanged);
                assert.isFalse(instance._virtualScrolling);
+            }).then(() => {
+               explorerMod.View._private.setViewMode(instance, newCfg3.viewMode, newCfg3);
+               assert.equal(instance._breadCrumbsItems, null);
             });
       });
 
