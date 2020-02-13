@@ -310,7 +310,9 @@ var _private = {
         if (entries) {
             filter.entries = entries;
         }
-        filter[cfg.parentProperty] = self._root;
+        if (cfg.parentProperty !== undefined) {
+            filter[cfg.parentProperty] = self._root;
+        }
     },
 
     reloadItem: function(self, key) {

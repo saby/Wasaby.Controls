@@ -1234,6 +1234,11 @@ define([
          treeGrid.TreeControl._private.beforeLoadToDirectionCallback({ _root: 'myCurrentRoot' }, filter, { parentProperty: 'parent', selectedKeys: [1], source: new sourceLib.Memory() });
          assert.deepEqual(filter.entries.get('marked'), ['1']);
       });
+      it('TreeControl._private.beforeLoadToDirectionCallback', function() {
+         let filter = {};
+         treeGrid.TreeControl._private.beforeLoadToDirectionCallback({ _root: 'myCurrentRoot' }, filter, { source: new sourceLib.Memory() });
+         assert.deepEqual(filter, {}, 'Incorrect value of filter for control without parentProperty.');
+      });
       it('TreeControl._private.loadMore', function () {
          var
              setHasMoreCalled = false,

@@ -10,6 +10,7 @@ import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
 import { CssClassList } from "../Utils/CssClassList";
+import {Logger} from 'UI/Utils';
 
 /**
  *
@@ -128,8 +129,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._reloadedKeys = {};
     },
     setEditingConfig: function(editingConfig) {
-        this._options.editingConfig = editingConfig;
-        this._nextModelVersion();
+        if (!isEqual(editingConfig, this._options.editingConfig)) {
+            this._options.editingConfig = editingConfig;
+            this._nextModelVersion();
+        }
     },
     setItemPadding: function(itemPadding) {
         this._options.itemPadding = itemPadding;
@@ -167,7 +170,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
+        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master' && !this._options.virtualScrolling;
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -228,8 +231,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemsModelCurrent;
     },
 
-    _calcCursorClasses: function(clickable) {
-        return ` controls-ListView__itemV ${clickable === false ? 'controls-ListView__itemV_cursor-default' : 'controls-ListView__itemV_cursor-pointer'}`;
+    _calcCursorClasses: function(clickable, cursor) {
+        const cursorStyle = cursor || (clickable === false ? 'default' : 'pointer');
+        if (typeof clickable !== 'undefined') {
+            Logger.error('Controls/list:BaseItemTemplate', 'Option "clickable" is deprecated and will be removed in 20.3000. Use option "cursor" with value "default".');
+        }
+        return ` controls-ListView__itemV controls-ListView__itemV_cursor-${cursorStyle}`;
     },
 
     _calcItemVersion: function(item, key) {
