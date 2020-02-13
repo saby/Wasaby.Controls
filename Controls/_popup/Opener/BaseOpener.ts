@@ -583,7 +583,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             }
         }
 
-        if (baseConfig.theme.indexOf("default") !== -1) {
+        if (baseConfig.theme && baseConfig.theme.indexOf("default") !== -1) {
             delete baseConfig.theme; // todo fix?
         }
 
