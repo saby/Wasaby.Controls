@@ -215,23 +215,46 @@ export default class VirtualScrollController {
             this.scrollTop - this.getItemsHeights(this.savedStartIndex, this.startIndex);
     }
 
+    getItemContainerByIndex(itemIndex: number): HTMLElement {
+        let startChildrenIndex = 0;
+
+        for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
+            if (this._itemsContainer.children[i].className.indexOf('controls-ListView__hiddenContainer') === -1) {
+                startChildrenIndex = i;
+                break;
+            }
+        }
+
+        return this.itemsContainer.children[startChildrenIndex + itemIndex - this.startIndex] as HTMLElement;
+    }
+
     /**
      * Проверяет возможность подскроллить к элементу
      * @param {number} index
+     * @param {boolean} toBottom
+     * @param {boolean} force
      * @returns {boolean}
      */
-    canScrollToItem(index: number): boolean {
+    canScrollToItem(index: number, toBottom: boolean, force: boolean): boolean {
         let canScroll = false;
 
         if (this.stopIndex === this.itemsCount) {
             canScroll = true;
-        } else if (this.startIndex <= index && this.stopIndex > index) {
-            if (this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index]) {
+        } else if (this.isItemInRange(index)) {
+            if (
+                this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index] && force
+                || toBottom
+                || !force
+            ) {
                 canScroll = true;
             }
         }
 
         return canScroll;
+    }
+
+    isItemInRange(index: number): boolean {
+        return this.startIndex <= index && this.stopIndex > index;
     }
 
     /**
