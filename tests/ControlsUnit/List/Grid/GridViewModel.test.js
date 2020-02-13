@@ -87,10 +87,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       ],
       gridHeaderWithColumns = [
          {
-            title: '',
-            style: 'default',
+            endColumn: 2,
+            endRow: 2,
             startColumn: 1,
-            endColumn: 2
+            startRow: 1,
+            style: 'default',
+            title: ''
          },
          {
             title: 'Цена',
