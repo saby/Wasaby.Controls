@@ -715,6 +715,18 @@ define([
          assert.isFalse(ctrl._showContinueSearchButton);
       });
 
+      it('isPortionedLoad',  () => {
+         const baseControl = {
+            _options: {}
+         };
+
+         baseControl._items = null;
+         assert.isFalse(lists.BaseControl._private.isPortionedLoad(baseControl));
+
+         baseControl._options.searchValue = 'test';
+         assert.isTrue(lists.BaseControl._private.isPortionedLoad(baseControl));
+      });
+
 
       it('loadToDirection indicator triggerVisibility', async () => {
          var source = new sourceLib.Memory({
