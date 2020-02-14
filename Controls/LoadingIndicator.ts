@@ -277,16 +277,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         this._updateProperties(cfg);
         this._redrawOverlay();
     },
-    _beforeUnmount() {
-        if (this._overlayDiv.parentElement) {
-            this._container.removeChild(this._overlayDiv);
-        }
-        if (this._messageDiv.parentElement) {
-            this._overlayDiv.removeChild(this._messageDiv);
-        }
-        this._overlayDiv = null;
-        this._messageDiv = null;
-    },
     _updateProperties(cfg) {
         if (cfg.isGlobal !== undefined) {
             this.isGlobal = cfg.isGlobal;
