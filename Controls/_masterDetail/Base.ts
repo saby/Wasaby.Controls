@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_masterDetail/Base/Base';
 import 'css!theme?Controls/masterDetail';
 import {debounce} from 'Types/function';
+import { SyntheticEvent } from 'Vdom/Vdom';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
 
@@ -90,12 +91,13 @@ class Base extends Control<IMasterDetail> {
     protected _canResizing: boolean = false;
     protected _minOffset: number;
     protected _maxOffset: number;
+    protected _prevCurrentWidth: string;
     protected _currentWidth: string;
     protected _containerWidth: number;
     protected _updateOffsetDebounced: Function;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
-        this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
+        this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
         this._canResizing = this._isCanResizing(options);
         if (receivedState) {
             this._currentWidth = receivedState;
@@ -121,15 +123,27 @@ class Base extends Control<IMasterDetail> {
         return getSettings([options.propStorageId]);
     }
 
+    private _setSettings(width: number): void {
+        const propStorageId = this._options.propStorageId;
+        if (propStorageId) {
+            setSettings({[propStorageId]: width});
+        }
+    }
+
     private initCurrentWidth(width: string|number): void {
         if (this._isPercentValue(width)) {
             this._currentWidth = String(width);
-        } else if (width) {
+        } else if (width !== undefined) {
             this._currentWidth = width + 'px';
         }
     }
 
+    private _updateOffsetDebounced(): void {
+        this._updateOffset(this._options);
+    }
+
     protected _afterMount(options: IMasterDetail): void {
+        this._prevCurrentWidth = this._currentWidth;
         if (this._canResizing) {
             this._updateOffset(options);
         }
@@ -145,6 +159,25 @@ class Base extends Control<IMasterDetail> {
             this._canResizing = this._isCanResizing(options);
             this._updateOffset(options);
         }
+    }
+
+    protected _afterRender(): void {
+        if (this._prevCurrentWidth !== this._currentWidth) {
+            this._prevCurrentWidth = this._currentWidth;
+            this._startResizeRegister();
+            this._setSettings(parseInt(this._currentWidth, 10));
+        }
+    }
+
+    private _startResizeRegister(): void {
+        const eventCfg = {
+            type: 'controlResize',
+            target: this._container,
+            _bubbling: true
+        };
+        // https://online.sbis.ru/opendoc.html?guid=8aa1c2d6-f471-4a7e-971f-6ff9bfe72079
+        this._children.resizeDetectMaster.start(new SyntheticEvent(null, eventCfg));
+        this._children.resizeDetectDetail.start(new SyntheticEvent(null, eventCfg));
     }
 
     private _isSizeOptionsChanged(oldOptions: IMasterDetail, newOptions: IMasterDetail): boolean {
@@ -191,10 +224,6 @@ class Base extends Control<IMasterDetail> {
             const width = parseInt(this._currentWidth, 10) + offset;
             this._currentWidth = width + 'px';
             this._updateOffset(this._options);
-            const propStorageId = this._options.propStorageId;
-            if (propStorageId) {
-                setSettings({[propStorageId]: width});
-            }
         }
     }
 
@@ -224,6 +253,10 @@ class Base extends Control<IMasterDetail> {
         if (!this._container.closest('.ws-hidden')) {
             this._containerWidth = null;
             this._updateOffsetDebounced(this._options);
+            // Нужно чтобы лисенеры, лежащие внутри нашего регистратора, реагировали на ресайз страницы.
+            // Код можно будет убрать, если в регистраторах дадут возможность не стопать событие регистрации лисенера,
+            // чтобы лисенер мог регистрироваться в 2х регистраторах.
+            this._startResizeRegister();
         }
     }
 }

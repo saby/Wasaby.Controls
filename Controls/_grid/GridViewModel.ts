@@ -33,14 +33,19 @@ interface IGridColumn {
     compatibleWidth?: string;
 }
 
+interface IGridItemData {
+    hasMultiSelect: boolean;
+    columns: any[];
+}
+
 interface IColgroupColumn {
     classes: string;
     style: string;
     index: number;
 }
 
-type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll'
-    | 'editingRow' | 'bottomPadding' | 'emptyTemplate' | 'emptyTemplateAndColumnScroll' | 'footer'
+type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll' |
+    'colspanedRow' | 'editingRow' | 'bottomPadding' | 'emptyTemplate' | 'emptyTemplateAndColumnScroll' | 'footer'
     | 'headerBreadcrumbs' | 'fullWithoutMultiSelect';
 
 interface IGetColspanStylesForParams {
@@ -438,24 +443,30 @@ var
             return version;
         },
 
-        getColumnAlignGroupStyles(itemData: IGridItemData, columnAlignGroup: number = 0): {
+        /**
+         * Производит пересчёт групп объединяемых колонок для заголовков (разделителей) записей
+         * @param itemData информация о записи
+         * @param leftSideItemsCount число колонок в группе (или номер последней колонки)
+         * @private
+         */
+        getColumnAlignGroupStyles(itemData: IGridItemData, leftSideItemsCount: number = 0): {
             left: string
             right: string
         } {
+            const additionalTerm = (itemData.hasMultiSelect ? 1 : 0);
+            const result = {left: '', right: ''};
+            const start = 1;
+            const end = itemData.columns.length + 1;
 
-            let
-                start = 1,
-                center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1,
-                stop = itemData.columns.length + 1,
-                result = {right: '', left: ''};
-
-            if (columnAlignGroup) {
-                result.left = `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
-                result.right = `grid-column: ${center} / ${stop}; -ms-grid-column: ${center}; -ms-grid-column-span: ${stop - center};`;
+            if (leftSideItemsCount > 0) {
+                const center = leftSideItemsCount + additionalTerm + 1;
+                result.left = `grid-column: ${start} / ${center - end - 1}; -ms-grid-column: ${start}; -ms-grid-column-span: ${(center - 1)};`;
+                // Расчёт был изменён из-за того, что в случае установки колонки MultiSelect необходимо делать перерасчёт размеров,
+                // но getColumnAlignGroupStyles при добавлении колонки MultiSelect не вызывается
+                result.right = `grid-column: span ${(end - center)} / auto; -ms-grid-column: ${center}; -ms-grid-column-span: ${(end - center)};`;
             } else {
-                result.left = `grid-column: ${start} / ${stop}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stop - 1};`;
+                result.left = `grid-column: ${start} / ${end}; -ms-grid-column: ${start}; -ms-grid-column-span: ${end - 1};`;
             }
-
             return result;
         },
 
@@ -478,6 +489,14 @@ var
                 scrollableColumns: `${scrollableColumnsStyle} z-index: auto;`,
                 actions: scrollableColumnsStyle
             };
+        },
+        getTableCellStyles(currentColumn): string {
+            let styles = '';
+            const isCheckbox = currentColumn.hasMultiSelect && currentColumn.columnIndex === 0;
+            if (!isCheckbox && currentColumn.column.width !== 'auto') {
+                styles += `min-width: ${currentColumn.column.width}; max-width: ${currentColumn.column.width};`;
+            }
+            return styles;
         }
     },
 
@@ -1073,8 +1092,7 @@ var
         },
 
         setMultiSelectVisibility: function(multiSelectVisibility) {
-            var
-                hasMultiSelect = multiSelectVisibility !== 'hidden';
+            const hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
             this._prepareColgroupColumns(this._columns, hasMultiSelect);
             if (this._cachaedHeaderColumns && this._isMultiHeader) {
@@ -1263,7 +1281,9 @@ var
             current.style = this._options.style;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
 
-            current.getColumnAlignGroupStyles = (columnAlignGroup: number) => _private.getColumnAlignGroupStyles(current, columnAlignGroup);
+            current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
+                _private.getColumnAlignGroupStyles(current, columnAlignGroup)
+            );
 
             const superShouldDrawMarker = current.shouldDrawMarker;
             current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
@@ -1381,7 +1401,9 @@ var
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
-                        _preferVersionAPI: true
+                        _preferVersionAPI: true,
+                        gridCellStyles: '',
+                        tableCellStyles: ''
                     };
                 currentColumn.cellClasses = current.getItemColumnCellClasses(current, self._options.theme, self.getEditingItemData());
                 currentColumn.column = current.columns[current.columnIndex];
@@ -1406,6 +1428,10 @@ var
                             'span 1 / ' +
                             'span 1;';
                     }
+                }
+
+                if (current.columnScroll && !GridLayoutUtil.isFullGridSupport()) {
+                    currentColumn.tableCellStyles = _private.getTableCellStyles(currentColumn);
                 }
 
                 // TODO: Проверить. https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
@@ -1784,6 +1810,7 @@ var
                 case 'customResults':
                 case 'emptyTemplate':
                 case 'editingRow':
+                case 'colspanedRow':
                     return this._columns.length;
                 case 'fixedColumnOfColumnScroll':
                     return this._options.stickyColumnsCount || 1;

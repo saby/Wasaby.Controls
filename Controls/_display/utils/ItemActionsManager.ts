@@ -17,12 +17,14 @@ interface IItemActionsContainer {
 export interface IVirtualScrollManageableCollection {
     each(callback: (item: IItemActionsManageableItem) => void): void;
     setEventRaising?(raising: boolean, analyze?: boolean): void;
+    nextVersion(): void;
 }
 
 export interface IItemActionsManageableItem {
     getActions(): IItemActionsContainer;
     getContents(): unknown;
     setActions(actions: IItemActionsContainer): void;
+    isActive(): boolean;
     setActive(active: boolean): void;
 }
 
@@ -37,25 +39,35 @@ export default class ItemActionsManager extends BaseManager<IVirtualScrollManage
     ): void {
         // NB Deprecated style names are intentionally no longer supported
         const supportsEventPause = typeof this._collection.setEventRaising === 'function';
+        let hasChanges = false;
 
         if (supportsEventPause) {
             this._collection.setEventRaising(false, true);
         }
         this._collection.each((item) => {
-            const actions = actionsGetter(item).map(this._fixActionIcon);
-            const assignedActions = actions.filter((action) => visibilityCallback(action, item.getContents()));
-            this.setItemActions(item, this._wrapActionsInContainer(assignedActions));
+            if (!item.isActive()) {
+                const actions = actionsGetter(item).map(this._fixActionIcon);
+                const assignedActions = actions.filter((action) => visibilityCallback(action, item.getContents()));
+                const itemChanged = this.setItemActions(item, this._wrapActionsInContainer(assignedActions));
+                hasChanges = hasChanges || itemChanged;
+            }
         });
         if (supportsEventPause) {
             this._collection.setEventRaising(true, true);
         }
+
+        if (hasChanges) {
+            this._collection.nextVersion();
+        }
     }
 
-    setItemActions(item: IItemActionsManageableItem, actions: IItemActionsContainer): void {
+    setItemActions(item: IItemActionsManageableItem, actions: IItemActionsContainer): boolean {
         const oldActions = item.getActions();
         if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions))) {
             item.setActions(actions);
+            return true;
         }
+        return false;
     }
 
     setActiveItem(item: IItemActionsManageableItem): void {
