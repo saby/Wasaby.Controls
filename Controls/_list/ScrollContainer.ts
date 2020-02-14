@@ -20,13 +20,14 @@ interface IDeprecatedOptions {
     virtualPageSize: number;
     virtualSegmentSize: number;
 }
+
 interface IOptions extends IControlOptions, IDeprecatedOptions {
     virtualScrollConfig: IVirtualScrollConfig;
     viewModel: Collection<entityRecord>;
     useNewModel: boolean;
     virtualScrolling: boolean;
     observeScroll: boolean;
-    activeElement: string|number;
+    activeElement: string | number;
 }
 
 interface IScrollParams {
@@ -54,6 +55,7 @@ export default class ScrollContainer extends Control<IOptions> {
     set itemsFromLoadToDirection(value) {
         this.virtualScroll.itemsFromLoadToDirection = value;
     }
+
     protected _template: TemplateFunction = template;
     protected virtualScroll: VirtualScroll;
     private itemsContainer: HTMLElement;
@@ -321,15 +323,28 @@ export default class ScrollContainer extends Control<IOptions> {
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
-    scrollToItem(key: string|number, toBottom: boolean = true, force: boolean = false): Promise<void> {
+    scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false): Promise<void> {
         return new Promise((resolve, reject) => {
             const itemIndex = this._options.viewModel.getIndexByKey(key);
 
             if (itemIndex !== -1) {
-                if (this._options.virtualScrolling) {
-                    return this._virtualScrollToItem(itemIndex, toBottom, force);
+                const callback = () => {
+                    const container = this.getItemContainerByIndex(itemIndex);
+
+                    if (container) {
+                        this.scrollToElement(container, toBottom, force);
+                    }
+
+                    resolve();
+                };
+
+                if (!this._options.virtualScrolling || this.virtualScroll.canScrollToItem(itemIndex, toBottom, force)) {
+                    callback();
+                } else if (force) {
+                    this.virtualScroll.recalcRangeFromIndex(itemIndex);
+                    this.afterRenderCallback = callback;
                 } else {
-                    return this._nativeScrollToItem(itemIndex, toBottom, force);
+                    resolve();
                 }
             } else {
                 reject();
@@ -342,7 +357,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param {number} itemsCount
      * @param {string|number} initialKey
      */
-    reset(itemsCount: number, initialKey?: string|number): void {
+    reset(itemsCount: number, initialKey?: string | number): void {
         if (this.virtualScroll) {
             let initialIndex: number;
 
@@ -363,40 +378,12 @@ export default class ScrollContainer extends Control<IOptions> {
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
-    private _virtualScrollToItem(itemIndex: number, toBottom: boolean, force: boolean): Promise<void> {
-        return new Promise((resolve) => {
-            const callback = () => {
-                const container = this.virtualScroll.getItemContainerByIndex(itemIndex);
-
-                if (container) {
-                    this.scrollToElement(container, toBottom, force);
-                }
-
-                resolve();
-            };
-
-            if (this.virtualScroll.canScrollToItem(itemIndex, toBottom, force)) {
-                callback();
-            } else if (force) {
-                this.virtualScroll.recalcRangeFromIndex(itemIndex);
-                this.afterRenderCallback = callback;
-            } else {
-                resolve();
-            }
-        });
-    }
-
-    private _nativeScrollToItem(itemIndex: number, toBottom: boolean, force: boolean): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const container = this.itemsContainer.children[itemIndex];
-
-            if (container) {
-                this.scrollToElement(container as HTMLElement, toBottom, force);
-                resolve();
-            } else {
-                reject();
-            }
-        });
+    private getItemContainerByIndex(itemIndex: number): HTMLElement {
+        if (this._options.virtualScrolling) {
+            return this.virtualScroll.getItemContainerByIndex(itemIndex);
+        } else {
+            return this.itemsContainer.children[itemIndex] as HTMLElement;
+        }
     }
 
     private getVirtualScrollConfig(options: IOptions): IVirtualScrollConfig {
@@ -439,7 +426,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private scrollToPosition(position: number): void {
         this.fakeScroll = true;
-        this._notify('restoreScrollPosition', [ position ], {bubbling: true});
+        this._notify('restoreScrollPosition', [position], {bubbling: true});
         this.fakeScroll = false;
     }
 

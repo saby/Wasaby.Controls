@@ -220,6 +220,9 @@ describe('Controls/_list/ScrollContainer', () => {
                         return key;
                     }
                 }
+            },
+            getItemContainerByIndex() {
+                return {};
             }
         };
 
