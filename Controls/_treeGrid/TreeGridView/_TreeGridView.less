@@ -28,6 +28,18 @@
    padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_s;
    padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_s;
 }
+
+//выделение мастера верстается через before и after. В ие верстка через td. td могут иметь разную высоту.
+//при этом если красить цветом сами td все ок, они рисуются одинаково, но через after это не работает, визаульно
+//получается разная высота. По задаче надо переверстать выделение в ие, либо вообще везде.
+//https://online.sbis.ru/opendoc.html?guid=fd048300-3223-4bb5-8982-db3a14a05996
+
+.ws-is-ie {
+   .controls-Grid__cell_master .controls-TreeGrid__row-expander_size_default_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_default_theme-@{themeName} {
+      padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_s - 1;
+      padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_s - 1;
+   }
+}
 .controls-TreeGrid__row-expander_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_theme-@{themeName} {
    line-height: 1;
    display: inline-block;
