@@ -1205,7 +1205,7 @@ var _private = {
                     target,
                     templateOptions: defaultMenuConfig,
                     eventHandlers: {
-                        onResult: self._closeActionsMenu,
+                        onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
                     closeOnOutsideClick: true,
@@ -1262,7 +1262,7 @@ var _private = {
                         }
                     },
                     eventHandlers: {
-                        onResult: self._closeActionsMenu,
+                        onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
                     className: 'controls-DropdownList__margin-head'
@@ -1273,46 +1273,43 @@ var _private = {
         }
     },
 
-    closeActionsMenu: function(self, args) {
-        var
-            actionName = args && args.action,
-            event = args && args.event;
-
-        function closeMenu() {
-            if (self._options.useNewModel) {
-                displayLib.ItemActionsController.setActiveItem(
-                    self._listViewModel,
-                    null
-                );
-            } else {
-                self._listViewModel.setActiveItem(null);
-                self._listViewModel.setMenuState('hidden');
-            }
-            self._children.swipeControl && self._children.swipeControl.closeSwipe();
-            self._menuIsShown = false;
-            self._itemWithShownMenu = null;
-            self._actionMenuIsShown = false;
+    closeActionsMenu(self): void {
+        if (self._options.useNewModel) {
+            displayLib.ItemActionsController.setActiveItem(
+                self._listViewModel,
+                null
+            );
+        } else {
+            self._listViewModel.setActiveItem(null);
+            self._listViewModel.setMenuState('hidden');
         }
+        self._children.swipeControl?.closeSwipe();
+        self._menuIsShown = false;
+        self._itemWithShownMenu = null;
+        self._actionMenuIsShown = false;
+    },
+
+    actionsMenuResultHandler(self, args): void {
+        const actionName = args && args.action;
+        const event = args && args.event;
 
         if (actionName === 'itemClick') {
             const action = args.data && args.data[0] && args.data[0].getRawData();
             const activeItem =
                 self._options.useNewModel
-                ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
-                : self._listViewModel.getActiveItem();
+                    ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
+                    : self._listViewModel.getActiveItem();
             aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
-                closeMenu();
+                _private.closeActionsMenu(self);
             }
-        } else {
-            closeMenu();
         }
-        self._forceUpdate();
     },
 
     bindHandlers: function(self) {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
+        self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -2401,6 +2398,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _closeActionsMenu: function(args) {
         _private.closeActionsMenu(this, args);
+    },
+
+    _actionsMenuResultHandler(args): void {
+        _private.actionsMenuResultHandler(this, args);
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
