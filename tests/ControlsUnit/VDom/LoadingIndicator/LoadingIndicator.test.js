@@ -25,8 +25,6 @@ define([
          Loading2._beforeMount({});
          Loading._toggleIndicator = () => {
          };
-         Loading2._redrawOverlay = () => {
-         };
          let prom = new Promise((resolve) => {
          });
          let promise = new Promise((resolve, reject) => {
@@ -161,8 +159,6 @@ define([
          let baseToggleIndicatorVisible = LoadingInd._toggleIndicatorVisible;
          let baseToggleOverlayAsync = LoadingInd._toggleOverlayAsync;
          LoadingInd._toggleOverlayAsync = LoadingInd._toggleOverlay;
-         LoadingInd._redrawOverlay = () => {
-         };
          let config = {
             delay: 1
          };
