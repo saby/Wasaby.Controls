@@ -5,6 +5,7 @@ import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/
 import Utils = require('Types/util');
 import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
+import {isEqual} from 'Types/object';
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -287,7 +288,10 @@ var Input = Control.extend({
 
    _selectedItemsChangedHandler: function (event, items) {
       this._notify('textValueChanged', [_private.getText(this, items) + _private.getMoreText(items)]);
-      return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
+      const newSelectedKeys = _private.getSelectedKeys(items, this._options.keyProperty);
+      if (!isEqual(this._options.selectedKeys, newSelectedKeys)) {
+         return this._notify('selectedKeysChanged', [newSelectedKeys]);
+      }
    },
 
    _dataLoadCallback: function (items) {
