@@ -187,6 +187,8 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         it('can`t scroll', () => {
             assert.isFalse(instance.canScrollToItem(6, false, true), 'Item is out of range');
             assert.isFalse(instance.canScrollToItem(5, false, true), 'Item offset > viewport offset');
+            instance.resetRange(0, 5);
+            assert.isFalse(instance.canScrollToItem(5, false, true));
         });
         it('can scroll', () => {
             assert.isTrue(instance.canScrollToItem(0, false, true));
@@ -194,7 +196,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.isTrue(instance.canScrollToItem(4, false, false));
             assert.isTrue(instance.canScrollToItem(4, true, true));
             instance.resetRange(0, 5);
-            assert.isTrue(instance.canScrollToItem(5, false, true));
+            assert.isTrue(instance.canScrollToItem(4, false, true));
         });
     });
     describe('.getActiveElementIndex()', () => {
