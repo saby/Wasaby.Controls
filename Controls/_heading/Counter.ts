@@ -100,7 +100,7 @@ class Counter extends Control<ICounterOptions> implements IFontColorStyle, IFont
         this._fontColorStyle = counterStyle(newOptions.style, newOptions.fontColorStyle);
     }
 
-    static _theme: string[] = ['Controls/heading'];
+    static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
