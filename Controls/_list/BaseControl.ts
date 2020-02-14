@@ -452,6 +452,7 @@ var _private = {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
+            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.serviceDataLoadCallback instanceof Function) {
                 self._options.serviceDataLoadCallback(self._items, addedItems);
             }
@@ -519,7 +520,6 @@ var _private = {
             if (isPortionedLoad) {
                 _private.loadToDirectionWithSearchValueStarted(self);
             }
-            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
