@@ -255,8 +255,9 @@ class StickyController extends BaseController {
     }
 
     elementAfterUpdated(item, container): Boolean {
+        const target = item.popupOptions.target[0] ? item.popupOptions.target[0] : item.popupOptions.target;
         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
-        if (item.popupOptions.target && item.popupOptions.target.closest && item.popupOptions.target.closest('.ws-hidden')) {
+        if (target && target.closest && target.closest('.ws-hidden')) {
             return false;
         }
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
