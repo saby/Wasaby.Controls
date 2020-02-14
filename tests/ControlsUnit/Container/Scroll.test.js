@@ -152,6 +152,11 @@ define(
          });
 
          describe('_resizeHandler. Paging buttons.', function() {
+            beforeEach(function() {
+               scroll._container = {
+                  closest: () => {}
+               };
+            });
             it('Content at the top', function() {
                scroll._pagingState = {};
                scroll._children.content = {
@@ -199,6 +204,9 @@ define(
          describe('_resizeHandler', function() {
             it('should update _displayState if it changed.', function() {
                let oldDisplayState = scroll._displayState;
+               scroll._container = {
+                  closest: () => {}
+               };
                scroll._pagingState = {};
                scroll._children.content = {
                   scrollTop: 100,
