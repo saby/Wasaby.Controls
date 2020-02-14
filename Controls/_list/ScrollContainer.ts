@@ -196,6 +196,9 @@ export default class ScrollContainer extends Control<IOptions> {
         if (index !== -1) {
             return new Promise((resolve) => {
                 const scrollCallback = () => {
+                    // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
+                    // логического родителя, который отрисовывает все элементы
+                    // https://online.sbis.ru/opendoc.html?guid=942e1a1d-15ee-492e-b763-0a52d091a05e
                     const itemContainer = this._virtualScroll.getItemContainerByIndex(index, this._itemsContainer);
 
                     if (itemContainer) {
