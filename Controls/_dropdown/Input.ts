@@ -319,7 +319,7 @@ var Input = Control.extend({
    // Делаем через событие deactivated на Controller'e,
    // т.к в Controller передается просто шаблон, а не контрол, который не обладает состоянием активности,
    // и подписка на _deactivated на это шаблоне работать не будет
-   _deactivated: function () {
+   _deactivated: function() {
       this.closeMenu();
    },
 
