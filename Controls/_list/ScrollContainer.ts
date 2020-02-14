@@ -341,8 +341,16 @@ export default class ScrollContainer extends Control<IOptions> {
                 if (!this._options.virtualScrolling || this.virtualScroll.canScrollToItem(itemIndex, toBottom, force)) {
                     callback();
                 } else if (force) {
-                    this.virtualScroll.recalcRangeFromIndex(itemIndex);
-                    this.afterRenderCallback = callback;
+                    // Во время отрисовки нельзя менять range, так как мы уже никак на него не повлияем, поэтому
+                    // перерисуем в следующий цикл синхронизации
+                    if (this.virtualScroll.itemsChanged) {
+                        this.afterRenderCallback = () => {
+                            this.scrollToItem(key, toBottom, force);
+                        };
+                    } else {
+                        this.virtualScroll.recalcRangeFromIndex(itemIndex);
+                        this.afterRenderCallback = callback;
+                    }
                 } else {
                     resolve();
                 }
@@ -437,6 +445,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param force
      */
     private scrollToElement(container: HTMLElement, toBottom: boolean, force: boolean): void {
+        this.fakeScroll = true;
         scrollToElement(container, toBottom, force);
     }
 
@@ -461,11 +470,14 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         if (this._options.virtualScrolling) {
+
             this.virtualScroll.scrollTop = params.scrollTop;
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
+            if (this.fakeScroll) {
+                this.fakeScroll = false;
+            } else if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {

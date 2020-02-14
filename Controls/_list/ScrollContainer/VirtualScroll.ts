@@ -238,13 +238,15 @@ export default class VirtualScrollController {
     canScrollToItem(index: number, toBottom: boolean, force: boolean): boolean {
         let canScroll = false;
 
-        if (this.stopIndex === this.itemsCount) {
-            canScroll = true;
-        } else if (this.isItemInRange(index) && (
-            toBottom || !force ||
-            this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index] && force
-        )) {
-            canScroll = true;
+        if (this.isItemInRange(index)) {
+            if (this.stopIndex === this.itemsCount) {
+                canScroll = true;
+            } else if (this.isItemInRange(index) && (
+                toBottom || !force ||
+                this._options.viewportHeight < this.itemsContainerHeight - this.itemsOffsets[index] && force
+            )) {
+                canScroll = true;
+            }
         }
 
         return canScroll;

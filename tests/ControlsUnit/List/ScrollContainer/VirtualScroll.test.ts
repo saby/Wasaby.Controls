@@ -161,8 +161,9 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.stopIndex = 19;
             assert.isTrue(instance.canScrollToItem(1, false, true));
             assert.isFalse(instance.canScrollToItem(18, false, true));
+            assert.isFalse(instance.canScrollToItem(19, false, true));
             instance.stopIndex = 20;
-            assert.isTrue(instance.canScrollToItem(20, false, true));
+            assert.isTrue(instance.canScrollToItem(19, false, true));
             assert.isTrue(instance.canScrollToItem(18, true, true));
             assert.isTrue(instance.canScrollToItem(18, false, false));
         });
