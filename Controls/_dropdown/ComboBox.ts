@@ -125,6 +125,10 @@ var ComboBox = Control.extend({
       }
    },
 
+   _deactivated: function() {
+      this.closeMenu();
+   },
+
    openMenu(popupOptions?: object): void {
       this._children.controller.openMenu(popupOptions);
    },
