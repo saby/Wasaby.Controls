@@ -49,22 +49,6 @@ define([
          gridHeader = [
             { title: '' },
             { title: 'Цена' },
-         ],
-         fullGridHeader = [
-            {
-               title: '',
-               startColumn: 1,
-               endColumn: 2,
-               startRow: 1,
-               endRow: 2
-            },
-            {
-               title: 'Цена',
-               startColumn: 2,
-               endColumn: 3,
-               startRow: 1,
-               endRow: 2
-            }
          ];
 
       function createModel(cfg, data) {
@@ -126,7 +110,7 @@ define([
                   columnScroll: true
                });
                var headerRows = RowUtil.getHeaderRowsArray(gridHeader, false, false);
-               assert.deepEqual([fullGridHeader], headerRows);
+               assert.deepEqual([gridHeader], headerRows);
             });
             it('getHeaderRowsArray with multiheader', function() {
                gridModel = createModel({

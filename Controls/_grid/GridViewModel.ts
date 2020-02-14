@@ -11,7 +11,7 @@ import {
     getIndexByDisplayIndex,
     getIndexById,
     getIndexByItem,
-    getMaxEndRow,
+    getHeaderMaxEndCellData,
     getResultsIndex,
     getHeaderRowsArray,
     getTopOffset,
@@ -529,6 +529,8 @@ var
 
         _cachaedHeaderColumns: null,
 
+        _isMultiHeader: null,
+
         constructor: function(cfg) {
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
@@ -571,7 +573,9 @@ var
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
-            if (this._options.header && this._options.header.length) { this._isMultiHeader = this.isMultiHeader(this._options.header); }
+            if (this._options.header && this._options.header.length) {
+                this._isMultiHeader = this.isMultiHeader(this._options.header);
+            }
             this._setHeader(this._options.header);
             this._updateLastItemKey();
         },
@@ -662,21 +666,28 @@ var
             this._setHeader(columns);
             this._nextModelVersion();
         },
-        isMultiHeader: function(columns) {
-            let k = 0;
-            while(columns.length > k) {
-                if (columns[k].endRow > 2) {
-                    return true;
+        isMultiHeader: function(columns?: any) {
+            let result = false;
+            if (columns) {
+                let k = 0;
+                while (columns.length > k) {
+                    if (columns[k].endRow > 2) {
+                        result = true;
+                    }
+                    k++;
                 }
-                k++;
+            } else if (this._isMultiHeader !== null) {
+                result = this._isMultiHeader;
             }
-            return false;
+            return result;
         },
         _prepareHeaderColumns: function(columns, multiSelectVisibility, actionsCell) {
             if (columns && columns.length) {
                 this._isMultiHeader = this.isMultiHeader(columns);
                 this._headerRows = getHeaderRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell);
-                [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
+                const headerMaxEndCellData = getHeaderMaxEndCellData(this._headerRows);
+                this._maxEndRow = headerMaxEndCellData.maxRow;
+                this._maxEndColumn = headerMaxEndCellData.maxColumn;
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
@@ -728,7 +739,7 @@ var
             return this._options.stickyColumnsCount;
         },
 
-        getMaxEndColumn: function() {
+        getHeaderMaxEndColumn: function() {
             return this._maxEndColumn;
         },
 
@@ -837,7 +848,7 @@ var
                     maxEndColumn: this._maxEndColumn,
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs,
-                    hasActionCell: this._shouldAddActionsCell(),
+                    hasActionCell: this._shouldAddActionsCell()
                 }, this._options.theme);
                 cellClasses += ' controls-Grid__header-cell_min-width';
             }

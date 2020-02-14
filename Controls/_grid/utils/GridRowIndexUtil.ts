@@ -6,7 +6,7 @@ import {IHeaderCell} from '../interface/IHeaderCell';
  * @author Родионов Е.А.
  */
 
-
+const SINGLE_HEADER_MAX_ROW = 2;
 
 /**
  * @typedef {Object} IBaseGridRowIndexOptions Конфигурационый объект.
@@ -262,29 +262,33 @@ function getRowsCount(array): number {
 
 /**
  * Функция подсчета максимальной строки в массиве строк.
- * @param {Array} array Массив строк _headerRows.
- * @return {Number} Максимальная строка.
+ * @param {Array} cells Массив строк _headerRows.
+ * @return {Number} Массив Максимальная строка.
  */
-
-function getMaxEndRow(array): number[] {
-    let maxRow = 0;
-    let maxColumn = 0;
-    let isMuliRow = true;
-    if (array.length === 1) {
-        isMuliRow = false;
-        maxRow = 2;
-    }
-    array.forEach((cur) => {
+function getHeaderMaxEndCellData(cells: IHeaderCell[][]): {maxRow: number, maxColumn: number} {
+    const result = {
+        maxRow: 0,
+        maxColumn: 0
+    };
+    const isMultiColumn = cells.length > 1;
+    cells.forEach((cur) => {
         cur.forEach((c) => {
-            if (isMuliRow && c.endRow > maxRow) {
-                maxRow = c.endRow;
+            if (isMultiColumn && c.endRow !== undefined && c.endRow > result.maxRow) {
+                result.maxRow = c.endRow;
             }
-            if (c.endColumn > maxColumn) {
-                maxColumn = c.endColumn;
+            if (c.endColumn !== undefined && c.endColumn > result.maxColumn) {
+                result.maxColumn = c.endColumn;
             }
         });
     });
-    return [maxRow, maxColumn];
+    // If header isn't multiple we should be careful, because endColumn and endRow are unnecessary
+    if (!isMultiColumn) {
+        if (!result.maxColumn) {
+            result.maxColumn = cells[0].length + 1;
+        }
+        result.maxRow = SINGLE_HEADER_MAX_ROW;
+    }
+    return result;
 }
 
 /**
@@ -298,14 +302,12 @@ function getMaxEndRow(array): number[] {
  *  [{title: 'name', startRow: 1, endRow: 2...}, {title: 'Price', startRow: 2, endRow: 3...}, ...], true
  *  ) -> [[{}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
  */
-
 function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMultiHeader?: boolean, hasActionsCell?: boolean): IHeaderCell[][] {
     let headerRows = [];
-    const preparedCells = prepareCellsArray(cells);
     if (!isMultiHeader) {
-        headerRows.push(preparedCells);
+        headerRows.push(cells);
     } else {
-        let sortedArray = preparedCells.sort((a, b) => {
+        let sortedArray = cells.sort((a, b) => {
             if (a.startRow > b.startRow) {
                 return 1;
             }
@@ -326,13 +328,10 @@ function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMul
         headerRows[0] = [{}, ...headerRows[0]];
     }
     if (hasActionsCell) {
-        // We have to calculate at least endColumn here, because it is used
+        // For multiple headers we have to calculate at least endColumn here, because it is used
         // by ColumnsScroll ScrollWrapper to get the last column number
-        const firstRow = headerRows[0];
-        headerRows[0] = [
-            ...firstRow,
-            getHeaderActionsCellConfig(preparedCells)
-        ];
+        // If header isn't multiple we shouldn't care about startColumn, endColumn etc
+        headerRows[0] = [...headerRows[0], (isMultiHeader ? getHeaderActionsCellConfig(cells) : {isActionCell: true})];
     }
     return headerRows;
 }
@@ -362,22 +361,6 @@ function getHeaderActionsCellConfig(cells: IHeaderCell[]): IHeaderCell {
     };
 }
 
-/**
- * Для расчёта значений в методе getHeaderRowsArray
- * обязательно наличие у колонок startColumn, endColumn, startRow, endRow
- * @param cells
- */
-function prepareCellsArray(cells: IHeaderCell[]): IHeaderCell[] {
-    return cells.map((cell: IHeaderCell, index: number) => {
-        const cellExtension: IHeaderCell = {} as IHeaderCell;
-        cellExtension.startColumn = cell.startColumn || index + 1;
-        cellExtension.endColumn = cell.endColumn || cellExtension.startColumn + 1;
-        cellExtension.startRow = cell.startRow || 1;
-        cellExtension.endRow = cell.endRow || cellExtension.startRow + 1;
-        return {...cell, ...cellExtension};
-    });
-}
-
 export {
     ItemId,
     DisplayItem,
@@ -395,5 +378,5 @@ export {
     getTopOffset,
     getBottomPaddingRowIndex,
     getHeaderRowsArray,
-    getMaxEndRow
+    getHeaderMaxEndCellData
 };
