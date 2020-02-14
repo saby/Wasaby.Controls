@@ -515,7 +515,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     },
     _toggleOverlay(toggle: boolean, config): void {
         this._isOverlayVisible = toggle && config.overlay !== 'none';
-        this._forceUpdate();
+        this._redrawOverlay();
     },
     _clearOverlayTimerId() {
         if (this._toggleOverlayTimerId) {
@@ -532,6 +532,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         } else {
             this._isMessageVisible = false;
         }
+        this._redrawOverlay();
     },
 
     _createOverlay(): void {
