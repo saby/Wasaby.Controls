@@ -30,7 +30,7 @@ var _private = {
             newExcludedKeys = selectionCount === 0 ? [] : self._multiselection.excludedKeys,
             selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
             excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys),
-            isAllSelected = !model.getHasMoreData() && selectionCount === itemsCount ||
+            isAllSelected = !model.getHasMoreData() && selectionCount && selectionCount === itemsCount ||
                newSelectedKeys.includes(root) && (newExcludedKeys.length === 0 || newExcludedKeys.length === 1 && newExcludedKeys[0] === root);
 
         if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
