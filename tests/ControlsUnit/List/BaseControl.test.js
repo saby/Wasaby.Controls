@@ -1201,6 +1201,9 @@ define([
 
          // Without marker
          lists.BaseControl._private.enterHandler({
+            _options: {
+               useNewModel: false
+            },
             getViewModel: function() {
                return {
                   getMarkedItem: function() {
@@ -1218,6 +1221,9 @@ define([
          var mockedEvent = { target: 'myTestTarget' };
          // With marker
          lists.BaseControl._private.enterHandler({
+            _options: {
+               useNewModel: false
+            },
             getViewModel: function() {
                return {
                   getMarkedItem: function() {
@@ -2222,7 +2228,8 @@ define([
             setTimeout(function() {
                lists.BaseControl._private.reload(lnBaseControl, lnCfg);
                setTimeout(function() {
-                  assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+                  // _markedKeyForRestoredScroll известен подскрол не сработает т.к _isScrollShown = false;
+                  assert.equal(lnBaseControl._markedKeyForRestoredScroll, 3);
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
@@ -2243,6 +2250,59 @@ define([
                }, 10);
             }, 10);
          });
+      });
+
+      it('resetScroll after reload', function() {
+
+         var
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnSource2 = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: [{
+                  id: 4,
+                  title: 'Четвертый',
+                  type: 1
+               },
+                  {
+                     id: 5,
+                     title: 'Пятый',
+                     type: 2
+                  }]
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               markedKey: 3,
+               viewModelConstructor: lists.ListViewModel
+            },
+            lnBaseControl = new lists.BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+         lnBaseControl._children = {
+            listView: {
+               getItemsContainer: () => ({
+                 children: [{}, {}, { children: [{ tagName: "DIV"
+                    }]
+                 }]
+               })
+            }
+         }
+
+         assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+
+         lnBaseControl.reload()
+            .addCallback(() => {
+               lnBaseControl._isScrollShown = true;
+               assert.equal(lnBaseControl._markedKeyForRestoredScroll, 3); // set to existing markedKey
+               lnBaseControl._shouldRestoreScrollPosition = true;
+               lnBaseControl._beforePaint();
+               assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+            })
       });
 
       it('reloadRecordSet', function() {
@@ -3059,28 +3119,17 @@ define([
                   }
                }
             };
-            let commitDef = cDeferred.success();
             let commitAndMoveDef = cDeferred.success();
             let result;
 
-            var ctrl = new lists.BaseControl(cfg);
+            const ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
-                  commitEdit: function() {
-                     result = commitDef;
-                  },
                   commitAndMoveNextRow: function () {
                      result = commitAndMoveDef;
                   }
                }
             };
-            ctrl._commitEditActionHandler();
-            assert.equal(commitDef, result);
-
-            commitDef = cDeferred.success();
-            commitAndMoveDef = cDeferred.success();
-
-            ctrl._options.task1178374430 = true;
             ctrl._commitEditActionHandler();
             assert.equal(commitAndMoveDef, result);
          });
