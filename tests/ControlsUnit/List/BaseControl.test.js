@@ -657,11 +657,13 @@ define([
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
+         assert.isTrue(ctrl._listViewModel.getHasMoreData());
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
          assert.isFalse(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isFalse(ctrl._listViewModel.getHasMoreData());
       });
 
       it('loadToDirection down with portioned load', async function() {
