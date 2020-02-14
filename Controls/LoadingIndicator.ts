@@ -540,6 +540,11 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     _redrawOverlay(): void {
         const overlayDiv = this._overlayDiv;
         const messageDiv = this._messageDiv;
+        const container = this._container;
+
+        if (!container) {
+            return;
+        }
 
         const currentOverlayVisibility = !!overlayDiv.parentElement;
         const nextOverlayVisibility = this._isOverlayVisible;
@@ -554,9 +559,9 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         }
         if (currentOverlayVisibility !== nextOverlayVisibility) {
             if (nextOverlayVisibility) {
-                this._container.appendChild(overlayDiv);
+                container.appendChild(overlayDiv);
             } else {
-                this._container.removeChild(overlayDiv);
+                container.removeChild(overlayDiv);
             }
         }
 
