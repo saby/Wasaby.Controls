@@ -202,6 +202,7 @@ export default class ScrollContainer extends Control<IOptions> {
                     const itemContainer = this._virtualScroll.getItemContainerByIndex(index, this._itemsContainer);
 
                     if (itemContainer) {
+                        this._fakeScroll = true;
                         scrollToElement(itemContainer, toBottom, force);
                     }
 
@@ -211,10 +212,19 @@ export default class ScrollContainer extends Control<IOptions> {
                 if (this._virtualScroll.canScrollToItem(index, toBottom, force)) {
                     scrollCallback();
                 } else if (force) {
-                    const rangeShiftResult = this._virtualScroll.resetRange(index, this._options.collection.getCount());
-                    this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-                    this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
-                    this._restoreScrollResolve = scrollCallback;
+                    // Нельзя менять диапазон отображемых элементов
+                    // поэтому нужно перенести scrollToItem на следующий цикл синхронизации
+                    if (this._virtualScroll.rangeChanged) {
+                        this._restoreScrollResolve = () => {
+                            this.scrollToItem(key, toBottom, force);
+                        };
+                    } else {
+                        const rangeShiftResult = this._virtualScroll
+                            .resetRange(index, this._options.collection.getCount());
+                        this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
+                        this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+                        this._restoreScrollResolve = scrollCallback;
+                    }
                 } else {
                     resolve();
                 }
@@ -346,7 +356,9 @@ export default class ScrollContainer extends Control<IOptions> {
 
         this._notify('scrollPositionChanged', [this._lastScrollTop]);
 
-        if (!this._restoreScrollResolve && !this._fakeScroll && !this._virtualScroll.rangeChanged) {
+        if (this._fakeScroll) {
+            this._fakeScroll = false;
+        } else if (!this._restoreScrollResolve && !this._virtualScroll.rangeChanged) {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
 
             if (typeof activeIndex !== 'undefined') {

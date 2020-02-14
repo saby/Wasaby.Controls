@@ -258,11 +258,15 @@ export default class VirtualScroll {
         const {viewport, scroll: scrollHeight} = this._containerHeightsData;
         const itemOffset = this._itemsHeightData.itemsOffsets[itemIndex];
 
-        if (this._range.stop === this._itemsCount) {
-            canScroll = true;
-        } else if (this._isItemInRange(itemIndex) &&
-            (toBottom || !force || (viewport < scrollHeight - itemOffset))) {
-            canScroll = true;
+        if (this._isItemInRange(itemIndex)) {
+            if (
+                this._range.stop === this._itemsCount ||
+                toBottom ||
+                !force ||
+                (viewport < scrollHeight - itemOffset)
+            ) {
+                canScroll = true;
+            }
         }
 
         return canScroll;
