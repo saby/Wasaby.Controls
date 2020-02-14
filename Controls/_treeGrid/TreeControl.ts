@@ -129,9 +129,18 @@ var _private = {
         }
     },
     shouldLoadChildren: function(self, nodeKey): boolean {
-        // загружаем узел только в том случае, если он не был загружен ранее
-        // это можно определить по наличию его nodeSourceController'a
-        return !self._nodesSourceControllers.get(nodeKey);
+        // загружаем узел только если:
+        // 1. он не был загружен ранее (определяем по наличию его nodeSourceController'a)
+        // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
+        const isAlreadyLoaded = !!self._nodesSourceControllers.get(nodeKey);
+        if (isAlreadyLoaded) {
+            return false;
+        }
+        if (self._options.hasChildrenProperty) {
+            const node = self._children.baseControl.getViewModel().getItems().getRecordById(nodeKey);
+            return node.get(self._options.hasChildrenProperty) !== false;
+        }
+        return true;
     },
     prepareHasMoreStorage(sourceControllers: Record<string, SourceController>): Record<string, boolean> {
         const hasMore = {};

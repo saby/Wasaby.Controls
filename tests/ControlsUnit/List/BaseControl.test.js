@@ -539,6 +539,7 @@ define([
          lists.BaseControl._private.checkPortionedSearchByScrollTriggerVisibility(self, false);
 
          assert.isTrue(self._portionedSearch._searchTimer !== null);
+         self._portionedSearch._clearTimer();
       });
 
       it('_needScrollCalculation', function(done) {
@@ -656,11 +657,13 @@ define([
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
+         assert.isTrue(ctrl._listViewModel.getHasMoreData());
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
          assert.isFalse(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isFalse(ctrl._listViewModel.getHasMoreData());
       });
 
       it('loadToDirection down with portioned load', async function() {
@@ -712,6 +715,18 @@ define([
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+      });
+
+      it('isPortionedLoad',  () => {
+         const baseControl = {
+            _options: {}
+         };
+
+         baseControl._items = null;
+         assert.isFalse(lists.BaseControl._private.isPortionedLoad(baseControl));
+
+         baseControl._options.searchValue = 'test';
+         assert.isTrue(lists.BaseControl._private.isPortionedLoad(baseControl));
       });
 
 
