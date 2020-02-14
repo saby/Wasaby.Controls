@@ -255,7 +255,7 @@ class StickyController extends BaseController {
     }
 
     elementAfterUpdated(item, container): Boolean {
-        const target = item.popupOptions.target[0] ? item.popupOptions.target[0] : item.popupOptions.target;
+        const target = _private.getTargetNode(item);
         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
         if (target && target.closest && target.closest('.ws-hidden')) {
             return false;
