@@ -228,13 +228,13 @@
                 <div attr:class="test_element ControlsDemo-standartDemoHeader_ButtonSeparatorSecondary controls-Header_all__clickable">
                     <Controls.heading:Title on:click="clickIcon(8)" caption="Header" fontColorStyle="secondary" fontSize="l"/>
                     <Controls.heading:Counter on:click="clickIcon(8)" attr:class="counter" caption="12" fontColorStyle="primary" fontSize="l"/>
-                    <Controls.toggle:Separator on:click="clickIcon(8)" bold="{{true}}" fontColorStyle="primary" value="{{_iconValue8}}"/>
+                    <Controls.toggle:Separator on:click="clickIcon(8)" bold="{{true}}" style="primary" value="{{_iconValue8}}"/>
                 </div>
             </div>
             <div attr:class="test_element__wrapper">
                 <div attr:class="test_element ControlsDemo-standartDemoHeader_ButtonSeparatorPrimary controls-Header_all__clickable">
                     <Controls.toggle:Separator on:click="clickIcon(10)" bold="{{true}}" style="primary" value="{{_iconValue10}}"/>
-                    <Controls.heading:Counter on:click="clickIcon(10)" attr:class="counter-left-direction" caption="12" fontColorStyle="primary" fontSize="l"/>
+                    <Controls.heading:Counter on:click="clickIcon(10)" attr:class="counter-left-direction" caption="12" style="primary" fontSize="l"/>
                     <Controls.heading:Title on:click="clickIcon(10)" caption="Header" fontColorStyle="secondary" fontSize="l"/>
                 </div>
             </div>
