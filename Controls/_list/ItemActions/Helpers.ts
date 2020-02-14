@@ -5,16 +5,18 @@ var MOVE_DIRECTION = {
     'DOWN': 'down'
 };
 
-var cachedDisplay;
+let cachedDisplay;
+let cachedVersion;
 
 function getDisplay(items, parentProperty, nodeProperty, root) {
    //Кешируем проекцию, т.к. её создание тежеловесная операция, а данный метод будет вызываться для каждой записи в списке.
-   if (!cachedDisplay || cachedDisplay.getCollection() !== items || cachedDisplay.getCollection().getVersion() !== items.getVersion()) {
+   if (!cachedDisplay || cachedDisplay.getCollection() !== items || cachedVersion !== items.getVersion()) {
       cachedDisplay = TreeItemsUtil.getDefaultDisplayTree(items, {
          keyProperty: items.getKeyProperty(),
          parentProperty: parentProperty,
          nodeProperty: nodeProperty
       }, {});
+      cachedVersion = items.getVersion();
    }
    if (root !== undefined) {
        cachedDisplay.setRoot(root);
@@ -113,11 +115,11 @@ var helpers = {
      * }
      * </pre>
      */
-    
+
 
     /*
      * Helper to display up/down item actions.
-     * @function 
+     * @function
      * @name Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
      * @param {MoveDirection} direction
      * @param {Types/entity:Record} item Instance of the item whose action is being processed.
