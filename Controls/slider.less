@@ -172,7 +172,7 @@
   left: -@tick_thickness_slider;
 }
 
-.controls-Slider__tooltipValue {
+.controls-Slider__tooltipValue_theme-@{themeName} {
   padding: @tooltip_padding-vertical_slider @tooltip_padding-horizontal_slider;
   background-color: @tooltip_background-color_slider;
   border-radius: @tooltip_border-radius_slider;
@@ -182,22 +182,22 @@
   left: 50%;
   transform: translate(-50%);
 }
-.controls-Slider__point_big_tooltipValue {
+.controls-Slider__point_big_tooltipValue_theme-@{themeName} {
   bottom: @marker_l_size_slider + @tooltip_offset_slider;
 }
-.controls-Slider__point_small_tooltipValue {
+.controls-Slider__point_small_tooltipValue_theme-@{themeName} {
   bottom: @marker_s_size_slider + @tooltip_offset_slider;
 }
-.controls-Slider__point_tooltip {
+.controls-Slider__point_tooltip_theme-@{themeName} {
   border: @marker_border-thickness_slider solid @marker_hover_border-color_slider;
   background-color: @marker_background-color_slider;
   z-index: 2;
 }
-.controls-Slider__point_tooltip:hover {
+.controls-Slider__point_tooltip_theme-@{themeName}:hover {
   background-color: @marker_background-color_slider;
 }
-.controls-Slider__point_hidden,
-.controls-Slider__point_hidden:hover {
+.controls-Slider__point_hidden_theme-@{themeName},
+.controls-Slider__point_hidden_theme-@{themeName}:hover {
   border: @marker_border-thickness_slider solid transparent;
   background: none;
 }
