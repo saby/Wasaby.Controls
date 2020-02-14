@@ -216,7 +216,9 @@ var _private = {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
                 }
-
+                if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
+                    cfg.afterSetItemsOnReloadCallback();
+                }
                 _private.prepareFooter(self, navigation, self._sourceController);
                 _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
