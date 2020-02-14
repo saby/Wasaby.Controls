@@ -5,7 +5,6 @@ import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_list/BaseControl/SelectionController');
 import {isEqual} from 'Types/object';
 import merge = require('Core/core-merge');
-import {extractLibraryModule} from '../../../application/View/Executor/_Utils/Common';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
