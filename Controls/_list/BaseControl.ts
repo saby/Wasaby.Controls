@@ -33,6 +33,7 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
+import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -205,7 +206,7 @@ var _private = {
                         listModel.setItems(list);
                         const nextKey = listModel.getMarkedKey();
                         if (nextKey && nextKey !== curKey
-                            && self._listViewModel.getCount() && self._isScrollShown
+                            && self._listViewModel.getCount()
                             && !self._options.task46390860 && !self._options.task1177182277
                         ) {
                             self._markedKeyForRestoredScroll = nextKey;
@@ -309,8 +310,8 @@ var _private = {
         }
     },
 
-    scrollToItem: function(self, key) {
-        return self._children.scrollController.scrollToItem(key);
+    scrollToItem: function(self, key, toBottom, force) {
+        return self._children.scrollController.scrollToItem(key, toBottom, force);
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
@@ -324,9 +325,11 @@ var _private = {
             _private.scrollToItem(self, key);
         }
     },
-    restoreScrollPosition: function(self) {
-        if (self._markedKeyForRestoredScroll !== null) {
-            _private.scrollToItem(self, self._markedKeyForRestoredScroll);
+    restoreScrollPosition: function (self) {
+        if (self._markedKeyForRestoredScroll !== null && self._isScrollShown) {
+            const currentItemIndex = self._listViewModel.getItems().getIndexByValue(self._options.keyProperty, self._markedKeyForRestoredScroll);
+            const nodeElement = self._children.listView.getItemsContainer().children[currentItemIndex].children[0];
+            scrollToElement(nodeElement, true);
             self._markedKeyForRestoredScroll = null;
         }
     },
@@ -463,6 +466,7 @@ var _private = {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
+            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.serviceDataLoadCallback instanceof Function) {
                 self._options.serviceDataLoadCallback(self._items, addedItems);
             }
@@ -530,7 +534,6 @@ var _private = {
             if (isPortionedLoad) {
                 _private.loadToDirectionWithSearchValueStarted(self);
             }
-            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
@@ -1031,7 +1034,9 @@ var _private = {
     },
 
     isPortionedLoad(self): boolean {
-        return self._items.getMetaData()[PORTIONED_LOAD_META_FIELD] || self._options.searchValue;
+        const loadByMetaData = self._items && self._items.getMetaData()[PORTIONED_LOAD_META_FIELD];
+        const loadBySearchValue = !!self._options.searchValue;
+        return loadByMetaData || loadBySearchValue;
     },
 
     checkPortionedSearchByScrollTriggerVisibility(self, scrollTriggerVisibility: boolean): void {
@@ -1835,7 +1840,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
-        _private.loadToDirectionIfNeed(this, direction, this._options.filter);
+        if (this._options?.navigation?.view === 'infinity') {
+            _private.loadToDirectionIfNeed(this, direction, this._options.filter);
+        }
     },
 
     triggerVisibilityChangedHandler(_: SyntheticEvent<Event>, direction: IDirection, state: boolean): void {
@@ -2062,8 +2069,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
     },
 
-    scrollToItem(key: string|number): void {
-        return _private.scrollToItem(this, key);
+    scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
+        return _private.scrollToItem(this, key, toBottom, force);
     },
 
     _beforeUnmount: function() {

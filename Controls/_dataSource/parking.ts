@@ -9,4 +9,4 @@
  * @author Санников К.А.
  */
 export { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
-export { default as Controller, Config } from 'Controls/_dataSource/_parking/Controller';
+export { default as Controller, loadHandlers, Config } from 'Controls/_dataSource/_parking/Controller';
