@@ -1082,7 +1082,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
       });
       describe('ladder and sticky column', function() {
-
+         it('TODO: split this into cases', function() {
          // for ladder by date check, ladder field can be any JS type
          var date1 = new Date(2017, 00, 01),
             date2 = new Date(2017, 00, 03),
@@ -1245,6 +1245,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          var curLadderViewModelVersion = ladderViewModel.getVersion();
          ladderViewModel.setLadderProperties(['date']);
          assert.equal(curLadderViewModelVersion, ladderViewModel.getVersion());
+         });
       });
       describe('other methods of the class', function() {
          var
