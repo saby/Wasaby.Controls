@@ -4065,7 +4065,7 @@ define([
                   }
                }
             };
-            instance._closeActionsMenu({
+            instance._actionsMenuResultHandler({
                action: 'itemClick',
                event: fakeEvent,
                data: [{
@@ -4110,7 +4110,7 @@ define([
                   }
                }
             };
-            instance._closeActionsMenu({
+            instance._actionsMenuResultHandler({
                action: 'itemClick',
                event: {
                   type: 'click',
