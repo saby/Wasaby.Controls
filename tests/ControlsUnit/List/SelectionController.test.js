@@ -109,6 +109,17 @@ define([
             assert.deepEqual(instance._multiselection.excludedKeys, newCfg.excludedKeys);
             assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[], [], [null]]).calledOnce);
             assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
+
+            newCfg.selectedKeys = [null];
+            newCfg.excludedKeys = [null];
+            instance._beforeUpdate(newCfg);
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [7, true], { bubbling: true }).calledOnce);
+
+            newCfg.selectedKeys = [null];
+            newCfg.excludedKeys = [null];
+            instance._multiselection._listModel.getItems().clear();
+            instance._beforeUpdate(newCfg);
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
          });
 
          it('change list model', async function() {
