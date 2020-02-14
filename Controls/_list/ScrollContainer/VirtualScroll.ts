@@ -557,7 +557,7 @@ export default class VirtualScroll {
         const fixedStopIndex = Math.min(stopIndex, itemsHeights.length);
 
         for (let i = fixedStartIndex; i < fixedStopIndex; i++) {
-            sum += itemsHeights[i];
+            sum += itemsHeights[i] || 0;
         }
 
         return sum;
