@@ -1947,8 +1947,7 @@ define([
                isPendingCanceled = false;
 
             eip.saveOptions({
-               listModel: listModel,
-               task1178703576: true
+               listModel: listModel
             });
 
             eip._notify = (eName, args, params) => {
