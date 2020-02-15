@@ -315,7 +315,7 @@
 }
 
 .controls-Grid__row-ladder-cell__content_default_theme-@{themeName} {
-   top: @spacing_Grid-row-between-content-borderTop_default;
+   top: 0;
 }
 .controls-Grid__row-ladder-cell__content_m_theme-@{themeName} {
    top: @spacing_Grid-row-between-content-borderTop_s;
@@ -494,6 +494,11 @@
    align-items: baseline;
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
    flex-shrink: 1;
+   box-sizing: border-box;
+}
+
+.controls-Grid__row-cell_cursor-default {
+   cursor: default;
 }
 
 //MasterList styles

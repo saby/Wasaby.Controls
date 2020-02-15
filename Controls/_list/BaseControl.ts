@@ -32,7 +32,8 @@ import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
-import {INavigationOptionValue} from 'Controls/interface';
+import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
+import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -66,7 +67,8 @@ const
 const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
-
+const LIMIT_DRAG_SELECTION = 100;
+const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_PROPORTION = 2;
 /**
  * Object with state from server side rendering
@@ -204,7 +206,7 @@ var _private = {
                         listModel.setItems(list);
                         const nextKey = listModel.getMarkedKey();
                         if (nextKey && nextKey !== curKey
-                            && self._listViewModel.getCount() && self._isScrollShown
+                            && self._listViewModel.getCount()
                             && !self._options.task46390860 && !self._options.task1177182277
                         ) {
                             self._markedKeyForRestoredScroll = nextKey;
@@ -308,8 +310,8 @@ var _private = {
         }
     },
 
-    scrollToItem: function(self, key) {
-        return self._children.scrollController.scrollToItem(key);
+    scrollToItem: function(self, key, toBottom, force) {
+        return self._children.scrollController.scrollToItem(key, toBottom, force);
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
@@ -323,9 +325,11 @@ var _private = {
             _private.scrollToItem(self, key);
         }
     },
-    restoreScrollPosition: function(self) {
-        if (self._markedKeyForRestoredScroll !== null) {
-            _private.scrollToItem(self, self._markedKeyForRestoredScroll);
+    restoreScrollPosition: function (self) {
+        if (self._markedKeyForRestoredScroll !== null && self._isScrollShown) {
+            const currentItemIndex = self._listViewModel.getItems().getIndexByValue(self._options.keyProperty, self._markedKeyForRestoredScroll);
+            const nodeElement = self._children.listView.getItemsContainer().children[currentItemIndex].children[0];
+            scrollToElement(nodeElement, true);
             self._markedKeyForRestoredScroll = null;
         }
     },
@@ -457,10 +461,12 @@ var _private = {
     loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
+        const isPortionedLoad = _private.isPortionedLoad(self);
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
+            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.serviceDataLoadCallback instanceof Function) {
                 self._options.serviceDataLoadCallback(self._items, addedItems);
             }
@@ -482,7 +488,7 @@ var _private = {
                 self._hideIndicatorOnTriggerHideDirection = self._loadingState;
             }
 
-            if (self._options.searchValue) {
+            if (isPortionedLoad) {
                 _private.loadToDirectionWithSearchValueEnded(self, addedItems);
             }
 
@@ -525,10 +531,9 @@ var _private = {
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
-            if (self._options.searchValue) {
+            if (isPortionedLoad) {
                 _private.loadToDirectionWithSearchValueStarted(self);
             }
-            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
@@ -585,7 +590,7 @@ var _private = {
             if (self._loadTriggerVisibility.down || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'down', filter);
             }
-            if (self._options.searchValue) {
+            if (_private.isPortionedLoad(self)) {
                 _private.checkPortionedSearchByScrollTriggerVisibility(self, self._loadTriggerVisibility.down);
             }
         } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
@@ -610,7 +615,7 @@ var _private = {
         return  result;
     },
 
-    needLoadByMaxCountNavigation(listViewModel, navigation: INavigationOptionValue): boolean {
+    needLoadByMaxCountNavigation(listViewModel, navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         let result = false;
 
         if (_private.isMaxCountNavigation(navigation) && _private.isMaxCountNavigationConfiguredCorrect(navigation)) {
@@ -623,15 +628,15 @@ var _private = {
         return result;
     },
 
-    getMaxCountFromNavigation(navigation: INavigationOptionValue): number {
+    getMaxCountFromNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): number {
         return navigation.viewConfig.maxCountValue;
     },
 
-    isMaxCountNavigation(navigation: INavigationOptionValue): boolean {
+    isMaxCountNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation && navigation.view === 'maxCount';
     },
 
-    isMaxCountNavigationConfiguredCorrect(navigation: INavigationOptionValue): boolean {
+    isMaxCountNavigationConfiguredCorrect(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation.viewConfig && typeof navigation.viewConfig.maxCountValue === 'number';
     },
 
@@ -639,11 +644,11 @@ var _private = {
         return navigationMaxCount >  itemsCount;
     },
 
-    isDemandNavigation(navigation: INavigationOptionValue): boolean {
+    isDemandNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation && navigation.view === 'demand';
     },
 
-    needShowShadowByNavigation(navigation: INavigationOptionValue, itemsCount: number): boolean {
+    needShowShadowByNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>, itemsCount: number): boolean {
         const isDemand = _private.isDemandNavigation(navigation);
         const isMaxCount = _private.isMaxCountNavigation(navigation);
         let result = true;
@@ -1028,8 +1033,14 @@ var _private = {
         }
     },
 
+    isPortionedLoad(self): boolean {
+        const loadByMetaData = self._items && self._items.getMetaData()[PORTIONED_LOAD_META_FIELD];
+        const loadBySearchValue = !!self._options.searchValue;
+        return loadByMetaData || loadBySearchValue;
+    },
+
     checkPortionedSearchByScrollTriggerVisibility(self, scrollTriggerVisibility: boolean): void {
-        if (!scrollTriggerVisibility) {
+        if (!scrollTriggerVisibility && self._portionedSearchInProgress) {
             _private.getPortionedSearch(self).resetTimer();
         }
     },
@@ -1194,7 +1205,7 @@ var _private = {
                     target,
                     templateOptions: defaultMenuConfig,
                     eventHandlers: {
-                        onResult: self._closeActionsMenu,
+                        onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
                     closeOnOutsideClick: true,
@@ -1251,7 +1262,7 @@ var _private = {
                         }
                     },
                     eventHandlers: {
-                        onResult: self._closeActionsMenu,
+                        onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
                     className: 'controls-DropdownList__margin-head'
@@ -1262,46 +1273,43 @@ var _private = {
         }
     },
 
-    closeActionsMenu: function(self, args) {
-        var
-            actionName = args && args.action,
-            event = args && args.event;
-
-        function closeMenu() {
-            if (self._options.useNewModel) {
-                displayLib.ItemActionsController.setActiveItem(
-                    self._listViewModel,
-                    null
-                );
-            } else {
-                self._listViewModel.setActiveItem(null);
-                self._listViewModel.setMenuState('hidden');
-            }
-            self._children.swipeControl && self._children.swipeControl.closeSwipe();
-            self._menuIsShown = false;
-            self._itemWithShownMenu = null;
-            self._actionMenuIsShown = false;
+    closeActionsMenu(self): void {
+        if (self._options.useNewModel) {
+            displayLib.ItemActionsController.setActiveItem(
+                self._listViewModel,
+                null
+            );
+        } else {
+            self._listViewModel.setActiveItem(null);
+            self._listViewModel.setMenuState('hidden');
         }
+        self._children.swipeControl?.closeSwipe();
+        self._menuIsShown = false;
+        self._itemWithShownMenu = null;
+        self._actionMenuIsShown = false;
+    },
+
+    actionsMenuResultHandler(self, args): void {
+        const actionName = args && args.action;
+        const event = args && args.event;
 
         if (actionName === 'itemClick') {
             const action = args.data && args.data[0] && args.data[0].getRawData();
             const activeItem =
                 self._options.useNewModel
-                ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
-                : self._listViewModel.getActiveItem();
+                    ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
+                    : self._listViewModel.getActiveItem();
             aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
-                closeMenu();
+                _private.closeActionsMenu(self);
             }
-        } else {
-            closeMenu();
         }
-        self._forceUpdate();
     },
 
     bindHandlers: function(self) {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
+        self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -1829,7 +1837,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
-        _private.loadToDirectionIfNeed(this, direction, this._options.filter);
+        if (this._options?.navigation?.view === 'infinity') {
+            _private.loadToDirectionIfNeed(this, direction, this._options.filter);
+        }
     },
 
     triggerVisibilityChangedHandler(_: SyntheticEvent<Event>, direction: IDirection, state: boolean): void {
@@ -2056,8 +2066,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
     },
 
-    scrollToItem(key: string|number): void {
-        return _private.scrollToItem(this, key);
+    scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
+        return _private.scrollToItem(this, key, toBottom, force);
     },
 
     _beforeUnmount: function() {
@@ -2390,6 +2400,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.closeActionsMenu(this, args);
     },
 
+    _actionsMenuResultHandler(args): void {
+        _private.actionsMenuResultHandler(this, args);
+    },
+
     _itemMouseDown: function(event, itemData, domEvent) {
         var
             selection,
@@ -2401,7 +2415,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
             selection.recursive = false;
-            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function(items) {
+            // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
+            // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
+            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter, LIMIT_DRAG_SELECTION).addCallback(function(items) {
                 const dragKeyPosition = items.indexOf(itemData.key);
                 // If dragged item is in the list, but it's not the first one, move
                 // it to the front of the array
@@ -2602,14 +2618,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
         const indicatorState = state || this._loadingIndicatorState;
+        const itemsCount = this._listViewModel && this._listViewModel.getCount();
 
-        if (indicatorState === 'all') {
-            if (this._loadingIndicatorContainerHeight) {
-                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-            }
-            if (this._loadingIndicatorContainerOffsetTop) {
-                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
-            }
+        if ((!itemsCount && indicatorState === 'down' || indicatorState === 'all') && this._loadingIndicatorContainerHeight) {
+            styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+        }
+
+        if (indicatorState === 'all' && this._loadingIndicatorContainerOffsetTop) {
+            styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
         }
         return styles;
     },

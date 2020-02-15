@@ -589,7 +589,7 @@ define([
             shouldLoadChildrenResult = {
                'node_has_loaded_children': false,
                'node_has_unloaded_children': true,
-               'node_has_no_children': true
+               'node_has_no_children': false
             };
          return new Promise(function(resolve) {
             setTimeout(function() {
@@ -1233,6 +1233,11 @@ define([
 
          treeGrid.TreeControl._private.beforeLoadToDirectionCallback({ _root: 'myCurrentRoot' }, filter, { parentProperty: 'parent', selectedKeys: [1], source: new sourceLib.Memory() });
          assert.deepEqual(filter.entries.get('marked'), ['1']);
+      });
+      it('TreeControl._private.beforeLoadToDirectionCallback', function() {
+         let filter = {};
+         treeGrid.TreeControl._private.beforeLoadToDirectionCallback({ _root: 'myCurrentRoot' }, filter, { source: new sourceLib.Memory() });
+         assert.deepEqual(filter, {}, 'Incorrect value of filter for control without parentProperty.');
       });
       it('TreeControl._private.loadMore', function () {
          var

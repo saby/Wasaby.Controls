@@ -1,4 +1,4 @@
-define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Types/display'], function(Util, Collection, Display) {
+define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/display'], function(Util, Collection, Display) {
 
    describe('Controls/_grid/GridLadderUtil', function() {
       it('isSupportLadder', function() {
