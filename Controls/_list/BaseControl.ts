@@ -2618,14 +2618,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
         const indicatorState = state || this._loadingIndicatorState;
-        const itemsCount = this._listViewModel && this._listViewModel.getCount();
 
-        if ((!itemsCount && indicatorState === 'down' || indicatorState === 'all') && this._loadingIndicatorContainerHeight) {
-            styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-        }
-
-        if (indicatorState === 'all' && this._loadingIndicatorContainerOffsetTop) {
-            styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+        if (indicatorState === 'all') {
+            if (this._loadingIndicatorContainerHeight) {
+                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+            }
+            if (this._loadingIndicatorContainerOffsetTop) {
+                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+            }
         }
         return styles;
     },
