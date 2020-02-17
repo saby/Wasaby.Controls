@@ -31,10 +31,7 @@ export default class SearchFilterController extends Control<ISearchFilterControl
 
       if (searchValue && searchParam) {
          preparedFilter[searchParam] = searchValue;
-         const options = {
-            filter: preparedFilter
-         };
-         _assignServiceFilters(options, preparedFilter, true);
+         _assignServiceFilters({}, preparedFilter, true);
       }
 
       return preparedFilter;
