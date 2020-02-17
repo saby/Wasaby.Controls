@@ -22,13 +22,6 @@ var Registrar = cExtend.extend({
       if (this._startOverRegistry) {
          this._overRegistry.push(component.getInstanceId());
       }
-      const previousUnmountCallback = component.unmountCallback;
-      component.unmountCallback = () => {
-         if (typeof previousUnmountCallback === 'function') {
-            previousUnmountCallback();
-         }
-         this.unregister(event, component);
-      };
       event.stopPropagation();
    },
    unregister: function(event, component) {
