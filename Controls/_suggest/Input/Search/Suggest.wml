@@ -28,6 +28,7 @@
             value="{{_options.value}}"
             tagStyle="{{_options.tagStyle}}"
             trim="{{_options.trim}}"
+            contrastBackground="{{_options.contrastBackground}}"
             placeholder="{{_options.placeholder}}"
             maxLength="{{_options.maxLength}}"
             constraint="{{_options.constraint}}"
