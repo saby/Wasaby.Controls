@@ -248,7 +248,7 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    private collectionChangedHandler(event: string, changesType: string, action: string): void {
+    private collectionChangedHandler = (event: string, changesType: string, action: string): void => {
         const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
 
         if ((changesType === 'collectionChanged' || newModelChanged) && action) {
