@@ -1,5 +1,3 @@
-import extend = require('Core/core-extend');
-
 const SERVICE_FILTERS = {
     HIERARCHY: {
         'Разворот': 'С разворотом',
@@ -7,26 +5,23 @@ const SERVICE_FILTERS = {
     }
 };
 
-var FilterUtils = extend({
-    constructor: function(options) {
-        FilterUtils.superclass.constructor.call(this, options);
-    },
+function _assignServiceFilters(searchController, filter:object, forced):void {
+    if (forced || searchController._options.parentProperty && searchController._viewMode !== 'search' ) {
+        Object.assign(filter, SERVICE_FILTERS.HIERARCHY);
+    }
+},
 
-    assignServiceFilters: function(self, filter:object, forced):void {
-        if (forced || self._options.parentProperty && self._viewMode !== 'search' ) {
-            Object.assign(filter, SERVICE_FILTERS.HIERARCHY);
-        }
-    },
-
-    deleteServiceFilters: function(self, filter:object):void {
-        if (self._options.parentProperty) {
-            for (var i in SERVICE_FILTERS.HIERARCHY) {
-                if (SERVICE_FILTERS.HIERARCHY.hasOwnProperty(i)) {
-                    delete filter[i];
-                }
+function _deleteServiceFilters(options, filter:object):void {
+    if (options.parentProperty) {
+        for (var i in SERVICE_FILTERS.HIERARCHY) {
+            if (SERVICE_FILTERS.HIERARCHY.hasOwnProperty(i)) {
+                delete filter[i];
             }
         }
     }
-})
+}
 
-export default FilterUtils;
+export {
+    _assignServiceFilters,
+    _deleteServiceFilters,
+}
