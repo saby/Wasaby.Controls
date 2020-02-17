@@ -976,6 +976,7 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
+        self._scrollPageLocked = false;
     },
 
     getPortionedSearch(self): PortionedSearch {
@@ -1205,7 +1206,7 @@ var _private = {
                     target,
                     templateOptions: defaultMenuConfig,
                     eventHandlers: {
-                        onResult: self._closeActionsMenu,
+                        onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
                     closeOnOutsideClick: true,
@@ -1262,7 +1263,7 @@ var _private = {
                         }
                     },
                     eventHandlers: {
-                        onResult: self._closeActionsMenu,
+                        onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
                     className: 'controls-DropdownList__margin-head'
@@ -1273,46 +1274,43 @@ var _private = {
         }
     },
 
-    closeActionsMenu: function(self, args) {
-        var
-            actionName = args && args.action,
-            event = args && args.event;
-
-        function closeMenu() {
-            if (self._options.useNewModel) {
-                displayLib.ItemActionsController.setActiveItem(
-                    self._listViewModel,
-                    null
-                );
-            } else {
-                self._listViewModel.setActiveItem(null);
-                self._listViewModel.setMenuState('hidden');
-            }
-            self._children.swipeControl && self._children.swipeControl.closeSwipe();
-            self._menuIsShown = false;
-            self._itemWithShownMenu = null;
-            self._actionMenuIsShown = false;
+    closeActionsMenu(self): void {
+        if (self._options.useNewModel) {
+            displayLib.ItemActionsController.setActiveItem(
+                self._listViewModel,
+                null
+            );
+        } else {
+            self._listViewModel.setActiveItem(null);
+            self._listViewModel.setMenuState('hidden');
         }
+        self._children.swipeControl?.closeSwipe();
+        self._menuIsShown = false;
+        self._itemWithShownMenu = null;
+        self._actionMenuIsShown = false;
+    },
+
+    actionsMenuResultHandler(self, args): void {
+        const actionName = args && args.action;
+        const event = args && args.event;
 
         if (actionName === 'itemClick') {
             const action = args.data && args.data[0] && args.data[0].getRawData();
             const activeItem =
                 self._options.useNewModel
-                ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
-                : self._listViewModel.getActiveItem();
+                    ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
+                    : self._listViewModel.getActiveItem();
             aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
-                closeMenu();
+                _private.closeActionsMenu(self);
             }
-        } else {
-            closeMenu();
         }
-        self._forceUpdate();
     },
 
     bindHandlers: function(self) {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
+        self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -2358,7 +2356,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this.__error) {
             return;
         }
-        if (this._listViewModel && this._hasItemActions) {
+
+        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
+        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
+        if (this._listViewModel && this._hasItemActions && this._children.itemActions) {
             this._children.itemActions.updateActions();
         }
     },
@@ -2401,6 +2402,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _closeActionsMenu: function(args) {
         _private.closeActionsMenu(this, args);
+    },
+
+    _actionsMenuResultHandler(args): void {
+        _private.actionsMenuResultHandler(this, args);
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
@@ -2617,14 +2622,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
         const indicatorState = state || this._loadingIndicatorState;
-        const itemsCount = this._listViewModel && this._listViewModel.getCount();
 
-        if ((!itemsCount && indicatorState === 'down' || indicatorState === 'all') && this._loadingIndicatorContainerHeight) {
-            styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-        }
-
-        if (indicatorState === 'all' && this._loadingIndicatorContainerOffsetTop) {
-            styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+        if (indicatorState === 'all') {
+            if (this._loadingIndicatorContainerHeight) {
+                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+            }
+            if (this._loadingIndicatorContainerOffsetTop) {
+                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+            }
         }
         return styles;
     },
