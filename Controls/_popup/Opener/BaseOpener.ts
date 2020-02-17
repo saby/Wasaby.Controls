@@ -10,6 +10,7 @@ import {parse as parserLib, load} from 'Core/library';
 import {Logger} from 'UI/Utils';
 import { DefaultOpenerFinder } from 'UI/Focus';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import {detection} from 'Env/Env';
 import rk = require('i18n!Controls');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 
@@ -49,6 +50,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     private _openPopupTimerId: number;
     private _vdomOnOldPage: boolean;
     private _action: any; // compatible
+
+    // Used in template
+    private _isMobileIOS(): boolean {
+        return detection.isMobileIOS;
+    }
 
     protected _afterMount(): void {
         this._openerUpdateCallback = this._updatePopup.bind(this);
