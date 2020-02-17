@@ -110,6 +110,7 @@ import 'css!theme?Controls/filterPopup';
 
       _textValueChangedHandler: function(event, index, textValue) {
          this._options.items[index].textValue = textValue;
+         this._options.items[index].visibility = true;
          this._notify('itemsChanged', [this._options.items]);
       },
 

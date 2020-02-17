@@ -69,7 +69,7 @@ define([
          instance._afterMount();
          assert.isTrue(stubNotify.withArgs('register', ['selectedTypeChanged', instance, SelectionController._private.selectedTypeChangedHandler], {bubbling: true}).calledOnce);
          assert.isTrue(instance._options.items.hasEventHandlers('onCollectionChange'));
-         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).calledOnce);
+         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
       });
 
       describe('_beforeUpdate', function() {
@@ -108,6 +108,17 @@ define([
             assert.deepEqual(instance._multiselection.selectedKeys, newCfg.selectedKeys);
             assert.deepEqual(instance._multiselection.excludedKeys, newCfg.excludedKeys);
             assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[], [], [null]]).calledOnce);
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
+
+            newCfg.selectedKeys = [null];
+            newCfg.excludedKeys = [null];
+            instance._beforeUpdate(newCfg);
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [7, true], { bubbling: true }).calledOnce);
+
+            newCfg.selectedKeys = [null];
+            newCfg.excludedKeys = [null];
+            instance._multiselection._listModel.getItems().clear();
+            instance._beforeUpdate(newCfg);
             assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
          });
 
