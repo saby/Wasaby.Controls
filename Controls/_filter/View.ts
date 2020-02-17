@@ -136,11 +136,15 @@ var _private = {
                 popupItem.selectorItems = configs[item.name].items;
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source && (!configs[item.name].loadDeferred || configs[item.name].loadDeferred.isReady())) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
-                        popupItem.loadDeferred = _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
+                        popupItem.loadDeferred = _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter, item.editorOptions.navigation);
                         configs[item.name].loadDeferred = popupItem.loadDeferred;
                     }
-                    popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
-                    popupItem.sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
+                    if (!configs[item.name].sourceController) {
+                        let sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
+                        sourceController.calculateState(popupItem.items);
+                    }
+                    popupItem.hasMoreButton = configs[item.name].sourceController.hasMoreData('down');
+                    popupItem.sourceController = configs[item.name].sourceController;
                     popupItem.selectorOpener = self._children.selectorOpener;
                     popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
                 }
@@ -290,11 +294,11 @@ var _private = {
 
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
-                    let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
+                    let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter, null,
                         // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
-                        if (item.editorOptions.dataLoadCallback) {
-                            item.editorOptions.dataLoadCallback(newItems);
-                        }
+                        item.editorOptions.dataLoadCallback,
+                        false).addCallback((newItems) => {
+
                         _private.setItems(config, item, newItems);
                     });
                     pDef.push(result);
@@ -304,13 +308,13 @@ var _private = {
         return pDef.done().getResult();
     },
 
-    loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?) {
+    loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?, withHistory = true) {
         let queryFilter;
         if (instance.nodeProperty) {
             queryFilter = Merge(filter, {historyId: instance.historyId});
         }
             // As the data source can be history source, then you need to merge the filter
-        queryFilter = historyUtils.getSourceFilter(filter, source);
+        queryFilter = withHistory ? historyUtils.getSourceFilter(filter, source) : filter;
         return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback(function(items) {
             instance.items = items;
             if (dataLoadCallback) {

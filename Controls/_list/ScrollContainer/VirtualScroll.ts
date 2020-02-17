@@ -391,10 +391,6 @@ export default class VirtualScrollController {
                 this.itemsRemovedHandler(removedItemsIndex, removedItems);
             }
 
-            if (action === IObservable.ACTION_RESET) {
-                this.reset();
-            }
-
             this._options.indexesChangedCallback(this.startIndex, this.stopIndex);
         }
     }

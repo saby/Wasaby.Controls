@@ -217,7 +217,9 @@ var _private = {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
                 }
-
+                if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
+                    cfg.afterSetItemsOnReloadCallback();
+                }
                 _private.prepareFooter(self, navigation, self._sourceController);
                 _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
@@ -960,6 +962,7 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
+        self._scrollPageLocked = false;
     },
 
     getPortionedSearch(self): PortionedSearch {
@@ -2313,7 +2316,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this.__error) {
             return;
         }
-        if (this._listViewModel && this._hasItemActions) {
+
+        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
+        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
+        if (this._listViewModel && this._hasItemActions && this._children.itemActions) {
             this._children.itemActions.updateActions();
         }
     },
@@ -2575,14 +2581,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
         const indicatorState = state || this._loadingIndicatorState;
-        const itemsCount = this._listViewModel && this._listViewModel.getCount();
 
-        if ((!itemsCount && indicatorState === 'down' || indicatorState === 'all') && this._loadingIndicatorContainerHeight) {
-            styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-        }
-
-        if (indicatorState === 'all' && this._loadingIndicatorContainerOffsetTop) {
-            styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+        if (indicatorState === 'all') {
+            if (this._loadingIndicatorContainerHeight) {
+                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+            }
+            if (this._loadingIndicatorContainerOffsetTop) {
+                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+            }
         }
         return styles;
     },

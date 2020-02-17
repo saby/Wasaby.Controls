@@ -52,6 +52,7 @@ var _private = {
                 pDef.push(curItem.loadDeferred.addCallback(() => {
                     if (isHistorySource(curItem.source)) {
                         curItem.items = curItem.source.prepareItems(curItem.items);
+                        curItem.hasMoreButton = curItem.sourceController.hasMoreData('down');
                     }
                 }));
             }
