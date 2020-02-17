@@ -2,13 +2,13 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_search/FilterController';
 import * as clone from 'Core/core-clone';
 import {isEqual} from 'Types/object';
-import FilterUtils from 'Controls/_search/Utils/FilterUtils';
-
+import {_assignServiceFilters} from 'Controls/_search/Utils/FilterUtils';
 
 export interface ISearchFilterController extends IControlOptions {
    searchValue: string;
    searchParam: string;
    filter: object;
+   minSearchLength: number;
 }
 
 export default class SearchFilterController extends Control<ISearchFilterController> {
@@ -34,8 +34,7 @@ export default class SearchFilterController extends Control<ISearchFilterControl
          const options = {
             filter: preparedFilter
          };
-         const filterUtils = new FilterUtils(options);
-         filterUtils.assignServiceFilters(options, preparedFilter, true);
+         _assignServiceFilters(options, preparedFilter, true);
       }
 
       return preparedFilter;

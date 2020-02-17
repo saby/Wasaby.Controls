@@ -6,7 +6,7 @@ import cInstance = require('Core/core-instance');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
-import FilterUtils from 'Controls/_search/Utils/FilterUtils';
+import {_assignServiceFilters, _deleteServiceFilters} from 'Controls/_search/Utils/FilterUtils';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
@@ -34,16 +34,6 @@ var _private = {
       }
 
       return self._searchController;
-   },
-
-   getFilterUtils: function (self, filter, searchControllerCreated) {
-      if (!self._filterUtils) {
-         self._filterUtils = new FilterUtils({
-            filter: clone(filter) || {}
-         });
-      }
-
-      return self._filterUtils;
    },
 
    getOriginSource: function(source: ICrud): ICrud {
@@ -75,7 +65,7 @@ var _private = {
       if (self._viewMode === 'search') {
          self._searchValue = '';
          self._misspellValue = '';
-         _private.getFilterUtils(self).deleteServiceFilters(self, filter);
+         _deleteServiceFilters(self._options, filter);
 
          //abortCallback is called on every input change, when input value is less then minSearchLength,
          //but filter could be already changed, because viewMode: 'search' will change only after data loaded.
@@ -87,7 +77,7 @@ var _private = {
    },
 
    searchStartCallback: function (self, filter:object):void {
-      _private.getFilterUtils(self).assignServiceFilters(self, filter);
+      _assignServiceFilters(self, filter);
 
       if (self._root !== undefined && self._options.parentProperty) {
          if (self._options.startingWith === 'current') {
