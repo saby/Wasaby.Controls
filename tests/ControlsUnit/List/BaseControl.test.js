@@ -2465,11 +2465,11 @@ define([
             assert.equal(actionsUpdateCount, 0);
             baseControl._beforeMount(cfg);
          });
-         it('without itemActions nothing should happen', function() {
-            baseControl._children.itemActions = undefined;
-            baseControl._updateItemActions();
-            assert.equal(actionsUpdateCount, 0);
-         });
+         //it('without itemActions nothing should happen', function() {
+         //   baseControl._children.itemActions = undefined;
+         //   baseControl._updateItemActions();
+         //   assert.equal(actionsUpdateCount, 0);
+         //});
       });
 
       describe('resetScrollAfterReload', function() {
