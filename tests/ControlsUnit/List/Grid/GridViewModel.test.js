@@ -1082,7 +1082,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
       });
       describe('ladder and sticky column', function() {
-
+         it('TODO: split this into cases', function() {
          // for ladder by date check, ladder field can be any JS type
          var date1 = new Date(2017, 00, 01),
             date2 = new Date(2017, 00, 03),
@@ -1245,6 +1245,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          var curLadderViewModelVersion = ladderViewModel.getVersion();
          ladderViewModel.setLadderProperties(['date']);
          assert.equal(curLadderViewModelVersion, ladderViewModel.getVersion());
+         });
       });
       describe('other methods of the class', function() {
          var
@@ -2069,6 +2070,25 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                );
             }
 
+         });
+
+         it('TableCellStyles', function() {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'hidden',
+               columns: [
+                  { title: 'first', width: '101px' },
+                  { title: 'second', compatibleWidth: '102px', width: '1fr' },
+                  { title: 'third' }
+               ],
+               columnScroll: true
+            });
+            const current = model.getCurrent();
+            assert.equal(current.getCurrentColumn().tableCellStyles, 'min-width: 101px; max-width: 101px;');
+            current.goToNextColumn();
+            assert.equal(current.getCurrentColumn().tableCellStyles, 'min-width: 102px; max-width: 102px;');
+            current.goToNextColumn();
+            assert.equal(current.getCurrentColumn().tableCellStyles, '');
          });
 
          it('should rowspan checkbox th if multiheader', function () {

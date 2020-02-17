@@ -25,5 +25,7 @@
    </ws:else>
 </ws:if>
 <ws:else>
-   <invisible-node />
+
+ <!-- нельзя использовать invisible-node. он ломает всплытие событий/-->
+   <div style="display: none"></div>
 </ws:else>
