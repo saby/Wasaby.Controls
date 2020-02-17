@@ -23,6 +23,9 @@ define('Controls-demo/Explorer/SearchExpand', [
          _expItemsCh: function(e, items) {
             console.log(items);
          },
+         _markedKeyChangedHandler: function(e, markedKey) {
+            console.log('markedKey: ', markedKey);
+         },
          _beforeMount: function() {
             this._viewColumns = [
                {
