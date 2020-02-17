@@ -255,8 +255,15 @@ class StickyController extends BaseController {
     }
 
     elementAfterUpdated(item, container) {
+        const target = _private.getTargetNode(item);
+        // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+        if (target && target.closest && target.closest('.ws-hidden')) {
+            return false;
+        }
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
         const width = container.style.width;
+        const maxHeight = container.style.maxHeight;
+        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '100vh';
         container.style.width = 'auto';
         container.style.height = 'auto';
 
@@ -266,6 +273,7 @@ class StickyController extends BaseController {
 
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
+        container.style.maxHeight = maxHeight;
         // После того, как дочерние контролы меняют размеры, они кидают событие controlResize, окно отлавливает событие,
         // измеряет верстку и выставляет себе новую позицию и размеры. Т.к. это проходит минимум в 2 цикла синхронизации,
         // то визуально видны прыжки. Уменьшаю на 1 цикл синхронизации простановку размеров

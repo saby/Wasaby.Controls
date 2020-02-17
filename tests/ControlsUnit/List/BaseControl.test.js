@@ -657,11 +657,13 @@ define([
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
+         assert.isTrue(ctrl._listViewModel.getHasMoreData());
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
          assert.isFalse(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isFalse(ctrl._listViewModel.getHasMoreData());
       });
 
       it('loadToDirection down with portioned load', async function() {
@@ -713,6 +715,18 @@ define([
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+      });
+
+      it('isPortionedLoad',  () => {
+         const baseControl = {
+            _options: {}
+         };
+
+         baseControl._items = null;
+         assert.isFalse(lists.BaseControl._private.isPortionedLoad(baseControl));
+
+         baseControl._options.searchValue = 'test';
+         assert.isTrue(lists.BaseControl._private.isPortionedLoad(baseControl));
       });
 
 
@@ -2088,6 +2102,14 @@ define([
             ctrl._afterUpdate(cfg);
             assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in _afterUpdate');
 
+            ctrl.__onPagingArrowClick({}, 'Prev');
+            assert.strictEqual('pageUp', result[0], 'Wrong state of scroll after clicking to Prev');
+
+            assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Prev until handleScrollMoveSync');
+            ctrl._setMarkerAfterScroll = false;
+            ctrl.scrollMoveSyncHandler(null, { scrollTop: 0 });
+            assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in handleScrollMoveSync');
+
             done();
          }, 100);
       });
@@ -2214,7 +2236,8 @@ define([
             setTimeout(function() {
                lists.BaseControl._private.reload(lnBaseControl, lnCfg);
                setTimeout(function() {
-                  assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+                  // _markedKeyForRestoredScroll известен подскрол не сработает т.к _isScrollShown = false;
+                  assert.equal(lnBaseControl._markedKeyForRestoredScroll, 3);
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
@@ -2235,6 +2258,59 @@ define([
                }, 10);
             }, 10);
          });
+      });
+
+      it('resetScroll after reload', function() {
+
+         var
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnSource2 = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: [{
+                  id: 4,
+                  title: 'Четвертый',
+                  type: 1
+               },
+                  {
+                     id: 5,
+                     title: 'Пятый',
+                     type: 2
+                  }]
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               markedKey: 3,
+               viewModelConstructor: lists.ListViewModel
+            },
+            lnBaseControl = new lists.BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+         lnBaseControl._children = {
+            listView: {
+               getItemsContainer: () => ({
+                 children: [{}, {}, { children: [{ tagName: "DIV"
+                    }]
+                 }]
+               })
+            }
+         }
+
+         assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+
+         lnBaseControl.reload()
+            .addCallback(() => {
+               lnBaseControl._isScrollShown = true;
+               assert.equal(lnBaseControl._markedKeyForRestoredScroll, 3); // set to existing markedKey
+               lnBaseControl._shouldRestoreScrollPosition = true;
+               lnBaseControl._beforePaint();
+               assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+            })
       });
 
       it('reloadRecordSet', function() {
@@ -2385,6 +2461,12 @@ define([
          });
          it('without listViewModel should not call update', function() {
             baseControl._listViewModel = null;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 0);
+            baseControl._beforeMount(cfg);
+         });
+         it('without itemActions nothing should happen', function() {
+            baseControl._children.itemActions = undefined;
             baseControl._updateItemActions();
             assert.equal(actionsUpdateCount, 0);
          });
@@ -3997,7 +4079,7 @@ define([
                   }
                }
             };
-            instance._closeActionsMenu({
+            instance._actionsMenuResultHandler({
                action: 'itemClick',
                event: fakeEvent,
                data: [{
@@ -4042,7 +4124,7 @@ define([
                   }
                }
             };
-            instance._closeActionsMenu({
+            instance._actionsMenuResultHandler({
                action: 'itemClick',
                event: {
                   type: 'click',
@@ -5121,7 +5203,7 @@ define([
 
          baseControl._loadingIndicatorContainerHeight = 32;
          itemsCount = 0;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'min-height: 32px;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
 
@@ -5132,7 +5214,7 @@ define([
 
          baseControl._loadingIndicatorContainerOffsetTop = 48;
          itemsCount = 0;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'min-height: 32px;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
 

@@ -83,9 +83,10 @@
 <ws:template name="viewTpl">
     <Controls._list.ScrollContainer
             name="scrollController"
-            on:scrollMoveSync="scrollMoveSyncHandler()"
+            on:scrollPositionChanged="scrollMoveSyncHandler()"
             on:scrollMove="scrollMoveHandler()"
             on:loadMore="loadMore()"
+            on:viewResize="_viewResize()"
             on:viewportResize="viewportResizeHandler()"
             on:canScroll="canScrollHandler()"
             on:cantScroll="cantScrollHandler()"
@@ -94,10 +95,8 @@
             on:triggerVisibilityChanged="triggerVisibilityChangedHandler()"
             on:triggerOffsetChanged="triggerOffsetChangedHandler()"
             on:activeElementChanged="_notifyHandler('activeElementChanged')"
-            on:viewResize="_viewResize()"
             on:changeIndicatorState="changeIndicatorStateHandler()"
-            viewModel="{{_listViewModel}}"
-            observeScroll="{{_needScrollCalculation}}"
+            collection="{{_listViewModel}}"
             scope="{{_options}}">
         <Controls._list.EditInPlace
                 name="editInPlace"
@@ -106,6 +105,7 @@
                 on:afterBeginEdit="_onAfterBeginEdit()"
                 on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
                 on:afterEndEdit="_onAfterEndEdit()"
+                task1178703576="{{_options.task1178703576}}"
                 listModel="{{_listViewModel}}"
                 multiSelectVisibility="{{_options.multiSelectVisibility}}"
                 errorController="{{ __errorController }}"
