@@ -54,8 +54,6 @@ import {getOptionTypes} from 'Controls/_suggest/Utils';
  * @author Gerasimov A.M.
  */
 
-
-
 var Suggest = Control.extend({
 
    _template: template,
@@ -126,7 +124,7 @@ var Suggest = Control.extend({
 
 // <editor-fold desc="OptionsDesc">
 
-Suggest._theme = ['Controls/suggest'];
+Suggest._theme = ['Controls/suggest', 'Controls/Classes'];
 Suggest.getOptionTypes = getOptionTypes;
 Suggest.getDefaultOptions = function() {
    return {
@@ -137,4 +135,3 @@ Suggest.getDefaultOptions = function() {
 // </editor-fold>
 
 export = Suggest;
-
