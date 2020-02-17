@@ -103,8 +103,7 @@ export default class ScrollContainer extends Control<IOptions> {
     protected triggerOffset: number = DEFAULT_TRIGGER_OFFSET;
     private __mounted: boolean;
 
-
-    set itemsFromLoadToDirection(value) {
+    set itemsFromLoadToDirection(value: boolean) {
         this.virtualScroll.itemsFromLoadToDirection = value;
     }
 
