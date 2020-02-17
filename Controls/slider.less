@@ -185,9 +185,11 @@
   box-shadow: @tooltip_box-shadow_slider;
   font-size: @tooltip_font-size_slider;
 }
-.controls-Slider__point_big_tooltipValue_theme-@{themeName},
-.controls-Slider__point_small_tooltipValue_theme-@{themeName} {
+.controls-Slider__point_big_tooltipValue_theme-@{themeName} {
   bottom: @marker_l_size_slider + @tooltip_offset_slider;
+}
+.controls-Slider__point_small_tooltipValue_theme-@{themeName} {
+  bottom: @marker_s_size_slider + @tooltip_offset_slider;
 }
 .controls-Slider__point_tooltip {
   z-index: 2;
