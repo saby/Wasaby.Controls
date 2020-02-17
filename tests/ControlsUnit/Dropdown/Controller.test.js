@@ -62,8 +62,7 @@ define(
                data: items
             }),
             nodeProperty: 'node',
-            itemTemplateProperty: 'itemTemplate',
-            _dropDownOpener: 'testOpener'
+            itemTemplateProperty: 'itemTemplate'
 
          };
 
@@ -882,18 +881,6 @@ define(
             assert.isFalse(!!dropdownController._sourceController);
          });
 
-         it('_deactivated', () => {
-            let dropdownController = getDropdownController(config);
-            let closed = false;
-
-            dropdownController.closeMenu = () => {
-               closed = true;
-            };
-
-            dropdownController._deactivated();
-            assert.isTrue(closed);
-         });
-
          it('openMenu', () => {
             let dropdownController = getDropdownController(config);
             let openConfig;
@@ -911,7 +898,6 @@ define(
 
             dropdownController.openMenu({ testOption: 'testValue' });
             assert.equal(openConfig.testOption, 'testValue');
-            assert.equal(openConfig.opener, 'testOpener');
 
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',

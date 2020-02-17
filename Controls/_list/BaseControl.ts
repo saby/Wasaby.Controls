@@ -33,6 +33,7 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue} from 'Controls/interface';
+import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -204,7 +205,7 @@ var _private = {
                         listModel.setItems(list);
                         const nextKey = listModel.getMarkedKey();
                         if (nextKey && nextKey !== curKey
-                            && self._listViewModel.getCount() && self._isScrollShown
+                            && self._listViewModel.getCount()
                             && !self._options.task46390860 && !self._options.task1177182277
                         ) {
                             self._markedKeyForRestoredScroll = nextKey;
@@ -322,9 +323,11 @@ var _private = {
             _private.scrollToItem(self, key);
         }
     },
-    restoreScrollPosition: function(self) {
-        if (self._markedKeyForRestoredScroll !== null) {
-            _private.scrollToItem(self, self._markedKeyForRestoredScroll);
+    restoreScrollPosition: function (self) {
+        if (self._markedKeyForRestoredScroll !== null && self._isScrollShown) {
+            const currentItemIndex = self._listViewModel.getItems().getIndexByValue(self._options.keyProperty, self._markedKeyForRestoredScroll);
+            const nodeElement = self._children.listView.getItemsContainer().children[currentItemIndex].children[0];
+            scrollToElement(nodeElement, true);
             self._markedKeyForRestoredScroll = null;
         }
     },
@@ -452,6 +455,7 @@ var _private = {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
+            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.serviceDataLoadCallback instanceof Function) {
                 self._options.serviceDataLoadCallback(self._items, addedItems);
             }
@@ -519,7 +523,6 @@ var _private = {
             if (isPortionedLoad) {
                 _private.loadToDirectionWithSearchValueStarted(self);
             }
-            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
@@ -1015,7 +1018,9 @@ var _private = {
     },
 
     isPortionedLoad(self): boolean {
-        return self._items.getMetaData()[PORTIONED_LOAD_META_FIELD] || self._options.searchValue;
+        const loadByMetaData = self._items && self._items.getMetaData()[PORTIONED_LOAD_META_FIELD];
+        const loadBySearchValue = !!self._options.searchValue;
+        return loadByMetaData || loadBySearchValue;
     },
 
     checkPortionedSearchByScrollTriggerVisibility(self, scrollTriggerVisibility: boolean): void {
@@ -1180,7 +1185,7 @@ var _private = {
                     target,
                     templateOptions: defaultMenuConfig,
                     eventHandlers: {
-                        onResult: self._closeActionsMenu,
+                        onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
                     closeOnOutsideClick: true,
@@ -1233,7 +1238,7 @@ var _private = {
                         }
                     },
                     eventHandlers: {
-                        onResult: self._closeActionsMenu,
+                        onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
                     className: 'controls-DropdownList__margin-head'
@@ -1244,38 +1249,35 @@ var _private = {
         }
     },
 
-    closeActionsMenu: function(self, args) {
-        var
-            actionName = args && args.action,
-            event = args && args.event;
-
-        function closeMenu() {
-            self._listViewModel.setActiveItem(null);
-            if (!self._options.useNewModel) {
-                // TODO Do we need this in new model?
-                self._listViewModel.setMenuState('hidden');
-            }
-            self._children.swipeControl && self._children.swipeControl.closeSwipe();
-            self._menuIsShown = false;
-            self._itemWithShownMenu = null;
-            self._actionMenuIsShown = false;
+    closeActionsMenu(self): void {
+        self._listViewModel.setActiveItem(null);
+        if (!self._options.useNewModel) {
+            // TODO Do we need this in new model?
+            self._listViewModel.setMenuState('hidden');
         }
+        self._children.swipeControl?.closeSwipe();
+        self._menuIsShown = false;
+        self._itemWithShownMenu = null;
+        self._actionMenuIsShown = false;
+    },
+
+    actionsMenuResultHandler(self, args): void {
+        const actionName = args && args.action;
+        const event = args && args.event;
 
         if (actionName === 'itemClick') {
-            var action = args.data && args.data[0] && args.data[0].getRawData();
+            const action = args.data && args.data[0] && args.data[0].getRawData();
             aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem(), self._listViewModel);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
-                closeMenu();
+                _private.closeActionsMenu(self);
             }
-        } else {
-            closeMenu();
         }
-        self._forceUpdate();
     },
 
     bindHandlers: function(self) {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
+        self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -2353,6 +2355,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _closeActionsMenu: function(args) {
         _private.closeActionsMenu(this, args);
+    },
+
+    _actionsMenuResultHandler(args): void {
+        _private.actionsMenuResultHandler(this, args);
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
