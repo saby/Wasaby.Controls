@@ -212,7 +212,7 @@ export default class ScrollContainer extends Control<IOptions> {
                 if (this._virtualScroll.canScrollToItem(index, toBottom, force)) {
                     scrollCallback();
                 } else if (force) {
-                    // Нельзя менять диапазон отображемых элементов
+                    // Нельзя менять диапазон отображемых элементов во время перерисовки
                     // поэтому нужно перенести scrollToItem на следующий цикл синхронизации
                     if (this._virtualScroll.rangeChanged) {
                         this._restoreScrollResolve = () => {
