@@ -231,6 +231,14 @@ export default class ScrollContainer extends Control<IOptions> {
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
+    startChainUpdate(): void {
+        this._virtualScroll.startChainUpdate();
+    }
+
+    stopChainUpdate(): void {
+        this._virtualScroll.stopChainUpdate();
+    }
+
     /**
      * Проверка на видимость триггеров
      * @remark Иногда, уже после загрузки данных триггер остается видимым, в таком случае вызвать повторную загрузку
@@ -311,11 +319,24 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     private _setCollectionIndices(collection: Collection<Record>, {start, stop}: IRange): void {
+        let collectionStartIndex: number;
+        let collectionStopIndex: number;
+
         if (collection.getViewIterator) {
-            return collection.getViewIterator().setIndices(start, stop);
+            collectionStartIndex = displayLib.VirtualScrollController.getStartIndex(collection);
+            collectionStopIndex = displayLib.VirtualScrollController.getStopIndex(collection);
         } else {
-            // @ts-ignore
-            return collection.setIndexes(start, stop);
+            collectionStartIndex = collection.getStartIndex();
+            collectionStopIndex = collection.getStopIndex();
+        }
+
+        if (collectionStartIndex !== start || collectionStopIndex !== stop) {
+            if (collection.getViewIterator) {
+                return collection.getViewIterator().setIndices(start, stop);
+            } else {
+                // @ts-ignore
+                return collection.setIndexes(start, stop);
+            }
         }
     }
 

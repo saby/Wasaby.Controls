@@ -494,8 +494,8 @@ var _private = {
                 _private.loadToDirectionWithSearchValueEnded(self, addedItems);
             }
 
-            if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = true;
+            if (self._isMounted) {
+                self._children.scrollController.startChainUpdate();
             }
         };
 
@@ -508,8 +508,8 @@ var _private = {
                 (self._options.task1176625749 && countCurrentItems === cnt2)) {
                 _private.checkLoadToDirectionCapability(self);
             }
-            if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = false;
+            if (self._isMounted) {
+                self._children.scrollController.stopChainUpdate();
             }
 
             _private.prepareFooter(self, self._options.navigation, self._sourceController);
