@@ -182,6 +182,7 @@ export default class ScrollContainer extends Control<IOptions> {
             if (this.savedScrollDirection) {
                 this.scrollToPosition(this.virtualScroll.getRestoredScrollPosition(this.savedScrollDirection));
             }
+            this.virtualScroll.actualizeSavedIndexes();
             this.saveScrollPosition = false;
             this.savedScrollDirection = null;
             this.checkTriggerVisibilityWithTimeout();
@@ -551,11 +552,17 @@ export default class ScrollContainer extends Control<IOptions> {
      * @returns {boolean}
      */
     private applyIndexesToModel(model: Collection<entityRecord>, startIndex: number, stopIndex: number): boolean {
-        if (model.setViewIndices) {
-            return model.setViewIndices(startIndex, stopIndex);
+        if (startIndex !== model.getStartIndex() || stopIndex !== model.getStopIndex()) {
+            if (model.setViewIndices) {
+                model.setViewIndices(startIndex, stopIndex);
+            } else {
+                // @ts-ignore
+                model.setIndexes(startIndex, stopIndex);
+            }
+
+            return true;
         } else {
-            // @ts-ignore
-            return model.setIndexes(startIndex, stopIndex);
+            return false;
         }
     }
 

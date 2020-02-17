@@ -407,11 +407,6 @@ export default class VirtualScrollController {
         if (this.itemsContainer) {
             const direction = newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
 
-            if (direction === 'up' && this._itemsFromLoadToDirection) {
-                this.savedStartIndex += newItems.length;
-                this.setStartIndex(this.startIndex + newItems.length);
-            }
-
             if (direction === 'down') {
                 if (this.stopIndex === this.itemsCount - newItems.length && this.triggerVisibility.down
                     && !this._itemsFromLoadToDirection) {
@@ -421,6 +416,11 @@ export default class VirtualScrollController {
                     this._options.saveScrollPositionCallback(direction);
                 }
             } else {
+                if (this._itemsFromLoadToDirection) {
+                    this.savedStartIndex += newItems.length;
+                    this.setStartIndex(this.startIndex + newItems.length);
+                }
+
                 this.shiftRangeBySegment(direction, newItems.length);
                 this._options.saveScrollPositionCallback(direction);
             }
@@ -441,7 +441,6 @@ export default class VirtualScrollController {
     }
 
     private shiftRangeBySegment(direction: IDirection, segment: number): void {
-        this.actualizeSavedIndexes();
         let startIndex = this.startIndex;
         let stopIndex = this.stopIndex;
         const fixedSegmentSize = Math
