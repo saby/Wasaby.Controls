@@ -154,7 +154,7 @@
                  iconSize="m"
                  inlineHeight="l"
                  source="{{_createMemory(_iconAddMedium)}}"
-                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeaderBig"
+                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeaderCircle"
                  tooltip="Add">
             <ws:headConfig caption="Add"/>
          </Controls.dropdown:Button>
