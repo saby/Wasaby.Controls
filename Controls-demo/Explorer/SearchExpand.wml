@@ -3,7 +3,9 @@
    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" bind:filter="_filter"
                                 searchNavigationMode="expand"
                                 bind:expandedItems="_expandedItems"
-                                bind:markedKey="_markedKey">
+                                root="{{null}}"
+                                bind:markedKey="_markedKey"
+                                on:markedKeyChanged="_markedKeyChangedHandler()">
       <Controls.operations:Controller bind:selectedKeys="_selectedKeys"
                                       bind:excludedKeys="_excludedKeys">
          <Controls.search:Controller searchParam="title"
