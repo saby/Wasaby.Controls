@@ -6,7 +6,12 @@
    width: 100%;
    position: relative;
 }
-
+.controls-Grid_dragging_process .controls-Grid__row-ladder-cell {
+   display: none;
+}
+.controls-Grid_dragging_process .controls-Grid__row-cell__content_ladderHeader {
+   visibility: visible;
+}
 .controls-GridView__itemV_marker_theme-@{themeName} {
    position: absolute;
    width: @width_Grid-selection-marker;
@@ -201,7 +206,7 @@
    display: -ms-grid;
 }
 .ws-is-hover {
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
       background-color: @background-color_Grid-row_hover;
    }
    .controls-BaseControl_showActions .controls-Grid__row:hover {
@@ -310,7 +315,7 @@
 }
 
 .controls-Grid__row-ladder-cell__content_default_theme-@{themeName} {
-   top: @spacing_Grid-row-between-content-borderTop_default;
+   top: 0;
 }
 .controls-Grid__row-ladder-cell__content_m_theme-@{themeName} {
    top: @spacing_Grid-row-between-content-borderTop_s;
@@ -489,6 +494,11 @@
    align-items: baseline;
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
    flex-shrink: 1;
+   box-sizing: border-box;
+}
+
+.controls-Grid__row-cell_cursor-default {
+   cursor: default;
 }
 
 //MasterList styles

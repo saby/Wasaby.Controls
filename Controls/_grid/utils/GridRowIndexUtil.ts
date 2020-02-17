@@ -1,5 +1,5 @@
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil')
-import {Collection, CollectionItem} from 'Types/display'
+import {Collection, CollectionItem} from 'Controls/display'
 
 /**
  * @author Родионов Е.А.
@@ -9,7 +9,7 @@ import {Collection, CollectionItem} from 'Types/display'
 
 /**
  * @typedef {Object} IBaseGridRowIndexOptions Конфигурационый объект.
- * @param {'Types/display'} display Проекция элементов списка.
+ * @param {'Controls/display'} display Проекция элементов списка.
  * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
  * @param {"top" | "bottom" | null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
  */
@@ -31,7 +31,7 @@ type ItemId = { id: string };
 
 /**
  * @typedef {Object} DisplayItem Объект расширяющий базовую конфигурацию для получения индекса записи по элементу проекции.
- * @param {'Types/display:CollectionItem'} item Элемент проекции таблицы.
+ * @param {'Controls/display:CollectionItem'} item Элемент проекции таблицы.
  */
 type DisplayItem = { item: CollectionItem<unknown> };
 
@@ -296,7 +296,7 @@ function getMaxEndRow(array): number[] {
  *  ) -> [[{}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
  */
 
-function getRowsArray(array, hasMultiselect, isMultiHeader, actionsCell) {
+function getRowsArray(array, hasMultiselect, isMultiHeader, actionsCell, stickyLadderCell) {
     let result = [];
     if (!isMultiHeader) {
         result.push(array);
@@ -317,6 +317,9 @@ function getRowsArray(array, hasMultiselect, isMultiHeader, actionsCell) {
             sortedArray = sortedArray.slice(row.length);
         }
         result = sortedColumns(result);
+    }
+    if (stickyLadderCell) {
+        result[0] = [{}, ...result[0]];
     }
     if (hasMultiselect) {
         result[0] = [{}, ...result[0]];

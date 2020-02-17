@@ -1,12 +1,15 @@
 import { IBaseCollection, TItemKey } from '../interface';
 import { IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig } from '../Collection';
-import { showType } from 'Controls/Utils/Toolbar';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 
-// TODO Move these measurers to listRender, maybe rewrite them
-import { SwipeVerticalMeasurer, SwipeHorizontalMeasurer } from 'Controls/list';
+// FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
+const showType = {
+    MENU: 0,
+    MENU_TOOLBAR: 1,
+    TOOLBAR: 2
+};
 
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
@@ -28,6 +31,7 @@ export interface IItemActionsTemplateOptions {
     itemActionsPosition: string;
     actionAlignment?: string;
     actionCaptionPosition: 'right'|'bottom'|'none';
+    itemActionsClass?: string;
 }
 
 export interface IItemActionsItem {
@@ -68,17 +72,21 @@ export function assignActions(
     }
 
     const supportsEventRaising = typeof collection.setEventRaising === 'function';
+    let hasChanges = false;
 
     if (supportsEventRaising) {
         collection.setEventRaising(false, true);
     }
 
     collection.each((item) => {
-        const fixedActions = actionsGetter(item).map(_fixActionIcon);
-        const actionsForItem = fixedActions.filter((action) =>
-            visibilityCallback(action, item.getContents())
-        );
-        _setItemActions(item, _wrapActionsInContainer(actionsForItem));
+        if (!item.isActive()) {
+            const fixedActions = actionsGetter(item).map(_fixActionIcon);
+            const actionsForItem = fixedActions.filter((action) =>
+                visibilityCallback(action, item.getContents())
+            );
+            const itemChanged = _setItemActions(item, _wrapActionsInContainer(actionsForItem));
+            hasChanges = hasChanges || itemChanged;
+        }
     });
 
     if (supportsEventRaising) {
@@ -87,7 +95,9 @@ export function assignActions(
 
     collection.setActionsAssigned(true);
 
-    collection.nextVersion();
+    if (hasChanges) {
+        collection.nextVersion();
+    }
 }
 
 export function resetActionsAssignment(collection: IItemActionsCollection): void {
@@ -117,7 +127,8 @@ export function calculateActionsTemplateConfig(
         size: editingConfig ? 's' : 'm',
         itemActionsPosition: options.itemActionsPosition,
         actionAlignment: options.actionAlignment,
-        actionCaptionPosition: options.actionCaptionPosition
+        actionCaptionPosition: options.actionCaptionPosition,
+        itemActionsClass: options.itemActionsClass
     });
 }
 
@@ -357,6 +368,10 @@ function _calculateSwipeConfig(
     actionsContainerHeight: number,
     actionCaptionPosition: 'right'|'bottom'|'none'
 ): ISwipeConfig {
+    // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
+    // TODO Move these measurers to listRender, maybe rewrite them
+    const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('Controls/list');
+
     const measurer =
         actionAlignment === 'vertical'
         ? SwipeVerticalMeasurer.default
@@ -415,11 +430,13 @@ function _processActionsMenuClose(
 function _setItemActions(
     item: IItemActionsItem,
     actions: IItemActionsContainer
-): void {
+): boolean {
     const oldActions = item.getActions();
     if (!oldActions || (actions && !_isMatchingActions(oldActions, actions))) {
         item.setActions(actions);
+        return true;
     }
+    return false;
 }
 
 function _fixActionIcon(action: TItemAction): TItemAction {
