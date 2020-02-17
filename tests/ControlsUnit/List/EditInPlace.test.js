@@ -539,6 +539,13 @@ define([
          });
 
          it('add item to the top of the grouped list', async function() {
+            /*
+            * 0 --goods-----
+            * 1    Первый
+            * 2    Второй
+            * 3 --services--
+            * 4    Третий
+            * */
             var source = new sourceLib.Memory({
                keyProperty: 'id',
                data: items
@@ -552,22 +559,38 @@ define([
                }
             });
 
+            // Без группировки, в начало
             await eip.beginAdd({ item: newItem });
             assert.equal(eip._editingItemData.index, 0); // First item of list
             await eip.cancelEdit();
 
+            // C группировкой, в начало группы goods
             newItem.set('type', 'goods');
             await eip.beginAdd({ item: newItem });
             assert.equal(eip._editingItemData.index, 1);
             await eip.cancelEdit();
 
+            // C группировкой, в начало группы services
             newItem.set('type', 'services');
             await eip.beginAdd({ item: newItem });
             assert.equal(eip._editingItemData.index, 4);
             await eip.cancelEdit();
+
+            // С группировкой, в новую, не существующую ранее группу
+            newItem.set('type', 'new');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 0);
+            await eip.cancelEdit();
          });
 
          it('add item to the bottom of the grouped list', async function() {
+            /*
+            * 0 --goods-----
+            * 1    Первый
+            * 2    Второй
+            * 3 --services--
+            * 4    Третий
+            * */
             var source = new sourceLib.Memory({
                keyProperty: 'id',
                data: items
@@ -581,18 +604,27 @@ define([
                }
             });
 
+            // Без группировки, в конец
             await eip.beginAdd({ item: newItem });
-            assert.equal(eip._editingItemData.index, 4);
+            assert.equal(eip._editingItemData.index, 5);
             await eip.cancelEdit();
 
+            // С группировкой, в конец группы goods
             newItem.set('type', 'goods');
             await eip.beginAdd({ item: newItem });
-            assert.equal(eip._editingItemData.index, 2);
+            assert.equal(eip._editingItemData.index, 3);
             await eip.cancelEdit();
 
+            // С группировкой, в конец группы services
             newItem.set('type', 'services');
             await eip.beginAdd({ item: newItem });
-            assert.equal(eip._editingItemData.index, 4);
+            assert.equal(eip._editingItemData.index, 5);
+            await eip.cancelEdit();
+
+            // С группировкой, в новую, не существующую ранее группу
+            newItem.set('type', 'new');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 5);
             await eip.cancelEdit();
          });
       });
