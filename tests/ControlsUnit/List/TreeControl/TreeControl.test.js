@@ -589,7 +589,7 @@ define([
             shouldLoadChildrenResult = {
                'node_has_loaded_children': false,
                'node_has_unloaded_children': true,
-               'node_has_no_children': true
+               'node_has_no_children': false
             };
          return new Promise(function(resolve) {
             setTimeout(function() {

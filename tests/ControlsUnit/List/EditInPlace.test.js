@@ -1941,6 +1941,40 @@ define([
             assert.isFalse(isPendingCanceled);
             assert.isNull(eip._pendingDeferred);
          });
+         it('new standard: close eip by close panel', function() {
+            let
+               isPendingStarted = false,
+               isPendingCanceled = false;
+
+            eip.saveOptions({
+               listModel: listModel,
+               task1178703576: true
+            });
+
+            eip._notify = (eName, args, params) => {
+               if (eName === 'registerPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingStarted = true;
+               }
+               if (eName === 'cancelFinishingPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingCanceled = true;
+               }
+            };
+
+            eip.beginAdd({
+               item: newItem
+            });
+
+            eip._children.formController = failedValidationFormController;
+            eip._editingItem.isChanged = () => true;
+            // Emulate closing popup. It will call _onPendingFail;
+            eip._onPendingFail(undefined, new Deferred());
+
+            assert.isTrue(isPendingStarted);
+            assert.isFalse(isPendingCanceled);
+            assert.isNull(eip._pendingDeferred);
+         });
          it('cancel edit if there is no changes', function () {
             let
                 isPendingStarted = false,
