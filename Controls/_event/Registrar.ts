@@ -11,7 +11,7 @@ var Registrar = cExtend.extend({
       this._options = cfg;
    },
 
-   register: function(event, component, callback, config) {
+   register: function(event, component, callback, config: any = {}) {
       this._registry[component.getInstanceId()] = {
          component: component,
          callback: callback
