@@ -1,5 +1,6 @@
 import cExtend = require('Core/core-simpleExtend');
 
+
 var Registrar = cExtend.extend({
 
    _registry: null,
