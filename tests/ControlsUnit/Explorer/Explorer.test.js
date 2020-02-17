@@ -102,7 +102,6 @@ define([
          explorerMod.View._private.serviceDataLoadCallback(self, testData1, testData3);
          assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
       });
-
       it('should update subscription on data recordSet on change', function () {
          let
              isSubscribed = false,
@@ -409,6 +408,33 @@ define([
          assert.isTrue(itemsPromiseResolved);
       });
 
+      it('dataLoadErrback', () => {
+         let instance = new explorerMod.View();
+         let path = new collection.RecordSet({
+            rawData: [
+               { id: 1, title: 'item1' }
+            ],
+            keyProperty: 'id'
+         });
+         let cfg = {
+            source: {},
+            items: {
+               getMetaData: function() {
+                  return { path: path };
+               }
+            },
+            root: 1
+         };
+
+
+         let itemsPromiseResolved = false;
+         instance._beforeMount(cfg);
+         instance._itemsResolver = function() {
+            itemsPromiseResolved = true;
+         };
+         instance._dataLoadErrback({});
+         assert.isTrue(itemsPromiseResolved);
+      });
       describe('_beforeUpdate', function() {
          it('collapses and expands items as needed', () => {
             const cfg = { viewMode: 'tree', root: null };
