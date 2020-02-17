@@ -976,6 +976,7 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
+        self._scrollPageLocked = false;
     },
 
     getPortionedSearch(self): PortionedSearch {
