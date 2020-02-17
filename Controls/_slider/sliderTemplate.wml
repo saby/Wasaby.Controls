@@ -13,7 +13,7 @@
                <div class="controls-Slider__point_theme-{{_options.theme}}
                           controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}
                           controls-Slider__point{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
-                          {{point.name=='tooltip' ? (_isDrag ? 'controls-Slider__point_hidden controls-Slider__point_hidden' : 'controls-Slider__point_tooltip controls-Slider__point_tooltip')}}_theme-{{_options.theme}}"
+                          {{point.name=='tooltip' ? (_isDrag ? 'controls-Slider__point_hidden controls-Slider__point_hidden_theme-' + _options.theme : 'controls-Slider__point_tooltip controls-Slider__point_tooltip_theme-' + _options.theme)}}"
                     name="{{point.name}}"
                     style="left:{{point.position}}%;">
                   <ws:if data="{{point.name=='tooltip' && !_options.readOnly && (_tooltipValue || _tooltipValue==0)}}">
