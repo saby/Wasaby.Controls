@@ -110,6 +110,17 @@ define(
             menu._beforeUpdate(newOptions);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-large_duplicate_popup');
          });
+
+         it('_deactivated', () => {
+            let closed = false;
+
+            menu.closeMenu = () => {
+               closed = true;
+            };
+
+            menu._deactivated();
+            assert.isTrue(closed);
+         });
       });
    }
 );

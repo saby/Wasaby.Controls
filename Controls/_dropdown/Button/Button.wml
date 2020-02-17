@@ -7,7 +7,7 @@
             dataLoadCallback="{{_dataLoadCallback}}"
             popupClassName="{{_options.popupClassName || _offsetClassName}} theme_{{_options.theme}}"
             hasIconPin="{{_hasIconPin}}"
-            _dropDownOpener="{{_children.content}}"
+            on:deactivated="_deactivated()"
             on:selectedItemsChanged="_onItemClickHandler()"
             on:pinClick="_onPinClickHandler()"
             on:dropDownOpen="_tmplNotify('dropDownOpen')"
