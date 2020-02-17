@@ -16,7 +16,7 @@ export default class SearchFilterController extends Control<ISearchFilterControl
    protected _filter: object = null;
 
    protected _beforeMount(options: ISearchFilterController): void {
-      this._filter = options.searchValue.length < options.minSearchLength ? clone(options.filter) || {} :
+      this._filter = options.searchValue && options.searchValue.length < options.minSearchLength ? clone(options.filter) || {} :
           SearchFilterController.prepareFilter(options.filter, options.searchValue, options.searchParam);
    }
 
