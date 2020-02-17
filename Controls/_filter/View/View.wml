@@ -22,6 +22,7 @@
          <ws:partial template="Controls/_filter/Editors/DateRange"
                      scope="{{_dateRangeItem.editorOptions}}"
                      value="{{_dateRangeItem.value}}"
+                     resetValue="{{_dateRangeItem.resetValue}}"
                      on:textValueChanged="_rangeTextChangedHandler()"
                      on:rangeChanged="_rangeValueChangedHandler()"/>
       </ws:if>
