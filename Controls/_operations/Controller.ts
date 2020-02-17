@@ -72,5 +72,10 @@ export default class MultiSelector extends Control {
 
    protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: TKey): void {
       this._listMarkedKey = markedKey;
+      this._notify('markedKeyChanged', [markedKey]);
+   }
+
+   protected _markedKeyChangedHandler(event: SyntheticEvent<null>): void {
+      event.stopPropagation();
    }
 }
