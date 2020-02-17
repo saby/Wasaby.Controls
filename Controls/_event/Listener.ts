@@ -47,7 +47,7 @@ var EventListener = Control.extend({
 EventListener.getOptionTypes = function() {
    return {
       event: entity.descriptor(String).required(),
-      listenAll: entity.descriptor(String)
+      listenAll: entity.descriptor(Boolean)
    };
 };
 
