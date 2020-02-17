@@ -6,7 +6,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/Scroll/Watcher/Watcher');
 import {Registrar}  from 'Controls/event';
-import Env = require('Env/Env');
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import {SyntheticEvent} from "Vdom/Vdom"
 
@@ -127,7 +126,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
                _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
             }
             if (oldClientHeight !== sizeCache.clientHeight) {
-                _private.sendByRegistrar(self, 'viewPortResize', [sizeCache.clientHeight, container.getBoundingClientRect()]);
+                _private.sendByRegistrar(self, 'viewportResize', {
+                    scrollHeight: sizeCache.scrollHeight,
+                    scrollTop: sizeCache.scrollTop,
+                    clientHeight: sizeCache.clientHeight,
+                    rect: container.getBoundingClientRect()
+                });
             }
             if ((oldClientHeight !== sizeCache.clientHeight) || (oldScrollHeight !== sizeCache.scrollHeight)) {
                 _private.sendByRegistrar(self, 'scrollResize', {...sizeCache});
@@ -286,7 +290,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
                self._registrar.startOnceTarget(component, 'cantScroll');
             }
 
-            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight, container.getBoundingClientRect()]);
+            self._registrar.startOnceTarget(component, 'viewportResize', {
+                scrollHeight: sizeCache.scrollHeight,
+                scrollTop: sizeCache.scrollTop,
+                clientHeight: sizeCache.clientHeight,
+                rect: container.getBoundingClientRect()
+            });
 
             if (!withObserver) {
                //TODO надо кидать не всем компонентам, а адресно одному
