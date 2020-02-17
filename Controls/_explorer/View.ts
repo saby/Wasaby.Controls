@@ -114,7 +114,6 @@ var
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
-
             if (self._options.itemsReadyCallback) {
                self._options.itemsReadyCallback(items);
             }
@@ -130,6 +129,10 @@ var
             if (self._isGoingFront) {
                self._children.treeControl.setMarkedKey(null);
                self._isGoingFront = false;
+            }
+            if (self._pendingViewMode) {
+               _private.checkedChangeViewMode(self, self._pendingViewMode, self._options);
+               self._pendingViewMode = null;
             }
          },
          setVirtualScrolling(self, viewMode, cfg): void {
@@ -152,8 +155,11 @@ var
             var dataRoot = _private.getDataRoot(self);
             var result;
 
-            if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
-               _private.setRoot(self, dataRoot);
+            if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
+               self._breadCrumbsItems = null;
+               if (dataRoot !== currentRoot) {
+                  _private.setRoot(self, dataRoot);
+               }
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
@@ -226,6 +232,12 @@ var
                if (newPath && newPath.getCount) {
                   newPath.subscribe('onCollectionItemChange', updateHeadingPathCallback);
                }
+            }
+         },
+         checkedChangeViewMode(self, viewMode: string, cfg): void {
+            _private.setViewMode(self, viewMode, cfg);
+            if (cfg.searchNavigationMode !== 'expand') {
+               self._children.treeControl.resetExpandedItems();
             }
          }
       };
@@ -342,6 +354,10 @@ var
       _itemsPromise: null,
       _itemsResolver: null,
 
+      _resolveItemsPromise() {
+         this._itemsResolver();
+      },
+
       _beforeMount: function(cfg) {
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
@@ -351,7 +367,9 @@ var
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
 
          this._itemsPromise = new Promise((res) => { this._itemsResolver = res; });
-
+         if (!cfg.source) {
+            this._resolveItemsPromise();
+         }
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
          [root]: {
@@ -363,18 +381,25 @@ var
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
-
          //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
          if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
             this._isGoingFront = false;
          }
 
-         if (this._viewMode !== cfg.viewMode) {
-            _private.setViewMode(this, cfg.viewMode, cfg);
-            if (cfg.searchNavigationMode !== 'expand') {
-               this._children.treeControl.resetExpandedItems();
-            }
+         if (
+            cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
+            this._pendingViewMode && cfg.viewMode !== this._pendingViewMode
+         ) {
+            // Если меняется и root и viewMode, не меняем режим отображения сразу,
+            // потому что тогда мы перерисуем explorer в новом режиме отображения
+            // со старыми записями, а после загрузки новых получим еще одну перерисовку.
+            // Вместо этого запомним, какой режим отображения от нас хотят, и проставим
+            // его, когда новые записи будут установлены в модель (itemsSetCallback).
+            this._pendingViewMode = cfg.viewMode;
+         } else if (cfg.viewMode !== this._viewMode && !this._pendingViewMode) {
+            _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
          }
+
          if (cfg.virtualScrolling !== this._options.virtualScrolling) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);
          }

@@ -3,9 +3,10 @@ define(
       'Controls/_popupTemplate/Sticky/StickyStrategy',
       'Controls/_popupTemplate/Sticky/StickyController',
       'Controls/popup',
-      'UI/Base'
+      'UI/Base',
+      'Core/core-clone'
    ],
-   (StickyStrategy, StickyController, popupLib, UIBase) => {
+   (StickyStrategy, StickyController, popupLib, UIBase, cClone) => {
       'use strict';
 
       describe('Controls/_popup/Opener/Sticky', () => {
@@ -599,6 +600,42 @@ define(
             const margins = StickyController._private.getFakeDivMargins(item);
             assert.equal(margins.left, 11.4);
             assert.equal(margins.top, 10.2);
+         });
+
+         it('elementAfterUpdated', () => {
+            let item = {
+               popupOptions: {},
+               position: {
+                  height: 100
+               }
+            };
+            let container = {
+               style: {
+                  width: '100px',
+                  height: '300px'
+               }
+            };
+            let newContainer = {};
+            let prepareConfig = StickyController.prepareConfig;
+            StickyController.prepareConfig = (itemConfig, containerConfig) => newContainer = cClone(containerConfig);
+            StickyController.elementAfterUpdated(item, container);
+
+            // сбрасываем размеры с контейнера
+            assert.strictEqual(newContainer.style.width, 'auto');
+            assert.strictEqual(newContainer.style.height, 'auto');
+            assert.strictEqual(newContainer.style.maxHeight, '100vh');
+
+            // возвращаем их обратно
+            assert.strictEqual(container.style.width, '100px');
+            assert.strictEqual(container.style.height, '100px');
+            assert.isUndefined(container.style.maxHeight);
+
+            item.position.maxHeight = 300;
+            container.style.maxHeight = '200px';
+            StickyController.elementAfterUpdated(item, container);
+            assert.strictEqual(newContainer.style.maxHeight, '300px');
+            assert.strictEqual(container.style.maxHeight, '200px');
+            StickyController.prepareConfig = prepareConfig;
          });
 
          it('getMargins', () => {

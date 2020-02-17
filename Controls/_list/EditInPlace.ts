@@ -685,19 +685,20 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         e.stopPropagation();
     },
 
-    _onPendingFail(forceFinishValue: boolean, pendingDeferred: Promise<boolean>): void {
+    _onPendingFail(shouldSave: boolean, pendingDeferred: Promise<boolean>): void {
         const cancelPending = () => this._notify('cancelFinishingPending', [], {bubbling: true});
 
-        if (this._editingItem && this._editingItem.isChanged()) {
-            this.commitEdit().addCallback((result = {}) => {
+        if (!(this._options.task1178703576 && !shouldSave) && this._editingItem && this._editingItem.isChanged()) {
+            return this.commitEdit().addCallback((result = {}) => {
                 if (result.validationFailed) {
                     cancelPending();
                 }
+                return result;
             }).addErrback(() => {
                 cancelPending();
             });
         } else {
-            this.cancelEdit();
+            return this.cancelEdit();
         }
     },
 

@@ -30,7 +30,19 @@ define(['Controls/masterDetail'], function (masterDetail) {
             Control.destroy();
             done();
          });
+      });
 
+      it('initCurrentWidth', () => {
+         let Control = new masterDetail.Base();
+         let options = {
+            propStorageId: '1',
+            masterMinWidth: 0,
+            masterWidth: 0,
+            masterMaxWidth: 0
+         };
+         Control.initCurrentWidth(options.masterWidth);
+         assert.equal(Control._currentWidth, '0px');
+         Control.destroy();
       });
 
       it('update offset', () => {
@@ -107,5 +119,24 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(Control._isCanResizing(options), false);
          Control.destroy();
       });
+
+      it('afterRender', () => {
+         const Control = new masterDetail.Base();
+         let isStartRegister = false;
+         let isSetSettings = false;
+         Control._startResizeRegister = () => isStartRegister = true;
+         Control._setSettings = () => isSetSettings = true;
+
+         Control._afterRender();
+         assert.equal(isStartRegister, false);
+         assert.equal(isSetSettings, false);
+
+         Control._currentWidth = 1;
+         Control._afterRender();
+         assert.equal(isStartRegister, true);
+         assert.equal(isSetSettings, true);
+
+         Control.destroy();
+      })
    });
 });

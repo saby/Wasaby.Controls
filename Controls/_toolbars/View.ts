@@ -32,7 +32,7 @@ type TItems = RecordSet<TItem>;
 type TypeItem = 'toolButton' | 'icon' | 'link' | 'list';
 export type TItemsSpacing = 'medium' | 'big';
 
-export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
+export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {
     const size = 'm';
     const icon = item.get('icon');
     const style = item.get('buttonStyle');
@@ -40,11 +40,10 @@ export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
     const iconStyle = item.get('iconStyle');
     const transparent = item.get('buttonTransparent');
     const caption = item.get('caption');
-    const readOnly = item.get('readOnly');
+    const readOnly = item.get('readOnly') || toolbarOptions.readOnly;
     const fontColorStyle = item.get('fontColorStyle');
     const contrastBackground = item.get('contrastBackground');
     const cfg: IButtonOptions = {};
-    cfg.readOnly = readOnly;
     cfg._hoverIcon = true;
     cssStyleGeneration.call(cfg, {
         size, icon, style, viewMode, iconStyle, transparent, caption, readOnly, fontColorStyle, contrastBackground
@@ -342,10 +341,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     }
 
     protected _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
-        if (this._options.readOnly) {
-            item.set('readOnly', true);
-        }
-        return getButtonTemplateOptionsByItem(item);
+        return getButtonTemplateOptionsByItem(item, this._options);
     }
 
     protected _showMenu(event: SyntheticEvent<UIEvent>): void {
