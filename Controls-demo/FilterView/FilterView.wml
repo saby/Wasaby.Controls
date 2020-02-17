@@ -10,8 +10,15 @@
       <div class="controls-demo-FilterView__item">
          <h3>Fast and button filters</h3>
          <Controls.filter:View source="{{_fastButtonItems2}}"
+                               alignment="left"
                                detailPanelTemplateName="Controls-demo/FilterView/resources/Panel"
                                attr:class="controls-demo-FilterView__itemButton demo-FilterView__items2" />
+      </div>
+      <div class="controls-demo-FilterView__item">
+         <h3>Fast and button filters</h3>
+         <Controls.filter:View source="{{_fastButtonItems3}}"
+                               detailPanelTemplateName="Controls-demo/FilterView/resources/Panel"
+                               attr:class="controls-demo-FilterView__itemButton demo-FilterView__items3" />
       </div>
       <div class="controls-demo-FilterView__item">
          <h3>Fast filter with button "more"</h3>
