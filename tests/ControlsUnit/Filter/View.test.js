@@ -744,9 +744,18 @@ define(
             let isLoading = false;
             let source = Clone(defaultSource);
             source[0].editorOptions.itemTemplate = 'new';
+            source[0].editorOptions.navigation = {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 1,
+                  page: 0
+               }
+            };
+            let navItems = getItems(Clone(defaultItems[0]));
+            navItems.setMetaData({more: true});
             let configs = {
                document: {
-                  items: Clone(defaultItems[0]),
+                  items: navItems,
                   itemTemplate: 'old',
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
@@ -773,6 +782,7 @@ define(
 
             let resultItems = filter.View._private.getPopupConfig(self, configs, source);
             assert.isTrue(isLoading);
+            assert.isTrue(resultItems[0].hasMoreButton);
             assert.equal(resultItems[0].displayProperty, 'title');
             assert.equal(resultItems[0].itemTemplate, 'new');
          });
