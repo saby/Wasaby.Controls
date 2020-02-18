@@ -11,7 +11,7 @@
           <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Input/FooterTemplate/resources/SuggestTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
-          <ws:footerTemplate templateName="wml!Controls-demo/Suggest_new/Input/FooterTemplate/resources/FooterTemplate"/>
+          <ws:footerTemplate templateName="Controls-demo/Suggest_new/Input/FooterTemplate/resources/FooterTemplate"/>
       </Controls.suggest:Input>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
