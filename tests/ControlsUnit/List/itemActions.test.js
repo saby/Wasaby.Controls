@@ -627,15 +627,7 @@ define([
                   id: 1,
                }
             ];
-            assert.isFalse(needActionsMenu(actions));
-         });
-         it('only one action should not be hidden in menu but there is menuButtonVisibility = visible', function() {
-            let actions = [
-               {
-                  id: 1,
-               }
-            ];
-            assert.isTrue(needActionsMenu(actions, 'visible'));
+            assert.isFalse(needActionsMenu(actions, 'inside'));
          });
          it('actions with showType = TOOLBAR should not be hidden in menu', function() {
             let actions = [
@@ -648,7 +640,7 @@ define([
                   showType: tUtil.showType.TOOLBAR
                }
             ];
-            assert.isFalse(needActionsMenu(actions));
+            assert.isFalse(needActionsMenu(actions, 'inside'));
 
          });
          it('actions with showType = MENU should be hidden in menu', function() {
@@ -662,7 +654,7 @@ define([
                   showType: tUtil.showType.TOOLBAR
                }
             ];
-            assert.isTrue(needActionsMenu(actions));
+            assert.isTrue(needActionsMenu(actions, 'inside'));
          });
          it('actions with showType = TOOLBAR_MENU should be hidden in menu', function() {
             let actions = [
@@ -675,7 +667,7 @@ define([
                   showType: tUtil.showType.TOOLBAR
                }
             ];
-            assert.isTrue(needActionsMenu(actions));
+            assert.isTrue(needActionsMenu(actions, 'inside'));
          });
          it('default action showType is MENU', function() {
             let actions = [
@@ -687,8 +679,22 @@ define([
                   showType: tUtil.showType.TOOLBAR
                }
             ];
+            assert.isTrue(needActionsMenu(actions, 'inside'));
+         });
+         it('actions with position = outside should not be hidden in menu', function() {
+            let actions = [
+               {
+                  id: 1,
+                  showType: tUtil.showType.TOOLBAR_MENU
+               },
+               {
+                  id: 2,
+                  showType: tUtil.showType.MENU
+               }
+            ];
             assert.isTrue(needActionsMenu(actions));
          });
+
       });
    });
 
