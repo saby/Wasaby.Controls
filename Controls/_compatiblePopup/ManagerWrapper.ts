@@ -53,8 +53,8 @@ var ManagerWrapper = Control.extend({
             const popups = this._children.PopupContainer.getChildControls(null, false, (instance) => {
                return instance._moduleName === 'Controls/_popup/Manager/Popup' && instance._options.template !== 'Controls/popupTemplate:templateInfoBox';
             });
-            if (popups && popups.each) {
-               popups.each((popup) => {
+            if (popups && popups.map) {
+               popups.map((popup) => {
                   // На всякий случай если фильтр вернет не то
                   if (popup._controlResizeOuterHandler) {
                      popup._controlResizeOuterHandler();
