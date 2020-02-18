@@ -405,9 +405,16 @@ define([
                },
                displayProperty: 'title'
             },
-            itemsViewModel = new list.ItemsViewModel(cfg);
+            itemsViewModel = new list.ItemsViewModel(cfg),
+            notifyArray = [],
+            expectedNotifyArray = ['group_1', 'group_2', 'group_1', 'group_2'];
          assert.equal(itemsViewModel._display.getGroup(), cfg.groupingKeyCallback, 'Grouping for display not applied. Error sending to display grouping method.');
          assert.equal(itemsViewModel._display.getCount(), 8, 'Grouping for display not applied. Display items count (with groups) not equal 8.');
+         itemsViewModel._notify = function(event, params) {
+            if (event === 'onGroupsExpandChange') {
+               notifyArray.push(params.group);
+            }
+         };
          itemsViewModel.toggleGroup('group_1');
          assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after collapsing "group_1".');
          itemsViewModel.toggleGroup('group_2');
@@ -416,6 +423,7 @@ define([
          assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after expanding "group_1".');
          itemsViewModel.toggleGroup('group_2');
          assert.equal(itemsViewModel._display.getCount(), 8, 'Invalid display items count after expanding "group_2".');
+         assert.deepEqual(notifyArray, expectedNotifyArray);
          current = itemsViewModel.getCurrent();
          assert.equal(current.isGroup, true, 'Invalid value isGroup for current item.');
          assert.equal(current.isHiddenGroup, true, 'Invalid value isHiddenGroup for current item.');
