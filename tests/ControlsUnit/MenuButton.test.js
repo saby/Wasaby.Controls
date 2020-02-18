@@ -93,7 +93,14 @@ define(
             menu._beforeUpdate(newOptions);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_functionalButton__l_popup');
 
+            newOptions.icon = 'icon-Doge';
+            newOptions.iconSize = null;
+            newOptions.viewMode = 'button';
+            menu._beforeUpdate(newOptions);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-medium_popup');
+
             newOptions.showHeader = false;
+            newOptions.icon = 'icon-small icon-Doge icon-primary';
             newOptions.viewMode = 'link';
             menu._beforeUpdate(newOptions);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_duplicate_popup');
