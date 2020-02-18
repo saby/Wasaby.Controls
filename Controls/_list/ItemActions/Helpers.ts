@@ -80,7 +80,7 @@ var helpers = {
      */
 
     /**
-     * Хелпер для отображения {@link панели /doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опций записи} наверху/внизу.
+     * Хелпер для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ панели опций записи} наверху/внизу.
      * @function 
      * @name Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
      * @param {MoveDirection} direction Направление.
