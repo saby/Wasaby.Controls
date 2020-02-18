@@ -416,7 +416,13 @@ class Manager extends Control<IManagerOptions> {
             for (let i = 0; i < deactivatedPopups.length; i++) {
                 const itemContainer = this._getItemContainer(deactivatedPopups[i].id);
                 if (deactivatedPopups[i].popupOptions.isCompoundTemplate) {
-                    this._getCompoundArea(itemContainer).close();
+                    // TODO: Compatible ветка.
+                    // Если попап создался, а слой совместимости еще не готов, то считаем что окно не построилось
+                    // и не должно закрываться на клик мимо.
+                    const compoundArea = this._getCompoundArea(itemContainer);
+                    if (compoundArea.isPopupCreated()) {
+                        compoundArea.close();
+                    }
                 } else {
                     deactivatedPopups[i].controller.popupDeactivated(deactivatedPopups[i]);
                 }
