@@ -30,7 +30,7 @@ function getCount(selection: ISelectionObject, callParams: IGetCountCallParams):
     const data = getDataForCallWithSelection(selection, callParams);
 
     return callParams.rpc.call(callParams.command, data).then((dataSet) => {
-        return dataSet.getScalar('count') as number;
+        return dataSet.getRow().get('count') as number;
     });
 }
 

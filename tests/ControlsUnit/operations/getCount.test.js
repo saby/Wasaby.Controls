@@ -14,7 +14,11 @@ define(['Controls/_operations/MultiSelector/getCount', 'Types/entity'], function
          call: (command, data) => {
             callCallback(command, data);
             return Promise.resolve({
-               getScalar: () => TEST_DATA_COUNT
+               getRow: () => {
+                  return {
+                     get: () => TEST_DATA_COUNT
+                  };
+               }
             });
          },
          getAdapter: () => {
