@@ -843,13 +843,13 @@ var _private = {
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
-            self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
         }
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
+                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
                     self._showLoadingIndicatorImage = true;
                     self._notify('controlResize');
                 }
@@ -1419,7 +1419,7 @@ var _private = {
             source: source,
             navigation: navigation,
             keyProperty: keyProperty
-        })
+        });
     },
 
     checkRequiredOptions: function(options) {
@@ -1512,6 +1512,12 @@ var _private = {
     getListTopOffset(self): number {
         const view = self._children && self._children.listView;
         let height = 0;
+        if (self._isMounted) {
+            const viewRect = (self._container[0] || self._container).getBoundingClientRect();
+            if (self._isScrollShown || (self._needScrollCalculation && viewRect && self._viewPortRect)) {
+                height = viewRect.y + self._scrollTop - self._viewPortRect.top;
+            }
+        }
         if (view && view.getHeaderHeight) {
             height += view.getHeaderHeight();
         }
