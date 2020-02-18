@@ -174,20 +174,13 @@ const _private = {
     },
 
     getFakeDivMargins(item) {
-        if (!document) {
-            return {
-                left: 0,
-                top: 0
-            };
-        }
-
         const fakeDiv = _private.getFakeDiv();
         fakeDiv.className = item.popupOptions.className;
 
         const styles = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
         return {
-            top: parseInt(styles.marginTop, 10),
-            left: parseInt(styles.marginLeft, 10)
+            top: parseFloat(styles.marginTop),
+            left: parseFloat(styles.marginLeft)
         };
     },
 
@@ -196,6 +189,12 @@ const _private = {
      * Element is created with position absolute and far beyond the screen left position
      */
     getFakeDiv(): HTMLDivElement {
+        if (!document) {
+            return {
+                marginLeft: 0,
+                marginTop: 0
+            };
+        }
         // create fake div on invisible part of window, cause user class can overlap the body
         if (!_fakeDiv) {
             _fakeDiv = document.createElement('div');
@@ -256,8 +255,15 @@ class StickyController extends BaseController {
     }
 
     elementAfterUpdated(item, container) {
+        const target = _private.getTargetNode(item);
+        // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+        if (target && target.closest && target.closest('.ws-hidden')) {
+            return false;
+        }
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
         const width = container.style.width;
+        const maxHeight = container.style.maxHeight;
+        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '100vh';
         container.style.width = 'auto';
         container.style.height = 'auto';
 
@@ -267,6 +273,7 @@ class StickyController extends BaseController {
 
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
+        container.style.maxHeight = maxHeight;
         // После того, как дочерние контролы меняют размеры, они кидают событие controlResize, окно отлавливает событие,
         // измеряет верстку и выставляет себе новую позицию и размеры. Т.к. это проходит минимум в 2 цикла синхронизации,
         // то визуально видны прыжки. Уменьшаю на 1 цикл синхронизации простановку размеров

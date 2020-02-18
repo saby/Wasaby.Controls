@@ -7,9 +7,10 @@ define(
       'Controls/history',
       'Core/Deferred',
       'Types/chain',
+      'Controls/_dropdown/dropdownHistoryUtils',
       'Core/nativeExtensions'
    ],
-   function(filter, Clone, sourceLib, collection, history, Deferred, chain) {
+   function(filter, Clone, sourceLib, collection, history, Deferred, chain, historyUtils) {
       describe('Filter:View', function() {
 
          let defaultItems = [
@@ -301,11 +302,14 @@ define(
                document: {
                   items: Clone(defaultItems[0]),
                   displayProperty: 'title',
-                  keyProperty: 'id'},
+                  keyProperty: 'id',
+                  source: defaultSource[0].editorOptions.source
+               },
                state: {
                   items: Clone(defaultItems[1]),
                   displayProperty: 'title',
                   keyProperty: 'id',
+                  source: defaultSource[1].editorOptions.source,
                   multiSelect: true}
             };
             view._openPanel();
@@ -321,6 +325,13 @@ define(
 
             view._openPanel('click');
             assert.deepStrictEqual(popupOptions.target, 'filter_container');
+
+            view._configs.state.sourceController = {
+               isLoading: () => { return true; }
+            };
+            popupOptions = null;
+            view._openPanel('click');
+            assert.isNull(popupOptions);
          });
 
          it('_needShowFastFilter', () => {
@@ -664,11 +675,17 @@ define(
                   multiSelect: true}
             };
             assert.strictEqual(configs['state'].items.getCount(), 6);
+
+            const sandBox = sinon.createSandbox();
+            let stub = sandBox.stub(historyUtils, 'getSourceFilter');
+
             filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
                assert.strictEqual(configs['state'].popupItems.getCount(), 6);
                assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                assert.isTrue(isDataLoad);
+               assert.isFalse(stub.called);
+               sandBox.restore();
                done();
             });
          });
@@ -734,9 +751,18 @@ define(
             let isLoading = false;
             let source = Clone(defaultSource);
             source[0].editorOptions.itemTemplate = 'new';
+            source[0].editorOptions.navigation = {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 1,
+                  page: 0
+               }
+            };
+            let navItems = getItems(Clone(defaultItems[0]));
+            navItems.setMetaData({more: true});
             let configs = {
                document: {
-                  items: Clone(defaultItems[0]),
+                  items: navItems,
                   itemTemplate: 'old',
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
@@ -763,6 +789,7 @@ define(
 
             let resultItems = filter.View._private.getPopupConfig(self, configs, source);
             assert.isTrue(isLoading);
+            assert.isTrue(resultItems[0].hasMoreButton);
             assert.equal(resultItems[0].displayProperty, 'title');
             assert.equal(resultItems[0].itemTemplate, 'new');
          });

@@ -165,6 +165,13 @@ define(
             assert.equal('newValue', addParams._options.items[2].value);
          });
 
+         it('_textValueChangedHandler', function() {
+            let addParams = getAddParams(items);
+            addParams._textValueChangedHandler('valueChanged', 2, 'newValue');
+            assert.equal('newValue', addParams._options.items[2].value);
+            assert.isTrue(addParams._options.items[2].visibility);
+         });
+
          it('_visibilityChanged', function() {
             let addParams = getAddParams(items);
             addParams._visibilityChangedHandler('visibilityChanged', 2);

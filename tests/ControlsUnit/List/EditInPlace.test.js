@@ -212,6 +212,7 @@ define([
                item: listModel.at(0).getContents()
             });
             assert.isTrue(result.isSuccessful());
+            assert.isNull(eip._pendingDeferred);
          });
 
          it('Without handler', function() {
@@ -538,6 +539,13 @@ define([
          });
 
          it('add item to the top of the grouped list', async function() {
+            /*
+            * 0 --goods-----
+            * 1    Первый
+            * 2    Второй
+            * 3 --services--
+            * 4    Третий
+            * */
             var source = new sourceLib.Memory({
                keyProperty: 'id',
                data: items
@@ -551,22 +559,38 @@ define([
                }
             });
 
+            // Без группировки, в начало
             await eip.beginAdd({ item: newItem });
             assert.equal(eip._editingItemData.index, 0); // First item of list
             await eip.cancelEdit();
 
+            // C группировкой, в начало группы goods
             newItem.set('type', 'goods');
             await eip.beginAdd({ item: newItem });
             assert.equal(eip._editingItemData.index, 1);
             await eip.cancelEdit();
 
+            // C группировкой, в начало группы services
             newItem.set('type', 'services');
             await eip.beginAdd({ item: newItem });
             assert.equal(eip._editingItemData.index, 4);
             await eip.cancelEdit();
+
+            // С группировкой, в новую, не существующую ранее группу
+            newItem.set('type', 'new');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 0);
+            await eip.cancelEdit();
          });
 
          it('add item to the bottom of the grouped list', async function() {
+            /*
+            * 0 --goods-----
+            * 1    Первый
+            * 2    Второй
+            * 3 --services--
+            * 4    Третий
+            * */
             var source = new sourceLib.Memory({
                keyProperty: 'id',
                data: items
@@ -580,18 +604,27 @@ define([
                }
             });
 
+            // Без группировки, в конец
             await eip.beginAdd({ item: newItem });
-            assert.equal(eip._editingItemData.index, 4);
+            assert.equal(eip._editingItemData.index, 5);
             await eip.cancelEdit();
 
+            // С группировкой, в конец группы goods
             newItem.set('type', 'goods');
             await eip.beginAdd({ item: newItem });
-            assert.equal(eip._editingItemData.index, 2);
+            assert.equal(eip._editingItemData.index, 3);
             await eip.cancelEdit();
 
+            // С группировкой, в конец группы services
             newItem.set('type', 'services');
             await eip.beginAdd({ item: newItem });
-            assert.equal(eip._editingItemData.index, 4);
+            assert.equal(eip._editingItemData.index, 5);
+            await eip.cancelEdit();
+
+            // С группировкой, в новую, не существующую ранее группу
+            newItem.set('type', 'new');
+            await eip.beginAdd({ item: newItem });
+            assert.equal(eip._editingItemData.index, 5);
             await eip.cancelEdit();
          });
       });
@@ -1935,6 +1968,40 @@ define([
             eip._children.formController = failedValidationFormController;
 
             await eip.cancelEdit();
+
+            assert.isTrue(isPendingStarted);
+            assert.isFalse(isPendingCanceled);
+            assert.isNull(eip._pendingDeferred);
+         });
+         it('new standard: close eip by close panel', function() {
+            let
+               isPendingStarted = false,
+               isPendingCanceled = false;
+
+            eip.saveOptions({
+               listModel: listModel,
+               task1178703576: true
+            });
+
+            eip._notify = (eName, args, params) => {
+               if (eName === 'registerPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingStarted = true;
+               }
+               if (eName === 'cancelFinishingPending') {
+                  assert.isTrue(params.bubbling);
+                  isPendingCanceled = true;
+               }
+            };
+
+            eip.beginAdd({
+               item: newItem
+            });
+
+            eip._children.formController = failedValidationFormController;
+            eip._editingItem.isChanged = () => true;
+            // Emulate closing popup. It will call _onPendingFail;
+            eip._onPendingFail(undefined, new Deferred());
 
             assert.isTrue(isPendingStarted);
             assert.isFalse(isPendingCanceled);

@@ -9,6 +9,11 @@ interface IParsedName {
 }
 
 class ModuleLoader {
+    /**
+     * requirejs.defined работает не корректно. Возвращает true, хотя callback в defined(name, callback) ещё не был вызван.
+     */
+    private asyncLoadedModules: Record<string, boolean> = {};
+
     private getFromLib(lib: Module, parsedName: IParsedName): Module {
         let mod = lib;
         let processed = [];
@@ -39,10 +44,11 @@ class ModuleLoader {
         }
 
         let promiseResult = this.requireAsync(parsedInfo.name);
-        cache[parsedInfo.name] = promiseResult = promiseResult.then((res)=>{
+        cache[parsedInfo.name] = promiseResult = promiseResult.then((res) => {
             delete cache[parsedInfo.name];
+            this.asyncLoadedModules[parsedInfo.name] = true;
             return res;
-        },(e) => {
+        }, (e) => {
             delete cache[parsedInfo.name];
             let errorMessage = "Couldn't load module " + parsedInfo.name;
             IoC.resolve("ILogger").error(errorMessage, e);
@@ -63,16 +69,30 @@ class ModuleLoader {
         if (!loaded) {
             return null;
         }
+        this.asyncLoadedModules
         return this.getFromLib(loaded, parsedInfo);
     };
 
+    /**
+     * Делаю проверку, что загруженный модуль имеет тип функции, т.к. может быть require уже реально загрузил.
+     * Текущее решение, нужно для случая, когда модуль реально возвращает пустой объект, и нужно
+     *   вернуть ответ, что модуль загружен.
+     * @param name имя модуля
+     */
     private isLoaded(name: string): boolean {
         let parsedInfo: IParsedName = libHelper.parse(name);
-        try {
-            return !!require(parsedInfo.name);
-        } catch (_) {
+        if (!!this.asyncLoadedModules[parsedInfo.name]) {
+            return true;
+        }
+        let module = require(parsedInfo.name);
+        if (!module) {
             return false;
         }
+        if (module instanceof Function || Object.keys(module).length > 0) {
+            this.asyncLoadedModules[parsedInfo.name] = true;
+            return true;
+        };
+        return false;
     };
 
     private isCached(name: string): boolean {

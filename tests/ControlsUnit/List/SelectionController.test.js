@@ -69,7 +69,7 @@ define([
          instance._afterMount();
          assert.isTrue(stubNotify.withArgs('register', ['selectedTypeChanged', instance, SelectionController._private.selectedTypeChangedHandler], {bubbling: true}).calledOnce);
          assert.isTrue(instance._options.items.hasEventHandlers('onCollectionChange'));
-         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).calledOnce);
+         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
       });
 
       describe('_beforeUpdate', function() {
@@ -108,6 +108,17 @@ define([
             assert.deepEqual(instance._multiselection.selectedKeys, newCfg.selectedKeys);
             assert.deepEqual(instance._multiselection.excludedKeys, newCfg.excludedKeys);
             assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[], [], [null]]).calledOnce);
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
+
+            newCfg.selectedKeys = [null];
+            newCfg.excludedKeys = [null];
+            instance._beforeUpdate(newCfg);
+            assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [7, true], { bubbling: true }).calledOnce);
+
+            newCfg.selectedKeys = [null];
+            newCfg.excludedKeys = [null];
+            instance._multiselection._listModel.getItems().clear();
+            instance._beforeUpdate(newCfg);
             assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
          });
 
@@ -209,8 +220,15 @@ define([
       });
 
       it('_beforeUnmount', async function() {
-         const numHandlersCollectionChange = cfg.items.getEventHandlers('onCollectionChange').length;
-         await instance._beforeMount(cfg);
+         const config = {...cfg};
+         const numHandlersCollectionChange = config.items.getEventHandlers('onCollectionChange').length;
+         config.selectedKeys = ['testId'];
+         config.excludedKeys = ['testId'];
+         instance.saveOptions(config);
+         instance.getRoot = () => {
+            return null;
+         };
+         await instance._beforeMount(config);
          instance._afterMount();
          const stubNotify = sandbox.stub(instance, '_notify');
          instance._options.listModel.updateSelection = sandbox.stub();
@@ -221,6 +239,7 @@ define([
          assert.equal(numHandlersCollectionChange, cfg.items.getEventHandlers('onCollectionChange').length);
          assert.isNull(instance._onCollectionChangeHandler);
          assert.isTrue(stubNotify.withArgs('unregister', ['selectedTypeChanged', instance], { bubbling: true }).calledOnce);
+         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0], { bubbling: true }).calledOnce);
       });
 
       it('_private.selectedTypeChangedHandler', async function() {

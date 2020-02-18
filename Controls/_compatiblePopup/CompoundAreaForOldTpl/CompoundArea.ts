@@ -1471,5 +1471,4 @@ var CompoundArea = CompoundContainer.extend([
       return res;
    }
 });
-
 export default CompoundArea;
