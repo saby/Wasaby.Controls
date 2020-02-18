@@ -503,7 +503,6 @@ var _private = {
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
             beforeAddItems(addedItems);
-            self._saveAndRestoreScrollPosition = 'up';
             if (self._options.useNewModel) {
                 self._listViewModel.getCollection().prepend(addedItems);
             } else {
@@ -2059,13 +2058,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforeRender(): void {
-        if (this._saveAndRestoreScrollPosition) {
-            /**
-             * This event should bubble, because there can be anything between Scroll/Container and the list,
-             * and we can't force everyone to manually bubble it.
-             */
-            this._notify('saveScrollPosition', [], { bubbling: true });
-        }
         // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
         // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
         // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
