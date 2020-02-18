@@ -214,7 +214,7 @@ var _private = {
                     }
 
                     if (self._sourceController) {
-                        _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+                        _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
                 }
                 if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
@@ -286,8 +286,8 @@ var _private = {
             return;
         }
 
-        const hasMoreDataDown = self._sourceController.hasMoreData('down');
-        const hasMoreDataUp = self._sourceController.hasMoreData('up');
+        const hasMoreDataDown = _private.hasMoreData(self, self._sourceController, 'down');
+        const hasMoreDataUp = _private.hasMoreData(self, self._sourceController, 'up');
 
         if (!list.getCount()) {
             const needShowIndicatorByNavigation =
@@ -309,6 +309,17 @@ var _private = {
         } else {
             _private.hideIndicator(self);
         }
+    },
+
+    hasMoreData(self, sourceController, direction): boolean {
+        return self._options.getHasMoreData ?
+            self._options.getHasMoreData(sourceController, direction) :
+            sourceController && sourceController.hasMoreData(direction);
+    },
+
+    hasMoreDataInAnyDirection(self, sourceController): boolean {
+        return _private.hasMoreData(self, sourceController, 'up') ||
+            _private.hasMoreData(self, sourceController, 'down');
     },
 
     scrollToItem: function(self, key, toBottom, force) {
@@ -440,7 +451,7 @@ var _private = {
         var
             loadedDataCount, allDataCount;
 
-        if (_private.isDemandNavigation(navigation) && sourceController.hasMoreData('down')) {
+        if (_private.isDemandNavigation(navigation) && _private.hasMoreData(self, sourceController, 'down')) {
             self._shouldDrawFooter = (self._options.groupingKeyCallback || self._options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
@@ -465,7 +476,8 @@ var _private = {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
-            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+            _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController)
+            );
             if (self._options.serviceDataLoadCallback instanceof Function) {
                 self._options.serviceDataLoadCallback(self._items, addedItems);
             }
@@ -477,7 +489,7 @@ var _private = {
                 self._loadingState === 'all' ||
                 !_private.needScrollCalculation(navigation) ||
                 !self._loadTriggerVisibility[self._loadingState] ||
-                !self._sourceController.hasMoreData(self._loadingState)
+                !_private.hasMoreData(self, self._sourceController, self._loadingState)
             ) {
                 _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
             } else {
@@ -663,19 +675,20 @@ var _private = {
 
     loadToDirectionIfNeed: function(self, direction, filter) {
         const sourceController = self._sourceController;
+        const hasMoreData = _private.hasMoreData(self, sourceController, direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
             !self._loadedItems :
             true;
         const allowLoadBySource =
             sourceController &&
-            sourceController.hasMoreData(direction) &&
+            hasMoreData &&
             !sourceController.isLoading();
         const allowLoadBySearch =
             !self._options.searchValue ||
             _private.getPortionedSearch(self).shouldSearch();
 
         if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
-            _private.setHasMoreData(self._listViewModel, sourceController.hasMoreData(direction));
+            _private.setHasMoreData(self._listViewModel, hasMoreData);
             _private.loadToDirection(
                self, direction,
                self._options.dataLoadCallback,
@@ -694,7 +707,7 @@ var _private = {
 
     scrollToEdge: function(self, direction) {
         _private.setMarkerAfterScroll(self);
-        if (self._sourceController && self._sourceController.hasMoreData(direction)) {
+        if (_private.hasMoreData(self, self._sourceController, direction)) {
             self._sourceController.setEdgeState(direction);
             _private.reload(self, self._options).addCallback(function() {
                 if (direction === 'up') {
@@ -729,8 +742,8 @@ var _private = {
 
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             const hasMoreData = {
-                up: self._sourceController.hasMoreData('up'),
-                down: self._sourceController.hasMoreData('down')
+                up: _private.hasMoreData(self, self._sourceController, 'up'),
+                down: _private.hasMoreData(self, self._sourceController, 'down')
             };
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
@@ -897,8 +910,8 @@ var _private = {
             } else {
                 // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                 if (self._sourceController) {
-                    const hasMoreDataUp = self._sourceController.hasMoreData('up');
-                    const hasMoreDataDown = self._sourceController.hasMoreData('down');
+                    const hasMoreDataUp = _private.hasMoreData(self, self._sourceController, 'up');
+                    const hasMoreDataDown = _private.hasMoreData(self, self._sourceController, 'down');
 
                     hasMoreData = {
                         up: hasMoreDataUp,
@@ -1026,7 +1039,7 @@ var _private = {
 
     loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
         const portionedSearch = _private.getPortionedSearch(self);
-        if (!self._sourceController.hasMoreData('down')) {
+        if (!_private.hasMoreData(self, self._sourceController, 'down')) {
             portionedSearch.reset();
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
@@ -1051,7 +1064,7 @@ var _private = {
 
     updateShadowMode(self, placeholderSizes: {top: number, bottom: number}): void {
         const itemsCount = self._listViewModel && self._listViewModel.getCount();
-        const hasMoreData = (direction) => self._sourceController && self._sourceController.hasMoreData(direction);
+        const hasMoreData = (direction) => _private.hasMoreData(self, self._sourceController, direction);
         const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
         const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
 
@@ -2195,7 +2208,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             ? !displayLib.EditInPlaceController.isEditing(listViewModel)
             : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
-        const notHasMore = !(this._sourceController && (this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up')));
+        const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
