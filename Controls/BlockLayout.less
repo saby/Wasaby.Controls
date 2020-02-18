@@ -1,14 +1,13 @@
-//TODO: https://online.sbis.ru/opendoc.html?guid=99fae5d6-81af-4515-b0a4-c2567901456d
-.controls-BlockLayout {
+.controls-BlockLayout_theme-@{themeName} {
    overflow: hidden;
    background-color: @background_BlockLayout_between_blocks;
-
-   &_detached {
-      padding-top: @spacing_BlockLayout_between_blocks;
-   }
 }
 
-.controls-BlockLayout > .controls-BlockLayout__blockGroup {
+.controls-BlockLayout_detached_theme-@{themeName} {
+   padding-top: @spacing_BlockLayout_between_blocks;
+}
+
+.controls-BlockLayout_theme-@{themeName} > .controls-BlockLayout__blockGroup_theme-@{themeName} {
    @margin: -@spacing_BlockLayout_between_blocks / 2;
 
    margin-left: @margin;
@@ -22,7 +21,7 @@
       margin-bottom: @margin;
    }
 
-   .controls-BlockLayout__block {
+   .controls-BlockLayout__block_theme-@{themeName} {
       position: relative;
       border-style: solid;
       border-width: @spacing_BlockLayout_between_blocks / 2 + @border-width_BlockLayout-block;
@@ -50,7 +49,7 @@
 
 .controls-BlockLayout__block {
    .for(6, {
-      &_style_@{_i} {
+      &_style_@{_i}_theme-@{themeName} {
          background-color: ~"@{background_BlockLayout_block_style_@{_i}}";
       }
    });
@@ -61,7 +60,7 @@
  * Поэтому живем в ie10 без тени на блоках.
  * Убрать body:not(.ws-is-ie10), когда откажемся от e10.
  */
-body:not(.ws-is-ie10) .controls-BlockLayout__block:after {
+body:not(.ws-is-ie10) .controls-BlockLayout__block_theme-@{themeName}:after {
    content: '';
    position: absolute;
    pointer-events: none;
@@ -84,12 +83,12 @@ body:not(.ws-is-ie10) .controls-BlockLayout__block:after {
 .controls-BlockLayout__block_border- {
    @variants: top, right, bottom, left;
    .for(@variants, {
-      &@{_item} {
+      &@{_item}_theme-@{themeName} {
          border-@{_item}: @spacing_BlockLayout_between_blocks solid @background_BlockLayout_between_blocks;
       }
    });
 }
 
-.controls-BlockLayout_background {
+.controls-BlockLayout_background_theme-@{themeName} {
    background-color: @background_BlockLayout_between_blocks;
 }

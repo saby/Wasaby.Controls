@@ -10,6 +10,7 @@ import {descriptor, Record as entityRecord} from 'Types/entity';
 import {IDirection, IVirtualScrollConfig, IVirtualScrollMode} from './interface/IVirtualScroll';
 import {Logger} from 'UI/Utils';
 import {Collection} from 'Controls/display';
+import {IObservable} from 'Types/collection';
 
 const SCROLLMOVE_DELAY = 150;
 export const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
@@ -50,6 +51,10 @@ const SIZE_RELATION_TO_VIEWPORT = 0.3;
  * @extends UI/Base:Control
  */
 export default class ScrollContainer extends Control<IOptions> {
+
+    set itemsFromLoadToDirection(value) {
+        this.virtualScroll.itemsFromLoadToDirection = value;
+    }
     protected _template: TemplateFunction = template;
     protected virtualScroll: VirtualScroll;
     private itemsContainer: HTMLElement;
@@ -103,10 +108,16 @@ export default class ScrollContainer extends Control<IOptions> {
     protected triggerOffset: number = DEFAULT_TRIGGER_OFFSET;
     private __mounted: boolean;
 
-
-    set itemsFromLoadToDirection(value) {
-        this.virtualScroll.itemsFromLoadToDirection = value;
-    }
+    /**
+     * Обработчик изменения позиции "виртуального" скролла
+     * @type {Function}
+     * @remark Для повышения производительности используем throttle, чтобы не вызывать пересчет "видимого" набора
+     * данных слишком часто
+     */
+    protected throttledUpdateIndexesByVirtualScrollMove = throttle((params) => {
+        this.virtualScroll.scrollTop = params.scrollTop;
+        this.virtualScroll.recalcRangeFromScrollTop();
+    }, SCROLLMOVE_DELAY, true);
 
     protected _beforeMount(options: IOptions): void {
         this.initModel(options);
@@ -209,7 +220,6 @@ export default class ScrollContainer extends Control<IOptions> {
         this.itemsContainer = itemsContainer;
     }
 
-
     /**
      * Обновление режима тени, в зависимости от размеров виртуальных распорок
      * @remark Так как при виртуальном скроллировании отображается только некоторый "видимый" набор записей
@@ -225,8 +235,26 @@ export default class ScrollContainer extends Control<IOptions> {
     private initModel(options: IOptions): void {
         this.viewModel = options.viewModel;
 
+        if (options.useNewModel) {
+            this.viewModel.subscribe('onCollectionChange', (...args: unknown[]) => {
+                this.collectionChangedHandler.apply(this, [args[0], null, ...args.slice(1)]);
+            });
+        } else {
+            this.viewModel.subscribe('onListChange', this.collectionChangedHandler);
+        }
+
         if (options.virtualScrolling) {
             this.initModelObserving(options);
+        }
+    }
+
+    private collectionChangedHandler = (event: string, changesType: string, action: string): void => {
+        const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
+
+        if ((changesType === 'collectionChanged' || newModelChanged) && action) {
+            if (action === IObservable.ACTION_RESET) {
+                this.reset(this.viewModel.getCount(), this._options.activeElement);
+            }
         }
     }
 
@@ -264,17 +292,6 @@ export default class ScrollContainer extends Control<IOptions> {
             this.throttledUpdateIndexesByVirtualScrollMove(params);
         }
     }
-
-    /**
-     * Обработчик изменения позиции "виртуального" скролла
-     * @type {Function}
-     * @remark Для повышения производительности используем throttle, чтобы не вызывать пересчет "видимого" набора
-     * данных слишком часто
-     */
-    protected throttledUpdateIndexesByVirtualScrollMove = throttle((params) => {
-        this.virtualScroll.scrollTop = params.scrollTop;
-        this.virtualScroll.recalcRangeFromScrollTop();
-    }, SCROLLMOVE_DELAY, true);
 
     protected emitListScrollHandler(event: SyntheticEvent<Event>, type: string, params: IScrollParams | unknown[]): void {
         switch (type) {
@@ -323,7 +340,7 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     scrollToItem(key: string|number): Promise<void> {
         return new Promise((resolve, reject) => {
-            let itemIndex = this._options.viewModel.getIndexByKey(key);
+            const itemIndex = this._options.viewModel.getIndexByKey(key);
 
             if (itemIndex !== -1) {
                 if (this._options.virtualScrolling) {
@@ -460,9 +477,13 @@ export default class ScrollContainer extends Control<IOptions> {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {
-                    this._notify('activeElementChanged', [
-                        this._options.viewModel.at(activeIndex).getUid()
-                    ]);
+                    const activeElement = this._options.viewModel.at(activeIndex).getUid();
+
+                    if (activeElement !== this._options.activeElement) {
+                        this._notify('activeElementChanged', [
+                            this._options.viewModel.at(activeIndex).getUid()
+                        ]);
+                    }
                 }
             }
         }
