@@ -542,8 +542,8 @@ define([
 
          it('toggleAll with root', function() {
             cfg = getConfig({
-               selectedKeys: [1, 4, 6],
-               excludedKeys: [2, 5]
+               selectedKeys: [1, 6],
+               excludedKeys: [5]
             });
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance._listModel._model.setRoot(2);
@@ -552,15 +552,14 @@ define([
             });
             selectionInstance.toggleAll();
 
-            // 2 выходит из исключений, а ее дочерний эл-т который был выбран, наоборот.
-            assert.deepEqual([1, 6], selectionInstance.selectedKeys);
-            assert.deepEqual([5, 4], selectionInstance.excludedKeys);
+            assert.deepEqual([6], selectionInstance.selectedKeys);
+            assert.deepEqual([5, 2], selectionInstance.excludedKeys);
 
             selectionInstance.toggleAll();
 
             // Вернулись к начальному
-            assert.deepEqual([6, 4], selectionInstance.selectedKeys);
-            assert.deepEqual([5, 2], selectionInstance.excludedKeys);
+            assert.deepEqual([6], selectionInstance.selectedKeys);
+            assert.deepEqual([5], selectionInstance.excludedKeys);
          });
 
          it('toggle all with id folder, which when cast to a boolean type, returns false', function() {

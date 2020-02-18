@@ -137,8 +137,8 @@ var _private = {
 
    itemOpenHandler: function(root:string|number|null, items:object):void {
       if (this._viewMode === 'search' && this._options.searchNavigationMode === 'expand') {
-         this._notify('markedKeyChanged', [root]);
-         this._notify('expandedItemsChanged', [_private.prepareExpandedItems(this._root, root, items, this._options.parentProperty)]);
+         this._notifiedMarkedKey = root;
+         this._notify('expandedItemsChanged', [_private.prepareExpandedItems(this._options.root, root, items, this._options.parentProperty)]);
          if (!this._options.deepReload) {
             this._deepReload = true;
          }
@@ -164,6 +164,13 @@ var _private = {
       }
       if (self._options.dataLoadCallback) {
          self._options.dataLoadCallback(data);
+      }
+   },
+
+   afterSetItemsOnReloadCallback: function(self) {
+      if (self._notifiedMarkedKey !== undefined) {
+         self._notify('markedKeyChanged', [self._notifiedMarkedKey]);
+         self._notifiedMarkedKey = undefined;
       }
    },
 
@@ -294,6 +301,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
       this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
+      this._afterSetItemsOnReloadCallback = _private.afterSetItemsOnReloadCallback.bind(null, this);
       Container.superclass.constructor.apply(this, arguments);
    },
 
