@@ -20,7 +20,7 @@ class DateRangeEditor extends Control<IControlOptions> {
     protected _tmplNotify: Function = tmplNotify;
     protected _templateName: string;
     protected _emptyCaption: string;
-    protected _reset: boolean = false;
+    protected _reseted: boolean = false;
 
     protected _beforeMount(options: IControlOptions): Promise<void>|void {
         this._templateName = 'Controls/dateRange:' + (options.editorMode === 'Selector' ? 'Selector' : 'LiteSelector');
@@ -28,7 +28,7 @@ class DateRangeEditor extends Control<IControlOptions> {
             this._emptyCaption = options.emptyCaption;
         } else if (options.resetValue) {
             if (isEqual(options.value, options.resetValue)) {
-                this._reset = true;
+                this._reseted = true;
             }
             return this.getCaption(options.resetValue[0], options.resetValue[1]).then((caption) => {
                 this._emptyCaption = caption;
@@ -38,7 +38,7 @@ class DateRangeEditor extends Control<IControlOptions> {
 
     protected _beforeUpdate(newOptions: IControlOptions): Promise<void>|void {
         if (this._options.value !== newOptions.value) {
-            this._reset = isEqual(newOptions.value, newOptions.resetValue);
+            this._reseted = isEqual(newOptions.value, newOptions.resetValue);
         }
     }
 
@@ -47,10 +47,10 @@ class DateRangeEditor extends Control<IControlOptions> {
             this._notify('textValueChanged', [caption]);
             if (!startValue && !endValue && this._options.resetValue || isEqual([startValue, endValue], this._options.resetValue)) {
                 this._notify('rangeChanged', [this._options.resetValue[0], this._options.resetValue[1]]);
-                this._reset = true;
+                this._reseted = true;
             } else {
                 this._notify('rangeChanged', [startValue, endValue]);
-                this._reset = false;
+                this._reseted = false;
             }
         });
     }

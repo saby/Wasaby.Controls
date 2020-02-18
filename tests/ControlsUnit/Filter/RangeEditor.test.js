@@ -30,7 +30,7 @@ define(['Controls/filter'],
                   resetValue
                });
                assert.equal(rangeEditor._emptyCaption, 'testCaption');
-               assert.isFalse(rangeEditor._reset);
+               assert.isFalse(rangeEditor._reseted);
             });
 
             it('without option emptyCaption', () => {
@@ -38,7 +38,7 @@ define(['Controls/filter'],
                   resetValue
                }).then(() => {
                   assert.equal(rangeEditor._emptyCaption, "Апрель'95");
-                  assert.isFalse(rangeEditor._reset);
+                  assert.isFalse(rangeEditor._reseted);
                });
             });
 
@@ -48,7 +48,7 @@ define(['Controls/filter'],
                   resetValue
                }).then(() => {
                   assert.equal(rangeEditor._emptyCaption, "Апрель'95");
-                  assert.isTrue(rangeEditor._reset);
+                  assert.isTrue(rangeEditor._reseted);
                });
             });
          });
@@ -58,10 +58,10 @@ define(['Controls/filter'],
             const resetValue = [new Date('April 17, 1995'), new Date('May 17, 1995')];
 
             rangeEditor._beforeUpdate({value: resetValue, resetValue});
-            assert.isTrue(rangeEditor._reset);
+            assert.isTrue(rangeEditor._reseted);
 
             rangeEditor._beforeUpdate({value: [new Date('April 17, 1998'), new Date('May 17, 1998')], resetValue});
-            assert.isFalse(rangeEditor._reset);
+            assert.isFalse(rangeEditor._reseted);
          });
 
          it('_rangeChanged', () => {
@@ -80,7 +80,7 @@ define(['Controls/filter'],
 
             return rangeEditor._rangeChanged({}, new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00')).then(() => {
                assert.equal(textValue, '17.04.95 - 17.05.95');
-               assert.isFalse(rangeEditor._reset);
+               assert.isFalse(rangeEditor._reseted);
             });
          });
 
@@ -102,7 +102,7 @@ define(['Controls/filter'],
 
             return rangeEditor._rangeChanged({}, null, null).then(() => {
                assert.deepEqual(date, resetValue);
-               assert.isTrue(rangeEditor._reset);
+               assert.isTrue(rangeEditor._reseted);
             });
          });
       });
