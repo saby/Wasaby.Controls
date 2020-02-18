@@ -181,7 +181,7 @@ var
                 .add(`controls-GridView__footer__paddingLeft_${leftPadding}_theme-${this._options.theme}`);
             // Для предотвращения скролла одной записи в таблице с экшнами.
             // _options._needBottomPadding тут не сработает.
-            if (this._options.itemActionsPosition === 'outside') {
+            if (this._options.itemActionsPosition === 'outside' && this._options.footerTemplate) {
                 classList = classList.add('controls-GridView__footer__itemActionsV_outside');
             }
             return classList.compile();
