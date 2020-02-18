@@ -4750,7 +4750,7 @@ define([
                   };
                }
             },
-            _viewPortRect: { top: 0 }
+            _viewPortRect: { top: 0 },
             _options: {}
          };
          const navigation = {
