@@ -190,6 +190,10 @@ var CompoundArea = CompoundContainer.extend([
       return rebuildDeferred;
    },
 
+   isPopupCreated(): boolean {
+      return this._isPopupCreated;
+   },
+
    getIsStack: function() {
       return this._options.type === 'stack';
    },

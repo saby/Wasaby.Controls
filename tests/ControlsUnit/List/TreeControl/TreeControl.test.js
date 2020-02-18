@@ -970,6 +970,12 @@ define([
          assert.equal(treeControl._nodesSourceControllers.size, 2);
          assert.isTrue(treeControl._nodesSourceControllers.get(1).hasMoreData('down', 1));
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
+
+         treeGrid.TreeControl._private.afterReloadCallback(treeControl, treeControl._options);
+
+         assert.equal(treeControl._nodesSourceControllers.size, 2);
+         assert.isTrue(treeControl._nodesSourceControllers.get(1).hasMoreData('down', 1));
+         assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
       it('List navigation by keys', function(done) {

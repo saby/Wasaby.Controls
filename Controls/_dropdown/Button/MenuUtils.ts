@@ -38,7 +38,7 @@ import buttonLib = require('Controls/buttons');
       } else if (options.icon) {
          // у кнопки типа 'Ссылка' высота вызывающего элемента зависит от размера иконки,
          // поэтому необходимо это учесть при сдвиге
-         offsetClassName += '_iconSize-' + getIconSize(options) || 'medium';
+         offsetClassName += '_iconSize-' + (getIconSize(options) || 'medium');
       }
       offsetClassName += ((!options.headerTemplate && !options.showHeader) ? '_duplicate' : '') + '_popup';
       return offsetClassName;
