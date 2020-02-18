@@ -62,6 +62,7 @@ const
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
+const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 const LIMIT_DRAG_SELECTION = 100;
@@ -848,8 +849,8 @@ var _private = {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
-                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
                     self._showLoadingIndicatorImage = true;
+                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
                     self._notify('controlResize');
                 }
             }, 2000);
@@ -1418,7 +1419,7 @@ var _private = {
             source: source,
             navigation: navigation,
             keyProperty: keyProperty
-        });
+        })
     },
 
     checkRequiredOptions: function(options) {
@@ -1511,6 +1512,8 @@ var _private = {
     getListTopOffset(self): number {
         const view = self._children && self._children.listView;
         let height = 0;
+
+        /* Получаем расстояние от начала скроллконтейнера, до начала списка, т.к.список может лежать не в "личном" контейнере. */
         if (self._isMounted) {
             const viewRect = (self._container[0] || self._container).getBoundingClientRect();
             if (self._isScrollShown || (self._needScrollCalculation && viewRect && self._viewPortRect)) {
