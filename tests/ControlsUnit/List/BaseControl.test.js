@@ -1349,7 +1349,7 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._container = {clientHeight: 100};
+         baseControl._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
          baseControl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
@@ -2397,7 +2397,10 @@ define([
                }
             }
          };
-         baseControl._container = { clientHeight: 100 };
+         baseControl._container = {
+            clientHeight: 100,
+            getBoundingClientRect: () => ({ y: 0 })
+         };
 
          afterEach(() => {
             actionsUpdateCount = 0;
@@ -2482,10 +2485,14 @@ define([
             baseControl = new lists.BaseControl(cfg),
             doScrollNotified = false;
 
+         baseControl._viewPortRect = {top: 0}
          baseControl._notify = function(eventName) {
             if (eventName === 'doScroll') {
                doScrollNotified = true;
             }
+         };
+         baseControl._container = {
+            getBoundingClientRect: () => ({ y: 0 })
          };
 
          baseControl.saveOptions(cfg);
@@ -2494,7 +2501,7 @@ define([
             await baseControl._beforeMount(cfg);
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
-            baseControl._container = {clientHeight: 100};
+            baseControl._container.clientHeight = 100;
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
          });
@@ -3583,7 +3590,16 @@ define([
             dragEnded,
             ctrl = new lists.BaseControl();
          ctrl._isMounted = true;
+         ctrl._scrollTop = 0;
+         ctrl._container = {
+            getBoundingClientRect() {
+               return {
+                  y: -900
+               };
+            }
+         };
 
+         ctrl._viewPortRect = { top: 0 }
          //dragend without deferred
          dragEnded = false;
          ctrl._documentDragEndHandler = function() {
@@ -4671,6 +4687,15 @@ define([
             },
             _notify: () => {},
             _isMounted: true,
+            _scrollTop: 0,
+            _container: {
+               getBoundingClientRect() {
+                  return {
+                     y: -900
+                  };
+               }
+            },
+            _viewPortRect: { top: 0 }
          };
          const navigation = {
             view: 'maxCount'
@@ -4836,10 +4861,9 @@ define([
          disableResults();
 
          /* Список находится в скроллконтейнере, но не личном. До списка лежит контент */
-         bc._isMounted = false;
          bc._isScrollShown = true;
          bc._viewPortRect = {
-            top: 100
+            top: 50
          };
          bc._scrollTop = 1000;
          bc._container = {
@@ -4849,7 +4873,10 @@ define([
                };
             }
          };
-         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 200);
+         bc._isMounted = false;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 0);
+         bc._isMounted = true;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 50);
       });
 
       it('_itemMouseMove: notify draggingItemMouseMove', async function() {
@@ -5083,7 +5110,7 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-         instance._container = {clientHeight: 100};
+         instance._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
          instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
@@ -5431,10 +5458,13 @@ define([
                up: false,
                down: true
             };
+            ctrl._container = {
+               clientHeight: 100,
+               getBoundingClientRect: () => ({y: 0})
+            };
             ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            ctrl._container = {clientHeight: 100};
             ctrl._afterMount(cfg);
 
             let queryCallsCount = 0;
