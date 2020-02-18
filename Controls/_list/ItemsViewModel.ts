@@ -308,7 +308,7 @@ var ItemsViewModel = BaseViewModel.extend({
         this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
         this._nextModelVersion();
         this._notify('onGroupsExpandChange', {
-            groupId,
+            group: groupId,
             changeType: state ? 'expand' : 'collapse',
             collapsedGroups: _private.prepareCollapsedGroupsByObject(this._collapsedGroups)
         });
