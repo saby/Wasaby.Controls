@@ -10,6 +10,7 @@
            selectedKeysCount="{{ _selectedKeysCount }}"
            isAllSelected="{{ _isAllSelected }}"
            listMarkedKey="{{_listMarkedKey}}"
+           on:markedKeyChanged="_markedKeyChangedHandler()"
            on:selectedTypeChanged="_selectedTypeChangedHandler()"
            on:listMarkedKeyChanged="_listMarkedKeyChangedHandler()"
    />
