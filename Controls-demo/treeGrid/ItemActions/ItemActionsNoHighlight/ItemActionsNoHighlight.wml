@@ -9,7 +9,7 @@
                 nodeProperty="type"
                 itemActions="{{_itemActions}}">
             <ws:itemTemplate>
-                <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{false}}"/>
+                <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{true}}"/>
             </ws:itemTemplate>
         </Controls.treeGrid:View>
     </div>
@@ -24,7 +24,7 @@
                 itemActions="{{_itemActions}}"
                 itemActionsPosition="outside">
             <ws:itemTemplate>
-                <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{false}}"/>
+                <ws:partial template="Controls/treeGrid:ItemTemplate" highlightOnHover="{{true}}"/>
             </ws:itemTemplate>
         </Controls.treeGrid:View>
     </div>

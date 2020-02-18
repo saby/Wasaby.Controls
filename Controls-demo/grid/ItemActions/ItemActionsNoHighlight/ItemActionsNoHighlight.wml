@@ -7,7 +7,7 @@
                 columns="{{_columns}}"
                 itemActions="{{_itemActions}}">
         <ws:itemTemplate>
-            <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}"/>
+            <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{true}}"/>
         </ws:itemTemplate>
         </Controls.grid:View>
     </div>
@@ -20,7 +20,7 @@
                 itemActions="{{_itemActions}}"
                 itemActionsPosition="outside">
         <ws:itemTemplate>
-            <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}"/>
+            <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{true}}"/>
         </ws:itemTemplate>
         </Controls.grid:View>
     </div>
