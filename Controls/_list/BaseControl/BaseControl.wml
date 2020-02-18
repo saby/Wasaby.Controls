@@ -119,7 +119,6 @@
                 on:menuActionClick="_showActionMenu()"
                 on:actionClick="_notifyHandler('actionClick')"
                 toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
-                contextMenuConfig="{{_options.contextMenuConfig}}"
                 name="itemActions"
                 style="{{_options.style}}"
                 listModel="{{_listViewModel}}"
