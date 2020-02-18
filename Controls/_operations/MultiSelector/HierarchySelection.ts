@@ -109,22 +109,27 @@ export default class HierarchySelection extends Selection {
    toggleAll(): void {
       const rootId: TKey = this._getRoot();
       const childrenIdsInRoot = getChildrenIds(rootId, this._listModel, this._hierarchyRelation);
-      const intersectionChildIdsWithSelectedKeys = ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, this._selectedKeys);
-      const intersectionChildIdsWithExcludedKeys = ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, this._excludedKeys);
       const rootExcluded = this._excludedKeys.includes(rootId);
+      const oldExcludedKeys = this._excludedKeys.slice();
+      const oldSelectedKeys = this._selectedKeys.slice();
 
       if (this._selectionStrategy.isAllSelected(this.getSelection(), rootId, this._listModel, this._hierarchyRelation)) {
          this._unselectAllInRoot();
+         this.select(ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldExcludedKeys));
       } else {
          this.selectAll();
+
+         if (this._listModel.getHasMoreData()) {
+            this.unselect(oldSelectedKeys);
+         }
       }
+
+      ArraySimpleValuesUtil.addSubArray(this._excludedKeys, ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldSelectedKeys));
+      ArraySimpleValuesUtil.addSubArray(this._selectedKeys, ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldExcludedKeys));
 
       if (rootExcluded) {
          ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
       }
-
-      this._selectedKeys = ArraySimpleValuesUtil.addSubArray(this._selectedKeys, intersectionChildIdsWithExcludedKeys);
-      this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, intersectionChildIdsWithSelectedKeys);
    }
 
    getCount(): number|null {
