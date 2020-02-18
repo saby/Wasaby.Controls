@@ -324,7 +324,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * от элемента
      */
     scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const itemIndex = this._options.viewModel.getIndexByKey(key);
 
             if (itemIndex !== -1) {
@@ -355,7 +355,7 @@ export default class ScrollContainer extends Control<IOptions> {
                     resolve();
                 }
             } else {
-                reject();
+                resolve();
             }
         });
     }
