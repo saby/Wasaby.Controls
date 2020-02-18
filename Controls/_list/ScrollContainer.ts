@@ -350,9 +350,13 @@ export default class ScrollContainer extends Control<IOptions> {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
 
             if (typeof activeIndex !== 'undefined') {
-                this._notify('activeElementChanged', [
-                    this._options.collection.at(activeIndex).getUid()
-                ]);
+                const activeElement = this._options.collection.at(activeIndex).getUid();
+
+                if (activeElement !== this._options.activeElement) {
+                    this._notify('activeElementChanged', [
+                        this._options.collection.at(activeIndex).getUid()
+                    ]);
+                }
             }
         }
     }

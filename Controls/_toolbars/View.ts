@@ -10,7 +10,6 @@ import {IShowType, showType, getMenuItems} from 'Controls/Utils/Toolbar';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
 import {
-    IButtonOptions,
     IHierarchy,
     IHierarchyOptions,
     IIconSize,
@@ -20,6 +19,7 @@ import {
     ISource,
     ISourceOptions
 } from 'Controls/interface';
+import {IButtonOptions} from 'Controls/buttons';
 import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 
 import * as template from 'wml!Controls/_toolbars/View';
@@ -32,7 +32,7 @@ type TItems = RecordSet<TItem>;
 type TypeItem = 'toolButton' | 'icon' | 'link' | 'list';
 export type TItemsSpacing = 'medium' | 'big';
 
-export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
+export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {
     const size = 'm';
     const icon = item.get('icon');
     const style = item.get('buttonStyle');
@@ -40,15 +40,15 @@ export function getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
     const iconStyle = item.get('iconStyle');
     const transparent = item.get('buttonTransparent');
     const caption = item.get('caption');
-    const readOnly = item.get('readOnly');
+    const readOnly = item.get('readOnly') || toolbarOptions.readOnly;
     const fontColorStyle = item.get('fontColorStyle');
     const contrastBackground = item.get('contrastBackground');
-    const cfg = {};
-    cfg.readOnly = readOnly;
+    const cfg: IButtonOptions = {};
     cfg._hoverIcon = true;
     cssStyleGeneration.call(cfg, {
         size, icon, style, viewMode, iconStyle, transparent, caption, readOnly, fontColorStyle, contrastBackground
     });
+    cfg.readOnly = readOnly;
     return cfg;
 }
 
@@ -324,7 +324,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     }
 
     protected _itemClickHandler(event: SyntheticEvent<MouseEvent>, item: TItem): void {
-        const readOnly: boolean = item.get('readOnly');
+        const readOnly: boolean = item.get('readOnly') || this._options.readOnly;
 
         if (readOnly) {
             event.stopPropagation();
@@ -358,12 +358,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
     }
 
     protected _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
-        return getButtonTemplateOptionsByItem(item);
+        return getButtonTemplateOptionsByItem(item, this._options);
     }
 
     protected _showMenu(event: SyntheticEvent<UIEvent>): void {
-        this._notify('menuOpened', [], {bubbling: true});
-        this._openMenu(this._getMenuConfig());
+        if (!this._options.readOnly) {
+            this._notify('menuOpened', [], {bubbling: true});
+            this._openMenu(this._getMenuConfig());
+        }
         /**
          * Stop bubbling of 'click' after opening the menu.
          * Nobody should have to catch the 'click'', if toolbar handled it.
@@ -457,7 +459,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
         };
     }
 
-    static _theme = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
 }
 
 /**
