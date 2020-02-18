@@ -33,7 +33,6 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue} from 'Controls/interface';
-import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -217,7 +216,9 @@ var _private = {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
                 }
-
+                if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
+                    cfg.afterSetItemsOnReloadCallback();
+                }
                 _private.prepareFooter(self, navigation, self._sourceController);
                 _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
@@ -325,9 +326,7 @@ var _private = {
     },
     restoreScrollPosition: function (self) {
         if (self._markedKeyForRestoredScroll !== null && self._isScrollShown) {
-            const currentItemIndex = self._listViewModel.getItems().getIndexByValue(self._options.keyProperty, self._markedKeyForRestoredScroll);
-            const nodeElement = self._children.listView.getItemsContainer().children[currentItemIndex].children[0];
-            scrollToElement(nodeElement, true);
+            _private.scrollToItem(self, self._markedKeyForRestoredScroll);
             self._markedKeyForRestoredScroll = null;
         }
     },
@@ -960,6 +959,7 @@ var _private = {
         }
 
         self._scrollTop = params.scrollTop;
+        self._scrollPageLocked = false;
     },
 
     getPortionedSearch(self): PortionedSearch {
@@ -2313,7 +2313,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this.__error) {
             return;
         }
-        if (this._listViewModel && this._hasItemActions) {
+
+        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
+        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
+        if (this._listViewModel && this._hasItemActions && this._children.itemActions) {
             this._children.itemActions.updateActions();
         }
     },

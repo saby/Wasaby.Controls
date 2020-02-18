@@ -94,6 +94,38 @@ define([
             assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(5), rs, 'parent', 'parent@'));
          });
 
+         it('append item', () => {
+            const newItem = { id: 0, parent: null, 'parent@': null };
+            const newItems = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: [newItem]
+            });
+
+            // creating cached display
+            lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(1), rs)
+
+            rs.append(newItems);
+
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(0), rs));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(0), rs));
+         });
+
+         it('prepend item', () => {
+            const newItem = { id: 0, parent: null, 'parent@': null };
+            const newItems = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: [newItem]
+            });
+
+            // creating cached display
+            lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(1), rs)
+
+            rs.prepend(newItems);
+
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(0), rs));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(0), rs));
+         });
+
          it('in folder', function() {
             data = [{
                id: 2,
