@@ -92,12 +92,13 @@ const prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): H
  */
 export default class ErrorController {
     private __controller: ParkingController;
+
     constructor(config: Config) {
         // Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок
         const configField = 'errorHandlers';
         // Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения
         loadHandlers(configField);
-        this.__controller = new ParkingController({configField, ...config});
+        this.__controller = new ParkingController({ configField, ...config });
     }
 
     destroy(): void {
@@ -185,12 +186,18 @@ function importConfirmation(): Promise<typeof Confirmation> {
     // Предварительно загрузить темизированные стили для диалога.
     // Без этого стили загружаются только в момент показа диалога.
     // Но когда потребуется показать сообщение о потере соединения, стили уже не смогут загрузиться.
-    const importThemedStyles = import('Core/Themes/ThemesControllerNew')
-        .then((Theme) => Theme.getInstance().loadCssWithAppTheme('Controls/popupConfirmation'));
+    const confirmationModule = 'Controls/popupConfirmation';
+    const importThemedStyles = Promise.all([
+        import('Core/Themes/ThemesController'),
+        import('Core/Themes/ThemesControllerNew')
+    ]).then(([OldTheme, Theme]) => Theme.getInstance().loadCss(
+        confirmationModule,
+        OldTheme.getInstance().getCurrentTheme()
+    ));
 
     return Promise.all([
         import('Controls/popup'),
-        import('Controls/popupConfirmation'),
+        import(confirmationModule),
         importThemedStyles
     ]).then(([popup]) => popup.Confirmation);
 }
