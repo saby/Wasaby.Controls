@@ -1,6 +1,7 @@
 import {Rpc} from 'Types/source';
 import {TSelectionRecord, ISelectionObject} from 'Controls/interface';
 import * as selectionToRecord from 'Controls/_operations/MultiSelector/selectionToRecord';
+import {Record} from 'Types/entity';
 
 type TCount = null|number|void;
 
@@ -13,8 +14,11 @@ export interface IGetCountCallParams {
 function getDataForCallWithSelection(selection: ISelectionObject, callParams: IGetCountCallParams): object {
     const data = {...callParams.data || {}};
     const filter = {...(data.filter || {})};
+    const adapter = callParams.rpc.getAdapter();
+
     Object.assign(filter, {selection: getSelectionRecord(selection, callParams.rpc)});
-    data.filter = filter;
+    data.filter = Record.fromObject(filter, adapter);
+
     return data;
 }
 

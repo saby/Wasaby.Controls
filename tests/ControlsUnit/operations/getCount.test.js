@@ -43,7 +43,8 @@ define(['Controls/_operations/MultiSelector/getCount', 'Types/entity'], function
          return new Promise((resolve) => {
             getCount(selection, rpcParams).then((countResult) => {
                assert.equal(callCommand, TEST_CALL_METHOD_NAME);
-               assert.deepEqual(getSelectedKeysFromSelection(callData.filter.selection), TEST_SELECTED_KEYS);
+               assert.isTrue(callData.filter instanceof entity.Record);
+               assert.deepEqual(getSelectedKeysFromSelection(callData.filter.get('selection')), TEST_SELECTED_KEYS);
                assert.equal(countResult, TEST_DATA_COUNT);
                resolve();
             });
