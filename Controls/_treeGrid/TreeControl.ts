@@ -324,11 +324,6 @@ var _private = {
         }
     },
 
-    getHasMoreData(self, sourceController, direction, key) {
-        const root = key !== undefined ? key : self._root;
-        return sourceController.hasMoreData(direction, root);
-    },
-
     reloadItem: function(self, key) {
         var viewModel = self._children.baseControl.getViewModel();
         var filter = cClone(self._options.filter);
@@ -433,7 +428,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
-    _getHasMoreData: null,
     _expandOnDragData: null,
     _updateExpandedItemsAfterReload: false,
     _notifyHandler: tmplNotify,
@@ -449,7 +443,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
         this._beforeLoadToDirectionCallback = _private.beforeLoadToDirectionCallback.bind(null, this);
-        this._getHasMoreData = _private.getHasMoreData.bind(null, this);
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
     _afterMount: function() {
