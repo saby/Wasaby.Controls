@@ -230,7 +230,7 @@ export default class ScrollContainer extends Control<IOptions> {
                 }
             });
         } else {
-            return Promise.reject();
+            return Promise.resolve();
         }
     }
 
