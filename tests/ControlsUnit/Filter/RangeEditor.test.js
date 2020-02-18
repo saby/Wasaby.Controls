@@ -14,7 +14,22 @@ define(['Controls/filter'],
                editorMode: 'Selector'
             });
             assert.equal(rangeEditor._templateName, 'Controls/dateRange:Selector');
+         });
 
+         it('_beforeMount _emptyCaption', () => {
+            var rangeEditor = new filter.DateRangeEditor();
+            const resetValue = [new Date('April 1, 1995'), new Date('April 30, 1995')];
+            rangeEditor._beforeMount({
+               emptyCaption: 'testCaption',
+               resetValue
+            });
+            assert.equal(rangeEditor._emptyCaption, 'testCaption');
+
+            return rangeEditor._beforeMount({
+               resetValue
+            }).then(() => {
+               assert.equal(rangeEditor._emptyCaption, "Апрель'95");
+            });
          });
 
          it('_rangeChanged', (done) => {

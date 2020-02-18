@@ -391,6 +391,7 @@ var
 
       _topPlaceholderSize: 0,
       _bottomPlaceholderSize: 0,
+      _isSafari13: null,
 
       _scrollTopAfterDragEnd: undefined,
       _scrollLockedPosition: null,
@@ -435,6 +436,8 @@ var
          } else {
             this._pagingState = {};
          }
+
+         this._isSafari13 = this._isSafari13();
 
          if (receivedState) {
             _private.updateDisplayState(this, receivedState.displayState);
@@ -497,6 +500,10 @@ var
                return def;
             }
          }
+      },
+
+      _isSafari13: function() {
+          return Env.detection.safariVersion >= 13;
       },
 
       _afterMount: function() {
@@ -661,6 +668,11 @@ var
          // Событие ресайза может прилететь из _afterMount внутренних контролов
          // до вызова _afterMount на скрол контейнере.
          if (!this._isMounted) {
+            return;
+         }
+         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+         // Не реагируем на ресайз, если контрол скрыт
+         if (this._container.closest('.ws-hidden')) {
             return;
          }
          const displayState = _private.calcDisplayState(this);
