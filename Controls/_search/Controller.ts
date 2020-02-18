@@ -6,17 +6,11 @@ import cInstance = require('Core/core-instance');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
+import {_assignServiceFilters, _deleteServiceFilters} from 'Controls/_search/Utils/FilterUtils';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 import {Logger} from 'UI/Utils';
-
-const SERVICE_FILTERS = {
-   HIERARCHY: {
-      'Разворот': 'С разворотом',
-      'usePages': 'full'
-   }
-};
 
 var _private = {
    getSearchController: function (self) {
@@ -50,8 +44,7 @@ var _private = {
       self._loading = false;
 
       if (self._viewMode !== 'search') {
-         self._previousViewMode = self._viewMode;
-         self._viewMode = 'search';
+         _private.updateViewMode(self, 'search');
 
          if (self._options.startingWith === 'root' && self._options.parentProperty) {
             self._root = _private.getRoot(self._path, self._root, self._options.parentProperty);
@@ -70,9 +63,7 @@ var _private = {
       if (self._viewMode === 'search') {
          self._searchValue = '';
          self._misspellValue = '';
-         if (self._options.parentProperty) {
-            _private.deleteServiceFilters(filter);
-         }
+         _deleteServiceFilters(self._options, filter);
 
          //abortCallback is called on every input change, when input value is less then minSearchLength,
          //but filter could be already changed, because viewMode: 'search' will change only after data loaded.
@@ -83,22 +74,9 @@ var _private = {
       }
    },
 
-   assignServiceFilters: function(filter:object):void {
-      Object.assign(filter, SERVICE_FILTERS.HIERARCHY);
-   },
-
-   deleteServiceFilters: function(filter:object):void {
-      for (var i in SERVICE_FILTERS.HIERARCHY) {
-         if (SERVICE_FILTERS.HIERARCHY.hasOwnProperty(i)) {
-            delete filter[i];
-         }
-      }
-   },
-
    searchStartCallback: function (self, filter:object):void {
-      if (self._options.parentProperty && self._viewMode !== 'search') {
-         _private.assignServiceFilters(filter);
-      }
+      _assignServiceFilters(self, filter);
+
       if (self._root !== undefined && self._options.parentProperty) {
          if (self._options.startingWith === 'current') {
             filter[self._options.parentProperty] = self._root;
@@ -135,8 +113,8 @@ var _private = {
 
    itemOpenHandler: function(root:string|number|null, items:object):void {
       if (this._viewMode === 'search' && this._options.searchNavigationMode === 'expand') {
-         this._notify('markedKeyChanged', [root]);
-         this._notify('expandedItemsChanged', [_private.prepareExpandedItems(this._root, root, items, this._options.parentProperty)]);
+         this._notifiedMarkedKey = root;
+         this._notify('expandedItemsChanged', [_private.prepareExpandedItems(this._options.root, root, items, this._options.parentProperty)]);
          if (!this._options.deepReload) {
             this._deepReload = true;
          }
@@ -162,6 +140,13 @@ var _private = {
       }
       if (self._options.dataLoadCallback) {
          self._options.dataLoadCallback(data);
+      }
+   },
+
+   afterSetItemsOnReloadCallback: function(self) {
+      if (self._notifiedMarkedKey !== undefined) {
+         self._notify('markedKeyChanged', [self._notifiedMarkedKey]);
+         self._notifiedMarkedKey = undefined;
       }
    },
 
@@ -292,6 +277,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
       this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
+      this._afterSetItemsOnReloadCallback = _private.afterSetItemsOnReloadCallback.bind(null, this);
       Container.superclass.constructor.apply(this, arguments);
    },
 

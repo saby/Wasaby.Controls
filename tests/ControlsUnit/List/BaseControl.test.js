@@ -2102,6 +2102,14 @@ define([
             ctrl._afterUpdate(cfg);
             assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in _afterUpdate');
 
+            ctrl.__onPagingArrowClick({}, 'Prev');
+            assert.strictEqual('pageUp', result[0], 'Wrong state of scroll after clicking to Prev');
+
+            assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Prev until handleScrollMoveSync');
+            ctrl._setMarkerAfterScroll = false;
+            ctrl.scrollMoveSyncHandler(null, { scrollTop: 0 });
+            assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in handleScrollMoveSync');
+
             done();
          }, 100);
       });
@@ -2455,7 +2463,13 @@ define([
             baseControl._listViewModel = null;
             baseControl._updateItemActions();
             assert.equal(actionsUpdateCount, 0);
+            baseControl._beforeMount(cfg);
          });
+         //it('without itemActions nothing should happen', function() {
+         //   baseControl._children.itemActions = undefined;
+         //   baseControl._updateItemActions();
+         //   assert.equal(actionsUpdateCount, 0);
+         //});
       });
 
       describe('resetScrollAfterReload', function() {
