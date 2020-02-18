@@ -19,7 +19,7 @@ import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISe
  * @class Controls/_operations/MultiSelector/SelectionStrategy/Tree
  * @control
  * @private
- * @author Капустин И.А.
+ * @author Герасимов А.М.
  */
 
 interface ITreeSelectionStrategyOptions {

@@ -1,8 +1,9 @@
 define(
    [
-      'Controls/popup'
+      'Controls/popup',
+      'i18n!ControlsUnits'
    ],
-   (popup) => {
+   (popup, rk) => {
       'use strict';
 
       describe('Controls/_popup/Opener/BaseOpener', () => {

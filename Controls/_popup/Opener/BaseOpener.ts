@@ -255,11 +255,12 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();
-        const openOptions: IControlOptions = (opener || cfg?.opener)?._options;
+        // Если задали опцию, берем с опции, иначе с контрола, который открывает
+        const popupOpener = cfg?.opener || opener;
+        const openOptions: IControlOptions = popupOpener?._options;
         if (!BaseOpener.isNewEnvironment()) {
             BaseOpener.getManager(openOptions).then(() => {
                 BaseOpener.getZIndexUtil().addCallback((getZIndex) => {
-                    const popupOpener = opener || cfg.opener;
                     if (popupOpener) {
                         // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
                         cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
