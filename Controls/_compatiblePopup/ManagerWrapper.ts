@@ -50,14 +50,17 @@ var ManagerWrapper = Control.extend({
       if (!this._destroyed) {
          // защита на случай если не подмешалась совместимость
          if (this._children.PopupContainer.getChildControls) {
-            this._children.PopupContainer.getChildControls(null, false, (instance) => {
+            const popups = this._children.PopupContainer.getChildControls(null, false, (instance) => {
                return instance._moduleName === 'Controls/_popup/Manager/Popup' && instance._options.template !== 'Controls/popupTemplate:templateInfoBox';
-            }).each((popup) => {
-               // На всякий случай если фильтр вернет не то
-               if (popup._controlResizeOuterHandler) {
-                  popup._controlResizeOuterHandler();
-               }
             });
+            if (popups && popups.each) {
+               popups.each((popup) => {
+                  // На всякий случай если фильтр вернет не то
+                  if (popup._controlResizeOuterHandler) {
+                     popup._controlResizeOuterHandler();
+                  }
+               });
+            }
          }
       }
    },
