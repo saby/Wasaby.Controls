@@ -7,6 +7,7 @@ import 'css!theme?Controls/list';
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction, ShowType } from './interface/IItemAction';
 import { ISwipeConfig } from './interface/ISwipeConfig';
+import {compatibility} from 'Env/Env';
 import {
    ISwipeContext,
    ISwipeControlOptions,
@@ -243,7 +244,12 @@ export default class SwipeControl extends Control {
          this._swipeConfig &&
          context &&
          context.isTouch &&
-         !context.isTouch.isTouch
+         !context.isTouch.isTouch &&
+
+          // В слое совместимости не приходит context.isTouch.isTouch
+          // приходится узнавать о наличии тача из compatibility
+          // https://online.sbis.ru/opendoc.html?guid=53d7d489-aae1-4881-8503-86cfc364a235
+         !compatibility.touch
       ) {
          this.closeSwipe();
       }
