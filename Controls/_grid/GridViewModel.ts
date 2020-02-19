@@ -138,7 +138,7 @@ var
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
-                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn } } = params;
+                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn }, isMultiHeader } = params;
             if (params.cell.isActionCell) {
                 return preparedClasses;
             }
@@ -158,7 +158,7 @@ var
             }
             // Отступ для последней колонки
             const lastColClass = ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${theme}`;
-            if (maxEndColumn) {
+            if (isMultiHeader && maxEndColumn) {
                 // у мультихэдера последняя ячейка определяется по endColumn, а не по последнему элементу массива.
                 if (maxEndColumn === endColumn) {
                     preparedClasses += lastColClass;
@@ -741,6 +741,7 @@ var
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
+                    isMultiHeader: this._isMultiHeader,
                     isHeader: true,
                     cell,
                     rowIndex,
