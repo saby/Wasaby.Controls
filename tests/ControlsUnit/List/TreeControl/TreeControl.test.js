@@ -888,6 +888,17 @@ define([
          assert.deepEqual({}, treeViewModel.getHasMoreStorage());
       });
 
+      it('_private.getHasMoreData', function() {
+         const self = {};
+         const sourceController = {
+            hasMoreData: (direction, root) => {
+               return root ? undefined : true;
+            }
+         };
+
+         assert.isTrue(treeGrid.TreeControl._private.getHasMoreData(self, sourceController));
+      });
+
       it('TreeControl.afterReloadCallback created source controller with multi root navigation', function () {
          const source = new sourceLib.Memory({
             data: [],
@@ -966,6 +977,12 @@ define([
          treeControl._options.deepReload = true;
 
          treeGrid.TreeControl._private.afterReloadCallback(treeControl, treeControl._options, items);
+
+         assert.equal(treeControl._nodesSourceControllers.size, 2);
+         assert.isTrue(treeControl._nodesSourceControllers.get(1).hasMoreData('down', 1));
+         assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
+
+         treeGrid.TreeControl._private.afterReloadCallback(treeControl, treeControl._options);
 
          assert.equal(treeControl._nodesSourceControllers.size, 2);
          assert.isTrue(treeControl._nodesSourceControllers.get(1).hasMoreData('down', 1));

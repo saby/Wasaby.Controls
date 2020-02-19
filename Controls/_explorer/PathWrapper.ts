@@ -18,6 +18,9 @@ var PathWrapper = Control.extend({
       return options.itemsPromise.then((items) => {
          this._items = items;
          this._needCrumbs = _private.needCrumbs(options.header, items, options.rootVisible);
+      },
+          () => {
+
       });
    },
 

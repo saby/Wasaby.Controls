@@ -13,8 +13,22 @@ export default {
 
     getTemplateOptions: function(self) {
         return {
-            startValue: self._rangeModel?.startValue || self._options.startValue || self._options.value,
-            endValue: self._rangeModel?.endValue || self._options.endValue || self._options.value,
+            ...this.getCommonTemplateOptions(self),
+            startValue: self._options.value,
+            endValue: self._options.value
+        };
+    },
+
+    getDateRangeTemplateOptions: function(self) {
+        return {
+            ...this.getCommonTemplateOptions(self),
+            startValue: self._rangeModel?.startValue || self._options.startValue,
+            endValue: self._rangeModel?.endValue || self._options.endValue
+        };
+    },
+
+    getCommonTemplateOptions: function(self) {
+        return {
             mask: self._options.mask,
             readOnly: self._options.readOnly,
             dateConstructor: self._options.dateConstructor

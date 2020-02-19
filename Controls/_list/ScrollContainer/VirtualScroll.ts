@@ -252,6 +252,10 @@ export default class VirtualScroll {
      * @param itemIndex
      * @param toBottom
      * @param force
+     * @remark К элементу можно подскроллить в случае если:
+     * - мы скроллим к нижней границе элемента
+     * - мы скроллим только если элемент не виден
+     * - мы скроллим к верху элемента и его оффсет не превышает высоту вьюпорта
      */
     canScrollToItem(itemIndex: number, toBottom: boolean, force: boolean): boolean {
         let canScroll = false;
