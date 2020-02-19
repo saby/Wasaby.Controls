@@ -1409,7 +1409,7 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._container = {clientHeight: 100};
+         baseControl._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
          baseControl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
@@ -1489,7 +1489,9 @@ define([
       it('indicator', function() {
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
-
+         ctrl._container = {
+            getBoundingClientRect: () => ({})
+         };
          ctrl._scrollTop = 200;
 
          assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
@@ -1508,14 +1510,14 @@ define([
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
-         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 200, 'Wrong top offset');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
          lists.BaseControl._private.hideIndicator(ctrl);
 
          lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
          assert.isTrue(!!ctrl._loadingIndicatorTimer, 'Loading timer should created');
-         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 200, 'Wrong top offset');
+         assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
 
          // картинка должнa появляться через 2000 мс, проверим, что её нет сразу
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
@@ -2455,7 +2457,10 @@ define([
                }
             }
          };
-         baseControl._container = { clientHeight: 100 };
+         baseControl._container = {
+            clientHeight: 100,
+            getBoundingClientRect: () => ({ y: 0 })
+         };
 
          afterEach(() => {
             actionsUpdateCount = 0;
@@ -2540,10 +2545,14 @@ define([
             baseControl = new lists.BaseControl(cfg),
             doScrollNotified = false;
 
+         baseControl._viewPortRect = {top: 0}
          baseControl._notify = function(eventName) {
             if (eventName === 'doScroll') {
                doScrollNotified = true;
             }
+         };
+         baseControl._container = {
+            getBoundingClientRect: () => ({ y: 0 })
          };
 
          baseControl.saveOptions(cfg);
@@ -2552,7 +2561,7 @@ define([
             await baseControl._beforeMount(cfg);
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
-            baseControl._container = {clientHeight: 100};
+            baseControl._container.clientHeight = 100;
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
          });
@@ -3641,7 +3650,16 @@ define([
             dragEnded,
             ctrl = new lists.BaseControl();
          ctrl._isMounted = true;
+         ctrl._scrollTop = 0;
+         ctrl._container = {
+            getBoundingClientRect() {
+               return {
+                  y: -900
+               };
+            }
+         };
 
+         ctrl._viewPortRect = { top: 0 }
          //dragend without deferred
          dragEnded = false;
          ctrl._documentDragEndHandler = function() {
@@ -4729,6 +4747,15 @@ define([
             },
             _notify: () => {},
             _isMounted: true,
+            _scrollTop: 0,
+            _container: {
+               getBoundingClientRect() {
+                  return {
+                     y: -900
+                  };
+               }
+            },
+            _viewPortRect: { top: 0 },
             _options: {}
          };
          const navigation = {
@@ -4867,6 +4894,14 @@ define([
       });
 
       it('getListTopOffset', function () {
+         let resultsHeight = 0;
+         let headerHeight = 0;
+
+         const enableHeader = () => { bc._children.listView.getHeaderHeight = () => headerHeight };
+         const disableHeader = () => { bc._children.listView.getHeaderHeight = undefined };
+         const enableResults = () => { bc._children.listView.getResultsHeight = () => resultsHeight };
+         const disableResults = () => { bc._children.listView.getResultsHeight = undefined };
+
          const bc = {
             _children: {
                listView: {
@@ -4874,10 +4909,35 @@ define([
             }
          };
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 0);
-         bc._children.listView.getHeaderHeight = () => 40;
+
+         enableHeader();
+         headerHeight = 40;
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 40);
-         bc._children.listView.getResultsHeight = () => 30;
+
+         enableResults();
+         resultsHeight = 30;
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 70);
+
+         disableHeader();
+         disableResults();
+
+         /* Список находится в скроллконтейнере, но не личном. До списка лежит контент */
+         bc._isScrollShown = true;
+         bc._viewPortRect = {
+            top: 50
+         };
+         bc._scrollTop = 1000;
+         bc._container = {
+            getBoundingClientRect() {
+               return {
+                  y: -900
+               };
+            }
+         };
+         bc._isMounted = false;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 0);
+         bc._isMounted = true;
+         assert.equal(lists.BaseControl._private.getListTopOffset(bc), 50);
       });
 
       it('_itemMouseMove: notify draggingItemMouseMove', async function() {
@@ -5111,7 +5171,7 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-         instance._container = {clientHeight: 100};
+         instance._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
          instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
@@ -5459,10 +5519,13 @@ define([
                up: false,
                down: true
             };
+            ctrl._container = {
+               clientHeight: 100,
+               getBoundingClientRect: () => ({y: 0})
+            };
             ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            ctrl._container = {clientHeight: 100};
             ctrl._afterMount(cfg);
 
             let queryCallsCount = 0;
