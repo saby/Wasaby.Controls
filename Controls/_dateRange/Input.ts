@@ -89,7 +89,7 @@ var Component = Control.extend([], {
             template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker',
             templateOptions: {
-               ...getOptions.getTemplateOptions(this),
+               ...getOptions.getDateRangeTemplateOptions(this),
                selectionType: this._options.selectionType,
                quantum: this._options.quantum,
                headerType: 'input',
