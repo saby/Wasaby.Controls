@@ -141,13 +141,16 @@ const _private = {
 
                self._sourceController.load({ $_history: true })
                   .addCallback(function(res) {
+                     let historyResult;
                      recent = source.getRecent();
+
                      if (recent.getCount()) {
                         lastFilter = recent.at(ACTIVE_HISTORY_FILTER_INDEX);
-                        result.callback(source.getDataObject(lastFilter));
+                        historyResult = source.getDataObject(lastFilter) || [];
                      } else {
-                        result.callback([]);
+                        historyResult = [];
                      }
+                     result.callback(historyResult);
                      return res;
                   })
                   .addErrback(function(error) {

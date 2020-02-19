@@ -11,9 +11,9 @@ import {
     getIndexByDisplayIndex,
     getIndexById,
     getIndexByItem,
-    getMaxEndRow,
+    getHeaderMaxEndCellData,
     getResultsIndex,
-    getRowsArray,
+    getHeaderRowsArray,
     getTopOffset,
     IBaseGridRowIndexOptions
 } from 'Controls/_grid/utils/GridRowIndexUtil';
@@ -44,8 +44,8 @@ interface IColgroupColumn {
     index: number;
 }
 
-type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll'
-    | 'editingRow' | 'bottomPadding' | 'emptyTemplate' | 'emptyTemplateAndColumnScroll' | 'footer'
+type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll' |
+    'colspanedRow' | 'editingRow' | 'bottomPadding' | 'emptyTemplate' | 'emptyTemplateAndColumnScroll' | 'footer'
     | 'headerBreadcrumbs' | 'fullWithoutMultiSelect';
 
 interface IGetColspanStylesForParams {
@@ -100,7 +100,7 @@ var
             var
                 preparedClasses = '';
 
-            if (columns[columnIndex].actionCell) {
+            if (columns[columnIndex].isActionCell) {
                 return preparedClasses;
             }
             const arrayLengthOffset = params.hasActionCell ? 2 : 1;
@@ -147,8 +147,8 @@ var
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
-                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn } } = params;
-            if (params.cell.actionCell) {
+                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn }, isMultiHeader } = params;
+            if (params.cell.isActionCell) {
                 return preparedClasses;
             }
             const actionCellOffset = params.hasActionCell ? 1 : 0;
@@ -167,7 +167,7 @@ var
             }
             // Отступ для последней колонки
             const lastColClass = ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${theme}`;
-            if (maxEndColumn) {
+            if (isMultiHeader && maxEndColumn) {
                 // у мультихэдера последняя ячейка определяется по endColumn, а не по последнему элементу массива.
                 if (maxEndColumn === endColumn) {
                     preparedClasses += lastColClass;
@@ -489,6 +489,14 @@ var
                 scrollableColumns: `${scrollableColumnsStyle} z-index: auto;`,
                 actions: scrollableColumnsStyle
             };
+        },
+        getTableCellStyles(currentColumn): string {
+            let styles = '';
+            const isCheckbox = currentColumn.hasMultiSelect && currentColumn.columnIndex === 0;
+            if (!isCheckbox && currentColumn.column.width !== 'auto') {
+                styles += `min-width: ${currentColumn.column.width}; max-width: ${currentColumn.column.width};`;
+            }
+            return styles;
         }
     },
 
@@ -520,6 +528,8 @@ var
         _columnsVersion: 0,
 
         _cachaedHeaderColumns: null,
+
+        _isMultiHeader: null,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -563,7 +573,9 @@ var
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
-            if (this._options.header && this._options.header.length) { this._isMultiHeader = this.isMultiHeader(this._options.header); }
+            if (this._options.header && this._options.header.length) {
+                this._isMultiHeader = this.isMultiHeader(this._options.header);
+            }
             this._setHeader(this._options.header);
             this._updateLastItemKey();
         },
@@ -654,21 +666,28 @@ var
             this._setHeader(columns);
             this._nextModelVersion();
         },
-        isMultiHeader: function(columns) {
-            let k = 0;
-            while(columns.length > k) {
-                if (columns[k].endRow > 2) {
-                    return true;
+        isMultiHeader: function(columns?: any) {
+            let result = false;
+            if (columns) {
+                let k = 0;
+                while (columns.length > k) {
+                    if (columns[k].endRow > 2) {
+                        result = true;
+                    }
+                    k++;
                 }
-                k++;
+            } else if (this._isMultiHeader !== null) {
+                result = this._isMultiHeader;
             }
-            return false;
+            return result;
         },
         _prepareHeaderColumns: function(columns, multiSelectVisibility, actionsCell) {
             if (columns && columns.length) {
                 this._isMultiHeader = this.isMultiHeader(columns);
-                this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell);
-                [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
+                this._headerRows = getHeaderRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell);
+                const headerMaxEndCellData = getHeaderMaxEndCellData(this._headerRows);
+                this._maxEndRow = headerMaxEndCellData.maxRow;
+                this._maxEndColumn = headerMaxEndCellData.maxColumn;
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
@@ -683,7 +702,7 @@ var
         setHeaderCellMinHeight: function(data) {
             const multiSelectVisibility = this._options.multiSelectVisibility !== 'hidden';
             const actionsCell = this._shouldAddActionsCell();
-            const headerRows = getRowsArray(
+            const headerRows = getHeaderRowsArray(
                 data[0],
                 multiSelectVisibility,
                 false,
@@ -720,7 +739,7 @@ var
             return this._options.stickyColumnsCount;
         },
 
-        getMaxEndColumn: function() {
+        getHeaderMaxEndColumn: function() {
             return this._maxEndColumn;
         },
 
@@ -823,13 +842,14 @@ var
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
+                    isMultiHeader: this._isMultiHeader,
                     isHeader: true,
                     cell,
                     rowIndex,
                     maxEndColumn: this._maxEndColumn,
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs,
-                    hasActionCell: this._shouldAddActionsCell(),
+                    hasActionCell: this._shouldAddActionsCell()
                 }, this._options.theme);
                 cellClasses += ' controls-Grid__header-cell_min-width';
             }
@@ -964,7 +984,7 @@ var
             }
 
             if (this._shouldAddActionsCell()) {
-                this._resultsColumns = this._resultsColumns.concat([{ actionCell: true }]);
+                this._resultsColumns = this._resultsColumns.concat([{ isActionCell: true }]);
             }
 
             this.resetResultsColumns();
@@ -1393,7 +1413,9 @@ var
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
-                        _preferVersionAPI: true
+                        _preferVersionAPI: true,
+                        gridCellStyles: '',
+                        tableCellStyles: ''
                     };
                 currentColumn.cellClasses = current.getItemColumnCellClasses(current, self._options.theme, self.getEditingItemData());
                 currentColumn.column = current.columns[current.columnIndex];
@@ -1418,6 +1440,10 @@ var
                             'span 1 / ' +
                             'span 1;';
                     }
+                }
+
+                if (current.columnScroll && !GridLayoutUtil.isFullGridSupport()) {
+                    currentColumn.tableCellStyles = _private.getTableCellStyles(currentColumn);
                 }
 
                 // TODO: Проверить. https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
@@ -1796,6 +1822,7 @@ var
                 case 'customResults':
                 case 'emptyTemplate':
                 case 'editingRow':
+                case 'colspanedRow':
                     return this._columns.length;
                 case 'fixedColumnOfColumnScroll':
                     return this._options.stickyColumnsCount || 1;

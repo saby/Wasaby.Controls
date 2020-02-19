@@ -10,6 +10,7 @@ import {descriptor, Record as entityRecord} from 'Types/entity';
 import {IDirection, IVirtualScrollConfig, IVirtualScrollMode} from './interface/IVirtualScroll';
 import {Logger} from 'UI/Utils';
 import {Collection} from 'Controls/display';
+import {IObservable} from 'Types/collection';
 
 const SCROLLMOVE_DELAY = 150;
 export const DEFAULT_VIRTUAL_PAGE_SIZE = 100;
@@ -55,7 +56,6 @@ export default class ScrollContainer extends Control<IOptions> {
     set itemsFromLoadToDirection(value) {
         this.virtualScroll.itemsFromLoadToDirection = value;
     }
-
     protected _template: TemplateFunction = template;
     protected virtualScroll: VirtualScroll;
     private itemsContainer: HTMLElement;
@@ -236,8 +236,26 @@ export default class ScrollContainer extends Control<IOptions> {
     private initModel(options: IOptions): void {
         this.viewModel = options.viewModel;
 
+        if (options.useNewModel) {
+            this.viewModel.subscribe('onCollectionChange', (...args: unknown[]) => {
+                this.collectionChangedHandler.apply(this, [args[0], null, ...args.slice(1)]);
+            });
+        } else {
+            this.viewModel.subscribe('onListChange', this.collectionChangedHandler);
+        }
+
         if (options.virtualScrolling) {
             this.initModelObserving(options);
+        }
+    }
+
+    private collectionChangedHandler = (event: string, changesType: string, action: string): void => {
+        const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
+
+        if ((changesType === 'collectionChanged' || newModelChanged) && action) {
+            if (action === IObservable.ACTION_RESET) {
+                this.reset(this.viewModel.getCount(), this._options.activeElement);
+            }
         }
     }
 
@@ -481,9 +499,13 @@ export default class ScrollContainer extends Control<IOptions> {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {
-                    this._notify('activeElementChanged', [
-                        this._options.viewModel.at(activeIndex).getUid()
-                    ]);
+                    const activeElement = this._options.viewModel.at(activeIndex).getUid();
+
+                    if (activeElement !== this._options.activeElement) {
+                        this._notify('activeElementChanged', [
+                            this._options.viewModel.at(activeIndex).getUid()
+                        ]);
+                    }
                 }
             }
         }
