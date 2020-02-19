@@ -5,9 +5,9 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { TKeySelection as TKey } from 'Controls/interface/';
 
-/**
- * Контроллер для работы с множественным выбором.
- * Передает состояние массового выделения дочерним контролам.
+/** 
+ * Контрол используется для организации множественного выбора. 
+ * Он обеспечивает связь между Controls/operationsPanel:Containter и {@link Controls/list:Containter}.
  * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
  *
  * @class Controls/_operations/Controller

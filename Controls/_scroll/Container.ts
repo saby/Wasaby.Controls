@@ -391,7 +391,6 @@ var
 
       _topPlaceholderSize: 0,
       _bottomPlaceholderSize: 0,
-      _isSafari13: null,
 
       _scrollTopAfterDragEnd: undefined,
       _scrollLockedPosition: null,
@@ -436,8 +435,6 @@ var
          } else {
             this._pagingState = {};
          }
-
-         this._isSafari13 = this._isSafari13();
 
          if (receivedState) {
             _private.updateDisplayState(this, receivedState.displayState);
@@ -500,10 +497,6 @@ var
                return def;
             }
          }
-      },
-
-      _isSafari13: function() {
-          return Env.detection.safariVersion >= 13;
       },
 
       _afterMount: function() {
