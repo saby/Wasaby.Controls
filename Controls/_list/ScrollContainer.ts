@@ -81,6 +81,8 @@ export default class ScrollContainer extends Control<IOptions> {
     private _indicatorState: IDirection;
     private _indicatorTimeout: number;
 
+    // Флаг, который необходимо включать, чтобы не реагировать на скроллы происходящие вследствие
+    // подскроллов создаваемых самим контролом (scrollToItem, восстановление позиции скролла после перерисовок)
     private _fakeScroll: boolean;
 
     private __mounted: boolean = false;
