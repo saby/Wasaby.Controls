@@ -147,7 +147,7 @@ var
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
-                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn } } = params;
+                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn }, isMultiHeader } = params;
             if (params.cell.isActionCell) {
                 return preparedClasses;
             }
@@ -167,7 +167,7 @@ var
             }
             // Отступ для последней колонки
             const lastColClass = ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${theme}`;
-            if (maxEndColumn) {
+            if (isMultiHeader && maxEndColumn) {
                 // у мультихэдера последняя ячейка определяется по endColumn, а не по последнему элементу массива.
                 if (maxEndColumn === endColumn) {
                     preparedClasses += lastColClass;
@@ -189,12 +189,6 @@ var
                 if (params.multiSelectVisibility && GridLayoutUtil.isFullGridSupport()) {
                     preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection' + `_theme-${theme}`;
                 }
-            }
-            // Стиль колонки
-            preparedClasses += ' controls-Grid__cell_' + (style || 'default');
-            if (!params.isHeader) {
-                preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
-                preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
             }
 
             return preparedClasses;
@@ -842,7 +836,7 @@ var
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
-                    isHeader: true,
+                    isMultiHeader: this._isMultiHeader,
                     cell,
                     rowIndex,
                     maxEndColumn: this._maxEndColumn,
