@@ -87,10 +87,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       ],
       gridHeaderWithColumns = [
          {
-            title: '',
-            style: 'default',
+            endColumn: 2,
+            endRow: 2,
             startColumn: 1,
-            endColumn: 2
+            startRow: 1,
+            style: 'default',
+            title: ''
          },
          {
             title: 'Цена',
@@ -421,7 +423,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   endColumn: 4
                },
                {
-                  actionCell: true,
+                  isActionCell: true,
                   startRow: 1,
                   endRow: 2,
                   startColumn: 4,
@@ -540,6 +542,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                columns: headerRows[0],
                multiSelectVisibility: false,
                maxEndColumn: 5,
+               isMultiHeader: true,
                style: 'default',
                itemPadding: {
                   left: 'XL',
@@ -567,6 +570,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                multiSelectVisibility: false,
                maxEndColumn: 5,
                style: 'default',
+               isMultiHeader: true,
                itemPadding: {
                   left: 'XL',
                   right: 'L',
@@ -1302,7 +1306,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
-            gridViewModel._prepareHeaderColumns(gridHeader, true);
+            const gridHeaderClone = gridHeader.map(function(obj) {
+               return Object.assign({}, obj);
+            });
+
+            gridViewModel._prepareHeaderColumns(gridHeaderClone, true);
             gridViewModel._headerRows[0][0].title = '123';
 
             let headerRow = gridViewModel.getCurrentHeaderRow();
@@ -1333,7 +1341,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             const secondCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
-               column: gridHeader[0],
+               column: gridHeaderClone[0],
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 1,
                shadowVisibility: "visible",
@@ -1353,7 +1361,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             const thirdCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
-               column: gridHeader[1],
+               column: gridHeaderClone[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 2,
                sortingDirection: 'DESC',
@@ -1374,7 +1382,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             const fourthCell = headerRow.getCurrentHeaderColumn().column;
 
             assert.deepEqual({
-               column: gridHeader[2],
+               column: gridHeaderClone[2],
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 3,
                cellContentClasses: " controls-Grid__header-cell_justify_content_right",
@@ -1395,6 +1403,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
+
          });
 
          it('getCurrentHeaderColumn with header (startColumn and endColumn)', function() {

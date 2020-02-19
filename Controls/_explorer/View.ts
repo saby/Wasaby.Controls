@@ -104,12 +104,21 @@ var
              }
              return breadCrumbs;
          },
-         serviceDataLoadCallback: function(self, oldData, newData) {
-            self._breadCrumbsItems = _private.getPath(newData);
+         resolveItemsOnFirstLoad(self, resolver, result) {
             if (self._firstLoad) {
-               self._itemsResolver(self._breadCrumbsItems);
+               resolver(result);
                self._firstLoad = false;
             }
+         },
+         dataLoadErrback: function(self, cfg, error) {
+            _private.resolveItemsOnFirstLoad(self, self._itemsResolver, null);
+            if (cfg.dataLoadErrback) {
+               cfg.dataLoadErrback(error);
+            }
+         },
+         serviceDataLoadCallback: function(self, oldData, newData) {
+            self._breadCrumbsItems = _private.getPath(newData);
+            _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
          itemsReadyCallback: function(self, items) {
@@ -359,6 +368,7 @@ var
       },
 
       _beforeMount: function(cfg) {
+         this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);

@@ -342,17 +342,23 @@ var
             * Если добавление идет в существующуюю группу, то добавляем ей в начало или в конец.
             * Если добавление идет в несуществующую группу, то добавляем в начало или в конец списка.
             *   При добавлении в начало - добавляем ее действительно первой, до всех групп. Сделать это просто
-            *   выставлением индекса нельзя, в силу организации шаблонов: добавляемая запись рисуется под другой записью.
+            *   выставлением индекса нельзя, в силу организации шаблонов: добавляемая запись рисуется под другой записью,
+            *   поэтому рисуем его над первой группой в Controls/_list/resources/For.wml:47
+            *
+            *   При добавлении в конец индекс будет на один больше последнего элемента списка / группы.
+            *   Controls/_list/resources/ItemOutput.wml:31
+            *   TODO: Возможно, стоит всегда выставлять индекс записи рядом с которой выводим добавляемую запись, а,
+            *    над или под ней выводить, решать через editingConfig.addPosition
             * */
             let index = 0;
             if (display.getCount()) {
                 const groupItems = display.getGroupItems(groupId);
                 if (typeof groupId === 'undefined' || groupItems.length === 0) {
                     if (!isAddInTop) {
-                        index = display.getIndex(display.getLast());
+                        index = display.getIndex(display.getLast()) + 1;
                     }
                 } else {
-                    index = display.getIndex(groupItems[isAddInTop ? 0 : groupItems.length - 1]);
+                    index = display.getIndex(groupItems[isAddInTop ? 0 : groupItems.length - 1]) + (isAddInTop ? 0 : 1);
                 }
             }
             return index;

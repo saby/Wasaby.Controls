@@ -623,7 +623,8 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          var searchController = getSearchController(Object.assign(defaultOptions, {
             searchNavigationMode: 'expand',
             parentProperty: 'parent',
-            nodeProperty: 'type'
+            nodeProperty: 'type',
+            root: null
          }));
          var markedKeyChangedParams = null;
          var expandedItemsChangedParams = null;
@@ -650,6 +651,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchController._viewMode = 'search';
 
          searchController._itemOpenHandler(3, items);
+         searchController._afterSetItemsOnReloadCallback(3, items);
          assert.deepEqual(markedKeyChangedParams, [3]);
          assert.deepEqual(expandedItemsChangedParams,[[1, 2, 3]]);
       });
