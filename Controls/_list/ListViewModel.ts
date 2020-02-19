@@ -91,17 +91,17 @@ var _private = {
     ): string {
         let classList = 'controls-itemActionsV' + (true ? ' controls-itemActionsV_full_item_size' : '');
         classList += itemActionsPosition ? ` controls-itemActionsV_${itemActionsPosition}` : '';
-        classList += itemData.isEditing ? ' controls-itemActionsV_editing' : '';
-        classList += itemData.isEditing && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
         classList += itemData.isActive && actionMenuIsShown ? ' controls-itemActionsV_visible' : '';
         classList += itemData.isSwiped ? ' controls-itemActionsV_swiped' : '';
         classList += itemData.itemActionsColumnScrollDraw ? ' controls-itemActionsV_columnScrollDraw' : '';
         return classList;
     },
-    getItemActionsWrapperClasses(isTile, itemActionsPosition, highlightOnHover, style,
-        getContainerPaddingClass, itemActionsClass, itemPadding): string {
+    getItemActionsWrapperClasses(itemData, isTile, itemActionsPosition, highlightOnHover, style,
+        getContainerPaddingClass, itemActionsClass, itemPadding, toolbarVisibility): string {
         let classList = 'controls-itemActionsV__wrapper';
             classList += '  controls-itemActionsV__wrapper_absolute';
+            classList += itemData.isEditing ? ' controls-itemActionsV_editing' : '';
+            classList += itemData.isEditing && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
             classList += ` controls-itemActionsV_${itemActionsPosition}`;
             classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
             classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') : '';

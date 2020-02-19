@@ -1,8 +1,8 @@
 <ws:template name="localItemActionsTemplate">
     <div attr:class="{{itemData.getItemActionsClasses(itemData, isTile, false, itemActionsClass,
         toolbarVisibility, actionMenuIsShown, highlightOnHover, style, getContainerPaddingClass, itemPadding)}}">
-        <div attr:class="{{itemData.getItemActionsWrapperClasses(isTile, itemActionsPosition, highlightOnHover, style,
-            getContainerPaddingClass, itemActionsClass, itemPadding)}}">
+        <div attr:class="{{itemData.getItemActionsWrapperClasses(itemData, isTile, itemActionsPosition, highlightOnHover, style,
+            getContainerPaddingClass, itemActionsClass, itemPadding, toolbarVisibility)}}">
             <ws:partial
                     template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
                     itemData="{{itemData}}"
