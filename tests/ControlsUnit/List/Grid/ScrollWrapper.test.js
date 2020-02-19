@@ -31,12 +31,6 @@ define(['Controls/_grid/ScrollWrapper'], function(ScrollWrapper) {
       });
       it('should calculate grid header offset when MaxEndColumn is set and isMultiHeader is false', () => {
          wrapper._options.listModel.getMultiSelectVisibility = () => 'visible';
-         wrapper._options.listModel.getHeaderMaxEndColumn = () => 11;
-         assert.equal('grid-column: 3 / 11;width: 500px', wrapper._getGridStyles(options));
-      });
-      it('should calculate grid header offset when MaxEndColumn is set and isMultiHeader is true', () => {
-         wrapper._options.listModel.getMultiSelectVisibility = () => 'visible';
-         wrapper._options.listModel.isMultiHeader = () => true;
          wrapper._options.listModel.getHeaderMaxEndColumn = () => 10;
          assert.equal('grid-column: 3 / 11;width: 500px', wrapper._getGridStyles(options));
       });

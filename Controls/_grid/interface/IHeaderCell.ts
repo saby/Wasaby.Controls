@@ -111,5 +111,5 @@ export interface IHeaderCell extends IControlOptions {
     /**
      * @description Поле, для определения ячейки действий
      */
-    isActionCell: boolean;
+    isActionCell?: boolean;
 }
