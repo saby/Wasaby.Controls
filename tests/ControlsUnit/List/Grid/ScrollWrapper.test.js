@@ -7,7 +7,6 @@ define(['Controls/_grid/ScrollWrapper'], function(ScrollWrapper) {
          options = {
             listModel: {
                getHeaderMaxEndColumn: () => 0,
-               isMultiHeader: () => false,
                getStickyColumnsCount: () => 1,
                getHeader: () => [{}, {}, {}, {}, {}],
                getMultiSelectVisibility: () => 'hidden',
@@ -38,9 +37,6 @@ define(['Controls/_grid/ScrollWrapper'], function(ScrollWrapper) {
       it('should calculate grid header offset when MultiSelect column and sticky ladder should be added', () => {
          wrapper._options.listModel.getMultiSelectVisibility = () => 'visible';
          wrapper._options.listModel.shouldAddStickyLadderCell = () => true;
-         // TODO PLEASE REMOVE NEXT line as it will cause errors after merging with
-         // https://online.sbis.ru/opendoc.html?guid=f5b054c8-914d-4987-9601-0bd436a5aa39
-         wrapper._options.listModel.isMultiHeader = () => true;
          wrapper._options.listModel.getHeaderMaxEndColumn = () => 10;
          assert.equal('grid-column: 4 / 12;width: 500px', wrapper._getGridStyles(options));
       });
