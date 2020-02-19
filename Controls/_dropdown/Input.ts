@@ -272,6 +272,7 @@ var Input = Control.extend({
    _defaultContentTemplate: defaultContentTemplate,
    _text: '',
    _hasMoreText: '',
+   task1178744737: null,
 
    _beforeMount: function () {
       this._setText = this._setText.bind(this);
@@ -289,7 +290,7 @@ var Input = Control.extend({
    _selectedItemsChangedHandler: function (event, items) {
       this._notify('textValueChanged', [_private.getText(this, items) + _private.getMoreText(items)]);
       const newSelectedKeys = _private.getSelectedKeys(items, this._options.keyProperty);
-      if (!isEqual(this._options.selectedKeys, newSelectedKeys)) {
+      if (!isEqual(this._options.selectedKeys, newSelectedKeys) || this._options.task1178744737) {
          return this._notify('selectedKeysChanged', [newSelectedKeys]);
       }
    },
