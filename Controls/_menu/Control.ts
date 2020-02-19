@@ -17,7 +17,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
 
 /**
  * Контрол меню.
- * @control
+ * @class Controls/menu:Control
  * @public
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IIconSize
@@ -25,7 +25,9 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @control
  * @category Popup
+ * @author Герасимов А.М.
  */
 const SUB_DROPDOWN_OPEN_DELAY = 100;
 
