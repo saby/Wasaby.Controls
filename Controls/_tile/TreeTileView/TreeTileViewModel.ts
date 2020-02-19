@@ -37,7 +37,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         prevItem = this._display.at(current.index - 1);
         nextItem = this._display.at(current.index + 1);
 
-        if (!nextItem && current.dispItem.isNode()) {
+        if (!nextItem && !current.isGroup && current.dispItem.isNode()) {
             current.afterItemTemplate = InvisibleFor;
             current.afterItemTemplateOptions = {
                 type: 'folder'

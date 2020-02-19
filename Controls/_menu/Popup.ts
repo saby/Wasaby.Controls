@@ -4,7 +4,7 @@ import * as headerTemplate from 'wml!Controls/_menu/Popup/headerTemplate';
 
 /**
  * Базовый шаблон для {@link Controls/menu:Control}, отображаемого в прилипающем блоке.
- * @class Controls/_menu/Popup
+ * @class Controls/menu:Popup
  * @extends Controls/_popupTemplate/Sticky
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IIconSize
@@ -15,7 +15,7 @@ import * as headerTemplate from 'wml!Controls/_menu/Popup/headerTemplate';
  * @control
  * @public
  * @category Popup
- * @author Герасимов А.м.
+ * @author Герасимов А.М.
  */
 
 class Popup extends Control<IControlOptions> {
