@@ -46,7 +46,12 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
         let style = '';
         let offset = 0;
         const listModel = options.listModel;
+        // Учёт колонки с чекбоксами для выбора записей
         if (listModel.getMultiSelectVisibility() !== 'hidden') {
+            offset += 1;
+        }
+        // Учёт колонки с лесенкой
+        if (listModel.shouldAddStickyLadderCell()) {
             offset += 1;
         }
         const maxEndColumn = listModel.getHeaderMaxEndColumn();
