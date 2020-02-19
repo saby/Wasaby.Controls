@@ -190,6 +190,12 @@ var
                     preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection' + `_theme-${theme}`;
                 }
             }
+            // Стиль колонки
+            preparedClasses += ' controls-Grid__cell_' + (style || 'default');
+            if (!params.isHeader) {
+                preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${theme}`;
+                preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
+            }
 
             return preparedClasses;
         },
@@ -837,6 +843,7 @@ var
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
                     isMultiHeader: this._isMultiHeader,
+                    isHeader: true,
                     cell,
                     rowIndex,
                     maxEndColumn: this._maxEndColumn,

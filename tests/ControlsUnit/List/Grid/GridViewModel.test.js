@@ -541,6 +541,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                columns: headerRows[0],
                multiSelectVisibility: false,
                maxEndColumn: 5,
+               isMultiHeader: true,
                style: 'default',
                itemPadding: {
                   left: 'XL',
@@ -568,6 +569,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                multiSelectVisibility: false,
                maxEndColumn: 5,
                style: 'default',
+               isMultiHeader: true,
                itemPadding: {
                   left: 'XL',
                   right: 'L',
@@ -1286,6 +1288,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             const gridHeaderClone = gridHeader.map(function(obj) {
                return Object.assign({}, obj);
             });
+
             gridViewModel._prepareHeaderColumns(gridHeaderClone, true);
             gridViewModel._headerRows[0][0].title = '123';
 
@@ -1384,6 +1387,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
+
          });
 
          it('getCurrentHeaderColumn with header (startColumn and endColumn)', function() {
