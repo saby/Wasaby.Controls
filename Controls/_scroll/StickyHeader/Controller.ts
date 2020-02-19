@@ -6,6 +6,8 @@ import {POSITION} from 'Controls/_scroll/StickyHeader/Utils';
 
 // @ts-ignore
 
+const CONTENTS_STYLE: string = 'contents';
+
 class Component extends Control {
     private _template: Function = template;
 
@@ -15,6 +17,9 @@ class Component extends Control {
     private _headersStack: object;
     // The list of headers that are stuck at the moment.
     private _fixedHeadersStack: object;
+    // Если созданный заголвок невидим, то мы не можем посчитать его позицию.
+    // Учтем эти заголовки после ближайшего события ресайза.
+    private _delayedHeaders: TRegisterEventData[] = [];
 
     _beforeMount(options) {
         this._headersStack = {
@@ -57,17 +62,26 @@ class Component extends Control {
     }
 
     _stickyRegisterHandler(event, data: TRegisterEventData, register: boolean): void {
+        this._register(data, register)
+        event.stopImmediatePropagation();
+    }
+
+    _register(data: TRegisterEventData, register: boolean): void {
         if (register) {
             this._headers[data.id] = {
                 ...data,
                 fixedInitially: false
             };
-            this._addToHeadersStack(data.id, data.position);
+            if (Component._isVisible(data.container)) {
+                this._addToHeadersStack(data.id, data.position);
+            } else {
+                this._delayedHeaders.push(data);
+            }
+
         } else {
             delete this._headers[data.id];
             this._removeFromHeadersStack(data.id, data.position);
         }
-        event.stopImmediatePropagation();
     }
 
     /**
@@ -92,6 +106,13 @@ class Component extends Control {
     }
 
     _resizeHandler() {
+        this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
+            if (Component._isVisible(header.container)) {
+                this._register(header, true);
+                return false;
+            }
+            return true;
+        });
         this._updateTopBottom();
     }
 
@@ -182,6 +203,18 @@ class Component extends Control {
                 offset += this._headers[headerId].inst.height;
             }
         }
+    }
+
+    static _isVisible(element: HTMLElement): boolean {
+        if (element.offsetParent !== null) {
+            return true;
+        } else {
+            const styles = getComputedStyle(element);
+            if (styles.display === CONTENTS_STYLE) {
+                return Component._isVisible(element.parentElement);
+            }
+        }
+        return false;
     }
 }
 
