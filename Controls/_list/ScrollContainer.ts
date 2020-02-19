@@ -52,6 +52,13 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
     activeElement: string|number;
 }
 
+/**
+ * Класс для управления скроллированием в списках
+ * @author Волоцкой В.Д.
+ * @control Controls/_list/ScrollContainer
+ * @extends UI/Base:Control
+ * @private
+ */
 export default class ScrollContainer extends Control<IOptions> {
     protected _template: TemplateFunction = template;
     protected _children: {
@@ -231,10 +238,16 @@ export default class ScrollContainer extends Control<IOptions> {
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
+    /**
+     * Начинает цепочку обновлений коллекции
+     */
     startChainUpdate(): void {
         this._virtualScroll.startChainUpdate();
     }
 
+    /**
+     * Заканчивает цепочку обновлений коллекции
+     */
     stopChainUpdate(): void {
         this._virtualScroll.stopChainUpdate();
     }
