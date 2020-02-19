@@ -313,9 +313,14 @@ var _private = {
     },
 
     hasMoreData(self, sourceController, direction): boolean {
-        return self._options.getHasMoreData ?
-            self._options.getHasMoreData(sourceController, direction) :
-            sourceController && sourceController.hasMoreData(direction);
+        let moreDataResult = false;
+
+        if (sourceController) {
+            moreDataResult = self._options.getHasMoreData ?
+                self._options.getHasMoreData(sourceController, direction) :
+                sourceController.hasMoreData(direction);
+        }
+        return moreDataResult;
     },
 
     hasMoreDataInAnyDirection(self, sourceController): boolean {
