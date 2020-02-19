@@ -272,7 +272,6 @@ var Input = Control.extend({
    _defaultContentTemplate: defaultContentTemplate,
    _text: '',
    _hasMoreText: '',
-   task1178744737: null,
 
    _beforeMount: function () {
       this._setText = this._setText.bind(this);
