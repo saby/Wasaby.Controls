@@ -14,7 +14,7 @@ var Registrar = cExtend.extend({
       this._options = cfg;
    },
 
-   register: function(event, component, callback) {
+   register: function(event, component, callback, config: any = {}) {
       this._registry[component.getInstanceId()] = {
          component: component,
          callback: callback
@@ -26,8 +26,9 @@ var Registrar = cExtend.extend({
          }
          this.unregister(event, component);
       };
-
-      event.stopPropagation();
+      if (!config.listenAll) {
+         event.stopPropagation();
+      }
    },
    unregister: function(event, component) {
       delete this._registry[component.getInstanceId()];

@@ -717,6 +717,66 @@ define([
          assert.isFalse(ctrl._showContinueSearchButton);
       });
 
+      it('loadToDirection down with getHasMoreData option', async function() {
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+
+         let dataLoadFired = false;
+         let beforeLoadToDirectionCalled = false;
+
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            beforeLoadToDirectionCallback: function() {
+               beforeLoadToDirectionCalled = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
+            },
+            getHasMoreData: function(sourceController, direction) {
+               return sourceController.hasMoreData(direction);
+            }
+         };
+
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         ctrl._container = {clientHeight: 100};
+         ctrl._afterMount(cfg);
+
+         let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.equal(ctrl._loadingState, 'down');
+         await loadPromise;
+
+         assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+         assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+         assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
+         assert.equal(ctrl._loadingState, null);
+         assert.isTrue(ctrl._listViewModel.getHasMoreData());
+
+         loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         await loadPromise;
+         assert.isFalse(ctrl._listViewModel.getHasMoreData());
+      });
+
       it('isPortionedLoad',  () => {
          const baseControl = {
             _options: {}
@@ -2459,11 +2519,11 @@ define([
             assert.equal(actionsUpdateCount, 0);
             baseControl._beforeMount(cfg);
          });
-         it('without itemActions nothing should happen', function() {
-            baseControl._children.itemActions = undefined;
-            baseControl._updateItemActions();
-            assert.equal(actionsUpdateCount, 0);
-         });
+         //it('without itemActions nothing should happen', function() {
+         //   baseControl._children.itemActions = undefined;
+         //   baseControl._updateItemActions();
+         //   assert.equal(actionsUpdateCount, 0);
+         //});
       });
 
       describe('resetScrollAfterReload', function() {
@@ -4669,6 +4729,7 @@ define([
             },
             _notify: () => {},
             _isMounted: true,
+            _options: {}
          };
          const navigation = {
             view: 'maxCount'
