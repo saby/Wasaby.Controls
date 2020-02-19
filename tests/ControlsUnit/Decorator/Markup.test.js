@@ -795,6 +795,16 @@ define([
       });
 
       describe('wrapLinksInString', function() {
+         it('time test', function() {
+            var goodStr = 'h'.repeat(70000);
+            var parentNode = ['p', goodStr];
+            var startTime = Date.now();
+            var checkStr = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            var time = Date.now() - startTime;
+            assert.ok(time < 500, `${time}ms is too long`);
+            assert.equal(goodStr, checkStr);
+         });
+
          it('with protocol - 1', function() {
             var parentNode = ['p', 'https://ya.ru'];
             var goodResultNode = [[], ['a',
