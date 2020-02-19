@@ -784,21 +784,43 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          }]);
       });
 
-      it('_private.getHistoryItems', function(done) {
-         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(history) {
-            assert.deepEqual(history.length, 15);
-
-            var self = {
-               _sourceController: {
-                  load: function() {
-                     return Deferred.fail();
+      it('_private.getHistoryItems', function() {
+         const self = {};
+         const sandbox = sinon.createSandbox();
+         const historyItems = new collection.List({
+            items: [
+               new entity.Model({
+                  rawData: {
+                     ObjectData: null
                   }
-               }
-            };
+               })
+            ]
+         });
 
-            Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(hItems) {
-               assert.equal(hItems.length, 0);
-               done();
+         return new Promise(function(resolve) {
+            Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(history) {
+               assert.deepEqual(history.length, 15);
+
+               self._sourceController = { load: () => Deferred.fail() };
+               Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(hItems) {
+                  assert.equal(hItems.length, 0);
+
+                  sandbox.replace(HistoryUtils, 'getHistorySource', () => {
+                     return {
+                        getItems: () => historyItems,
+                        getDataObject: () => null,
+                        getPinned: () => new collection.List(),
+                        getRecent: () => historyItems
+                     };
+                  });
+                  self._sourceController = { load: () => Promise.resolve(new collection.RecordSet()) };
+
+                  Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(histItems) {
+                     assert.equal(histItems.length, 0);
+                     sandbox.restore();
+                     resolve();
+                  });
+               });
             });
          });
       });
