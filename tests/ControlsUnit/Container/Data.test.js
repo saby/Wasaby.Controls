@@ -4,12 +4,9 @@ define(
       'Types/source',
       'Controls/context',
       'Core/Deferred',
-      'Types/collection',
-      'Application/Initializer',
-      'Application/Env'
-
+      'Types/collection'
    ],
-   function(lists, sourceLib, contexts, Deferred, collection, AppInit, AppEnv) {
+   function(lists, sourceLib, contexts, Deferred, collection) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -39,23 +36,6 @@ define(
             var data = new lists.DataContainer(config);
             data.saveOptions(config);
             return data;
-         };
-
-         var setNewEnvironmentValue = function(value) {
-            let sandbox = sinon.createSandbox();
-
-            if (value) {
-               sandbox.replace(AppInit, 'isInit', () => true);
-               sandbox.replace(AppEnv, 'getStore', () => ({
-                  isNewEnvironment: true
-               }));
-            } else {
-               sandbox.replace(AppInit, 'isInit', () => false);
-            }
-
-            return function resetNewEnvironmentValue() {
-               sandbox.restore();
-            };
          };
 
          it('resolvePrefetchSourceResult', function() {
@@ -128,18 +108,15 @@ define(
          });
 
          it('_beforeMount with receivedState', function() {
-            let data = getDataWithConfig({source: source, keyProperty: 'id'});
-            let newSource = new sourceLib.Memory({
+            var data = getDataWithConfig({source: source, keyProperty: 'id'});
+            var newSource = new sourceLib.Memory({
                keyProperty: 'id',
                data: sourceData
             });
-            let resetCallback = setNewEnvironmentValue(true);
             data._beforeMount({source: newSource, idProperty: 'id'}, {}, sourceData);
 
             assert.deepEqual(data._items, sourceData);
             assert.isTrue(!!data._prefetchSource);
-
-            resetCallback();
          });
 
          it('_beforeMount with receivedState and prefetchProxy', function() {
@@ -154,14 +131,11 @@ define(
                }
             });
             let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
-            let resetCallback = setNewEnvironmentValue(true);
 
             data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
             assert.isTrue(data._prefetchSource.getOriginal() === memory);
             assert.isTrue(data._prefetchSource !== prefetchSource);
             assert.equal(data._prefetchSource._$data.query, sourceData);
-
-            resetCallback();
          });
 
          it('_beforeMount with prefetchProxy', async function() {
