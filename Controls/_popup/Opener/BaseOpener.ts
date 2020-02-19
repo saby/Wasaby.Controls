@@ -532,7 +532,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         // которые на окно попасть не должны.
         const baseConfig = {};
         const usedOptions = [
-            'theme',
             'id',
             'closeByExternalClick',
             'isCompoundTemplate',
@@ -590,9 +589,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             }
         }
 
-        if (baseConfig.theme && baseConfig.theme.indexOf("default") !== -1) {
-            delete baseConfig.theme; // todo fix?
-        }
+        delete baseConfig.theme; // todo fix?
 
         const templateOptions = {};
         CoreMerge(templateOptions, baseConfig.templateOptions || {});
