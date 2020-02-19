@@ -9,6 +9,7 @@ import {parse as parserLib, load} from 'Core/library';
 import {Logger} from 'UI/Utils';
 import { DefaultOpenerFinder } from 'UI/Focus';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import {detection} from 'Env/Env';
 import rk = require('i18n!Controls');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 
@@ -46,6 +47,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     private _loadModulesPromise: Promise<ILoadDependencies|Error>;
     private _openerUpdateCallback: Function;
     private _openPopupTimerId: number;
+
+    // Used in template
+    private _isMobileIOS(): boolean {
+        return detection.isMobileIOS;
+    }
 
     protected _afterMount(): void {
         this._openerUpdateCallback = this._updatePopup.bind(this);
@@ -255,11 +261,12 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();
-        const openOptions: IControlOptions = (opener || cfg?.opener)?._options;
+        // Если задали опцию, берем с опции, иначе с контрола, который открывает
+        const popupOpener = cfg?.opener || opener;
+        const openOptions: IControlOptions = popupOpener?._options;
         if (!BaseOpener.isNewEnvironment()) {
             BaseOpener.getManager(openOptions).then(() => {
                 BaseOpener.getZIndexUtil().addCallback((getZIndex) => {
-                    const popupOpener = opener || cfg.opener;
                     if (popupOpener) {
                         // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
                         cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);

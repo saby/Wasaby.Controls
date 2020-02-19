@@ -22,9 +22,9 @@ var EventRegistrator = Control.extend({
          this._registrar = new Registrar({ register: newOptions.register });
       }
    },
-   _registerIt: function(event, registerType, component, callback) {
+   _registerIt: function(event, registerType, component, callback, config = {}) {
       if (registerType === this._options.register) {
-         this._registrar.register(event, component, callback);
+         this._registrar.register(event, component, callback, config);
       }
    },
    _unRegisterIt: function(event, registerType, component) {

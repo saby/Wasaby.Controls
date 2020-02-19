@@ -15,6 +15,7 @@ import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
+import 'css!theme?Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
    var idx = arrayFindIndex(array, function(op) {
@@ -187,6 +188,10 @@ var CompoundArea = CompoundContainer.extend([
       });
 
       return rebuildDeferred;
+   },
+
+   isPopupCreated(): boolean {
+      return this._isPopupCreated;
    },
 
    getIsStack: function() {
@@ -1470,5 +1475,4 @@ var CompoundArea = CompoundContainer.extend([
       return res;
    }
 });
-CompoundArea._theme = ['Controls/compatiblePopup'];
 export default CompoundArea;
