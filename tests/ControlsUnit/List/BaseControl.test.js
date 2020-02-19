@@ -777,6 +777,23 @@ define([
          assert.isFalse(ctrl._listViewModel.getHasMoreData());
       });
 
+      it('_private.hasMoreData', function() {
+         let hasMoreDataResult = false;
+         const self = {
+            _options: {}
+         };
+         const sourceController = {
+            hasMoreData: () => {
+               return hasMoreDataResult;
+            }
+         };
+         assert.isFalse(lists.BaseControl._private.hasMoreData(self, sourceController));
+         assert.isFalse(lists.BaseControl._private.hasMoreData(self));
+
+         hasMoreDataResult = true;
+         assert.isTrue(lists.BaseControl._private.hasMoreData(self, sourceController));
+      });
+
       it('isPortionedLoad',  () => {
          const baseControl = {
             _options: {}

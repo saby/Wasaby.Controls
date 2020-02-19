@@ -326,7 +326,16 @@ var _private = {
 
     getHasMoreData(self, sourceController, direction, key) {
         const root = key !== undefined ? key : self._root;
-        return sourceController.hasMoreData(direction, root);
+        const rootResult = sourceController.hasMoreData(direction, root);
+        let moreDataResult;
+
+        // support for not multi root navigation
+        if (rootResult !== undefined) {
+            moreDataResult = rootResult;
+        } else {
+            moreDataResult = sourceController.hasMoreData(direction);
+        }
+        return moreDataResult;
     },
 
     reloadItem: function(self, key) {
