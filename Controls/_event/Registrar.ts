@@ -16,7 +16,9 @@ var Registrar = cExtend.extend({
          component: component,
          callback: callback
       };
-      event.stopPropagation();
+      if (!config.listenAll) {
+         event.stopPropagation();
+      }
    },
    unregister: function(event, component) {
       delete this._registry[component.getInstanceId()];
