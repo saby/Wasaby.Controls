@@ -217,7 +217,6 @@ function getItemRealIndex(cfg: GridRowIndexOptions<DisplayItemIndex>): number {
     return cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multiHeaderOffset, cfg.hasColumnScroll);
 }
 
-
 /**
  * Функция takeWhile, для пика элеменотов до условия в отсортированном массиве.
  */
@@ -262,29 +261,29 @@ function getRowsCount(array): number {
 
 /**
  * Функция подсчета максимальной строки в массиве строк.
- * @param {Array} cells Массив строк _headerRows.
+ * @param {Array} headerRows Массив строк _headerRows.
  * @return {Number} Массив Максимальная строка.
  */
-function getHeaderMaxEndCellData(cells: IHeaderCell[][]): {maxRow: number, maxColumn: number} {
+function getHeaderMaxEndCellData(headerRows: IHeaderCell[][]): {maxRow: number, maxColumn: number} {
     const result = {
         maxRow: 0,
         maxColumn: 0
     };
-    const isMultiColumn = cells.length > 1;
-    cells.forEach((cur) => {
-        cur.forEach((c) => {
-            if (isMultiColumn && c.endRow !== undefined && c.endRow > result.maxRow) {
-                result.maxRow = c.endRow;
+    const isMultiColumn = headerRows.length > 1;
+    headerRows.forEach((headerRow) => {
+        headerRow.forEach((cell, i) => {
+            if (isMultiColumn && cell.endRow !== undefined && cell.endRow > result.maxRow) {
+                result.maxRow = cell.endRow;
             }
-            if (c.endColumn !== undefined && c.endColumn > result.maxColumn) {
-                result.maxColumn = c.endColumn;
+            if (cell.endColumn !== undefined && cell.endColumn > result.maxColumn) {
+                result.maxColumn = cell.endColumn;
             }
         });
     });
     // If header isn't multiple we should be careful, because endColumn and endRow are unnecessary
     if (!isMultiColumn) {
         if (!result.maxColumn) {
-            result.maxColumn = cells[0].length + 1;
+            result.maxColumn = headerRows[0].length; // calculating w/o consideration of multiselect column
         }
         result.maxRow = SINGLE_HEADER_MAX_ROW;
     }
@@ -330,23 +329,31 @@ function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMul
     if (hasActionsCell) {
         // For multiple headers we have to calculate at least endColumn here, because it is used
         // by ColumnsScroll ScrollWrapper to get the last column number
-        // If header isn't multiple we shouldn't care about startColumn, endColumn etc
-        headerRows[0] = [...headerRows[0], (isMultiHeader ? getHeaderActionsCellConfig(cells) : {isActionCell: true})];
+        headerRows[0] = [...headerRows[0], getHeaderActionsCellConfig(cells, isMultiHeader)];
     }
     return headerRows;
 }
 
 /**
  * Производит расчёт параметров экшн-ячейки
- * @param cells
+ * @param headerRow
+ * @param isMultiHeader
  * caption: "Код"
  */
-function getHeaderActionsCellConfig(cells: IHeaderCell[]): IHeaderCell {
+function getHeaderActionsCellConfig(headerRow: IHeaderCell[], isMultiHeader: boolean): IHeaderCell {
     let minStartRow = Number.MAX_VALUE;
     let maxEndRow = 0;
     let maxEndColumn = 0;
 
-    cells.forEach((cell) => {
+    // If not isMultiHeader we only need next endColumn
+    if (!isMultiHeader) {
+        return {
+            isActionCell: true,
+            endColumn: headerRow.length + 2
+        };
+    }
+
+    headerRow.forEach((cell) => {
         minStartRow = cell.startRow < minStartRow ? cell.startRow : minStartRow;
         maxEndRow = cell.endRow > maxEndRow ? cell.endRow : maxEndRow;
         maxEndColumn = cell.endColumn > maxEndColumn ? cell.endColumn : maxEndColumn;
