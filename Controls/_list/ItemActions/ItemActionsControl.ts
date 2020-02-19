@@ -55,7 +55,7 @@ var _private = {
             options
         );
 
-        let showed = all.slice();
+        let showed = all;
         if (showed.length > 1) {
             // TODO: any => action type
             showed = showed.filter((action: any) => {
@@ -63,10 +63,7 @@ var _private = {
             });
         }
 
-        const menuButtonVisibility = (self._options.contextMenuConfig && (self._options.contextMenuConfig.footerTemplate
-            || self._options.contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
-
-        if (_private.needActionsMenu(all, menuButtonVisibility)) {
+        if (_private.needActionsMenu(all)) {
             showed.push({
                 icon: 'icon-ExpandDown ' + ACTION_ICON_CLASS,
                 style: 'secondary',
@@ -105,6 +102,9 @@ var _private = {
             } else {
                 let hasChanges = 'none',
                     updateItemActionsResult;
+                if (options.editingConfig && options.editingConfig.item) {
+                    hasChanges = _private.updateItemActions(self, options.editingConfig.item, options);
+                }
                 for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                     var
                         itemData = options.listModel.getCurrent(),
@@ -129,7 +129,7 @@ var _private = {
         _private.updateActions(self, newOptions);
     },
 
-    needActionsMenu: function(actions, menuButtonVisibility?) {
+    needActionsMenu: function(actions) {
         var
             hasActionInMenu = false;
 
@@ -140,7 +140,7 @@ var _private = {
             }
         });
 
-        return hasActionInMenu || menuButtonVisibility === 'visible';
+        return hasActionInMenu;
     },
 
     getAllChildren(

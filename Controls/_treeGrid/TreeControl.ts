@@ -269,7 +269,7 @@ var _private = {
             if (viewModelRoot !== root) {
                 viewModel.setRoot(root);
             }
-            if (isDeepReload && modelExpandedItems.length) {
+            if (isDeepReload && modelExpandedItems.length && loadedList) {
                 const sourceController = baseControl.getSourceController();
                 const hasMore = {};
                 const expandedItems = modelExpandedItems.slice();
@@ -322,6 +322,20 @@ var _private = {
         if (cfg.parentProperty !== undefined) {
             filter[cfg.parentProperty] = self._root;
         }
+    },
+
+    getHasMoreData(self, sourceController, direction, key) {
+        const root = key !== undefined ? key : self._root;
+        const rootResult = sourceController.hasMoreData(direction, root);
+        let moreDataResult;
+
+        // support for not multi root navigation
+        if (rootResult !== undefined) {
+            moreDataResult = rootResult;
+        } else {
+            moreDataResult = sourceController.hasMoreData(direction);
+        }
+        return moreDataResult;
     },
 
     reloadItem: function(self, key) {
@@ -428,6 +442,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
+    _getHasMoreData: null,
     _expandOnDragData: null,
     _updateExpandedItemsAfterReload: false,
     _notifyHandler: tmplNotify,
@@ -443,6 +458,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
         this._beforeLoadToDirectionCallback = _private.beforeLoadToDirectionCallback.bind(null, this);
+        this._getHasMoreData = _private.getHasMoreData.bind(null, this);
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
     _afterMount: function() {
