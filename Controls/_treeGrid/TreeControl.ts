@@ -26,7 +26,15 @@ type TNodeSourceControllers = Map<string, SourceController>;
 var _private = {
     clearNodeSourceController(self, node: string|number): void {
         const nodeSourceControllers = _private.getNodesSourceControllers(self);
-        nodeSourceControllers.get(node).destroy();
+        let nodeSourceController = nodeSourceControllers.get(node);
+
+        // Для ие необходим нормальный полифил, Map из shim не подходит
+        // теряются типы ключей, ключ всегда приходит строкой
+        // https://online.sbis.ru/opendoc.html?guid=fdebafad-799b-4d49-a9b9-ff718e57011d
+        if (!nodeSourceController) {
+            nodeSourceController = nodeSourceControllers.get(Number(node));
+        }
+        nodeSourceController.destroy();
         nodeSourceControllers.delete(node);
     },
     clearNodesSourceControllers(self): void {
