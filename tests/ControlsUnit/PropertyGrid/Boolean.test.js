@@ -12,28 +12,18 @@ define([
 
       describe('_valueChanged', function() {
          it('force update', () => {
-            boolean._valueChanged({}, 'test1');
-            assert.equal(boolean.value, 'test1');
+            boolean._valueChanged({}, false);
+            assert.equal(boolean.value, false);
          });
       });
       describe('_beforeUpdate', function() {
          it('new value', () => {
-            var changeNotified = false;
-            boolean._notify = function () {
-               changeNotified = true;
-            };
-            boolean._beforeUpdate({ propertyValue: 'test2' });
-            assert.equal(boolean.value, 'test2');
-            assert.isTrue(changeNotified);
+            boolean._beforeUpdate({ propertyValue: true });
+            assert.equal(boolean.value, true);
          });
-         it('old value', () => {
-            var changeNotified = false;
-            boolean._notify = function () {
-               changeNotified = true;
-            };
-            boolean._beforeUpdate({ propertyValue: 'test2' });
-            assert.equal(boolean.value, 'test2');
-            assert.isFalse(changeNotified);
+         it('undefined value', () => {
+            boolean._beforeUpdate({ propertyValue: undefined });
+            assert.equal(boolean.value, undefined);
          });
       });
    });
