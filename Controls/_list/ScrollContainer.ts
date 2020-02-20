@@ -128,17 +128,11 @@ export default class ScrollContainer extends Control<IOptions> {
         this.__mounted = true;
         this.viewSize = this._container.clientHeight;
 
-        if (this._options.virtualScrolling) {
-            this.virtualScroll.itemsChanged = false;
-        }
-
         if (this._options.observeScroll) {
             this.registerScroll();
         }
 
-        if (this._options.activeElement) {
-            this.scrollToItem(this._options.activeElement, false, true);
-        }
+        this.afterRenderHandler();
     }
 
     protected _beforeUpdate(options: IOptions): void {
@@ -166,6 +160,30 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     protected _afterRender(): void {
+        this.afterRenderHandler();
+    }
+
+    protected _afterUpdate(): void {
+        if (this._options.observeScroll) {
+            this.registerScroll();
+        } else {
+            this.scrollRegistered = false;
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        clearTimeout(this.checkTriggerVisibilityTimeout);
+    }
+
+    protected itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
+        if (this._options.virtualScrolling) {
+            this.virtualScroll.itemsContainer = itemsContainer;
+        }
+
+        this.itemsContainer = itemsContainer;
+    }
+
+    private afterRenderHandler() {
         if (this.virtualScroll && this.virtualScroll.itemsContainer && this.virtualScroll.itemsChanged) {
             this.virtualScroll.recalcItemsHeights();
             this.virtualScroll.itemsChanged = false;
@@ -199,26 +217,6 @@ export default class ScrollContainer extends Control<IOptions> {
             this.savedScrollDirection = null;
             this.checkTriggerVisibilityWithTimeout();
         }
-    }
-
-    protected _afterUpdate(): void {
-        if (this._options.observeScroll) {
-            this.registerScroll();
-        } else {
-            this.scrollRegistered = false;
-        }
-    }
-
-    protected _beforeUnmount(): void {
-        clearTimeout(this.checkTriggerVisibilityTimeout);
-    }
-
-    protected itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
-        if (this._options.virtualScrolling) {
-            this.virtualScroll.itemsContainer = itemsContainer;
-        }
-
-        this.itemsContainer = itemsContainer;
     }
 
     /**
@@ -389,6 +387,9 @@ export default class ScrollContainer extends Control<IOptions> {
 
             if (typeof initialKey !== 'undefined') {
                 initialIndex = this.viewModel.getIndexByKey(initialKey);
+                this.afterRenderCallback = () => {
+                    this.scrollToItem(initialKey, false, true);
+                };
             }
 
             this.virtualScroll.itemsChanged = true;
