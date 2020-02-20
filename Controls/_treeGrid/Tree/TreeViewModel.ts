@@ -270,6 +270,7 @@ var
             if (!current.nodeProperty || !current.parentProperty) {
                 return;
             }
+            const theme = self._options.theme;
             const isRootChild = (item) => item.get(current.parentProperty) === null;
             const getChildCount = (dispItem) => self._display.getChildren(dispItem).getCount();
             const hasChildren = (dispItem) => !!getChildCount(dispItem);
@@ -282,6 +283,15 @@ var
                 template?: TemplateFunction,
                 hasMoreStorage?: boolean
             }) => {
+                const getFooterClasses = () => {
+                    let classes = `controls-TreeGrid__nodeFooterContent controls-TreeGrid__nodeFooterContent_theme-${theme} ` +
+                        `controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
+                    if (!current.hasMultiSelect) {
+                        classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
+                    }
+                    return classes;
+                };
+
                 current.nodeFooters.push({
                     key: params.key,
                     item: params.dispItem.getContents(),
@@ -290,6 +300,7 @@ var
                     getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                     multiSelectVisibility: current.multiSelectVisibility,
                     template: params.template,
+                    classes: getFooterClasses(),
                     hasMoreStorage: !!params.hasMoreStorage
                 });
             };
