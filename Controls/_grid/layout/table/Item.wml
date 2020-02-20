@@ -52,6 +52,7 @@
 <ws:template name="tableTD">
     <td colspan="{{ itemData.getColspanFor(colspanFor) }}"
         style="{{ currentColumn.tableCellStyles }}"
+        class="{{currentColumn.column.valign ?' controls-Grid__table-layout__cell_valign_' + currentColumn.column.valign}}"
         attr:key="{{ itemData.getCurrentColumnKey() }}{{ keyPostfix ? ('_' + keyPostfix) : '' }}">
         <ws:partial template="{{content}}" />
     </td>
