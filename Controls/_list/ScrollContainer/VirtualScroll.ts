@@ -60,8 +60,10 @@ export default class VirtualScrollController {
     private _itemsContainer: HTMLElement;
 
     set itemsContainer(container: HTMLElement) {
-        this._itemsContainer = container;
-        this.recalcItemsHeights();
+        if (container) {
+            this._itemsContainer = container;
+            this.recalcItemsHeights();
+        }
     }
 
     get itemsContainer(): HTMLElement {

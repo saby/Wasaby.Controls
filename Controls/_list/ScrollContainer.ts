@@ -269,6 +269,7 @@ export default class ScrollContainer extends Control<IOptions> {
             useNewModel: options.useNewModel,
             ...this.getVirtualScrollConfig(options)
         });
+        this.virtualScroll.itemsContainer = this.itemsContainer;
         this.virtualScroll.triggerOffset = this.triggerOffset;
         this.reset(this.viewModel.getCount(), options.activeElement);
     }
