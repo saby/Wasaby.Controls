@@ -36,8 +36,7 @@
                         itemData="{{currentColumn}}"/>
         </ws:else>
     </ws:else>
-    <!-- В table-layout операции над записью всегда выводятся в последней ячейке, даже при скролле колонок -->
-    <ws:if data="{{itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+    <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
         <ws:partial template="itemActionsTemplateChooser"/>
     </ws:if>
 </ws:template>
@@ -52,7 +51,13 @@
 <ws:template name="tableTD">
     <td colspan="{{ itemData.getColspanFor(colspanFor) }}"
         style="{{ currentColumn.tableCellStyles }}"
-        class="{{currentColumn.column.valign ?' controls-Grid__table-layout__cell_valign_' + currentColumn.column.valign}}"
+        attr:class="{{currentColumn.cellClasses}} js-controls-SwipeControl__actionsContainer
+                    {{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
+                    {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
+                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
+                    {{currentColumn.column.valign ?' controls-Grid__table-layout__cell_valign_' + currentColumn.column.valign}}
+                    {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
+                    {{className || ''}}"
         attr:key="{{ itemData.getCurrentColumnKey() }}{{ keyPostfix ? ('_' + keyPostfix) : '' }}">
         <ws:partial template="{{content}}" />
     </td>
@@ -78,18 +83,21 @@
             <ws:partial template="columnContentWrapper"/>
         </ws:partial>
     </ws:else>
+
+    <!-- В table-layout операции над записью всегда выводятся в последней ячейке, даже при скролле колонок -->
+    <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+        <ws:partial template="tableTD" keyPostfix="_actions"
+                    attr:class="controls-Grid-table-layout__itemActions__container"
+                    attr:style="width: 0; min-width: 0; max-width: 0; padding: 0px;">
+            <ws:partial template="itemActionsTemplateChooser"/>
+        </ws:partial>
+    </ws:if>
+
 </ws:template>
 
 <tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
            {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
     <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
-        <ws:partial template="colTpl"
-                    currentColumn="{{itemData.getCurrentColumn()}}"
-                    attr:class="{{itemData.getCurrentColumn().cellClasses}} js-controls-SwipeControl__actionsContainer
-                        {{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
-                        {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-                        {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
-                        {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
-                        {{className || ''}}"/>
+        <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
     </ws:for>
 </tr>
