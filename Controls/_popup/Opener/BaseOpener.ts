@@ -62,6 +62,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     protected _beforeUnmount(): void {
+        this._openerUpdateCallback._isNeedless = true;
         this._notify('unregisterOpenerUpdateCallback', [this._openerUpdateCallback], {bubbling: true});
         this._toggleIndicator(false);
         if (this._options.closePopupBeforeUnmount) {
