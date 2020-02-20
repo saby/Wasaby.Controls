@@ -64,6 +64,7 @@ const
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
+const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 const LIMIT_DRAG_SELECTION = 100;
@@ -312,9 +313,14 @@ var _private = {
     },
 
     hasMoreData(self, sourceController, direction): boolean {
-        return self._options.getHasMoreData ?
-            self._options.getHasMoreData(sourceController, direction) :
-            sourceController && sourceController.hasMoreData(direction);
+        let moreDataResult = false;
+
+        if (sourceController) {
+            moreDataResult = self._options.getHasMoreData ?
+                self._options.getHasMoreData(sourceController, direction) :
+                sourceController.hasMoreData(direction);
+        }
+        return moreDataResult;
     },
 
     hasMoreDataInAnyDirection(self, sourceController): boolean {
@@ -526,7 +532,6 @@ var _private = {
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
             beforeAddItems(addedItems);
-            self._saveAndRestoreScrollPosition = 'up';
             if (self._options.useNewModel) {
                 self._listViewModel.getCollection().prepend(addedItems);
             } else {
@@ -866,7 +871,6 @@ var _private = {
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
-            self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
         }
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
@@ -874,6 +878,7 @@ var _private = {
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
                     self._showLoadingIndicatorImage = true;
+                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
                     self._notify('controlResize');
                 }
             }, 2000);
@@ -1561,6 +1566,14 @@ var _private = {
     getListTopOffset(self): number {
         const view = self._children && self._children.listView;
         let height = 0;
+
+        /* Получаем расстояние от начала скроллконтейнера, до начала списка, т.к.список может лежать не в "личном" контейнере. */
+        if (self._isMounted) {
+            const viewRect = (self._container[0] || self._container).getBoundingClientRect();
+            if (self._isScrollShown || (self._needScrollCalculation && viewRect && self._viewPortRect)) {
+                height = viewRect.y + self._scrollTop - self._viewPortRect.top;
+            }
+        }
         if (view && view.getHeaderHeight) {
             height += view.getHeaderHeight();
         }
@@ -2112,13 +2125,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforeRender(): void {
-        if (this._saveAndRestoreScrollPosition) {
-            /**
-             * This event should bubble, because there can be anything between Scroll/Container and the list,
-             * and we can't force everyone to manually bubble it.
-             */
-            this._notify('saveScrollPosition', [], { bubbling: true });
-        }
         // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
         // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
         // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
