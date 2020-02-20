@@ -43,5 +43,4 @@ export default interface IBaseItemTemplateOptions {
     * @default controls-itemActionsV_position_bottomRight
     */
    itemActionsClass?: string;
-   contentTemplate?: string;
 }
