@@ -634,21 +634,16 @@ define(
             });
          });
 
-         it('_private::loadItems', (done) => {
-            let dropdownController = getDropdownController(config);
-            var hasErrBack = false;
-            config.dataLoadErrback = function() {
+         it('_private::loadItems', () => {
+            let hasErrBack = false;
+            const controllerConfig = Clone(config);
+            controllerConfig.dataLoadErrback = function() {
                hasErrBack = true;
             };
-            config.source.query = function() {
-               var def = new Deferred();
-               def.errback();
-               return def;
-            }
-            dropdown._Controller._private.loadItems(dropdownController, config).addCallback(() => {
-               assert.isTrue(hasErrBack);
-               done();
-            });
+            let dropdownController = getDropdownController(controllerConfig);
+            dropdown._Controller._private.loadItems(dropdownController, controllerConfig);
+            dropdownController._beforeUnmount();
+            assert.isTrue(hasErrBack);
          });
 
          it('_private::getItemsTemplates', () => {
