@@ -256,10 +256,9 @@ var ItemActionsControl = Control.extend({
     },
     needShowTitle(action: IItemAction): boolean {
         return !!action.title && (action.displayMode === actionDisplayMode.TITLE ||
-                                  action.displayMode === actionDisplayMode.BOTH || (
-                                     action.displayMode === actionDisplayMode.AUTO ||
-                                     !action.displayMode) &&
-                                     !action.icon);
+                                  action.displayMode === actionDisplayMode.BOTH ||
+                                 (action.displayMode === actionDisplayMode.AUTO ||
+                                     !action.displayMode) && !action.icon);
     },
     getTooltip(action: IItemAction): string|undefined {
         return action.tooltip || action.title;
