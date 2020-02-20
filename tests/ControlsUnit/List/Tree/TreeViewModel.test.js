@@ -946,6 +946,17 @@ define([
       describe('setNodeFooterIfNeed', function() {
          let model;
 
+         /*
+            123
+               234
+                  1 (лист)
+                  2 (лист)
+                  3 (пустая папка)
+            345 (лист)
+            456 (лист)
+            567 (лист)
+         */
+
          beforeEach(function() {
             model = new treeGrid.TreeViewModel(cfg);
          });
@@ -956,6 +967,14 @@ define([
             itemData.parentProperty = undefined;
             treeGrid.TreeViewModel._private.setNodeFooterIfNeed(model, itemData);
             assert.deepEqual(itemData.nodeFooters, []);
+         });
+
+         it('try to get node footers for item that not exists in record set', function() {
+            model.setExpandedItems(['123', '234']);
+            const itemModel = model.getItemById('234', 'id');
+            const itemData = model.getItemDataByItem(itemModel);
+            model._items.remove(itemModel.getContents());
+            treeGrid.TreeViewModel._private.setNodeFooterIfNeed(model, itemData);
          });
       });
    });
