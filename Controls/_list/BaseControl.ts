@@ -327,8 +327,8 @@ var _private = {
                _private.hasMoreData(self, sourceController, 'down');
     },
 
-    scrollToItem: function(self, key) {
-        return self._children.scrollController.scrollToItem(key);
+    scrollToItem: function(self, key, toBottom, force) {
+        return self._children.scrollController.scrollToItem(key, toBottom, force);
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
@@ -2052,8 +2052,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
     },
 
-    scrollToItem(key: string|number): void {
-        return _private.scrollToItem(this, key);
+    scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
+        return _private.scrollToItem(this, key, toBottom, force);
     },
 
     _beforeUnmount: function() {

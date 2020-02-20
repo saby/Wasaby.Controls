@@ -21,13 +21,14 @@ interface IDeprecatedOptions {
     virtualPageSize: number;
     virtualSegmentSize: number;
 }
+
 interface IOptions extends IControlOptions, IDeprecatedOptions {
     virtualScrollConfig: IVirtualScrollConfig;
     viewModel: Collection<entityRecord>;
     useNewModel: boolean;
     virtualScrolling: boolean;
     observeScroll: boolean;
-    activeElement: string|number;
+    activeElement: string | number;
 }
 
 interface IScrollParams {
@@ -136,7 +137,7 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         if (this._options.activeElement) {
-            this.scrollToItem(this._options.activeElement);
+            this.scrollToItem(this._options.activeElement, false, true);
         }
     }
 
@@ -146,7 +147,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
             if (options.activeElement) {
                 this.afterRenderCallback = () => {
-                    this.scrollToItem(options.activeElement);
+                    this.scrollToItem(options.activeElement, false, true);
                 };
             }
         }
@@ -335,37 +336,44 @@ export default class ScrollContainer extends Control<IOptions> {
     /**
      * Функция подскролла к элементу
      * @param {string | number} key
+     * @param {boolean} toBottom
+     * @param {boolean} force
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
-    scrollToItem(key: string|number): Promise<void> {
-        return new Promise((resolve, reject) => {
+    scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false): Promise<void> {
+        return new Promise((resolve) => {
             const itemIndex = this._options.viewModel.getIndexByKey(key);
 
             if (itemIndex !== -1) {
-                if (this._options.virtualScrolling) {
-                    const callback = () => {
-                        this.scrollToPosition(this.virtualScroll.getItemOffset(itemIndex));
-                        resolve();
-                    };
-                    if (this.virtualScroll.canScrollToItem(itemIndex)) {
-                        callback();
+                const callback = () => {
+                    const container = this.getItemContainerByIndex(itemIndex);
+
+                    if (container) {
+                        this.scrollToElement(container, toBottom, force);
+                    }
+
+                    resolve();
+                };
+
+                if (!this._options.virtualScrolling || this.virtualScroll.canScrollToItem(itemIndex, toBottom, force)) {
+                    callback();
+                } else if (force) {
+                    // Во время отрисовки нельзя менять range, так как мы уже никак на него не повлияем, поэтому
+                    // перерисуем в следующий цикл синхронизации
+                    if (this.virtualScroll.itemsChanged) {
+                        this.afterRenderCallback = () => {
+                            this.scrollToItem(key, toBottom, force);
+                        };
                     } else {
                         this.virtualScroll.recalcRangeFromIndex(itemIndex);
                         this.afterRenderCallback = callback;
                     }
                 } else {
-                    const container = this.itemsContainer.children[itemIndex];
-
-                    if (container) {
-                        this.scrollToElement(container as HTMLElement);
-                        resolve();
-                    } else {
-                        reject();
-                    }
+                    resolve();
                 }
             } else {
-                reject();
+                resolve();
             }
         });
     }
@@ -375,7 +383,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param {number} itemsCount
      * @param {string|number} initialKey
      */
-    reset(itemsCount: number, initialKey?: string|number): void {
+    reset(itemsCount: number, initialKey?: string | number): void {
         if (this.virtualScroll) {
             let initialIndex: number;
 
@@ -394,6 +402,14 @@ export default class ScrollContainer extends Control<IOptions> {
             this.checkTriggerVisibility();
             clearTimeout(this.checkTriggerVisibilityTimeout);
         }, TRIGGER_VISIBILITY_DELAY);
+    }
+
+    private getItemContainerByIndex(itemIndex: number): HTMLElement {
+        if (this._options.virtualScrolling) {
+            return this.virtualScroll.getItemContainerByIndex(itemIndex);
+        } else {
+            return this.itemsContainer.children[itemIndex] as HTMLElement;
+        }
     }
 
     private getVirtualScrollConfig(options: IOptions): IVirtualScrollConfig {
@@ -436,16 +452,19 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private scrollToPosition(position: number): void {
         this.fakeScroll = true;
-        this._notify('restoreScrollPosition', [ position ], {bubbling: true});
+        this._notify('restoreScrollPosition', [position], {bubbling: true});
         this.fakeScroll = false;
     }
 
     /**
      * Подскролливает к переданному HTML-элементу
      * @param {HTMLElement} container
+     * @param toBottom
+     * @param force
      */
-    private scrollToElement(container: HTMLElement): void {
-        scrollToElement(container, false);
+    private scrollToElement(container: HTMLElement, toBottom: boolean, force: boolean): void {
+        this.fakeScroll = true;
+        scrollToElement(container, toBottom, force);
     }
 
     private updateViewport(viewportHeight: number, viewportRect: DOMRect, shouldNotify: boolean = true): void {
@@ -469,11 +488,14 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         if (this._options.virtualScrolling) {
+
             this.virtualScroll.scrollTop = params.scrollTop;
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
+            if (this.fakeScroll) {
+                this.fakeScroll = false;
+            } else if (!this.afterRenderCallback && !this.fakeScroll && !this.virtualScroll.itemsChanged) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
                 if (typeof activeIndex !== 'undefined') {
