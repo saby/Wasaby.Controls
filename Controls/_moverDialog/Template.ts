@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_moverDialog/Template/Template');
-import 'css!theme?Controls/_moverDialog/Template/Template';
+import 'css!theme?Controls/moverDialog';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TColumns} from 'Controls/grid';

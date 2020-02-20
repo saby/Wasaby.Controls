@@ -102,6 +102,9 @@ var _private = {
             } else {
                 let hasChanges = 'none',
                     updateItemActionsResult;
+                if (options.editingConfig && options.editingConfig.item) {
+                    hasChanges = _private.updateItemActions(self, options.editingConfig.item, options);
+                }
                 for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                     var
                         itemData = options.listModel.getCurrent(),

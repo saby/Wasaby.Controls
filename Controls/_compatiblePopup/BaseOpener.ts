@@ -322,17 +322,17 @@ const BaseOpener = {
          }
       }
 
-      if (cfg.hasOwnProperty('direction')) {
+      if (cfg.hasOwnProperty('direction') && typeof cfg.direction !== 'object') {
          const newDirection = {
             horizontal: 'right',
             vertical: 'bottom'
          };
          if (cfg.direction === 'right' || cfg.direction === 'left') {
             if (typeof cfg.horizontalAlign !== 'object') {
-               newDirection.horizontal = cfg.direction;
+               newDirection.horizontal = cfg.direction && cfg.direction.horizontal || cfg.direction;
             }
          } else if (typeof cfg.verticalAlign !== 'object') {
-            newDirection.vertical = cfg.direction;
+            newDirection.vertical = cfg.direction && cfg.direction.vertical || cfg.direction;
 
             // magic of old floatarea
             if (typeof cfg.horizontalAlign !== 'object' && cfg.side !== 'center') {

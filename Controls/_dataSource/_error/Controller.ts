@@ -1,23 +1,25 @@
 /// <amd-module name="Controls/_dataSource/_error/Controller" />
-import { Controller as ParkingController } from 'Controls/_dataSource/parking';
+import { Controller as ParkingController, loadHandlers } from 'Controls/_dataSource/parking';
 import {
     Handler,
     HandlerConfig,
     ViewConfig
-} from 'Controls/_dataSource/_error/Handler';
-import Mode from 'Controls/_dataSource/_error/Mode';
+} from './Handler';
+import Mode from './Mode';
 import { fetch } from 'Browser/Transport';
 import { IVersionable } from 'Types/entity';
+import { constants } from 'Env/Env';
+import { Confirmation } from 'Controls/popup';
 
 const { Errors } = fetch;
 const { Abort } = Errors;
 
 export type Config = {
-    handlers?: Array<Handler>
-}
+    handlers?: Handler[]
+};
 
 /// region helpers
-let getIVersion = (): IVersionable => {
+const getIVersion = (): IVersionable => {
     const id: number = Math.random();
     /*
      * неоходимо для прохождения dirty-checking при схранении объекта на инстансе компонента,
@@ -29,30 +31,30 @@ let getIVersion = (): IVersionable => {
         getVersion(): number {
             return id;
         }
-    }
+    };
 };
 
-let isNeedHandle = (error: Error): boolean => {
+const isNeedHandle = (error: Error): boolean => {
     return !(
         (error instanceof Abort) ||
         // @ts-ignore
         error.processed ||
         // @ts-ignore
         error.canceled
-    )
+    );
 };
 
-let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> => {
+const prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> => {
     if (config instanceof Error) {
         return {
-            error: <T>config,
+            error: config,
             mode: Mode.dialog
-        }
+        };
     }
     return {
         mode: Mode.dialog,
         ...config
-    }
+    };
 };
 
 /// endregion helpers
@@ -90,13 +92,16 @@ let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): Han
  */
 export default class ErrorController {
     private __controller: ParkingController;
+
     constructor(config: Config) {
-        this.__controller = new ParkingController({
-            configField: 'errorHandlers',
-            ...config
-        });
+        // Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок
+        const configField = 'errorHandlers';
+        // Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения
+        loadHandlers(configField);
+        this.__controller = new ParkingController({ configField, ...config });
     }
-    destroy() {
+
+    destroy(): void {
         this.__controller.destroy();
         delete this.__controller;
     }
@@ -134,7 +139,7 @@ export default class ErrorController {
      * @return {void | Controls/_dataSource/_error/ViewConfig} Данные для отображения шаблона
      */
     process<T extends Error = Error>(config: HandlerConfig<T> | T): Promise<ViewConfig | void> {
-        let _config = prepareConfig<T>(config);
+        const _config = prepareConfig<T>(config);
         if (!isNeedHandle(_config.error)) {
             return Promise.resolve();
         }
@@ -157,8 +162,37 @@ export default class ErrorController {
         const message = config.error.message;
         const style = 'danger';
         const type = 'ok';
-        // @ts-ignore
-        import('Controls/popup').then((popup) => { popup.Confirmation.openPopup({ type, style, message }); });
-    }
 
+        importConfirmation().then((Confirmation) => {
+            Confirmation.openPopup({
+                type,
+                style,
+                message
+            });
+        }, () => {
+            if (constants.isBrowserPlatform) {
+                alert(message);
+            }
+        });
+    }
+}
+
+/**
+ * Загрузить всё необходимое для показа диалога.
+ * @returns {Promise} Промис с Controls/popup:Confirmation.
+ * Если что-то не загрузилось, то промис завершится с ошибкой.
+ */
+function importConfirmation(): Promise<typeof Confirmation> {
+    // Предварительно загрузить темизированные стили для диалога.
+    // Без этого стили загружаются только в момент показа диалога.
+    // Но когда потребуется показать сообщение о потере соединения, стили уже не смогут загрузиться.
+    const confirmationModule = 'Controls/popupConfirmation';
+    const importThemedStyles = import('Core/Themes/ThemesControllerNew')
+        .then((Theme) => Theme.getInstance().loadCssWithAppTheme(confirmationModule));
+
+    return Promise.all([
+        import('Controls/popup'),
+        import(confirmationModule),
+        importThemedStyles
+    ]).then(([popup]) => popup.Confirmation);
 }

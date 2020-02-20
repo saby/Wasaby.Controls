@@ -5,16 +5,18 @@ var MOVE_DIRECTION = {
     'DOWN': 'down'
 };
 
-var cachedDisplay;
+let cachedDisplay;
+let cachedVersion;
 
 function getDisplay(items, parentProperty, nodeProperty, root) {
    //Кешируем проекцию, т.к. её создание тежеловесная операция, а данный метод будет вызываться для каждой записи в списке.
-   if (!cachedDisplay || cachedDisplay.getCollection() !== items || cachedDisplay.getCollection().getVersion() !== items.getVersion()) {
+   if (!cachedDisplay || cachedDisplay.getCollection() !== items || cachedVersion !== items.getVersion()) {
       cachedDisplay = TreeItemsUtil.getDefaultDisplayTree(items, {
          keyProperty: items.getKeyProperty(),
          parentProperty: parentProperty,
          nodeProperty: nodeProperty
       }, {});
+      cachedVersion = items.getVersion();
    }
    if (root !== undefined) {
        cachedDisplay.setRoot(root);
@@ -78,13 +80,15 @@ var helpers = {
      */
 
     /**
-     * Хелпер для отображения панели операций над записью наверху/внизу.
-     * @function Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
-     * @param {MoveDirection} direction
+     * Хелпер для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ панели опций записи} наверху/внизу.
+     * @function 
+     * @name Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
+     * @param {MoveDirection} direction Направление.
      * @param {Types/entity:Record} item Экземпляр элемента, действие которого обрабатывается.
      * @param {Types/collection:RecordSet} items Список всех элементов.
      * @param {Controls/_interface/IHierarchy#parentProperty} parentProperty Имя поля, содержащего сведения о родительском узле.
      * @param {Controls/_interface/IHierarchy#nodeProperty} nodeProperty Имя поля, описывающего тип узла (список, узел, скрытый узел).
+     * @example
      * В следующем примере разрешается перемещать только элементы, находящиеся в одном родительском элементе.
      * JS:
      * <pre>
@@ -113,11 +117,11 @@ var helpers = {
      * }
      * </pre>
      */
-    
+
 
     /*
      * Helper to display up/down item actions.
-     * @function 
+     * @function
      * @name Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
      * @param {MoveDirection} direction
      * @param {Types/entity:Record} item Instance of the item whose action is being processed.

@@ -27,6 +27,7 @@ import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
+import { shouldAddStickyLadderCell } from 'Controls/_grid/utils/GridLadderUtil';
 
 var
     _private = {
@@ -41,8 +42,10 @@ var
         },
 
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
-            // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             let columnsWidths: string[] = hasMultiSelect ? ['max-content'] : [];
+            if (shouldAddStickyLadderCell(columns, self._options.stickyColumn, self._options.listModel.getDragItemData())) {
+                columnsWidths = columnsWidths.concat(['0px']);
+            }
             columnsWidths = columnsWidths.concat(columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth())));
             if (shouldAddActionsCell({
                 hasColumnScroll: self._options.columnScroll,
@@ -162,6 +165,10 @@ var
             }
         },
 
+        /**
+         * Производит расчёт CSS классов для футера grid'а
+         * @private
+         */
         _calcFooterPaddingClass(): string {
             let leftPadding;
             if (this._options.multiSelectVisibility !== 'hidden') {
@@ -169,11 +176,15 @@ var
             } else {
                 leftPadding = (this._options.itemPadding && this._options.itemPadding.left || 'default').toLowerCase();
             }
-
-            return CssClassList
+            let classList = CssClassList
                 .add('controls-GridView__footer')
-                .add(`controls-GridView__footer__paddingLeft_${leftPadding}_theme-${this._options.theme}`)
-                .compile();
+                .add(`controls-GridView__footer__paddingLeft_${leftPadding}_theme-${this._options.theme}`);
+            // Для предотвращения скролла одной записи в таблице с экшнами.
+            // _options._needBottomPadding почему-то иногда не работает.
+            if (this._options.itemActionsPosition === 'outside' && !this._options._needBottomPadding) {
+                classList = classList.add('controls-GridView__footer__itemActionsV_outside');
+            }
+            return classList.compile();
         },
 
         resizeNotifyOnListChanged(): void {
@@ -221,6 +232,9 @@ var
                     .add('controls-Grid_table-layout')
                     .add('controls-Grid_table-layout_fixed', isFixedLayout)
                     .add('controls-Grid_table-layout_auto', !isFixedLayout);
+            }
+            if (this._listModel.getDragItemData()) {
+                classes.add('controls-Grid_dragging_process');
             }
             return classes.compile();
         },

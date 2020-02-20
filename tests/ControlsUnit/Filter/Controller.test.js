@@ -610,22 +610,35 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             id: 'testId3',
             value: 'testValue',
             resetValue: ''
+         }, {
+            id: 'testId4',
+            value: 'testValue',
+            resetValue: '',
+            textValue: 'textValue4'
          }];
          var historyItems = Filter._private.prepareHistoryItems(fbItems);
          assert.deepEqual(historyItems, [{
             id: 'testId2',
             value: '',
-            textValue: '',
+            textValue: ''
          }, {
-            id: 'testId3',
+            id: 'testId3'
+         }, {
+            id: 'testId4',
+            value: 'testValue',
+            textValue: 'textValue4'
          }]);
          historyItems = Filter._private.prepareHistoryItems(fbItems, fastFilterItems);
          assert.deepEqual(historyItems, [{
             id: 'testId2',
             value: '',
-            textValue: 'test2',
+            textValue: ''
          }, {
-            id: 'testId3',
+            id: 'testId3'
+         }, {
+            id: 'testId4',
+            value: 'testValue',
+            textValue: 'textValue4'
          }]);
 
          var saveToHistoryItems = [{
@@ -771,21 +784,43 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          }]);
       });
 
-      it('_private.getHistoryItems', function(done) {
-         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(history) {
-            assert.deepEqual(history.length, 15);
-
-            var self = {
-               _sourceController: {
-                  load: function() {
-                     return Deferred.fail();
+      it('_private.getHistoryItems', function() {
+         const self = {};
+         const sandbox = sinon.createSandbox();
+         const historyItems = new collection.List({
+            items: [
+               new entity.Model({
+                  rawData: {
+                     ObjectData: null
                   }
-               }
-            };
+               })
+            ]
+         });
 
-            Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(hItems) {
-               assert.equal(hItems.length, 0);
-               done();
+         return new Promise(function(resolve) {
+            Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(history) {
+               assert.deepEqual(history.length, 15);
+
+               self._sourceController = { load: () => Deferred.fail() };
+               Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(hItems) {
+                  assert.equal(hItems.length, 0);
+
+                  sandbox.replace(HistoryUtils, 'getHistorySource', () => {
+                     return {
+                        getItems: () => historyItems,
+                        getDataObject: () => null,
+                        getPinned: () => new collection.List(),
+                        getRecent: () => historyItems
+                     };
+                  });
+                  self._sourceController = { load: () => Promise.resolve(new collection.RecordSet()) };
+
+                  Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(histItems) {
+                     assert.equal(histItems.length, 0);
+                     sandbox.restore();
+                     resolve();
+                  });
+               });
             });
          });
       });
@@ -908,9 +943,12 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          let fastFilterItems = [],
             filterButtonItems = [{name: 'testName', value: 'testValue'}];
          Filter.updateFilterHistory({historyId: 'TEST_HISTORY_ID', filterButtonItems: filterButtonItems, fastFilterItems: fastFilterItems});
-         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
-            assert.deepEqual(items, [{name: 'testName', value: 'testValue'}]);
-            done();
+         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID')
+            .addCallback(function(items) {
+               assert.deepEqual(items, [{name: 'testName', value: 'testValue'}]);
+               done();
+            }).addErrback((error) => {
+            throw new Error(error);
          });
 
          let errorCathed = false;

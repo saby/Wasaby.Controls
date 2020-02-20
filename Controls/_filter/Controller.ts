@@ -97,7 +97,11 @@ const _private = {
             }
 
             if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
-                minimizedItem.textValue = getPropValue(item, 'textValue');
+                if (isEqual(value, getPropValue(item, 'resetValue'))) {
+                    minimizedItem.textValue = '';
+                } else {
+                    minimizedItem.textValue = getPropValue(item, 'textValue');
+                }
             }
 
             if (getPropValue(item, 'id')) {
@@ -137,13 +141,16 @@ const _private = {
 
                self._sourceController.load({ $_history: true })
                   .addCallback(function(res) {
+                     let historyResult;
                      recent = source.getRecent();
+
                      if (recent.getCount()) {
                         lastFilter = recent.at(ACTIVE_HISTORY_FILTER_INDEX);
-                        result.callback(source.getDataObject(lastFilter));
+                        historyResult = source.getDataObject(lastFilter) || [];
                      } else {
-                        result.callback([]);
+                        historyResult = [];
                      }
+                     result.callback(historyResult);
                      return res;
                   })
                   .addErrback(function(error) {
@@ -164,7 +171,7 @@ const _private = {
                  let historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
 
                  // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
-                 self?._notify('historySave', [historyData, filterButtonItems]);
+                 self._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
 
                  historyUtils.getHistorySource({historyId: historyId}).update(historyData, meta);
              }

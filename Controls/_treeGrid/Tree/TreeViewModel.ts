@@ -169,6 +169,9 @@ var
             expanderClasses += ' controls-TreeGrid__row-expander_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             expanderClasses += ' js-controls-ListView__notEditable';
 
+            expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
+            expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${itemData.itemPadding.bottom}_theme-${theme}`;
+
             if (expanderIcon) {
                 expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
                 expanderClasses += expanderIconClass;
@@ -317,7 +320,7 @@ var
                     const _parentItem = dispItem.getParent().getContents();
                     const _parentKey = _parentItem && _parentItem.getId();
                     const _parentChildren = self._hierarchyRelation.getChildren(_parentKey, self._items);
-                    return _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
+                    return !!_parentChildren.length && _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
                 };
 
                 let result = true;

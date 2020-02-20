@@ -161,6 +161,7 @@ var CompoundArea = CompoundContainer.extend([
          if (self._options._initCompoundArea) {
             self._options._initCompoundArea(self);
          }
+         EnvEvent.Bus.globalChannel().notify('onFloatAreaCreating', this);
          self.setEnabled(self._enabled);
       });
       self.once('onAfterLoad', function() {
@@ -187,6 +188,18 @@ var CompoundArea = CompoundContainer.extend([
       });
 
       return rebuildDeferred;
+   },
+
+   isPopupCreated(): boolean {
+      return this._isPopupCreated;
+   },
+
+   getIsStack: function() {
+      return this._options.type === 'stack';
+   },
+
+   getShowOnControlsReady: function() {
+      return true;
    },
 
    _notifyManagerPopupCreated(): void {
@@ -309,6 +322,11 @@ var CompoundArea = CompoundContainer.extend([
 
       var self = this;
 
+      // wsControl нужно установить до того, как запустим автофокусировку.
+      // Потому что она завязана в том числе и на этом свойстве
+      var container = self.getContainer()[0];
+      container.wsControl = self;
+
       // Переведем фокус сразу на окно, после построения шаблона уже сфокусируем внутренности
       // Если этого не сделать, то во время построения окна, при уничтожении контролов в других областях запустится восстановление фокуса,
       // которое восстановит его в последнюю активную область.
@@ -321,9 +339,6 @@ var CompoundArea = CompoundContainer.extend([
       // CompoundArea мы точно знаем, что внутри находится CompoundControl и фокус нужно распространять
       // по правилам AreaAbstract.compatible для контролов WS3
       self.detectNextActiveChildControl = self._oldDetectNextActiveChildControl;
-
-      var container = self.getContainer()[0];
-      container.wsControl = self;
 
       self._childConfig = self._options.templateOptions || {};
       self._compoundId = self._options._compoundId;
@@ -1462,5 +1477,4 @@ var CompoundArea = CompoundContainer.extend([
       return res;
    }
 });
-
 export default CompoundArea;

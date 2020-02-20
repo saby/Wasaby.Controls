@@ -6,7 +6,7 @@ define([
    'Types/source',
    'Types/entity',
    'Types/collection',
-   'Types/display',
+   'Controls/display',
    'Controls/_list/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar'
 ], function(lists, source, entity, collection, display, aUtil, tUtil) {
@@ -542,6 +542,10 @@ define([
       });
       it('updateActions', function() {
          let data, rs, lvm;
+         let emptyRecordSet = new collection.RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         });
          data = [{
             id: 1,
             title: 'item1'
@@ -583,6 +587,27 @@ define([
          modelUpdated = false;
          lists.ItemActionsControl._private.updateActions(ctrl, cfg);
          assert.isFalse(modelUpdated);
+         cfg.editingConfig = {
+            item: {
+               get: (prop) => {
+                  return this[prop];
+                  },
+               id: 'newItem'
+            }
+         };
+         cfg.listModel = new lists.ListViewModel({
+            items: emptyRecordSet,
+            keyProperty: 'id'
+         });
+         cfg.listModel._editingItemData = {
+            key: 'newItem'
+         };
+         modelUpdated = false;
+         cfg.listModel.nextModelVersion = function() {
+            modelUpdated = true;
+         };
+         lists.ItemActionsControl._private.updateActions(ctrl, cfg);
+         assert.isTrue(modelUpdated);
       });
       it('updateItemActions', function() {
          var cfg = {

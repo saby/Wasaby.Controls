@@ -119,17 +119,17 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          var result;
          searchController._dataOptions = defaultOptions;
 
-         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'test');
+         result = searchMod.Controller._private.isInputSearchValueShort(defaultOptions.minSearchLength, 'test');
          assert.isFalse(result);
 
          searchMod.Controller._private.setInputSearchValue(searchController, 'test');
-         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'testing');
+         result = searchMod.Controller._private.isInputSearchValueShort(defaultOptions.minSearchLength, 'testing');
          assert.isFalse(result);
 
-         result = searchMod.Controller._private.isInputSearchValueShort(searchController, 'te');
+         result = searchMod.Controller._private.isInputSearchValueShort(defaultOptions.minSearchLength, 'te');
          assert.isTrue(result);
 
-         result = searchMod.Controller._private.isInputSearchValueShort(searchController, undefined);
+         result = searchMod.Controller._private.isInputSearchValueShort(defaultOptions.minSearchLength, undefined);
          assert.isTrue(result);
       });
 
@@ -434,7 +434,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          });
          it('with short searchValue', function() {
             searchController._searchValue = '';
-            searchController._beforeMount({searchValue: 'te',  viewMode: 'notSearch'}, {});
+            searchController._beforeMount({searchValue: 'te',  viewMode: 'notSearch', minSearchLength: 3}, {});
 
             assert.equal(searchController._inputSearchValue, 'te');
             assert.equal(searchController._searchValue, '');
@@ -455,13 +455,15 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          it('source is changed', function() {
             var options = getDefaultOptions();
+            var searchStarted = false;
             options.source = new sourceLib.Memory();
             searchMod.Controller._private.getSearchController(searchController);
+            searchMod.Controller._private.startSearch = () => {searchStarted = true;};
             searchController._inputSearchValue = 'test';
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
 
-            assert.isNull(searchController._searchController);
-            assert.isTrue(searchController._inputSearchValue === '');
+            assert.isTrue(searchController._inputSearchValue === 'test');
+            assert.isTrue(searchStarted);
          });
 
          it('filter is changed', function() {
@@ -513,12 +515,6 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             var abortStub = sandbox.stub(searchController._searchController, 'abort');
 
             searchController._searchValue = 'test';
-            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
-            assert.isNull(searchController._searchController);
-            assert.isTrue(abortStub.calledOnce);
-
-            searchController._searchValue = 'test1';
-            defaultOptions._searchValue = 'test1';
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.isNull(searchController._searchController);
             assert.isTrue(abortStub.calledOnce);
@@ -627,7 +623,8 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          var searchController = getSearchController(Object.assign(defaultOptions, {
             searchNavigationMode: 'expand',
             parentProperty: 'parent',
-            nodeProperty: 'type'
+            nodeProperty: 'type',
+            root: null
          }));
          var markedKeyChangedParams = null;
          var expandedItemsChangedParams = null;
@@ -654,6 +651,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchController._viewMode = 'search';
 
          searchController._itemOpenHandler(3, items);
+         searchController._afterSetItemsOnReloadCallback(3, items);
          assert.deepEqual(markedKeyChangedParams, [3]);
          assert.deepEqual(expandedItemsChangedParams,[[1, 2, 3]]);
       });

@@ -879,6 +879,30 @@ define([
          assert.equal(version, lv.getVersion());
       });
 
+      it('setEditingConfig should not change version if the config is the same', () => {
+         const lv = new lists.ListViewModel({
+            items: data,
+            keyProperty: 'id',
+            markedKey: null
+         });
+
+         lv.setEditingConfig({
+            abc: true
+         });
+         const originalVersion = lv.getVersion();
+
+         lv.setEditingConfig({
+            abc: true
+         });
+         assert.strictEqual(lv.getVersion(), originalVersion);
+
+         lv.setEditingConfig({
+            abc: true,
+            def: false
+         });
+         assert.isAbove(lv.getVersion(), originalVersion);
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 
@@ -1129,8 +1153,8 @@ define([
                      displayProperty: 'title'
                   },
                   model = new lists.ListViewModel(cfg);
-               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-default', model._calcCursorClasses(false));
-               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses(true));
+               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-default', model._calcCursorClasses(false, 'default'));
+               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses(true, 'pointer'));
                assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses());
             })
          });

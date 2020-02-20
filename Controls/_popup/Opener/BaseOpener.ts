@@ -9,6 +9,7 @@ import {parse as parserLib, load} from 'Core/library';
 import {Logger} from 'UI/Utils';
 import { DefaultOpenerFinder } from 'UI/Focus';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import {detection} from 'Env/Env';
 import rk = require('i18n!Controls');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 
@@ -46,6 +47,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     private _loadModulesPromise: Promise<ILoadDependencies|Error>;
     private _openerUpdateCallback: Function;
     private _openPopupTimerId: number;
+
+    // Used in template
+    private _isMobileIOS(): boolean {
+        return detection.isMobileIOS;
+    }
 
     protected _afterMount(): void {
         this._openerUpdateCallback = this._updatePopup.bind(this);
@@ -255,10 +261,12 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();
+        // Если задали опцию, берем с опции, иначе с контрола, который открывает
+        const popupOpener = cfg?.opener || opener;
+        const openOptions: IControlOptions = popupOpener?._options;
         if (!BaseOpener.isNewEnvironment()) {
-            BaseOpener.getManager().then(() => {
+            BaseOpener.getManager(openOptions).then(() => {
                 BaseOpener.getZIndexUtil().addCallback((getZIndex) => {
-                    const popupOpener = opener || cfg.opener;
                     if (popupOpener) {
                         // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
                         cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
@@ -275,7 +283,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 });
             });
         } else if (BaseOpener.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-            BaseOpener.getManager().then(() => {
+            BaseOpener.getManager(openOptions).then(() => {
                 BaseOpener._openPopup(cfg, controller, def);
             });
         } else {
@@ -470,17 +478,18 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     // TODO Compatible
-    static getManager(): Promise<void> {
+    static getManager(_options: IControlOptions = {}): Promise<void> {
         if (!ManagerWrapperCreatingPromise) {
             if (!isNewEnvironment()) {
                 const managerContainer = document.createElement('div');
                 managerContainer.classList.add('controls-PopupContainer');
                 document.body.insertBefore(managerContainer, document.body.firstChild);
 
-                ManagerWrapperCreatingPromise = new Promise((resolve) => {
+                ManagerWrapperCreatingPromise = new Promise((resolve, reject) => {
                     require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
-                        Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
-                    });
+                        const cfg = _options.theme ? { theme: _options.theme } : {};
+                        Creator(compatiblePopup.ManagerWrapper, cfg, managerContainer).then(resolve);
+                    }, reject);
                 });
             } else {
                 // Защита от случаев, когда позвали открытие окна до полного построения страницы

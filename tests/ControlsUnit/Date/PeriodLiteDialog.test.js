@@ -14,7 +14,7 @@ define([
    'Core/core-instance'
 ], function(
    coreMerge,
-   PeriodLiteDialog.View,
+   PeriodLiteDialog,
    DateUtils,
    calendarTestUtils,
    typesEntity,
@@ -61,13 +61,13 @@ define([
                      fullName: formatDate.date(new Date(year, 0, 1), 'QQQQr'),
                      tooltip: formatDate.date(new Date(year, 0, 1), formatDate.date.FULL_QUATER),
                      months: [{
-                        name: new Date(year, 0, 1),
+                        date: new Date(year, 0, 1),
                         tooltip: formatDate.date(new Date(year, 0, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new Date(year, 1, 1),
+                        date: new Date(year, 1, 1),
                         tooltip: formatDate.date(new Date(year, 1, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new Date(year, 2, 1),
+                        date: new Date(year, 2, 1),
                         tooltip: formatDate.date(new Date(year, 2, 1), formatDate.date.FULL_MONTH)
                      }],
                      number: 0
@@ -76,13 +76,13 @@ define([
                      fullName: formatDate.date(new Date(year, 3, 1), 'QQQQr'),
                      tooltip: formatDate.date(new Date(year, 3, 1), formatDate.date.FULL_QUATER),
                      months: [{
-                        name: new Date(year, 3, 1),
+                        date: new Date(year, 3, 1),
                         tooltip: formatDate.date(new Date(year, 3, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new Date(year, 4, 1),
+                        date: new Date(year, 4, 1),
                         tooltip: formatDate.date(new Date(year, 4, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new Date(year, 5, 1),
+                        date: new Date(year, 5, 1),
                         tooltip: formatDate.date(new Date(year, 5, 1), formatDate.date.FULL_MONTH)
                      }],
                      number: 1
@@ -96,13 +96,13 @@ define([
                      fullName: formatDate.date(new Date(year, 6, 1), 'QQQQr'),
                      tooltip: formatDate.date(new Date(year, 6, 1), formatDate.date.FULL_QUATER),
                      months: [{
-                        name: new Date(year, 6, 1),
+                        date: new Date(year, 6, 1),
                         tooltip: formatDate.date(new Date(year, 6, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new Date(year, 7, 1),
+                        date: new Date(year, 7, 1),
                         tooltip: formatDate.date(new Date(year, 7, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new Date(year, 8, 1),
+                        date: new Date(year, 8, 1),
                         tooltip: formatDate.date(new Date(year, 8, 1), formatDate.date.FULL_MONTH)
                      }],
                      number: 2
@@ -111,13 +111,13 @@ define([
                      fullName: formatDate.date(new Date(year, 9, 1), 'QQQQr'),
                      tooltip: formatDate.date(new Date(year, 9, 1), formatDate.date.FULL_QUATER),
                      months: [{
-                        name: new Date(year, 9, 1),
+                        date: new Date(year, 9, 1),
                         tooltip: formatDate.date(new Date(year, 9, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new Date(year, 10, 1),
+                        date: new Date(year, 10, 1),
                         tooltip: formatDate.date(new Date(year, 10, 1), formatDate.date.FULL_MONTH)
                      }, {
-                        name: new Date(year, 11, 1),
+                        date: new Date(year, 11, 1),
                         tooltip: formatDate.date(new Date(year, 11, 1), formatDate.date.FULL_MONTH)
                      }],
                      number: 3
@@ -148,7 +148,7 @@ define([
             const component = calendarTestUtils.createComponent(bodyItem, {}),
                year = (new Date()).getFullYear(),
                yearModel = component._getYearModel(year, entity.Date);
-            assert.isTrue(cInstance.instanceOfModule(yearModel[0].quarters[0].months[0].name, 'Types/entity:Date'));
+            assert.isTrue(cInstance.instanceOfModule(yearModel[0].quarters[0].months[0].date, 'Types/entity:Date'));
          });
       });
 

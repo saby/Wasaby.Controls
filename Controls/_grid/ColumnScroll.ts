@@ -46,10 +46,11 @@ const
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
          _private.setDispalyNoneForScroll(self._children.content);
          _private.drawTransform(self, 0);
+         const isFullSupport = isFullGridSupport();
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
             newContentContainerSize = null;
-         if (!isFullGridSupport()) {
+         if (!isFullSupport) {
             newContentContainerSize = self._children.content.offsetWidth;
          } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
@@ -73,7 +74,7 @@ const
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
             self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
          }
-         self._contentSizeForHScroll = self._contentSize - self._fixedColumnsWidth;
+         self._contentSizeForHScroll = isFullSupport ? self._contentSize - self._fixedColumnsWidth : self._contentSize;
          _private.drawTransform(self, self._scrollPosition);
          // после расчетов убираем display: none
          _private.removeDisplayFromScroll(self._children.content);
@@ -250,6 +251,22 @@ const
       _calculateShadowStyles(position) {
          return _private.calculateShadowStyles(this, position);
       },
+
+      _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
+           if (e.target.tagName !== 'INPUT' || !this._options.listModel.getEditingItemData() || !this._isDisplayColumnScroll()) {
+               return;
+           }
+           const container = this._children.content;
+           const startShadow = this._children.startShadow;
+           const { right: activeElementRight, left: activeElementLeft  } = e.target.getBoundingClientRect();
+           const { right: containerRight } = container.getBoundingClientRect();
+           const { left: startShadowLeft } = startShadow.getBoundingClientRect();
+           if (activeElementRight > containerRight) {
+               this._setScrollPosition(this._scrollPosition + (activeElementRight - containerRight + (this._children.startShadow.offsetWidth || 0)));
+           } else if (startShadowLeft > activeElementLeft) {
+               this._setScrollPosition(this._scrollPosition - (startShadowLeft - activeElementLeft + (this._children.startShadow.offsetWidth || 0)));
+           }
+       },
 
       _setScrollPosition: function(position) {
           const
