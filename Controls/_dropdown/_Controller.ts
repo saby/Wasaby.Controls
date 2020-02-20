@@ -51,6 +51,7 @@ var _private = {
             if (self._options.dataLoadErrback) {
                self._options.dataLoadErrback(error);
             }
+            return error;
          });
    },
 
