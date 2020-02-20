@@ -16,6 +16,13 @@ export default class VirtualScroll {
     private _savedDirection: IDirection;
     private _itemsCount: number;
     private _chainUpdate: boolean;
+    private _triggerVisibility: {
+        up: boolean;
+        down: boolean;
+    } = {
+        up: false,
+        down: false
+    };
 
     rangeChanged: boolean;
 
@@ -52,6 +59,10 @@ export default class VirtualScroll {
 
     applyContainerHeightsData(containerData: Partial<IContainerHeights>): void {
         this._containerHeightsData = {...this._containerHeightsData, ...containerData};
+    }
+
+    applyTriggerVisibility(triggerName: IDirection, isVisible: boolean): void {
+        this._triggerVisibility[triggerName] = isVisible;
     }
 
     /**
@@ -124,7 +135,7 @@ export default class VirtualScroll {
         this._insertItemHeights(addIndex, count);
 
         if (direction === 'down') {
-            if (this._chainUpdate) {
+            if (this._chainUpdate && !this._triggerVisibility[direction]) {
                 return this.shiftRange(direction);
             } else {
                 return this._setRange(

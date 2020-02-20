@@ -376,6 +376,7 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         this._triggerVisibility[triggerName] = triggerVisible;
+        this._virtualScroll.applyTriggerVisibility(triggerName, triggerVisible);
         // TODO Совместимость необходимо удалить после переписывания baseControl
         this._notify('triggerVisibilityChanged', [triggerName, triggerVisible]);
     }
