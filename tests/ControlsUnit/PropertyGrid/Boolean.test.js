@@ -21,10 +21,6 @@ define([
             boolean._beforeUpdate({ propertyValue: true });
             assert.equal(boolean.value, true);
          });
-         it('undefined value', () => {
-            boolean._beforeUpdate({ propertyValue: undefined });
-            assert.equal(boolean.value, undefined);
-         });
       });
    });
 });
