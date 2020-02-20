@@ -245,6 +245,7 @@ export default class VirtualScroll {
         }
 
         this._savedDirection = undefined;
+        this._oldRange = {...this._range};
 
         return savedPosition;
     }
@@ -503,7 +504,6 @@ export default class VirtualScroll {
 
     private _shiftRangeBySegment(direction: IDirection, segmentSize: number): IRange {
         this._savedDirection = direction;
-        this._oldRange = {...this._range};
         const fixedSegmentSize = Math
             .min(segmentSize, Math.max(this._options.pageSize - (this._range.stop - this._range.start), 0));
         const itemsCount = this._itemsCount;

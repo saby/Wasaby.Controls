@@ -519,6 +519,15 @@ export default class ScrollContainer extends Control<IOptions> {
                 this._initVirtualScroll(this._options);
             }
         }
+
+        // Если произошли изменения индексов в модели, значит был пересчитан range
+        // даже если внутри состояния виртуального скролла этого не произошло
+        // такое может произойти на старой модели, так как она сама управляет индексами
+        // при загрузке новой пачки элементов
+        // TODO Совместимость
+        if (changesType === 'indexesChanged') {
+            this._virtualScroll.rangeChanged = true;
+        }
     }
 
     /**
