@@ -106,6 +106,12 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.deepEqual({range: {start: 2, stop: 7}, placeholders: {top: 60, bottom: 0}},
                 instance.insertItems(0, 2));
         });
+        it('at begining with chain update with trigger visibility', () => {
+            instance.startChainUpdate();
+            instance.applyTriggerVisibility('down', true);
+            assert.deepEqual({range: {start: 2, stop: 7}, placeholders: {top: 60, bottom: 0}},
+                instance.insertItems(0, 2));
+        });
         it('at middle', () => {
             assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 0}},
                 instance.insertItems(5, 2));
@@ -200,6 +206,8 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         it('can`t scroll', () => {
             assert.isFalse(instance.canScrollToItem(6, false, true), 'Item is out of range');
             assert.isFalse(instance.canScrollToItem(5, false, true), 'Item offset > viewport offset');
+            instance.resetRange(0, 5);
+            assert.isFalse(instance.canScrollToItem(5, false, true));
         });
         it('can scroll', () => {
             assert.isTrue(instance.canScrollToItem(0, false, true));
@@ -207,7 +215,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.isTrue(instance.canScrollToItem(4, false, false));
             assert.isTrue(instance.canScrollToItem(4, true, true));
             instance.resetRange(0, 5);
-            assert.isTrue(instance.canScrollToItem(5, false, true));
+            assert.isTrue(instance.canScrollToItem(4, false, true));
         });
     });
     describe('.getActiveElementIndex()', () => {

@@ -16,6 +16,13 @@ export default class VirtualScroll {
     private _savedDirection: IDirection;
     private _itemsCount: number;
     private _chainUpdate: boolean;
+    private _triggerVisibility: {
+        up: boolean;
+        down: boolean;
+    } = {
+        up: false,
+        down: false
+    };
 
     rangeChanged: boolean;
 
@@ -52,6 +59,10 @@ export default class VirtualScroll {
 
     applyContainerHeightsData(containerData: Partial<IContainerHeights>): void {
         this._containerHeightsData = {...this._containerHeightsData, ...containerData};
+    }
+
+    applyTriggerVisibility(triggerName: IDirection, isVisible: boolean): void {
+        this._triggerVisibility[triggerName] = isVisible;
     }
 
     /**
@@ -124,7 +135,7 @@ export default class VirtualScroll {
         this._insertItemHeights(addIndex, count);
 
         if (direction === 'down') {
-            if (this._chainUpdate) {
+            if (this._chainUpdate && !this._triggerVisibility[direction]) {
                 return this.shiftRange(direction);
             } else {
                 return this._setRange(
@@ -264,17 +275,25 @@ export default class VirtualScroll {
      * @param itemIndex
      * @param toBottom
      * @param force
+     * @remark К элементу можно подскроллить в случае если:
+     * - мы скроллим к нижней границе элемента
+     * - мы скроллим только если элемент не виден
+     * - мы скроллим к верху элемента и его оффсет не превышает высоту вьюпорта
      */
     canScrollToItem(itemIndex: number, toBottom: boolean, force: boolean): boolean {
         let canScroll = false;
         const {viewport, scroll: scrollHeight} = this._containerHeightsData;
         const itemOffset = this._itemsHeightData.itemsOffsets[itemIndex];
 
-        if (this._range.stop === this._itemsCount) {
-            canScroll = true;
-        } else if (this._isItemInRange(itemIndex) &&
-            (toBottom || !force || (viewport < scrollHeight - itemOffset))) {
-            canScroll = true;
+        if (this._isItemInRange(itemIndex)) {
+            if (
+                this._range.stop === this._itemsCount ||
+                toBottom ||
+                !force ||
+                (viewport < scrollHeight - itemOffset)
+            ) {
+                canScroll = true;
+            }
         }
 
         return canScroll;
