@@ -209,10 +209,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (itemsModelCurrent.itemActions) {
            drawnActions = itemsModelCurrent.itemActions.showed;
-           itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
-           itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         }
-
+        itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
+        itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         itemsModelCurrent.drawActions = _private.needToDrawActions(this._editingItemData, itemsModelCurrent, this._options.editingConfig, drawnActions);
 
         if (itemsModelCurrent.drawActions && drawnActions) {
