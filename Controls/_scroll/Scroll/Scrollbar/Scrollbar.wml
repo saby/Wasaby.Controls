@@ -16,5 +16,5 @@
          ></div>
       </div>
    </Controls.dragnDrop:Container>
-   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
+   <Controls.event:Listener event="controlResize" listenAll="{{true}}" on:controlResize="_resizeHandler()"/>
 </div>

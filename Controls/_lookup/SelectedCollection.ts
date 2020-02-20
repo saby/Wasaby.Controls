@@ -18,7 +18,7 @@ import { Model } from 'Types/entity';
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
  * @public
- * @author Капустин И.А.
+ * @author Герасимов А.М.
  */
 /*
  * Control, that display collection of items.
@@ -27,7 +27,7 @@ import { Model } from 'Types/entity';
  * @extends Core/Control
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
- * @author Kapustin I.A.
+ * @author Герасимов А.М.
  */
 
 

@@ -17,7 +17,7 @@ const ALL_SELECTION_VALUE = null;
  * @class Controls/_operations/MultiSelector/SelectionStrategy/Flat
  * @control
  * @private
- * @author Капустин И.А.
+ * @author Герасимов А.М.
  */
 export default class FlatSelectionStrategy implements ISelectionStrategy {
    select(selection: ISelection, keys: TKeys): ISelection {

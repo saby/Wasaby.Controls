@@ -143,7 +143,8 @@ import {SyntheticEvent} from "Vdom/Vdom"
             var sizeCache = _private.getSizeCache(self, container);
 
              const newScrollTop = container.scrollTop;
-             if (container.scrollLeft) {
+             // todo будет удалено по: https://online.sbis.ru/opendoc.html?guid=bcc4b6be-7513-4f3d-8f26-eb27512d0a28
+             if (!self._options.task1178703223 && container.scrollLeft) {
                  container.scrollLeft = 0;
              }
              if (newScrollTop === self._scrollTopCache) {
