@@ -118,11 +118,13 @@ import {SyntheticEvent} from 'Vdom/Vdom';
             if (self._options.emptyText && self._listModel.getSelectedKeys()[0] === null) {
                result.data = [self._listModel.getEmptyItem().item];
             } else {
-               let selectedItems = [];
-               chain.factory(self._listModel.getSelectedKeys()).each(function (key) {
-                  selectedItems.push(self._options.items.getRecordById(key));
+               const newSelectedItems = [];
+               const currentSelectedItems = self._options.selectorItems || self._options.items;
+
+               chain.factory(self._listModel.getSelectedKeys()).each((key) => {
+                  newSelectedItems.push(currentSelectedItems.getRecordById(key));
                });
-               result.data = selectedItems;
+               result.data = newSelectedItems;
             }
             return result;
          },
