@@ -38,7 +38,6 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
-      return error;
    },
 
    prepareFilterForQuery(self, options): object {
@@ -94,6 +93,7 @@ var _private = {
                 return items;
              }).addErrback((error) => {
                 _private.loadError(self, error);
+                return error;
              });
           });
    },

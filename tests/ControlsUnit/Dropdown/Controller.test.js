@@ -588,7 +588,7 @@ define(
 
          it('_private::loadItems', () => {
             let hasErrBack = false;
-            const controllerConfig = Clone(config);
+            const controllerConfig = { ...config };
             controllerConfig.dataLoadErrback = function() {
                hasErrBack = true;
             };
