@@ -37,10 +37,10 @@ const correctTopLevelDomainNames = [
     'рус'
 ];
 const protocolLinkPrefixPattern = `(?:${protocolNames.join('|')})`.replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`);
-const simpleLinkPrefixPattern = '([\\w\\-]+(?:\\.[a-zA-Z]+)*\\.([a-zA-Z]+)(?::[0-9]+)?)';
+const simpleLinkPrefixPattern = '([\\w\\-]{1,100}(?:\\.[a-zA-Z]{1,100}){0,100}\\.([a-zA-Z]{1,100})(?::[0-9]{1,100})?)';
 const linkPrefixPattern = `(?:${protocolLinkPrefixPattern}|${simpleLinkPrefixPattern})`;
-const linkPattern = `(${linkPrefixPattern}(?:[^\\s()\\ud800-\\udfff]*))`;
-const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]+@[^\\s@()\\ud800-\\udfff]+\\.([\\wа-яёА-ЯЁ]+))';
+const linkPattern = `(${linkPrefixPattern}(?:[^\\s()\\ud800-\\udfff]{0,100}))`;
+const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]{1,100}@[^\\s@()\\ud800-\\udfff]{1,100}\\.([\\wа-яёА-ЯЁ]{1,100}))';
 const endingPattern = '([^.,:\\s()\\ud800-\\udfff])';
 const characterRegExp = /[\wа-яёА-ЯЁ]/;
 const linkParseRegExp = new RegExp(`(?:(?:${emailPattern}|${linkPattern})${endingPattern})|(.|\\s)`, 'g');
