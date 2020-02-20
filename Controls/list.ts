@@ -4,6 +4,7 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
+ * @includes IContentTemplate Controls/list:ContentTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
@@ -34,6 +35,7 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
+ * @includes IContentTemplate Controls/list:IContentTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
