@@ -17,33 +17,16 @@
    height: 100%;
 }
 
-.controls-Back_style-primary_size-l_theme-@{themeName}:before {
+.controls-Back_style-secondary_size-l_theme-@{themeName}:before {
    background-image: @secondary_icon_background-image_l_headingBack;
 }
 
-.controls-Back_style-primary_size-m_theme-@{themeName}:before {
+.controls-Back_style-secondary_size-m_theme-@{themeName}:before {
    background-image: @secondary_icon_background-image_m_headingBack;
 }
 
-.controls-Back_style-primary_size-s_theme-@{themeName}:before {
-   background-image: @secondary_icon_background-image_s_headingBack;
-}
-
-.controls-Back_style-primary_theme-@{themeName}:before {
-   background-repeat: no-repeat;
-   content: '';
-}
-
-.controls-Back_style-secondary_size-l_theme-@{themeName}:before {
-   background-image: @primary_icon_background-image_l_headingBack;
-}
-
-.controls-Back_style-secondary_size-m_theme-@{themeName}:before {
-   background-image: @primary_icon_background-image_m_headingBack;
-}
-
 .controls-Back_style-secondary_size-s_theme-@{themeName}:before {
-   background-image: @primary_icon_background-image_s_headingBack;
+   background-image: @secondary_icon_background-image_s_headingBack;
 }
 
 .controls-Back_style-secondary_theme-@{themeName}:before {
@@ -51,71 +34,88 @@
    content: '';
 }
 
+.controls-Back_style-primary_size-l_theme-@{themeName}:before {
+   background-image: @primary_icon_background-image_l_headingBack;
+}
+
+.controls-Back_style-primary_size-m_theme-@{themeName}:before {
+   background-image: @primary_icon_background-image_m_headingBack;
+}
+
+.controls-Back_style-primary_size-s_theme-@{themeName}:before {
+   background-image: @primary_icon_background-image_s_headingBack;
+}
+
+.controls-Back_style-primary_theme-@{themeName}:before {
+   background-repeat: no-repeat;
+   content: '';
+}
+
 .controls-Back__wrapper:active {
-   .controls-Back_style-secondary_size-l_theme-@{themeName}:before {
+   .controls-Back_style-primary_size-l_theme-@{themeName}:before {
       background-image: @primary_icon_hover_background-image_l_headingBack;
    }
 
-   .controls-Back_style-secondary_size-m_theme-@{themeName}:before {
+   .controls-Back_style-primary_size-m_theme-@{themeName}:before {
       background-image: @primary_icon_hover_background-image_m_headingBack;
    }
 
-   .controls-Back_style-secondary_size-s_theme-@{themeName}:before {
+   .controls-Back_style-primary_size-s_theme-@{themeName}:before {
       background-image: @primary_icon_hover_background-image_s_headingBack;
    }
 
-   .controls-Back_style-primary_size-l_theme-@{themeName}:before {
+   .controls-Back_style-secondary_size-l_theme-@{themeName}:before {
       background-image: @secondary_icon_hover_background-image_l_headingBack;
    }
 
-   .controls-Back_style-primary_size-m_theme-@{themeName}:before {
+   .controls-Back_style-secondary_size-m_theme-@{themeName}:before {
       background-image: @secondary_icon_hover_background-image_m_headingBack;
    }
 
-   .controls-Back_style-primary_size-s_theme-@{themeName}:before {
+   .controls-Back_style-secondary_size-s_theme-@{themeName}:before {
       background-image: @secondary_icon_hover_background-image_s_headingBack;
    }
 
    .controls-Back__caption_style-primary_theme-@{themeName} {
-      color: @color-Back__caption_style-primary_hovered;
+      color: @primary_hover_text-color;
    }
 
    .controls-Back__caption_style-secondary_theme-@{themeName} {
-      color: @color-Back__caption_style-secondary_hovered;
+      color: @secondary_hover_text-color_headingBack;
    }
 }
 
 .ws-is-hover {
    .controls-Back__wrapper:hover {
-      .controls-Back_style-secondary_size-l_theme-@{themeName}:before {
+      .controls-Back_style-primary_size-l_theme-@{themeName}:before {
          background-image: @primary_icon_hover_background-image_l_headingBack;
       }
 
-      .controls-Back_style-secondary_size-m_theme-@{themeName}:before {
+      .controls-Back_style-primary_size-m_theme-@{themeName}:before {
          background-image: @primary_icon_hover_background-image_m_headingBack;
       }
 
-      .controls-Back_style-secondary_size-s_theme-@{themeName}:before {
+      .controls-Back_style-primary_size-s_theme-@{themeName}:before {
          background-image: @primary_icon_hover_background-image_s_headingBack;
       }
 
-      .controls-Back_style-primary_size-l_theme-@{themeName}:before {
+      .controls-Back_style-secondary_size-l_theme-@{themeName}:before {
          background-image: @secondary_icon_hover_background-image_l_headingBack;
       }
 
-      .controls-Back_style-primary_size-m_theme-@{themeName}:before {
+      .controls-Back_style-secondary_size-m_theme-@{themeName}:before {
          background-image: @secondary_icon_hover_background-image_m_headingBack;
       }
 
-      .controls-Back_style-primary_size-s_theme-@{themeName}:before {
+      .controls-Back_style-secondary_size-s_theme-@{themeName}:before {
          background-image: @secondary_icon_hover_background-image_s_headingBack;
       }
       .controls-Back__caption_style-primary_theme-@{themeName} {
-         color: @color-Back__caption_style-primary_hovered;
+         color: @primary_hover_text-color;
       }
 
       .controls-Back__caption_style-secondary_theme-@{themeName} {
-         color: @color-Back__caption_style-secondary_hovered;
+         color: @secondary_hover_text-color_headingBack;
       }
    }
 }
@@ -137,11 +137,11 @@
 }
 
 .controls-Back__caption_style-secondary_theme-@{themeName} {
-   color: @color-Back__caption_style-secondary;
+   color: @secondary_text-color_headingBack;
 }
 
 .controls-Back__caption_style-primary_theme-@{themeName} {
-   color: @color-Back__caption_style-primary;
+   color: @primary_text-color;
 }
 
 .controls-Back_size-l_theme-@{themeName} {

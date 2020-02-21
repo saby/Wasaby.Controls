@@ -3,9 +3,8 @@ import backTemplate = require('wml!Controls/_heading/Back/Back');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {detection} from 'Env/Env';
 import {Logger} from 'UI/Utils';
-import {backSize, backStyle, counterSize, counterStyle} from './_ActualAPI';
+import {backSize, backStyle} from './_ActualAPI';
 import {IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions, IIconSize, IIconSizeOptions, IIconStyle, IIconStyleOptions} from 'Controls/interface';
-
 type TBackStyle = 'primary' | 'secondary';
 
 export interface IBackOptions extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions, IIconStyleOptions, IIconSizeOptions {
@@ -26,6 +25,10 @@ const MODERN_IE_VERSION = 11;
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_heading/Back/BackStyles
+ * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/_interface/IFontSize
+ * @implements Controls/_interface/IIconSize
+ * @implements Controls/_interface/IIconStyle
  * @control
  * @public
  * @author Красильников А.С.
@@ -43,6 +46,10 @@ const MODERN_IE_VERSION = 11;
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_heading/Back/BackStyles
+ * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/_interface/IFontSize
+ * @implements Controls/_interface/IIconSize
+ * @implements Controls/_interface/IIconStyle
  * @control
  * @public
  * @author Красильников А.С.
@@ -128,31 +135,38 @@ class Back extends Control<IBackOptions> {
     protected _iconSize: string;
     protected _iconStyle: string;
 
-    private _convertOldStyleToNew(options: IBackOptions): void {
+    private _convertOldStyleToNew(options: IBackOptions): IBackOptions {
         if (options.style === 'default') {
-            this._style = 'primary';
-            Logger.warn('Heading.Back', 'Используются устаревшие стили. Используйте style primary вместо style default', this);
+            options.style = 'primary';
+            Logger.warn('Heading.Back', 'Используются устаревшие стили. Используйте style primary вместо style default');
+            return options;
         } else {
-            this._style = options.style;
+            return options;
         }
+    }
+    private _setFontState(options: IBackOptions): void {
+        const convertOptions = this._convertOldStyleToNew(options);
+        const styles = backStyle(convertOptions);
+        this._iconStyle = styles.iconStyle;
+        this._fontColorStyle = styles.fontColorStyle;
+    }
+
+    private _setSizeState(options: IBackOptions): void {
+        const sizes = backSize(options);
+        this._fontSize = sizes.fontSize;
+        this._iconSize = sizes.iconSize;
     }
 
     protected _beforeMount(options: IBackOptions): void {
-     //   this._convertOldStyleToNew(options);
-        this._fontSize = backSize(options.size, options.fontSize).fontSize;
-        this._fontColorStyle = backStyle(options.style, options.fontColorStyle).fontColorStyle;
-        this._iconSize = backSize(options.size, options.iconSize).iconSize;
-        this._iconStyle = backStyle(options.style, options.iconStyle).iconStyle;
+        this._setFontState(options);
+        this._setSizeState(options);
         this._isOldIe = detection.isIE && detection.IEVersion < MODERN_IE_VERSION;
     }
 
     protected _beforeUpdate(newOptions: IBackOptions): void {
         if (newOptions.style !== this._options.style) {
-            this._fontSize = backSize(newOptions.size, newOptions.fontSize).fontSize;
-            this._fontColorStyle = backStyle(newOptions.style, newOptions.fontColorStyle).fontColorStyle;
-            this._iconSize = backSize(newOptions.size, newOptions.iconSize).iconSize;
-            this._iconStyle = backStyle(newOptions.style, newOptions.iconStyle).iconStyle;
-           // this._convertOldStyleToNew(newOptions);
+            this._setFontState(newOptions);
+            this._setSizeState(newOptions);
         }
     }
 

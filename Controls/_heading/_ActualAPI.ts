@@ -1,3 +1,5 @@
+import {IBackOptions} from './Back';
+
 export function counterSize(size: 's' | 'm' | 'l', fontSize: string): string {
     if (fontSize) {
         return fontSize;
@@ -26,25 +28,33 @@ export function counterStyle(style: 'primary' | 'secondary' | 'disabled', fontCo
     }
 }
 
-export function backSize(size?: 's' | 'm' | 'l', fontSize?: string, iconSize?: string): {fontSize: string, iconSize: string} {
-    if (fontSize && iconSize) {
-        return { fontSize: fontSize, iconSize: iconSize };
+export function backSize(options: IBackOptions): { fontSize: string, iconSize: string } {
+    if (options.fontSize && options.iconSize) {
+        return {fontSize: options.fontSize, iconSize: options.iconSize};
     } else {
-        return { fontSize: size, iconSize: size };
-    }
-}
-export function backStyleOptions(style: 'primary' | 'secondary' ): {fontColorStyle: string, iconStyle: string} {
-    if (style === 'primary') {
-        return { fontColorStyle: 'primary', iconStyle: 'secondary' };
-    } else {
-        return {fontColorStyle: 'secondary', iconStyle: 'primary' };
+        return {fontSize: options.size, iconSize: options.size};
     }
 }
 
-export function backStyle(style?: 'primary' | 'secondary', fontColorStyle?: string, iconStyle?: string ): {fontColorStyle: string, iconStyle: string} {
-    if (fontColorStyle && iconStyle) {
-        return {fontColorStyle: fontColorStyle, iconStyle: iconStyle};
+export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorStyle: string, iconStyle: string } {
+    if (style === 'primary') {
+        return {
+            fontColorStyle: 'primary', iconStyle: 'secondary'
+        };
     } else {
-        return backStyleOptions(style);
+        return {
+            fontColorStyle: 'secondary', iconStyle: 'primary'
+        };
+    }
+}
+
+export function backStyle(options: IBackOptions): { fontColorStyle: string, iconStyle: string } {
+    if (options.fontColorStyle && options.iconStyle) {
+        return {
+            fontColorStyle: options.fontColorStyle,
+            iconStyle: options.iconStyle
+        };
+    } else {
+        return backStyleOptions(options.style);
     }
 }
