@@ -189,18 +189,21 @@ class Component extends Control {
     }
 
     private _updateTopBottom() {
-        let offset = 0;
+        let offset = 0,
+            header;
         for (let headerId of this._headersStack['top']) {
-            this._headers[headerId].inst.top = offset;
-            if (this._headers[headerId].mode === 'stackable') {
-                offset += this._headers[headerId].inst.height;
+            header = this._headers[headerId];
+            header.inst.top = offset;
+            if (header.mode === 'stackable' && Component._isVisible(header.container)) {
+                offset += header.inst.height;
             }
         }
         offset = 0;
         for (let headerId of this._headersStack['bottom']) {
-            this._headers[headerId].inst.bottom = offset;
-            if (this._headers[headerId].mode === 'stackable') {
-                offset += this._headers[headerId].inst.height;
+            header = this._headers[headerId];
+            header.inst.bottom = offset;
+            if (header.mode === 'stackable' && Component._isVisible(header.container)) {
+                offset += header.inst.height;
             }
         }
     }
