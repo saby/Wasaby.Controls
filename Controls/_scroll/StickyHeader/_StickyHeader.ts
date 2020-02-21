@@ -132,6 +132,7 @@ var StickyHeader = Control.extend({
       this._notify('stickyRegister', [{
          id: this._index,
          inst: this,
+         container: this._container,
          position: this._options.position,
          mode: this._options.mode
       }, true], { bubbling: true });

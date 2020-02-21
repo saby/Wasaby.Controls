@@ -142,6 +142,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
                   this._notify('stickyRegister', [{
                      id: this._index,
                      inst: this,
+                     container: this._container,
                      position: data.position,
                      mode: data.mode,
                   }, true], { bubbling: true });
