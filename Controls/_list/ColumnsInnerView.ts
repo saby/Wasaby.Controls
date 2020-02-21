@@ -222,7 +222,10 @@ export default class ColumnsInnerView extends Control {
             }
         }
     }
-    protected _keyDownHandler(e: SyntheticEvent<KeyboardEvent>): void {
+    getKeyDownHandler(): Function {
+        return this._keyDownHandler.bind(this);
+    }
+    protected _keyDownHandler(e: SyntheticEvent<KeyboardEvent>): boolean {
         let direction = '';
         switch (e.nativeEvent.keyCode) {
             case constants.key.left: direction = 'Left'; break;
@@ -234,6 +237,7 @@ export default class ColumnsInnerView extends Control {
             this.moveMarker(direction);
             e.stopPropagation();
             e.preventDefault();
+            return true;
         }
     }
     static getDefaultOptions(): Partial<IColumnsInnerViewOptions> {
