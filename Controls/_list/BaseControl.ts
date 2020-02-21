@@ -1749,6 +1749,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     return;
                 }
                 if (receivedError) {
+                    if (newOptions.task1178762977 && newOptions.dataLoadErrback instanceof Function) {
+                        newOptions.dataLoadErrback(receivedError);
+                    }
                     return _private.showError(self, receivedError);
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
