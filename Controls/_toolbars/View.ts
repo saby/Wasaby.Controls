@@ -91,6 +91,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions,
  * @mixes Controls/interface:IItemTemplate
  * @mixes Controls/_toolbars/IToolbarOptions
  * @mixes Controls/_toolbars/IToolbarSource
+ * @mixes Controls/interface/IItemTemplate
  *
  * @public
  * @author Красильников А.С.
@@ -404,10 +405,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IS
              * @default 'medium'
              */
             itemsSpacing: 'medium',
-            /**
-             * @name Controls/_toolbars/View#itemTemplate
-             * @default Controls/toolbars:ItemTemplate
-             */
             itemTemplate: defaultItemTemplate
         };
     }
