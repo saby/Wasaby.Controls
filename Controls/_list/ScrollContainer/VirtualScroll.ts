@@ -55,7 +55,7 @@ export default class VirtualScrollController {
 
     scrollTop: number = 0;
     itemsContainerHeight: number = 0;
-    itemsFromLoadToDirection: IDirection = false;
+    itemsFromLoadToDirection: IDirection = null;
 
     private _itemsContainer: HTMLElement;
 
@@ -421,7 +421,7 @@ export default class VirtualScrollController {
         // мы уже не можем на него повлиять
         if (this.itemsContainer) {
             const direction = this.itemsFromLoadToDirection
-            || newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
+            || (newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down');
 
             if (direction === 'up' && this.itemsFromLoadToDirection) {
                 this.savedStartIndex += newItems.length;
@@ -457,7 +457,6 @@ export default class VirtualScrollController {
     }
 
     private shiftRangeBySegment(direction: IDirection, segment: number): void {
-        this.actualizeSavedIndexes();
         let startIndex = this.startIndex;
         let stopIndex = this.stopIndex;
         const fixedSegmentSize = Math
@@ -488,7 +487,8 @@ export default class VirtualScrollController {
      * @param {string} direction
      */
     private checkIndexesChanged(newStartIndex: number, newStopIndex: number, direction?: string): void {
-        if (this.stopIndex !== newStopIndex || this.startIndex !== newStartIndex) {
+        if (this.stopIndex !== newStopIndex && (!direction || direction === 'down')
+            || this.startIndex !== newStartIndex && (!direction || direction === 'up')) {
             this._options.indexesChangedCallback(this.startIndex = newStartIndex, this.stopIndex = newStopIndex, direction);
             this._options.placeholderChangedCallback(this.calcPlaceholderSize());
         }
