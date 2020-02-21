@@ -37,7 +37,7 @@ type TActionAlignment = 'horizontal'|'vertical';
  * @variant bottom Под иконкой опции записи.
  * @variant none Не будет отображаться.
  */
-type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
+type TActionCaptionPosition = 'right'|'bottom'|'none';
 type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
@@ -214,7 +214,7 @@ export interface IList {
 /**
  * @typedef {Object} ItemAction
  * @property {String} id Идентификатор опции записи.
- * @property {String} title Название опции записи (Устаревшее свойство. Будет , используйте caption).
+ * @property {String} title Название опции записи (Свойство устарело и будет удалено. Используйте caption).
  * @property {String} caption Название опции записи.
  * @property {String} tooltip Текст подсказки при наведении мыши.
  * @property {String} icon Имя иконки для опции записи.

@@ -21,12 +21,6 @@ const POSITION_CLASSES = {
     bottomRight: 'controls-itemActionsV_position_bottomRight',
     topRight: 'controls-itemActionsV_position_topRight'
 }
-export const actionDisplayMode = {
-    ICON: 'icon',
-    TITLE: 'title',
-    BOTH: 'both',
-    AUTO: 'auto',
-}
 var _private = {
     fillItemAllActions: function(item, options) {
         var actions = [];
