@@ -130,8 +130,13 @@ const
       drawTransform (self, position) {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
-         const newHTML = '.' + self._transformSelector +
-            ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
+         let newHTML = `.${self._transformSelector} .controls-Grid__cell_transform { transform: translateX(-${position}px); }`;
+
+         if (!isFullGridSupport()) {
+             const maxTranslate = self._contentSize - self._contentContainerSize;
+             newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(-${maxTranslate}px); }`;
+         }
+
          if (self._children.contentStyle.innerHTML !== newHTML) {
             self._children.contentStyle.innerHTML = newHTML;
          }
