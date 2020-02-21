@@ -53,7 +53,7 @@ const SIZE_RELATION_TO_VIEWPORT = 0.3;
  */
 export default class ScrollContainer extends Control<IOptions> {
 
-    set itemsFromLoadToDirection(value) {
+    set itemsFromLoadToDirection(value: IDirection) {
         this.virtualScroll.itemsFromLoadToDirection = value;
     }
     protected _template: TemplateFunction = template;

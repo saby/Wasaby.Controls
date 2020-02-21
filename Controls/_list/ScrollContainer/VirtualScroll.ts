@@ -55,7 +55,7 @@ export default class VirtualScrollController {
 
     scrollTop: number = 0;
     itemsContainerHeight: number = 0;
-    itemsFromLoadToDirection: boolean = false;
+    itemsFromLoadToDirection: IDirection = false;
 
     private _itemsContainer: HTMLElement;
 
@@ -407,6 +407,11 @@ export default class VirtualScrollController {
 
             this._options.indexesChangedCallback(this.startIndex, this.stopIndex);
         }
+
+        // TODO Совместиосмть
+        if (changesType === 'indexesChanged') {
+            this.itemsChanged = true;
+        }
     }
 
     private itemsAddedHandler(newItemsIndex: number, newItems: object[]): void {
@@ -415,14 +420,23 @@ export default class VirtualScrollController {
         // Обновляем виртуальный скроллинг, только если он инициализирован, так как в другом случае,
         // мы уже не можем на него повлиять
         if (this.itemsContainer) {
-            const direction = newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
+            const direction = this.itemsFromLoadToDirection
+            || newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
 
             if (direction === 'up' && this.itemsFromLoadToDirection) {
                 this.savedStartIndex += newItems.length;
                 this.setStartIndex(this.startIndex + newItems.length);
             }
 
-            if (!this.itemsChanged) {
+            if (direction === 'down') {
+                if (this.stopIndex === this.itemsCount - newItems.length && this.triggerVisibility.down
+                    && !this.itemsFromLoadToDirection) {
+                    this.recalcRangeToDirection(direction);
+                } else {
+                    this.shiftRangeBySegment(direction, newItems.length);
+                    this._options.saveScrollPositionCallback(direction);
+                }
+            } else {
                 this.shiftRangeBySegment(direction, newItems.length);
                 this._options.saveScrollPositionCallback(direction);
             }
