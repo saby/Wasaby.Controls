@@ -55,23 +55,19 @@ function getActionsWithDisplayMode(): IItemAction[] {
     return [{
             id: 1,
             icon: 'icon-Email',
-            title: 'Email',
-            displayMode: 'both',
+            caption: 'Email',
             tooltip: 'Электронная почта',
             showType: showType.TOOLBAR
         },
         {
             id: 2,
-            icon: 'icon-Profile',
-            title: 'Профиль пользователя',
-            displayMode: 'title',
+            caption: 'Профиль пользователя',
             showType: showType.TOOLBAR
         },
         {
             id: 3,
-            title: 'Удалить',
+            tooltip: 'Удалить',
             showType: showType.TOOLBAR,
-            displayMode: 'icon',
             icon: 'icon-Erase',
             iconStyle: 'danger'
         }];

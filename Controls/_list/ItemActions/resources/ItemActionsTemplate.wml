@@ -13,8 +13,7 @@
             <ws:partial
                     template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
                     itemData="{{itemData}}"
-                    needShowTitle="{{needShowTitle}}"
-                    needShowIcon="{{needShowIcon}}"
+                    getCaption="{{getCaption}}"
                     getTooltip="{{getTooltip}}"
                     size="{{size}}"
                     showedActions="{{itemData.itemActions.showed}}"/>

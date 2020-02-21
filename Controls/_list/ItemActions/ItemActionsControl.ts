@@ -251,17 +251,11 @@ var ItemActionsControl = Control.extend({
             this._options.listModel.nextModelVersion(true, ACTION_TYPE);
         }
     },
-    needShowIcon(action: IItemAction): boolean {
-        return !!action.icon && (action.displayMode !== actionDisplayMode.TITLE);
-    },
-    needShowTitle(action: IItemAction): boolean {
-        return !!action.title && (action.displayMode === actionDisplayMode.TITLE ||
-                                  action.displayMode === actionDisplayMode.BOTH ||
-                                 (action.displayMode === actionDisplayMode.AUTO ||
-                                     !action.displayMode) && !action.icon);
+    getCaption(action: IItemAction): string {
+        return action.caption || (!action.icon ? action.title : undefined);
     },
     getTooltip(action: IItemAction): string|undefined {
-        return action.tooltip || action.title;
+        return action.tooltip || action.title || action.caption;
     },
     updateActions(): void {
         _private.updateActions(this, this._options);
