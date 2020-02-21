@@ -574,7 +574,7 @@ var
                 this._header,
                 this._options.multiSelectVisibility !== 'hidden',
                 this._shouldAddActionsCell(),
-                this._shouldAddStickyLadderCell()
+                this.shouldAddStickyLadderCell()
             );
         },
 
@@ -621,7 +621,10 @@ var
                 shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport()
             });
         },
-        _shouldAddStickyLadderCell() {
+        /**
+         * Проверка необходимости добавлять ячейку для лесенки
+         */
+        shouldAddStickyLadderCell(): boolean {
             return shouldAddStickyLadderCell(
                 this._options.columns,
                 this._options.stickyColumn,
@@ -875,7 +878,7 @@ var
             } else {
                 this._resultsColumns = columns;
             }
-            if (this._shouldAddStickyLadderCell()) {
+            if (this.shouldAddStickyLadderCell()) {
                 this._resultsColumns = [{}].concat(this._resultsColumns);
             }
             if (this._shouldAddActionsCell()) {
@@ -1002,7 +1005,7 @@ var
             const hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
             this._prepareColgroupColumns(this._columns, hasMultiSelect);
-            this._prepareHeaderColumns(this._header, hasMultiSelect, this._shouldAddActionsCell(), this._shouldAddStickyLadderCell());
+            this._prepareHeaderColumns(this._header, hasMultiSelect, this._shouldAddActionsCell(), this.shouldAddStickyLadderCell());
 
             this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
