@@ -71,7 +71,7 @@ export default class ColumnsInnerView extends Control {
     }
     private setColumnOnItem(item: CollectionItem<unknown>, index: number): void {
         const model = this._model;
-        const column = this._columnsController.calcColumn(model, model.getStartIndex() + index, this._columnsCount);
+        const column = this._columnsController.calcColumn(model, index, this._columnsCount);
         item.setColumn(column);
         this._columnsIndexes[column].push(index);
     }
@@ -222,7 +222,10 @@ export default class ColumnsInnerView extends Control {
             }
         }
     }
-    protected _keyDownHandler(e: SyntheticEvent<KeyboardEvent>): void {
+    getKeyDownHandler(): Function {
+        return this._keyDownHandler.bind(this);
+    }
+    protected _keyDownHandler(e: SyntheticEvent<KeyboardEvent>): boolean {
         let direction = '';
         switch (e.nativeEvent.keyCode) {
             case constants.key.left: direction = 'Left'; break;
@@ -234,6 +237,7 @@ export default class ColumnsInnerView extends Control {
             this.moveMarker(direction);
             e.stopPropagation();
             e.preventDefault();
+            return true;
         }
     }
     static getDefaultOptions(): Partial<IColumnsInnerViewOptions> {
