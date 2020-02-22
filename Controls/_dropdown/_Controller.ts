@@ -93,6 +93,7 @@ var _private = {
                 return items;
              }).addErrback((error) => {
                 _private.loadError(self, error);
+                return error;
              });
           });
    },

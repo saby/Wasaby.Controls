@@ -1,12 +1,13 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import DateLitePopupSource from "./DateLitePopupSource";
-import template = require("wml!Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Source/Source");
+import template = require("wml!Controls-demo/ShortDatePicker/MonthTemplate/Periods/Periods");
 import 'css!Controls-demo/Controls-demo';
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
 
-    private _source: Record = new DateLitePopupSource();
+    private _periods: [Date[]] = [
+        [new Date(2017, 0), new Date(2021, 0)]
+    ];
 }
 
 export default DemoControl;
