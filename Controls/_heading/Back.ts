@@ -24,7 +24,6 @@ const MODERN_IE_VERSION = 11;
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_heading/Back/BackStyles
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize
@@ -45,7 +44,6 @@ const MODERN_IE_VERSION = 11;
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_heading/Back/BackStyles
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize
