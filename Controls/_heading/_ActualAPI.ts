@@ -37,13 +37,13 @@ export function backSize(options: IBackOptions): { fontSize: string, iconSize: s
 }
 
 export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorStyle: string, iconStyle: string } {
-    if (style === 'primary') {
+    if (style === 'secondary') {
         return {
-            fontColorStyle: 'primary', iconStyle: 'secondary'
+            fontColorStyle: 'secondary', iconStyle: 'primary'
         };
     } else {
         return {
-            fontColorStyle: 'secondary', iconStyle: 'primary'
+            fontColorStyle: 'primary', iconStyle: 'secondary'
         };
     }
 }
