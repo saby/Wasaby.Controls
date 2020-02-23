@@ -21,6 +21,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
+ * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/interface/IDropdown
