@@ -14,22 +14,22 @@ export interface ILoadingIndicatorOptions extends IControlOptions {
 /**
  * Интерфейс индикатора загрузки.
  *
- * @interface Controls/_interface/ILoadingIndicator
+ * @interface Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @public
  */
 
 /*
  * Interface of Loading Indicator.
  *
- * @interface Controls/_interface/ILoadingIndicator
+ * @interface Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @public
  */
 export default interface ILoadingIndicator {
-    readonly '[Controls/_interface/ILoadingIndicator]': boolean;
+    readonly '[Controls/_LoadingIndicator/interface/ILoadingIndicator]': boolean;
 }
 
 /*
- * @name Controls/_interface/ILoadingIndicator#isGlobal
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#isGlobal
  * @cfg {Boolean} Показать индикатор над всей страницей или только над собственным контентом.
  * @remark
  * true — индикатор позиционируется через position: fixed;
@@ -38,7 +38,7 @@ export default interface ILoadingIndicator {
  */
 
 /*
- * @name Controls/_interface/ILoadingIndicator#isGlobal
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#isGlobal
  * @cfg {Boolean} show indicator covering whole page (global) or covering just own content
  * @remark
  * * true — It means position: fixed of indicator's container
@@ -47,14 +47,14 @@ export default interface ILoadingIndicator {
  */
 
 /**
- * @name Controls/_interface/ILoadingIndicator#message
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#message
  * @cfg {String} Текст сообщения индикатора.
  * @default '' (пустая строка)
  * @demo Controls-demo/LoadingIndicator/Message/Index
  */
 
 /*
- * @name Controls/_interface/ILoadingIndicator#message
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#message
  * @cfg {String} message of indicator
  * @default '' (empty string)
  * @demo Controls-demo/LoadingIndicator/Message/Index
@@ -80,14 +80,14 @@ export default interface ILoadingIndicator {
  */
 
 /**
- * @name Controls/_interface/ILoadingIndicator#scroll
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#scroll
  * @cfg {Scroll} Добавляет градиент к фону индикатора для прокручивания объекта привязки.
  * @default '' (пустая строка)
  * @demo Controls-demo/LoadingIndicator/Scroll/Index
  */
 
 /*
- * @name Controls/_interface/ILoadingIndicator#scroll
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#scroll
  * @cfg {Scroll} add gradient of indicator's background
  * @default '' (empty string)
  * @demo Controls-demo/LoadingIndicator/Scroll/Index
@@ -107,14 +107,14 @@ export default interface ILoadingIndicator {
  */
 
 /**
- * @name Controls/_interface/ILoadingIndicator#small
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#small
  * @cfg {Small} Размер параметров индикатора (полей, фона, границы, ширины, высоты).
  * @default '' (пустая строка)
  * @demo Controls-demo/LoadingIndicator/Small/Index
  */
 
 /*
- * @name Controls/_interface/ILoadingIndicator#small
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#small
  * @cfg {Small} size of some styles of indicator (tuning of margin, background, border, width, height styles)
  * @default '' (empty string)
  * @demo Controls-demo/LoadingIndicator/Small/Index
@@ -129,21 +129,21 @@ export default interface ILoadingIndicator {
  */
 
 /**
- * @name Controls/_interface/ILoadingIndicator#overlay
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#overlay
  * @cfg {Overlay} Настройка оверлея индикатора.
  * @default default
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
 /*
- * @name Controls/_interface/ILoadingIndicator#overlay
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#overlay
  * @cfg {Overlay} setting of indicator's overlay
  * @default default
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
 /**
- * @name Controls/_interface/ILoadingIndicator#mods
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#mods
  * @cfg {Array.<String>|String} Параметр может использоваться для пользовательской настройки индикатора.
  * @remark
  * Параметр mods содержит слова, которые будут добавлены в качестве стиля "controls-loading-indicator_mod-[mod]" в контейнер индикатора.
@@ -153,7 +153,7 @@ export default interface ILoadingIndicator {
  */
 
 /*
- * @name Controls/_interface/ILoadingIndicator#mods
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#mods
  * @cfg {Array.<String>|String} It can be using for custom tuning of indicator.
  * mods contains words what will be adding as "controls-loading-indicator_mod-[mod]" style in indicator's container
  * * [] — no mods
@@ -162,7 +162,7 @@ export default interface ILoadingIndicator {
  */
 
 /**
- * @name Controls/_interface/ILoadingIndicator#delay
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#delay
  * @cfg {Number} Задержка перед началом показа индикатора.
  * @remark
  * Значение задаётся в миллисекундах.
@@ -171,7 +171,7 @@ export default interface ILoadingIndicator {
  */
 
 /*
- * @name Controls/_interface/ILoadingIndicator#delay
+ * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#delay
  * @cfg {Number} timeout before indicator will be visible
  * @default 2000
  * @demo Controls-demo/LoadingIndicator/Delay/Index

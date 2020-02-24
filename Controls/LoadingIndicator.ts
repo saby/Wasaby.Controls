@@ -1,8 +1,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import tmpl = require('wml!Controls/_LoadingIndicator/LoadingIndicator');
 import randomId = require('Core/helpers/Number/randomId');
-import collection = require('Types/collection');
-import {ILoadingIndicatorOptions, ILoadingIndicator} from 'Controls/interface';
+import {List} from 'Types/collection';
+import {ILoadingIndicatorOptions, ILoadingIndicator} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
@@ -23,7 +23,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @class Controls/LoadingIndicator
  * @extends Core/Control
  * @control
- * @implements Controls/_interface/ILoadingIndicator
+ * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @author Красильников А.С.
  * @public
  * @category Container
@@ -78,7 +78,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  *
  * @class Controls/LoadingIndicator
  * @extends Core/Control
- * @implements Controls/_interface/ILoadingIndicator
+ * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @control
  * @author Красильников А.С.
  * @public
@@ -87,12 +87,12 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  */
 let ManagerController;
 
-class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoadingIndicator{
+class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoadingIndicator {
     protected _template: TemplateFunction = tmpl;
 
     protected _isOverlayVisible: boolean = false;
     protected _isMessageVisible: boolean = false;
-    protected _stack: collection.List<ILoadingIndicatorOptions>;
+    protected _stack: List<ILoadingIndicatorOptions>;
     protected _delay: number = 2000;
     protected _zIndex: number;
     protected _toggleOverlayTimerId: number;
@@ -108,7 +108,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
 
     protected _beforeMount(cfg: ILoadingIndicatorOptions): void {
         this.mods = [];
-        this._stack = new collection.List();
+        this._stack = new List();
         this._updateProperties(cfg);
     }
 
