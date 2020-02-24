@@ -29,7 +29,7 @@ export function counterStyle(style: 'primary' | 'secondary' | 'disabled', fontCo
 }
 
 export function backSize(options: IBackOptions): { fontSize: string, iconSize: string } {
-    if (options.style) {
+    if (options.size) {
         return {fontSize: options.size, iconSize: options.size};
     } else {
         return {fontSize: options.fontSize, iconSize: options.iconSize};
