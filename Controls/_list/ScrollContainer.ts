@@ -358,16 +358,18 @@ export default class ScrollContainer extends Control<IOptions> {
                 if (!this._options.virtualScrolling || this.virtualScroll.canScrollToItem(itemIndex, toBottom, force)) {
                     callback();
                 } else if (force) {
-                    // Во время отрисовки нельзя менять range, так как мы уже никак на него не повлияем, поэтому
-                    // перерисуем в следующий цикл синхронизации
-                    if (this.virtualScroll.itemsChanged) {
-                        this.afterRenderCallback = () => {
-                            this.scrollToItem(key, toBottom, force);
-                        };
-                    } else {
-                        this.virtualScroll.recalcRangeFromIndex(itemIndex);
-                        this.afterRenderCallback = callback;
-                    }
+                    this.inertialScrolling.callAfterScrollStopped(() => {
+                        // Во время отрисовки нельзя менять range, так как мы уже никак на него не повлияем, поэтому
+                        // перерисуем в следующий цикл синхронизации
+                        if (this.virtualScroll.itemsChanged) {
+                            this.afterRenderCallback = () => {
+                                this.scrollToItem(key, toBottom, force).then(resolve);
+                            };
+                        } else {
+                            this.virtualScroll.recalcRangeFromIndex(itemIndex);
+                            this.afterRenderCallback = callback;
+                        }
+                    });
                 } else {
                     resolve();
                 }
@@ -538,15 +540,15 @@ export default class ScrollContainer extends Control<IOptions> {
     private updateViewWindow(direction: IDirection, params?: IScrollParams): void {
         this.changeTriggerVisibility(direction, true);
         if (this._options.virtualScrolling) {
-            if (!this.virtualScroll.itemsChanged) {
-                if (params) {
-                    this.virtualScroll.viewportHeight = params.clientHeight;
-                }
+            this.inertialScrolling.callAfterScrollStopped(() => {
+                if (!this.virtualScroll.itemsChanged) {
+                    if (params) {
+                        this.virtualScroll.viewportHeight = params.clientHeight;
+                    }
 
-                this.inertialScrolling.callAfterScrollStopped(() => {
                     this.virtualScroll.recalcRangeToDirection(direction);
-                });
-            }
+                }
+            });
         } else {
             this._notify('loadMore', [direction]);
         }
