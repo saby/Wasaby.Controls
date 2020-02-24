@@ -124,7 +124,7 @@ const MODERN_IE_VERSION = 11;
  * </pre>
  */
 
-class Back extends Control<IBackOptions> {
+class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, IIconStyle, IIconSize {
     protected _template: TemplateFunction = backTemplate;
     protected _isOldIe: Boolean = false;
     protected _style: TBackStyle;
@@ -173,7 +173,11 @@ class Back extends Control<IBackOptions> {
     static getDefaultOptions(): object {
         return {
             style: 'primary',
-            size: 'm'
+            size: 'm',
+            fontColorStyle: 'primary',
+            fontSize: 'm',
+            iconStyle: 'secondary',
+            iconSize: 'm'
         };
     }
 
@@ -186,6 +190,24 @@ class Back extends Control<IBackOptions> {
                 'default'
             ]),
             size: EntityDescriptor(String).oneOf([
+                's',
+                'm',
+                'l'
+            ]),
+            fontColorStyle: EntityDescriptor(String).oneOf([
+                'primary',
+                'secondary'
+            ]),
+            fontSize: EntityDescriptor(String).oneOf([
+                's',
+                'm',
+                'l'
+            ]),
+            iconStyle: EntityDescriptor(String).oneOf([
+                'primary',
+                'secondary'
+            ]),
+            iconSize: EntityDescriptor(String).oneOf([
                 's',
                 'm',
                 'l'
