@@ -3903,6 +3903,51 @@ define([
             assert.equal(callBackCount, 0);
          });
 
+         it('closeSwipe on listDeactivated', () => {
+            let
+               swipeClosed = false,
+               cfg = {
+                  items: new collection.RecordSet({
+                     rawData: [
+                        {
+                           id: 1,
+                           title: 'item 1'
+                        },
+                        {
+                           id: 2,
+                           title: 'item 2'
+                        }
+                     ],
+                     keyProperty: 'id'
+                  }),
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  markedKey: null,
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg);
+            instance._children = {
+               swipeControl: {
+                  closeSwipe: function () {
+                     swipeClosed = true;
+                  }
+               }
+            };
+            instance._menuIsShown = true;
+            instance._listDeactivated();
+            assert.isFalse(swipeClosed);
+            instance._menuIsShown = false;
+            instance._listDeactivated();
+            assert.isTrue(swipeClosed);
+         });
+
          it('close context menu if its owner was removed', function() {
             let
                swipeClosed = false,
