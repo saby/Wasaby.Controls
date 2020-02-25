@@ -29,10 +29,12 @@ export function counterStyle(style: 'primary' | 'secondary' | 'disabled', fontCo
 }
 
 export function backSize(options: IBackOptions): { fontSize: string, iconSize: string } {
-    if (options.size) {
+    if (options.fontSize && options.iconSize) {
+        return {fontSize: options.fontSize, iconSize: options.iconSize};
+    } else if (options.size) {
         return {fontSize: options.size, iconSize: options.size};
     } else {
-        return {fontSize: options.fontSize, iconSize: options.iconSize};
+        return {fontSize: 'm', iconSize: 'm'};
     }
 }
 
@@ -49,12 +51,14 @@ export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorSty
 }
 
 export function backStyle(options: IBackOptions): { fontColorStyle: string, iconStyle: string } {
-    if (options.style) {
-        return backStyleOptions(options.style);
-    } else {
-        return  {
+    if (options.fontColorStyle && options.iconStyle) {
+        return {
             fontColorStyle: options.fontColorStyle,
             iconStyle: options.iconStyle
         };
+    } else if (options.style) {
+        return backStyleOptions(options.style);
+    } else {
+        return {fontColorStyle: 'primary', iconStyle: 'secondary'};
     }
 }

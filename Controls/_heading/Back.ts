@@ -173,11 +173,7 @@ class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, 
     static getDefaultOptions(): object {
         return {
             style: 'primary',
-            size: 'm',
-            fontColorStyle: 'primary',
-            fontSize: 'm',
-            iconStyle: 'secondary',
-            iconSize: 'm'
+            size: 'm'
         };
     }
 
