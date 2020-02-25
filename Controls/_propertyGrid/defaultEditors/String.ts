@@ -37,6 +37,13 @@ class StringEditor extends Control implements IEditor {
         this.initialValue = options.propertyValue;
     }
 
+    _beforeUpdate(newOptions: IEditorOptions): void {
+        if (this._options.propertyValue !== newOptions.propertyValue) {
+            this.value = newOptions.propertyValue;
+            this.initialValue = newOptions.propertyValue;
+        }
+    }
+
     _inputCompleted(event: Event, value: string): void {
         if (this.initialValue !== value) {
             this.initialValue = value;
