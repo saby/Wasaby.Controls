@@ -126,7 +126,7 @@ interface IValidateResult {
  * @param {CrudResult} crudResult
  * @return {ReceivedState}
  */
-let getState = function (crudResult) {
+const getState = (crudResult: ICrudResult): IReceivedState => {
     delete crudResult.error;
     return crudResult;
 };
@@ -143,7 +143,7 @@ let getState = function (crudResult) {
  * @param {CrudResult} [crudResult]
  * @return {Promise}
  */
-const getData = (crudResult) => {
+const getData = (crudResult: ICrudResult): Promise<undefined | Model> => {
     if (!crudResult) {
         return Promise.resolve();
     }
@@ -153,11 +153,11 @@ const getData = (crudResult) => {
     return Promise.reject(crudResult.error);
 };
 
-let _private = {
-    checkRecordType(record) {
+const _private = {
+    checkRecordType(record: Model): boolean {
         return cInstance.instanceOfModule(record, 'Types/entity:Record');
     },
-    readRecordBeforeMount: (instance, cfg) => {
+    readRecordBeforeMount: (instance, cfg: IFormController) => {
         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
         return instance._source.read(cfg.key, cfg.readMetaData).then((record) => {
@@ -176,7 +176,7 @@ let _private = {
             return instance._processError(e).then(getState);
         });
     },
-    readRecordBeforeMountNotify(instance) {
+    readRecordBeforeMountNotify(instance: any): void {
         if (!instance._readInMounting.isError) {
             instance._notifyHandler('readSuccessed', [instance._readInMounting.result]);
 
@@ -188,10 +188,10 @@ let _private = {
         instance._readInMounting = null;
     },
 
-    createRecordBeforeMount(instance, cfg) {
+    createRecordBeforeMount(instance: any, cfg: IFormController): Promise<ICrudResult> {
         // если ни рекорда, ни ключа, создаем новый рекорд и используем его
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
-        return instance._source.create(cfg.initValues || cfg.createMetaData).then(function (record) {
+        return instance._source.create(cfg.initValues || cfg.createMetaData).then((record) => {
             instance._setRecord(record);
             instance._createdInMounting = {isError: false, result: record};
 
@@ -207,7 +207,7 @@ let _private = {
         });
     },
 
-    createRecordBeforeMountNotify(instance) {
+    createRecordBeforeMountNotify(instance: any): void {
         if (!instance._createdInMounting.isError) {
             instance._notifyHandler('createSuccessed', [instance._createdInMounting.result]);
 
@@ -239,7 +239,7 @@ class FormController extends Control<IFormController> {
     protected __error: dataSourceError.ViewConfig;
 
     protected _beforeMount(options: IFormController, context: object, receivedState: IReceivedState): Promise<ICrudResult> | void {
-        this.__errorController = options.errorController || new dataSource.error.Controller({});
+        this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._source = options.source || options.dataSource;
         if (options.dataSource) {
             Logger.warn('FormController: Use option "source" instead of "dataSource"', this);
@@ -553,7 +553,7 @@ class FormController extends Control<IFormController> {
                 });
                 res.addErrback((error: Error) => {
                     updateDef.errback(error);
-                    return self._processError(error, dataSource.error.Mode.dialog);
+                    return self._processError(error, dataSourceError.Mode.dialog);
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
@@ -658,12 +658,12 @@ class FormController extends Control<IFormController> {
         this._notifyHandler(eventName, args);
     }
 
-    private _notifyHandler(eventName: string, args) { //подумать
+    private _notifyHandler(eventName: string, args): void { //подумать
         this._notifyToOpener(eventName, args);
         this._notify(eventName, args, {bubbling: true});
     }
 
-    private _notifyToOpener(eventName: string, args: [Model, string | number]) {
+    private _notifyToOpener(eventName: string, args: [Model, string | number]): void {
         let handlers = {
             'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
