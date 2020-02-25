@@ -320,7 +320,7 @@ var
                     const _parentItem = dispItem.getParent().getContents();
                     const _parentKey = _parentItem && _parentItem.getId();
                     const _parentChildren = self._hierarchyRelation.getChildren(_parentKey, self._items);
-                    return _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
+                    return !!_parentChildren.length && _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
                 };
 
                 let result = true;
