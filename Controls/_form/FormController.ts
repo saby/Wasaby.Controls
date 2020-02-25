@@ -4,9 +4,8 @@ import cInstance = require('Core/core-instance');
 import tmpl = require('wml!Controls/_form/FormController/FormController');
 import Deferred = require('Core/Deferred');
 import {Logger} from 'UI/Utils';
-import dataSource = require('Controls/dataSource');
 import {error as dataSourceError} from 'Controls/dataSource';
-import {IContainerConstructor, Controller} from 'Controls/_dataSource/error';
+import {IContainerConstructor} from 'Controls/_dataSource/error';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -142,15 +141,6 @@ interface IConfigInMounting {
  * @param {CrudResult} [crudResult]
  * @return {Promise}
  */
-const getData = (crudResult: ICrudResult): Promise<undefined | Model> => {
-    if (!crudResult) {
-        return Promise.resolve();
-    }
-    if (crudResult.data) {
-        return Promise.resolve(crudResult.data);
-    }
-    return Promise.reject(crudResult.error);
-};
 
 class FormController extends Control<IFormController, IReceivedState> {
     protected _template: TemplateFunction = tmpl;
@@ -187,13 +177,13 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
 
         receivedState = receivedState || {};
-        let receivedError = receivedState.errorConfig;
-        let receivedData = receivedState.data;
+        const receivedError = receivedState.errorConfig;
+        const receivedData = receivedState.data;
 
         if (receivedError) {
             return this._showError(receivedError);
         }
-        let record = receivedData || options.record;
+        const record = receivedData || options.record;
 
         // use record
         if (record && this._checkRecordType(record)) {
@@ -226,7 +216,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IFormController): void {
-        let self = this;
+        const self = this;
         if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
             //Сбрасываем состояние, только если данные поменялись, иначе будет зацикливаться
@@ -317,7 +307,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         });
     }
 
-    protected _readRecordBeforeMount = (cfg: IFormController) => {
+    private _readRecordBeforeMount = (cfg: IFormController) => {
         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
         return this._source.read(cfg.key, cfg.readMetaData).then((record) => {
@@ -370,6 +360,16 @@ class FormController extends Control<IFormController, IReceivedState> {
         return crudResult;
     }
 
+    private _getData = (crudResult: ICrudResult): Promise<undefined | Model> => {
+        if (!crudResult) {
+            return Promise.resolve();
+        }
+        if (crudResult.data) {
+            return Promise.resolve(crudResult.data);
+        }
+        return Promise.reject(crudResult.error);
+    }
+
     private _setRecord(record: Model): void {
         if (!record || this._checkRecordType(record)) {
             this._record = record;
@@ -381,7 +381,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             Logger.error('FormController: Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда', this);
             return null;
         }
-        let keyProperty = this._options.idProperty || this._options.keyProperty;
+        const keyProperty = this._options.idProperty || this._options.keyProperty;
         return keyProperty ? this._record.get(keyProperty) : this._record.getId();
     }
 
@@ -494,14 +494,14 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     update(): Promise<undefined | Model> {
-        let updateResult = new Deferred(),
-            self = this;
+        const updateResult = new Deferred()
+        const self = this;
 
         function updateCallback(result): void {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                 self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
-                let res = self._update().addCallback(getData);
+                const res = self._update().addCallback(self._getData);
                 updateResult.dependOn(res);
             } else {
                 updateResult.callback(true);
@@ -510,10 +510,10 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
 
         // maybe anybody want to do custom update. check it.
-        let result = this._notify('requestCustomUpdate', [], {bubbling: true});
+        const result = this._notify('requestCustomUpdate', [], {bubbling: true});
 
         // pending waiting while update process finished
-        let def = new Deferred();
+        const def = new Deferred();
         self._notify('registerPending', [def, {showLoadingIndicator: false}], {bubbling: true});
         def.dependOn(updateResult);
 
@@ -532,12 +532,12 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _update(): Promise<IDataValid> {
-        let self = this,
-            record = this._record,
-            updateDef = new Deferred();
+        const self = this;
+        const record = this._record;
+        const updateDef = new Deferred();
 
         // запускаем валидацию
-        let validationDef = this._children.validation.submit();
+        const validationDef = this._children.validation.submit();
         validationDef.addCallback((results) => {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
@@ -561,11 +561,11 @@ class FormController extends Control<IFormController, IReceivedState> {
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
-                let validationErrors = self._children.validation.isValid();
+                const validationErrors = self._children.validation.isValid();
                 self._notify('validationFailed', [validationErrors], {bubbling: true});
                 updateDef.callback({
                     data: {
-                        validationErrors: validationErrors
+                        validationErrors
                     }
                 });
             }
@@ -579,8 +579,8 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     delete(destroyMetaData: object): Promise<Model | undefined> {
         destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
-        let self = this;
-        let resultDef = this._children.crud.delete(this._record, destroyMetaData);
+        const self = this;
+        const resultDef = this._children.crud.delete(this._record, destroyMetaData);
 
         resultDef.addCallbacks((record) => {
             self._setRecord(null);
@@ -589,7 +589,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             self._forceUpdate();
             return record;
         }, (error) => {
-            return self._crudErrback(error, dataSource.error.Mode.dialog);
+            return self._crudErrback(error, dataSourceError.Mode.dialog);
         });
         return resultDef;
     }
@@ -623,10 +623,10 @@ class FormController extends Control<IFormController, IReceivedState> {
      * @private
      */
     private _processError(error: Error, mode?: dataSourceError.Mode): Promise<ICrudResult> {
-        let self = this;
+        const self = this;
         return self.__errorController.process({
             error,
-            mode: mode || dataSource.error.Mode.include
+            mode: mode || dataSourceError.Mode.include
         }).then((errorConfig: dataSourceError.ViewConfig) => {
             self._showError(errorConfig);
             return {
@@ -656,8 +656,8 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _crudHandler(event: SyntheticEvent<Event>): void {
-        let eventName = event.type;
-        let args = Array.prototype.slice.call(arguments, 1);
+        const eventName = event.type;
+        const args = Array.prototype.slice.call(arguments, 1);
         event.stopPropagation(); // FC the notification event by itself
         this._notifyHandler(eventName, args);
     }
@@ -668,7 +668,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _notifyToOpener(eventName: string, args: [Model, string | number]): void {
-        let handlers = {
+        const handlers = {
             'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
             'createsuccessed': '_getCreateSuccessedData',
@@ -676,9 +676,9 @@ class FormController extends Control<IFormController, IReceivedState> {
             'deletesuccessed': '_getDeleteSuccessedData',
             'updatefailed': '_getUpdateFailedData'
         };
-        let resultDataHandlerName = handlers[eventName.toLowerCase()];
+        const resultDataHandlerName = handlers[eventName.toLowerCase()];
         if (this[resultDataHandlerName]) {
-            let resultData = this[resultDataHandlerName].apply(this, args);
+            const resultData = this[resultDataHandlerName].apply(this, args);
             this._notify('sendResult', [resultData], {bubbling: true});
         }
     }
