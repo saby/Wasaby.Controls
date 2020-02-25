@@ -2613,6 +2613,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         return styles;
     },
+    _listDeactivated: function() {
+        if (!this._menuIsShown) {
+            this._children.swipeControl?.closeSwipe();
+        }
+    },
 
     _onHoveredItemChanged: function(e, item, container) {
         this._notify('hoveredItemChanged', [item, container]);
