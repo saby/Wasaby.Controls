@@ -1,5 +1,5 @@
 <div class="controls-MasterDetail">
-   <div class="controls-MasterDetail_master" style="width: {{_currentWidth}}">
+   <div class="controls-MasterDetail_master" style="width: {{_currentWidth}}; max-width: {{_currentMaxWidth}}; min-width: {{_currentMinWidth}}">
       <Controls.event:Register name="resizeDetectMaster" register="controlResize" attr:fixCompatible="1">
          <ws:partial
             template="{{_options.master}}"
