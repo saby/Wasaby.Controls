@@ -159,10 +159,13 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.viewportHeight = 400;
 
             instance.stopIndex = 19;
-            assert.isTrue(instance.canScrollToItem(1));
-            assert.isFalse(instance.canScrollToItem(18));
+            assert.isTrue(instance.canScrollToItem(1, false, true));
+            assert.isFalse(instance.canScrollToItem(18, false, true));
+            assert.isFalse(instance.canScrollToItem(19, false, true));
             instance.stopIndex = 20;
-            assert.isTrue(instance.canScrollToItem(20));
+            assert.isTrue(instance.canScrollToItem(19, false, true));
+            assert.isTrue(instance.canScrollToItem(18, true, true));
+            assert.isTrue(instance.canScrollToItem(18, false, false));
         });
         it('recalcFromScrollTop', () => {
             // @ts-ignore
@@ -238,28 +241,28 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             // @ts-ignore
             const instance = new VirtualScroll(defaultOptions);
             instance._options.viewModel.getStartIndex = () => instance.startIndex;
-            instance.itemsFromLoadToDirection = true;
+            instance.itemsFromLoadToDirection = 'down';
             instance.itemsCount = 20;
             instance.reset(0);
             instance.itemsContainer = itemsContainer;
             instance.itemsCount = 40;
             instance.itemsAddedHandler(0, {length: 20});
-            assert.equal(instance.stopIndex, 40);
-            assert.equal(instance.startIndex, 20);
+            assert.equal(instance.startIndex, 0);
+            assert.equal(instance.stopIndex, 20);
 
             // @ts-ignore
             const instanceWithBigPageSize = new VirtualScroll({...defaultOptions, pageSize: 40});
 
             instanceWithBigPageSize._options.viewModel.getStartIndex = () => instanceWithBigPageSize.startIndex;
-            instanceWithBigPageSize.itemsFromLoadToDirection = true;
+            instanceWithBigPageSize.itemsFromLoadToDirection = 'up';
             instanceWithBigPageSize.itemsCount = 20;
             instanceWithBigPageSize.reset(0);
             instanceWithBigPageSize.itemsContainer = itemsContainer;
             instanceWithBigPageSize.itemsCount = 40;
 
             instanceWithBigPageSize.itemsAddedHandler(0, {length: 20});
-            assert.equal(instanceWithBigPageSize.stopIndex, 40);
             assert.equal(instanceWithBigPageSize.startIndex, 0);
+            assert.equal(instanceWithBigPageSize.stopIndex, 40);
             assert.equal(affectingInstance.loadDirection, 'up');
         });
         it('itemsRemovedHandler', () => {

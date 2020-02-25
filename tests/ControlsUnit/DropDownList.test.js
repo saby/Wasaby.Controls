@@ -455,6 +455,16 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             let result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'itemClick');
             assert.deepEqual(result, expectedResult);
 
+            const selectorItemsRawData = rawData.slice();
+            selectorItemsRawData.push({id: 'testId' });
+
+            dropdownList._options.selectorItems = new collection.RecordSet({ rawData: selectorItemsRawData, keyProperty: 'id' });
+            dropdownList._listModel.setSelectedKeys(['testId', 1]);
+
+            result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'applyClick');
+            assert.equal(result.data.length, 2);
+            dropdownList._listModel.setSelectedKeys([]);
+
             let ddlConfig = getDropDownConfig();
             ddlConfig.emptyText = 'Not selected';
             ddlConfig.selectedKeys = [null];

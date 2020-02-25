@@ -6,6 +6,7 @@ let lastId = 0;
 export type TRegisterEventData = {
    id: number;
    inst?: object;
+   container: HTMLElement;
    position?: string;
    mode?: string;
 };
