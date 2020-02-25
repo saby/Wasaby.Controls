@@ -83,15 +83,15 @@
    pointer-events: auto;
    font-family: 'TensorFont Обычный', 'TensorFont Regular', 'TensorFont', sans-serif;
    font-size: @font-size_loadingIndicator;
-   line-height: @line-height_LoadingIndicator; //подумать
    color: @text-color_loadingIndicator;
 }
 
 .controls-loading-indicator_text .controls-loading-indicator-in {
+   display: flex;
+   align-items: center;
    min-width: @spinner_l_size_loadingIndicator + 3*@content_l_padding_loadingIndicator;
    width: auto;
-   padding: (@spinner_l_size_loadingIndicator + 2*@content_l_padding_loadingIndicator - @line-height_LoadingIndicator)/2 //подумать
-   @content_l_padding_loadingIndicator 0 (@spinner_l_size_loadingIndicator + 2*@content_l_padding_loadingIndicator);
+   padding: 0 @content_l_padding_loadingIndicator 0 (@spinner_l_size_loadingIndicator + 2*@content_l_padding_loadingIndicator);
    background-position:@content_l_padding_loadingIndicator 50%;
    white-space: nowrap;
    text-overflow: ellipsis;
