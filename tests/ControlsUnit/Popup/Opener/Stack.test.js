@@ -83,7 +83,7 @@ define(
                popupOptions: { stackClassName: '' }
             });
             popupTemplate.StackController._stack.add({
-               position: { width: 1000 },
+               position: { width: 50, right: 950},
                popupOptions: { stackClassName: '' }
             });
             popupTemplate.StackController._stack.add({
