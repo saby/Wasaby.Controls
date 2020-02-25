@@ -86,12 +86,19 @@ define(['Controls/heading'], function(heading) {
          assert.equal(backD._iconSize, 'l');
 
          const styles2 = {
-            iconSize: 'm',
-            fontSize: 'm'
+            iconSize: 'l',
+            fontSize: 'l'
          };
          backD._setSizeState(styles2);
+         assert.equal(backD._fontSize, 'l');
+         assert.equal(backD._iconSize, 'l');
+
+         const styles3 = {
+            iconSize: 's',
+         };
+         backD._setSizeState(styles3);
          assert.equal(backD._fontSize, 'm');
-         assert.equal(backD._iconSize, 'm');
+         assert.equal(backD._iconSize, 's');
 
       });
    });

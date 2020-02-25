@@ -29,13 +29,10 @@ export function counterStyle(style: 'primary' | 'secondary' | 'disabled', fontCo
 }
 
 export function backSize(options: IBackOptions): { fontSize: string, iconSize: string } {
-    if (options.fontSize && options.iconSize) {
-        return {fontSize: options.fontSize, iconSize: options.iconSize};
-    } else if (options.size) {
-        return {fontSize: options.size, iconSize: options.size};
-    } else {
-        return {fontSize: 'm', iconSize: 'm'};
-    }
+    return {
+        fontSize: options.fontSize || options.size || 'm',
+        iconSize: options.iconSize || options.size || 'm'
+    };
 }
 
 export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorStyle: string, iconStyle: string } {
@@ -51,14 +48,8 @@ export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorSty
 }
 
 export function backStyle(options: IBackOptions): { fontColorStyle: string, iconStyle: string } {
-    if (options.fontColorStyle && options.iconStyle) {
-        return {
-            fontColorStyle: options.fontColorStyle,
-            iconStyle: options.iconStyle
-        };
-    } else if (options.style) {
-        return backStyleOptions(options.style);
-    } else {
-        return {fontColorStyle: 'primary', iconStyle: 'secondary'};
-    }
+    return {
+        fontColorStyle: options.fontColorStyle || backStyleOptions(options.style).fontColorStyle || 'primary',
+        iconStyle: options.iconStyle || backStyleOptions(options.style).iconStyle || 'secondary'
+    };
 }
