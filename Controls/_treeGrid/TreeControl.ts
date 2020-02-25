@@ -261,6 +261,7 @@ var _private = {
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
             if (self._updateExpandedItemsAfterReload) {
+                _private.clearNodesSourceControllers(self);
                 viewModel.setExpandedItems(options.expandedItems);
                 self._updateExpandedItemsAfterReload = false;
             }
