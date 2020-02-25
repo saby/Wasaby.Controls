@@ -458,7 +458,7 @@ class FormController extends Control<IFormController> {
         });
     }
 
-    create(createMetaData) {
+    create(createMetaData: object): Promise<undefined | Model> {
         createMetaData = createMetaData || this._options.initValues || this._options.createMetaData;
         return this._children.crud.create(createMetaData).addCallbacks(
             this._createHandler.bind(this),
@@ -466,14 +466,14 @@ class FormController extends Control<IFormController> {
         );
     }
 
-    private _createHandler(record) {
+    private _createHandler(record: Model): Model {
         this._updateIsNewRecord(true);
         this._wasCreated = true;
         this._forceUpdate();
         return record;
     }
 
-    read(key, readMetaData) {
+    read(key: string, readMetaData: object): Promise<Model> {
         readMetaData = readMetaData || this._options.readMetaData;
         return this._children.crud.read(key, readMetaData).addCallbacks(
             this._readHandler.bind(this),
@@ -481,7 +481,7 @@ class FormController extends Control<IFormController> {
         );
     }
 
-    private _readHandler(record) {
+    private _readHandler(record: Model): Model {
         this._wasRead = true;
         this._updateIsNewRecord(false);
         this._forceUpdate();
@@ -489,11 +489,11 @@ class FormController extends Control<IFormController> {
         return record;
     }
 
-    update() {
+    update(): Promise<undefined | Model> {
         let updateResult = new Deferred(),
             self = this;
 
-        function updateCallback(result) {
+        function updateCallback(result): void {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                 self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
@@ -514,10 +514,10 @@ class FormController extends Control<IFormController> {
         def.dependOn(updateResult);
 
         if (result && result.then) {
-            result.then(function (defResult) {
+            result.then((defResult) => {
                 updateCallback(defResult);
                 return defResult;
-            }, function (err) {
+            }, (err) => {
                 updateResult.errback(err);
                 return err;
             });
@@ -527,14 +527,14 @@ class FormController extends Control<IFormController> {
         return updateResult;
     }
 
-    private _update() {
+    private _update(): Promise<IDataValid> {
         let self = this,
             record = this._record,
             updateDef = new Deferred();
 
         // запускаем валидацию
         let validationDef = this._children.validation.submit();
-        validationDef.addCallback(function (results) {
+        validationDef.addCallback((results) => {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
                 self._notify('validationSuccessed', [], {bubbling: true});
@@ -545,7 +545,7 @@ class FormController extends Control<IFormController> {
                     res = new Deferred();
                     res.callback();
                 }
-                res.addCallback(function (arg) {
+                res.addCallback((arg) => {
                     self._updateIsNewRecord(false);
 
                     updateDef.callback({data: true});
@@ -566,31 +566,31 @@ class FormController extends Control<IFormController> {
                 });
             }
         });
-        validationDef.addErrback(function (e) {
+        validationDef.addErrback((e) => {
             updateDef.errback(e);
             return e;
         });
         return updateDef;
     }
 
-    delete(destroyMetaData) {
+    delete(destroyMetaData: object): Promise<Model | undefined> {
         destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
         let self = this;
         let resultDef = this._children.crud.delete(this._record, destroyMetaData);
 
-        resultDef.addCallbacks(function (record) {
+        resultDef.addCallbacks((record) => {
             self._setRecord(null);
             self._wasDestroyed = true;
             self._updateIsNewRecord(false);
             self._forceUpdate();
             return record;
-        }, function (error) {
+        }, (error) => {
             return self._crudErrback(error, dataSource.error.Mode.dialog);
         });
         return resultDef;
     }
 
-    validate() {
+    validate(): Promise<IValidateResult | Error> {
         return this._children.validation.submit();
     }
 
@@ -601,11 +601,11 @@ class FormController extends Control<IFormController> {
      * @return {Promise<*>}
      * @private
      */
-    private _crudErrback(error, mode) {
+    private _crudErrback(error: Error, mode: dataSourceError.Mode): Promise<undefined | Model> {
         return this._processError(error, mode).then(getData);
     }
 
-    private _updateIsNewRecord(value) {
+    private _updateIsNewRecord(value: boolean): void {
         if (this._isNewRecord !== value) {
             this._isNewRecord = value;
             this._notify('isNewRecordChanged', [value]);
@@ -618,12 +618,12 @@ class FormController extends Control<IFormController> {
      * @return {Promise.<CrudResult>}
      * @private
      */
-    private _processError(error, mode) {
+    private _processError(error: Error, mode: dataSourceError.Mode): Promise<ICrudResult> {
         let self = this;
         return self.__errorController.process({
             error: error,
             mode: mode || dataSource.error.Mode.include
-        }).then(function (errorConfig) {
+        }).then((errorConfig) => {
             self._showError(errorConfig);
             return {
                 error: error,
@@ -635,35 +635,35 @@ class FormController extends Control<IFormController> {
     /**
      * @private
      */
-    private _showError(errorConfig) {
+    private _showError(errorConfig: dataSourceError.ViewConfig): void {
         this.__error = errorConfig;
     }
 
-    private _hideError() {
+    private _hideError(): void {
         if (this.__error) {
             this.__error = null;
         }
     }
 
-    private _onCloseErrorDialog() {
+    private _onCloseErrorDialog(): void {
         if (!this._record) {
             this._notify('close', [], {bubbling: true});
         }
     }
 
-    private _crudHandler(event) {
+    private _crudHandler(event: SyntheticEvent<Event>): void {
         let eventName = event.type;
         let args = Array.prototype.slice.call(arguments, 1);
         event.stopPropagation(); // FC the notification event by itself
         this._notifyHandler(eventName, args);
     }
 
-    private _notifyHandler(eventName, args) {
+    private _notifyHandler(eventName: string, args) { //подумать
         this._notifyToOpener(eventName, args);
         this._notify(eventName, args, {bubbling: true});
     }
 
-    private _notifyToOpener(eventName, args) {
+    private _notifyToOpener(eventName: string, args: [Model, string | number]) {
         let handlers = {
             'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
@@ -679,34 +679,34 @@ class FormController extends Control<IFormController> {
         }
     }
 
-    private _getUpdateStartedData(record, key) {
+    private _getUpdateStartedData(record: Model, key: string): IResultData {
         let config = this._getUpdateSuccessedData(record, key);
         config.formControllerEvent = 'updateStarted';
         return config;
     }
 
-    private _getUpdateSuccessedData(record, key) {
-        let additionalData = {
+    private _getUpdateSuccessedData(record: Model, key: string): IResultData {
+        let additionalData: IAdditionalData = {
             key: key,
             isNewRecord: this._isNewRecord
         };
         return this._getResultData('update', record, additionalData);
     }
 
-    private _getDeleteSuccessedData(record) {
+    private _getDeleteSuccessedData(record: Model): IResultData {
         return this._getResultData('delete', record);
     }
 
-    private _getCreateSuccessedData(record) {
+    private _getCreateSuccessedData(record: Model): IResultData {
         return this._getResultData('create', record);
     }
 
-    private _getReadSuccessedData(record) {
+    private _getReadSuccessedData(record: Model): IResultData {
         return this._getResultData('read', record);
     }
 
-    private _getUpdateFailedData(error, record) {
-        let additionalData = {
+    private _getUpdateFailedData(error: Error, record: Model): IResultData {
+        let additionalData: IAdditionalData = {
             record: record,
             error: error,
             isNewRecord: this._isNewRecord
@@ -714,7 +714,7 @@ class FormController extends Control<IFormController> {
         return this._getResultData('updateFailed', record, additionalData);
     }
 
-    private _getResultData(eventName, record, additionalData) {
+    private _getResultData(eventName: string, record: Model, additionalData?: IAdditionalData): IResultData {
         return {
             formControllerEvent: eventName,
             record: record,
