@@ -12,10 +12,24 @@ export default class extends Control {
     protected _columns = getPorts().getColumns();
     protected _documentSignMemory;
 
+    private getData(data) {
+        for (let key in data) {
+            if (data[key]) {
+                data[key] = '' + data[key];
+            } else {
+                data[key] = 'random'
+            }
+
+        }
+        return data;
+    }
+    private data = getPorts().getData().map((cur) => this.getData(cur));
+
     protected _beforeMount() {
+        console.log(this.data)
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: getPorts().getData()
+            data: this.data
         });
 
         this._documentSignMemory = new Memory({

@@ -59,7 +59,35 @@ function getActionsForContacts(): Array<{
     ]
 }
 
+function getMoreActions(): Array<{
+    id: number
+    title: string
+    showType?: number
+    icon?: string
+    iconStyle?: string
+    handler?: Function
+    parent?: number
+    'parent@'?: true | false
+}> {
+    return [
+        {
+            id: 10,
+            icon: 'icon-Erase icon-error',
+            title: 'delete pls',
+            showType: showType.TOOLBAR,
+        },
+        {
+            id: 11,
+            icon: 'icon-Forward',
+            title: 'delete pls',
+            showType: showType.TOOLBAR,
+        }
+    ]
+}
+
+
 
 export {
-    getActionsForContacts
+    getActionsForContacts,
+    getMoreActions
 }

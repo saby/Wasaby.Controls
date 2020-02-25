@@ -1,5 +1,5 @@
 <ws:partial template="Controls/grid:RowEditor" scope="{{_options}}">
-    <div>
+    <div style="padding-left: 6px;">
         <div class="demo-EditableGrid__editor-flexWrapper" style="width: 100%;">
             <div class="demo-EditableGrid__editor-flexWrapper">
                 <span class="demo-EditableGrid__editor-description">Признак ТД</span>
@@ -31,10 +31,10 @@
                 <Controls.input:Text bind:value="itemData.item.get('serviceContract')" placeholder="Номер"/>
             </div>
         </div>
-        <div class="demo-EditableGrid__editor-rowTopSpacing">
-            <span class="demo-EditableGrid__editor-description">Грузоотправитель</span>
-            <Controls.lookup:Input placeholder="Укажите"/>
-        </div>
+<!--        <div class="demo-EditableGrid__editor-rowTopSpacing">-->
+<!--            <span class="demo-EditableGrid__editor-description">Грузоотправитель</span>-->
+<!--            <Controls.lookup:Input value="" placeholder="Укажите"/>-->
+<!--        </div>-->
         <div class="demo-EditableGrid__editor-description demo-EditableGrid__editor-rowTopSpacing">Сведения о маршрутном поручении (телеграмме)</div>
         <div class="demo-EditableGrid__editor-flexWrapper demo-EditableGrid__editor-rowTopSpacing" style="width: 100%;">
             <span class="demo-EditableGrid__editor-description">Примечание</span>
