@@ -22,7 +22,8 @@ define('Controls-demo/RootRouter', [
          reload: function() {
             this.isReloading = true;
             // При обновлении демки сбрасываем все что лежит в settingsController (задается на application);
-            window.localStorage.setItem('controlSettingsStorage', '{}');
+            // здесь падает рендеринг на wi.sbis-doc
+            //window.localStorage.setItem('controlSettingsStorage', '{}');
          },
 
          _afterMount: function() {
