@@ -154,7 +154,7 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     protected _beforeRender(): void {
-        if (this.saveScrollPosition) {
+        if (this.savedScrollDirection) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
     }

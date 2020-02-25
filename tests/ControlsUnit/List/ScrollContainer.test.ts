@@ -62,7 +62,7 @@ describe('Controls/_list/ScrollContainer', () => {
 
             instance._beforeRender();
             assert.notEqual('saveScrollPosition', instance.lastNotifiedEventName);
-            instance.saveScrollPosition = true;
+            instance.savedScrollDirection = 'up';
             instance._beforeRender();
             assert.isTrue(instance.lastNotifiedParams.bubbling);
             assert.equal('saveScrollPosition', instance.lastNotifiedEventName);
