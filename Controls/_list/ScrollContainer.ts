@@ -199,8 +199,18 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         if (this.afterRenderCallback) {
+            // В результате afterRenderCallback он может сам себя перезаписать
+            // (такое происходит, когда вызвали scrolLToItem)
+            // во время перерисовки. В таком случае занулять afterRenderCallback нельзя
+            // TODO Нужно этот момент продумать получше, выписал задачу
+            // https://online.sbis.ru/opendoc.html?guid=df37d700-5686-4c28-baee-e015b5db444c
+            const oldCallback = this.afterRenderCallback;
+
             this.afterRenderCallback();
-            this.afterRenderCallback = null;
+
+            if (oldCallback === this.afterRenderCallback) {
+                this.afterRenderCallback = null;
+            }
         }
 
         if (this.indicatorState) {
