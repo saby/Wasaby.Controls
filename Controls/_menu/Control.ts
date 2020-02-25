@@ -370,14 +370,18 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
     }
 
-    private additionalFilter(options: IMenuOptions, item: Model, index: number, treeItem: TreeItem<Model>): boolean {
+    private additionalFilter(options: IMenuOptions, item: Model): boolean {
         return (!item.get || !item.get(options.additionalProperty) || this.isHistoryItem(item));
     }
 
-    private displayFilter(options: IMenuOptions, item: Model, index: number, treeItem: TreeItem<Model>): boolean {
+    private displayFilter(options: IMenuOptions, item: Model): boolean {
         let isVisible = true;
         if (item.get && options.parentProperty) {
-            isVisible = item.get(options.parentProperty) === options.root;
+            let parent = item.get(options.parentProperty);
+            if (parent === undefined) {
+                parent = null;
+            }
+            isVisible = parent === options.root;
         }
         return isVisible;
     }
