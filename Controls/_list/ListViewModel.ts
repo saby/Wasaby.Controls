@@ -10,6 +10,7 @@ import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { CollectionItem } from 'Types/display';
 import { CssClassList } from "../Utils/CssClassList";
+import {detection} from 'Env/Env';
 
 /**
  *
@@ -209,6 +210,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
            drawnActions = itemsModelCurrent.itemActions.showed;
         }
 
+        itemsModelCurrent.isIE12 = detection.isIE12;
+
         itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
         itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         itemsModelCurrent.drawActions = _private.needToDrawActions(this._editingItemData, itemsModelCurrent, this._options.editingConfig, drawnActions);
@@ -240,6 +243,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
             }
         }
+
         return itemsModelCurrent;
     },
 
