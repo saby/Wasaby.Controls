@@ -93,12 +93,15 @@ class Base extends Control<IMasterDetail> {
     protected _maxOffset: number;
     protected _prevCurrentWidth: string;
     protected _currentWidth: string;
+    protected _currentMaxWidth: string;
+    protected _currentMinWidth: string;
     protected _containerWidth: number;
     protected _updateOffsetDebounced: Function;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
         this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
         this._canResizing = this._isCanResizing(options);
+        this._prepareLimitSizes(options);
         if (receivedState) {
             this._currentWidth = receivedState;
         } else if (options.propStorageId) {
@@ -111,6 +114,7 @@ class Base extends Control<IMasterDetail> {
                     } else {
                         this.initCurrentWidth(options.masterWidth);
                     }
+                    this._prepareLimitSizes(options);
                     resolve(this._currentWidth);
                 });
             });
@@ -127,6 +131,23 @@ class Base extends Control<IMasterDetail> {
         const propStorageId = this._options.propStorageId;
         if (propStorageId) {
             setSettings({[propStorageId]: width});
+        }
+    }
+
+    private _prepareLimitSizes(options: IMasterDetail): void {
+        // Если _currentWidth задан в процентах, а minWidth и maxWidth в пикселях, может получиться ситуация, что
+        // _currentWidth больше допустимого значения. Узнаем мы это только на клиенте, когда будут размеры контрола.
+        // Чтобы верстка визуально не прыгала после оживления, вешаю minWidth и maxWidth сразу на контейнер мастера.
+        if (this._isPercentValue(options.masterMaxWidth)) {
+            this._currentMaxWidth = options.masterMaxWidth as string;
+        } else if (options.masterMaxWidth) {
+            this._currentMaxWidth = `${options.masterMaxWidth}px`;
+        }
+
+        if (this._isPercentValue(options.masterMinWidth)) {
+            this._currentMinWidth = options.masterMinWidth as string;
+        } else if (options.masterMinWidth) {
+            this._currentMinWidth = `${options.masterMinWidth}px`;
         }
     }
 
@@ -157,6 +178,7 @@ class Base extends Control<IMasterDetail> {
 
         if (this._isSizeOptionsChanged(options, this._options)) {
             this._canResizing = this._isCanResizing(options);
+            this._prepareLimitSizes(options);
             this._updateOffset(options);
         }
     }
