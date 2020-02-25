@@ -10,8 +10,8 @@ define([
       it('initializingWay', (done) => {
          let FC = new form.Controller();
 
-         let baseReadRecordBeforeMount = form.Controller._private.readRecordBeforeMount;
-         let baseCreateRecordBeforeMount = form.Controller._private.createRecordBeforeMount;
+         let baseReadRecordBeforeMount = form.Controller._readRecordBeforeMount;
+         let baseCreateRecordBeforeMount = form.Controller._createRecordBeforeMount;
          let cfg = {
             record: new entity.Record(),
          };
@@ -19,12 +19,12 @@ define([
          let isReading = false;
          let isCreating = false;
 
-         form.Controller._private.readRecordBeforeMount = () => {
+         FC._readRecordBeforeMount = () => {
             isReading = true;
             return Promise.resolve({ data: true });
          };
 
-         form.Controller._private.createRecordBeforeMount = () => {
+         FC._createRecordBeforeMount = () => {
             isCreating = true;
             return Promise.resolve({ data: true });
          };
@@ -84,8 +84,8 @@ define([
          });
 
          Promise.all([p1, p2, p3, p4]).then(() => {
-            form.Controller._private.readRecordBeforeMount = baseReadRecordBeforeMount;
-            form.Controller._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
+            form.Controller._readRecordBeforeMount = baseReadRecordBeforeMount;
+            form.Controller._createRecordBeforeMount = baseCreateRecordBeforeMount;
             FC.destroy();
             done();
          });

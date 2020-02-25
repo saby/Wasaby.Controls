@@ -7,11 +7,9 @@ import {Logger} from 'UI/Utils';
 import dataSource = require('Controls/dataSource');
 import {error as dataSourceError} from 'Controls/dataSource';
 import {IContainerConstructor, Controller} from 'Controls/_dataSource/error';
-import {IErrorControllerOptions} from 'Controls/_interface/IErrorController';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
-
 
 interface IFormController extends IControlOptions {
     createMetaData?: object;
@@ -22,7 +20,7 @@ interface IFormController extends IControlOptions {
     keyProperty?: string;
     readMetaData?: object;
     record?: Model;
-    errorController?: IErrorControllerOptions;
+    errorController?: dataSourceError.Controller;
     source?: Memory;
 
     //удалить при переходе на новые опции
@@ -38,7 +36,7 @@ interface IReceivedState {
 }
 
 interface ICrudResult extends IReceivedState {
-    error: Error;
+    error?: Error;
 }
 
 interface IAdditionalData {
@@ -62,8 +60,12 @@ interface IDataValid {
 
 interface IValidateResult {
     [key: number]: boolean;
-
     hasErrors?: boolean;
+}
+
+interface IConfigInMounting {
+    isError: boolean;
+    result: Model;
 }
 
 /**
@@ -126,10 +128,7 @@ interface IValidateResult {
  * @param {CrudResult} crudResult
  * @return {ReceivedState}
  */
-const getState = (crudResult: ICrudResult): IReceivedState => {
-    delete crudResult.error;
-    return crudResult;
-};
+
 
 
 /**
@@ -153,92 +152,25 @@ const getData = (crudResult: ICrudResult): Promise<undefined | Model> => {
     return Promise.reject(crudResult.error);
 };
 
-const _private = {
-    checkRecordType(record: Model): boolean {
-        return cInstance.instanceOfModule(record, 'Types/entity:Record');
-    },
-    readRecordBeforeMount: (instance, cfg: IFormController) => {
-        // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
-        // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-        return instance._source.read(cfg.key, cfg.readMetaData).then((record) => {
-            instance._setRecord(record);
-            instance._readInMounting = {isError: false, result: record};
-
-            if (instance._isMount) {
-                _private.readRecordBeforeMountNotify(instance);
-            }
-
-            return {
-                data: record
-            };
-        }, (e: Error) => {
-            instance._readInMounting = {isError: true, result: e};
-            return instance._processError(e).then(getState);
-        });
-    },
-    readRecordBeforeMountNotify(instance: any): void {
-        if (!instance._readInMounting.isError) {
-            instance._notifyHandler('readSuccessed', [instance._readInMounting.result]);
-
-            // перерисуемся
-            instance._readHandler(instance._record);
-        } else {
-            instance._notifyHandler('readFailed', [instance._readInMounting.result]);
-        }
-        instance._readInMounting = null;
-    },
-
-    createRecordBeforeMount(instance: any, cfg: IFormController): Promise<ICrudResult> {
-        // если ни рекорда, ни ключа, создаем новый рекорд и используем его
-        // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
-        return instance._source.create(cfg.initValues || cfg.createMetaData).then((record) => {
-            instance._setRecord(record);
-            instance._createdInMounting = {isError: false, result: record};
-
-            if (instance._isMount) {
-                _private.createRecordBeforeMountNotify(instance);
-            }
-            return {
-                data: record
-            };
-        },  (e) => {
-            instance._createdInMounting = {isError: true, result: e};
-            return instance._processError(e).then(getState);
-        });
-    },
-
-    createRecordBeforeMountNotify(instance: any): void {
-        if (!instance._createdInMounting.isError) {
-            instance._notifyHandler('createSuccessed', [instance._createdInMounting.result]);
-
-            // зарегистрируем пендинг, перерисуемся
-            instance._createHandler(instance._record);
-        } else {
-            instance._notifyHandler('createFailed', [instance._createdInMounting.result]);
-        }
-        instance._createdInMounting = null;
-    }
-};
-
-class FormController extends Control<IFormController> {
+class FormController extends Control<IFormController, IReceivedState> {
     protected _template: TemplateFunction = tmpl;
     protected _record: Model = null;
     protected _isNewRecord: boolean = false;
-    protected _createMetaDataOnUpdate: any = null;
+    protected _createMetaDataOnUpdate: object = null;
     protected _errorContainer: IContainerConstructor;
-    protected __errorController: IErrorControllerOptions | Controller;
+    protected __errorController: dataSourceError.Controller;
     protected _source: Memory;
-    protected _createdInMounting: any
+    protected _createdInMounting: IConfigInMounting;
     protected _isMount: boolean;
-    protected _readInMounting: any;
+    protected _readInMounting: IConfigInMounting;
     protected _wasCreated: boolean;
     protected _wasRead: boolean;
     protected _wasDestroyed: boolean;
-    protected _pendingPromise: any;
+    protected _pendingPromise: Promise<any>;
     protected _options: IFormController;
     protected __error: dataSourceError.ViewConfig;
 
-    protected _beforeMount(options: IFormController, context: object, receivedState: IReceivedState): Promise<ICrudResult> | void {
+    protected _beforeMount(options?: IFormController, context?: object, receivedState?: IReceivedState): Promise<ICrudResult> | void {
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._source = options.source || options.dataSource;
         if (options.dataSource) {
@@ -264,30 +196,30 @@ class FormController extends Control<IFormController> {
         let record = receivedData || options.record;
 
         // use record
-        if (record && _private.checkRecordType(record)) {
+        if (record && this._checkRecordType(record)) {
             this._setRecord(record);
             this._isNewRecord = !!options.isNewRecord;
 
             // If there is a key - read the record. Not waiting for answer BL
             if (options.key !== undefined && options.key !== null) {
-                _private.readRecordBeforeMount(this, options);
+                this._readRecordBeforeMount( options);
             }
         } else if (options.key !== undefined && options.key !== null) {
-            return _private.readRecordBeforeMount(this, options);
+            return this._readRecordBeforeMount(options);
         } else {
-            return _private.createRecordBeforeMount(this, options);
+            return this._createRecordBeforeMount(options);
         }
     }
 
     protected _afterMount(): void {
         // если рекорд был создан во время beforeMount, уведомим об этом
         if (this._createdInMounting) {
-            _private.createRecordBeforeMountNotify(this);
+            this._createRecordBeforeMountNotify();
         }
 
         // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
         if (this._readInMounting) {
-            _private.readRecordBeforeMountNotify(this);
+            this._readRecordBeforeMountNotify();
         }
         this._createChangeRecordPending();
         this._isMount = true;
@@ -311,7 +243,7 @@ class FormController extends Control<IFormController> {
             if (newOptions.record && newOptions.record.isChanged()) {
                 this._showConfirmPopup('yesno').addCallback((answer) => {
                     if (answer === true) {
-                        self.update().addCallback(function (res) {
+                        self.update().addCallback((res) => {
                             self.read(newOptions.key, newOptions.readMetaData);
                             return res;
                         });
@@ -366,8 +298,80 @@ class FormController extends Control<IFormController> {
         this._tryDeleteNewRecord();
     }
 
+    private _createRecordBeforeMount(cfg: IFormController): Promise<ICrudResult> {
+        // если ни рекорда, ни ключа, создаем новый рекорд и используем его
+        // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
+        return this._source.create(cfg.initValues || cfg.createMetaData).then((record: Model) => {
+            this._setRecord(record);
+            this._createdInMounting = {isError: false, result: record};
+
+            if (this._isMount) {
+                this._createRecordBeforeMountNotify();
+            }
+            return {
+                data: record
+            };
+        },  (e: Error) => {
+            this._createdInMounting = {isError: true, result: e};
+            return this._processError(e).then(this._getState);
+        });
+    }
+
+    protected _readRecordBeforeMount = (cfg: IFormController) => {
+        // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
+        // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
+        return this._source.read(cfg.key, cfg.readMetaData).then((record) => {
+            this._setRecord(record);
+            this._readInMounting = {isError: false, result: record};
+
+            if (this._isMount) {
+                this._readRecordBeforeMountNotify();
+            }
+
+            return {
+                data: record
+            };
+        }, (e: Error) => {
+            this._readInMounting = {isError: true, result: e};
+            return this._processError(e).then(this._getState);
+        });
+    }
+
+    private _checkRecordType(record: Model): boolean {
+        return cInstance.instanceOfModule(record, 'Types/entity:Record');
+    }
+
+    private _readRecordBeforeMountNotify(): void {
+        if (!this._readInMounting.isError) {
+            this._notifyHandler('readSuccessed', [this._readInMounting.result]);
+
+            // перерисуемся
+            this._readHandler(this._record);
+        } else {
+            this._notifyHandler('readFailed', [this._readInMounting.result]);
+        }
+        this._readInMounting = null;
+    }
+
+    private  _createRecordBeforeMountNotify(): void {
+        if (!this._createdInMounting.isError) {
+            this._notifyHandler('createSuccessed', [this._createdInMounting.result]);
+
+            // зарегистрируем пендинг, перерисуемся
+            this._createHandler(this._record);
+        } else {
+            this._notifyHandler('createFailed', [this._createdInMounting.result]);
+        }
+        this._createdInMounting = null;
+    }
+
+    private _getState = (crudResult: ICrudResult): IReceivedState => {
+        delete crudResult.error;
+        return crudResult;
+    }
+
     private _setRecord(record: Model): void {
-        if (!record || _private.checkRecordType(record)) {
+        if (!record || this._checkRecordType(record)) {
             this._record = record;
         }
     }
@@ -618,16 +622,16 @@ class FormController extends Control<IFormController> {
      * @return {Promise.<CrudResult>}
      * @private
      */
-    private _processError(error: Error, mode: dataSourceError.Mode): Promise<ICrudResult> {
+    private _processError(error: Error, mode?: dataSourceError.Mode): Promise<ICrudResult> {
         let self = this;
         return self.__errorController.process({
-            error: error,
+            error,
             mode: mode || dataSource.error.Mode.include
-        }).then((errorConfig) => {
+        }).then((errorConfig: dataSourceError.ViewConfig) => {
             self._showError(errorConfig);
             return {
-                error: error,
-                errorConfig: errorConfig
+                error,
+                errorConfig
             };
         });
     }
@@ -680,14 +684,14 @@ class FormController extends Control<IFormController> {
     }
 
     private _getUpdateStartedData(record: Model, key: string): IResultData {
-        let config = this._getUpdateSuccessedData(record, key);
+        const config = this._getUpdateSuccessedData(record, key);
         config.formControllerEvent = 'updateStarted';
         return config;
     }
 
     private _getUpdateSuccessedData(record: Model, key: string): IResultData {
-        let additionalData: IAdditionalData = {
-            key: key,
+        const additionalData: IAdditionalData = {
+            key,
             isNewRecord: this._isNewRecord
         };
         return this._getResultData('update', record, additionalData);
@@ -706,9 +710,9 @@ class FormController extends Control<IFormController> {
     }
 
     private _getUpdateFailedData(error: Error, record: Model): IResultData {
-        let additionalData: IAdditionalData = {
-            record: record,
-            error: error,
+        const additionalData: IAdditionalData = {
+            record,
+            error,
             isNewRecord: this._isNewRecord
         };
         return this._getResultData('updateFailed', record, additionalData);
@@ -717,12 +721,9 @@ class FormController extends Control<IFormController> {
     private _getResultData(eventName: string, record: Model, additionalData?: IAdditionalData): IResultData {
         return {
             formControllerEvent: eventName,
-            record: record,
+            record,
             additionalData: additionalData || {}
         };
     }
 }
-
-FormController._private = _private;
 export default FormController;
-
