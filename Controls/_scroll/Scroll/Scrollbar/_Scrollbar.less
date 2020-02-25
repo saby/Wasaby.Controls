@@ -38,16 +38,19 @@
 }
 
 .controls-VScrollbar__thumbWrapper {
-   padding: @margin_Scrollbar;
    box-sizing: border-box;
+   position: relative;
 }
 
 .controls-ColumnScroll_without_offset .controls-VScrollbar__thumbWrapper {
    padding: 0 @margin_Scrollbar;
    height: @width_Scrollbar;
 }
-
+.controls-VScrollbar__thumbWrapper_vertical {
+   min-height: @min-height_Scrollbar-thumb;
+}
 .controls-VScrollbar__thumbWrapper_horizontal {
+   min-width: @min-height_Scrollbar-thumb;
    height: 100%;
    padding: ((@width_Scrollbar-horizontal - @width_Scrollbar-horizontal-thumb) / 2) @offset_horizontal_Scrollbar_track;
    transition: padding @animation-duration_Scrollbar ease-in-out;
@@ -55,8 +58,11 @@
 
 .controls-VScrollbar__thumb {
    border-radius: @border-radius_Scrollbar-thumb;
-   width: 100%;
-   height: 100%;
+   left: @margin_Scrollbar;
+   right: @margin_Scrollbar;
+   top: @margin_Scrollbar;
+   bottom: @margin_Scrollbar;
+   position: absolute;
 }
 
 .controls-VScrollbar__thumb {
