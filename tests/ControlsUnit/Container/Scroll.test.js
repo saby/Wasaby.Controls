@@ -43,6 +43,7 @@ define(
             };
             scroll._children.content = {
                scrollHeight: 50,
+               clientHeight: 10,
                scrollTop: 10
             };
             scroll._displayState = {
