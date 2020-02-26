@@ -105,11 +105,11 @@ class StackController extends BaseController {
                 item.position = this._getItemPosition(item);
                 this._updatePopupWidth(item);
                 this._removeLastStackClass(item);
-                const currentWidth = item.containerWidth || item.position.width;
+                const currentWidth = this._getPopupHorizontalLength(item);
                 let forRemove;
                 if (currentWidth) {
                     const cacheItem = cache.find((el) => {
-                        const itemWidth = el.containerWidth || el.position.width;
+                        const itemWidth = this._getPopupHorizontalLength(el);
                         return itemWidth === currentWidth;
                     });
 
@@ -126,7 +126,7 @@ class StackController extends BaseController {
                         forRemove = null;
                         return false;
                     }
-                    const itemWidth = el.containerWidth || el.position.width;
+                    const itemWidth = this._getPopupHorizontalLength(el);
                     const isVisiblePopup = itemWidth >= (currentWidth || 0);
                     if (!isVisiblePopup) {
                         this._hidePopup(el);
@@ -143,6 +143,11 @@ class StackController extends BaseController {
         if (lastItem) {
             this._addLastStackClass(lastItem);
         }
+    }
+
+    // length = popup size + popup padding
+    private _getPopupHorizontalLength(item: IPopupItem): number {
+        return (item.containerWidth || item.position.width) + (item.position?.right || 0);
     }
 
     private _prepareSizes(item: IPopupItem, container?: HTMLDivElement): void {
