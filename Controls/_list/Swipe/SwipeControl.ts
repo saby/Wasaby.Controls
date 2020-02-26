@@ -243,10 +243,6 @@ export default class SwipeControl extends Control {
       this.closeSwipe();
    }
 
-   protected _listDeactivated(): void {
-      this.closeSwipe();
-   }
-
    async _beforeMount(newOptions: ISwipeControlOptions): Promise<void> {
       this._updateModel(newOptions);
       this._setMeasurer(newOptions.actionAlignment);

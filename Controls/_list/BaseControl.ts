@@ -1026,7 +1026,7 @@ var _private = {
                 _private.disablePagingNextButtons(self);
 
                 if (self._isScrollShown) {
-                    _private.updateShadowMode(self, self._placeholderSizes);
+                    _private.updateShadowMode(self, self._shadowVisibility);
                 }
             }
         }));
@@ -1069,15 +1069,18 @@ var _private = {
         return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
     },
 
-    updateShadowMode(self, placeholderSizes: {top: number, bottom: number}): void {
+    updateShadowMode(self, shadowVisibility: {up: boolean, down: boolean}): void {
         const itemsCount = self._listViewModel && self._listViewModel.getCount();
         const hasMoreData = (direction) => _private.hasMoreData(self, self._sourceController, direction);
         const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
         const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
 
         self._notify('updateShadowMode', [{
-            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || showShadowByNavigation && showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+            top: (shadowVisibility.up ||
+                showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+            bottom: (shadowVisibility.down ||
+                showShadowByNavigation &&
+                showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -1625,7 +1628,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _savedStartIndex: 0,
     _savedStopIndex: 0,
-    _placeholderSizes: null,
+    _shadowVisibility: null,
 
     _template: BaseControlTpl,
     iWantVDOM: true,
@@ -1862,9 +1865,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    updateShadowModeHandler(_: SyntheticEvent<Event>, placeholderSizes: {top: number, bottom: number}): void {
-        this._placeholderSizes = placeholderSizes;
-        _private.updateShadowMode(this, placeholderSizes);
+    updateShadowModeHandler(_: SyntheticEvent<Event>, shadowVisibility: {down: boolean, up: boolean}): void {
+        this._shadowVisibility = shadowVisibility;
+        _private.updateShadowMode(this, shadowVisibility);
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
@@ -2672,6 +2675,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         return styles;
+    },
+    _listDeactivated: function() {
+        if (!this._menuIsShown) {
+            this._children.swipeControl?.closeSwipe();
+        }
     },
 
     _onHoveredItemChanged: function(e, item, container) {
