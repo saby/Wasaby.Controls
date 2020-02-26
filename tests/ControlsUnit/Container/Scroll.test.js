@@ -493,6 +493,24 @@ define(
             });
          });
 
+         it('scrollToBottom', () => {
+            let
+               sandbox = sinon.createSandbox(),
+               scrollContainer = new scrollMod.Container({});
+
+            scrollContainer._children = {
+               content: {
+                  scrollHeight: 200,
+                  clientHeight: 50,
+               }
+            };
+            sandbox.stub(scrollMod.Container._private, 'setScrollTop');
+            scrollContainer.scrollToBottom();
+
+            sinon.assert.calledWith(scrollMod.Container._private.setScrollTop, sinon.match.any, 150);
+            sandbox.restore();
+         });
+
          it('restores scroll after scrollbar drag end', () => {
             let
                sandbox = sinon.createSandbox(),
