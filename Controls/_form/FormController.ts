@@ -492,17 +492,17 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     update(): Promise<undefined | Model> {
-        const updateResult = new Deferred()
-
+        const updateResult = new Deferred();
+        const self = this;
         function updateCallback(result): void {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-                this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
-                const res = this._update().addCallback(this._getData);
+                self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
+                const res = self._update().addCallback(self._getData);
                 updateResult.dependOn(res);
             } else {
                 updateResult.callback(true);
-                this._updateIsNewRecord(false);
+                self._updateIsNewRecord(false);
             }
         }
 
@@ -511,7 +511,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
         // pending waiting while update process finished
         const def = new Deferred();
-        self._notify('registerPending', [def, {showLoadingIndicator: false}], {bubbling: true});
+        this._notify('registerPending', [def, {showLoadingIndicator: false}], {bubbling: true});
         def.dependOn(updateResult);
 
         if (result && result.then) {
@@ -529,12 +529,12 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _update(): Promise<IDataValid> {
-        const self = this;
         const record = this._record;
         const updateDef = new Deferred();
+        const self = this;
 
         // запускаем валидацию
-        const validationDef = this._children.validation.submit();
+        const validationDef = self._children.validation.submit();
         validationDef.addCallback((results) => {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
@@ -657,7 +657,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         this._notifyHandler(eventName, args);
     }
 
-    private _notifyHandler(eventName: string, args): void { //подумать
+    private _notifyHandler(eventName: string, args): void {
         this._notifyToOpener(eventName, args);
         this._notify(eventName, args, {bubbling: true});
     }
