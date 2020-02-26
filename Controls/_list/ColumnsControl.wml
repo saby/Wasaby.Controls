@@ -1,6 +1,6 @@
 <Controls._list.BaseControl scope="{{_options}}"
                             moveMarkerOnScrollPaging="{{false}}"
-                            keyDownHandler="{{_keyDownHandler}}"
+                            _keyDownHandler="{{_keyDownHandler}}"
                             name="baseControl">
     <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partail, потому что изменения только в замыкании функции-->
     <Controls._list.ColumnsInnerView scope="{{_options}}" name="innerView">
