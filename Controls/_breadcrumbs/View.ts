@@ -48,9 +48,8 @@ var BreadCrumbsView = Control.extend({
             rs.each(function (item, index) {
                 item.set('indentation', index);
             });
-            const target = (e.target && e.target.closest) ? e.target.closest('.controls-BreadCrumbsView__menu__dots') : e.target;
             this._children.menuOpener.open({
-                target,
+                target: e.currentTarget,
                 templateOptions: {
                     items: rs,
                     itemTemplate: menuItemTemplate,
