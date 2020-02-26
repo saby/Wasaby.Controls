@@ -96,8 +96,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected _delay: number = 2000;
     protected _zIndex: number;
     protected _toggleOverlayTimerId: number;
-    _overlayDiv: null,
-    _messageDiv: null,
+    protected _overlayDiv = null;
+    protected _messageDiv = null;
 
     protected isGlobal: boolean = true;
     protected message: string = '';
@@ -129,7 +129,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         // TODO Откатить DOM-решение или доказать невозмодность другого в задаче по ссылке ниже.
         // https://online.sbis.ru/opendoc.html?guid=2bd41176-8896-4a0a-a04d-a93b8a4c3a2d
         this._redrawOverlay();
-    },
+    }
     protected _beforeUpdate(cfg: ILoadingIndicatorOptions): void {
         this._updateProperties(cfg);
         this._redrawOverlay();
@@ -361,7 +361,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         this._toggleOverlayTimerId = setTimeout(() => {
             this._toggleOverlay(toggle, config);
         }, delay);
-    },
+    }
     private _toggleOverlay(toggle: boolean, config: ILoadingIndicatorOptions): void  {
         this._isOverlayVisible = toggle && config.overlay !== 'none';
         this._redrawOverlay();
@@ -382,9 +382,9 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             this._isMessageVisible = false;
         }
         this._redrawOverlay();
-    },
+    }
 
-    _createOverlay(): void {
+    private _createOverlay(): void {
         const overlayDiv = document.createElement('div');
         overlayDiv.setAttribute('data-vdomignore', 'true');
         overlayDiv.setAttribute('tabindex', '1');
@@ -394,9 +394,9 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
 
         this._overlayDiv = overlayDiv;
         this._messageDiv = messageDiv;
-    },
+    }
 
-    _redrawOverlay(): void {
+    private _redrawOverlay(): void {
         const container = this._container;
         if (!container) {
             return;
@@ -439,9 +439,9 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
                 overlayDiv.removeChild(messageDiv);
             }
         }
-    },
+    }
 
-    _calculateOverlayClassName(): string {
+    private _calculateOverlayClassName(): string {
         const classList = ['controls-loading-indicator', 'controls-Popup__isolatedFocusingContext'];
 
         classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
@@ -472,3 +472,4 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
 }
 
 export default LoadingIndicator;
+
