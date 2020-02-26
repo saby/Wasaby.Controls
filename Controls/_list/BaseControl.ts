@@ -2608,7 +2608,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
-     * Хандлер клика на Tag в _columnTagTemplate.wml
+     * Хандлер клика на Tag в BaseControl.wml
      * @private
      */
     _onTagClickHandler(event: Event, dispItem: CollectionItem<Model>, columnIndex: number): void {
@@ -2616,7 +2616,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
-     * Хандлер наведения на Tag в _columnTagTemplate.wml
+     * Хандлер наведения на Tag в BaseControl.wml
      * @private
      */
     _onTagHoverHandler(event: Event, dispItem: CollectionItem<Model>, columnIndex: number): void {
