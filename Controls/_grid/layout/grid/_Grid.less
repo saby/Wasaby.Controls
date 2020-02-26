@@ -530,9 +530,16 @@
       z-index: 1;
    }
 }
+
 .ws-is-hover {
    .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @background-color_List-masterList-item_hover;
+   }
+
+   //TODO удалить controls-BreadCrumbsView__menu__dots, когда найдем другое решение
+   .controls-Grid__row_master_theme-@{themeName}:hover .controls-BreadCrumbsView__menu__dots {
+      background-color: @background-color_List-masterList-item_hover;
+      box-shadow: -15px 2px 4px -6px @background-color_List-masterList-item_hover;
    }
 }
 .ws-is-no-touch {
