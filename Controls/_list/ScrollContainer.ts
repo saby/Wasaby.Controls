@@ -139,6 +139,10 @@ export default class ScrollContainer extends Control<IOptions> {
         this._itemsContainer = itemsContainer;
     }
 
+    protected _updateShadowModeHandler(event: SyntheticEvent<Event>): void {
+        event.stopPropagation();
+    }
+
     protected _viewResize(): void {
         this._viewHeight = this._container.offsetHeight;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
