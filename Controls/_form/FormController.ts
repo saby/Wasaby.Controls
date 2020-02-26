@@ -11,13 +11,13 @@ import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 interface IFormController extends IControlOptions {
-    createMetaData?: object;
-    destroyMetaData?: object;
+    createMetaData?: unknown;
+    destroyMetaData?: unknown;
     errorContainer?: IContainerConstructor;
     isNewRecord?: boolean;
     key?: string;
     keyProperty?: string;
-    readMetaData?: object;
+    readMetaData?: unknown;
     record?: Model;
     errorController?: dataSourceError.Controller;
     source?: Memory;
@@ -40,7 +40,7 @@ interface ICrudResult extends IReceivedState {
 
 interface IAdditionalData {
     key?: string;
-    record?: object;
+    record?: Model;
     isNewRecord?: boolean;
     error?: Error;
 }
@@ -146,7 +146,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     protected _template: TemplateFunction = tmpl;
     protected _record: Model = null;
     protected _isNewRecord: boolean = false;
-    protected _createMetaDataOnUpdate: object = null;
+    protected _createMetaDataOnUpdate: unknown = null;
     protected _errorContainer: IContainerConstructor = dataSourceError.Container;
     protected __errorController: dataSourceError.Controller;
     protected _source: Memory;
@@ -216,7 +216,6 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IFormController): void {
-        const self = this;
         if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
             //Сбрасываем состояние, только если данные поменялись, иначе будет зацикливаться
@@ -233,18 +232,18 @@ class FormController extends Control<IFormController, IReceivedState> {
             if (newOptions.record && newOptions.record.isChanged()) {
                 this._showConfirmPopup('yesno').addCallback((answer) => {
                     if (answer === true) {
-                        self.update().addCallback((res) => {
-                            self.read(newOptions.key, newOptions.readMetaData);
+                        this.update().addCallback((res) => {
+                            this.read(newOptions.key, newOptions.readMetaData);
                             return res;
                         });
                     } else {
-                        self._tryDeleteNewRecord().addCallback(() => {
-                            self.read(newOptions.key, newOptions.readMetaData);
+                        this._tryDeleteNewRecord().addCallback(() => {
+                            this.read(newOptions.key, newOptions.readMetaData);
                         });
                     }
                 });
             } else {
-                self.read(newOptions.key, newOptions.readMetaData);
+                this.read(newOptions.key, newOptions.readMetaData);
             }
             return;
         }
@@ -258,9 +257,9 @@ class FormController extends Control<IFormController, IReceivedState> {
             this._createMetaDataOnUpdate = createMetaData;
             this.create(newOptions.initValues || newOptions.createMetaData).addCallback(() => {
                 if (newOptions.hasOwnProperty('isNewRecord')) {
-                    self._isNewRecord = newOptions.isNewRecord;
+                    this._isNewRecord = newOptions.isNewRecord;
                 }
-                self._createMetaDataOnUpdate = null;
+                this._createMetaDataOnUpdate = null;
             });
         } else {
             if (newOptions.hasOwnProperty('isNewRecord')) {
@@ -462,7 +461,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         });
     }
 
-    create(createMetaData: object): Promise<undefined | Model> {
+    create(createMetaData: unknown): Promise<undefined | Model> {
         createMetaData = createMetaData || this._options.initValues || this._options.createMetaData;
         return this._children.crud.create(createMetaData).addCallbacks(
             this._createHandler.bind(this),
@@ -477,7 +476,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         return record;
     }
 
-    read(key: string, readMetaData: object): Promise<Model> {
+    read(key: string, readMetaData: unknown): Promise<Model> {
         readMetaData = readMetaData || this._options.readMetaData;
         return this._children.crud.read(key, readMetaData).addCallbacks(
             this._readHandler.bind(this),
@@ -577,7 +576,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         return updateDef;
     }
 
-    delete(destroyMetaData: object): Promise<Model | undefined> {
+    delete(destroyMetaData: unknown): Promise<Model | undefined> {
         destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
         const self = this;
         const resultDef = this._children.crud.delete(this._record, destroyMetaData);
