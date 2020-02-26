@@ -531,15 +531,14 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _update(): Promise<IDataValid> {
         const record = this._record;
         const updateDef = new Deferred();
-        const self = this;
 
         // запускаем валидацию
-        const validationDef = self._children.validation.submit();
+        const validationDef = this._children.validation.submit();
         validationDef.addCallback((results) => {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
-                self._notify('validationSuccessed', [], {bubbling: true});
-                let res = self._children.crud.update(record, self._isNewRecord);
+                this._notify('validationSuccessed', [], {bubbling: true});
+                let res = this._children.crud.update(record, this._isNewRecord);
 
                 // fake deferred used for code refactoring
                 if (!(res && res.addCallback)) {
@@ -547,19 +546,19 @@ class FormController extends Control<IFormController, IReceivedState> {
                     res.callback();
                 }
                 res.addCallback((arg) => {
-                    self._updateIsNewRecord(false);
+                    this._updateIsNewRecord(false);
 
                     updateDef.callback({data: true});
                     return arg;
                 });
                 res.addErrback((error: Error) => {
                     updateDef.errback(error);
-                    return self._processError(error, dataSourceError.Mode.dialog);
+                    return this._processError(error, dataSourceError.Mode.dialog);
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
-                const validationErrors = self._children.validation.isValid();
-                self._notify('validationFailed', [validationErrors], {bubbling: true});
+                const validationErrors = this._children.validation.isValid();
+                this._notify('validationFailed', [validationErrors], {bubbling: true});
                 updateDef.callback({
                     data: {
                         validationErrors
