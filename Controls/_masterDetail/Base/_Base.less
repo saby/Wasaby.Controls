@@ -7,6 +7,12 @@
    background-color: @background-color_List-masterList;
    flex-shrink: 0;
    width: 27%;
+
+   //TODO удалить controls-BreadCrumbsView__menu__dots, когда найдем другое решение. Нет возможности отнаследовать цвет для box-shadow
+   .controls-BreadCrumbsView__menu__dots {
+      background-color: @background-color_List-masterList;
+      box-shadow: -15px 2px 4px -6px @background-color_List-masterList;
+   }
 }
 
 .controls-MasterDetail_master-template {
