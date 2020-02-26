@@ -147,7 +147,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     protected _record: Model = null;
     protected _isNewRecord: boolean = false;
     protected _createMetaDataOnUpdate: object = null;
-    protected _errorContainer: IContainerConstructor;
+    protected _errorContainer: IContainerConstructor = dataSourceError.Container;
     protected __errorController: dataSourceError.Controller;
     protected _source: Memory;
     protected _createdInMounting: IConfigInMounting;
@@ -310,7 +310,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _readRecordBeforeMount = (cfg: IFormController) => {
         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-        return this._source.read(cfg.key, cfg.readMetaData).then((record) => {
+        return this._source.read(cfg.key, cfg.readMetaData).then((record: Model) => {
             this._setRecord(record);
             this._readInMounting = {isError: false, result: record};
 
