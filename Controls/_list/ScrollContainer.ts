@@ -459,7 +459,18 @@ export default class ScrollContainer extends Control<IOptions> {
             this._scrollToPosition(this._virtualScroll.getPositionToRestore(this._lastScrollTop));
             this.checkTriggerVisibilityWithTimeout();
         } else if (this._restoreScrollResolve) {
+            // В результате _restoreScrollResolve он может сам себя перезаписать
+            // (такое происходит, когда вызвали scrolLToItem)
+            // во время перерисовки. В таком случае занулять _restoreScrollResolve нельзя
+            // TODO Нужно этот момент продумать получше, выписал задачу
+            // https://online.sbis.ru/opendoc.html?guid=df37d700-5686-4c28-baee-e015b5db444c
+            const oldScrollResolve = this._restoreScrollResolve;
             this._restoreScrollResolve();
+
+            if (this._restoreScrollResolve === oldScrollResolve) {
+                this._restoreScrollResolve = null;
+            }
+
             this.checkTriggerVisibilityWithTimeout();
         }
     }
