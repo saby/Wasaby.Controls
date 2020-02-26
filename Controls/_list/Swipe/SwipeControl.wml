@@ -2,8 +2,7 @@
    template="{{_options.content}}"
    scope="{{_options}}"
    on:itemSwipe="_listSwipe()"
-   on:itemClick="_listClick()"
-   on:deactivated="_listDeactivated()">
+   on:itemClick="_listClick()">
     <ws:swipeTemplate>
         <ws:partial
            template="{{ _swipeTemplate }}"

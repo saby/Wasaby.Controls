@@ -128,6 +128,8 @@ export default class ScrollContainer extends Control<IOptions> {
         this.__mounted = true;
         this.viewSize = this._container.clientHeight;
 
+        this.updateShadowMode();
+
         if (this._options.observeScroll) {
             this.registerScroll();
         }
@@ -154,7 +156,7 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     protected _beforeRender(): void {
-        if (this.saveScrollPosition) {
+        if (this.savedScrollDirection) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
     }
@@ -188,8 +190,6 @@ export default class ScrollContainer extends Control<IOptions> {
             this.virtualScroll.recalcItemsHeights();
             this.virtualScroll.itemsChanged = false;
         }
-
-        this.updateShadowMode();
 
         if (this.virtualScroll && this.applyScrollTopCallback) {
             this.applyScrollTopCallback();
@@ -225,7 +225,10 @@ export default class ScrollContainer extends Control<IOptions> {
      * то scrollContainer будет неверно рассчитывать наличие тени, поэтому управляем режимом тени вручную
      */
     private updateShadowMode(): void {
-        this._notify('updateShadowMode', [this.placeholdersSizes]);
+        this._notify('updateShadowMode', [{
+            up: this.viewModel.getStartIndex() > 0,
+            down: this.viewModel.getStopIndex() < this.viewModel.getCount()
+        }]);
     }
 
     /**
@@ -580,6 +583,10 @@ export default class ScrollContainer extends Control<IOptions> {
 
             this.saveScrollPosition = true;
             this.virtualScroll.itemsChanged = true;
+
+            if (this.__mounted) {
+                this.updateShadowMode();
+            }
         } else if (this.applyScrollTopCallback) {
             this.applyScrollTopCallback();
             this.applyScrollTopCallback = null;
