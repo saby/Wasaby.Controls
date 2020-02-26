@@ -1,8 +1,8 @@
 import rk = require('i18n!Controls');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import cInstance = require('Core/core-instance');
+import * as cInstance from 'Core/core-instance';
 import tmpl = require('wml!Controls/_form/FormController/FormController');
-import Deferred = require('Core/Deferred');
+import * as Deferred from 'Core/Deferred';
 import {Logger} from 'UI/Utils';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {IContainerConstructor} from 'Controls/_dataSource/error';
