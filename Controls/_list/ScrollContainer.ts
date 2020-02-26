@@ -185,7 +185,11 @@ export default class ScrollContainer extends Control<IOptions> {
         this.itemsContainer = itemsContainer;
     }
 
-    private afterRenderHandler() {
+    protected updateShadowModeHandler(event: SyntheticEvent<Event>): void {
+        event.stopPropagation();
+    }
+
+    private afterRenderHandler(): void {
         if (this.virtualScroll && this.virtualScroll.itemsContainer && this.virtualScroll.itemsChanged) {
             this.virtualScroll.recalcItemsHeights();
             this.virtualScroll.itemsChanged = false;
@@ -583,13 +587,13 @@ export default class ScrollContainer extends Control<IOptions> {
 
             this.saveScrollPosition = true;
             this.virtualScroll.itemsChanged = true;
-
-            if (this.__mounted) {
-                this.updateShadowMode();
-            }
         } else if (this.applyScrollTopCallback) {
             this.applyScrollTopCallback();
             this.applyScrollTopCallback = null;
+        }
+
+        if (this.__mounted) {
+            this.updateShadowMode();
         }
     }
 
