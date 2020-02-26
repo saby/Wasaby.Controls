@@ -399,15 +399,14 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _createChangeRecordPending(): void {
-        const self = this;
-        self._pendingPromise = new Deferred();
-        self._notify('registerPending', [self._pendingPromise, {
+        this._pendingPromise = new Deferred();
+        this._notify('registerPending', [this._pendingPromise, {
             showLoadingIndicator: false,
             validate(): boolean {
-                return self._record && self._record.isChanged();
+                return this._record && this._record.isChanged();
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-                self._showConfirmDialog(deferred, forceFinishValue);
+                this._showConfirmDialog(deferred, forceFinishValue);
             }
         }], {bubbling: true});
     }
@@ -494,17 +493,16 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     update(): Promise<undefined | Model> {
         const updateResult = new Deferred()
-        const self = this;
 
         function updateCallback(result): void {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-                self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
-                const res = self._update().addCallback(self._getData);
+                this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
+                const res = this._update().addCallback(this._getData);
                 updateResult.dependOn(res);
             } else {
                 updateResult.callback(true);
-                self._updateIsNewRecord(false);
+                this._updateIsNewRecord(false);
             }
         }
 
@@ -578,17 +576,16 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     delete(destroyMetaData: unknown): Promise<Model | undefined> {
         destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
-        const self = this;
         const resultDef = this._children.crud.delete(this._record, destroyMetaData);
 
         resultDef.addCallbacks((record) => {
-            self._setRecord(null);
-            self._wasDestroyed = true;
-            self._updateIsNewRecord(false);
-            self._forceUpdate();
+            this._setRecord(null);
+            this._wasDestroyed = true;
+            this._updateIsNewRecord(false);
+            this._forceUpdate();
             return record;
         }, (error) => {
-            return self._crudErrback(error, dataSourceError.Mode.dialog);
+            return this._crudErrback(error, dataSourceError.Mode.dialog);
         });
         return resultDef;
     }
@@ -622,12 +619,11 @@ class FormController extends Control<IFormController, IReceivedState> {
      * @private
      */
     private _processError(error: Error, mode?: dataSourceError.Mode): Promise<ICrudResult> {
-        const self = this;
-        return self.__errorController.process({
+        return this.__errorController.process({
             error,
             mode: mode || dataSourceError.Mode.include
         }).then((errorConfig: dataSourceError.ViewConfig) => {
-            self._showError(errorConfig);
+            this._showError(errorConfig);
             return {
                 error,
                 errorConfig
