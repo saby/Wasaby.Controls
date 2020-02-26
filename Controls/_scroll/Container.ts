@@ -224,7 +224,7 @@ var
       },
 
       getScrollHeight: function(container) {
-         return container.scrollHeight;
+         return container.scrollHeight - container.clientHeight;
       },
 
       getContainerHeight: function(container) {

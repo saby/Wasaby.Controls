@@ -43,6 +43,7 @@ define(
             };
             scroll._children.content = {
                scrollHeight: 50,
+               clientHeight: 10,
                scrollTop: 10
             };
             scroll._displayState = {
@@ -353,13 +354,13 @@ define(
             it('Should update scroll style when header fixed', function() {
                scroll._fixedHandler(null, 10, 10);
                assert.strictEqual(scroll._scrollbarStyles, 'top:10px; bottom:10px;');
-               assert.strictEqual(scroll._displayState.contentHeight, 30);
+               assert.strictEqual(scroll._displayState.contentHeight, 20);
             });
             it('Should update scroll style when header unfixed', function() {
                scroll._headersHeight = { top: 10, bottom: 20 };
                scroll._fixedHandler(null, 0, 0);
                assert.strictEqual(scroll._scrollbarStyles, 'top:0px; bottom:0px;');
-               assert.strictEqual(scroll._displayState.contentHeight, 50);
+               assert.strictEqual(scroll._displayState.contentHeight, 40);
             });
          });
 
@@ -597,13 +598,14 @@ define(
             describe('getSizes', function() {
                var container = {
                   scrollHeight: 200,
+                  clientHeight: 50,
                   offsetHeight: 100,
                   scrollTop: 0
                };
 
                it('getScrollHeight', function() {
                   result = scrollMod.Container._private.getScrollHeight(container);
-                  assert.equal(result, 200);
+                  assert.equal(result, 150);
                });
                it('getContainerHeight', function() {
                   result = scrollMod.Container._private.getContainerHeight(container);
