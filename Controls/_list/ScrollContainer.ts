@@ -344,6 +344,13 @@ export default class ScrollContainer extends Control<IOptions> {
                 return collection.setIndexes(start, stop);
             }
         }
+
+        if (this.__mounted) {
+            this._notify('updateShadowMode', [{
+                up: start > 0,
+                down: stop < collection.getCount()
+            }]);
+        }
     }
 
     /**
