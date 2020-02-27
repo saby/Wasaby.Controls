@@ -160,7 +160,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     protected _options: IFormController;
     protected __error: dataSourceError.ViewConfig;
 
-    protected _beforeMount(options?: IFormController, context?: object, receivedState?: IReceivedState): Promise<ICrudResult> | void {
+    protected _beforeMount(options?: IFormController, context?: object, receivedState: IReceivedState = {}): Promise<ICrudResult> | void {
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._source = options.source || options.dataSource;
         if (options.dataSource) {
@@ -175,8 +175,6 @@ class FormController extends Control<IFormController, IReceivedState> {
         if (options.idProperty) {
             Logger.warn('FormController: Use option "keyProperty " instead of "idProperty"', this);
         }
-
-        receivedState = receivedState || {};
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
 
