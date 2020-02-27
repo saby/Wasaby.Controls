@@ -699,6 +699,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
     },
 
+    handleKeyDown(event): void {
+        this._onTreeViewKeyDown(event);
+        if (!event.stopped && event._bubbling !== false) {
+            this._children.baseControl.handleKeyDown(event);
+        }
+    },
+
     _onTreeViewKeyDown: function(event) {
         keysHandler(event, HOT_KEYS, _private, this);
     },
