@@ -8,14 +8,14 @@ class PreviewerController extends StickyController.constructor {
     _destroyDeferred: object = {};
     TYPE: string = 'Previewer';
 
-    elementCreated(item: IPopupItem, container: HTMLDivElement, id: string): boolean {
+    elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         /**
          * Only one window can be opened.
          */
         if (!this._isLinkedPopup(item)) {
             require('Controls/popup').Controller.remove(this._openedPopupIds[0]);
         }
-        this._openedPopupIds.push(id);
+        this._openedPopupIds.push(item.id);
         return super.elementCreated.apply(this, arguments);
     }
 

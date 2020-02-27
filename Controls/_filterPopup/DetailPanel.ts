@@ -13,6 +13,8 @@ import {factory, List} from 'Types/collection';
 import {HistoryUtils, FilterUtils} from 'Controls/filter';
 import 'Controls/form';
 import {Logger} from 'UI/Utils';
+import {_scrollContext as ScrollData} from 'Controls/scroll';
+
 /**
     * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
     * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
@@ -354,6 +356,12 @@ import {Logger} from 'UI/Utils';
          FilterUtils.resetFilter(this._items);
          this._isChanged = false;
          this._notify('itemsChanged', [this._items]);
+      },
+
+      _getChildContext: function() {
+         return {
+            ScrollData: new ScrollData({pagingVisible: false})
+         };
       }
    });
 

@@ -60,6 +60,16 @@ define(
             scroll._isMounted = true;
          });
 
+         describe('_afterUpdate', function() {
+            it('should not update state if control is invisible', function () {
+               sinon.stub(scroll, '_isHidden').returns(true);
+               sinon.stub(scrollMod.Container._private, 'calcDisplayState');
+               scroll._afterUpdate();
+               sinon.assert.notCalled(scrollMod.Container._private.calcDisplayState);
+               sinon.restore();
+            });
+         });
+
          describe('_shadowVisible', function() {
             [{
                title: "shouldn't display shadow if there are fixed headers",
@@ -491,6 +501,24 @@ define(
                sinon.assert.calledWith(scrollContainer._children.scrollDetect.start, sinon.match.any, 10);
                sandbox.restore();
             });
+         });
+
+         it('scrollToBottom', () => {
+            let
+               sandbox = sinon.createSandbox(),
+               scrollContainer = new scrollMod.Container({});
+
+            scrollContainer._children = {
+               content: {
+                  scrollHeight: 200,
+                  clientHeight: 50,
+               }
+            };
+            sandbox.stub(scrollMod.Container._private, 'setScrollTop');
+            scrollContainer.scrollToBottom();
+
+            sinon.assert.calledWith(scrollMod.Container._private.setScrollTop, sinon.match.any, 150);
+            sandbox.restore();
          });
 
          it('restores scroll after scrollbar drag end', () => {
