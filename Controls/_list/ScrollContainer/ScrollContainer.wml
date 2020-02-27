@@ -4,7 +4,10 @@
     <ws:partial template="{{_options.content}}"
                 listModel="{{_options.collection}}"
                 scope="{{_options}}"
-                on:updateShadowMode="_updateShadowModeHandler()"
+                on:updateShadowMode="_stopBubblingEvent()"
+                on:updatePlaceholdersSize="_stopBubblingEvent()"
+                on:saveScrollPosition="_stopBubblingEvent()"
+                on:restoreScrollPosition="_stopBubblingEvent()"
                 on:itemsContainerReady="_itemsContainerReadyHandler()"
                 on:controlResize="_viewResize()"/>
     <div name="bottomVirtualScrollTrigger" style="position: relative; bottom: 0;"></div>
