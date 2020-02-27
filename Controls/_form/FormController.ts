@@ -493,16 +493,15 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     update(): Promise<undefined | Model> {
         const updateResult = new Deferred();
-        const self = this;
-        function updateCallback(result): void {
+        const updateCallback = (result) => {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-                self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
-                const res = self._update().addCallback(self._getData);
+                this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
+                const res = this._update().addCallback(this._getData);
                 updateResult.dependOn(res);
             } else {
                 updateResult.callback(true);
-                self._updateIsNewRecord(false);
+                this._updateIsNewRecord(false);
             }
         }
 
