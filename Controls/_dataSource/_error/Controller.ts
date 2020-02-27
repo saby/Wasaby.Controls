@@ -186,13 +186,8 @@ function importConfirmation(): Promise<typeof Confirmation> {
     // Предварительно загрузить темизированные стили для диалога.
     // Без этого стили загружаются только в момент показа диалога.
     // Но когда потребуется показать сообщение о потере соединения, стили уже не смогут загрузиться.
-    const confirmationModule = 'Controls/popupConfirmation';
-    const importThemedStyles = import('UI/theme/controller').then(({ getThemeController }) =>
-        getThemeController().get(confirmationModule));
-
     return Promise.all([
         import('Controls/popup'),
-        import(confirmationModule),
-        importThemedStyles
+        import('Controls/popupConfirmation').then(({ Template }) => Template.loadStyles())
     ]).then(([popup]) => popup.Confirmation);
 }
