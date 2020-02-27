@@ -83,6 +83,9 @@ var
         getExpandedItems: function () {
             return this._model.getExpandedItems();
         },
+        getCollapsedItems(): unknown[] {
+            return this._model.getCollapsedItems();
+        },
         getRoot: function() {
             return this._model.getRoot();
         },
