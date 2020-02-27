@@ -2511,6 +2511,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
         this._showActions = false;
     },
+
+    handleKeyDown(event): void {
+        this._onViewKeyDown(event);
+    },
+
     _onViewKeyDown: function(event) {
 
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
