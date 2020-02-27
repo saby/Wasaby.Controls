@@ -8,8 +8,7 @@ import {
 import Mode from './Mode';
 import { fetch } from 'Browser/Transport';
 import { IVersionable } from 'Types/entity';
-import { constants } from 'Env/Env';
-import { Confirmation } from 'Controls/popup';
+import Popup from './Popup';
 
 const { Errors } = fetch;
 const { Abort } = Errors;
@@ -56,6 +55,8 @@ const prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): H
         ...config
     };
 };
+
+const popupHelper = new Popup();
 
 /// endregion helpers
 
@@ -159,40 +160,10 @@ export default class ErrorController {
     }
 
     private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
-        const message = config.error.message;
-        const style = 'danger';
-        const type = 'ok';
-
-        importConfirmation().then((Confirmation) => {
-            Confirmation.openPopup({
-                type,
-                style,
-                message
-            });
-        }, () => {
-            if (constants.isBrowserPlatform) {
-                alert(message);
-            }
+        popupHelper.openConfirmation({
+            type: 'ok',
+            style: 'danger',
+            message: config.error.message
         });
     }
-}
-
-/**
- * Загрузить всё необходимое для показа диалога.
- * @returns {Promise} Промис с Controls/popup:Confirmation.
- * Если что-то не загрузилось, то промис завершится с ошибкой.
- */
-function importConfirmation(): Promise<typeof Confirmation> {
-    // Предварительно загрузить темизированные стили для диалога.
-    // Без этого стили загружаются только в момент показа диалога.
-    // Но когда потребуется показать сообщение о потере соединения, стили уже не смогут загрузиться.
-    const confirmationModule = 'Controls/popupConfirmation';
-    const importThemedStyles = import('Core/Themes/ThemesControllerNew')
-        .then((Theme) => Theme.getInstance().loadCssWithAppTheme(confirmationModule));
-
-    return Promise.all([
-        import('Controls/popup'),
-        import(confirmationModule),
-        importThemedStyles
-    ]).then(([popup]) => popup.Confirmation);
 }
