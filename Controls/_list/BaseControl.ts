@@ -2512,12 +2512,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._showActions = false;
     },
     _onViewKeyDown: function(event) {
-        let key = event.nativeEvent.keyCode;
-        let dontStop = key === 33
-            || key === 34
-            || key === 35
-            || key === 36;
-        keysHandler(event, HOT_KEYS, _private, this, dontStop);
+
+        // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
+        // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
+        if (!this._options._keyDownHandler || !this._options._keyDownHandler(event)) {
+            let key = event.nativeEvent.keyCode;
+            let dontStop = key === 33
+                || key === 34
+                || key === 35
+                || key === 36;
+            keysHandler(event, HOT_KEYS, _private, this, dontStop);
+        }
     },
     _dragEnter: function(event, dragObject) {
         if (
