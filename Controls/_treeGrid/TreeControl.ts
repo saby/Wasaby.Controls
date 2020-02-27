@@ -491,7 +491,11 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
 
         if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems())) {
-            _private.clearSourceControllersForNotExpandedNodes(this, viewModel.getExpandedItems(), newOptions.expanded);
+            _private.clearSourceControllersForNotExpandedNodes(
+                this,
+                viewModel.getExpandedItems(),
+                newOptions.expandedItems
+            );
             if (newOptions.source === this._options.source && isEqual(newOptions.filter, this._options.filter)) {
                 viewModel.setExpandedItems(newOptions.expandedItems);
             } else {
