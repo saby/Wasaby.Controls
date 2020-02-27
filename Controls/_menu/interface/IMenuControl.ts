@@ -53,7 +53,7 @@ export default interface IMenuControl {
 
 /**
  * @name Controls/_menu/interface/IMenuControl#displayProperty
- * @cfg {Number} Максимальная высота всплывающего окна
+ * @cfg {String} Устанавливает имя поля элемента, значение которого будет отображено.
  */
 
 /**
