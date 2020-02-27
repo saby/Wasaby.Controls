@@ -29,7 +29,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * @mixes Controls/_interface/IHierarchy
  * @control
  * @public
- * @author Авраменко А.С.
+ * @author Герасимов А.М.
  * @demo Controls-demo/OperationsPanelNew/Base/Index
  */
 
