@@ -139,7 +139,10 @@ export default class ScrollContainer extends Control<IOptions> {
         this._itemsContainer = itemsContainer;
     }
 
-    protected _updateShadowModeHandler(event: SyntheticEvent<Event>): void {
+    protected stopBubblingEvent(event: SyntheticEvent<Event>): void {
+        // В некоторых кейсах (например ScrollViewer) внутри списков могут находиться
+        // другие списки, которые также будут нотифицировать события управления скроллом и тенью
+        // Необходимо их останавливать, чтобы скроллом управлял только самый верхний список
         event.stopPropagation();
     }
 
