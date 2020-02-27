@@ -429,6 +429,10 @@ var
             _private.resetExpandedItems(this);
         },
 
+        getCollapsedItems(): unknown[] {
+            return this._collapsedItems;
+        },
+
         _prepareDisplay: function(items, cfg) {
             return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
         },
