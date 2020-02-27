@@ -261,6 +261,7 @@ var _private = {
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
             if (self._updateExpandedItemsAfterReload) {
+                _private.clearNodesSourceControllers(self);
                 viewModel.setExpandedItems(options.expandedItems);
                 self._updateExpandedItemsAfterReload = false;
             }
@@ -476,9 +477,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         _private.onNodeRemoved(this, nodeId);
     },
     _beforeUpdate: function(newOptions) {
-        if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
-            const baseControl = this._children.baseControl;
+        const baseControl = this._children.baseControl;
+        const viewModel = baseControl.getViewModel();
 
+        if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
             this._updatedRoot = true;
 
@@ -487,41 +489,43 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             }
             baseControl.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
-        //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
-        if (newOptions.expandedItems) {
-            if (isEqual(this._options.filter, newOptions.filter) && this._options.source === newOptions.source) {
-                this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
+
+        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems())) {
+            _private.clearSourceControllersForNotExpandedNodes(
+                this,
+                viewModel.getExpandedItems(),
+                newOptions.expandedItems
+            );
+            if (newOptions.source === this._options.source && isEqual(newOptions.filter, this._options.filter)) {
+                viewModel.setExpandedItems(newOptions.expandedItems);
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
+        }
+        if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
+            viewModel.setCollapsedItems(newOptions.collapsedItems);
+        }
 
-            if (newOptions.expandedItems !== this._options.expandedItems) {
-                _private.clearSourceControllersForNotExpandedNodes(this, this._options.expadedItems, newOptions.expanded);
-            }
-        }
-        if (newOptions.collapsedItems) {
-            this._children.baseControl.getViewModel().setCollapsedItems(newOptions.collapsedItems);
-        }
         if (newOptions.propStorageId && !isEqual(newOptions.sorting, this._options.sorting)) {
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
         }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
-            this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
+            viewModel.setNodeFooterTemplate(newOptions.nodeFooterTemplate);
         }
         if (newOptions.expanderDisplayMode !== this._options.expanderDisplayMode) {
-            this._children.baseControl.getViewModel().setExpanderDisplayMode(newOptions.expanderDisplayMode);
+            viewModel.setExpanderDisplayMode(newOptions.expanderDisplayMode);
         }
         if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
-            this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
+            viewModel.setExpanderVisibility(newOptions.expanderVisibility);
         }
         if (newOptions.nodeProperty !== this._options.nodeProperty) {
-            this._children.baseControl.getViewModel().setNodeProperty(newOptions.nodeProperty);
+            viewModel.setNodeProperty(newOptions.nodeProperty);
         }
         if (newOptions.parentProperty !== this._options.parentProperty) {
-            this._children.baseControl.getViewModel().setParentProperty(newOptions.parentProperty);
+            viewModel.setParentProperty(newOptions.parentProperty);
         }
         if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
-            this._children.baseControl.getViewModel().setHasChildrenProperty(newOptions.hasChildrenProperty);
+            viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
         }
     },
     _afterUpdate: function(oldOptions) {
@@ -695,6 +699,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             if (dispItem) {
                 _private.toggleExpanded(this, dispItem);
             }
+        }
+    },
+
+    handleKeyDown(event): void {
+        this._onTreeViewKeyDown(event);
+        if (!event.stopped && event._bubbling !== false) {
+            this._children.baseControl.handleKeyDown(event);
         }
     },
 

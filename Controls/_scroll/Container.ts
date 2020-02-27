@@ -575,6 +575,11 @@ var
       },
 
       _afterUpdate: function() {
+         // Нельзя рассчитать состояние для скрытого скрол контейнера
+         if (this._isHidden()) {
+            return;
+         }
+
          var displayState = _private.calcDisplayState(this);
 
          if (!isEqual(this._displayState, displayState)) {
@@ -620,7 +625,7 @@ var
          // поэтому св-во не является реактивным и для обновления надо позвать _forceUpdate
          // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
          // Не запускаем перерисовку, если контрол скрыт
-         if (!this._container.closest('.ws-hidden')) {
+         if (this._isHidden()) {
             this._shadowVisibilityByInnerComponents = shadowVisibleObject;
             this._forceUpdate();
          }
@@ -665,7 +670,7 @@ var
          }
          // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
          // Не реагируем на ресайз, если контрол скрыт
-         if (this._container.closest('.ws-hidden')) {
+         if (this._isHidden()) {
             return;
          }
          const displayState = _private.calcDisplayState(this);
@@ -921,7 +926,7 @@ var
        * @function Controls/_scroll/Container#scrollToBottom
        */
       scrollToBottom: function() {
-         _private.setScrollTop(this, _private.getScrollHeight(this._children.content) + this._topPlaceholderSize);
+         _private.setScrollTop(this, _private.getScrollHeight(this._children.content)  - this._children.content.clientHeight + this._topPlaceholderSize);
       },
 
       // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
@@ -995,6 +1000,12 @@ var
          setTimeout(() => {
             this._scrollLockedPosition = null;
          }, _private.KEYBOARD_SHOWING_DURATION);
+      },
+
+      _isHidden: function(): boolean {
+         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+         // Не запускаем перерисовку, если контрол скрыт
+         return !!this._container.closest('.ws-hidden');
       }
    });
 
