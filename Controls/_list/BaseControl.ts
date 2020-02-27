@@ -1233,7 +1233,8 @@ var _private = {
                     targetPoint: {vertical: 'top', horizontal: 'right'},
                     direction: {horizontal: context ? 'right' : 'left'},
                     className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
-                    nativeEvent: context ? childEvent.nativeEvent : false
+                    nativeEvent: context ? childEvent.nativeEvent : false,
+                    autofocus: false
                 });
                 self._menuIsShown = true;
                 self._forceUpdate();
@@ -1286,7 +1287,8 @@ var _private = {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
-                    className: 'controls-DropdownList__margin-head'
+                    className: 'controls-DropdownList__margin-head',
+                    autofocus: false
                 });
                 self._actionMenuIsShown = true;
                 self._forceUpdate();
@@ -2511,6 +2513,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
         this._showActions = false;
     },
+
+    handleKeyDown(event): void {
+        this._onViewKeyDown(event);
+    },
+
     _onViewKeyDown: function(event) {
 
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
