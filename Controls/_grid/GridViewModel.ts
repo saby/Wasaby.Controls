@@ -1350,10 +1350,6 @@ var
                         classLists.base += ` controls-GridView__item_active_theme-${current.theme}`;
                     }
 
-                    if (current.styleLadderHeading && currentColumn.hiddenForLadder) {
-                        classLists.base += ' controls-Grid__row-ladder-cell';
-                    }
-
                     // Первая колонка с включенным маркером.
                     if (!GridLayoutUtil.isFullGridSupport()) {
                         if (params.marker !== false && current.markerVisibility !== 'hidden' && current.isSelected && current.columnIndex === 0) {

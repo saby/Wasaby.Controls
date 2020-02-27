@@ -18,6 +18,13 @@ import {Logger} from 'UI/Utils';
  * @private
  */
 
+interface IListItemTemplateParams {
+    highlightOnHover?: boolean;
+    marker?: boolean;
+    clickable?: boolean;
+    cursor?: boolean;
+}
+
 var _private = {
     updateIndexes: function(self, startIndex, stopIndex) {
         self._startIndex = startIndex;
@@ -91,6 +98,9 @@ var _private = {
         const right = `controls-ListView__groupContent__rightPadding_${current.itemPadding.right}`;
         const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}`;
         return {right, left};
+    },
+    getRowClasses(self: IListViewModel, params: IListItemTemplateParams): string {
+        return '';
     }
 };
 
@@ -177,6 +187,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
+        itemsModelCurrent.getRowClasses = (params: IListItemTemplateParams) => _private.getRowClasses(this, params);
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrolling = this._options.virtualScrolling;
