@@ -69,7 +69,6 @@ class ModuleLoader {
         if (!loaded) {
             return null;
         }
-        this.asyncLoadedModules
         return this.getFromLib(loaded, parsedInfo);
     }
 
