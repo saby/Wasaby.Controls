@@ -17,7 +17,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
 
 /**
  * Контрол меню.
- * @control
+ * @class Controls/menu:Control
  * @public
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IIconSize
@@ -25,7 +25,9 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @control
  * @category Popup
+ * @author Герасимов А.М.
  */
 const SUB_DROPDOWN_OPEN_DELAY = 100;
 
@@ -368,14 +370,18 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
     }
 
-    private additionalFilter(options: IMenuOptions, item: Model, index: number, treeItem: TreeItem<Model>): boolean {
+    private additionalFilter(options: IMenuOptions, item: Model): boolean {
         return (!item.get || !item.get(options.additionalProperty) || this.isHistoryItem(item));
     }
 
-    private displayFilter(options: IMenuOptions, item: Model, index: number, treeItem: TreeItem<Model>): boolean {
+    private displayFilter(options: IMenuOptions, item: Model): boolean {
         let isVisible = true;
         if (item.get && options.parentProperty) {
-            isVisible = item.get(options.parentProperty) === options.root;
+            let parent = item.get(options.parentProperty);
+            if (parent === undefined) {
+                parent = null;
+            }
+            isVisible = parent === options.root;
         }
         return isVisible;
     }

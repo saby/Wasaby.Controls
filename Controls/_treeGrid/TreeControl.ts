@@ -26,7 +26,15 @@ type TNodeSourceControllers = Map<string, SourceController>;
 var _private = {
     clearNodeSourceController(self, node: string|number): void {
         const nodeSourceControllers = _private.getNodesSourceControllers(self);
-        nodeSourceControllers.get(node).destroy();
+        let nodeSourceController = nodeSourceControllers.get(node);
+
+        // Для ие необходим нормальный полифил, Map из shim не подходит
+        // теряются типы ключей, ключ всегда приходит строкой
+        // https://online.sbis.ru/opendoc.html?guid=fdebafad-799b-4d49-a9b9-ff718e57011d
+        if (!nodeSourceController) {
+            nodeSourceController = nodeSourceControllers.get(Number(node));
+        }
+        nodeSourceController.destroy();
         nodeSourceControllers.delete(node);
     },
     clearNodesSourceControllers(self): void {
@@ -253,6 +261,7 @@ var _private = {
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
             if (self._updateExpandedItemsAfterReload) {
+                _private.clearNodesSourceControllers(self);
                 viewModel.setExpandedItems(options.expandedItems);
                 self._updateExpandedItemsAfterReload = false;
             }
@@ -322,6 +331,20 @@ var _private = {
         if (cfg.parentProperty !== undefined) {
             filter[cfg.parentProperty] = self._root;
         }
+    },
+
+    getHasMoreData(self, sourceController, direction, key) {
+        const root = key !== undefined ? key : self._root;
+        const rootResult = sourceController.hasMoreData(direction, root);
+        let moreDataResult;
+
+        // support for not multi root navigation
+        if (rootResult !== undefined) {
+            moreDataResult = rootResult;
+        } else {
+            moreDataResult = sourceController.hasMoreData(direction);
+        }
+        return moreDataResult;
     },
 
     reloadItem: function(self, key) {
@@ -428,6 +451,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
+    _getHasMoreData: null,
     _expandOnDragData: null,
     _updateExpandedItemsAfterReload: false,
     _notifyHandler: tmplNotify,
@@ -443,6 +467,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
         this._beforeLoadToDirectionCallback = _private.beforeLoadToDirectionCallback.bind(null, this);
+        this._getHasMoreData = _private.getHasMoreData.bind(null, this);
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
     _afterMount: function() {

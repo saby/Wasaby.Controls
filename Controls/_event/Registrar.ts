@@ -11,12 +11,21 @@ var Registrar = cExtend.extend({
       this._options = cfg;
    },
 
-   register: function(event, component, callback) {
+   register: function(event, component, callback, config: any = {}) {
       this._registry[component.getInstanceId()] = {
          component: component,
          callback: callback
       };
-      event.stopPropagation();
+      const previousUnmountCallback = component.unmountCallback;
+      component.unmountCallback = () => {
+         if (typeof previousUnmountCallback === 'function') {
+            previousUnmountCallback();
+         }
+         this.unregister(event, component);
+      };
+      if (!config.listenAll) {
+         event.stopPropagation();
+      }
    },
    unregister: function(event, component) {
       delete this._registry[component.getInstanceId()];

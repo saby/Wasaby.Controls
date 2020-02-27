@@ -414,7 +414,13 @@ class Manager extends Control<IManagerOptions> {
             for (let i = 0; i < deactivatedPopups.length; i++) {
                 const itemContainer = this._getItemContainer(deactivatedPopups[i].id);
                 if (deactivatedPopups[i].popupOptions.isCompoundTemplate) {
-                    this._getCompoundArea(itemContainer).close();
+                    // TODO: Compatible ветка.
+                    // Если попап создался, а слой совместимости еще не готов, то считаем что окно не построилось
+                    // и не должно закрываться на клик мимо.
+                    const compoundArea = this._getCompoundArea(itemContainer);
+                    if (compoundArea.isPopupCreated()) {
+                        compoundArea.close();
+                    }
                 } else {
                     deactivatedPopups[i].controller.popupDeactivated(deactivatedPopups[i]);
                 }
@@ -610,9 +616,10 @@ class Manager extends Control<IManagerOptions> {
     private _isIgnoreActivationArea(focusedContainer: HTMLElement): boolean {
         while (focusedContainer && focusedContainer.classList) {
             // TODO: Compatible
-            // Клик по старому оверлею не должен приводить к закрытию вдомных окон на старой странице
+            // Клик по старому оверлею и по старому индикатору не должен приводить к закрытию вдомных окон на старой странице
             if (focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext') ||
-                focusedContainer.classList.contains('ws-window-overlay')) {
+                focusedContainer.classList.contains('ws-window-overlay') ||
+                focusedContainer.classList.contains('ws-wait-indicator')) {
                 return true;
             }
             focusedContainer = focusedContainer.parentElement;

@@ -64,6 +64,7 @@ const
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
+const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 const LIMIT_DRAG_SELECTION = 100;
@@ -206,7 +207,7 @@ var _private = {
                         const nextKey = listModel.getMarkedKey();
                         if (nextKey && nextKey !== curKey
                             && self._listViewModel.getCount()
-                            && !self._options.task46390860 && !self._options.task1177182277
+                            && !self._options.task46390860 && !self._options.task1177182277 && !cfg.task1178786918
                         ) {
                             self._markedKeyForRestoredScroll = nextKey;
                         }
@@ -214,7 +215,7 @@ var _private = {
                     }
 
                     if (self._sourceController) {
-                        _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+                        _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
                 }
                 if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
@@ -286,8 +287,8 @@ var _private = {
             return;
         }
 
-        const hasMoreDataDown = self._sourceController.hasMoreData('down');
-        const hasMoreDataUp = self._sourceController.hasMoreData('up');
+        const hasMoreDataDown = _private.hasMoreData(self, self._sourceController, 'down');
+        const hasMoreDataUp = _private.hasMoreData(self, self._sourceController, 'up');
 
         if (!list.getCount()) {
             const needShowIndicatorByNavigation =
@@ -309,6 +310,22 @@ var _private = {
         } else {
             _private.hideIndicator(self);
         }
+    },
+
+    hasMoreData(self, sourceController, direction): boolean {
+        let moreDataResult = false;
+
+        if (sourceController) {
+            moreDataResult = self._options.getHasMoreData ?
+                self._options.getHasMoreData(sourceController, direction) :
+                sourceController.hasMoreData(direction);
+        }
+        return moreDataResult;
+    },
+
+    hasMoreDataInAnyDirection(self, sourceController): boolean {
+        return _private.hasMoreData(self, sourceController, 'up') ||
+            _private.hasMoreData(self, sourceController, 'down');
     },
 
     scrollToItem: function(self, key, toBottom, force) {
@@ -440,7 +457,7 @@ var _private = {
         var
             loadedDataCount, allDataCount;
 
-        if (_private.isDemandNavigation(navigation) && sourceController.hasMoreData('down')) {
+        if (_private.isDemandNavigation(navigation) && _private.hasMoreData(self, sourceController, 'down')) {
             self._shouldDrawFooter = (self._options.groupingKeyCallback || self._options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
@@ -465,7 +482,8 @@ var _private = {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
-            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+            _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController)
+            );
             if (self._options.serviceDataLoadCallback instanceof Function) {
                 self._options.serviceDataLoadCallback(self._items, addedItems);
             }
@@ -477,7 +495,7 @@ var _private = {
                 self._loadingState === 'all' ||
                 !_private.needScrollCalculation(navigation) ||
                 !self._loadTriggerVisibility[self._loadingState] ||
-                !self._sourceController.hasMoreData(self._loadingState)
+                !_private.hasMoreData(self, self._sourceController, self._loadingState)
             ) {
                 _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
             } else {
@@ -489,10 +507,6 @@ var _private = {
 
             if (isPortionedLoad) {
                 _private.loadToDirectionWithSearchValueEnded(self, addedItems);
-            }
-
-            if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = true;
             }
         };
 
@@ -506,7 +520,7 @@ var _private = {
                 _private.checkLoadToDirectionCapability(self);
             }
             if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = false;
+                self._children.scrollController.itemsFromLoadToDirection = null;
             }
 
             _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -514,7 +528,6 @@ var _private = {
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
             beforeAddItems(addedItems);
-            self._saveAndRestoreScrollPosition = 'up';
             if (self._options.useNewModel) {
                 self._listViewModel.getCollection().prepend(addedItems);
             } else {
@@ -543,6 +556,10 @@ var _private = {
                 //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 const countCurrentItems = self._listViewModel.getCount();
+
+                if (self._options.virtualScrolling && self._isMounted) {
+                    self._children.scrollController.itemsFromLoadToDirection = direction;
+                }
 
                 if (direction === 'down') {
                     beforeAddItems(addedItems);
@@ -663,19 +680,20 @@ var _private = {
 
     loadToDirectionIfNeed: function(self, direction, filter) {
         const sourceController = self._sourceController;
+        const hasMoreData = _private.hasMoreData(self, sourceController, direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
             !self._loadedItems :
             true;
         const allowLoadBySource =
             sourceController &&
-            sourceController.hasMoreData(direction) &&
+            hasMoreData &&
             !sourceController.isLoading();
         const allowLoadBySearch =
             !self._options.searchValue ||
             _private.getPortionedSearch(self).shouldSearch();
 
         if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
-            _private.setHasMoreData(self._listViewModel, sourceController.hasMoreData(direction));
+            _private.setHasMoreData(self._listViewModel, hasMoreData);
             _private.loadToDirection(
                self, direction,
                self._options.dataLoadCallback,
@@ -694,7 +712,7 @@ var _private = {
 
     scrollToEdge: function(self, direction) {
         _private.setMarkerAfterScroll(self);
-        if (self._sourceController && self._sourceController.hasMoreData(direction)) {
+        if (_private.hasMoreData(self, self._sourceController, direction)) {
             self._sourceController.setEdgeState(direction);
             _private.reload(self, self._options).addCallback(function() {
                 if (direction === 'up') {
@@ -729,8 +747,8 @@ var _private = {
 
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             const hasMoreData = {
-                up: self._sourceController.hasMoreData('up'),
-                down: self._sourceController.hasMoreData('down')
+                up: _private.hasMoreData(self, self._sourceController, 'up'),
+                down: _private.hasMoreData(self, self._sourceController, 'down')
             };
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
@@ -853,7 +871,6 @@ var _private = {
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
-            self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
         }
         if (!self._loadingIndicatorTimer) {
             self._loadingIndicatorTimer = setTimeout(function() {
@@ -861,6 +878,7 @@ var _private = {
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
                     self._showLoadingIndicatorImage = true;
+                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
                     self._notify('controlResize');
                 }
             }, 2000);
@@ -897,8 +915,8 @@ var _private = {
             } else {
                 // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                 if (self._sourceController) {
-                    const hasMoreDataUp = self._sourceController.hasMoreData('up');
-                    const hasMoreDataDown = self._sourceController.hasMoreData('down');
+                    const hasMoreDataUp = _private.hasMoreData(self, self._sourceController, 'up');
+                    const hasMoreDataDown = _private.hasMoreData(self, self._sourceController, 'down');
 
                     hasMoreData = {
                         up: hasMoreDataUp,
@@ -1006,7 +1024,7 @@ var _private = {
                 _private.disablePagingNextButtons(self);
 
                 if (self._isScrollShown) {
-                    _private.updateShadowMode(self, self._placeholderSizes);
+                    _private.updateShadowMode(self, self._shadowVisibility);
                 }
             }
         }));
@@ -1026,7 +1044,7 @@ var _private = {
 
     loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
         const portionedSearch = _private.getPortionedSearch(self);
-        if (!self._sourceController.hasMoreData('down')) {
+        if (!_private.hasMoreData(self, self._sourceController, 'down')) {
             portionedSearch.reset();
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
@@ -1049,15 +1067,18 @@ var _private = {
         return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
     },
 
-    updateShadowMode(self, placeholderSizes: {top: number, bottom: number}): void {
+    updateShadowMode(self, shadowVisibility: {up: boolean, down: boolean}): void {
         const itemsCount = self._listViewModel && self._listViewModel.getCount();
-        const hasMoreData = (direction) => self._sourceController && self._sourceController.hasMoreData(direction);
+        const hasMoreData = (direction) => _private.hasMoreData(self, self._sourceController, direction);
         const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
         const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
 
         self._notify('updateShadowMode', [{
-            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || showShadowByNavigation && showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+            top: (shadowVisibility.up ||
+                showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+            bottom: (shadowVisibility.down ||
+                showShadowByNavigation &&
+                showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -1548,6 +1569,14 @@ var _private = {
     getListTopOffset(self): number {
         const view = self._children && self._children.listView;
         let height = 0;
+
+        /* Получаем расстояние от начала скроллконтейнера, до начала списка, т.к.список может лежать не в "личном" контейнере. */
+        if (self._isMounted) {
+            const viewRect = (self._container[0] || self._container).getBoundingClientRect();
+            if (self._isScrollShown || (self._needScrollCalculation && viewRect && self._viewPortRect)) {
+                height = viewRect.y + self._scrollTop - self._viewPortRect.top;
+            }
+        }
         if (view && view.getHeaderHeight) {
             height += view.getHeaderHeight();
         }
@@ -1597,7 +1626,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _savedStartIndex: 0,
     _savedStopIndex: 0,
-    _placeholderSizes: null,
+    _shadowVisibility: null,
 
     _template: BaseControlTpl,
     iWantVDOM: true,
@@ -1761,6 +1790,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     return;
                 }
                 if (receivedError) {
+                    if (newOptions.dataLoadErrback instanceof Function) {
+                        newOptions.dataLoadErrback(receivedError);
+                    }
                     return _private.showError(self, receivedError);
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
@@ -1831,9 +1863,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    updateShadowModeHandler(_: SyntheticEvent<Event>, placeholderSizes: {top: number, bottom: number}): void {
-        this._placeholderSizes = placeholderSizes;
-        _private.updateShadowMode(this, placeholderSizes);
+    updateShadowModeHandler(_: SyntheticEvent<Event>, shadowVisibility: {down: boolean, up: boolean}): void {
+        this._shadowVisibility = shadowVisibility;
+        _private.updateShadowMode(this, shadowVisibility);
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
@@ -2099,13 +2131,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforeRender(): void {
-        if (this._saveAndRestoreScrollPosition) {
-            /**
-             * This event should bubble, because there can be anything between Scroll/Container and the list,
-             * and we can't force everyone to manually bubble it.
-             */
-            this._notify('saveScrollPosition', [], { bubbling: true });
-        }
         // Браузер при замене контента всегда пытается восстановить скролл в прошлую позицию.
         // Т.е. если scrollTop = 1000, а размер нового контента будет лишь 500, то видимым будет последний элемент.
         // Из-за этого получится что мы вначале из-за нативного подскрола видим последний элемент, а затем сами
@@ -2195,7 +2220,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             ? !displayLib.EditInPlaceController.isEditing(listViewModel)
             : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
-        const notHasMore = !(this._sourceController && (this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up')));
+        const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
@@ -2631,6 +2656,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         return styles;
+    },
+    _listDeactivated: function() {
+        if (!this._menuIsShown) {
+            this._children.swipeControl?.closeSwipe();
+        }
     },
 
     _onHoveredItemChanged: function(e, item, container) {

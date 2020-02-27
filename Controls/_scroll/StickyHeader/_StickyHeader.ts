@@ -114,7 +114,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
-            position: this._options.position,
+            container: this._container,position: this._options.position,
             mode: this._options.mode
         }, true], {bubbling: true});
         this._observer = new IntersectionObserver(this._observeHandler);
@@ -352,8 +352,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             // There's no container at first building of template.
             if (container) {
                 const offsetWidth = container.offsetWidth;
+                let offsetHeight = container.offsetHeight;
+                if (this._options.position.indexOf('bottom') !== -1) {
+                    offsetHeight -= MOBILE_GAP_FIX_OFFSET;
+                }
                 this._bottomShadowStyle =
-                     `bottom: unset; right: unset; top:${container.offsetHeight}px; width:${offsetWidth}px;`;
+                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
                 this._topShadowStyle = `right: unset; width:${offsetWidth}px;`;
             }
         }

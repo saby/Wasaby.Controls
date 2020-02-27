@@ -138,7 +138,7 @@ var
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
-                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn } } = params;
+                rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn }, isMultiHeader } = params;
             if (params.cell.isActionCell) {
                 return preparedClasses;
             }
@@ -158,7 +158,7 @@ var
             }
             // Отступ для последней колонки
             const lastColClass = ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${theme}`;
-            if (maxEndColumn) {
+            if (isMultiHeader && maxEndColumn) {
                 // у мультихэдера последняя ячейка определяется по endColumn, а не по последнему элементу массива.
                 if (maxEndColumn === endColumn) {
                     preparedClasses += lastColClass;
@@ -574,7 +574,7 @@ var
                 this._header,
                 this._options.multiSelectVisibility !== 'hidden',
                 this._shouldAddActionsCell(),
-                this._shouldAddStickyLadderCell()
+                this.shouldAddStickyLadderCell()
             );
         },
 
@@ -621,7 +621,10 @@ var
                 shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport()
             });
         },
-        _shouldAddStickyLadderCell() {
+        /**
+         * Проверка необходимости добавлять ячейку для лесенки
+         */
+        shouldAddStickyLadderCell(): boolean {
             return shouldAddStickyLadderCell(
                 this._options.columns,
                 this._options.stickyColumn,
@@ -741,6 +744,7 @@ var
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
+                    isMultiHeader: this._isMultiHeader,
                     isHeader: true,
                     cell,
                     rowIndex,
@@ -874,7 +878,7 @@ var
             } else {
                 this._resultsColumns = columns;
             }
-            if (this._shouldAddStickyLadderCell()) {
+            if (this.shouldAddStickyLadderCell()) {
                 this._resultsColumns = [{}].concat(this._resultsColumns);
             }
             if (this._shouldAddActionsCell()) {
@@ -1001,7 +1005,7 @@ var
             const hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
             this._prepareColgroupColumns(this._columns, hasMultiSelect);
-            this._prepareHeaderColumns(this._header, hasMultiSelect, this._shouldAddActionsCell(), this._shouldAddStickyLadderCell());
+            this._prepareHeaderColumns(this._header, hasMultiSelect, this._shouldAddActionsCell(), this.shouldAddStickyLadderCell());
 
             this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
