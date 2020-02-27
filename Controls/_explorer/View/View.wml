@@ -1,4 +1,4 @@
-<div class="controls-Explorer">
+<div class="controls-Explorer" on:keyDown="_onExternalKeyDown()">
    <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
       <Controls._explorer.PathController
                                  scope="{{_options}}"

@@ -11,8 +11,7 @@ import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import 'css!theme?Controls/explorer';
 import 'css!theme?Controls/tile';
-import 'Types/entity';;
-
+import 'Types/entity';
 
 var
       HOT_KEYS = {
@@ -480,6 +479,12 @@ var
           _private.cleanRestoredKeyObject(this, item.getId());
           _private.setRoot(this, item.getId());
           this._isGoingBack = true;
+      },
+      _onExternalKeyDown(event): void {
+         this._onExplorerKeyDown(event);
+         if (!event.stopped && event._bubbling !== false) {
+            this._children.treeControl.handleKeyDown(event);
+         }
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
