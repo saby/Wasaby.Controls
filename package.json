@@ -33,7 +33,7 @@
       "cookie-parser": "^1.4.3",
       "eslint": "^5.7.0",
       "express": "^4.17.1",
-      "wasaby-cli": "git+https://platform-git.sbis.ru/saby/wasaby-cli.git#20.3000/issue/integration-with-controls-rmi-try-2",
+      "wasaby-cli": "git+https://platform-git.sbis.ru/saby/wasaby-cli.git#rc-20.3000",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-20.3000",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
