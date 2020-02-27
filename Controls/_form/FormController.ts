@@ -24,8 +24,8 @@ interface IFormController extends IControlOptions {
 
     //удалить при переходе на новые опции
     dataSource?: Memory;
-    initValues?: object;
-    destroyMeta?: object;
+    initValues?: unknown;
+    destroyMeta?: unknown;
     idProperty?: string;
 }
 
@@ -576,7 +576,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
         const resultDef = this._children.crud.delete(this._record, destroyMetaData);
 
-        resultDef.addCallbacks((record) => {
+        return resultDef.then((record) => {
             this._setRecord(null);
             this._wasDestroyed = true;
             this._updateIsNewRecord(false);
@@ -585,7 +585,6 @@ class FormController extends Control<IFormController, IReceivedState> {
         }, (error) => {
             return this._crudErrback(error, dataSourceError.Mode.dialog);
         });
-        return resultDef;
     }
 
     validate(): Promise<IValidateResult | Error> {
@@ -600,7 +599,7 @@ class FormController extends Control<IFormController, IReceivedState> {
      * @private
      */
     private _crudErrback(error: Error, mode: dataSourceError.Mode): Promise<undefined | Model> {
-        return this._processError(error, mode).then(getData);
+        return this._processError(error, mode).then(this._getData);
     }
 
     private _updateIsNewRecord(value: boolean): void {
