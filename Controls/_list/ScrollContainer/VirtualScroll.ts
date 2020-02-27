@@ -121,7 +121,7 @@ export default class VirtualScroll {
         this._itemsCount += count;
         this._insertItemHeights(addIndex, count);
 
-        if (direction === 'up' && predicatedDirection) {
+        if (direction === 'up') {
             this._oldRange.start += count;
             this._updateStartIndex(this._range.start + count);
         }
