@@ -2021,6 +2021,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.getPortionedSearch(self).reset();
+            if (this._menuIsShown) {
+                this._children.itemActionsOpener.close();
+                this._closeActionsMenu();
+            }
 
             // return result here is for unit tests
             return _private.reload(self, newOptions);
