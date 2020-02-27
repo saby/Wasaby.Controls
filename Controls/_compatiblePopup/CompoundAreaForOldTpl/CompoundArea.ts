@@ -264,6 +264,11 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    _callCallbackCreated: function() {
+      // До инициализации старого контрола окно могли закрыть (позвали close в конструкторе шаблона).
+      // В этом случае логический родитель уже почищен, защищаюсь, чтобы код совместимости не падал.
+      if (!this._logicParent) {
+         return;
+      }
       this._logicParent.callbackCreated && this._logicParent.callbackCreated();
       this._logicParent.waitForPopupCreated = false;
       var self = this;
