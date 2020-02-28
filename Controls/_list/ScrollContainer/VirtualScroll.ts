@@ -425,7 +425,7 @@ export default class VirtualScrollController {
             const direction = this.itemsFromLoadToDirection
             || (newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down');
 
-            if (direction === 'up') {
+            if (direction === 'up' && this.itemsFromLoadToDirection) {
                 this.savedStartIndex += newItems.length;
                 this.setStartIndex(this.startIndex + newItems.length);
             }
