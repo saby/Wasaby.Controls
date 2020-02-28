@@ -1,4 +1,4 @@
-<div class="controls-Explorer">
+<div class="controls-Explorer" on:keyDown="_onExternalKeyDown()">
    <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
       <Controls._explorer.PathController
                                  scope="{{_options}}"
@@ -56,6 +56,7 @@
                                     on:expandedItemsChanged="_notifyHandler('expandedItemsChanged')"
                                     on:collapsedItemsChanged="_notifyHandler('collapsedItemsChanged')"
                                     on:editArrowClick="_notifyHandler('editArrowClick')"
+                                    dataLoadErrback="{{_dataLoadErrback}}"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     serviceDataLoadCallback="{{_serviceDataLoadCallback}}"
                                     itemsSetCallback="{{_itemsSetCallback}}"/>

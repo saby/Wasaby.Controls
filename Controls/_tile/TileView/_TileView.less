@@ -74,6 +74,8 @@
 .controls-TileView__item_unfixed, .controls-TileView__item_unscaleable {
    max-height: 100%;
 }
+
+.controls-TileView__item_active.controls-TileView__item_unscaleable,
 .controls-TileView__item:hover > .controls-TileView__item_unscaleable {
    max-height: none;
 }
@@ -129,6 +131,7 @@
    // if the parent container limits through overflow: hidden.
    // Turn on the display of the caption only for the desktop, so tile does not change the size by swipe on ios .
    .controls-TileView__item_hovered,
+   .controls-TileView__item_active,
    .controls-TileView__item:hover > .controls-TileView__item_unscaleable {
       .controls-TileView__title_invisible {
          display: block;

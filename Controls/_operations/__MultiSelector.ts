@@ -107,7 +107,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
       // хотя можно было это сделать за одну синхронизацию
       if (getCountResult instanceof Promise) {
-         getCountResult.then(getCountCallback);
+         return getCountResult.then(getCountCallback);
       } else {
          getCountCallback(getCountResult);
       }
@@ -140,13 +140,13 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       if (this._isCorrectCount(count) || !this._options.selectedCountConfig) {
          countResult = count === undefined ? selection.selected.length : count;
       } else {
-         this._children.countIndicator.show();
+         this._menuCaption = rk('Отмечено') + ':';
+         this._countLoading = true;
          countResult = getCountUtil.getCount(selection, this._options.selectedCountConfig).then((count) => {
-            this._children.countIndicator.hide();
+            this._countLoading = false;
             return count;
          });
       }
-
       return countResult;
    }
 
