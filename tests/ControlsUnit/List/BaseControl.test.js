@@ -286,15 +286,20 @@ define([
          const self = {_options: {}};
          const sandbox = sinon.createSandbox();
          const myFilter = {testField: 'testValue'};
+         const resultNavigation = 'testNavigation';
+         let maxCountNavigation;
 
          self._needScrollCalculation = false;
          // loadToDirectionIfNeed вызывается с фильтром, переданным в checkLoadToDirectionCapability
-         sandbox.replace(lists.BaseControl._private, 'needLoadByMaxCountNavigation', () => true);
+         sandbox.replace(lists.BaseControl._private, 'needLoadByMaxCountNavigation', (model, navigation) => {
+            maxCountNavigation = navigation;
+         });
          sandbox.replace(lists.BaseControl._private, 'loadToDirectionIfNeed', (baseControl, direction, filter) => {
             assert.equal(direction, 'down');
             assert.deepEqual(filter, myFilter);
          });
-         lists.BaseControl._private.checkLoadToDirectionCapability(self, myFilter);
+         lists.BaseControl._private.checkLoadToDirectionCapability(self, myFilter, resultNavigation);
+         assert.equal(resultNavigation, maxCountNavigation);
          sandbox.restore();
       });
 
@@ -2547,11 +2552,15 @@ define([
             assert.equal(actionsUpdateCount, 0);
             baseControl._beforeMount(cfg);
          });
-         //it('without itemActions nothing should happen', function() {
-         //   baseControl._children.itemActions = undefined;
-         //   baseControl._updateItemActions();
-         //   assert.equal(actionsUpdateCount, 0);
-         //});
+        // it('without itemActions nothing should happen', function() {
+        //    baseControl._beforeUpdate({
+        //       ...cfg,
+        //       itemActions: null,
+        //       itemActionsProperty: null
+        //    });
+        //    baseControl._updateItemActions();
+        //    assert.equal(actionsUpdateCount, 0);
+        // });
       });
 
       describe('resetScrollAfterReload', function() {
@@ -4239,6 +4248,54 @@ define([
             assert.isFalse(instance._menuIsShown);
          });
 
+         it('closeActionsMenu', () => {
+            const filter = {
+               1: 1,
+               2: 2
+            };
+            const filter2 = {
+               1: 1
+            };
+            let cfg = {
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               filter: filter
+            };
+            let newCfg = {
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               filter: filter2
+            };
+            let openerClosed = false;
+            let ctrl = new lists.BaseControl(cfg);
+            ctrl._children.itemActionsOpener = {
+               close: () => {
+                  openerClosed = true;
+               }
+            };
+            ctrl.saveOptions(cfg);
+            ctrl._beforeMount(cfg);
+            ctrl._menuIsShown = true;
+            ctrl._beforeUpdate(newCfg);
+            assert.isFalse(ctrl._menuIsShown);
+            assert.isTrue(openerClosed);
+         });
          it('closeActionsMenu item with children', function() {
             var cfg = {
                   viewName: 'Controls/List/ListView',
