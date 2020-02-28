@@ -676,7 +676,9 @@ var Filter = Control.extend({
     openDetailPanel: function() {
         if (this._options.detailPanelTemplateName) {
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
-            let popupOptions =  {};
+            let popupOptions =  {
+                fittingMode: 'overflow'
+            };
             if (this._options.alignment === 'right') {
                 popupOptions.targetPoint = {
                     vertical: 'top',

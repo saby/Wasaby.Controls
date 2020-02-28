@@ -207,6 +207,34 @@ define(
             assert.isTrue(closed);
          });
 
+         it('displayFilter', function() {
+            let menuControl = getMenu();
+            let hierarchyOptions = {
+               root: null
+            };
+            let item = new entity.Model({
+               rawData: {key: '1', parent: null},
+               keyProperty: 'key'
+            });
+            let isVisible = menuControl.displayFilter(hierarchyOptions, item);
+            assert.isTrue(isVisible);
+
+            hierarchyOptions = {
+               parentProperty: 'parent',
+               root: null
+            };
+            isVisible = menuControl.displayFilter(hierarchyOptions, item);
+            assert.isTrue(isVisible);
+
+            item.set('parent', undefined);
+            isVisible = menuControl.displayFilter(hierarchyOptions, item);
+            assert.isTrue(isVisible);
+
+            item.set('parent', '1');
+            isVisible = menuControl.displayFilter(hierarchyOptions, item);
+            assert.isFalse(isVisible);
+         });
+
       });
    }
 );
