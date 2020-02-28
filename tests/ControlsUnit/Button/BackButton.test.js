@@ -82,7 +82,7 @@ define(['Controls/heading'], function(heading) {
             size: 'l'
          };
          backD._setSizeState(styles1);
-         assert.equal(backD._fontSize, 'l');
+         assert.equal(backD._fontSize, '4xl');
          assert.equal(backD._iconSize, 'l');
 
          const styles2 = {
@@ -97,7 +97,7 @@ define(['Controls/heading'], function(heading) {
             iconSize: 's',
          };
          backD._setSizeState(styles3);
-         assert.equal(backD._fontSize, 'm');
+         assert.equal(backD._fontSize, '3xl');
          assert.equal(backD._iconSize, 's');
 
       });
