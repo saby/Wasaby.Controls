@@ -550,7 +550,7 @@ var _private = {
                     self._children.scrollController.itemsFromLoadToDirection = direction;
                 }
 
-                if (self._isMounted) {
+                if (self._isMounted && self?._children?.scrollController) {
                     self._children.scrollController.saveScrollDirection(direction);
                 }
 
