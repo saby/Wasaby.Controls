@@ -39,25 +39,31 @@
 }
 
 .controls-VScrollbar__thumbWrapper {
-   padding: @padding_scrollbar;
    box-sizing: border-box;
+   position: relative;
 }
 
 .controls-ColumnScroll_without_offset .controls-VScrollbar__thumbWrapper {
    padding: 0 @padding_scrollbar;
    height: @thumb_l_thickness_scrollbar;
 }
-
+.controls-VScrollbar__thumbWrapper_vertical {
+   min-height: @min-height_Scrollbar-thumb;
+}
 .controls-VScrollbar__thumbWrapper_horizontal {
+   min-width: @min-height_Scrollbar-thumb;
    height: 100%;
    padding: @padding_scrollbar @track_offset_scrollbar;
    transition: padding 0.3s ease-in-out;
 }
 
 .controls-VScrollbar__thumb {
-   border-radius: @thumb_l_border-radius_scrollbar;
-   width: 100%;
-   height: 100%;
+   border-radius:  @thumb_l_border-radius_scrollbar;
+   left: @padding_scrollbar;
+   right: @padding_scrollbar;
+   top: @padding_scrollbar;
+   bottom: @padding_scrollbar;
+   position: absolute;
 }
 
 .controls-VScrollbar__thumb_vertical {
