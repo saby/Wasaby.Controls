@@ -4,6 +4,7 @@ import * as library from 'Core/library';
 import { IoC, constants } from 'Env/Env';
 import { descriptor } from 'Types/entity';
 import { Control, IControlOptions, TemplateFunction, headDataStore } from 'UI/Base';
+import rk = require('i18n!Controls');
 import template = require('wml!Controls/Container/Async/Async');
 
 /**
@@ -85,6 +86,7 @@ class Async extends Control<IOptions, TStateRecivied> {
    private optionsForComponent: Record<string, unknown> = {};
    private canUpdate: boolean = true;
    protected error: TStateRecivied | void;
+   protected userErrorMessage: string | void;
 
    _beforeMount(options: IOptions, _: unknown, receivedState: TStateRecivied): Promise<TStateRecivied> {
       if (typeof options.templateName === 'undefined') {
@@ -104,6 +106,7 @@ class Async extends Control<IOptions, TStateRecivied> {
 
       this.error = this._loadContentSync(options.templateName, options.templateOptions);
       if (this.error) {
+         this.userErrorMessage = rk('У СБИС возникла проблема');
          return Promise.resolve(this.error);
       }
 
@@ -166,7 +169,8 @@ class Async extends Control<IOptions, TStateRecivied> {
          this.canUpdate = true;
          if (loaded === null) {
             this.error = generateErrorMsg(name);
-            return true;
+            this.userErrorMessage = rk('У СБИС возникла проблема');
+            return this.error;
          }
 
          this._insertComponent(loaded, options, name);
@@ -174,6 +178,7 @@ class Async extends Control<IOptions, TStateRecivied> {
       }, (err) => {
          this.canUpdate = true;
          this.error = generateErrorMsg(name);
+         this.userErrorMessage = rk('У СБИС возникла проблема');
          return err;
       });
 
