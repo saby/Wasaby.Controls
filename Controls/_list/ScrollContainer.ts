@@ -49,7 +49,7 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
         viewportHeight?: number;
     };
     collection: Collection<Record>;
-    activeElement: string|number;
+    activeElement: string | number;
 }
 
 export default class ScrollContainer extends Control<IOptions> {
@@ -139,6 +139,13 @@ export default class ScrollContainer extends Control<IOptions> {
         this._itemsContainer = itemsContainer;
     }
 
+    protected _stopBubblingEvent(event: SyntheticEvent<Event>): void {
+        // В некоторых кейсах (например ScrollViewer) внутри списков могут находиться
+        // другие списки, которые также будут нотифицировать события управления скроллом и тенью
+        // Необходимо их останавливать, чтобы скроллом управлял только самый верхний список
+        event.stopPropagation();
+    }
+
     protected _viewResize(): void {
         this._viewHeight = this._container.offsetHeight;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
@@ -192,7 +199,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
-    scrollToItem(key: string|number, toBottom: boolean = true, force: boolean = false): Promise<void> {
+    scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false): Promise<void> {
         const index = this._options.collection.getIndexByKey(key);
 
         if (index !== -1) {
@@ -214,19 +221,21 @@ export default class ScrollContainer extends Control<IOptions> {
                 if (this._virtualScroll.canScrollToItem(index, toBottom, force)) {
                     scrollCallback();
                 } else if (force) {
-                    // Нельзя менять диапазон отображемых элементов во время перерисовки
-                    // поэтому нужно перенести scrollToItem на следующий цикл синхронизации
-                    if (this._virtualScroll.rangeChanged) {
-                        this._restoreScrollResolve = () => {
-                            this.scrollToItem(key, toBottom, force);
-                        };
-                    } else {
-                        const rangeShiftResult = this._virtualScroll
-                            .resetRange(index, this._options.collection.getCount());
-                        this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-                        this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
-                        this._restoreScrollResolve = scrollCallback;
-                    }
+                    this._inertialScrolling.callAfterScrollStopped(() => {
+                        // Нельзя менять диапазон отображемых элементов во время перерисовки
+                        // поэтому нужно перенести scrollToItem на следующий цикл синхронизации
+                        if (this._virtualScroll.rangeChanged) {
+                            this._restoreScrollResolve = () => {
+                                this.scrollToItem(key, toBottom, force).then(resolve);
+                            };
+                        } else {
+                            const rangeShiftResult = this._virtualScroll
+                                .resetRange(index, this._options.collection.getCount());
+                            this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
+                            this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+                            this._restoreScrollResolve = scrollCallback;
+                        }
+                    });
                 } else {
                     resolve();
                 }
@@ -342,6 +351,13 @@ export default class ScrollContainer extends Control<IOptions> {
                 return collection.setIndexes(start, stop);
             }
         }
+
+        if (this.__mounted) {
+            this._notify('updateShadowMode', [{
+                up: start > 0,
+                down: stop < collection.getCount()
+            }]);
+        }
     }
 
     /**
@@ -410,11 +426,11 @@ export default class ScrollContainer extends Control<IOptions> {
      * @private
      */
     private _recalcToDirection(direction: IDirection): void {
-        if (!this._virtualScroll.rangeChanged) {
-            if (this._virtualScroll.isRangeOnEdge(direction)) {
-                this._notifyLoadMore(direction);
-            } else {
-                this._inertialScrolling.callAfterScrollStopped(() => {
+        if (this._virtualScroll.isRangeOnEdge(direction)) {
+            this._notifyLoadMore(direction);
+        } else {
+            this._inertialScrolling.callAfterScrollStopped(() => {
+                if (!this._virtualScroll.rangeChanged) {
                     const rangeShiftResult = this._virtualScroll.shiftRange(direction);
                     this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
                     this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
@@ -422,8 +438,8 @@ export default class ScrollContainer extends Control<IOptions> {
                     if (this._virtualScroll.isRangeOnEdge(direction)) {
                         this._notifyLoadMore(direction);
                     }
-                });
-            }
+                }
+            });
         }
     }
 
@@ -450,10 +466,22 @@ export default class ScrollContainer extends Control<IOptions> {
             this._scrollToPosition(this._virtualScroll.getPositionToRestore(this._lastScrollTop));
             this.checkTriggerVisibilityWithTimeout();
         } else if (this._restoreScrollResolve) {
+            // В результате _restoreScrollResolve он может сам себя перезаписать
+            // (такое происходит, когда вызвали scrolLToItem)
+            // во время перерисовки. В таком случае занулять _restoreScrollResolve нельзя
+            // TODO Нужно этот момент продумать получше, выписал задачу
+            // https://online.sbis.ru/opendoc.html?guid=df37d700-5686-4c28-baee-e015b5db444c
+            const oldScrollResolve = this._restoreScrollResolve;
             this._restoreScrollResolve();
+
+            if (this._restoreScrollResolve === oldScrollResolve) {
+                this._restoreScrollResolve = null;
+            }
+
             this.checkTriggerVisibilityWithTimeout();
         }
     }
+
     /**
      * Нотифицирует скролл контейнеру о том, что нужно подскролить к переданной позиции
      * @param position
@@ -536,7 +564,7 @@ export default class ScrollContainer extends Control<IOptions> {
         this._placeholders = placeholders;
 
         if (this.__mounted) {
-            this._notify('updatePlaceholdersSize', [placeholders], { bubbling: true });
+            this._notify('updatePlaceholdersSize', [placeholders], {bubbling: true});
         }
     }
 

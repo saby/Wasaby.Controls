@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import ColumnScrollTpl = require('wml!Controls/_grid/ColumnScroll');
-import 'css!theme?Controls/grid';
 import { detection } from 'Env/Env';
 import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
@@ -130,8 +129,13 @@ const
       drawTransform (self, position) {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
-         const newHTML = '.' + self._transformSelector +
-            ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
+         let newHTML = `.${self._transformSelector} .controls-Grid__cell_transform { transform: translateX(-${position}px); }`;
+
+         if (!isFullGridSupport()) {
+             const maxTranslate = self._contentSize - self._contentContainerSize;
+             newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(-${maxTranslate}px); }`;
+         }
+
          if (self._children.contentStyle.innerHTML !== newHTML) {
             self._children.contentStyle.innerHTML = newHTML;
          }
@@ -335,5 +339,6 @@ const
            return delta;
        }
    });
+ColumnScroll._theme = ['Controls/grid'];
 ColumnScroll._private = _private;
 export = ColumnScroll;
