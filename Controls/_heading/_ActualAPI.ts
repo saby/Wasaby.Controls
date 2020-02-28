@@ -40,7 +40,7 @@ export function backSizeOptions(size: string): string {
 export function backSize(options: IBackOptions): { fontSize: string, iconSize: string } {
     return {
         fontSize: options.fontSize || backSizeOptions(options.size) ,
-        iconSize: options.iconSize || backSizeOptions(options.size)
+        iconSize: options.iconSize || options.size
     };
 }
 
