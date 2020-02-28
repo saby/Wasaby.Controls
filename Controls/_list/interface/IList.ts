@@ -38,6 +38,14 @@ type TActionAlignment = 'horizontal'|'vertical';
  * @variant none Не будет отображаться.
  */
 type TActionCaptionPosition = 'right'|'bottom'|'none';
+/**
+ * @typedef {String} TActionDisplayMode
+ * @variant title показывать только заголовок
+ * @variant icon показывать только иконку
+ * @variant both показывать иконку и заголовок
+ * @variant auto если есть иконка, то показывать иконку, иначе заголовок
+ */
+type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
 type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
@@ -59,8 +67,8 @@ export interface IItemAction {
     showType?: 0|1|2;
     style?: string;
     iconStyle?: TIconStyle;
+    displayMode?: TActionDisplayMode;
     tooltip?: string;
-    caption?: string;
     handler?: (item) => void;
     parent?: string;
     'parent@'?: boolean|null;
@@ -214,16 +222,16 @@ export interface IList {
 /**
  * @typedef {Object} ItemAction
  * @property {String} id Идентификатор опции записи.
- * @property {String} title Название опции записи (Свойство устарело и будет удалено. Используйте caption).
- * @property {String} caption Название опции записи.
+ * @property {String} title Название опции записи.
  * @property {String} tooltip Текст подсказки при наведении мыши.
  * @property {String} icon Имя иконки для опции записи.
+ * @property {TActionDisplayMode} displayMode Режим отображения операции над записью.
  * @property {Number} [showType=0] Местоположение опции записи.
  * * 0 — в контекстном меню.
  * * 1 — в строке и в контекстном меню.
  * * 2 — в строке.
  * @property {String} style Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
- * Он будет установлен для html-контейнера самой опции записи, и свойства класса будут применены как к тексту (см. caption), так и к иконке (см. icon).
+ * Он будет установлен для html-контейнера самой опции записи, и свойства класса будут применены как к тексту (см. title), так и к иконке (см. icon).
  * @property {TIconStyle} [iconStyle=default] Стиль иконки.
  * Каждому значению свойства соответствует стиль, который определяется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
  * @property {Function} handler Обработчик опции записи.

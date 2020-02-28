@@ -52,22 +52,27 @@ function getActionsForContacts(): IItemAction[] {
 }
 
 function getActionsWithDisplayMode(): IItemAction[] {
-    return [{
+    return [
+        {
             id: 1,
             icon: 'icon-Email',
-            caption: 'Email',
+            title: 'Email',
+            displayMode: 'both',
             tooltip: 'Электронная почта',
             showType: showType.TOOLBAR
         },
         {
             id: 2,
-            caption: 'Профиль пользователя',
+            icon: 'icon-Profile',
+            title: 'Профиль пользователя',
+            displayMode: 'title',
             showType: showType.TOOLBAR
         },
         {
             id: 3,
-            tooltip: 'Удалить',
+            title: 'Удалить',
             showType: showType.TOOLBAR,
+            displayMode: 'icon',
             icon: 'icon-Erase',
             iconStyle: 'danger'
         }];

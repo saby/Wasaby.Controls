@@ -643,45 +643,66 @@ define([
             _isMenu: true
          }], listViewModel._actions[0].showed);
       });
-      describe('getTooltip, getTitle', () => {
+      describe('needShow- methods', () => {
          const inst = new lists.ItemActionsControl();
          const actions = {
-            caption: {
+            title: {
+               displayMode: 'title',
                title: 'title',
-               caption: 'caption',
-               tooltip: 'tooltip'
+               icon: 'icon'
             },
             icon: {
+               displayMode: 'icon',
                title: 'title',
                icon: 'icon'
             },
-            icon2: {
-               icon: 'icon',
-               tooltip: 'tooltip'
-            },
             both: {
-               caption: 'caption',
+               displayMode: 'both',
+               title: 'title',
                icon: 'icon'
             },
-            captionWithTitle: {
-               caption: 'caption',
+            autoWithIcon: {
+               displayMode: 'auto',
+               title: 'title',
+               icon: 'icon'
+            },
+            autoWithoutIcon: {
+               displayMode: 'auto',
                title: 'title'
             }
          };
-         it('getCaption', () => {
-            assert.equal(inst.getCaption(actions.caption), 'caption');
-            assert.equal(inst.getCaption(actions.icon), undefined);
-            assert.equal(inst.getCaption(actions.icon2), undefined);
-            assert.equal(inst.getCaption(actions.both), 'caption');
-            assert.equal(inst.getCaption(actions.captionWithTitle), 'caption');
+         it('needShowIcon', () => {
+            assert.isTrue(inst.needShowIcon(actions.icon));
+            assert.isTrue(inst.needShowIcon(actions.autoWithIcon));
+            assert.isTrue(inst.needShowIcon(actions.both));
+            assert.isFalse(inst.needShowIcon(actions.autoWithoutIcon));
+            assert.isFalse(inst.needShowIcon(actions.title));
          });
-         it('getTooltip', () => {
-            assert.equal(inst.getTooltip(actions.caption), 'tooltip');
-            assert.equal(inst.getTooltip(actions.icon), 'title');
-            assert.equal(inst.getTooltip(actions.icon2), 'tooltip');
-            assert.equal(inst.getTooltip(actions.both), 'caption');
-            assert.equal(inst.getTooltip(actions.captionWithTitle), 'title');
+         it('needShowTitle', () => {
+            assert.isFalse(inst.needShowTitle(actions.icon));
+            assert.isFalse(inst.needShowTitle(actions.autoWithIcon));
+            assert.isTrue(inst.needShowTitle(actions.both));
+            assert.isTrue(inst.needShowTitle(actions.autoWithoutIcon));
+            assert.isTrue(inst.needShowTitle(actions.title));
          });
+      });
+      it('getTooltip', () => {
+         const inst = new lists.ItemActionsControl();
+         const actions = {
+            titleTooltip: {
+               title: 'title',
+               tooltip: 'tooltip'
+            },
+            title: {
+               title: 'title',
+            },
+            tooltip: {
+               tooltip: 'tooltip'
+            }
+         };
+         assert.equal(inst.getTooltip(actions.titleTooltip), 'tooltip');
+         assert.equal(inst.getTooltip(actions.title), 'title');
+         assert.equal(inst.getTooltip(actions.tooltip), 'tooltip');
       });
 
       describe('needActionsMenu', function() {
