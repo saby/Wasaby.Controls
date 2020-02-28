@@ -20,7 +20,8 @@
                 displayProperty="title"
                 virtualScrolling="{{true}}"
                 virtualPageSize="{{_virtualPageSize}}"
-                navigation="{{_navigation}}">
+                navigation="{{_navigation}}"
+                showEndButton="{{ true }}">
         </Controls.list:View>
     </Controls.scroll:Container>
 </div>

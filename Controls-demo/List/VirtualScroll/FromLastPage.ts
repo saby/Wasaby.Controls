@@ -18,9 +18,12 @@ class FromLastPage extends Control {
         view: 'infinity',
         sourceConfig: {
             pageSize: 40,
-            direction: 'before',
-            page: 25,
+            direction: 'both',
+            page: 0,
             hasMore: false
+        },
+        viewConfig: {
+            pagingMode: 'direct'
         }
     };
 
@@ -38,4 +41,3 @@ class FromLastPage extends Control {
 }
 
 export = FromLastPage;
-

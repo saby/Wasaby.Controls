@@ -162,7 +162,7 @@ var _private = {
                 } else {
                     self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
                 }
-                if (self._pagingNavigation) {
+                if (self._pagingNavigation || _private.needScrollPaging(cfg.navigation) && cfg.showEndButton) {
                     var hasMoreDataDown = list.getMetaData().more;
                     self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, self._currentPageSize);
                     self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, self._currentPageSize, self._currentPage);
@@ -1480,9 +1480,7 @@ var _private = {
                 self._scrollPagingCtr = null;
             }
             self._pagingCfg = null;
-            if (self._pagingVisible) {
-                self._pagingVisible = false;
-            }
+            self._pagingVisible = false;
         }
         if (self._pagingNavigation) {
             _private.resetPagingNavigation(self, cfg.navigation);
@@ -1738,7 +1736,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         self._items = self._listViewModel.getItems();
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
-                    if (self._pagingNavigation) {
+                    if (self._pagingNavigation || _private.needScrollPaging(newOptions.navigation) && newOptions.showEndButton) {
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
                         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
