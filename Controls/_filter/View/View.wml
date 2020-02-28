@@ -31,6 +31,7 @@
             <ws:partial template="itemTemplate"
                         itemName="all_frequent"
                         text="{[Все]}"
+                        attr:class="controls-FilterView__frequentFilter"
                         on:click="_openPanel('all_frequent')"/>
          </ws:if>
          <ws:for data="index, item in _source">
@@ -41,7 +42,9 @@
                            moreText="{{_displayText[item.name].hasMoreText}}"
                            on:click="_openPanel(item.name)"
                            item="{{item}}"
-                           itemName="{{item.name}}" />
+                           itemName="{{item.name}}"
+                           attr:class="controls-FilterView__frequentFilter"
+               />
                <ws:if data="{{item.hasOwnProperty('resetValue')}}">
                   <ws:partial template="cross" on:click="_reset(item)" item="{{item}}"/>
                </ws:if>
