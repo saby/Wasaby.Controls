@@ -3,6 +3,7 @@ import * as Template from 'wml!Controls-demo/Filter_new/DetailPanel/ApplyButtonC
 import {Memory} from 'Types/source';
 import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/Filter_new/Filter';
+import 'wml!Controls-demo/Filter_new/resources/Editors/Dropdown';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
