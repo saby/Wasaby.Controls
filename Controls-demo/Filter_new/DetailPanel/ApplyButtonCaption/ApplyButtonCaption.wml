@@ -1,0 +1,7 @@
+<div class="controlsDemo__wrapper">
+   <Controls-demo.Filter_new.resources.Panel
+      width="l"
+      items="{{_items}}"
+      applyButtonCaption="Отобрать параметры">
+   </Controls-demo.Filter_new.resources.Panel>
+</div>
