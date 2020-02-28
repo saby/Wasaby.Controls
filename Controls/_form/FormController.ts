@@ -417,7 +417,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                     // если нет ошибок в валидации, просто завершаем пендинг с результатом
                     if (!def.isReady()) {
                         this._pendingPromise = null;
-                        def.resolve(res);
+                        def.callback(res);
                     }
                 } else {
                     // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
@@ -432,7 +432,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         } else if (answer === false) {
             if (!def.isReady()) {
                 this._pendingPromise = null;
-                def.resolve(false);
+                def.callback(false);
             }
         } else {
             // if user press 'cancel' button, then cancel finish pendings
