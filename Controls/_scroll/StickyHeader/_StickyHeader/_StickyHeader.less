@@ -1,5 +1,15 @@
+// Legacy style. Please prefer using 'StickyHeader.backgroundStyle' option
+// That will affect the .controls-StickyHeader_background-{backgroundStyle}-theme-@{themeName} class
 .controls-StickyHeader__background {
    background-color: @background-color_StickyHeader;
+}
+
+.controls-StickyHeader_background-default-theme-@{themeName} {
+   background-color: @background-color_StickyHeader;
+}
+
+.controls-StickyHeader_background-transparent-theme-@{themeName} {
+   background-color: transparent;
 }
 
 /*A double selector is needed so that the "position" specified on the block that wraps the StickyHeader does not work.*/
