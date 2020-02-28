@@ -19,6 +19,7 @@ export interface IScrollBarOptions extends IControlOptions {
     direction: TDirection;
     trackVisible: boolean;
     thumbStyle?: string;
+    thumbThickness?: string;
 }
 /**
  * Thin scrollbar.
@@ -70,6 +71,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _position: number = 0;
     private _thumbPosition: number = 0;
     private _thumbSize: number;
+    private _thumbThickness: string;
     private _thumbStyle: string;
     private _scrollBarSize: number;
     // Запоминаемые на момент перетаскиваеия ползунка координаты самого скроллбара
@@ -82,6 +84,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
         this._resizeHandler = this._resizeHandler.bind(this);
         this._thumbStyle = this._getThumbStyle(options);
+        this._thumbThickness = this._getThumbThickness(options);
     }
 
     protected _afterMount(): void {
@@ -100,6 +103,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
 
     protected _beforeUpdate(options: IScrollBarOptions): void {
         this._thumbStyle = this._getThumbStyle(options);
+        this._thumbThickness = this._getThumbThickness(options);
     }
 
     protected _afterUpdate(oldOptions: IScrollBarOptions): void {
@@ -131,6 +135,13 @@ class Scrollbar extends Control<IScrollBarOptions> {
             return 'inverted';
         }
         return (options.direction === 'vertical' ? 'accented' : 'unaccented');
+    }
+
+    private _getThumbThickness(options: IScrollBarOptions): string {
+        if (options.thumbThickness) {
+            return options.thumbThickness;
+        }
+        return (options.direction === 'vertical' ? 'l' : 's');
     }
 
     private _getThumbCoordByScroll(scrollbarSize: number, thumbSize: number, scrollPosition: number): number {
