@@ -273,6 +273,7 @@ var
             if (!current.nodeProperty || !current.parentProperty) {
                 return;
             }
+            const theme = self._options.theme;
             const isRootChild = (item) => item.get(current.parentProperty) === null;
             const getChildCount = (dispItem) => self._display.getChildren(dispItem).getCount();
             const hasChildren = (dispItem) => !!getChildCount(dispItem);
@@ -285,6 +286,15 @@ var
                 template?: TemplateFunction,
                 hasMoreStorage?: boolean
             }) => {
+                const getFooterClasses = () => {
+                    let classes = `controls-TreeGrid__nodeFooterContent controls-TreeGrid__nodeFooterContent_theme-${theme} ` +
+                        `controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
+                    if (!current.hasMultiSelect) {
+                        classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
+                    }
+                    return classes;
+                };
+
                 current.nodeFooters.push({
                     key: params.key,
                     item: params.dispItem.getContents(),
@@ -293,6 +303,7 @@ var
                     getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                     multiSelectVisibility: current.multiSelectVisibility,
                     template: params.template,
+                    classes: getFooterClasses(),
                     hasMoreStorage: !!params.hasMoreStorage
                 });
             };
@@ -320,7 +331,7 @@ var
                     const _parentItem = dispItem.getParent().getContents();
                     const _parentKey = _parentItem && _parentItem.getId();
                     const _parentChildren = self._hierarchyRelation.getChildren(_parentKey, self._items);
-                    return _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
+                    return !!_parentChildren.length && _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
                 };
 
                 let result = true;
@@ -427,6 +438,10 @@ var
 
         resetExpandedItems: function() {
             _private.resetExpandedItems(this);
+        },
+
+        getCollapsedItems(): unknown[] {
+            return this._collapsedItems;
         },
 
         _prepareDisplay: function(items, cfg) {

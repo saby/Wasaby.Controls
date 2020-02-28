@@ -166,6 +166,7 @@ define(
             var searchController = new searchLib._SearchController({
                minSearchLength: 3,
                source: source,
+               keyProperty: 'id',
                filter: {}
             });
 
@@ -183,6 +184,8 @@ define(
 
                   return originalSearch.apply(search, arguments);
                };
+
+               assert.equal(search._sourceController._options.keyProperty, 'id');
 
                return searchController.search('1', true).then(() => {
                   assert.isTrue(searched);
@@ -215,8 +218,9 @@ define(
             };
 
             let originalAbort = searchController._search.abort;
-            searchController._search.abort = function() {
+            searchController._search.abort = function(force) {
                reseted = true;
+               forced = force;
                return originalAbort.apply(searchController._search, arguments);
             };
 
@@ -239,6 +243,7 @@ define(
             reseted = false;
             searchController._search.search('').then(() => {
                assert.isTrue(reseted);
+               assert.isTrue(forced);
             });
          });
       });

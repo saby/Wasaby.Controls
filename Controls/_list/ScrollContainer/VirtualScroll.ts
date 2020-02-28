@@ -252,17 +252,25 @@ export default class VirtualScroll {
      * @param itemIndex
      * @param toBottom
      * @param force
+     * @remark К элементу можно подскроллить в случае если:
+     * - мы скроллим к нижней границе элемента
+     * - мы скроллим только если элемент не виден
+     * - мы скроллим к верху элемента и его оффсет не превышает высоту вьюпорта
      */
     canScrollToItem(itemIndex: number, toBottom: boolean, force: boolean): boolean {
         let canScroll = false;
         const {viewport, scroll: scrollHeight} = this._containerHeightsData;
         const itemOffset = this._itemsHeightData.itemsOffsets[itemIndex];
 
-        if (this._range.stop === this._itemsCount) {
-            canScroll = true;
-        } else if (this._isItemInRange(itemIndex) &&
-            (toBottom || !force || (viewport < scrollHeight - itemOffset))) {
-            canScroll = true;
+        if (this._isItemInRange(itemIndex)) {
+            if (
+                this._range.stop === this._itemsCount ||
+                toBottom ||
+                !force ||
+                (viewport < scrollHeight - itemOffset)
+            ) {
+                canScroll = true;
+            }
         }
 
         return canScroll;

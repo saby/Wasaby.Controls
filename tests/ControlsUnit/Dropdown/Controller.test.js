@@ -587,23 +587,24 @@ define(
          });
 
          it('_private::loadItems', () => {
-            let dropdownController = getDropdownController(config);
-            var hasErrBack = false;
-            let errConfig = clone(config);
-            errConfig.dataLoadErrback = function() {
-               hasErrBack = true;
+            const controllerConfig = { ...config };
+            controllerConfig.dataLoadCallback = function(loadedItems) {
+               const item = new entity.Record({
+                  rawData: {
+                     id: '9',
+                     title: 'Запись 9'
+                  }
+               });
+               loadedItems.add(item);
             };
-            errConfig.source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
-            errConfig.source.query = function() {
-               var def = new Deferred();
-               def.errback();
-               return def;
-            };
-            return dropdown._Controller._private.loadItems(dropdownController, errConfig).catch(() => {
-               assert.isTrue(hasErrBack);
+            let dropdownController = getDropdownController(controllerConfig);
+            return new Promise((resolve) => {
+               dropdown._Controller._private.loadItems(dropdownController, controllerConfig).then(() => {
+                  dropdownController._menuSource.query().then((menuItems) => {
+                     assert.isTrue(!!menuItems.getRecordById('9'));
+                     resolve();
+                  });
+               });
             });
          });
 

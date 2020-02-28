@@ -81,10 +81,10 @@ var _private = {
              self._filter = _private.prepareFilterForQuery(self, options);
 
              return sourceController.load(self._filter).addCallback((items) => {
-                self._setItems(items);
                 if (options.dataLoadCallback) {
                    options.dataLoadCallback(items);
                 }
+                self._setItems(items);
                 _private.updateSelectedItems(self,
                     options.emptyText,
                     options.selectedKeys,
@@ -93,6 +93,7 @@ var _private = {
                 return items;
              }).addErrback((error) => {
                 _private.loadError(self, error);
+                return error;
              });
           });
    },
