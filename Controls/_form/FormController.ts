@@ -397,14 +397,15 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _createChangeRecordPending(): void {
-        this._pendingPromise = new Deferred();
-        this._notify('registerPending', [this._pendingPromise, {
+        const self = this;
+        self._pendingPromise = new Deferred();
+        self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
             validate(): boolean {
-                return this._record && this._record.isChanged();
+                return self._record && self._record.isChanged();
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-                this._showConfirmDialog(deferred, forceFinishValue);
+                self._showConfirmDialog(deferred, forceFinishValue);
             }
         }], {bubbling: true});
     }
