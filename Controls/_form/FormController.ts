@@ -228,14 +228,14 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
             if (newOptions.record && newOptions.record.isChanged()) {
-                this._showConfirmPopup('yesno').addCallback((answer) => {
+                this._showConfirmPopup('yesno').then((answer) => {
                     if (answer === true) {
-                        this.update().addCallback((res) => {
+                        this.update().then((res) => {
                             this.read(newOptions.key, newOptions.readMetaData);
                             return res;
                         });
                     } else {
-                        this._tryDeleteNewRecord().addCallback(() => {
+                        this._tryDeleteNewRecord().then(() => {
                             this.read(newOptions.key, newOptions.readMetaData);
                         });
                     }
@@ -253,7 +253,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         // Нельзя чтобы контрол ддосил БЛ.
         if (newOptions.key === undefined && !newOptions.record && this._createMetaDataOnUpdate !== createMetaData) {
             this._createMetaDataOnUpdate = createMetaData;
-            this.create(newOptions.initValues || newOptions.createMetaData).addCallback(() => {
+            this.create(newOptions.initValues || newOptions.createMetaData).then(() => {
                 if (newOptions.hasOwnProperty('isNewRecord')) {
                     this._isNewRecord = newOptions.isNewRecord;
                 }
@@ -386,7 +386,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         if (this._needDestroyRecord()) {
             return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
         }
-        return (new Deferred()).callback();
+        return Promise.resolve();
     }
 
     private _needDestroyRecord(): number | string {
@@ -409,14 +409,14 @@ class FormController extends Control<IFormController, IReceivedState> {
         }], {bubbling: true});
     }
 
-    private _confirmDialogResult(answer: boolean, def: Promise<boolean>): void {
+    private _confirmDialogResult(answer: boolean, def: Promise<any>): void {
         if (answer === true) {
-            this.update().addCallbacks((res) => {
+            this.update().then((res) => {
                 if (!res.validationErrors) {
                     // если нет ошибок в валидации, просто завершаем пендинг с результатом
                     if (!def.isReady()) {
                         this._pendingPromise = null;
-                        def.callback(res);
+                        def.resolve(res);
                     }
                 } else {
                     // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
@@ -425,13 +425,13 @@ class FormController extends Control<IFormController, IReceivedState> {
                     this._notify('cancelFinishingPending', [], {bubbling: true});
                 }
                 return res;
-            }, (err: Error) => {
+            },(err: Error) => {
                 this._notify('cancelFinishingPending', [], {bubbling: true});
             });
         } else if (answer === false) {
             if (!def.isReady()) {
                 this._pendingPromise = null;
-                def.callback(false);
+                def.resolve(false);
             }
         } else {
             // if user press 'cancel' button, then cancel finish pendings
@@ -460,7 +460,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     create(createMetaData: unknown): Promise<undefined | Model> {
         createMetaData = createMetaData || this._options.initValues || this._options.createMetaData;
-        return this._children.crud.create(createMetaData).addCallbacks(
+        return this._children.crud.create(createMetaData).then(
             this._createHandler.bind(this),
             this._crudErrback.bind(this)
         );
@@ -475,7 +475,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     read(key: string, readMetaData: unknown): Promise<Model> {
         readMetaData = readMetaData || this._options.readMetaData;
-        return this._children.crud.read(key, readMetaData).addCallbacks(
+        return this._children.crud.read(key, readMetaData).then(
             this._readHandler.bind(this),
             this._crudErrback.bind(this)
         );
@@ -495,7 +495,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                 this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
-                const res = this._update().addCallback(this._getData);
+                const res = this._update().then(this._getData);
                 updateResult.dependOn(res);
             } else {
                 updateResult.callback(true);
@@ -531,18 +531,18 @@ class FormController extends Control<IFormController, IReceivedState> {
 
         // запускаем валидацию
         const validationDef = this._children.validation.submit();
-        validationDef.addCallback((results) => {
+        validationDef.then((results) => {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
                 this._notify('validationSuccessed', [], {bubbling: true});
                 let res = this._children.crud.update(record, this._isNewRecord);
 
                 // fake deferred used for code refactoring
-                if (!(res && res.addCallback)) {
+                if (!(res && res.then)) {
                     res = new Deferred();
                     res.callback();
                 }
-                res.addCallback((arg) => {
+                res.then((arg) => {
                     this._updateIsNewRecord(false);
 
                     updateDef.callback({data: true});
@@ -563,8 +563,8 @@ class FormController extends Control<IFormController, IReceivedState> {
                 });
             }
         });
-        validationDef.addErrback((e) => {
-            updateDef.errback(e);
+        validationDef.then((e) => {
+            updateDef.catch(e);
             return e;
         });
         return updateDef;
