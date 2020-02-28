@@ -4,7 +4,10 @@ import { constants } from 'Env/Env';
 
 type PopupId = string;
 
-const popupHelper = new dataSourceError.Popup(['Controls/compatiblePopup']);
+const popupHelper = new dataSourceError.Popup([
+    'Core/Creator',
+    'Controls/compatiblePopup'
+], ['Controls/compatiblePopup']);
 const POPUP_PRELOAD_TIMEOUT = 10000;
 
 if (constants.isBrowserPlatform) {

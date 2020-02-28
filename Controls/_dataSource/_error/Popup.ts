@@ -91,6 +91,8 @@ export default class Popup {
      * Стили, которые нужны для нормального отображения диалогов.
      */
     private static readonly POPUP_THEMES: string[] = [
+        'Controls/popup',
+        'Controls/popupConfirmation',
         'Controls/buttons',
         'Controls/Classes'
     ];
@@ -109,7 +111,7 @@ export default class Popup {
             // Помимо библиотек нужно ещё загружать темизированные стили для диалога.
             // Без этого стили загружаются только в момент показа диалога.
             // Но когда потребуется показать сообщение о потере соединения, стили уже не смогут загрузиться.
-            Popup.importThemes(modules.concat(themes))
+            Popup.importThemes(themes)
         ]).catch(() => []);
     }
 

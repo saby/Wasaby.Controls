@@ -95,11 +95,10 @@ export default class ErrorController {
     private __controller: ParkingController;
 
     constructor(config: Config) {
-        // Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок
-        const configField = 'errorHandlers';
-        // Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения
-        loadHandlers(configField);
-        this.__controller = new ParkingController({ configField, ...config });
+        this.__controller = new ParkingController({
+            configField: ErrorController.CONFIG_FIELD,
+            ...config
+        });
     }
 
     destroy(): void {
@@ -166,4 +165,12 @@ export default class ErrorController {
             message: config.error.message
         });
     }
+
+    /**
+     * Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
+     */
+    static readonly CONFIG_FIELD: string = 'errorHandlers';
 }
+
+// Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения.
+loadHandlers(ErrorController.CONFIG_FIELD);
