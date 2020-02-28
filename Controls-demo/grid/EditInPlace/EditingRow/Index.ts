@@ -17,13 +17,14 @@ export default class extends Control {
             if (data[key]) {
                 data[key] = '' + data[key];
             } else {
-                data[key] = 'random'
+                data[key] = ''
             }
 
         }
         return data;
     }
     private data = getPorts().getData().map((cur) => this.getData(cur));
+    private selectedKey = 1;
 
     protected _beforeMount() {
         console.log(this.data)
@@ -38,5 +39,13 @@ export default class extends Control {
         });
 
 
+    }
+
+    private onChange1 = (_, name, item, value) => {
+        item.set(name, value);
+    }
+
+    private onChange2 = (_, key) => {
+        this.selectedKey = key;
     }
 }

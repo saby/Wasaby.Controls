@@ -75,17 +75,24 @@ function getMoreActions(): Array<{
             icon: 'icon-Erase icon-error',
             title: 'delete pls',
             showType: showType.TOOLBAR,
+            handler: () => { console.log('click to error-icon') }
         },
         {
-            id: 11,
-            icon: 'icon-Forward',
-            title: 'delete pls',
+            id: 12,
+            icon: 'icon-View icon-small',
+            title: 'view',
             showType: showType.TOOLBAR,
+            handler: () => { console.log('click to View-icon') }
+        },
+        {
+            id: 13,
+            icon: 'icon-Motion icon-small',
+            title: 'motion',
+            showType: showType.TOOLBAR,
+            handler: () => { console.log('click to Motion-icon') }
         }
     ]
 }
-
-
 
 export {
     getActionsForContacts,

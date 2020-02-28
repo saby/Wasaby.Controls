@@ -10,7 +10,7 @@
                     <ws:Function value="{{itemData.item[itemData.column.displayProperty || 'title']}}">Controls/validate:isEmail</ws:Function>
                 </ws:validators>
                 <ws:content>
-                    <Controls.input:Text bind:value="itemData.item[itemData.column.displayProperty || 'title'].toString()"
+                    <Controls.input:Text bind:value="itemData.item[itemData.column.displayProperty || 'title']"
                                          selectOnClick="{{ false }}" />
                 </ws:content>
             </Controls.validate:InputContainer>
