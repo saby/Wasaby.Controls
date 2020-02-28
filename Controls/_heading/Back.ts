@@ -168,7 +168,7 @@ class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, 
         }
     }
 
-    static _theme: string[] = ['Controls/heading'];
+    static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
