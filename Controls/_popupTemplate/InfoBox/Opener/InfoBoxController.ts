@@ -4,7 +4,6 @@ import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/re
 import cMerge = require('Core/core-merge');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/popup';
-import { getThemeController } from 'UI/theme/controller';
 
 import collection = require('Types/collection');
 
@@ -38,9 +37,9 @@ function getConstants() {
 let constants: IInfoBoxThemeConstants = {};
 
 function initConstants(): Promise<any> {
-    return getThemeController().get('Controls/popupTemplate').then(() => {
-        constants = getConstants();
-    });
+    return import('Controls/_popupTemplate/InfoBox')
+        .then(({ default as InfoboxTemplate }) => InfoboxTemplate.loadStyles())
+        .then(() => { constants = getConstants(); });
 }
 
 if (document) {
