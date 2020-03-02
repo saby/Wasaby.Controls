@@ -7,7 +7,7 @@
 
     <!-- Результаты сверху -->
     <ws:if data="{{ _listModel.getResultsPosition() === 'top' }}">
-        <ws:partial template="{{ _resultsTemplate }}" attr:name="results" listModel="{{_listModel}}" baseResultsTemplate="{{ _baseResultsTemplate }}"/>
+        <ws:partial template="{{ _resultsTemplate }}" attr:name="results" listModel="{{_listModel}}" baseResultsTemplate="{{ _baseResultsTemplate }}" backgroundStyle="{{_options.backgroundStyle}}"/>
     </ws:if>
 
     <!-- Скроллбар горизонтального скролла -->
@@ -21,7 +21,8 @@
                 scrollWidth="{{ scrollWidth }}"
                 listModel="{{ _listModel }}"
                 trackVisible="{{ trackVisible }}"
-                positionChangeHandler="{{ positionChangeHandler }}">
+                positionChangeHandler="{{ positionChangeHandler }}"
+                backgroundStyle="{{_options.backgroundStyle}}">
         </Controls._grid.ScrollWrapper>
     </ws:if>
 

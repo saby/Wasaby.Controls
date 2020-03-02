@@ -1,8 +1,8 @@
 <!--Styles specified with attr are not merged, so as a temporary solution, we use the option.-->
 <!--https://online.sbis.ru/opendoc.html?guid=e692216c-8a18-4b42-8523-5434d436a502-->
 <div class="controls-StickyHeader
-   {{_options.backgroundVisible ? 'controls-StickyHeader__background'}}
    controls-StickyHeader_background-{{_options.backgroundStyle || 'default'}}-theme-{{_options.theme}}
+   {{_options.backgroundVisible ? 'controls-StickyHeader__background'}}
    controls-StickyHeader_position" style="{{_getStyle() + (_options.style || '')}}">
    <!--We use visibility style instead of "if" statement to prevent jumps when scrolling on iPad-->
    <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-top

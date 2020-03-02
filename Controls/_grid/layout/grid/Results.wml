@@ -12,6 +12,7 @@
 </ws:template>
 <ws:template name="stickyCell">
       <Controls.scroll:StickyHeader attr:class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}"
+                                    backgroundStyle="{{backgroundStyle}}"
                                     mode="stackable"
                                     fixedZIndex="{{currentResultsColumn.zIndex}}">
           <ws:partial template="cellContent"/>
@@ -28,6 +29,7 @@
         <Controls.scroll:StickyHeader
             attr:class="{{listModel.getCurrentResultsColumn().cellClasses}}"
             attr:style="{{listModel.getStyleForCustomResultsTemplate()}}"
+            backgroundStyle="{{backgroundStyle}}"
             mode="stackable"
             fixedZIndex="{{listModel.getCurrentResultsColumn().zIndex}}">
             <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
@@ -46,6 +48,7 @@
    <ws:for data="listModel.resetResultsColumns(); listModel.isEndResultsColumn(); listModel.goToNextResultsColumn();">
       <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
                   listModel="{{ listModel }}"
+                  backgroundStyle="{{backgroundStyle}}"
                   multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
                   currentResultsColumn="{{listModel.getCurrentResultsColumn()}}"/>
    </ws:for>
