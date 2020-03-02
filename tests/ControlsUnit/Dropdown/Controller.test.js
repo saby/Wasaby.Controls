@@ -429,6 +429,18 @@ define(
             });
          });
 
+         it('change readOnly', () => {
+            let readOnlyConfig = Clone(config),
+               isClosed = false;
+
+            dropdownController._children.DropdownOpener = {
+               close: () => {isClosed = true;}
+            };
+            readOnlyConfig.readOnly = true;
+            dropdownController._beforeUpdate(readOnlyConfig);
+            assert.isTrue(isClosed);
+         });
+
          it('notify footerClick', () => {
             let dropdownController = getDropdownController(config);
             let isClosed = false, isFooterClicked = false;
