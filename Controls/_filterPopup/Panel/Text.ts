@@ -52,7 +52,7 @@ import 'css!theme?Controls/filterPopup';
       _template: template,
 
       _afterMount: function() {
-         this._notify('valueChanged', [true]);
+         this._notify('valueChanged', [this._options.value]);
          this._notify('textValueChanged', [this._options.caption]);
       },
 
