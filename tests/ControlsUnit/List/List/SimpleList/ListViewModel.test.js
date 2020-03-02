@@ -233,7 +233,7 @@ define([
          assert.isUndefined(lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
          edditingItem.isAdd = true;
          iv._markedKey = 21;
-         assert.deepEqual(edditingItem.item, lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
+         assert.isUndefined(lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
       });
 
       describe('needToDrawActions', function () {
