@@ -430,7 +430,7 @@ define(
          });
 
          it('change readOnly', () => {
-            let readOnlyConfig = Clone(config),
+            let readOnlyConfig = clone(config),
                isClosed = false;
 
             dropdownController._children.DropdownOpener = {
