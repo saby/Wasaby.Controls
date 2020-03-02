@@ -38,6 +38,7 @@
                     itemActionsPosition="{{_options.itemActionsPosition}}"
                     itemOutputWrapper="{{_itemOutputWrapper}}"
                     swipeTemplate="{{_options.swipeTemplate}}"
+                    backgroundStyle="{{_options.backgroundStyle}}"
                     tagTemplate="{{_options.tagTemplate}}">
             <ws:editArrowTemplate>
                 <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>

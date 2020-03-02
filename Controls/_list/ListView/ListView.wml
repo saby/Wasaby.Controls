@@ -11,6 +11,7 @@
              editingItemData="{{_options.editingItemData}}"
              isAdd="{{_options.isAdd}}"
              itemOutputWrapper="{{_itemOutputWrapper}}"
+             backgroundStyle="{{_options.backgroundStyle}}"
              itemTemplate="{{_itemTemplate}}">
          </ws:partial>
          <ws:if data="{{_options._needBottomPadding}}">
