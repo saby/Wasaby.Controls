@@ -38,7 +38,7 @@ let constants: IInfoBoxThemeConstants = {};
 
 function initConstants(): Promise<any> {
     return import('Controls/_popupTemplate/InfoBox')
-        .then(({ default as InfoboxTemplate }) => InfoboxTemplate.loadStyles())
+        .then((InfoboxTemplate) => InfoboxTemplate.default.loadStyles())
         .then(() => { constants = getConstants(); });
 }
 
