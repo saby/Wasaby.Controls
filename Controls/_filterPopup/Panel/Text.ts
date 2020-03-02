@@ -46,7 +46,7 @@ import 'css!theme?Controls/filterPopup';
     */
    /**
     * @name Controls/_filterPopup/Panel/Text#value
-    * @cfg {*} [value=true] Значение, которое будет установлено в конфигурацию фильтра после построения.
+    * @cfg {*} [value=true] Значение, которое будет установлено в конфигурацию фильтра после построения контрола.
     * @example
     * <pre>
     *    <Controls.filterPopup:Text>
