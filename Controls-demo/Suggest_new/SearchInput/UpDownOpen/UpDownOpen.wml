@@ -29,19 +29,4 @@
             </ws:suggestTemplate>
         </Controls.suggest:SearchInput>
     </div>
-    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell ControlsDemo-Suggest_bottom50">
-        <div class="controls-text-label_theme-{{_options.theme}}">Направление открытия автодополнения</div>
-        <Controls.suggest:SearchInput
-                attr:class="ControlsDemo-Suggest__simple demo-SuggestNewSearch__openUp"
-                bind:value="_suggestUpMoreValue"
-                displayProperty="true"
-                searchParam="title"
-                autoDropDown="{{true}}"
-                navigation="{{_navigation}}"
-                source="{{_indentSource}}">
-            <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/UpDownOpen/resources/SuggestTemplate">
-                <ws:templateOptions demoClass="controlsDemo_fixedWidth300" dialogMode="{{true}}"/>
-            </ws:suggestTemplate>
-        </Controls.suggest:SearchInput>
-    </div>
 </div>
