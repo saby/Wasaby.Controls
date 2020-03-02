@@ -135,7 +135,9 @@ define(
                } else if (e === 'sendResult') {
                   filter = args[0].filter;
                }
-               assert.isTrue(eCfg.bubbling);
+               if (eCfg) {
+                  assert.isTrue(eCfg.bubbling);
+               }
             };
             panel._beforeMount(config);
             panel._children = {
