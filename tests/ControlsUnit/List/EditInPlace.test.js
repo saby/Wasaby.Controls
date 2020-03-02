@@ -1166,6 +1166,40 @@ define([
             });
          });
 
+         it('Enter on adding item', function(done) {
+            let isFifthItemCreated = false;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+            // Начинаем добавление.
+            eip.beginAdd({
+               item: newItem
+            });
+            eip._notify = (eName) => {
+               if (eName === 'afterBeginEdit' && isFifthItemCreated) {
+                  // Второе добавление успешно началось.
+                  done();
+               }
+               if (eName === 'beforeBeginEdit') {
+                  isFifthItemCreated = true;
+                  return {
+                     item: new entity.Model({
+                        rawData: {
+                           id: 5,
+                           title: 'Пятый'
+                        },
+                        keyProperty: 'id'
+                     })
+                  };
+               }
+            };
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
+            });
+         });
+
          it('Enter, sequentialEditing: false', function(done) {
             eip.commitEdit = function() {
                done();
