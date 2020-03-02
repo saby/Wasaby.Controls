@@ -43,6 +43,7 @@ interface IAdditionalData {
     record?: Model;
     isNewRecord?: boolean;
     error?: Error;
+    cfg?: any;
 }
 
 interface IResultData {
@@ -451,7 +452,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
     }
 
-    private _showConfirmPopup(type: string, details?: string): Promise<string> {
+    private _showConfirmPopup(type: string, details?: string): Promise<string | boolean> {
         return this._children.popupOpener.open({
             message: rk('Сохранить изменения?'),
             details,
@@ -490,12 +491,12 @@ class FormController extends Control<IFormController, IReceivedState> {
         return record;
     }
 
-    update(): Promise<undefined | Model> {
+    update(config?: any): Promise<undefined | Model> {
         const updateResult = new Deferred();
         const updateCallback = (result) => {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-                this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
+                this._notifyToOpener('updateStarted', [this._record, this._getRecordId(), config]);
                 const res = this._update().then(this._getData);
                 updateResult.dependOn(res);
             } else {
@@ -658,7 +659,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         this._notify(eventName, args, {bubbling: true});
     }
 
-    private _notifyToOpener(eventName: string, args: [Model, string | number]): void {
+    private _notifyToOpener(eventName: string, args: [Model, string | number, any]): void {
         const handlers = {
             'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
@@ -674,16 +675,17 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
     }
 
-    private _getUpdateStartedData(record: Model, key: string): IResultData {
-        const config = this._getUpdateSuccessedData(record, key);
+    private _getUpdateStartedData(record: Model, key: string, cfg?: any): IResultData {
+        const config = this._getUpdateSuccessedData(record, key, cfg);
         config.formControllerEvent = 'updateStarted';
         return config;
     }
 
-    private _getUpdateSuccessedData(record: Model, key: string): IResultData {
+    private _getUpdateSuccessedData(record: Model, key: string, cfg?: any): IResultData {
         const additionalData: IAdditionalData = {
             key,
-            isNewRecord: this._isNewRecord
+            isNewRecord: this._isNewRecord,
+            cfg
         };
         return this._getResultData('update', record, additionalData);
     }
