@@ -11,7 +11,8 @@ define('Controls-demo/List/Grid/ColumnScroll', [
    'css!Controls-demo/List/Grid/Grid',
    'Controls/scroll',
    'Controls/grid',
-   'wml!Controls-demo/List/Grid/Results'
+   'wml!Controls-demo/List/Grid/Results',
+   'css!Controls-demo/List/Grid/_strongred',
 ], function(BaseControl, GridData, template, source) {
    'use strict';
    var
