@@ -952,12 +952,22 @@ var
          }
       },
 
-      _saveScrollPosition: function(e) {
+      _saveScrollPosition(e: Event): void {
          /**
           * Only closest scroll container should react to this event, so we have to stop propagation here.
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
+
+         function getScrollTop(element: Element): number {
+            const scrollTop = element.scrollTop;
+            // scrollTop in MobileIOS at the moment of inertial scrolling and display overflow is equals negative value.
+            if (Env.detection.isMobileIOS && scrollTop < 0) {
+               return 0;
+            }
+            return scrollTop;
+         }
+
          // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
          // дерганья и лишняя загрузка данных.
@@ -966,16 +976,26 @@ var
          if (Env.detection.isMobileIOS) {
             this.setOverflowScrolling('auto');
          }
+
+         this._savedScrollTop = getScrollTop(this._children.content);
+         this._savedScrollPosition = this._children.content.scrollHeight - this._savedScrollTop;
       },
 
-      _restoreScrollPosition: function(e: SyntheticEvent<Event>, position: number): void {
+      _restoreScrollPosition(e: SyntheticEvent<Event>, heightDifference: number, direction: string): void {
          /**
           * Only closest scroll container should react to this event, so we have to stop propagation here.
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         this._children.scrollWatcher.setScrollTop(position, true);
-          // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
+
+         if (direction === 'up') {
+            this._children.content.scrollTop = this._children.content.scrollHeight -
+                this._savedScrollPosition + heightDifference;
+         } else {
+            this._children.content.scrollTop = this._savedScrollTop - heightDifference;
+         }
+
+         // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
          // дерганья и лишняя загрузка данных.
          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
