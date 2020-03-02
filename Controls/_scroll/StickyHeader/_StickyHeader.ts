@@ -100,18 +100,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     protected _notifyHandler: Function = tmplNotify;
 
+    // Префикс для корректной установки background
+    protected _backgroundStyle: string;
+
    _bottomShadowStyle: string = '';
    _topShadowStyle: string = '';
 
     private _stickyDestroy: boolean = false;
 
     protected _beforeMount(options: IStickyHeaderOptions): void {
+        this._options = options;
         this._observeHandler = this._observeHandler.bind(this);
         this._index = getNextId();
-        this._options = options;
-        if (this._options.backgroundVisible === false) {
-            this._options.backgroundStyle = BACKGROUND_STYLE.TRANSPARENT;
-        }
+        this._backgroundStyle = this._options.backgroundVisible !== false ? this._options.backgroundStyle : BACKGROUND_STYLE.TRANSPARENT;
     }
 
     protected _afterUpdate(): void {
