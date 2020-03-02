@@ -134,6 +134,8 @@ define(
                   isNotifyClose = true;
                } else if (e === 'sendResult') {
                   filter = args[0].filter;
+               } else if (e === 'historyApply') {
+                  isHistoryApplyEventFired = true;
                }
                if (eCfg) {
                   assert.isTrue(eCfg.bubbling);
