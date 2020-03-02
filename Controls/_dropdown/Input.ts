@@ -268,6 +268,12 @@ var _private = {
  * </pre>
  */
 
+/**
+ * @name Controls/_dropdown/Input#emptyTemplate
+ * @cfg {Function} Шаблон, который будет отображаться в выпадающем списке, если поисковой запрос не вернул результатов.
+ * @demo
+ */
+
 var Input = Control.extend({
    _template: template,
    _defaultContentTemplate: defaultContentTemplate,

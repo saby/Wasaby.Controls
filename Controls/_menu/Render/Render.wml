@@ -3,6 +3,7 @@
         multiselectVisibility="{{_options.multiSelect ? 'onhover' : 'hidden'}}"
         multiSelectTpl="{{_multiSelectTpl}}"
         footerTemplate="{{_options.footerTemplate}}"
+        emptyTemplate="{{!_options.listModel.getCount() ? _options.emptyTemplate : null}}"
         on:itemMouseLeave="_proxyEvent('itemMouseLeave')"
         on:itemMouseEnter="_proxyEvent('itemMouseEnter')"
         on:itemClick="_itemClick()">

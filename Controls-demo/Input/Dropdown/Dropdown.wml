@@ -328,6 +328,7 @@
                                      keyProperty="id"
                                      displayProperty="title"
                                      searchParam="title"
+                                     emptyTemplate="Controls/menu:EmptyTemplate"
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__search"
                                      source="{{_searchItems}}">
             </Controls.dropdown:Input>
@@ -342,6 +343,7 @@
                                      searchParam="title"
                                      parentProperty="parent"
                                      nodeProperty="@parent"
+                                     emptyTemplate="Controls/menu:EmptyTemplate"
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__searchHierarchy"
                                      source="{{_hierarchySearchItems}}">
             </Controls.dropdown:Input>

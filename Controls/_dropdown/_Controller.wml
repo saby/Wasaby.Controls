@@ -49,6 +49,7 @@
               minSearchLength="{{_options.minSearchLength}}"
               searchDelay="{{_options.searchDelay}}"
               searchValueTrim="{{_options.searchValueTrim}}"
+              emptyTemplate="{{_options.emptyTemplate}}"
               theme="{{_options.theme}}"/>
    </Controls.popup:Sticky>
    <ws:if data="{{_options.selectorTemplate}}">
