@@ -441,6 +441,10 @@ export default class ScrollContainer extends Control<IOptions> {
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
+    saveScrollDirection(direction: IDirection): void {
+        this.saveScrollPositionCallback(direction);
+    }
+
     private getItemContainerByIndex(itemIndex: number): HTMLElement {
         if (this._options.virtualScrolling) {
             return this.virtualScroll.getItemContainerByIndex(itemIndex);
