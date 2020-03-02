@@ -339,7 +339,7 @@ export default class VirtualScrollController {
         const items = this.itemsHeights;
 
         for (let i = fixedStartIndex; i < fixedStopIndex; i++) {
-            height += items[i];
+            height += items[i] || 0;
         }
 
         return height;
