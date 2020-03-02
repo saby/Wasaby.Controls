@@ -145,7 +145,14 @@
       </div>
       <h1>Explorer</h1>
       <div>
-         <a href="Controls-demo%252FExplorer%252FExplorer">Explorer</a>
+         <Router.router:Reference state="Controls-demo/app/:app" app="{{ 'Controls-demo/Explorer/Explorer' }}">
+            <a href="{{content.href}}">Old Explorer</a>
+         </Router.router:Reference>
+      </div>
+      <div>
+         <Router.router:Reference state="Controls-demo/app/:app" app="{{ 'Controls-demo/Explorer_new/Index' }}">
+            <a href="{{content.href}}">New Explorer</a>
+         </Router.router:Reference>
       </div>
       <h1>MasterDetail</h1>
       <div>
@@ -389,7 +396,7 @@
             <a href="Controls-demo%252FSpoiler%252FView%252FContent%252FIndex">Content</a>
          </li>
       </ul>
-      
+
       <h1>Decorator</h1>
       <h2>
          <a href="Controls-demo%252FDecorator%252FWrapURLs%252FIndex">WrapURLs</a>
