@@ -43,7 +43,7 @@
                                                  iconSize="m"
                                                  iconStyle="contrast"
                                                  buttonStyle="success"
-                                                 inlineHeight="l"
+                                                 inlineHeight="menuapply"
                                                  on:click="_applySelection()"/>
                      </div>
                   </ws:if>

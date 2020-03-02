@@ -209,9 +209,14 @@ var _private = {
 
             //if we had group element we should return it without changes
             if (itemsModelCurrent.isGroup) {
+
+               if (itemsModelCurrent.isHidden === undefined) {
+                  itemsModelCurrent.isHidden  = itemsModelCurrent.isHiddenGroup;
+               }
+
                let isHidden = false;
                //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
-               if (_private.needHideGroup(this, itemsModelCurrent.key)) {
+               if (_private.needHideGroup(this, itemsModelCurrent.key) || itemsModelCurrent.isHidden) {
                   isHidden = true;
                }
                itemsModelCurrent.isHiddenGroup = () => { return isHidden };
