@@ -23,7 +23,6 @@ import 'css!theme?Controls/filterPopup';
     * @author Герасимов А.М.
     */
 
-
    /**
     * @name Controls/_filterPopup/Panel/Text#caption
     * @cfg {String} Caption Текст, который будет отображаться рядом с кнопкой сброса.
@@ -45,8 +44,16 @@ import 'css!theme?Controls/filterPopup';
     *    </Controls.filterPopup:Text>
     * </pre>
     */
-
-
+   /**
+    * @name Controls/_filterPopup/Panel/Text#value
+    * @cfg {*} [value=true] Значение, которое будет установлено в конфигурацию фильтра после построения.
+    * @example
+    * <pre>
+    *    <Controls.filterPopup:Text>
+    *        <ws:value>-2</ws:value>
+    *    </Controls.filterPopup:Text>
+    * </pre>
+    */
 
    var Text = Control.extend({
       _template: template,
