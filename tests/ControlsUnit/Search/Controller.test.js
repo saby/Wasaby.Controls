@@ -31,6 +31,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchDelay: 50,
          sorting: [],
          filter: {},
+         keyProperty: 'id',
          source: memorySource,
          navigation: {
             source: 'page',
@@ -73,6 +74,8 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchController._options.searchValueTrim = true;
 
          searchMod.Controller._private.getSearchController(searchController);
+
+         assert.equal(searchController._searchController._options.keyProperty, 'id');
 
          searchController._searchController.search = function(searchVal) {
             value = searchVal;
@@ -474,6 +477,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             searchMod.Controller._private.getSearchController(searchController);
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.deepEqual(searchController._searchController.getFilter(), {test: 'testValue'});
+            assert.isTrue(searchController._searchController.getFilter() === options.filter);
 
             // filter and navigation changed
             options.filter = {test: 'testValue', test1: 'testValue1'};

@@ -31,13 +31,12 @@
                         editArrowTemplate="{{editArrowTemplate}}"
                         ladderWrapper="{{currentColumn.ladderWrapper}}"
                         attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
-                             {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}
-                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}"
+                             {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
                         itemData="{{currentColumn}}"/>
         </ws:else>
     </ws:else>
-    <!-- В table-layout операции над записью всегда выводятся в последней ячейке, даже при скролле колонок -->
-    <ws:if data="{{itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+    <!-- Без скролла колонок операции выводятся в последней ячейке таблицы. -->
+    <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
         <ws:partial template="itemActionsTemplateChooser"/>
     </ws:if>
 </ws:template>
@@ -60,6 +59,7 @@
                     {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                     {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                     {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
+                    controls-Grid__cell_valign_{{currentColumn.column.valign || 'baseline'}}
                     {{className || ''}}">
         <ws:partial template="{{content}}" />
     </td>
@@ -85,6 +85,19 @@
             <ws:partial template="columnContentWrapper"/>
         </ws:partial>
     </ws:else>
+
+    <!-- При скролле колонок операции над записью выводятся в отдельной ячейке после всех ячеек строки. -->
+    <!-- Позиционируются прижатыми к правому краю с помощью отрицательного translateX на максимально возможную величину -->
+    <!-- скролла(как если бы колонки были полностью проскролены). -->
+    <!-- Стиль смещения задается в ColumnScroll. Ячейка не должна иметь ширины, чтобы быть идеально прижатой справа. -->
+    <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+        <ws:partial template="tableTD" keyPostfix="_actions"
+                    attr:class="controls-Grid-table-layout__itemActions__container"
+                    attr:style="width: 0; min-width: 0; max-width: 0; padding: 0px;">
+            <ws:partial template="itemActionsTemplateChooser"/>
+        </ws:partial>
+    </ws:if>
+
 </ws:template>
 
 <tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable, cursor)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}

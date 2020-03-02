@@ -210,10 +210,10 @@
    <div class="demo_controls_list_section">
       <h1>Buttons</h1>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FButtonsVdom">Buttons: baseline demo</a>
+         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FBaseline%252FIndex">Buttons: baseline demo</a>
       </div>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FdemoButtons">Buttons: styles demo</a>
+         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FstandartDemoButton">Buttons: styles demo</a>
       </div>
 
       <h1>Dropdown</h1>

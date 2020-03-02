@@ -26,6 +26,7 @@ var _private = {
             source: options.source,
             sorting: options.sorting,
             navigation: options.navigation,
+            keyProperty: options.keyProperty,
             searchCallback: _private.searchCallback.bind(self, self),
             abortCallback: _private.abortCallback.bind(self, self),
             searchStartCallback: _private.searchStartCallback.bind(self, self),
@@ -324,7 +325,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (this._searchController) {
          if (filter) {
-            this._searchController.setFilter(clone(filter));
+            this._searchController.setFilter(filter);
          }
 
          if (isNeedRestartSearch && this._searchValue) {

@@ -16,6 +16,7 @@ var _private = {
                sorting: self._options.sorting,
                navigation: self._options.navigation,
                searchDelay: self._options.searchDelay,
+               keyProperty: self._options.keyProperty,
                searchStartCallback: self._options.searchStartCallback
             });
          }
@@ -52,12 +53,11 @@ var _private = {
       });
    },
 
-   abort: function(self, force) {
-      _private.getSearch(self).addCallback(function(search) {
-         search.abort(force).addCallback(function() {
-            var filter = self._options.filter;
+   abort(self, force: boolean): void {
+      _private.getSearch(self).addCallback((search) => {
+         search.abort(force).addCallback(() => {
+            const filter = clone(self._options.filter);
             delete filter[self._options.searchParam];
-            filter = clone(filter);
             if (self._options.abortCallback) {
                self._options.abortCallback(filter);
             }

@@ -348,8 +348,27 @@ const moduleClass = CompoundControl.extend({
          });
          ManagerWrapperController.registerListener(event, eventName, emitter, handler);
       } else {
+         if (emitter && emitter.getInstanceId()) {
+            const index = this._getListenerIndex(emitter);
+            if (typeof index === 'number') {
+               this._listeners.splice(index, 1);``
+            }
+         }
          ManagerWrapperController.unregisterListener(event, eventName, emitter);
       }
+   },
+   _getListenerIndex(emitter) {
+      const length = this._listeners.length;
+      for (let index = 0; index < length; index++) {
+         const listener = this._listeners[index];
+         const unregisterEmitter = listener.emitter;
+         if (unregisterEmitter && unregisterEmitter.getInstanceId()) {
+            if (unregisterEmitter.getInstanceId() === emitter.getInstanceId()) {
+               return index;
+            }
+         }
+      }
+      return undefined;
    },
 
    onBringToFront() {

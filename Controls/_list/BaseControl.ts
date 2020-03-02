@@ -207,7 +207,7 @@ var _private = {
                         const nextKey = listModel.getMarkedKey();
                         if (nextKey && nextKey !== curKey
                             && self._listViewModel.getCount()
-                            && !self._options.task46390860 && !self._options.task1177182277
+                            && !self._options.task46390860 && !self._options.task1177182277 && !cfg.task1178786918
                         ) {
                             self._markedKeyForRestoredScroll = nextKey;
                         }
@@ -236,8 +236,8 @@ var _private = {
                 }
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-                if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, cfg.navigation)) {
-                    _private.checkLoadToDirectionCapability(self, filter);
+                if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
+                    _private.checkLoadToDirectionCapability(self, filter, navigation);
                 }
             }).addErrback(function(error) {
                 return _private.processError(self, {
@@ -508,10 +508,6 @@ var _private = {
             if (isPortionedLoad) {
                 _private.loadToDirectionWithSearchValueEnded(self, addedItems);
             }
-
-            if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = true;
-            }
         };
 
         const afterAddItems = (countCurrentItems, addedItems) => {
@@ -521,10 +517,10 @@ var _private = {
             // handler after current items are rendered on the page.
             if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
                 (self._options.task1176625749 && countCurrentItems === cnt2)) {
-                _private.checkLoadToDirectionCapability(self);
+                _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = false;
+                self._children.scrollController.itemsFromLoadToDirection = null;
             }
 
             _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -561,6 +557,10 @@ var _private = {
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 const countCurrentItems = self._listViewModel.getCount();
 
+                if (self._options.virtualScrolling && self._isMounted) {
+                    self._children.scrollController.itemsFromLoadToDirection = direction;
+                }
+
                 if (direction === 'down') {
                     beforeAddItems(addedItems);
                     if (self._options.useNewModel) {
@@ -584,7 +584,7 @@ var _private = {
         Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
     },
 
-    checkLoadToDirectionCapability: function(self, filter) {
+    checkLoadToDirectionCapability: function(self, filter, navigation) {
         if (self._destroyed) {
             return;
         }
@@ -609,7 +609,7 @@ var _private = {
             if (_private.isPortionedLoad(self)) {
                 _private.checkPortionedSearchByScrollTriggerVisibility(self, self._loadTriggerVisibility.down);
             }
-        } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
+        } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, navigation)) {
             _private.loadToDirectionIfNeed(self, 'down', filter);
         }
     },
@@ -1024,7 +1024,7 @@ var _private = {
                 _private.disablePagingNextButtons(self);
 
                 if (self._isScrollShown) {
-                    _private.updateShadowMode(self, self._placeholderSizes);
+                    _private.updateShadowMode(self, self._shadowVisibility);
                 }
             }
         }));
@@ -1067,15 +1067,18 @@ var _private = {
         return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
     },
 
-    updateShadowMode(self, placeholderSizes: {top: number, bottom: number}): void {
+    updateShadowMode(self, shadowVisibility: {up: boolean, down: boolean}): void {
         const itemsCount = self._listViewModel && self._listViewModel.getCount();
         const hasMoreData = (direction) => _private.hasMoreData(self, self._sourceController, direction);
         const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
         const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
 
         self._notify('updateShadowMode', [{
-            top: (placeholderSizes.top || showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (placeholderSizes.bottom || showShadowByNavigation && showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+            top: (shadowVisibility.up ||
+                showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+            bottom: (shadowVisibility.down ||
+                showShadowByNavigation &&
+                showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -1230,7 +1233,8 @@ var _private = {
                     targetPoint: {vertical: 'top', horizontal: 'right'},
                     direction: {horizontal: context ? 'right' : 'left'},
                     className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
-                    nativeEvent: context ? childEvent.nativeEvent : false
+                    nativeEvent: context ? childEvent.nativeEvent : false,
+                    autofocus: false
                 });
                 self._menuIsShown = true;
                 self._forceUpdate();
@@ -1283,7 +1287,8 @@ var _private = {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
-                    className: 'controls-DropdownList__margin-head'
+                    className: 'controls-DropdownList__margin-head',
+                    autofocus: false
                 });
                 self._actionMenuIsShown = true;
                 self._forceUpdate();
@@ -1623,7 +1628,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _savedStartIndex: 0,
     _savedStopIndex: 0,
-    _placeholderSizes: null,
+    _shadowVisibility: null,
 
     _template: BaseControlTpl,
     iWantVDOM: true,
@@ -1787,6 +1792,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     return;
                 }
                 if (receivedError) {
+                    if (newOptions.dataLoadErrback instanceof Function) {
+                        newOptions.dataLoadErrback(receivedError);
+                    }
                     return _private.showError(self, receivedError);
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
@@ -1857,9 +1865,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    updateShadowModeHandler(_: SyntheticEvent<Event>, placeholderSizes: {top: number, bottom: number}): void {
-        this._placeholderSizes = placeholderSizes;
-        _private.updateShadowMode(this, placeholderSizes);
+    updateShadowModeHandler(_: SyntheticEvent<Event>, shadowVisibility: {down: boolean, up: boolean}): void {
+        this._shadowVisibility = shadowVisibility;
+        _private.updateShadowMode(this, shadowVisibility);
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
@@ -1938,6 +1946,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
+        this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
             _private.initializeNavigation(this, newOptions);
@@ -2015,6 +2024,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.getPortionedSearch(self).reset();
+            if (this._menuIsShown) {
+                this._children.itemActionsOpener.close();
+                this._closeActionsMenu();
+            }
 
             // return result here is for unit tests
             return _private.reload(self, newOptions);
@@ -2500,13 +2513,23 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
         this._showActions = false;
     },
+
+    handleKeyDown(event): void {
+        this._onViewKeyDown(event);
+    },
+
     _onViewKeyDown: function(event) {
-        let key = event.nativeEvent.keyCode;
-        let dontStop = key === 33
-            || key === 34
-            || key === 35
-            || key === 36;
-        keysHandler(event, HOT_KEYS, _private, this, dontStop);
+
+        // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
+        // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
+        if (!this._options._keyDownHandler || !this._options._keyDownHandler(event)) {
+            let key = event.nativeEvent.keyCode;
+            let dontStop = key === 33
+                || key === 34
+                || key === 35
+                || key === 36;
+            keysHandler(event, HOT_KEYS, _private, this, dontStop);
+        }
     },
     _dragEnter: function(event, dragObject) {
         if (
@@ -2650,6 +2673,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         return styles;
+    },
+    _listDeactivated: function() {
+        if (!this._menuIsShown) {
+            this._children.swipeControl?.closeSwipe();
+        }
     },
 
     _onHoveredItemChanged: function(e, item, container) {
