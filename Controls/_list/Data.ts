@@ -265,8 +265,8 @@ type GetSourceResult = {
             };
          },
 
-         _onItemsChangeError: function(event, error) {
-            this._children.itemsErrorRegistrar.start(error);
+         _onDataError: function(event, errbackConfig) {
+            this._children.dataErrorRegistrar.start(errbackConfig);
          }
       });
 

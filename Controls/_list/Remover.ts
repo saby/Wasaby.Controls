@@ -2,6 +2,7 @@ import BaseAction from 'Controls/_list/BaseAction';
 import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import {ContextOptions as dataOptions} from 'Controls/context';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 var _private = {
     removeFromSource: function (self, items) {
@@ -27,7 +28,7 @@ var _private = {
     },
 
     afterItemsRemove: function (self, items, result) {
-        self._notify('afterItemsRemove', [items, result]);
+        var afterItemsRemoveResult = self._notify('afterItemsRemove', [items, result]);
 
         //According to the standard, after moving the items, you need to unselect all in the table view.
         //The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
@@ -37,6 +38,8 @@ var _private = {
         self._notify('selectedTypeChanged', ['unselectAll'], {
             bubbling: true
         });
+
+        return Promise.resolve(afterItemsRemoveResult);
     },
 
     updateDataOptions: function (self, dataOptions) {
@@ -99,10 +102,15 @@ var Remover = BaseAction.extend({
                     _private.removeFromSource(self, items).addCallback(function (result) {
                         _private.removeFromItems(self, items);
                         return result;
-                    }).addErrback(function (error) {
-                        self._notify('itemsChangeError', [error]);
                     }).addBoth(function (result) {
-                        _private.afterItemsRemove(self, items, result);
+                        _private.afterItemsRemove(self, items, result).then(function (eventResult) {
+                            if (eventResult === true && result instanceof Error) {
+                                self._notify('dataError', [{
+                                    error: result,
+                                    mode: dataSourceError.Mode.dialog
+                                }]);
+                            }
+                        });
                     });
                 }
             });

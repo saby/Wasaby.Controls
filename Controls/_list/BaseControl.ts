@@ -2487,10 +2487,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.getPortionedSearch(this).abortSearch();
     },
 
-    _onItemsChangeError(event: unknown, error: Error): void {
+    _onDataError(event: unknown, errorConfig: ErrbackConfig): void {
         _private.processError(this, {
-            error,
-            mode: dataSourceError.Mode.dialog
+            error: errorConfig.error,
+            mode: errorConfig.mode || dataSourceError.Mode.dialog
         });
     },
 

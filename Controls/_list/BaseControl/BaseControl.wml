@@ -274,7 +274,7 @@
         </ws:if>
 
         <Controls.event:Listener
-           event="itemsChangeError"
-           on:itemsChangeError="_onItemsChangeError()"/>
+           event="dataError"
+           on:dataError="_onDataError()"/>
     </div>
 </Controls.dataSource:error.Container>
