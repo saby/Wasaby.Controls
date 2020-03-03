@@ -30,6 +30,7 @@
 <ws:template name="groupOutputLocalTemplate">
    <ws:partial
       template="{{groupTemplate}}"
+      backgroundStyle="{{backgroundStyle}}"
       on:click="_onGroupClick(listModel.getCurrent().dispItem)"
       itemData="{{listModel.getCurrent()}}"/>
    {{listModel.goToNext();}}
