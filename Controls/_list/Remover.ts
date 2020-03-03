@@ -22,7 +22,7 @@ var _private = {
     },
 
     beforeItemsRemove: function (self, items) {
-        var beforeItemsRemoveResult = self._notify('beforeItemsRemove', [items]);
+        const beforeItemsRemoveResult = self._notify('beforeItemsRemove', [items]);
         return beforeItemsRemoveResult instanceof Deferred || beforeItemsRemoveResult instanceof Promise ?
            beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
     },
@@ -87,29 +87,29 @@ var Remover = BaseAction.extend({
         _private.updateDataOptions(this, context.dataOptions);
     },
 
-    removeItems: function (items) {
-        var
-            self = this,
-            itemsDeferred;
+    removeItems(items: string[]): void {
+        let itemsDeferred;
 
         //Support removing with mass selection.
-        //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-        itemsDeferred = items instanceof Array ? Deferred.success(items) : getItemsBySelection(items, this._source, this._items, this._filter);
+        //Full transition to selection will be made by:
+        // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+        itemsDeferred = items instanceof Array
+            ? Deferred.success(items)
+            : getItemsBySelection(items, this._source, this._items, this._filter);
 
-        itemsDeferred.addCallback(function (items) {
-            _private.beforeItemsRemove(self, items).addCallback(function (result) {
+        itemsDeferred.addCallback((items) => {
+            _private.beforeItemsRemove(this, items).addCallback((result) => {
                 if (result !== false) {
-                    _private.removeFromSource(self, items).addCallback(function (result) {
-                        _private.removeFromItems(self, items);
+                    _private.removeFromSource(this, items).addCallback((result) => {
+                        _private.removeFromItems(this, items);
                         return result;
-                    }).addBoth(function (result) {
-                        _private.afterItemsRemove(self, items, result).then(function (eventResult) {
-                            if (eventResult === true && result instanceof Error) {
-                                self._notify('dataError', [{
-                                    error: result,
-                                    mode: dataSourceError.Mode.dialog
-                                }]);
+                    }).addBoth((result) => {
+                        _private.afterItemsRemove(this, items, result).then((eventResult) => {
+                            if (eventResult === false || !(result instanceof Error)) {
+                                return;
                             }
+
+                            this._notify('dataError', [{ error: result }]);
                         });
                     });
                 }
