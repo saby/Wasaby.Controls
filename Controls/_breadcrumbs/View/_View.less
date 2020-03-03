@@ -30,11 +30,13 @@
 }
 .controls-BreadCrumbsView__crumb {
    display: inline-block;
-   color: @color_BreadCrumbs-title;
    overflow: hidden;
    max-width: 100%;
    white-space: nowrap;
    .baseline-fix();
+}
+.controls-BreadCrumbsView__crumb_theme-@{themeName} {
+   color: @color_BreadCrumbs-title;
    height: @height_BreadCrumbs-items;
    &:before {
       font-size: @font-size_BreadCrumbs-baseline;
@@ -50,11 +52,13 @@
    position: absolute;
    top: 0;
    .baseline-fix();
+   cursor: pointer;
+   padding-right: 1px;
+}
+.controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
    left: @spacing_BreadCrumbs-menu;
    background: @background-color_BreadCrumbs-menu;
    box-shadow: @box-shadow_BreadCrumbs-menu;
-   cursor: pointer;
-   padding-right: 1px;
    height: @height_BreadCrumbs-items;
    &:before {
       font-size: @font-size_BreadCrumbs-baseline;
@@ -101,14 +105,17 @@
    display: inline;
 }
 
-.controls-BreadCrumbsView__title_enabled {
+.controls-BreadCrumbsView__title_enabled_theme-@{themeName} {
    cursor: pointer;
 }
 
 .controls-BreadCrumbsView__title {
    .text-overflow();
-   font-size: @font-size_BreadCrumbs-title;
    display: inline;
+}
+
+.controls-BreadCrumbsView__title_theme-@{themeName} {
+   font-size: @font-size_BreadCrumbs-title;
 }
 
 .controls-BreadCrumbsView__arrow {
@@ -155,7 +162,7 @@
 
 .ws-is-hover {
    .controls-BreadCrumbsView__crumb:hover, .controls-BreadCrumbsView__menu__dots:hover {
-      .controls-BreadCrumbsView__title_enabled {
+      .controls-BreadCrumbsView__title_enabled_theme-@{themeName} {
          color: @color_BreadCrumbs-title_hovered;
          text-decoration: underline;
       }
