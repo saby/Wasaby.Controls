@@ -6,7 +6,7 @@
                         highlighter="{{_options.highlighter}}"
                         applyHighlighter="{{_applyHighlighter}}"
                         items="{{_options.visibleItems}}"
-                        itemTemplate="{{_options.itemTem@{themeName}plate}}" />
+                        itemTemplate="{{_options.itemTemplate}}" />
         </div>
     </ws:if>
 
