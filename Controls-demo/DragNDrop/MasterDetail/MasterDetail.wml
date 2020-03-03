@@ -19,7 +19,6 @@
                            on:dragEnter="_dragEnterMaster()"
                            parentProperty="Раздел"
                            style="master"
-                           backgroundStyle="master"
                            markerVisibility='visible'
                            nodeProperty="Раздел@"
                            expanderDisplayMode="adaptive"
