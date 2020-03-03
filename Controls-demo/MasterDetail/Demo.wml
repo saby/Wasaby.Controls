@@ -38,7 +38,7 @@
                   <Controls.list:View
                           keyProperty="id"
                           source="{{_detailSource}}"
-                  >
+                          backgroundStyle="detail">
                      <ws:filter myOpt="{{detail.selectedMasterValue || '0'}}">
                      </ws:filter>
                      <ws:itemTemplate>
@@ -94,7 +94,8 @@
             <Controls.scroll:Container attr:class="controls-demo_MasterDetail_detail">
                <Controls.list:View
                   keyProperty="id"
-                  source="{{_detailSource}}">
+                  source="{{_detailSource}}"
+                  backgroundStyle="detail">
                   <ws:filter myOpt="{{detail.selectedMasterValue || '0'}}">
                   </ws:filter>
                   <ws:itemTemplate>
@@ -151,7 +152,8 @@
                <Controls.scroll:Container attr:class="controls-demo_MasterDetail_detail">
                   <Controls.list:View
                      keyProperty="id"
-                     source="{{_detailSource}}">
+                     source="{{_detailSource}}"
+                     backgroundStyle="detail">
                      <ws:filter myOpt="{{detail.selectedMasterValue || '0'}}">
                      </ws:filter>
                      <ws:itemTemplate>
