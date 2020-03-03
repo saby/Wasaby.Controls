@@ -85,7 +85,11 @@ define('Controls/Application/Core',
          coreTheme: '',
          setTheme: function(ev, theme) {
             this.coreTheme = theme;
-            controller.getThemeController().setTheme(theme);
+            controller.getThemeController().setTheme(theme).catch(function (e) {
+               require(['UI/Utils'], function (Utils) {
+                  Utils.Logger.error(e.message);
+               });
+            });
          },
          changeApplicationHandler: function(e, app) {
             var result;
