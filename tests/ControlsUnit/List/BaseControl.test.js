@@ -3234,9 +3234,6 @@ define([
             const ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
-                  commitEdit: function() {
-                     result = commitDef;
-                  },
                   commitAndMoveNextRow: function () {
                      result = commitAndMoveDef;
                   }
