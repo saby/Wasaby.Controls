@@ -105,7 +105,7 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _beforeUpdate: function(newOptions) {
-         if (!isEqual(this.items, newOptions.items)) {
+         if (!isEqual(this._options.items, newOptions.items)) {
             this.items = _private.cloneItems(newOptions.items);
             this._columns = _private.getColumnsByItems(newOptions.items);
             _private.onResize(this);
