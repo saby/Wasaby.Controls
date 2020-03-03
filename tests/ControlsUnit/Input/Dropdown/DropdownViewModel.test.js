@@ -240,7 +240,7 @@ define(
             viewModel3._options.additionalProperty = null;
             viewModel3._options.nodeProperty = '@parent';
             it('groupItems', function() {
-               assert.isTrue(viewModel3.getCurrent().isHiddenGroup());
+               assert.isTrue(viewModel3.getCurrent().isHiddenGroup);
                assert.equal(viewModel3._itemsModel._display.getCount(), 11);
                assert.equal(viewModel3._itemsModel._display.at(9).getContents().get('group'), 'group_1');
                assert.equal(viewModel3._itemsModel._display.at(10).getContents().get('group'), 'group_1');
