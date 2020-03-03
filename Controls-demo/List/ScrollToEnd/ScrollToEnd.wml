@@ -1,0 +1,12 @@
+<div class="cDemo">
+   <Controls.scroll:Container attr:class="cDemo-ScrollContainer" attr:style="height: 500px; width: 600px;">
+      <Controls.list:View
+         name="listView"
+         source="{{ _viewSource }}"
+         keyProperty="id"
+         displayProperty="title"
+         virtualScrolling="{{ true }}"
+         virtualPageSize="{{ 20 }}"
+         navigation="{{ _navigation }}" />
+   </Controls.scroll:Container>
+</div>
