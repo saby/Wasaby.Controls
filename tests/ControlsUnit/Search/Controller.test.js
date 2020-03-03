@@ -588,6 +588,19 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.equal(searchController._inputSearchValue, '');
          });
+
+         it('navigation is changed', function() {
+            var options = getDefaultOptions();
+            var searchStarted = false;
+            options.navigation = {};
+            searchMod.Controller._private.getSearchController(searchController);
+            searchMod.Controller._private.startSearch = () => {searchStarted = true;};
+            searchController._inputSearchValue = 'test';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+
+            assert.isTrue(searchController._inputSearchValue === 'test');
+            assert.isTrue(searchStarted);
+         });
       });
 
       describe('_beforeUnmount', function() {
