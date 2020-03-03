@@ -411,6 +411,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._container.get ? this._container.get(0) : this._container;
     }
 
+    static _theme: string[] = ['Controls/scroll', 'Controls/Classes'];
+
     static _isSafari13(): boolean {
         return detection.safariVersion >= 13;
     }
