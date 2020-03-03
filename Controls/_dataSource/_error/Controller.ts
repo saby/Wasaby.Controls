@@ -10,9 +10,6 @@ import { fetch } from 'Browser/Transport';
 import { IVersionable } from 'Types/entity';
 import Popup from './Popup';
 
-const { Errors } = fetch;
-const { Abort } = Errors;
-
 export type Config = {
     handlers?: Handler[]
 };
@@ -35,7 +32,7 @@ const getIVersion = (): IVersionable => {
 
 const isNeedHandle = (error: Error): boolean => {
     return !(
-        (error instanceof Abort) ||
+        (error instanceof fetch.Errors.Abort) ||
         // @ts-ignore
         error.processed ||
         // @ts-ignore
@@ -56,7 +53,14 @@ const prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): H
     };
 };
 
-const popupHelper = new Popup();
+let popupHelper: Popup;
+function getPopupHelper(): Popup {
+    if (!popupHelper) {
+        popupHelper = new Popup();
+    }
+
+    return popupHelper;
+}
 
 /// endregion helpers
 
@@ -94,7 +98,7 @@ const popupHelper = new Popup();
 export default class ErrorController {
     private __controller: ParkingController;
 
-    constructor(config: Config) {
+    constructor(config: Config, private _popupHelper: Popup = getPopupHelper()) {
         this.__controller = new ParkingController({
             configField: ErrorController.CONFIG_FIELD,
             ...config
@@ -104,6 +108,7 @@ export default class ErrorController {
     destroy(): void {
         this.__controller.destroy();
         delete this.__controller;
+        delete this._popupHelper;
     }
 
     /**
@@ -159,7 +164,7 @@ export default class ErrorController {
     }
 
     private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
-        popupHelper.openConfirmation({
+        this._popupHelper.openConfirmation({
             type: 'ok',
             style: 'danger',
             message: config.error.message
