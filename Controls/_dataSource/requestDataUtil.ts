@@ -19,6 +19,7 @@
  */
 
 import {Controller as SourceController} from 'Controls/source';
+import {Controller as FilterController} from 'Controls/filter';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
@@ -61,9 +62,7 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    let sortingPromise;
    let filterPromise;
    if (cfg.historyId && cfg.filterButtonSource && cfg.filter) {
-      filterPromise = import('Controls/filter').then((filterLib): Promise<IFilter> => {
-         return filterLib.Controller.getCalculatedFilter(cfg);
-      });
+      filterPromise = FilterController.getCalculatedFilter(cfg);
    }
    if (cfg.propStorageId) {
       sortingPromise = loadSavedConfig(cfg.propStorageId, ['sorting']);
