@@ -1,5 +1,6 @@
 import Control = require('Core/Control');
 import ColumnScrollTpl = require('wml!Controls/_grid/ColumnScroll');
+import 'css!theme?Controls/grid';
 import { detection } from 'Env/Env';
 import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
@@ -156,6 +157,13 @@ const
          }
       },
 
+       setTopToZero: function(container) {
+           const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
+           if (scroll) {
+               scroll.style.top = 0;
+           }
+       },
+
       prepareDebouncedUpdateSizes: function() {
           return debounce(_private.updateSizes, DELAY_UPDATE_SIZES, true);
       },
@@ -218,6 +226,10 @@ const
          if (oldOptions.root !== this._options.root) {
              this._contentSize = 0;
              this._contentContainerSize = 0;
+             // TODO: Remove after execution https://online.sbis.ru/opendoc.html?guid=23a81552-092f-4880-bce7-96ca09ee4705
+             // обнулить топ при смене рута,
+             // после построения заголовков, stickyHeader выставил верный топ.
+             _private.setTopToZero(this._children.content);
          }
       },
 
@@ -328,6 +340,5 @@ const
            return delta;
        }
    });
-ColumnScroll._theme = ['Controls/grid'];
 ColumnScroll._private = _private;
 export = ColumnScroll;
