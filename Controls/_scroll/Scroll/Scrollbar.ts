@@ -268,9 +268,9 @@ class Scrollbar extends Control<IScrollBarOptions> {
 
     protected _thumbMouseDownHandler(event: Event): void {
         // to disable selection while dragging
-        event.preventDefault();
+        //event.preventDefault();
 
-        event.stopPropagation();
+        //event.stopPropagation();
         this._scrollbarBeginDragHandler(event);
     }
 

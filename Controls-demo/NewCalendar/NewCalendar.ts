@@ -1,27 +1,10 @@
-import Control = require('Core/Control');
-import {Date as WSDate} from 'Types/entity';
-import {date as formatDate} from 'Types/formatter';
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import {DateRangeModel} from 'Controls/dateRange';
-import proxyModelEvents from 'Controls/Utils/proxyModelEvents';
-import dateUtils = require('Controls/Utils/Date');
-import MonthsRangeItem from './MonthsRangeItem';
-import componentTmpl = require('wml!Controls/_datePopup/MonthsRange');
-import 'css!theme?Controls/datePopup';
+import {Control, TemplateFunction} from 'UI/Base';
+import controlTemplate = require('wml!Controls-demo/NewCalendar/NewCalendar');
 
-/**
- * Component that allows you to select a period of multiple months.
- *
- * @class Controls/_datePopup/MonthsRange
- * @extends Core/Control
- * @control
- * @author Красильников А.С.
- * @private
- */
+import 'css!Controls-demo/NewCalendar/NewCalendar';
 
-class Component extends Control {
-    protected _template: Function = componentTmpl;
-
+export default class extends Control {
+    protected _template: TemplateFunction = controlTemplate;
     _date = new Date();
     _viewport = null;
     _startScrollTop = 12480;
@@ -40,7 +23,7 @@ class Component extends Control {
     }
 
     private _load() {
-        this._children.scroll.scrollTop = this._startScrollTop;
+        this._children.scroll.scrollTo(this._startScrollTop);
     }
 
     private _calcYearByPosition(topPosition: number) {
@@ -61,7 +44,7 @@ class Component extends Control {
     }
 
     private _scrollHandler() {
-        const elementPosition = Math.round(this._children.scroll.scrollTop / this._heightYearBlock);
+        const elementPosition = Math.round(this._children.scroll._scrollTop / this._heightYearBlock);
         const newRenderedYears = [];
         for (let i = elementPosition - 2; i <= elementPosition + 2; i++) {
             if (i >= 0) {
@@ -73,18 +56,3 @@ class Component extends Control {
         // newRenderedYears.forEach((item) => this._renderedYears.push(item));
     }
 }
-
-Component.SELECTION_VEIW_TYPES = MonthsRangeItem.SELECTION_VEIW_TYPES;
-
-Component.getDefaultOptions = function() {
-    return {
-        selectionViewType: MonthsRangeItem.SELECTION_VEIW_TYPES.days,
-        dateConstructor: WSDate
-    };
-};
-
-// Component.getOptionTypes = function() {
-//    return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());
-// };
-
-export default Component;

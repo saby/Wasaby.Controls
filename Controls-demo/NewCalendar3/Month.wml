@@ -1,0 +1,10 @@
+<div class="one-year pos-absolute year-{{_options.month.getFullYear()}}">
+    <div class="year-header">{{_options.month.getFullYear() + ' ' + _monthNames[_options.month.getMonth()]}}</div>
+    <ws:for data="i in _monthDays">
+        <ul class="one-Week">
+            <ws:for data="j in i">
+                <li class="one-Day">{{j}}</li>
+            </ws:for>
+        </ul>
+    </ws:for>
+</div>

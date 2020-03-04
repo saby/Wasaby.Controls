@@ -100,93 +100,100 @@ var Component = BaseControl.extend([EventProxyMixin], {
         if (this._options.selectionViewType !== options.selectionViewType) {
             this._selectionViewType = options.selectionViewType;
         }
+        if (this._options.date !== options.date) {
+            this._months = [];
+            const year = options.date.getFullYear();
+            for (let i = 0; i < 12; i++) {
+                this._months.push(new WSDate(year, i, 1));
+            }
+        }
     },
 
     _onQuarterClick: function (e, date) {
-        if (this._quarterSelectionEnabled) {
-            this._selectionViewType = SELECTION_VEIW_TYPES.months;
-            this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfQuarter(date)]);
-        }
+        // if (this._quarterSelectionEnabled) {
+        //     this._selectionViewType = SELECTION_VEIW_TYPES.months;
+        //     this._notify('selectionViewTypeChanged', [this._selectionViewType]);
+        //     this._notify('fixedPeriodClick', [date, dateUtils.getEndOfQuarter(date)]);
+        // }
     },
 
     _onQuarterMouseEnter: function (e, index) {
-        if (this._quarterSelectionEnabled) {
-            this._quarterHovered = index;
-        }
+        // if (this._quarterSelectionEnabled) {
+        //     this._quarterHovered = index;
+        // }
     },
 
     _onQuarterMouseLeave: function () {
-        if (this._quarterSelectionEnabled) {
-            this._quarterHovered = null;
-        }
+        // if (this._quarterSelectionEnabled) {
+        //     this._quarterHovered = null;
+        // }
     },
 
     _onHalfYearClick: function (e, date) {
-        if (this._halfyearSelectionEnabled) {
-            this._selectionViewType = SELECTION_VEIW_TYPES.months;
-            this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfHalfyear(date)]);
-        }
+        // if (this._halfyearSelectionEnabled) {
+        //     this._selectionViewType = SELECTION_VEIW_TYPES.months;
+        //     this._notify('selectionViewTypeChanged', [this._selectionViewType]);
+        //     this._notify('fixedPeriodClick', [date, dateUtils.getEndOfHalfyear(date)]);
+        // }
     },
 
     _onHalfYearMouseEnter: function (e, index) {
-        if (this._halfyearSelectionEnabled) {
-            this._halfYearHovered = index;
-        }
+        // if (this._halfyearSelectionEnabled) {
+        //     this._halfYearHovered = index;
+        // }
     },
 
     _onHalfYearMouseLeave: function () {
-        if (this._halfyearSelectionEnabled) {
-            this._halfYearHovered = null;
-        }
+        // if (this._halfyearSelectionEnabled) {
+        //     this._halfYearHovered = null;
+        // }
     },
 
     _onMonthTitleClick: function (e, date) {
-        if (this._monthsSelectionEnabled && !this._options.selectionProcessing && this._options.monthClickable) {
-            this._selectionViewType = SELECTION_VEIW_TYPES.months;
-            this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-
-            this._notify('itemClick', [date]);
-        }
+        // if (this._monthsSelectionEnabled && !this._options.selectionProcessing && this._options.monthClickable) {
+        //     this._selectionViewType = SELECTION_VEIW_TYPES.months;
+        //     this._notify('selectionViewTypeChanged', [this._selectionViewType]);
+        //
+        //     this._notify('itemClick', [date]);
+        // }
     },
 
     _onMonthTitleMouseEnter: function (e, date) {
-        if (!this._options.selectionProcessing) {
-            this._notify('itemMouseEnter', [date]);
-        }
+        // if (!this._options.selectionProcessing) {
+        //     this._notify('itemMouseEnter', [date]);
+        // }
     },
 
     _onMonthTitleMouseLeave: function (e, date) {
-        if (!this._options.selectionProcessing && this._options.monthClickable) {
-            this._notify('itemMouseLeave', [date]);
-        }
+        // if (!this._options.selectionProcessing && this._options.monthClickable) {
+        //     this._notify('itemMouseLeave', [date]);
+        // }
     },
 
     _onMonthBodyClick: function (e, date) {
-        if (!this._options.selectionProcessing && this._options.monthClickable) {
-            this._notify('monthClick', [date]);
-        }
+        // if (!this._options.selectionProcessing && this._options.monthClickable) {
+        //     this._notify('monthClick', [date]);
+        // }
     },
 
     _onMonthClick: function (e, date) {
-        if (this._options.selectionProcessing || !this._options.monthClickable) {
-            this._selectionViewType = SELECTION_VEIW_TYPES.months;
-            this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('itemClick', [date]);
-        }
+        // if (this._options.selectionProcessing || !this._options.monthClickable) {
+        //     this._selectionViewType = SELECTION_VEIW_TYPES.months;
+        //     this._notify('selectionViewTypeChanged', [this._selectionViewType]);
+        //     this._notify('itemClick', [date]);
+        // }
     },
 
     _onMonthMouseEnter: function (e, date) {
-        if (this._options.selectionProcessing || !this._options.monthClickable) {
-            this._notify('itemMouseEnter', [date]);
-        }
+        // if (this._options.selectionProcessing || !this._options.monthClickable) {
+        //     this._notify('itemMouseEnter', [date]);
+        // }
     },
 
     _onMonthMouseLeave: function (e, date) {
-        if (this._options.selectionProcessing || !this._options.monthClickable) {
-            this._notify('itemMouseLeave', [date]);
-        }
+        // if (this._options.selectionProcessing || !this._options.monthClickable) {
+        //     this._notify('itemMouseLeave', [date]);
+        // }
     },
 
     _prepareItemClass: function (itemValue) {

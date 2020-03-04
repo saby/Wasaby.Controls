@@ -1,48 +1,19 @@
-<!-- virtualPageSize="{{3}}" - 1 item is displayed and one at a time from the top and bottom in stock  -->
-<Controls.calendar:MonthList
-   attr:class="controls-PeriodDialog-MonthsRange"
-   virtualPageSize="{{3}}"
-   position="{{_options.position}}"
-   _limit="{{1}}"
-   on:itemClick="_onItemClick()"
->
-   <ws:yearHeaderTemplate>
-      <div class="controls-PeriodDialog-MonthsRange__header">
-         {{ _formatDate(yearHeaderTemplate.date, 'YYYY') }}
-      </div>
-   </ws:yearHeaderTemplate>
-   <ws:yearTemplate>
-      <ws:partial template="Controls/calendar:MonthListYearTemplate">
-         <ws:headerTemplate>
-            <invisible-node />
-         </ws:headerTemplate>
-         <ws:bodyTemplate>
-            <Controls._datePopup.MonthsRangeItem
-               monthClickable="{{_options.monthClickable}}"
-               quantum="{{_options.quantum}}"
-               selectionType="{{_options.selectionType}}"
-               bind:startValue="_rangeModel.startValue"
-               bind:endValue="_rangeModel.endValue"
-               dayTemplate="{{_options.dayTemplate}}"
+<ws:template name="yearBlock">
+    <div class="year-{{renderItem.year.getFullYear()}}" style="position: absolute; top:{{renderItem.position}}px">
+        <div>{{renderItem.year.getFullYear()}}</div>
+        <Controls._datePopup.MonthsRangeItem
+                date = "{{renderItem.year}}"
+        />
+    </div>
+</ws:template>
 
-               selectionProcessing="{{_options.selectionProcessing}}"
-               on:selectionProcessingChanged="_proxyEvent('selectionProcessingChanged')"
-               selectionBaseValue="{{_options.selectionBaseValue}}"
-               selectionHoveredValue="{{_options.selectionHoveredValue}}"
-
-               hoveredStartValue="{{_options.hoveredStartValue}}"
-               hoveredEndValue="{{_options.hoveredEndValue}}"
-
-               bind:selectionViewType="_selectionViewType"
-               dateConstructor="{{_options.dateConstructor}}"
-
-               on:monthClick="_proxyEvent('monthClick')"
-               on:fixedPeriodClick="_proxyEvent('fixedPeriodClick')"
-               on:itemClick="_proxyEvent('itemClick')"
-               on:itemMouseEnter="_proxyEvent('itemMouseEnter')"
-               on:itemMouseLeave="_proxyEvent('itemMouseLeave')"
-            />
-         </ws:bodyTemplate>
-      </ws:partial>
-   </ws:yearTemplate>
-</Controls.calendar:MonthList>
+<div
+        name="scroll"
+        attr:style="width: 366px;height: 375px;margin: 0px auto;overflow-x: scroll;"
+        on:scroll="_scrollHandler()">
+    <div style="position: relative; height: 20000px;">
+            <ws:for data="renderItem in _renderedYears">
+                   <ws:partial attr:key="{{renderItem.year.getFullYear()}}" template="yearBlock"></ws:partial>
+            </ws:for>
+    </div>
+</div>

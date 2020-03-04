@@ -1,4 +1,4 @@
-import BaseControl = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -57,124 +57,64 @@ const _private = {
     }
 };
 
-var Component = BaseControl.extend([EventProxy], {
-    _template: componentTmpl,
+export default class Component extends Control {
+    protected _template: TemplateFunction = componentTmpl;
+    _date = new Date();
+    _viewport = null;
+    _startScrollTop = 67760;
+    _currentDate = new Date();
+    _renderedMonths = [
+        {year: new Date(2020, 1, 1), position: 67480},
+        {year: new Date(2020, 2, 1), position: 67760},
+        {year: new Date(2020, 3, 1), position: 68040},
+    ];
+    _heightYearBlock = 280;
+    _monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
 
-    _monthViewModel: MonthModel,
-
-    _weekdaysCaptions: DateControlsUtils.getWeekdaysCaptions(),
-    _formatDate: formatDate,
-
-    _isStickySupport: datePopupUtils.isStickySupport(),
-
-    _monthSelectionEnabled: true,
-    _selectionProcessing: false,
-
-    // We store the position locally in the component, and don't use the value from options
-    // to be able to quickly switch it on the mouse wheel.
-    _position: Date,
-
-    constructor: function (options) {
-        Component.superclass.constructor.apply(this, arguments);
-        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
-        proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
-    },
-
-    _beforeMount: function (options) {
-        _private.updateView(this, options);
-    },
-
-    _beforeUpdate: function (options) {
-        _private.updateView(this, options);
-    },
-
-    _beforeUnmount: function () {
-        this._rangeModel.destroy();
-    },
-
-    _monthCaptionClick: function(e: SyntheticEvent, yearDate: Date, month: number): void {
-        let date;
-        if (this._monthSelectionEnabled) {
-            date = new this._options.dateConstructor(yearDate.getFullYear(), month);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfMonth(date)]);
-        }
-    },
-
-    /**
-     * [текст, условие, если true, если false]
-     * @param prefix
-     * @param style
-     * @param cfgArr
-     * @private
-     */
-    _prepareCssClass: function (prefix, style, cfgArr) {
-        var cssClass = prefix;
-        if (style) {
-            cssClass += '-' + style;
-        }
-        return cfgArr.reduce(function (previousValue, currentValue, index) {
-            var valueToAdd = currentValue[0] ? currentValue[1] : currentValue[2];
-            if (valueToAdd) {
-                return previousValue + '-' + valueToAdd;
-            }
-            return previousValue;
-        }, cssClass);
-    },
-
-    _onItemClick: function (e) {
-        e.stopPropagation();
-    },
-
-    _wheelHandler: function(event) {
-        const direction = event.nativeEvent.deltaY > 0 ? 'top' : 'bottom';
-        _private.changeYear(this, this._position, direction);
-        event.preventDefault();
-    },
-
-    _swipeHandler: function(event) {
-        _private.changeYear(this, this._position, event.nativeEvent.direction);
-        event.preventDefault();
-    },
-
-    _dateToString: function(date) {
-        return datePopupUtils.dateToDataString(date);
-    },
-
-    _scrollToMonth: function(e, year, month) {
-        _private.notifyPositionChanged(this, new this._options.dateConstructor(year, month));
-    },
-
-    _formatMonth: function(month) {
-        return formatDate(new Date(2000, month), 'MMMM');
-    },
-
-    _getMonth: function(year, month) {
-        return new this._options.dateConstructor(year, month, 1);
-    },
-
-    _onPositionChanged: function(e: Event, position: Date) {
-        if (position.getFullYear() !== this._position.getFullYear()) {
-            _private.notifyPositionChanged(this, position);
-        }
-    },
-
-    _getSeparatorCssClass: function(): string {
-        return this._isStickySupport ?
-            'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-sticky-support' :
-            'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-not-sticky-support';
+    protected _afterMount(cfg: any): void {
+        this._load();
     }
 
-});
+    private _load() {
+        this._children.scroll.scrollTop = this._startScrollTop;
+    }
 
-Component._private = _private;
+    private _diffArrays(arr1: object[], arr2: object[]) {
+        return arr1.filter((obj: any) => !arr2.some((obj2: any) => obj.year.getMonth() === obj2.year.getMonth()));
 
-// Component.EMPTY_CAPTIONS = IPeriodSimpleDialog.EMPTY_CAPTIONS;
+    }
 
-Component.getDefaultOptions = function() {
-   return {
-       dateConstructor: WSDate
-   };
-};
+    private _changeRenderedArrays(arr1: object[], arr2: object[]) {
+        this._diffArrays(arr1, arr2).forEach((item: any) => { this._renderedMonths.push(item);});
+        this._diffArrays(arr2, arr1).forEach((item: any) => {
+            const index = arr2.map((val) => val.year.getMonth()).indexOf(item.year.getMonth());
+            if (index !== -1) { arr2.splice(index, 1); }
+        });
+    }
+
+    private _getDate(position: number) {
+        const year = Math.round(position / 12) + 2000;
+        const month = position - (Math.round(position / 12) * 12);
+        return {year: new Date(year, month, 1), position: position * this._heightYearBlock};
+    }
+
+    private _scrollHandler() {
+        const elementPosition = Math.round(this._children.scroll.scrollTop / this._heightYearBlock);
+        const newRenderedYears = [];
+        for (let i = elementPosition - 2; i <= elementPosition + 2; i++) {
+            if (i >= 0) {
+                newRenderedYears.push(this._getDate(i));
+            }
+        }
+        this._changeRenderedArrays(newRenderedYears, this._renderedMonths);
+        // this._renderedMonths = [];
+        // newRenderedYears.forEach((item) => this._renderedMonths.push(item));
+        //console.log('_renderedMonths: ', this._renderedMonths);
+
+    }
+}
 
 // Component.getOptionTypes = function() {
 //    return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());

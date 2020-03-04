@@ -1,0 +1,26 @@
+<ws:template name="yearBlock">
+    <div class="one-year pos-absolute year-{{renderItem.year.getFullYear()}}" attr:gf="{{_Foo(renderItem.year)}}" style="top:{{renderItem.position}}px">
+        <div class="year-header">{{renderItem.year.getFullYear() + ' ' + _monthNames[renderItem.year.getMonth()]}}</div>
+        <ws:for data="i in _monthDays">
+            <ul class="one-Week">
+                <ws:for data="j in i">
+                    <li class="one-Day">{{j}}</li>
+                </ws:for>
+            </ul>
+        </ws:for>
+    </div>
+</ws:template>
+
+<div class="scroll-Container1" name="scroll1" on:scroll="_scrollHandler()">
+<div class="content-wrapper">
+    <ws:for data="renderItem in _renderedMonths">
+<!--        <ws:partial  attr:key="{{renderItem.year.getFullYear()+'_'+renderItem.year.getMonth()}}" template="yearBlock"></ws:partial>-->
+        <ws:partial  attr:key="{{renderItem.year.getFullYear()+'_'+renderItem.year.getMonth()}}" month="{{renderItem.year}}" attr:style="top:{{renderItem.position}}px" template="Controls-demo/NewCalendar3/Month"></ws:partial>
+
+    </ws:for>
+
+</div>
+</div>
+        <!--<Controls.scroll:Container name="scroll" attr:class="ControlsDemo-scroll_container" on:scroll="_scrollHandler()">-->
+
+        <!--</Controls.scroll:Container>-->
