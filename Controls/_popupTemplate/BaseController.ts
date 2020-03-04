@@ -153,6 +153,10 @@ abstract class BaseController {
         return true;
     }
 
+    protected getCustomZIndex(popupItems: collection.List<IPopupItem>, item: IPopupItem): number | null {
+        return null;
+    }
+
     protected _getPopupSizes(item: IPopupItem, container: HTMLDivElement): IPopupSizes {
         const containerSizes: IPopupSizes = this.getContentSizes(container);
 
