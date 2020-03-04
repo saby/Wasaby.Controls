@@ -92,9 +92,9 @@ var MonthView = BaseControl.extend({
    },
 
    _mouseEnterHandler: function(event, item, clickable) {
-      if (clickable) {
-         this._notify('itemMouseEnter', [item]);
-      }
+      // if (clickable) {
+      //    this._notify('itemMouseEnter', [item]);
+      // }
    }
 
    // cancelSelection: function () {

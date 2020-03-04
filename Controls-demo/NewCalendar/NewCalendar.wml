@@ -1,0 +1,20 @@
+<ws:template name="yearBlock">
+    <div class="one-year pos-absolute year-{{renderItem.year.getFullYear()}}" style="top:{{renderItem.position}}px">
+        <div class="year-header">{{renderItem.year.getFullYear()}}</div>
+        <Controls._datePopup.MonthsRangeItem
+                date = "{{renderItem.year}}"
+        />
+    </div>
+</ws:template>
+
+<Controls.scroll:Container name="scroll" attr:class="ControlsDemo-scroll_container" on:scroll="_scrollHandler()">
+    <div class="content-wrapper">
+            <Controls.datePopup
+                    attr:class="controls-PeriodDialog_5"
+                    minRange="month"
+            />
+            <ws:for data="renderItem in _renderedYears"> <!--2017 2018 2019 => 2016 2017 2018-->
+                   <ws:partial  attr:key="{{renderItem.year.getFullYear()}}" template="yearBlock"></ws:partial>
+            </ws:for>
+    </div>
+</Controls.scroll:Container>
