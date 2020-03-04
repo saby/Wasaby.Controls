@@ -29,9 +29,6 @@ var _private = {
         } else {
             options.itemActions.forEach(function(action) {
                 if (!options.itemActionVisibilityCallback || options.itemActionVisibilityCallback(action, item)) {
-                    if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
-                        action.icon += ' ' + ACTION_ICON_CLASS;
-                    }
                     action.style = getStyle(action.style, 'ItemActions');
                     action.iconStyle = getStyle(action.iconStyle, 'ItemActions');
                     actions.push(action);

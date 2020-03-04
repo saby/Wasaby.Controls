@@ -1278,6 +1278,7 @@ var _private = {
                         groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
                         groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
                         groupProperty: self._options.contextMenuConfig && self._options.contextMenuConfig.groupProperty,
+                        iconSize: self._options.contextMenuConfig && self._options.contextMenuConfig.iconSize,
                         rootKey: action.id,
                         showHeader: true,
                         dropdownClassName: 'controls-itemActionsV__popup',
