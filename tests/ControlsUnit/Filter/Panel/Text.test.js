@@ -9,7 +9,7 @@ define(['Controls/_filterPopup/Panel/Text'
             var textValue;
             var controlValue;
 
-            textControl.saveOptions({ caption: 'test', value: true });
+            textControl.saveOptions({ caption: 'test' });
             textControl._notify = function(eventName, value) {
                if (eventName === 'valueChanged') {
                   controlValue = value[0];

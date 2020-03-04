@@ -19,10 +19,7 @@ import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelecto
  * @public
  * @category Input
  * @author Красильников А.С.
- * @demo Controls-demo/dateRange/LiteSelector/Index
- * @demo Controls-demo/dateRange/LiteSelector/ArrowVisibility/Index
- * @demo Controls-demo/dateRange/LiteSelector/Disabled/Index
- * @demo Controls-demo/dateRange/LiteSelector/NotSpecified/Index
+ * @demo Controls-demo/Input/Date/RangeLinkLite
  *
  */
 

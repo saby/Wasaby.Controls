@@ -1018,6 +1018,14 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
+        markAddingItem() {
+            this._model.markAddingItem();
+        },
+
+        restoreMarker() {
+            this._model.restoreMarker();
+        },
+
         setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
         },
@@ -1288,7 +1296,8 @@ var
             };
 
             current.getCurrentColumn = function() {
-                const currentColumn: any = {
+                var
+                    currentColumn = {
                         item: current.item,
                         style: current.style,
                         isMenuShown: current.isMenuShown,
@@ -1302,7 +1311,7 @@ var
                         isEditing: current.isEditing,
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
-                        getVersion: () => {
+                        getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
                         _preferVersionAPI: true,

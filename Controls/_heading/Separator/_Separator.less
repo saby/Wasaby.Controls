@@ -9,30 +9,30 @@
 }
 
 .controls-HeaderSeparator__arrow_theme-@{themeName} {
-   width: @width_headingSeparator;
-   height: @height_headingSeparator;
-   padding-left: @padding-left_headingSeparator;
+   width: @width-HeaderSeparator;
+   height: @height-HeaderSeparator;
+   padding-left: @spacing-HeaderSeparator_between_headerSeparator_Header;
 }
 
 .controls-HeaderSeparator__arrow_style-primary_theme-@{themeName} {
-   fill: @primary_icon-color_headingSeparator;
+   fill: @color_HeaderSeparator_primary;
    &:active {
-      fill: @primary_active_icon-color_headingSeparator;
+      fill: @color_HeaderSeparator_primary_hovered;
    }
 }
 
 .controls-HeaderSeparator__arrow_style-secondary_theme-@{themeName} {
-   fill: @secondary_icon-color_headingSeparator;
+   fill: @color_HeaderSeparator_secondary;
    &:active {
-      fill: @secondary_active_icon-color_headingSeparator;
+      fill: @color_HeaderSeparator_secondary_hovered;
    }
 }
 
 .ws-is-hover {
    .controls-HeaderSeparator__arrow_style-primary_theme-@{themeName}:hover {
-      fill: @primary_hover_icon-color_headingSeparator;
+      fill: @color_HeaderSeparator_primary_hovered;
    }
    .controls-HeaderSeparator__arrow_style-secondary_theme-@{themeName}:hover {
-      fill: @secondary_hover_icon-color_headingSeparator;
+      fill: @color_HeaderSeparator_secondary_hovered;
    }
 }
