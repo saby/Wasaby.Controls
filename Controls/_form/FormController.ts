@@ -43,7 +43,6 @@ interface IAdditionalData {
     record?: Model;
     isNewRecord?: boolean;
     error?: Error;
-    cfg?: any;
 }
 
 interface IResultData {
@@ -491,13 +490,13 @@ class FormController extends Control<IFormController, IReceivedState> {
         return record;
     }
 
-    update(userConfig?: any): Promise<undefined | Model> {
+    update(config?: any): Promise<undefined | Model> {
         const updateResult = new Deferred();
         const updateCallback = (result) => {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                 this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
-                const res = this._update(userConfig.additionalData).then(this._getData);
+                const res = this._update(config.additionalData).then(this._getData);
                 updateResult.dependOn(res);
             } else {
                 updateResult.callback(true);
@@ -527,7 +526,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         return updateResult;
     }
 
-    private _update(userConfigData: object): Promise<IDataValid> {
+    private _update(configAdditionalData: object): Promise<IDataValid> {
         const record = this._record;
         const updateDef = new Deferred();
 
@@ -537,7 +536,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
                 this._notify('validationSuccessed', [], {bubbling: true});
-                let res = this._children.crud.update(record, this._isNewRecord, userConfigData);
+                let res = this._children.crud.update(record, this._isNewRecord, configAdditionalData);
 
                 // fake deferred used for code refactoring
                 if (!(res && res.then)) {
@@ -681,11 +680,11 @@ class FormController extends Control<IFormController, IReceivedState> {
         return config;
     }
 
-    private _getUpdateSuccessedData(record: Model, key: string, userConfig?: object): IResultData {
+    private _getUpdateSuccessedData(record: Model, key: string, configAdditionalData?: object): IResultData {
         const additionalData: IAdditionalData = {
             key,
             isNewRecord: this._isNewRecord,
-            ...userConfig
+            ...configAdditionalData
         };
         return this._getResultData('update', record, additionalData);
     }

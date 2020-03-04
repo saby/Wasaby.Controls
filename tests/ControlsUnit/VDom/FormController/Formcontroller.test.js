@@ -258,6 +258,55 @@ define([
          });
       });
 
+      it('FormController update with Config', (done) => {
+         let isNotifyCalled = false;
+         let configData = {
+            additionalData: {
+               name: 'cat'
+            }
+         };
+         let FC = new form.Controller();
+         let Crud = new form.Crud();
+         let validation = {
+            submit: () => Promise.resolve(true)
+         };
+         let crud = {
+            update: Crud.update,
+            _dataSource: {
+               update: () => (new Deferred()).callback()
+            },
+            _options: {
+               showLoadingIndicator: 'true'
+            }
+         };
+         crud._notify = (event, arg, bubbling) => {
+            if (event === 'updateSuccessed') {
+               assert.equal(arg, configData);
+               isNotifyCalled = true;
+            }
+            if (event === 'requestCustomUpdate') {
+               return false;
+            }
+         };
+         FC._record = {
+            getId: () => 'id1',
+            isChanged: () => true
+         };
+         FC._isNewRecord = true;
+         FC._notify = (event, arg) => {
+            if (event === 'requestCustomUpdate') {
+               return false;
+            }
+         };
+         FC._children = {crud, validation };
+         FC._processError = () => {};
+         FC.update(configData).then(() => {
+            isNotifyCalled = true;
+            done();
+            FC.destroy();
+         });
+      });
+
       it('beforeUnmount', () => {
          let isDestroyCall = false;
          let dataSource = {
