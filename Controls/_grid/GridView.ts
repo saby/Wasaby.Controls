@@ -75,15 +75,22 @@ var
             return event.target.closest('.controls-Grid__row-cell');
         },
 
-        getCellIndexByEventTarget(self,  e): number {
-            const gridCells = e.target.closest('.controls-Grid__row').querySelectorAll('.controls-Grid__row-cell');
-            const currentCell = _private.getCellByEventTarget(e);
+        getCellIndexByEventTarget(self,  event): number {
+            if (!event) {
+                return null;
+            }
+            const gridRow = event.target.closest('.controls-Grid__row');
+            if (!gridRow) {
+                return null;
+            }
+            const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
+            const currentCell = _private.getCellByEventTarget(event);
             const multiSelectOffset = self._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
         },
 
         setHoveredCell(self, item, nativeEvent): void {
-            const hoveredCellIndex = nativeEvent ? _private.getCellIndexByEventTarget(self, nativeEvent) : null;
+            const hoveredCellIndex = _private.getCellIndexByEventTarget(self, nativeEvent);
             if (item !== self._hoveredCellItem || hoveredCellIndex !== self._hoveredCellIndex) {
                 self._hoveredCellItem = item;
                 self._hoveredCellIndex = hoveredCellIndex;
