@@ -85,8 +85,9 @@ var
  * @author Авраменко А.С.
  * @public
  *
- * @css @background-color_EditableArea_style_withBackground Background color of the input field with the style option set to "accentHeader".
- * @css @spacing_EditableArea-between-editor-toolbar Spacing between the editor and the toolbar.
+ * @remark
+ * Для предотвращения скачков текста при переключении из режима редактирования в режим чтения используйте css-класс
+ * controls-Input_negativeOffset_theme_{{_options.theme}} на редактирумой области.
  *
  * @demo Controls-demo/EditableArea/EditableArea
  */
