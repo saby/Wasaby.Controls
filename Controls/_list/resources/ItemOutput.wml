@@ -16,8 +16,7 @@
       itemTemplate="{{itemTemplate}}"
       template="wml!Controls/_list/ItemTemplateWrapper"
       itemData="{{itemData}}"
-      actionsType="{{itemActionsPosition}}"
-      tagTemplate="{{tagTemplate}}"/>
+      actionsType="{{itemActionsPosition}}"/>
 </ws:template>
 <ws:if data="{{itemData.dragTargetPosition === 'before'}}">
    <ws:partial multiSelectTpl="{{multiSelectTpl}}" attr:key="{{ itemData.draggingItemData.key + '__dragged' }}" template="baseTemplate" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>

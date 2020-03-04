@@ -17,7 +17,7 @@ export interface IStickyPopupOptions extends IBasePopupOptions {
     height?: number;
     maxHeight?: number;
     target?: HTMLElement | EventTarget | Control;
-    actionOnScroll?: 'close' | 'track' | 'none';
+    actionOnScroll?: string;
     targetPoint?: IStickyPosition;
     direction?: IStickyPosition;
     offset?: IStickyPositionOffset;

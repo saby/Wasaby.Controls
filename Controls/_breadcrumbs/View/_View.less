@@ -1,7 +1,7 @@
 .controls-BreadCrumbsView__items {
    display: inline-flex;
    overflow: hidden;
-   height: @height_breadcrumbsView;
+   height: @height_BreadCrumbs-items;
    width: 100%;
 }
 .controls-BreadCrumbsView__itemsTemplate {
@@ -14,11 +14,11 @@
    max-width: 50%;
    overflow: hidden;
    text-overflow: ellipsis;
-   font-size: @item_font-size_default_breadcrumbsView;
+   font-size: @font-size_BreadCrumbs-title;
 }
 
 .controls-BreadCrumbsView__crumb__last {
-   min-width: @item_icon-size_default_breadcrumbsView + @text_min-width_breadcrumbs;
+   min-width: @min-width_BreadCrumbs_withOverflow;
 }
 
 .controls-BreadCrumbsView__items__middle {
@@ -34,15 +34,15 @@
    max-width: 100%;
    white-space: nowrap;
    .baseline-fix();
-   height: @height_breadcrumbsView;
+   height: @height_BreadCrumbs-items;
    &:before {
-      font-size: @line-height_breadcrumbsView;
+      font-size: @font-size_BreadCrumbs-baseline;
    }
 }
 .controls-BreadCrumbsView__menu {
    float: right;
    position: relative;
-   bottom: @height_breadcrumbsView;
+   bottom: @height_BreadCrumbs-items;
    z-index: 5;
 }
 .controls-BreadCrumbsView__menu__dots {
@@ -51,12 +51,12 @@
    .baseline-fix();
    left: @spacing_BreadCrumbs-menu;
    background: @background-color_BreadCrumbs-menu;
-   box-shadow: @dots_shadow-offset_breadcrumbsView  @dots_shadow-color_breadcrumbsView;
+   box-shadow: @box-shadow_BreadCrumbs-menu;
    cursor: pointer;
    padding-right: 1px;
-   height: @height_breadcrumbsView;
+   height: @height_BreadCrumbs-items;
    &:before {
-      font-size: @line-height_breadcrumbsView;
+      font-size: @font-size_BreadCrumbs-baseline;
    }
 }
 .controls-BreadCrumbsView__max-width {
@@ -74,15 +74,15 @@
 .controls-BreadCrumbsView__dropTarget_withArrow, .controls-BreadCrumbsView__dropTarget_withoutArrow {
    &:after {
       content: '';
-      height: @height_breadcrumbsView;
-      border: @droppable_border-thickness_breadcrumbsView solid @droppable_border-color_breadcrumbsView;
+      height: @height_BreadCrumbs-items;
+      border: @border-width_BreadCrumbs-item_dropTarget solid @border-color_BreadCrumbs-item_dropTarget;
       box-sizing: border-box;
       position: absolute;
       display: block;
-      border-radius: @droppable_border-radius_breadcrumbsView;
+      border-radius: @border-radius_BreadCrumbs-item_dropTarget;
       z-index: 10;
       align-self: center;
-      width: calc(100% + 2 * @droppable_padding-horizontal_breadcrumbsView);
+      width: calc(100% + 2 * @spacing_BreadCrumbs-between-item-border);
    }
 }
 
@@ -91,7 +91,7 @@
 }
 
 .controls-BreadCrumbsView__dropTarget_withoutArrow:after {
-   left: -@droppable_padding-horizontal_breadcrumbsView;
+   left: -@spacing_BreadCrumbs-between-item-border;
 }
 
 .controls-BreadCrumbsView__titleWrapper {
@@ -106,14 +106,14 @@
 
 .controls-BreadCrumbsView__title {
    .text-overflow();
-   color: @item_text-color_default_breadcrumbsView;
-   font-size: @item_font-size_default_breadcrumbsView;
+   color: @color_BreadCrumbs-title;
+   font-size: @font-size_BreadCrumbs-title;
    display: inline;
 }
 
 .controls-BreadCrumbsView__arrow {
-   .icon(@item_icon-size_default_breadcrumbsView);
-   color: @item_text-color_default_breadcrumbsView;
+   .icon(@font-size_BreadCrumbs-arrow);
+   color: @color_BreadCrumbs-arrow;
    flex-shrink: 0;
    display: inline;
 }
@@ -124,11 +124,11 @@
 
 .controls-BreadCrumbsView__title_min {
    //класс существует только для удобства замеров
-   min-width: @text_min-width_breadcrumbs;
+   min-width: @min-width_BreadCrumbs-text;
 }
 
 .controls-BreadCrumbsController__menu {
-   max-width: @popup_max-width_breadcrumbsView;
+   max-width: @max-width_BreadCrumbs-menu;
 }
 
 .controls-BreadCrumbsView__menuItem {
@@ -136,7 +136,7 @@
    max-width: 100%;
    display: inline-flex;
    align-items: center;
-   height: @popup_item_height_breadcrumbsView;
+   height: @height_BreadCrumbs-menuItem;
 }
 
 .controls-BreadCrumbsView__menuTitle {
@@ -147,8 +147,8 @@
 }
 
 .controls-BreadCrumbsView__indentation {
-   .icon(@popup_item_icon-size_breadcrumbsView);
-   color: @popup_item_icon-color_breadcrumbsView;
+   .icon(@font-size_BreadCrumbs-hierarchyIcon);
+   color: @color_BreadCrumbs-hierarchyIcon;
    align-self: flex-start;
    flex-shrink: 0;
 }
@@ -156,19 +156,19 @@
 .ws-is-hover {
    .controls-BreadCrumbsView__crumb:hover, .controls-BreadCrumbsView__menu__dots:hover {
       .controls-BreadCrumbsView__title_enabled {
-         color: @item_hover_text-color_default_breadcrumbsView;
+         color: @color_BreadCrumbs-title_hovered;
          text-decoration: underline;
       }
 
       .controls-BreadCrumbsView__arrow_enabled {
-         color: @item_hover_icon-color_default_breadcrumbsView;
+         color: @color_BreadCrumbs-arrow_hovered;
       }
    }
 }
 
 //Класс сделан только для удобства замеров
 .controls-BreadCrumbsView__crumbMeasurer {
-   font-family: @font-family, "Courier New";
+   font-family: @font-family_BreadCrumbs, "Courier New";
 }
 
 .ws-is-ie {
