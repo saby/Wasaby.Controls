@@ -270,29 +270,30 @@ define([
          let validation = {
             submit: () => Promise.resolve(true)
          };
+         FC._record = {
+            getId: () => 'id1',
+            isChanged: () => true
+         };
+         FC._isNewRecord = true;
          let crud = {
             update: Crud.update,
             _dataSource: {
-               update: () => (new Deferred()).callback()
+               update: () => (new Deferred()).callback('key')
             },
             _options: {
                showLoadingIndicator: 'true'
             }
          };
-         crud._notify = (event, arg, bubbling) => {
+         let argsCorrect = [FC._record, 'key', configData.additionalData];
+         crud._notify = (event, args, bubbling) => {
             if (event === 'updateSuccessed') {
-               assert.equal(arg, configData);
+               assert.deepEqual(args, argsCorrect);
                isNotifyCalled = true;
             }
             if (event === 'requestCustomUpdate') {
                return false;
             }
          };
-         FC._record = {
-            getId: () => 'id1',
-            isChanged: () => true
-         };
-         FC._isNewRecord = true;
          FC._notify = (event, arg) => {
             if (event === 'requestCustomUpdate') {
                return false;
