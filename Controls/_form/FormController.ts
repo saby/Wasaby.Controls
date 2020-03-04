@@ -496,7 +496,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                 this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
-                const res = this._update(config.additionalData).then(this._getData);
+                const res = this._update(config).then(this._getData);
                 updateResult.dependOn(res);
             } else {
                 updateResult.callback(true);
@@ -526,7 +526,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         return updateResult;
     }
 
-    private _update(configAdditionalData: object): Promise<IDataValid> {
+    private _update(config?: object): Promise<IDataValid> {
         const record = this._record;
         const updateDef = new Deferred();
 
@@ -536,7 +536,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
                 this._notify('validationSuccessed', [], {bubbling: true});
-                let res = this._children.crud.update(record, this._isNewRecord, configAdditionalData);
+                let res = this._children.crud.update(record, this._isNewRecord, config);
 
                 // fake deferred used for code refactoring
                 if (!(res && res.then)) {
@@ -680,11 +680,12 @@ class FormController extends Control<IFormController, IReceivedState> {
         return config;
     }
 
-    private _getUpdateSuccessedData(record: Model, key: string, configAdditionalData?: object): IResultData {
+    private _getUpdateSuccessedData(record: Model, key: string, config?: object): IResultData {
+        const configData = config ? config.additionalData : {};
         const additionalData: IAdditionalData = {
             key,
             isNewRecord: this._isNewRecord,
-            ...configAdditionalData
+            ...configData
         };
         return this._getResultData('update', record, additionalData);
     }

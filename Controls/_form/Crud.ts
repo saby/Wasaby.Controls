@@ -53,7 +53,7 @@ let CRUD = Control.extend({
         return def;
     },
 
-    update(record: Model, isNewRecord: boolean, configAdditionalData?: object): Promise<any> {
+    update(record: Model, isNewRecord: boolean, config?: object): Promise<any> {
         let def;
         if (record.isChanged() || isNewRecord) {
             def = this._dataSource.update(record);
@@ -61,7 +61,7 @@ let CRUD = Control.extend({
             this._notify('registerPending', [def, {showLoadingIndicator: this._options.showLoadingIndicator}], {bubbling: true});
             let self = this;
             def.addCallback(function(key) {
-                self._notify('updateSuccessed', [record, key, configAdditionalData]);
+                self._notify('updateSuccessed', [record, key, config]);
                 return key;
             });
 
