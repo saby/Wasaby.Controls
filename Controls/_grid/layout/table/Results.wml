@@ -3,6 +3,7 @@
         <ws:if data="{{!!currentResultsColumn.column.resultTemplate && (!hasMultiSelect || currentResultsColumn.index !== 0)}}">
             <ws:partial template="{{currentResultsColumn.column.resultTemplate}}"
                         listModel="{{listModel}}"
+                        currentResultsColumn="{{ currentResultsColumn }}"
                         column="{{currentResultsColumn.column}}" />
         </ws:if>
     </td>
@@ -16,7 +17,7 @@
         </ws:if>
         <td class="{{listModel.getCurrentResultsColumn().cellClasses}}"
             colspan="{{listModel.getColspanFor('customResults')}}">
-            <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
+            <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}" results="{{ listModel.getResults() }}"/>
         </td>
     </ws:if>
     <ws:else>

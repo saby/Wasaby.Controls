@@ -1,0 +1,23 @@
+<ws:if data="{{!!content}}">
+    <ws:partial template="{{ content }}"
+                listModel="{{ listModel }}"
+                results="{{ results }}"
+                column="{{ currentResultsColumn.column }}"/>
+</ws:if>
+<ws:else data="{{ !!currentResultsColumn.results || currentResultsColumn.results === 0 }}">
+    <ws:if data="{{ currentResultsColumn.resultsFormat === 'money' }}">
+        <Controls.decorator:Money value="{{ currentResultsColumn.results }}" useGrouping="{{ true }}"
+                                  fontWeight="{{fontWeight || 'bold'}}"
+                                  fontColorStyle="{{ fontColorStyle || 'secondary'}}"/>
+    </ws:if>
+    <ws:else
+            data="{{ currentResultsColumn.resultsFormat === 'integer' || currentResultsColumn.resultsFormat === 'real' }}">
+        <Controls.decorator:Number value="{{ currentResultsColumn.results }}" useGrouping="{{ true }}"
+                                   fontWeight="{{fontWeight || 'bold'}}"
+                                   fontColorStyle="{{ fontColorStyle || 'secondary'}}"
+                                   fractionSize="{{ 2 }}"/>
+    </ws:else>
+    <ws:else>
+        {{ currentResultsColumn.results }}
+    </ws:else>
+</ws:else>

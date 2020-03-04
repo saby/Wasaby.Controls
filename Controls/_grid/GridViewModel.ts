@@ -5,6 +5,7 @@ import {isStickySupport} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
 import {detection} from 'Env/Env';
 import {isEqual} from 'Types/object';
+import cInstance = require('Core/core-instance');
 import {
     getBottomPaddingRowIndex,
     getFooterIndex,
@@ -892,13 +893,12 @@ var
         },
 
         getCurrentResultsColumn: function() {
-            var
-                columnIndex = this._curResultsColumnIndex,
-                cellClasses = `controls-Grid__results-cell controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`,
-                resultsColumn = {
-                    column: this._resultsColumns[columnIndex],
-                    index: columnIndex
-                };
+            const columnIndex = this._curResultsColumnIndex;
+            const resultsColumn = {
+                column: this._resultsColumns[columnIndex],
+                index: columnIndex
+            };
+            let cellClasses = `controls-Grid__results-cell controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`;
 
             if (resultsColumn.column.align) {
                 cellClasses += ` controls-Grid__row-cell__content_halign_${resultsColumn.column.align}`;
@@ -931,8 +931,19 @@ var
                     hasMultiSelect: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
                     isResult: true,
-                    hasActionCell: this._shouldAddActionsCell(),
+                    hasActionCell: this._shouldAddActionsCell()
                 }, this._options.theme).getAll();
+
+                if (resultsColumn.column.displayProperty) {
+                    const results = this._model.getMetaResults();
+                    if (results && cInstance.instanceOfModule(results, 'Types/entity:Model')) {
+                        resultsColumn.results = results.get(resultsColumn.column.displayProperty);
+
+                        const format = results.getFormat();
+                        const fieldIndex = format.getIndexByValue('name', resultsColumn.column.displayProperty);
+                        resultsColumn.resultsFormat = fieldIndex !== -1 ? format.at(fieldIndex).getType() : undefined;
+                    }
+                }
             }
             resultsColumn.cellClasses = cellClasses;
             return resultsColumn;
@@ -944,6 +955,10 @@ var
 
         isEndResultsColumn: function() {
             return this._curResultsColumnIndex < this._resultsColumns.length;
+        },
+
+        getResults() {
+            return this._model.getMetaResults();
         },
 
         // -----------------------------------------------------------
