@@ -15,6 +15,7 @@ import { Model } from 'Types/entity';
  *
  * @class Controls/_lookup/SelectedCollection
  * @extends Core/Control
+ * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
  * @public
  * @author Герасимов А.М.
@@ -24,6 +25,7 @@ import { Model } from 'Types/entity';
  *
  * @class Controls/_lookup/SelectedCollection
  * @extends Core/Control
+ * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
  * @author Герасимов А.М.
  */
