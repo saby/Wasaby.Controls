@@ -1693,6 +1693,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _portionedSearch: null,
     _portionedSearchInProgress: null,
     _showContinueSearchButton: false,
+    _canCommitByAction: true,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
