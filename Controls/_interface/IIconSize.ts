@@ -33,7 +33,6 @@ export default interface IIconSize {
  * @default default
  * @remark
  * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
- * В контроле {@link Controls/dropdown:Button} опция задаёт общий размер для иконки внутри кнопки и иконок внутри элементов выпадающего меню.
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @example
  * Кнопка с размером иконки по умолчанию.
