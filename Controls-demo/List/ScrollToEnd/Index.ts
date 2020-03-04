@@ -97,19 +97,19 @@ export default class ScrollToEnd extends Control {
                 // ключи предыдущей/следующей записи и наличие оставшихся записей
                 const filter = cursorQuery.getWhere() || {};
                 if (typeof filter['id>='] !== 'undefined') {
-                    resultData.meta.more = nextKey <= 999;
-                    resultData.meta.nextPosition = nextKey <= 999 ? [nextKey] : [];
+                    resultData.meta.more = nextKey < ITEMS_COUNT;
+                    resultData.meta.nextPosition = nextKey < ITEMS_COUNT ? [nextKey] : [];
                 } else if (typeof filter['id<='] !== 'undefined') {
                     resultData.meta.more = prevKey >= 0;
                     resultData.meta.nextPosition = prevKey >= 0 ? [prevKey] : [];
                 } else {
                     resultData.meta.more = {
                         before: prevKey >= 0,
-                        after: nextKey <= 999
+                        after: nextKey < ITEMS_COUNT
                     };
                     resultData.meta.nextPosition = {
                         before: prevKey >= 0 ? [prevKey] : [],
-                        after: nextKey <= 999 ? [nextKey] : []
+                        after: nextKey < ITEMS_COUNT ? [nextKey] : []
                     };
                 }
 
