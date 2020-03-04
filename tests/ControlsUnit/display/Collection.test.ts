@@ -4301,6 +4301,15 @@ describe('Controls/_display/Collection', () => {
         assert.strictEqual(collection.getSearchValue(), searchValue);
     });
 
+    it('.setSearchValue()', () => {
+        const searchValue = 'searchValue';
+        const collection = new CollectionDisplay({
+            collection: []
+        });
+        collection.setSearchValue(searchValue);
+        assert.strictEqual(collection.getSearchValue(), searchValue);
+    });
+
     it('.getItemBySourceKey()', () => {
         const list = new RecordSet({
             rawData: items,

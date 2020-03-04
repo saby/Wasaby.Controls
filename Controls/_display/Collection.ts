@@ -2098,6 +2098,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$searchValue;
     }
 
+    setSearchValue(searchValue: string): void {
+        this._$searchValue = searchValue;
+    }
+
     getItemBySourceKey(key: string|number): CollectionItem<S> {
         if (this._$collection['[Types/_collection/RecordSet]']) {
             if (key !== undefined) {
