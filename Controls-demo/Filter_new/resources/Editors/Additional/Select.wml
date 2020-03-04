@@ -1,7 +1,0 @@
-<Controls.filterPopup:Select
-   keyProperty="id"
-   textValueProperty="title"
-   bind:textValue="_options.item.textValue"
-   bind:selectedKeys="_options.item.value"
-   items="{{_items}}"
-/>

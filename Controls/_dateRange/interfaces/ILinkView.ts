@@ -3,7 +3,7 @@ import {descriptor} from 'Types/entity';
 import dateControlsUtils from './../Utils';
 
 /**
- * Интерфейс для визуального отображения контрола {@link Controls/dateRange:Link}.
+ * Интерфейс для визуального отображения контрола {@link Controls/dataRange:Link}.
  * @interface Controls/_dateRange/interfaces/ILinkView
  * @public
  * @author Красильников А.С.

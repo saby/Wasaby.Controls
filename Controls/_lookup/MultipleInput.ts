@@ -30,6 +30,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/IInputField
  * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
  * @author Герасимов А.М.
@@ -61,6 +62,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/IInputField
  * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
  * @author Герасимов А.М.
