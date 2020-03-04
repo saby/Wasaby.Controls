@@ -13,12 +13,16 @@ define(
             items = new collection.List(),
             popupContainer = new popupMod.Container();
 
+         it('set null items', function(){
+            popupContainer._beforeMount();
+            assert.equal(popupContainer._popupItems.getCount(), 0);
+         });
+
          it('add popupItem', function(){
             id = randomId('popup-');
             items.add({
                id: id,
-               popupOptions: {},
-               controller: {}
+               popupOptions: {}
             });
             popupContainer.setPopupItems(items);
             assert.equal(popupContainer._popupItems.getCount(), 1);

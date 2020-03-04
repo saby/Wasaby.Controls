@@ -26,8 +26,7 @@ define('Controls-demo/Popup/TestDialog',
             }
             else{
                this._children.stack.open({
-                  maxWidth: 600,
-                  opener: this._options.fromNotification === true ? null : this
+                  maxWidth: 600
                });
             }
          }
