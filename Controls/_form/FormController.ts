@@ -490,7 +490,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         return record;
     }
 
-    update(config?: any): Promise<undefined | Model> {
+    update(config?: object): Promise<undefined | Model> {
         const updateResult = new Deferred();
         const updateCallback = (result) => {
             // if result is true, custom update called and we dont need to call original update.

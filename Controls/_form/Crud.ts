@@ -55,7 +55,7 @@ let CRUD = Control.extend({
 
     update(record: Model, isNewRecord: boolean, configAdditionalData?: object): Promise<any> {
         let def;
-        if ((record && record.isChanged()) || isNewRecord) {
+        if (record.isChanged() || isNewRecord) {
             def = this._dataSource.update(record);
 
             this._notify('registerPending', [def, {showLoadingIndicator: this._options.showLoadingIndicator}], {bubbling: true});

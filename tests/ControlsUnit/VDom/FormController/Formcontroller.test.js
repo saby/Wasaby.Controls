@@ -284,19 +284,20 @@ define([
                showLoadingIndicator: 'true'
             }
          };
-         let argsCorrect = [FC._record, 'key', configData.additionalData];
+         let argsCorrectUpdate = {
+            key: 'key',
+            isNewRecord: true,
+            name: 'cat'
+         };
          crud._notify = (event, args, bubbling) => {
             if (event === 'updateSuccessed') {
-               assert.deepEqual(args, argsCorrect);
-               isNotifyCalled = true;
-            }
-            if (event === 'requestCustomUpdate') {
-               return false;
+               FC._notifyHandler(event, args);
             }
          };
          FC._notify = (event, arg) => {
-            if (event === 'requestCustomUpdate') {
-               return false;
+            if (event === 'sendResult' && arg[0].formControllerEvent === 'update') {
+               isNotifyCalled = true;
+               assert.deepEqual(arg[0].additionalData, argsCorrectUpdate);
             }
          };
          FC._children = {crud, validation };
