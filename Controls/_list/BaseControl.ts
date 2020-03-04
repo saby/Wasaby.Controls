@@ -236,8 +236,8 @@ var _private = {
                 }
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-                if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, cfg.navigation)) {
-                    _private.checkLoadToDirectionCapability(self, filter);
+                if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
+                    _private.checkLoadToDirectionCapability(self, filter, navigation);
                 }
             }).addErrback(function(error) {
                 return _private.processError(self, {
@@ -517,10 +517,10 @@ var _private = {
             // handler after current items are rendered on the page.
             if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
                 (self._options.task1176625749 && countCurrentItems === cnt2)) {
-                _private.checkLoadToDirectionCapability(self);
+                _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = null;
+                self._children.scrollController.stopBatchAdding();
             }
 
             _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -558,7 +558,7 @@ var _private = {
                 const countCurrentItems = self._listViewModel.getCount();
 
                 if (self._options.virtualScrolling && self._isMounted) {
-                    self._children.scrollController.itemsFromLoadToDirection = direction;
+                    self._children.scrollController.startBatchAdding(direction);
                 }
 
                 if (direction === 'down') {
@@ -584,7 +584,7 @@ var _private = {
         Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
     },
 
-    checkLoadToDirectionCapability: function(self, filter) {
+    checkLoadToDirectionCapability: function(self, filter, navigation) {
         if (self._destroyed) {
             return;
         }
@@ -609,7 +609,7 @@ var _private = {
             if (_private.isPortionedLoad(self)) {
                 _private.checkPortionedSearchByScrollTriggerVisibility(self, self._loadTriggerVisibility.down);
             }
-        } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
+        } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, navigation)) {
             _private.loadToDirectionIfNeed(self, 'down', filter);
         }
     },
@@ -1233,7 +1233,8 @@ var _private = {
                     targetPoint: {vertical: 'top', horizontal: 'right'},
                     direction: {horizontal: context ? 'right' : 'left'},
                     className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
-                    nativeEvent: context ? childEvent.nativeEvent : false
+                    nativeEvent: context ? childEvent.nativeEvent : false,
+                    autofocus: false
                 });
                 self._menuIsShown = true;
                 self._forceUpdate();
@@ -1286,7 +1287,8 @@ var _private = {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
-                    className: 'controls-DropdownList__margin-head'
+                    className: 'controls-DropdownList__margin-head',
+                    autofocus: false
                 });
                 self._actionMenuIsShown = true;
                 self._forceUpdate();
