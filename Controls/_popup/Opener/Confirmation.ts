@@ -41,7 +41,6 @@ class Confirmation extends Control<IControlOptions> implements IConfirmationOpen
     open(templateOptions: IConfirmationOptions = {}): Promise<boolean | undefined> {
         const options: IConfirmationOptions = {...templateOptions};
         options.opener = this;
-        options.topPopup = true;
         options.theme = this._options.theme;
         return Confirmation.openPopup(options);
     }
@@ -62,7 +61,6 @@ class Confirmation extends Control<IControlOptions> implements IConfirmationOpen
             template: 'Controls/popupTemplate:ConfirmationDialog',
             modal: true,
             autofocus: true,
-            topPopup: true,
             className: 'controls-Confirmation_popup',
             isCentered: true,
             templateOptions

@@ -1,4 +1,5 @@
 import template = require('wml!Controls/_grid/SortingResources/SortingSelector');
+import 'css!theme?Controls/grid';
 import {Control, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Record} from 'Types/entity';

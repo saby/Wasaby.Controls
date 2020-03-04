@@ -36,18 +36,13 @@ define('Controls-demo/MasterDetail/Demo', [
          });
       },
 
-      _firstHandler: function() {
+      _clickHandler: function() {
          this._firstBaseWidth = '1000px';
          this._children.resizeDetect.start();
       },
 
-      _secondHandlerIncrease: function() {
+      _clickHandler1: function() {
          this._secondBaseWidth = '1920px';
-         this._children.resizeDetect1.start();
-      },
-
-      _secondHandlerDecrease: function() {
-         this._secondBaseWidth = '1000px';
          this._children.resizeDetect1.start();
       },
 

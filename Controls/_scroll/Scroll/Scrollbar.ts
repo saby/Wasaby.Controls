@@ -18,8 +18,6 @@ export interface IScrollBarOptions extends IControlOptions {
     contentSize: number;
     direction: TDirection;
     trackVisible: boolean;
-    thumbStyle?: string;
-    thumbThickness?: string;
 }
 /**
  * Thin scrollbar.
@@ -71,8 +69,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _position: number = 0;
     private _thumbPosition: number = 0;
     private _thumbSize: number;
-    private _thumbThickness: string;
-    private _thumbStyle: string;
     private _scrollBarSize: number;
     // Запоминаемые на момент перетаскиваеия ползунка координаты самого скроллбара
     private _currentCoords: IScrollBarCoords | null = null;
@@ -80,11 +76,9 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _dragPointOffset: number | null = null;
     protected _trackVisible: boolean = false;
 
-    protected _beforeMount(options: IScrollBarOptions): void {
+    protected _beforeMount(): void {
         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
         this._resizeHandler = this._resizeHandler.bind(this);
-        this._thumbStyle = this._getThumbStyle(options);
-        this._thumbThickness = this._getThumbThickness(options);
     }
 
     protected _afterMount(): void {
@@ -99,11 +93,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
         if (!newEnv() && window) {
             window.addEventListener('resize', this._resizeHandler);
         }
-    }
-
-    protected _beforeUpdate(options: IScrollBarOptions): void {
-        this._thumbStyle = this._getThumbStyle(options);
-        this._thumbThickness = this._getThumbThickness(options);
     }
 
     protected _afterUpdate(oldOptions: IScrollBarOptions): void {
@@ -125,23 +114,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
         if (!newEnv() && window) {
             window.removeEventListener('resize', this._resizeHandler);
         }
-    }
-
-    private _getThumbStyle(options: IScrollBarOptions): string {
-        if (options.thumbStyle) {
-            return options.thumbStyle;
-        }
-        if (options.theme === 'inverted') {
-            return 'inverted';
-        }
-        return (options.direction === 'vertical' ? 'accented' : 'unaccented');
-    }
-
-    private _getThumbThickness(options: IScrollBarOptions): string {
-        if (options.thumbThickness) {
-            return options.thumbThickness;
-        }
-        return (options.direction === 'vertical' ? 'l' : 's');
     }
 
     private _getThumbCoordByScroll(scrollbarSize: number, thumbSize: number, scrollPosition: number): number {
