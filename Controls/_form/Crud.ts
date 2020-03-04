@@ -52,7 +52,7 @@ let CRUD = Control.extend({
         return def;
     },
 
-    update(record, isNewRecord) {
+    update(record, isNewRecord, userConfigData) {
         let def;
         if (record.isChanged() || isNewRecord) {
             def = this._dataSource.update(record);
@@ -61,7 +61,7 @@ let CRUD = Control.extend({
 
             let self = this;
             def.addCallback(function(key) {
-                self._notify('updateSuccessed', [record, key]);
+                self._notify('updateSuccessed', [record, key, userConfigData]);
                 return key;
             });
 

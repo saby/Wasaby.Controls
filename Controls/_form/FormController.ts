@@ -491,13 +491,13 @@ class FormController extends Control<IFormController, IReceivedState> {
         return record;
     }
 
-    update(config?: any): Promise<undefined | Model> {
+    update(userConfig?: any): Promise<undefined | Model> {
         const updateResult = new Deferred();
         const updateCallback = (result) => {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-                this._notifyToOpener('updateStarted', [this._record, this._getRecordId(), config]);
-                const res = this._update().then(this._getData);
+                this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
+                const res = this._update(userConfig.additionalData).then(this._getData);
                 updateResult.dependOn(res);
             } else {
                 updateResult.callback(true);
@@ -527,7 +527,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         return updateResult;
     }
 
-    private _update(): Promise<IDataValid> {
+    private _update(userConfigData: object): Promise<IDataValid> {
         const record = this._record;
         const updateDef = new Deferred();
 
@@ -537,7 +537,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
                 this._notify('validationSuccessed', [], {bubbling: true});
-                let res = this._children.crud.update(record, this._isNewRecord);
+                let res = this._children.crud.update(record, this._isNewRecord, userConfigData);
 
                 // fake deferred used for code refactoring
                 if (!(res && res.then)) {
@@ -659,7 +659,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         this._notify(eventName, args, {bubbling: true});
     }
 
-    private _notifyToOpener(eventName: string, args: [Model, string | number, any]): void {
+    private _notifyToOpener(eventName: string, args: [Model, string | number, object?]): void {
         const handlers = {
             'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
@@ -675,17 +675,17 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
     }
 
-    private _getUpdateStartedData(record: Model, key: string, cfg?: any): IResultData {
-        const config = this._getUpdateSuccessedData(record, key, cfg);
+    private _getUpdateStartedData(record: Model, key: string): IResultData {
+        const config = this._getUpdateSuccessedData(record, key);
         config.formControllerEvent = 'updateStarted';
         return config;
     }
 
-    private _getUpdateSuccessedData(record: Model, key: string, cfg?: any): IResultData {
+    private _getUpdateSuccessedData(record: Model, key: string, userConfig?: object): IResultData {
         const additionalData: IAdditionalData = {
             key,
             isNewRecord: this._isNewRecord,
-            cfg
+            ...userConfig
         };
         return this._getResultData('update', record, additionalData);
     }
