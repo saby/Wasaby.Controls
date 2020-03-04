@@ -17,7 +17,6 @@ export default class extends Control {
    protected _selectedKeys = null;
    protected _excludedKeys = null;
    protected _expandedOperationsPanel: boolean;
-   protected _navigation: object = null;
 
    _beforeMount() {
       this._selectedKeys = [];
@@ -64,7 +63,7 @@ export default class extends Control {
             case 'merge':
                this._showPopup('Объединение');
                break;
-         }
+         }   
       }
    }
 

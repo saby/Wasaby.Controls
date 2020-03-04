@@ -4,11 +4,11 @@ define([
    'use strict';
 
    describe('LoadingIndicator-tests', () => {
-      let Loading = new LoadingIndicator.default();
+      let Loading = new LoadingIndicator();
       Loading._beforeMount({});
 
       it('LoadingIndicator - delay', () => {
-         let LoadingDelay = new LoadingIndicator.default();
+         let LoadingDelay = new LoadingIndicator();
          LoadingDelay._beforeMount({
             delay: 1
          });
@@ -21,7 +21,7 @@ define([
       });
 
       it('LoadingIndicator - add', () => {
-         let Loading2 = new LoadingIndicator.default();
+         let Loading2 = new LoadingIndicator();
          Loading2._beforeMount({});
          Loading._toggleIndicator = () => {
          };
@@ -127,7 +127,7 @@ define([
       });
 
       it('LoadingIndicator - getOverlay', () => {
-         let LoadingInd = new LoadingIndicator.default();
+         let LoadingInd = new LoadingIndicator();
          let overlay = 'dark';
          LoadingInd._isOverlayVisible = true;
          LoadingInd._isMessageVisible = false;
@@ -153,7 +153,7 @@ define([
       });
 
       it('LoadingIndicator - toggleIndicator', (done) => {
-         let LoadingInd = new LoadingIndicator.default();
+         let LoadingInd = new LoadingIndicator();
          let isMessageVisible = true;
          LoadingInd._beforeMount({});
          let baseToggleIndicatorVisible = LoadingInd._toggleIndicatorVisible;

@@ -1,4 +1,4 @@
-<div class="controls-menu"
+<div class="controls-Menu"
      attr:ws-no-focus="true">
    <Controls.scroll:Container attr:class="controls-ScrollContainer__flex
                                           controls-Menu__scroll
@@ -16,7 +16,7 @@
                              on:pinClick="_pinClick()">
          <ws:footerTemplate>
             <ws:if data="{{_applyButtonVisible || _moreButtonVisible || _expandButtonVisible}}">
-               <div class="controls-DropdownList__footer controls-Menu__footer_theme-{{_options.theme}}" on:mouseenter="_footerMouseEnter()">
+               <div class="controls-DropdownList__footer controls-Menu__footer_theme-{{_options.theme}}" on:mouseenter="_closeSubMenu()">
                   <ws:if data="{{_moreButtonVisible}}">
                      <div class="controls-Menu__footer-moreButton">
                      <Controls.buttons:Button viewMode="link"
@@ -43,7 +43,7 @@
                                                  iconSize="m"
                                                  iconStyle="contrast"
                                                  buttonStyle="success"
-                                                 inlineHeight="menuapply"
+                                                 inlineHeight="l"
                                                  on:click="_applySelection()"/>
                      </div>
                   </ws:if>

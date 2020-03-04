@@ -2,6 +2,18 @@
    display: inline-block;
 }
 
+.controls-HeaderCounter_size-l_theme-@{themeName} {
+   font-size: @font-size_Counter_size-l;
+}
+
+.controls-HeaderCounter_size-m_theme-@{themeName} {
+   font-size: @font-size_Counter_size-m;
+}
+
+.controls-HeaderCounter_size-s_theme-@{themeName} {
+   font-size: @font-size_Counter_size-s;
+}
+
 .controls-HeaderCounter_style-primary_hovered_theme-@{themeName},
 .controls-HeaderCounter_style-secondary_hovered_theme-@{themeName},
 .controls-HeaderCounter_style-disabled_hovered_theme-@{themeName} {
@@ -9,31 +21,31 @@
 }
 
 .controls-HeaderCounter_style-primary_theme-@{themeName}, .controls-HeaderCounter_style-primary_hovered_theme-@{themeName} {
-   color: @primary_text-color_headingCounter;
+   color: @color_Counter_style-primary;
 }
 
 .controls-HeaderCounter_style-secondary_theme-@{themeName}, .controls-HeaderCounter_style-secondary_hovered_theme-@{themeName} {
-   color: @secondary_text-color_headingCounter;
+   color: @color_Counter_style-secondary;
 }
 
-.controls-HeaderCounter_style-unaccented_theme-@{themeName}, .controls-HeaderCounter_style-unaccented_hovered_theme-@{themeName} {
-   color: @unaccented_text-color_headingCounter;
+.controls-HeaderCounter_style-disabled_theme-@{themeName}, .controls-HeaderCounter_style-disabled_hovered_theme-@{themeName} {
+   color: @color_Counter_style-disabled;
 }
 
 .controls-HeaderCounter_style-primary_hovered_theme-@{themeName}:active {
-   color: @primary_active_text-color_headingCounter;
+   color: @color_Counter_style-primary_hovered;
 }
 
 .controls-HeaderCounter_style-secondary_hovered_theme-@{themeName}:active {
-   color: @secondary_active_text-color_headingCounter;
+   color: @color_Counter_style-secondary_hovered;
 }
 
 .ws-is-hover {
    .controls-HeaderCounter_style-primary_hovered_theme-@{themeName}:hover {
-      color: @primary_hover_text-color_headingCounter;
+      color: @color_Counter_style-primary_hovered;
    }
 
    .controls-HeaderCounter_style-secondary_hovered_theme-@{themeName}:hover {
-      color: @secondary_hover_text-color_headingCounter;
+      color: @color_Counter_style-secondary_hovered;
    }
 }
