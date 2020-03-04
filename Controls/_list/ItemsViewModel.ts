@@ -7,6 +7,7 @@ import cInstance = require('Core/core-instance');
 import ControlsConstants = require('Controls/Constants');
 import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
+import {RecordSet} from 'Types/collection';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 
 /**
@@ -110,6 +111,8 @@ var ItemsViewModel = BaseViewModel.extend({
         this._itemDataCache = {};
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
+        this._onItemsCollectionItemChange = this._onItemsCollectionItemChange.bind(this);
+        this._onItemsCollectionChange = this._onItemsCollectionChange.bind(this);
         this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
         this._options.groupingKeyCallback = cfg.groupingKeyCallback || cfg.groupMethod;
         if (cfg.items) {
@@ -117,9 +120,28 @@ var ItemsViewModel = BaseViewModel.extend({
                 cfg.itemsReadyCallback(cfg.items);
             }
             this._items = cfg.items;
+            this._updateSubscribetionOnMetaData(null, this._items);
+            this._updateResults(this._items);
             this._display = this._prepareDisplay(cfg.items, this._options);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
         }
+    },
+
+    _onItemsCollectionItemChange() {
+        this._updateResults(this._items);
+    },
+
+    _onItemsCollectionChange() {
+        this._updateResults(this._items);
+    },
+
+    _updateResults(items: RecordSet): void {
+        const metaData = items && items.getMetaData();
+        this._metaResults = metaData && metaData.results;
+    },
+
+    getMetaResults() {
+        return this._metaResults;
     },
 
     _prepareDisplay: function(items, cfg) {
@@ -469,6 +491,7 @@ var ItemsViewModel = BaseViewModel.extend({
             if (this._options.itemsReadyCallback) {
                 this._options.itemsReadyCallback(items);
             }
+            this._updateSubscribetionOnMetaData(this._items, items);
             this._items = items;
             if (this._display) {
                 this._display.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
@@ -484,11 +507,21 @@ var ItemsViewModel = BaseViewModel.extend({
             // https://online.sbis.ru/opendoc.html?guid=569a3c15-462f-4765-b624-c913baed1a57
             this._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET);
         }
+        this._updateResults(this._items);
         if (this._options.itemsSetCallback) {
             this._options.itemsSetCallback(this._items);
         }
     },
-
+    _updateSubscribetionOnMetaData(oldItems, newItems) {
+        if (oldItems) {
+            oldItems.unsubscribe('onCollectionItemChange', this._onItemsCollectionItemChange);
+            oldItems.unsubscribe('onCollectionChange', this._onItemsCollectionChange);
+        }
+        if (newItems) {
+            newItems.subscribe('onCollectionItemChange', this._onItemsCollectionItemChange);
+            newItems.subscribe('onCollectionChange', this._onItemsCollectionChange);
+        }
+    },
     getItems: function() {
         return this._items;
     },

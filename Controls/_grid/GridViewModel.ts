@@ -893,13 +893,12 @@ var
         },
 
         getCurrentResultsColumn: function() {
-            var
-                columnIndex = this._curResultsColumnIndex,
-                cellClasses = `controls-Grid__results-cell controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`,
-                resultsColumn = {
-                    column: this._resultsColumns[columnIndex],
-                    index: columnIndex
-                };
+            const columnIndex = this._curResultsColumnIndex;
+            const resultsColumn = {
+                column: this._resultsColumns[columnIndex],
+                index: columnIndex
+            };
+            let cellClasses = `controls-Grid__results-cell controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`;
 
             if (resultsColumn.column.align) {
                 cellClasses += ` controls-Grid__row-cell__content_halign_${resultsColumn.column.align}`;
@@ -934,6 +933,12 @@ var
                     isResult: true,
                     hasActionCell: this._shouldAddActionsCell(),
                 }, this._options.theme).getAll();
+
+                const metaResults = this._model.getMetaResults();
+                const displayProperty = this._resultsColumns[columnIndex].displayProperty;
+                if (metaResults && !resultsColumn.column.isActionCell && displayProperty) {
+                    resultsColumn.results = metaResults[displayProperty];
+                }
             }
             resultsColumn.cellClasses = cellClasses;
             return resultsColumn;
@@ -945,6 +950,10 @@ var
 
         isEndResultsColumn: function() {
             return this._curResultsColumnIndex < this._resultsColumns.length;
+        },
+
+        getResults() {
+            return this._model.getMetaResults();
         },
 
         // -----------------------------------------------------------
