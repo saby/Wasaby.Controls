@@ -1018,14 +1018,6 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
-        markAddingItem() {
-            this._model.markAddingItem();
-        },
-
-        restoreMarker() {
-            this._model.restoreMarker();
-        },
-
         setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
         },
@@ -1296,8 +1288,7 @@ var
             };
 
             current.getCurrentColumn = function() {
-                var
-                    currentColumn = {
+                const currentColumn: any = {
                         item: current.item,
                         style: current.style,
                         isMenuShown: current.isMenuShown,
@@ -1311,7 +1302,7 @@ var
                         isEditing: current.isEditing,
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
-                        getVersion: function() {
+                        getVersion: () => {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
                         _preferVersionAPI: true,
@@ -1383,6 +1374,11 @@ var
 
         setColumnScroll(columnScroll: boolean): void {
             this._options.columnScroll = columnScroll;
+            this._nextModelVersion();
+        },
+
+        setDisableColumnScrollCellStyles(disableColumnScrollCellStyles: boolean): void {
+            this._options.disableColumnScrollCellStyles = disableColumnScrollCellStyles;
             this._nextModelVersion();
         },
 
