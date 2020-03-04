@@ -28,9 +28,9 @@ class ModuleLoader {
             }
         });
         return mod;
-    }
+    };
 
-    loadAsync(name: string): Promise<Module> {
+    public loadAsync(name: string): Promise<Module> {
         if (this.isLoaded(name)) {
             return Promise.resolve(this.loadSync(name));
         }
@@ -56,9 +56,9 @@ class ModuleLoader {
         });
 
         return promiseResult.then(loadFromModule);
-    }
+    };
 
-    loadSync(name: string): Module {
+    public loadSync(name: string): Module {
         let parsedInfo = libHelper.parse(name);
         try {
             var loaded = this.requireSync(parsedInfo.name);
@@ -69,8 +69,9 @@ class ModuleLoader {
         if (!loaded) {
             return null;
         }
+        this.asyncLoadedModules
         return this.getFromLib(loaded, parsedInfo);
-    }
+    };
 
     /**
      * Делаю проверку, что загруженный модуль имеет тип функции, т.к. может быть require уже реально загрузил.
@@ -78,7 +79,7 @@ class ModuleLoader {
      *   вернуть ответ, что модуль загружен.
      * @param name имя модуля
      */
-    isLoaded(name: string): boolean {
+    private isLoaded(name: string): boolean {
         let parsedInfo: IParsedName = libHelper.parse(name);
         if (!!this.asyncLoadedModules[parsedInfo.name]) {
             return true;
@@ -92,7 +93,7 @@ class ModuleLoader {
             return true;
         };
         return false;
-    }
+    };
 
     private isCached(name: string): boolean {
         return !!cache[name];
