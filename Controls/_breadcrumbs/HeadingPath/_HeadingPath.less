@@ -4,7 +4,7 @@
 }
 
 .controls-BreadCrumbsPath__twoRows {
-   padding-left: @padding-left_multiline_breadcrumbsPath;
+   padding-left: @spacing_Path-between-home-and-leftEdge;
 }
 
 .controls-BreadCrumbsPath__wrapper {
@@ -13,7 +13,7 @@
 
    //TODO KINGO есть темы, в которых выравнивание ХК идет по базовой линии шрифта, размер которого отличается от размера шрифта кнопки назад
    .controls-Back__wrapper:before {
-      font-size: @line-height_breadcrumbsView;
+      font-size:@font-size_BreadCrumbs-baseline;
    }
 }
 
@@ -24,17 +24,18 @@
 }
 
 .controls-BreadCrumbsPath__home {
-   .icon(@home_icon-size_breadcrumbsPath);
+   .icon(@font-size_Path-home);
    cursor: pointer;
-   color: @home_icon-color_breadcrumbsPath;
+   color: @color_Path-home;
    flex-shrink: 0;
+   min-width: @min-width_Breadcrumbs-home;
 }
 
 .controls-BreadCrumbsPath__backButton__wrapper {
    position: relative;
    display: inline-flex;
    align-items: baseline;
-   padding-right: @back_offset_breadcrumbsHeadingPath;
+   padding-right: @spacing_Path-between-home-and-backButton;
    max-width: 50%;
    flex-shrink: 0;
 }
@@ -61,31 +62,31 @@
    align-items: baseline;
    right: 0;
    bottom: 0;
-   background-color: @back_editButton_background-color_breadcrumbsHeadingPath;
+   background-color: @background-color_Path-backButtonArrow;
    &:before {
-      font-size: @line-height_breadcrumbsView;
+      font-size:@font-size_BreadCrumbs-baseline;
    }
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
-   .icon(@back_editButton_icon-size_breadcrumbsHeadingPath);
+   .icon(@font-size_Path-backButtonArrow);
    display: none;
-   color: @back_editButton_icon-color_breadcrumbsHeadingPath;
+   color: @color_Path-backButtonArrow;
    cursor: pointer;
 }
 
 .controls-Path__backButtonArrow_readonly {
-   color: @back_editButton_readonly_icon-color_breadcrumbsHeadingPath;
+   color: @color_Path-backButtonArrow_readonly;
 }
 
 //Необходимо добавить отступ шеврону для того, чтобы он не наезжал на кнопку назад. Отодвигаем на ширину иконки, не считая паддинга после кнопки.
 //Так как ширина и высота иконки шеврона равна размеру @font-size_Path-backButtonArrow, отодвигаем на эту величину.
 //TODO remove after TODO https://online.sbis.ru/opendoc.html?guid=aedf32aa-28db-40b7-abae-e740021cc782
 .controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {
-   margin-right: -(@back_editButton_icon-size_breadcrumbsHeadingPath - @back_offset_breadcrumbsHeadingPath);
+   margin-right: -(@font-size_Path-backButtonArrow - @spacing_Path-between-home-and-backButton);
 }
 .controls-BreadCrumbsPath__counter {
-   margin-left: @back_counter_offset_breadcrumbsHeadingPath;
+   margin-left: @spacing_Path-between-back-and-counter;
 }
 
 .controls-BreadCrumbsPath__breadCrumbs {
@@ -93,7 +94,7 @@
    flex-grow: 1;
 }
 .controls-BreadCrumbsPath__breadCrumbs_home-path-spacing {
-   padding-left: @home_offset_breadcrumbsPath;
+   padding-left: @spacing_Path-between-home-and-crumbs;
 }
 
 .controls-BreadCrumbsPath__homeContainer {
@@ -103,7 +104,7 @@
    display: inline-flex;
    align-items: baseline;
    &:before {
-     font-size: @line-height_breadcrumbsView;
+     font-size: @font-size_BreadCrumbs-baseline;
    }
 }
 
@@ -114,7 +115,7 @@
 }
 
 .controls-BreadCrumbsPath__backButton_short {
-   min-width: @text_min-width_breadcrumbs + @icon_m_width_headingBack + @icon_s_offset_headingBack;
+   min-width: @min-width_BackButton_short;
 }
 
 .controls-BreadCrumbsPath__backButton_half,
@@ -130,7 +131,7 @@
 
 .ws-is-hover {
    .controls-BreadCrumbsPath__backButtonArrow:hover {
-      color: @back_editButton_hover_icon-color_breadcrumbsHeadingPath;
+      color: @color_Path-backButtonArrow_hovered;
       display: inline-flex;
    }
    .controls-BreadCrumbsPath__backButton__wrapper:hover .controls-BreadCrumbsPath__backButtonArrow {
@@ -138,13 +139,14 @@
    }
 
    .controls-BreadCrumbsPath__home:hover {
-      color: @home_hover_icon-color_breadcrumbsPath;
+      color: @color_Path-home_hovered;
    }
 }
 
+//Класс сделан только для удобства замеров
 .controls-BreadCrumbsPath__backButtonMeasurer {
-   font-family: @font-family, "Courier New";
-   font-weight: bold;
+   font-family: @font-family_BreadCrumbs, "Courier New";
+   font-weight: @font-weight_Back;
 }
 
 .controls-BreadCrumbsPath__backButton_zeroWidth {

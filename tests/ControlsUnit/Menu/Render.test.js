@@ -27,23 +27,6 @@ define(
             });
          };
 
-         let getListModelWithSbisAdapter = function() {
-            return new display.Tree({
-               collection: new collection.RecordSet({
-                  rawData: {
-                     _type: 'recordset',
-                     d: [],
-                     s: [
-                        { n: 'id', t: 'Строка' },
-                        { n: 'title', t: 'Строка' },
-                     ]
-                  },
-                  keyProperty: 'id',
-                  adapter: new entity.adapter.Sbis()
-               })
-            });
-         };
-
          let defaultOptions = {
             listModel: getListModel()
          };
@@ -115,22 +98,18 @@ define(
             beforeEach(function() {
                menuRender = getRender();
                renderOptions = {
-                  listModel: getListModelWithSbisAdapter(),
+                  listModel: getListModel(),
                   emptyText: 'Not selected',
                   emptyKey: null,
-                  keyProperty: 'id',
-                  displayProperty: 'title',
+                  keyProperty: 'key',
                   selectedKeys: []
                };
             });
 
             it('check items count', function() {
                menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
-               assert.equal(renderOptions.listModel.getCount(), 1);
-               assert.equal(renderOptions.listModel.getCollection().at(0).get('title'), 'Not selected');
-               assert.equal(renderOptions.listModel.getCollection().at(0).get('id'), null);
+               assert.equal(renderOptions.listModel.getCount(), 5);
             });
-
             it('check selected empty item', function() {
                renderOptions.selectedKeys = [null];
                menuRender.addEmptyItem(renderOptions.listModel, renderOptions);

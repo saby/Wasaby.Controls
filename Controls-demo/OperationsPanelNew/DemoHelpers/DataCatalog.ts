@@ -380,23 +380,8 @@ function getPanelData(): Array<{
    }];
 }
 
-function getPanelDataWithLongCaption(): Array<{
-   id: string,
-   '@parent': boolean,
-   icon?: string,
-   title: string,
-   parent: string|null
-}> {
-   return [{
-      id: 'print',
-      '@parent': false,
-      title: 'Очень длинное название для кнопки, очень длинное название для кнопки',
-      parent: null
-   }];
-}
 
 export {
    getListData,
-   getPanelData,
-   getPanelDataWithLongCaption
+   getPanelData
 };

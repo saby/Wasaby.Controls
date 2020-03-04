@@ -103,7 +103,6 @@ import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {IList} from './_list/interface/IList';
-import {IItemAction} from './_list/interface/IList';
 
 import {Paging} from 'Controls/paging';
 
@@ -152,8 +151,7 @@ export {
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,
-    IList,
-    IItemAction
+    IList
 };
 
 export {default as SourceControl} from 'Controls/_list/SourceControl';

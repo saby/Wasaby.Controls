@@ -1,5 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_grid/SortingResources/SortingButton');
+import 'css!theme?Controls/grid';
 
 /**
  * Контрол, используюемый для изменения сортировки внутри таблиц
