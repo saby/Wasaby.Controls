@@ -4,7 +4,7 @@ import {
     IDirection,
     IItemsHeights,
     IVirtualScrollOptions, IPlaceholders,
-    IRangeShiftResult, ITriggerState
+    IRangeShiftResult, ITriggerState, IScrollRestoreParams
 } from './interfaces';
 
 export default class VirtualScroll {
@@ -54,14 +54,19 @@ export default class VirtualScroll {
      */
     resetRange(startIndex: number, itemsCount: number, itemsHeights?: Partial<IItemsHeights>): IRangeShiftResult {
         this._itemsCount = itemsCount;
+        let createRangeResult: IRangeShiftResult;
 
         if (itemsHeights) {
             this._itemsHeightData = {...this._itemsHeightData, ...itemsHeights};
 
-            return this._createRangeByItemHeightProperty(startIndex, itemsCount);
+            createRangeResult = this._createRangeByItemHeightProperty(startIndex, itemsCount);
         } else {
-            return this._createRangeByIndex(startIndex, itemsCount);
+            createRangeResult = this._createRangeByIndex(startIndex, itemsCount);
         }
+
+        this._oldRange = {...this._range};
+
+        return createRangeResult;
     }
 
     /**
@@ -123,7 +128,9 @@ export default class VirtualScroll {
 
         if (direction === 'up' && predicatedDirection) {
             this._oldRange.start += count;
-            this._updateStartIndex(this._range.start + count);
+            this._oldRange.stop += count;
+            this._range.start = Math.min(this._itemsCount, this._range.start + count);
+            this._range.stop = Math.min(this._itemsCount, this._range.stop + count);
         }
 
         if (direction === 'down') {
@@ -220,23 +227,21 @@ export default class VirtualScroll {
     }
 
     /**
-     * Возвращает восстановленную позицию скролла по направлению
-     * @param scrollTop
+     * Возвращает параметры для восстановления скролла
      */
-    getPositionToRestore(scrollTop: number): number {
+    getParamsToRestoreScroll(): IScrollRestoreParams {
         const itemsHeights = this._itemsHeightData.itemsHeights;
-        let savedPosition: number;
-
-        if (this._savedDirection) {
-            savedPosition = this._savedDirection === 'up' ?
-                scrollTop + this._getItemsHeightsSum(this._range.start, this._oldRange.start, itemsHeights) :
-                scrollTop - this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights);
-        }
+        const paramsForRestore = {
+            direction: this._savedDirection,
+            heightDifference: this._savedDirection === 'up' ?
+                this._getItemsHeightsSum(this._range.stop, this._oldRange.stop, itemsHeights) :
+                this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights)
+        };
 
         this._savedDirection = undefined;
         this._oldRange = {...this._range};
 
-        return savedPosition;
+        return paramsForRestore;
     }
 
     getItemContainerByIndex(index: number, itemsContainer: HTMLElement): HTMLElement {
@@ -461,15 +466,6 @@ export default class VirtualScroll {
         }
 
         return this._setRange({start, stop});
-    }
-
-    private _updateStartIndex(index: number): void {
-        const start = Math.max(0, index);
-        const stop = Math.min(this._itemsCount, start + this._options.pageSize);
-
-        this._range = {
-            start, stop
-        };
     }
 
     private _insertItemHeights(insertIndex: number, length: number): void {

@@ -479,7 +479,7 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         if (this._virtualScroll.isNeedToRestorePosition) {
-            this._scrollToPosition(this._virtualScroll.getPositionToRestore(this._lastScrollTop));
+            this._restoreScrollPosition();
             this.checkTriggerVisibilityWithTimeout();
         } else if (this._restoreScrollResolve) {
             // В результате _restoreScrollResolve он может сам себя перезаписать
@@ -499,12 +499,13 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     /**
-     * Нотифицирует скролл контейнеру о том, что нужно подскролить к переданной позиции
-     * @param position
+     * Нотифицирует скролл контейнеру о том, что нужно восстановить скролл
      */
-    private _scrollToPosition(position: number): void {
+    private _restoreScrollPosition(): void {
+        const {direction, heightDifference} = this._virtualScroll.getParamsToRestoreScroll();
+
         this._fakeScroll = true;
-        this._notify('restoreScrollPosition', [position], {bubbling: true});
+        this._notify('restoreScrollPosition', [heightDifference, direction], {bubbling: true});
         this._fakeScroll = false;
     }
 
@@ -526,19 +527,21 @@ export default class ScrollContainer extends Control<IOptions> {
                                          newItemsIndex: number,
                                          removedItems: object[],
                                          removedItemsIndex: number) => {
-        const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
+        if (this.__mounted) {
+            const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
 
-        if (changesType === 'collectionChanged' && action || newModelChanged) {
-            if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
-                this._itemsAddedHandler(newItemsIndex, newItems);
-            }
+            if (changesType === 'collectionChanged' && action || newModelChanged) {
+                if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
+                    this._itemsAddedHandler(newItemsIndex, newItems);
+                }
 
-            if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
-                this._itemsRemovedHandler(removedItemsIndex, removedItems);
-            }
+                if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
+                    this._itemsRemovedHandler(removedItemsIndex, removedItems);
+                }
 
-            if (action === IObservable.ACTION_RESET) {
-                this._initVirtualScroll(this._options);
+                if (action === IObservable.ACTION_RESET) {
+                    this._initVirtualScroll(this._options);
+                }
             }
         }
     }
