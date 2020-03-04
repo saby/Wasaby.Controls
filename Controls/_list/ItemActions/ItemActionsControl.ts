@@ -58,6 +58,12 @@ var _private = {
             showed = showed.filter((action: any) => {
                 return action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR;
             });
+            // ACTION_ICON_CLASS нужен для отображаемых по ховеру операций - именно он обеспечивает их выравнивание
+            showed.forEach((action) => {
+                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
+                    action.icon += ' ' + ACTION_ICON_CLASS;
+                }
+            });
         }
 
         if (_private.needActionsMenu(all)) {
