@@ -12,7 +12,6 @@
  * @includes IGrouped Controls/_dropdown/interface/IGrouped
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
- * @includes IIconSize Controls/_dropdown/interface/IIconSize
  * @public
  * @author Крайнов Д.О.
  */
@@ -31,7 +30,6 @@
  * @includes IGrouped Controls/_dropdown/interface/IGrouped
  * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
  * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
- * @includes IIconSize Controls/_dropdown/interface/IIconSize
  * @public
  * @author Крайнов Д.О.
  */
