@@ -272,5 +272,9 @@
                 on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
             />
         </ws:if>
+
+        <Controls.event:Listener
+           event="dataError"
+           on:dataError="_onDataError()"/>
     </div>
 </Controls.dataSource:error.Container>
