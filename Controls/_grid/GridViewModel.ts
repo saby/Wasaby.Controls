@@ -94,10 +94,10 @@ var
         },
 
         getPaddingCellClasses: function(params, theme) {
-            const { columns, columnIndex } = params;
+            const { columns, columnIndex, rowSeparatorSize } = params;
             const { cellPadding } = columns[columnIndex];
             const classLists = createClassListCollection('top', 'bottom', 'left', 'right');
-
+            const isWideRowSeparator = rowSeparatorSize === 'l';
 
             if (columns[columnIndex].isActionCell) {
                 return classLists;
@@ -128,7 +128,7 @@ var
                 classLists.right += ` controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
             }
             if (!params.isHeader && !params.isResult) {
-                classLists.top += ` controls-Grid__row-cell_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
+                classLists.top += ` controls-Grid__row-cell${isWideRowSeparator ? '-wide-sep' : ''}_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
                 classLists.bottom += ` controls-Grid__row-cell_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme}`;
             }
 
@@ -1296,8 +1296,7 @@ var
             };
 
             current.getCurrentColumn = function() {
-                var
-                    currentColumn = {
+                const currentColumn: any = {
                         item: current.item,
                         style: current.style,
                         isMenuShown: current.isMenuShown,
@@ -1311,7 +1310,7 @@ var
                         isEditing: current.isEditing,
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
-                        getVersion: function() {
+                        getVersion: () => {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
                         _preferVersionAPI: true,
