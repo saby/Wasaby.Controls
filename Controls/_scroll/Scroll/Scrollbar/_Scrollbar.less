@@ -84,7 +84,7 @@
    transition: padding 0.3s ease-in-out;
 }
 
-.controls-VScrollbar__thumb {
+.controls-VScrollbar__thumb_vertical {
    left: @padding_scrollbar;
    right: @padding_scrollbar;
    top: @padding_scrollbar;
@@ -103,7 +103,8 @@
 
 .controls-VScrollbar__thumb_horizontal {
    min-width: @thumb_min-length_scrollbar;
-   transition: height 0.3s ease-in-out;
+   transition: height 0.3s ease-in-out, border-radius 0.3s ease-in-out;
+   width: 100%;
 }
 
 .controls-VScrollbar__thumb_horizontal_size-s {
