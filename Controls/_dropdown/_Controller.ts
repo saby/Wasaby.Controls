@@ -411,7 +411,7 @@ var _Controller = Control.extend({
 
    _beforeUpdate: function (newOptions) {
       if (newOptions.readOnly && newOptions.readOnly !== this._options.readOnly) {
-          _private.closeDropdownList(this);
+         _private.closeDropdownList(this);
       }
 
       if (_private.templateOptionsChanged(newOptions, this._options)) {
