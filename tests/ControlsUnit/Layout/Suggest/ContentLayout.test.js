@@ -82,14 +82,11 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
 
       it('Suggest::_private.calcHeight', function() {
          var self = getComponentObject();
-         var suggestHeight = 200;
 
          self._container = getContainer({
             top: 100,
             bottom: 0,
-            get height() {
-               return suggestHeight;
-            }
+            height: 400
          });
          self._options.target = getContainer({
             bottom: 324,
@@ -111,6 +108,29 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          }
          __ContentLayer.default._private.updateHeight(self, false);
          assert.equal(self._height, '400px');
+      });
+
+      it('Suggest::_afterUpdate', function() {
+         const layer = new __ContentLayer.default();
+         const sandbox = sinon.createSandbox();
+         let resizeStarted = false;
+
+         layer.saveOptions({
+            showContent: true
+         });
+         layer._controlResized = true;
+
+         sandbox.replace(layer, '_children', {
+            resize: {
+               start: () => {
+                  resizeStarted = true;
+               }
+            }
+         });
+         sandbox.replace(__ContentLayer.default._private, 'updateHeight', () => {});
+
+         layer._afterUpdate();
+         assert.isTrue(resizeStarted);
       });
    });
 

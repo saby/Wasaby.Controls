@@ -10,10 +10,13 @@
         </div>
     </ws:if>
 
-    <Controls.dropdown:Opener
+    <Controls.popup:Sticky
             on:result="_onResult()"
             name="menuOpener"
-            keyProperty="id"
-            className="controls-BreadCrumbsController__menu">
-    </Controls.dropdown:Opener>
+            template="Controls/dropdownPopup:List"
+            closeOnOutsideClick="{{true}}"
+            actionOnScroll="close">
+        <ws:templateOptions className="controls-BreadCrumbsController__menu"/>
+    </Controls.popup:Sticky>
+
 </div>

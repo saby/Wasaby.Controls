@@ -210,10 +210,10 @@
    <div class="demo_controls_list_section">
       <h1>Buttons</h1>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FButtonsVdom">Buttons: baseline demo</a>
+         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FBaseline%252FIndex">Buttons: baseline demo</a>
       </div>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FdemoButtons">Buttons: styles demo</a>
+         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FstandartDemoButton">Buttons: styles demo</a>
       </div>
 
       <h1>Dropdown</h1>
@@ -263,8 +263,6 @@
    <div class="demo_controls_list_section">
       <h1>InfoBox</h1>
       <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBox">InfoBox</a>
-      <br />
-      <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBoxPG">InfoBox PG</a>
        <br />
       <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FOpener%252FInfoBox">Opener/InfoBox</a>
       <br/>
@@ -272,8 +270,6 @@
 
       <h1>Confirmation</h1>
       <a href="/Controls-demo/app/Controls-demo%252FConfirmation%252FConfirmation">Confirmation</a>
-      <br/>
-      <a href="/Controls-demo/app/Controls-demo%252FPopup%252FOpener%252FConfirmationPG">ConfirmationPG</a>
       <br/>
       <a href="/Controls-demo/app/Controls-demo%252FPopup%252FTemplates%252FConfirmationTemplatePG">Confirmation Template</a>
 

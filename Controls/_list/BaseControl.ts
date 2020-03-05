@@ -19,7 +19,7 @@ import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {constants, detection} from 'Env/Env';
+import {constants} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud, Memory} from "Types/source";
 import {TouchContextField} from 'Controls/context';
@@ -32,13 +32,15 @@ import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
-import {INavigationOptionValue} from 'Controls/interface';
+import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
     defaultSelectedKeys = [],
     defaultExcludedKeys = [];
+
+let displayLib: typeof import('Controls/display');
 
 const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 2, title: '10', pageSize: 10},
@@ -168,7 +170,6 @@ var _private = {
                     self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, self._currentPageSize, self._currentPage);
                 }
                 var
-                    isActive,
                     listModel = self._listViewModel;
 
                 if (cfg.afterReloadCallback) {
@@ -324,7 +325,7 @@ var _private = {
 
     hasMoreDataInAnyDirection(self, sourceController): boolean {
         return _private.hasMoreData(self, sourceController, 'up') ||
-               _private.hasMoreData(self, sourceController, 'down');
+            _private.hasMoreData(self, sourceController, 'down');
     },
 
     scrollToItem: function(self, key, toBottom, force) {
@@ -334,7 +335,8 @@ var _private = {
         if (key !== undefined) {
             const model = self.getViewModel();
             if (self._options.useNewModel) {
-                model.setMarkedItem(model.getItemBySourceId(key));
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(model);
             } else {
                 model.setMarkedKey(key);
             }
@@ -365,7 +367,9 @@ var _private = {
             // TODO Update after MarkerManager is fully implemented
             let nextKey;
             if (self._options.useNewModel) {
-                const nextItem = model.getNext(model.getMarkedItem());
+                const nextItem = model.getNext(
+                    model.find((item) => item.isMarked())
+                );
                 const contents = nextItem && nextItem.getContents();
                 nextKey = contents && contents.getId();
             } else {
@@ -386,7 +390,9 @@ var _private = {
             // TODO Update after MarkerManager is fully implemented
             let prevKey;
             if (self._options.useNewModel) {
-                const prevItem = model.getPrevious(model.getMarkedItem());
+                const prevItem = model.getPrevious(
+                    model.find((item) => item.isMarked())
+                );
                 const contents = prevItem && prevItem.getContents();
                 prevKey = contents && contents.getId();
             } else {
@@ -419,7 +425,12 @@ var _private = {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
         }
-        let markedItem = self.getViewModel().getMarkedItem();
+        let markedItem;
+        if (self._options.useNewModel) {
+            markedItem = self.getViewModel().find((item) => item.isMarked());
+        } else {
+            markedItem = self.getViewModel().getMarkedItem();
+        }
         if (markedItem) {
             self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
         }
@@ -509,7 +520,7 @@ var _private = {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = null;
+                self._children.scrollController.stopBatchAdding();
             }
 
             _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -547,11 +558,7 @@ var _private = {
                 const countCurrentItems = self._listViewModel.getCount();
 
                 if (self._options.virtualScrolling && self._isMounted) {
-                    self._children.scrollController.itemsFromLoadToDirection = direction;
-                }
-
-                if (self._isMounted && self?._children?.scrollController) {
-                    self._children.scrollController.saveScrollDirection(direction);
+                    self._children.scrollController.startBatchAdding(direction);
                 }
 
                 if (direction === 'down') {
@@ -624,7 +631,7 @@ var _private = {
         return  result;
     },
 
-    needLoadByMaxCountNavigation(listViewModel, navigation: INavigationOptionValue): boolean {
+    needLoadByMaxCountNavigation(listViewModel, navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         let result = false;
 
         if (_private.isMaxCountNavigation(navigation) && _private.isMaxCountNavigationConfiguredCorrect(navigation)) {
@@ -637,15 +644,15 @@ var _private = {
         return result;
     },
 
-    getMaxCountFromNavigation(navigation: INavigationOptionValue): number {
+    getMaxCountFromNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): number {
         return navigation.viewConfig.maxCountValue;
     },
 
-    isMaxCountNavigation(navigation: INavigationOptionValue): boolean {
+    isMaxCountNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation && navigation.view === 'maxCount';
     },
 
-    isMaxCountNavigationConfiguredCorrect(navigation: INavigationOptionValue): boolean {
+    isMaxCountNavigationConfiguredCorrect(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation.viewConfig && typeof navigation.viewConfig.maxCountValue === 'number';
     },
 
@@ -653,11 +660,11 @@ var _private = {
         return navigationMaxCount >  itemsCount;
     },
 
-    isDemandNavigation(navigation: INavigationOptionValue): boolean {
+    isDemandNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation && navigation.view === 'demand';
     },
 
-    needShowShadowByNavigation(navigation: INavigationOptionValue, itemsCount: number): boolean {
+    needShowShadowByNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>, itemsCount: number): boolean {
         const isDemand = _private.isDemandNavigation(navigation);
         const isMaxCount = _private.isMaxCountNavigation(navigation);
         let result = true;
@@ -947,13 +954,18 @@ var _private = {
     },
 
     setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
-        let firstItemIndex = self._listViewModel.getStartIndex();
+        let firstItemIndex =
+            self._options.useNewModel
+            ? displayLib.VirtualScrollController.getStartIndex(self._listViewModel)
+            : self._listViewModel.getStartIndex();
         firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
         firstItemIndex = Math.min(firstItemIndex, self._listViewModel.getStopIndex());
         if (self._options.useNewModel) {
             const item = self._listViewModel.at(firstItemIndex);
             if (item) {
-                self._listViewModel.setMarkedItem(item);
+                const key = item.getContents().getId();
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(self._listViewModel);
             }
         } else {
             self._listViewModel.setMarkerOnValidItem(firstItemIndex);
@@ -1181,9 +1193,13 @@ var _private = {
             const rs = new RecordSet({ rawData: showActions, keyProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
-            self._listViewModel.setActiveItem(itemData);
-            if (!self._options.useNewModel) {
-                // TODO Do we need this in new model?
+            if (self._options.useNewModel) {
+                displayLib.ItemActionsController.setActiveItem(
+                    self._listViewModel,
+                    itemData.getContents().getId()
+                );
+            } else {
+                self._listViewModel.setActiveItem(itemData);
                 self._listViewModel.setMenuState('shown');
             }
             self._itemWithShownMenu = self._options.useNewModel ? itemData.getContents() : itemData.item;
@@ -1239,9 +1255,13 @@ var _private = {
         const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
         const children = self._children.itemActions.getChildren(action, itemActions.all);
         if (children.length) {
-            self._listViewModel.setActiveItem(itemData);
-            if (!self._options.useNewModel) {
-                // TODO Do we need this in new model?
+            if (self._options.useNewModel) {
+                displayLib.ItemActionsController.setActiveItem(
+                    self._listViewModel,
+                    itemData.getContents().getId()
+                );
+            } else {
+                self._listViewModel.setActiveItem(itemData);
                 self._listViewModel.setMenuState('shown');
             }
             require(['css!Controls/input'], () => {
@@ -1277,9 +1297,13 @@ var _private = {
     },
 
     closeActionsMenu(self): void {
-        self._listViewModel.setActiveItem(null);
-        if (!self._options.useNewModel) {
-            // TODO Do we need this in new model?
+        if (self._options.useNewModel) {
+            displayLib.ItemActionsController.setActiveItem(
+                self._listViewModel,
+                null
+            );
+        } else {
+            self._listViewModel.setActiveItem(null);
             self._listViewModel.setMenuState('hidden');
         }
         self._children.swipeControl?.closeSwipe();
@@ -1294,7 +1318,11 @@ var _private = {
 
         if (actionName === 'itemClick') {
             const action = args.data && args.data[0] && args.data[0].getRawData();
-            aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem(), self._listViewModel);
+            const activeItem =
+                self._options.useNewModel
+                    ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
+                    : self._listViewModel.getActiveItem();
+            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
                 _private.closeActionsMenu(self);
@@ -1386,6 +1414,7 @@ var _private = {
         }
         return self.__errorController.process({
             error: config.error,
+            theme: self._options.theme,
             mode: config.mode || dataSourceError.Mode.include
         }).then((errorConfig) => {
             _private.showError(self, errorConfig);
@@ -1455,12 +1484,17 @@ var _private = {
     },
 
     needBottomPadding: function(options, items, listViewModel) {
-        return (!!items &&
-            (!!items.getCount() ||
-                (options.useNewModel ? listViewModel.isEditing() : !!listViewModel.getEditingItemData())) &&
+        const isEditing =
+            options.useNewModel
+            ? displayLib.EditInPlaceController.isEditing(listViewModel)
+            : !!listViewModel.getEditingItemData();
+        return (
+            !!items &&
+            (!!items.getCount() || isEditing) &&
             options.itemActionsPosition === 'outside' &&
             !options.footerTemplate &&
-            options.resultsPosition !== 'bottom');
+            options.resultsPosition !== 'bottom'
+        );
     },
 
     isPagingNavigation: function(navigation) {
@@ -1561,7 +1595,8 @@ var _private = {
     },
     notifyIfDragging(self, eName, itemData, nativeEvent){
         const model = self.getViewModel();
-        if (model.getDragEntity() || model.getDragItemData()) {
+        // TODO Make available for new model as well
+        if (!self._options.useNewModel && (model.getDragEntity() || model.getDragItemData())) {
             self._notify(eName, [itemData, nativeEvent]);
         }
     }
@@ -1659,7 +1694,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _portionedSearch: null,
     _portionedSearchInProgress: null,
     _showContinueSearchButton: false,
-    _canCommitByAction: true,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1759,7 +1793,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     return;
                 }
                 if (receivedError) {
-                    if (newOptions.task1178762977 && newOptions.dataLoadErrback instanceof Function) {
+                    if (newOptions.dataLoadErrback instanceof Function) {
                         newOptions.dataLoadErrback(receivedError);
                     }
                     return _private.showError(self, receivedError);
@@ -2189,7 +2223,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
         const noData = !listViewModel.getCount();
-        const noEdit = this._options.useNewModel ? !listViewModel.isEditing() : !listViewModel.getEditingItemData();
+        const noEdit =
+            this._options.useNewModel
+            ? !displayLib.EditInPlaceController.isEditing(listViewModel)
+            : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
@@ -2206,9 +2243,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.itemActionsOpener.close();
 
         const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
+        const key = this._options.useNewModel ? itemData.getContents().getId() : itemData.key;
 
         if (direction === 'right' && !isSwiped && _private.isItemsSelectionAllowed(this._options)) {
-            const key = this._options.useNewModel ? itemData.getId() : itemData.key;
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
             /**
              * After the right swipe the item should get selected.
@@ -2228,12 +2265,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (direction === 'right' || direction === 'left') {
             if (this._options.useNewModel) {
-                this._listViewModel.setMarkedItem(itemData);
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(this._listViewModel);
+                displayLib.ItemActionsController.setActiveItem(this._listViewModel, key);
             } else {
                 var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
                 this._listViewModel.setMarkedKey(newKey);
+                this._listViewModel.setActiveItem(itemData);
             }
-            this._listViewModel.setActiveItem(itemData);
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
@@ -2297,7 +2336,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             e.stopPropagation();
         }
         if (this._options.useNewModel) {
-            this._listViewModel.setMarkedItem(this._listViewModel.getItemBySourceItem(item));
+            const markCommand = new displayLib.MarkerCommands.Mark(item.getId());
+            markCommand.execute(this._listViewModel);
         } else {
             var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
@@ -2327,16 +2367,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _commitEditActionHandler: function() {
-        if (this._options.task1178374430) {
-            this._children.editInPlace.commitAndMoveNextRow();
-        } else {
-            if (this._canCommitByAction) {
-                this._canCommitByAction = false;
-                this._children.editInPlace.commitEdit().then(() => {
-                    this._canCommitByAction = true;
-                });
-            }
-        }
+        this._children.editInPlace.commitAndMoveNextRow();
     },
 
     _cancelEditActionHandler: function() {
@@ -2394,7 +2425,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
         if (this._options.useNewModel) {
-            this._listViewModel.setMarkedItem(itemData);
+            const markCommand = new displayLib.MarkerCommands.Mark(itemData.getContents().getId());
+            markCommand.execute(this._listViewModel);
         } else {
             this._listViewModel.setMarkedKey(itemData.key);
         }
@@ -2658,6 +2690,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // библиотеки Controls/listRender
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
+        }
+        if (typeof displayLib === 'undefined') {
+            displayLib = require('Controls/display');
         }
         return diCreate(modelName, { ...modelConfig, collection: items });
     }
