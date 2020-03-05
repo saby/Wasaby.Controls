@@ -36,7 +36,6 @@
    .baseline-fix();
 }
 .controls-BreadCrumbsView__crumb_theme-@{themeName} {
- // color: @color_BreadCrumbs-title;
   color: @item_text-color_default_breadcrumbsView;
   height: @height_breadcrumbsView;
   &:before {
@@ -54,17 +53,19 @@
    top: 0;
    .baseline-fix();
    padding-right: 1px;
-
 }
+
 .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
   left: @spacing_BreadCrumbs-menu;
   background: @background-color_BreadCrumbs-menu;
   box-shadow: @dots_shadow-offset_breadcrumbsView  @dots_shadow-color_breadcrumbsView;
   height: @height_breadcrumbsView;
+  color: @item_text-color_default_breadcrumbsView;
   &:before {
     font-size: @line-height_breadcrumbsView;
   }
 }
+
 .controls-BreadCrumbsView__max-width {
    max-width: 100%;
 }
