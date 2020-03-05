@@ -343,7 +343,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
       if (_private.isSearchValueChanged(this, searchValue) || searchValue && needRecreateSearchController) {
          _private.startSearch(this, searchValue);
-         if (this._searchValue !== searchValue) {
+         if (searchValue !== this._inputSearchValue) {
             _private.setInputSearchValue(this, searchValue);
          }
       }
