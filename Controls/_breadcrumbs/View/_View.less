@@ -1,4 +1,4 @@
-.controls-BreadCrumbsView__items {
+.controls-BreadCrumbsView__items_theme-@{themeName} {
    display: inline-flex;
    overflow: hidden;
    height: @height_breadcrumbsView;
@@ -34,12 +34,16 @@
    max-width: 100%;
    white-space: nowrap;
    .baseline-fix();
-   height: @height_breadcrumbsView;
-   &:before {
-      font-size: @line-height_breadcrumbsView;
-   }
 }
-.controls-BreadCrumbsView__menu {
+.controls-BreadCrumbsView__crumb_theme-@{themeName} {
+ // color: @color_BreadCrumbs-title;
+  color: @item_text-color_default_breadcrumbsView;
+  height: @height_breadcrumbsView;
+  &:before {
+    font-size: @line-height_breadcrumbsView;
+  }
+}
+.controls-BreadCrumbsView__menu_theme-@{themeName} {
    float: right;
    position: relative;
    bottom: @height_breadcrumbsView;
@@ -49,14 +53,17 @@
    position: absolute;
    top: 0;
    .baseline-fix();
-   left: @spacing_BreadCrumbs-menu;
-   background: @background-color_BreadCrumbs-menu;
-   box-shadow: @dots_shadow-offset_breadcrumbsView  @dots_shadow-color_breadcrumbsView;
    padding-right: 1px;
-   height: @height_breadcrumbsView;
-   &:before {
-      font-size: @line-height_breadcrumbsView;
-   }
+
+}
+.controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
+  left: @spacing_BreadCrumbs-menu;
+  background: @background-color_BreadCrumbs-menu;
+  box-shadow: @dots_shadow-offset_breadcrumbsView  @dots_shadow-color_breadcrumbsView;
+  height: @height_breadcrumbsView;
+  &:before {
+    font-size: @line-height_breadcrumbsView;
+  }
 }
 .controls-BreadCrumbsView__max-width {
    max-width: 100%;
@@ -99,38 +106,32 @@
    display: inline;
 }
 
-.controls-BreadCrumbsView__title_enabled {
+.controls-BreadCrumbsView__title_enabled_theme-@{themeName} {
    cursor: pointer;
 }
 
-.controls-BreadCrumbsView__title {
+.controls-BreadCrumbsView__title_theme-@{themeName} {
    .text-overflow();
-   color: @item_text-color_default_breadcrumbsView;
    font-size: @item_font-size_default_breadcrumbsView;
    display: inline;
 }
 
-.controls-BreadCrumbsView__arrow {
+.controls-BreadCrumbsView__arrow_theme-@{themeName} {
    .icon(@item_icon-size_default_breadcrumbsView);
    color: @item_text-color_default_breadcrumbsView;
    flex-shrink: 0;
    display: inline;
 }
 
-.controls-BreadCrumbsView__arrow_enabled {
+.controls-BreadCrumbsView__arrow_enabled_theme-@{themeName} {
    cursor: pointer;
 }
 
-.controls-BreadCrumbsView__title_min {
-   //класс существует только для удобства замеров
-   min-width: @text_min-width_breadcrumbs;
-}
-
-.controls-BreadCrumbsController__menu {
+.controls-BreadCrumbsController__menu_theme-@{themeName} {
    max-width: @popup_max-width_breadcrumbsView;
 }
 
-.controls-BreadCrumbsView__menuItem {
+.controls-BreadCrumbsView__menuItem_theme-@{themeName} {
    .baseline-fix();
    max-width: 100%;
    display: inline-flex;
@@ -145,7 +146,7 @@
    width: 100%;
 }
 
-.controls-BreadCrumbsView__indentation {
+.controls-BreadCrumbsView__indentation_theme-@{themeName} {
    .icon(@popup_item_icon-size_breadcrumbsView);
    color: @popup_item_icon-color_breadcrumbsView;
    align-self: flex-start;
@@ -153,13 +154,13 @@
 }
 
 .ws-is-hover {
-   .controls-BreadCrumbsView__crumb:hover, .controls-BreadCrumbsView__menu__dots:hover {
-      .controls-BreadCrumbsView__title_enabled {
+   .controls-BreadCrumbsView__crumb:hover, .controls-BreadCrumbsView__menu__dots_theme-@{themeName}:hover {
+      .controls-BreadCrumbsView__title_enabled_theme-@{themeName} {
          color: @item_hover_text-color_default_breadcrumbsView;
          text-decoration: underline;
       }
 
-      .controls-BreadCrumbsView__arrow_enabled {
+      .controls-BreadCrumbsView__arrow_enabled_theme-@{themeName} {
          color: @item_hover_icon-color_default_breadcrumbsView;
       }
    }
@@ -182,7 +183,7 @@
 .ws-is-ie12 {
 
    //В Edge без явного указания ширины контейнера неправильно работает float, из-за чего точки не падают вниз. Пример: https://jsfiddle.net/q70vkn94/
-   .controls-BreadCrumbsView__menu {
+   .controls-BreadCrumbsView__menu_theme-@{themeName} {
       width: 1px;
    }
 }
