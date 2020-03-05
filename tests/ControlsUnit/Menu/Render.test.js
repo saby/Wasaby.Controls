@@ -68,7 +68,8 @@ define(
                stopPropagation: () => {isStopped = true;}
             };
             menuRender._proxyEvent(event, 'itemClick', { key: 1 }, 'item1');
-            assert.deepEqual(actualData, [{ key: 1 }, 'item1']);
+            assert.deepEqual(actualData[0], { key: 1 });
+            assert.deepEqual(actualData[1], 'item1');
             assert.isTrue(isStopped);
          });
 
@@ -163,6 +164,10 @@ define(
             renderOptions.listModel = getListModel(iconItems);
             renderOptions.parentProperty = 'parent';
             renderOptions.nodeProperty = 'node';
+            iconPadding = menuRender.getIconPadding(renderOptions);
+            assert.equal(iconPadding, '');
+
+            renderOptions.headingIcon = 'icon-Add';
             iconPadding = menuRender.getIconPadding(renderOptions);
             assert.equal(iconPadding, '');
          });

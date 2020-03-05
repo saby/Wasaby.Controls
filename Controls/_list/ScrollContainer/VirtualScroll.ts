@@ -4,7 +4,7 @@ import {
     IDirection,
     IItemsHeights,
     IVirtualScrollOptions, IPlaceholders,
-    IRangeShiftResult
+    IRangeShiftResult, ITriggerState
 } from './interfaces';
 import * as getDimensions from 'Controls/Utils/getDimensions';
 
@@ -109,26 +109,32 @@ export default class VirtualScroll {
      * Производит смещение диапазона за счет добавления новых элементов
      * @param addIndex индекс начиная с которого происходит вставка элементов
      * @param count количество вставляемых элементов
+     * @param triggerState видимость триггеров
+     * @param predicatedDirection заранее высчитанное направление добавления(необходимо при вызове prepend и append у коллекции)
      */
-    insertItems(addIndex: number, count: number): IRangeShiftResult {
-        const direction = addIndex <= this._range.start ? 'up' : 'down';
+    insertItems(
+        addIndex: number,
+        count: number,
+        triggerState: ITriggerState,
+        predicatedDirection?: IDirection
+    ): IRangeShiftResult {
+        const direction = predicatedDirection || (addIndex <= this._range.start ? 'up' : 'down');
         this._itemsCount += count;
         this._insertItemHeights(addIndex, count);
 
-        if (direction === 'up') {
+        if (direction === 'up' && predicatedDirection) {
             this._oldRange.start += count;
             this._updateStartIndex(this._range.start + count);
         }
 
-        // TODO Поправить после исправления
-        // https://online.sbis.ru/opendoc.html?guid=63490db6-53f7-411a-9603-0fcbe5838b9a
-        if (!this._options.pageSize) {
-            this._oldRange = {...this._range};
-            return this._setRange({start: 0, stop: this._itemsCount});
+        if (direction === 'down') {
+            if (!predicatedDirection && triggerState[direction]) {
+                return this.shiftRange(direction);
+            } else {
+                return this._setRange(this._shiftRangeBySegment(direction, count));
+            }
         } else {
-            return this._setRange(
-                this.rangeChanged ? this._range : this._shiftRangeBySegment(direction, count)
-            );
+            return this._setRange(this._shiftRangeBySegment(direction, count));
         }
     }
 
@@ -229,6 +235,7 @@ export default class VirtualScroll {
         }
 
         this._savedDirection = undefined;
+        this._oldRange = {...this._range};
 
         return savedPosition;
     }
@@ -487,7 +494,6 @@ export default class VirtualScroll {
 
     private _shiftRangeBySegment(direction: IDirection, segmentSize: number): IRange {
         this._savedDirection = direction;
-        this._oldRange = {...this._range};
         const fixedSegmentSize = Math
             .min(segmentSize, Math.max(this._options.pageSize - (this._range.stop - this._range.start), 0));
         const itemsCount = this._itemsCount;

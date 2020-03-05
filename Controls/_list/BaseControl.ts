@@ -522,7 +522,7 @@ var _private = {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._options.virtualScrolling && self._isMounted) {
-                self._children.scrollController.itemsFromLoadToDirection = null;
+                self._children.scrollController.stopBatchAdding();
             }
 
             _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -560,7 +560,7 @@ var _private = {
                 const countCurrentItems = self._listViewModel.getCount();
 
                 if (self._options.virtualScrolling && self._isMounted) {
-                    self._children.scrollController.itemsFromLoadToDirection = direction;
+                    self._children.scrollController.startBatchAdding(direction);
                 }
 
                 if (direction === 'down') {
@@ -2336,12 +2336,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
              */
             e.stopPropagation();
         }
-        if (this._options.useNewModel) {
-            const markCommand = new displayLib.MarkerCommands.Mark(item.getId());
-            markCommand.execute(this._listViewModel);
-        } else {
-            var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
-            this._listViewModel.setMarkedKey(newKey);
+        // При редактировании по месту маркер появляется только если в списке больше одной записи.
+        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
+        if (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1)) {
+            if (this._options.useNewModel) {
+                const markCommand = new displayLib.MarkerCommands.Mark(item.getId());
+                markCommand.execute(this._listViewModel);
+            } else {
+                const newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
+                this._listViewModel.setMarkedKey(newKey);
+            }
         }
     },
 
