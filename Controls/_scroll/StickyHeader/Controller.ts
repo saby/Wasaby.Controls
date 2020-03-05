@@ -33,6 +33,10 @@ class Component extends Control {
         this._headers = {};
     }
 
+    _afterMount(options) {
+        this._registerDelayed();
+    }
+
     /**
      * Returns the tru if there is at least one fixed header.
      * @param position
@@ -62,18 +66,21 @@ class Component extends Control {
     }
 
     _stickyRegisterHandler(event, data: TRegisterEventData, register: boolean): void {
-        this._register(data, register)
+        this._register(data, register, true);
         event.stopImmediatePropagation();
     }
 
-    _register(data: TRegisterEventData, register: boolean): void {
+    _register(data: TRegisterEventData, register: boolean, update: boolean): void {
         if (register) {
             this._headers[data.id] = {
                 ...data,
                 fixedInitially: false
             };
-            if (Component._isVisible(data.container)) {
+            if (Component._isVisible(data.container) && this._mounted) {
                 this._addToHeadersStack(data.id, data.position);
+                if (update) {
+                    this._updateTopBottom();
+                }
             } else {
                 this._delayedHeaders.push(data);
             }
@@ -106,9 +113,16 @@ class Component extends Control {
     }
 
     _resizeHandler() {
+        this._registerDelayed();
+    }
+
+    _registerDelayed() {
+        if (!this._delayedHeaders.length) {
+            return;
+        }
         this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
             if (Component._isVisible(header.container)) {
-                this._register(header, true);
+                this._register(header, true, true);
                 return false;
             }
             return true;
