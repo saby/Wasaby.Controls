@@ -135,6 +135,8 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _beforeUnmount(): void {
         clearTimeout(this._checkTriggerVisibilityTimeout);
+        this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
+        this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
     }
 
     protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
@@ -450,10 +452,6 @@ export default class ScrollContainer extends Control<IOptions> {
                     const rangeShiftResult = this._virtualScroll.shiftRange(direction);
                     this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
                     this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
-
-                    if (this._virtualScroll.isRangeOnEdge(direction)) {
-                        this._notifyLoadMore(direction);
-                    }
                 }
             });
         }
@@ -527,21 +525,19 @@ export default class ScrollContainer extends Control<IOptions> {
                                          newItemsIndex: number,
                                          removedItems: object[],
                                          removedItemsIndex: number) => {
-        if (this.__mounted) {
-            const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
+        const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
 
-            if (changesType === 'collectionChanged' && action || newModelChanged) {
-                if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
-                    this._itemsAddedHandler(newItemsIndex, newItems);
-                }
+        if (changesType === 'collectionChanged' && action || newModelChanged) {
+            if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
+                this._itemsAddedHandler(newItemsIndex, newItems);
+            }
 
-                if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
-                    this._itemsRemovedHandler(removedItemsIndex, removedItems);
-                }
+            if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
+                this._itemsRemovedHandler(removedItemsIndex, removedItems);
+            }
 
-                if (action === IObservable.ACTION_RESET) {
-                    this._initVirtualScroll(this._options);
-                }
+            if (action === IObservable.ACTION_RESET) {
+                this._initVirtualScroll(this._options);
             }
         }
     }
