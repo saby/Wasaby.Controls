@@ -7,7 +7,6 @@ export interface IIconSizeOptions {
  *
  * @interface Controls/_interface/IIconSize
  * @public
- * @author Крайнов Д.О.
  */
 
 /*
@@ -20,19 +19,14 @@ export default interface IIconSize {
    readonly '[Controls/_interface/IIconSize]': boolean;
 }
 /**
- * @typedef {String} IconSize
- * @variant s Маленькая.
- * @variant m Средняя.
- * @variant l Большая.
- * @variant default По умолчанию.
- */
-
-/**
  * @name Controls/_interface/IIconSize#iconSize
- * @cfg {IconSize} Размер иконки.
- * @default default
+ * @cfg {Enum} Размер иконки.
+ * @variant s малый
+ * @variant m средний
+ * @variant l большой
+ * @variant default по-умолчанию
  * @remark
- * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
+ * Размер иконки задается константой из стандартного набора размеров, который определен для текущей темы оформления.
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @example
  * Кнопка с размером иконки по умолчанию.
