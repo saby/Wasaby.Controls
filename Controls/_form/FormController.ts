@@ -67,6 +67,10 @@ interface IConfigInMounting {
     result: Model;
 }
 
+interface IUpdateConfig {
+    additionalData: IAdditionalData;
+}
+
 /**
  * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью.
  * В частном случае контрол применяется для создания <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи</a>. Может выполнять запросы CRUD-методов на БЛ.
@@ -490,7 +494,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         return record;
     }
 
-    update(config?: object): Promise<undefined | Model> {
+    update(config?: IUpdateConfig): Promise<undefined | Model> {
         const updateResult = new Deferred();
         const updateCallback = (result) => {
             // if result is true, custom update called and we dont need to call original update.
@@ -526,7 +530,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         return updateResult;
     }
 
-    private _update(config?: object): Promise<IDataValid> {
+    private _update(config?: IUpdateConfig): Promise<IDataValid> {
         const record = this._record;
         const updateDef = new Deferred();
 

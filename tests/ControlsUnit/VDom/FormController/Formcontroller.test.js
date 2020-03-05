@@ -259,7 +259,6 @@ define([
       });
 
       it('FormController update with Config', (done) => {
-         let isNotifyCalled = false;
          let configData = {
             additionalData: {
                name: 'cat'
@@ -270,6 +269,7 @@ define([
          let validation = {
             submit: () => Promise.resolve(true)
          };
+         let data;
          FC._record = {
             getId: () => 'id1',
             isChanged: () => true
@@ -296,14 +296,13 @@ define([
          };
          FC._notify = (event, arg) => {
             if (event === 'sendResult' && arg[0].formControllerEvent === 'update') {
-               isNotifyCalled = true;
-               assert.deepEqual(arg[0].additionalData, argsCorrectUpdate);
+               data = arg[0].additionalData;
             }
          };
          FC._children = {crud, validation };
          FC._processError = () => {};
          FC.update(configData).then(() => {
-            isNotifyCalled = true;
+            assert.deepEqual(data, argsCorrectUpdate);
             done();
             FC.destroy();
          });
