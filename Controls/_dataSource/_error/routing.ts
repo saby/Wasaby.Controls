@@ -24,9 +24,8 @@ export default function routing(config: { status?: number; template: string; opt
 
     if (config.status > 0) {
         process.domain.res.sendStatus(config.status);
-    } else {
-        process.domain.res.render(config.template, config.options);
+        return true;
     }
 
-    return true;
+    return false;
 }
