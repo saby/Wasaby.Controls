@@ -20,6 +20,7 @@ class Component extends Control {
     // Если созданный заголвок невидим, то мы не можем посчитать его позицию.
     // Учтем эти заголовки после ближайшего события ресайза.
     private _delayedHeaders: TRegisterEventData[] = [];
+    private _stickyControllerMounted = false;
 
     _beforeMount(options) {
         this._headersStack = {
@@ -34,6 +35,7 @@ class Component extends Control {
     }
 
     _afterMount(options) {
+        this._stickyControllerMounted = true;
         this._registerDelayed();
     }
 
@@ -76,7 +78,7 @@ class Component extends Control {
                 ...data,
                 fixedInitially: false
             };
-            if (Component._isVisible(data.container) && this._mounted) {
+            if (Component._isVisible(data.container) && this._stickyControllerMounted) {
                 this._addToHeadersStack(data.id, data.position);
                 if (update) {
                     this._updateTopBottom();
