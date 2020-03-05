@@ -821,7 +821,7 @@ var Filter = Control.extend({
                 if (object.getPropertyValue(item, 'visibility') !== undefined) {
                     object.setPropertyValue(item, 'visibility', false);
                 }
-                object.setPropertyValue(item, 'textValue', '');
+                item.textValue = '';
             }
         });
         _private.notifyChanges(this, this._source);
