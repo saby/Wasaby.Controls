@@ -8,7 +8,6 @@ import ViewTemplate = require('wml!Controls/_menu/Render/Render');
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {factory} from 'Types/chain';
-import {ActualApi} from 'Controls/buttons';
 import {ItemsUtil} from 'Controls/list';
 
 interface IMenuRenderOptions extends IMenuOptions, IRenderOptions {
@@ -49,10 +48,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
         };
     }
 
-    protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string, item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {
+    protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string, item: Model, sourceEvent: SyntheticEvent<MouseEvent>, swipeContainerHeight: number): void {
         e.stopPropagation();
         if (!(item instanceof GroupItem)) {
-            this._notify(eventName, [item, sourceEvent]);
+            this._notify(eventName, [item, sourceEvent, swipeContainerHeight]);
         }
     }
 
@@ -155,16 +154,31 @@ class MenuRender extends Control<IMenuRenderOptions> {
         let headingIcon = options.headConfig?.icon || options.headingIcon;
 
         if (options.root === null && headingIcon && (!options.headConfig || options.headConfig.menuStyle !== 'titleHead')) {
-            iconPadding = ActualApi.iconSize(options.iconSize, headingIcon) || 'm';
+            iconPadding = this.getIconSize(options.iconSize, headingIcon);
         } else {
             factory(items).each((item) => {
                 icon = item.get('icon');
                 if (icon && (!parentProperty || item.get(parentProperty) === options.root)) {
-                    iconPadding = ActualApi.iconSize(options.iconSize, icon) || 'm';
+                    iconPadding = this.getIconSize(options.iconSize, icon);
                 }
             });
         }
         return iconPadding;
+    }
+
+    private getIconSize(iconSize: string, icon: string): string {
+        const iconSizes = [['icon-small', 's'], ['icon-medium', 'm'], ['icon-large', 'l']];
+        if (iconSize) {
+            return iconSize;
+        } else {
+            let result = '';
+            iconSizes.forEach((size) => {
+                if (icon.indexOf(size[0]) !== -1) {
+                    result = size[1];
+                }
+            });
+            return result;
+        }
     }
 
     static _theme: string[] = ['Controls/menu', 'Controls/Classes'];

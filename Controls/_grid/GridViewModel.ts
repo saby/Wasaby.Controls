@@ -1018,14 +1018,6 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
-        markAddingItem() {
-            this._model.markAddingItem();
-        },
-
-        restoreMarker() {
-            this._model.restoreMarker();
-        },
-
         setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
         },
@@ -1382,6 +1374,11 @@ var
 
         setColumnScroll(columnScroll: boolean): void {
             this._options.columnScroll = columnScroll;
+            this._nextModelVersion();
+        },
+
+        setDisableColumnScrollCellStyles(disableColumnScrollCellStyles: boolean): void {
+            this._options.disableColumnScrollCellStyles = disableColumnScrollCellStyles;
             this._nextModelVersion();
         },
 
