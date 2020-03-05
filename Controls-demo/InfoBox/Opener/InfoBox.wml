@@ -47,7 +47,6 @@
                                            attr:class="controls-InfoBoxDemo__{{config.cfg.size}}-{{config.cfg.targetSide}}"
                                            icon="icon-EmptyMessage"
                                            iconSize="{{config.cfg.iconSize}}"
-                                           inlineHeight="{{config.cfg.inlineHeight}}"
                                            on:mouseenter="_open(config.cfg)"/>
                </div>
             </ws:for>
