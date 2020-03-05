@@ -42,8 +42,10 @@
             <ws:for data="config in item.items">
                <div class="controls-InfoBoxDemo-icon">
                   <Controls.buttons:Button viewMode="linkButton" fontColorStyle="link"
+                                           iconSize="{{config.cfg.iconSize}}"
+                                           inlineHeight="{{config.cfg.inlineHeight}}"
                                            attr:class="controls-InfoBoxDemo__{{config.cfg.size}}-{{config.cfg.targetSide}}"
-                                           icon="icon-EmptyMessage icon-{{config.cfg.size}}"
+                                           icon="icon-EmptyMessage"
                                            on:mouseenter="_open(config.cfg)"/>
                </div>
             </ws:for>
