@@ -208,7 +208,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'small',
-                        iconSize: 's',
                         targetSide: 'left',
                         alignment: 'center',
                         message: 'Small left-center'
@@ -217,7 +216,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'small',
-                        iconSize: 's',
                         targetSide: 'top',
                         alignment: 'center',
                         message: 'Small top-center'
@@ -226,7 +224,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'small',
-                        iconSize: 's',
                         targetSide: 'bottom',
                         alignment: 'center',
                         message: 'Small bottom-center'
@@ -235,7 +232,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'small',
-                        iconSize: 's',
                         targetSide: 'right',
                         alignment: 'center',
                         message: 'Small right-center'
@@ -248,7 +244,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'medium',
-                        iconSize: 'm',
                         targetSide: 'left',
                         alignment: 'center',
                         style: 'warning',
@@ -258,7 +253,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'medium',
-                        iconSize: 'm',
                         targetSide: 'top',
                         alignment: 'center',
                         style: 'success',
@@ -268,7 +262,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'medium',
-                        iconSize: 'm',
                         targetSide: 'bottom',
                         alignment: 'center',
                         style: 'danger',
@@ -278,7 +271,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'medium',
-                        iconSize: 'm',
                         targetSide: 'right',
                         alignment: 'center',
                         style: 'info',
@@ -292,7 +284,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'large',
-                        iconSize: 'l',
                         targetSide: 'left',
                         alignment: 'center',
                         message: 'Large left-center'
@@ -301,7 +292,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'large',
-                        iconSize: 'l',
                         targetSide: 'top',
                         alignment: 'center',
                         message: 'Large top-center'
@@ -310,7 +300,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'large',
-                        iconSize: 'l',
                         targetSide: 'bottom',
                         alignment: 'center',
                         message: 'Large bottom-center'
@@ -319,7 +308,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   {
                      cfg: {
                         size: 'large',
-                        iconSize: 'l',
                         targetSide: 'right',
                         alignment: 'center',
                         message: 'Large right-center'
