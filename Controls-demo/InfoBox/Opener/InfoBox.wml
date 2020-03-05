@@ -41,7 +41,7 @@
          <div class="controls-InfoBoxDemo-targets controls-InfoBoxDemo__{{item.items[0].cfg.size}}">
             <ws:for data="config in item.items">
                <div class="controls-InfoBoxDemo-icon">
-                  <Controls.buttons:Button viewMode="link" fontColorStyle="link"
+                  <Controls.buttons:Button viewMode="linkButton" fontColorStyle="link"
                                            attr:class="controls-InfoBoxDemo__{{config.cfg.size}}-{{config.cfg.targetSide}}"
                                            icon="icon-EmptyMessage icon-{{config.cfg.size}}"
                                            on:mouseenter="_open(config.cfg)"/>
