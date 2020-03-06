@@ -474,7 +474,7 @@ var
                         action === collection.IObservable.ACTION_ADD ||
                         action === collection.IObservable.ACTION_REMOVE
                     ) &&
-                    !this._options.disableColumnScrollCellStyles
+                    !this._options.columnScroll
                 ) {
                     event.setResult('updatePrefix');
                 }
@@ -616,7 +616,6 @@ var
         },
         _shouldAddActionsCell() {
             return shouldAddActionsCell({
-                disableCellStyles: this._options.disableColumnScrollCellStyles,
                 hasColumnScroll: this._options.columnScroll,
                 shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport()
             });
@@ -1258,8 +1257,8 @@ var
             }
 
             current.itemActionsDrawPosition =
-                this._options.disableColumnScrollCellStyles ? 'after' : 'before';
-            current.itemActionsColumnScrollDraw = this._options.columnScroll && this._options.disableColumnScrollCellStyles;
+                this._options.columnScroll ? 'after' : 'before';
+            current.itemActionsColumnScrollDraw = this._options.columnScroll;
 
             current.columnIndex = 0;
 
@@ -1310,6 +1309,7 @@ var
                         isEditing: current.isEditing,
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
+                        itemPadding: current.itemPadding,
                         getVersion: () => {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
@@ -1336,19 +1336,8 @@ var
                     currentColumn.tableCellStyles = _private.getTableCellStyles(currentColumn);
                 }
 
-                // TODO: Проверить. https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-                if (current.columnScroll && !self._options.disableColumnScrollCellStyles) {
-                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles({
-                        rowStart: current.rowIndex,
-                        columnStart: currentColumn.columnIndex
-                    });
-                } else {
-                    currentColumn.gridCellStyles = '';
-                }
-
-                if (current.columnScroll && self._options.disableColumnScrollCellStyles) {
+                if (current.columnScroll) {
                     currentColumn.itemActionsGridCellStyles =
-                        currentColumn.gridCellStyles +
                         ' position: sticky; overflow: visible; display: inline-block; right: 0;';
                 }
 
@@ -1382,11 +1371,6 @@ var
 
         setColumnScroll(columnScroll: boolean): void {
             this._options.columnScroll = columnScroll;
-            this._nextModelVersion();
-        },
-
-        setDisableColumnScrollCellStyles(disableColumnScrollCellStyles: boolean): void {
-            this._options.disableColumnScrollCellStyles = disableColumnScrollCellStyles;
             this._nextModelVersion();
         },
 
