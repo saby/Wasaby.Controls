@@ -14,6 +14,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import * as ControlsConstants from 'Controls/Constants';
 
 /**
  * Контрол меню.
@@ -400,7 +401,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private groupMethod(options: IMenuOptions, item: Model): string {
-        return item.get(options.groupProperty);
+        return item.get(options.groupProperty) || ControlsConstants.view.hiddenGroup;
     }
 
     private setSelectedItems(listModel: Tree, keys: TKeys): void {
