@@ -28,6 +28,9 @@ import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 import {Logger} from 'UI/Utils';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import { shouldAddStickyLadderCell } from 'Controls/_grid/utils/GridLadderUtil';
+import {debounce as cDebounce} from 'Types/function';
+
+const DEBOUNCE_HOVERED_CELL_CHANGED = 150;
 
 var
     _private = {
@@ -64,15 +67,37 @@ var
             self._baseResultsTemplate = isFullGridSupport ? GridResults : TableResults;
         },
 
-        _resetScroll(self): void {
-            self._notify('doScroll', ['top'], { bubbling: true });
+        getCellByEventTarget(event: MouseEvent): HTMLElement {
+            return event.target.closest('.controls-Grid__row-cell');
         },
 
-        getClickedColumnIndex(self,  e): number {
-            const gridCells = e.target.closest('.controls-Grid__row').querySelectorAll('.controls-Grid__row-cell');
-            const currentCell = e.target.closest('.controls-Grid__row-cell');
+        getCellIndexByEventTarget(self,  event): number {
+            if (!event) {
+                return null;
+            }
+            const gridRow = event.target.closest('.controls-Grid__row');
+            if (!gridRow) {
+                return null;
+            }
+            const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
+            const currentCell = _private.getCellByEventTarget(event);
             const multiSelectOffset = self._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
+        },
+
+        setHoveredCell(self, item, nativeEvent): void {
+            const hoveredCellIndex = _private.getCellIndexByEventTarget(self, nativeEvent);
+            if (item !== self._hoveredCellItem || hoveredCellIndex !== self._hoveredCellIndex) {
+                self._hoveredCellItem = item;
+                self._hoveredCellIndex = hoveredCellIndex;
+                let container = null;
+                let hoveredCellContainer = null;
+                if (nativeEvent) {
+                    container = nativeEvent.target.closest('.controls-ListView__itemV');
+                    hoveredCellContainer = _private.getCellByEventTarget(nativeEvent);
+                }
+                self._notify('hoveredCellChanged', [item, container, hoveredCellIndex, hoveredCellContainer]);
+            }
         },
 
         // uDimensions for unit tests
@@ -110,6 +135,11 @@ var
 
         _notifyHandler: tmplNotify,
 
+        constructor: function() {
+            GridView.superclass.constructor.apply(this, arguments);
+            this._debouncedSetHoveredCell = cDebounce(_private.setHoveredCell, DEBOUNCE_HOVERED_CELL_CHANGED);
+        },
+
         _beforeMount(cfg) {
             _private.checkDeprecated(cfg, this);
             _private.setBaseTemplates(this, GridLayoutUtil.isFullGridSupport());
@@ -137,9 +167,6 @@ var
                 this._listModel.setColumns(newCfg.columns);
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
-                if (this._listModel._isMultiHeader) {
-                    _private._resetScroll(this);
-                }
                 this._listModel.setHeader(newCfg.header);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
@@ -270,7 +297,7 @@ var
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 const item = dispItem.getContents();
-                this._notify('itemClick', [item, e, _private.getClickedColumnIndex(this, e)], {bubbling: true});
+                this._notify('itemClick', [item, e, _private.getCellIndexByEventTarget(this, e)], {bubbling: true});
             }
         },
 
@@ -283,6 +310,16 @@ var
 
         _getGridTemplateColumns(columns, hasMultiSelect) {
             return _private.getGridTemplateColumns(this, columns, hasMultiSelect);
+        },
+
+        _onItemMouseMove: function(event, itemData) {
+            GridView.superclass._onItemMouseMove.apply(this, arguments);
+            this._debouncedSetHoveredCell(this, itemData.item, event.nativeEvent);
+        },
+
+        _onItemMouseLeave: function() {
+            GridView.superclass._onItemMouseLeave.apply(this, arguments);
+            this._debouncedSetHoveredCell(this, null, null);
         }
     });
 
