@@ -186,7 +186,9 @@ var _private = {
                     cfg.dataLoadCallback(list);
                 }
 
-                self._cachedPagingState = null;
+                if (!self._shouldNotResetPagingCache) {
+                    self._cachedPagingState = false;
+                }
                 clearTimeout(self._needPagingTimeout);
 
                 if (listModel) {
@@ -716,17 +718,23 @@ var _private = {
         _private.setMarkerAfterScroll(self);
         if (_private.hasMoreData(self, self._sourceController, direction)) {
             self._sourceController.setEdgeState(direction);
+
+            // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
+            // к началу или концу, от этого прыжка его состояние не может
+            // измениться, поэтому пейджинг не должен прятаться в любом случае
+            self._shouldNotResetPagingCache = true;
             _private.reload(self, self._options).addCallback(function() {
+                self._shouldNotResetPagingCache = false;
                 if (direction === 'up') {
                     self._notify('doScroll', ['top'], { bubbling: true });
                 } else {
-                    self._notify('doScroll', ['bottom'], { bubbling: true });
+                    _private.jumpToEnd(self);
                 }
             });
         } else if (direction === 'up') {
             self._notify('doScroll', ['top'], { bubbling: true });
         } else {
-            self._notify('doScroll', ['bottom'], { bubbling: true });
+            _private.jumpToEnd(self);
         }
     },
     scrollPage: function(self, direction) {
@@ -1417,6 +1425,7 @@ var _private = {
         }
         return self.__errorController.process({
             error: config.error,
+            theme: self._options.theme,
             mode: config.mode || dataSourceError.Mode.include
         }).then((errorConfig) => {
             _private.showError(self, errorConfig);
@@ -1601,6 +1610,23 @@ var _private = {
         if (!self._options.useNewModel && (model.getDragEntity() || model.getDragItemData())) {
             self._notify(eName, [itemData, nativeEvent]);
         }
+    },
+    jumpToEnd(self) {
+        const lastItem =
+            self._options.useNewModel
+            ? self._listViewModel.getLast()?.getContents()
+            : self._listViewModel.getLastItem();
+
+        const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._options.keyProperty);
+
+        // Последняя страница уже загружена но конец списка не обязательно отображается,
+        // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
+        _private.scrollToItem(self, lastItemKey, true, true).then(() => {
+            // После того как последний item гарантированно отобразился,
+            // нужно попросить ScrollWatcher прокрутить вниз, чтобы
+            // прокрутить отступ пейджинга и скрыть тень
+            self._notify('doScroll', ['pageDown'], { bubbling: true });
+        });
     }
 };
 
@@ -1656,6 +1682,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
     _needPagingTimeout: null,
+    _shouldNotResetPagingCache: false,
 
     _itemTemplate: null,
 
