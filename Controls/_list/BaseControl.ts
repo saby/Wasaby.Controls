@@ -2732,10 +2732,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _onHoveredItemChanged: function(e, item, container) {
-        this._notify('hoveredItemChanged', [item, container]);
-    },
-
     _createNewModel(items, modelConfig, modelName) {
         // Подразумеваем, что Controls/display уже загружен. Он загружается при подключении
         // библиотеки Controls/listRender
