@@ -77,10 +77,8 @@
 .controls-VScrollbar__thumb_horizontal {
    background-color: @bg_Scrollbar-horizontal_thumb_normal;
    border-radius: @border-radius_Scrollbar-horizontal-thumb;
-   height: @width_Scrollbar-horizontal-thumb;
    min-width: @min-height_Scrollbar-thumb;
-   transition: height @animation-duration_Scrollbar ease-in-out, border-radius @animation-duration_Scrollbar ease-in-out;
-   width: 100%;
+   height: 100%;
 }
 
 .controls-VScrollbar__thumb_inverted {
@@ -106,13 +104,12 @@
 // Изменил scale на height, т.к. при scale не корректно рассчитывается border-radius
 .controls-VScrollbar_horizontal_dragging,
 .controls-VScrollbar_horizontal:hover {
-   .controls-VScrollbar__thumb_horizontal {
-      height: @width_Scrollbar-horizontal-thumb * @scale_Scrollbar-horizontal_thumb;
-      border-radius: @border-radius_Scrollbar-horizontal-thumb_animation;
-   }
-
    .controls-VScrollbar__thumbWrapper_horizontal {
       padding: ((@width_Scrollbar-horizontal - (@width_Scrollbar-horizontal-thumb * @scale_Scrollbar-horizontal_thumb)) / 2) @offset_horizontal_Scrollbar_track;
+   }
+
+   .controls-VScrollbar__thumb_horizontal {
+      border-radius: @border-radius_Scrollbar-horizontal-thumb_animation;
    }
 }
 
