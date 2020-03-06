@@ -1,3 +1,10 @@
+/**
+ * Интерфейс для плоских списков, которые поддерживают событие клика.
+ * @interface Controls/_list/interface/IClickableView
+ * @public
+ * @author Авраменко А.С.
+ */
+
 /*
  * Interface for lists.
  * @interface Controls/_list/interface/IClickableView
