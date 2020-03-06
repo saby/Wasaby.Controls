@@ -19,6 +19,7 @@
                              keyProperty="id"
                              parentProperty="Раздел"
                              style="master"
+                             backgroundStyle="master"
                              nodeProperty="Раздел@"
                              markerVisibility="visible"
                              itemActions="{{_itemActions}}"
@@ -70,6 +71,7 @@
                <Controls.masterDetail:List selectedField="sourceType" attr:class="controls-demo_MasterDetail_master_list">
                   <Controls.list:View
                      style="master"
+                     backgroundStyle="master"
                      keyProperty="id"
                      markerVisibility="visible"
                      itemActions="{{_itemActions}}"
@@ -134,6 +136,7 @@
                         keyProperty="id"
                         parentProperty="Раздел"
                         style="master"
+                        backgroundStyle="master"
                         nodeProperty="Раздел@"
                         markerVisibility="visible"
                         itemActions="{{_itemActions}}"
