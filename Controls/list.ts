@@ -155,5 +155,3 @@ export {
     IList,
     IItemAction
 };
-
-export {default as SourceControl} from 'Controls/_list/SourceControl';
