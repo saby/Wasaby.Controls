@@ -12,27 +12,51 @@ define('ControlsUnit/resources/TemplateUtil',
 
          regExpSpacesString: /\s+/g,
 
-         regExpAdditionalAttributes: / ?(data-component|ws-delegates-tabfocus|ws-creates-context|__config|tabindex|name|config|hasMarkup)=".+?"/g
+         regExpAdditionalAttributes: / ?(data-component|ws-delegates-tabfocus|ws-creates-context|__config|tabindex|name|config|hasMarkup)=".+?"/g,
+
+         regScripts: /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi
       };
 
       return {
          content: SimpleContent,
 
-         clearTemplate: function(template) {
-            return function(inst) {
-               var markup = template(inst);
-
-               markup = markup.replace(_private.regExpSpacesString, function(substr) {
-                  if (_private.ignoreSpaces.includes(substr)) {
-                     return '';
-                  }
-
-                  return ' ';
+         clearTemplatePromise: function(markup) {
+            const self = this;
+            return markup
+               .then(function(resolved) {
+                  return self.clearMarkup(resolved);
+               })
+               .catch(function() {
+                  return Promise.resolve('');
                });
-               markup = markup.replace(_private.regExpAdditionalAttributes, '');
+         },
 
-               return markup;
+         clearTemplate: function(template) {
+            const self = this;
+            return function(inst, async) {
+               return async ? self.clearTemplatePromise(template(inst)) : self.clearMarkup(template(inst));
             };
+         },
+
+         clearMarkup: function(_markup) {
+            let markup = _markup.replace(_private.regExpSpacesString, function(substr) {
+               if (_private.ignoreSpaces.includes(substr)) {
+                  return '';
+               }
+
+               return ' ';
+            });
+            markup = markup.replace(_private.regExpAdditionalAttributes, '');
+
+            return this.clearScripts(markup);
+         },
+
+         clearScripts: function(markup) {
+            var innerMarkup = markup;
+            while (_private.regScripts.test(innerMarkup)) {
+               innerMarkup = markup.replace(_private.regScripts, '');
+            }
+            return innerMarkup;
          }
       };
    });
