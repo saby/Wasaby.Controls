@@ -4,6 +4,5 @@
             source="{{_viewSource}}"
             columns="{{_columns}}"
             parentProperty="parent"
-            rowSeparatorVisibility="{{true}}"
             nodeProperty="type"/>
 </div>
