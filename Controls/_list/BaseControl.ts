@@ -2488,6 +2488,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.getPortionedSearch(this).abortSearch();
     },
 
+    _onDataError(event: unknown, errorConfig: ErrbackConfig): void {
+        _private.processError(this, {
+            error: errorConfig.error,
+            mode: errorConfig.mode || dataSourceError.Mode.dialog
+        });
+    },
+
     _nativeDragStart: function(event) {
         // preventDefault нужно делать именно на нативный dragStart:
         // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
