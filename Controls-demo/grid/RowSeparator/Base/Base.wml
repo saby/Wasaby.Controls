@@ -1,8 +1,31 @@
-<div class="controlsDemo__wrapper">
-    <Controls.grid:View
-            keyProperty="id"
-            attr:class="controlsDemo__inline-flex"
-            source="{{_viewSource}}"
-            rowSeparatorVisibility="{{true}}"
-            columns="{{_columns}}"/>
+<div>
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                attr:class="controlsDemo__inline-flex"
+                source="{{_viewSource}}"
+                rowSeparatorVisibility="{{true}}"
+                multiSelectVisibility="hidden"
+                columns="{{_columns}}"/>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                attr:class="controlsDemo__inline-flex"
+                source="{{_viewSource}}"
+                rowSeparatorVisibility="{{true}}"
+                multiSelectVisibility="visible"
+                columns="{{_columns}}"/>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                attr:class="controlsDemo__inline-flex"
+                source="{{_viewSource}}"
+                rowSeparatorVisibility="{{true}}"
+                multiSelectVisibility="onhover"
+                columns="{{_columns}}"/>
+    </div>
 </div>
