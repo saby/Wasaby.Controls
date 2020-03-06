@@ -2200,6 +2200,7 @@ define([
 
       it('_processError', function() {
          var self = {
+            _options: {},
             _loadingState: 'all',
             _notify: () => {
             },
@@ -5837,6 +5838,7 @@ define([
                expectedSourceConfig.pageSize = 100;
                expectedSourceConfig.hasMore = false;
                baseControl._changePageSize({}, {id: 1, title: 100, get: function() {return this.title;}});
+               assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
             });
