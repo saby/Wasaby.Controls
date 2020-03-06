@@ -64,10 +64,6 @@ var
             self._baseResultsTemplate = isFullGridSupport ? GridResults : TableResults;
         },
 
-        _resetScroll(self): void {
-            self._notify('doScroll', ['top'], { bubbling: true });
-        },
-
         getClickedColumnIndex(self,  e): number {
             const gridCells = e.target.closest('.controls-Grid__row').querySelectorAll('.controls-Grid__row-cell');
             const currentCell = e.target.closest('.controls-Grid__row-cell');
@@ -137,9 +133,6 @@ var
                 this._listModel.setColumns(newCfg.columns);
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
-                if (this._listModel._isMultiHeader) {
-                    _private._resetScroll(this);
-                }
                 this._listModel.setHeader(newCfg.header);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
