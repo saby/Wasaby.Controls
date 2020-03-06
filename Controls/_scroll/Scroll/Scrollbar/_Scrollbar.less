@@ -43,14 +43,6 @@
    }
 }
 
-.controls-VScrollbar_horizontal-track_size-s:before {
-   top: (@thumb_s_thickness_scrollbar + 2 * @padding_scrollbar - @track_thickness_scrollbar) / 2;
-}
-
-.controls-VScrollbar_horizontal-track_size-l:before {
-   top: (@thumb_l_thickness_scrollbar + 2 * @padding_scrollbar - @track_thickness_scrollbar) / 2;
-}
-
 .controls-ColumnScroll_without_offset {
    transform-origin: 50% 0;
 }
@@ -84,7 +76,7 @@
    transition: padding 0.3s ease-in-out;
 }
 
-.controls-VScrollbar__thumb {
+.controls-VScrollbar__thumb_vertical {
    left: @padding_scrollbar;
    right: @padding_scrollbar;
    top: @padding_scrollbar;
@@ -98,20 +90,11 @@
 
 .controls-VScrollbar__thumb_size-s {
    border-radius: @thumb_s_border-radius_scrollbar;
-
 }
 
 .controls-VScrollbar__thumb_horizontal {
    min-width: @thumb_min-length_scrollbar;
-   transition: height 0.3s ease-in-out;
-}
-
-.controls-VScrollbar__thumb_horizontal_size-s {
-   height: @thumb_s_thickness_scrollbar;
-}
-
-.controls-VScrollbar__thumb_horizontal_size-l {
-   height: @thumb_l_thickness_scrollbar;
+   height: 100%;
 }
 
 .controls-VScrollbar_vertical_size-l:hover,
@@ -128,6 +111,7 @@
 .controls-VScrollbar__thumb_dragging {
    border-radius: @thumb_hover_s_border-radius_scrollbar;
 }
+
 .controls-VScrollbar:hover .controls-VScrollbar__thumb_size-l,
 .controls-VScrollbar__thumb_dragging {
    border-radius: @thumb_hover_l_border-radius_scrollbar;
@@ -135,26 +119,23 @@
 
 // при наведении или перемещении увеличиваем только thumb,
 // что бы линия посередине не изменялась
-// Изменил scale на height, т.к. при scale не корректно рассчитывается border-radius
+// Изменил scale у thumb на padding у thumbWrapper, т.к. при scale не корректно рассчитывается border-radius
 .controls-VScrollbar_horizontal_dragging,
 .controls-VScrollbar_horizontal:hover {
+   .controls-VScrollbar__thumbWrapper_size-s {
+      padding: ((@thumb_s_thickness_scrollbar + 2 * @padding_scrollbar) - @thumb_hover_s_thickness_scrollbar) / 2 @track_offset_scrollbar;
+   }
+
+   .controls-VScrollbar__thumbWrapper_size-l {
+      padding: 0 @track_offset_scrollbar;
+   }
+
    .controls-VScrollbar__thumb_horizontal_size-s {
-      height: @thumb_hover_s_thickness_scrollbar;
       border-radius: @thumb_hover_s_border-radius_scrollbar;
    }
 
    .controls-VScrollbar__thumb_horizontal_size-l {
-      height: @thumb_hover_l_thickness_scrollbar;
       border-radius: @thumb_hover_l_border-radius_scrollbar;
-   }
-
-   .controls-VScrollbar__thumbWrapper_horizontal {
-      padding: @padding_scrollbar/2 @track_offset_scrollbar;
-   }
-
-   .controls-VScrollbar__thumb {
-      top: 0;
-      bottom: 0;
    }
 }
 
