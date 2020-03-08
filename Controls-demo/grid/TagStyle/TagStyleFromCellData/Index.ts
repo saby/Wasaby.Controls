@@ -75,6 +75,7 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
             if (i === 3) {
                 return {
                     ...cur,
+                    align: 'right',
                     tagStyleProperty: this._tagStyleProperty
                 };
             }
