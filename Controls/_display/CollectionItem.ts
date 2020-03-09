@@ -184,7 +184,9 @@ export default class CollectionItem<T> extends mixin<
     // список опций, которые нужны для его шаблона (contents, marked и т. д.), и будет
     // в автоматическом режиме генерироваться подпроекция с нужными полями
     get contents(): T {
-        return this.getContents();
+        if (!this.destroyed) {
+            return this.getContents();
+        }
     }
 
     /**

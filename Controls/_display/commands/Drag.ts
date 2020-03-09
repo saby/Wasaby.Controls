@@ -1,5 +1,5 @@
 import { TItemKey, IBaseCollection, ICollectionCommand, IStrategyCollection } from '../interface';
-
+import {CollectionItem} from '../CollectionItem';
 import DragStrategy from '../itemsStrategy/Drag';
 
 export type IDragItem = unknown;
@@ -30,7 +30,15 @@ export class Move implements ICollectionCommand<IDragItem> {
         const strategy = collection.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
         if (strategy) {
             strategy.avatarIndex = this.index;
-            collection.nextVersion();
+            collection.reCalculateStrategyItemsOrder();
+        }
+    }
+}
+export class GetAvatarItem implements ICollectionCommand<IDragItem> {
+    execute(collection: IDragCollection): CollectionItem<unknown> {
+        const strategy = collection.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
+        if (strategy) {
+            return strategy.avatarItem;
         }
     }
 }

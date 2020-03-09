@@ -1,8 +1,8 @@
 <div attr:class="controls-ListViewV controls-ColumnsView">
    <ws:if data="{{ _options.listModel }}">
-      <div attr:class="controls-ColumnsView__itemsContainer" name="itemsContainer">
+      <div attr:class="controls-ColumnsView__itemsContainer" style="display: grid; column-gap:16px; grid-template-columns: repeat({{_options.columnsCount}}, minmax({{_options.minWidth}}px,{{_options.maxWidth}}px));" name="itemsContainer">
          <ws:for data="i in _options.columnsCount">
-            <div class="controls-ColumnsView_column" style="min-width:{{_options.minWidth}}px; max-width:{{_options.maxWidth}}px;">
+            <div class="controls-ColumnsView_column" style="min-width:{{_options.minWidth}}px; max-width:{{_options.maxWidth}}px;" on:mouseMove="_columnMouseMove(i)">
                <div class="controls-ColumnsView_column-placeholder" style="min-width:{{_options.minWidth}}px; max-width:{{_options.maxWidth}}px;"></div>
                <ws:partial
                        template="wml!Controls/_listRender/Columns/resources/For"

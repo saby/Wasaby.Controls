@@ -2252,6 +2252,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$markerVisibility;
     }
 
+    reCalculateStrategyItemsOrder(): void {
+        this._reBuild();
+        this.nextVersion();
+    }
     // region SerializableMixin
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, T> {

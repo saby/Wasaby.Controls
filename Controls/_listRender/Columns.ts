@@ -26,7 +26,9 @@ export default class Columns extends BaseRender {
     protected _beforeUnmount(): void {
         this._unsubscribeFromModelChanges(this._options.listModel);
     }
-
+    protected _columnMouseMove(_: SyntheticEvent<MouseEvent>, index: number): void {
+        this._notify('columnMouseMove', [index]);
+    }
     protected _resizeHandler(): void {
         this._notify('resize', []);
     }

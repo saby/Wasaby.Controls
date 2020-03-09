@@ -5,16 +5,16 @@
 }
 
 .controls-ColumnsView_column {
-   height: fit-content;
+   height: 100%;
    max-width: @max-width_ColumnsView_tile;
 }
 
-.controls-ColumnsView__itemsContainer,
-.controls-ColumnsView_column {
+.controls-ColumnsView__itemsContainer {
    margin: 0 @side-spacing_ColumnsView_columns;
 }
 
 .controls-ColumnsView__itemV {
+   user-select: none;
    box-sizing: border-box;
    box-shadow: @shadow_ColumnsView_tile_normal;
    display: inline-block;

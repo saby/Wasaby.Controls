@@ -2,19 +2,27 @@ import * as template from 'wml!Controls/_list/ColumnsInnerView';
 import ColumnsController from './Controllers/ColumnsController';
 import { TemplateFunction, Control } from 'UI/Base';
 import {IList} from 'Controls/_list/interface/IList';
-import { ColumnsCollection as Collection, ColumnsCollectionItem as CollectionItem} from 'Controls/display';
+import {
+    ColumnsCollection as Collection,
+    ColumnsCollectionItem as CollectionItem,
+    ICollectionCommand,
+    MarkerCommands,
+    DragCommands
+} from 'Controls/display';
 import { ICrudPlus } from 'Types/source';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { constants } from 'Env/Env';
+import { Model } from 'Types/entity';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
 export interface IColumnsInnerViewOptions extends IList {
     columnMinWidth: number;
     columnMaxWidth: number;
-    listModel: Collection<unknown>;
+    listModel: Collection<Model>;
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
     source: ICrudPlus;
+    itemsDragNDrop?: boolean;
 }
 
 const SPACING = 16;
@@ -30,8 +38,12 @@ export default class ColumnsInnerView extends Control {
     private _maxWidth: number = DEFAULT_MAX_WIDTH;
     private _columnsController: ColumnsController;
     private _columnsIndexes: number[][];
-    private _model: Collection<unknown>;
-
+    private _model: Collection<Model>;
+    private _draggingItem: CollectionItem<Model>;
+    private _draggingItems: Array<CollectionItem<Model>>;
+    private _draggingTarget: CollectionItem<Model>;
+    private _avatarItem: CollectionItem<Model>;
+    private _isDragInside: boolean;
     protected _options: IColumnsInnerViewOptions;
 
     protected _beforeMount(options: IColumnsInnerViewOptions): void {
@@ -49,6 +61,8 @@ export default class ColumnsInnerView extends Control {
 
     protected _afterMount(): void {
        this._resizeHandler();
+
+       this._notify('register', ['mouseup', this, this._onMouseUp], {bubbling: true});
     }
 
     protected _beforeUpdate(options: IColumnsInnerViewOptions): void {
@@ -69,7 +83,7 @@ export default class ColumnsInnerView extends Control {
             this.updateColumns();
         }
     }
-    private setColumnOnItem(item: CollectionItem<unknown>, index: number): void {
+    private setColumnOnItem(item: CollectionItem<Model>, index: number): void {
         const model = this._model;
         const column = this._columnsController.calcColumn(model, index, this._columnsCount);
         item.setColumn(column);
@@ -98,9 +112,9 @@ export default class ColumnsInnerView extends Control {
     }
     protected _onCollectionChange(_e: unknown,
                                   action: string,
-                                  newItems: [CollectionItem<unknown>],
+                                  newItems: [CollectionItem<Model>],
                                   newItemsIndex: number,
-                                  removedItems: [CollectionItem<unknown>],
+                                  removedItems: [CollectionItem<Model>],
                                   removedItemsIndex: number): void {
         if (action === 'rm') {
             this.processRemoving(removedItemsIndex);
@@ -108,7 +122,7 @@ export default class ColumnsInnerView extends Control {
         if (action === 'a') {
             newItems.forEach(this.setColumnOnItem.bind(this));
         }
-        if (action !== 'ch') {
+        if (action !== 'ch' && action !== 'm') {
             this.updateColumns();
         }
     }
@@ -117,19 +131,19 @@ export default class ColumnsInnerView extends Control {
         this._unsubscribeFromModelChanges(this._options.listModel);
     }
 
-    protected _unsubscribeFromModelChanges(model: Collection<unknown>): void {
+    protected _unsubscribeFromModelChanges(model: Collection<Model>): void {
         if (model && !model.destroyed) {
             this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChange);
         }
     }
 
-    protected _subscribeToModelChanges(model: Collection<unknown>): void {
+    protected _subscribeToModelChanges(model: Collection<Model>): void {
         this._unsubscribeFromModelChanges(this._options.listModel);
         if (model && !model.destroyed) {
             model.subscribe('onCollectionChange', this._onCollectionChange);
         }
     }
-    private getItemToLeft(model: Collection<unknown>, item: CollectionItem<unknown>): CollectionItem<unknown> {
+    private getItemToLeft(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
         if (this._options.columnsMode === 'auto') {
@@ -148,7 +162,7 @@ export default class ColumnsInnerView extends Control {
         }
         return model.at(newIndex);
     }
-    private getItemToRight(model: Collection<unknown>, item: CollectionItem<unknown>): CollectionItem<unknown> {
+    private getItemToRight(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
         if (this._options.columnsMode === 'auto') {
@@ -169,7 +183,7 @@ export default class ColumnsInnerView extends Control {
         }
         return model.at(newIndex);
     }
-    private getItemToUp(model: Collection<unknown>, item: CollectionItem<unknown>): CollectionItem<unknown> {
+    private getItemToUp(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
         if (this._options.columnsMode === 'auto') {
@@ -187,7 +201,7 @@ export default class ColumnsInnerView extends Control {
         }
         return model.at(newIndex);
     }
-    private getItemToDown(model: Collection<unknown>, item: CollectionItem<unknown>): CollectionItem<unknown> {
+    private getItemToDown(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
         if (this._options.columnsMode === 'auto') {
@@ -209,11 +223,12 @@ export default class ColumnsInnerView extends Control {
     private moveMarker(direction: string): void {
         const model = this._options.listModel;
         if (model && this._options.markerVisibility !== 'hidden') {
-            const curMarkedItem = model.getMarkedItem() as CollectionItem<unknown>;
-            let newMarkedItem: CollectionItem<unknown>;
+            const curMarkedItem = this._model.find((item) => item.isMarked());
+            let newMarkedItem: CollectionItem<Model>;
             newMarkedItem = this[`getItemTo${direction}`](model, curMarkedItem);
             if (newMarkedItem && curMarkedItem !== newMarkedItem) {
-                model.setMarkedItem(newMarkedItem);
+                const moveMarker = new MarkerCommands.Mark(newMarkedItem.getContents().getKey());
+                this._executeCommands([moveMarker]);
                 const column = newMarkedItem.getColumn();
                 const curIndex = model.getIndex(newMarkedItem);
                 const columnIndex = this._columnsIndexes[column].indexOf(curIndex);
@@ -237,6 +252,118 @@ export default class ColumnsInnerView extends Control {
             return true;
         }
     }
+
+    protected _executeCommands(commands: Array<ICollectionCommand<unknown>>): void {
+        commands.forEach((command) => command.execute(this._model));
+    }
+    _onColumnMouseMove(e: SyntheticEvent<null>, index: number) {
+        if (this._avatarItem && this._avatarItem.getColumn() !== index) {
+            this._avatarItem.setColumn(index);
+            if (this._columnsIndexes[index].length) {
+                const newIndex = this._columnsIndexes[index][this._columnsIndexes[index].length - 1];
+                const dragCommand = new  DragCommands.Move(newIndex);
+                this._executeCommands([dragCommand]);
+            }
+
+        }
+    }
+    _onItemMouseDown(e: SyntheticEvent<MouseEvent>,
+                     item: CollectionItem<Model>,
+                     domEvent: SyntheticEvent<MouseEvent>): void {
+        if (this.canStartDragNDrop(domEvent, this._options)) {
+            this._draggingItem = item;
+            const items = this._model.getSelectedItems();
+            this._draggingItems = [...items];
+            if (!this._draggingItems.includes(item)) {
+                this._draggingItems.push(item);
+            }
+            const itemsKeys = this._draggingItems.map((item) => item.getContents().getKey());
+
+            const dragStartResult = this._notify('dragStart', [itemsKeys]);
+
+            if (dragStartResult && this._options.dragNDropControl) {
+                this._options.dragNDropControl.startDragNDrop(dragStartResult, domEvent);
+            }
+        }
+        this._notify('itemMouseDown', [item, domEvent.nativeEvent]);
+    }
+    _onItemMouseMove(e: SyntheticEvent<MouseEvent>,
+                     item: CollectionItem<Model>): void {
+
+        if (this._options.itemsDragNDrop && this._draggingItem) {
+            if (this._draggingItem !== item) {
+                this.itemDragMove(item);
+            }
+            this._isDragInside = true;
+        }
+    }
+    _onMouseUp(e: SyntheticEvent<MouseEvent>): void {
+         this.dragEnd();
+    }
+    _onMouseLeave(): void {
+        if (this._options.itemsDragNDrop && this._draggingItem) {
+            this._isDragInside = false;
+        }
+    }
+    private canStartDragNDrop(domEvent: SyntheticEvent<MouseEvent>, cfg: unknown): boolean {
+        return (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
+            !(domEvent.nativeEvent.button) &&
+            !cfg.readOnly &&
+            cfg.itemsDragNDrop &&
+            !domEvent.target.closest('.controls-DragNDrop__notDraggable');
+    }
+
+    dragStart(): void {
+
+        const key = this._draggingItem .getContents().getKey();
+        const itemsKeys = this._draggingItems.map((item) => item.getContents().getKey());
+        const dragCommand = new DragCommands.Start(itemsKeys, key);
+        this._executeCommands([dragCommand]);
+        this._avatarItem = new DragCommands.GetAvatarItem().execute(this._model) as CollectionItem<Model>;
+        this._avatarItem.setColumn(this._draggingItem .getColumn());
+
+    }
+    protected itemDragMove(item: CollectionItem<Model>): void {
+        if (this._draggingTarget !== item) {
+            this._draggingTarget = item;
+
+            if (this._avatarItem.getContents().getKey() !== item.getContents().getKey()) {
+                const newIndex = this._model.getIndex(item);
+                const dragCommand = new  DragCommands.Move(newIndex);
+                this._avatarItem.setColumn(item.getColumn());
+                this._executeCommands([dragCommand]);
+            }
+        }
+    }
+    private moveItems(items: CollectionItem<Model>[], to: number): void {
+        if (!(items instanceof Array)) {
+            items = [items];
+        }
+        const collection = this._model.getCollection();
+        items.forEach((from) => {
+            collection.move(collection.getIndex(from.getContents()), to);
+        });
+    }
+    protected dragEnd(): void {
+        const avatarItemIndex = this._model.getIndex(this._avatarItem);
+        if (this._avatarItem && avatarItemIndex !== null && this._isDragInside) {
+            const items = this._draggingItems;
+            const itemsKeys = items.map((item) => item.getContents().getKey());
+            this.moveItems([...items], avatarItemIndex);
+            this._options.source.move([...itemsKeys], this._avatarItem.getContents().getKey());
+            items.map((i) => {
+                i.setColumn(this._avatarItem.getColumn());
+            });
+        }
+        const dragCommand = new  DragCommands.Stop();
+        this._executeCommands([dragCommand]);
+        this._draggingItem = null;
+        this._draggingItems = null;
+        this._avatarItem = null;
+        this._draggingTarget = null;
+        this._isDragInside = false;
+    }
+
     static getDefaultOptions(): Partial<IColumnsInnerViewOptions> {
         return {
             columnMinWidth: DEFAULT_MIN_WIDTH,

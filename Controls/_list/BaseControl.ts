@@ -1800,6 +1800,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
                     if (newOptions.useNewModel && !self._listViewModel && result.data) {
+                        self._items = result.data;
                         self._listViewModel = self._createNewModel(
                             result.data,
                             viewModelConfig,
@@ -2446,7 +2447,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             self = this,
             dragStartResult;
 
-        if (_private.canStartDragNDrop(domEvent, this._options)) {
+        if (!this._options.useNewModel && _private.canStartDragNDrop(domEvent, this._options)) {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
@@ -2495,12 +2496,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject, domEvent) {
-        this._listViewModel.setDragEntity(dragObject.entity);
-        this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
+        if (!this._options.useNewModel) {
+            this._listViewModel.setDragEntity(dragObject.entity);
+            this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
+        } else if (this._options._dragStartHandler) {
+            this._options._dragStartHandler(event, dragObject, domEvent);
+        }
     },
 
     _dragEnd: function(event, dragObject) {
-        if (this._options.itemsDragNDrop) {
+        if (this._options.itemsDragNDrop && !this._options.useNewModel) {
             this._dragEndHandler(dragObject);
         }
     },
@@ -2534,7 +2539,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
     _dragEnter: function(event, dragObject) {
         if (
-            dragObject &&
+            dragObject && !this._options.useNewModel &&
             !this._listViewModel.getDragEntity() &&
             cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
@@ -2551,7 +2556,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragLeave: function() {
-        this._listViewModel.setDragTargetPosition(null);
+        if (!this._options.useNewModel) {
+            this._listViewModel.setDragTargetPosition(null);
+        }
     },
 
     _documentDragEnd: function() {
@@ -2570,13 +2577,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _documentDragEndHandler: function() {
-        this._listViewModel.setDragTargetPosition(null);
-        this._listViewModel.setDragItemData(null);
-        this._listViewModel.setDragEntity(null);
+        if (!this._options.useNewModel) {
+            this._listViewModel.setDragTargetPosition(null);
+            this._listViewModel.setDragItemData(null);
+            this._listViewModel.setDragEntity(null);
+        }
     },
 
     _itemMouseEnter: function(event, itemData, nativeEvent) {
-        if (this._options.itemsDragNDrop) {
+        if (this._options.itemsDragNDrop && !this._options.useNewModel) {
             var
                 dragPosition,
                 dragEntity = this._listViewModel.getDragEntity();

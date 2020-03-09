@@ -148,6 +148,7 @@
                 template="{{ _options.content }}"
                 scope="{{_options}}"
                 loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
+                dragNDropControl="{{_children.dragNDropController}}"
                 _pagingVisible="{{_pagingVisible}}"
                 _needBottomPadding="{{_needBottomPadding}}"
                 multiSelectReady="{{_multiSelectReady}}"
@@ -165,6 +166,7 @@
                 on:itemMouseLeave="_itemMouseLeave()"
                 on:hoveredItemChanged="_onHoveredItemChanged()"
                 on:itemSwipe="_listSwipe()"
+                on:dragStart="_notifyHandler('dragStart')"
         >
             <ws:viewTemplate>
                 <ws:partial template="{{_options.viewName}}"/>

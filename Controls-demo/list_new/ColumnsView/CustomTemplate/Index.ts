@@ -3,6 +3,7 @@ import template = require('wml!Controls-demo/list_new/ColumnsView/CustomTemplate
 import 'css!Controls-demo/Controls-demo';
 import {Memory as MemorySource, Memory} from 'Types/source';
 import {generateData} from '../../DemoHelpers/DataCatalog';
+import {ListItems} from 'Controls/dragnDrop';
 
 const NUMBER_OF_ITEMS = 50;
 
@@ -28,7 +29,15 @@ export default class RenderDemo extends Control {
     private _itemsReadyCallback(items): void {
         this._items = items;
     }
+    private _dragStart(e, items): unknown {
 
+        return new ListItems({
+            items: items
+        });
+    }
+    private _selectedKeysChanged(): void {
+        //
+    }
     protected _beforeMount(): void {
         this._itemActions = [{
             id: 1,
