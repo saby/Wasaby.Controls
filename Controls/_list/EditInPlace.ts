@@ -489,6 +489,8 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _onKeyDown: function (e, nativeEvent) {
         switch (nativeEvent.keyCode) {
             case 13: // Enter
+                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                e.stopPropagation();
                 if (this._options.editingConfig && !this._sequentialEditing) {
                     this.commitEdit();
                 } else {
@@ -496,6 +498,8 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 }
                 break;
             case 27: // Esc
+                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                e.stopPropagation();
                 this.cancelEdit();
                 break;
         }
