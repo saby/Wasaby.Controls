@@ -2767,6 +2767,8 @@ BaseControl.contextTypes = function contextTypes() {
     };
 };
 
+BaseControl._theme = ['Controls/Classes'];
+
 BaseControl.getDefaultOptions = function() {
     return {
         uniqueKeys: true,

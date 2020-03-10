@@ -95,6 +95,16 @@
 .controls-VScrollbar__thumb_horizontal {
    min-width: @thumb_min-length_scrollbar;
    height: 100%;
+   transition: height 0.3s ease-in-out, border-radius 0.3s ease-in-out;
+   width: 100%;
+}
+
+.controls-VScrollbar__thumb_horizontal_size-s {
+   height: @thumb_s_thickness_scrollbar;
+}
+
+.controls-VScrollbar__thumb_horizontal_size-l {
+   height: @thumb_l_thickness_scrollbar;
 }
 
 .controls-VScrollbar_vertical_size-l:hover,
