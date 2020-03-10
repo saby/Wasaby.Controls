@@ -1,5 +1,6 @@
 import { default as BaseOpener, IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {Logger} from 'UI/Utils';
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 
 /**
@@ -42,6 +43,17 @@ const getStackConfig = (config: IStackOpenerOptions = {}) => {
     // For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
     config._type = 'stack'; // TODO: Compatible for compoundArea
+
+    // TODO: Compatible
+    // На старой странице могут открывать на одном уровне 2 стековых окна.
+    // Последнее открытое окно должно быть выше предыдущего, для этого должно знать его zIndex. Данные хранятся в WM
+    if (!isNewEnvironment() && !config.zIndex) {
+        const oldWindowManager = requirejs('Core/WindowManager');
+        const zIndexStep = 9;
+        if (oldWindowManager) {
+            config.zIndex = oldWindowManager.getMaxZIndex() + zIndexStep;
+        }
+    }
     return config;
 };
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
