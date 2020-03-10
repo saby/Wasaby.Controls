@@ -217,7 +217,7 @@ export default class ColumnsInnerView extends Control {
             newMarkedItem = this[`getItemTo${direction}`](model, curMarkedItem);
             if (newMarkedItem && curMarkedItem !== newMarkedItem) {
                 const moveMarker = new MarkerCommands.Mark(newMarkedItem.getContents().getKey());
-                this._executeCommands([moveMarker]);
+                moveMarker.execute(this._model);
                 const column = newMarkedItem.getColumn();
                 const curIndex = model.getIndex(newMarkedItem);
                 const columnIndex = this._columnsIndexes[column].indexOf(curIndex);
