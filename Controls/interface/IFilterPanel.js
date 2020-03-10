@@ -403,6 +403,34 @@ define('Controls/interface/IFilterPanel', [], function() {
     */
 
    /**
+    * @name Controls/interface/IFilterPanel#footerTemplate
+    * @cfg {Function|String}  Шаблон отображения подвала в панели фильтра.
+    * @example
+    * Пример настройки параметра footerTemplate
+    * <pre>
+    *    <Controls.filterPopup:Panel>
+    *       <ws:footerTemplate>
+    *           <ws:partial template="MyModule/control:footerTemplate" />
+    *       </ws:footerTemplate>
+    *    </Controls.filterPopup:Panel>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/interface/IFilterPanel#footerTemplate
+    * @cfg {Function|String} Template that will be rendered below the filter panel
+    * @example
+    * Example of setting options footerTemplate
+    * <pre>
+    *    <Controls.filterPopup:Panel>
+    *       <ws:footerTemplate>
+    *           <ws:partial template="MyModule/control:footerTemplate" />
+    *       </ws:footerTemplate>
+    *    </Controls.filterPopup:Panel>
+    * </pre>
+    */
+
+   /**
     * @name Controls/interface/IFilterPanel#additionalTemplateProperty
     * @demo Controls-demo/Filter_new/FilterView/Source/AdditionalTemplateProperty/Index
     * @cfg {String} Имя свойства элемента, содержащего шаблон отображения элемента в блоке "Еще можно отобрать". Если параметр не задан, вместо него используется additionalTemplate.

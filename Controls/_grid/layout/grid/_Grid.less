@@ -140,8 +140,8 @@
    box-sizing: border-box;
    position: relative;
 }
-.controls-Grid__itemAction {
-   z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у колонок results;
+.controls-Grid__itemAction.controls-itemActionsV_outside {
+   z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у results; только для весла, иначе будут поверх шапки
 }
 
 
@@ -717,4 +717,13 @@
 
 .controls-Grid__cell-content_full-height {
    height: 100%;
+}
+
+.controls-Grid__cell_tag {
+   position: relative;
+   right: -@tag_offset-horizontal_gridView;
+
+   .controls__tag_theme-@{themeName} {
+      top: -@tag_offset-vertical_gridView;
+   }
 }

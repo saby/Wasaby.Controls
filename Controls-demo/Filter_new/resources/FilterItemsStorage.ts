@@ -87,7 +87,8 @@ const defaultItems = [{
             emptyCaption: 'Весь период',
             editorMode: 'Selector',
             chooseHalfyears: true,
-            chooseYears: true
+            chooseYears: true,
+            clearButtonVisibility: true
         },
         viewMode: 'basic'
     },
