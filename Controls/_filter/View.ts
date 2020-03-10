@@ -410,7 +410,7 @@ var _private = {
             keyProperty = config.keyProperty;
 
         factory(selectedItems).each(function(item) {
-            if (item.has(keyProperty) && !curItems.getRecordById(object.getPropertyValue(item, keyProperty))) {
+            if (item.has(keyProperty)) {
                 newItems.push(item);
             }
         });
@@ -508,8 +508,6 @@ var _private = {
                     sKey = _private.prepareHierarchySelection(sKey, curConfig, item.resetValue);
                 }
                 const selectedItems = _private.getSelectedItems(curConfig.items, sKey);
-                curConfig.popupItems = getItemsWithHistory(curConfig.popupItems || CoreClone(curConfig.items), selectedItems,
-                    curConfig.sourceController, item.editorOptions.source, curConfig.keyProperty);
                 _private.setValue(self, sKey, index);
                 _private.updateHistory(self, index, selectedItems);
             }
