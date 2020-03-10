@@ -10,12 +10,12 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  * Декорация ссылки выполняется через {@link https://wi.sbis.ru/doc/platform/developmentapl/middleware/link-decorator/ Сервис декорирования ссылок}.
  * Функция предназначена для использования в контроле {@link Controls/decorator:Markup} в опции {@link https://wi.sbis.ru/docs/js/Controls/decorator/Markup/options/tagResolver/ tagResolver}.
  * @example
- * WML:
  * <pre class="brush: xml">
+ * <!-- WML -->
  *    <Controls.decorator:Markup value="{{ _json }}" tagResolver="{{ _tagResolver }}" />
  * </pre>
- * JS:
  * <pre class="brush: js">
+ * // JavaScript
  * define("MyControl", ["UI/Base", "wml!MyControl", "Controls/decorator"], 
  * function(Base, template, decorator) {
  *    var ModuleClass = Base.Control.extend({
@@ -25,16 +25,15 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *          [
  *             [
  *                ["p", 
- * &#160;
+ *                   &#160;
  *                   // Ссылка, подходящая для декорирования, сразу в json
  *                   ["a",
- *                      {"href": "https://ya.ru
- *                      "},
+ *                      {"href": "https://ya.ru"},
  *                      "https://ya.ru"
  *                   ]
  *                ],
  *                ["p", 
- * &#160;
+ *                   &#160;
  *                   // Ссылка, не подходящая для декорирования, сразу в json
  *                   ["a",
  *                      {"href": "http://www.google.com"},
@@ -42,7 +41,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *                   ]
  *                ],
  *                ["pre", 
- * &#160;
+ *                   &#160;
  *                   // Не подходящая и подходящая ссылки прямо в plain/text строке, 
  *                   //положенной в тег pre для отображения переноса строки \n
  *                   "     www.google.com\nhttps://ya.ru"
@@ -53,7 +52,9 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *   return ModuleClass;
  * });
  * </pre>
+ * 
  * Результат:
+ * 
  * <pre class="brush: html">
  * <div>
  *    <p>
@@ -68,7 +69,6 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *    </p>
  *    <pre>
  *       <a href="http://www.google.com">www.google.com</a>
- *       \n
  *       <span class="...">
  *          <a class="..." href="https://ya.ru">
  *             <img class="..." src="..." alt="https://ya.ru"></img>

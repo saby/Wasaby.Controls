@@ -168,6 +168,7 @@ export default class ErrorController {
         this._popupHelper.openConfirmation({
             type: 'ok',
             style: 'danger',
+            theme: config.theme,
             message: config.error.message
         });
     }

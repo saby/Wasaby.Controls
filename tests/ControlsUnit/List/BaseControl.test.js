@@ -2065,6 +2065,7 @@ define([
          });
 
          var cfg = {
+            keyProperty: 'id',
             viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
@@ -2098,6 +2099,18 @@ define([
             ctrl._notify = function(event, dir) {
                result = dir;
             };
+            ctrl._children = {
+               scrollController: {
+                  scrollToItem(key) {
+                     if (key === data[0].id) {
+                        result = 'top';
+                     } else if (key === data[data.length - 1].id) {
+                        result = 'bottom';
+                     }
+                     return Promise.resolve();
+                  }
+               }
+            };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
             lists.BaseControl._private.scrollToEdge(ctrl, 'down');
@@ -2122,6 +2135,7 @@ define([
          });
 
          var cfg = {
+            keyProperty: 'id',
             viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
@@ -2160,6 +2174,18 @@ define([
          setTimeout(function() {
             ctrl._notify = function(eventName, type) {
                result = type;
+            };
+            ctrl._children = {
+               scrollController: {
+                  scrollToItem(key) {
+                     if (key === data[0].id) {
+                        result = ['top'];
+                     } else if (key === data[data.length - 1].id) {
+                        result = ['bottom'];
+                     }
+                     return Promise.resolve();
+                  }
+               }
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -2200,6 +2226,7 @@ define([
 
       it('_processError', function() {
          var self = {
+            _options: {},
             _loadingState: 'all',
             _notify: () => {
             },
@@ -2552,15 +2579,17 @@ define([
             assert.equal(actionsUpdateCount, 0);
             baseControl._beforeMount(cfg);
          });
-        // it('without itemActions nothing should happen', function() {
-        //    baseControl._beforeUpdate({
-        //       ...cfg,
-        //       itemActions: null,
-        //       itemActionsProperty: null
-        //    });
-        //    baseControl._updateItemActions();
-        //    assert.equal(actionsUpdateCount, 0);
-        // });
+         it('without itemActions nothing should happen', function() {
+            baseControl._beforeUpdate({
+               ...cfg,
+               itemActions: null,
+               itemActionsProperty: null
+            });
+            baseControl._children.itemActions = undefined;
+            actionsUpdateCount = 0;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 0);
+         });
       });
 
       describe('resetScrollAfterReload', function() {

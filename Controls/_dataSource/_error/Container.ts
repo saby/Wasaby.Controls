@@ -74,7 +74,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
      * @public
      */
     show(viewConfig: ViewConfig): void {
-        if (viewConfig.mode === Mode.dialog) {
+        if (viewConfig && viewConfig.mode === Mode.dialog) {
             return this.__showDialog(viewConfig);
         }
         this.__setConfig(viewConfig);
