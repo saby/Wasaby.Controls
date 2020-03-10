@@ -9,6 +9,7 @@
  * @includes IFontColorStyle Controls/_interface/IFontColorStyle
  * @includes IFontSize Controls/_interface/IFontSize
  * @includes IFontWeight Controls/_interface/IFontWeight
+ * @includes IFontWeightOptions Controls/_interface/IFontWeightOptions
  * @includes IHeight Controls/_interface/IHeight
  * @includes ISource Controls/_interface/ISource
  * @includes IErrorController Controls/_interface/IErrorController
