@@ -32,8 +32,6 @@ export default class ColumnsInnerView extends Control {
     _template: TemplateFunction = template;
     private _itemsContainer: HTMLDivElement;
     private _columnsCount: number = DEFAULT_COLUMNS_COUNT;
-    private _minWidth: number = DEFAULT_MIN_WIDTH;
-    private _maxWidth: number = DEFAULT_MAX_WIDTH;
     private _columnsController: ColumnsController;
     private _columnsIndexes: number[][];
     private _model: Collection<Model>;

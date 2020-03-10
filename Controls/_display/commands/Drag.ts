@@ -24,13 +24,13 @@ export class Start implements ICollectionCommand<IDragItem> {
 }
 
 export class Move implements ICollectionCommand<IDragItem> {
-    constructor(private index: number) {
-    }
+    constructor(private index: number) {}
 
     execute(collection: IDragCollection): void {
         const strategy = collection.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
         if (strategy) {
             strategy.avatarIndex = this.index;
+            collection.nextVersion();
         }
     }
 }

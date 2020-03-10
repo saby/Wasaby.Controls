@@ -1,5 +1,5 @@
 .controls-ColumnsView__itemsContainer {
-   display: flex;
+   display: grid;
    flex-direction: row;
    justify-content: flex-start;
 }
@@ -11,6 +11,7 @@
 
 .controls-ColumnsView__itemsContainer {
    margin: 0 @side-spacing_ColumnsView_columns;
+   column-gap: @side-spacing_ColumnsView_columns_val * 2;
 }
 
 .controls-ColumnsView__itemV {
