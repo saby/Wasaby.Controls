@@ -4,6 +4,19 @@
    border-color: @border-color_searchInput;
    background: @background-color_searchInput;
    border-radius: @border-radius_default_searchInput;
+
+   &:focus-within {
+      border-color: @border-color_focus_searchInput;
+      background: @background-color_focus_searchInput;
+   }
+}
+
+.controls-Render_state-search-valid-active_theme-@{themeName},
+.controls-Render_state-search-invalid-active_theme-@{themeName},
+.controls-Render_state-search-invalidAccent-active_theme-@{themeName} {
+   border-color: @border-color_focus_searchInput;
+   background: @background-color_focus_searchInput;
+   border-radius: @border-radius_default_searchInput;
 }
 
 .controls-Render_state-searchContrast-valid_theme-@{themeName},
@@ -12,25 +25,16 @@
    border-color: @border-color_contrast_searchInput;
    background: @background-color_contrast_searchInput;
    border-radius: @border-radius_default_searchInput;
-}
 
-.controls-Render_state-search-valid-active_theme-@{themeName},
-.controls-Render_state-search-invalid-active_theme-@{themeName},
-.controls-Render_state-search-invalidAccent-active_theme-@{themeName},
-.controls-Render_state-search-valid_theme-@{themeName}:focus-within,
-.controls-Render_state-search-invalid_theme-@{themeName}:focus-within,
-.controls-Render_state-search-invalidAccent_theme-@{themeName}:focus-within {
-   border-color: @border-color_focus_searchInput;
-   background: @background-color_focus_searchInput;
-   border-radius: @border-radius_default_searchInput;
+   &:focus-within {
+      border-color: @border-color_contrast_focus_searchInput;
+      background: @background-color_contrast_focus_searchInput;
+   }
 }
 
 .controls-Render_state-searchContrast-valid-active_theme-@{themeName},
 .controls-Render_state-searchContrast-invalid-active_theme-@{themeName},
-.controls-Render_state-searchContrast-invalidAccent-active_theme-@{themeName},
-.controls-Render_state-searchContrast-valid_theme-@{themeName}:focus-within,
-.controls-Render_state-searchContrast-invalid_theme-@{themeName}:focus-within,
-.controls-Render_state-searchContrast-invalidAccent_theme-@{themeName}:focus-within {
+.controls-Render_state-searchContrast-invalidAccent-active_theme-@{themeName} {
    border-color: @border-color_contrast_focus_searchInput;
    background: @background-color_contrast_focus_searchInput;
    border-radius: @border-radius_default_searchInput;
