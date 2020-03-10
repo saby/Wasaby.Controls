@@ -70,7 +70,7 @@
 }
 
 .controls-VScrollbar__thumbWrapper_horizontal {
-   min-width: @thumb_min-length_scrollbar;
+   min-width: @thumb_min-length_scrollbar + @track_offset_scrollbar * 2;
    height: 100%;
    padding: @padding_scrollbar @track_offset_scrollbar;
    transition: padding 0.3s ease-in-out;
@@ -93,7 +93,6 @@
 }
 
 .controls-VScrollbar__thumb_horizontal {
-   min-width: @thumb_min-length_scrollbar;
    height: 100%;
    transition: height 0.3s ease-in-out, border-radius 0.3s ease-in-out;
    width: 100%;
