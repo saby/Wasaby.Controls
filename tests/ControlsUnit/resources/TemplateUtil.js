@@ -20,21 +20,23 @@ define('ControlsUnit/resources/TemplateUtil',
       return {
          content: SimpleContent,
 
-         clearTemplatePromise: function(markup) {
-            const self = this;
-            return markup
-               .then(function(resolved) {
-                  return self.clearMarkup(resolved);
-               })
-               .catch(function() {
-                  return Promise.resolve('');
-               });
-         },
-
          clearTemplate: function(template) {
             const self = this;
-            return function(inst, async) {
-               return async ? self.clearTemplatePromise(template(inst)) : self.clearMarkup(template(inst));
+            return function(inst, callback) {
+               const result = template(inst);
+               if (!callback) {
+                  return self.clearMarkup(result);
+               }
+               if (result.then !== undefined) {
+                  return result
+                     .then(function(markup) {
+                        return callback(self.clearMarkup(markup));
+                     })
+                     .catch(function() {
+                        return Promise.resolve('');
+                     });
+               }
+               return callback(self.clearMarkup(result));
             };
          },
 

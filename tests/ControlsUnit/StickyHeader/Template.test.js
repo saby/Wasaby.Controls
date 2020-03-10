@@ -47,14 +47,16 @@ define(
                inst._isStickySupport = true;
                inst._options.content = TemplateUtil.content;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader__background controls-StickyHeader_position">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
-                  '<div></div><div></div>' +
-                  '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
-                  '<div class="controls-StickyHeader__content">testing the template</div>' +
-                  '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
-                  '</div>');
+               template(inst, function(result) {
+                  assert.equal(result, '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader__background controls-StickyHeader_position">' +
+                     '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
+                     '<div></div><div></div>' +
+                     '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+                     '<div class="controls-StickyHeader__content">testing the template</div>' +
+                     '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                     '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
+                     '</div>');
+               });
             });
          });
 
@@ -78,7 +80,7 @@ define(
                inst._options.theme = 'default';
                inst._options.content = function() {return ''};
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
@@ -100,7 +102,7 @@ define(
                inst._options.theme = 'default';
                inst._options.content = function() {return ''};
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader_position" style="top: -1px;padding-top:1px;margin-top: -1px;z-index: 2;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: -1px;padding-top:1px;margin-top: -1px;z-index: 2;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
@@ -116,7 +118,7 @@ define(
                inst._options.theme = 'default';
                inst._options.content = function() {return ''};
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader_position" style="top: 10px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 10px;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
@@ -132,7 +134,7 @@ define(
                inst._options.theme = 'default';
                inst._options.content = function() {return ''};
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader_position" style="bottom: 10px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="bottom: 10px;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
@@ -146,7 +148,7 @@ define(
                inst._options.content = TemplateUtil.content;
                inst._options.theme = 'default';
 
-               assert.equal(template(inst),   '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader_position" style="top: 0px;">' +
+               assert.equal(template(inst),   '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
@@ -165,7 +167,7 @@ define(
                inst._options.content = TemplateUtil.content;
                inst._options.theme = 'default';
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
@@ -185,7 +187,7 @@ define(
                inst._options.content = TemplateUtil.content;
                inst._options.theme = 'default';
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top"></div>' +
                   '<div></div>' +
                   '<div></div>' +
