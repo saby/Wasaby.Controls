@@ -48,7 +48,7 @@ define(
                inst._options.content = TemplateUtil.content;
 
                template(inst, function(result) {
-                  assert.equal(result, '<div class="controls-StickyHeader controls-background-default-theme-default controls-StickyHeader__background controls-StickyHeader_position">' +
+                  assert.equal(result, '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position">' +
                      '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                      '<div></div><div></div>' +
                      '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
