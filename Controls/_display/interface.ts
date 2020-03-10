@@ -17,5 +17,5 @@ export interface IStrategyCollection<T> {
 }
 
 export interface ICollectionCommand<T> {
-    execute(collection: IBaseCollection<T>): unknown;
+    execute(collection: IBaseCollection<T>): void;
 }

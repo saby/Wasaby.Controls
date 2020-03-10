@@ -8,12 +8,8 @@ export default class ColumnsControl extends ListControl {
     private _keyDownHandler: Function;
     protected _afterMount(): void {
         this._keyDownHandler = this.keyDownHandler.bind(this);
-        this._dragStartHandler = this.dragStartHandler.bind(this);
     }
     protected keyDownHandler(e: SyntheticEvent<KeyboardEvent>): boolean {
         return this._children.innerView.keyDownHandler.call(this._children.innerView, e);
-    }
-    protected dragStartHandler(): unknown {
-        return this._children.innerView.dragStart.apply(this._children.innerView, arguments);
     }
 }

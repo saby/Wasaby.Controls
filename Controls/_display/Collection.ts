@@ -2252,7 +2252,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$markerVisibility;
     }
 
-    reCalculateStrategyItemsOrder(): void {
+    recalculateStrategyItemsOrder(): void {
         this._reBuild();
         this.nextVersion();
     }

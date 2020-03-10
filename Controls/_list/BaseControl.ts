@@ -1695,6 +1695,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _portionedSearchInProgress: null,
     _showContinueSearchButton: false,
 
+    _draggingItem: null,
+    _draggingEntity: null,
+    _draggingTargetItem: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -2446,21 +2450,23 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             selection,
             self = this,
             dragStartResult;
-
-        if (!this._options.useNewModel && _private.canStartDragNDrop(domEvent, this._options)) {
+        const key = itemData.key || itemData.getContents().getKey();
+        if (_private.canStartDragNDrop(domEvent, this._options)) {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-            selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
+            selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, key);
             selection.recursive = false;
+            const recordSet = this._options.useNewModel ? this._listViewModel.getCollection() : this._listViewModel.getItems();
+
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
-            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter, LIMIT_DRAG_SELECTION).addCallback(function(items) {
-                const dragKeyPosition = items.indexOf(itemData.key);
+            getItemsBySelection(selection, this._options.source, recordSet, this._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
+                const dragKeyPosition = items.indexOf(key);
                 // If dragged item is in the list, but it's not the first one, move
                 // it to the front of the array
                 if (dragKeyPosition > 0) {
                     items.splice(dragKeyPosition, 1);
-                    items.unshift(itemData.key);
+                    items.unshift(key);
                 }
                 dragStartResult = self._notify('dragStart', [items]);
                 if (dragStartResult) {
@@ -2468,7 +2474,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         dragStartResult.dragControlId = self._options.dragControlId;
                     }
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
-                    self._itemDragData = itemData;
+                    self._draggingItem = itemData;
                 }
             });
         }
@@ -2496,26 +2502,27 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject, domEvent) {
-        if (!this._options.useNewModel) {
+        if (this._options.useNewModel) {
+            this._draggingEntity = dragObject.entity;
+        } else {
             this._listViewModel.setDragEntity(dragObject.entity);
-            this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
-        } else if (this._options._dragStartHandler) {
-            this._options._dragStartHandler(event, dragObject, domEvent);
+            this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
         }
     },
 
     _dragEnd: function(event, dragObject) {
-        if (this._options.itemsDragNDrop && !this._options.useNewModel) {
+        if (this._options.itemsDragNDrop) {
             this._dragEndHandler(dragObject);
         }
     },
 
     _dragEndHandler: function(dragObject) {
-        var targetPosition = this._listViewModel.getDragTargetPosition();
-        if (targetPosition) {
-            this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+        if (!this._options.useNewModel) {
+            var targetPosition = this._listViewModel.getDragTargetPosition();
+            if (targetPosition) {
+                this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            }
         }
-
         // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
         this._showActions = false;
     },
@@ -2556,7 +2563,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragLeave: function() {
-        if (!this._options.useNewModel) {
+        if (this._options.useNewModel) {
+            this._draggingTargetItem = null;
+        } else {
             this._listViewModel.setDragTargetPosition(null);
         }
     },
@@ -2577,7 +2586,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _documentDragEndHandler: function() {
-        if (!this._options.useNewModel) {
+        if (this._options.useNewModel) {
+            this._draggingEntity = null;
+            this._draggingItem = null;
+            this._draggingTargetItem = null;
+        } else {
             this._listViewModel.setDragTargetPosition(null);
             this._listViewModel.setDragItemData(null);
             this._listViewModel.setDragEntity(null);
@@ -2585,19 +2598,22 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseEnter: function(event, itemData, nativeEvent) {
-        if (this._options.itemsDragNDrop && !this._options.useNewModel) {
+        if (this._options.itemsDragNDrop) {
             var
                 dragPosition,
-                dragEntity = this._listViewModel.getDragEntity();
+                dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
 
             if (dragEntity) {
-                dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+                dragPosition = this._options.useNewModel ? {position: 'before', item: itemData.getContents()} : this._listViewModel.calculateDragTargetPosition(itemData);
 
-                if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                    this._listViewModel.setDragTargetPosition(dragPosition);
+                if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false)
+                    if (this._options.useNewModel) {
+                        this._draggingTargetItem = dragPosition.item;
+                    } else {
+                        this._listViewModel.setDragTargetPosition(dragPosition);
+                    }
                 }
             }
-        }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
