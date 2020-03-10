@@ -25,6 +25,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes IClickableView Controls/_list/interface/IClickableView
  * @public
  * @author Крайнов Д.О.
  */
@@ -55,6 +56,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes IClickableView Controls/_list/interface/IClickableView
  * @public
  * @author Крайнов Д.О.
  */
