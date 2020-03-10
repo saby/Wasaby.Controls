@@ -52,8 +52,7 @@ var
             columnsWidths = columnsWidths.concat(columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth())));
             if (shouldAddActionsCell({
                 hasColumnScroll: self._options.columnScroll,
-                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport(),
-                disableCellStyles: self._options.disableColumnScrollCellStyles
+                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport()
             })) {
                 columnsWidths = columnsWidths.concat(['0px']);
             }
@@ -189,9 +188,6 @@ var
             }
             if (this._options.columnScroll !== newCfg.columnScroll) {
                 this._listModel.setColumnScroll(newCfg.columnScroll);
-            }
-            if (this._options.disableColumnScrollCellStyles !== newCfg.disableColumnScrollCellStyles) {
-                this._listModel.setDisableColumnScrollCellStyles(newCfg.disableColumnScrollCellStyles);
             }
         },
 
