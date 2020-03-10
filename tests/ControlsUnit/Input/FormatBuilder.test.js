@@ -3,264 +3,252 @@ define(
       'Controls/input'
    ],
    function(input) {
-
       'use strict';
 
-      describe('Controls/_input/Mask/FormatBuilder', function() {
-         var result;
+      describe('Controls.input:MaskFormatBuilder', function() {
+         const MaskFormatBuilder = input.MaskFormatBuilder;
 
-         describe('_private.getMaskKeysString', function() {
-            it('Test_01', function() {
-               result = input.MaskFormatBuilder._private.getMaskKeysString({});
-               assert.equal(result, '');
+         it('PAIR_DELIMITERS', function() {
+            assert.equal(MaskFormatBuilder.PAIR_DELIMITERS, '(){}[]⟨⟩<>\'\'""«»„“‘’””');
+         });
+
+         it('getMaskParsing', function() {
+            const actual = MaskFormatBuilder.getMaskParsing('Lldx');
+            assert.deepEqual(actual, /([Lldx])(?:\\({.*?}|.))?|([\(\)\{\}\[\]⟨⟩<>''""«»„“‘’””])|(.)/g);
+         });
+
+         describe('getMaskKeys', function() {
+            it('Empty object', function() {
+               const actual = MaskFormatBuilder.getMaskKeys({});
+               assert.equal(actual, '');
             });
-            it('Test_02', function() {
-               result = input.MaskFormatBuilder._private.getMaskKeysString({
-                  'd': '[0-9]'
+            it('Fill object', function() {
+               const actual = MaskFormatBuilder.getMaskKeys({
+                  'd': '[0-9]',
+                  'l': '[a-z]'
                });
-               assert.equal(result, 'd');
-            });
-            it('Test_03', function() {
-               result = input.MaskFormatBuilder._private.getMaskKeysString({
-                  'L': '[А-ЯA-ZЁ]',
-                  'l': '[а-яa-zё]',
-                  'd': '[0-9]',
-                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-               });
-               assert.equal(result, 'Lldx');
+               assert.equal(actual, 'dl');
             });
          });
 
-         describe('_private.getReplacingKeyAsValue', function() {
-            it('Test_01', function() {
-               result = input.MaskFormatBuilder._private.getReplacingKeyAsValue({
-                  'L': '[А-ЯA-ZЁ]',
-                  'l': '[а-яa-zё]',
-                  'd': '[0-9]',
-                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-               }, 'd');
-               assert.equal(result, '[0-9]?');
+         describe('delimiterSubtype', function() {
+            it('Open', function() {
+               const actual = MaskFormatBuilder.delimiterSubtype('(');
+               assert.equal(actual, 'open');
+            });
+            it('Close', function() {
+               const actual = MaskFormatBuilder.delimiterSubtype(')');
+               assert.equal(actual, 'close');
+            });
+            it('Error', function() {
+               const actual = MaskFormatBuilder.delimiterSubtype.bind(MaskFormatBuilder, '-');
+               assert.throws(actual, Error, 'Неверно указан разделитель. Он должен быть парным.');
+            });
+         });
+         describe('pairOfDelimiter', function() {
+            it('Open', function() {
+               const actual = MaskFormatBuilder.pairOfDelimiter('(', 'open');
+               assert.equal(actual, ')');
+            });
+            it('Close', function() {
+               const actual = MaskFormatBuilder.pairOfDelimiter(')', 'close');
+               assert.equal(actual, '(');
+            });
+            it('Error subtype open', function() {
+               const actual = MaskFormatBuilder.pairOfDelimiter.bind(MaskFormatBuilder, ')', 'open');
+               assert.throws(actual, Error, 'Неверно указан разделитель или его подтип.');
+            });
+            it('Error subtype close', function() {
+               const actual = MaskFormatBuilder.pairOfDelimiter.bind(MaskFormatBuilder, '(', 'close');
+               assert.throws(actual, Error, 'Неверно указан разделитель или его подтип.');
             });
          });
 
-         describe('_private.getReplacingKeyFn', function() {
-            it('Test_01', function() {
-               result = input.MaskFormatBuilder._private.getReplacingKeyFn({
-                  'L': '[А-ЯA-ZЁ]',
-                  'l': '[а-яa-zё]',
-                  'd': '[0-9]',
-                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-               }, '');
-
-               assert.isFunction(result);
-               assert.equal(result('d', ''), '[0-9]?');
-               assert.equal(result('d', '*'), '(?:[0-9]*)?');
-            });
-            it('Test_02', function() {
-               result = input.MaskFormatBuilder._private.getReplacingKeyFn({
-                  'L': '[А-ЯA-ZЁ]',
-                  'l': '[а-яa-zё]',
-                  'd': '[0-9]',
-                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-               }, ' ');
-
-               assert.isFunction(result);
-               assert.equal(result('d', ''), '(?:[0-9]| )');
-               assert.equal(result('d', '*'), '(?:[0-9]| )*');
-            });
-            it('Test_03', function() {
-               result = input.MaskFormatBuilder._private.getReplacingKeyFn({
-                  'L': '[А-ЯA-ZЁ]',
-                  'l': '[а-яa-zё]',
-                  'd': '[0-9]',
-                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-               }, '*');
-
-               assert.isFunction(result);
-               assert.equal(result('d', ''), '(?:[0-9]|\\*)');
-               assert.equal(result('d', '*'), '(?:[0-9]|\\*)*');
-            });
-         });
-
-         describe('_private.getRegExpSearchingMaskChar', function() {
-            it('Test_01', function() {
-               result = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('', '', '');
-               assert.deepEqual(result, /(;$)|([])(?:\\({.*?}|.))?|(([])|([]))|(.)/g);
-            });
-            it('Test_02', function() {
-               result = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('d', '(', ')');
-               assert.deepEqual(result, /(;$)|([d])(?:\\({.*?}|.))?|(([\(])|([\)]))|(.)/g);
-            });
-            it('Test_03', function() {
-               result = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('Lldx', '', '');
-               assert.deepEqual(result, /(;$)|([Lldx])(?:\\({.*?}|.))?|(([])|([]))|(.)/g);
-            });
-            it('Test_04', function() {
-               result = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('', '(', ')');
-               assert.deepEqual(result, /(;$)|([])(?:\\({.*?}|.))?|(([\(])|([\)]))|(.)/g);
-            });
-         });
-
-         describe('getMaskCharData', function() {
-            var
-               regExp = input.MaskFormatBuilder._private.getRegExpSearchingMaskChar('dl', '(', ')'),
-               mask = 'dl\\*().';
-
-            beforeEach(function() {
-               result = input.MaskFormatBuilder._private.getMaskCharData(regExp.exec(mask));
-            });
-            it('Test_key', function() {
-               assert.deepEqual(result, {
-                  value: 'd',
+         describe('getCharData', function() {
+            it('Key', function() {
+               const actual = MaskFormatBuilder.getCharData(['d', 'd', undefined, undefined, undefined]);
+               assert.deepEqual(actual, {
                   type: 'key',
+                  value: 'd',
                   quantifier: ''
                });
             });
-            it('Test_keyWithQuantifier', function() {
-               assert.deepEqual(result, {
-                  value: 'l',
+            it('Key and quantifier', function() {
+               const actual = MaskFormatBuilder.getCharData(['d\\{2}', 'd', '{2}', undefined, undefined]);
+               assert.deepEqual(actual, {
                   type: 'key',
-                  quantifier: '*'
+                  value: 'd',
+                  quantifier: '{2}'
                });
             });
-            it('Test_openPairingDelimiter', function() {
-               assert.deepEqual(result, {
+            it('Open pair delimiter', function() {
+               const actual = MaskFormatBuilder.getCharData(['(', undefined, undefined, '(', undefined]);
+               assert.deepEqual(actual, {
+                  type: 'pairDelimiter',
                   value: '(',
-                  type: 'pairingDelimiter',
+                  pair: ')',
                   subtype: 'open'
                });
             });
-            it('Test_closePairingDelimiter', function() {
-               assert.deepEqual(result, {
+            it('Close pair delimiter', function() {
+               const actual = MaskFormatBuilder.getCharData([')', undefined, undefined, ')', undefined]);
+               assert.deepEqual(actual, {
+                  type: 'pairDelimiter',
                   value: ')',
-                  type: 'pairingDelimiter',
+                  pair: '(',
                   subtype: 'close'
                });
             });
-            it('Test_singlingDelimiter', function() {
-               assert.deepEqual(result, {
-                  value: '.',
-                  type: 'singlingDelimiter'
+            it('Single delimiter', function() {
+               const actual = MaskFormatBuilder.getCharData(['-', undefined, undefined, undefined, '-']);
+               assert.deepEqual(actual, {
+                  type: 'singleDelimiter',
+                  value: '-'
                });
+            });
+            it('Error', function() {
+               const actual = MaskFormatBuilder.getCharData.bind(MaskFormatBuilder, ['', undefined, undefined, undefined, undefined]);
+               assert.throws(actual, Error, 'Неверный массив результатов после разбора символа маски.');
             });
          });
 
+         describe('getReplacingKeyAsValue', function() {
+            const formatMaskChars = {
+               'd': '[0-9]'
+            };
+            it('Key', function() {
+               const actual = MaskFormatBuilder.getReplacingKeyAsValue(formatMaskChars, 'd', '');
+               assert.equal(actual, '[0-9]');
+            });
+            it('Key and quantifier', function() {
+               const actual = MaskFormatBuilder.getReplacingKeyAsValue(formatMaskChars, 'd', '{2}');
+               assert.equal(actual, '[0-9]{2}');
+            });
+         });
+
+         describe('getReplacingKeyAsValueOrReplacer', function() {
+            const formatMaskChars = {
+               'd': '[0-9]'
+            };
+            it('Key', function() {
+               const actual = MaskFormatBuilder.getReplacingKeyAsValueOrReplacer(formatMaskChars, '_', 'd', '');
+               assert.equal(actual, '(?:[0-9]|_)');
+            });
+            it('Key and quantifier', function() {
+               const actual = MaskFormatBuilder.getReplacingKeyAsValueOrReplacer(formatMaskChars, '_', 'd', '{2}');
+               assert.equal(actual, '(?:[0-9]|_){2}');
+            });
+         });
+
+         describe('getReplacingKeyFn', function() {
+            const formatMaskChars = {
+               'd': '[0-9]'
+            };
+            it('Empty replacer', function() {
+               const actual = MaskFormatBuilder.getReplacingKeyFn(formatMaskChars, '');
+               assert.equal(actual.name, 'bound getReplacingKeyAsValue');
+            });
+            it('Not empty replacer', function() {
+               const actual = MaskFormatBuilder.getReplacingKeyFn(formatMaskChars, '_');
+               assert.equal(actual.name, 'bound getReplacingKeyAsValueOrReplacer');
+            });
+         });
          describe('getFormat', function() {
-            var
-               masks = [
-                  'dd.dd.dd',
-                  '+7(ddd)ddd-dd-dd'
-               ],
-               formatMaskChars = {
-                  'd': '[0-9]'
-               },
-               replacers = [
-                  '',
-                  ' '
-               ];
-            it('Test_01', function() {
-               result = input.MaskFormatBuilder.getFormat(masks[0], formatMaskChars, replacers[0]);
-               assert.deepEqual(result, {
-                  searchingGroups: '^([0-9]?[0-9]?)(\\.)?([0-9]?[0-9]?)(\\.)?([0-9]?[0-9]?)$',
-                  delimiterGroups: {
-                     1: {
-                        value: '.',
-                        type: 'single'
-                     },
-                     3: {
-                        value: '.',
-                        type: 'single'
-                     }
+            const formatMaskChars = {
+               'd': '[0-9]',
+               'l': '[а-яa-zё]'
+            };
+            it('dl.ld without replacer', function() {
+               const actual = MaskFormatBuilder.getFormat('dl.ld', formatMaskChars, '');
+               assert.equal(actual.searchingGroups, '^(?:([0-9][а-яa-zё])(\\.?)([а-яa-zё][0-9])|([0-9][а-яa-zё])(\\.?)([а-яa-zё])|([0-9][а-яa-zё])(\\.?)|([0-9])|)$');
+               assert.deepEqual(actual.delimiterGroups, {
+                  1: {
+                     value: '.',
+                     type: 'singleDelimiter'
                   }
                });
             });
-            it('Test_02', function() {
-               result = input.MaskFormatBuilder.getFormat(masks[0], formatMaskChars, replacers[1]);
-               assert.deepEqual(result, {
-                  searchingGroups: '^((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))$',
-                  delimiterGroups: {
-                     1: {
-                        value: '.',
-                        type: 'single'
-                     },
-                     3: {
-                        value: '.',
-                        type: 'single'
-                     }
+            it('dl.ld with replacer', function() {
+               const actual = MaskFormatBuilder.getFormat('dl.ld', formatMaskChars, '_');
+               assert.equal(actual.searchingGroups, '^(?:((?:[0-9]|_)(?:[а-яa-zё]|_))(\\.?)((?:[а-яa-zё]|_)(?:[0-9]|_)))$');
+               assert.deepEqual(actual.delimiterGroups, {
+                  1: {
+                     value: '.',
+                     type: 'singleDelimiter'
                   }
                });
             });
-            it('Test_03', function() {
-               result = input.MaskFormatBuilder.getFormat(masks[1], formatMaskChars, replacers[0]);
-               assert.deepEqual(result, {
-                  searchingGroups: '^(\\+)?(7)?(\\()?([0-9]?)([0-9]?)([0-9]?)(\\))?([0-9]?[0-9]?[0-9]?)(-)?([0-9]?[0-9]?)(-)?([0-9]?[0-9]?)$',
-                  delimiterGroups: {
-                     0: {
-                        value: '+',
-                        type: 'single'
-                     },
-                     1: {
-                        value: '7',
-                        type: 'single'
-                     },
-                     2: {
-                        value: '(',
-                        type: 'pair',
-                        subtype: 'open',
-                        pair: ')'
-                     },
-                     6: {
-                        value: ')',
-                        type: 'pair',
-                        subtype: 'close',
-                        pair: '('
-                     },
-                     8: {
-                        value: '-',
-                        type: 'single'
-                     },
-                     10: {
-                        value: '-',
-                        type: 'single'
-                     }
+            it('(dd)-[ll] without replacer', function() {
+               const actual = MaskFormatBuilder.getFormat('(dd)-[ll]', formatMaskChars, '');
+               assert.equal(actual.searchingGroups, '^(?:(\\(?)([0-9][0-9])(\\)?)(-?)(\\[?)([а-яa-zё][а-яa-zё])(\\]?)|(\\(?)([0-9][0-9])(\\)?)(-?)(\\[?)([а-яa-zё])|(\\(?)([0-9][0-9])(\\)?)(-?)(\\[?)|(\\(?)([0-9])|(\\(?))$');
+               assert.deepEqual(actual.delimiterGroups, {
+                  0: {
+                     value: '(',
+                     type: 'pairDelimiter',
+                     subtype: 'open',
+                     pair: ')'
+                  },
+                  2: {
+                     value: ')',
+                     type: 'pairDelimiter',
+                     subtype: 'close',
+                     pair: '('
+                  },
+                  3: {
+                     value: '-',
+                     type: 'singleDelimiter'
+                  },
+                  4: {
+                     value: '[',
+                     type: 'pairDelimiter',
+                     subtype: 'open',
+                     pair: ']'
+                  },
+                  6: {
+                     value: ']',
+                     type: 'pairDelimiter',
+                     subtype: 'close',
+                     pair: '['
                   }
                });
             });
-            it('Test_04', function() {
-               result = input.MaskFormatBuilder.getFormat(masks[1], formatMaskChars, replacers[1]);
-               assert.deepEqual(result, {
-                  searchingGroups: '^(\\+)?(7)?(\\()?((?:[0-9]| ))((?:[0-9]| ))((?:[0-9]| ))(\\))?((?:[0-9]| )(?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))$',
-                  delimiterGroups: {
-                     0: {
-                        value: '+',
-                        type: 'single'
-                     },
-                     1: {
-                        value: '7',
-                        type: 'single'
-                     },
-                     2: {
-                        value: '(',
-                        type: 'pair',
-                        subtype: 'open',
-                        pair: ')'
-                     },
-                     6: {
-                        value: ')',
-                        type: 'pair',
-                        subtype: 'close',
-                        pair: '('
-                     },
-                     8: {
-                        value: '-',
-                        type: 'single'
-                     },
-                     10: {
-                        value: '-',
-                        type: 'single'
-                     }
+            it('(dd)-[ll] with replacer', function() {
+               const actual = MaskFormatBuilder.getFormat('(dd)-[ll]', formatMaskChars, '_');
+               assert.equal(actual.searchingGroups, '^(?:(\\(?)((?:[0-9]|_)(?:[0-9]|_))(\\)?)(-?)(\\[?)((?:[а-яa-zё]|_)(?:[а-яa-zё]|_))(\\]?))$');
+               assert.deepEqual(actual.delimiterGroups, {
+                  0: {
+                     value: '(',
+                     type: 'pairDelimiter',
+                     subtype: 'open',
+                     pair: ')'
+                  },
+                  2: {
+                     value: ')',
+                     type: 'pairDelimiter',
+                     subtype: 'close',
+                     pair: '('
+                  },
+                  3: {
+                     value: '-',
+                     type: 'singleDelimiter'
+                  },
+                  4: {
+                     value: '[',
+                     type: 'pairDelimiter',
+                     subtype: 'open',
+                     pair: ']'
+                  },
+                  6: {
+                     value: ']',
+                     type: 'pairDelimiter',
+                     subtype: 'close',
+                     pair: '['
                   }
                });
+            });
+            it('Error', function() {
+               const actual = MaskFormatBuilder.getFormat.bind(MaskFormatBuilder, '(d[d)]', formatMaskChars, '');
+               assert.throws(actual, Error, 'Неверный формат парных разделителей. Открытые и закрытые не соответствуют друг другу.');
             });
          });
       });
