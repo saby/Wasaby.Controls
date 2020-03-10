@@ -7,7 +7,6 @@ import Mode from './Mode';
 import { isEqual } from 'Types/object';
 import { load } from 'Core/library';
 import { default as IContainer, IContainerConfig } from './IContainer';
-import routing from './routing';
 
 /**
  * @interface Controls/dataSource/error/Container/Config
@@ -136,10 +135,6 @@ export default class Container extends Control<IContainerConfig> implements ICon
         this.__setConfig(options.viewConfig);
         if (this.__viewConfig) {
             this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
-
-            if (this.__viewConfig.mode === Mode.routing) {
-                routing(this.__viewConfig);
-            }
         }
     }
 
