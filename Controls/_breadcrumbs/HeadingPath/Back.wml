@@ -1,4 +1,4 @@
-<div class="controls-BreadCrumbsPath__backButton__wrapper_theme-{{_options.theme}} {{_options.backButtonClass}}">
+<div class="controls-BreadCrumbsPath__backButton__wrapper controls-BreadCrumbsPath__backButton__wrapper_theme-{{_options.theme}} {{_options.backButtonClass}}">
    <Controls.heading:Back attr:class="controls-BreadCrumbsPath__backButton"
                           caption="{{ _options.backButtonCaption }}"
                           tooltip="{{ _options.backButtonCaption }}"
@@ -16,12 +16,12 @@
                                 style="disabled"/>
    </ws:if>
    <ws:if data="{{ _options.showActionButton }}">
-      <div class="controls-BreadCrumbsPath__backButtonArrow-container_theme-{{_options.theme}}
+      <div class="controls-BreadCrumbsPath__backButtonArrow-container controls-BreadCrumbsPath__backButtonArrow-container_theme-{{_options.theme}}
                {{_options.showArrowOutsideOfBackButton ? ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton_theme-' + _options.theme : ''}}
                {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly_theme-' + _options.theme}}"
            title="{[Подробнее]}"
            on:click="_onArrowClick()">
-         <div class="icon-ForwardBaseLine controls-BreadCrumbsPath__backButtonArrow_theme-{{_options.theme}}"></div>
+         <div class="icon-ForwardBaseLine controls-BreadCrumbsPath__backButtonArrow controls-BreadCrumbsPath__backButtonArrow_theme-{{_options.theme}}"></div>
       </div>
    </ws:if>
 </div>
