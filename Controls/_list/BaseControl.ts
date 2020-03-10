@@ -2450,7 +2450,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             selection,
             self = this,
             dragStartResult;
-        const key = itemData.key !== undefined ? itemData.key : itemData.getContents().getKey();
+        const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (_private.canStartDragNDrop(domEvent, this._options)) {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
