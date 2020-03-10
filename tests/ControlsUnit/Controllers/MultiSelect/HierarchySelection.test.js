@@ -22,7 +22,8 @@ define([
             selectionStrategy: new TreeSelectionStrategy.default({
                selectDescendants: true,
                selectAncestors: true,
-               nodesSourceControllers: new Map()
+               nodesSourceControllers: new Map(),
+               parentProperty: 'Раздел'
             })
          }, config || {});
       }
@@ -373,7 +374,7 @@ define([
                selectionInstance.unselect([2]);
                selectionInstance.updateSelectionForRender();
                assert.deepEqual([], selectionInstance.selectedKeys);
-               assert.deepEqual([5, 2], selectionInstance.excludedKeys);
+               assert.deepEqual([], selectionInstance.excludedKeys);
                assert.deepEqual({}, selectionInstance._listModel._model._selectedKeys);
                assert.equal(0, selectionInstance.getCount());
             });
@@ -420,17 +421,17 @@ define([
 
                selectionInstance.unselect([3]);
                selectionInstance.updateSelectionForRender();
-               assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([null, 7, 6, 5, 4, 3], selectionInstance.excludedKeys);
-               assert.deepEqual({1: null, 2: null}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(2, selectionInstance.getCount());
+               assert.deepEqual([], selectionInstance.selectedKeys);
+               assert.deepEqual([null, 7, 6, 1], selectionInstance.excludedKeys);
+               assert.deepEqual({}, selectionInstance._listModel._model._selectedKeys);
+               assert.equal(0, selectionInstance.getCount());
 
                selectionInstance.unselect([2]);
                selectionInstance.updateSelectionForRender();
-               assert.deepEqual([null], selectionInstance.selectedKeys);
-               assert.deepEqual([null, 7, 6, 5, 2], selectionInstance.excludedKeys);
-               assert.deepEqual({1: null}, selectionInstance._listModel._model._selectedKeys);
-               assert.equal(1, selectionInstance.getCount());
+               assert.deepEqual([], selectionInstance.selectedKeys);
+               assert.deepEqual([null, 7, 6, 1], selectionInstance.excludedKeys);
+               assert.deepEqual({}, selectionInstance._listModel._model._selectedKeys);
+               assert.equal(0, selectionInstance.getCount());
 
                selectionInstance.unselect([1]);
                selectionInstance.updateSelectionForRender();
