@@ -2128,6 +2128,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // Чтобы предотвратить эту ошибку - восстанавливаем скролл на ту позицию, которая была до вставки новых записей.
         // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
         // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
+        if (!this._options.virtualScrolling) {
+            _private.updateShadowMode(this, { up: false, down: false });
+        }
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
             this._loadedItems = null;
