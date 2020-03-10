@@ -147,8 +147,9 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {String|Core/Deferred} EndEditResult
-    * @variant Cancel Отмена окончания редактирования\добавления.
-    * @variant Deferred Используется для сохранения с пользовательской логикой.
+    * @variant Cancel Отмена окончания редактирования или добавления записи.
+    * @variant Deferred Редактирование по месту заканчивается без использования базовой логики для сохранения или добавления записи.
+    * Всю логику сохранения изменений прикладной разработчик должен реализовать самостоятельно.
     */
 
    /*
@@ -346,31 +347,32 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением редактирования\добавления.
+    * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением редактирования или добавления записи.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} item Редактируемая запись.
     * @param {Boolean} willSave Определяет, будут ли сохранены изменения в редактируемом элементе.
-    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
+    * @param {Boolean} isAdd Аргумент принимает значение true, если событие произошло перед добавлением записи, и false — в случае редактирования.
     * @returns {EndEditResult}
+    * @demo Controls-demo/list_new/EditInPlace/EndEdit/Index
     * @remark
     * Используйте событие, если необходимо проверить данные и отменить изменения. По умолчанию для сохранения изменений вызывается метод обновления списка.
     * Не обновляйте пользовательский интерфейс в обработчике этого события, потому что если во время подготовки данных произойдет ошибка, вам придется откатить изменения.
     * @example
-    * В следующем примере показано, как запретить завершение редактирования элемента, если оно соответствует условию:
-    * WML:
-    * <pre>
+    * В следующем примере показано завершение редактирования элемента, если выполнено условие.
+    * <pre class="brush:html;">
+    * <!-- WML -->
     *    <Controls.list:View on:beforeEndEdit="beforeEndEditHandler()" />
     * </pre>
-    * JS:
-    * <pre>
-    *    define('ModuleName', ['Controls/Constants'], function(constants) {
-    *       ...
-    *       beforeEndEditHandler: function(e, item, commit, isAdd) {
-    *          if (!item.get('text').length) {
-    *             return constants.editing.CANCEL;
-    *          }
+    * <pre class="brush: js; highlight: [4,5,6,7,8]">
+    * // JavaScript
+    * define('ModuleName', ['Controls/Constants'], function(constants) {
+    *    ...
+    *    beforeEndEditHandler: function(e, item, commit, isAdd) {
+    *       if (!item.get('text').length) {
+    *          return constants.editing.CANCEL;
     *       }
-    *    });
+    *    }
+    * });
     * </pre>
     * @see beforeBeginEdit
     * @see afterBeginEdit
