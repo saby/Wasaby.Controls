@@ -2200,6 +2200,7 @@ define([
 
       it('_processError', function() {
          var self = {
+            _options: {},
             _loadingState: 'all',
             _notify: () => {
             },
@@ -2552,15 +2553,17 @@ define([
             assert.equal(actionsUpdateCount, 0);
             baseControl._beforeMount(cfg);
          });
-        // it('without itemActions nothing should happen', function() {
-        //    baseControl._beforeUpdate({
-        //       ...cfg,
-        //       itemActions: null,
-        //       itemActionsProperty: null
-        //    });
-        //    baseControl._updateItemActions();
-        //    assert.equal(actionsUpdateCount, 0);
-        // });
+         it('without itemActions nothing should happen', function() {
+            baseControl._beforeUpdate({
+               ...cfg,
+               itemActions: null,
+               itemActionsProperty: null
+            });
+            baseControl._children.itemActions = undefined;
+            actionsUpdateCount = 0;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 0);
+         });
       });
 
       describe('resetScrollAfterReload', function() {

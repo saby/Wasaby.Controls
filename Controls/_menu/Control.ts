@@ -369,7 +369,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             listModel.setHoveredItem(listModel.at(this._hoveredItemIndex));
         }
         if (options.groupProperty) {
-            listModel.setGroup(this.groupMethod.bind(this));
+            listModel.setGroup(this.groupMethod.bind(this, options));
         } else if (options.groupingKeyCallback) {
             listModel.setGroup(options.groupingKeyCallback);
         }
@@ -399,8 +399,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return isVisible;
     }
 
-    private groupMethod(item: Model): string {
-        return item.get(this._options.groupProperty);
+    private groupMethod(options: IMenuOptions, item: Model): string {
+        return item.get(options.groupProperty);
     }
 
     private setSelectedItems(listModel: Tree, keys: TKeys): void {
