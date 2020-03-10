@@ -25,6 +25,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @demo Controls-demo/Menu/Control/Source/Index
  * @control
  * @category Popup
  * @author Герасимов А.М.
