@@ -265,7 +265,7 @@ interface ISuggest {
        * @example
        * В этом примере автодополнение будет показано после фокусировки на поле ввода.
        * <pre>
-       *    <Controls.suggest:Input autoSuggest={{true}}/>
+       *    <Controls.suggest:Input autoDropDown="{{true}}" />
        * </pre>
        */
 
