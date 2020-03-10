@@ -42,7 +42,7 @@ define(['Controls/_grid/ScrollWrapper'], function(ScrollWrapper) {
          wrapper._options.listModel.getMultiSelectVisibility = () => 'visible';
          wrapper._options.listModel.shouldAddStickyLadderCell = () => true;
          wrapper._options.listModel.getHeaderMaxEndColumn = () => 10;
-         assert.equal('grid-column: 4 / 13;width: 500px', wrapper._getGridStyles(options));
+         assert.equal('grid-column: 4 / 12;width: 500px', wrapper._getGridStyles(options));
       });
    });
 });
