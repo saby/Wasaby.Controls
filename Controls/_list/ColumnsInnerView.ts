@@ -83,28 +83,12 @@ export default class ColumnsInnerView extends Control {
         this._model.each(this.setColumnOnItem.bind(this));
     }
 
-    private processRemoving(removedItemsIndex: number): void {
-        const collection = this._options.listModel.getCollection();
-        const source = this._options.source;
-        const total = collection.getCount(removedItemsIndex);
-        if (this._options.columnsMode === 'auto') {
-            let currIndex = removedItemsIndex;
-            while (currIndex + this._columnsCount - 1 < total) {
-                collection.move(currIndex + this._columnsCount - 1, currIndex);
-                source.move([currIndex + this._columnsCount - 1], currIndex);
-                currIndex += this._columnsCount;
-            }
-        }
-    }
     protected _onCollectionChange(_e: unknown,
                                   action: string,
                                   newItems: [CollectionItem<unknown>],
                                   newItemsIndex: number,
                                   removedItems: [CollectionItem<unknown>],
                                   removedItemsIndex: number): void {
-        if (action === 'rm') {
-            this.processRemoving(removedItemsIndex);
-        }
         if (action === 'a') {
             newItems.forEach(this.setColumnOnItem.bind(this));
         }
