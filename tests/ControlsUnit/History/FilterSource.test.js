@@ -183,7 +183,7 @@ define(
             assert.isOk(result);
          });
 
-         it('query', function() {
+         it('query', function(done) {
             const query = new sourceLib.Query();
             const sandbox = sinon.createSandbox();
             const filterSource = new historyMod.FilterSource({ historySource: {} });
@@ -193,13 +193,18 @@ define(
             });
 
             sandbox.replace(filterSource, 'historySource', {
-               query: () => Promise.reject()
+               query: () => Promise.reject(),
+               getHistoryId: () => 'test',
+               saveHistory: () => {}
             });
-
             const query1 = filterSource.query(query);
             const query2 = filterSource.query(query);
-
             assert.isTrue(query1 === query2);
+            filterSource.query(query).addCallback((result) => {
+               const isEmptyResultOnError = !result.getAll().getCount();
+               assert.isTrue(isEmptyResultOnError);
+               done();
+            });
          });
 
          it('_private::destroy', () => {
