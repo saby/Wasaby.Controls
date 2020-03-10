@@ -31,7 +31,6 @@ export class Move implements ICollectionCommand<IDragItem> {
         const strategy = collection.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
         if (strategy) {
             strategy.avatarIndex = this.index;
-            collection.recalculateStrategyItemsOrder();
         }
     }
 }
