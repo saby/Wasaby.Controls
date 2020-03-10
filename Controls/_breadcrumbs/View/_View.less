@@ -1,8 +1,10 @@
-.controls-BreadCrumbsView__items_theme-@{themeName} {
+.controls-BreadCrumbsView__items {
    display: inline-flex;
    overflow: hidden;
-   height: @height_breadcrumbsView;
    width: 100%;
+}
+.controls-BreadCrumbsView__items_theme-@{themeName} {
+   height: @@height_breadcrumbsView;
 }
 .controls-BreadCrumbsView__itemsTemplate {
    display: flex;
@@ -42,11 +44,13 @@
     font-size: @line-height_breadcrumbsView;
   }
 }
-.controls-BreadCrumbsView__menu_theme-@{themeName} {
+.controls-BreadCrumbsView__menu {
    float: right;
    position: relative;
-   bottom: @height_breadcrumbsView;
    z-index: 5;
+}
+.controls-BreadCrumbsView__menu_theme-@{themeName} {
+   bottom: @height_breadcrumbsView;
 }
 .controls-BreadCrumbsView__menu__dots {
    position: absolute;
@@ -111,20 +115,24 @@
    cursor: pointer;
 }
 
-.controls-BreadCrumbsView__title_theme-@{themeName} {
+.controls-BreadCrumbsView__title {
    .text-overflow();
-   font-size: @item_font-size_default_breadcrumbsView;
    display: inline;
 }
+.controls-BreadCrumbsView__title_theme-@{themeName} {
+   font-size: @item_font-size_default_breadcrumbsView;
+}
 
-.controls-BreadCrumbsView__arrow_theme-@{themeName} {
-   .icon(@item_icon-size_default_breadcrumbsView);
-   color: @item_text-color_default_breadcrumbsView;
+.controls-BreadCrumbsView__arrow {
    flex-shrink: 0;
    display: inline;
 }
+.controls-BreadCrumbsView__arrow_theme-@{themeName}{
+   .icon(@item_icon-size_default_breadcrumbsView);
+   color: @item_text-color_default_breadcrumbsView;
+}
 
-.controls-BreadCrumbsView__arrow_enabled_theme-@{themeName} {
+.controls-BreadCrumbsView__arrow_enabled {
    cursor: pointer;
 }
 
@@ -132,14 +140,15 @@
    max-width: @popup_max-width_breadcrumbsView;
 }
 
-.controls-BreadCrumbsView__menuItem_theme-@{themeName} {
+.controls-BreadCrumbsView__menuItem {
    .baseline-fix();
    max-width: 100%;
    display: inline-flex;
    align-items: center;
+}
+.controls-BreadCrumbsView__menuItem_theme-@{themeName} {
    height: @popup_item_height_breadcrumbsView;
 }
-
 .controls-BreadCrumbsView__menuTitle {
    .text-overflow();
    flex-shrink: 1;
@@ -147,11 +156,13 @@
    width: 100%;
 }
 
+.controls-BreadCrumbsView__indentation {
+   align-self: flex-start;
+   flex-shrink: 0;
+}
 .controls-BreadCrumbsView__indentation_theme-@{themeName} {
    .icon(@popup_item_icon-size_breadcrumbsView);
    color: @popup_item_icon-color_breadcrumbsView;
-   align-self: flex-start;
-   flex-shrink: 0;
 }
 
 .ws-is-hover {
@@ -184,7 +195,7 @@
 .ws-is-ie12 {
 
    //В Edge без явного указания ширины контейнера неправильно работает float, из-за чего точки не падают вниз. Пример: https://jsfiddle.net/q70vkn94/
-   .controls-BreadCrumbsView__menu_theme-@{themeName} {
+   .controls-BreadCrumbsView__menu {
       width: 1px;
    }
 }

@@ -7,7 +7,7 @@
    padding-left: @padding-left_multiline_breadcrumbsPath;
 }
 
-.controls-BreadCrumbsPath__wrapper_theme-@{themeName} {
+.controls-BreadCrumbsPath__wrapper {
    display: flex;
    white-space: nowrap;
 
@@ -32,13 +32,15 @@
    flex-shrink: 0;
 }
 
-.controls-BreadCrumbsPath__backButton__wrapper_theme-@{themeName} {
+.controls-BreadCrumbsPath__backButton__wrapper {
    position: relative;
    display: inline-flex;
    align-items: baseline;
-   padding-right: @back_offset_breadcrumbsHeadingPath;
    max-width: 50%;
    flex-shrink: 0;
+}
+.controls-BreadCrumbsPath__backButton__wrapper_theme-@{themeName} {
+   padding-right: @back_offset_breadcrumbsHeadingPath;
 }
 
 .controls-BreadCrumbsPath__backButton__wrapper__only {
@@ -55,7 +57,7 @@
    max-width: 100%;
 }
 
-.controls-BreadCrumbsPath__backButtonArrow-container_theme-@{themeName} {
+.controls-BreadCrumbsPath__backButtonArrow-container {
    .baseline-fix();
    height: 100%;
    position: absolute;
@@ -63,17 +65,21 @@
    align-items: baseline;
    right: 0;
    bottom: 0;
+}
+.controls-BreadCrumbsPath__backButtonArrow-container_theme-@{themeName} {
    background-color: @back_editButton_background-color_breadcrumbsHeadingPath;
    &:before {
       font-size: @line-height_breadcrumbsView;
    }
 }
 
+.controls-BreadCrumbsPath__backButtonArrow {
+   display: none;
+   cursor: pointer;
+}
 .controls-BreadCrumbsPath__backButtonArrow_theme-@{themeName} {
    .icon(@back_editButton_icon-size_breadcrumbsHeadingPath);
-   display: none;
    color: @back_editButton_icon-color_breadcrumbsHeadingPath;
-   cursor: pointer;
 }
 
 .controls-Path__backButtonArrow_readonly_theme-@{themeName} {
@@ -98,12 +104,14 @@
    padding-left: @home_offset_breadcrumbsPath;
 }
 
-.controls-BreadCrumbsPath__homeContainer_theme-@{themeName} {
+.controls-BreadCrumbsPath__homeContainer {
    .baseline-fix();
 
    position: relative;
    display: inline-flex;
    align-items: baseline;
+}
+.controls-BreadCrumbsPath__homeContainer_theme-@{themeName} {
    &:before {
      font-size: @line-height_breadcrumbsView;
    }
@@ -133,9 +141,11 @@
 .ws-is-hover {
    .controls-BreadCrumbsPath__backButtonArrow_theme-@{themeName}:hover {
       color: @back_editButton_hover_icon-color_breadcrumbsHeadingPath;
+   }
+   .controls-BreadCrumbsPath__backButtonArrow:hover {
       display: inline-flex;
    }
-   .controls-BreadCrumbsPath__backButton__wrapper_theme-@{themeName}:hover .controls-BreadCrumbsPath__backButtonArrow_theme-@{themeName} {
+   .controls-BreadCrumbsPath__backButton__wrapper:hover .controls-BreadCrumbsPath__backButtonArrow {
       display: inline-flex;
    }
 
