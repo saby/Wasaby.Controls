@@ -259,11 +259,13 @@ define([
          };
          instance._getCount(selection, null).addCallback(function() {
             assert.equal(instance._menuCaption, 'Отметить');
+            done();
          });
 
          instance._menuCaption = 'Отмечено: 3';
          instance._getCount(selection, null).addCallback(function() {
             assert.equal(instance._menuCaption, 'Отмечено:');
+            done();
          });
       });
 
