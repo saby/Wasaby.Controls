@@ -2,7 +2,7 @@ import {TFontWeight} from 'Controls/_interface/IFontWeight';
 
 /**
  * Шаблон, который по умолчанию используется для отображения ячеек итогов в контроле {@link Controls/grid:View Таблица}.
- * @class Controls/grid:ResultColumn
+ * @class Controls/grid:ResultColumnTemplate
  * @author Авраменко А.С.
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
@@ -12,7 +12,7 @@ import {TFontWeight} from 'Controls/_interface/IFontWeight';
  *       <ws:Array>
  *          <ws:Object displayProperty="Name">
  *             <ws:resultsTemplate>
- *                <ws:partial template="Controls/grid:ResultColumn">
+ *                <ws:partial template="Controls/grid:ResultColumnTemplate">
  *                    <div title="{{resultsTemplate.results.get('Name')}}">
  *                       {{resultsTemplate.results.get('Name')}}
  *                    </div>
@@ -25,10 +25,10 @@ import {TFontWeight} from 'Controls/_interface/IFontWeight';
  * </pre>
  * @public
  */
-export default interface IColumnTemplateOptions {
+export default interface IResultColumnTemplateOptions {
 
     /**
-     * @name Controls/_grid/interface/IResultColumn#contentTemplate
+     * @name Controls/_grid/interface/IResultColumnTemplate#contentTemplate
      * @cfg {String|Function} Устанавливает пользовательский шаблон для отображения содержимого ячейки итогов.
      * @remark
      * В области видимости шаблона доступен объект **results** - итогов, которые были пеерданы в метаданных RecordSet.
@@ -43,7 +43,7 @@ export default interface IColumnTemplateOptions {
      *       <ws:Array>
      *          <ws:Object displayProperty="Name">
      *             <ws:resultsTemplate>
-     *                <ws:partial template="Controls/grid:ResultColumn">
+     *                <ws:partial template="Controls/grid:ResultColumnTemplate">
      *                    <div title="{{resultsTemplate.results.get('Name')}}">
      *                       {{resultsTemplate.results.get('Name')}}
      *                    </div>
@@ -73,7 +73,7 @@ export default interface IColumnTemplateOptions {
      *
      * <pre class="brush: html">
      * <!-- file2.wml -->
-     * <ws:partial template="Controls/grid:ResultColumn">
+     * <ws:partial template="Controls/grid:ResultColumnTemplate">
      *     <div title="{{resultsTemplate.results.get('Name')}}">
      *        {{results.get('Name')}}
      *     </div>
@@ -87,7 +87,7 @@ export default interface IColumnTemplateOptions {
      *       <ws:Array>
      *          <ws:Object displayProperty="Name">
      *             <ws:resultsTemplate>
-     *                <ws:partial template="Controls/grid:ResultColumn" fontWeight="default" fontColorStyle="unaccented"/>
+     *                <ws:partial template="Controls/grid:ResultColumnTemplate" fontWeight="default" fontColorStyle="unaccented"/>
      *             </ws:resultsTemplate>
      *          </ws:Object>
      *       </ws:Array>
@@ -98,7 +98,7 @@ export default interface IColumnTemplateOptions {
     content?: string;
 
     /**
-     * @name Controls/_grid/interface/IResultColumn#fontWeight
+     * @name Controls/_grid/interface/IResultColumnTemplate#fontWeight
      * Начертание шрифта.
      * @type TFontWeight
      * @default bold
@@ -106,7 +106,7 @@ export default interface IColumnTemplateOptions {
     fontWeight?: TFontWeight;
 
     /**
-     * @name Controls/_grid/interface/IResultColumn#fontColorStyle
+     * @name Controls/_grid/interface/IResultColumnTemplate#fontColorStyle
      * @cfg {Enum} Стиль цвета текста результатов.
      * @variant secondary
      * @variant success
@@ -119,7 +119,7 @@ export default interface IColumnTemplateOptions {
      * @example
      * Шаблон ячейки результатов со стилем шрифта "success".
      * <pre>
-     *      <ws:partial template="Controls/grid:ResultColumn" scope="{{_options}}" fontColorStyle="success" />
+     *      <ws:partial template="Controls/grid:ResultColumnTemplate" scope="{{_options}}" fontColorStyle="success" />
      * </pre>
      */
     fontColorStyle?: string;
