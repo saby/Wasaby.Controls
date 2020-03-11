@@ -38,6 +38,14 @@ type TActionAlignment = 'horizontal'|'vertical';
  * @variant none Не будет отображаться.
  */
 type TActionCaptionPosition = 'right'|'bottom'|'none';
+/**
+ * @typedef {String} TActionDisplayMode
+ * @variant title показывать только заголовок
+ * @variant icon показывать только иконку
+ * @variant both показывать иконку и заголовок
+ * @variant auto если есть иконка, то показывать иконку, иначе заголовок
+ */
+type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
 type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
@@ -52,13 +60,15 @@ export interface IContextMenuConfig {
     headerTemplate?: TemplateFunction|string;
 }
 
-interface IItemAction {
+export interface IItemAction {
     id: string;
     title?: string;
     icon?: string;
     showType?: 0|1|2;
     style?: string;
     iconStyle?: TIconStyle;
+    displayMode?: TActionDisplayMode;
+    tooltip?: string;
     handler?: (item) => void;
     parent?: string;
     'parent@'?: boolean|null;
@@ -196,7 +206,7 @@ export interface IList {
  * @variant onhover Показывать при наведении.
  * @default hidden
  * @remark
- * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/mass-select/">руководству разработчика</a>.
+ * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/service-development/service-contract/logic/list/list-iterator/">руководству разработчика</a>.
  */
 
 /*
@@ -213,7 +223,9 @@ export interface IList {
  * @typedef {Object} ItemAction
  * @property {String} id Идентификатор опции записи.
  * @property {String} title Название опции записи.
+ * @property {String} tooltip Текст подсказки при наведении мыши.
  * @property {String} icon Имя иконки для опции записи.
+ * @property {TActionDisplayMode} displayMode Режим отображения операции над записью.
  * @property {Number} [showType=0] Местоположение опции записи.
  * * 0 — в контекстном меню.
  * * 1 — в строке и в контекстном меню.
@@ -763,39 +775,14 @@ export interface IList {
  */
 
 /**
- * @event Controls/_list/interface/IList#itemClick Происходит при клике на элемент списка.
- * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
- * @param {Types/entity:Record} item Элемент, по которому кликнули.
- * @param {Object} nativeEvent Объект нативного события браузера.
- */
-
- /*
- * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
- * @param {Vdom/Vdom:SyntheticEvent} event Event object.
- * @param {Types/entity:Record} item Clicked item.
- * @param {Object} nativeEvent Native event object.
- */
-
-/**
  * @event Controls/_list/interface/IList#itemMouseDown Происходит в момент нажатия на кнопку мыши над элементом списка.
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, над которым произошло нажатие на кнопку мыши.
  * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
- * От события itemClick данное событие отличается следующим:
+ * От события {@link Controls/_list/interface/IClickableView#itemClick itemClick} данное событие отличается следующим:
  * 1. Срабатывает при нажатии на любую кнопку мыши (левую, правую, среднюю);
  * 2. Срабатывает в момент нажатия кнопки (itemClick срабатывает уже после её отпускания).
- */
-
- /*
- * @event Controls/_list/interface/IList#itemClick Occurs when a mouse button is pressed over a list item.
- * @param {Vdom/Vdom:SyntheticEvent} event Event object.
- * @param {Types/entity:Record} item Item that the mouse button was pressed over.
- * @param {Object} nativeEvent Native event object.
- * @remark
- * From the itemClick event this event differs in the following:
- * 1. It works when you click on any mouse button (left, right, middle);
- * 2. It works when the button is down (itemClick fires after it is released).
  */
 
 /**
@@ -804,7 +791,7 @@ export interface IList {
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
  * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
- * Событие срабатывает, только если со списком ничего не происходит при жесте "swipe" (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IList#itemClick itemClick}.
+ * Событие срабатывает, только если со списком ничего не происходит при жесте "swipe" (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
  */
 
 /*
@@ -813,7 +800,7 @@ export interface IList {
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Object} nativeEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
- * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/_list/interface/IList#itemClick itemClick}.
+ * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
  */
 
 /**

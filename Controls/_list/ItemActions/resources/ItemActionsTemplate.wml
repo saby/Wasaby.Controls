@@ -6,6 +6,9 @@
             <ws:partial
                     template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
                     itemData="{{itemData}}"
+                    needShowTitle="{{needShowTitle}}"
+                    needShowIcon="{{needShowIcon}}"
+                    getTooltip="{{getTooltip}}"
                     size="{{size}}"
                     showedActions="{{itemData.itemActions.showed}}"/>
             <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
@@ -22,7 +25,7 @@
 <ws:template name="localItemActionsTemplate">
 <div attr:class="controls-itemActionsV
             {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') }}
-            {{itemActionsPosition !== 'outside' ? itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight' : ''}}
+            {{itemActionsPosition !== 'outside' ? (itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight') : ''}}
             controls-itemActionsV_{{itemActionsPosition}}
             {{getContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding)}}
             {{itemData.isEditing ? 'controls-itemActionsV_editing'}}
@@ -34,6 +37,9 @@
         <ws:partial
                 template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
                 itemData="{{itemData}}"
+                needShowTitle="{{needShowTitle}}"
+                needShowIcon="{{needShowIcon}}"
+                getTooltip="{{getTooltip}}"
                 size="{{size}}"
                 showedActions="{{itemData.itemActions.showed}}"/>
         <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">

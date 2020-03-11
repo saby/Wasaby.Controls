@@ -4,7 +4,6 @@
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
 import {Logger} from 'UI/Utils';
-import 'css!theme?Controls/decorator';
 
    var markupGenerator,
       defCollection,

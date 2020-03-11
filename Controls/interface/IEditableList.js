@@ -10,7 +10,7 @@ define('Controls/interface/IEditableList', [
     * @author Авраменко А.С.
     * @see Controls/View
     * @remark
-    * Разница между этим интерфейсом и {@link Controls/View Controls/editableArea:View} заключается в том, что первый используется в списках, а второй-вне их (например, на вкладках).
+    * Разница между этим интерфейсом и {@link Controls/View Controls/editableArea:View} заключается в том, что первый используется в списках, а второй - вне их (например, на вкладках).
     */
 
    /*
@@ -473,7 +473,7 @@ define('Controls/interface/IEditableList', [
     * WML:
     * <pre>
     *    <Controls.list:View>
-    *       <ws:editingConfig editOnClick="{{true}}" showToolbar="{{true}}" />
+    *       <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}" />
     *    </Controls.list:View>
     * </pre>
     */
@@ -486,7 +486,7 @@ define('Controls/interface/IEditableList', [
     * WML:
     * <pre>
     *    <Controls.list:View>
-    *       <ws:editingConfig editOnClick="{{true}}" showToolbar="{{true}}" />
+    *       <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}" />
     *    </Controls.list:View>
     * </pre>
     */

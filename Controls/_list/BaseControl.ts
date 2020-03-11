@@ -33,6 +33,8 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
+import {CollectionItem} from 'Controls/display';
+import {Model} from 'saby-types/Types/entity';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -519,7 +521,7 @@ var _private = {
                 (self._options.task1176625749 && countCurrentItems === cnt2)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
-            if (self._options.virtualScrolling && self._isMounted) {
+            if (self._isMounted && self?._children?.scrollController) {
                 self._children.scrollController.stopBatchAdding();
             }
 
@@ -557,7 +559,7 @@ var _private = {
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 const countCurrentItems = self._listViewModel.getCount();
 
-                if (self._options.virtualScrolling && self._isMounted) {
+                if (self._isMounted && self?._children?.scrollController) {
                     self._children.scrollController.startBatchAdding(direction);
                 }
 
@@ -1120,7 +1122,7 @@ var _private = {
         // virtual scrolling is disabled.
         if (
             changesType === 'collectionChanged' ||
-            changesType === 'indexesChanged' && self._options.virtualScrolling !== false ||
+            changesType === 'indexesChanged' && (self._options.virtualScrolling !== false || Boolean(self._options.virtualScrollConfig)) ||
             newModelChanged
         ) {
             self._itemsChanged = true;
@@ -1414,6 +1416,7 @@ var _private = {
         }
         return self.__errorController.process({
             error: config.error,
+            theme: self._options.theme,
             mode: config.mode || dataSourceError.Mode.include
         }).then((errorConfig) => {
             _private.showError(self, errorConfig);
@@ -2485,6 +2488,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.getPortionedSearch(this).abortSearch();
     },
 
+    _onDataError(event: unknown, errorConfig: ErrbackConfig): void {
+        _private.processError(this, {
+            error: errorConfig.error,
+            mode: errorConfig.mode || dataSourceError.Mode.dialog
+        });
+    },
+
     _nativeDragStart: function(event) {
         // preventDefault нужно делать именно на нативный dragStart:
         // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
@@ -2622,8 +2632,26 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
     _changePageSize: function(e, item) {
         this._currentPageSize = item.get('pageSize');
+        this._currentPage = 1;
         this._applyPagingNavigationState({pageSize: this._currentPageSize});
     },
+
+    /**
+     * Хандлер клика на Tag в BaseControl.wml
+     * @private
+     */
+    _onTagClickHandler(event: Event, dispItem: CollectionItem<Model>, columnIndex: number): void {
+        this._notify('tagClick', [dispItem, columnIndex, event]);
+    },
+
+    /**
+     * Хандлер наведения на Tag в BaseControl.wml
+     * @private
+     */
+    _onTagHoverHandler(event: Event, dispItem: CollectionItem<Model>, columnIndex: number): void {
+        this._notify('tagHover', [dispItem, columnIndex, event]);
+    },
+
     _applyPagingNavigationState: function(params) {
         var newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
@@ -2680,10 +2708,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _onHoveredItemChanged: function(e, item, container) {
-        this._notify('hoveredItemChanged', [item, container]);
-    },
-
     _createNewModel(items, modelConfig, modelName) {
         // Подразумеваем, что Controls/display уже загружен. Он загружается при подключении
         // библиотеки Controls/listRender
@@ -2711,6 +2735,8 @@ BaseControl.contextTypes = function contextTypes() {
         isTouch: TouchContextField
     };
 };
+
+BaseControl._theme = ['Controls/Classes'];
 
 BaseControl.getDefaultOptions = function() {
     return {
