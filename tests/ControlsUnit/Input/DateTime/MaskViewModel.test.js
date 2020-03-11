@@ -25,6 +25,7 @@ define([
       describe("handleInput", function() {
          [
             // Inserting date from buffer
+            { mask: "DD.MM.YYYY", before: "", after: "  .  .    ", insert: "23", delete: "", displayValue: "23.  .    ", value: "23      ", selection: 3},
             { mask: "DD.MM.YYYY", before: "0", after: "1.01.2017", insert: "05.11.21", delete: "", displayValue: "05.11.2021", value: "05112021"},
             { mask: "DD.MM.YYYY", before: "01.01.20", after: "17", insert: "05.11.79", delete: "", displayValue: "05.11.1979", value: "05111979"},
             { mask: "DD.MM.YYYY", before: "", after: "", insert: "05.11.21", delete: "", displayValue: "05.11.2021", value: "05112021"},
