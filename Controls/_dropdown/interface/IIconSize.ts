@@ -21,7 +21,6 @@ export interface IIconSizeOptions {
     * @remark
     * Иконки могут отображаться внутри вызывающего элемента (см. {@link Controls/dropdown:Button#icon icon}) и внутри элементов выпадающего списка (см. {@link  Controls/dropdown:Button#itemTemplate itemTemplate}).
     * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
-    * @demo Controls-demo/Buttons/SizesAndHeights/Index
     * @example
     * @see Icon
     */
