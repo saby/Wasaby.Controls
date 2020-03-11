@@ -23,7 +23,7 @@ const DEFAULT_ITEMS = [
 
 const SHOW_SELECTED_ITEM =  {
    id: 'selected',
-   title: rk('Показать отмеченнные')
+   title: rk('Показать отмеченные')
 };
 
 const SHOW_ALL_ITEM =  {

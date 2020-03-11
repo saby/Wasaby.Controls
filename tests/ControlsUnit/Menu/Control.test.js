@@ -245,6 +245,7 @@ define(
 
             hierarchyOptions = {
                parentProperty: 'parent',
+               nodeProperty: 'node',
                root: null
             };
             isVisible = menuControl.displayFilter(hierarchyOptions, item);
