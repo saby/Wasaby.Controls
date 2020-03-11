@@ -1,4 +1,4 @@
-<div attr:class="{{ item.getWrapperClasses(highlightOnHover, marker) }}">
+<div attr:class="{{ item.getWrapperClasses(highlightOnHover) }}">
    <ws:if data="{{item.shouldDisplayMarker(marker)}}">
       <div class="controls-ColumnsView__item_marker"></div>
    </ws:if>

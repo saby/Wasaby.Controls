@@ -5,6 +5,8 @@
          useNewModel="{{true}}"
          source="{{ _viewSource }}"
          columnsMode="auto"
+         bind:selectedKeys="_selectedKeys"
+         multiSelectVisibility="visible"
          itemsReadyCallback="{{_itemsReadyCallback}}"
          itemActionsClass="controls-itemActionsV_position_topRight"
          itemActions="{{_itemActions}}"
@@ -15,7 +17,8 @@
             <ws:partial template="Controls/listRender:ColumnsItemTemplate" highlightOnHover="{{false}}">
                <ws:contentTemplate>
                   <div class="controlsDemo_ColumnsView_itemTemplate-wrapper">
-                     <div class="controlsDemo_ColumnsView_itemTemplate-title">{{itemTemplate.item.getContents().get('title')}}</div>
+
+                     <div class="controlsDemo_ColumnsView_itemTemplate-title">{{itemTemplate.item.getContents().get('title')}}   {{itemTemplate.item._contentsIndex}}</div>
                      <div class="controlsDemo_ColumnsView_itemTemplate-description">{{itemTemplate.item.getContents().get('description')}}</div>
                   </div>
                </ws:contentTemplate>
