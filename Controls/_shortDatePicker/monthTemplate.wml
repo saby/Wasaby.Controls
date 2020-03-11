@@ -12,7 +12,7 @@
         </ws:if>
         <ws:else>
             <ws:if data="{{!!periods}}">
-                <ws:if data="{{isIconChecked(periods, month.date)}}">
+                <ws:if data="{{_isIconChecked(periods, month.date)}}">
                     <div class="controls-PeriodLiteDialog-item__checkBox" title="{[Месяц закрыт]}">
                         <div class="icon-16 icon-Yes icon-done"></div>
                     </div>
