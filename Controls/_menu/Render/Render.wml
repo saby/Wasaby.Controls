@@ -20,8 +20,8 @@
       <ws:partial template="wml!Controls/_menu/Render/multiSelectTpl" scope="{{_options}}"/>
    </ws:multiSelectTpl>
    <ws:groupTemplate>
-      <ws:if data="{{_options.groupTemplate && _isGroupVisible(groupTemplate.item)}}">
-         <ws:partial template="{{_options.groupTemplate}}" itemData="{{groupTemplate.item}}" />
+      <ws:if data="{{(_options.groupTemplate || _options.groupProperty) && _isGroupVisible(groupTemplate.item)}}">
+         <ws:partial template="{{_options.groupTemplate || 'wml!Controls/_menu/Render/groupTemplate'}}" itemData="{{groupTemplate.item}}" />
       </ws:if>
    </ws:groupTemplate>
 </Controls.listRender:Render>
