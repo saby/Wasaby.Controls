@@ -50,7 +50,7 @@
    min-height: @min-height_Scrollbar-thumb;
 }
 .controls-VScrollbar__thumbWrapper_horizontal {
-   min-width: @min-height_Scrollbar-thumb;
+   min-width: @min-height_Scrollbar-thumb + @offset_horizontal_Scrollbar_track * 2;
    height: 100%;
    padding: ((@width_Scrollbar-horizontal - @width_Scrollbar-horizontal-thumb) / 2) @offset_horizontal_Scrollbar_track;
    transition: padding @animation-duration_Scrollbar ease-in-out;
@@ -77,7 +77,6 @@
 .controls-VScrollbar__thumb_horizontal {
    background-color: @bg_Scrollbar-horizontal_thumb_normal;
    border-radius: @border-radius_Scrollbar-horizontal-thumb;
-   min-width: @min-height_Scrollbar-thumb;
    height: 100%;
 }
 
