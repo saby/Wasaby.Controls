@@ -390,7 +390,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
 
     private displayFilter(options: IMenuOptions, item: Model): boolean {
         let isVisible = true;
-        if (item.get && options.parentProperty) {
+        if (item.get && options.parentProperty && options.nodeProperty) {
             let parent = item.get(options.parentProperty);
             if (parent === undefined) {
                 parent = null;
