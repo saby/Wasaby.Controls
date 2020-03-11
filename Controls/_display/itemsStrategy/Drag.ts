@@ -69,6 +69,10 @@ export default class Drag<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         return itemsOrder.map((index) => items[index]);
     }
 
+    get avatarItem(): T {
+        return this._avatarItem;
+    }
+
     at(index: number): T {
         const itemsOrder = this._getItemsOrder();
         const itemIndex = itemsOrder[index];
