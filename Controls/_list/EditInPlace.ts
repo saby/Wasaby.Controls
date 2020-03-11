@@ -489,7 +489,9 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _onKeyDown: function (e, nativeEvent) {
         switch (nativeEvent.keyCode) {
             case 13: // Enter
-                if (this._options.editingConfig && !this._sequentialEditing) {
+                if (this._isAdd) {
+                    _private.editNextRow(this, true, true);
+                } else if (this._options.editingConfig && !this._sequentialEditing) {
                     this.commitEdit();
                 } else {
                     _private.editNextRow(this, true);
