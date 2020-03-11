@@ -78,7 +78,7 @@ define([
       });
 
       it('LoadingIndicator - open config', () => {
-         let LoadingInd = new LoadingIndicator();
+         let LoadingInd = new LoadingIndicator.default();
          LoadingInd._beforeMount({});
          const waitPromise = Promise.resolve();
          const config = {};
