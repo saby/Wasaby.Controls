@@ -445,7 +445,6 @@
 
 /**
  * @event Происходит при клике на элемент списка.
- * @name Controls/_grid/interface/IGridControl#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, по которому кликнули.
  * @param {Object} nativeEvent Объект нативного события браузера.
@@ -454,7 +453,6 @@
 
 /*
 * @event Occurs when list item is clicked.
-* @name Controls/_grid/interface/IGridControl#itemClick
 * @param {Vdom/Vdom:SyntheticEvent} event Event object.
 * @param {Types/entity:Record} item Clicked item.
 * @param {Object} nativeEvent Native event object.
