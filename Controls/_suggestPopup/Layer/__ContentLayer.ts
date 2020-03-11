@@ -16,7 +16,7 @@ var _private = {
          } else {
             for (var i in bc) {
                // hasOwnProperty does not work correctly on clientRect object in FireFox and IE (not all versions)
-               if (Object.prototype.hasOwnProperty.call(bc, i)) {
+               if (Object.getPrototypeOf(bc).hasOwnProperty(i)) {
                   resultObj[i] = bc[i];
                }
             }
