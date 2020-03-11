@@ -21,6 +21,7 @@
                      imageProperty="image"
                      tileScalingMode="outside"
                      multiSelectVisibility="visible"
+                     showActionButton="{{true}}"
                      columns="{{_viewColumns}}">
                      <ws:tileItemTemplate>
                         <ws:partial
