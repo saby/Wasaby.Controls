@@ -224,7 +224,7 @@ var
 
 
         getHeaderZIndex: function(params) {
-           return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+           return _private.isFixedCell(params) && params.columnScroll ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
         },
 
         getColumnScrollCellClasses: function(params, theme) {
@@ -707,7 +707,8 @@ var
                   rowIndex,
                   isMultiHeader: this._isMultiHeader,
                   multiSelectVisibility: this._options.multiSelectVisibility,
-                  stickyColumnsCount: this._options.stickyColumnsCount
+                  stickyColumnsCount: this._options.stickyColumnsCount,
+                  columnScroll: this._options.columnScroll
                });
             }
 
@@ -908,7 +909,8 @@ var
                 resultsColumn.zIndex = _private.getHeaderZIndex({
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
-                    stickyColumnsCount: this._options.stickyColumnsCount
+                    stickyColumnsCount: this._options.stickyColumnsCount,
+                    columnScroll: this._options.columnScroll
                 });
             }
 
