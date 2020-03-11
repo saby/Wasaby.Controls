@@ -175,7 +175,9 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this.subMenu = eventResult;
         } else {
             this._notify(eventName, [eventResult]);
-            this._closeSubMenu();
+            if (eventName === 'pinClick') {
+                this._closeSubMenu();
+            }
         }
     }
 
@@ -185,7 +187,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         this._closeSubMenu();
     }
 
-    private _closeSubMenu(needOpenDropDown): void {
+    private _closeSubMenu(needOpenDropDown = false): void {
         if (this._children.Sticky) {
             this._children.Sticky.close();
         }
@@ -391,7 +393,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
 
     private displayFilter(options: IMenuOptions, item: Model): boolean {
         let isVisible = true;
-        if (item.get && options.parentProperty) {
+        if (item.get && options.parentProperty && options.nodeProperty) {
             let parent = item.get(options.parentProperty);
             if (parent === undefined) {
                 parent = null;
@@ -515,7 +517,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             selectedKeys: [],
             root: null,
             emptyKey: null,
-            moreButtonCaption: rk('Еще') + '...'
+            moreButtonCaption: rk('Еще') + '...',
+            groupTemplate: 'wml!Controls/_menu/Render/groupTemplate'
         };
     }
 }

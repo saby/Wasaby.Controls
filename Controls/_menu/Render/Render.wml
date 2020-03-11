@@ -18,7 +18,7 @@
       </ws:if>
    </ws:itemTemplate>
    <ws:groupTemplate>
-      <ws:if data="{{_options.groupTemplate && _isGroupVisible(groupTemplate.item)}}">
+      <ws:if data="{{_options.groupTemplate && (_options.groupProperty || _options.groupingKeyCallback) && _isGroupVisible(groupTemplate.item)}}">
          <ws:partial template="{{_options.groupTemplate}}" itemData="{{groupTemplate.item}}" />
       </ws:if>
    </ws:groupTemplate>
