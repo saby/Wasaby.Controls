@@ -1292,6 +1292,7 @@ var _private = {
                         dropdownClassName: 'controls-itemActionsV__popup',
                         headConfig: {
                             caption: action.title,
+                            iconSize: self._options.contextMenuConfig && self._options.contextMenuConfig.iconSize,
                             icon: action.icon
                         }
                     },
