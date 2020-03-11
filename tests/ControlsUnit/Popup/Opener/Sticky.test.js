@@ -117,7 +117,7 @@ define(
                isRemoveCalled = true;
             };
             StickyController.elementCreated({});
-            assert.equal(isRemoveCalled, true);
+            assert.equal(isRemoveCalled, false);
 
             popupLib.Controller.remove = ManagerControllerRemove;
             StickyController._isTargetVisible = () => true;
@@ -617,7 +617,9 @@ define(
             };
             let newContainer = {};
             let prepareConfig = StickyController.prepareConfig;
+            let isTargetVisible = StickyController._isTargetVisible;
             StickyController.prepareConfig = (itemConfig, containerConfig) => newContainer = cClone(containerConfig);
+            StickyController._isTargetVisible = () => true;
             StickyController.elementAfterUpdated(item, container);
 
             // сбрасываем размеры с контейнера
@@ -636,6 +638,7 @@ define(
             assert.strictEqual(newContainer.style.maxHeight, '300px');
             assert.strictEqual(container.style.maxHeight, '200px');
             StickyController.prepareConfig = prepareConfig;
+            StickyController._isTargetVisible = isTargetVisible;
          });
 
          it('getMargins', () => {
