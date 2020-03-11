@@ -1291,7 +1291,8 @@ var _private = {
                         showHeader: true,
                         dropdownClassName: 'controls-itemActionsV__popup',
                         headConfig: {
-                            caption: action.title
+                            caption: action.title,
+                            icon: action.icon
                         }
                     },
                     eventHandlers: {
