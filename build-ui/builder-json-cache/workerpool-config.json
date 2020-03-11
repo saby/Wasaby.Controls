@@ -1,1 +1,0 @@
-{"systemMaxWorkers":6,"maxWorkers":5,"forkOpts":{"env":{"logs":"","main-process-cwd":"E:\\work\\wc3000\\node_modules\\sbis3-builder","required-modules":"[]"},"execArgv":["--max-old-space-size=1024"]}}
