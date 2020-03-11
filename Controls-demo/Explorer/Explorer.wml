@@ -10,6 +10,7 @@
                   <Controls.explorer:View
                      bind:root="_root"
                      attr:class="demo-Explorer ControlsDemo-Explorer"
+                     backgroundStyle="default"
                      keyProperty="id"
                      displayProperty="title"
                      parentProperty="parent"

@@ -14,6 +14,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import * as ControlsConstants from 'Controls/Constants';
 
 /**
  * Контрол меню.
@@ -25,6 +26,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @demo Controls-demo/Menu/Control/Source/Index
  * @control
  * @category Popup
  * @author Герасимов А.М.
@@ -435,7 +437,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private groupMethod(options: IMenuOptions, item: Model): string {
-        return item.get(options.groupProperty);
+        return item.get(options.groupProperty) || ControlsConstants.view.hiddenGroup;
     }
 
     private setSelectedItems(listModel: Tree, keys: TKeys): void {

@@ -124,6 +124,8 @@ import {delay} from 'Types/function';
             });
          });
       }
+
+      static _theme = ['Controls/decorator'];
    }
 
    export default MarkupDecorator;

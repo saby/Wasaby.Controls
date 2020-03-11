@@ -77,6 +77,18 @@ define([
          });
       });
 
+      it('LoadingIndicator - open config', () => {
+         let LoadingInd = new LoadingIndicator.default();
+         LoadingInd._beforeMount({});
+         const waitPromise = Promise.resolve();
+         const config = {};
+
+         LoadingInd.show(config, waitPromise);
+         assert.equal(config.waitPromise, undefined);
+
+         LoadingInd.destroy();
+      });
+
       it('LoadingIndicator - isOpened', () => {
          let cfg1 = Loading._stack.at(0);
          assert.equal(Loading._isOpened(cfg1), true);

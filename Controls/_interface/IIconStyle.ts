@@ -7,6 +7,7 @@ export interface IIconStyleOptions {
  *
  * @interface Controls/_interface/IIconStyle
  * @public
+ * @author Красильников А.С.
  */
 
 /*
