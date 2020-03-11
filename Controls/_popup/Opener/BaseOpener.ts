@@ -42,6 +42,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     protected _template: TemplateFunction = Template;
     private _actionOnScroll: string = 'none';
     private _popupId: string = '';
+    private _openerUnmounted: boolean = false;
     private _indicatorId: string = '';
     private _loadModulesPromise: Promise<ILoadDependencies|Error>;
     private _openerUpdateCallback: Function;
@@ -55,6 +56,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     protected _beforeUnmount(): void {
         this._notify('unregisterOpenerUpdateCallback', [this._openerUpdateCallback], {bubbling: true});
         this._toggleIndicator(false);
+        this._openerUnmounted = true;
         if (this._options.closePopupBeforeUnmount) {
             if (this._openPopupTimerId) {
                 clearTimeout(this._openPopupTimerId);
@@ -135,7 +137,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 this._loadModulesPromise = null;
                 // todo https://online.sbis.ru/opendoc.html?guid=b954dff3-9aa5-4415-a9b2-7d3430bb20a5
                 // If Opener was destroyed while template loading, then don't open popup.
-                if (!this._destroyed || this._options.closePopupBeforeUnmount === false) {
+                if (!this._openerUnmounted || this._options.closePopupBeforeUnmount === false) {
                     return results;
                 }
                 return new Error('Opener was destroyed');
@@ -166,6 +168,13 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         baseConfig.id = this._popupId;
 
         this._prepareNotifyConfig(baseConfig);
+
+        if (this._options.closePopupBeforeUnmount === false) {
+            const message = 'Если при дестрое опенера окно не должно закрываться, используйте ' +
+                'статический метод openPopup вместо опции closePopupBeforeUnmount';
+            Logger.warn(` ${this._moduleName}: ${message}`);
+        }
+
         return baseConfig;
     }
 
@@ -181,14 +190,18 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     private _popupHandler(eventName: string, args: any[]): void {
-        // Trim the prefix "on" in the event name
-        const event = eventName.substr(2).toLowerCase();
+        // В ядре появилась новая фича, при дестрое контрола через несколько секунд очищаются все св-ва и методы
+        // с инстанса. Если закроют окно после того, как открыватор был задестроен, то метода _notify уже не будет.
+        if (!this._openerUnmounted) {
+            // Trim the prefix "on" in the event name
+            const event = eventName.substr(2).toLowerCase();
 
-        if (event === 'close' || event === 'open') {
-            this._toggleIndicator(false);
+            if (event === 'close' || event === 'open') {
+                this._toggleIndicator(false);
+            }
+
+            this._notify(event, args);
         }
-
-        this._notify(event, args);
     }
 
     private _toggleIndicator(visible: boolean): void {
