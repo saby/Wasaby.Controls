@@ -45,6 +45,7 @@
 /__pycache__
 /application
 /builder-ui
+/build-ui
 /tests/**/.idea
 /tests/**/result.db
 /tests/**/config.ini

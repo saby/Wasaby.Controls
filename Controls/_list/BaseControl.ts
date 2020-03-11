@@ -186,7 +186,9 @@ var _private = {
                     cfg.dataLoadCallback(list);
                 }
 
-                self._cachedPagingState = null;
+                if (!self._shouldNotResetPagingCache) {
+                    self._cachedPagingState = false;
+                }
                 clearTimeout(self._needPagingTimeout);
 
                 if (listModel) {
@@ -521,7 +523,7 @@ var _private = {
                 (self._options.task1176625749 && countCurrentItems === cnt2)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
-            if (self._options.virtualScrolling && self._isMounted) {
+            if (self._isMounted && self?._children?.scrollController) {
                 self._children.scrollController.stopBatchAdding();
             }
 
@@ -559,7 +561,7 @@ var _private = {
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 const countCurrentItems = self._listViewModel.getCount();
 
-                if (self._options.virtualScrolling && self._isMounted) {
+                if (self._isMounted && self?._children?.scrollController) {
                     self._children.scrollController.startBatchAdding(direction);
                 }
 
@@ -716,17 +718,23 @@ var _private = {
         _private.setMarkerAfterScroll(self);
         if (_private.hasMoreData(self, self._sourceController, direction)) {
             self._sourceController.setEdgeState(direction);
+
+            // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
+            // к началу или концу, от этого прыжка его состояние не может
+            // измениться, поэтому пейджинг не должен прятаться в любом случае
+            self._shouldNotResetPagingCache = true;
             _private.reload(self, self._options).addCallback(function() {
+                self._shouldNotResetPagingCache = false;
                 if (direction === 'up') {
                     self._notify('doScroll', ['top'], { bubbling: true });
                 } else {
-                    self._notify('doScroll', ['bottom'], { bubbling: true });
+                    _private.jumpToEnd(self);
                 }
             });
         } else if (direction === 'up') {
             self._notify('doScroll', ['top'], { bubbling: true });
         } else {
-            self._notify('doScroll', ['bottom'], { bubbling: true });
+            _private.jumpToEnd(self);
         }
     },
     scrollPage: function(self, direction) {
@@ -1122,7 +1130,7 @@ var _private = {
         // virtual scrolling is disabled.
         if (
             changesType === 'collectionChanged' ||
-            changesType === 'indexesChanged' && self._options.virtualScrolling !== false ||
+            changesType === 'indexesChanged' && (self._options.virtualScrolling !== false || Boolean(self._options.virtualScrollConfig)) ||
             newModelChanged
         ) {
             self._itemsChanged = true;
@@ -1278,6 +1286,7 @@ var _private = {
                         groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
                         groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
                         groupProperty: self._options.contextMenuConfig && self._options.contextMenuConfig.groupProperty,
+                        iconSize: self._options.contextMenuConfig && self._options.contextMenuConfig.iconSize,
                         rootKey: action.id,
                         showHeader: true,
                         dropdownClassName: 'controls-itemActionsV__popup',
@@ -1416,6 +1425,7 @@ var _private = {
         }
         return self.__errorController.process({
             error: config.error,
+            theme: self._options.theme,
             mode: config.mode || dataSourceError.Mode.include
         }).then((errorConfig) => {
             _private.showError(self, errorConfig);
@@ -1600,6 +1610,23 @@ var _private = {
         if (!self._options.useNewModel && (model.getDragEntity() || model.getDragItemData())) {
             self._notify(eName, [itemData, nativeEvent]);
         }
+    },
+    jumpToEnd(self) {
+        const lastItem =
+            self._options.useNewModel
+            ? self._listViewModel.getLast()?.getContents()
+            : self._listViewModel.getLastItem();
+
+        const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._options.keyProperty);
+
+        // Последняя страница уже загружена но конец списка не обязательно отображается,
+        // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
+        _private.scrollToItem(self, lastItemKey, true, true).then(() => {
+            // После того как последний item гарантированно отобразился,
+            // нужно попросить ScrollWatcher прокрутить вниз, чтобы
+            // прокрутить отступ пейджинга и скрыть тень
+            self._notify('doScroll', ['pageDown'], { bubbling: true });
+        });
     }
 };
 
@@ -1655,6 +1682,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
     _needPagingTimeout: null,
+    _shouldNotResetPagingCache: false,
 
     _itemTemplate: null,
 
@@ -2491,6 +2519,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.getPortionedSearch(this).abortSearch();
     },
 
+    _onDataError(event: unknown, errorConfig: ErrbackConfig): void {
+        _private.processError(this, {
+            error: errorConfig.error,
+            mode: errorConfig.mode || dataSourceError.Mode.dialog
+        });
+    },
+
     _nativeDragStart: function(event) {
         // preventDefault нужно делать именно на нативный dragStart:
         // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
@@ -2704,10 +2739,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _onHoveredItemChanged: function(e, item, container) {
-        this._notify('hoveredItemChanged', [item, container]);
-    },
-
     _createNewModel(items, modelConfig, modelName) {
         // Подразумеваем, что Controls/display уже загружен. Он загружается при подключении
         // библиотеки Controls/listRender
@@ -2735,6 +2766,8 @@ BaseControl.contextTypes = function contextTypes() {
         isTouch: TouchContextField
     };
 };
+
+BaseControl._theme = ['Controls/Classes'];
 
 BaseControl.getDefaultOptions = function() {
     return {

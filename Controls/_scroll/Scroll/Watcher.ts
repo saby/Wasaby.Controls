@@ -157,9 +157,15 @@ import {SyntheticEvent} from "Vdom/Vdom"
                sizeCache = _private.getSizeCache(self, container);
             }
 
-            if (self._scrollTopCache <= 0) {
+            if (
+               self._scrollTopCache <= 0 &&
+               (!self._isVirtualPlaceholderMode() || self._topPlaceholderSize <= 0)
+            ) {
                curPosition = 'up';
-            } else if (self._scrollTopCache + sizeCache.clientHeight >= sizeCache.scrollHeight) {
+            } else if (
+               (self._scrollTopCache + sizeCache.clientHeight >= sizeCache.scrollHeight) &&
+               (!self._isVirtualPlaceholderMode() || self._bottomPlaceholderSize <= 0)
+            ) {
                curPosition = 'down';
             } else {
                curPosition = 'middle';
@@ -226,7 +232,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                   if (self._observers === null) {
                      return;
                   }
-                  for (var i = 0; i < changes.length; i++) {
+                  for (var i = changes.length - 1; i > -1 ; i--) {
                      switch (changes[i].target) {
                         case elements.topLoadTrigger:
                            if (changes[i].isIntersecting) {
@@ -242,18 +248,18 @@ import {SyntheticEvent} from "Vdom/Vdom"
                               eventName = 'loadBottomStop';
                            }
                            break;
-                        case elements.topVirtualScrollTrigger:
+                         case elements.bottomVirtualScrollTrigger:
+                             if (changes[i].isIntersecting) {
+                                 eventName = 'virtualPageBottomStart';
+                             } else {
+                                 eventName = 'virtualPageBottomStop';
+                             }
+                             break;
+                         case elements.topVirtualScrollTrigger:
                            if (changes[i].isIntersecting) {
                               eventName = 'virtualPageTopStart';
                            } else {
                                eventName = 'virtualPageTopStop';
-                           }
-                           break;
-                        case elements.bottomVirtualScrollTrigger:
-                           if (changes[i].isIntersecting) {
-                              eventName = 'virtualPageBottomStart';
-                           } else {
-                               eventName = 'virtualPageBottomStop';
                            }
                            break;
                      }

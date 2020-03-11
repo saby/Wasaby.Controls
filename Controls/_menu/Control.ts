@@ -14,6 +14,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import * as ControlsConstants from 'Controls/Constants';
 
 /**
  * Контрол меню.
@@ -404,7 +405,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             listModel.setHoveredItem(listModel.at(this._hoveredItemIndex));
         }
         if (options.groupProperty) {
-            listModel.setGroup(this.groupMethod.bind(this));
+            listModel.setGroup(this.groupMethod.bind(this, options));
         } else if (options.groupingKeyCallback) {
             listModel.setGroup(options.groupingKeyCallback);
         }
@@ -434,8 +435,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return isVisible;
     }
 
-    private groupMethod(item: Model): string {
-        return item.get(this._options.groupProperty);
+    private groupMethod(options: IMenuOptions, item: Model): string {
+        return item.get(options.groupProperty) || ControlsConstants.view.hiddenGroup;
     }
 
     private setSelectedItems(listModel: Tree, keys: TKeys): void {

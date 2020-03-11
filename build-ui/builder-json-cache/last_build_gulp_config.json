@@ -1,0 +1,82 @@
+{
+ "cache": "E:/work/wc3000/build-ui/builder-json-cache",
+ "output": "E:\\work\\wc3000\\application",
+ "logs": "E:/work/wc3000/application/logs",
+ "typescript": true,
+ "contents": true,
+ "joinedMeta": true,
+ "clearOutput": true,
+ "less": true,
+ "themes": true,
+ "symlinks": false,
+ "modules": [
+  {
+   "name": "ControlsUnit",
+   "path": "E:\\work\\wc3000\\tests\\ControlsUnit"
+  },
+  {
+   "name": "Controls",
+   "path": "E:\\work\\wc3000\\Controls"
+  },
+  {
+   "name": "Types",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\saby-types\\Types"
+  },
+  {
+   "name": "Env",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\rmi\\src\\client\\Env"
+  },
+  {
+   "name": "Browser",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\rmi\\src\\client\\Browser"
+  },
+  {
+   "name": "I18n",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\saby-i18n\\I18n"
+  },
+  {
+   "name": "WS.Core",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\sbis3-ws\\WS.Core"
+  },
+  {
+   "name": "View",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\sbis3-ws\\View"
+  },
+  {
+   "name": "Inferno",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\saby-inferno\\Inferno"
+  },
+  {
+   "name": "UI",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\saby-ui\\UI"
+  },
+  {
+   "name": "Vdom",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\sbis3-ws\\Vdom"
+  },
+  {
+   "name": "SbisEnv",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\rmi\\src\\client\\SbisEnv"
+  },
+  {
+   "name": "Application",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\wasaby-app\\src\\Application"
+  },
+  {
+   "name": "Controls-default-theme",
+   "path": "E:\\work\\wc3000\\Controls-default-theme"
+  },
+  {
+   "name": "Controls-demo",
+   "path": "E:\\work\\wc3000\\Controls-demo"
+  },
+  {
+   "name": "Router",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\Router\\Router"
+  },
+  {
+   "name": "SbisEnvUI",
+   "path": "E:\\work\\wc3000\\node_modules\\wasaby-cli\\store\\_repos\\rmi\\src\\client\\SbisEnvUI"
+  }
+ ]
+}
