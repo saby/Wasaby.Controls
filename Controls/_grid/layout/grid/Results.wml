@@ -1,11 +1,16 @@
 <ws:template name="cellContent">
-   <ws:if data="{{!!currentResultsColumn.column.resultTemplate && (multiSelectVisibility === 'hidden' || currentResultsColumn.index !== 0)}}">
-      <ws:partial template="{{currentResultsColumn.column.resultTemplate}}"
-                  listModel="{{listModel}}"
-                  results="{{ listModel.getResults() }}"
-                  currentResultsColumn="{{ currentResultsColumn }}"
-                  column="{{currentResultsColumn.column}}" />
-   </ws:if>
+    <ws:if data="{{ multiSelectVisibility === 'hidden' || currentResultsColumn.index !== 0 }}">
+        <ws:if data="{{!!currentResultsColumn.column.resultTemplate}}">
+            <ws:partial template="{{currentResultsColumn.column.resultTemplate}}"
+                        listModel="{{listModel}}"
+                        results="{{ listModel.getResults() }}"
+                        currentResultsColumn="{{ currentResultsColumn }}"
+                        column="{{currentResultsColumn.column}}" />
+        </ws:if>
+        <ws:else data="{{ currentResultsColumn.showDefaultResultTemplate }}">
+            <ws:partial template="wml!Controls/_grid/layout/common/ResultCellContent" currentResultsColumn="{{currentResultsColumn}}" fontWeight="{{ fontWeight }}" fontColorStyle="{{ fontColorStyle }}"/>
+        </ws:else>
+    </ws:if>
 </ws:template>
 <ws:template name="cell">
    <div class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}">

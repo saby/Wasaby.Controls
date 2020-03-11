@@ -938,12 +938,13 @@ var
                     const results = this._model.getMetaResults();
                     if (results && cInstance.instanceOfModule(results, 'Types/entity:Model')) {
                         resultsColumn.results = results.get(resultsColumn.column.displayProperty);
-
                         const format = results.getFormat();
                         const fieldIndex = format.getIndexByValue('name', resultsColumn.column.displayProperty);
                         resultsColumn.resultsFormat = fieldIndex !== -1 ? format.at(fieldIndex).getType() : undefined;
                     }
                 }
+
+                resultsColumn.showDefaultResultTemplate = !!resultsColumn.resultsFormat;
             }
             resultsColumn.cellClasses = cellClasses;
             return resultsColumn;

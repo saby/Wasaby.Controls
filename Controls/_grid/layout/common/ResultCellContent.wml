@@ -1,3 +1,4 @@
+{{ debug() }}
 <ws:if data="{{!!content}}">
     <ws:partial template="{{ content }}"
                 listModel="{{ listModel }}"
@@ -10,8 +11,7 @@
                                   fontWeight="{{fontWeight || 'bold'}}"
                                   fontColorStyle="{{ fontColorStyle || 'secondary'}}"/>
     </ws:if>
-    <ws:else
-            data="{{ currentResultsColumn.resultsFormat === 'integer' || currentResultsColumn.resultsFormat === 'real' }}">
+    <ws:else data="{{ currentResultsColumn.resultsFormat === 'integer' || currentResultsColumn.resultsFormat === 'real' }}">
         <Controls.decorator:Number value="{{ currentResultsColumn.results }}" useGrouping="{{ true }}"
                                    attr:class="controls-Grid__row-result-cell__content-font-weight_{{ fontWeight || 'bold' }}_theme-{{_options.theme}}
                                                controls-Grid__row-result-cell__content-font-color-style_{{ fontColorStyle || 'secondary' }}_theme-{{_options.theme}}"

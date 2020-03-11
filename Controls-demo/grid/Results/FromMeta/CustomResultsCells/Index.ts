@@ -15,7 +15,7 @@ export default class extends Control {
     private _columns = getCountriesStats().getColumnsWithWidths().map((c, i) => ({
         ...c,
         result: undefined,
-        resultTemplate: (i === 4 ? sqResTpl : ((i === 3 || i === 5) ? defResTpl: undefined))
+        resultTemplate: (i === 4 ? sqResTpl : (i === 5 ? defResTpl : undefined))
     }));
     private _fullResultsIndex = 0;
     private _partialResultsIndex = 0;
