@@ -15,6 +15,7 @@
                <Controls.grid:View
                   attr:class="demo-Grid__control demo-PopupEditOpener__grid"
                   itemPadding="{{ _itemPadding }}"
+                  name="grid"
                   displayProperty="title"
                   dataLoadCallback="{{_dataLoadCallback}}"
                   rowSeparatorVisibility="{{true}}"
