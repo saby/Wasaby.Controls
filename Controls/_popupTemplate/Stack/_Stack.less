@@ -44,6 +44,12 @@
 
 .controls-StackTemplate__top-area-background_theme_@{themeName} {
    background: @header_background-color_stack;
+
+   //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
+   .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
+      background-color: @header_background-color_stack;
+      box-shadow: -15px 2px 4px -6px @header_background-color_stack;
+   }
 }
 
 .controls-StackTemplate__top-area-border_theme_@{themeName} {
@@ -53,12 +59,6 @@
 .controls-StackTemplate__top-area {
    display: flex;
    flex-shrink: 0;
-
-   //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-   .controls-BreadCrumbsView__menu__dots {
-      background-color: @header_background-color_stack ;
-      box-shadow: -15px 2px 4px -6px @header_background-color_stack;
-   }
 }
 
 .controls-StackTemplate__content-area {
@@ -72,6 +72,12 @@
 
 .controls-StackTemplate__content-area_theme_@{themeName} {
    background: @background-color_stack;
+
+   //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
+   .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
+      background-color: @background-color_stack;
+      box-shadow: -15px 2px 4px -6px @background-color_stack;
+   }
 }
 
 .controls-StackTemplate__top-area-content {
