@@ -10,5 +10,5 @@
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, по которому кликнули.
  * @param {Object} nativeEvent Объект нативного события браузера.
- * @param {Number} columnIndex Индекс колонки по которой кликнули.
+ * @param {Number} columnIndex Индекс колонки, по которой кликнули.
  */
