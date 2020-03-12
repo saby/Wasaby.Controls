@@ -160,8 +160,8 @@ define(
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;
             expectedOptions.additionalProperty = null;
+            expectedOptions.itemPadding = null;
             expectedOptions.searchParam = null;
-
 
             let resultOptions = menuControl.getTemplateOptions(item);
             assert.deepEqual(resultOptions, expectedOptions);
