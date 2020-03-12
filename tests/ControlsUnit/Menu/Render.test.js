@@ -140,14 +140,14 @@ define(
             });
          });
 
-         describe('_isGroupVisible', function() {
+         describe('grouping', function() {
             let getGroup = (item) => {
                if (!item.get('group')) {
                   return 'CONTROLS_HIDDEN_GROUP';
                }
                return item.get('group');
             };
-            it('simple', function() {
+            it('_isGroupVisible simple', function() {
                let groupListModel = getListModel([
                   { key: 0, title: 'все страны' },
                   { key: 1, title: 'Россия', icon: 'icon-add' },
@@ -169,7 +169,7 @@ define(
                assert.isTrue(result);
             });
 
-            it('one group', function() {
+            it('_isGroupVisible one group', function() {
                let groupListModel = getListModel([
                   { key: 0, title: 'все страны', group: '2' },
                   { key: 1, title: 'Россия', icon: 'icon-add', group: '2' },
@@ -185,6 +185,112 @@ define(
 
                let result = menuRender._isGroupVisible(groupListModel.at(0));
                assert.isFalse(result);
+            });
+
+            it('_isVisibleSeparator', function() {
+               let groupListModel = getListModel([
+                  { key: 0, title: 'все страны' },
+                  { key: 1, title: 'Россия', icon: 'icon-add' },
+                  { key: 2, title: 'США', group: '2' },
+                  { key: 3, title: 'Великобритания', group: '2' },
+                  { key: 4, title: 'Великобритания', group: '2' },
+                  { key: 5, title: 'Великобритания', group: '3' }
+               ]);
+               groupListModel.setGroup(getGroup);
+
+               let menuRender = getRender(
+                  { listModel: groupListModel }
+               );
+               let result = menuRender._isVisibleSeparator(groupListModel.at(1));
+               assert.isFalse(!!result);
+
+               groupListModel.at(1).getContents().set('pinned', true);
+               result = menuRender._isVisibleSeparator(groupListModel.at(1));
+               assert.isTrue(result);
+
+               groupListModel.at(2).getContents().set('pinned', true);
+               result = menuRender._isVisibleSeparator(groupListModel.at(2));
+               assert.isFalse(result);
+            });
+         });
+
+         describe('_getClassList', function() {
+            let menuRender, renderOptions;
+            beforeEach(function() {
+               menuRender = getRender();
+               renderOptions = {
+                  listModel: getListModel(),
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKeys: [],
+                  itemPadding: {
+                     top: 'null',
+                     left: 'l',
+                     right: 'l'
+                  },
+                  theme: 'theme'
+               };
+            });
+
+            it('row_state default|readOnly', function() {
+               let expectedClasses = 'controls-Menu__row_state_default';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               renderOptions.listModel.at(0).getContents().set('readOnly', true);
+               expectedClasses = 'controls-Menu__row_state_readOnly';
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+            });
+
+            it('hovered', function() {
+               let expectedClasses = 'controls-Menu__row_hovered';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(1));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+
+               renderOptions.listModel.setHoveredItem(renderOptions.listModel.at(1));
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(1));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               renderOptions.listModel.setHoveredItem(renderOptions.listModel.at(0));
+               renderOptions.listModel.at(0).getContents().set('readOnly', true);
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+            });
+
+            it('emptyItem', function() {
+               let expectedClasses = 'controls-Menu__defaultItem';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(1));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               menuRender._options.emptyText = 'Text';
+               menuRender._options.emptyKey = 0;
+               expectedClasses = 'controls-Menu__emptyItem';
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               menuRender._options.multiSelect = true;
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+            });
+
+            it('pinned', function() {
+               let expectedClasses = 'controls-Menu__row_pinned';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+
+               renderOptions.listModel.at(0).getContents().set('pinned', true);
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+            });
+
+            it('lastItem', function() {
+               let expectedClasses = 'controls-Menu__row-separator';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               actualClasses = menuRender._getClassList(menuRender._options.listModel.at(3));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
             });
          });
 

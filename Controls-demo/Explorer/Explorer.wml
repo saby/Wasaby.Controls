@@ -10,6 +10,7 @@
                   <Controls.explorer:View
                      bind:root="_root"
                      attr:class="demo-Explorer ControlsDemo-Explorer"
+                     backgroundStyle="default"
                      keyProperty="id"
                      displayProperty="title"
                      parentProperty="parent"
@@ -21,6 +22,7 @@
                      imageProperty="image"
                      tileScalingMode="outside"
                      multiSelectVisibility="visible"
+                     showActionButton="{{true}}"
                      columns="{{_viewColumns}}">
                      <ws:tileItemTemplate>
                         <ws:partial

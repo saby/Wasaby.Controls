@@ -160,6 +160,7 @@ define(
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;
             expectedOptions.additionalProperty = null;
+            expectedOptions.searchParam = null;
 
 
             let resultOptions = menuControl.getTemplateOptions(item);
@@ -251,6 +252,7 @@ define(
 
             hierarchyOptions = {
                parentProperty: 'parent',
+               nodeProperty: 'node',
                root: null
             };
             isVisible = menuControl.displayFilter(hierarchyOptions, item);
@@ -283,6 +285,14 @@ define(
             assert.deepEqual(listModel.getActionsTemplateConfig(), expectedConfig);
          });
 
+         it('getCollection', function() {
+            let menuControl = getMenu();
+            let listModel = menuControl.getCollection(new collection.RecordSet(), {
+               searchParam: 'title',
+               searchValue: 'searchText'
+            });
+            assert.instanceOf(listModel, display.Search);
+         });
       });
    }
 );

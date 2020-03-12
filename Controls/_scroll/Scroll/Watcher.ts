@@ -232,7 +232,10 @@ import {SyntheticEvent} from "Vdom/Vdom"
                   if (self._observers === null) {
                      return;
                   }
-                  for (var i = 0; i < changes.length; i++) {
+                  // Изменения необходимо проходить с конца, чтобы сначала нотифицировать о видимости нижнего триггера
+                  // Это необходимо для того, чтобы когда вся высота записей списочного контрола была меньше вьюпорта, то
+                  // сначала список заполнялся бы вниз, а не вверх, при этом сохраняя положение скролла
+                  for (var i = changes.length - 1; i > -1 ; i--) {
                      switch (changes[i].target) {
                         case elements.topLoadTrigger:
                            if (changes[i].isIntersecting) {
@@ -248,18 +251,18 @@ import {SyntheticEvent} from "Vdom/Vdom"
                               eventName = 'loadBottomStop';
                            }
                            break;
-                        case elements.topVirtualScrollTrigger:
+                         case elements.bottomVirtualScrollTrigger:
+                             if (changes[i].isIntersecting) {
+                                 eventName = 'virtualPageBottomStart';
+                             } else {
+                                 eventName = 'virtualPageBottomStop';
+                             }
+                             break;
+                         case elements.topVirtualScrollTrigger:
                            if (changes[i].isIntersecting) {
                               eventName = 'virtualPageTopStart';
                            } else {
                                eventName = 'virtualPageTopStop';
-                           }
-                           break;
-                        case elements.bottomVirtualScrollTrigger:
-                           if (changes[i].isIntersecting) {
-                              eventName = 'virtualPageBottomStart';
-                           } else {
-                               eventName = 'virtualPageBottomStop';
                            }
                            break;
                      }

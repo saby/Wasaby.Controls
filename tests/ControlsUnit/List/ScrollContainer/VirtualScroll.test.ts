@@ -178,7 +178,15 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.resetRange(0, 5);
             // @ts-ignore
             instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
-            instance.insertItems(0, 2);
+            instance.insertItems(0, 2, {up: false, down: false});
+            assert.isFalse(instance.isNeedToRestorePosition);
+        });
+        it('after insert with predicted direction', () => {
+            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
+            instance.resetRange(0, 5);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
+            instance.insertItems(0, 2, {up: false, down: false}, 'up');
             assert.isTrue(instance.isNeedToRestorePosition);
         });
         it('after remove', () => {
@@ -187,7 +195,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             // @ts-ignore
             instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
             instance.removeItems(0, 1);
-            assert.isTrue(instance.isNeedToRestorePosition);
+            assert.isFalse(instance.isNeedToRestorePosition);
         });
     });
     describe('.canScrollToItem', () => {
@@ -256,21 +264,13 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
 
             assert.deepEqual({direction: 'up', heightDifference: 0}, instance.getParamsToRestoreScroll());
         });
-        it('after insert', () => {
+        it('after insert with predicted direction', () => {
             const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
             instance.resetRange(0, 5);
             // @ts-ignore
             instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
-            instance.insertItems(0, 2);
+            instance.insertItems(0, 2, {up: false, down: false}, 'up');
             assert.deepEqual({direction: 'up', heightDifference: 0}, instance.getParamsToRestoreScroll());
-        });
-        it('after remove', () => {
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
-            instance.resetRange(0, 5);
-            // @ts-ignore
-            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
-            instance.removeItems(0, 1);
-            assert.deepEqual({direction: 'down', heightDifference: 0}, instance.getParamsToRestoreScroll());
         });
     });
     describe('.updateItemsHeights()', () => {

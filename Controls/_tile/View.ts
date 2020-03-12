@@ -25,6 +25,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/_treeGrid/interface/ITreeControl
  * @mixes Controls/interface/IDraggable
  * @mixes Controls/_tile/interface/ITile
+ * @mixes Controls/_list/interface/IClickableView
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  * @mixes Controls/_list/BaseControlStyles
@@ -63,6 +64,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/_treeGrid/interface/ITreeControl
  * @mixes Controls/interface/IDraggable
  * @mixes Controls/List/interface/ITile
+ * @mixes Controls/_list/interface/IClickableView
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  * @mixes Controls/_list/BaseControlStyles

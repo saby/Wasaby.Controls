@@ -14,12 +14,18 @@ export const enum SHADOW_VISIBILITY {
     hidden = 'hidden'
 }
 
+export enum BACKGROUND_STYLE {
+    TRANSPARENT = 'transparent',
+    DEFAULT = 'default'
+}
+
 export interface IStickyHeaderOptions extends IControlOptions {
     position: POSITION;
     mode: MODE;
     fixedZIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
     backgroundVisible: boolean;
+    backgroundStyle: string;
 }
 
 /**
@@ -94,14 +100,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     protected _notifyHandler: Function = tmplNotify;
 
+    // Префикс для корректной установки background
+    protected _backgroundStyle: string;
+
    _bottomShadowStyle: string = '';
    _topShadowStyle: string = '';
 
     private _stickyDestroy: boolean = false;
 
-    protected _beforeMount(): void {
+    protected _beforeMount(options: IStickyHeaderOptions): void {
+        this._options = options;
         this._observeHandler = this._observeHandler.bind(this);
         this._index = getNextId();
+        this._backgroundStyle = this._options.backgroundVisible !== false ? this._options.backgroundStyle : BACKGROUND_STYLE.TRANSPARENT;
     }
 
     protected _afterUpdate(): void {
@@ -400,6 +411,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._container.get ? this._container.get(0) : this._container;
     }
 
+    static _theme: string[] = ['Controls/scroll', 'Controls/Classes'];
+
     static _isSafari13(): boolean {
         return detection.safariVersion >= 13;
     }
@@ -416,6 +429,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             fixedZIndex: 2,
             shadowVisibility: SHADOW_VISIBILITY.visible,
             backgroundVisible: true,
+            backgroundStyle: BACKGROUND_STYLE.DEFAULT,
             mode: MODE.replaceable,
             position: POSITION.top
         };
@@ -428,6 +442,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 SHADOW_VISIBILITY.hidden
             ]),
             backgroundVisible: descriptor(Boolean),
+            backgroundStyle: descriptor(String),
             mode: descriptor(String).oneOf([
                 MODE.replaceable,
                 MODE.stackable
