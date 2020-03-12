@@ -359,25 +359,20 @@ function getHeaderActionsCellConfig(headerRow: IHeaderCell[], isMultiHeader: boo
     let maxEndRow = 0;
     let maxEndColumn = 0;
 
-    // If not isMultiHeader we only need next endColumn
-    // Note! 2 = (headerRow.length + ActionsCell + 1) to have correct grid right endColumn
-    if (!isMultiHeader) {
-        return {
-            isActionCell: true,
-            endColumn: headerRow.length + 2
-        };
-    }
-
     headerRow.forEach((cell) => {
-        minStartRow = cell.startRow < minStartRow ? cell.startRow : minStartRow;
-        maxEndRow = cell.endRow > maxEndRow ? cell.endRow : maxEndRow;
-        maxEndColumn = cell.endColumn > maxEndColumn ? cell.endColumn : maxEndColumn;
+        minStartRow = cell.startRow && cell.startRow < minStartRow ? cell.startRow : minStartRow;
+        maxEndRow = cell.endRow && cell.endRow > maxEndRow ? cell.endRow : maxEndRow;
+        maxEndColumn = cell.endColumn && cell.endColumn > maxEndColumn ? cell.endColumn : maxEndColumn;
     });
+
+    if (maxEndColumn === 0) {
+        maxEndColumn = headerRow.length + 1;
+    }
 
     return {
         isActionCell: true,
-        startRow: minStartRow,
-        endRow: maxEndRow,
+        startRow: minStartRow > 0 ? minStartRow : 1,
+        endRow: maxEndRow > 0 ? maxEndRow : 1,
         startColumn: maxEndColumn,
         endColumn: maxEndColumn + 1
     };

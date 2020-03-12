@@ -161,10 +161,14 @@ var
             if (this._options.theme !== newCfg.theme) {
                 this._listModel.setTheme(newCfg.theme);
             }
+            if (this._options.columnScroll !== newCfg.columnScroll) {
+                this._listModel.setColumnScroll(newCfg.columnScroll);
+            }
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
             }
+            // header calculation is dependent on columnScroll option
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
             }
@@ -185,9 +189,6 @@ var
             }
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || this._baseResultsTemplate;
-            }
-            if (this._options.columnScroll !== newCfg.columnScroll) {
-                this._listModel.setColumnScroll(newCfg.columnScroll);
             }
         },
 
