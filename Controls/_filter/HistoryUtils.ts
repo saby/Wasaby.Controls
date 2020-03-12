@@ -79,28 +79,34 @@ function deleteHistorySourceFromConfig(initConfig, sourceField) {
    return configs;
 }
 
+function createRecordSet(items, sourceRecordSet) {
+   return items.value(CollectionFactory.recordSet, {
+      adapter: sourceRecordSet.getAdapter(),
+      keyProperty: sourceRecordSet.getKeyProperty(),
+      format: sourceRecordSet.getFormat(),
+      model: sourceRecordSet.getModel()
+   });
+}
+
 function getUniqItems(items1, items2, keyProperty) {
-   const uniqItems = factory(items2).filter((item) => {
-      if (!items1.getRecordById(item.get(keyProperty))) {
+   const resultItems = items1.clone();
+   resultItems.prepend(items2);
+
+   let uniqItems = factory(resultItems).filter((item, index) => {
+      if (resultItems.getIndexByValue(keyProperty, item.get(keyProperty)) === index) {
          return item;
       }
-   }).value();
-   const resultItems = items1.clone();
-   resultItems.prepend(uniqItems);
-   return resultItems;
+   });
+   return createRecordSet(uniqItems, items1);
 }
 
 function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
    const allCount = oldItems.getCount();
-   const uniqItems = getUniqItems(oldItems, newItems, keyProperty);
+   let uniqItems = getUniqItems(oldItems, newItems, keyProperty);
 
    if (sourceController && sourceController.hasMoreData('down')) {
-      uniqItems = factory(uniqItems).first(allCount).value(CollectionFactory.recordSet, {
-         adapter: oldItems.getAdapter(),
-         keyProperty: oldItems.getKeyProperty(),
-         format: oldItems.getFormat(),
-         model: oldItems.getModel()
-      });
+      uniqItems = factory(uniqItems).first(allCount);
+      uniqItems = createRecordSet(uniqItems, oldItems);
    }
    uniqItems.setMetaData(oldItems.getMetaData());
    return uniqItems;
