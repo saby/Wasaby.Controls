@@ -40,8 +40,6 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * Если установлено значение false, то иконка поиска внутри поля не отображается
  */
 
-
-
 /**
  * @name Controls/_search/Input/Search#contrastBackground
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
