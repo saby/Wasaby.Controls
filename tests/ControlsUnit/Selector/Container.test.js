@@ -128,7 +128,8 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
       it('prepareFilter', function() {
          var filter = {
             searchParam: 'test',
-            parent: 123
+            parent: 123,
+            SelectionWithPath: []
          };
          var source = new sourceLib.Memory();
          var selection = operations.selectionToRecord({ selected: [1, 2], excluded: [3, 4] }, source.getAdapter());
@@ -139,6 +140,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          assert.isTrue(preparedFilter !== filter);
          assert.isTrue(!preparedFilter.searchParam);
          assert.isTrue(!preparedFilter.parent);
+         assert.isTrue(!preparedFilter.SelectionWithPath);
 
          selection = operations.selectionToRecord({ selected: [null], excluded: [null] }, source.getAdapter());
          preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, 'searchParam');

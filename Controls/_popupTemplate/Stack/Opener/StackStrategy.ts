@@ -20,6 +20,7 @@ const _private = {
     getPanelWidth(item, tCoords, maxPanelWidth) {
         let panelWidth;
         const maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
+        const isCompoundTemplate = item.popupOptions.isCompoundTemplate;
         let minWidth = parseInt(item.popupOptions.minWidth, 10);
         const maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
@@ -35,7 +36,7 @@ const _private = {
             }
             return panelWidth;
         }
-        if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
+        if (minWidth > maxPanelWidthWithOffset && !isCompoundTemplate) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
             if (_private.isMaximizedPanel(item)) {
                 minWidth = item.popupOptions.minimizedWidth;
             }

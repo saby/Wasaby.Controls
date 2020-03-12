@@ -53,16 +53,19 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       return this._updateMenuCaptionByOptions(options);
    }
 
-   protected _beforeUpdate(options: IMultiSelectorOptions): void|Promise<TCount> {
-      const currOpts = this._options;
-      const selectionIsChanged = currOpts.selectedKeys !== options.selectedKeys || currOpts.excludedKeys !== options.excludedKeys;
+   protected _beforeUpdate(newOptions: IMultiSelectorOptions): void|Promise<TCount> {
+      const options = this._options;
+      const selectionIsChanged = options.selectedKeys !== newOptions.selectedKeys ||
+                                 options.excludedKeys !== newOptions.excludedKeys;
+      const viewModeChanged = options.selectionViewMode !== newOptions.selectionViewMode;
+      const isAllSelectedChanged = options.isAllSelected !== newOptions.isAllSelected;
 
-      if (selectionIsChanged || currOpts.selectionViewMode !== options.selectionViewMode) {
-         this._menuSource = this._getMenuSource(options);
+      if (selectionIsChanged || viewModeChanged || isAllSelectedChanged) {
+         this._menuSource = this._getMenuSource(newOptions);
       }
 
-      if (selectionIsChanged || currOpts.selectedKeysCount !== options.selectedKeysCount || currOpts.isAllSelected !== options.isAllSelected) {
-         return this._updateMenuCaptionByOptions(options);
+      if (selectionIsChanged || options.selectedKeysCount !== newOptions.selectedKeysCount || isAllSelectedChanged) {
+         return this._updateMenuCaptionByOptions(newOptions);
       }
    }
 

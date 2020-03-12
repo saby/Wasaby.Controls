@@ -689,26 +689,94 @@ define([
             assert.isTrue(result.isSuccessful());
          });
 
-          it('Two deferreds', function() {
-             const deferred = new Deferred();
-              eip._notify = function(e) {
-                  if (e === 'beforeEndEdit') {
-                      return deferred;
-                  }
-              };
-              eip.saveOptions({
-                  listModel: listModel
-              });
+         it('Two deferreds', function() {
+            const deferred = new Deferred();
+            eip._notify = function(e) {
+               if (e === 'beforeEndEdit') {
+                  return deferred;
+               }
+            };
+            eip.saveOptions({
+               listModel: listModel
+            });
 
-              eip.beginEdit({
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            eip.commitEdit();
+            assert.isTrue(!!eip._endEditDeferred);
+            var result = eip.commitEdit();
+            deferred.callback();
+            assert.isTrue(result.isSuccessful());
+         });
+
+         describe('Two async commits', () => {
+            it('validation success', function(done) {
+               let
+                  validationResultDef,
+                  firstCommitDef,
+                  secondCommitDef;
+
+               eip.saveOptions({
+                  listModel: listModel
+               });
+
+               eip.beginEdit({
                   item: listModel.at(0).getContents()
-              });
-              eip.commitEdit();
-              assert.isTrue(!!eip._endEditDeferred);
-              var result = eip.commitEdit();
-              deferred.callback();
-              assert.isTrue(result.isSuccessful());
-          });
+               });
+               eip._children.formController.submit = () => {
+                  return validationResultDef;
+               };
+
+               validationResultDef = new Deferred();
+               firstCommitDef = eip.commitEdit();
+               secondCommitDef = eip.commitEdit();
+               assert.equal(firstCommitDef, secondCommitDef);
+               assert.equal(eip._commitPromise, firstCommitDef);
+               assert.isTrue(eip._isCommitInProcess);
+
+               firstCommitDef.addCallback(() => {
+                  assert.isFalse(eip._isCommitInProcess);
+                  assert.isTrue(eip._commitPromise.isReady());
+                  done();
+               });
+
+               validationResultDef.callback({});
+            });
+
+            it('validation failed', function(done) {
+               let
+                  validationResultDef,
+                  firstCommitDef,
+                  secondCommitDef;
+
+               eip.saveOptions({
+                  listModel: listModel
+               });
+
+               eip.beginEdit({
+                  item: listModel.at(0).getContents()
+               });
+               eip._children.formController.submit = () => {
+                  return validationResultDef;
+               };
+
+               validationResultDef = new Deferred();
+               firstCommitDef = eip.commitEdit();
+               secondCommitDef = eip.commitEdit();
+               assert.equal(firstCommitDef, secondCommitDef);
+               assert.equal(eip._commitPromise, firstCommitDef);
+               assert.isTrue(eip._isCommitInProcess);
+
+               firstCommitDef.addCallback(() => {
+                  assert.isFalse(eip._isCommitInProcess);
+                  assert.isTrue(eip._commitPromise.isReady());
+                  done();
+               });
+
+               validationResultDef.callback({any: true});
+            });
+         });
 
          it('With source', function(done) {
             var source = new sourceLib.Memory({
@@ -1111,6 +1179,51 @@ define([
             assert.isTrue(result.isSuccessful());
             assert.equal(listModel.at(0).getContents().get('title'), 'Первый');
          });
+
+         it('cancel called while commit is in process', (done) => {
+            let
+               validationResultDef,
+               commitDef,
+               cancelDef,
+               notifyBeforeEndEditCount = 0;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            eip._children.formController.submit = () => {
+               return validationResultDef;
+            };
+            eip._notify = (eName) => {
+               if (eName === 'beforeEndEdit') {
+                  notifyBeforeEndEditCount++;
+               }
+            };
+
+            validationResultDef = new Deferred();
+            commitDef = eip.commitEdit();
+            cancelDef = eip.cancelEdit();
+
+            assert.equal(commitDef, cancelDef);
+            assert.equal(eip._commitPromise, commitDef);
+            assert.isTrue(eip._isCommitInProcess);
+
+            commitDef.addCallback(() => {
+               assert.isFalse(eip._isCommitInProcess);
+               assert.isTrue(eip._commitPromise.isReady());
+            });
+
+            cancelDef.addCallback(() => {
+               assert.isNull(eip._editingItem);
+               assert.equal(notifyBeforeEndEditCount, 1);
+               done();
+            });
+
+            validationResultDef.callback({});
+         });
       });
 
       describe('_onKeyDown', function() {
@@ -1163,6 +1276,40 @@ define([
             eip._sequentialEditing = true;
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel, eip._options);
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
+            });
+         });
+
+         it('Enter on adding item', function(done) {
+            let isFifthItemCreated = false;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+            // Начинаем добавление.
+            eip.beginAdd({
+               item: newItem
+            });
+            eip._notify = (eName) => {
+               if (eName === 'afterBeginEdit' && isFifthItemCreated) {
+                  // Второе добавление успешно началось.
+                  done();
+               }
+               if (eName === 'beforeBeginEdit') {
+                  isFifthItemCreated = true;
+                  return {
+                     item: new entity.Model({
+                        rawData: {
+                           id: 5,
+                           title: 'Пятый'
+                        },
+                        keyProperty: 'id'
+                     })
+                  };
+               }
+            };
             eip._onKeyDown({}, {
                keyCode: 13,
                stopPropagation: function() {}
@@ -2045,14 +2192,14 @@ define([
       });
 
       describe('commitAndMoveNextRow (commitEdit by itemAction click)', () => {
-         it('commit edit existing record', async function () {
+         it('commit edit existing record without autoAddByApplyButton', async function () {
             let
-                source = new sourceLib.Memory({
-                   keyProperty: 'id',
-                   data: data
-                });
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
             eip.saveOptions({
-               listModel: listModel
+               listModel: listModel,
             });
             eip.beginEdit({
                item: listModel.at(0).getContents()
@@ -2064,15 +2211,63 @@ define([
             }));
             assert.isNull(eip._editingItemData);
          });
-         it('commit edit new record', async function () {
+
+         it('commit edit existing record with autoAddByApplyButton', async function () {
             let
-                source = new sourceLib.Memory({
-                   keyProperty: 'id',
-                   data: data
-                });
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data,
+               });
+            eip.saveOptions({
+               listModel: listModel,
+               editingConfig: {
+                  autoAddByApplyButton: true
+               }
+            });
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            assert.isNotNull(eip._editingItemData);
+            await (new Promise((resolve) => {
+               eip.commitAndMoveNextRow();
+               setTimeout(resolve, 10);
+            }));
+            assert.isNull(eip._editingItemData);
+         });
+
+         it('commit edit new record without autoAddByApplyButton', async function () {
+            let
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
             eip.saveOptions({
                listModel: listModel,
                source
+            });
+            eip.beginAdd({
+               item: newItem
+            });
+            assert.isNotNull(eip._editingItemData);
+            await (new Promise((resolve) => {
+               eip.commitAndMoveNextRow();
+               setTimeout(resolve, 10);
+            }));
+            assert.isNull(eip._editingItemData);
+         });
+
+         it('commit edit new record with autoAddByApplyButton', async function () {
+            let
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
+            eip.saveOptions({
+               listModel: listModel,
+               source,
+               editingConfig: {
+                  autoAddByApplyButton: true
+               }
             });
             eip.beginAdd({
                item: newItem

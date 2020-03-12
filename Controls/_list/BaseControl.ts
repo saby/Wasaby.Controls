@@ -2027,7 +2027,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newOptions.markedKey);
         }
 
-        if (newOptions.markerVisibility !== this._options.markerVisibility) {
+        if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
         }
 
@@ -2055,7 +2055,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
         }
 
-        if (sortingChanged) {
+        if (sortingChanged && !newOptions.useNewModel) {
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
