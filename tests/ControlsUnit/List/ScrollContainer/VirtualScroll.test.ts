@@ -142,7 +142,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         });
         it('at ending', () => {
             assert.deepEqual({range: {start: 0, stop: 4}, placeholders: {top: 0, bottom: 0}},
-                instance.removeItems(3, 1));
+                instance.removeItems(4, 1));
         });
     });
     describe('.shiftRange', () => {
