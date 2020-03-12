@@ -206,31 +206,30 @@ define([
             selectedKeysCount: 0,
             isAllSelected: true
          };
-         let isUpdateMenu = false;
+         let isMenuUpdated = false;
 
-         instance._getMenuSource = () =>  isUpdateMenu = true;
+         instance._getMenuSource = () =>  isMenuUpdated = true;
          await instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отмечено всё');
-         assert.isTrue(isUpdateMenu);
+         assert.isTrue(isMenuUpdated);
+         instance.saveOptions({ ...newOptions });
 
-         isUpdateMenu = false;
+         isMenuUpdated = false;
          newOptions.isAllSelected = false;
          await instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отметить');
-         assert.isTrue(isUpdateMenu);
+         assert.isTrue(isMenuUpdated);
+         instance.saveOptions({ ...newOptions });
 
          newOptions.selectedKeys = [1, 2];
          newOptions.selectedKeysCount = 2;
          await instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
+         instance.saveOptions({ ...newOptions });
 
-         isUpdateMenu = false;
+         isMenuUpdated = false;
          instance._beforeUpdate(instance._options);
-         assert.isFalse(isUpdateMenu);
-
-         newOptions.withShowSelected = true;
-         instance._beforeUpdate(newOptions);
-         assert.isTrue(isUpdateMenu);
+         assert.isFalse(isMenuUpdated);
       });
       it('_afterUpdate', function() {
          var instance = new MultiSelector.default();

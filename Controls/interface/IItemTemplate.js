@@ -20,10 +20,10 @@ define('Controls/interface/IItemTemplate', [
 
    /**
     * @name Controls/interface/IItemTemplate#itemTemplate
-    * @cfg {String|Function} Устанавливает шаблон отображения элемента.
+    * @cfg {String|Function} Шаблон отображения элемента.
     * @default Controls/list:ItemTemplate
+    * @demo Controls-demo/List/List/ItemTemplatePG
     * @remark
-    * См. <a href="/materials/demo-ws4-list-item-template">демо-пример</a>.
     * Подробнее о параметрах шаблона Controls/list:ItemTemplate читайте {@link Controls/list:ItemTemplate здесь}.
     * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
     * Шаблон может быть переопределён с помощью опции {@link Controls/interface/IItemTemplate#itemTemplateProperty itemTemplateProperty}.
@@ -73,9 +73,9 @@ define('Controls/interface/IItemTemplate', [
 
    /**
     * @name Controls/interface/IItemTemplate#itemTemplateProperty
-    * @cfg {String|undefined} Устанавливает имя поля элемента, где содержится имя шаблона. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
+    * @cfg {String|undefined} Имя поля элемента, где содержится имя шаблона отображения элемента. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
+    * @demo Controls-demo/List/List/ItemTemplatePG
     * @remark
-    * См. <a href="/materials/demo-ws4-list-item-template">демо-пример</a>.
     * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/interface/IItemTemplate#itemTemplate itemTemplate}.
     * @see Controls/interface/IItemTemplate#itemTemplate
     */

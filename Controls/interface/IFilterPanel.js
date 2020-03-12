@@ -49,7 +49,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * В данном примере панель будет отображаться в две колонки.
     * <pre>
     *    <Controls.filterPopup:Panel
-    *          items={{_items}}
+    *          source="{{_source}}"
     *          orientation="horizontal"
     *          historyId="myHistoryId">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
@@ -70,7 +70,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * In this example panel will be displayed in two column.
     * <pre>
     *    <Controls.filterPopup:Panel
-    *          items={{_items}}
+    *          source="{{_source}}"
     *          orientation="horizontal"
     *          historyId="myHistoryId">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
