@@ -671,7 +671,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и начинается добавление новой.
         * */
         if (this._isAdd) {
-            _private.editNextRow(this, true, true);
+            _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
         } else {
             this.commitEdit();
         }
