@@ -231,7 +231,8 @@ class FormController extends Control<IFormController, IReceivedState> {
             this._setRecord(newOptions.record);
         }
         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
-            if (newOptions.record && newOptions.record.isChanged()) {
+            // Если текущий рекорд изменен, то покажем вопрос
+            if (this._options.record && this._options.record.isChanged()) {
                 this._showConfirmPopup('yesno').then((answer) => {
                     if (answer === true) {
                         this.update().then((res) => {
