@@ -843,6 +843,7 @@ define(
                   })]);
                   assert.strictEqual(fastFilter._configs[0]._items.getCount(), 1);
 
+                  fastFilter._configs[0].keyProperty = 'id';
                   filterMod.Fast._private.onSelectorResult(fastFilter._configs[0], [new entity.Model({
                      keyProperty: 'key',
                      rawData: { key: 5, title: 'Китай' }
