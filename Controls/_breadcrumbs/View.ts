@@ -34,6 +34,16 @@ var BreadCrumbsView = Control.extend({
                 this._notify('itemClick', [itemData.item]);
             }
     },
+
+    _afterRender: function(oldOptions) {
+        if (oldOptions.visibleItems !== this._options.visibleItems) {
+            // Если крошки пропали (стало 0 записей), либо наоборот появились (стало больше 0 записей), кинем ресайз
+            if (!this._options.visibleItems.length || !oldOptions.visibleItems.length) {
+                this._notify('controlResize', [], {bubbling: true});
+            }
+        }
+    },
+
     _dotsClick: function (e) {
             var rs = new RecordSet({
                 rawData: this._options.items.map(function (item) {
