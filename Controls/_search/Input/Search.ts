@@ -84,8 +84,6 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * @author Золотова Э.Е.
  */
 
-
-
 /**
  * @event Controls/_suggest/Input/Search/Suggest#searchClick Происходит при нажатии на иконку поиска (лупы).
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
