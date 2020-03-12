@@ -21,7 +21,9 @@
                {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly_theme-' + _options.theme}}"
            title="{[Подробнее]}"
            on:click="_onArrowClick()">
-         <div class="icon-ForwardBaseLine controls-BreadCrumbsPath__backButtonArrow controls-BreadCrumbsPath__backButtonArrow_theme-{{_options.theme}}"></div>
+          <div class="controls-BreadCrumbsPath__backButtonArrow">
+              <div class="icon-ForwardBaseLine controls-BreadCrumbsPath__backButtonArrow_theme-{{_options.theme}}"></div>
+          </div>
       </div>
    </ws:if>
 </div>

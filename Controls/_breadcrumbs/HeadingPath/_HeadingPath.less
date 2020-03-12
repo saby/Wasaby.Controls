@@ -79,9 +79,8 @@
    cursor: pointer;
 }
 .controls-BreadCrumbsPath__backButtonArrow_theme-@{themeName} {
-   .icon(@font-size_Path-backButtonArrow);
    color: @color_Path-backButtonArrow;
-   display: none;
+   .icon(@font-size_Path-backButtonArrow);
 }
 
 .controls-Path__backButtonArrow_readonly_theme-@{themeName} {
@@ -141,14 +140,14 @@
 }
 
 .ws-is-hover {
-   .controls-BreadCrumbsPath__backButtonArrow_theme-@{themeName}:hover {
-      color: @color_Path-backButtonArrow_hovered;
-   }
    .controls-BreadCrumbsPath__backButtonArrow:hover {
       display: inline-flex;
    }
    .controls-BreadCrumbsPath__backButton__wrapper:hover .controls-BreadCrumbsPath__backButtonArrow {
       display: inline-flex;
+   }
+   .controls-BreadCrumbsPath__backButtonArrow_theme-@{themeName}:hover {
+      color: @color_Path-backButtonArrow_hovered;
    }
 
    .controls-BreadCrumbsPath__home_theme-@{themeName}:hover {
