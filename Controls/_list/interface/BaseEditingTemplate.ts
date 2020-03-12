@@ -28,8 +28,8 @@
  * @public
  */
 
-import IEditingTemplateOptions from './EditingTemplate'
+import IEditingTemplateOptions from './EditingTemplate';
 
 export default interface IBaseEditingTemplateOptions extends IEditingTemplateOptions {
     readonly '[Controls/_list/interface/IBaseEditingTemplateOptions]': boolean;
-};
+}

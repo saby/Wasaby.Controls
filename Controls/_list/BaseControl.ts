@@ -2802,6 +2802,7 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
+        loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
         markedKey: null,
         stickyHeader: true,
         virtualScrollMode: 'remove'
