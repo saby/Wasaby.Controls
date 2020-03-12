@@ -20,6 +20,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/interface/IGridItemTemplate
     * @mixes Controls/interface/IDraggable
     * @mixes Controls/interface/IGroupedGrid
+    * @mixes Controls/interface/IItemClick
     *
     * @mixes Controls/_list/BaseControlStyles
     * @mixes Controls/_list/ListStyles
