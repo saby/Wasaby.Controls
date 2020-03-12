@@ -14,7 +14,6 @@ import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
 import dayTmpl = require('wml!Controls/_datePopup/day');
 import {MonthViewDayTemplate} from 'Controls/calendar';
-import 'css!theme?Controls/datePopup';
 import {Controller as ManagerController} from 'Controls/popup';
 import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "./scroll";
 
@@ -538,6 +537,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
 });
 
 Component._private = _private;
+Component._theme = ['Controls/datePopup'];
 
 Component.SELECTION_TYPES = IRangeSelectable.SELECTION_TYPES;
 Component.HEADER_TYPES = HEADER_TYPES;
