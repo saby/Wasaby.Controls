@@ -35,6 +35,7 @@ import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
 import {CollectionItem} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
+import {IItemAction} from "./interface/IList";
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1180,6 +1181,37 @@ var _private = {
             getBoundingClientRect: () => clientRect
         };
     },
+    getMenuConfig(items: IItemAction[], contextMenuConfig: object, action?: IItemAction): object {
+        let defaultMenuConfig: object = {
+            items: new RecordSet({ rawData: items, keyProperty: 'id' }),
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'parent@',
+            dropdownClassName: 'controls-itemActionsV__popup'
+        };
+        if (action) {
+            defaultMenuConfig = {
+                ...defaultMenuConfig,
+                rootKey: action.id,
+                showHeader: true,
+                headConfig: {
+                    caption: action.title,
+                    iconSize: contextMenuConfig && contextMenuConfig.iconSize,
+                    icon: action.icon
+                }
+            };
+        } else {
+            defaultMenuConfig.showClose = true;
+        }
+        if (contextMenuConfig) {
+            if (typeof contextMenuConfig === 'object') {
+                cMerge(defaultMenuConfig, contextMenuConfig);
+            } else {
+                Logger.error('Controls/list:View: Некорректное значение опции contextMenuConfig. Ожидается объект');
+            }
+        }
+        return defaultMenuConfig;
+    },
 
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
@@ -1200,7 +1232,6 @@ var _private = {
          */
         const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
-            const rs = new RecordSet({ rawData: showActions, keyProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
@@ -1214,27 +1245,12 @@ var _private = {
             }
             self._itemWithShownMenu = self._options.useNewModel ? itemData.getContents() : itemData.item;
             require(['css!theme?Controls/toolbars'], function() {
-                const defaultMenuConfig = {
-                    items: rs,
-                    keyProperty: 'id',
-                    parentProperty: 'parent',
-                    nodeProperty: 'parent@',
-                    dropdownClassName: 'controls-itemActionsV__popup',
-                    showClose: true
-                };
-
-                if (self._options.contextMenuConfig) {
-                    if (typeof self._options.contextMenuConfig === 'object') {
-                        cMerge(defaultMenuConfig, self._options.contextMenuConfig);
-                    } else {
-                        Logger.error('Controls/list:View: Некорректное значение опции contextMenuConfig. Ожидается объект');
-                    }
-                }
+                const menuConfig = _private.getMenuConfig(showActions, self._options.contextMenuConfig);
 
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
-                    templateOptions: defaultMenuConfig,
+                    templateOptions: menuConfig,
                     eventHandlers: {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
@@ -1256,7 +1272,7 @@ var _private = {
         self: Control,
         itemData,
         childEvent: Event,
-        action: object
+        action: IItemAction
     ): void {
         /**
          * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because we'd get 2 root nodes.
@@ -1275,27 +1291,12 @@ var _private = {
                 self._listViewModel.setMenuState('shown');
             }
             require(['css!Controls/input'], () => {
+                const menuConfig = _private.getMenuConfig(children, self._options.contextMenuConfig, action);
+
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target: childEvent.target,
-                    templateOptions: {
-                        items: new RecordSet({ rawData: children, keyProperty: 'id' }),
-                        keyProperty: 'id',
-                        parentProperty: 'parent',
-                        nodeProperty: 'parent@',
-                        groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
-                        groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
-                        groupProperty: self._options.contextMenuConfig && self._options.contextMenuConfig.groupProperty,
-                        iconSize: self._options.contextMenuConfig && self._options.contextMenuConfig.iconSize,
-                        rootKey: action.id,
-                        showHeader: true,
-                        dropdownClassName: 'controls-itemActionsV__popup',
-                        headConfig: {
-                            caption: action.title,
-                            iconSize: self._options.contextMenuConfig && self._options.contextMenuConfig.iconSize,
-                            icon: action.icon
-                        }
-                    },
+                    templateOptions: menuConfig,
                     eventHandlers: {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
