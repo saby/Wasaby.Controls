@@ -87,7 +87,7 @@
          <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.itemActionsGridCellStyles}}"/>
       </ws:if>
       <ws:else data="{{ itemData.isActionsColumn(itemData, currentColumn, colspan || colspanCurrentNode) }}">
-         <div></div>
+         <div attr:key="{{itemData.getCurrentColumnKey()}}__action-cell"></div>
       </ws:else>
    </ws:if>
 </ws:template>
@@ -109,7 +109,7 @@
          <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{itemData.itemActionsGridCellStyles}}"/>
       </ws:if>
       <ws:else data="{{ itemData.isActionsColumn(itemData, currentColumn, colspan || colspanCurrentNode) }}">
-         <div></div>
+         <div attr:key="{{itemData.getCurrentColumnKey()}}__action-cell"></div>
       </ws:else>
    </ws:if>
 </ws:template>
