@@ -68,7 +68,7 @@ import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
 import ColumnsView = require('Controls/_list/Columns');
 import BaseAction from 'Controls/_list/BaseAction';
-import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatortemplate');
+import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
