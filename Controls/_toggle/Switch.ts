@@ -55,6 +55,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
  * @variant left Заголовок расположен перед кнопкой.
  * @variant right Заголовок расположен после кнопки. Значение по умолчанию.
+ * @default right
  */
 
 /*
@@ -62,6 +63,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @cfg {String} Determines on which side of the button caption is located.
  * @variant left Caption before toggle.
  * @variant right Toggle before caption. It is default value.
+ * @default right
  */
 
 class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IValidationStatus {
