@@ -37,7 +37,8 @@ var BreadCrumbsView = Control.extend({
 
     _afterRender: function(oldOptions) {
         if (oldOptions.visibleItems !== this._options.visibleItems) {
-            // Если крошки пропали (стало 0 записей), либо наоборот появились (стало больше 0 записей), кинем ресайз
+            // Если крошки пропали (стало 0 записей), либо наоборот появились (стало больше 0 записей), кинем ресайз,
+            // т.к. изменится высота контрола
             if (!this._options.visibleItems.length || !oldOptions.visibleItems.length) {
                 this._notify('controlResize', [], {bubbling: true});
             }
