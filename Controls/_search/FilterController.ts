@@ -16,13 +16,12 @@ export default class SearchFilterController extends Control<ISearchFilterControl
    protected _filter: object = null;
 
    protected _beforeMount(options: ISearchFilterController): void {
-      this._filter = options.searchValue && options.searchValue.length < options.minSearchLength ? clone(options.filter) || {} :
-          SearchFilterController.prepareFilter(options.filter, options.searchValue, options.searchParam);
+      this._filter = this.getFilter(options);
    }
 
    protected _beforeUpdate(newOptions: ISearchFilterController): void {
       if (!isEqual(this._options.filter, newOptions.filter)) {
-         this._filter = newOptions.filter;
+         this._filter = this.getFilter(newOptions);
       }
    }
 
@@ -35,6 +34,11 @@ export default class SearchFilterController extends Control<ISearchFilterControl
       }
 
       return preparedFilter;
+   }
+
+   private getFilter(options: ISearchFilterController): object {
+      return options.searchValue && options.searchValue.length < options.minSearchLength ? clone(options.filter) || {} :
+          SearchFilterController.prepareFilter(options.filter, options.searchValue, options.searchParam);
    }
 }
 
