@@ -5,9 +5,10 @@ define(
       'Core/core-clone',
       'Controls/display',
       'Types/collection',
-      'Types/entity'
+      'Types/entity',
+      'Types/di'
    ],
-   function(menu, source, Clone, display, collection, entity) {
+   function(menu, source, Clone, display, collection, entity, di) {
       describe('Menu:Render', function() {
          let defaultItems = [
             { key: 0, title: 'все страны' },
@@ -136,6 +137,27 @@ define(
                renderOptions.selectedKeys = [null];
                menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
                assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
+            });
+
+            it('check model', function() {
+               let isCreatedModel;
+               let sandbox = sinon.createSandbox();
+               sandbox.replace(menuRender, '_createModel', (model, config) => {
+                  isCreatedModel = true;
+                  return new entity.Model(config);
+               });
+
+               renderOptions.listModel = new display.Tree({
+                  collection: new collection.RecordSet({
+                     rawData: defaultItems,
+                     keyProperty: 'id'
+                  })
+               });
+
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('id'), null);
+               assert.isTrue(isCreatedModel);
+               sandbox.restore();
             });
          });
 
