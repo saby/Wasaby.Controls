@@ -47,9 +47,6 @@ import {TemplateFunction} from 'UI/Base';
 /**
  * @name Controls/list:LoadingIndicatorTemplate#footerTemplate
  * @cfg {String|Function|undefined} Пользовательский шаблон, описывающий подвал индикатора.
- * @default false
- * @remark
- * Кнопка-экспандер позволяет сворачивать/разворачивать группу.
  * @example
  * WML:
  * <pre class="brush: html">
