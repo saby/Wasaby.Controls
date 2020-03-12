@@ -489,7 +489,7 @@ export default class VirtualScroll {
     }
 
     private _removeItemHeights(removeIndex: number, length: number): void {
-        this._itemsHeightData.itemsHeights.splice(removeIndex + 1, length);
+        this._itemsHeightData.itemsHeights.splice(removeIndex, length);
     }
 
     private _shiftRangeBySegment(direction: IDirection, segmentSize: number): IRange {
