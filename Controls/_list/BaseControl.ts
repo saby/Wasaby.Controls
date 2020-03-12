@@ -521,7 +521,7 @@ var _private = {
                 (self._options.task1176625749 && countCurrentItems === cnt2)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
-            if (self._options.virtualScrolling && self._isMounted) {
+            if (self._isMounted && self?._children?.scrollController) {
                 self._children.scrollController.stopBatchAdding();
             }
 
@@ -559,7 +559,7 @@ var _private = {
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 const countCurrentItems = self._listViewModel.getCount();
 
-                if (self._options.virtualScrolling && self._isMounted) {
+                if (self._isMounted && self?._children?.scrollController) {
                     self._children.scrollController.startBatchAdding(direction);
                 }
 
@@ -1122,7 +1122,7 @@ var _private = {
         // virtual scrolling is disabled.
         if (
             changesType === 'collectionChanged' ||
-            changesType === 'indexesChanged' && self._options.virtualScrolling !== false ||
+            changesType === 'indexesChanged' && (self._options.virtualScrolling !== false || Boolean(self._options.virtualScrollConfig)) ||
             newModelChanged
         ) {
             self._itemsChanged = true;
@@ -1697,6 +1697,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _portionedSearchInProgress: null,
     _showContinueSearchButton: false,
 
+    _draggingItem: null,
+    _draggingEntity: null,
+    _draggingTargetItem: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1802,6 +1806,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
                     if (newOptions.useNewModel && !self._listViewModel && result.data) {
+                        self._items = result.data;
                         self._listViewModel = self._createNewModel(
                             result.data,
                             viewModelConfig,
@@ -1992,7 +1997,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newOptions.markedKey);
         }
 
-        if (newOptions.markerVisibility !== this._options.markerVisibility) {
+        if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
         }
 
@@ -2452,21 +2457,23 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             selection,
             self = this,
             dragStartResult;
-
+        const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (_private.canStartDragNDrop(domEvent, this._options)) {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-            selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
+            selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, key);
             selection.recursive = false;
+            const recordSet = this._options.useNewModel ? this._listViewModel.getCollection() : this._listViewModel.getItems();
+
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
-            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter, LIMIT_DRAG_SELECTION).addCallback(function(items) {
-                const dragKeyPosition = items.indexOf(itemData.key);
+            getItemsBySelection(selection, this._options.source, recordSet, this._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
+                const dragKeyPosition = items.indexOf(key);
                 // If dragged item is in the list, but it's not the first one, move
                 // it to the front of the array
                 if (dragKeyPosition > 0) {
                     items.splice(dragKeyPosition, 1);
-                    items.unshift(itemData.key);
+                    items.unshift(key);
                 }
                 dragStartResult = self._notify('dragStart', [items]);
                 if (dragStartResult) {
@@ -2474,7 +2481,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         dragStartResult.dragControlId = self._options.dragControlId;
                     }
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
-                    self._itemDragData = itemData;
+                    self._draggingItem = itemData;
                 }
             });
         }
@@ -2509,8 +2516,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject, domEvent) {
-        this._listViewModel.setDragEntity(dragObject.entity);
-        this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
+        if (this._options.useNewModel) {
+            this._draggingEntity = dragObject.entity;
+        } else {
+            this._listViewModel.setDragEntity(dragObject.entity);
+            this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
+        }
     },
 
     _dragEnd: function(event, dragObject) {
@@ -2520,11 +2531,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragEndHandler: function(dragObject) {
-        var targetPosition = this._listViewModel.getDragTargetPosition();
-        if (targetPosition) {
-            this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+        if (!this._options.useNewModel) {
+            var targetPosition = this._listViewModel.getDragTargetPosition();
+            if (targetPosition) {
+                this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            }
         }
-
         // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
         this._showActions = false;
     },
@@ -2548,7 +2560,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
     _dragEnter: function(event, dragObject) {
         if (
-            dragObject &&
+            dragObject && !this._options.useNewModel &&
             !this._listViewModel.getDragEntity() &&
             cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
@@ -2565,7 +2577,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragLeave: function() {
-        this._listViewModel.setDragTargetPosition(null);
+        if (this._options.useNewModel) {
+            this._draggingTargetItem = null;
+        } else {
+            this._listViewModel.setDragTargetPosition(null);
+        }
     },
 
     _documentDragEnd: function() {
@@ -2584,25 +2600,34 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _documentDragEndHandler: function() {
-        this._listViewModel.setDragTargetPosition(null);
-        this._listViewModel.setDragItemData(null);
-        this._listViewModel.setDragEntity(null);
+        if (this._options.useNewModel) {
+            this._draggingEntity = null;
+            this._draggingItem = null;
+            this._draggingTargetItem = null;
+        } else {
+            this._listViewModel.setDragTargetPosition(null);
+            this._listViewModel.setDragItemData(null);
+            this._listViewModel.setDragEntity(null);
+        }
     },
 
     _itemMouseEnter: function(event, itemData, nativeEvent) {
         if (this._options.itemsDragNDrop) {
             var
                 dragPosition,
-                dragEntity = this._listViewModel.getDragEntity();
+                dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
 
             if (dragEntity) {
-                dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+                dragPosition = this._options.useNewModel ? {position: 'before', item: itemData.getContents()} : this._listViewModel.calculateDragTargetPosition(itemData);
 
-                if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                    this._listViewModel.setDragTargetPosition(dragPosition);
+                if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false)
+                    if (this._options.useNewModel) {
+                        this._draggingTargetItem = dragPosition.item;
+                    } else {
+                        this._listViewModel.setDragTargetPosition(dragPosition);
+                    }
                 }
             }
-        }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
