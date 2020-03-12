@@ -1997,7 +1997,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newOptions.markedKey);
         }
 
-        if (newOptions.markerVisibility !== this._options.markerVisibility) {
+        if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
         }
 
