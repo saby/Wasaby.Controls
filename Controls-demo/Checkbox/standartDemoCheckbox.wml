@@ -7,7 +7,7 @@
             <div attr:class="ws-flexbox ws-flex-column controlsDemo__ml3 demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
                 <h2>Read mode</h2>
                 <div attr:class="ws-flexbox">
-                    <div class="ws-flexbox ws-flex-column">
+                    <div class="ws-flexbox ws-flex-column checkbox_wrapper_width2">
                         <h3>Selected value</h3>
                         <Controls.toggle:Checkbox readOnly="{{true}}" value="{{true}}" caption="receive notifications" triState="{{false}}" tooltip="Tooltip"/>
                     </div>
