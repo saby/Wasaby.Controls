@@ -470,20 +470,30 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             return self._endEditDeferred;
         }
 
-        return _private.validate(this).addCallback(function (result) {
-            for (var key in result) {
-                if (result.hasOwnProperty(key) && result[key]) {
-                    return Deferred.success({validationFailed: true});
+        if (!self._isCommitInProcess) {
+            self._isCommitInProcess = true;
+            self._commitPromise = _private.validate(this).addCallback(function(result) {
+                for (var key in result) {
+                    if (result.hasOwnProperty(key) && result[key]) {
+                        self._isCommitInProcess = false;
+                        return Deferred.success({validationFailed: true});
+                    }
                 }
-            }
-            return _private.endItemEdit(self, true).addCallback((result) => {
-                return Deferred.success({validationFailed: result && result.cancelled});
+                return _private.endItemEdit(self, true).addCallback((result) => {
+                    self._isCommitInProcess = false;
+                    return Deferred.success({validationFailed: result && result.cancelled});
+                });
             });
-        });
+        }
+
+        return self._commitPromise;
     },
 
     cancelEdit: function () {
-        return _private.endItemEdit(this, false);
+        const self = this;
+        return this._isCommitInProcess ? this._commitPromise.addBoth(() => {
+            return _private.endItemEdit(self, false);
+        }) : _private.endItemEdit(this, false);
     },
 
     _onKeyDown: function (e, nativeEvent) {
@@ -703,6 +713,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     },
 
     _beforeUnmount: function () {
+        this._commitPromise = null;
         _private.resetVariables(this);
     }
 });
