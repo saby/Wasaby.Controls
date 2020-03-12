@@ -11,6 +11,14 @@
                     <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
                     <ws:viewConfig pagingMode="direct"/>
                 </ws:navigation>
+                <ws:loadingIndicatorTemplate>
+                    <ws:partial template="Controls/list:LoadingIndicatorTemplate"
+                                scope="{{loadingIndicatorTemplate}}">
+                        <ws:footerTemplate>
+                            <div>Дополнительная информация при итеративном поиске</div>
+                        </ws:footerTemplate>
+                    </ws:partial>
+                </ws:loadingIndicatorTemplate>
             </Controls.list:View>
         </Controls.scroll:HotKeysContainer>
     </Controls.scroll:Container>
