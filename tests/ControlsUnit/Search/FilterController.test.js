@@ -5,7 +5,8 @@ define(['Controls/search'], function(search) {
 
          filterController._beforeMount({
             searchParam: 'title',
-            searchValue: 'test'
+            searchValue: 'test',
+            parentProperty: 'test'
          });
 
          assert.deepEqual(filterController._filter, {  'Разворот': 'С разворотом', 'usePages': 'full', title: 'test' });
@@ -49,7 +50,7 @@ define(['Controls/search'], function(search) {
             searchParam: 'search_string'
          });
 
-         assert.deepEqual(filterController._filter, { title: 'test2', search_string: 'test',  usePages: "full", "Разворот": "С разворотом" });
+         assert.deepEqual(filterController._filter, { title: 'test2', search_string: 'test' });
 
          filterController._filter = null;
          // filter options is not changed
