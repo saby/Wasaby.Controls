@@ -2025,7 +2025,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
         }
 
-        if (sortingChanged) {
+        if (sortingChanged && !newOptions.useNewModel) {
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
