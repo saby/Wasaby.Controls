@@ -38,9 +38,11 @@ const Component = BaseControl.extend({
         }
     },
 
-    isIconChecked: function(periods, date) {
+    _isIconChecked: function(periods, date) {
         for (let i = 0; i < periods.length; i++) {
-            if (periods[i][0] < date && periods[i][1] > date) {
+            //Проверяем второй элемент массива на null. Если задан null в опции periods, то лента будет бесконечно
+            //отображать зеленые галки.
+            if (periods[i][0] < date && (periods[i][1] > date || periods[i][1] === null)) {
                 return true;
             }
         }
