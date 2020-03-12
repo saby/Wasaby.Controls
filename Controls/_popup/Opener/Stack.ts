@@ -49,9 +49,17 @@ const getStackConfig = (config: IStackOpenerOptions = {}) => {
     // Последнее открытое окно должно быть выше предыдущего, для этого должно знать его zIndex. Данные хранятся в WM
     if (!isNewEnvironment() && !config.zIndex) {
         const oldWindowManager = requirejs('Core/WindowManager');
+        const compatibleManagerWrapperName = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+        let managerWrapperMaxZIndex = 0;
+        // На старой странице может быть бутерброд из старых и новых окон. zIndex вдомных окон берем
+        // из менеджера совместимости. Ищем наибольший zIndex среди всех окон
+        if (requirejs.defined(compatibleManagerWrapperName)) {
+            managerWrapperMaxZIndex = requirejs(compatibleManagerWrapperName).default.getMaxZIndex();
+        }
         const zIndexStep = 9;
         if (oldWindowManager) {
-            config.zIndex = oldWindowManager.getMaxZIndex() + zIndexStep;
+            const maxZIndex = Math.max(oldWindowManager.getMaxZIndex(), managerWrapperMaxZIndex);
+            config.zIndex = maxZIndex + zIndexStep;
         }
     }
     return config;

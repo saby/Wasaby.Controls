@@ -2,6 +2,9 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import dateUtils = require('Controls/Utils/Date');
 import ViewModel = require('Controls/_input/Mask/ViewModel');
 
+const DEFAULT_YEAR_NUM = 1900;
+const DEFAULT_YEAR_STR = '1900';
+
 class ModuleClass extends ViewModel {
     protected handleInput(splitValue, inputType) {
         let _stringValueConverter = new StringValueConverter({replacer: this.options.replacer}),
@@ -10,7 +13,9 @@ class ModuleClass extends ViewModel {
         if (splitValue.insert.length > 1) {
             date = _stringValueConverter.getValueByString(splitValue.insert);
         }
-        if (dateUtils.isValidDate(date)) {
+        if (dateUtils.isValidDate(date) &&
+            (this.options.mask.indexOf('Y') >= 0 && date.getFullYear() === DEFAULT_YEAR_NUM ?
+                splitValue.insert.indexOf(DEFAULT_YEAR_STR) >= 0 : true)) {
             const dateValue = _stringValueConverter.getStringByValue(date, this.options.mask);
             const displayValue = dateValue;
             const hasChangedDisplayValue = this._displayValue !== displayValue;

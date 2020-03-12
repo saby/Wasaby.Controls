@@ -57,6 +57,6 @@
                           closeOnOutsideClick="{{true}}"
                           on:result="_subMenuResult()"
                           on:close="_closeSubMenu()"
-                          template="Controls/_menu/Popup"
+                          template="Controls/menu:Popup"
                           className="controls-DropdownList__subMenu controls-Menu__subMenu_margin_theme-{{_options.theme}}"/>
 </div>

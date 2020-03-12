@@ -240,7 +240,8 @@ import dataSource = require('Controls/dataSource');
             this._setRecord(newOptions.record);
          }
          if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
-            if (newOptions.record && newOptions.record.isChanged()) {
+            // Если текущий рекорд изменен, то покажем вопрос
+            if (this._options.record && this._options.record.isChanged()) {
                this._showConfirmPopup('yesno').addCallback(function(answer) {
                   if (answer === true) {
                      self.update().addCallback(function(res) {

@@ -1,17 +1,23 @@
 /**
  * Created by dv.zuev on 17.01.2018.
  *
- * Вставляем в tmpl:
- * <Controls/event:Listener event="scroll" callback="myScrollCallback()" />
+ * Вставляем в wml:
+ * <Controls.event:Listener event="scroll" on:scroll="myScrollCallback()" />
  */
-import Control = require('Core/Control');
+
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_event/Listener');
-import entity = require('Types/entity');
+import {descriptor} from 'Types/entity';
+
+interface IListenerOptions extends IControlOptions {
+   event?: string;
+   listenAll?: boolean;
+}
 
 /**
  * Позволяет реагировать на события родителя, использующего Controls.events:Register в своем шаблоне
  * @class Controls/_event/Register
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @control
  * @public
  * @author Белотелов Н.В.
@@ -28,35 +34,37 @@ import entity = require('Types/entity');
  *  либо же только на события ближайшего такого контрола
  */
 
-function getConfig(options: any) {
+const getConfig = (options: IListenerOptions): IListenerOptions => {
    return {
       listenAll: !!options.listenAll
    };
-}
-
-var EventListener = Control.extend({
-   _template: template,
-   config: null,
-   _beforeMount: function() {
-      this.config = getConfig(this._options);
-   },
-   _afterMount: function() {
-      this._notify('register', [this._options.event, this, this.callback, this.config], {bubbling: true});
-   },
-   _beforeUnmount: function() {
-      this._notify('unregister', [this._options.event, this, this.config], {bubbling: true});
-   },
-   callback: function() {
-      this._notify(this._options.event, Array.prototype.slice.call(arguments));
-   }
-});
-
-EventListener.getOptionTypes = function() {
-   return {
-      event: entity.descriptor(String).required(),
-      listenAll: entity.descriptor(Boolean)
-   };
 };
 
-export = EventListener;
+class EventListener extends Control<IListenerOptions> {
+   protected _template: TemplateFunction = template;
+   protected config: IListenerOptions =  null;
+   protected _beforeMount(options: IListenerOptions): void {
+      this.config = getConfig(options);
+   }
 
+   protected _afterMount(): void {
+      this._notify('register', [this._options.event, this, this.callback, this.config], {bubbling: true});
+   }
+
+   protected _beforeUnmount(): void {
+      this._notify('unregister', [this._options.event, this, this.config], {bubbling: true});
+   }
+
+   protected callback(): void {
+      this._notify(this._options.event, Array.prototype.slice.call(arguments));
+   }
+
+   static getOptionTypes(): object {
+      return {
+         event: descriptor(String).required(),
+         listenAll: descriptor(Boolean)
+      };
+   }
+}
+
+export default EventListener;
