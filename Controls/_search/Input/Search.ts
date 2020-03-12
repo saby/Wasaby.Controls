@@ -33,6 +33,16 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  */
 
 /**
+ * @name Controls/_search/Input/Search#searchButtonVisible
+ * @cfg {Boolean} Включает/выключает отображение иконки внутри поля поиска.
+ * @default true
+ * @remark
+ * Если установлено значение false, то иконка поиска внутри поля не отображается
+ */
+
+
+
+/**
  * @name Controls/_search/Input/Search#contrastBackground
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
  * @default false
@@ -74,6 +84,8 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * @category Input
  * @author Золотова Э.Е.
  */
+
+
 
 /**
  * @event Controls/_suggest/Input/Search/Suggest#searchClick Происходит при нажатии на иконку поиска (лупы).
