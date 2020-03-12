@@ -255,7 +255,9 @@ define([
 
          instance._options.selectedCountConfig = {};
          GetCount.default.getCount = function() {
-            return Deferred.success();
+            var def = new Deferred();
+            def.callback();
+            return def;
          };
          instance._getCount(selection, null).addCallback(function() {
             assert.equal(instance._menuCaption, 'Отметить');
