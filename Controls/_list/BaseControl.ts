@@ -2240,14 +2240,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
-    _onCheckBoxClick(e, key, status): void {
-        const editingItemData = this._listViewModel.getEditingItemData();
-        const isAddingItem = !!editingItemData && editingItemData.key === key && editingItemData.isAdd;
-
-        if (!isAddingItem) {
-            this._children.selectionController.onCheckBoxClick(key, status);
-            this._notify('checkboxClick', [key, status]);
-        }
+    _onCheckBoxClick: function(e, key, status) {
+        this._children.selectionController.onCheckBoxClick(key, status);
+        this._notify('checkboxClick', [key, status]);
     },
 
     _listSwipe: function(event, itemData, childEvent) {

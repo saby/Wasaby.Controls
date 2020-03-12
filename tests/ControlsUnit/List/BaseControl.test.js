@@ -2845,27 +2845,6 @@ define([
             }
          };
          ctrl._onCheckBoxClick({}, 1, 1);
-
-         let isCheckBoxClickNotified = false;
-         ctrl._notify = function(eName, args) {
-            if (eName === 'checkboxClick') {
-               isCheckBoxClickNotified = true;
-            }
-         };
-         ctrl._listViewModel.getEditingItemData = () => ({
-            key: 1,
-            isAdd: false
-         });
-         ctrl._onCheckBoxClick({}, 1, 1);
-         assert.isTrue(isCheckBoxClickNotified);
-
-         isCheckBoxClickNotified = false;
-         ctrl._listViewModel.getEditingItemData = () => ({
-            key: 1,
-            isAdd: true
-         });
-         ctrl._onCheckBoxClick({}, 1, 1);
-         assert.isFalse(isCheckBoxClickNotified);
       });
 
       it('_onItemClick', async function() {
