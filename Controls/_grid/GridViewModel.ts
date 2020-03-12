@@ -603,7 +603,8 @@ var
                 this._headerRows = getHeaderRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell, stickyLadderCell);
                 const headerMaxEndCellData = getHeaderMaxEndCellData(this._headerRows);
                 this._maxEndRow = headerMaxEndCellData.maxRow;
-                this._maxEndColumn = headerMaxEndCellData.maxColumn;            } else if (multiSelectVisibility) {
+                this._maxEndColumn = headerMaxEndCellData.maxColumn;
+            } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
                 this._headerRows = [];
