@@ -545,6 +545,9 @@ var
 
         setExpanderVisibility: function(expanderVisibility) {
             this._options.expanderVisibility = expanderVisibility;
+            if (_private.getExpanderVisibility(this._options) === 'hasChildren') {
+                _private.determinePresenceChildItem(this);
+            }
             this._nextModelVersion();
         },
 
