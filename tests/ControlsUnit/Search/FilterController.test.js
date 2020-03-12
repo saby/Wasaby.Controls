@@ -41,6 +41,16 @@ define(['Controls/search'], function(search) {
 
          assert.deepEqual(filterController._filter, { title: 'test2' });
 
+         filterController._beforeUpdate({
+            filter: {
+               title: 'test2'
+            },
+            searchValue: 'test',
+            searchParam: 'search_string'
+         });
+
+         assert.deepEqual(filterController._filter, { title: 'test2', search_string: 'test',  usePages: "full", "Разворот": "С разворотом" });
+
          filterController._filter = null;
          // filter options is not changed
          filterController._beforeUpdate({
