@@ -4,7 +4,7 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
- * @includes IContentTemplate Controls/list:ContentTemplate
+ * @includes IContentTemplate Controls/list:IContentTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
@@ -25,6 +25,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes IClickableView Controls/_list/interface/IClickableView
  * @public
  * @author Крайнов Д.О.
  */
@@ -55,6 +56,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes IClickableView Controls/_list/interface/IClickableView
  * @public
  * @author Крайнов Д.О.
  */

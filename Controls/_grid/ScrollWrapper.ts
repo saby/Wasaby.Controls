@@ -10,6 +10,11 @@ export interface IHorizontalScrollWrapperOptions extends IControlOptions {
     scrollWidth: number;
     listModel: IGridViewModel;
     gridSupport: 'no' | 'full' | 'partial';
+
+    /**
+     * Стиль background в случае sticky header
+     */
+    backgroundStyle: string;
 }
 
 export default class HorizontalScrollWrapper extends Control<IControlOptions> {
@@ -56,9 +61,9 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
         }
         const maxEndColumn = listModel.getHeaderMaxEndColumn();
         const stickyColumnsCount = listModel.getStickyColumnsCount();
-        const isMultiHeader = listModel.isMultiHeader();
-
-        style += `grid-column: ${stickyColumnsCount + 1 + offset} / ${(isMultiHeader ? maxEndColumn : maxEndColumn + 1) + offset};`;
+        const header = listModel.getHeader();
+        // В случае !multiHeader добавление offset к grid-column-end не нужно, т.к. оно уже учтено в maxEndColumn
+        style += `grid-column: ${stickyColumnsCount + 1 + offset} / ${(maxEndColumn ? maxEndColumn : header.length + 1) + offset};`;
         style += `width: ${options.scrollWidth}px`;
         return style;
     }

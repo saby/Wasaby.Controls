@@ -3472,7 +3472,7 @@ define([
          ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, {key: 1}, {nativeEvent: {button: 0}});
-         assert.isUndefined(ctrl._itemDragData);
+         assert.isNull(ctrl._draggingItem);
       });
       it('can\'t start drag if canStartDragNDrop return false', function () {
          let
@@ -3509,7 +3509,7 @@ define([
          ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, { key: 1 }, { nativeEvent: { button: 0 } });
-         assert.isUndefined(ctrl._itemDragData);
+         assert.isNull(ctrl._draggingItem);
       });
       describe('mouseDown with different buttons', function() {
          it('dragNDrop do not start on right or middle mouse button', async function() {

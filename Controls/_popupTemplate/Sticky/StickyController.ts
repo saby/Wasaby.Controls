@@ -6,6 +6,7 @@ import Env = require('Env/Env');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
 import * as cInstance from 'Core/core-instance';
+import {Logger} from 'UI/Utils';
 
 export type TVertical = 'top' | 'bottom' | 'center';
 export type THorizontal = 'left' | 'right' | 'center';
@@ -224,7 +225,7 @@ class StickyController extends BaseController {
             item.position.position = undefined;
             this.prepareConfig(item, container);
         } else {
-            require('Controls/popup').Controller.remove(item.id);
+            this._printTargetRemovedWarn();
         }
     }
 
@@ -250,14 +251,14 @@ class StickyController extends BaseController {
                 }
             }
         } else {
-            require('Controls/popup').Controller.remove(item.id);
+            this._printTargetRemovedWarn();
         }
     }
 
     elementAfterUpdated(item, container) {
-        const target = _private.getTargetNode(item);
         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
-        if (target && target.closest && target.closest('.ws-hidden')) {
+        if (!this._isTargetVisible(item)) {
+            this._printTargetRemovedWarn();
             return false;
         }
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
@@ -384,6 +385,10 @@ class StickyController extends BaseController {
             };
         }
         return TargetCoords.get(_private.getTargetNode(cfg));
+    }
+
+    private _printTargetRemovedWarn(): void {
+        Logger.warn('Controls/popup:Sticky: Пропал target из DOM. Позиция окна может быть не верная');
     }
 
     private _isTargetVisible(item): boolean {

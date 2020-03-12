@@ -470,26 +470,38 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             return self._endEditDeferred;
         }
 
-        return _private.validate(this).addCallback(function (result) {
-            for (var key in result) {
-                if (result.hasOwnProperty(key) && result[key]) {
-                    return Deferred.success({validationFailed: true});
+        if (!self._isCommitInProcess) {
+            self._isCommitInProcess = true;
+            self._commitPromise = _private.validate(this).addCallback(function(result) {
+                for (var key in result) {
+                    if (result.hasOwnProperty(key) && result[key]) {
+                        self._isCommitInProcess = false;
+                        return Deferred.success({validationFailed: true});
+                    }
                 }
-            }
-            return _private.endItemEdit(self, true).addCallback((result) => {
-                return Deferred.success({validationFailed: result && result.cancelled});
+                return _private.endItemEdit(self, true).addCallback((result) => {
+                    self._isCommitInProcess = false;
+                    return Deferred.success({validationFailed: result && result.cancelled});
+                });
             });
-        });
+        }
+
+        return self._commitPromise;
     },
 
     cancelEdit: function () {
-        return _private.endItemEdit(this, false);
+        const self = this;
+        return this._isCommitInProcess ? this._commitPromise.addBoth(() => {
+            return _private.endItemEdit(self, false);
+        }) : _private.endItemEdit(this, false);
     },
 
     _onKeyDown: function (e, nativeEvent) {
         switch (nativeEvent.keyCode) {
             case 13: // Enter
-                if (this._options.editingConfig && !this._sequentialEditing) {
+                if (this._isAdd) {
+                    _private.editNextRow(this, true, true);
+                } else if (this._options.editingConfig && !this._sequentialEditing) {
                     this.commitEdit();
                 } else {
                     _private.editNextRow(this, true);
@@ -660,7 +672,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и начинается добавление новой.
         * */
         if (this._isAdd) {
-            _private.editNextRow(this, true, true);
+            _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
         } else {
             this.commitEdit();
         }
@@ -701,6 +713,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     },
 
     _beforeUnmount: function () {
+        this._commitPromise = null;
         _private.resetVariables(this);
     }
 });
