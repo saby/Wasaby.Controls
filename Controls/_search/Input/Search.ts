@@ -34,10 +34,11 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
 
 /**
  * @name Controls/_search/Input/Search#searchButtonVisible
- * @cfg {Boolean} Определяет, показывать ли иконку поиска.
+ * @cfg {Boolean} Определяет, отображать ли иконку внутри поля поиска.
  * @default true
  * @remark
- * Если установлено значение false, то иконка поиска внутри поля не отображается.
+ * * true - иконка поиска отображается.
+ * * false - иконка поиска не отображается.
  */
 
 /**
