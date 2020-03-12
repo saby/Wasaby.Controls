@@ -25,54 +25,58 @@ class FormController extends Control<IControlOptions> {
 
     private _create(config): Promise<any> {
         const self = this;
-        const resultDef = new Deferred();
         const initValues = config.initValues;
         const finishDef = this._children.registrator.finishPendingOperations();
-
         initValues.id = this.idCount;
-
-        finishDef.addCallback(function(finishResult) {
-            let createDef = self._children.formControllerInst.create(initValues);
-            createDef.addCallback(function(result) {
+        const result = new Promise((resolve, reject) => {
+        finishDef.then((finishResult) => {
+            const createDef = self._children.formControllerInst.create(initValues);
+            createDef.then((result) => {
                 self.idCount++;
-                resultDef.callback(true);
+                resolve(true);
                 return result;
-            }).addErrback(function(e) {
-                resultDef.errback(e);
-                Env.IoC.resolve('ILogger').error('FormController example', '', e);
-                return e;
+            }, (error) => {
+                Env.IoC.resolve('ILogger').error('FormController example', '', error);
+                reject(error);
+                return error;
             });
             return finishResult;
-        });
-        finishDef.addErrback(function(e) {
-            resultDef.errback(e);
+        }, (e) => {
+            reject(e);
             Env.IoC.resolve('ILogger').error('FormController example', '', e);
             return e;
         });
+        });
 
-        return resultDef;
+        result.then((result) => {
+            return result;
+        }, (error) => {
+            return error;
+        });
     }
 
     private _read(config): Promise<any> {
         const self = this;
-        const resultDef = new Deferred();
-
         const finishDef = this._children.registrator.finishPendingOperations();
-
-        finishDef.addCallback(function(finishResult) {
+        const result = new Promise((resolve, reject) => {
+        finishDef.then((finishResult) => {
             self._key = config.key;
             self._record = null;
             self._forceUpdate();
-            resultDef.callback(true);
+            resolve(true);
             return finishResult;
-        });
-        finishDef.addErrback(function(e) {
-            resultDef.errback(e);
+        }, (e) => {
+            reject(e);
             Env.IoC.resolve('ILogger').error('FormController example', '', e);
             return e;
         });
-
-        return resultDef;
+        });
+        result.then((result) => {
+            return result;
+            },
+            (error) => {
+            return error;
+            });
     }
     private _update(): Promise<any> {
         return this._children.formControllerInst.update();
@@ -112,7 +116,7 @@ class FormController extends Control<IControlOptions> {
         if (!this._record.getRawData()) {
             return '';
         }
-        return JSON.stringify(this._record.getRawData());
+        return this._record.getRawData();
     }
     private _createSuccessedHandler(e, record) {
         this._alert('FormController demo: create successed');
@@ -146,28 +150,26 @@ class FormController extends Control<IControlOptions> {
         this._alert('FormController demo: delete failed');
         this._updateValuesByRecord(new Model());
     }
-    private _updateValuesByRecord(record) {
+    private _updateValuesByRecord(record: Model): void {
         this._record = record;
 
         this._key = this._record.get('id');
         this._recordAsText = this.getRecordString();
 
         // запросим еще данные прямо из dataSource и обновим dataSourceRecordString
-        const self = this;
         const def = this._dataSource.read(this._key);
-        def.addCallback((record) => {
+        def.then((record) => {
             if (!record) {
                 return '';
             }
             if (!record.getRawData()) {
                 return '';
             }
-            self.dataSourceRecordString = record.getRawData();
-            self._forceUpdate();
-        });
-        def.addErrback(function(e) {
-            self.dataSourceRecordString = '';
-            self._forceUpdate();
+            this.dataSourceRecordString = record.getRawData();
+            this._forceUpdate();
+        }, (e) => {
+            this.dataSourceRecordString = '';
+            this._forceUpdate();
             return e;
         });
         this._forceUpdate();

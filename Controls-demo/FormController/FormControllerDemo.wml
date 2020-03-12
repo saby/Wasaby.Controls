@@ -21,51 +21,93 @@
 >
 
 
-    <div class="controlsDemo__wrapper" style="width: 600px">
-        <div class="controlsDemo__cell controlsDemo__mb2 controls-fontsize-4xl_theme-{{_options.theme}}" style="font-weight: bold">Form Controller | Notes</div>
+    <div class="controlsDemo__wrapper">
+        <div class="controlsDemo__cell controlsDemo__mb2 controls-fontsize-4xl_theme-{{_options.theme}}"
+             style="font-weight: bold">Form Controller | Notes
+        </div>
         <Controls.Pending name="registrator">
-        <Controls.form:Controller name="formControllerInst" dataSource="{{ _options.dataSource || _dataSource }}" record="{{ _record }}" key="{{ !_record ? _key : undefined }}">
-            <Controls-demo.FormController.Container name="Container">
-                <div attr:class="form-content">
-                <div class="controlsDemo__cell controlsDemo__mb1">
-                    <div class="ws-flexbox ws-flex-column controlsDemo__mb1">
-                        <div class="controlsDemo__mr3 controls-fontsize-m_theme-{{_options.theme}}" style="font-weight: bold">Title*</div>
-                        <Controls.input:Text class="formControllerDemo__input" name="nameText" bind:value="_record.title" type="text" placeholder="Title" />
-                    </div>
-                    <div class="ws-flexbox ws-flex-column controlsDemo__mb1">
-                        <div class="controlsDemo__mr3 controls-fontsize-m_theme-{{_options.theme}}" style="font-weight: bold">Description*</div>
-                        <Controls.input:Text class="formControllerDemo__input" name="emailText" bind:value="_record.description" type="text" placeholder="Description"/>
-                    </div>
+            <Controls.form:Controller name="formControllerInst" dataSource="{{ _options.dataSource || _dataSource }}"
+                                      record="{{ _record }}" key="{{ !_record ? _key : undefined }}">
+                <Controls-demo.FormController.Container name="Container">
+                    <div attr:class="form-content" style="width: 600px">
+                        <div class="controlsDemo__cell controlsDemo__mb1">
+                            <div class="ws-flexbox ws-flex-column controlsDemo__mb1">
+                                <div class="controlsDemo__mr3 controls-fontsize-m_theme-{{_options.theme}}"
+                                     style="font-weight: bold">Title*
+                                </div>
+                                <Controls.input:Text class="formControllerDemo__input formControllerDemo__input__title"
+                                                     name="nameText" bind:value="_record.title" type="text"
+                                                     placeholder="Title"/>
+                            </div>
+                            <div class="ws-flexbox ws-flex-column controlsDemo__mb1">
+                                <div class="controlsDemo__mr3 controls-fontsize-m_theme-{{_options.theme}}"
+                                     style="font-weight: bold">Description*
+                                </div>
+                                <Controls.input:Text class="formControllerDemo__input formControllerDemo__input__desc"
+                                                     name="emailText" bind:value="_record.description" type="text"
+                                                     placeholder="Description"/>
+                            </div>
 
-                    <div class="formControllerDemo__button" name="updateButton" on:click="_clickUpdateHandler()">+ NOTE</div>
-                </div>
+                            <div class="formControllerDemo__button formControllerDemo__button__save" name="updateButton"
+                                 on:click="_clickUpdateHandler()">SAVE
+                            </div>
+                        </div>
 
-                <div class="form-result">
-                    <div if="{{ _recordAsText }}">
-                        Record is {{ _recordAsText }}
+
+                        <div class="controlsDemo__cell formControllerDemo__record ">
+                            <div class="controls-fontsize-2xl_theme-{{_options.theme}} formControllerDemo__record__header"
+                                 style="font-weight: bold">Record is:
+                            </div>
+                            <div class="ws-flexbox ws-flex-column ws-justify-content-between">
+                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}">
+                                    ID: {{ _recordAsText.id }}
+                                </div>
+                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}">
+                                    Title: {{ _recordAsText.title }}
+                                </div>
+                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}">
+                                    Description: {{ _recordAsText.description }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="controlsDemo__cell">
+                            <div class="controls-fontsize-2xl_theme-{{_options.theme}} controlsDemo__ml2 controlsDemo__mb1"
+                                 style="font-weight: bold">Read note:
+                            </div>
+                            <div class="ws-flexbox ws-justify-content-between formControllerDemo__list__header">
+                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}">
+                                    ID
+                                </div>
+                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}"
+                                     style="text-align: center">Title
+                                </div>
+                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}"
+                                     style="text-align: right">Description
+                                </div>
+                            </div>
+                            <div class="ws-flexbox ws-flex-row formControllerDemo__list ws-justify-content-between">
+                                <div class="formControllerDemo__note__id formControllerDemo__list__item ">{{ _key }}
+                                </div>
+                                <div class="formControllerDemo__note__title formControllerDemo__list__item "
+                                     style="text-align: center">{{ dataSourceRecordString.title }}
+                                </div>
+                                <div class="formControllerDemo__note__desc formControllerDemo__list__item "
+                                     style="text-align: right">{{ dataSourceRecordString.description }}
+                                </div>
+                            </div>
+                            <div class="ws-flexbox ws-justify-content-end">
+                                <div class="formControllerDemo__button formControllerDemo__button__create "
+                                     name="createButton" on:click="_clickCreateHandler()">Create
+                                </div>
+                                <div class="formControllerDemo__button formControllerDemo__button__delete"
+                                     name="deleteButton" on:click="_clickDeleteHandler()">Delete
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <br/>
-                </div>
-                    <div class="controlsDemo__cell">
-                        <div class="controls-fontsize-2xl_theme-{{_options.theme}} controlsDemo__ml2 controlsDemo__mb1" style="font-weight: bold">Note</div>
-                        <div class="ws-flexbox ws-justify-content-between formControllerDemo__list__header">
-                            <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}">ID</div>
-                            <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}" style="text-align: center">Title</div>
-                            <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}" style="text-align: right">Description</div>
-                        </div>
-                        <div class="ws-flexbox ws-flex-row formControllerDemo__list ws-justify-content-between">
-                            <div class="formControllerDemo__note__title formControllerDemo__list__item ">{{ _key }}</div>
-                            <div class="formControllerDemo__note__title formControllerDemo__list__item " style="text-align: center">{{ dataSourceRecordString.title }}</div>
-                            <div class="formControllerDemo__note__desc formControllerDemo__list__item " style="text-align: right">{{ dataSourceRecordString.description }}</div>
-                        </div>
-                        <div class="ws-flexbox ws-justify-content-end">
-                            <div class="formControllerDemo__button formControllerDemo__button__create " name="createButton" on:click="_clickCreateHandler()">Create</div>
-                            <div class="formControllerDemo__button formControllerDemo__button__delete" name="deleteButton"  on:click="_clickDeleteHandler()">Delete</div>
-                        </div>
-                    </div>
-    </div>
-           </Controls-demo.FormController.Container>
-        </Controls.form:Controller>
+                </Controls-demo.FormController.Container>
+            </Controls.form:Controller>
         </Controls.Pending>
 
 
