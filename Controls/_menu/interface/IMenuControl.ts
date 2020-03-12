@@ -1,5 +1,5 @@
 import {IControlOptions, TemplateFunction} from 'UI/Base';
-import {ISourceOptions, INavigation, IFilter, IHierarchy, IIconSizeOptions} from 'Controls/interface';
+import {ISourceOptions, INavigation, IFilterOptions, IHierarchy, IIconSizeOptions} from 'Controls/interface';
 import {IGroupedOptions} from 'Controls/dropdown';
 
 export type TKeys = string[]|number[];
@@ -9,7 +9,7 @@ interface IItemPadding {
     right: string;
 }
 
-export interface IMenuOptions extends IControlOptions, ISourceOptions, INavigation, IFilter, IHierarchy, IIconSizeOptions, IGroupedOptions {
+export interface IMenuOptions extends IControlOptions, ISourceOptions, INavigation, IFilterOptions, IHierarchy, IIconSizeOptions, IGroupedOptions {
     displayProperty: string;
     itemTemplate?: TemplateFunction;
     emptyText?: string;

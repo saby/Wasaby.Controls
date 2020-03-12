@@ -6,13 +6,14 @@ import {RecordSet, List} from 'Types/collection';
 import {ICrud, PrefetchProxy} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
-import {Collection, Tree, TreeItem, SelectionController, ItemActionsController} from 'Controls/display';
+import {Collection, Tree, Search, TreeItem, SelectionController, ItemActionsController} from 'Controls/display';
 import {debounce} from 'Types/function';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
+import {isEqual} from 'Types/object';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import * as ControlsConstants from 'Controls/Constants';
 
@@ -63,16 +64,27 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     protected _beforeUpdate(newOptions: IMenuOptions): void {
         const rootChanged = newOptions.root !== this._options.root;
         const sourceChanged = newOptions.source !== this._options.source;
+        const filterChanged = !isEqual(newOptions.filter, this._options.filter);
 
         if (sourceChanged) {
             this._sourceController = null;
         }
 
-        if (rootChanged || sourceChanged) {
+        if (rootChanged || sourceChanged || filterChanged) {
             this.loadItems(newOptions);
         }
         if (this.isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this.setSelectedItems(this._listModel, newOptions.selectedKeys);
+        }
+    }
+
+    protected _afterRender(oldOptions: IMenuOptions): void {
+        const rootChanged = oldOptions.root !== this._options.root;
+        const sourceChanged = oldOptions.source !== this._options.source;
+        const filterChanged = !isEqual(oldOptions.filter, this._options.filter);
+
+        if (rootChanged || sourceChanged || filterChanged) {
+            this._notify('controlResize', [], {bubbling: true});
         }
     }
 
@@ -393,12 +405,24 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private getCollection(items: RecordSet, options: IMenuOptions): Collection {
-        // В дереве не работает группировка, ждем решения по ошибке https://online.sbis.ru/opendoc.html?guid=f4a3be79-5ec5-45d2-b742-2d585c5c069d
-        let listModel = new Collection({
+        const collectionConfig = {
             collection: items,
             keyProperty: options.keyProperty,
-            filter: this.displayFilter.bind(this, options)
-        });
+            unique: true
+        };
+        let listModel;
+        if (options.searchParam && options.searchValue) {
+            listModel = new Search({...collectionConfig,
+                nodeProperty: options.nodeProperty,
+                parentProperty: options.parentProperty,
+                root: options.root
+            });
+        } else {
+            // В дереве не работает группировка, ждем решения по ошибке https://online.sbis.ru/opendoc.html?guid=f4a3be79-5ec5-45d2-b742-2d585c5c069d
+            listModel = new Collection({...collectionConfig,
+                filter: this.displayFilter.bind(this, options)
+            });
+        }
 
         if (options.itemActions) {
             this._calculateActionsConfig(listModel, options);
@@ -530,6 +554,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.showHeader = false;
         templateOptions.headerTemplate = null;
         templateOptions.additionalProperty = null;
+        templateOptions.searchParam = null;
 
         templateOptions.source = this.getSourceSubMenu(templateOptions.root);
         return templateOptions;
