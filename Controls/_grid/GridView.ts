@@ -161,6 +161,7 @@ var
             if (this._options.theme !== newCfg.theme) {
                 this._listModel.setTheme(newCfg.theme);
             }
+            // В зависимости от columnScroll вычисляются значения колонок для stickyHeader в методе setHeader.
             if (this._options.columnScroll !== newCfg.columnScroll) {
                 this._listModel.setColumnScroll(newCfg.columnScroll);
             }
@@ -168,7 +169,7 @@ var
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
             }
-            // header calculation is dependent on columnScroll option
+            // Вычисления в setHeader зависят от columnScroll.
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
             }
