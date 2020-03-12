@@ -10,6 +10,7 @@ import {Collection, Tree, TreeItem, SelectionController} from 'Controls/display'
 import {debounce} from 'Types/function';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
+import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
@@ -491,6 +492,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.showHeader = false;
         templateOptions.headerTemplate = null;
         templateOptions.additionalProperty = null;
+        templateOptions.itemPadding = null;
 
         templateOptions.source = this.getSourceSubMenu(templateOptions.root);
         return templateOptions;
@@ -518,7 +520,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             root: null,
             emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
-            groupTemplate: 'wml!Controls/_menu/Render/groupTemplate'
+            groupTemplate
         };
     }
 }
