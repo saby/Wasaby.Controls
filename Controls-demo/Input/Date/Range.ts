@@ -12,8 +12,5 @@ class Range extends Control<IControlOptions> {
        'DD.MM.YY',
        'DD.MM.YYYY'
        ];
-   protected _afterMount(): void {
-      this._children.input0.activate();
-   }
 }
 export default Range;
