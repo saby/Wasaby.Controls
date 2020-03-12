@@ -2076,14 +2076,14 @@ define([
       });
 
       describe('commitAndMoveNextRow (commitEdit by itemAction click)', () => {
-         it('commit edit existing record', async function () {
+         it('commit edit existing record without autoAddByApplyButton', async function () {
             let
-                source = new sourceLib.Memory({
-                   keyProperty: 'id',
-                   data: data
-                });
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
             eip.saveOptions({
-               listModel: listModel
+               listModel: listModel,
             });
             eip.beginEdit({
                item: listModel.at(0).getContents()
@@ -2095,15 +2095,63 @@ define([
             }));
             assert.isNull(eip._editingItemData);
          });
-         it('commit edit new record', async function () {
+
+         it('commit edit existing record with autoAddByApplyButton', async function () {
             let
-                source = new sourceLib.Memory({
-                   keyProperty: 'id',
-                   data: data
-                });
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data,
+               });
+            eip.saveOptions({
+               listModel: listModel,
+               editingConfig: {
+                  autoAddByApplyButton: true
+               }
+            });
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            assert.isNotNull(eip._editingItemData);
+            await (new Promise((resolve) => {
+               eip.commitAndMoveNextRow();
+               setTimeout(resolve, 10);
+            }));
+            assert.isNull(eip._editingItemData);
+         });
+
+         it('commit edit new record without autoAddByApplyButton', async function () {
+            let
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
             eip.saveOptions({
                listModel: listModel,
                source
+            });
+            eip.beginAdd({
+               item: newItem
+            });
+            assert.isNotNull(eip._editingItemData);
+            await (new Promise((resolve) => {
+               eip.commitAndMoveNextRow();
+               setTimeout(resolve, 10);
+            }));
+            assert.isNull(eip._editingItemData);
+         });
+
+         it('commit edit new record with autoAddByApplyButton', async function () {
+            let
+               source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
+            eip.saveOptions({
+               listModel: listModel,
+               source,
+               editingConfig: {
+                  autoAddByApplyButton: true
+               }
             });
             eip.beginAdd({
                item: newItem
