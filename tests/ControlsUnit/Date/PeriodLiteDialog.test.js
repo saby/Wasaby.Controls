@@ -252,29 +252,67 @@ define([
          });
       });
 
-      describe('_onPrevYearBtnClick', function() {
-         it('should update year', function() {
-            const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {year: new Date(2000, 0, 1)});
-            sandbox.stub(component, '_notify');
-            component._onPrevYearBtnClick(null, 0);
+      describe('_onNextPrevYearBtnClick', function() {
+         [{
+            year: new Date(2000, 0),
+            index: 1,
+            result: 2001
+         }, {
+            year: new Date(2000, 0),
+            index: -1,
+            result: 1999
+         }, {
+            year: new Date(2000, 0),
+            index: 1,
+            result: 2001
+         }, {
+            year: new Date(2000, 0),
+            index: -1,
+            result: 1999
+         }].forEach(function(test) {
+            it('should update year', function() {
+               const sandbox = sinon.sandbox.create(),
+                  component = calendarTestUtils.createComponent(PeriodLiteDialog.View, { year: test.year });
+               sandbox.stub(component, '_notify');
+               component._changeYear('event', test.index);
 
-            assert.equal(component._position.getFullYear(), 1999);
-            sinon.assert.calledWith(component._notify, 'yearChanged', [1999]);
-            sandbox.restore();
+               assert.equal(component._position.getFullYear(), test.result);
+               sinon.assert.calledWith(component._notify, 'yearChanged', [test.result]);
+               sandbox.restore();
+            });
          });
-      });
 
-      describe('_onNextYearBtnClick', function() {
-         it('should update year', function() {
-            const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {year: new Date(2000, 0, 1)});
-            sandbox.stub(component, '_notify');
-            component._onNextYearBtnClick(null, 0);
+         [{
+            year: new Date(2018, 0),
+            displayedRanges: [[new Date(2016, 0), new Date(2018, 0)]],
+            index: 1
+         }, {
+            year: new Date(2000, 0),
+            chooseHalfyears: false,
+            chooseMonths: false,
+            chooseQuarters: false,
+            displayedRanges: [[new Date(2016, 0), new Date(2018, 0)]],
+            index: 1
+         }, {
+            year: new Date(2018, 0),
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 0)]],
+            index: -1
+         }, {
+            year: new Date(2022, 0),
+            chooseHalfyears: false,
+            chooseMonths: false,
+            chooseQuarters: false,
+            displayedRanges: [[new Date(2018, 0), new Date(2025, 0)]],
+            index: -1
+         }].forEach(function(options) {
+            it('should not update year', function () {
+               const component = calendarTestUtils.createComponent(PeriodLiteDialog.View,
+                  options);
+               component._position = options.year;
+               component._changeYear('event', options.index);
 
-            assert.equal(component._position.getFullYear(), 2001);
-            sinon.assert.calledWith(component._notify, 'yearChanged', [2001]);
-            sandbox.restore();
+               assert.equal(options.year, component._position);
+            });
          });
       });
 
