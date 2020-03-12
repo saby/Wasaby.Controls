@@ -9,6 +9,7 @@ export interface ISearchFilterController extends IControlOptions {
    searchParam: string;
    filter: object;
    minSearchLength: number;
+   parentProperty: any;
 }
 
 export default class SearchFilterController extends Control<ISearchFilterController> {
@@ -25,12 +26,12 @@ export default class SearchFilterController extends Control<ISearchFilterControl
       }
    }
 
-   private static prepareFilter(filter: object, searchValue?: string, searchParam?: string): object {
+   private static prepareFilter(filter: object, searchValue?: string, searchParam?: string, parentProperty?: any): object {
       const preparedFilter = clone(filter) || {};
 
       if (searchValue && searchParam) {
          preparedFilter[searchParam] = searchValue;
-         _assignServiceFilters({}, preparedFilter, true);
+         _assignServiceFilters({}, preparedFilter, parentProperty);
       }
 
       return preparedFilter;
@@ -38,7 +39,7 @@ export default class SearchFilterController extends Control<ISearchFilterControl
 
    private getFilter(options: ISearchFilterController): object {
       return options.searchValue && options.searchValue.length < options.minSearchLength ? clone(options.filter) || {} :
-          SearchFilterController.prepareFilter(options.filter, options.searchValue, options.searchParam);
+          SearchFilterController.prepareFilter(options.filter, options.searchValue, options.searchParam, options.parentProperty);
    }
 }
 
