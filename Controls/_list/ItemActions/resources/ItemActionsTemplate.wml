@@ -8,7 +8,6 @@
                     itemData="{{itemData}}"
                     needShowTitle="{{needShowTitle}}"
                     needShowIcon="{{needShowIcon}}"
-                    getTooltip="{{getTooltip}}"
                     size="{{size}}"
                     showedActions="{{itemData.itemActions.showed}}"/>
             <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
