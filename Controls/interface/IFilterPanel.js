@@ -49,7 +49,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * В данном примере панель будет отображаться в две колонки.
     * <pre>
     *    <Controls.filterPopup:Panel
-    *          items={{_items}}
+    *          source="{{_source}}"
     *          orientation="horizontal"
     *          historyId="myHistoryId">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
@@ -70,7 +70,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * In this example panel will be displayed in two column.
     * <pre>
     *    <Controls.filterPopup:Panel
-    *          items={{_items}}
+    *          source="{{_source}}"
     *          orientation="horizontal"
     *          historyId="myHistoryId">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
@@ -400,6 +400,34 @@ define('Controls/interface/IFilterPanel', [], function() {
     * </pre>
     * @see additionalTemplateProperty
     * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/fast-filter-settings/'>Guide for setup Fast Filter</a>
+    */
+
+   /**
+    * @name Controls/interface/IFilterPanel#footerTemplate
+    * @cfg {Function|String}  Шаблон отображения подвала в панели фильтра.
+    * @example
+    * Пример настройки параметра footerTemplate
+    * <pre>
+    *    <Controls.filterPopup:Panel>
+    *       <ws:footerTemplate>
+    *           <ws:partial template="MyModule/control:footerTemplate" />
+    *       </ws:footerTemplate>
+    *    </Controls.filterPopup:Panel>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/interface/IFilterPanel#footerTemplate
+    * @cfg {Function|String} Template that will be rendered below the filter panel
+    * @example
+    * Example of setting options footerTemplate
+    * <pre>
+    *    <Controls.filterPopup:Panel>
+    *       <ws:footerTemplate>
+    *           <ws:partial template="MyModule/control:footerTemplate" />
+    *       </ws:footerTemplate>
+    *    </Controls.filterPopup:Panel>
+    * </pre>
     */
 
    /**

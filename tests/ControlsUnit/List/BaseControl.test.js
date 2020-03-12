@@ -2200,6 +2200,7 @@ define([
 
       it('_processError', function() {
          var self = {
+            _options: {},
             _loadingState: 'all',
             _notify: () => {
             },
@@ -2552,15 +2553,17 @@ define([
             assert.equal(actionsUpdateCount, 0);
             baseControl._beforeMount(cfg);
          });
-        // it('without itemActions nothing should happen', function() {
-        //    baseControl._beforeUpdate({
-        //       ...cfg,
-        //       itemActions: null,
-        //       itemActionsProperty: null
-        //    });
-        //    baseControl._updateItemActions();
-        //    assert.equal(actionsUpdateCount, 0);
-        // });
+         it('without itemActions nothing should happen', function() {
+            baseControl._beforeUpdate({
+               ...cfg,
+               itemActions: null,
+               itemActionsProperty: null
+            });
+            baseControl._children.itemActions = undefined;
+            actionsUpdateCount = 0;
+            baseControl._updateItemActions();
+            assert.equal(actionsUpdateCount, 0);
+         });
       });
 
       describe('resetScrollAfterReload', function() {
@@ -3407,7 +3410,7 @@ define([
          ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, {key: 1}, {nativeEvent: {button: 0}});
-         assert.isUndefined(ctrl._itemDragData);
+         assert.isNull(ctrl._draggingItem);
       });
       it('can\'t start drag if canStartDragNDrop return false', function () {
          let
@@ -3444,7 +3447,7 @@ define([
          ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, { key: 1 }, { nativeEvent: { button: 0 } });
-         assert.isUndefined(ctrl._itemDragData);
+         assert.isNull(ctrl._draggingItem);
       });
       describe('mouseDown with different buttons', function() {
          it('dragNDrop do not start on right or middle mouse button', async function() {

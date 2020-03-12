@@ -332,8 +332,37 @@ define([
             };
             treeGrid.TreeViewModel._private.onBeginCollectionChange(treeViewModel);
             assert.isTrue(updated);
-
-
+         });
+         it('determinePresenceChildItem after setExpanderVisibility', function() {
+            var
+               rs = new collection.RecordSet({
+                  rawData: [
+                     {
+                        key: 1,
+                        parent: null,
+                        hasChildren: false,
+                        type: null
+                     },
+                     {
+                        key: 2,
+                        parent: null,
+                        hasChildren: true,
+                        type: true
+                     }
+                  ],
+                  keyProperty: 'key'
+               }),
+               treeViewModel = new treeGrid.TreeViewModel({
+                  items: rs,
+                  hasChildrenProperty: 'hasChildren',
+                  expanderVisibility: 'visibly',
+                  parentProperty: 'parent',
+                  keyProperty: 'id',
+                  nodeProperty: 'type'
+               });
+            assert.isFalse(treeViewModel._thereIsChildItem);
+            treeViewModel.setExpanderVisibility('hasChildren');
+            assert.isTrue(treeViewModel._thereIsChildItem);
          });
          it('getExpanderPaddingClasses', function() {
             let expectation = [

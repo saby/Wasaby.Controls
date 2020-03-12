@@ -14,6 +14,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import * as ControlsConstants from 'Controls/Constants';
 
 /**
  * Контрол меню.
@@ -25,6 +26,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @demo Controls-demo/Menu/Control/Source/Index
  * @control
  * @category Popup
  * @author Герасимов А.М.
@@ -173,7 +175,9 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this.subMenu = eventResult;
         } else {
             this._notify(eventName, [eventResult]);
-            this._closeSubMenu();
+            if (eventName === 'pinClick') {
+                this._closeSubMenu();
+            }
         }
     }
 
@@ -183,7 +187,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         this._closeSubMenu();
     }
 
-    private _closeSubMenu(needOpenDropDown): void {
+    private _closeSubMenu(needOpenDropDown = false): void {
         if (this._children.Sticky) {
             this._children.Sticky.close();
         }
@@ -369,7 +373,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             listModel.setHoveredItem(listModel.at(this._hoveredItemIndex));
         }
         if (options.groupProperty) {
-            listModel.setGroup(this.groupMethod.bind(this));
+            listModel.setGroup(this.groupMethod.bind(this, options));
         } else if (options.groupingKeyCallback) {
             listModel.setGroup(options.groupingKeyCallback);
         }
@@ -389,7 +393,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
 
     private displayFilter(options: IMenuOptions, item: Model): boolean {
         let isVisible = true;
-        if (item.get && options.parentProperty) {
+        if (item.get && options.parentProperty && options.nodeProperty) {
             let parent = item.get(options.parentProperty);
             if (parent === undefined) {
                 parent = null;
@@ -399,8 +403,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return isVisible;
     }
 
-    private groupMethod(item: Model): string {
-        return item.get(this._options.groupProperty);
+    private groupMethod(options: IMenuOptions, item: Model): string {
+        return item.get(options.groupProperty) || ControlsConstants.view.hiddenGroup;
     }
 
     private setSelectedItems(listModel: Tree, keys: TKeys): void {
@@ -513,7 +517,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             selectedKeys: [],
             root: null,
             emptyKey: null,
-            moreButtonCaption: rk('Еще') + '...'
+            moreButtonCaption: rk('Еще') + '...',
+            groupTemplate: 'wml!Controls/_menu/Render/groupTemplate'
         };
     }
 }

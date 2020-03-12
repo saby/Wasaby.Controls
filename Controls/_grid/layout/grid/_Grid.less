@@ -220,11 +220,21 @@
             visibility: visible;
          }
       }
+      /** Общая проблема с background'ом у контролов, которые лежат в списке, решается через background: inherit **/
       //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
       .controls-BreadCrumbsView__menu__dots {
          background-color: @background-color_Grid-row_hover;
          box-shadow: -15px 2px 4px -6px @background-color_Grid-row_hover;
       }
+
+      .controls-SelectedCollection__InfoBox_fixed {
+         background-color: @background-color_Grid-row_hover;
+      }
+
+      .controls-SelectedCollection__InfoBox_fixed:after {
+         .horizontal-gradient(@background-color_Grid-row_hover, rgba(255, 255, 255, 0));
+      }
+      /**********************************************/
    }
 
 }
@@ -736,9 +746,9 @@
 
 .controls-Grid__cell_tag {
    position: relative;
-   right: -@tag_offset-vertical_gridView;
+   right: -@tag_offset-horizontal_gridView;
 
-   .controls-InputTag_theme-@{themeName} {
-      top: -@tag_offset-horizontal_gridView;
+   .controls__tag_theme-@{themeName} {
+      top: -@tag_offset-vertical_gridView;
    }
 }

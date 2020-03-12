@@ -69,6 +69,21 @@ define(
             });
          });
 
+         it('getCollection', function() {
+            let menuControl = new menu.Control();
+            let items = new collection.RecordSet({
+               rawData: defaultItems.map((item) => {
+                  item.group = item.key < 2 ? '1' : '2';
+                  return item;
+               }),
+               keyProperty: 'key'
+            });
+            let listModel = menuControl.getCollection(items, {
+               groupProperty: 'group'
+            });
+            assert.instanceOf(listModel.at(0), display.GroupItem);
+         });
+
          describe('_itemClick', function() {
             let menuControl;
             let selectedItem, selectedKeys, pinItem, item;
@@ -230,6 +245,7 @@ define(
 
             hierarchyOptions = {
                parentProperty: 'parent',
+               nodeProperty: 'node',
                root: null
             };
             isVisible = menuControl.displayFilter(hierarchyOptions, item);
