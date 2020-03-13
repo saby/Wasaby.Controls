@@ -1020,8 +1020,8 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
-        setMarkedKey: function(key) {
-            this._model.setMarkedKey(key);
+        setMarkedKey: function(key, byOptions) {
+            this._model.setMarkedKey(key, byOptions);
         },
 
         setMarkerVisibility: function(markerVisibility) {
