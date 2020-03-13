@@ -36,7 +36,7 @@
     background-color: transparent;
 }
 
-.controls-SelectedCollection__counterItems {
+.controls-SelectedCollection__counterItems_theme-@{themeName} {
     font-size: @font-size_SelectedCollection-counter;
     color: @color_SelectedCollection-counter;
     padding-right: @spacing_SelectedCollection-between-counter-items;
@@ -45,13 +45,13 @@
 }
 
 .ws-is-hover {
-    .controls-SelectedCollection__counterItems:hover {
+    .controls-SelectedCollection__counterItems_theme-@{themeName}:hover {
         color: @color_SelectedCollection-counter_hover;
         text-decoration: underline;
     }
 }
 
-.controls-SelectedCollection__counterItems:active {
+.controls-SelectedCollection__counterItems_theme-@{themeName}:active {
     color: @color_SelectedCollection-counter_active;
 
     .controls-SelectedCollection__counter,
@@ -94,24 +94,24 @@
     .text-overflow();
 }
 
-.controls-SelectedCollection__item__caption-size-default,
-.controls-SelectedCollection__item__caption-size-m {
+.controls-SelectedCollection__item__caption-size-default_theme-@{themeName},
+.controls-SelectedCollection__item__caption-size-m_theme-@{themeName} {
     font-size: @font-size_SelectedCollection-size_m;
 }
 
-.controls-SelectedCollection__item__caption-size-l {
+.controls-SelectedCollection__item__caption-size-l_theme-@{themeName} {
     font-size: @font-size_SelectedCollection-size_l;
 }
 
-.controls-SelectedCollection__item__caption-size-xl {
+.controls-SelectedCollection__item__caption-size-xl_theme-@{themeName} {
     font-size: @font-size_SelectedCollection-size_xl;
 }
 
-.controls-SelectedCollection__item__caption-size-2xl {
+.controls-SelectedCollection__item__caption-size-2xl_theme-@{themeName} {
     font-size: @font-size_SelectedCollection-size_2xl;
 }
 
-.controls-SelectedCollection__item__caption-size-3xl {
+.controls-SelectedCollection__item__caption-size-3xl_theme-@{themeName} {
     font-size: @font-size_SelectedCollection-size_3xl;
 }
 
