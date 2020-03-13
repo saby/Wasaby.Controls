@@ -15,11 +15,20 @@ class FormController extends Control<IControlOptions> {
     protected _key = 0;
     protected _record = null;
     protected _recordAsText = '';
+    protected _operation: string = '';
 
     protected _beforeMount(cfg): void {
-        this._dataSource = cfg.dataSource || new Memory({
+       this._dataSource = cfg.dataSource || new Memory({
             keyProperty: 'id',
-            data: [{ id: 0 }]
+            data: [{ id: 0}]
+        });
+    }
+    protected  _afterMount(options?: IControlOptions): void {
+        this._create({
+            initValues: {
+                title: 'Title',
+                description: 'New note'
+            }
         });
     }
 
@@ -52,6 +61,14 @@ class FormController extends Control<IControlOptions> {
             return result;
         }, (error) => {
             return error;
+        });
+    }
+
+    private _finishPending() {
+        const finishDef = this._children.registrator.finishPendingOperations();
+        finishDef.then((finishResult) => {
+            this._operation = 'Finish Pending';
+            window.reloadDemo();
         });
     }
 
@@ -120,10 +137,12 @@ class FormController extends Control<IControlOptions> {
     }
     private _createSuccessedHandler(e, record) {
         this._alert('FormController demo: create successed');
+        this._operation = 'created successfully';
         this._updateValuesByRecord(record);
     }
     private _updateSuccessedHandler(e, record, key): void {
         this._alert('FormController demo: update successed with key ' + key);
+        this._operation = 'saved successfully';
         this._updateValuesByRecord(record);
     }
     private _updateFailedHandler(): void  {
@@ -144,6 +163,7 @@ class FormController extends Control<IControlOptions> {
     }
     private _deleteSuccessedHandler(e): void  {
         this._alert('FormController demo: delete successed');
+        this._operation = 'deleted successfully';
         this._updateValuesByRecord(new Model());
     }
     private _deleteFailedHandler(e): void  {
