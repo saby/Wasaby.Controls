@@ -10,6 +10,7 @@
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
+ * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
  * @includes View Controls/_list/List
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
