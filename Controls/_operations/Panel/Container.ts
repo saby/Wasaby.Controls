@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_operationsPanel/Container/Container';
+import * as template from 'wml!Controls/_operations/Panel/Container';
 import { isEqual } from 'Types/object';
 import { TKeysSelection as TKeys, TKeySelection as TKey } from 'Controls/interface';
 
