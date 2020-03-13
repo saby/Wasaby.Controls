@@ -10,6 +10,7 @@
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
+ * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
  * @includes View Controls/_list/List
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
@@ -68,6 +69,7 @@ import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
 import ColumnsView = require('Controls/_list/Columns');
 import BaseAction from 'Controls/_list/BaseAction';
+import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
@@ -151,6 +153,7 @@ export {
     getStyle,
     ItemsView,
     ItemsViewModel,
+    LoadingIndicatorTemplate,
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,
