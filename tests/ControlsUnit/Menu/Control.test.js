@@ -145,6 +145,7 @@ define(
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;
             expectedOptions.additionalProperty = null;
+            expectedOptions.itemPadding = null;
 
             let menuControl = getMenu();
             menuControl._listModel = getListModel();
