@@ -1,11 +1,13 @@
 define([
    'Controls/_operations/__MultiSelector',
    'Controls/_operations/MultiSelector/getCount',
-   'Core/Deferred'
+   'Core/Deferred',
+   'Types/entity'
 ], function(
    MultiSelector,
    GetCount,
-   Deferred
+   Deferred,
+   entity
 ) {
    'use strict';
    describe('Controls.OperationsPanel.__MultiSelector', function() {
@@ -237,42 +239,33 @@ define([
          assert.isTrue(isUpdateMenu);
       });
 
-      it('_getCount', function() {
-         var instance = new MultiSelector.default();
-         var newOptions = {
-            selectedKeys: [null],
-            excludedKeys: [],
-            selectedKeysCount: 0,
-            isAllSelected: false
-         };
-         instance._beforeMount(newOptions);
-         assert.equal(instance._menuSource._$data.length, 3);
-         assert.equal(instance._menuCaption, 'Отметить');
-
-         var selection = {
-            selected: [1]
+      it('_getCount', async() => {
+         let instance = new MultiSelector.default();
+         const selection = {
+            selected: ['test'],
+            excluded: []
          };
 
-         instance._options.selectedCountConfig = {};
-         GetCount.default.getCount = function() {
-            var def = new Deferred();
-            def.callback();
-            return def;
+         instance._options.selectedCountConfig = {
+            rpc: {
+               call: () => {
+                  return Promise.resolve({
+                     getRow: () => {
+                        return {
+                           get: () => 'TEST_DATA_COUNT'
+                        };
+                     }
+                  });
+               },
+               getAdapter: () => {
+                  return new entity.adapter.Json();
+               }
+            }
          };
-         return new Promise(function(resolve) {
-            instance._getCount(selection, null).then(function() {
-               assert.equal(instance._menuCaption, 'Отметить');
-               resolve();
-            });
-         });
 
          instance._menuCaption = 'Отмечено: 3';
-         return new Promise(function(resolve) {
-            instance._getCount(selection, null).then(function() {
-               assert.equal(instance._menuCaption, 'Отмечено:');
-               resolve();
-            });
-         });
+         instance._getCount(selection, null);
+         assert.equal(instance._menuCaption, 'Отмечено:');
       });
 
       it('_afterUpdate', function() {
