@@ -118,9 +118,9 @@
     font-size: @font-size_SelectedCollection-size_3xl;
 }
 
-.controls-SelectedCollection__item__caption-style-bold,
-.controls-SelectedCollection__item__caption-style-accent,
-.controls-SelectedCollection__item__caption-style-primary {
+.controls-SelectedCollection__item__caption-style-bold_theme-@{themeName},
+.controls-SelectedCollection__item__caption-style-accent_theme-@{themeName},
+.controls-SelectedCollection__item__caption-style-primary_theme-@{themeName} {
     font-weight: bold;
 }
 
@@ -129,11 +129,11 @@
     cursor: pointer;
 }
 
-.controls-SelectedCollection__item__caption-style-accent {
+.controls-SelectedCollection__item__caption-style-accent_theme-@{themeName} {
     color: @color_SelectedCollection-item_accent;
 }
 
-.controls-SelectedCollection__item__caption-style-primary {
+.controls-SelectedCollection__item__caption-style-primary_theme-@{themeName} {
     color: @color_SelectedCollection-item_primary;
 }
 
@@ -148,7 +148,7 @@
 .controls-SelectedCollection__collection-default:after,
 .controls-SelectedCollection__collection-oneRow:after {
     content: '\200b';
-    line-height: @line-height_SelectedCollection-item;;
+    line-height: @line-height_SelectedCollection-item;
 }
 
 .controls-SelectedCollection__collection_singleLine {
