@@ -9,7 +9,7 @@ export interface ISearchFilterController extends IControlOptions {
    searchParam: string;
    filter: object;
    minSearchLength: number;
-   parentProperty: any;
+   parentProperty: string|void;
 }
 
 export default class SearchFilterController extends Control<ISearchFilterController> {
@@ -26,7 +26,7 @@ export default class SearchFilterController extends Control<ISearchFilterControl
       }
    }
 
-   private static prepareFilter(filter: object, searchValue?: string, searchParam?: string, parentProperty?: any): object {
+   private static prepareFilter(filter: object, searchValue?: string, searchParam?: string, parentProperty?: string|void): object {
       const preparedFilter = clone(filter) || {};
 
       if (searchValue && searchParam) {
