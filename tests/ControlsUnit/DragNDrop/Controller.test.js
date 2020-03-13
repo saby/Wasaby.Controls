@@ -189,6 +189,11 @@ define([
                assert.deepEqual(dragObject.offset, {x: 10, y: 5});
                assert.deepEqual(dragObject.position, {x: 30, y: 15});
             });
+            it('pageleave', function() {
+               controller._onMouseMove(createSyntheticEvent('mouseleave', 50, 45));
+               assert.equal(events.join(', '), 'dragMove, _updateDraggingTemplate');
+               assert.isTrue(controller._documentDragging);
+            });
          });
          describe('touch', function() {
             it('dragStart', function() {
