@@ -187,7 +187,7 @@ define(
                assert.isFalse(result);
             });
 
-            it('_isVisibleSeparator', function() {
+            it('_isHistorySeparatorVisible', function() {
                let groupListModel = getListModel([
                   { key: 0, title: 'все страны' },
                   { key: 1, title: 'Россия', icon: 'icon-add' },
@@ -201,16 +201,53 @@ define(
                let menuRender = getRender(
                   { listModel: groupListModel }
                );
-               let result = menuRender._isVisibleSeparator(groupListModel.at(1));
+               let result = menuRender._isHistorySeparatorVisible(groupListModel.at(1));
                assert.isFalse(!!result);
 
                groupListModel.at(1).getContents().set('pinned', true);
-               result = menuRender._isVisibleSeparator(groupListModel.at(1));
+               result = menuRender._isHistorySeparatorVisible(groupListModel.at(1));
                assert.isTrue(result);
 
                groupListModel.at(2).getContents().set('pinned', true);
-               result = menuRender._isVisibleSeparator(groupListModel.at(2));
+               result = menuRender._isHistorySeparatorVisible(groupListModel.at(2));
                assert.isFalse(result);
+            });
+
+            describe('check class separator', function() {
+               let groupListModel, menuRender, expectedClasses = 'controls-Menu__row-separator';
+               beforeEach(function() {
+                  groupListModel = getListModel([
+                     { key: 0, title: 'все страны' },
+                     { key: 1, title: 'Россия', icon: 'icon-add' },
+                     { key: 2, title: 'США', group: '2' },
+                     { key: 3, title: 'Великобритания', group: '2' },
+                     { key: 4, title: 'Великобритания', group: '2' },
+                     { key: 5, title: 'Великобритания', group: '3' }
+                  ]);
+                  groupListModel.setGroup(getGroup);
+
+                  menuRender = getRender(
+                     { listModel: groupListModel }
+                  );
+               });
+
+               it('collectionItem', function() {
+                  let expectedClasses = 'controls-Menu__row-separator';
+                  let actualClasses = menuRender._getClassList(groupListModel.at(1));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+               });
+
+               it('next item is groupItem', function() {
+                  // Collection: [GroupItem, CollectionItem, CollectionItem, GroupItem,...]
+                  let actualClasses = menuRender._getClassList(groupListModel.at(2));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+               });
+
+               it('history separator is visible', function() {
+                  groupListModel.at(1).getContents().set('pinned', true);
+                  let actualClasses = menuRender._getClassList(groupListModel.at(1));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+               });
             });
          });
 
