@@ -1317,7 +1317,9 @@ define([
                   };
                }
             };
-            eip._onKeyDown({}, {
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
                keyCode: 13,
                stopPropagation: function() {}
             });
