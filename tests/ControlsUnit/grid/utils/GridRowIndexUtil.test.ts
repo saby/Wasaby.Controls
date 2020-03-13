@@ -12,6 +12,7 @@ describe('Controls/_grid/utils/GridRowIndexUtil', () => {
         let gridHeaderWithStartEndParams: ICustomHeaderCell[];
         let gridHeaderWithoutStartEndParams: ICustomHeaderCell[];
         let gridMultiHeaderWithStartEndParams: ICustomHeaderCell[];
+        let gridHeaderWithColspanStartEndParams: ICustomHeaderCell[];
 
         beforeEach(() => {
             gridHeaderWithStartEndParams = [
@@ -40,6 +41,26 @@ describe('Controls/_grid/utils/GridRowIndexUtil', () => {
                     startRow: 1,
                     endRow: 2,
                     startColumn: 3,
+                    endColumn: 4
+                }
+            ];
+            gridHeaderWithColspanStartEndParams = [
+                {
+                    title: '',
+                    style: 'default',
+                    startRow: 1,
+                    endRow: 3,
+                    startColumn: 1,
+                    endColumn: 2
+                },
+                {
+                    title: 'Цена',
+                    align: 'right',
+                    style: 'default',
+                    sortingProperty: 'price',
+                    startRow: 1,
+                    endRow: 3,
+                    startColumn: 2,
                     endColumn: 4
                 }
             ];
@@ -114,6 +135,13 @@ describe('Controls/_grid/utils/GridRowIndexUtil', () => {
 
         it('should calculate endColumn for actionCell w/o multiselect and with multiheader', () => {
             const headerRows = getHeaderRowsArray(gridMultiHeaderWithStartEndParams, false, true, true);
+            const lastColumnData = getHeaderMaxEndCellData(headerRows);
+            // In fact it should be 6, not 5, but this delta is calculating in ScrollWrapper
+            assert.equal(lastColumnData.maxColumn, 5);
+        });
+
+        it('should calculate endColumn for actionCell w/o multiHeader but with "colspan" and/or "rowspan"', () => {
+            const headerRows = getHeaderRowsArray(gridHeaderWithColspanStartEndParams, false, false, true);
             const lastColumnData = getHeaderMaxEndCellData(headerRows);
             // In fact it should be 6, not 5, but this delta is calculating in ScrollWrapper
             assert.equal(lastColumnData.maxColumn, 5);
