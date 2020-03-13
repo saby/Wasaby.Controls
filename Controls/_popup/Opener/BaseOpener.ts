@@ -276,7 +276,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 BaseOpener.getZIndexUtil().addCallback((getZIndex) => {
                     if (popupOpener) {
                         // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
-                        cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
+                        // Если topPopup, то zIndex менеджер высчитает сам
+                        if (!cfg.topPopup) {
+                            cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
+                        }
                         cfg.theme = popupOpener._options.theme;
                     }
                     if (!BaseOpener.isVDOMTemplate(rootTpl)) {

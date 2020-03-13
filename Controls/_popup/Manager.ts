@@ -555,7 +555,9 @@ class Manager extends Control<IManagerOptions> {
     private _updateZIndex(): void {
         const popupList = this._preparePopupList();
         const POPUP_ZINDEX_STEP = 10;
-        const TOP_POPUP_ZINDEX_STEP = 1000;
+        // для topPopup сделал шаг 2000, чтобы не писать отдельный просчет zIndex на старой странице
+        const TOP_POPUP_ZINDEX_STEP = 2000;
+
         this._popupItems.each((item: IPopupItem, index: number) => {
             // todo Нужно будет удалить поддержку опции zIndex, теперь есть zIndexCallback
             let customZIndex: number = item.popupOptions.zIndex;
