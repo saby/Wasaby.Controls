@@ -204,7 +204,8 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [leafId]);
       }
 
-      if (this._isAllChildrenExcluded(selection, parentId, model, hierarchyRelation)) {
+      if (this._isAllChildrenExcluded(selection, parentId, model, hierarchyRelation) &&
+          this._options.selectAncestors) {
          ArraySimpleValuesUtil.removeSubArray(selection.selected, [parentId]);
       }
    }

@@ -74,7 +74,7 @@ define([
 
          selection.excluded = [2];
          selectResult = treeStrategy.unSelect(selection, [3, 4], model, hierarchyRelation);
-         assert.deepEqual(selectResult.selected, []);
+         assert.deepEqual(selectResult.selected, [2]);
          assert.deepEqual(selectResult.excluded, [2, 3, 4]);
 
 
@@ -153,6 +153,24 @@ define([
                   treeStrategyWithDescendantsAndAncestors.getCount(selection, model, {}, hierarchyRelation),
                   5
                );
+            });
+
+            it('unSelect', function() {
+               let selectResult = treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model, hierarchyRelation);
+               assert.deepEqual(selectResult.selected, []);
+               assert.deepEqual(selectResult.excluded, []);
+
+               // 2 - родитедль 3 и 4
+               selection.selected = [2];
+               selectResult = treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model, hierarchyRelation);
+               assert.deepEqual(selectResult.selected, []);
+               assert.deepEqual(selectResult.excluded, []);
+
+               selection.selected = [2];
+               selection.excluded = [2];
+               selectResult = treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model, hierarchyRelation);
+               assert.deepEqual(selectResult.selected, []);
+               assert.deepEqual(selectResult.excluded, [2]);
             });
          });
       });
