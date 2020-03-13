@@ -498,7 +498,11 @@ export default class VirtualScroll {
         const itemsCount = this._itemsCount;
         let {start, stop} = this._range;
 
-        if (direction === 'up') {
+        // TODO Совместимость, пока виртуальный скролл не включен у всех безусловно
+        if (!this._options.pageSize) {
+            start = 0;
+            stop = itemsCount;
+        } else if (direction === 'up') {
             start = Math.max(0, start - fixedSegmentSize);
             stop = Math.min(itemsCount, Math.max(this._range.stop, start + this._options.pageSize));
         } else {
