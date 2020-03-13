@@ -1,7 +1,6 @@
 import {Logger} from 'UI/Utils';
 import simpleExtend = require('Core/core-simpleExtend');
-
-
+import {POSITION} from '../Utils';
 
 /**
  * @extends Core/core-simpleExtend
@@ -68,9 +67,12 @@ export = simpleExtend.extend({
     * @private
     */
    _updateStateIntersection: function(entry) {
-      var target = this._getTarget(entry);
-
-      this._intersection[target] = entry.isIntersecting;
+      const position = this._getTarget(entry);
+      // entry.isIntersecting нельзя использовать потому что у нас есть горизонтальное скролирование в таблицах.
+      // Ячейка может быть проскролена вбок и перестать пересекаться со скроллируемым контейнером.
+      this._intersection[position] = position === POSITION.top ?
+          entry.rootBounds[position] <= entry.boundingClientRect[position] :
+          entry.rootBounds[position] > entry.boundingClientRect[position];
    },
 
    /**
