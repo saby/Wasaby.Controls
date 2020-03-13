@@ -154,7 +154,7 @@ define(
 
                renderOptions.listModel = new display.Tree({
                   collection: new collection.RecordSet({
-                     rawData: defaultItems,
+                     rawData: Clone(defaultItems),
                      keyProperty: 'id'
                   })
                });
