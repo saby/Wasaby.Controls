@@ -113,7 +113,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this._pinClick(event, item);
         } else {
             if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem)) {
-                SelectionController.selectItem(this._listModel, key, !treeItem.isSelected());
+                this._changeSelection(key, treeItem);
                 this.updateApplyButton();
 
                 this._notify('selectedKeysChanged', [this.getSelectedKeys()]);
@@ -310,6 +310,13 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
                 }
             }
         }, selectorTemplate.popupOptions || {});
+    }
+
+    private _changeSelection(key: string|number|null, treeItem): void {
+        SelectionController.selectItem(this._listModel, key, !treeItem.isSelected());
+
+        const isEmptySelected = this._options.emptyText && !this._listModel.getSelectedItems().length;
+        SelectionController.selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
     }
 
     private getSelectedKeys(): TKeys {

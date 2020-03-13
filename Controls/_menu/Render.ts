@@ -129,7 +129,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
         emptyItem.set(data);
         collection.prepend([emptyItem]);
 
-        if (options.selectedKeys.includes(options.emptyKey)) {
+        if (!options.selectedKeys.length || options.selectedKeys.includes(options.emptyKey)) {
             SelectionController.selectItem(listModel, options.emptyKey, true);
         }
     }
