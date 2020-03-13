@@ -124,11 +124,15 @@ export default class Container extends Control implements IContainer {
             ], { bubbling: true });
 
             if (!result) {
-                result = this._popupHelper.openDialog(config, this);
+                result = new Promise((resolve) => {
+                    this._popupHelper.openDialog(config, this, {
+                        onClose: resolve
+                    });
+                });
             }
 
-            if (result) {
-                (result as Promise<null>).then(this.__notifyDialogClosed.bind(this));
+            if (result instanceof Promise) {
+                result.then(this.__notifyDialogClosed.bind(this));
             }
         });
     }
