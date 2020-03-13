@@ -555,7 +555,7 @@ define(
             Manager.show(item3, controller);
             Manager._popupItems.at(2).parentId = 2;
             Manager._updateZIndex();
-            assert.equal(Manager._popupItems.at(2).currentZIndex, 2010);
+            assert.equal(Manager._popupItems.at(2).currentZIndex, 4010);
 
             const item4 = {
                id: 2,
