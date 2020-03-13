@@ -2,6 +2,7 @@
  * Библиотека контролов, которые служат для организации преобразования данных для нескольких элементов списка.
  * @library Controls/operations
  * @includes Panel Controls/_operations/Panel
+ * @includes PanelContainer Controls/_operations/Panel/Container
  * @includes Button Controls/_operations/Button
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
@@ -14,6 +15,7 @@
  * operations library
  * @library Controls/operations
  * @includes Panel Controls/_operations/Panel
+ * @includes PanelContainer Controls/_operations/Panel/Container
  * @includes Button Controls/_operations/Button
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
@@ -22,6 +24,7 @@
  */
 
 import Panel = require('Controls/_operations/Panel');
+import PanelContainer = require('Controls/_operations/Panel/Container');
 import Controller from 'Controls/_operations/Controller';
 import Container = require('Controls/_operations/Container');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
@@ -36,6 +39,7 @@ import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionS
 
 export {
    Panel,
+   PanelContainer,
    Button,
    Controller,
    Container,
