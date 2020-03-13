@@ -2434,6 +2434,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
+        event.stopPropagation();
         if (this._options.useNewModel) {
             const markCommand = new displayLib.MarkerCommands.Mark(itemData.getContents().getId());
             markCommand.execute(this._listViewModel);
