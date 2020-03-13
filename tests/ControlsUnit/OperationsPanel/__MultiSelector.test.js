@@ -237,7 +237,7 @@ define([
          assert.isTrue(isUpdateMenu);
       });
 
-      it('_getCount', async() => {
+      it('_getCount', function() {
          var instance = new MultiSelector.default();
          var newOptions = {
             selectedKeys: [null],
@@ -245,13 +245,13 @@ define([
             selectedKeysCount: 0,
             isAllSelected: false
          };
+         instance._beforeMount(newOptions);
+         assert.equal(instance._menuSource._$data.length, 3);
+         assert.equal(instance._menuCaption, 'Отметить');
 
          var selection = {
             selected: [1]
          };
-         instance._beforeMount(newOptions);
-         assert.equal(instance._menuSource._$data.length, 3);
-         assert.equal(instance._menuCaption, 'Отметить');
 
          instance._options.selectedCountConfig = {};
          GetCount.default.getCount = function() {
@@ -259,12 +259,20 @@ define([
             def.callback();
             return def;
          };
-         await instance._getCount(selection, null);
-         assert.equal(instance._menuCaption, 'Отметить');
+         return new Promise(function(resolve) {
+            instance._getCount(selection, null).then(function() {
+               assert.equal(instance._menuCaption, 'Отметить');
+               resolve();
+            });
+         });
 
          instance._menuCaption = 'Отмечено: 3';
-         await instance._getCount(selection, null);
-         assert.equal(instance._menuCaption, 'Отмечено:');
+         return new Promise(function(resolve) {
+            instance._getCount(selection, null).then(function() {
+               assert.equal(instance._menuCaption, 'Отмечено:');
+               resolve();
+            });
+         });
       });
 
       it('_afterUpdate', function() {
