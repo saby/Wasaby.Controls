@@ -778,6 +778,35 @@ define([
             });
          });
 
+         it('commit not in process if server validation failed', function(done) {
+            let
+               validationResultDef;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            eip._editingItem.set('title', '1234');
+
+            eip._children.formController.submit = () => {
+               return validationResultDef;
+            };
+
+            validationResultDef = new Deferred();
+            eip._options.source = { update: () => Deferred.fail() };
+            eip.commitEdit().addErrback(() => {
+               assert.isFalse(eip._isCommitInProcess);
+               assert.isTrue(eip._commitPromise.isReady());
+               done();
+            });
+
+            assert.isTrue(eip._isCommitInProcess);
+            validationResultDef.callback({});
+         });
+
          it('With source', function(done) {
             var source = new sourceLib.Memory({
                keyProperty: 'id',
@@ -1228,6 +1257,7 @@ define([
 
       describe('_onKeyDown', function() {
          it('Enter', function() {
+            let isPropagationStopped = false;
             eip.beginEdit = function(options) {
                assert.equal(options.item, listModel.at(1).getContents());
             };
@@ -1236,10 +1266,15 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel, eip._options);
-            eip._onKeyDown({}, {
+            eip._onKeyDown({
+               stopPropagation: function() {
+                  isPropagationStopped = true;
+               }
+            }, {
                keyCode: 13,
                stopPropagation: function() {}
             });
+            assert.isTrue(isPropagationStopped);
          });
 
          it('Enter on last item', function(done) {
@@ -1257,7 +1292,9 @@ define([
             });
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel, eip._options);
-            eip._onKeyDown({}, {
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
                keyCode: 13,
                stopPropagation: function() {}
             });
@@ -1276,7 +1313,9 @@ define([
             eip._sequentialEditing = true;
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel, eip._options);
-            eip._onKeyDown({}, {
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
                keyCode: 13,
                stopPropagation: function() {}
             });
@@ -1310,7 +1349,9 @@ define([
                   };
                }
             };
-            eip._onKeyDown({}, {
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
                keyCode: 13,
                stopPropagation: function() {}
             });
@@ -1334,7 +1375,9 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel, eip._options);
-            eip._onKeyDown({}, {
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
                keyCode: 13,
                stopPropagation: function() {}
             });
@@ -1352,7 +1395,9 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel, eip._options);
-            eip._onKeyDown({}, {
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
                keyCode: 27,
                stopPropagation: function() {}
             });
@@ -1598,7 +1643,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(1).getContents();
                eip._setEditingItemData(treeModel.at(1).getContents(), eip._options.listModel, eip._options);
-               eip._onKeyDown({}, {
+               eip._onKeyDown({
+                  stopPropagation: function() {}
+               }, {
                   keyCode: 13,
                   stopPropagation: function() {}
                });
@@ -1617,7 +1664,9 @@ define([
                treeModel.setExpandedItems([1, 2]);
                eip._editingItem = treeModel.at(5).getContents();
                eip._setEditingItemData(treeModel.at(5).getContents(), eip._options.listModel, eip._options);
-               eip._onKeyDown({}, {
+               eip._onKeyDown({
+                  stopPropagation: function() {}
+               }, {
                   keyCode: 13,
                   stopPropagation: function() {}
                });
@@ -1639,7 +1688,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(3).getContents();
                eip._setEditingItemData(treeModel.at(3).getContents(), eip._options.listModel, eip._options);
-               eip._onKeyDown({}, {
+               eip._onKeyDown({
+                  stopPropagation: function() {}
+               }, {
                   keyCode: 13,
                   stopPropagation: function() {}
                });
@@ -1659,7 +1710,9 @@ define([
                eip._sequentialEditing = true;
                eip._editingItem = treeModel.at(3).getContents();
                eip._setEditingItemData(treeModel.at(3).getContents(), eip._options.listModel, eip._options);
-               eip._onKeyDown({}, {
+               eip._onKeyDown({
+                  stopPropagation: function() {}
+               }, {
                   keyCode: 13,
                   stopPropagation: function() {}
                });
@@ -1684,7 +1737,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(1).getContents();
                eip._setEditingItemData(treeModel.at(1).getContents(), eip._options.listModel, eip._options);
-               eip._onKeyDown({}, {
+               eip._onKeyDown({
+                  stopPropagation: function() {}
+               }, {
                   keyCode: 13,
                   stopPropagation: function() {}
                });

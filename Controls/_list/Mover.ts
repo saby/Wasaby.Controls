@@ -274,11 +274,14 @@ var _private = {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
     },
 
-    getItemsBySelection: function (selection) {
+    getItemsBySelection(selection): Promise<Record> {
         //Support moving with mass selection.
         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
         selection.recursive = false;
-        return selection instanceof Array ? Deferred.success(selection) : getItemsBySelection(selection, this._source, this._items, this._filter);
+        const filter = _private.prepareFilter(this, this._filter, selection);
+        return selection instanceof Array ?
+            Deferred.success(selection) :
+            getItemsBySelection(selection, this._source, this._items, filter);
     },
 
     prepareMovedItems(self, items) {
@@ -288,6 +291,19 @@ var _private = {
         });
         return result;
     },
+
+    prepareFilter(self, filter, selection): object {
+        const searchParam = self._options.searchParam;
+        const root = self._options.root;
+        let resultFilter = filter;
+
+        if (searchParam && !selection.selected.includes(root)) {
+            resultFilter = {...filter};
+            delete resultFilter[searchParam];
+        }
+
+        return resultFilter;
+    }
 };
 
 /**
