@@ -81,6 +81,7 @@ function getPropertyGridItems(editingObject: Object, source: IProperty[]): Prope
  * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IPropertyGrid
+ * @demo Controls-demo/PropertyGridNew/Group/Expander/Index
  * @control
  * @public
  * @author Герасимов А.М.

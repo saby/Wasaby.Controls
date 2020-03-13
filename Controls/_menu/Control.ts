@@ -10,10 +10,13 @@ import {Collection, Tree, TreeItem, SelectionController} from 'Controls/display'
 import {debounce} from 'Types/function';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
+import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import * as ControlsConstants from 'Controls/Constants';
+import {_scrollContext as ScrollData} from 'Controls/scroll';
 
 /**
  * Контрол меню.
@@ -25,6 +28,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @demo Controls-demo/Menu/Control/Source/Index
  * @control
  * @category Popup
  * @author Герасимов А.М.
@@ -110,7 +114,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this._pinClick(event, item);
         } else {
             if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem)) {
-                SelectionController.selectItem(this._listModel, key, !treeItem.isSelected());
+                this._changeSelection(key, treeItem);
                 this.updateApplyButton();
 
                 this._notify('selectedKeysChanged', [this.getSelectedKeys()]);
@@ -173,7 +177,9 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this.subMenu = eventResult;
         } else {
             this._notify(eventName, [eventResult]);
-            this._closeSubMenu();
+            if (eventName === 'pinClick') {
+                this._closeSubMenu();
+            }
         }
     }
 
@@ -183,7 +189,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         this._closeSubMenu();
     }
 
-    private _closeSubMenu(needOpenDropDown): void {
+    private _closeSubMenu(needOpenDropDown = false): void {
         if (this._children.Sticky) {
             this._children.Sticky.close();
         }
@@ -307,6 +313,13 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         }, selectorTemplate.popupOptions || {});
     }
 
+    private _changeSelection(key: string|number|null, treeItem): void {
+        SelectionController.selectItem(this._listModel, key, !treeItem.isSelected());
+
+        const isEmptySelected = this._options.emptyText && !this._listModel.getSelectedItems().length;
+        SelectionController.selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
+    }
+
     private getSelectedKeys(): TKeys {
         let selectedKeys = [];
         factory(this._listModel.getSelectedItems()).each((treeItem) => {
@@ -389,7 +402,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
 
     private displayFilter(options: IMenuOptions, item: Model): boolean {
         let isVisible = true;
-        if (item.get && options.parentProperty) {
+        if (item.get && options.parentProperty && options.nodeProperty) {
             let parent = item.get(options.parentProperty);
             if (parent === undefined) {
                 parent = null;
@@ -400,7 +413,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private groupMethod(options: IMenuOptions, item: Model): string {
-        return item.get(options.groupProperty);
+        return item.get(options.groupProperty) || ControlsConstants.view.hiddenGroup;
     }
 
     private setSelectedItems(listModel: Tree, keys: TKeys): void {
@@ -487,6 +500,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.showHeader = false;
         templateOptions.headerTemplate = null;
         templateOptions.additionalProperty = null;
+        templateOptions.itemPadding = null;
 
         templateOptions.source = this.getSourceSubMenu(templateOptions.root);
         return templateOptions;
@@ -508,12 +522,19 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
 
     static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
 
+    static _getChildContext(): object {
+        return {
+            ScrollData: new ScrollData({pagingVisible: false})
+        };
+    }
+
     static getDefaultOptions(): object {
         return {
             selectedKeys: [],
             root: null,
             emptyKey: null,
-            moreButtonCaption: rk('Еще') + '...'
+            moreButtonCaption: rk('Еще') + '...',
+            groupTemplate
         };
     }
 }

@@ -1,5 +1,5 @@
 import { TItemKey, IBaseCollection, ICollectionCommand, IStrategyCollection } from '../interface';
-
+import {CollectionItem} from '../CollectionItem';
 import DragStrategy from '../itemsStrategy/Drag';
 
 export type IDragItem = unknown;

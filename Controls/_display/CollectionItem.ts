@@ -13,6 +13,7 @@ import {IList} from 'Types/collection';
 import {register} from 'Types/di';
 import {mixin} from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
+import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 
 export interface IOptions<T> {
     contents?: T;
@@ -55,7 +56,7 @@ export default class CollectionItem<T> extends mixin<
     OptionsToPropertyMixin,
     InstantiableMixin,
     SerializableMixin
-) implements IInstantiable, IVersionable {
+) implements IInstantiable, IVersionable, ICollectionItemStyled {
 
     // region IInstantiable
 
@@ -184,7 +185,11 @@ export default class CollectionItem<T> extends mixin<
     // список опций, которые нужны для его шаблона (contents, marked и т. д.), и будет
     // в автоматическом режиме генерироваться подпроекция с нужными полями
     get contents(): T {
-        return this.getContents();
+
+        // в процессе удаления, блокируются все поля класса, и метод getContents становится недоступен
+        if (!this.destroyed) {
+            return this.getContents();
+        }
     }
 
     /**
@@ -404,6 +409,10 @@ export default class CollectionItem<T> extends mixin<
             ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? 'controls-ListView__item_editing' : ''}
             ${this.isDragged() ? 'controls-ListView__item_dragging' : ''}`;
+    }
+
+    getItemActionClasses(itemActionsPosition: string): string {
+        return `controls-itemActionsV_${itemActionsPosition}`;
     }
 
     getContentClasses(): string {

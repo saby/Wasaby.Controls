@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {IRenderOptions} from 'Controls/listRender';
 import {IMenuOptions} from 'Controls/_menu/interface/IMenuControl';
-import {Tree, GroupItem, SelectionController} from 'Controls/display';
+import {Tree, TreeItem, GroupItem, SelectionController} from 'Controls/display';
 import * as itemTemplate from 'wml!Controls/_menu/Render/itemTemplate';
 import * as multiSelectTpl from 'wml!Controls/_menu/Render/multiSelectTpl';
 import ViewTemplate = require('wml!Controls/_menu/Render/Render');
@@ -15,7 +15,6 @@ interface IMenuRenderOptions extends IMenuOptions, IRenderOptions {
 
 class MenuRender extends Control<IMenuRenderOptions> {
     protected _template: TemplateFunction = ViewTemplate;
-    protected _multiSelectTpl: TemplateFunction = multiSelectTpl;
     protected _iconPadding: string;
 
     protected _beforeMount(options: IMenuRenderOptions): void {
@@ -72,16 +71,18 @@ class MenuRender extends Control<IMenuRenderOptions> {
         if (item.get('pinned') === true && !this.hasParent(item)) {
             classes += ' controls-Menu__row_pinned controls-DropdownList__row_pinned';
         }
-        if (this._options.listModel.getLast() !== treeItem) {
+        if (this._options.listModel.getLast() !== treeItem &&
+            !this._isGroupNext(treeItem) && !this._isHistorySeparatorVisible(treeItem)) {
             classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
         }
         return classes;
     }
 
-    protected _isVisibleSeparator(treeItem): boolean {
+    protected _isHistorySeparatorVisible(treeItem): boolean {
         const item = treeItem.getContents();
-        const nextItem = treeItem.getOwner().getNext(treeItem)?.getContents();
-        return nextItem && this._isHistoryItem(item) && !this.hasParent(treeItem.getContents()) && !this._isHistoryItem(nextItem);
+        const nextItem = this._getNextItem(treeItem);
+        const isGroupNext = this._isGroupNext(treeItem);
+        return !isGroupNext && nextItem?.getContents() && this._isHistoryItem(item) && !this.hasParent(treeItem.getContents()) && !this._isHistoryItem(nextItem.getContents());
     }
 
     protected _isGroupVisible(groupItem: GroupItem): boolean {
@@ -96,6 +97,15 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     private _isHistoryItem(item: Model): boolean {
         return item.get('pinned') || item.get('recent') || item.get('frequent');
+    }
+
+    private _isGroupNext(treeItem: TreeItem<Model>): boolean {
+        return this._getNextItem(treeItem) instanceof GroupItem;
+    }
+
+    private _getNextItem(treeItem): TreeItem {
+        const index = treeItem.getOwner().getIndex(treeItem);
+        return treeItem.getOwner().at(index + 1);
     }
 
     private setListModelOptions(options: IMenuRenderOptions) {
@@ -124,7 +134,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
         emptyItem.set(data);
         collection.prepend([emptyItem]);
 
-        if (options.selectedKeys.includes(options.emptyKey)) {
+        if (!options.selectedKeys.length || options.selectedKeys.includes(options.emptyKey)) {
             SelectionController.selectItem(listModel, options.emptyKey, true);
         }
     }

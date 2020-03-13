@@ -114,10 +114,18 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
-            container: this._container,position: this._options.position,
+            container: this._container,
+            position: this._options.position,
             mode: this._options.mode
         }, true], {bubbling: true});
-        this._observer = new IntersectionObserver(this._observeHandler);
+
+        // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
+        // отказаться от closest.
+        this._observer = new IntersectionObserver(
+                this._observeHandler,
+                { root: this._container.closest('.controls-Scroll') }
+            );
+
         this._model = new Model({
             topTarget: children.observationTargetTop,
             bottomTarget: children.observationTargetBottom,

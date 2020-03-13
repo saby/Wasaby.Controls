@@ -28,6 +28,8 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IDraggable
  * @mixes Controls/interface/IGroupedList
+ * @mixes Controls/_list/interface/IClickableView
+ * 
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  * @mixes Controls/_list/BaseControlStyles
@@ -65,6 +67,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/interface/IDraggable
  * @mixes Controls/interface/IGroupedList
+ * @mixes Controls/_list/interface/IClickableView
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  * @mixes Controls/_list/BaseControlStyles

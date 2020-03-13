@@ -342,7 +342,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
      * @see hide
      */
     show(config, waitPromise) {
-        return this._show(config, waitPromise);
+        return this._show({...config}, waitPromise);
     },
 
     _show(config, waitPromise) {

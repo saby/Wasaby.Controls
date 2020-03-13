@@ -134,6 +134,10 @@ export default class VirtualScroll {
             this._range.stop = Math.min(this._itemsCount, this._range.stop + count);
         }
 
+        if (predicatedDirection) {
+            this._savedDirection = predicatedDirection;
+        }
+
         if (direction === 'down') {
             if (!predicatedDirection && triggerState[direction]) {
                 return this.shiftRange(direction);
@@ -485,11 +489,10 @@ export default class VirtualScroll {
     }
 
     private _removeItemHeights(removeIndex: number, length: number): void {
-        this._itemsHeightData.itemsHeights.splice(removeIndex + 1, length);
+        this._itemsHeightData.itemsHeights.splice(removeIndex, length);
     }
 
     private _shiftRangeBySegment(direction: IDirection, segmentSize: number): IRange {
-        this._savedDirection = direction;
         const fixedSegmentSize = Math
             .min(segmentSize, Math.max(this._options.pageSize - (this._range.stop - this._range.start), 0));
         const itemsCount = this._itemsCount;
@@ -497,6 +500,7 @@ export default class VirtualScroll {
 
         if (direction === 'up') {
             start = Math.max(0, start - fixedSegmentSize);
+            stop = Math.min(itemsCount, Math.max(this._range.stop, start + this._options.pageSize));
         } else {
             stop = Math.min(stop + fixedSegmentSize, itemsCount);
         }

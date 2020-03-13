@@ -7,6 +7,7 @@ import 'css!theme?Controls/list';
  * Специализированный тип кнопки.
  *
  * @class Controls/_list/AddButton
+ * @mixes Controls/_buttons/interface/IClick
  * @extends Core/Control
  * @control
  * @public

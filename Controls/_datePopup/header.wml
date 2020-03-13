@@ -79,7 +79,7 @@
    <div if="{{_homeButtonVisible}}" title="{[Текущий период]}"
         attr:class="controls-PeriodDialog__homeButton controls-PeriodDialog__cursor-pointer"
         on:click="_homeButtonClick()">
-      <i attr:class="icon-Home3 controls-icon controls-icon_style-secondary_theme-{{_options.theme}}
+      <i attr:class="icon-Home3 controls-icon controls-icon_style-secondary_theme-{{theme}}
                      controls-PeriodDialog__homeButton-icon"/>
    </div>
 

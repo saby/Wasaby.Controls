@@ -29,8 +29,8 @@ export default function(self, popupOptions, multiSelect) {
             multiSelect: multiSelect,
             handlers: {
                 onSelectComplete: function (event, result) {
-                    self._selectCallback(null, result);
                     selectorOpener.close();
+                    self._selectCallback(null, result);
                 }
             }
         }, selectorTemplate.templateOptions || {});

@@ -172,7 +172,13 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfigByItem(item: TItem): IStickyPopupOptions {
         const options = this._options;
+        let source = this._source;
+        const root = item.get(options.keyProperty);
 
+        // Если запись для выпадающего списка еще не были загружены, то отдаем оригинальный источник вместо prefetchProxy
+        if (this._items.getIndexByValue(options.parentProperty, root) === -1) {
+            source = options.source;
+        }
         return {
             opener: this,
             className: `controls-Toolbar__popup__${Toolbar._typeItem(item)}_theme-${options.theme} ${Toolbar._menuItemClassName(item)}`,
@@ -184,8 +190,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 horizontal: 'right'
             },
             templateOptions: {
-                source: this._source,
-                root: item.get(options.keyProperty),
+                source,
+                root,
                 groupTemplate: options.groupTemplate,
                 groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
