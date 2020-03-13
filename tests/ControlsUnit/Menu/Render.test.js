@@ -187,7 +187,7 @@ define(
                assert.isFalse(result);
             });
 
-            it('_isVisibleSeparator', function() {
+            it('_isHistorySeparatorVisible', function() {
                let groupListModel = getListModel([
                   { key: 0, title: 'все страны' },
                   { key: 1, title: 'Россия', icon: 'icon-add' },
@@ -201,15 +201,15 @@ define(
                let menuRender = getRender(
                   { listModel: groupListModel }
                );
-               let result = menuRender._isVisibleSeparator(groupListModel.at(1));
+               let result = menuRender._isHistorySeparatorVisible(groupListModel.at(1));
                assert.isFalse(!!result);
 
                groupListModel.at(1).getContents().set('pinned', true);
-               result = menuRender._isVisibleSeparator(groupListModel.at(1));
+               result = menuRender._isHistorySeparatorVisible(groupListModel.at(1));
                assert.isTrue(result);
 
                groupListModel.at(2).getContents().set('pinned', true);
-               result = menuRender._isVisibleSeparator(groupListModel.at(2));
+               result = menuRender._isHistorySeparatorVisible(groupListModel.at(2));
                assert.isFalse(result);
             });
 

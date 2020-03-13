@@ -78,7 +78,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
                 classes += ' controls-Menu__row_pinned controls-DropdownList__row_pinned';
             }
             if (this._options.listModel.getLast() !== treeItem &&
-                !(this._getNextItem(treeItem) instanceof GroupItem) && !this._isVisibleSeparator(treeItem)) {
+                !this._isGroupNext(treeItem) && !this._isHistorySeparatorVisible(treeItem)) {
                 classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
             }
         } else {
@@ -87,10 +87,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
         return classes;
     }
 
-    protected _isVisibleSeparator(treeItem): boolean {
+    protected _isHistorySeparatorVisible(treeItem): boolean {
         const item = treeItem.getContents();
         const nextItem = this._getNextItem(treeItem);
-        const isGroupNext = nextItem instanceof GroupItem;
+        const isGroupNext = this._isGroupNext(treeItem);
         return !isGroupNext && nextItem?.getContents() && this._isHistoryItem(item) && !this.hasParent(treeItem.getContents()) && !this._isHistoryItem(nextItem.getContents());
     }
 
@@ -106,6 +106,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     private _isHistoryItem(item: Model): boolean {
         return item.get('pinned') || item.get('recent') || item.get('frequent');
+    }
+
+    private _isGroupNext(treeItem: TreeItem<Model>): boolean {
+        return this._getNextItem(treeItem) instanceof GroupItem;
     }
 
     private _getNextItem(treeItem): TreeItem {
