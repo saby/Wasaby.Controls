@@ -32,8 +32,9 @@
        </ws:else>
    </ws:if>
    <ws:if data="{{colspan}}">
-       <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"
-                   attr:class="{{currentColumn.classList.padding.top}} {{currentColumn.classList.padding.bottom}} {{currentColumn.classList.padding.right}}"/>
+       <div class="controls-Grid__row-cell_colspaned {{currentColumn.classList.padding.top}} {{currentColumn.classList.padding.bottom}} {{currentColumn.classList.padding.right}}">
+           <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
+       </div>
    </ws:if>
    <ws:else>
        <ws:partial template="{{currentColumn.template}}"
@@ -55,7 +56,7 @@
    <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
        <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
            <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
-                               checkboxReadOnly="{{checkboxReadOnly}}"
+                               checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"
                                multiSelectStatus="{{itemData.multiSelectStatus}}"
                                key="{{itemData.key}}"/>
        </ws:partial>

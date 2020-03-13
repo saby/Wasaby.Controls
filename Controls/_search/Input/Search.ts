@@ -33,6 +33,15 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  */
 
 /**
+ * @name Controls/_search/Input/Search#searchButtonVisible
+ * @cfg {Boolean} Определяет отображение иконки лупы внутри поля поиска, клик по которой запускает поиск.
+ * @default true
+ * @remark
+ * * true - иконка отображается.
+ * * false - иконка не отображается.
+ */
+
+/**
  * @name Controls/_search/Input/Search#contrastBackground
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
  * @default false
