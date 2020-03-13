@@ -259,16 +259,12 @@ define([
             def.callback();
             return def;
          };
-         instance._getCount(selection, null).addCallback(function() {
-            assert.equal(instance._menuCaption, 'Отметить');
-            done();
-         });
+         await instance._getCount(selection, null);
+         assert.equal(instance._menuCaption, 'Отметить');
 
          instance._menuCaption = 'Отмечено: 3';
-         instance._getCount(selection, null).addCallback(function() {
-            assert.equal(instance._menuCaption, 'Отмечено:');
-            done();
-         });
+         await instance._getCount(selection, null);
+         assert.equal(instance._menuCaption, 'Отмечено:');
       });
 
       it('_afterUpdate', function() {
