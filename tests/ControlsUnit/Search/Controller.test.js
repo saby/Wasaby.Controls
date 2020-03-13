@@ -602,6 +602,15 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.isTrue(searchController._inputSearchValue === 'test');
             assert.isTrue(searchStarted);
          });
+
+         it('root is changed', function() {
+            var options = getDefaultOptions();
+            var searchStarted = false;
+            options.root = 'test_root';
+            searchMod.Controller._private.startSearch = () => {searchStarted = true;};
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            assert.isFalse(searchStarted);
+         });
       });
 
       describe('_beforeUnmount', function() {
