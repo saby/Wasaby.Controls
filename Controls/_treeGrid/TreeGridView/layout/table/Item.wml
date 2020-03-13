@@ -39,7 +39,7 @@
        <ws:partial template="{{currentColumn.template}}"
                    editArrowTemplate="{{editArrowTemplate}}"
                    attr:class=" {{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
-                                {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
+                                {{currentColumn.column.compatibleValign ? ' controls-Grid__cell_valign_' + (currentColumn.column.compatibleValign || 'top') + ' controls-Grid__cell-content_full-height' : ''}}
                                 {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
                    ladderWrapper="{{currentColumn.ladderWrapper}}"
                    expanderTemplate="{{itemData.expanderTemplate}}"
