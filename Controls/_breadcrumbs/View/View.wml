@@ -16,7 +16,7 @@
             template="Controls/dropdownPopup:List"
             closeOnOutsideClick="{{true}}"
             actionOnScroll="close">
-        <ws:templateOptions className="controls-BreadCrumbsController__menu"/>
+        <ws:templateOptions className="controls-BreadCrumbsController__menu_theme-{{_options.theme}}"/>
     </Controls.popup:Sticky>
 
 </div>

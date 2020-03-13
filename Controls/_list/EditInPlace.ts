@@ -111,13 +111,13 @@ var
             }
         },
 
-
         afterEndEdit: function (self, commit) {
             self._notify('afterEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
-            if (self._isAdd && !commit) {
-                // TODO: Kingo.
-                // Если добавление было отменено, то отмчаем последнюю отмеченную запись до старта добавления.
-                self._options.listModel.restoreMarker();
+
+            // При редактировании по месту маркер появляется только если в списке больше одной записи.
+            // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
+            if (self._isAdd && commit && self._options.listModel.getCount() > 1) {
+                self._options.listModel.setMarkedKey(self._editingItem.getId());
             }
             _private.resetVariables(self);
             if (!self._destroyed) {
@@ -470,20 +470,30 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             return self._endEditDeferred;
         }
 
-        return _private.validate(this).addCallback(function (result) {
-            for (var key in result) {
-                if (result.hasOwnProperty(key) && result[key]) {
-                    return Deferred.success({validationFailed: true});
+        if (!self._isCommitInProcess) {
+            self._isCommitInProcess = true;
+            self._commitPromise = _private.validate(this).addCallback(function(result) {
+                for (var key in result) {
+                    if (result.hasOwnProperty(key) && result[key]) {
+                        self._isCommitInProcess = false;
+                        return Deferred.success({validationFailed: true});
+                    }
                 }
-            }
-            return _private.endItemEdit(self, true).addCallback((result) => {
-                return Deferred.success({validationFailed: result && result.cancelled});
+                return _private.endItemEdit(self, true).addCallback((result) => {
+                    self._isCommitInProcess = false;
+                    return Deferred.success({validationFailed: result && result.cancelled});
+                });
             });
-        });
+        }
+
+        return self._commitPromise;
     },
 
     cancelEdit: function () {
-        return _private.endItemEdit(this, false);
+        const self = this;
+        return this._isCommitInProcess ? this._commitPromise.addBoth(() => {
+            return _private.endItemEdit(self, false);
+        }) : _private.endItemEdit(this, false);
     },
 
     _onKeyDown: function (e, nativeEvent) {
@@ -652,15 +662,6 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             listModel._setEditingItemData(this._editingItemData);
         }
 
-        if (this._isAdd) {
-            if (options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(this._editingItemData.getContents().getId());
-                markCommand.execute(listModel);
-            } else {
-                listModel.markAddingItem();
-            }
-        }
-
         listModel.subscribe('onCollectionChange', this._updateIndex);
     },
 
@@ -671,7 +672,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и начинается добавление новой.
         * */
         if (this._isAdd) {
-            _private.editNextRow(this, true, true);
+            _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
         } else {
             this.commitEdit();
         }
@@ -712,6 +713,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     },
 
     _beforeUnmount: function () {
+        this._commitPromise = null;
         _private.resetVariables(this);
     }
 });

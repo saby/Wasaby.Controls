@@ -452,6 +452,7 @@ export default class ScrollContainer extends Control<IOptions> {
                     const rangeShiftResult = this._virtualScroll.shiftRange(direction);
                     this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
                     this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+                    this._indicatorState = direction;
                 }
             });
         }

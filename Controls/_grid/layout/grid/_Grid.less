@@ -1,7 +1,4 @@
 @z-index-Grid-results-cell: 1;
-.get-padding-top(@padding-top: 0px) {
-   padding-top: calc(@padding-top - (@height_Grid-row-separator-l - @height_Grid-row-separator));
-}
 
 .controls-Grid {
    display: -ms-grid;
@@ -143,6 +140,11 @@
    box-sizing: border-box;
    position: relative;
 }
+
+.controls-Grid__row-cell_colspaned {
+   flex-grow: 1;
+}
+
 .controls-Grid__itemAction.controls-itemActionsV_outside {
    z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у results; только для весла, иначе будут поверх шапки
 }
@@ -222,7 +224,7 @@
       }
       /** Общая проблема с background'ом у контролов, которые лежат в списке, решается через background: inherit **/
       //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-      .controls-BreadCrumbsView__menu__dots {
+      .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
          background-color: @background-color_Grid-row_hover;
          box-shadow: -15px 2px 4px -6px @background-color_Grid-row_hover;
       }
@@ -272,10 +274,6 @@
    }
 }
 
-.controls-Grid__row-cell-wide-sep_rowSpacingTop_default_theme-@{themeName} {
-  .get-padding-top(@spacing_Grid-row-between-content-borderTop_default);
-}
-
 .controls-Grid__row-cell_rowSpacingTop_default_theme-@{themeName} {
    padding-top: @spacing_Grid-row-between-content-borderTop_default;
 }
@@ -283,19 +281,11 @@
    padding-bottom: @spacing_Grid-row-between-content-borderBottom_default;
 }
 
-.controls-Grid__row-cell-wide-sep_rowSpacingTop_m_theme-@{themeName} {
-   .get-padding-top(@spacing_Grid-row-between-content-borderTop_s);
-}
-
 .controls-Grid__row-cell_rowSpacingTop_m_theme-@{themeName} {
    padding-top: @spacing_Grid-row-between-content-borderTop_s;
 }
 .controls-Grid__row-cell_rowSpacingBottom_m_theme-@{themeName} {
    padding-bottom: @spacing_Grid-row-between-content-borderBottom_s;
-}
-
-.controls-Grid__row-cell-wide-sep_rowSpacingTop_l_theme-@{themeName} {
-   .get-padding-top(@spacing_Grid-row-between-content-borderTop_l);
 }
 
 .controls-Grid__row-cell_rowSpacingTop_l_theme-@{themeName} {
@@ -552,7 +542,6 @@
 
 .controls-Grid__row-cell_selected-master_theme-@{themeName} {
    z-index: 1;
-   background-color: @background-color_List-masterList-item_selected;
 
    &:before {
       content: '';
@@ -600,7 +589,7 @@
    }
 
    //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} .controls-BreadCrumbsView__menu__dots {
+   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
       background-color: @background-color_List-masterList-item_hover;
       box-shadow: -15px 2px 4px -6px @background-color_List-masterList-item_hover;
    }
@@ -701,6 +690,7 @@
    position: relative;
    background: @background-color_Grid-row_hover;
    z-index: 1;
+   .icon(@height_Grid-editArrow)
 }
 
 .controls-Grid__editArrow_style-default_background {
