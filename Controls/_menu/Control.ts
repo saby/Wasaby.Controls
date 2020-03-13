@@ -10,11 +10,13 @@ import {Collection, Tree, TreeItem, SelectionController} from 'Controls/display'
 import {debounce} from 'Types/function';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
+import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import * as ControlsConstants from 'Controls/Constants';
+import {_scrollContext as ScrollData} from 'Controls/scroll';
 
 /**
  * Контрол меню.
@@ -112,7 +114,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this._pinClick(event, item);
         } else {
             if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem)) {
-                SelectionController.selectItem(this._listModel, key, !treeItem.isSelected());
+                this._changeSelection(key, treeItem);
                 this.updateApplyButton();
 
                 this._notify('selectedKeysChanged', [this.getSelectedKeys()]);
@@ -311,6 +313,13 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         }, selectorTemplate.popupOptions || {});
     }
 
+    private _changeSelection(key: string|number|null, treeItem): void {
+        SelectionController.selectItem(this._listModel, key, !treeItem.isSelected());
+
+        const isEmptySelected = this._options.emptyText && !this._listModel.getSelectedItems().length;
+        SelectionController.selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
+    }
+
     private getSelectedKeys(): TKeys {
         let selectedKeys = [];
         factory(this._listModel.getSelectedItems()).each((treeItem) => {
@@ -491,6 +500,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.showHeader = false;
         templateOptions.headerTemplate = null;
         templateOptions.additionalProperty = null;
+        templateOptions.itemPadding = null;
 
         templateOptions.source = this.getSourceSubMenu(templateOptions.root);
         return templateOptions;
@@ -512,13 +522,19 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
 
     static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
 
+    static _getChildContext(): object {
+        return {
+            ScrollData: new ScrollData({pagingVisible: false})
+        };
+    }
+
     static getDefaultOptions(): object {
         return {
             selectedKeys: [],
             root: null,
             emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
-            groupTemplate: 'wml!Controls/_menu/Render/groupTemplate'
+            groupTemplate
         };
     }
 }
