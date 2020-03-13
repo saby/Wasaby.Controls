@@ -269,9 +269,11 @@ define(
                         itemTemplateProperty: 'myTemplate',
                         iconSize: 'm',
                         nodeProperty: '@parent',
-                        parentProperty: 'parent'
+                        parentProperty: 'parent',
+                        source: '_options.source'
                      },
-                     _source: 'items'
+                     _source: 'items',
+                     _items: { getIndexByValue: () => {} }
                   },
                   expectedConfig = {
                      opener: testSelf,
@@ -303,6 +305,10 @@ define(
                         showHeader: 'showHeader'
                      }
                   };
+               assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
+
+               testSelf._items = { getIndexByValue: () => { return -1; } }; // для элемента не найдены записи в списке
+               expectedConfig.templateOptions.source = '_options.source';
                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
             });
             it('get button template options by item', function() {

@@ -16,7 +16,6 @@
                getContainerPaddingClass="{{_getContainerPaddingClass}}"
                needShowTitle="{{needShowTitle}}"
                needShowIcon="{{needShowIcon}}"
-               getTooltip="{{getTooltip}}"
                itemActionsPosition="{{_options.itemActionsPosition}}"
                actionMenuIsShown="{{_options.actionMenuIsShown}}"
                scope="{{itemActionsTemplate}}"/>

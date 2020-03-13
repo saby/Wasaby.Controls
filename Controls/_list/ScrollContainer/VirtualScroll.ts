@@ -489,7 +489,7 @@ export default class VirtualScroll {
     }
 
     private _removeItemHeights(removeIndex: number, length: number): void {
-        this._itemsHeightData.itemsHeights.splice(removeIndex + 1, length);
+        this._itemsHeightData.itemsHeights.splice(removeIndex, length);
     }
 
     private _shiftRangeBySegment(direction: IDirection, segmentSize: number): IRange {
@@ -500,6 +500,7 @@ export default class VirtualScroll {
 
         if (direction === 'up') {
             start = Math.max(0, start - fixedSegmentSize);
+            stop = Math.min(itemsCount, Math.max(this._range.stop, start + this._options.pageSize));
         } else {
             stop = Math.min(stop + fixedSegmentSize, itemsCount);
         }

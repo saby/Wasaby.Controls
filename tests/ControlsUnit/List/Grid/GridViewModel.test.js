@@ -2142,6 +2142,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isUndefined(event.result, 'Change action should not update prefix version without ladder');
          });
 
+         it('getHeaderZIndex with or without columnScroll', function() {
+            const params = {
+               multiSelectVisibility: false,
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 0,
+               isMultiHeader: false,
+               columnScroll: true
+            }
+            // first fixed coll with columnScroll
+            assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex(params));
+            // first fit coll withoutColumnScroll
+            assert.equal(3, gridMod.GridViewModel._private.getHeaderZIndex({...params, columnScroll: false}));
+         })
+
          it('updates prefix version with ladder only on add and remove', () => {
             const model = new gridMod.GridViewModel({
                ...cfg,

@@ -938,12 +938,12 @@ define(
                assert.strictEqual(view._configs.state.items.getCount(), 9);
 
                newItems = new collection.RecordSet({
-                  keyProperty: 'key',
-                  rawData: [{key: 15, text: 'Completed'}] // without id field
+                  keyProperty: 'id',
+                  rawData: [{id: 15, title: 'Completed'}] // without id field
                });
                eventResult.data = newItems;
                view._resultHandler('resultEvent', eventResult);
-               assert.strictEqual(view._configs.state.items.getCount(), 9);
+               assert.strictEqual(view._configs.state.items.getCount(), 10);
             });
 
             it('selectorResult selectorCallback', function() {

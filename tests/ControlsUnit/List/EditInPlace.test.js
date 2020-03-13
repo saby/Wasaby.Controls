@@ -1000,7 +1000,7 @@ define([
          });
 
          describe('afterEndEdit', function() {
-            it('add item', function(done) {
+            it('add item', async function(done) {
                var source = new sourceLib.Memory({
                   keyProperty: 'id',
                   data: data
@@ -1020,10 +1020,13 @@ define([
                   if (event === 'afterEndEdit') {
                      assert.equal(eip._editingItem, args[0]);
                      assert.isTrue(args[1]);
+                     assert.equal(listModel.getMarkedKey(), 1);
                      done();
                   }
                };
-               eip.commitEdit();
+               await eip.commitEdit().then(() => {
+                  assert.equal(listModel.getMarkedKey(), 4);
+               });
             });
 
             it('edit item', function(done) {
