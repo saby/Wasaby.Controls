@@ -10,6 +10,7 @@ import { isEqual } from 'Types/object';
 // @ts-ignore
 import { load } from 'Core/library';
 import { default as IContainer, IContainerConfig } from "Controls/_dataSource/_error/IContainer";
+import Popup from './Popup';
 
 /**
  * @interface Controls/dataSource/error/Container/Config
@@ -52,6 +53,7 @@ export default class Container extends Control implements IContainer {
      */
     private __viewConfig: Config;
     private __lastShowedId: number;
+    private _popupHelper: Popup = new Popup();
     protected _template = template;
     _options: IContainerConfig;
     _forceUpdate;
@@ -113,12 +115,29 @@ export default class Container extends Control implements IContainer {
         this.__lastShowedId = config.getVersion && config.getVersion();
         config.isShowed = true;
         getTemplate(config.template).then((template) => {
-            let result: Promise<void> = this._notify('serviceError', [
+            let result = this._notify('serviceError', [
                 template,
                 config.options,
                 this
             ], { bubbling: true });
-            if (result) {
+
+            /**
+             * Controls/popup:Global ловит событие 'serviceError'.
+             * В Wasaby окружении Controls/popup:Global есть на каждой странице в виде глобальной обертки.
+             * На старых страницах этого нет, поэтому если errorContainer
+             * был создан в контроле, который был вставлен в старое окружение ws3 с помощью Core/create,
+             * то событие 'serviceError' будет некому ловить и результата _notify не будет.
+             * Тогда гарантированно показываем диалог с помощью popupHelper.
+             */
+            if (!result) {
+                result = new Promise((resolve) => {
+                    this._popupHelper.openDialog(config, this, {
+                        onClose: resolve
+                    });
+                });
+            }
+
+            if (result instanceof Promise) {
                 result.then(this.__notifyDialogClosed.bind(this));
             }
         });
