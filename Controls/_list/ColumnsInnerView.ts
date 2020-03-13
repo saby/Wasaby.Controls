@@ -49,7 +49,6 @@ export default class ColumnsInnerView extends Control {
         this._subscribeToModelChanges(options.listModel);
         this._resizeHandler = this._resizeHandler.bind(this);
         this._model = options.listModel;
-        this.calculateActionsTemplateConfig(options);
 
         this.updateColumns();
     }
@@ -65,7 +64,6 @@ export default class ColumnsInnerView extends Control {
         if (this._model !== options.listModel) {
             this._model = options.listModel;
         }
-        this.calculateActionsTemplateConfig(options);
     }
     private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainer: HTMLDivElement): void {
         this._itemsContainer = itemsContainer;
@@ -120,24 +118,6 @@ export default class ColumnsInnerView extends Control {
         if (model && !model.destroyed) {
             model.subscribe('onCollectionChange', this._onCollectionChange);
         }
-    }
-
-    /**
-     * Запускает расчёт опций для шаблона Действий над записью.
-     * При использовании колоночной разметки всегда используется newModel
-     * и опции для itemActionsTemplate устанавливаются в шаблоне Controls/_listRender/Render/resources/ForItemTemplate.wml
-     * как collection.getActionsTemplateConfig(), который возвращает undefined, если предварительно не был вызван
-     * calculateActionsTemplateConfig
-     * @param options
-     */
-    private calculateActionsTemplateConfig(options: IColumnsInnerViewOptions): void {
-        ItemActionsController.calculateActionsTemplateConfig(this._model, {
-            itemActionsPosition: options.itemActionsPosition,
-            style: options.style,
-            actionAlignment: options.actionAlignment,
-            actionCaptionPosition: options.actionCaptionPosition,
-            itemActionsClass: options.itemActionsClass
-        });
     }
 
     private getItemToLeft(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
