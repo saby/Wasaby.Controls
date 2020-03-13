@@ -237,7 +237,7 @@ define([
          assert.isTrue(isUpdateMenu);
       });
 
-      it('_getCount', () => {
+      it('_getCount', async() => {
          var instance = new MultiSelector.default();
          var newOptions = {
             selectedKeys: [null],
