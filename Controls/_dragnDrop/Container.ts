@@ -1073,7 +1073,6 @@ import entity = require('Types/entity');
       DragNDropController.getDefaultOptions = function() {
          return {
             draggingTemplateOffset: 10,
-            ignoreMouseLeave: false,
             resetTextSelection: true
          };
       };
