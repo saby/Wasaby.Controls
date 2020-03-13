@@ -16,6 +16,7 @@ import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import * as ControlsConstants from 'Controls/Constants';
+import {_scrollContext as ScrollData} from 'Controls/scroll';
 
 /**
  * Контрол меню.
@@ -520,6 +521,12 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
+
+    static _getChildContext(): object {
+        return {
+            ScrollData: new ScrollData({pagingVisible: false})
+        };
+    }
 
     static getDefaultOptions(): object {
         return {
