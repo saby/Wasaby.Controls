@@ -127,7 +127,7 @@ var ManagerWrapper = Control.extend({
       const items = this.getItems();
       let maxZIndex = 0;
       items.each((item) => {
-         if (item.currentZIndex > maxZIndex) {
+         if (item.currentZIndex > maxZIndex && !item.popupOptions.topPopup) {
             maxZIndex = item.currentZIndex;
          }
       });

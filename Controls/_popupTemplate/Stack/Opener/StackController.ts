@@ -459,6 +459,7 @@ class StackController extends BaseController {
             if (oldWindowManager._acquireIndex < item.currentZIndex) {
                 oldWindowManager._acquireIndex = item.currentZIndex;
                 oldWindowManager._acquiredIndexes.push(item.currentZIndex);
+                oldWindowManager.setVisible(item.currentZIndex);
             }
         }
     }

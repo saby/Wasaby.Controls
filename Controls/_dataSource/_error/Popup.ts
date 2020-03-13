@@ -60,11 +60,13 @@ export default class Popup {
      * Открыть диалог. Если не удалось открыть платформенное диалоговое окно, будет показан браузерный alert.
      * @param config Конфигурация с шаблоном диалога и опциями для этого шаблона.
      * @param opener Контрол, открывающий диалоговое окно.
+     * @param eventHandlers обработчики событий, передаваемые в шаблон диалога
      * @returns Если диалог открылся, в промисе будет идентификатор окна, который надо использовать для закрытия
      * окна через {@link Controls/_popup/interface/IDialog#closePopup}.
      */
     openDialog<T extends IViewConfigMessage>(config: ViewConfig<T>,
-                                             opener: Control = null): Promise<string | void> {
+                                             opener: Control = null,
+                                             eventHandlers: Record<string, Function> = {}): Promise<string | void> {
         return this.preloadPopup().then((popup) => {
             if (!popup) {
                 Popup.showDefaultDialog(config.options.message, config.options.details);
@@ -74,7 +76,8 @@ export default class Popup {
             return popup.Dialog.openPopup({
                 template: config.template,
                 templateOptions: config.options,
-                opener
+                opener,
+                eventHandlers
             });
         });
     }
