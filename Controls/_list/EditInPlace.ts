@@ -134,6 +134,7 @@ var
                     return self._options.source.update(self._editingItem).addCallbacks(function () {
                         _private.acceptChanges(self);
                     }, (error: Error) => {
+                        self._isCommitInProcess = false;
                         return _private.processError(self, error);
                     });
 

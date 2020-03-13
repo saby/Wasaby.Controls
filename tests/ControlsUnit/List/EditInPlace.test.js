@@ -778,6 +778,35 @@ define([
             });
          });
 
+         it('commit not in process if server validation failed', function(done) {
+            let
+               validationResultDef;
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            eip._editingItem.set('title', '1234');
+
+            eip._children.formController.submit = () => {
+               return validationResultDef;
+            };
+
+            validationResultDef = new Deferred();
+            eip._options.source = { update: () => Deferred.fail() };
+            eip.commitEdit().addErrback(() => {
+               assert.isFalse(eip._isCommitInProcess);
+               assert.isTrue(eip._commitPromise.isReady());
+               done();
+            });
+
+            assert.isTrue(eip._isCommitInProcess);
+            validationResultDef.callback({});
+         });
+
          it('With source', function(done) {
             var source = new sourceLib.Memory({
                keyProperty: 'id',
