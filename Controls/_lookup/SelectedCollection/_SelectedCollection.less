@@ -36,22 +36,25 @@
     background-color: transparent;
 }
 
-.controls-SelectedCollection__counterItems_theme-@{themeName} {
-    font-size: @font-size_SelectedCollection-counter;
+.controls-SelectedCollection__counterItems_theme {
     color: @color_SelectedCollection-counter;
     padding-right: @spacing_SelectedCollection-between-counter-items;
     box-sizing: border-box;
     cursor: pointer;
 }
 
+.controls-SelectedCollection__counterItems_theme-@{themeName} {
+    font-size: @font-size_SelectedCollection-counter;
+}
+
 .ws-is-hover {
-    .controls-SelectedCollection__counterItems_theme-@{themeName}:hover {
+    .controls-SelectedCollection__counterItems_theme:hover {
         color: @color_SelectedCollection-counter_hover;
         text-decoration: underline;
     }
 }
 
-.controls-SelectedCollection__counterItems_theme-@{themeName}:active {
+.controls-SelectedCollection__counterItems_theme:active {
     color: @color_SelectedCollection-counter_active;
 
     .controls-SelectedCollection__counter,
