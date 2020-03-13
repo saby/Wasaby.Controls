@@ -12,6 +12,8 @@
                             itemActionsType="outside"
                             itemActions="{{_itemActions}}"
                             on:afterEndEdit="_toggleAddButton()"
+                            multiSelectVisibility="visible"
+                            bind:selectedKeys="_selectedKeys"
                             columns="{{_columns}}">
                         <ws:editingConfig>
                             <ws:Object editOnClick="{{true}}" autoAdd="{{true}}"/>
