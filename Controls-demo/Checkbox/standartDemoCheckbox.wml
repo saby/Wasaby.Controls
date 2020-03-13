@@ -41,6 +41,6 @@
                     <h3>Different style text</h3>
                     <Controls.toggle:Checkbox readOnly="{{false}}" bind:value="_value5" caption="{{_content3}}" tooltip="Tooltip"/>
                 </div>
-            </div>>
+            </div>
         </div>
 </div>
