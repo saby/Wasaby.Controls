@@ -547,7 +547,7 @@ define(
                topPopup: true
             };
             Manager.show(item2, controller);
-            assert.equal(Manager._popupItems.at(1).currentZIndex, 2000);
+            assert.equal(Manager._popupItems.at(1).currentZIndex, 4000);
 
             const item3 = {
                id: 3,
