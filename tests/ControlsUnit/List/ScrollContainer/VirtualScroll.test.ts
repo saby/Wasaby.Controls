@@ -121,6 +121,14 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
                 assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 60}},
                     instance.insertItems(3, 1, {up: false, down: true}, 'down'));
         });
+        it('lack of items, direction up', () => {
+            instance.setOptions({pageSize: 10});
+            instance.resetRange(0, 5);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
+            assert.deepEqual({range: {start: 0, stop: 6}, placeholders: {top: 0, bottom: 0}},
+                instance.insertItems(0, 1, {up: false, down: false});
+        });
     });
     describe('.removeItems', () => {
         let instance: controller;
@@ -142,7 +150,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         });
         it('at ending', () => {
             assert.deepEqual({range: {start: 0, stop: 4}, placeholders: {top: 0, bottom: 0}},
-                instance.removeItems(3, 1));
+                instance.removeItems(4, 1));
         });
     });
     describe('.shiftRange', () => {

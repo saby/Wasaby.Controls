@@ -9,19 +9,23 @@
                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                   on:arrowActivated="_notifyHandler('arrowActivated')"
                   on:itemClick="_notifyHandler('itemClick')"
-                  on:itemMouseDown="_notifyHandler('itemMouseDown')"
-                  on:arrowClick="_notifyHandler('arrowClick')"/>
+                  on:itemMouseDown="_notifyHandler('itemMouseDown')"/>
    </Controls.Container.Async>
 </ws:template>
 
 <ws:if data="{{_needCrumbs}}">
    <ws:if data="{{_options.stickyHeader}}">
-      <Controls.scroll:StickyHeader mode="stackable" shadowVisibility="{{_options.needShadow ? 'visible' : 'hidden'}}" fixedZIndex="{{5}}">
+      <Controls.scroll:StickyHeader
+              mode="stackable"
+              shadowVisibility="{{_options.needShadow ? 'visible' : 'hidden'}}"
+              fixedZIndex="{{5}}"
+              backgroundStyle="{{_options.backgroundStyle}}">
          <ws:partial template="headingPath" />
       </Controls.scroll:StickyHeader>
    </ws:if>
    <ws:else>
-      <ws:partial template="headingPath" />
+      <ws:partial template="headingPath"
+                  on:arrowClick="_notifyHandler('arrowClick')"/>
    </ws:else>
 </ws:if>
 <ws:else>

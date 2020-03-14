@@ -3,7 +3,7 @@
       <div class="controls-PeriodLiteDialog__currentValue" on:click="_onHeaderClick()">{{_caption}}</div>
       <div class="controls-PeriodLiteDialog__bodyWrapper">
          <div class="controls-PeriodLiteDialog__yearWrapper {{_getYearWrapperCssClasses()}} {{(_yearHovered === _position.getFullYear())? ' controls-PeriodLiteDialog__yearHeader-background-hovered'}}"  title="{[Выбрать год]}">
-            <div class="controls-PeriodLiteDialog__year-prev" title="{[Предыдущий год]}" on:click="_onPrevYearBtnClick()"></div>
+            <div class="controls-PeriodLiteDialog__year-prev" title="{[Предыдущий год]}" on:click="_changeYear (-1)"></div>
             <div class="controls-PeriodLiteDialog__home-wrapper{{!_options.chooseHalfyears ? '-lite' }}" title="{[Поставить текущий период]}">
                <Controls.buttons:Button
                        class="controls-PeriodLiteDialog__homeButton"
@@ -22,7 +22,7 @@
             >
                {{ _position.getFullYear() }}
             </div>
-            <div class="controls-PeriodLiteDialog__year-next" on:click="_onNextYearBtnClick()" title="{[Следующий год]}"></div>
+            <div class="controls-PeriodLiteDialog__year-next" on:click="_changeYear (1)" title="{[Следующий год]}"></div>
          </div>
          <ws:partial
                  class="controls-PeriodLiteDialog__body {{_getListCssClasses()}}"
@@ -39,7 +39,7 @@
       </div>
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
-      <div class="controls-PeriodLiteDialog__years-next" on:click="_onNextYearBtnClick()"></div>
+      <div class="controls-PeriodLiteDialog__years-next" on:click="_changeYear (1)"></div>
       <Controls.calendar:MonthList
               order="desc"
               virtualPageSize="{{24}}"
@@ -62,7 +62,7 @@
             </ws:partial>
          </ws:yearTemplate>
       </Controls.calendar:MonthList>
-      <div class="controls-PeriodLiteDialog__years-prev" on:click="_onPrevYearBtnClick()"></div>
+      <div class="controls-PeriodLiteDialog__years-prev" on:click="_changeYear (-1)"></div>
       <div class="controls-PeriodLiteDialog__years-home" title="{[Поставить текущий диапазон]}">
          <Controls.buttons:Button
             class="controls-PeriodLiteDialog__homeButton"

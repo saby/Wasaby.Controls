@@ -2,16 +2,22 @@ import * as template from 'wml!Controls/_list/ColumnsInnerView';
 import ColumnsController from './Controllers/ColumnsController';
 import { TemplateFunction, Control } from 'UI/Base';
 import {IList} from 'Controls/_list/interface/IList';
-import { ColumnsCollection as Collection, ColumnsCollectionItem as CollectionItem} from 'Controls/display';
+import {
+    ColumnsCollection as Collection,
+    ColumnsCollectionItem as CollectionItem,
+    ICollectionCommand,
+    MarkerCommands,
+} from 'Controls/display';
 import { ICrudPlus } from 'Types/source';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { constants } from 'Env/Env';
+import { Model } from 'Types/entity';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
 export interface IColumnsInnerViewOptions extends IList {
     columnMinWidth: number;
     columnMaxWidth: number;
-    listModel: Collection<unknown>;
+    listModel: Collection<Model>;
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
     source: ICrudPlus;
@@ -26,12 +32,9 @@ export default class ColumnsInnerView extends Control {
     _template: TemplateFunction = template;
     private _itemsContainer: HTMLDivElement;
     private _columnsCount: number = DEFAULT_COLUMNS_COUNT;
-    private _minWidth: number = DEFAULT_MIN_WIDTH;
-    private _maxWidth: number = DEFAULT_MAX_WIDTH;
     private _columnsController: ColumnsController;
     private _columnsIndexes: number[][];
-    private _model: Collection<unknown>;
-
+    private _model: Collection<Model>;
     protected _options: IColumnsInnerViewOptions;
 
     protected _beforeMount(options: IColumnsInnerViewOptions): void {
@@ -69,7 +72,7 @@ export default class ColumnsInnerView extends Control {
             this.updateColumns();
         }
     }
-    private setColumnOnItem(item: CollectionItem<unknown>, index: number): void {
+    private setColumnOnItem(item: CollectionItem<Model>, index: number): void {
         const model = this._model;
         const column = this._columnsController.calcColumn(model, index, this._columnsCount);
         item.setColumn(column);
@@ -85,14 +88,14 @@ export default class ColumnsInnerView extends Control {
 
     protected _onCollectionChange(_e: unknown,
                                   action: string,
-                                  newItems: [CollectionItem<unknown>],
+                                  newItems: [CollectionItem<Model>],
                                   newItemsIndex: number,
-                                  removedItems: [CollectionItem<unknown>],
+                                  removedItems: [CollectionItem<Model>],
                                   removedItemsIndex: number): void {
         if (action === 'a') {
             newItems.forEach(this.setColumnOnItem.bind(this));
         }
-        if (action !== 'ch') {
+        if (action !== 'ch' && action !== 'm') {
             this.updateColumns();
         }
     }
@@ -101,19 +104,19 @@ export default class ColumnsInnerView extends Control {
         this._unsubscribeFromModelChanges(this._options.listModel);
     }
 
-    protected _unsubscribeFromModelChanges(model: Collection<unknown>): void {
+    protected _unsubscribeFromModelChanges(model: Collection<Model>): void {
         if (model && !model.destroyed) {
             this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChange);
         }
     }
 
-    protected _subscribeToModelChanges(model: Collection<unknown>): void {
+    protected _subscribeToModelChanges(model: Collection<Model>): void {
         this._unsubscribeFromModelChanges(this._options.listModel);
         if (model && !model.destroyed) {
             model.subscribe('onCollectionChange', this._onCollectionChange);
         }
     }
-    private getItemToLeft(model: Collection<unknown>, item: CollectionItem<unknown>): CollectionItem<unknown> {
+    private getItemToLeft(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
         if (this._options.columnsMode === 'auto') {
@@ -132,7 +135,7 @@ export default class ColumnsInnerView extends Control {
         }
         return model.at(newIndex);
     }
-    private getItemToRight(model: Collection<unknown>, item: CollectionItem<unknown>): CollectionItem<unknown> {
+    private getItemToRight(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
         if (this._options.columnsMode === 'auto') {
@@ -153,7 +156,7 @@ export default class ColumnsInnerView extends Control {
         }
         return model.at(newIndex);
     }
-    private getItemToUp(model: Collection<unknown>, item: CollectionItem<unknown>): CollectionItem<unknown> {
+    private getItemToUp(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
         if (this._options.columnsMode === 'auto') {
@@ -171,7 +174,7 @@ export default class ColumnsInnerView extends Control {
         }
         return model.at(newIndex);
     }
-    private getItemToDown(model: Collection<unknown>, item: CollectionItem<unknown>): CollectionItem<unknown> {
+    private getItemToDown(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
         if (this._options.columnsMode === 'auto') {
@@ -193,11 +196,12 @@ export default class ColumnsInnerView extends Control {
     private moveMarker(direction: string): void {
         const model = this._options.listModel;
         if (model && this._options.markerVisibility !== 'hidden') {
-            const curMarkedItem = model.getMarkedItem() as CollectionItem<unknown>;
-            let newMarkedItem: CollectionItem<unknown>;
+            const curMarkedItem = this._model.find((item) => item.isMarked());
+            let newMarkedItem: CollectionItem<Model>;
             newMarkedItem = this[`getItemTo${direction}`](model, curMarkedItem);
             if (newMarkedItem && curMarkedItem !== newMarkedItem) {
-                model.setMarkedItem(newMarkedItem);
+                const moveMarker = new MarkerCommands.Mark(newMarkedItem.getContents().getKey());
+                moveMarker.execute(this._model);
                 const column = newMarkedItem.getColumn();
                 const curIndex = model.getIndex(newMarkedItem);
                 const columnIndex = this._columnsIndexes[column].indexOf(curIndex);
@@ -221,6 +225,7 @@ export default class ColumnsInnerView extends Control {
             return true;
         }
     }
+
     static getDefaultOptions(): Partial<IColumnsInnerViewOptions> {
         return {
             columnMinWidth: DEFAULT_MIN_WIDTH,

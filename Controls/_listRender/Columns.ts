@@ -22,11 +22,9 @@ export default class Columns extends BaseRender {
         super._beforeMount(options);
         this._templateKeyPrefix = `columns-render-${this.getInstanceId()}`;
     }
-
     protected _beforeUnmount(): void {
         this._unsubscribeFromModelChanges(this._options.listModel);
     }
-
     protected _resizeHandler(): void {
         this._notify('resize', []);
     }
@@ -35,6 +33,12 @@ export default class Columns extends BaseRender {
         this._notify('itemSwipe', [item, e]);
     }
 
+    protected _getItemsContainerStyle(): string {
+        return  `grid-template-columns: repeat(${this._options.columnsCount}, minmax(${this._options.columnMinWidth}px, ${this._options.columnMaxWidth}px)); `;
+    }
+    protected _getPlaceholderStyle(): string {
+        return  `min-width:${this._options.columnMinWidth}px; max-width:${this._options.columnMaxWidth}px; `;
+    }
     static getDefaultOptions(): Partial<IRenderOptions> {
         return {
             itemTemplate: defaultItemTemplate

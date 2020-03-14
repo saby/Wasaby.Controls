@@ -286,7 +286,7 @@ function getHeaderMaxEndCellData(headerRows: IHeaderCell[][]): {maxRow: number, 
             // calculating w/o consideration of multiselect column
             // we need +1 here, because otherwise it calculates incorrect last right column side
             result.maxColumn = headerRows[0].length + 1;
-}
+        }
         result.maxRow = SINGLE_HEADER_MAX_ROW;
     }
     return result;
@@ -359,25 +359,30 @@ function getHeaderActionsCellConfig(headerRow: IHeaderCell[], isMultiHeader: boo
     let maxEndRow = 0;
     let maxEndColumn = 0;
 
-    // If not isMultiHeader we only need next endColumn
-    // Note! 2 = (headerRow.length + ActionsCell + 1) to have correct grid right endColumn
-    if (!isMultiHeader) {
-        return {
-            isActionCell: true,
-            endColumn: headerRow.length + 2
-        };
-    }
-
+    // Бывают случаи, когда в не-multiHeader headerRow приходит массив IHeaderCell из трёх, например, записей.
+    // При этом у одной из них указан startRow, endRow и endColumn так, что явно объединяются несколько колонок.
+    // В этих случаях старым методом (если не-multiHeader, то maxEndColumn = headerRow.length + 1;) происходит
+    // некорректный расчёт maxEndColumn. Это влияет в дальнейшем на расчёт в методе getHeaderMaxEndCellData,
+    // и для headerRow, в которых IHeaderCell объединяют несколько колонок последняя колонка считалась не правильно.
+    // Это потенциальная ошибка, и в таких случаях было не понятно, почему у actionCell, которая по факту последняя,
+    // maxEndRow могла посчитаться на несколько колонок раньше реально последней колонки.
     headerRow.forEach((cell) => {
-        minStartRow = cell.startRow < minStartRow ? cell.startRow : minStartRow;
-        maxEndRow = cell.endRow > maxEndRow ? cell.endRow : maxEndRow;
-        maxEndColumn = cell.endColumn > maxEndColumn ? cell.endColumn : maxEndColumn;
+        minStartRow = cell.startRow && cell.startRow < minStartRow ? cell.startRow : minStartRow;
+        maxEndRow = cell.endRow && cell.endRow > maxEndRow ? cell.endRow : maxEndRow;
+        maxEndColumn = cell.endColumn && cell.endColumn > maxEndColumn ? cell.endColumn : maxEndColumn;
     });
+
+    // В случае, когда в не-isMultiHeader headerRow приходят ячейки IHeaderCell без endColumn, мы должны исходить из
+    // величины текущего headerRow + 1.
+    // Задаём maxEndColumn явно, как величину headerRow + 1, что соответствует правой границе grid-column.
+    if (!isMultiHeader && maxEndColumn === 0) {
+        maxEndColumn = headerRow.length + 1;
+    }
 
     return {
         isActionCell: true,
-        startRow: minStartRow,
-        endRow: maxEndRow,
+        startRow: minStartRow > 0 ? minStartRow : 1,
+        endRow: maxEndRow > 0 ? maxEndRow : 1,
         startColumn: maxEndColumn,
         endColumn: maxEndColumn + 1
     };

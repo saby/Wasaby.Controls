@@ -17,7 +17,7 @@
                                 template="{{_options.monthTemplate}}"
                                 month="{{month}}"
                                 formatDate="{{_formatDate}}"
-                                isIconChecked="{{isIconChecked}}"
+                                _isIconChecked="{{_isIconChecked}}"
                                 extData="{{_options.extData && _options.extData[month.date.getMonth()]}}"
                         />
                   </ws:for>

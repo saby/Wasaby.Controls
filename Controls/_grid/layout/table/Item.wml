@@ -19,12 +19,14 @@
 <ws:template name="columnContent">
     <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
         <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
-            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" checkboxReadOnly="{{checkboxReadOnly}}"/>
+            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"/>
         </ws:partial>
     </ws:if>
     <ws:else>
         <ws:if data="{{colspan}}">
-            <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" attr:class="{{ itemData.isEditing ? currentColumn.classList.padding.getAll() }}"/>
+            <div class="controls-Grid__row-cell_colspaned {{ currentColumn.classList.padding.getAll() }}">
+                <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+            </div>
         </ws:if>
         <ws:else>
             <ws:partial template="{{currentColumn.template}}"
@@ -33,6 +35,7 @@
                         attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                              {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
                         itemData="{{currentColumn}}"
+                        backgroundStyle="{{backgroundStyle}}"
                         tagTemplate="{{tagTemplate}}"/>
         </ws:else>
     </ws:else>
@@ -60,7 +63,7 @@
                     {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                     {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                     {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
-                    controls-Grid__cell_valign_{{currentColumn.column.valign || 'baseline'}}
+                    controls-Grid__cell_valign_{{currentColumn.column.compatibleValign || 'top'}}
                     {{className || ''}}">
         <ws:partial template="{{content}}" />
     </td>

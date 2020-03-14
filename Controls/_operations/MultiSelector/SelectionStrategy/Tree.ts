@@ -58,17 +58,31 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       return selection;
    }
 
+   unSelectParentNodes(selection: ISelection, parentId: TKey, model: TreeCollection | ViewModel, hierarchyRelation: relation.Hierarchy): void {
+      let allChildrenExcluded = this._isAllChildrenExcluded(selection, parentId, model, hierarchyRelation);
+      let currentParentId = parentId;
+      while (currentParentId !== this._getRoot(model) && allChildrenExcluded) {
+         const item = getItems(model).getRecordById(currentParentId);
+         this._unSelectNode(selection, currentParentId, model, hierarchyRelation);
+         currentParentId = this._getParentId(item.getId(), model, hierarchyRelation);
+         allChildrenExcluded = this._isAllChildrenExcluded(selection, currentParentId, model, hierarchyRelation);
+      }
+   }
+
    unSelect(selection: ISelection, keys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): ISelection {
       const selectionClone = clone(selection);
-      let item;
 
       keys.forEach((key) => {
-         item = getItems(model).getRecordById(key);
-
+         const item = getItems(model).getRecordById(key);
+         const isRoot = key === this._getRoot(model);
          if (!item || isNode(item, model, hierarchyRelation)) {
             this._unSelectNode(selectionClone, key, model, hierarchyRelation);
          } else {
             this._unSelectLeaf(selectionClone, key, model, hierarchyRelation);
+         }
+         if (!isRoot && item && this._options.selectAncestors) {
+            const parentId = this._getParentId(item.getId(), model, hierarchyRelation);
+            this.unSelectParentNodes(selectionClone, parentId, model, hierarchyRelation);
          }
       });
 
@@ -190,7 +204,8 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [leafId]);
       }
 
-      if (this._isAllChildrenExcluded(selection, parentId, model, hierarchyRelation)) {
+      if (this._isAllChildrenExcluded(selection, parentId, model, hierarchyRelation) &&
+          this._options.selectAncestors) {
          ArraySimpleValuesUtil.removeSubArray(selection.selected, [parentId]);
       }
    }
@@ -199,7 +214,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       return model.getRoot().getContents();
    }
 
-   private _getParentId(itemId: Tkey, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy): TKey|undefined {
+   private _getParentId(itemId: string|number, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy): TKey|undefined {
       let parentProperty: string = getParentProperty(model, hierarchyRelation);
       let item: Record|undefined = getItems(model).getRecordById(itemId);
 
@@ -297,14 +312,6 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _isAllChildrenExcluded(selection: ISelection, nodeId: TKey, model: ViewModel, hierarchyRelation: relation.Hierarchy): boolean {
       const children = getChildren(nodeId, model, hierarchyRelation);
-      let isExcluded = true;
-
-      children.forEach((item) => {
-         if (!selection.excluded.includes(item.getId())) {
-            isExcluded = false;
-         }
-      });
-
-      return isExcluded;
+      return !children.some((item): boolean => !selection.excluded.includes(item.getId()));
    }
 }

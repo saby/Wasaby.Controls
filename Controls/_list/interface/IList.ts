@@ -120,6 +120,12 @@ export interface IList {
  * @default true
  */
 
+/**
+ * @name Controls/_list/interface/IList#loadingIndicatorTemplate
+ * @cfg {string|Function} Определяет шаблон индикатора загрузки данных.
+ * @default Controls/list:LoadingIndicatorTemplate
+ */
+
 /*
  * @name Controls/_list/interface/IList#contextMenuVisibility
  * @cfg {Boolean} Determines whether context menu should be shown on right-click.
@@ -129,7 +135,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#contextMenuConfig
- * @cfg {Object} Устанавливает конфигурацию для меню операций над записью.
+ * @cfg {Control/menu:IMenuControl} Устанавливает конфигурацию для меню операций над записью.
  * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
  * В качестве ключей можно использовать следующие свойства:
  * - items - для смены набора элементов.

@@ -3,7 +3,7 @@
    box-sizing: border-box;
 }
 
-.controls-BreadCrumbsPath__twoRows {
+.controls-BreadCrumbsPath__twoRows_theme-@{themeName} {
    padding-left: @padding-left_multiline_breadcrumbsPath;
 }
 
@@ -23,10 +23,12 @@
    max-width: 100%;
 }
 
-.controls-BreadCrumbsPath__home {
+.controls-BreadCrumbsPath__home_theme-@{themeName} {
    .icon(@home_icon-size_breadcrumbsPath);
-   cursor: pointer;
    color: @home_icon-color_breadcrumbsPath;
+}
+.controls-BreadCrumbsPath__home {
+   cursor: pointer;
    flex-shrink: 0;
 }
 
@@ -34,9 +36,11 @@
    position: relative;
    display: inline-flex;
    align-items: baseline;
-   padding-right: @back_offset_breadcrumbsHeadingPath;
    max-width: 50%;
    flex-shrink: 0;
+}
+.controls-BreadCrumbsPath__backButton__wrapper_theme-@{themeName} {
+   padding-right: @back_offset_breadcrumbsHeadingPath;
 }
 
 .controls-BreadCrumbsPath__backButton__wrapper__only {
@@ -61,6 +65,8 @@
    align-items: baseline;
    right: 0;
    bottom: 0;
+}
+.controls-BreadCrumbsPath__backButtonArrow-container_theme-@{themeName} {
    background-color: @back_editButton_background-color_breadcrumbsHeadingPath;
    &:before {
       font-size: @line-height_breadcrumbsView;
@@ -68,23 +74,25 @@
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
-   .icon(@back_editButton_icon-size_breadcrumbsHeadingPath);
    display: none;
-   color: @back_editButton_icon-color_breadcrumbsHeadingPath;
    cursor: pointer;
 }
+.controls-BreadCrumbsPath__backButtonArrow_theme-@{themeName} {
+   .icon(@back_editButton_icon-size_breadcrumbsHeadingPath);
+   color: @back_editButton_icon-color_breadcrumbsHeadingPath;
+}
 
-.controls-Path__backButtonArrow_readonly {
+.controls-Path__backButtonArrow_readonly_theme-@{themeName} {
    color: @back_editButton_readonly_icon-color_breadcrumbsHeadingPath;
 }
 
 //Необходимо добавить отступ шеврону для того, чтобы он не наезжал на кнопку назад. Отодвигаем на ширину иконки, не считая паддинга после кнопки.
 //Так как ширина и высота иконки шеврона равна размеру @font-size_Path-backButtonArrow, отодвигаем на эту величину.
 //TODO remove after TODO https://online.sbis.ru/opendoc.html?guid=aedf32aa-28db-40b7-abae-e740021cc782
-.controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {
+.controls-BreadCrumbsPath__backButtonArrow_outsideBackButton_theme-@{themeName} {
    margin-right: -(@back_editButton_icon-size_breadcrumbsHeadingPath - @back_offset_breadcrumbsHeadingPath);
 }
-.controls-BreadCrumbsPath__counter {
+.controls-BreadCrumbsPath__counter_theme-@{themeName} {
    margin-left: @back_counter_offset_breadcrumbsHeadingPath;
 }
 
@@ -92,7 +100,7 @@
    overflow: hidden;
    flex-grow: 1;
 }
-.controls-BreadCrumbsPath__breadCrumbs_home-path-spacing {
+.controls-BreadCrumbsPath__breadCrumbs_home-path-spacing_theme-@{themeName} {
    padding-left: @home_offset_breadcrumbsPath;
 }
 
@@ -102,6 +110,8 @@
    position: relative;
    display: inline-flex;
    align-items: baseline;
+}
+.controls-BreadCrumbsPath__homeContainer_theme-@{themeName} {
    &:before {
      font-size: @line-height_breadcrumbsView;
    }
@@ -130,14 +140,16 @@
 
 .ws-is-hover {
    .controls-BreadCrumbsPath__backButtonArrow:hover {
-      color: @back_editButton_hover_icon-color_breadcrumbsHeadingPath;
       display: inline-flex;
    }
    .controls-BreadCrumbsPath__backButton__wrapper:hover .controls-BreadCrumbsPath__backButtonArrow {
       display: inline-flex;
    }
+   .controls-BreadCrumbsPath__backButtonArrow_theme-@{themeName}:hover {
+      color: @back_editButton_hover_icon-color_breadcrumbsHeadingPath;
+   }
 
-   .controls-BreadCrumbsPath__home:hover {
+   .controls-BreadCrumbsPath__home_theme-@{themeName}:hover {
       color: @home_hover_icon-color_breadcrumbsPath;
    }
 }

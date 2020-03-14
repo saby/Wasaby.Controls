@@ -185,7 +185,11 @@ export default class CollectionItem<T> extends mixin<
     // список опций, которые нужны для его шаблона (contents, marked и т. д.), и будет
     // в автоматическом режиме генерироваться подпроекция с нужными полями
     get contents(): T {
-        return this.getContents();
+
+        // в процессе удаления, блокируются все поля класса, и метод getContents становится недоступен
+        if (!this.destroyed) {
+            return this.getContents();
+        }
     }
 
     /**
@@ -422,17 +426,17 @@ export default class CollectionItem<T> extends mixin<
     protected _getSpacingClasses(): string {
         let classes = '';
 
-        const rowSpacing = this._$owner.getRowSpacing().toLowerCase();
-        const rightSpacing = this._$owner.getRightSpacing().toLowerCase();
+        const rowSpacing = this.getOwner().getRowSpacing().toLowerCase();
+        const rightSpacing = this.getOwner().getRightSpacing().toLowerCase();
 
         classes += ` controls-ListView__item-topPadding_${rowSpacing}`;
         classes += ` controls-ListView__item-bottomPadding_${rowSpacing}`;
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}`;
 
-        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+        if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {
            classes += ' controls-ListView__itemContent_withCheckboxes';
         } else {
-           classes += ` controls-ListView__item-leftPadding_${this._$owner.getLeftSpacing().toLowerCase()}`;
+           classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftSpacing().toLowerCase()}`;
         }
 
         return classes;

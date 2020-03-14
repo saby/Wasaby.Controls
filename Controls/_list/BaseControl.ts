@@ -35,6 +35,7 @@ import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
 import {CollectionItem} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
+import {IItemAction} from "./interface/IList";
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1180,6 +1181,37 @@ var _private = {
             getBoundingClientRect: () => clientRect
         };
     },
+    getMenuConfig(items: IItemAction[], contextMenuConfig: object, action?: IItemAction): object {
+        let defaultMenuConfig: object = {
+            items: new RecordSet({ rawData: items, keyProperty: 'id' }),
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'parent@',
+            dropdownClassName: 'controls-itemActionsV__popup'
+        };
+        if (action) {
+            defaultMenuConfig = {
+                ...defaultMenuConfig,
+                rootKey: action.id,
+                showHeader: true,
+                headConfig: {
+                    caption: action.title,
+                    iconSize: contextMenuConfig && contextMenuConfig.iconSize,
+                    icon: action.icon
+                }
+            };
+        } else {
+            defaultMenuConfig.showClose = true;
+        }
+        if (contextMenuConfig) {
+            if (typeof contextMenuConfig === 'object') {
+                cMerge(defaultMenuConfig, contextMenuConfig);
+            } else {
+                Logger.error('Controls/list:View: Некорректное значение опции contextMenuConfig. Ожидается объект');
+            }
+        }
+        return defaultMenuConfig;
+    },
 
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
@@ -1200,7 +1232,6 @@ var _private = {
          */
         const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
-            const rs = new RecordSet({ rawData: showActions, keyProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
@@ -1214,27 +1245,12 @@ var _private = {
             }
             self._itemWithShownMenu = self._options.useNewModel ? itemData.getContents() : itemData.item;
             require(['css!theme?Controls/toolbars'], function() {
-                const defaultMenuConfig = {
-                    items: rs,
-                    keyProperty: 'id',
-                    parentProperty: 'parent',
-                    nodeProperty: 'parent@',
-                    dropdownClassName: 'controls-itemActionsV__popup',
-                    showClose: true
-                };
-
-                if (self._options.contextMenuConfig) {
-                    if (typeof self._options.contextMenuConfig === 'object') {
-                        cMerge(defaultMenuConfig, self._options.contextMenuConfig);
-                    } else {
-                        Logger.error('Controls/list:View: Некорректное значение опции contextMenuConfig. Ожидается объект');
-                    }
-                }
+                const menuConfig = _private.getMenuConfig(showActions, self._options.contextMenuConfig);
 
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target,
-                    templateOptions: defaultMenuConfig,
+                    templateOptions: menuConfig,
                     eventHandlers: {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
@@ -1256,7 +1272,7 @@ var _private = {
         self: Control,
         itemData,
         childEvent: Event,
-        action: object
+        action: IItemAction
     ): void {
         /**
          * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because we'd get 2 root nodes.
@@ -1275,25 +1291,12 @@ var _private = {
                 self._listViewModel.setMenuState('shown');
             }
             require(['css!Controls/input'], () => {
+                const menuConfig = _private.getMenuConfig(children, self._options.contextMenuConfig, action);
+
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target: childEvent.target,
-                    templateOptions: {
-                        items: new RecordSet({ rawData: children, keyProperty: 'id' }),
-                        keyProperty: 'id',
-                        parentProperty: 'parent',
-                        nodeProperty: 'parent@',
-                        groupTemplate: self._options.contextMenuConfig && self._options.contextMenuConfig.groupTemplate,
-                        groupingKeyCallback: self._options.contextMenuConfig && self._options.contextMenuConfig.groupingKeyCallback,
-                        groupProperty: self._options.contextMenuConfig && self._options.contextMenuConfig.groupProperty,
-                        iconSize: self._options.contextMenuConfig && self._options.contextMenuConfig.iconSize,
-                        rootKey: action.id,
-                        showHeader: true,
-                        dropdownClassName: 'controls-itemActionsV__popup',
-                        headConfig: {
-                            caption: action.title
-                        }
-                    },
+                    templateOptions: menuConfig,
                     eventHandlers: {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
@@ -1724,6 +1727,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _portionedSearchInProgress: null,
     _showContinueSearchButton: false,
 
+    _draggingItem: null,
+    _draggingEntity: null,
+    _draggingTargetItem: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1829,6 +1836,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
                     if (newOptions.useNewModel && !self._listViewModel && result.data) {
+                        self._items = result.data;
                         self._listViewModel = self._createNewModel(
                             result.data,
                             viewModelConfig,
@@ -2019,7 +2027,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newOptions.markedKey);
         }
 
-        if (newOptions.markerVisibility !== this._options.markerVisibility) {
+        if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
         }
 
@@ -2047,7 +2055,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
         }
 
-        if (sortingChanged) {
+        if (sortingChanged && !newOptions.useNewModel) {
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
@@ -2478,21 +2486,23 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             selection,
             self = this,
             dragStartResult;
-
+        const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (_private.canStartDragNDrop(domEvent, this._options)) {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-            selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
+            selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, key);
             selection.recursive = false;
+            const recordSet = this._options.useNewModel ? this._listViewModel.getCollection() : this._listViewModel.getItems();
+
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
-            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter, LIMIT_DRAG_SELECTION).addCallback(function(items) {
-                const dragKeyPosition = items.indexOf(itemData.key);
+            getItemsBySelection(selection, this._options.source, recordSet, this._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
+                const dragKeyPosition = items.indexOf(key);
                 // If dragged item is in the list, but it's not the first one, move
                 // it to the front of the array
                 if (dragKeyPosition > 0) {
                     items.splice(dragKeyPosition, 1);
-                    items.unshift(itemData.key);
+                    items.unshift(key);
                 }
                 dragStartResult = self._notify('dragStart', [items]);
                 if (dragStartResult) {
@@ -2500,7 +2510,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         dragStartResult.dragControlId = self._options.dragControlId;
                     }
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
-                    self._itemDragData = itemData;
+                    self._draggingItem = itemData;
                 }
             });
         }
@@ -2535,8 +2545,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject, domEvent) {
-        this._listViewModel.setDragEntity(dragObject.entity);
-        this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
+        if (this._options.useNewModel) {
+            this._draggingEntity = dragObject.entity;
+        } else {
+            this._listViewModel.setDragEntity(dragObject.entity);
+            this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
+        }
     },
 
     _dragEnd: function(event, dragObject) {
@@ -2546,11 +2560,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragEndHandler: function(dragObject) {
-        var targetPosition = this._listViewModel.getDragTargetPosition();
-        if (targetPosition) {
-            this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+        if (!this._options.useNewModel) {
+            var targetPosition = this._listViewModel.getDragTargetPosition();
+            if (targetPosition) {
+                this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            }
         }
-
         // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
         this._showActions = false;
     },
@@ -2574,7 +2589,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
     _dragEnter: function(event, dragObject) {
         if (
-            dragObject &&
+            dragObject && !this._options.useNewModel &&
             !this._listViewModel.getDragEntity() &&
             cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
@@ -2591,7 +2606,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragLeave: function() {
-        this._listViewModel.setDragTargetPosition(null);
+        if (this._options.useNewModel) {
+            this._draggingTargetItem = null;
+        } else {
+            this._listViewModel.setDragTargetPosition(null);
+        }
     },
 
     _documentDragEnd: function() {
@@ -2610,25 +2629,34 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _documentDragEndHandler: function() {
-        this._listViewModel.setDragTargetPosition(null);
-        this._listViewModel.setDragItemData(null);
-        this._listViewModel.setDragEntity(null);
+        if (this._options.useNewModel) {
+            this._draggingEntity = null;
+            this._draggingItem = null;
+            this._draggingTargetItem = null;
+        } else {
+            this._listViewModel.setDragTargetPosition(null);
+            this._listViewModel.setDragItemData(null);
+            this._listViewModel.setDragEntity(null);
+        }
     },
 
     _itemMouseEnter: function(event, itemData, nativeEvent) {
         if (this._options.itemsDragNDrop) {
             var
                 dragPosition,
-                dragEntity = this._listViewModel.getDragEntity();
+                dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
 
             if (dragEntity) {
-                dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+                dragPosition = this._options.useNewModel ? {position: 'before', item: itemData.getContents()} : this._listViewModel.calculateDragTargetPosition(itemData);
 
-                if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                    this._listViewModel.setDragTargetPosition(dragPosition);
+                if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false)
+                    if (this._options.useNewModel) {
+                        this._draggingTargetItem = dragPosition.item;
+                    } else {
+                        this._listViewModel.setDragTargetPosition(dragPosition);
+                    }
                 }
             }
-        }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
@@ -2777,6 +2805,7 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
+        loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
         markedKey: null,
         stickyHeader: true,
         virtualScrollMode: 'remove'

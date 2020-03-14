@@ -163,9 +163,9 @@ export interface IEditOpener {
 
 /**
  * @name Controls/_popup/interface/IEdit#items
- * @cfg {Object} Рекордсет для синхронизации с редактируемой записью.
+ * @cfg {Types/collection:RecordSet} Рекордсет для синхронизации с редактируемой записью.
  */
 /*
  * @name Controls/_popup/interface/IEdit#items
- * @cfg {Object} RecordSet for synchronization with the editing record.
+ * @cfg {Types/collection:RecordSet} RecordSet for synchronization with the editing record.
  */

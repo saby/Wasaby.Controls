@@ -20,17 +20,17 @@ define('ControlsUnit/ListData', function() {
          }, {
             'id': 3,
             'Раздел': 2,
-            'Раздел@': false,
+            'Раздел@': null,
             'Раздел$': false
          }, {
             'id': 4,
             'Раздел': 2,
-            'Раздел@': false,
+            'Раздел@': null,
             'Раздел$': false
          }, {
             'id': 5,
             'Раздел': 1,
-            'Раздел@': false,
+            'Раздел@': null,
             'Раздел$': false
          }, {
             'id': 6,
@@ -40,7 +40,7 @@ define('ControlsUnit/ListData', function() {
          }, {
             'id': 7,
             'Раздел': null,
-            'Раздел@': false,
+            'Раздел@': null,
             'Раздел$': false
          }];
       },

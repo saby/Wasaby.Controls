@@ -40,6 +40,11 @@ class StackController extends BaseController {
             // Пересчитаем еще раз позицию, на случай, если ресайзили окно браузера
             item.position = this._getItemPosition(item);
         }
+
+        if (!isNewEnvironment()) {
+            this._addZIndexToOldWindowManager(item);
+        }
+
         return true;
     }
 
@@ -62,6 +67,9 @@ class StackController extends BaseController {
     elementDestroyed(item: IPopupItem): Promise<null> {
         this._stack.remove(item);
         this._update();
+        if (!isNewEnvironment()) {
+            this._removeZIndexToOldWindowManager(item);
+        }
         return (new Deferred()).callback();
     }
 
@@ -440,6 +448,27 @@ class StackController extends BaseController {
     private _removeLastStackClass(item: IPopupItem): void {
         const className = (item.popupOptions.className || '').replace(/controls-Stack__last-item/ig, '');
         item.popupOptions.className = className.trim();
+    }
+
+    // TODO COMPATIBLE
+    private _addZIndexToOldWindowManager(item: IPopupItem): void {
+        const oldWindowManager = requirejs('Core/WindowManager');
+        // Сообщим старому WM про текущий zindex открываемого вдомного окна
+        // Так как старый WM всегда сам назначал zindex, приходится лезть в приватные св-ва
+        if (oldWindowManager) {
+            if (oldWindowManager._acquireIndex < item.currentZIndex) {
+                oldWindowManager._acquireIndex = item.currentZIndex;
+                oldWindowManager._acquiredIndexes.push(item.currentZIndex);
+                oldWindowManager.setVisible(item.currentZIndex);
+            }
+        }
+    }
+
+    private _removeZIndexToOldWindowManager(item: IPopupItem): void {
+        const oldWindowManager = requirejs('Core/WindowManager');
+        if (oldWindowManager) {
+            oldWindowManager.releaseZIndex(item.currentZIndex);
+        }
     }
 }
 

@@ -123,6 +123,17 @@ var ManagerWrapper = Control.extend({
       });
    },
 
+   getMaxZIndex(): number {
+      const items = this.getItems();
+      let maxZIndex = 0;
+      items.each((item) => {
+         if (item.currentZIndex > maxZIndex && !item.popupOptions.topPopup) {
+            maxZIndex = item.currentZIndex;
+         }
+      });
+      return maxZIndex;
+   },
+
    getItems: function() {
       return this._children.PopupContainer._popupItems;
    },

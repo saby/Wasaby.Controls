@@ -14,7 +14,6 @@ import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
 import dayTmpl = require('wml!Controls/_datePopup/day');
 import {MonthViewDayTemplate} from 'Controls/calendar';
-import 'css!theme?Controls/datePopup';
 import {Controller as ManagerController} from 'Controls/popup';
 import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "./scroll";
 
@@ -353,6 +352,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
             this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
         }
 
+        if ((this._state === STATES.year && this._displayedDate.getFullYear() === new Date().getFullYear()) ||
+            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth())) {
+            this._homeButtonVisible = false;
+        }
+
         this._headerType = options.headerType;
     },
 
@@ -538,6 +542,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
 });
 
 Component._private = _private;
+Component._theme = ['Controls/datePopup'];
 
 Component.SELECTION_TYPES = IRangeSelectable.SELECTION_TYPES;
 Component.HEADER_TYPES = HEADER_TYPES;

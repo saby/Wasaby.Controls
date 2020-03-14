@@ -9,13 +9,13 @@ import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {factory} from 'Types/chain';
 import {ItemsUtil} from 'Controls/list';
+import {create as DiCreate} from 'Types/di';
 
 interface IMenuRenderOptions extends IMenuOptions, IRenderOptions {
 }
 
 class MenuRender extends Control<IMenuRenderOptions> {
     protected _template: TemplateFunction = ViewTemplate;
-    protected _multiSelectTpl: TemplateFunction = multiSelectTpl;
     protected _iconPadding: string;
 
     protected _beforeMount(options: IMenuRenderOptions): void {
@@ -50,38 +50,48 @@ class MenuRender extends Control<IMenuRenderOptions> {
         };
     }
 
-    protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string, item: Model, sourceEvent: SyntheticEvent<MouseEvent>, swipeContainerHeight: number): void {
+    protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string, item: TreeItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
-        if (!(item instanceof GroupItem)) {
-            this._notify(eventName, [item, sourceEvent, swipeContainerHeight]);
+        this._notify(eventName, [item, sourceEvent]);
+    }
+
+    protected _itemClick(e: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {
+        e.stopPropagation();
+        if (item instanceof Model) {
+            this._notify('itemClick', [item, sourceEvent]);
         }
     }
 
     protected _getClassList(treeItem): string {
         const item = treeItem.getContents();
         let classes = treeItem.getContentClasses();
-        classes += ' controls-Menu__row_state_' + (item.get('readOnly')  ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
-        if (treeItem.isHovered() && !item.get('readOnly')) {
-            classes += ' controls-Menu__row_hovered_theme-' + this._options.theme;
-        }
-        if (this._isEmptyItem(treeItem) && !this._options.multiSelect) {
-            classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
+        if (item.get) {
+            classes += ' controls-Menu__row_state_' + (item.get('readOnly') ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
+            if (treeItem.isHovered() && !item.get('readOnly')) {
+                classes += ' controls-Menu__row_hovered_theme-' + this._options.theme;
+            }
+            if (this._isEmptyItem(treeItem) && !this._options.multiSelect) {
+                classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
+            } else {
+                classes += ' controls-Menu__defaultItem_theme-' + this._options.theme;
+            }
+            if (item.get('pinned') === true && !this.hasParent(item)) {
+                classes += ' controls-Menu__row_pinned controls-DropdownList__row_pinned';
+            }
+            if (this._options.listModel.getLast() !== treeItem &&
+                !this._isGroupNext(treeItem) && !this._isHistorySeparatorVisible(treeItem)) {
+                classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
+            }
         } else {
-            classes += ' controls-Menu__defaultItem_theme-' + this._options.theme;
-        }
-        if (item.get('pinned') === true && !this.hasParent(item)) {
-            classes += ' controls-Menu__row_pinned controls-DropdownList__row_pinned';
-        }
-        if (this._options.listModel.getLast() !== treeItem && !(this._getNextItem(treeItem) instanceof GroupItem)) {
-            classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
+            classes += ' controls-Menu__row-breadcrumbs_theme-' + this._options.theme;
         }
         return classes;
     }
 
-    protected _isVisibleSeparator(treeItem): boolean {
+    protected _isHistorySeparatorVisible(treeItem): boolean {
         const item = treeItem.getContents();
         const nextItem = this._getNextItem(treeItem);
-        const isGroupNext = nextItem instanceof GroupItem;
+        const isGroupNext = this._isGroupNext(treeItem);
         return !isGroupNext && nextItem?.getContents() && this._isHistoryItem(item) && !this.hasParent(treeItem.getContents()) && !this._isHistoryItem(nextItem.getContents());
     }
 
@@ -99,6 +109,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
         return item.get('pinned') || item.get('recent') || item.get('frequent');
     }
 
+    private _isGroupNext(treeItem: TreeItem<Model>): boolean {
+        return this._getNextItem(treeItem) instanceof GroupItem;
+    }
+
     private _getNextItem(treeItem): TreeItem {
         const index = treeItem.getOwner().getIndex(treeItem);
         return treeItem.getOwner().at(index + 1);
@@ -110,29 +124,43 @@ class MenuRender extends Control<IMenuRenderOptions> {
             left: this.getLeftSpacing(options),
             right: this.getRightSpacing(options)
         });
-        if (options.emptyText && !options.listModel.getItemBySourceKey(options.emptyKey)) {
+        if (!options.searchValue && options.emptyText && !options.listModel.getItemBySourceKey(options.emptyKey)) {
             this.addEmptyItem(options.listModel, options);
         }
     }
 
     private addEmptyItem(listModel: Tree, options: IMenuRenderOptions): void {
         const collection = listModel.getCollection();
-        const emptyItem = new Model({
-            keyProperty: options.keyProperty,
-            format: collection.getFormat(),
-            adapter: collection.getAdapter()
-        });
-        const data = {};
+        let emptyItem = this._getItemModel(collection, options.keyProperty);
 
+        const data = {};
         data[options.keyProperty] = options.emptyKey;
         data[options.displayProperty] = options.emptyText;
 
         emptyItem.set(data);
         collection.prepend([emptyItem]);
 
-        if (options.selectedKeys.includes(options.emptyKey)) {
+        if (!options.selectedKeys.length || options.selectedKeys.includes(options.emptyKey)) {
             SelectionController.selectItem(listModel, options.emptyKey, true);
         }
+    }
+
+    private _getItemModel(collection, keyProperty) {
+        const model = collection.getModel();
+        const modelConfig = {
+            keyProperty,
+            format: collection.getFormat(),
+            adapter: collection.getAdapter()
+        };
+        if (typeof model === 'string') {
+            return this._createModel(model, modelConfig);
+        } else {
+            return new model(modelConfig);
+        }
+    }
+
+    private _createModel(model, config) {
+        return DiCreate(model, config);
     }
 
     private getLeftSpacing(options: IMenuRenderOptions): string {
