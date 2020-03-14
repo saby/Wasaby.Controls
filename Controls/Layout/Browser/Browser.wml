@@ -1,0 +1,55 @@
+<Controls.search:FilterController scope="{{_options}}">
+    <Controls.filter:Controller filterButtonSource="{{_options.filterSource}}">
+        <Controls.list:DataContainer>
+            <Controls.search:Controller startingWith="{{_options.searchStartingWith}}"
+                                        filter="{{content.filter}}">
+                <div class="layoutBrowser ws-flexbox ws-flex-column">
+                    <div class="layoutBrowser__header ws-flexbox ws-align-items-center ws-flex-shrink-0">
+                        <ws:if data="{{_options.beforeSearchTemplate}}">
+                            <ws:partial
+                                    attr:class="layoutBrowser__beforeSearchTemplate"
+                                    template="{{_options.beforeSearchTemplate}}"/>
+                        </ws:if>
+                        <ws:if data="{{_options.search}}">
+                            <Controls.search:InputContainer>
+                                <ws:partial
+                                        attr:class="layoutBrowser__search"
+                                        template="{{_options.search}}"/>
+                            </Controls.search:InputContainer>
+                        </ws:if>
+                        <ws:if data="{{_options.beforeFilterTemplate}}">
+                            <ws:partial template="{{_options.beforeFilterTemplate}}"
+                                        attr:class="layoutBrowser__beforeFilterTemplate"
+                            />
+                        </ws:if>
+                        <ws:if data="{{_options.filterView}}">
+                            <div class="layoutBrowser__filterView-wrapper ws-justify-content-end ws-flexbox ws-flex-shrink-1">
+                                <Controls.filter:ViewContainer>
+                                    <ws:partial template="{{_options.filterView}}"
+                                                attr:class="layoutBrowser__filterView"/>
+                                </Controls.filter:ViewContainer>
+                            </div>
+                        </ws:if>
+                        <ws:if data="{{_options.afterFilterTemplate}}">
+                            <ws:partial template="{{_options.afterFilterTemplate}}"
+                                        attr:class="layoutBrowser__afterFilterTemplate"
+                            />
+                        </ws:if>
+                    </div>
+                    <div class="layoutBrowser__content ws-flex-shrink-1 ws-flexbox ws-flex-column">
+                        <Controls.tabs:Buttons
+                                selectedKey="{{_options.tabKey}}"
+                                on:selectedKeyChanged="_tabKeyChanged()"
+                                keyProperty="id"
+                                source="{{_tabsSource}}">
+                        </Controls.tabs:Buttons>
+                        <Controls.list:Container>
+                            <ws:partial
+                                    template="{{_options.content}}"/>
+                        </Controls.list:Container>
+                    </div>
+                </div>
+            </Controls.search:Controller>
+        </Controls.list:DataContainer>
+    </Controls.filter:Controller>
+</Controls.search:FilterController>
