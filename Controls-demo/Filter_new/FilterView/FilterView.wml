@@ -1,10 +1,54 @@
 <div class="controlsDemo__wrapper">
-   <div class="controlsDemo__cell">
-      <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
-                               state="/Controls-demo/app/:app"
-                               app="{{ 'Controls-demo/Filter_new/FilterView/Source/Index' }}">
-         <a href="{{content.href}}">Source</a>
-      </Router.router:Reference>
-      <Controls-demo.Filter_new.FilterView.Source.Index/>
-   </div>
+    <Controls.Layout.Browser.Tabs
+            keyProperty="id"
+            bind:selectedKey="_currentTab">
+        <ws:items>
+            <ws:Array>
+                <ws:Object
+                        id="1">
+                    <ws:itemTemplate>
+                            <Controls.Layout.Browser
+                                    source="{{_source}}"
+                                    tabKey="{{_currentTab}}"
+                                    keyProperty="id"
+                                    selectedKeys="{{ [] }}"
+                                    excludedKeys="{{ [] }}">
+                                <ws:search>
+                                    <Controls.search:Input
+                                            value="kek"/>
+                                </ws:search>
+                                <ws:filterView>
+                                    <Controls.filter:View/>
+                                </ws:filterView>
+                                <ws:content>
+                                    <div>Первый запуск</div>
+                                </ws:content>
+                            </Controls.Layout.Browser>
+                    </ws:itemTemplate>
+                </ws:Object>
+                <ws:Object
+                        id="2">
+                    <ws:itemTemplate>
+                        <Controls.Layout.Browser
+                                source="{{_source}}"
+                                tabKey="{{_currentTab}}"
+                                keyProperty="id"
+                                selectedKeys="{{ [] }}"
+                                excludedKeys="{{ [] }}">
+                            <ws:search>
+                                <Controls.search:Input
+                                        value="lol"/>
+                            </ws:search>
+                            <ws:filterView>
+                                <Controls.filter:View/>
+                            </ws:filterView>
+                            <ws:content>
+                                <div>второй айтем</div>
+                            </ws:content>
+                        </Controls.Layout.Browser>
+                    </ws:itemTemplate>
+                </ws:Object>
+            </ws:Array>
+        </ws:items>
+    </Controls.Layout.Browser.Tabs>
 </div>

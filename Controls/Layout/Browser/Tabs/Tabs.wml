@@ -1,0 +1,7 @@
+<Controls.Layout.Area.Controller
+    selectedKey="{{_options.selectedKey}}"
+    on:selectedKeyChanged="_selectedKeyChanged()">
+    <Controls.switchableArea:View items="{{_options.items}}"
+                                  keyProperty="{{_options.keyProperty}}"
+    />
+</Controls.Layout.Area.Controller>
