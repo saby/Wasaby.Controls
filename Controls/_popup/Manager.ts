@@ -409,6 +409,8 @@ class Manager extends Control<IManagerOptions> {
                     if (this._needClosePopupByOutsideClick(item) && parentControls.indexOf(popupInstance) === -1) {
                         deactivatedPopups.push(item);
                     }
+                    event.stopPropagation();
+                    event.preventDefault();
                 }
             });
             for (let i = 0; i < deactivatedPopups.length; i++) {
@@ -426,6 +428,8 @@ class Manager extends Control<IManagerOptions> {
                 }
             }
         }
+        event.stopPropagation();
+        event.preventDefault();
     }
 
     private _needClosePopupByOutsideClick(item: IPopupItem): boolean {

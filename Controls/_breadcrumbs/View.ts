@@ -59,23 +59,38 @@ var BreadCrumbsView = Control.extend({
             rs.each(function (item, index) {
                 item.set('indentation', index);
             });
-            this._children.menuOpener.open({
-                target: e.currentTarget,
-                templateOptions: {
-                    items: rs,
-                    itemTemplate: menuItemTemplate,
-                    displayProperty: this._options.displayProperty
-                },
-                targetPoint: {
-                    vertical: 'bottom',
-                    horizontal: 'left'
-                },
-                direction: {
-                    horizontal: 'right'
-                },
-                fittingMode: 'overflow'
-            });
+
+            if (!this.popopIsOpen) {
+                this._children.menuOpener.open({
+                    target: e.currentTarget,
+                    templateOptions: {
+                        items: rs,
+                        itemTemplate: menuItemTemplate,
+                        displayProperty: this._options.displayProperty
+                    },
+                    targetPoint: {
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    },
+                    direction: {
+                        horizontal: 'right'
+                    },
+                    fittingMode: 'overflow'
+                });
+            } else {
+                this._children.menuOpener.close();
+            }
             e.stopPropagation();
+    },
+
+    _onOpen() {
+        this.popopIsOpen = true;
+    },
+
+    _onClose() {
+        setTimeout(() => {
+            this.popopIsOpen = false;
+        });
     },
 
     _applyHighlighter: applyHighlighter,
