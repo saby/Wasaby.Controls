@@ -88,9 +88,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
     }
 
     private _onClose(): void {
-        setTimeout(() => {
-            this.popupIsOpen = false;
-        });
+        this.popupIsOpen = false;
     }
 
     protected _applyHighlighter = applyHighlighter;
