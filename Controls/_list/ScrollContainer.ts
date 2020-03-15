@@ -631,7 +631,7 @@ export default class ScrollContainer extends Control<IOptions> {
             Logger.warn('Controls.list: Specify virtual page size in virtualScrollConfig option');
             virtualScrollConfig.pageSize = DEFAULT_VIRTUAL_PAGESIZE;
         }
-        if (options.virtualPageSize || options.virtualSegmentSize) {
+        if (options.virtualScrolling && (options.virtualPageSize || options.virtualSegmentSize)) {
             virtualScrollConfig.segmentSize = options.virtualSegmentSize;
             virtualScrollConfig.pageSize = options.virtualPageSize;
             Logger.warn('Controls.list: Use virtualScrollConfig instead of old virtual scroll config options');
