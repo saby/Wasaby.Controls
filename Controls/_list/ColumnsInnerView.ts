@@ -47,7 +47,6 @@ export default class ColumnsInnerView extends Control {
         this._subscribeToModelChanges(options.listModel);
         this._resizeHandler = this._resizeHandler.bind(this);
         this._model = options.listModel;
-
         this.updateColumns();
     }
 

@@ -1608,10 +1608,10 @@ var _private = {
 
     /**
      * Запускает расчёт опций для шаблона Действий над записью.
-     * При использовании колоночной разметки всегда используется newModel
-     * и опции для itemActionsTemplate устанавливаются в шаблоне Controls/_listRender/Render/resources/ForItemTemplate.wml
-     * как collection.getActionsTemplateConfig(), который возвращает undefined, если предварительно не был вызван
-     * calculateActionsTemplateConfig
+     * Когда используется newModel с контролом из Controls.list (например Controls.list:View или Controls.list:ColumnsView),
+     * в шаблон itemActions опции задаются из метода getActionsTemplateConfig()
+     * (см Controls/_listRender/Render/resources/ForItemTemplate.wml) и их необходимо рассчитывать
+     * на основе текущей модели viewModel.
      * @param self
      * @param options
      */
