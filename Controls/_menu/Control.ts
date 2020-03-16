@@ -611,13 +611,13 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         );
     }
 
-    static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
-
-    static _getChildContext(): object {
+    private _getChildContext(): object {
         return {
             ScrollData: new ScrollData({pagingVisible: false})
         };
     }
+
+    static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
 
     static getDefaultOptions(): object {
         return {
