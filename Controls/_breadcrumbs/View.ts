@@ -80,7 +80,6 @@ class BreadCrumbsView extends Control<IControlOptions> {
             } else {
                 this._children.menuOpener.close();
             }
-            e.stopPropagation();
     }
 
     protected _onOpen(): void {
