@@ -35,7 +35,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
             }
     }
 
-    private _afterRender(oldOptions): void {
+    protected _afterRender(oldOptions): void {
         if (oldOptions.visibleItems !== this._options.visibleItems) {
             // Если крошки пропали (стало 0 записей), либо наоборот появились (стало больше 0 записей), кинем ресайз,
             // т.к. изменится высота контрола
@@ -83,11 +83,11 @@ class BreadCrumbsView extends Control<IControlOptions> {
             e.stopPropagation();
     }
 
-    private _onOpen(): void {
+    protected _onOpen(): void {
         this.popupIsOpen = true;
     }
 
-    private _onClose(): void {
+    protected _onClose(): void {
         this.popupIsOpen = false;
     }
 
