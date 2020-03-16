@@ -33,7 +33,7 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
-import {CollectionItem} from 'Controls/display';
+import {CollectionItem, ItemActionsController} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 
@@ -1604,6 +1604,25 @@ var _private = {
         if (!self._options.useNewModel && (model.getDragEntity() || model.getDragItemData())) {
             self._notify(eName, [itemData, nativeEvent]);
         }
+    },
+
+    /**
+     * Запускает расчёт опций для шаблона Действий над записью.
+     * Когда используется newModel с контролом из Controls.list (например Controls.list:View или Controls.list:ColumnsView),
+     * в шаблон itemActions опции задаются из метода getActionsTemplateConfig()
+     * (см Controls/_listRender/Render/resources/ForItemTemplate.wml) и их необходимо рассчитывать
+     * на основе текущей модели viewModel.
+     * @param self
+     * @param options
+     */
+    calculateActionsTemplateConfig(self: any, options: any): void {
+        ItemActionsController.calculateActionsTemplateConfig(self.getViewModel(), {
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.style,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass
+        });
     }
 };
 
@@ -1769,6 +1788,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (newOptions.itemsReadyCallback) {
                     newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                 }
+                _private.calculateActionsTemplateConfig(self, newOptions);
             }
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
@@ -1821,6 +1841,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         if (self._listViewModel) {
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
+                        _private.calculateActionsTemplateConfig(self, newOptions);
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, result.data, self._listViewModel);
 

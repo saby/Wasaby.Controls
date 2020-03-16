@@ -116,6 +116,7 @@ export default class ColumnsInnerView extends Control {
             model.subscribe('onCollectionChange', this._onCollectionChange);
         }
     }
+
     private getItemToLeft(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;
