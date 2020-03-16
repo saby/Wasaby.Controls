@@ -32,7 +32,7 @@ define('Controls/interface/IItemTemplate', [
     * Для изменения отображения элемента следует передать новую конфигурацию опциям шаблона, список которых доступен {@link Controls/list:ItemTemplate здесь}.
     * 
     * Опция контрола itemTemplate предназначена для изменения опций шаблона Controls/list:ItemTemplate.
-    * Опция itemTemplate в качестве значение принимает только шаблон.
+    * Опция itemTemplate в качестве значения принимает только шаблон.
     * В разделе "Примеры" показано как с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать шаблон Controls/list:ItemTemplate с новой конфигурацией.
     * 
     * Также в опцию itemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например, директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}.
