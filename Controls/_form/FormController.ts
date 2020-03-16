@@ -427,10 +427,18 @@ class FormController extends Control<IFormController, IReceivedState> {
                 return self._record && !self._record.isChanged() && self._needDestroyRecord();
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-                self._tryDeleteNewRecord().then(() => {
-                    deferred.callback();
-                    self._unmountPromise = null;
-                });
+                // Обернул в setTimeout, т.к. часть функционала написана на Promise, часть на Deferred. Из-за чего код
+                // может выполняться синхронно. На промис от сохранения через then вешается колбэк, который говорит о
+                // том, что запись больше не новая. Если прикладник подписался на событие о сохранении
+                // ( которое стреляет вместе с завершением промиса) и в обработчике позвал закрытие окна - то мы в
+                // onPendingFail придем раньше, чем запись будет помечена как не новая.
+                // Нужно везде перейти на промисы, пока их задержку делаю руками.
+                setTimeout(() => {
+                    self._tryDeleteNewRecord().then(() => {
+                        deferred.callback();
+                        self._unmountPromise = null;
+                    });
+                }, 0);
             }
         }], { bubbling: true });
     }
