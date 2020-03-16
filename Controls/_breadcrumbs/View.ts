@@ -22,7 +22,7 @@ import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 class BreadCrumbsView extends Control<IControlOptions> {
     protected _template: TemplateFunction =  template;
     protected _itemsTemplate: TemplateFunction = itemsTemplate;
-    protected popupIsOpen: boolean = false;
+    protected _popupIsOpen: boolean = false;
 
     protected _beforeMount(): void {
         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
@@ -35,7 +35,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
             }
     }
 
-    private _afterRender(oldOptions): void {
+    protected _afterRender(oldOptions): void {
         if (oldOptions.visibleItems !== this._options.visibleItems) {
             // Если крошки пропали (стало 0 записей), либо наоборот появились (стало больше 0 записей), кинем ресайз,
             // т.к. изменится высота контрола
@@ -60,7 +60,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
                 item.set('indentation', index);
             });
 
-            if (!this.popupIsOpen) {
+            if (!this._popupIsOpen) {
                 this._children.menuOpener.open({
                     target: e.currentTarget,
                     templateOptions: {
@@ -83,12 +83,12 @@ class BreadCrumbsView extends Control<IControlOptions> {
             e.stopPropagation();
     }
 
-    private _onOpen(): void {
-        this.popupIsOpen = true;
+    protected _onOpen(): void {
+        this._popupIsOpen = true;
     }
 
-    private _onClose(): void {
-        this.popupIsOpen = false;
+    protected _onClose(): void {
+        this._popupIsOpen = false;
     }
 
     protected _applyHighlighter = applyHighlighter;
