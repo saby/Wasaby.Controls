@@ -329,7 +329,7 @@ export default class ScrollContainer extends Control<IOptions> {
         const rangeShiftResult = this._virtualScroll
             .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(options.collection, rangeShiftResult.range);
+        this._setCollectionIndices(options.collection, rangeShiftResult.range, true);
 
         if (options.activeElement) {
             this._restoreScrollResolve = () => {
@@ -348,7 +348,11 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    private _setCollectionIndices(collection: Collection<Record>, {start, stop}: IRange): void {
+    private _setCollectionIndices(
+        collection: Collection<Record>,
+        {start, stop}: IRange,
+        force?: boolean
+    ): void {
         let collectionStartIndex: number;
         let collectionStopIndex: number;
 
@@ -360,7 +364,7 @@ export default class ScrollContainer extends Control<IOptions> {
             collectionStopIndex = collection.getStopIndex();
         }
 
-        if (collectionStartIndex !== start || collectionStopIndex !== stop) {
+        if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
             if (collection.getViewIterator) {
                 collection.getViewIterator().setIndices(start, stop);
             } else {
