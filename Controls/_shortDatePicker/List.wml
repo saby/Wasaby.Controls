@@ -8,7 +8,7 @@
                 on:mouseenter="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
                 on:mouseleave="_onYearMouseLeave()"
                 on:click="_onYearClick(yearHeaderTemplate.date.getFullYear())"
-                class="controls-PeriodLiteDialog__fullYear-listElement
+                class="controls-PeriodLiteDialog__fullYear-listElement {{_options.chooseYears?  'controls-PeriodLiteDialog__fullYear-listElement-hovered'}}
                       controls-PeriodLiteDialog__vLayoutItem-caption controls-PeriodLiteDialog__text-align-center
                       ">
             {{ yearHeaderTemplate.date.getFullYear() }}

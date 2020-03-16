@@ -305,7 +305,6 @@
    background-color: #fff;
    color: @color_PeriodLiteDialog-year;
    font-weight: bold;
-   cursor: pointer;
 
    &:after {
       content: '';
@@ -317,7 +316,8 @@
    }
 }
 
-.controls-PeriodLiteDialog__fullYear-listElement:hover {
+.controls-PeriodLiteDialog__fullYear-listElement-hovered:hover {
+   cursor: pointer;
    border: solid @border-width_PeriodLiteDialog_hovered @border-color_PeriodLiteDialog_hovered;
    border-bottom: none;
    margin-top: -1px;
