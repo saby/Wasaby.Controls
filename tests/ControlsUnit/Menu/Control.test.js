@@ -175,7 +175,7 @@ define(
 
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
-            expectedOptions.footerTemplate = defaultOptions.nodeFooterTemplate;
+            delete expectedOptions.footerTemplate;
             expectedOptions.footerItemData = {
                item,
                key: expectedOptions.root
