@@ -3816,8 +3816,10 @@ define([
                },
                instance = new lists.BaseControl(cfg),
                fakeEvent = {
-                  type: 'itemcontextmenu'
-
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
                },
                childEvent = {
                   nativeEvent: {
@@ -3884,7 +3886,10 @@ define([
                },
                instance = new lists.BaseControl(cfg),
                fakeEvent = {
-                  type: 'itemcontextmenu'
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
                },
                childEvent = {
                   nativeEvent: {
@@ -4049,7 +4054,10 @@ define([
                },
                instance = new lists.BaseControl(cfg),
                fakeEvent = {
-                  type: 'itemcontextmenu'
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
                },
                childEvent = {
                   nativeEvent: {
@@ -4092,7 +4100,10 @@ define([
                },
                instance = new lists.BaseControl(cfg),
                fakeEvent = {
-                  type: 'itemcontextmenu'
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
                },
                itemData = {
                   itemActions: { all: [] }
