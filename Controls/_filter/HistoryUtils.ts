@@ -84,7 +84,8 @@ function createRecordSet(items, sourceRecordSet) {
       adapter: sourceRecordSet.getAdapter(),
       keyProperty: sourceRecordSet.getKeyProperty(),
       format: sourceRecordSet.getFormat(),
-      model: sourceRecordSet.getModel()
+      model: sourceRecordSet.getModel(),
+      metaData: sourceRecordSet.getMetaData()
    });
 }
 
@@ -108,7 +109,6 @@ function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
       uniqItems = factory(uniqItems).first(allCount);
       uniqItems = createRecordSet(uniqItems, oldItems);
    }
-   uniqItems.setMetaData(oldItems.getMetaData());
    return uniqItems;
 }
 
