@@ -495,7 +495,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         let templateOptions = Clone(this._options);
         templateOptions.root = item.getContents().get(this._options.keyProperty);
         templateOptions.bodyContentTemplate = 'Controls/_menu/Control';
-        templateOptions.footerTemplate = this._options.nodeFooterTemplate;
         templateOptions.closeButtonVisibility = false;
         templateOptions.showHeader = false;
         templateOptions.headerTemplate = null;
