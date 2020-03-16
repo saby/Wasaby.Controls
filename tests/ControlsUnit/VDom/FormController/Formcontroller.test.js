@@ -411,9 +411,10 @@ define([
             return true;
          };
          FC._notifyToOpener = (eventName) => {
-            if( eventName === 'updateStarted');
-            update = true;
-            FC.destroy();
+            if ( eventName === 'updateStarted') {
+               update = true;
+               FC.destroy();
+            }
          };
          let validation = {
             submit: () => Promise.resolve(true)
@@ -436,11 +437,11 @@ define([
          FC.destroy();
       });
 
-   /*   it('update with error', () => {
+       it('update with error', (done) => {
          let error = false;
          let FC = new form.Controller();
          let validation = {
-            submit: () => Promise.resolve(true)
+            submit: () => Promise.reject('error')
          };
          let crud = {
             update: () => Promise.reject()
@@ -450,16 +451,17 @@ define([
             isChanged: () => true
          };
          FC._notify = (event) => {
-            return true;
+            return false;
          };
          FC._children = { crud, validation };
          FC._processError = () => {};
          FC.update().catch( () => {
             error = true;
+            assert.isTrue(error);
+            FC.destroy();
+            done();
          });
-         assert.isTrue(error);
-         FC.destroy();
-      });*/
+      });
 
       it('createHandler and readHandler ', () => {
          let FC = new form.Controller();
