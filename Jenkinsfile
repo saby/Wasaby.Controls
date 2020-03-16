@@ -1,4 +1,4 @@
-@Library('pipeline@feature/stab_tests') _
+@Library('pipeline') _
 
 def version = '20.2000'
 
