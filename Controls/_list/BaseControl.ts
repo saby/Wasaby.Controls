@@ -2024,7 +2024,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.markedKey !== this._options.markedKey) {
-            this._listViewModel.setMarkedKey(newOptions.markedKey);
+            this._listViewModel.setMarkedKey(newOptions.markedKey, true);
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
@@ -2465,6 +2465,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
+        event.stopPropagation();
         if (this._options.useNewModel) {
             const markCommand = new displayLib.MarkerCommands.Mark(itemData.getContents().getId());
             markCommand.execute(this._listViewModel);
@@ -2805,6 +2806,7 @@ BaseControl.getDefaultOptions = function() {
         style: 'default',
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
+        loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
         markedKey: null,
         stickyHeader: true,
         virtualScrollMode: 'remove'

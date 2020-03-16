@@ -73,7 +73,7 @@ export default class ColumnsInnerView extends Control {
     protected _resizeHandler(): void {
         if (this._options.columnsMode === 'auto') {
             const width = this._itemsContainer.getBoundingClientRect().width;
-            this._columnsCount = Math.floor(width / (this._options.columnMinWidth || DEFAULT_MIN_WIDTH + SPACING));
+            this._columnsCount = Math.floor(width / ((this._options.columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
             this.updateColumns();
         }
     }

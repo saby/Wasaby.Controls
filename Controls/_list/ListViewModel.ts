@@ -300,7 +300,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    setMarkedKey: function(key) {
+    setMarkedKey: function(key, byOptions) {
+        if (byOptions) {
+            this._options.markedKey = key;
+        }
         if (key === this._markedKey) {
             return;
         }

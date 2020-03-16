@@ -120,6 +120,12 @@ export interface IList {
  * @default true
  */
 
+/**
+ * @name Controls/_list/interface/IList#loadingIndicatorTemplate
+ * @cfg {string|Function} Определяет шаблон индикатора загрузки данных.
+ * @default Controls/list:LoadingIndicatorTemplate
+ */
+
 /*
  * @name Controls/_list/interface/IList#contextMenuVisibility
  * @cfg {Boolean} Determines whether context menu should be shown on right-click.
