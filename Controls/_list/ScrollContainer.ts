@@ -104,6 +104,7 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     protected _afterMount(): void {
+        this._viewResize(this._container.offsetHeight, false);
         // @ts-ignore
         this._children.scrollObserver.startRegister(this._children);
         this._afterRenderHandler();
@@ -150,10 +151,8 @@ export default class ScrollContainer extends Control<IOptions> {
         event.stopPropagation();
     }
 
-    protected _viewResize(): void {
-        this._viewHeight = this._container.offsetHeight;
-        this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
-        this._virtualScroll.resizeView(this._viewHeight, this._triggerOffset, this._itemsContainer);
+    protected _viewResizeHandler(): void {
+        this._viewResize(this._container.offsetHeight);
         // TODO Совместимость необходимо удалить после переписывания baseControl
         this._notify('viewResize');
     }
@@ -165,16 +164,16 @@ export default class ScrollContainer extends Control<IOptions> {
     ): void {
         switch (eventName) {
             case 'virtualPageBottomStart':
-                this._triggerVisibilityChanged('down', true);
+                this._triggerVisibilityChanged('down', true, params);
                 break;
             case 'virtualPageTopStart':
-                this._triggerVisibilityChanged('up', true);
+                this._triggerVisibilityChanged('up', true, params);
                 break;
             case 'virtualPageBottomStop':
-                this._triggerVisibilityChanged('down', false);
+                this._triggerVisibilityChanged('down', false, params);
                 break;
             case 'virtualPageTopStop':
-                this._triggerVisibilityChanged('up', false);
+                this._triggerVisibilityChanged('up', false, params);
                 break;
             case 'scrollMoveSync':
                 this._scrollPositionChanged(params);
@@ -330,7 +329,7 @@ export default class ScrollContainer extends Control<IOptions> {
         const rangeShiftResult = this._virtualScroll
             .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(options.collection, rangeShiftResult.range);
+        this._setCollectionIndices(options.collection, rangeShiftResult.range, true);
 
         if (options.activeElement) {
             this._restoreScrollResolve = () => {
@@ -349,7 +348,11 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    private _setCollectionIndices(collection: Collection<Record>, {start, stop}: IRange): void {
+    private _setCollectionIndices(
+        collection: Collection<Record>,
+        {start, stop}: IRange,
+        force?: boolean
+    ): void {
         let collectionStartIndex: number;
         let collectionStopIndex: number;
 
@@ -361,7 +364,7 @@ export default class ScrollContainer extends Control<IOptions> {
             collectionStopIndex = collection.getStopIndex();
         }
 
-        if (collectionStartIndex !== start || collectionStopIndex !== stop) {
+        if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
             if (collection.getViewIterator) {
                 collection.getViewIterator().setIndices(start, stop);
             } else {
@@ -383,9 +386,14 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param triggerName
      * @param triggerVisible
      */
-    private _triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean): void {
-        if (triggerVisible) {
-            this._recalcToDirection(triggerName);
+    private _triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean, params: IScrollParams): void {
+        if (!this._applyScrollTopCallback) {
+            this._viewResize(params.scrollHeight, false);
+            this._viewportResize(params.clientHeight, false);
+
+            if (triggerVisible) {
+                this._recalcToDirection(triggerName);
+            }
         }
 
         this._triggerVisibility[triggerName] = triggerVisible;
@@ -432,10 +440,24 @@ export default class ScrollContainer extends Control<IOptions> {
         this._throttledPositionChanged(params);
     }
 
-    private _viewportResize(params: IScrollParams): void {
-        this._viewportHeight = params.clientHeight;
+    private _viewResize(viewSize: number, updateItemsHeights: boolean = true): void {
+        this._viewHeight = viewSize;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
-        this._virtualScroll.resizeViewport(this._viewportHeight, this._triggerOffset, this._itemsContainer);
+        this._virtualScroll.resizeView(
+            this._viewHeight,
+            this._triggerOffset,
+            updateItemsHeights ? this._itemsContainer : undefined
+        );
+    }
+
+    private _viewportResize(viewportSize: number, updateItemsHeights: boolean = true): void {
+        this._viewportHeight = viewportSize;
+        this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
+        this._virtualScroll.resizeViewport(
+            this._viewportHeight,
+            this._triggerOffset,
+            updateItemsHeights ? this._itemsContainer : undefined
+        );
     }
 
     /**
@@ -639,7 +661,7 @@ export default class ScrollContainer extends Control<IOptions> {
             Logger.warn('Controls.list: Specify virtual page size in virtualScrollConfig option');
             virtualScrollConfig.pageSize = DEFAULT_VIRTUAL_PAGESIZE;
         }
-        if (options.virtualPageSize || options.virtualSegmentSize) {
+        if (options.virtualScrolling && (options.virtualPageSize || options.virtualSegmentSize)) {
             virtualScrollConfig.segmentSize = options.virtualSegmentSize;
             virtualScrollConfig.pageSize = options.virtualPageSize;
             Logger.warn('Controls.list: Use virtualScrollConfig instead of old virtual scroll config options');
