@@ -34,13 +34,6 @@ var
             self._editingItem = options.item.clone();
             self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
             self._notify('afterBeginEdit', [self._editingItem, isAdd]);
-
-            /**
-             * This code exists because there's no way to declaratively change editing item, so the users are forced to write something like this:
-             * editingItem.set('field', 'value').
-             */
-            self._editingItem.subscribe('onPropertyChange', self._resetValidation);
-
             return options;
         },
 
@@ -141,6 +134,7 @@ var
                     return self._options.source.update(self._editingItem).addCallbacks(function () {
                         _private.acceptChanges(self);
                     }, (error: Error) => {
+                        self._isCommitInProcess = false;
                         return _private.processError(self, error);
                     });
 
@@ -499,6 +493,8 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _onKeyDown: function (e, nativeEvent) {
         switch (nativeEvent.keyCode) {
             case 13: // Enter
+                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                e.stopPropagation();
                 if (this._isAdd) {
                     _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
                 } else if (this._options.editingConfig && !this._sequentialEditing) {
@@ -508,6 +504,8 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 }
                 break;
             case 27: // Esc
+                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                e.stopPropagation();
                 this.cancelEdit();
                 break;
         }
@@ -623,6 +621,12 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             this._editingItemData = null;
             return;
         }
+
+        /**
+         * This code exists because there's no way to declaratively change editing item, so the users are forced to write something like this:
+         * editingItem.set('field', 'value').
+         */
+        this._editingItem.subscribe('onPropertyChange', this._resetValidation);
 
         let editingItemProjection;
         if (options.useNewModel) {

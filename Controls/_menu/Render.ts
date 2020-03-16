@@ -9,6 +9,7 @@ import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {factory} from 'Types/chain';
 import {ItemsUtil} from 'Controls/list';
+import {create as DiCreate} from 'Types/di';
 
 interface IMenuRenderOptions extends IMenuOptions, IRenderOptions {
 }
@@ -43,6 +44,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
             multiSelectTpl,
+            itemClassList: this._getClassList(item),
             getPropValue: ItemsUtil.getPropertyValue,
             isEmptyItem: this._isEmptyItem(item),
             isSelected: item.isSelected.bind(item)
@@ -121,13 +123,9 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     private addEmptyItem(listModel: Tree, options: IMenuRenderOptions): void {
         const collection = listModel.getCollection();
-        const emptyItem = new Model({
-            keyProperty: options.keyProperty,
-            format: collection.getFormat(),
-            adapter: collection.getAdapter()
-        });
-        const data = {};
+        let emptyItem = this._getItemModel(collection, options.keyProperty);
 
+        const data = {};
         data[options.keyProperty] = options.emptyKey;
         data[options.displayProperty] = options.emptyText;
 
@@ -137,6 +135,24 @@ class MenuRender extends Control<IMenuRenderOptions> {
         if (!options.selectedKeys.length || options.selectedKeys.includes(options.emptyKey)) {
             SelectionController.selectItem(listModel, options.emptyKey, true);
         }
+    }
+
+    private _getItemModel(collection, keyProperty) {
+        const model = collection.getModel();
+        const modelConfig = {
+            keyProperty,
+            format: collection.getFormat(),
+            adapter: collection.getAdapter()
+        };
+        if (typeof model === 'string') {
+            return this._createModel(model, modelConfig);
+        } else {
+            return new model(modelConfig);
+        }
+    }
+
+    private _createModel(model, config) {
+        return DiCreate(model, config);
     }
 
     private getLeftSpacing(options: IMenuRenderOptions): string {

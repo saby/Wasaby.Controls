@@ -233,6 +233,12 @@ describe('Controls/_listRender/Render', () => {
         let itemContextMenuFired = false;
         let itemContextMenuParameter;
         let itemContextMenuBubbling = false;
+        let contextMenuStopped = false;
+        const mockEvent = {
+            stopPropagation(): void {
+                contextMenuStopped = true;
+            }
+        };
         render._notify = (eventName, params, opts) => {
             if (eventName === 'itemContextMenu') {
                 itemContextMenuFired = true;
@@ -245,7 +251,7 @@ describe('Controls/_listRender/Render', () => {
             ...cfg,
             contextMenuEnabled: false
         });
-        render._onItemContextMenu({}, {});
+        render._onItemContextMenu(mockEvent, {});
 
         assert.isFalse(itemContextMenuFired, 'itemContextMenu should not fire when context menu is disabled');
 
@@ -254,7 +260,7 @@ describe('Controls/_listRender/Render', () => {
             contextMenuEnabled: true,
             contextMenuVisibility: false
         });
-        render._onItemContextMenu({}, {});
+        render._onItemContextMenu(mockEvent, {});
 
         assert.isFalse(itemContextMenuFired, 'itemContextMenu should not fire when context menu is not visible');
 
@@ -264,15 +270,16 @@ describe('Controls/_listRender/Render', () => {
             contextMenuVisibility: true
         });
         editingItem = {};
-        render._onItemContextMenu({}, {});
+        render._onItemContextMenu(mockEvent, {});
 
         assert.isFalse(itemContextMenuFired, 'itemContextMenu should not fire when an item is being edited');
 
         const item = {};
         editingItem = null;
-        render._onItemContextMenu({}, item);
+        render._onItemContextMenu(mockEvent, item);
 
         assert.isTrue(itemContextMenuFired, 'itemContextMenu should fire');
+        assert.isTrue(contextMenuStopped, 'contextMenu should be stopped');
         assert.strictEqual(itemContextMenuParameter, item);
         assert.isFalse(itemContextMenuBubbling, 'itemContextMenu should not bubble');
     });

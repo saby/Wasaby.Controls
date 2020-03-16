@@ -5,9 +5,10 @@ define(
       'Core/core-clone',
       'Controls/display',
       'Types/collection',
-      'Types/entity'
+      'Types/entity',
+      'Types/di'
    ],
-   function(menu, source, Clone, display, collection, entity) {
+   function(menu, source, Clone, display, collection, entity, di) {
       describe('Menu:Render', function() {
          let defaultItems = [
             { key: 0, title: 'все страны' },
@@ -141,6 +142,27 @@ define(
                menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
                assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
             });
+
+            it('check model', function() {
+               let isCreatedModel;
+               let sandbox = sinon.createSandbox();
+               sandbox.replace(menuRender, '_createModel', (model, config) => {
+                  isCreatedModel = true;
+                  return new entity.Model(config);
+               });
+
+               renderOptions.listModel = new display.Tree({
+                  collection: new collection.RecordSet({
+                     rawData: defaultItems,
+                     keyProperty: 'id'
+                  })
+               });
+
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('id'), null);
+               assert.isTrue(isCreatedModel);
+               sandbox.restore();
+            });
          });
 
          describe('grouping', function() {
@@ -252,6 +274,17 @@ define(
                   assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
                });
             });
+         });
+
+         it('_getItemData', function() {
+            let menuRender = getRender();
+            let itemData = menuRender._getItemData(menuRender._options.listModel.at(0));
+            assert.isOk(itemData.itemClassList);
+            assert.isOk(itemData.treeItem);
+            assert.isOk(itemData.multiSelectTpl);
+            assert.isOk(itemData.item);
+            assert.isOk(itemData.isSelected);
+            assert.isOk(itemData.getPropValue);
          });
 
          it('getIconPadding', function() {
