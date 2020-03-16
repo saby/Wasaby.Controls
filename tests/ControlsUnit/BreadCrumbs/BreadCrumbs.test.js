@@ -100,7 +100,6 @@ define([
                   title: '...'
                }
             };
-            var stopPropagationCalled = false;
             bc._children = {
                menuOpener: {
                   open: function(openerOptions) {
@@ -112,11 +111,7 @@ define([
             };
             bc._dotsClick({
                currentTarget: 123,
-               stopPropagation: function() {
-                  stopPropagationCalled = true;
-               }
             }, itemData);
-            assert.isTrue(stopPropagationCalled);
          });
       });
       it('_onResult', function(done) {
