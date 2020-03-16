@@ -500,7 +500,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         switch (nativeEvent.keyCode) {
             case 13: // Enter
                 if (this._isAdd) {
-                    _private.editNextRow(this, true, true);
+                    _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
                 } else if (this._options.editingConfig && !this._sequentialEditing) {
                     this.commitEdit();
                 } else {

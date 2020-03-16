@@ -1239,6 +1239,28 @@ define([
             });
          });
 
+         it('Enter with autoAddByApplyButton', function() {
+            eip.beginEdit = function(options) {
+               assert.equal(options.item, listModel.at(1).getContents());
+            };
+            eip.saveOptions({
+               listModel: listModel,
+               editingConfig: {
+                  autoAddByApplyButton: true
+               }
+            });
+            eip._editingItem = listModel.at(0).getContents();
+
+            eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel, eip._options);
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
+               keyCode: 13,
+               stopPropagation: function() {}
+            });
+            assert.isNull(eip._editingItem);
+         });
+
          it('Enter on last item', function(done) {
             eip.commitEdit = function() {
                done();
@@ -1280,37 +1302,25 @@ define([
          });
 
          it('Enter on adding item', function(done) {
-            let isFifthItemCreated = false;
-
-            eip.saveOptions({
-               listModel: listModel
-            });
-            // Начинаем добавление.
-            eip.beginAdd({
-               item: newItem
-            });
-            eip._notify = (eName) => {
-               if (eName === 'afterBeginEdit' && isFifthItemCreated) {
-                  // Второе добавление успешно началось.
-                  done();
-               }
-               if (eName === 'beforeBeginEdit') {
-                  isFifthItemCreated = true;
-                  return {
-                     item: new entity.Model({
-                        rawData: {
-                           id: 5,
-                           title: 'Пятый'
-                        },
-                        keyProperty: 'id'
-                     })
-                  };
-               }
+            eip.beginAdd = function(options) {
+               assert.isUndefined(options);
             };
-            eip._onKeyDown({}, {
+            eip.saveOptions({
+               listModel: listModel,
+               editingConfig: {
+                  autoAddByApplyButton: true
+               }
+            });
+            eip._editingItem = newItem;
+            eip._isAdd = true;
+
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
                keyCode: 13,
                stopPropagation: function() {}
             });
+            assert.isTrue(!!eip._editingItem);
          });
 
          it('Enter, sequentialEditing: false', function(done) {
