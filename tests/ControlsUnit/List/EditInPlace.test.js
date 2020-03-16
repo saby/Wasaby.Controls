@@ -778,7 +778,7 @@ define([
             });
          });
 
-         it('commit not in process if server validation failed', function(done) {
+         it('commit not in process if server validation failed', async function() {
             let
                validationResultDef;
 
@@ -797,14 +797,14 @@ define([
 
             validationResultDef = new Deferred();
             eip._options.source = { update: () => Deferred.fail() };
-            eip.commitEdit().addErrback(() => {
+            const commit = eip.commitEdit().addErrback(() => {
                assert.isFalse(eip._isCommitInProcess);
                assert.isTrue(eip._commitPromise.isReady());
-               done();
             });
 
             assert.isTrue(eip._isCommitInProcess);
             validationResultDef.callback({});
+            await commit;
          });
 
          it('With source', function(done) {
@@ -1340,18 +1340,42 @@ define([
             });
          });
 
-         it('Enter on adding item', function(done) {
-            eip.beginAdd = function(options) {
-               assert.isUndefined(options);
-            };
+         it('Enter on adding item', async function() {
+            let addCount = 0;
+            const secondAddItem = new entity.Model({
+               rawData: {
+                  id: 5,
+                  title: 'Пятый'
+               },
+               keyProperty: 'id'
+            });
             eip.saveOptions({
                listModel: listModel,
                editingConfig: {
                   autoAddByApplyButton: true
                }
             });
-            eip._editingItem = newItem;
-            eip._isAdd = true;
+
+            eip._notify = (eName, args) => {
+               if (eName === 'beforeBeginEdit' && args[1]) {
+                  if (addCount === 0) {
+                     addCount++;
+                     return {
+                        item: newItem
+                     };
+                  } else if (addCount === 1) {
+                     addCount++;
+                     return {
+                        item: secondAddItem
+                     };
+                  }
+                  throw new Error('beginEdit should be called only twice');
+               }
+            };
+
+            await eip.beginAdd();
+
+            assert.equal(eip._editingItem.getId(), newItem.getId());
 
             eip._onKeyDown({
                stopPropagation: function() {}
@@ -1359,7 +1383,8 @@ define([
                keyCode: 13,
                stopPropagation: function() {}
             });
-            assert.isTrue(!!eip._editingItem);
+
+            assert.equal(eip._editingItem.getId(), secondAddItem.getId());
          });
 
          it('Enter, sequentialEditing: false', function(done) {
