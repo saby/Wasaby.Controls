@@ -139,13 +139,13 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     reset: function() {
-        this._startIndex = this._options.virtualScrolling && !!this._startIndex ? this._startIndex : 0;
+        this._startIndex = (this._options.virtualScrolling || Boolean(this._options.virtuallScrollConfig)) && !!this._startIndex ? this._startIndex : 0;
         this._curIndex = this._startIndex;
     },
 
     isEnd: function() {
         var endIndex;
-        if (this._options.virtualScrolling) {
+        if (this._options.virtualScrolling || Boolean(this._options.virtuallScrollConfig)) {
             endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
             endIndex = (this._display ? this._display.getCount() : 0);
@@ -177,7 +177,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     isLast: function() {
         var lastIndex;
-        if (this._options.virtualScrolling) {
+        if (this._options.virtualScrolling || Boolean(this._options.virtuallScrollConfig)) {
             lastIndex = this._stopIndex - 1;
         } else {
             lastIndex = (this._display ? this._display.getCount() - 1 : 0);

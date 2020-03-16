@@ -104,13 +104,13 @@
 /**
  * @name Controls/_treeGrid/interface/ITreeControl#nodeFooterTemplate
  * @cfg {Function} Шаблон подвала раскрытого узла дерева.
- * <a href="/materials/demo-ws4-tree-grid-extended">Example</a>.
+ * @demo Controls-demo/treeGrid/NodeFooter/NodeFooterTemplate/Index
  */
 
 /*
  * @name Controls/_treeGrid/interface/ITreeControl#nodeFooterTemplate
  * @cfg {Function} Sets footer template that will be shown for every node.
- * <a href="/materials/demo-ws4-tree-grid-extended">Example</a>.
+ * @demo Controls-demo/treeGrid/NodeFooter/NodeFooterTemplate/Index
  */
 
 /**

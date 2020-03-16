@@ -10,7 +10,7 @@
                 on:saveScrollPosition="_stopBubblingEvent()"
                 on:restoreScrollPosition="_stopBubblingEvent()"
                 on:itemsContainerReady="_itemsContainerReadyHandler()"
-                on:controlResize="_viewResize()"/>
+                on:controlResize="_viewResizeHandler()"/>
     <div name="bottomVirtualScrollTrigger" style="position: relative; bottom: 0;"></div>
     <div name="bottomLoadTrigger"></div>
     <Controls._list.BaseControl.Scroll.Emitter on:emitListScroll="_observeScrollHandler()" name="scrollObserver"/>

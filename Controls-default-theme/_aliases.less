@@ -27,6 +27,10 @@
 @link_text-color:                   #0055BB;
 @link_hover_text-color:             #313E78;
 @unaccented_text-color:             @unaccented_color;
+@link_text-color_inline:            @link_hover_text-color;
+@link_hover_text-color_inline:      @link_text-color;
+
+
 
 // Цвета иконок
 
@@ -70,6 +74,7 @@
 @inline_height_2xl:                 36px;
 @inline_height_default:             @inline_height_m;
 
+@border-thickness-wide:                                                     3px;
 
 
 // Иконки
@@ -111,9 +116,11 @@
 // Цвет шрифта копеек в отображении денег
 @fractional_color:                  @readonly_color;
 
+
+
 //Размер тэга.
 //Примечание: тэг - это цветной индикатор, использующийся для информации о состоянии поля.
-@tag-size:                          8px;
+@tag-size:                                                                  8px;
 
 @import "aliases/_controls";
 

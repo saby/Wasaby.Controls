@@ -169,6 +169,11 @@
    box-sizing: border-box;
    position: relative;
 }
+
+.controls-Grid__row-cell_colspaned {
+   flex-grow: 1;
+}
+
 .controls-Grid__itemAction.controls-itemActionsV_outside {
    z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у results; только для весла, иначе будут поверх шапки
 }
@@ -246,37 +251,30 @@
             visibility: visible;
          }
       }
+      /** Общая проблема с background'ом у контролов, которые лежат в списке, решается через background: inherit **/
       //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-      .controls-BreadCrumbsView__menu__dots {
+      .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
          background-color: @background-color_Grid-row_hover;
          box-shadow: -15px 2px 4px -6px @background-color_Grid-row_hover;
       }
+
+      .controls-SelectedCollection__InfoBox_fixed {
+         background-color: @background-color_Grid-row_hover;
+      }
+
+      .controls-SelectedCollection__InfoBox_fixed:after {
+         .horizontal-gradient(@background-color_Grid-row_hover, rgba(255, 255, 255, 0));
+      }
+      /**********************************************/
    }
 
 }
-.ws-is-hover {
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}.controls-Grid_row-cell_hovered_theme-@{themeName} {
-      background-color: @background-color_Grid-row_hover;
+.ws-is-hover .controls-BaseControl_showActions .controls-Grid__row:hover {
+   .controls-Grid__editArrow-blur_theme-@{themeName},
+   .controls-Grid__editArrow-wrapper_theme-@{themeName} {
+      visibility: visible;
    }
 
-   .controls-BaseControl_showActions {
-      .controls-Grid_row-cell_hovered_theme-@{themeName},
-      .controls-Grid__row:hover {
-         .controls-Grid__editArrow-blur_theme-@{themeName},
-         .controls-Grid__editArrow-wrapper_theme-@{themeName} {
-            visibility: visible;
-         }
-      }
-   }
-
-   .controls-BaseControl_showActions .controls-Grid_row-cell_hovered_theme-@{themeName} > .controls-itemActionsV {
-      display: inline-block;
-   }
-
-   // Class controls-Grid_row-cell_hovered adds on all cells of hovered item only in browsers with partial grid support.
-   .controls-Grid_row-cell_hovered_theme-@{themeName} .controls-ListView__checkbox-onhover {
-      display: inline-block;
-   }
 }
 
 .controls-Grid__row-cell-background-editing_theme-@{themeName} {
@@ -356,6 +354,9 @@
 
 .controls-Grid__row-ladder-cell__content {
    .position-sticky();
+   // иначе не будет работать мини-карточка
+   // https://online.sbis.ru/opendoc.html?guid=873e5d1a-016f-456f-b51e-1a67a18a53d4
+   pointer-events: auto;
 }
 
 .controls-Grid__row-cell_first-row-in-group {
@@ -556,7 +557,6 @@
 
 .controls-Grid__row-cell_selected-master_theme-@{themeName} {
    z-index: 1;
-   background-color: @background-color_List-masterList-item_selected;
 
    &:before {
       content: '';
@@ -604,14 +604,9 @@
    }
 
    //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} .controls-BreadCrumbsView__menu__dots {
+   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
       background-color: @background-color_List-masterList-item_hover;
       box-shadow: -15px 2px 4px -6px @background-color_List-masterList-item_hover;
-   }
-}
-.ws-is-no-touch {
-   .controls-Grid__row_master_theme-@{themeName}.controls-Grid_row-cell_hovered_theme-@{themeName} {
-      background-color: @background-color_List-masterList-item_hover;
    }
 }
 
@@ -705,6 +700,7 @@
    position: relative;
    background: @background-color_Grid-row_hover;
    z-index: 1;
+   .icon(@height_Grid-editArrow)
 }
 
 .controls-Grid__editArrow_style-default_background {

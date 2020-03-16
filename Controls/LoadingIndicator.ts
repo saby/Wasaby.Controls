@@ -184,7 +184,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @see hide
      */
     show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
-        return this._show(config, waitPromise);
+        return this._show({...config}, waitPromise);
     }
 
     private _show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {

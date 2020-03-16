@@ -1,7 +1,9 @@
 define([
-   'Controls/_operations/__MultiSelector'
+   'Controls/_operations/__MultiSelector',
+   'Types/entity'
 ], function(
-   MultiSelector
+   MultiSelector,
+   entity
 ) {
    'use strict';
    describe('Controls.OperationsPanel.__MultiSelector', function() {
@@ -206,31 +208,30 @@ define([
             selectedKeysCount: 0,
             isAllSelected: true
          };
-         let isUpdateMenu = false;
+         let isMenuUpdated = false;
 
-         instance._getMenuSource = () =>  isUpdateMenu = true;
+         instance._getMenuSource = () =>  isMenuUpdated = true;
          await instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отмечено всё');
-         assert.isTrue(isUpdateMenu);
+         assert.isTrue(isMenuUpdated);
+         instance.saveOptions({ ...newOptions });
 
-         isUpdateMenu = false;
+         isMenuUpdated = false;
          newOptions.isAllSelected = false;
          await instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отметить');
-         assert.isTrue(isUpdateMenu);
+         assert.isTrue(isMenuUpdated);
+         instance.saveOptions({ ...newOptions });
 
          newOptions.selectedKeys = [1, 2];
          newOptions.selectedKeysCount = 2;
          await instance._beforeUpdate(newOptions);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
+         instance.saveOptions({ ...newOptions });
 
-         isUpdateMenu = false;
+         isMenuUpdated = false;
          instance._beforeUpdate(instance._options);
-         assert.isFalse(isUpdateMenu);
-
-         newOptions.withShowSelected = true;
-         instance._beforeUpdate(newOptions);
-         assert.isTrue(isUpdateMenu);
+         assert.isFalse(isMenuUpdated);
       });
       it('_afterUpdate', function() {
          var instance = new MultiSelector.default();
@@ -243,6 +244,34 @@ define([
          assert.equal(eventQueue[0].event, 'controlResize');
          assert.equal(eventQueue[0].eventArgs.length, 0);
          assert.isTrue(eventQueue[0].eventOptions.bubbling);
+      });
+
+      it('_getCount', async() => {
+         let instance = new MultiSelector.default();
+         const selection = {
+            selected: ['test'],
+            excluded: []
+         };
+         instance._options.selectedCountConfig = {
+            rpc: {
+               call: () => {
+                  return Promise.resolve({
+                     getRow: () => {
+                        return {
+                           get: () => 'TEST_DATA_COUNT'
+                        };
+                     }
+                  });
+               },
+               getAdapter: () => {
+                  return new entity.adapter.Json();
+               }
+            }
+         };
+
+         instance._menuCaption = 'Отмечено: 3';
+         instance._getCount(selection, null);
+         assert.equal(instance._menuCaption, 'Отмечено:');
       });
    });
 });

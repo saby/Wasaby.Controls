@@ -334,7 +334,6 @@
    background-color: @background-color_shortDatePicker;
    color: @grouping_text-color_shortDatePicker;
    font-weight: bold;
-   cursor: pointer;
 
    &:after {
       content: '';
@@ -346,7 +345,8 @@
    }
 }
 
-.controls-PeriodLiteDialog__fullYear-listElement:hover {
+.controls-PeriodLiteDialog__fullYear-listElement-hovered:hover {
+   cursor: pointer;
    border: solid @item_border-thickness_shortDatePicker @item_hover_border-color_shortDatePicker;
    border-bottom: none;
    margin-top: -1px;

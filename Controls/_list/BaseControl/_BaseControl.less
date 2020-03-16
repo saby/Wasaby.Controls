@@ -71,13 +71,14 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 
 .controls-BaseControl__loadingIndicator__state-up .controls-BaseControl__loadingIndicatorImg-wrapper {
    position: absolute;
-   top: 0
+   top: 0;
 }
 
 .controls-BaseControl__loadingIndicator__state-down .controls-BaseControl__loadingIndicatorImg-wrapper {
    position: absolute;
    bottom: 0;
 }
+
 .controls-BaseControl_empty__loadingIndicator__state-down {
    min-height: @spacing_BaseControl-loadingIndicator-between-top-border-content + @spacing_BaseControl-loadingIndicator-between-bottom-border-content + @height_BaseControl-loadingIndicator-img;
 }
@@ -85,9 +86,11 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 .controls-BaseControl_empty__loadingIndicator__state-down .controls-BaseControl__loadingIndicatorImg-wrapper {
    top: 0;
 }
+
 .controls-BaseControl_withPaging__loadingIndicator__state-down {
    top: @height_Paging-button;
 }
+
 .controls-BaseControl__loadingIndicator__state-all {
    position: absolute;
    top: 0;
@@ -110,9 +113,11 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    height: @spinner_l_size_loadingIndicator;
    background-size: @spinner_l_size_loadingIndicator;
 }
+
 .controls-BaseControl__trigger {
    position: relative;
 }
+
 .controls-BaseControl__footer-content {
    min-height: @min-height_BaseControl-footer-content;
    display: flex;
@@ -127,16 +132,19 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 .controls-BaseControl__footerPaging {
    background: @background-color_BaseControl-footer-paging;
 }
+
 .controls-BaseControl__footerPaging_wrapper {
    display: flex;
    justify-content: flex-end;
 }
+
 .controls-BaseControl_paging-label {
    display: flex;
    align-items: center;
    color: @color_BaseControl-paging_label;
    font-size: @font-size_BaseControl-paging_label;
 }
+
 .controls-BaseControl_paging-pageSizeChooser {
    margin-left: @spacing_BaseControl-paging_label_right;
 }
@@ -145,6 +153,12 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    display: inline-block;
    color: @color_BaseControl-abortSearch;
    margin-left: @spacing_BaseControl-between-indicator-abortSearch;
+}
+
+.controls-BaseControl__loadingIndicator-footerTemplate {
+   margin-left: @spacing_BaseControl-between-indicator-abortSearch;
+   color: @unaccented_color;
+   font-size: @font-size_xs;
 }
 
 .ws-is-no-touch .controls-BaseControl__abortSearch:hover {

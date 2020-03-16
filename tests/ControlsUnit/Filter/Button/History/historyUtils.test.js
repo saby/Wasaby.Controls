@@ -30,7 +30,6 @@ define(
             Env.constants.isServerSide = isServerSide;
          });
 
-
          it('prependNewItems', function() {
             let initItems = [
                { key: 0, title: 'все страны' },
@@ -55,7 +54,7 @@ define(
             });
             let expectedItems = [{ key: 18, title: '18 record' }].concat(initItems.slice(0, 3));
 
-            let resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source);
+            let resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key');
             assert.equal(resultItems.getCount(), 4);
             assert.deepStrictEqual(resultItems.getRawData(), expectedItems);
             assert.deepStrictEqual(resultItems.getMetaData(), {test: true});
@@ -67,8 +66,8 @@ define(
             resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key');
             assert.equal(resultItems.getCount(), 4);
             assert.equal(resultItems.at(0).getId(), 20);
-            assert.equal(resultItems.at(1).getId(), 0);
-            assert.equal(resultItems.at(2).getId(), 1);
+            assert.equal(resultItems.at(1).getId(), 1);
+            assert.equal(resultItems.at(2).getId(), 0);
             assert.equal(resultItems.at(3).getId(), 2);
 
             items = new collection.RecordSet({
@@ -95,7 +94,27 @@ define(
 
             assert.isTrue(filter.HistoryUtils.isHistorySource(hSource));
             assert.isFalse(filter.HistoryUtils.isHistorySource(origSource));
+         });
 
+         it('getUniqItems', function() {
+            let initItems = [
+               { key: 1, title: 'все страны' },
+               { key: 2, title: 'Россия' },
+            ];
+            let oldItems = new collection.RecordSet({
+               keyProperty: 'key',
+               rawData: initItems,
+               metaData: { test: true }
+            });
+
+            let newItems = new collection.RecordSet({
+               keyProperty: 'key',
+               rawData: [...initItems, { key: 5, title: 'New item' }]
+            });
+
+            let resultItems = filter.HistoryUtils.getUniqItems(oldItems, newItems, 'key');
+            assert.equal(resultItems.getCount(), 3);
+            assert.isOk(resultItems.getMetaData());
          });
       });
    });

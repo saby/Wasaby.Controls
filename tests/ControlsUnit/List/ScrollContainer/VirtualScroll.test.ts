@@ -121,6 +121,19 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
                 assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 60}},
                     instance.insertItems(3, 1, {up: false, down: true}, 'down'));
         });
+        it('lack of items, direction up', () => {
+            instance.setOptions({pageSize: 10});
+            instance.resetRange(0, 5);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
+            assert.deepEqual({range: {start: 0, stop: 6}, placeholders: {top: 0, bottom: 0}},
+                instance.insertItems(0, 1, {up: false, down: false});
+        });
+        it('without specified options', () => {
+            instance.setOptions({pageSize: undefined, segmentSize: undefined});
+            assert.deepEqual({range: {start: 0, stop: 55}, placeholders: {top: 0, bottom: 0}},
+                instance.insertItems(5, 50, {up: false, down: false}));
+        });
     });
     describe('.removeItems', () => {
         let instance: controller;
@@ -142,7 +155,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
         });
         it('at ending', () => {
             assert.deepEqual({range: {start: 0, stop: 4}, placeholders: {top: 0, bottom: 0}},
-                instance.removeItems(3, 1));
+                instance.removeItems(4, 1));
         });
     });
     describe('.shiftRange', () => {
@@ -178,7 +191,15 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.resetRange(0, 5);
             // @ts-ignore
             instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
-            instance.insertItems(0, 2);
+            instance.insertItems(0, 2, {up: false, down: false});
+            assert.isFalse(instance.isNeedToRestorePosition);
+        });
+        it('after insert with predicted direction', () => {
+            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
+            instance.resetRange(0, 5);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
+            instance.insertItems(0, 2, {up: false, down: false}, 'up');
             assert.isTrue(instance.isNeedToRestorePosition);
         });
         it('after remove', () => {
@@ -187,7 +208,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             // @ts-ignore
             instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
             instance.removeItems(0, 1);
-            assert.isTrue(instance.isNeedToRestorePosition);
+            assert.isFalse(instance.isNeedToRestorePosition);
         });
     });
     describe('.canScrollToItem', () => {
@@ -256,21 +277,13 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
 
             assert.deepEqual({direction: 'up', heightDifference: 0}, instance.getParamsToRestoreScroll());
         });
-        it('after insert', () => {
+        it('after insert with predicted direction', () => {
             const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
             instance.resetRange(0, 5);
             // @ts-ignore
             instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
-            instance.insertItems(0, 2);
+            instance.insertItems(0, 2, {up: false, down: false}, 'up');
             assert.deepEqual({direction: 'up', heightDifference: 0}, instance.getParamsToRestoreScroll());
-        });
-        it('after remove', () => {
-            const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
-            instance.resetRange(0, 5);
-            // @ts-ignore
-            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60]));
-            instance.removeItems(0, 1);
-            assert.deepEqual({direction: 'down', heightDifference: 0}, instance.getParamsToRestoreScroll());
         });
     });
     describe('.updateItemsHeights()', () => {

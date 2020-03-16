@@ -8,9 +8,6 @@ import { CollectionItem, Collection, EditInPlaceController, GroupItem } from 'Co
 import { constants } from 'Env/Env';
 import { Opener as DropdownOpener } from 'Controls/dropdown';
 
-import 'wml!Controls/_listRender/Render/resources/ItemActionsTemplate';
-import 'wml!Controls/_listRender/Render/resources/SwipeTemplate';
-
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
     contextMenuEnabled?: boolean;
@@ -107,6 +104,7 @@ export default class Render extends Control<IRenderOptions> {
             !EditInPlaceController.isEditing(this._options.listModel)
         ) {
             this._notify('itemContextMenu', [item, e, false]);
+            e.stopPropagation();
         }
     }
 

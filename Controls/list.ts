@@ -4,12 +4,13 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
- * @includes IContentTemplate Controls/list:ContentTemplate
+ * @includes IContentTemplate Controls/list:IContentTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
+ * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
  * @includes View Controls/_list/List
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
@@ -25,6 +26,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes IClickableView Controls/_list/interface/IClickableView
  * @public
  * @author Крайнов Д.О.
  */
@@ -55,6 +57,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes IClickableView Controls/_list/interface/IClickableView
  * @public
  * @author Крайнов Д.О.
  */
@@ -66,6 +69,7 @@ import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
 import ColumnsView = require('Controls/_list/Columns');
 import BaseAction from 'Controls/_list/BaseAction';
+import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
@@ -149,6 +153,7 @@ export {
     getStyle,
     ItemsView,
     ItemsViewModel,
+    LoadingIndicatorTemplate,
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,

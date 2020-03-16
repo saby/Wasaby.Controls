@@ -71,6 +71,8 @@ var _private = {
     }
 };
 
+const ONLY_YEARS_ELEMENTS_VISIBLE = 5;
+
 var Component = BaseControl.extend({
     _template: componentTmpl,
     _defaultListTemplate: listTmpl,
@@ -142,18 +144,36 @@ var Component = BaseControl.extend({
         }
     },
 
+    _canBeDisplayed: function (year) {
+        if (!this._displayedRanges) {
+            return true;
+        }
+        for (let i = 0; i < this._displayedRanges.length; i++) {
+            if (this._displayedRanges[i][0].getFullYear() <= year &&
+                this._displayedRanges[i][1].getFullYear() >= year) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    _changeYear : function(event, delta) {
+        const year = this._position.getFullYear() + delta;
+        let checkedYear = year;
+        //_position определяется первым отображаемым годом в списке. Всего у нас отображается
+        //onlyYearsElementsVisible записей. Для перехода на предыдущий элемент, нужно проверить, доступен ли он
+        //для отображения. Для этого выбираем самый нижний элемент
+        if (delta === -1 && !this._options.chooseMonths &&
+            !this._options.chooseHalfyears && !this._options.chooseQuarters) {
+            checkedYear = this._position.getFullYear() - ONLY_YEARS_ELEMENTS_VISIBLE;
+        }
+        if (this._canBeDisplayed(checkedYear)) {
+            this.setYear(year);
+        }
+    },
+
     _onYearMouseLeave: function () {
         this._yearHovered = null;
-    },
-
-    _onPrevYearBtnClick: function () {
-        var year = this._position.getFullYear() - 1;
-        this.setYear(year);
-    },
-
-    _onNextYearBtnClick: function () {
-        var year = this._position.getFullYear() + 1;
-        this.setYear(year);
     },
 
     _onHomeClick: function () {

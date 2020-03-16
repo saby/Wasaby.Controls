@@ -47,8 +47,9 @@ var _private = {
       if (self._viewMode !== 'search') {
          _private.updateViewMode(self, 'search');
 
-         if (self._options.startingWith === 'root' && self._options.parentProperty) {
-            self._root = _private.getRoot(self._path, self._root, self._options.parentProperty);
+         if (self._options.parentProperty) {
+            _private.deleteRootFromFilterAfterSearch(self, filter);
+            _private.updateRootAfterSearch(self);
          }
       }
 
@@ -59,12 +60,28 @@ var _private = {
       self._misspellValue = getSwitcherStrFromData(result.data);
    },
 
+   updateRootAfterSearch(self): void {
+      if (self._options.startingWith === 'root') {
+         self._root = _private.getRoot(self._path, self._root, self._options.parentProperty);
+      }
+   },
+
+   deleteRootFromFilterAfterSearch(self, filter: object): void {
+      if (self._options.startingWith === 'current') {
+         delete filter[self._options.parentProperty];
+      }
+   },
+
    abortCallback: function (self, filter) {
       self._loading = false;
       if (self._viewMode === 'search' && self._searchValue) {
          self._searchValue = '';
          self._misspellValue = '';
-         _deleteServiceFilters(self._options, filter);
+
+         if (self._options.parentProperty) {
+            _deleteServiceFilters(self._options, filter);
+            _private.deleteRootFromFilterAfterSearch(self, filter);
+         }
 
          //abortCallback is called on every input change, when input value is less then minSearchLength,
          //but filter could be already changed, because viewMode: 'search' will change only after data loaded.
@@ -310,12 +327,12 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       const needRecreateSearchController = _private.isNeedRecreateSearchControllerOnOptionsChanged(currentOptions, this._dataOptions) ||
           _private.isNeedRecreateSearchControllerOnOptionsChanged(this._options, newOptions);
       const searchValue = needRecreateSearchController ? this._inputSearchValue : newOptions.searchValue;
-
+      const needUpdateRoot = this._options.root !== newOptions.root;
       if (!isEqual(this._options.filter, newOptions.filter)) {
          filter = newOptions.filter;
       }
 
-      if (this._options.root !== newOptions.root) {
+      if (needUpdateRoot) {
          this._root = newOptions.root;
       }
 
@@ -341,7 +358,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (_private.isSearchValueChanged(this, searchValue) || searchValue && needRecreateSearchController) {
+      if (_private.isSearchValueChanged(this, searchValue) && !needUpdateRoot || searchValue && needRecreateSearchController) {
          _private.startSearch(this, searchValue);
          if (searchValue !== this._inputSearchValue) {
             _private.setInputSearchValue(this, searchValue);

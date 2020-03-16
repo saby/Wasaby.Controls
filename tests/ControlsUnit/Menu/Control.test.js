@@ -27,10 +27,10 @@ define(
             })
          };
 
-         let getListModel = function() {
+         let getListModel = function(items) {
             return new display.Collection({
                collection: new collection.RecordSet({
-                  rawData: defaultItems,
+                  rawData: items || defaultItems,
                   keyProperty: 'key'
                }),
                keyProperty: 'key'
@@ -134,6 +134,31 @@ define(
                menuControl._itemClick('itemClick', item, nativeEvent);
                assert.equal(pinItem.getId(), item.getId());
             });
+
+            it('select empty item', function() {
+               let emptyMenuControl = getMenu({...defaultOptions, emptyKey: null, emptyText: 'Not selected', multiSelect: true});
+               let emptyItems = Clone(defaultItems);
+               emptyItems.push({
+                  key: null,
+                  title: 'Not selected'
+               });
+               emptyMenuControl._listModel = getListModel(emptyItems);
+               emptyMenuControl._notify = (e, data) => {
+                  if (e === 'selectedKeysChanged') {
+                     selectedKeys = data[0];
+                  }
+               };
+
+               emptyMenuControl._selectionChanged = true;
+               emptyMenuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedKeys[0], 1);
+
+               emptyMenuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedKeys[0], null);
+
+               emptyMenuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedKeys[0], 1);
+            });
          });
 
          it('getTemplateOptions', function() {
@@ -150,7 +175,7 @@ define(
 
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
-            expectedOptions.footerTemplate = defaultOptions.nodeFooterTemplate;
+            delete expectedOptions.footerTemplate;
             expectedOptions.footerItemData = {
                item,
                key: expectedOptions.root
@@ -160,7 +185,8 @@ define(
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;
             expectedOptions.additionalProperty = null;
-
+            expectedOptions.itemPadding = null;
+            expectedOptions.searchParam = null;
 
             let resultOptions = menuControl.getTemplateOptions(item);
             assert.deepEqual(resultOptions, expectedOptions);
@@ -251,6 +277,7 @@ define(
 
             hierarchyOptions = {
                parentProperty: 'parent',
+               nodeProperty: 'node',
                root: null
             };
             isVisible = menuControl.displayFilter(hierarchyOptions, item);
@@ -283,6 +310,14 @@ define(
             assert.deepEqual(listModel.getActionsTemplateConfig(), expectedConfig);
          });
 
+         it('getCollection', function() {
+            let menuControl = getMenu();
+            let listModel = menuControl.getCollection(new collection.RecordSet(), {
+               searchParam: 'title',
+               searchValue: 'searchText'
+            });
+            assert.instanceOf(listModel, display.Search);
+         });
       });
    }
 );

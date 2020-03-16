@@ -225,7 +225,7 @@ var
 
 
         getHeaderZIndex: function(params) {
-           return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+           return _private.isFixedCell(params) && params.columnScroll ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
         },
 
         getColumnScrollCellClasses: function(params, theme) {
@@ -604,7 +604,8 @@ var
                 this._headerRows = getHeaderRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell, stickyLadderCell);
                 const headerMaxEndCellData = getHeaderMaxEndCellData(this._headerRows);
                 this._maxEndRow = headerMaxEndCellData.maxRow;
-                this._maxEndColumn = headerMaxEndCellData.maxColumn;            } else if (multiSelectVisibility) {
+                this._maxEndColumn = headerMaxEndCellData.maxColumn;
+            } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
                 this._headerRows = [];
@@ -708,7 +709,8 @@ var
                   rowIndex,
                   isMultiHeader: this._isMultiHeader,
                   multiSelectVisibility: this._options.multiSelectVisibility,
-                  stickyColumnsCount: this._options.stickyColumnsCount
+                  stickyColumnsCount: this._options.stickyColumnsCount,
+                  columnScroll: this._options.columnScroll
                });
             }
 
@@ -908,7 +910,8 @@ var
                 resultsColumn.zIndex = _private.getHeaderZIndex({
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
-                    stickyColumnsCount: this._options.stickyColumnsCount
+                    stickyColumnsCount: this._options.stickyColumnsCount,
+                    columnScroll: this._options.columnScroll
                 });
             }
 
@@ -1033,8 +1036,8 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
-        setMarkedKey: function(key) {
-            this._model.setMarkedKey(key);
+        setMarkedKey: function(key, byOptions) {
+            this._model.setMarkedKey(key, byOptions);
         },
 
         setMarkerVisibility: function(markerVisibility) {
