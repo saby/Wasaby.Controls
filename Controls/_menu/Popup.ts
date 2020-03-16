@@ -1,6 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import PopupTemplate = require('wml!Controls/_menu/Popup/template');
 import * as headerTemplate from 'wml!Controls/_menu/Popup/headerTemplate';
+import {Controller as ManagerController} from 'Controls/popup';
 
 /**
  * Базовый шаблон для {@link Controls/menu:Control}, отображаемого в прилипающем блоке.
@@ -21,6 +22,7 @@ import * as headerTemplate from 'wml!Controls/_menu/Popup/headerTemplate';
 class Popup extends Control<IControlOptions> {
     protected _template: TemplateFunction = PopupTemplate;
     protected _headerTemplate: TemplateFunction;
+    protected _headerTheme: string;
     protected _headingCaption: string;
     protected _headingIcon: string;
     protected _itemPadding: object;
@@ -28,7 +30,11 @@ class Popup extends Control<IControlOptions> {
     protected _horizontalDirection: string = 'right';
 
     protected _beforeMount(options: IControlOptions): void {
-        if (options.showHeader && options.headerTemplate !== null || options.headerTemplate) {
+        this._headerTheme = this._getTheme();
+
+        if (options.headerContentTemplate) {
+            this._headerTemplate = options.headerContentTemplate;
+        } else if (options.showHeader && options.headerTemplate !== null || options.headerTemplate) {
             if (options.headConfig) {
                 this._headingCaption = options.headConfig.caption;
             } else {
@@ -56,6 +62,7 @@ class Popup extends Control<IControlOptions> {
     }
 
     protected _beforeUpdate(newOptions: IControlOptions): void {
+        this._headerTheme = this._getTheme();
         if (newOptions.stickyPosition.direction && this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
             this._verticalDirection = newOptions.stickyPosition.direction.vertical;
             this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
@@ -84,6 +91,10 @@ class Popup extends Control<IControlOptions> {
             popupOptions.direction.horizontal = this._horizontalDirection;
             popupOptions.targetPoint.horizontal = this._horizontalDirection;
         }
+    }
+
+    private _getTheme(): string {
+        return ManagerController.getPopupHeaderTheme();
     }
 
     static _theme: string[] = ['Controls/menu'];
