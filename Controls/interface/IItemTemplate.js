@@ -29,12 +29,14 @@ define('Controls/interface/IItemTemplate', [
     * 
     * По умолчанию Controls/list:ItemTemplate отображает значение поля, имя которого задано в опции {@link Controls/list:ItemTemplate#displayProperty displayProperty}.
     * Об этом следует помнить при настройке источника данных контрола.
-    * Для изменения отображения элемента следует задать конфигурацию в опциях шаблона, список которых доступен {@link Controls/list:ItemTemplate здесь}.
+    * Для изменения отображения элемента следует передать новую конфигурацию опциям шаблона, список которых доступен {@link Controls/list:ItemTemplate здесь}.
     * 
     * Опция контрола itemTemplate предназначена для изменения опций шаблона Controls/list:ItemTemplate.
-    * В разделе "Примеры" показано как это сделать с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
-    * В опцию itemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например, директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}.
-    * Однако каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая добавляет Controls/list:ItemTemplate с заданной конфигурацией.
+    * Опция itemTemplate в качестве значение принимает только шаблон.
+    * В разделе "Примеры" показано как с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать шаблон Controls/list:ItemTemplate с новой конфигурацией.
+    * 
+    * Также в опцию itemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например, директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}.
+    * Однако каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/list:ItemTemplate.
     * 
     * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ руководстве разработчика}.
     * @example
