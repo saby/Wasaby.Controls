@@ -1,8 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls-demo/FormController/FormControllerDemo');
 import {Memory} from 'Types/source';
-import * as Deferred from 'Core/Deferred';
-import Model from 'Types/_entity/Model';
+import {Model} from 'Types/entity';
 import {ISource} from 'Types/source';
 import Env = require('Env/Env');
 import 'css!Controls-demo/Controls-demo';
