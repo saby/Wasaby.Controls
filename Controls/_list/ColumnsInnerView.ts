@@ -5,7 +5,6 @@ import {IList} from 'Controls/_list/interface/IList';
 import {
     ColumnsCollection as Collection,
     ColumnsCollectionItem as CollectionItem,
-    ItemActionsController,
     ICollectionCommand,
     MarkerCommands,
 } from 'Controls/display';
@@ -22,7 +21,6 @@ export interface IColumnsInnerViewOptions extends IList {
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
     source: ICrudPlus;
-    itemActionsClass?: string;
 }
 
 const SPACING = 16;
