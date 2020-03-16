@@ -540,6 +540,14 @@ export default class ScrollContainer extends Control<IOptions> {
             if (action === IObservable.ACTION_RESET) {
                 this._initVirtualScroll(this._options);
             }
+
+            // TODO Уберется после https://online.sbis.ru/opendoc.html?guid=5ebdec7d-e95e-438d-94f8-079a17b323c6
+            // На данный момент индексы в модели проставляются в двух местах: здесь и на уровне модели
+            // Вследствие чего могут возникать коллизии и индексы проставленные здесь, могут быть перетерты моделью.
+            // Такое происходит например при добавлении в узел дерева
+            // После решения ошибки этот код будет не нужен и индексы проставляться будут только здесь
+            // @ts-ignore
+            this._setCollectionIndices(this._options.collection, this._virtualScroll._range);
         }
     }
 
