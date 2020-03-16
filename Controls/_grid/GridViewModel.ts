@@ -201,9 +201,6 @@ var
             let result = '';
             if (current.rowSeparatorVisibility) {
                 result += ` controls-Grid__row-cell_withRowSeparator${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? '-l' : ''}_theme-${theme} `;
-                if (current.isFirstInGroup && !current.isInHiddenGroup) {
-                    result += ' controls-Grid__row-cell_first-row-in-group';
-                }
             } else {
                 result += `controls-Grid__row-cell_withoutRowSeparator_theme-${theme}`;
             }
@@ -1236,20 +1233,7 @@ var
                 return current;
             }
 
-            const itemGroupId = !current.isGroup && this._getItemGroup(current.item);
-            current.isInHiddenGroup = itemGroupId === ControlsConstants.view.hiddenGroup;
-            current.isFirstInGroup = this._isFirstInGroup(current.item, itemGroupId);
-            current.rowSeparatorSize = this._options.rowSeparatorSize;
-
-            if (
-                current.isFirstInGroup &&
-                !current.isInHiddenGroup &&
-                current.item !== self.getLastItem()
-            ) {
-                current.rowSeparatorVisibility = false;
-            } else {
-                current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
-            }
+            current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
 
             current.itemActionsDrawPosition =
                 this._options.columnScroll ? 'after' : 'before';
@@ -1630,7 +1614,6 @@ var
             if (!currentGroupItems || currentGroupItems.length === 0) {
                 return false;
             }
-
 
             return item === currentGroupItems[0].getContents();
         },
