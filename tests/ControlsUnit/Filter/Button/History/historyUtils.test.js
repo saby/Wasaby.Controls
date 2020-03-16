@@ -30,7 +30,6 @@ define(
             Env.constants.isServerSide = isServerSide;
          });
 
-
          it('prependNewItems', function() {
             let initItems = [
                { key: 0, title: 'все страны' },
@@ -95,7 +94,27 @@ define(
 
             assert.isTrue(filter.HistoryUtils.isHistorySource(hSource));
             assert.isFalse(filter.HistoryUtils.isHistorySource(origSource));
+         });
 
+         it('getUniqItems', function() {
+            let initItems = [
+               { key: 1, title: 'все страны' },
+               { key: 2, title: 'Россия' },
+            ];
+            let oldItems = new collection.RecordSet({
+               keyProperty: 'key',
+               rawData: initItems,
+               metaData: { test: true }
+            });
+
+            let newItems = new collection.RecordSet({
+               keyProperty: 'key',
+               rawData: [...initItems, { key: 5, title: 'New item' }]
+            });
+
+            let resultItems = filter.HistoryUtils.getUniqItems(oldItems, newItems, 'key');
+            assert.equal(resultItems.getCount(), 3);
+            assert.isOk(resultItems.getMetaData());
          });
       });
    });
