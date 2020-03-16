@@ -42,14 +42,10 @@
    height: @height_BreadCrumbs-items;
    color: @color_BreadCrumbs-title;
    padding-right: @spacing_default_xxs;
-}
 
-.controls-BreadCrumbsView__crumb_size-s_theme-@{themeName}:before {
-   font-size: @font-size_BreadCrumbs-baseline;
-}
-
-.controls-BreadCrumbsView__crumb_size-m_theme-@{themeName}:before {
-   font-size: @font-size_BreadCrumbs-home;
+   &::before {
+      font-size: @font-size_BreadCrumbs-baseline;
+   }
 }
 
 .controls-BreadCrumbsView__menu {
@@ -73,14 +69,10 @@
    box-shadow: @box-shadow_BreadCrumbs-menu;
    color: @color_BreadCrumbs-title;
    height: @height_BreadCrumbs-items;
+
+   &::before {
+      font-size: @font-size_BreadCrumbs-baseline;
    }
-
-.controls-BreadCrumbsView__menu__dots_size-s_theme-@{themeName}::before {
-   font-size: @font-size_BreadCrumbs;
-}
-
-.controls-BreadCrumbsView__menu__dots_size-m_theme-@{themeName}::before {
-   font-size: @font-size_BreadCrumbs-home;
 }
 
 .controls-BreadCrumbsView__max-width {

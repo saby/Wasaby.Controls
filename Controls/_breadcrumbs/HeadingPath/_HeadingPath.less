@@ -12,13 +12,9 @@
    white-space: nowrap;
 
    //TODO KINGO есть темы, в которых выравнивание ХК идет по базовой линии шрифта, размер которого отличается от размера шрифта кнопки назад
-   .controls-Back__wrapper_s_theme-@{themeName}::before {
-      font-size:@font-size_BreadCrumbs-baseline;
+   .controls-Back__wrapper::before {
+      font-size: @font-size_BreadCrumbs-baseline;
    }
-
-   .controls-Back__wrapper_m_theme-@{themeName}::before {
-      font-size: @font-size_BreadCrumbs-home;
-}
 }
 
 .controls-BreadCrumbsPath__backButton {
@@ -76,14 +72,10 @@
 }
 .controls-BreadCrumbsPath__backButtonArrow-container_theme-@{themeName} {
    background-color: @background-color_Path-backButtonArrow;
+
+   &::before {
+      font-size: @font-size_BreadCrumbs-baseline;
    }
-
-.controls-BreadCrumbsPath__backButtonArrow-container_size-m_theme-@{themeName}::before {
-   font-size: @font-size_BreadCrumbs-home;
-}
-
-.controls-BreadCrumbsPath__backButtonArrow-container_size-s_theme-@{themeName}::before {
-   font-size: @font-size_BreadCrumbs;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
@@ -126,7 +118,7 @@
 }
 .controls-BreadCrumbsPath__homeContainer_theme-@{themeName} {
    &::before {
-      font-size: @font-size_BreadCrumbs-home;
+      font-size: @font-size_BreadCrumbs-baseline-home;
    }
 }
 
