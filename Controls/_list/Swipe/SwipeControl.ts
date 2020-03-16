@@ -106,6 +106,10 @@ export default class SwipeControl extends Control {
    }
 
    private _onListChange(event, changesType, action): void {
+      if (this._destroyed) {
+         return;
+      }
+
       if (changesType !== 'itemActionsUpdated' && action !== 'ch' || changesType === 'newModelUpdated - editing') {
          this.closeSwipe();
       } else if (changesType === 'itemActionsUpdated') {
