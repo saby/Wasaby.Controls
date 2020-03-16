@@ -22,7 +22,7 @@
            title="{[Подробнее]}"
            on:click="_onArrowClick()">
           <div class="controls-BreadCrumbsPath__backButtonArrow">
-              <div class="icon-ForwardBaseLine controls-BreadCrumbsPath__backButtonArrow_theme-{{_options.theme}}"></div>
+              <svg attr:class="controls-BreadCrumbsPath__backButtonArrow_theme-{{_options.theme}}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8,11,3,16V14l3-3L3,8V6Zm5,0L8,16V14l3-3L8,8V6Z"/></svg>
           </div>
       </div>
    </ws:if>
