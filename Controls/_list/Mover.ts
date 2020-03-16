@@ -274,14 +274,21 @@ var _private = {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
     },
 
-    getItemsBySelection(selection): Promise<Record> {
-        //Support moving with mass selection.
-        //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+    getItemsBySelection(selection): Promise<Record<string, unknown>> {
+        let resultSelection;
+        // Support moving with mass selection.
+        // Full transition to selection will be made by:
+        // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
         selection.recursive = false;
-        const filter = _private.prepareFilter(this, this._filter, selection);
-        return selection instanceof Array ?
-            Deferred.success(selection) :
-            getItemsBySelection(selection, this._source, this._items, filter);
+
+        if (selection instanceof Array) {
+            resultSelection = Deferred.success(selection);
+        } else {
+            const filter = _private.prepareFilter(this, this._filter, selection);
+            resultSelection = getItemsBySelection(selection, this._source, this._items, filter);
+        }
+
+        return resultSelection;
     },
 
     prepareMovedItems(self, items) {
