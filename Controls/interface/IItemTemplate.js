@@ -20,22 +20,23 @@ define('Controls/interface/IItemTemplate', [
 
    /**
     * @name Controls/interface/IItemTemplate#itemTemplate
-    * @cfg {String|Function} Шаблон отображения элемента.
-    * @default Controls/list:ItemTemplate
+    * @cfg {String|Function} Конфигурация шаблона отображения элемента.
+    * @default undefined
     * @demo Controls-demo/list_new/ItemTemplate/CustomContent/Index
     * @remark
-    * По умолчанию для отображения всех элементов контрола используется шаблон Controls/list:ItemTemplate.
-    * Он настроен таким образом, чтобы выводить значение поля title, если такое присутствует в элементе.
-    * Помните об этой особенности шаблона при настройке источника данных.
-    *
-    * Использование других шаблонов для отображения элементов контрола не допускается.
-    *
-    * Шаблон Controls/list:ItemTemplate поддерживает параметры, с помощью которых можно изменить отображение элемента.
-    * Список параметров доступен {@link Controls/list:ItemTemplate здесь}.
-    * Подробнее о работе с шаблоном вы можете прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
+    * В качестве шаблона отображения элемента всегда используется {@link Controls/list:ItemTemplate}.
+    * Он обеспечивает правильную работу контрола, и использование других шаблонов не допускается.
     * 
-    * Для конкретных элементов контрола можно задать собственный шаблон отображения.
-    * Для этого используйте опцию {@link Controls/interface/IItemTemplate#itemTemplateProperty itemTemplateProperty}.
+    * По умолчанию Controls/list:ItemTemplate отображает значение поля, имя которого задано в опции {@link Controls/list:ItemTemplate#displayProperty displayProperty}.
+    * Об этом следует помнить при настройке источника данных контрола.
+    * Для изменения отображения элемента следует задать конфигурацию в опциях шаблона, список которых доступен {@link Controls/list:ItemTemplate здесь}.
+    * 
+    * Опция контрола itemTemplate предназначена для изменения опций шаблона Controls/list:ItemTemplate.
+    * В разделе "Примеры" показано как это сделать с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
+    * В опцию itemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например, директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}.
+    * Однако каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая добавляет Controls/list:ItemTemplate с заданной конфигурацией.
+    * 
+    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ руководстве разработчика}.
     * @example
     * <pre class="brush: html">
     * <Controls.list:View>
