@@ -426,9 +426,11 @@ define([
          FC.update();
          assert.equal(FC._isUpdating(), true);
          updateDef.callback().then(() => {
-            assert.equal(FC._isUpdating(), false);
-            FC.destroy();
-            done();
+            setTimeout(() => {
+               assert.equal(FC._isUpdating(), false, 'error');
+               FC.destroy();
+               done();
+            }, 10);
          });
       });
    });
