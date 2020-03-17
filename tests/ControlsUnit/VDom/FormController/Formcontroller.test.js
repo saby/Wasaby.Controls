@@ -425,7 +425,7 @@ define([
          FC._getRecordId = () => '123';
          FC.update();
          assert.equal(FC._isUpdating(), true);
-         updateDef.callback().addCallback(() => {
+         updateDef.callback().then(() => {
             assert.equal(FC._isUpdating(), false);
             FC.destroy();
             done();

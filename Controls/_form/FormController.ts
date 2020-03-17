@@ -539,7 +539,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                 this._updateIsNewRecord(false);
                 updateResult.callback(true);
             }
-        }
+        };
 
         // maybe anybody want to do custom update. check it.
         const result = this._notify('requestCustomUpdate', [], {bubbling: true});
