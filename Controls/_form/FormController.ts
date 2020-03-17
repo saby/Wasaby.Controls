@@ -547,7 +547,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
          // pending waiting while update process finished
          this._updatePromise = new Deferred();
-         self._notify('registerPending', [this._updatePromise, { showLoadingIndicator: false }], { bubbling: true });
+         this._notify('registerPending', [this._updatePromise, { showLoadingIndicator: false }], { bubbling: true });
          this._updatePromise.dependOn(updateResult);
 
         if (result && result.then) {
