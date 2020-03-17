@@ -14,6 +14,18 @@ export interface IToolbarSourceOptions {
 export default interface IToolbarSource {
     readonly '[Controls/_toolbars/IToolbarSource]': boolean;
 }
+/**
+ * @typedef {Enum} ShowType
+ * @variant 0  Элемент отображается только в меню
+ * @variant 1  Элемент отображается в меню и в тулбаре
+ * @variant 2  Элемент отображается только в тулбаре
+ */
+/**
+ * @typedef {Enum} ShowType
+ * @variant 0  item is displayed only in the menu
+ * @variant 1  item is displayed in the menu and toolbar
+ * @variant 2  item is displayed only in the toolbar
+ */
 
 /**
  * @typedef {Object} Item
@@ -25,7 +37,7 @@ export default interface IToolbarSource {
  * @property {String} [item.title] Определеяет текст элемента.
  * @property {Boolean} [item.showHeader] Определяет, будет ли отображаться шапка у выпадающего списка элемента.
  * @property {String} [item.tooltip] Текст подсказки, при наведении на элемент тулбара. {@link Controls/_interface/ITooltip#tooltip Подробнее}
- * @property {Number} [item.showType] Определяет, где будет отображаться элемент( 0 - только в меню,1 - в меню и в тулбаре, 2 - только в тулбаре)
+ * @property {ShowType} [item.showType] Определяет, где будет отображаться элемент( 0 - только в меню,1 - в меню и в тулбаре, 2 - только в тулбаре)
  * @property {String} [item.viewMode] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#viewMode Подробнее }
  */
 /*
@@ -38,7 +50,7 @@ export default interface IToolbarSource {
  * @property {String} [item.title] Determines item caption.
  * @property {Boolean} [item.showHeader] Indicates whether folders should be displayed.
  * @property {String} [item.tooltip] Text of the tooltip shown when the item is hovered over.
- * @property {Number} [item.showType] Determines where item is displayed ( 0 - in menu,1 - in menu and toolbar, 2 - in toolbar)
+ * @property {ShowType} [item.showType] Determines where item is displayed ( 0 - in menu,1 - in menu and toolbar, 2 - in toolbar)
  * @property {String} [item.buttonStyle] Button style of toolbar element.
  * @property {String} [item.buttonViewMode] Button style of toolbar element.
  */

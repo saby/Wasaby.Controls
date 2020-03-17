@@ -22,11 +22,11 @@ export interface IShowType {
    TOOLBAR: number;
 }
 
-export const showType: IShowType = {
-   MENU: 0,
-   MENU_TOOLBAR: 1,
-   TOOLBAR: 2
-};
+export enum showType {
+   MENU,
+   MENU_TOOLBAR,
+   TOOLBAR
+}
 
 export function getMenuItems<T extends Record>(items: RecordSet<T> | T[]): ChainAbstract<T> {
    return factory(items).filter((item) => {
