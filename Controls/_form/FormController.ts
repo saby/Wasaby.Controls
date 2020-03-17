@@ -445,7 +445,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     private _isUpdating(): boolean {
         return this._updatePromise && !this._updatePromise.isReady();
-    },
+    }
 
     private _confirmDialogResult(answer: boolean, def: Promise<any>): void {
         if (answer === true) {
