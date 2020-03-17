@@ -112,7 +112,7 @@ var _private = {
                     hasChanges = _private.updateItemActions(self, options.editingConfig.item, options);
                 }
                 options.listModel.reset();
-                while (!options.listModel.isEnd()) {
+                while (options.listModel.isEnd()) {
                     let itemData = options.listModel.getCurrent();
                     let item = itemData.actionsItem;
                     if (item !== ControlsConstants.view.hiddenGroup && item.get) {
