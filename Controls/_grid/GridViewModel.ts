@@ -1599,25 +1599,6 @@ var
             return '';
         },
 
-        _isFirstInGroup: function(item, groupId?): boolean {
-            const display = this._model._display;
-            let currentGroupItems;
-
-            groupId = groupId || this._getItemGroup(item);
-            if (groupId === undefined || groupId === null) {
-                return false;
-            }
-
-            currentGroupItems = display.getGroupItems(groupId);
-
-            // If current item is out of any group.
-            if (!currentGroupItems || currentGroupItems.length === 0) {
-                return false;
-            }
-
-            return item === currentGroupItems[0].getContents();
-        },
-
         _getItemGroup: function(item): boolean {
             const groupingKeyCallback = this._options.groupingKeyCallback;
             if (groupingKeyCallback) {
