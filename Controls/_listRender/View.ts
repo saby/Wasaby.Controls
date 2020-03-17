@@ -187,8 +187,7 @@ export default class View extends Control<IViewOptions> {
             action,
             clickEvent,
             false,
-            this._actionClickCallbackFn,
-            this._options.theme
+            this._actionClickCallbackFn
         );
     }
 
@@ -203,8 +202,7 @@ export default class View extends Control<IViewOptions> {
             clickEvent,
             null,
             true,
-            this._actionClickCallbackFn,
-            this._options.theme
+            this._actionClickCallbackFn
         );
     }
 

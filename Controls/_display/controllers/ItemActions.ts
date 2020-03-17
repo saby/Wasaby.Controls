@@ -183,15 +183,14 @@ export function processActionClick(
     action: TItemAction,
     clickEvent: SyntheticEvent<MouseEvent>,
     fromDropdown: boolean,
-    actionClickCallback: Function,
-    theme: string
+    actionClickCallback: Function
 ): void {
     clickEvent.stopPropagation();
     if (action._isMenu) {
-        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false, actionClickCallback, theme);
+        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false, actionClickCallback);
     } else if (action['parent@']) {
         if (!fromDropdown) {
-            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false, actionClickCallback, theme);
+            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false, actionClickCallback);
         }
     } else {
         const item = collection.getItemBySourceKey(itemKey);
@@ -217,8 +216,7 @@ export function prepareActionsMenuConfig(
     clickEvent: SyntheticEvent<MouseEvent>,
     parentAction: TItemAction,
     isContext: boolean,
-    actionClickCallback: Function,
-    theme: string
+    actionClickCallback: Function
 ): void {
     const item = collection.getItemBySourceKey(itemKey);
     if (!item) {
@@ -235,7 +233,7 @@ export function prepareActionsMenuConfig(
 
         // there was a fake target before, check if it is needed
         const menuTarget = isContext ? null : getFakeMenuTarget(clickEvent.target as HTMLElement);
-        const closeHandler = _processActionsMenuClose.bind(null, collection, actionClickCallback, theme);
+        const closeHandler = _processActionsMenuClose.bind(null, collection, actionClickCallback);
         const menuRecordSet = new RecordSet({
             rawData: menuActions,
             keyProperty: 'id'
@@ -412,7 +410,6 @@ function _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
 function _processActionsMenuClose(
     collection: IItemActionsCollection,
     actionClickCallback: Function,
-    theme: string,
     args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] },
 ): void {
     // Actions dropdown can start closing after the view itself was unmounted already, in which case
@@ -428,8 +425,7 @@ function _processActionsMenuClose(
                 action,
                 args.event,
                 true,
-                actionClickCallback,
-                theme
+                actionClickCallback
             );
 
             // If this action has children, don't close the menu if it was clicked
