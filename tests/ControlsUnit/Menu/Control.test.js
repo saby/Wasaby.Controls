@@ -169,6 +169,7 @@ define(
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;
+            expectedOptions.headerContentTemplate = null;
             expectedOptions.additionalProperty = null;
             expectedOptions.itemPadding = null;
 
