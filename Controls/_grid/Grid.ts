@@ -2,7 +2,6 @@ import {ListControl as viewTemplate, View as List} from 'Controls/list';
 import GridViewModel = require('Controls/_grid/GridViewModel');
 import viewName = require('Controls/_grid/GridView');
 
-
 /**
     * Контрол «Таблица». Может загружать данные из источника данных.
     * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
@@ -80,22 +79,19 @@ import viewName = require('Controls/_grid/GridView');
     * @demo Controls-demo/List/Grid/BasePG
     */
 
-   var
-      Grid = List.extend(/** @lends Controls/grid:View */{
-         _viewName: viewName,
-         _viewTemplate: viewTemplate,
+export default class Grid extends List /** @lends Controls/grid:View */ {
+    _viewName = viewName;
+    _viewTemplate = viewTemplate;
 
-         _getModelConstructor: function() {
-            return GridViewModel;
-         }
-      });
+    _getModelConstructor() {
+        return GridViewModel;
+    }
+}
 
-   Grid.getDefaultOptions = function() {
-      return {
-         stickyHeader: true,
-         stickyColumnsCount: 1,
-         rowSeparatorSize: 's',
-      };
+Grid.getDefaultOptions = function() {
+   return {
+       stickyHeader: true,
+       stickyColumnsCount: 1,
+       rowSeparatorSize: 's'
    };
-
-   export = Grid;
+};
