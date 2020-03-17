@@ -20,13 +20,25 @@ define('Controls/interface/IItemTemplate', [
 
    /**
     * @name Controls/interface/IItemTemplate#itemTemplate
-    * @cfg {String|Function} Шаблон отображения элемента.
-    * @default Controls/list:ItemTemplate
-    * @demo Controls-demo/List/List/ItemTemplatePG
+    * @cfg {String|Function} Конфигурация шаблона отображения элемента.
+    * @default undefined
+    * @demo Controls-demo/list_new/ItemTemplate/CustomContent/Index
     * @remark
-    * Подробнее о параметрах шаблона Controls/list:ItemTemplate читайте {@link Controls/list:ItemTemplate здесь}.
-    * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
-    * Шаблон может быть переопределён с помощью опции {@link Controls/interface/IItemTemplate#itemTemplateProperty itemTemplateProperty}.
+    * В качестве шаблона отображения элемента всегда используется {@link Controls/list:ItemTemplate}.
+    * Он обеспечивает правильную работу контрола, и использование других шаблонов не допускается.
+    * 
+    * По умолчанию Controls/list:ItemTemplate отображает значение поля, имя которого задано в опции {@link Controls/list:ItemTemplate#displayProperty displayProperty}.
+    * Об этом следует помнить при настройке источника данных контрола.
+    * Для изменения отображения элемента следует передать новую конфигурацию опциям шаблона, список которых доступен {@link Controls/list:ItemTemplate здесь}.
+    * 
+    * Опция контрола itemTemplate предназначена для изменения опций шаблона Controls/list:ItemTemplate.
+    * Опция itemTemplate в качестве значения принимает только шаблон.
+    * В разделе "Примеры" показано как с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать шаблон Controls/list:ItemTemplate с новой конфигурацией.
+    * 
+    * Также в опцию itemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}.
+    * В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/list:ItemTemplate.
+    * 
+    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ руководстве разработчика}.
     * @example
     * <pre class="brush: html">
     * <Controls.list:View>
@@ -46,7 +58,7 @@ define('Controls/interface/IItemTemplate', [
    /*
     * @name Controls/interface/IItemTemplate#itemTemplate
     * @cfg {Function} Template for item render.
-    * <a href="/materials/demo-ws4-list-item-template">Example</a>.
+    * @demo Controls-demo/list_new/ItemTemplate/CustomContent/Index
     * @remark
     * Base itemTemplate for Controls.list:View: "Controls/list:ItemTemplate".
     * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
@@ -74,7 +86,7 @@ define('Controls/interface/IItemTemplate', [
    /**
     * @name Controls/interface/IItemTemplate#itemTemplateProperty
     * @cfg {String|undefined} Имя поля элемента, где содержится имя шаблона отображения элемента. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
-    * @demo Controls-demo/List/List/ItemTemplatePG
+    * @demo Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/Index
     * @remark
     * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/interface/IItemTemplate#itemTemplate itemTemplate}.
     * @see Controls/interface/IItemTemplate#itemTemplate
@@ -83,6 +95,6 @@ define('Controls/interface/IItemTemplate', [
    /*
     * @name Controls/interface/IItemTemplate#itemTemplateProperty
     * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
-    * <a href="/materials/demo-ws4-list-item-template">Example</a>.
+    * @demo Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/Index
     */
 });
