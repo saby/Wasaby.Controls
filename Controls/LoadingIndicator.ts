@@ -343,8 +343,9 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         this._toggleOverlayTimerId = setTimeout(() => {
             this._toggleOverlay(toggle, config);
         }, delay);
-    },
-    _toggleOverlay(toggle: boolean, config): void {
+    }
+
+    private _toggleOverlay(toggle: boolean, config: ILoadingIndicatorOptions): void {
         this._isOverlayVisible = toggle && config.overlay !== 'none';
         this._redrawOverlay();
     }
