@@ -396,6 +396,7 @@ var
             if (!self._isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
+            self.resetCachedItemData();
             return prepareLadder({
                 ladderProperties: self._options.ladderProperties,
                 startIndex: self.getStartIndex(),
