@@ -274,12 +274,12 @@ export function prepareActionsMenuConfig(
             nativeEvent: isContext ? clickEvent.nativeEvent : null,
             autofocus: false
         };
+        setActiveItem(collection, itemKey);
+        collection.nextVersion();
         require(['css!theme?Controls/toolbars'], () => {
-            setActiveItem(collection, itemKey);
             collection.setActionsMenuConfig(dropdownConfig);
         });
 
-        collection.nextVersion();
     }
 }
 function getFakeMenuTarget(realTarget: HTMLElement): {

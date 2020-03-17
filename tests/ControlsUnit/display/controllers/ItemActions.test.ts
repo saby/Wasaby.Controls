@@ -92,7 +92,7 @@ describe('Controls/_display/controllers/ItemActions', () => {
     });
 
     describe('prepareActionsMenuConfig()', () => {
-        it('prepares actions menu config', () => {
+        it('prepares actions menu config', (done) => {
             const actionsItem = makeActionsItem();
             actionsItem.setActions({
                 all: [
@@ -110,14 +110,23 @@ describe('Controls/_display/controllers/ItemActions', () => {
             ItemActionsController.prepareActionsMenuConfig(
                 collection,
                 'test',
-                { preventDefault: () => null },
+                {
+                    preventDefault: () => null,
+                    target: { getBoundingClientRect: () => {
+                            return {};
+                        }
+                    }
+                },
                 null,
                 false
             );
 
             assert.isTrue(actionsItem.isActive());
-            assert.isOk(actionsMenuConfig);
             assert.isAbove(collection.getVersion(), 0);
+            require(['css!theme?Controls/toolbars'], () => {
+                assert.isOk(actionsMenuConfig);
+                done();
+            });
         });
     });
 
