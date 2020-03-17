@@ -92,7 +92,7 @@ describe('Controls/_display/controllers/ItemActions', () => {
     });
 
     describe('prepareActionsMenuConfig()', () => {
-        it('prepares actions menu config', (done) => {
+        it('prepares actions menu config', () => {
             const actionsItem = makeActionsItem();
             actionsItem.setActions({
                 all: [
@@ -122,11 +122,8 @@ describe('Controls/_display/controllers/ItemActions', () => {
             );
 
             assert.isTrue(actionsItem.isActive());
+            assert.isOk(actionsMenuConfig);
             assert.isAbove(collection.getVersion(), 0);
-            require(['css!theme?Controls/toolbars'], () => {
-                assert.isOk(actionsMenuConfig);
-                done();
-            });
         });
     });
 

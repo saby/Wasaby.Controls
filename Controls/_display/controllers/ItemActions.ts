@@ -270,16 +270,13 @@ export function prepareActionsMenuConfig(
             direction: {
                 horizontal: isContext ? 'right' : 'left'
             },
-            className: `controls-DropdownList__margin-head controls-Toolbar__popup__list_theme-${theme}`,
+            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
             nativeEvent: isContext ? clickEvent.nativeEvent : null,
             autofocus: false
         };
         setActiveItem(collection, itemKey);
+        collection.setActionsMenuConfig(dropdownConfig);
         collection.nextVersion();
-        require(['css!theme?Controls/toolbars'], () => {
-            collection.setActionsMenuConfig(dropdownConfig);
-        });
-
     }
 }
 function getFakeMenuTarget(realTarget: HTMLElement): {
