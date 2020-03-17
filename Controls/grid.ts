@@ -17,7 +17,7 @@
  * @author Крайнов Д.О.
  */
 
-import View = require('Controls/_grid/Grid');
+import {default as View} from 'Controls/_grid/Grid';
 import ItemTemplate = require('wml!Controls/_grid/ItemTemplateResolver');
 import ResultsTemplate = require('wml!Controls/_grid/ResultsTemplateResolver');
 import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
