@@ -21,6 +21,6 @@ export {default as Popup} from 'Controls/_menu/Popup';
 export {
     ItemTemplate,
     GroupTemplate,
-    EmptyTemplate
+    EmptyTemplate,
     HeaderTemplate
 };
