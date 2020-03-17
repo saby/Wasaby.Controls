@@ -1002,12 +1002,12 @@ var _private = {
         return i;
     },
 
-    handleListScrollSync(self, params) {
+    handleListScrollSync(self, scrollTop) {
         if (self._setMarkerAfterScroll) {
-            _private.delayedSetMarkerAfterScrolling(self, params.scrollTop);
+            _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
-        self._scrollTop = params.scrollTop;
+        self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
     },
 
