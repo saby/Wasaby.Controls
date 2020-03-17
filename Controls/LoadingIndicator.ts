@@ -23,7 +23,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @class Controls/LoadingIndicator
  * @extends Core/Control
  * @control
- * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @author Красильников А.С.
  * @public
  * @category Container
@@ -85,6 +84,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected message: string = '';
     protected scroll: string = '';
     protected small: string = '';
+    protected theme: string = '';
     protected overlay: string = 'default';
     protected mods: Array<string> | string;
     protected delay: number;
@@ -141,7 +141,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             }
         }
         this.delay = cfg.delay !== undefined ? cfg.delay : this._delay;
-
+        this.theme = cfg.theme;
     }
 
     // Indicator is opened above existing popups.
@@ -372,7 +372,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         overlayDiv.setAttribute('tabindex', '1');
 
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'controls-loading-indicator-in';
+        messageDiv.className = 'controls-loading-indicator-in controls-loading-indicator-in_theme-' + this.theme;
 
         this._overlayDiv = overlayDiv;
         this._messageDiv = messageDiv;
@@ -424,8 +424,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     private _calculateOverlayClassName(): string {
-        const classList = ['controls-loading-indicator', 'controls-Popup__isolatedFocusingContext'];
-
+        const classList = ['controls-loading-indicator', 'controls-loading-indicator_theme-' + this.theme , 'controls-Popup__isolatedFocusingContext'];
         classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
 
         if (this.message) {
@@ -443,6 +442,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         }
         if (this.overlay) {
             classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay));
+            classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay) + '_theme-' + this.theme);
         }
         if (this?.mods?.length) {
             classList.concat(this.mods.map((mod) => 'controls-loading-indicator_mod-' + mod));
