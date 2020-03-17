@@ -228,7 +228,7 @@ var
         },
 
         getColumnScrollCellClasses: function(params, theme) {
-           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
+           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed ${_private.getBackgroundStyle(this)} controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
         },
 
         getClassesLadderHeading(itemData, theme): String {
@@ -411,6 +411,22 @@ var
                 styles += `min-width: ${currentColumn.column.width}; max-width: ${currentColumn.column.width};`;
             }
             return styles;
+        },
+
+        /**
+         * Возвращает префикс стиля, выставленный для grid
+         * @param self
+         */
+        getStylePrefix(self): string {
+            return self._options.style || self._options.backgroundStyle;
+        },
+
+        /**
+         * Возвращает CSS класс для установки background
+         * @param self
+         */
+        getBackgroundStyle(self): string {
+            return `controls-background-${_private.getStylePrefix(self)}_theme-${self._options.theme}`;
         }
     },
 
@@ -896,7 +912,7 @@ var
         getCurrentResultsColumn: function() {
             var
                 columnIndex = this._curResultsColumnIndex,
-                cellClasses = `controls-Grid__results-cell controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`,
+                cellClasses = `controls-Grid__results-cell ${_private.getBackgroundStyle(this)} controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`,
                 resultsColumn = {
                     column: this._resultsColumns[columnIndex],
                     index: columnIndex
