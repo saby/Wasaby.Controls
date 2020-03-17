@@ -473,6 +473,10 @@ var _Controller = Control.extend({
    },
 
    _open(popupOptions?: object): void {
+      if (this._options.readOnly) {
+         return;
+      }
+
       const open = (): void => {
          let config = _private.getPopupOptions(this, popupOptions);
          _private.requireTemplates(this, this._options).addCallback(() => {
