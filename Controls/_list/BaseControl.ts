@@ -19,7 +19,7 @@ import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {constants} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud, Memory} from "Types/source";
 import {TouchContextField} from 'Controls/context';
@@ -36,6 +36,7 @@ import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INa
 import {CollectionItem, ItemActionsController} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
+import InertialScrolling from './resources/utils/InertialScrolling';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -566,17 +567,20 @@ var _private = {
                     self._children.scrollController.startBatchAdding(direction);
                 }
 
-                if (direction === 'down') {
-                    beforeAddItems(addedItems);
-                    if (self._options.useNewModel) {
-                        self._listViewModel.getCollection().append(addedItems);
-                    } else {
-                        self._listViewModel.appendItems(addedItems);
+                self._inertialScrolling.callAfterScrollStopped(() => {
+                    if (direction === 'down') {
+                        beforeAddItems(addedItems);
+                        if (self._options.useNewModel) {
+                            self._listViewModel.getCollection().append(addedItems);
+                        } else {
+                            self._listViewModel.appendItems(addedItems);
+                        }
+                        afterAddItems(countCurrentItems, addedItems);
+                    } else if (direction === 'up') {
+                        drawItemsUp(countCurrentItems, addedItems);
                     }
-                    afterAddItems(countCurrentItems, addedItems);
-                } else if (direction === 'up') {
-                    drawItemsUp(countCurrentItems, addedItems);
-                }
+                });
+
                 return addedItems;
             }).addErrback((error) => {
                 _private.hideIndicator(self);
@@ -998,12 +1002,12 @@ var _private = {
         return i;
     },
 
-    handleListScrollSync(self, params) {
+    handleListScrollSync(self, scrollTop) {
         if (self._setMarkerAfterScroll) {
-            _private.delayedSetMarkerAfterScrolling(self, params.scrollTop);
+            _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
-        self._scrollTop = params.scrollTop;
+        self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
     },
 
@@ -1766,6 +1770,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
         var self = this;
 
+        this._inertialScrolling = new InertialScrolling();
+
         // todo Костыль, т.к. построение ListView зависит от SelectionController.
         // Будет удалено при выполнении одного из пунктов:
         // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
@@ -1892,6 +1898,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     scrollMoveSyncHandler(_: SyntheticEvent<Event>, params: unknown): void {
         _private.handleListScrollSync(this, params);
+
+        if (detection.isMobileIOS) {
+            this._inertialScrolling.scrollStarted();
+        }
     },
 
     scrollMoveHandler(_: SyntheticEvent<Event>, params: unknown): void {

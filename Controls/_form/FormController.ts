@@ -532,8 +532,8 @@ class FormController extends Control<IFormController, IReceivedState> {
                 const res = this._update(config).then(this._getData);
                 updateResult.dependOn(res);
             } else {
-                updateResult.callback(true);
                 this._updateIsNewRecord(false);
+                updateResult.callback(true);
             }
         }
 
