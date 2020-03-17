@@ -23,9 +23,13 @@ interface IPosition {
       getWindowSizes: function() {
          // Ширина берется по body специально. В случае, когда уменьшили окно браузера и появился горизонтальный скролл
          // надо правильно вычислить координату right. Для высоты аналогично.
+         let height = _private.getBodyHeight();
+         if (_private.isIOS12()) {
+            height -= TouchKeyboardHelper.getKeyboardHeight(true);
+         }
          return {
             width: document.body.clientWidth,
-            height: document.body.clientHeight - TouchKeyboardHelper.getKeyboardHeight(true)
+            height
          };
       },
 
@@ -40,7 +44,7 @@ interface IPosition {
             position[isHorizontal ? 'left' : 'top'] = targetCoords[isHorizontal ? 'left' : 'top'] + targetCoords[isHorizontal ? 'width' : 'height'] / 2 - popupCfg.sizes[isHorizontal ? 'width' : 'height'] / 2 + _private.getMargins(popupCfg, direction) ;
          } else {
             if (popupCfg.direction[direction] === (isHorizontal ? 'left' : 'top')) {
-               position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
+               position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] + _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'] -
                    _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction);
             } else {
                position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
@@ -82,15 +86,17 @@ interface IPosition {
          // У нас нет никакой инфы про ее наличие и/или высоту.
          // Единственное решение учитывать ее всегда и поднимать окно от низа экрана на 45px.
          // С проектированием решили увеличить до 45.
-         if (!isHorizontal && TouchKeyboardHelper.isKeyboardVisible(true)) {
-            taskBarKeyboardIosHeight = 45;
-            if (_private.isIOS13()) {
-               // На ios13 высота серой области на 5px больше
-               taskBarKeyboardIosHeight += 5;
+         if (_private.isIOS12()) {
+            if (!isHorizontal && TouchKeyboardHelper.isKeyboardVisible(true)) {
+               taskBarKeyboardIosHeight = 45;
+               // if (_private.isIOS13()) {
+               //    // На ios13 высота серой области на 5px больше
+               //    taskBarKeyboardIosHeight += 5;
+               // }
             }
          }
-         let overflow = position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
-         if (!_private.isIOS13()) {
+         let overflow = position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
+         if (_private.isIOS12()) {
             overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
          }
          return overflow;
@@ -210,7 +216,7 @@ interface IPosition {
       },
 
       _fixBottomPositionForIos: function(position, targetCoords) {
-         if (position.bottom) {
+         if (position.bottom && _private.isIOS12()) {
             let keyboardHeight = _private.getKeyboardHeight();
             position.bottom += keyboardHeight;
 
@@ -287,7 +293,20 @@ interface IPosition {
       },
 
       getBodyHeight(): number {
+         if (window?.visualViewport) {
+            return _private.getVisualViewport().height;
+         }
          return document.body.clientHeight;
+      },
+
+      getVisualViewport(): object {
+         if (window?.visualViewport) {
+            return window.visualViewport;
+         }
+         return {
+            offsetLeft: 0,
+            offsetTop: 0
+         };
       }
    };
 
