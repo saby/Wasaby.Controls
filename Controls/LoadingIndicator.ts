@@ -247,7 +247,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     small: '',
     overlay: 'default',
     mods: null,
-    theme: '',
     _overlayDiv: null,
     _messageDiv: null,
 
@@ -301,7 +300,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
             }
         }
         this.delay = cfg.delay !== undefined ? cfg.delay : this._delay;
-        this.theme = cfg.theme;
     },
 
     // Indicator is opened above existing popups.
@@ -530,7 +528,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         overlayDiv.setAttribute('tabindex', '1');
 
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'controls-loading-indicator-in controls-loading-indicator-in_theme-' + this.theme;
+        messageDiv.className = 'controls-loading-indicator-in controls-loading-indicator-in_theme-' + this._options.theme;
 
         this._overlayDiv = overlayDiv;
         this._messageDiv = messageDiv;
@@ -582,7 +580,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     },
 
     _calculateOverlayClassName(): string {
-        const classList = ['controls-loading-indicator', 'controls-loading-indicator_theme-' + this.theme , 'controls-Popup__isolatedFocusingContext'];
+        const classList = ['controls-loading-indicator', 'controls-loading-indicator_theme-' + this._options.theme , 'controls-Popup__isolatedFocusingContext'];
 
         classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
 
@@ -601,7 +599,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         }
         if (this.overlay) {
             classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay));
-            classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay) + '_theme-' + this.theme);
+            classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay) + '_theme-' + this._options.theme);
         }
         if (this?.mods?.length) {
             classList.concat(this.mods.map((mod) => 'controls-loading-indicator_mod-' + mod));
