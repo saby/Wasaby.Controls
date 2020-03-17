@@ -445,8 +445,8 @@ import dataSource = require('Controls/dataSource');
                var res = self._update().addCallback(getData);
                updateResult.dependOn(res);
             } else {
-               updateResult.callback(true);
                self._updateIsNewRecord(false);
+               updateResult.callback(true);
             }
          }
 
