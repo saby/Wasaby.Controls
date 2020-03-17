@@ -219,7 +219,6 @@
    display: flex;
    align-items: center;
    height: @footer_min-height_menuPopup;
-   padding-left: @item_padding-horizontal_l_menu;
 }
 
 .controls-Menu__additional {
@@ -227,7 +226,6 @@
    justify-content: center;
    align-items: center;
    width: 100%;
-   margin-right: @spacing_ListView-item-between-content-borderRight_l;
 }
 
 .controls-Menu__applyButton_theme-@{themeName} {
@@ -238,8 +236,12 @@
    align-items: center;
 }
 
-.controls-Menu__footer_multiSelect {
-   padding-left: 0;
+.controls-Menu__footer_moreButton_theme-@{themeName} {
+   padding-left: @item_padding-horizontal_l_menu;
+}
+
+.controls-Menu__footer_moreButton_multiSelect_theme-@{themeName} {
+   padding-left: @click-area_width_checkbox;
 }
 
 .ws-is-hover {
