@@ -676,7 +676,6 @@ define(
          });
 
          it ('_open menuPopupOptions', () => {
-            let popupConfig;
             let expectedMenuOptions = {
                fittingMode: 'fixed',
                direction: 'top',
@@ -685,15 +684,14 @@ define(
             let newConfig = clone(config);
             newConfig.menuPopupOptions = expectedMenuOptions;
             let dropdownController = getDropdownController(newConfig);
-            dropdownController._children.DropdownOpener = {
-               open: (popupCfg) => {
-                  popupConfig = popupCfg;
-               }
+
+            dropdownController._sourceController = {
+               hasMoreData: () => {}
             };
-            dropdown._Controller._private.getPopupOptions(dropdownController);
-            assert.equal(popupConfig.fittingMode, expectedMenuOptions.fittingMode);
-            assert.equal(popupConfig.direction, expectedMenuOptions.direction);
-            assert.equal(popupConfig.target, expectedMenuOptions.target);
+            const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
+            assert.equal(resultPopupConfig.fittingMode, expectedMenuOptions.fittingMode);
+            assert.equal(resultPopupConfig.direction, expectedMenuOptions.direction);
+            assert.equal(resultPopupConfig.target, expectedMenuOptions.target);
          });
 
          it('events on open/close', async () => {
