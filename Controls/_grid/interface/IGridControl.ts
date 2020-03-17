@@ -297,7 +297,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
- * @cfg {Number} Определяет число зафиксированных колонок, которые не двигаются при горизонтальном скролле.
+ * @cfg {Number} Количество зафиксированных колонок, которые не двигаются при горизонтальном скролле.
  * @default 1
  * @see Controls/_grid/interface/IGridControl#columnScroll
  * @remark
@@ -335,9 +335,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#rowSeparatorSize
- * @cfg {RowSeparatorSize} Устанавливает высоту линии разделителя.
- * @variant s Тонкая линия разделителя строк.
- * @variant l Широкая линия разделителя строк.
+ * @cfg {RowSeparatorSize} Высота линии-разделителя.
  * @default s
  */
 
@@ -375,7 +373,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsPosition
- * @cfg {ResultsPosition|undefined} Устанавливает положение строки итогов.
+ * @cfg {ResultsPosition|undefined} Положение строки итогов.
  * @default undefined
  * @remark
  * При значении опции **undefined** строка итогов скрыта.
@@ -415,13 +413,13 @@
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
  * @remark
- * См. <a href="/materials/demo-ws4-edit-arrow">демо-пример</a>
  * Чтобы стрелка-шеврон отобразилась в прикладном шаблоне колонки, необходимо в опции contentTemplate явно указать позицию стрелки-шеврона.
  * Для этого используется переменная {@link Controls/grid:ColumnTemplate#editArrowTemplate} из области видимости самого шаблона.
  * Пример использования смотреть {@link Controls/grid:ColumnTemplate#contentTemplate тут}
+ * @demo Controls-demo/List/Tree/EditArrow
  * @example
  * <pre>
- * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
+ *    <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  * </pre>
  */
 
@@ -439,7 +437,7 @@
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, на который навели курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента, на который навели курсор.
- * @param {Number} columnIndex Индекс ячейки на которую навели курсор.
+ * @param {Number} columnIndex Индекс ячейки, на которую навели курсор.
  * @param {HTMLElement} cellContainer Контейнер ячейки элемента, на которую навели курсор.
  */
 
@@ -448,4 +446,18 @@
  * @name Controls/_grid/interface/IGridControl#editArrowClick
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Model} item Элемент, по которому произвели клик.
+ */
+
+/**
+ * @event Происходит при изменении набора развернутых узлов.
+ * @name Controls/_grid/interface/IGridControl#expandedItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Array.<Number|String>} expandedItems Идентификаторы развернутых узлов.
+ */
+
+/**
+ * @event Происходит при изменении набора свернутых узлов.
+ * @name Controls/_grid/interface/IGridControl#collapsedItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Array.<Number|String>} expandedItems Идентификаторы свернутых узлов.
  */
