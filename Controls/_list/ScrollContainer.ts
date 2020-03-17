@@ -415,6 +415,8 @@ export default class ScrollContainer extends Control<IOptions> {
 
         if (this._fakeScroll) {
             this._fakeScroll = false;
+        } else if (this._viewHeight !== this._container.offsetHeight) {
+            this._viewResize(this._container.offsetHeight);
         } else if (!this._restoreScrollResolve && !this._virtualScroll.rangeChanged) {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
 
