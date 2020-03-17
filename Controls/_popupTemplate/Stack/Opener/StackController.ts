@@ -460,6 +460,13 @@ class StackController extends BaseController {
                 oldWindowManager._acquireIndex = item.currentZIndex;
                 oldWindowManager._acquiredIndexes.push(item.currentZIndex);
                 oldWindowManager.setVisible(item.currentZIndex);
+            } else {
+                // В старом WM могут храниться не только zindex'ы от окон, например старый listView сохраняет свой
+                // z-index в менеджер. Но такой zindex не участвует в обходе по поиску максимального zindex'a окон.
+                // В итоге получаем что открываемое стековое окно меньше по zindex чем WM._acquireIndex, из-за чего
+                // проверка выше не проходит. Делаю нотифай вручную, чтобы старый notificationController знал про
+                // актуальные zindex'ы окон на странице.
+                oldWindowManager._notify('zIndexChanged', item.currentZIndex);
             }
         }
     }
