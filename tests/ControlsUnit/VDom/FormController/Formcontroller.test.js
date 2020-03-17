@@ -417,5 +417,19 @@ define([
          assert.equal(FC._isNewRecord, false);
          FC.destroy();
       });
+
+      it('is updating ', (done) => {
+         let FC = new form.Controller();
+         let updateDef = new Deferred();
+         FC._update = () => updateDef;
+         FC._getRecordId = () => '123';
+         FC.update();
+         assert.equal(FC._isUpdating(), true);
+         updateDef.callback().addCallback(() => {
+            assert.equal(FC._isUpdating(), false);
+            FC.destroy();
+            done();
+         });
+      });
    });
 });
