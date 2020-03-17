@@ -193,12 +193,12 @@ define(
 
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
-            delete expectedOptions.footerTemplate;
             expectedOptions.footerItemData = {
                item,
                key: expectedOptions.root
             };
             expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
+            expectedOptions.footerTemplate = defaultOptions.nodeFooterTemplate;
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;
