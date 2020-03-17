@@ -68,7 +68,7 @@ export default class ColumnsInnerView extends Control {
     protected _resizeHandler(): void {
         if (this._options.columnsMode === 'auto') {
             const width = this._itemsContainer.getBoundingClientRect().width;
-            this._columnsCount = Math.floor(width / (this._options.columnMinWidth || DEFAULT_MIN_WIDTH + SPACING));
+            this._columnsCount = Math.floor(width / ((this._options.columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
             this.updateColumns();
         }
     }
@@ -116,6 +116,7 @@ export default class ColumnsInnerView extends Control {
             model.subscribe('onCollectionChange', this._onCollectionChange);
         }
     }
+
     private getItemToLeft(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
         const curIndex = model.getIndex(item);
         let newIndex: number = curIndex;

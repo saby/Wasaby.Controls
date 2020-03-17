@@ -176,6 +176,31 @@ define([
          });
       });
 
+      it('moveItemsWithDialog is called with items and with search applied', function() {
+         const items = [1, 2, 3];
+         const filter = {
+            searchParam: 'searchValue'
+         };
+         let openConfig;
+
+         mover._options.searchParam = 'searchParam';
+         mover._filter = filter;
+
+         mover._children = {
+            dialogOpener: {
+               open: function(openArgs) {
+                  openConfig = openArgs;
+               }
+            }
+         };
+
+         mover.moveItemsWithDialog(items);
+
+         assert.deepEqual(openConfig.templateOptions.movedItems, items);
+         assert.equal(openConfig.templateOptions.source, mover._source);
+         assert.equal(openConfig.templateOptions.keyProperty, mover._keyProperty);
+      });
+
       it('moveItems for newLogic', function() {
          var
             callMethodCalled = false,

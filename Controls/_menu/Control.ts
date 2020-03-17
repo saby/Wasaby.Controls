@@ -554,7 +554,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         let templateOptions = Clone(this._options);
         templateOptions.root = item.getContents().get(this._options.keyProperty);
         templateOptions.bodyContentTemplate = 'Controls/_menu/Control';
-        templateOptions.footerTemplate = this._options.nodeFooterTemplate;
         templateOptions.footerItemData = {
             key: templateOptions.root,
             item
@@ -611,13 +610,13 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         );
     }
 
-    static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
-
-    static _getChildContext(): object {
+    private _getChildContext(): object {
         return {
             ScrollData: new ScrollData({pagingVisible: false})
         };
     }
+
+    static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
 
     static getDefaultOptions(): object {
         return {
