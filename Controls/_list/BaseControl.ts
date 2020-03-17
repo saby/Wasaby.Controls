@@ -1834,10 +1834,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     return _private.showError(self, receivedError);
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
-                    if (newOptions.useNewModel && !self._listViewModel && result.data) {
-                        self._items = result.data;
+
+                    // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
+                    const data = result.data || (new RecordSet<Model>({
+                        keyProperty: self._options.keyProperty,
+                        rawData: []
+                    }));
+
+                    if (newOptions.useNewModel && !self._listViewModel) {
+                        self._items = data;
                         self._listViewModel = self._createNewModel(
-                            result.data,
+                            data,
                             viewModelConfig,
                             newOptions.viewModelConstructor
                         );
@@ -1849,7 +1856,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         }
                         _private.calculateActionsTemplateConfig(self, newOptions);
                     }
-                    self._needBottomPadding = _private.needBottomPadding(newOptions, result.data, self._listViewModel);
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
