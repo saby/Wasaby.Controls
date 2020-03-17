@@ -264,8 +264,10 @@ export default class ScrollContainer extends Control<IOptions> {
 
     checkTriggerVisibilityWithTimeout(): void {
         this._checkTriggerVisibilityTimeout = setTimeout(() => {
-            this._checkTriggerVisibility();
-            clearTimeout(this._checkTriggerVisibilityTimeout);
+            if (!this._virtualScroll.rangeChanged) {
+                this._checkTriggerVisibility();
+                clearTimeout(this._checkTriggerVisibilityTimeout);
+            }
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
