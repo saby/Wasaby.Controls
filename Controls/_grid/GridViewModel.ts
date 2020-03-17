@@ -271,7 +271,7 @@ var
             }
 
             if (current.isSelected) {
-                classLists.base += ` controls-Grid__row-cell_selected controls-background-${style}_theme-${theme} controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell_selected ${_private.getBackgroundStyle({_options: {theme, style}})} controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 if (current.columnIndex === 0) {
                     classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
@@ -417,7 +417,7 @@ var
          * Возвращает префикс стиля, выставленный для grid
          * @param self
          */
-        getStylePrefix(self): string {
+        getStylePrefix(self: {_options?: {[p: string]: any}}): string {
             return self._options.style || self._options.backgroundStyle;
         },
 
@@ -425,7 +425,7 @@ var
          * Возвращает CSS класс для установки background
          * @param self
          */
-        getBackgroundStyle(self): string {
+        getBackgroundStyle(self: {_options?: {[p: string]: any}}): string {
             return `controls-background-${_private.getStylePrefix(self)}_theme-${self._options.theme}`;
         }
     },
