@@ -27,7 +27,7 @@ import {isEqual} from 'Types/object';
 
 export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */{
     _template: TemplateFunction = ListControlTpl;
-    protected _children: unknown;
+    protected _children: Record<string, Element | Control>;
     _beforeUpdate(cfg) {
         if (cfg.propStorageId && !isEqual(cfg.sorting, this._options.sorting)) {
             saveConfig(cfg.propStorageId, ['sorting'], cfg);
