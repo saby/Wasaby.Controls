@@ -179,7 +179,7 @@ export default class ScrollContainer extends Control<IOptions> {
                 this._scrollPositionChanged(params);
                 break;
             case 'viewportResize':
-                this._viewportResize(params);
+                this._viewportResize(params.clientHeight);
                 this._notify('viewportResize', [params.clientHeight, params.rect]);
                 break;
             case 'virtualScrollMove':
@@ -502,6 +502,7 @@ export default class ScrollContainer extends Control<IOptions> {
         if (this._virtualScroll.isNeedToRestorePosition) {
             this._restoreScrollPosition();
             this.checkTriggerVisibilityWithTimeout();
+            this._restoreScrollResolve = null;
         } else if (this._restoreScrollResolve) {
             // В результате _restoreScrollResolve он может сам себя перезаписать
             // (такое происходит, когда вызвали scrolLToItem)
