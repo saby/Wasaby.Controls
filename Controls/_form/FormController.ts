@@ -340,7 +340,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         });
     }
 
-    private _readRecordBeforeMount = (cfg: IFormController) => {
+    private _readRecordBeforeMount(cfg: IFormController): Promise<{data: Model}> {
         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
         return readWithAdditionalFields(this._source, cfg.key, cfg.readMetaData).then((record: Model) => {
@@ -357,7 +357,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         }, (e: Error) => {
             this._readInMounting = {isError: true, result: e};
             return this._processError(e).then(this._getState);
-        });
+        }) as Promise<{data: Model}>;
     }
 
     private _checkRecordType(record: Model): boolean {
