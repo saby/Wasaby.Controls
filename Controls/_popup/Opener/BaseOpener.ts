@@ -140,7 +140,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 if (!this._openerUnmounted || this._options.closePopupBeforeUnmount === false) {
                     return results;
                 }
-                return new Error('Opener was destroyed');
+                Logger.warn(`Controls/popup: Во время открытия окна с шаблоном ${cfg.template} задестроился opener`);
+                throw new Error('Opener was destroyed');
             }).catch((error) => {
                 this._loadModulesPromise = null;
                 throw error;
@@ -322,9 +323,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 BaseOpener.requireModule(config.template),
                 BaseOpener.requireModule(controller)
             ]).then((result: [Control, Control]) => {
-                if (!result[0]) {
-                    Logger.error(`Controls/popup: Проблемы с загрузкой шаблона ${config.template}, проверьте имя зависимости`);
-                }
                 resolve({
                     template: result[0],
                     controller: result[1]
