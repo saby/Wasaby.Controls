@@ -203,11 +203,8 @@ var ItemActionsControl = Control.extend({
     },
 
     _beforeMount: function(newOptions) {
-        if (typeof window === 'undefined') {
-            this.serverSide = true;
-            return;
-        }
         this._getContainerPaddingClass = _private.getContainerPaddingClass.bind(this);
+
         if (newOptions.useNewModel) {
             displayLib = require('Controls/display');
             return import('Controls/listRender').then((listRender) => {
