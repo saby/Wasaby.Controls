@@ -51,7 +51,6 @@
            attr:style="{{itemData.styleLadderHeading}}">
          <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{backgroundStyle}}"
                                        shadowVisibility="hidden"
-                                       ignoreHeight="{{true}}"
                                        mode="replaceable">
             <ws:partial template="columnContent" currentColumn="{{currentColumn}}" attr:class="{{itemData.getClassesLadderHeading(currentColumn, _options.theme)}}"/>
          </Controls.scroll:StickyHeader>
@@ -105,7 +104,6 @@
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                       js-controls-SwipeControl__actionsContainer"
                           shadowVisibility="hidden"
-                          ignoreHeight="{{true}}"
                           attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
       <ws:partial template="columnContentWrapper"/>
    </Controls.scroll:StickyHeader>
