@@ -6,9 +6,10 @@ import * as Deferred from 'Core/Deferred';
 import {Logger} from 'UI/Utils';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {IContainerConstructor} from 'Controls/_dataSource/error';
-import {Model} from 'Types/entity';
-import {Memory} from 'Types/source';
+import {Model, Record as EntityRecord, ObservableMixin} from 'Types/entity';
+import {CrudEntityKey, ICrud, Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import BindingMixin from "../../application/Types/_source/BindingMixin";
 
 interface IFormController extends IControlOptions {
     createMetaData?: unknown;
@@ -69,6 +70,33 @@ interface IConfigInMounting {
 
 interface IUpdateConfig {
     additionalData: IAdditionalData;
+}
+
+function readWithAdditionalFields(
+    source: ICrud | ObservableMixin | BindingMixin,
+    key: CrudEntityKey, metaData: unknown
+): Promise<EntityRecord> {
+    const needAdditionalFiedls = metaData && (source as ObservableMixin).subscribe &&
+        (source as BindingMixin).getBinding;
+    let handler;
+
+    if (needAdditionalFiedls) {
+        const sourceBinding = (source as BindingMixin).getBinding() || {};
+        handler = (event, name, args) => {
+            if (name === sourceBinding.read) {
+                args.ДопПоля = metaData;
+            }
+        };
+        (source as ObservableMixin).subscribe('onBeforeProviderCall', handler);
+    }
+
+    const result = (source as ICrud).read(key);
+
+    if (needAdditionalFiedls) {
+        (source as ObservableMixin).unsubscribe('onBeforeProviderCall', handler);
+    }
+
+    return result;
 }
 
 /**
@@ -315,7 +343,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _readRecordBeforeMount = (cfg: IFormController) => {
         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-        return this._source.read(cfg.key, cfg.readMetaData).then((record: Model) => {
+        return readWithAdditionalFields(this._source, cfg.key, cfg.readMetaData).then((record: Model) => {
             this._setRecord(record);
             this._readInMounting = {isError: false, result: record};
 
