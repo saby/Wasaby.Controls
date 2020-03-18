@@ -1225,7 +1225,8 @@ var
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
-            if (stickyColumn && !detection.isNotFullGridSupport && !current.dragTargetPosition) {
+            // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
+            if (stickyColumn && !detection.isNotFullGridSupport && !current.dragTargetPosition && current.index !== -1) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
             }
 
@@ -1698,6 +1699,9 @@ var
                 return GridLayoutUtil.getColumnStyles(columnCfg);
             } else {
                 columnCfg.columnSpan = params.columnsLength;
+                if (this.shouldAddStickyLadderCell()) {
+                    columnCfg.columnSpan += 1;
+                }
                 return GridLayoutUtil.getColumnStyles(columnCfg);
             }
         },
