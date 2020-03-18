@@ -9,7 +9,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * Контрол «Кнопка с меню».
  * 
  * Полезные ссылки:
- * * <a href="/materials/demo-ws4-button-menu">демо-пример</a>
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FMenu%2FMenu">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/">руководство разработчика</a>
  *
  * @class Controls/_dropdown/Button
@@ -42,7 +42,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
 /*
  * Button by clicking on which a drop-down list opens.
  *
- * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FMenu%2FMenu">Demo-example</a>.
  *
  * @class Controls/_dropdown/Button
  * @extends Core/Control
