@@ -27,8 +27,8 @@ import {isEqual} from 'Types/object';
  */
 
 export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */{
-    _template: TemplateFunction = ListControlTpl;
-    protected _children: Record<string, unknown>;
+    protected _template: TemplateFunction = ListControlTpl;
+    protected _children: { baseControl: unknown };
     _beforeUpdate(cfg) {
         if (cfg.propStorageId && !isEqual(cfg.sorting, this._options.sorting)) {
             saveConfig(cfg.propStorageId, ['sorting'], cfg);
@@ -60,11 +60,9 @@ export default class ListControl extends Control/** @lends Controls/_list/ListCo
     scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
         return this._children.baseControl.scrollToItem(key, toBottom, force);
     }
-}
-
-ListControl.getDefaultOptions = function () {
-    return {
-        uniqueKeys: true
+    static getDefaultOptions () {
+        return {
+            uniqueKeys: true
+        };
     };
-};
-
+}

@@ -87,11 +87,11 @@ import {default as ListControl} from 'Controls/_list/ListControl';
  */
 
 export default class List extends Control/** @lends Controls/_list/List.prototype */{
-    _template: TemplateFunction = ListControlTpl;
-    _viewName = viewName;
-    _viewTemplate: unknown = ListControl;
-    _viewModelConstructor = null;
-    protected _children: Record<string, unknown>;
+    protected _template: TemplateFunction = ListControlTpl;
+    protected _viewName = viewName;
+    protected _viewTemplate: unknown = ListControl;
+    protected _viewModelConstructor = null;
+    protected _children: { listControl: ListControl };
 
     static _theme = ['Controls/list_multi'];
 
@@ -142,13 +142,12 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     }
 
     _notifyHandler = tmplNotify;
-};
 
-ListControl.getDefaultOptions = function() {
-    return {
-        multiSelectVisibility: 'hidden',
-        stickyHeader: true,
-        style: 'default',
-    };
+    static getDefaultOptions() {
+        return {
+            multiSelectVisibility: 'hidden',
+            stickyHeader: true,
+            style: 'default'
+        };
+    }
 };
-
