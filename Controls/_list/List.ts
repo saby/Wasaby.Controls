@@ -91,7 +91,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     _viewName = viewName;
     _viewTemplate: unknown = ListControl;
     _viewModelConstructor = null;
-    protected _children: unknown;
+    protected _children: Record<string, Element | Control>;
 
     static _theme = ['Controls/list_multi'];
 
