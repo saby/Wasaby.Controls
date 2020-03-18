@@ -209,7 +209,7 @@ var _private = {
                         const curKey = listModel.getMarkedKey();
                         listModel.setItems(list);
                         const nextKey = listModel.getMarkedKey();
-                        if (nextKey && nextKey !== curKey
+                        if (nextKey && nextKey !== curKey && self._isScrollShown
                             && self._listViewModel.getCount()
                             && !self._options.task46390860 && !self._options.task1177182277 && !cfg.task1178786918
                         ) {
@@ -348,7 +348,7 @@ var _private = {
         }
     },
     restoreScrollPosition: function (self) {
-        if (self._markedKeyForRestoredScroll !== null && self._isScrollShown) {
+        if (self._markedKeyForRestoredScroll !== null) {
             _private.scrollToItem(self, self._markedKeyForRestoredScroll);
             self._markedKeyForRestoredScroll = null;
         }
