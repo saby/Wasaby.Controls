@@ -24,7 +24,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
  * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
  * @remark
- * См. <a href="/materials/demo-ws4-filter-view">демо-пример</a>
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">демо-пример</a>
  * Подробнее о работе с контролом читайте {@link https://wasaby.dev/doc/platform/controls/list-environment/filter-search/filter-view здесь}.
  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
  * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
@@ -49,7 +49,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
  * Clicking on a icon-button or a string opens the detail panel. {@link Controls/filterPopup:DetailPanel}
  * Clicking on fast filter parameters opens the simple panel. {@link Controls/filterPopup:SimplePanel}
- * Here you can see <a href="/materials/demo-ws4-filter-view">demo-example</a>.
+ * Here you can see <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">demo-example</a>.
  *
  * @class Controls/_filter/View
  * @extends Core/Control
