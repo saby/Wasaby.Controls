@@ -124,7 +124,10 @@ class Edit extends Control<IEditOpenerOptions> implements IEditOpener {
                 RecordSynchronizer.mergeRecord(data.record, items, editKey);
             }
         } else if (data.formControllerEvent === 'delete') {
-            RecordSynchronizer.deleteRecord(items, editKey);
+            // Если нет editKey - удаляют черновик, которого нет в списке
+            if (editKey) {
+                RecordSynchronizer.deleteRecord(items, editKey);
+            }
         }
     }
 
