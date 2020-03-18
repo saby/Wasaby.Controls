@@ -400,7 +400,6 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private _triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean, params: IScrollParams): void {
         if (!this._applyScrollTopCallback) {
-            this._viewResize(params.scrollHeight, false);
             this._viewportResize(params.clientHeight, false);
 
             if (triggerVisible) {
