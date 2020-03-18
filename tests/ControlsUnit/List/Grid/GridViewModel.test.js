@@ -1833,7 +1833,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(secondRow);
          });
          it('getColumnScrollCellClasses', function() {
-            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
+            const fixedCell = ` controls-Grid__cell_fixed controls-background-default_theme-default controls-Grid__cell_fixed_theme-${theme}`;
             const transformCell = ' controls-Grid__cell_transform';
             const params = {
                multiSelectVisibility: 'hidden',
