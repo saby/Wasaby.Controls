@@ -3,7 +3,7 @@ import PopupTemplate = require('wml!Controls/_menu/Popup/template');
 import {default as searchHeaderTemplate} from 'Controls/_menu/Popup/searchHeaderTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as mStubs from 'Core/moduleStubs';
-import * as headerTemplate from 'wml!Controls/_menu/Popup/headerTemplate';
+import {default as headerTemplate} from 'Controls/_menu/Popup/headerTemplate';
 import {Controller as ManagerController} from 'Controls/popup';
 
 /**

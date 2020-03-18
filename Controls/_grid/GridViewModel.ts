@@ -202,9 +202,6 @@ var
             let result = '';
             if (current.rowSeparatorVisibility) {
                 result += ` controls-Grid__row-cell_withRowSeparator${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? '-l' : ''}_theme-${theme} `;
-                if (current.isFirstInGroup && !current.isInHiddenGroup) {
-                    result += ' controls-Grid__row-cell_first-row-in-group';
-                }
             } else {
                 result += `controls-Grid__row-cell_withoutRowSeparator_theme-${theme}`;
             }
@@ -396,6 +393,7 @@ var
             if (!self._isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
+            self.resetCachedItemData();
             return prepareLadder({
                 ladderProperties: self._options.ladderProperties,
                 startIndex: self.getStartIndex(),
@@ -1248,7 +1246,8 @@ var
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
-            if (stickyColumn && !detection.isNotFullGridSupport && !current.dragTargetPosition) {
+            // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
+            if (stickyColumn && !detection.isNotFullGridSupport && !current.dragTargetPosition && current.index !== -1) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
             }
 
@@ -1268,20 +1267,7 @@ var
                 return current;
             }
 
-            const itemGroupId = !current.isGroup && this._getItemGroup(current.item);
-            current.isInHiddenGroup = itemGroupId === ControlsConstants.view.hiddenGroup;
-            current.isFirstInGroup = this._isFirstInGroup(current.item, itemGroupId);
-            current.rowSeparatorSize = this._options.rowSeparatorSize;
-
-            if (
-                current.isFirstInGroup &&
-                !current.isInHiddenGroup &&
-                current.item !== self.getLastItem()
-            ) {
-                current.rowSeparatorVisibility = false;
-            } else {
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
-            }
 
             current.itemActionsDrawPosition =
                 this._options.columnScroll ? 'after' : 'before';
@@ -1611,9 +1597,15 @@ var
 
         getFooterStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
+                const offsetForMultiSelect: number = this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0;
+                const offsetForStickyColumn: number = +!!getStickyColumn({
+                    stickyColumn: this._options.stickyColumn,
+                    columns: this._options.columns
+                });
+
                 return GridLayoutUtil.getColumnStyles({
                     columnStart: 0,
-                    columnSpan: this._columns.length + (this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)
+                    columnSpan: this._columns.length + offsetForMultiSelect + offsetForStickyColumn
                 });
             }
             return '';
@@ -1645,26 +1637,6 @@ var
                 });
             }
             return '';
-        },
-
-        _isFirstInGroup: function(item, groupId?): boolean {
-            const display = this._model._display;
-            let currentGroupItems;
-
-            groupId = groupId || this._getItemGroup(item);
-            if (groupId === undefined || groupId === null) {
-                return false;
-            }
-
-            currentGroupItems = display.getGroupItems(groupId);
-
-            // If current item is out of any group.
-            if (!currentGroupItems || currentGroupItems.length === 0) {
-                return false;
-            }
-
-
-            return item === currentGroupItems[0].getContents();
         },
 
         _getItemGroup: function(item): boolean {
@@ -1715,6 +1687,9 @@ var
                 return GridLayoutUtil.getColumnStyles(columnCfg);
             } else {
                 columnCfg.columnSpan = params.columnsLength;
+                if (this.shouldAddStickyLadderCell()) {
+                    columnCfg.columnSpan += 1;
+                }
                 return GridLayoutUtil.getColumnStyles(columnCfg);
             }
         },

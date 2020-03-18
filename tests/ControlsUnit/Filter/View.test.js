@@ -118,7 +118,7 @@ define(
             assert.isOk(view._configs.state.sourceController);
             assert.isFalse(view._hasSelectorTemplate);
 
-            receivedState.configs.document.selectorTemplate = 'New Template';
+            defaultConfig.source[0].editorOptions.selectorTemplate = 'New Template';
             view._beforeMount(defaultConfig, {}, receivedState);
             assert.isTrue(view._hasSelectorTemplate);
          });

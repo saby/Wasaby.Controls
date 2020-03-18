@@ -69,7 +69,7 @@ define(
             });
          });
 
-         it('getCollection', function() {
+         describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({
                rawData: defaultItems.map((item) => {
@@ -78,10 +78,28 @@ define(
                }),
                keyProperty: 'key'
             });
-            let listModel = menuControl.getCollection(items, {
-               groupProperty: 'group'
+
+            it ('check group', function() {
+               let listModel = menuControl.getCollection(items, {
+                  groupProperty: 'group'
+               });
+               assert.instanceOf(listModel.at(0), display.GroupItem);
             });
-            assert.instanceOf(listModel.at(0), display.GroupItem);
+
+            it ('check uniq', function() {
+               let doubleItems = new collection.RecordSet({
+                  rawData: [
+                     { key: 1, title: 'Россия' },
+                     { key: 1, title: 'Россия' },
+                     { key: 1, title: 'Россия' },
+                     { key: 1, title: 'Россия' },
+                     { key: 1, title: 'Россия' }
+                  ],
+                  keyProperty: 'key'
+               });
+               let listModel = menuControl.getCollection(doubleItems, { keyProperty: 'key' });
+               assert.equal(listModel.getCount(), 1);
+            });
          });
 
          describe('_itemClick', function() {
@@ -175,12 +193,12 @@ define(
 
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
-            delete expectedOptions.footerTemplate;
+            expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
+            expectedOptions.footerTemplate = defaultOptions.nodeFooterTemplate;
             expectedOptions.footerItemData = {
                item,
                key: expectedOptions.root
             };
-            expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;

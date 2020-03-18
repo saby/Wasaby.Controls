@@ -454,10 +454,10 @@ var _private = {
         return selectedKeys;
     },
 
-    hasSelectorTemplate: function(configs) {
+    hasSelectorTemplate: function(source) {
         let hasSelectorTemplate;
-        factory(configs).each((config) => {
-            if (config.selectorTemplate) {
+        factory(source).each((item) => {
+            if (_private.isFrequentItem(item) && item.editorOptions?.selectorTemplate) {
                 hasSelectorTemplate = true;
             }
         });
@@ -651,7 +651,7 @@ var Filter = Control.extend({
             _private.resolveItems(this, options.source);
             resultDef = _private.reload(this, true);
         }
-        this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
+        this._hasSelectorTemplate = _private.hasSelectorTemplate(this._source);
         return resultDef;
     },
 
@@ -663,7 +663,7 @@ var Filter = Control.extend({
             if (_private.isNeedReload(this._options.source, newOptions.source, this._configs) || _private.isNeedHistoryReload(this._configs)) {
                 _private.clearConfigs(this._source, this._configs);
                 resultDef = _private.reload(this).addCallback(() => {
-                    self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+                    self._hasSelectorTemplate = _private.hasSelectorTemplate(self._source);
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this);
