@@ -1,6 +1,6 @@
 interface IShouldAddActionsCellArgs {
     // legacy для работы со старыми браузерами
-    shouldUseTableLayout: boolean;
+    isFullGridSupport: boolean;
 
     // Дополнительная колонка нужна только если есть скролл
     hasColumnScroll: boolean;
@@ -12,5 +12,5 @@ interface IShouldAddActionsCellArgs {
 }
 
 export function shouldAddActionsCell(opts: IShouldAddActionsCellArgs): boolean {
-    return opts.hasColumns && opts.hasColumnScroll && !opts.shouldUseTableLayout;
+    return opts.hasColumns && opts.hasColumnScroll && opts.isFullGridSupport;
 }

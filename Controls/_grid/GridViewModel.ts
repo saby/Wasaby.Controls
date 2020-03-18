@@ -620,8 +620,8 @@ var
 
         _shouldAddActionsCell(): boolean {
             return shouldAddActionsCell({
-                hasColumnScroll: this._options.columnScroll,
-                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport(),
+                hasColumnScroll: !!this._options.columnScroll,
+                isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 hasColumns: !!this._columns.length
             });
         },
