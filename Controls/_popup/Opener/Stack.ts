@@ -63,7 +63,7 @@ const getStackConfig = (config: IStackOpenerOptions = {}) => {
             const oldMaxZWindow = oldWindowManager.getMaxZWindow((control) => {
                 return control._options.isCompoundNotification !== true;
             });
-            const oldMaxZIndex = oldMaxZWindow.getZIndex() || baseOldZIndex;
+            const oldMaxZIndex = oldMaxZWindow?.getZIndex() || baseOldZIndex;
             const maxZIndex = Math.max(oldMaxZIndex, managerWrapperMaxZIndex);
             config.zIndex = maxZIndex + zIndexStep;
         }
