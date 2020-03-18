@@ -322,6 +322,9 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 BaseOpener.requireModule(config.template),
                 BaseOpener.requireModule(controller)
             ]).then((result: [Control, Control]) => {
+                if (!result[0]) {
+                    Logger.error(`Controls/popup: Проблемы с загрузкой шаблона ${config.template}, проверьте имя зависимости`);
+                }
                 resolve({
                     template: result[0],
                     controller: result[1]
