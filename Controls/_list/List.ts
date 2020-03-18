@@ -108,7 +108,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
         }
     }
 
-    _getModelConstructor(useNewModel: boolean) {
+    protected _getModelConstructor(useNewModel: boolean) {
         return !useNewModel ? ListViewModel : 'Controls/display:Collection';
     }
 
