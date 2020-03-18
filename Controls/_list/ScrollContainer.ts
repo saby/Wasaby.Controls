@@ -264,10 +264,8 @@ export default class ScrollContainer extends Control<IOptions> {
 
     checkTriggerVisibilityWithTimeout(): void {
         this._checkTriggerVisibilityTimeout = setTimeout(() => {
-            if (!this._virtualScroll.rangeChanged) {
-                this._checkTriggerVisibility();
-                clearTimeout(this._checkTriggerVisibilityTimeout);
-            }
+            this._checkTriggerVisibility();
+            clearTimeout(this._checkTriggerVisibilityTimeout);
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
@@ -468,7 +466,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * @private
      */
     private _recalcToDirection(direction: IDirection): void {
-        if (this._virtualScroll.isRangeOnEdge(direction)) {
+        if (!this._virtualScroll.rangeChanged && this._virtualScroll.isRangeOnEdge(direction)) {
             this._notifyLoadMore(direction);
         } else {
             this._inertialScrolling.callAfterScrollStopped(() => {

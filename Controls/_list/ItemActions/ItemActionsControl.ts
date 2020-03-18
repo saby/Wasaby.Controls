@@ -111,10 +111,10 @@ var _private = {
                 if (options.editingConfig && options.editingConfig.item) {
                     hasChanges = _private.updateItemActions(self, options.editingConfig.item, options);
                 }
-                for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
-                    var
-                        itemData = options.listModel.getCurrent(),
-                        item = itemData.actionsItem;
+                options.listModel.reset();
+                while (options.listModel.isEnd()) {
+                    let itemData = options.listModel.getCurrent();
+                    let item = itemData.actionsItem;
                     if (item !== ControlsConstants.view.hiddenGroup && item.get) {
                         updateItemActionsResult = _private.updateItemActions(self, item, options);
                         if (hasChanges !== 'all') {
@@ -123,6 +123,7 @@ var _private = {
                             }
                         }
                     }
+                    options.listModel.goToNext();
                 }
                 if (hasChanges !== 'none') {
                     options.listModel.nextModelVersion(hasChanges !== 'all', ACTION_TYPE);

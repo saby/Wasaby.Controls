@@ -23,6 +23,7 @@
       <ws:partial
          template="{{ _options.itemActionsTemplate.itemActionsTemplate || 'Controls/listRender:itemActionsTemplate' }}"
          scope="{{ collection.getActionsTemplateConfig() }}"
+         itemActionsClass="{{ itemActionsTemplate.itemActionsClass }}"
          item="{{ item }}" />
       <!-- using || instead of ws:if because template is constantly being updated otherwise -->
    </ws:itemActionsTemplate>
