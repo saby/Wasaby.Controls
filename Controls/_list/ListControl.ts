@@ -1,5 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import ListControlTpl = require('wml!Controls/_list/ListControl/ListControl');
+import BaseControl = require('Controls/_list/BaseControl');
 import {saveConfig} from 'Controls/Application/SettingsController';
 import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
@@ -27,7 +28,7 @@ import {isEqual} from 'Types/object';
 
 export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */{
     _template: TemplateFunction = ListControlTpl;
-    protected _children: Record<string, Element | Control>;
+    protected _children: { baseControl: BaseControl };
     _beforeUpdate(cfg) {
         if (cfg.propStorageId && !isEqual(cfg.sorting, this._options.sorting)) {
             saveConfig(cfg.propStorageId, ['sorting'], cfg);
