@@ -140,7 +140,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 if (!this._openerUnmounted || this._options.closePopupBeforeUnmount === false) {
                     return results;
                 }
-                return new Error('Opener was destroyed');
+                Logger.warn(`Controls/popup: Во время открытия окна с шаблоном ${cfg.template} задестроился opener`);
+                throw new Error('Opener was destroyed');
             }).catch((error) => {
                 this._loadModulesPromise = null;
                 throw error;
