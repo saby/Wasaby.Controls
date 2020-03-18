@@ -81,7 +81,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          },
          {
             id: '8',
-            showType: showType.MENU_TOOLBAR,
+            showType: showType.MENU,
             title: 'Этапу',
             '@parent': false,
             parent: '4'
