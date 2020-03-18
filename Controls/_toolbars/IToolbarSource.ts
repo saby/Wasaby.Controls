@@ -14,18 +14,6 @@ export interface IToolbarSourceOptions {
 export default interface IToolbarSource {
     readonly '[Controls/_toolbars/IToolbarSource]': boolean;
 }
-/**
- * @typedef {Enum} ShowType
- * @variant showType.MENU Элемент отображается только в меню
- * @variant showType.MENU_TOOLBAR Элемент отображается в меню и в тулбаре
- * @variant showType.TOOLBAR Элемент отображается только в тулбаре
- */
-/**
- * @typedef {Enum} ShowType
- * @variant showType.MENU  item is displayed only in the menu
- * @variant showType.MENU_TOOLBAR item is displayed in the menu and toolbar
- * @variant showType.TOOLBAR item is displayed only in the toolbar
- */
 
 /**
  * @typedef {Object} Item
