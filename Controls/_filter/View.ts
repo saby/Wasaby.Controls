@@ -712,6 +712,8 @@ var Filter = Control.extend({
     _openPanel(event: SyntheticEvent<'click'>, name?: string) {
         const isLoading = this._loadDeferred && !this._loadDeferred.isReady();
         if (this._options.panelTemplateName && _private.sourcesIsLoaded(this._configs) && !isLoading) {
+            const clickOnFrequentItem = !!name;
+            const target = clickOnFrequentItem && event.currentTarget;
             return _private.loadUnloadedFrequentItems(this, this._configs, this._source).then(() => {
                 const items = new RecordSet({
                     rawData: _private.getPopupConfig(this, this._configs, this._source)
@@ -724,8 +726,12 @@ var Filter = Control.extend({
                     }
                 };
 
-                if (name) {
-                    popupOptions.target = this._children[name];
+                if (clickOnFrequentItem) {
+                    /*
+                        В кейсе, когда переопределен itemTemplate, контейнера нет в _children
+                        Нужно открыться от таргета, который закэширован перед запросом.
+                     */
+                    popupOptions.target = this._children[name] || target.getElementsByClassName('js-controls-FilterView__target')[0];
                     popupOptions.className = 'controls-FilterView-SimplePanel-popup';
                 } else {
                     popupOptions.className = 'controls-FilterView-SimplePanel__buttonTarget-popup';
