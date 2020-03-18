@@ -2349,6 +2349,7 @@ define([
                setTimeout(function() {
                   // _markedKeyForRestoredScroll известен подскрол не сработает т.к _isScrollShown = false;
                   assert.equal(lnBaseControl._markedKeyForRestoredScroll, 3);
+                  assert.equal(lnBaseControl._shouldRestoreScrollPosition, true);
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;

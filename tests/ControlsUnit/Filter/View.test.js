@@ -322,15 +322,20 @@ define(
                view._openPanel(event, 'state').then(() => {
                   assert.strictEqual(popupOptions.target, 'div_state_filter');
                   assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel-popup');
-                  view._openPanel('click').then(() => {
-                     assert.deepStrictEqual(popupOptions.target, 'filter_container');
-                     view._configs.state.sourceController = {
-                        isLoading: () => { return true; }
-                     };
-                     popupOptions = null;
-                     view._openPanel('click');
-                     assert.isNull(popupOptions);
-                     done();
+                  view._children.state = null;
+                  view._openPanel(event, 'state').then(() => {
+                     assert.strictEqual(popupOptions.target, 'div_second_filter');
+                     assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel-popup');
+                     view._openPanel('click').then(() => {
+                        assert.deepStrictEqual(popupOptions.target, 'filter_container');
+                        view._configs.state.sourceController = {
+                           isLoading: () => { return true; }
+                        };
+                        popupOptions = null;
+                        view._openPanel('click');
+                        assert.isNull(popupOptions);
+                        done();
+                     });
                   });
                });
             });

@@ -3,7 +3,6 @@ import {BaseViewModel, ItemsUtil, ListViewModel} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import {isStickySupport} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
-import {detection} from 'Env/Env';
 import {isEqual} from 'Types/object';
 import cInstance = require('Core/core-instance');
 import {
@@ -203,9 +202,6 @@ var
             let result = '';
             if (current.rowSeparatorVisibility) {
                 result += ` controls-Grid__row-cell_withRowSeparator${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? '-l' : ''}_theme-${theme} `;
-                if (current.isFirstInGroup && !current.isInHiddenGroup) {
-                    result += ' controls-Grid__row-cell_first-row-in-group';
-                }
             } else {
                 result += `controls-Grid__row-cell_withoutRowSeparator_theme-${theme}`;
             }
@@ -230,7 +226,7 @@ var
         },
 
         getColumnScrollCellClasses: function(params, theme) {
-           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
+           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed ${_private.getBackgroundStyle({style: params.style, theme})} controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
         },
 
         getClassesLadderHeading(itemData, theme): String {
@@ -273,7 +269,7 @@ var
             }
 
             if (current.isSelected) {
-                classLists.base += ` controls-Grid__row-cell_selected controls-background-${style}_theme-${theme} controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell_selected ${_private.getBackgroundStyle({theme, style})} controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 if (current.columnIndex === 0) {
                     classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
@@ -414,6 +410,22 @@ var
                 styles += `min-width: ${currentColumn.column.width}; max-width: ${currentColumn.column.width};`;
             }
             return styles;
+        },
+
+        /**
+         * Возвращает префикс стиля, выставленный для grid
+         * @param options
+         */
+        getStylePrefix(options: {theme: string, style?: string, backgroundStyle?: string}): string {
+            return options.style || options.backgroundStyle || 'default';
+        },
+
+        /**
+         * Возвращает CSS класс для установки background
+         * @param options
+         */
+        getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string}): string {
+            return `controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
         }
     },
 
@@ -900,10 +912,10 @@ var
         getCurrentResultsColumn(): {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} {
             const columnIndex = this._curResultsColumnIndex;
             const resultsColumn: {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} = {
-                column: this._resultsColumns[columnIndex],
-                index: columnIndex
+                   column: this._resultsColumns[columnIndex],
+                   index: columnIndex
             };
-            let cellClasses = `controls-Grid__results-cell controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`;
+            let cellClasses = `controls-Grid__results-cell ${_private.getBackgroundStyle(this._options)} controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`;
 
             if (resultsColumn.column?.align) {
                 cellClasses += ` controls-Grid__row-cell__content_halign_${resultsColumn.column.align}`;
@@ -947,7 +959,7 @@ var
                         const format = results.getFormat();
                         const fieldIndex = format.getIndexByValue('name', resultsColumn.column.displayProperty);
                         resultsColumn.resultsFormat = fieldIndex !== -1 ? format.at(fieldIndex).getType() : undefined;
-                    }
+            }
                 }
 
                 resultsColumn.showDefaultResultTemplate = !!resultsColumn.resultsFormat;
@@ -1236,7 +1248,7 @@ var
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
-            if (stickyColumn && !detection.isNotFullGridSupport && !current.dragTargetPosition && current.index !== -1) {
+            if (stickyColumn && current.isFullGridSupport()  && !current.dragTargetPosition && current.index !== -1) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
             }
 
@@ -1256,20 +1268,7 @@ var
                 return current;
             }
 
-            const itemGroupId = !current.isGroup && this._getItemGroup(current.item);
-            current.isInHiddenGroup = itemGroupId === ControlsConstants.view.hiddenGroup;
-            current.isFirstInGroup = this._isFirstInGroup(current.item, itemGroupId);
-            current.rowSeparatorSize = this._options.rowSeparatorSize;
-
-            if (
-                current.isFirstInGroup &&
-                !current.isInHiddenGroup &&
-                current.item !== self.getLastItem()
-            ) {
-                current.rowSeparatorVisibility = false;
-            } else {
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
-            }
 
             current.itemActionsDrawPosition =
                 this._options.columnScroll ? 'after' : 'before';
@@ -1645,26 +1644,6 @@ var
                 });
             }
             return '';
-        },
-
-        _isFirstInGroup: function(item, groupId?): boolean {
-            const display = this._model._display;
-            let currentGroupItems;
-
-            groupId = groupId || this._getItemGroup(item);
-            if (groupId === undefined || groupId === null) {
-                return false;
-            }
-
-            currentGroupItems = display.getGroupItems(groupId);
-
-            // If current item is out of any group.
-            if (!currentGroupItems || currentGroupItems.length === 0) {
-                return false;
-            }
-
-
-            return item === currentGroupItems[0].getContents();
         },
 
         _getItemGroup: function(item): boolean {

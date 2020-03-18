@@ -330,6 +330,6 @@ GridView.contextTypes = () => {
     };
 };
 
-GridView._theme = ['Controls/grid'];
+GridView._theme = ['Controls/grid', 'Controls/Classes'];
 
 export = GridView;
