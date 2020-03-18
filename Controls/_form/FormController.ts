@@ -314,7 +314,7 @@ import dataSource = require('Controls/dataSource');
 
       _tryDeleteNewRecord: function() {
          if (this._needDestroyRecord()) {
-            return this.delete(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
+            return this.delete();
          }
          return (new Deferred()).callback();
       },
@@ -345,7 +345,7 @@ import dataSource = require('Controls/dataSource');
          self._notify('registerPending', [self._unmountPromise, {
             showLoadingIndicator: false,
             validate(): boolean {
-               return self._record && !self._record.isChanged() && self._needDestroyRecord();
+               return self._record && !self._record.isChanged() && !self._isUpdating() && self._needDestroyRecord();
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
                self._tryDeleteNewRecord().then(() => {
@@ -354,7 +354,10 @@ import dataSource = require('Controls/dataSource');
                });
             }
          }], { bubbling: true });
+      },
 
+      _isUpdating(): boolean {
+         return this._updatePromise && !this._updatePromise.isReady();
       },
 
       _confirmDialogResult(answer: boolean, def: Promise<boolean>): void {
@@ -454,9 +457,9 @@ import dataSource = require('Controls/dataSource');
          var result = this._notify('requestCustomUpdate', [], { bubbling: true });
 
          // pending waiting while update process finished
-         var def = new Deferred();
-         self._notify('registerPending', [def, { showLoadingIndicator: false }], { bubbling: true });
-         def.dependOn(updateResult);
+         this._updatePromise = new Deferred();
+         self._notify('registerPending', [this._updatePromise, { showLoadingIndicator: false }], { bubbling: true });
+         this._updatePromise.dependOn(updateResult);
 
          if (result && result.then) {
             result.then(function(defResult) {
@@ -516,7 +519,7 @@ import dataSource = require('Controls/dataSource');
          });
          return updateDef;
       },
-      delete: function(destroyMetaData) {
+      delete: function(destroyMetaData?: unknown) {
          destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
          var self = this;
          var resultDef = this._children.crud.delete(this._record, destroyMetaData);
