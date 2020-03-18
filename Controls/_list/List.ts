@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 31.01.2018.
  */
-import {Control} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import ListControlTpl = require('wml!Controls/_list/List');
 import ListViewModel = require('Controls/_list/ListViewModel');
 import Deferred = require('Core/Deferred');
@@ -87,10 +87,11 @@ import {default as viewTemplate} from 'Controls/_list/ListControl';
  */
 
 export default class ListControl extends Control/** @lends Controls/_list/List.prototype */{
-    _template = ListControlTpl;
+    _template: TemplateFunction = ListControlTpl;
     _viewName = viewName;
-    _viewTemplate = viewTemplate;
+    _viewTemplate: unknown = viewTemplate;
     _viewModelConstructor = null;
+    protected _children: {listControl: Control};
 
     static _theme = ['Controls/list_multi'];
 
