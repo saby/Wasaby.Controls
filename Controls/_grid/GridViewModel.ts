@@ -615,10 +615,12 @@ var
         getMultiHeaderOffset: function() {
           return this._multiHeaderOffset;
         },
-        _shouldAddActionsCell() {
+
+        _shouldAddActionsCell(): boolean {
             return shouldAddActionsCell({
                 hasColumnScroll: this._options.columnScroll,
-                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport()
+                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport(),
+                hasColumns: !!this._columns.length
             });
         },
         /**
@@ -645,18 +647,17 @@ var
             return this._maxEndColumn;
         },
 
-        isDrawHeaderWithEmptyList: function() {
-            if (!this.headerInEmptyListVisible && !this.isGridListNotEmpty()) {
-                return false;
-            }
-            return true;
+        /**
+         * Метод проверяет, рисовать ли header при отсутствии записей.
+         */
+        isDrawHeaderWithEmptyList(): boolean {
+            return this.headerInEmptyListVisible || this.isGridListNotEmpty();
         },
 
         isGridListNotEmpty(): boolean {
             const items = this.getItems();
             return !!items && items.getCount() > 0;
         },
-
 
         getCurrentHeaderRow: function() {
             const self = this;
@@ -1599,9 +1600,15 @@ var
             if (GridLayoutUtil.isFullGridSupport()) {
                 const hasColumnScroll = !!this._options.columnScroll;
                 const hasMultiSelect = this.getMultiSelectVisibility() !== 'hidden';
-                const columnsCount = this._columns.length;
-                const columnStart = (!hasColumnScroll && hasMultiSelect) ? 1 : 0;
-                const columnSpan = hasColumnScroll ? (columnsCount + (hasMultiSelect ? 1 : 0)) : columnsCount;
+                // Необходимо учитывать, если к колонкам была добавлена колонка "Действий"
+                const hasActionCell = this._shouldAddActionsCell();
+                // В случае, если у нас приходит после поиска пустой массив колонок,
+                // пытаемся установить значение по длине массива заголовков, а если и он пуст,
+                // то необходимо установить columnsCount в 1, иначе весь дальнейший расчёт
+                // производится некорректно
+                const columnsCount = this._columns.length || this._header.length || 1;
+                const columnStart = +(!hasColumnScroll && hasMultiSelect);
+                const columnSpan = (hasColumnScroll ? (columnsCount + (+hasMultiSelect)) : columnsCount) + (+hasActionCell);
 
                 return GridLayoutUtil.getColumnStyles({
                     columnStart,
