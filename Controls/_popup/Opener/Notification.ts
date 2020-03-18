@@ -121,6 +121,14 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
     static openPopup(config: object): Promise<string> {
         return new Promise((resolve) => {
             const newConfig = BaseOpener.getConfig(BASE_OPTIONS, config);
+            // Сделал так же как в ws3. окна, которые закрываются автоматически - всегда выше всех.
+            if (newConfig.autoClose) {
+                newConfig.topPopup = true;
+            }
+            // Если окно не выше всех - высчитываем по стандарту
+            if (!newConfig.topPopup) {
+                newConfig.zIndexCallback = Notification.zIndexCallback;
+            }
             if (isNewEnvironment()) {
                 if (!newConfig.hasOwnProperty('opener')) {
                     newConfig.opener = null;
@@ -163,8 +171,7 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
 
 const BASE_OPTIONS = {
     autofocus: false,
-    autoClose: true,
-    zIndexCallback: Notification.zIndexCallback
+    autoClose: true
 };
 
 export default Notification;
