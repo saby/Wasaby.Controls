@@ -7,7 +7,7 @@ import ListViewModel = require('Controls/_list/ListViewModel');
 import Deferred = require('Core/Deferred');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import viewName = require('Controls/_list/ListView');
-import {default as viewTemplate} from 'Controls/_list/ListControl';
+import {default as ListControl} from 'Controls/_list/ListControl';
 
 /**
  * Контрол «Плоский список» с пользовательским шаблоном элемента. Может загружать данные из источника данных.
@@ -86,12 +86,12 @@ import {default as viewTemplate} from 'Controls/_list/ListControl';
  * @demo Controls-demo/List/List/BasePG
  */
 
-export default class ListControl extends Control/** @lends Controls/_list/List.prototype */{
+export default class List extends Control/** @lends Controls/_list/List.prototype */{
     _template: TemplateFunction = ListControlTpl;
     _viewName = viewName;
-    _viewTemplate: unknown = viewTemplate;
+    _viewTemplate: unknown = ListControl;
     _viewModelConstructor = null;
-    protected _children: {listControl: Control};
+    protected _children: {listControl: ListControl};
 
     static _theme = ['Controls/list_multi'];
 
