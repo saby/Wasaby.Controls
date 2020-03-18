@@ -223,6 +223,10 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
+
+                    if (self._loadedItems) {
+                        self._shouldRestoreScrollPosition = true;
+                    }
                 }
                 if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                     cfg.afterSetItemsOnReloadCallback();
