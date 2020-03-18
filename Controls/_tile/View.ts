@@ -83,22 +83,19 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @category List
  */
 
-var View = List.extend({
-   _viewName: TreeTileView,
-   _viewTemplate: TreeControl,
-   _beforeMount: function() {
+export default class View extends List {
+   protected _viewName = TreeTileView;
+   protected _viewTemplate = TreeControl;
+   protected _beforeMount(): void {
       this._viewModelConstructor = this._getModelConstructor();
-   },
-   _getModelConstructor: function() {
+   }
+   protected _getModelConstructor() {
       return TreeTileViewModel;
    }
-});
-
-View.getDefaultOptions = function() {
-   return {
-      actionAlignment: 'vertical',
-      actionCaptionPosition: 'none'
-   };
-};
-
-export = View;
+   static getDefaultOptions() {
+      return {
+         actionAlignment: 'vertical',
+         actionCaptionPosition: 'none'
+      };
+   }
+}

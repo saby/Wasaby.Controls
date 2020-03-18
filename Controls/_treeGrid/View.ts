@@ -96,25 +96,24 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @demo Controls-demo/List/TreeGrid/BasePG
     */
 
-   var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
-      _viewName: TreeGridView,
-      _viewTemplate: TreeControl,
+export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
+   _viewName = TreeGridView;
+   _viewTemplate = TreeControl;
 
+   _getModelConstructor() {
+      return TreeGridViewModel;
+   }
 
-      _getModelConstructor: function() {
-         return TreeGridViewModel;
-      },
-      getOptionTypes: function() {
-         return {
-            keyProperty: entity.descriptor(String).required(),
-            parentProperty: entity.descriptor(String).required()
-         };
-      },
-      // todo removed or documented by task:
-      // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
-      toggleExpanded: function(id) {
-         this._children.listControl.toggleExpanded(id);
-      }
-   });
-   export = Tree;
+   getOptionTypes() {
+      return {
+         keyProperty: entity.descriptor(String).required(),
+         parentProperty: entity.descriptor(String).required()
+      };
+   }
 
+   // todo removed or documented by task:
+   // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
+   toggleExpanded(id) {
+      this._children.listControl.toggleExpanded(id);
+   }
+}
