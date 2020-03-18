@@ -1,4 +1,3 @@
-import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
@@ -121,21 +120,8 @@ var Button = Control.extend({
    },
 
    _onPinClickHandler: function (event, item) {
-      var self = this;
-      const meta =  {
+      this._options.source.update(item.clone(), {
          $_pinned: !item.get('pinned')
-      };
-      this._options.source.update(item.clone(), meta).addCallback(function (result) {
-         if (!result) {
-            self._children.notificationOpener.open({
-               template: 'Controls/popupTemplate:NotificationSimple',
-               templateOptions: {
-                  style: 'danger',
-                  text: rk('Невозможно закрепить более 10 пунктов'),
-                  icon: 'Alert'
-               }
-            });
-         }
       });
    },
 

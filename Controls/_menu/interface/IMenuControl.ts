@@ -9,7 +9,7 @@ interface IItemPadding {
     right: string;
 }
 
-export interface IMenuOptions extends IControlOptions, ISourceOptions, INavigation, IFilterOptions, IHierarchy, IIconSizeOptions, IGroupedOptions {
+export interface IMenuControlOptions extends IControlOptions, ISourceOptions, INavigation, IFilterOptions, IHierarchy, IIconSizeOptions, IGroupedOptions {
     displayProperty: string;
     itemTemplate?: TemplateFunction;
     emptyText?: string;
@@ -48,7 +48,7 @@ export interface IHistoryConfig {
  * @author Золотова Э.Е.
  */
 export default interface IMenuControl {
-    readonly '[Controls/_menu/interface/IMenu]': boolean;
+    readonly '[Controls/_menu/interface/IMenuControl]': boolean;
 }
 
 /**
@@ -60,11 +60,13 @@ export default interface IMenuControl {
  * @name Controls/_menu/interface/IMenuControl#emptyText
  * @cfg {String} Добавляет пустой элемент в список с заданным текстом.
  * Ключ пустого элемента по умолчанию null, для изменения значения ключа используйте {@link emptyKey}.
+ * @demo Controls-demo/Menu/Control/EmptyText/Index
  */
 
 /**
  * @name Controls/_menu/interface/IMenuControl#emptyKey
  * @cfg {String} Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
+ * @demo Controls-demo/Menu/Control/EmptyText/EmptyKey/Index
  */
 
 /**
@@ -128,23 +130,27 @@ export default interface IMenuControl {
  *       });
  *    }
  * </pre>
+ * @demo Controls-demo/Menu/Control/NodeFooterTemplate/Index
  */
 
 /**
  * @name Controls/_menu/interface/IMenuControl#groupProperty
  * @cfg {String} Имя свойства, содержащего идентификатор группы элемента списка.
+ * @demo Controls-demo/Menu/Control/GroupProperty/Index
  * @see groupTemplate
  */
 
 /**
  * @name Controls/_menu/interface/IMenuControl#groupTemplate
  * @cfg {String|Function} Устанавливает шаблон отображения заголовка группы.
+ * @demo Controls-demo/Menu/Control/GroupProperty/GroupTemplate/Index
  * @see groupProperty
  */
 
 /**
  * @name Controls/_menu/interface/IMenuControl#root
  * @cfg {Number|String|null} Идентификатор корневого узла.
+ * @demo Controls-demo/Menu/Control/Root/Index
  */
 
 /**
