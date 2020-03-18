@@ -136,8 +136,10 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _beforeUnmount(): void {
         clearTimeout(this._checkTriggerVisibilityTimeout);
-        this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
-        this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
+        if (!this._options.collection.destroyed) {
+            this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
+            this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
+        }
     }
 
     protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
