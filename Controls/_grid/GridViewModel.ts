@@ -3,7 +3,6 @@ import {BaseViewModel, ItemsUtil, ListViewModel} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import {isStickySupport} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
-import {detection} from 'Env/Env';
 import {isEqual} from 'Types/object';
 import {
     getBottomPaddingRowIndex,
@@ -1225,7 +1224,7 @@ var
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
-            if (stickyColumn && !detection.isNotFullGridSupport && !current.dragTargetPosition) {
+            if (stickyColumn && current.isFullGridSupport() && !current.dragTargetPosition) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
             }
 
