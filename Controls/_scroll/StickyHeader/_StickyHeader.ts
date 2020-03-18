@@ -249,9 +249,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             offsetHeight: this._height,
             prevPosition,
             mode: this._options.mode,
-            shadowVisible: this._options.shadowVisibility === 'visible',
-            // Костыль для 2100. В 3000 удалено.
-            ignoreHeight: this._options.ignoreHeight
+            shadowVisible: this._options.shadowVisibility === 'visible'
         };
 
         this._shadowVisible = !!newPosition;
