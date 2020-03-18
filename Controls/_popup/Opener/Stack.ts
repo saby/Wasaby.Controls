@@ -58,7 +58,12 @@ const getStackConfig = (config: IStackOpenerOptions = {}) => {
         }
         const zIndexStep = 9;
         if (oldWindowManager) {
-            const maxZIndex = Math.max(oldWindowManager.getMaxZIndex(), managerWrapperMaxZIndex);
+            // Убираем нотификационные окна из выборки старого менеджера
+            const baseOldZIndex = 1000;
+            const oldMaxZIndex = oldWindowManager.getMaxZWindow((control) => {
+                return control._options.isCompoundNotification !== true;
+            }).getZIndex() || baseOldZIndex;
+            const maxZIndex = Math.max(oldMaxZIndex, managerWrapperMaxZIndex);
             config.zIndex = maxZIndex + zIndexStep;
         }
     }
