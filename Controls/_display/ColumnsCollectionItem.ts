@@ -1,7 +1,6 @@
 import CollectionItem, {IOptions as IBaseOptions} from './CollectionItem';
 import {register} from 'Types/di';
 import {ColumnsCollection} from '../display';
-import type = Mocha.utils.type;
 
 export interface IOptions<T> extends IBaseOptions<T> {
     columnProperty: number;
