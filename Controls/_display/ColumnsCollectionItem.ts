@@ -1,6 +1,7 @@
 import CollectionItem, {IOptions as IBaseOptions} from './CollectionItem';
 import {register} from 'Types/di';
 import {ColumnsCollection} from '../display';
+import type = Mocha.utils.type;
 
 export interface IOptions<T> extends IBaseOptions<T> {
     columnProperty: number;
@@ -21,9 +22,12 @@ export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
         this._$column = column;
         this._nextVersion();
     }
-    getWrapperClasses(templateHighlightOnHover: boolean = true, marker: boolean = true): string {
+    getWrapperClasses(templateHighlightOnHover: boolean = true, cursor: string|boolean = 'pointer'): string {
         let result: string = super.getWrapperClasses.apply(this, arguments);
         result += ' controls-ColumnsView__itemV';
+        if (cursor === true || cursor === 'pointer') {
+            result += ' controls-ListView__itemV_cursor-pointer';
+        }
         return result;
     }
     getContentClasses(): string {
