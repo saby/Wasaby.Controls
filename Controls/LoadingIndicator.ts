@@ -344,7 +344,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             this._toggleOverlay(toggle, config);
         }, delay);
     }
-    private _toggleOverlay(toggle: boolean, config: ILoadingIndicatorOptions): void  {
+
+    private _toggleOverlay(toggle: boolean, config: ILoadingIndicatorOptions): void {
         this._isOverlayVisible = toggle && config.overlay !== 'none';
         this._redrawOverlay();
     }
@@ -372,7 +373,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         overlayDiv.setAttribute('tabindex', '1');
 
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'controls-loading-indicator-in';
+        messageDiv.className = 'controls-loading-indicator-in controls-loading-indicator-in_theme-' + this._options.theme;
 
         this._overlayDiv = overlayDiv;
         this._messageDiv = messageDiv;
@@ -424,7 +425,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     private _calculateOverlayClassName(): string {
-        const classList = ['controls-loading-indicator', 'controls-Popup__isolatedFocusingContext'];
+        const classList = ['controls-loading-indicator', 'controls-loading-indicator_theme-' + this._options.theme , 'controls-Popup__isolatedFocusingContext'];
 
         classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
 
@@ -443,6 +444,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         }
         if (this.overlay) {
             classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay));
+            classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay) + '_theme-' + this._options.theme);
         }
         if (this?.mods?.length) {
             classList.concat(this.mods.map((mod) => 'controls-loading-indicator_mod-' + mod));

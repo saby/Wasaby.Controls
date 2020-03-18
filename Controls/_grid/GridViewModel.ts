@@ -272,7 +272,7 @@ var
             }
 
             if (current.isSelected) {
-                classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell_selected controls-background-${style}_theme-${theme} controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 if (current.columnIndex === 0) {
                     classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
@@ -396,6 +396,7 @@ var
             if (!self._isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
+            self.resetCachedItemData();
             return prepareLadder({
                 ladderProperties: self._options.ladderProperties,
                 startIndex: self.getStartIndex(),
@@ -1595,9 +1596,15 @@ var
 
         getFooterStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
+                const offsetForMultiSelect: number = this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0;
+                const offsetForStickyColumn: number = +!!getStickyColumn({
+                    stickyColumn: this._options.stickyColumn,
+                    columns: this._options.columns
+                });
+
                 return GridLayoutUtil.getColumnStyles({
                     columnStart: 0,
-                    columnSpan: this._columns.length + (this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)
+                    columnSpan: this._columns.length + offsetForMultiSelect + offsetForStickyColumn
                 });
             }
             return '';
