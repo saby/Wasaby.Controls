@@ -25,6 +25,7 @@ import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
+import {IHeaderCell} from './interface/IHeaderCell';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -896,21 +897,21 @@ var
             this._curResultsColumnIndex = 0;
         },
 
-        getCurrentResultsColumn: function() {
+        getCurrentResultsColumn(): {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} {
             const columnIndex = this._curResultsColumnIndex;
-            const resultsColumn = {
+            const resultsColumn: {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} = {
                 column: this._resultsColumns[columnIndex],
                 index: columnIndex
             };
             let cellClasses = `controls-Grid__results-cell controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`;
 
-            if (resultsColumn.column.align) {
+            if (resultsColumn.column?.align) {
                 cellClasses += ` controls-Grid__row-cell__content_halign_${resultsColumn.column.align}`;
             }
 
             if (this.isStickyHeader()) {
                 resultsColumn.zIndex = _private.getHeaderZIndex({
-                    columnIndex: columnIndex,
+                    columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount,
                     columnScroll: this._options.columnScroll
@@ -919,7 +920,7 @@ var
 
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
-                    columnIndex: columnIndex,
+                    columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 }, this._options.theme);
@@ -928,11 +929,11 @@ var
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if ((this._options.multiSelectVisibility !== 'hidden') && columnIndex === 0) {
                 cellClasses += ' controls-Grid__results-cell-checkbox' + `_theme-${this._options.theme}`;
-            } else {
+            } else if (resultsColumn.column) {
                 cellClasses += ' ' + _private.getPaddingCellClasses({
                     style: this._options.style,
                     columns: this._resultsColumns,
-                    columnIndex: columnIndex,
+                    columnIndex,
                     hasMultiSelect: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
                     isResult: true,
