@@ -7,10 +7,12 @@ import getPrefetchSource from './getPrefetchSource';
 import {ContextOptions} from 'Controls/context';
 import {isEqual} from "Types/object";
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
+import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 
 
 import {ICrud, PrefetchProxy} from 'Types/source';
 import {RecordSet} from 'Types/collection';
+import {TArrayGroupId, prepareFilterCollapsedGroups} from 'Controls/_list/Controllers/Grouping';
 
 type GetSourceResult = {
    data?: RecordSet;
@@ -99,17 +101,19 @@ type GetSourceResult = {
             data: RecordSet | void,
             dataLoadErrback: Function | void
          ): Promise<GetSourceResult> {
-            return getPrefetchSource({
-               source: self._source,
-               navigation: self._navigation,
-               sorting: self._sorting,
-               filter: self._filter,
-               keyProperty: self._keyProperty
-            }, data).then((result: GetSourceResult) => {
-               if (result.error && dataLoadErrback instanceof Function) {
-                  dataLoadErrback(result.error);
-               }
-               return result;
+             return GroupUtil.restoreCollapsedGroups(self._options.historyIdCollapsedGroups || self._options.groupHistoryId).then((collapsedGroups?: TArrayGroupId) => {
+               return getPrefetchSource({
+                  source: self._source,
+                  navigation: self._navigation,
+                  sorting: self._sorting,
+                  filter: prepareFilterCollapsedGroups(collapsedGroups, self._filter),
+                  keyProperty: self._keyProperty
+               }, data).then((result: GetSourceResult) => {
+                  if (result.error && dataLoadErrback instanceof Function) {
+                     dataLoadErrback(result.error);
+                  }
+                  return result;
+               });
             });
          },
 
