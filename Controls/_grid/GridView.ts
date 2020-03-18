@@ -52,8 +52,8 @@ var
             }
             columnsWidths = columnsWidths.concat(columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth())));
             if (shouldAddActionsCell({
-                hasColumnScroll: self._options.columnScroll,
-                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport(),
+                hasColumnScroll: !!self._options.columnScroll,
+                isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 hasColumns: !!columns.length
             })) {
                 columnsWidths = columnsWidths.concat(['0px']);
