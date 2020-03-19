@@ -23,7 +23,7 @@ define([
       describe('needCrumbs', function() {
          var needCrumbs = PathWrapper._private.needCrumbs;
          it('BackButton is in header, items.length === 1', function() {
-            assert.isFalse(needCrumbs([{ title: 'back' }], ['first'], false));
+            assert.isFalse(needCrumbs([{ title: 'back', isBreadCrumbs: true }], ['first'], false));
          });
          it('BackButton is not in header, items.length === 1', function() {
             assert.isTrue(needCrumbs(undefined, ['first'], false));
