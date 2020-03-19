@@ -7,7 +7,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри. Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
  * @remark
  * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ здесь}.
- * См. <a href="/materials/demo-ws4-stack-dialog">демо-пример</a>.
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">демо-пример</a>.
  * @class Controls/popup:Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
@@ -24,7 +24,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * Component that opens the popup to the right of content area at the full height of the screen.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
  *
- *  <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
+ *  <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">Demo-example</a>.
  * @class Controls/_popup/Opener/Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
