@@ -14,11 +14,11 @@ var
          return self._children.formController.submit();
       },
       afterEndEdit: function (self, commit) {
-         if (commit) {
-            _private.acceptChanges(self);
-         } else {
-            self._editObject.rejectChanges();
-         }
+              if (commit) {
+                  _private.acceptChanges(self);
+              } else {
+                  self._editObject.rejectChanges();
+              }
          self._isEditing = false;
          self._notify('afterEndEdit', [self._editObject], {
             bubbling: true
@@ -114,12 +114,6 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       this._editObject = newOptions.editObject.clone();
    },
 
-   _beforeUpdate: function (newOptions) {
-      if (this._options.editObject !== newOptions.editObject) {
-         this._editObject = newOptions.editObject.clone();
-      }
-   },
-
    _afterUpdate: function () {
       if (this._beginEditTarget) {
          // search closest input and focus
@@ -154,6 +148,8 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    },
 
    beginEdit: function (event, res) {
+      this._editObject = this._options.editObject.clone();
+      this._editObject.acceptChanges();
       // TODO: res - это результат события со старым названием. Снести вместе со старым контролом 3.19.110, как только появится веха
       var result = res || this._notify('beforeBeginEdit', [this._editObject], {
          bubbling: true
