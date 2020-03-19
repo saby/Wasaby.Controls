@@ -5,10 +5,10 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
 
 var _private = {
    needCrumbs: function(header, items, rootVisible) {
-      return !!items && ((_private.needBackButton(header) && items.length > 0) || items.length > 1) || !!rootVisible;
+      return !!items && ((!_private.withoutBackButton(header) && items.length > 0) || items.length > 1) || !!rootVisible;
    },
-   needBackButton: function(header) {
-      return !(header && header[0] && header[0].isBreadCrumbs);
+   withoutBackButton: function(header) {
+      return header && header[0] && header[0].isBreadCrumbs;
    },
 };
 
@@ -22,7 +22,7 @@ var PathWrapper = Control.extend({
          this._items = params.items;
          this._needCrumbs = _private.needCrumbs(params.header, params.items, options.rootVisible);
          this._header = params.header;
-         this._needBackButton = _private.needBackButton(this._header);
+         this._withoutBackButton = _private.withoutBackButton(this._header);
       });
    },
 
@@ -36,7 +36,7 @@ var PathWrapper = Control.extend({
       }
       if (!isEqualsHeader) {
          this._header = newOptions.header;
-         this._needBackButton = _private.needBackButton(this._header);
+         this._withoutBackButton = _private.withoutBackButton(this._header);
       }
    },
 
