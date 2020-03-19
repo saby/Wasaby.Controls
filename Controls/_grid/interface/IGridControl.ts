@@ -17,7 +17,7 @@
 /**
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
- * Работу лесенки можно проверить на <a href="/materials/demo/demo-ws4-grid-sticky">демо-примере</a>.
+ * Работу лесенки можно проверить на <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">демо-примере</a>.
  * @example
  * Пример 1. Шаблон лесенки задан в рамках шаблона родительского контрола.
  * <pre class="brush: html">
@@ -73,7 +73,7 @@
 /*
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Array of fields that should be sticky.
- * <a href="/materials/demo-ws4-grid-sticky">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">Example</a>
  * @example
  * Set ladderProperties and render item template through the ladderWrapper:
  * <pre>
@@ -111,7 +111,7 @@
  * Условно ячейки шапки нумеруются слева направо.
  * Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке.
  * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
- * См. <a href="/materials/demo-ws4-grid-base">демо-пример</a>
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
  * @example
  * Пример 1. Для первой ячейки задаём пользовательский шаблон.
  * <pre class="brush: html">
@@ -167,7 +167,7 @@
 /*
  * @name Controls/_grid/interface/IGridControl#header
  * @cfg {Array.<HeaderCell>} Describes grid's header.
- * <a href="/materials/demo-ws4-grid-base">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
  * @remark
  * Base header content template for Controls/grid:View: "Controls/grid:HeaderContent".
  * @example
@@ -180,7 +180,7 @@
 /**
  * @name Controls/_grid/interface/IGridControl#columns
  * @cfg {Array.<Controls/grid:IColumn>} Описывает колонки таблицы. Колонки объекты реализующие интерфейс {@link Controls/grid:IColumn IColumn}
- * <a href="/materials/demo-ws4-grid-base">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
  * @remark Перед отрисовкой убедитесь, что {@link Controls/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example
  * <pre>
@@ -211,7 +211,7 @@
 /*
  * @name Controls/_grid/interface/IGridControl#columns
  * @cfg {TColumns} Describes grid's columns.
- * <a href="/materials/demo-ws4-grid-base">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
  * @remark Before rendering, make sure that {@link Controls/display:Collection Collection} contains required data, when the {@link Controls/_grid/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/_grid/interface/IGridControl#columns columns} option, if necessary.
  * @example
  * <pre>
@@ -242,14 +242,14 @@
 /**
  * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Закрепляет заголовок таблицы.
- * <a href="/materials/demo-ws4-grid-sticky">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">Example</a>
  * @default true
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Fix the table header.
- * <a href="/materials/demo-ws4-grid-sticky">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">Example</a>
  * @default true
  */
 
@@ -316,14 +316,14 @@
 /**
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @cfg {Boolean} Позволяет отображать/скрывать разделитель строк.
- * <a href="/materials/demo-ws4-grid-base">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
  * @default false
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @cfg {Boolean} Allows to visible or hide row separator.
- * <a href="/materials/demo-ws4-grid-base">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
  * @default false
  */
 
@@ -426,7 +426,7 @@
 /*
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Allows showing button in first column on hover and in swipe menu.
- * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTree%2FEditArrow">Example</a>
  * @remark To place the button in the user column template, you should use the editArrowTemplate
  * @example
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>

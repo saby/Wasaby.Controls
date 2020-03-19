@@ -5,7 +5,7 @@ import viewName = require('Controls/_grid/GridView');
 /**
     * Контрол «Таблица». Может загружать данные из источника данных.
     * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
-    * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">Демо-пример</a>.
     *
     * @class Controls/_grid/Grid
     * @extends Controls/list:View
@@ -44,7 +44,7 @@ import viewName = require('Controls/_grid/GridView');
     * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
     * List of examples:
     * <ul>
-    *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">How to configure editing in your list</a>.</li>
     * </ul>
     *
     * @class Controls/_grid/Grid
