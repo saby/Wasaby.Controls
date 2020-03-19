@@ -490,6 +490,11 @@ class StackController extends BaseController {
         }
     }
 
+    private _getSideBarWidth(): number {
+        const sideBar = document.querySelector('.ws-float-area-stack-sidebar, .navSidebar__sideLeft, .online-Sidebar');
+        return sideBar.clientWidth || 0;
+    }
+
     private _updateSideBarVisibility(): void {
         let maxStackWidth = 0;
         this._stack.each((item) => {
@@ -498,7 +503,7 @@ class StackController extends BaseController {
             }
         });
 
-        const isVisible = this._getWindowSize().width - maxStackWidth >= ACCORDEON_MIN_WIDTH;
+        const isVisible = this._getWindowSize().width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
 
         if (isVisible !== this._sideBarVisible) {
             this._sideBarVisible = isVisible;
