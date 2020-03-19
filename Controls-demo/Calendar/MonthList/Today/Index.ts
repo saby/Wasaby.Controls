@@ -7,7 +7,7 @@ import 'css!Controls-demo/Calendar/MonthList/resources/MonthListDemo';
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _position: Date = new Date(2019, 0, 1);
-    protected _today: Date = new Date(2019, 0, 5);
+    protected _date: Date = new Date(2019, 0, 5);
 
     protected _formatMonth(date: Date): string {
         return date ? formatDate(date, formatDate.FULL_MONTH) : '';

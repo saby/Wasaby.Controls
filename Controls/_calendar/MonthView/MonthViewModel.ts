@@ -45,7 +45,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          daysData: state.daysData,
          dateConstructor: state.dateConstructor || WSDate,
          readOnly: state.readOnly,
-         _today: state._today
+         _date: state._date
       };
    },
 
@@ -59,11 +59,11 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
    _getDayObject: function(date, state) {
       state = state || this._state;
-      /* Опция _today устаналивается только(!) в демках, для возможности протестировать
+      /* Опция _date устаналивается только(!) в демках, для возможности протестировать
        визуальное отображение текущей даты */
       var obj = {},
-         today = this._state._today ?
-             DateUtil.normalizeDate(this._state._today) :
+         today = this._state._date ?
+             DateUtil.normalizeDate(this._state._date) :
              DateUtil.normalizeDate(new this._state.dateConstructor()),
          firstDateOfMonth = DateUtil.getStartOfMonth(date),
          lastDateOfMonth = DateUtil.getEndOfMonth(date);

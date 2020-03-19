@@ -1,5 +1,5 @@
 <ws:partial template="wml!Controls-demo/Calendar/MonthList/resources/DemoTemplate"
-            title="Пример для тестирования визуального отображения текущей даты. Опцию _today в других случаях не использовать.">
+            title="Пример для тестирования визуального отображения текущей даты. Опцию _date в других случаях не использовать.">
     <div class="controlsDemo__flex controlsDemo__flexColumn">
         <Controls.calendar:MonthList
                 name="monthList"
@@ -19,7 +19,7 @@
                                 showWeekdays="{{false}}"
                                 month="{{bodyTemplate.date}}"
                                 daysData="{{bodyTemplate.extData}}"
-                                _today="{{_today}}"
+                                _date="{{_date}}"
                         />
                     </ws:bodyTemplate>
                 </ws:partial>
