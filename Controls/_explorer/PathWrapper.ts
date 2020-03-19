@@ -15,12 +15,10 @@ var PathWrapper = Control.extend({
    _items: null,
 
    _beforeMount: function(options) {
-      return options.itemsPromise.then((items) => {
-         this._items = items;
-         this._needCrumbs = _private.needCrumbs(options.header, items, options.rootVisible);
-      },
-          () => {
-
+      return options.itemsAndHeaderPromise.then((params) => {
+         this._items = params.items;
+         this._needCrumbs = _private.needCrumbs(params.header, params.items, options.rootVisible);
+         this._header = params.header;
       });
    },
 
@@ -30,6 +28,9 @@ var PathWrapper = Control.extend({
           !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
          this._items = newOptions.items;
          this._needCrumbs = _private.needCrumbs(newOptions.header,  this._items, newOptions.rootVisible);
+      }
+      if (this._header !== newOptions.header) {
+         this._header = newOptions.header;
       }
    },
 
