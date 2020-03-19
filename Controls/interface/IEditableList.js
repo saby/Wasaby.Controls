@@ -470,7 +470,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @cfg {EditingConfig} Конфигурация редактирования по месту.
-    * <a href="/materials/demo-ws4-editable-list">Example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FEditableListPG">Example</a>.
     * @name Controls/interface/IEditableList#editingConfig
     * @example
     * WML:
@@ -483,7 +483,7 @@ define('Controls/interface/IEditableList', [
 
    /*
     * @cfg {EditingConfig} Configuration for editing in place.
-    * <a href="/materials/demo-ws4-editable-list">Example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FEditableListPG">Example</a>.
     * @name Controls/interface/IEditableList#editingConfig
     * @example
     * WML:

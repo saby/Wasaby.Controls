@@ -2,6 +2,7 @@ import {SyntheticEvent} from "Vdom/Vdom";
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
+import {delay as runDelayed} from 'Types/function';
 
 /**
  * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
@@ -130,6 +131,17 @@ export default class Group extends Control<IControlOptions> {
         }
     }
 
+    protected _updateTopBottom(): void {
+        let offset: number = 0;
+        for (const header of Object.keys(this._headers)) {
+            for (const position of [POSITION.top, POSITION.bottom]) {
+                offset = getOffset(this._container, this._headers[header].container, position);
+                this._headers[header][position] = offset;
+                this._headers[header].inst[position] = this._offset[position] + offset;
+            }
+        }
+    }
+
     protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
         event.stopImmediatePropagation();
         if (register) {
@@ -156,6 +168,32 @@ export default class Group extends Control<IControlOptions> {
                     mode: data.mode,
                 }, true], {bubbling: true});
                 this._isRegistry = true;
+            } else if (this._container.childElementCount === Object.keys(this._headers).length) {
+                /**При смене фильтрации (к примеру переход по кнопке назад) происходит обновление
+                 *  смещения заголовков. В этот момент так же могут регистрировать новые заголовки.
+                 *  Проблема заключается в том, что на момент регистрации новых - позиция существующих
+                 *  может не успеть обновиться в DOM, из-за чего новые заголовки неверно высчитают
+                 *  свое смещение.
+                 *  Как временное решение запускаем отложенный пересчет позиции, чтобы заголовки имели
+                 *  актуальное смещение. В первый цикл не всегда успевает обновиться позиция, поэтому делаем 2 пересчета.
+                 */
+                //TODO: https://online.sbis.ru/opendoc.html?guid=42232947-df0f-4a2b-9fbe-e3f9a9389263
+                runDelayed(() => {
+                    this._updateTopBottom();
+                    this._notify(
+                        'updateTopBottom',
+                        [{updateTopBottom: true}],
+                        {bubbling: true}
+                    );
+                    runDelayed(() => {
+                        this._updateTopBottom();
+                        this._notify(
+                            'updateTopBottom',
+                            [{updateTopBottom: true}],
+                            {bubbling: true}
+                        );
+                    });
+                });
             }
         } else {
             delete this._headers[data.id];
@@ -172,11 +210,8 @@ export default class Group extends Control<IControlOptions> {
         this._notify(
             'fixed',
             [{
-                id: this._index,
-                offsetHeight: fixedHeaderData.offsetHeight,
-                fixedPosition: fixedHeaderData.fixedPosition,
-                prevPosition: fixedHeaderData.prevPosition,
-                mode: fixedHeaderData.mode
+                ...fixedHeaderData,
+                id: this._index
             }],
             {bubbling: true}
         );

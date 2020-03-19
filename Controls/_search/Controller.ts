@@ -358,7 +358,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (_private.isSearchValueChanged(this, searchValue) && !needUpdateRoot || searchValue !== undefined && needRecreateSearchController) {
+      if (_private.isSearchValueChanged(this, searchValue) && !needUpdateRoot || searchValue && needRecreateSearchController) {
          _private.startSearch(this, searchValue);
          if (searchValue !== this._inputSearchValue) {
             _private.setInputSearchValue(this, searchValue);

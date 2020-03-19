@@ -257,8 +257,8 @@ var
     * Инструкции по настройке контрола доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
     * Демо-примеры:
     * <ul>
-    *    <li><a href="/materials/demo-ws4-explorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
-    *    <li><a href="/materials/demo-ws4-explorer-with-search">Иерархический проводник в режиме "список" и строкой поиска</a></li>
+    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
+    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Иерархический проводник в режиме "список" и строкой поиска</a></li>
     * </ul>
     *
     * @class Controls/_explorer/View
@@ -290,8 +290,8 @@ var
 
    /*
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
-    * <a href="/materials/demo-ws4-explorer">Demo example</a>.
-    * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Demo example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Demo example with search</a>.
     * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
     *
     * @class Controls/_explorer/View
@@ -396,8 +396,9 @@ var
          }
 
          if (
-            cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
-            this._pendingViewMode && cfg.viewMode !== this._pendingViewMode
+             cfg.viewMode !== 'search' &&
+             (cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
+             this._pendingViewMode && cfg.viewMode !== this._pendingViewMode)
          ) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
