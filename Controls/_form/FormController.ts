@@ -413,14 +413,14 @@ class FormController extends Control<IFormController, IReceivedState> {
         const isFormChangedCallback: boolean = this._options.isFormChangedCallback();
         self._pendingPromise = new Deferred();
         self._notify('registerPending', [self._pendingPromise, {
-                showLoadingIndicator: false,
-                validate(): boolean {
-                    return ((self._record && self._record.isChanged()) || isFormChangedCallback);
-                },
-                onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-                    self._showConfirmDialog(deferred, forceFinishValue);
-                }
-            }], {bubbling: true});
+            showLoadingIndicator: false,
+            validate(): boolean {
+                return ((self._record && self._record.isChanged()) || isFormChangedCallback);
+            },
+            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
+                self._showConfirmDialog(deferred, forceFinishValue);
+            }
+        }], {bubbling: true});
     }
 
     private _confirmDialogResult(answer: boolean, def: Promise<any>): void {
