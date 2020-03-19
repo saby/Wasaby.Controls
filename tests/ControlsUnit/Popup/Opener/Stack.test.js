@@ -34,6 +34,10 @@ define(
             return items ? items.templateWidth : 0;
          };
 
+         popupTemplate.StackController._getSideBarWidth = function() {
+            return 200;
+         };
+
          let item = {
             popupOptions: {
                minWidth: 600,
