@@ -2148,5 +2148,82 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.strictEqual(event.result, 'updatePrefix', 'Remove action should update prefix version with ladder');
          });
       });
+
+      describe('Calculation of empty template columns', () => {
+         let model;
+
+         it('should calculate empty template with this.getMultiSelectVisibility() === "hidden"', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'hidden',
+               columnScroll: false
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 1; grid-column-end: 4;');
+         });
+
+         it('should calculate empty template with this.getMultiSelectVisibility() === "visible"', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columnScroll: false
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 5;');
+         });
+
+         it('should calculate empty template with _options.columnScroll', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               columns: [],
+               multiSelectVisibility: 'visible',
+               columnScroll: true
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 1; grid-column-end: 5;');
+         });
+
+         it('should calculate empty template with ActionsCell', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columnScroll: true
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 1; grid-column-end: 6;');
+         });
+
+         it('should calculate empty template with sticky column', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columnScroll: false,
+               stickyColumn: {
+                  index: 0,
+                  property: ''
+               }
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 6;');
+         });
+
+         it('should calculate empty template when this._columns.length === 0', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columns: [],
+               header: [],
+               columnScroll: false
+            });
+            model.getEmptyTemplateStyles();
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 3;');
+         });
+
+         it('should calculate empty template when this._columns.length === 0 and this._header.length > 0', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columns: [],
+               columnScroll: false
+            });
+            model.getEmptyTemplateStyles()
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 5;');
+         });
+      });
    });
 });
