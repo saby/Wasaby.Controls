@@ -260,6 +260,10 @@ define(
             newItems[2].viewMode = 'frequent';
             result = filter.View._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
+
+            oldItems = [];
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
          });
 
          it('openDetailPanel', function() {
