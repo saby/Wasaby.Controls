@@ -124,10 +124,17 @@ class Component extends Control {
         ]);
     }
 
+    _updateTopBottomHandler(event: Event): void {
+        event.stopImmediatePropagation();
+
+        this._updateTopBottom();
+    }
+
     _resizeHandler() {
         // Игнорируем все собятия ресайза до _afterMount.
         // В любом случае в _afterMount мы попробуем рассчитать положение заголовков.
         if (this._stickyControllerMounted) {
+            this._updateTopBottom();
             this._registerDelayed();
         }
     }
