@@ -17,6 +17,7 @@ import 'css!theme?Controls/scroll';
 import * as newEnv from 'Core/helpers/isNewEnvironment';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from "UI/Utils";
+import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 /**
  * Контейнер с тонким скроллом.
@@ -950,6 +951,11 @@ var
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
          }
+      },
+
+      _scrollToElement(event: SyntheticEvent<Event>, { itemContainer, toBottom, force }): void {
+         event.stopPropagation();
+         scrollToElement(itemContainer, toBottom, force);
       },
 
       _saveScrollPosition(event: SyntheticEvent<Event>): void {
