@@ -26,9 +26,14 @@ define(
 
       describe('Controls/_popup/Opener/Stack', () => {
          StackStrategy.getMaxPanelWidth = () => 1000;
+         popupTemplate.StackController._getWindowSize = () => ({
+            width: 1000,
+            height: 1000
+         });
          popupTemplate.StackController._getContainerWidth = function(items) {
             return items ? items.templateWidth : 0;
          };
+
          let item = {
             popupOptions: {
                minWidth: 600,
@@ -687,6 +692,24 @@ define(
             item.popupOptions.propStorageId = 222;
             popupTemplate.StackController._preparePropStorageId(item);
             assert.equal(222, item.popupOptions.propStorageId);
+         });
+
+         it('updateSideBarVisibility', () => {
+            const Controller = popupTemplate.StackController;
+            Controller._stack.clear();
+            Controller._stack.add({
+               popupOptions: { width: 720 }
+            });
+            Controller._updateSideBarVisibility();
+            // не надо нотифаить скрытие аккордеона
+            assert.equal(Controller._sideBarVisible, true);
+
+            Controller._stack.add({
+               popupOptions: { width: 2000 }
+            });
+            Controller._updateSideBarVisibility();
+            // для аккордеона нет места
+            assert.equal(Controller._sideBarVisible, false);
          });
       });
    });
