@@ -410,7 +410,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _createChangeRecordPending(): void {
         const self = this;
         // Если в диалоге были изменены данные, не связанные с рекордом, то вызываем окно подтверждения.
-        const isFormChangedCallback: boolean = this._options.isFormChangedCallback();
+        const isFormChangedCallback: boolean = this._options.isFormChangedCallback ? this._options.isFormChangedCallback() : false;
         self._pendingPromise = new Deferred();
         self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
