@@ -396,8 +396,9 @@ var
          }
 
          if (
-            cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
-            this._pendingViewMode && cfg.viewMode !== this._pendingViewMode
+             cfg.viewMode !== 'search' &&
+             (cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
+             this._pendingViewMode && cfg.viewMode !== this._pendingViewMode)
          ) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
