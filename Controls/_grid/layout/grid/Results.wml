@@ -21,6 +21,7 @@
       <Controls.scroll:StickyHeader attr:class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}"
                                     backgroundStyle="{{backgroundStyle}}"
                                     mode="stackable"
+                                    task1177692247="{{true}}"
                                     fixedZIndex="{{currentResultsColumn.zIndex}}">
           <ws:partial template="cellContent"/>
       </Controls.scroll:StickyHeader>
