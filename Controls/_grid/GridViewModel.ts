@@ -409,8 +409,7 @@ var
             if (!isCheckbox && currentColumn.column.width !== 'auto') {
                 styles += `min-width: ${currentColumn.column.width}; max-width: ${currentColumn.column.width};`;
             }
-            return styles;
-        },
+            return styles;        },
 
         /**
          * Возвращает префикс стиля, выставленный для grid
@@ -426,7 +425,17 @@ var
          */
         getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string}): string {
             return `controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
-        }
+        },
+
+        /**
+         * Проверяет, присутствует ли "прилипающая" колонка
+         * @param self
+         */
+        hasStickyColumn(self): boolean {
+            return !!getStickyColumn({
+                stickyColumn: self._options.stickyColumn,
+                columns: self._options.columns
+            });        }
     },
 
     GridViewModel = BaseViewModel.extend({
@@ -1546,7 +1555,7 @@ var
 
         setDragItemData: function(itemData) {
             this._model.setDragItemData(itemData);
-            if (getStickyColumn({ stickyColumn: this._options.stickyColumn, columns: this._options.columns })) {
+            if (_private.hasStickyColumn(this)) {
                 this._setHeader(this._options.header);
                 this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             }
@@ -1598,11 +1607,8 @@ var
 
         getFooterStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
-                const offsetForMultiSelect: number = this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0;
-                const offsetForStickyColumn: number = +!!getStickyColumn({
-                    stickyColumn: this._options.stickyColumn,
-                    columns: this._options.columns
-                });
+                const offsetForMultiSelect: number = +(this.getMultiSelectVisibility() !== 'hidden');
+                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
 
                 return GridLayoutUtil.getColumnStyles({
                     columnStart: 0,
@@ -1614,22 +1620,28 @@ var
 
         getEmptyTemplateStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
-                const hasColumnScroll = !!this._options.columnScroll;
-                const hasMultiSelect = this.getMultiSelectVisibility() !== 'hidden';
-                // Необходимо учитывать, если к колонкам была добавлена колонка "Действий"
-                const hasActionCell = this._shouldAddActionsCell();
+                const hasColumnScroll: boolean = !!this._options.columnScroll;
+                // активирована колонка для множественного выбора?
+                const offsetForMultiSelect: number = +(this.getMultiSelectVisibility() !== 'hidden');
+                // к колонкам была добавлена "прилипающая" колонка?
+                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                // к колонкам была добавлена колонка "Действий"?
+                const offsetForActionCell: number = +(this._shouldAddActionsCell());
                 // В случае, если у нас приходит после поиска пустой массив колонок,
                 // пытаемся установить значение по длине массива заголовков, а если и он пуст,
                 // то необходимо установить columnsCount в 1, иначе весь дальнейший расчёт
                 // производится некорректно
                 const columnsCount = this._columns.length || this._header.length || 1;
-                const columnStart = +(!hasColumnScroll && hasMultiSelect);
-                const columnSpan = (hasColumnScroll ? (columnsCount + (+hasMultiSelect)) : columnsCount) + (+hasActionCell);
-
-                return GridLayoutUtil.getColumnStyles({
-                    columnStart,
-                    columnSpan
-                });
+                const result = {
+                    columnStart: 0,
+                    columnSpan: columnsCount + offsetForActionCell + offsetForStickyColumn
+                };
+                if (!hasColumnScroll) {
+                    result.columnStart += offsetForMultiSelect;
+                } else {
+                    result.columnSpan += offsetForMultiSelect;
+            }
+                return GridLayoutUtil.getColumnStyles(result);
             }
             return '';
         },
