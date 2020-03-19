@@ -35,6 +35,7 @@
    overflow: hidden;
    max-width: 100%;
    white-space: nowrap;
+   position: relative;
    .baseline-fix();
 }
 .controls-BreadCrumbsView__crumb_theme-@{themeName} {
@@ -43,11 +44,15 @@
    &:before {
       font-size: @font-size_BreadCrumbs-baseline;
    }
+   padding-right: @spacing_default_xxs;
+}
+.controls-BreadCrumbsView__crumb__left_edge {
+   padding: 0 @spacing_default_xxs;
 }
 .controls-BreadCrumbsView__menu {
    float: right;
    position: relative;
-   z-index: 5;
+   z-index: 10;
 }
 .controls-BreadCrumbsView__menu_theme-@{themeName} {
    bottom: @height_BreadCrumbs-items;
@@ -87,13 +92,16 @@
       content: '';
       height: @height_BreadCrumbs-items;
       border: @border-width_BreadCrumbs-item_dropTarget solid @border-color_BreadCrumbs-item_dropTarget;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       box-sizing: border-box;
       position: absolute;
       display: block;
       border-radius: @border-radius_BreadCrumbs-item_dropTarget;
       z-index: 10;
       align-self: center;
-      width: calc(100% + 2 * @spacing_BreadCrumbs-between-item-border);
    }
 }
 
@@ -101,9 +109,9 @@
    left: 0;
 }
 
-.controls-BreadCrumbsView__dropTarget_withoutArrow:after {
+/*.controls-BreadCrumbsView__dropTarget_withoutArrow:after {
    left: -@spacing_BreadCrumbs-between-item-border;
-}
+}*/
 
 .controls-BreadCrumbsView__titleWrapper {
    overflow: hidden;
