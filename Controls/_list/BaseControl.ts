@@ -232,6 +232,11 @@ var _private = {
                     if (self._loadedItems) {
                         self._shouldRestoreScrollPosition = true;
                     }
+                    // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
+                    if (self._itemsChanged) {
+                        self._shouldNotifyOnDrawItems = true;
+                    }
+
                 }
                 if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                     cfg.afterSetItemsOnReloadCallback();
