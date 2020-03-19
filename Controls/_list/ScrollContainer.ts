@@ -71,12 +71,12 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _triggerVisibility: ITriggerState = {up: false, down: false};
 
-    // В IE иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
+    // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
     // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
     // лишние пересчеты, например: https://online.sbis.ru/opendoc.html?guid=ea354034-fd77-4461-a368-1a8019fcb0d4
     // TODO: этот код должен быть убран после
     // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
-    private get _IEtriggerVisibility(): ITriggerState {
+    private get _calculatedTriggerVisibility(): ITriggerState {
         return {
             up: this._triggerOffset >= this._lastScrollTop,
             down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
@@ -292,11 +292,11 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private _checkTriggerVisibility(): void {
         if (!this._applyScrollTopCallback) {
-            if (detection.isIE ? this._IEtriggerVisibility.down : this._triggerVisibility.down) {
+            if (this._calculatedTriggerVisibility.down) {
                 this._recalcToDirection('down');
             }
 
-            if (detection.isIE ? this._IEtriggerVisibility.up : this._triggerVisibility.up) {
+            if (this._calculatedTriggerVisibility.up) {
                 this._recalcToDirection('up');
             }
         }
