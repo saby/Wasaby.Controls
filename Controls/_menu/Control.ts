@@ -344,14 +344,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return Merge({
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
-            isCompoundTemplate: options.isCompoundTemplate,
-            handlers: {
-                // Для совместимости.
-                // Старая система фокусов не знает про существование VDOM окна и не может восстановить на нем фокус после закрытия старой панели.
-                onAfterClose: () => {
-                    self.activate();
-                }
-            }
+            isCompoundTemplate: options.isCompoundTemplate
         }, selectorTemplate.popupOptions || {});
     }
 
