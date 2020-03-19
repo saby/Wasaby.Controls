@@ -1,4 +1,5 @@
 import { default as BaseOpener, IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {Logger} from 'UI/Utils';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack';
@@ -57,7 +58,12 @@ const getStackConfig = (config: IStackOpenerOptions = {}) => {
             managerWrapperMaxZIndex = requirejs(compatibleManagerWrapperName).default.getMaxZIndex();
         }
         const zIndexStep = 9;
-        if (oldWindowManager) {
+        const item = ManagerController.find(config.id);
+        // zindex окон, особенно на старой странице, никогда не обновлялся внутренними механизмами
+        // Если окно уже открыто, zindex не меняем
+        if (item) {
+            config.zIndex = item.popupOptions.zIndex;
+        } else if (oldWindowManager) {
             // Убираем нотификационные окна из выборки старого менеджера
             const baseOldZIndex = 1000;
             const oldMaxZWindow = oldWindowManager.getMaxZWindow((control) => {
