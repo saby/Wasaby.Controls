@@ -563,11 +563,9 @@ var _private = {
                 const oldItem = _private.getItemByName(oldItems, newItem.name);
                 const isFrequent = _private.isFrequentItem(newItem);
                 if (isFrequent && (!oldItem || !_private.isFrequentItem(oldItem) ||
-                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false))
+                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) ||
+                    !isEqual(newItem.value, oldItem.value) && !configs[newItem.name])
                 ) {
-                    result = true;
-                }
-                if (isFrequent && !isEqual(newItem.value, oldItem.value) && !configs[newItem.name]) {
                     result = true;
                 }
             });
