@@ -2,9 +2,8 @@ define([
    'Controls/form',
    'Core/Deferred',
    'Types/entity',
-   'Types/source',
    'Core/polyfill/PromiseAPIDeferred'
-], (form, Deferred, entity, source) => {
+], (form, Deferred, entity) => {
    'use strict';
 
    describe('FormController', () => {
@@ -330,40 +329,6 @@ define([
          FC._beforeUnmount();
          assert.equal(isDestroyCall, false);
          FC.destroy();
-      });
-
-      context('_readRecordBeforeMount()', () => {
-         const readRecordBeforeMount = form.Controller.prototype._readRecordBeforeMount;
-         let provider;
-         let ds;
-         let instance;
-         let lastArgs;
-
-         beforeEach(() => {
-            provider = {
-               call(name, args) {
-                  lastArgs = args;
-                  return Promise.reject(new Error('oops!'));
-               }
-            };
-            ds = new source.SbisService({provider});
-
-            instance = {
-               _source: ds
-            };
-         });
-
-         it('should call read() method at data source with given key', () => {
-            readRecordBeforeMount.call(instance, {key: 'foo'});
-            assert.equal(lastArgs['ИдО'], 'foo');
-         });
-
-         it('should call provider with read() method at data source with given meta data', () => {
-            readRecordBeforeMount.call(instance, {key: 'foo', readMetaData: ['bar']});
-
-            assert.equal(lastArgs['ИдО'], 'foo');
-            assert.deepEqual(lastArgs['ДопПоля'], ['bar']);
-         });
       });
 
       it('delete new record', () => {

@@ -2,14 +2,14 @@ import rk = require('i18n!Controls');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as cInstance from 'Core/core-instance';
 import tmpl = require('wml!Controls/_form/FormController/FormController');
+import {readWithAdditionalFields} from './crudProgression';
 import * as Deferred from 'Core/Deferred';
 import {Logger} from 'UI/Utils';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {IContainerConstructor} from 'Controls/_dataSource/error';
-import {Model, Record as EntityRecord, ObservableMixin} from 'Types/entity';
-import {CrudEntityKey, ICrud, Memory} from 'Types/source';
+import {Model} from 'Types/entity';
+import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import BindingMixin from "../../application/Types/_source/BindingMixin";
 
 interface IFormController extends IControlOptions {
     createMetaData?: unknown;
@@ -70,33 +70,6 @@ interface IConfigInMounting {
 
 interface IUpdateConfig {
     additionalData: IAdditionalData;
-}
-
-function readWithAdditionalFields(
-    source: ICrud | ObservableMixin | BindingMixin,
-    key: CrudEntityKey, metaData: unknown
-): Promise<EntityRecord> {
-    const needAdditionalFiedls = metaData && (source as ObservableMixin).subscribe &&
-        (source as BindingMixin).getBinding;
-    let handler;
-
-    if (needAdditionalFiedls) {
-        const sourceBinding = (source as BindingMixin).getBinding() || {};
-        handler = (event, name, args) => {
-            if (name === sourceBinding.read) {
-                args.ДопПоля = metaData;
-            }
-        };
-        (source as ObservableMixin).subscribe('onBeforeProviderCall', handler);
-    }
-
-    const result = (source as ICrud).read(key);
-
-    if (needAdditionalFiedls) {
-        (source as ObservableMixin).unsubscribe('onBeforeProviderCall', handler);
-    }
-
-    return result;
 }
 
 /**
