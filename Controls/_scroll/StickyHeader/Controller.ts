@@ -128,6 +128,7 @@ class Component extends Control {
         // Игнорируем все собятия ресайза до _afterMount.
         // В любом случае в _afterMount мы попробуем рассчитать положение заголовков.
         if (this._stickyControllerMounted) {
+            this._updateTopBottom();
             this._registerDelayed();
         }
     }
