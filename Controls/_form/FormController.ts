@@ -293,10 +293,12 @@ import dataSource = require('Controls/dataSource');
             this._pendingPromise.callback();
             this._pendingPromise = null;
          }
-         if (this._unmountPromise) {
-            this._unmountPromise.callback();
-            this._unmountPromise = null;
-         }
+         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
+         // Текущая реализация не подходит, завершать пендинги могут как сверху(при закрытии окна), так и
+         // снизу (редактирование закрывает пендинг).
+         // надо делать так, чтобы редактирование только на свой пендинг влияло
+         // https://online.sbis.ru/opendoc.html?guid=78c34d53-8705-4e25-bbb5-0033e81d6152
+         this._tryDeleteNewRecord();
       },
       _setRecord: function(record) {
          if (!record || _private.checkRecordType(record)) {
@@ -314,7 +316,7 @@ import dataSource = require('Controls/dataSource');
 
       _tryDeleteNewRecord: function() {
          if (this._needDestroyRecord()) {
-            return this.delete();
+            return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
          }
          return (new Deferred()).callback();
       },
@@ -337,27 +339,6 @@ import dataSource = require('Controls/dataSource');
                self._showConfirmDialog(deferred, forceFinishValue);
             }
          }], { bubbling: true });
-
-         // Перед закрытием окна возможно потребуется удалить запись.
-         // Делать надо здесь, а не на _beforeUnmount, т.к. нужно чтобы всплыли события об удалении записи,
-         // это нужно для синхронизации с реестром.
-         self._unmountPromise = new Deferred();
-         self._notify('registerPending', [self._unmountPromise, {
-            showLoadingIndicator: false,
-            validate(): boolean {
-               return self._record && !self._record.isChanged() && !self._isUpdating() && self._needDestroyRecord();
-            },
-            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-               self._tryDeleteNewRecord().then(() => {
-                  deferred.callback();
-                  self._unmountPromise = null;
-               });
-            }
-         }], { bubbling: true });
-      },
-
-      _isUpdating(): boolean {
-         return this._updatePromise && !this._updatePromise.isReady();
       },
 
       _confirmDialogResult(answer: boolean, def: Promise<boolean>): void {
