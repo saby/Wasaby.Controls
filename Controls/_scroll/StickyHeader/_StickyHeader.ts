@@ -248,7 +248,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             fixedPosition: newPosition,
             offsetHeight: this._height,
             prevPosition,
-            mode: this._options.mode
+            mode: this._options.mode,
+            shadowVisible: this._options.shadowVisibility === 'visible'
         };
 
         this._shadowVisible = !!newPosition;
