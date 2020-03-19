@@ -287,8 +287,13 @@ class FormController extends Control<IFormController, IReceivedState> {
             this._pendingPromise = null;
         }
         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
+        // Текущая реализация не подходит, завершать пендинги могут как сверху(при закрытии окна), так и
+        // снизу (редактирование закрывает пендинг).
+        // надо делать так, чтобы редактирование только на свой пендинг влияло
+        // https://online.sbis.ru/opendoc.html?guid=78c34d53-8705-4e25-bbb5-0033e81d6152
         this._tryDeleteNewRecord();
     }
+
 
     private _createRecordBeforeMount(cfg: IFormController): Promise<ICrudResult> {
         // если ни рекорда, ни ключа, создаем новый рекорд и используем его
@@ -504,18 +509,18 @@ class FormController extends Control<IFormController, IReceivedState> {
                 const res = this._update(config).then(this._getData);
                 updateResult.dependOn(res);
             } else {
-                updateResult.callback(true);
                 this._updateIsNewRecord(false);
+                updateResult.callback(true);
             }
         }
 
         // maybe anybody want to do custom update. check it.
         const result = this._notify('requestCustomUpdate', [], {bubbling: true});
 
-        // pending waiting while update process finished
-        const def = new Deferred();
-        this._notify('registerPending', [def, {showLoadingIndicator: false}], {bubbling: true});
-        def.dependOn(updateResult);
+         // pending waiting while update process finished
+         this._updatePromise = new Deferred();
+         this._notify('registerPending', [this._updatePromise, { showLoadingIndicator: false }], { bubbling: true });
+         this._updatePromise.dependOn(updateResult);
 
         if (result && result.then) {
             result.then((defResult) => {

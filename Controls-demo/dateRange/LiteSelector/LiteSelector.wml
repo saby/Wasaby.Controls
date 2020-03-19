@@ -39,5 +39,11 @@
                                              bind:startValue="_startValue"
                                              bind:endValue="_endValue"/>
         </div>
+        <div class="controlsDemo__cell">
+            <div class="controls-text-label_theme-{{_options.theme}} controlsDemo__maxWidth200">choseYears=false</div>
+            <Controls.dateRange:LiteSelector chooseYears="{{false}}"
+                                             bind:startValue="_startValue"
+                                             bind:endValue="_endValue"/>
+        </div>
     </div>
 </div>

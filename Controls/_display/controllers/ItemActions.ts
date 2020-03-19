@@ -32,6 +32,7 @@ export interface IItemActionsTemplateOptions {
     actionAlignment?: string;
     actionCaptionPosition: 'right'|'bottom'|'none';
     itemActionsClass?: string;
+    actionClickCallback?: Function;
 }
 
 export interface IItemActionsItem {
@@ -181,22 +182,24 @@ export function processActionClick(
     itemKey: TItemKey,
     action: TItemAction,
     clickEvent: SyntheticEvent<MouseEvent>,
-    fromDropdown: boolean
+    fromDropdown: boolean,
+    actionClickCallback: Function
 ): void {
     clickEvent.stopPropagation();
     if (action._isMenu) {
-        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false);
+        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false, actionClickCallback);
     } else if (action['parent@']) {
         if (!fromDropdown) {
-            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false);
+            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false, actionClickCallback);
         }
     } else {
         const item = collection.getItemBySourceKey(itemKey);
         if (item) {
             const contents = item.getContents();
 
-            // How to fire from here???
+            // How to calculate itemContainer?
             // this._notify('actionClick', [action, contents, itemContainer]);
+            actionClickCallback(clickEvent, action, contents);
 
             if (action.handler) {
                 action.handler(contents);
@@ -212,7 +215,8 @@ export function prepareActionsMenuConfig(
     itemKey: TItemKey,
     clickEvent: SyntheticEvent<MouseEvent>,
     parentAction: TItemAction,
-    isContext: boolean
+    isContext: boolean,
+    actionClickCallback: Function
 ): void {
     const item = collection.getItemBySourceKey(itemKey);
     if (!item) {
@@ -228,8 +232,8 @@ export function prepareActionsMenuConfig(
         clickEvent.preventDefault();
 
         // there was a fake target before, check if it is needed
-        const menuTarget = isContext ? null : clickEvent.target?.closest('.controls-ListView__itemV');
-        const closeHandler = _processActionsMenuClose.bind(null, collection);
+        const menuTarget = isContext ? null : getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const closeHandler = _processActionsMenuClose.bind(null, collection, actionClickCallback);
         const menuRecordSet = new RecordSet({
             rawData: menuActions,
             keyProperty: 'id'
@@ -264,7 +268,7 @@ export function prepareActionsMenuConfig(
             direction: {
                 horizontal: isContext ? 'right' : 'left'
             },
-            className: 'controls-DropdownList__margin-head controls-Toolbar__popup__list_theme-',
+            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
             nativeEvent: isContext ? clickEvent.nativeEvent : null,
             autofocus: false
         };
@@ -275,7 +279,16 @@ export function prepareActionsMenuConfig(
         collection.nextVersion();
     }
 }
-
+function getFakeMenuTarget(realTarget: HTMLElement): {
+    getBoundingClientRect(): ClientRect;
+} {
+    const rect = realTarget.getBoundingClientRect();
+    return {
+        getBoundingClientRect(): ClientRect {
+            return rect;
+        }
+    };
+}
 export function activateSwipe(
     collection: IItemActionsCollection,
     itemKey: TItemKey,
@@ -398,7 +411,8 @@ function _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
 
 function _processActionsMenuClose(
     collection: IItemActionsCollection,
-    args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] }
+    actionClickCallback: Function,
+    args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] },
 ): void {
     // Actions dropdown can start closing after the view itself was unmounted already, in which case
     // the model would be destroyed and there would be no need to process the action itself
@@ -412,7 +426,8 @@ function _processActionsMenuClose(
                 getActiveItem(collection)?.getContents()?.getKey(),
                 action,
                 args.event,
-                true
+                true,
+                actionClickCallback
             );
 
             // If this action has children, don't close the menu if it was clicked

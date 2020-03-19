@@ -17,7 +17,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
-import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 const SCROLLMOVE_DELAY = 150;
 const TRIGGER_VISIBILITY_DELAY = 101;
@@ -72,6 +71,18 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _triggerVisibility: ITriggerState = {up: false, down: false};
 
+    // В IE иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
+    // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
+    // лишние пересчеты, например: https://online.sbis.ru/opendoc.html?guid=ea354034-fd77-4461-a368-1a8019fcb0d4
+    // TODO: этот код должен быть убран после
+    // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
+    private get _IEtriggerVisibility(): ITriggerState {
+        return {
+            up: this._triggerOffset >= this._lastScrollTop,
+            down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
+        };
+    }
+
     private _restoreScrollResolve: Function;
     private _applyScrollTopCallback: Function;
     private _checkTriggerVisibilityTimeout: number;
@@ -104,6 +115,7 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     protected _afterMount(): void {
+        this._viewResize(this._container.offsetHeight, false);
         // @ts-ignore
         this._children.scrollObserver.startRegister(this._children);
         this._afterRenderHandler();
@@ -135,8 +147,11 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _beforeUnmount(): void {
         clearTimeout(this._checkTriggerVisibilityTimeout);
-        this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
-        this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
+        // TODO убрать проверку в https://online.sbis.ru/opendoc.html?guid=fb8a3901-bddf-4552-ae9a-ed0299d3e46f
+        if (!this._options.collection.destroyed) {
+            this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
+            this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
+        }
     }
 
     protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
@@ -150,10 +165,8 @@ export default class ScrollContainer extends Control<IOptions> {
         event.stopPropagation();
     }
 
-    protected _viewResize(): void {
-        this._viewHeight = this._container.offsetHeight;
-        this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
-        this._virtualScroll.resizeView(this._viewHeight, this._triggerOffset, this._itemsContainer);
+    protected _viewResizeHandler(): void {
+        this._viewResize(this._container.offsetHeight);
         // TODO Совместимость необходимо удалить после переписывания baseControl
         this._notify('viewResize');
     }
@@ -165,22 +178,22 @@ export default class ScrollContainer extends Control<IOptions> {
     ): void {
         switch (eventName) {
             case 'virtualPageBottomStart':
-                this._triggerVisibilityChanged('down', true);
+                this._triggerVisibilityChanged('down', true, params);
                 break;
             case 'virtualPageTopStart':
-                this._triggerVisibilityChanged('up', true);
+                this._triggerVisibilityChanged('up', true, params);
                 break;
             case 'virtualPageBottomStop':
-                this._triggerVisibilityChanged('down', false);
+                this._triggerVisibilityChanged('down', false, params);
                 break;
             case 'virtualPageTopStop':
-                this._triggerVisibilityChanged('up', false);
+                this._triggerVisibilityChanged('up', false, params);
                 break;
             case 'scrollMoveSync':
                 this._scrollPositionChanged(params);
                 break;
             case 'viewportResize':
-                this._viewportResize(params);
+                this._viewportResize(params.clientHeight);
                 this._notify('viewportResize', [params.clientHeight, params.rect]);
                 break;
             case 'virtualScrollMove':
@@ -230,7 +243,9 @@ export default class ScrollContainer extends Control<IOptions> {
 
                     if (itemContainer) {
                         this._fakeScroll = true;
-                        scrollToElement(itemContainer, toBottom, force);
+                        this._notify('scrollToElement', [{
+                            itemContainer, toBottom, force
+                        }], {bubbling: true});
                     }
 
                     resolve();
@@ -277,11 +292,11 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private _checkTriggerVisibility(): void {
         if (!this._applyScrollTopCallback) {
-            if (this._triggerVisibility.down) {
+            if (detection.isIE ? this._IEtriggerVisibility.down : this._triggerVisibility.down) {
                 this._recalcToDirection('down');
             }
 
-            if (this._triggerVisibility.up) {
+            if (detection.isIE ? this._IEtriggerVisibility.up : this._triggerVisibility.up) {
                 this._recalcToDirection('up');
             }
         }
@@ -330,7 +345,7 @@ export default class ScrollContainer extends Control<IOptions> {
         const rangeShiftResult = this._virtualScroll
             .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(options.collection, rangeShiftResult.range);
+        this._setCollectionIndices(options.collection, rangeShiftResult.range, true);
 
         if (options.activeElement) {
             this._restoreScrollResolve = () => {
@@ -349,7 +364,11 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    private _setCollectionIndices(collection: Collection<Record>, {start, stop}: IRange): void {
+    private _setCollectionIndices(
+        collection: Collection<Record>,
+        {start, stop}: IRange,
+        force?: boolean
+    ): void {
         let collectionStartIndex: number;
         let collectionStopIndex: number;
 
@@ -361,7 +380,7 @@ export default class ScrollContainer extends Control<IOptions> {
             collectionStopIndex = collection.getStopIndex();
         }
 
-        if (collectionStartIndex !== start || collectionStopIndex !== stop) {
+        if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
             if (collection.getViewIterator) {
                 collection.getViewIterator().setIndices(start, stop);
             } else {
@@ -383,9 +402,13 @@ export default class ScrollContainer extends Control<IOptions> {
      * @param triggerName
      * @param triggerVisible
      */
-    private _triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean): void {
-        if (triggerVisible) {
-            this._recalcToDirection(triggerName);
+    private _triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean, params: IScrollParams): void {
+        if (!this._applyScrollTopCallback) {
+            this._viewportResize(params.clientHeight, false);
+
+            if (triggerVisible) {
+                this._recalcToDirection(triggerName);
+            }
         }
 
         this._triggerVisibility[triggerName] = triggerVisible;
@@ -407,6 +430,8 @@ export default class ScrollContainer extends Control<IOptions> {
 
         if (this._fakeScroll) {
             this._fakeScroll = false;
+        } else if (this._viewHeight !== this._container.offsetHeight) {
+            this._viewResize(this._container.offsetHeight);
         } else if (!this._restoreScrollResolve && !this._virtualScroll.rangeChanged) {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
 
@@ -432,10 +457,24 @@ export default class ScrollContainer extends Control<IOptions> {
         this._throttledPositionChanged(params);
     }
 
-    private _viewportResize(params: IScrollParams): void {
-        this._viewportHeight = params.clientHeight;
+    private _viewResize(viewSize: number, updateItemsHeights: boolean = true): void {
+        this._viewHeight = viewSize;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
-        this._virtualScroll.resizeViewport(this._viewportHeight, this._triggerOffset, this._itemsContainer);
+        this._virtualScroll.resizeView(
+            this._viewHeight,
+            this._triggerOffset,
+            updateItemsHeights ? this._itemsContainer : undefined
+        );
+    }
+
+    private _viewportResize(viewportSize: number, updateItemsHeights: boolean = true): void {
+        this._viewportHeight = viewportSize;
+        this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
+        this._virtualScroll.resizeViewport(
+            this._viewportHeight,
+            this._triggerOffset,
+            updateItemsHeights ? this._itemsContainer : undefined
+        );
     }
 
     /**
@@ -444,7 +483,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * @private
      */
     private _recalcToDirection(direction: IDirection): void {
-        if (this._virtualScroll.isRangeOnEdge(direction)) {
+        if (!this._virtualScroll.rangeChanged && this._virtualScroll.isRangeOnEdge(direction)) {
             this._notifyLoadMore(direction);
         } else {
             this._inertialScrolling.callAfterScrollStopped(() => {
@@ -480,6 +519,7 @@ export default class ScrollContainer extends Control<IOptions> {
         if (this._virtualScroll.isNeedToRestorePosition) {
             this._restoreScrollPosition();
             this.checkTriggerVisibilityWithTimeout();
+            this._restoreScrollResolve = null;
         } else if (this._restoreScrollResolve) {
             // В результате _restoreScrollResolve он может сам себя перезаписать
             // (такое происходит, когда вызвали scrolLToItem)
@@ -540,6 +580,14 @@ export default class ScrollContainer extends Control<IOptions> {
             if (action === IObservable.ACTION_RESET) {
                 this._initVirtualScroll(this._options);
             }
+
+            // TODO Уберется после https://online.sbis.ru/opendoc.html?guid=5ebdec7d-e95e-438d-94f8-079a17b323c6
+            // На данный момент индексы в модели проставляются в двух местах: здесь и на уровне модели
+            // Вследствие чего могут возникать коллизии и индексы проставленные здесь, могут быть перетерты моделью.
+            // Такое происходит например при добавлении в узел дерева
+            // После решения ошибки этот код будет не нужен и индексы проставляться будут только здесь
+            // @ts-ignore
+            this._setCollectionIndices(this._options.collection, this._virtualScroll._range);
         }
     }
 
@@ -631,7 +679,7 @@ export default class ScrollContainer extends Control<IOptions> {
             Logger.warn('Controls.list: Specify virtual page size in virtualScrollConfig option');
             virtualScrollConfig.pageSize = DEFAULT_VIRTUAL_PAGESIZE;
         }
-        if (options.virtualPageSize || options.virtualSegmentSize) {
+        if (options.virtualScrolling && (options.virtualPageSize || options.virtualSegmentSize)) {
             virtualScrollConfig.segmentSize = options.virtualSegmentSize;
             virtualScrollConfig.pageSize = options.virtualPageSize;
             Logger.warn('Controls.list: Use virtualScrollConfig instead of old virtual scroll config options');

@@ -202,14 +202,15 @@ var
         },
 
         editNextRow: function (self, editNextRow: boolean, addAnyway: boolean = false) {
-            var index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+            const index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+            const editingConfig = self._options.editingConfig || {};
 
             if (editNextRow) {
-                if (_private.getNext(self._editingItem, index, self._options.listModel)) {
+                if (!self._isAdd && _private.getNext(self._editingItem, index, self._options.listModel)) {
                     self.beginEdit({
                         item: _private.getNext(self._editingItem, index, self._options.listModel)
                     });
-                } else if (addAnyway || self._options.editingConfig && self._options.editingConfig.autoAdd) {
+                } else if (addAnyway || editingConfig.autoAdd) {
                     self.beginAdd();
                 } else {
                     self.commitEdit();
@@ -496,7 +497,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
                 e.stopPropagation();
                 if (this._isAdd) {
-                    _private.editNextRow(this, true, true);
+                    _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
                 } else if (this._options.editingConfig && !this._sequentialEditing) {
                     this.commitEdit();
                 } else {

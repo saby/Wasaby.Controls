@@ -1,7 +1,6 @@
 <Controls.listRender:Render
         listModel="{{_options.listModel}}"
         multiselectVisibility="{{_options.multiSelect ? 'onhover' : 'hidden'}}"
-        footerTemplate="{{_options.footerTemplate}}"
         emptyTemplate="{{!_options.listModel.getCount() ? _options.emptyTemplate : null}}"
         on:itemMouseLeave="_proxyEvent('itemMouseLeave')"
         on:itemMouseEnter="_proxyEvent('itemMouseEnter')"

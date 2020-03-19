@@ -176,6 +176,15 @@ var _private = {
         const isAllSelected = _private.isAllSelectedInRoot(self, _private.getRoot(self));
 
         return isAllSelected && (rootChanged || listFilterChanged);
+    },
+
+    clearSelection(self): void {
+        self._multiselection.selectedKeys = [];
+        self._multiselection.excludedKeys = [];
+
+        if (self._options.listModel.getCount()) {
+            self._multiselection.updateSelectionForRender();
+        }
     }
 };
 
@@ -248,7 +257,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
     },
 
     _beforeUnmount: function () {
-        this._options.listModel.updateSelection({});
+        _private.clearSelection(this);
         this._notify('listSelectedKeysCountChanged', [0], {bubbling: true});
         this._multiselection = null;
         this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);

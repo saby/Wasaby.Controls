@@ -245,6 +245,29 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(controller._root, null);
       });
 
+      it('_private.searchCallback with startingWith = "current"', () => {
+         const controllerFilter = {
+            parent: 'testRoot'
+         };
+         const controller = getSearchController({
+            parentProperty: 'parent',
+            startingWith: 'current',
+            filter: controllerFilter
+         });
+         let searchCallbackFilter;
+
+         controller._searchContext = { updateConsumers: () => {} };
+         controller._notify = (eventName, eventValue) => {
+            if (eventName === 'filterChanged') {
+               searchCallbackFilter = eventValue[0];
+            }
+         };
+         controller._root = 'testRoot';
+
+         searchMod.Controller._private.searchCallback(controller, { data: new collection.RecordSet() }, controllerFilter);
+         assert.deepEqual(controllerFilter, {});
+      });
+
       it('_private.abortCallback', function() {
          var controller = getSearchController();
          var filter = { 'Разворот': 'С разворотом', 'usePages': 'full', test: 'test' };
@@ -464,6 +487,17 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.isNull(searchController._searchController);
          });
 
+         it('beforeUpdate after beforeMount', function() {
+            var options = getDefaultOptions();
+            var searchStarted = false;
+            searchMod.Controller._private.getSearchController(searchController);
+            searchMod.Controller._private.startSearch = () => {searchStarted = true;};
+            searchController._inputSearchValue = '';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+
+            assert.isFalse(searchStarted);
+         });
+
          it('source is changed', function() {
             var options = getDefaultOptions();
             var searchStarted = false;
@@ -471,9 +505,25 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             searchMod.Controller._private.getSearchController(searchController);
             searchMod.Controller._private.startSearch = () => {searchStarted = true;};
             searchController._inputSearchValue = 'test';
+            options.searchValue = 'test2';
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
 
-            assert.isTrue(searchController._inputSearchValue === 'test');
+            assert.equal(searchController._inputSearchValue, 'test2');
+            assert.isTrue(searchStarted);
+         });
+
+         it('searchParam is changed', function() {
+            var options = getDefaultOptions();
+            var searchStarted = false;
+            searchMod.Controller._private.getSearchController(searchController);
+            searchMod.Controller._private.startSearch = () => {searchStarted = true;};
+            options.searchParam = 'test1';
+            searchController._inputSearchValue = 'test';
+            searchController._searchValue = '';
+            options.searchValue = 'test';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+
+            assert.equal(searchController._inputSearchValue, 'test');
             assert.isTrue(searchStarted);
          });
 
@@ -596,10 +646,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             options.navigation = {};
             searchMod.Controller._private.getSearchController(searchController);
             searchMod.Controller._private.startSearch = () => {searchStarted = true;};
-            searchController._inputSearchValue = 'test';
+            searchController._inputSearchValue = 'test1';
+            options.searchValue = 'test';
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
 
-            assert.isTrue(searchController._inputSearchValue === 'test');
+            assert.equal(searchController._inputSearchValue, 'test');
             assert.isTrue(searchStarted);
          });
 

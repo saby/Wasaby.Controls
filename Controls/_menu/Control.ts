@@ -51,7 +51,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
-    private _hoveredItemIndex: number|null = null;
 
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
@@ -108,8 +107,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private _mouseOutHandler(event: SyntheticEvent<MouseEvent>): void {
-        this._hoveredItemIndex = null;
-        this._listModel.setHoveredItem(null);
         clearTimeout(this._handleCurrentItemTimeout);
     }
 
@@ -226,8 +223,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _footerMouseEnter(): void {
-        this._hoveredItemIndex = null;
-        this._listModel.setHoveredItem(null);
         this._closeSubMenu();
     }
 
@@ -254,7 +249,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private handleCurrentItem(item: TreeItem<Model>, target, nativeEvent): void {
-        this._hoveredItemIndex = this._listModel.getIndex(item);
         const needOpenDropDown = item.getContents().get(this._options.nodeProperty) && !item.getContents().get('readOnly');
         const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
         this.setItemParamsOnHandle(item, target, nativeEvent);
@@ -263,10 +257,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this.setSubMenuPosition();
         }
         this._isMouseInOpenedItemArea = needCloseDropDown ? this.isMouseInOpenedItemArea(nativeEvent) : false;
-
-        if (!this._isMouseInOpenedItemArea) {
-            this._listModel.setHoveredItem(item);
-        }
 
         // Close the already opened sub menu. Installation of new data sets new size of the container.
         // If you change the size of the update, you will see the container twitch.
@@ -344,14 +334,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return Merge({
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
-            isCompoundTemplate: options.isCompoundTemplate,
-            handlers: {
-                // Для совместимости.
-                // Старая система фокусов не знает про существование VDOM окна и не может восстановить на нем фокус после закрытия старой панели.
-                onAfterClose: () => {
-                    self.activate();
-                }
-            }
+            isCompoundTemplate: options.isCompoundTemplate
         }, selectorTemplate.popupOptions || {});
     }
 
@@ -437,9 +420,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this._calculateActionsConfig(listModel, options);
         }
 
-        if (this._hoveredItemIndex !== null) {
-            listModel.setHoveredItem(listModel.at(this._hoveredItemIndex));
-        }
         if (options.groupProperty) {
             listModel.setGroup(this.groupMethod.bind(this, options));
         } else if (options.groupingKeyCallback) {
@@ -562,6 +542,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         templateOptions.closeButtonVisibility = false;
         templateOptions.showHeader = false;
         templateOptions.headerTemplate = null;
+        templateOptions.headerContentTemplate = null;
         templateOptions.additionalProperty = null;
         templateOptions.searchParam = null;
         templateOptions.itemPadding = null;
@@ -611,13 +592,13 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         );
     }
 
-    static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
-
-    static _getChildContext(): object {
+    private _getChildContext(): object {
         return {
             ScrollData: new ScrollData({pagingVisible: false})
         };
     }
+
+    static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];
 
     static getDefaultOptions(): object {
         return {

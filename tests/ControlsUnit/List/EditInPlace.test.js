@@ -778,7 +778,7 @@ define([
             });
          });
 
-         it('commit not in process if server validation failed', function(done) {
+         it('commit not in process if server validation failed', async function() {
             let
                validationResultDef;
 
@@ -797,14 +797,14 @@ define([
 
             validationResultDef = new Deferred();
             eip._options.source = { update: () => Deferred.fail() };
-            eip.commitEdit().addErrback(() => {
+            const commit = eip.commitEdit().addErrback(() => {
                assert.isFalse(eip._isCommitInProcess);
                assert.isTrue(eip._commitPromise.isReady());
-               done();
             });
 
             assert.isTrue(eip._isCommitInProcess);
             validationResultDef.callback({});
+            await commit;
          });
 
          it('With source', function(done) {
@@ -878,6 +878,33 @@ define([
             };
             var result = eip.commitEdit();
             assert.isTrue(result.isSuccessful());
+         });
+
+
+         it('Add in top without sequentialEditing. Should not edit second record after adding.', function() {
+            var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            });
+            eip.saveOptions({
+               listModel: listModel,
+               source: source,
+               editingConfig: {
+                  sequentialEditing: false,
+                  addPosition: 'top'
+               }
+            });
+
+            eip.beginAdd({
+               item: newItem
+            });
+
+            eip._editingItem.set('title', '1234');
+
+            eip.commitEdit().addCallback(function() {
+               assert.equal(listModel.getCount(), 4);
+               assert.isNull(eip._editingItem);
+            });
          });
 
          describe('beforeEndEdit', function() {
@@ -1277,6 +1304,28 @@ define([
             assert.isTrue(isPropagationStopped);
          });
 
+         it('Enter with autoAddByApplyButton', function() {
+            eip.beginEdit = function(options) {
+               assert.equal(options.item, listModel.at(1).getContents());
+            };
+            eip.saveOptions({
+               listModel: listModel,
+               editingConfig: {
+                  autoAddByApplyButton: true
+               }
+            });
+            eip._editingItem = listModel.at(0).getContents();
+
+            eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel, eip._options);
+            eip._onKeyDown({
+               stopPropagation: function() {}
+            }, {
+               keyCode: 13,
+               stopPropagation: function() {}
+            });
+            assert.isNull(eip._editingItem);
+         });
+
          it('Enter on last item', function(done) {
             eip.commitEdit = function() {
                done();
@@ -1321,40 +1370,51 @@ define([
             });
          });
 
-         it('Enter on adding item', function(done) {
-            let isFifthItemCreated = false;
-
+         it('Enter on adding item', async function() {
+            let addCount = 0;
+            const secondAddItem = new entity.Model({
+               rawData: {
+                  id: 5,
+                  title: 'Пятый'
+               },
+               keyProperty: 'id'
+            });
             eip.saveOptions({
-               listModel: listModel
-            });
-            // Начинаем добавление.
-            eip.beginAdd({
-               item: newItem
-            });
-            eip._notify = (eName) => {
-               if (eName === 'afterBeginEdit' && isFifthItemCreated) {
-                  // Второе добавление успешно началось.
-                  done();
+               listModel: listModel,
+               editingConfig: {
+                  autoAddByApplyButton: true
                }
-               if (eName === 'beforeBeginEdit') {
-                  isFifthItemCreated = true;
-                  return {
-                     item: new entity.Model({
-                        rawData: {
-                           id: 5,
-                           title: 'Пятый'
-                        },
-                        keyProperty: 'id'
-                     })
-                  };
+            });
+
+            eip._notify = (eName, args) => {
+               if (eName === 'beforeBeginEdit' && args[1]) {
+                  if (addCount === 0) {
+                     addCount++;
+                     return {
+                        item: newItem
+                     };
+                  } else if (addCount === 1) {
+                     addCount++;
+                     return {
+                        item: secondAddItem
+                     };
+                  }
+                  throw new Error('beginEdit should be called only twice');
                }
             };
+
+            await eip.beginAdd();
+
+            assert.equal(eip._editingItem.getId(), newItem.getId());
+
             eip._onKeyDown({
                stopPropagation: function() {}
             }, {
                keyCode: 13,
                stopPropagation: function() {}
             });
+
+            assert.equal(eip._editingItem.getId(), secondAddItem.getId());
          });
 
          it('Enter, sequentialEditing: false', function(done) {
