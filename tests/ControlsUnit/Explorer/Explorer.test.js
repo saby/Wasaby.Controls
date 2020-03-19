@@ -465,9 +465,28 @@ define([
             assert.isFalse(instance._isGoingFront);
          });
 
-         it('changes viewMode on items set if both viewMode and root changed', () => {
+         it('changes viewMode on items set if both viewMode and root changed(tree -> search)', () => {
             const cfg = { viewMode: 'tree', root: null };
             const cfg2 = { viewMode: 'search' , root: 'abc' };
+            const instance = new explorerMod.View(cfg);
+            instance._children = {
+               treeControl: {
+                  resetExpandedItems: () => null
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._viewMode = 'tree';
+
+            instance._beforeUpdate(cfg2);
+            instance.saveOptions(cfg2);
+            assert.strictEqual(instance._viewMode, 'search');
+
+         });
+
+         it('changes viewMode on items set if both viewMode and root changed(tree -> tile)', () => {
+            const cfg = { viewMode: 'tree', root: null };
+            const cfg2 = { viewMode: 'tile' , root: 'abc' };
             const instance = new explorerMod.View(cfg);
             instance._children = {
                treeControl: {
@@ -483,7 +502,7 @@ define([
             assert.strictEqual(instance._viewMode, 'tree');
 
             explorerMod.View._private.itemsSetCallback(instance);
-            assert.strictEqual(instance._viewMode, 'search');
+            assert.strictEqual(instance._viewMode, 'tile');
          });
       });
 
