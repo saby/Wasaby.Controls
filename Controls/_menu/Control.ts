@@ -50,7 +50,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
-    private _hoveredItemIndex: number|null = null;
 
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
@@ -88,8 +87,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private _mouseOutHandler(event: SyntheticEvent<MouseEvent>): void {
-        this._hoveredItemIndex = null;
-        this._listModel.setHoveredItem(null);
         clearTimeout(this._handleCurrentItemTimeout);
     }
 
@@ -184,8 +181,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     protected _footerMouseEnter(): void {
-        this._hoveredItemIndex = null;
-        this._listModel.setHoveredItem(null);
         this._closeSubMenu();
     }
 
@@ -212,7 +207,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private handleCurrentItem(item: TreeItem<Model>, target, nativeEvent): void {
-        this._hoveredItemIndex = this._listModel.getIndex(item);
         const needOpenDropDown = item.getContents().get(this._options.nodeProperty) && !item.getContents().get('readOnly');
         const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
         this.setItemParamsOnHandle(item, target, nativeEvent);
@@ -221,10 +215,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             this.setSubMenuPosition();
         }
         this._isMouseInOpenedItemArea = needCloseDropDown ? this.isMouseInOpenedItemArea(nativeEvent) : false;
-
-        if (!this._isMouseInOpenedItemArea) {
-            this._listModel.setHoveredItem(item);
-        }
 
         // Close the already opened sub menu. Installation of new data sets new size of the container.
         // If you change the size of the update, you will see the container twitch.
@@ -372,9 +362,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
             filter: this.displayFilter.bind(this, options),
             unique: true
         });
-        if (this._hoveredItemIndex !== null) {
-            listModel.setHoveredItem(listModel.at(this._hoveredItemIndex));
-        }
         if (options.groupProperty) {
             listModel.setGroup(this.groupMethod.bind(this, options));
         } else if (options.groupingKeyCallback) {
