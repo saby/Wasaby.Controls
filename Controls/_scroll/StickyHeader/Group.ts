@@ -172,11 +172,8 @@ export default class Group extends Control<IControlOptions> {
         this._notify(
             'fixed',
             [{
-                id: this._index,
-                offsetHeight: fixedHeaderData.offsetHeight,
-                fixedPosition: fixedHeaderData.fixedPosition,
-                prevPosition: fixedHeaderData.prevPosition,
-                mode: fixedHeaderData.mode
+                ...fixedHeaderData,
+                id: this._index
             }],
             {bubbling: true}
         );
