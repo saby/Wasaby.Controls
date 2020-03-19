@@ -221,7 +221,7 @@ interface IPosition {
       },
 
       _fixBottomPositionForIos: function(position, targetCoords) {
-         if (position.bottom && _private.isIOS12()) {
+         if (position.bottom) {
             let keyboardHeight = _private.getKeyboardHeight();
             position.bottom += keyboardHeight;
 
@@ -229,15 +229,17 @@ interface IPosition {
             // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
             // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
             // only for this case consider a scrollTop
-            let win = _private.getWindow();
-            if ((win.innerHeight + win.scrollY) > win.innerWidth) {
-               // fix for positioning with keyboard on vertical ios orientation
-               let dif = win.innerHeight - targetCoords.boundingClientRect.top;
-               if (position.bottom > dif) {
-                  position.bottom = dif;
+            if (_private.isIOS12()) {
+               let win = _private.getWindow();
+               if ((win.innerHeight + win.scrollY) > win.innerWidth) {
+                  // fix for positioning with keyboard on vertical ios orientation
+                  let dif = win.innerHeight - targetCoords.boundingClientRect.top;
+                  if (position.bottom > dif) {
+                     position.bottom = dif;
+                  }
+               } else if (keyboardHeight === 0) {
+                  position.bottom += _private.getTopScroll(targetCoords);
                }
-            } else if (keyboardHeight === 0) {
-               position.bottom += _private.getTopScroll(targetCoords);
             }
          }
       },
