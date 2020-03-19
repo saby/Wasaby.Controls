@@ -72,6 +72,18 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _triggerVisibility: ITriggerState = {up: false, down: false};
 
+    // В IE иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
+    // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
+    // лишние пересчеты, например: https://online.sbis.ru/opendoc.html?guid=ea354034-fd77-4461-a368-1a8019fcb0d4
+    // TODO: этот код должен быть убран после
+    // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
+    private get _IEtriggerVisibility(): ITriggerState {
+        return {
+            up: this._triggerOffset >= this._lastScrollTop,
+            down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
+        };
+    }
+
     private _restoreScrollResolve: Function;
     private _applyScrollTopCallback: Function;
     private _checkTriggerVisibilityTimeout: number;
@@ -136,8 +148,11 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _beforeUnmount(): void {
         clearTimeout(this._checkTriggerVisibilityTimeout);
-        this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
-        this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
+        // TODO убрать проверку в https://online.sbis.ru/opendoc.html?guid=fb8a3901-bddf-4552-ae9a-ed0299d3e46f
+        if (!this._options.collection.destroyed) {
+            this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
+            this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
+        }
     }
 
     protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
@@ -276,11 +291,11 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private _checkTriggerVisibility(): void {
         if (!this._applyScrollTopCallback) {
-            if (this._triggerVisibility.down) {
+            if (detection.isIE ? this._IEtriggerVisibility.down : this._triggerVisibility.down) {
                 this._recalcToDirection('down');
             }
 
-            if (this._triggerVisibility.up) {
+            if (detection.isIE ? this._IEtriggerVisibility.up : this._triggerVisibility.up) {
                 this._recalcToDirection('up');
             }
         }
@@ -388,7 +403,6 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private _triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean, params: IScrollParams): void {
         if (!this._applyScrollTopCallback) {
-            this._viewResize(params.scrollHeight, false);
             this._viewportResize(params.clientHeight, false);
 
             if (triggerVisible) {

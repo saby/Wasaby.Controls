@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import PopupTemplate = require('wml!Controls/_menu/Popup/template');
-import * as headerTemplate from 'wml!Controls/_menu/Popup/headerTemplate';
+import {default as headerTemplate} from 'Controls/_menu/Popup/headerTemplate';
 import {Controller as ManagerController} from 'Controls/popup';
 
 /**

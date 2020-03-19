@@ -180,7 +180,12 @@ interface IPosition {
                      _private.restrictContainer(position, property, popupCfg, positionOverflow);
                      resultPosition = position;
                   } else {
-                     _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
+                     //Fix position and overflow, if the revert position is outside of the window, but it can be position in the visible area
+                     _private.fixPosition(revertPosition, targetCoords);
+                     revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+                     if (revertPositionOverflow > 0 ) {
+                        _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
+                     }
                      resultPosition = revertPosition;
                   }
                } else {
