@@ -577,13 +577,12 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             var abortStub = sandbox.stub(searchController._searchController, 'abort');
 
             searchController._searchValue = 'test';
-            options.source = new sourceLib.Memory({
-               keyProperty: 'key',
+            var newSource = new sourceLib.Memory({
                data: [1]
             });
+            options.source = newSource;
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
-            assert.notEqual(searchController._searchController, null);
-            assert.notEqual(searchController._searchController.data, [1]);
+            assert.deepEqual(searchController._searchController._options.source, newSource);
             assert.isTrue(abortStub.calledOnce);
          });
 
