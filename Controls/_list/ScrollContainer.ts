@@ -17,7 +17,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
-import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 const SCROLLMOVE_DELAY = 150;
 const TRIGGER_VISIBILITY_DELAY = 101;
@@ -244,7 +243,9 @@ export default class ScrollContainer extends Control<IOptions> {
 
                     if (itemContainer) {
                         this._fakeScroll = true;
-                        scrollToElement(itemContainer, toBottom, force);
+                        this._notify('scrollToElement', [{
+                            itemContainer, toBottom, force
+                        }], {bubbling: true});
                     }
 
                     resolve();
