@@ -8,7 +8,7 @@ import {getOptionTypes} from 'Controls/_suggest/Utils';
 
 /**
  * Поле ввода с выпадающим списком с возможностью автодополнения.
- * <a href="/materials/demo-ws4-selector-suggest">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Демо-пример</a>.
  *
  * @class Controls/_suggest/Selector
  * @extends Controls/input:Text
@@ -25,7 +25,7 @@ import {getOptionTypes} from 'Controls/_suggest/Utils';
 
 /*
  * Combobox input that suggests options as you are typing.
- * <a href="/materials/demo-ws4-selector-suggest">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Demo-example</a>.
  *
  * @class Controls/_suggest/Selector
  * @extends Controls/input:Text
