@@ -1,5 +1,4 @@
-import {CrudEntityKey, ICrud, IDecorator} from 'Types/source';
-import BindingMixin from 'Types/_source/BindingMixin';
+import {BindingMixin, CrudEntityKey, ICrud, IDecorator} from 'Types/source';
 import {ObservableMixin, Record as EntityRecord} from 'Types/entity';
 
 export function readWithAdditionalFields(
