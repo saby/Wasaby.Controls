@@ -1,11 +1,11 @@
 import {BindingMixin, CrudEntityKey, ICrud, IDecorator} from 'Types/source';
-import {ObservableMixin, Record as EntityRecord} from 'Types/entity';
+import {ObservableMixin, Record} from 'Types/entity';
 
 export function readWithAdditionalFields(
     source: ICrud | IDecorator | ObservableMixin | BindingMixin,
     key: CrudEntityKey,
     metaData?: unknown
-): Promise<EntityRecord> {
+): Promise<Record> {
     const targetSource = (source as IDecorator)['[Types/_source/IDecorator]'] ?
         (source as IDecorator).getOriginal() :
         source;
