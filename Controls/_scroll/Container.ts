@@ -602,9 +602,11 @@ var
       },
 
       _shadowVisible: function(position: POSITION) {
-
+         const stickyController = this._children.stickyController;
+         const fixed: boolean = stickyController?.hasFixed(position);
+         const shadowVisible: boolean = stickyController?.hasShadowVisible(position);
          // Do not show shadows on the scroll container if there are fixed headers. They display their own shadows.
-         if (this._children.stickyController && this._children.stickyController.hasFixed(position)) {
+         if (fixed && shadowVisible) {
             return false;
          }
 
