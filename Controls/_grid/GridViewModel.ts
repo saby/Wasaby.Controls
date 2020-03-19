@@ -409,7 +409,8 @@ var
             if (!isCheckbox && currentColumn.column.width !== 'auto') {
                 styles += `min-width: ${currentColumn.column.width}; max-width: ${currentColumn.column.width};`;
             }
-            return styles;        },
+            return styles;
+        },
 
         /**
          * Возвращает префикс стиля, выставленный для grid
@@ -435,7 +436,8 @@ var
             return !!getStickyColumn({
                 stickyColumn: self._options.stickyColumn,
                 columns: self._options.columns
-            });        }
+            });
+        }
     },
 
     GridViewModel = BaseViewModel.extend({
