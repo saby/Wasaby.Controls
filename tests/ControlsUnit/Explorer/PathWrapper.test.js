@@ -8,15 +8,15 @@ define([
          it('returns deferred, and sets items from callback', function(done) {
             let pathWrapper = new PathWrapper();
             let resolver;
-            let itemsPromise = new Promise((res) => { resolver = res; });
-            let result = pathWrapper._beforeMount({itemsPromise: itemsPromise});
+            let itemsAndHeaderPromise = new Promise((res) => { resolver = res; });
+            let result = pathWrapper._beforeMount({itemsAndHeaderPromise: itemsAndHeaderPromise});
             let items = [1, 2, 3];
             assert.isTrue(!!(result.then), 'must return Promise');
             result.then(() => {
                assert.strictEqual(items, pathWrapper._items);
                done();
             });
-            resolver(items);
+            resolver({items: items});
 
          });
       });
