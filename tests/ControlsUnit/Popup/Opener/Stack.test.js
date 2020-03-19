@@ -29,6 +29,11 @@ define(
          popupTemplate.StackController._getContainerWidth = function(items) {
             return items ? items.templateWidth : 0;
          };
+         popupTemplate.StackController._getWindowSizes = () => ({
+            width: 1920,
+            height: 1040
+         });
+
          let item = {
             popupOptions: {
                minWidth: 600,
