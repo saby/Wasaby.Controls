@@ -492,7 +492,7 @@ class StackController extends BaseController {
 
     private _getSideBarWidth(): number {
         const sideBar = document.querySelector('.ws-float-area-stack-sidebar, .navSidebar__sideLeft, .online-Sidebar');
-        return sideBar.clientWidth || 0;
+        return sideBar && sideBar.clientWidth || 0;
     }
 
     private _updateSideBarVisibility(): void {
