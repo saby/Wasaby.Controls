@@ -21,7 +21,7 @@ type GetSourceResult = {
       /**
        * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
        * @remark
-       * См. <a href="/materials/demo-ws4-filter-search-new">демо-пример</a>.
+       * См. <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>.
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
@@ -37,7 +37,7 @@ type GetSourceResult = {
       /*
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * Here you can see a <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">demo</a>.
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
