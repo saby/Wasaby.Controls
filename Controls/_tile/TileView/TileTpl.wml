@@ -1,5 +1,5 @@
 <ws:template name="itemTpl">
-   <div attr:class="controls-TileView__item controls-ListView__itemV controls-ListView__itemV_cursor-pointer">
+   <div attr:class="controls-TileView__item controls-ListView__itemV controls-ListView__itemV_cursor-{{checkboxReadOnly ? 'default' : 'pointer'}}">
       <ws:partial template="{{content}}"/>
    </div>
 </ws:template>
