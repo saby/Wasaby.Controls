@@ -1966,7 +1966,33 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridModel._isMultiHeader = true;
             gridModel.setMultiSelectVisibility('visible');
             assert.isTrue(isMultiHeader);
-         })
+         });
+
+         it('ladder can be on full grid Mac Os', function() {
+            let gridModel = new gridMod.GridViewModel({
+               ...cfg,
+               stickyColumn: {
+                  index: 0,
+                  property: ''
+               },
+               items: new collection.RecordSet({
+                  rawData: [{
+                     id: 1
+                  }],
+                  keyProperty: 'id'
+               })
+            });
+
+            gridModel._ladder = {
+               stickyLadder: [
+                  {
+                     headingStyle: '123'
+                  }
+               ]
+            };
+
+            assert.equal(gridModel.getCurrent().styleLadderHeading, '123');
+         });
       });
 
       describe('no grid support', () => {
