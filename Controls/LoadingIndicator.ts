@@ -291,6 +291,9 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         if (cfg.overlay !== undefined) {
             this.overlay = cfg.overlay;
         }
+        if (cfg.theme !== undefined) {
+            this.theme = cfg.theme;
+        }
         if (cfg.mods !== undefined) {
             // todo сделать mods строкой всегда, или вообще удалить опцию
             if (Array.isArray(cfg.mods)) {
@@ -528,7 +531,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         overlayDiv.setAttribute('tabindex', '1');
 
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'controls-loading-indicator-in controls-loading-indicator-in_theme-' + this._options.theme;
 
         this._overlayDiv = overlayDiv;
         this._messageDiv = messageDiv;
@@ -567,8 +569,14 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
 
         const currentMessageVisibility = !!messageDiv.parentElement;
         const nextMessageVisibility = this._isMessageVisible;
-        if (nextMessageVisibility && messageDiv.innerText !== this.message) {
-            messageDiv.innerText = this.message;
+        if (nextMessageVisibility) {
+            const newMessageClassName = this._getThemedClassName('controls-loading-indicator-in');
+            if (messageDiv.className !== newMessageClassName) {
+                messageDiv.className = newMessageClassName;
+            }
+            if (messageDiv.innerText !== this.message) {
+                messageDiv.innerText = this.message;
+            }
         }
         if (currentMessageVisibility !== nextMessageVisibility) {
             if (nextMessageVisibility) {
@@ -580,7 +588,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     },
 
     _calculateOverlayClassName(): string {
-        const classList = ['controls-loading-indicator', 'controls-loading-indicator_theme-' + this._options.theme , 'controls-Popup__isolatedFocusingContext'];
+        const classList = [this._getThemedClassName('controls-loading-indicator'), 'controls-Popup__isolatedFocusingContext'];
 
         classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
 
@@ -598,14 +606,18 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
             }
         }
         if (this.overlay) {
-            classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay));
-            classList.push('controls-loading-indicator_overlay-' + this._getOverlay(this.overlay) + '_theme-' + this._options.theme);
+            const overlayClassName = 'controls-loading-indicator_overlay-' + this._getOverlay(this.overlay);
+            classList.push(this._getThemedClassName(overlayClassName));
         }
         if (this?.mods?.length) {
             classList.concat(this.mods.map((mod) => 'controls-loading-indicator_mod-' + mod));
         }
 
         return classList.join(' ');
+    },
+
+    _getThemedClassName(simpleClassName: string): string {
+        return simpleClassName + ' ' + simpleClassName + '_theme-' + this.theme;
     }
 });
 module._theme = ['Controls/_LoadingIndicator/LoadingIndicator'];
