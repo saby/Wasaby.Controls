@@ -14,11 +14,11 @@ var
          return self._children.formController.submit();
       },
       afterEndEdit: function (self, commit) {
-              if (commit) {
-                  _private.acceptChanges(self);
-              } else {
-                  self._editObject.rejectChanges();
-              }
+          if (commit) {
+              _private.acceptChanges(self);
+          } else {
+              self._editObject.rejectChanges();
+          }
          self._isEditing = false;
          self._notify('afterEndEdit', [self._editObject], {
             bubbling: true
