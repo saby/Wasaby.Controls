@@ -233,7 +233,7 @@ var _private = {
                         self._shouldRestoreScrollPosition = true;
                     }
                     // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
-                    if (self._options.task1178850758 && self._itemsChanged) {
+                    if (self._itemsChanged) {
                         self._shouldNotifyOnDrawItems = true;
                     }
 
