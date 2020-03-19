@@ -327,19 +327,16 @@ define([
 
          FC._isNewRecord = true;
          FC._beforeUnmount();
-         assert.equal(isDestroyCall, false);
+         assert.equal(isDestroyCall, true);
          FC.destroy();
       });
 
       it('delete new record', () => {
          let FC = new form.Controller();
          let isDestroyCalled = false;
-         FC._children = {
-            crud: {
-               delete: () => {
-                  isDestroyCalled = true;
-                  return (new Deferred()).callback();
-               }
+         FC._source = {
+            destroy: () => {
+               isDestroyCalled = true;
             }
          };
          FC._tryDeleteNewRecord();
@@ -416,22 +413,6 @@ define([
          assert.equal(FC._wasRead, true);
          assert.equal(FC._isNewRecord, false);
          FC.destroy();
-      });
-
-      it('is updating ', (done) => {
-         let FC = new form.Controller();
-         let updateDef = new Deferred();
-         FC._update = () => updateDef;
-         FC._getRecordId = () => '123';
-         FC.update();
-         assert.equal(FC._isUpdating(), true);
-         updateDef.callback().then(() => {
-            setTimeout(() => {
-               assert.equal(FC._isUpdating(), false, 'error');
-               FC.destroy();
-               done();
-            }, 10);
-         });
       });
    });
 });

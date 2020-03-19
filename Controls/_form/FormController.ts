@@ -286,10 +286,12 @@ class FormController extends Control<IFormController, IReceivedState> {
             this._pendingPromise.callback();
             this._pendingPromise = null;
         }
-        if (this._unmountPromise) {
-            this._unmountPromise.callback();
-            this._unmountPromise = null;
-        }
+        // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
+        // Текущая реализация не подходит, завершать пендинги могут как сверху(при закрытии окна), так и
+        // снизу (редактирование закрывает пендинг).
+        // надо делать так, чтобы редактирование только на свой пендинг влияло
+        // https://online.sbis.ru/opendoc.html?guid=78c34d53-8705-4e25-bbb5-0033e81d6152
+        this._tryDeleteNewRecord();
     }
 
 
@@ -392,7 +394,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     private _tryDeleteNewRecord(): Promise<undefined> {
         if (this._needDestroyRecord()) {
-            return this.delete();
+            return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
         }
         return Promise.resolve();
     }
@@ -416,37 +418,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                 self._showConfirmDialog(deferred, forceFinishValue);
             }
         }], {bubbling: true});
-
-        // Перед закрытием окна возможно потребуется удалить запись.
-        // Делать надо здесь, а не на _beforeUnmount, т.к. нужно чтобы всплыли события об удалении записи,
-        // это нужно для синхронизации с реестром.
-        self._unmountPromise = new Deferred();
-        self._notify('registerPending', [self._unmountPromise, {
-            showLoadingIndicator: false,
-            validate(): boolean {
-               return self._record && !self._record.isChanged() && !self._isUpdating() && self._needDestroyRecord();
-            },
-            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-                // Обернул в setTimeout, т.к. часть функционала написана на Promise, часть на Deferred. Из-за чего код
-                // может выполняться синхронно. На промис от сохранения через then вешается колбэк, который говорит о
-                // том, что запись больше не новая. Если прикладник подписался на событие о сохранении
-                // ( которое стреляет вместе с завершением промиса) и в обработчике позвал закрытие окна - то мы в
-                // onPendingFail придем раньше, чем запись будет помечена как не новая.
-                // Нужно везде перейти на промисы, пока их задержку делаю руками.
-                setTimeout(() => {
-                    self._tryDeleteNewRecord().then(() => {
-                        deferred.callback();
-                        self._unmountPromise = null;
-                    });
-                }, 0);
-            }
-        }], { bubbling: true });
     }
-
-    private _isUpdating(): boolean {
-        return this._updatePromise && !this._updatePromise.isReady();
-    }
-
 
     private _confirmDialogResult(answer: boolean, def: Promise<any>): void {
         if (answer === true) {
