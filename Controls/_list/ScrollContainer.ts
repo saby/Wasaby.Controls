@@ -517,6 +517,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _afterRenderHandler(): void {
         if (this._virtualScroll.rangeChanged) {
+            this._viewResize(this._container.offsetHeight, false);
             this._virtualScroll.updateItemsHeights(this._itemsContainer);
         }
 
