@@ -411,8 +411,8 @@ class FormController extends Control<IFormController, IReceivedState> {
         self._pendingPromise = new Deferred();
         self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
-            validate(): boolean {
-                return self._record && self._record.isChanged();
+            validate(isInside: boolean): boolean {
+                return self._record && self._record.isChanged() && !isInside;
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
                 self._showConfirmDialog(deferred, forceFinishValue);
