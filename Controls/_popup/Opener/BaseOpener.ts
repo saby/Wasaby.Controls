@@ -245,7 +245,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         this.close();
     }
 
-    private _getCurrentPopupId(): string {
+    protected _getCurrentPopupId(): string {
         return this._popupId;
     }
 
