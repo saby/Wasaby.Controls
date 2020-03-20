@@ -51,9 +51,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
         };
     }
 
-    protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string, item: TreeItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): void {
+    protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string): void {
         e.stopPropagation();
-        this._notify(eventName, [item, sourceEvent]);
+        const args = Array.prototype.slice.call(arguments, 2);
+        this._notify(eventName, args);
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {
