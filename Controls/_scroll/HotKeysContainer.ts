@@ -1,6 +1,6 @@
 import {Control, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_scroll/HotKeysContainer');
-import {SyntheticEvent} from 'sbis3-ws/Vdom/Vdom';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контрол настраивает Controls/scroll:Container на перехват клавиш "up", "down", "page up", "page down", "home", "end" по умолчанию.
