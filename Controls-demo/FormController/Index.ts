@@ -67,7 +67,6 @@ class FormController extends Control<IControlOptions> {
         const finishDef = this._children.registrator.finishPendingOperations();
         finishDef.then((finishResult) => {
             this._operation = 'Finish Pending';
-            window.reloadDemo();
         });
     }
 
@@ -118,13 +117,6 @@ class FormController extends Control<IControlOptions> {
     private _clickDeleteHandler(): void  {
         this._delete();
     }
-
-    private _alertHandler(e, msg): void  {
-        this._alert(msg);
-    }
-    private _alert(msg) {
-        Env.IoC.resolve('ILogger').info(msg);
-    }
     getRecordString() {
         if (!this._record) {
             return '';
@@ -135,38 +127,30 @@ class FormController extends Control<IControlOptions> {
         return this._record.getRawData();
     }
     private _createSuccessedHandler(e, record) {
-        this._alert('FormController demo: create successed');
         this._operation = 'created successfully';
         this._updateValuesByRecord(record);
     }
     private _updateSuccessedHandler(e, record, key): void {
-        this._alert('FormController demo: update successed with key ' + key);
         this._operation = 'saved successfully';
         this._updateValuesByRecord(record);
     }
     private _updateFailedHandler(): void  {
-        this._alert('FormController demo: update failed');
         this._updateValuesByRecord(this._record);
     }
     private _validationFailedHandler(): void  {
-        this._alert('FormController demo: validation failed');
         this._updateValuesByRecord(this._record);
     }
     private _readSuccessedHandler(e, record): void  {
-        this._alert('FormController demo: read successed');
         this._updateValuesByRecord(record);
     }
     private _readFailedHandler(e, err): void  {
-        this._alert('FormController demo: read failed');
         this._updateValuesByRecord(new Model());
     }
     private _deleteSuccessedHandler(e): void  {
-        this._alert('FormController demo: delete successed');
         this._operation = 'deleted successfully';
         this._updateValuesByRecord(new Model());
     }
     private _deleteFailedHandler(e): void  {
-        this._alert('FormController demo: delete failed');
         this._updateValuesByRecord(new Model());
     }
     private _updateValuesByRecord(record: Model): void {

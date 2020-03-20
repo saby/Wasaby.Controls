@@ -2,24 +2,16 @@
         attr:class="form"
 
         on:createSuccessed="_createSuccessedHandler()"
-        on:createFailed="_alertHandler('FormController demo: create failded')"
         on:readSuccessed="_readSuccessedHandler()"
         on:readFailed="_readFailedHandler()"
         on:updateSuccessed="_updateSuccessedHandler()"
         on:updateFailed="_updateFailedHandler()"
         on:deleteSuccessed="_deleteSuccessedHandler()"
         on:deleteFailed="_deleteFailedHandler()"
-
-        on:validationSuccessed="_alertHandler('FormController demo: validation successed')"
         on:validationFailed="_validationFailedHandler()"
-
-        on:showIndicator="_alertHandler('FormController demo: showIndicator event. If you\'re seeing this message, some error is occured!')"
-        on:pendingsFinished="_alertHandler('FormController demo: pendings finished')"
         on:update="_updateHandler()"
-
         on:requestCustomUpdate="_requestCustomUpdate()"
 >
-
 
     <div class="controlsDemo__wrapper">
         <div class="controlsDemo__cell controlsDemo__mb2 controls-fontsize-4xl_theme-{{_options.theme}}"
