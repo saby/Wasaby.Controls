@@ -1,5 +1,6 @@
 import {Control, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_scroll/HotKeysContainer');
+import {SyntheticEvent} from 'sbis3-ws/Vdom/Vdom';
 
 /**
  * Контрол настраивает Controls/scroll:Container на перехват клавиш "up", "down", "page up", "page down", "home", "end" по умолчанию.
@@ -32,6 +33,11 @@ class HotKeysContainer extends Control<IControlOptions> {
     }
     unregister(): void {
         this._children.KeyHook.unregister();
+    }
+    protected _keyDown(event: SyntheticEvent<KeyboardEvent>): void {
+        if (event.nativeEvent.keyCode in this._defaultActions.map((e) => e.keyCode )) {
+            event.preventDefault();
+        }
     }
 }
 
