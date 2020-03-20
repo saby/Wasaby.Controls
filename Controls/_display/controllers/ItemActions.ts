@@ -240,7 +240,10 @@ export function prepareActionsMenuConfig(
             rawData: menuActions,
             keyProperty: 'id'
         });
-        const headConfig = hasParentAction ? { caption: parentAction.title } : null;
+        const headConfig = hasParentAction ? {
+            caption: parentAction.title,
+            icon: parentAction.icon
+        } : null;
         const contextMenuConfig = collection.getContextMenuConfig();
         const menuConfig = {
             items: menuRecordSet,
