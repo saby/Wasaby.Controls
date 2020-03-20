@@ -196,6 +196,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
+        itemsModelCurrent.backgroundStyle = this._options.backgroundStyle;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrolling = this._options.virtualScrolling || Boolean(this._options.virtualScrollConfig);
