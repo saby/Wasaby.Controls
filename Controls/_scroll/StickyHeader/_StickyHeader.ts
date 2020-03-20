@@ -278,21 +278,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         if (this._options.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
-
-            if (this._context.stickyHeader) {
-                top += this._context.stickyHeader.top;
-            }
-
             style += 'top: ' + (top - (fixedPosition ? offset : 0)) + 'px;';
         }
 
         if (this._options.position.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
             bottom = this._stickyHeadersHeight.bottom;
-
-            if (this._context.stickyHeader) {
-                bottom += this._context.stickyHeader.bottom;
-            }
-
             style += 'bottom: ' + (bottom - offset) + 'px;';
         }
 
@@ -328,6 +318,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
 
             style += 'z-index: ' + this._options.fixedZIndex + ';';
+        }
+
+        /**
+         * Сценарий: проскролить список с группой заголовков, вызвать перестроение заголовков.
+         * Ошибка и причина: Значение top(позиция заголовка) определяется после монтирования в DOM. Из-за этого происходит скачок.
+         * Решение: Так как в группе уже определено значение top, то пробросим его до заголовков через контекст.
+         * Берем значение из контекста только в случае, когда ещё не произошел моинтинг в DOM, не смогли определить top.
+         * Это костыль, который будет удален по https://online.sbis.ru/opendoc.html?guid=243c78ec-7f27-4625-b347-d92523702e50
+         */
+        if (style.indexOf('top') === -1 && style.indexOf('bottom') === -1 && this._context?.stickyHeader && !this._container) {
+            style += `top: ${this._context.stickyHeader.top}px;`;
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
