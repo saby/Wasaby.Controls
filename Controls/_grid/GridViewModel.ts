@@ -271,7 +271,11 @@ var
             }
 
             if (current.isSelected) {
-                classLists.base += ` controls-Grid__row-cell_selected ${_private.getBackgroundStyle({backgroundStyle, theme})} controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+
+                if (!GridLayoutUtil.isFullGridSupport()) {
+                    classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
+                }
 
                 if (current.columnIndex === 0) {
                     classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
