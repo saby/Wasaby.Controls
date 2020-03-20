@@ -58,18 +58,14 @@ var _private = {
  *
  * @class Controls/_dropdown/Input
  * @extends Core/Control
+ * @mixes Controls/_menu/interface/IMenuPopup
+ * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/INavigation
  * @mixes Controls/Input/interface/IValidation
  * @mixes Controls/_interface/IMultiSelectable
- * @mixes Controls/_dropdown/interface/IFooterTemplate
- * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/IFontSize

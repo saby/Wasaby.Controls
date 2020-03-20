@@ -175,3 +175,27 @@ export default interface IMenuControl {
  * @cfg {Array.<ItemAction>} Конфигурация опций записи.
  * @demo Controls-demo/Menu/Control/ItemActions/Index
  */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#parentProperty
+ * @cfg {Ыекштп} Имя свойства, содержащего информацию о родительском элементе.
+ * @demo Controls-demo/Menu/Control/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#nodeProperty
+ * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
+ * @demo Controls-demo/Menu/Control/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#navigation
+ * @cfg {Controls/_interface/INavigation} Конфигурация навигации по списку.
+ * @demo Controls-demo/Menu/Control/Navigation/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#selectedKeys
+ * @cfg {Array.<Number|String>} Массив ключей выбранных элементов.
+ * @demo Controls-demo/Menu/Control/SelectedKeys/Index
+ */

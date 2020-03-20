@@ -194,7 +194,7 @@ define(
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
             expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
-            expectedOptions.footerTemplate = defaultOptions.nodeFooterTemplate;
+            expectedOptions.footerContentTemplate = defaultOptions.nodeFooterTemplate;
             expectedOptions.footerItemData = {
                item,
                key: expectedOptions.root
