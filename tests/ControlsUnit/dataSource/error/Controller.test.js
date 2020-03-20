@@ -2,8 +2,14 @@
 define([
    'Controls/dataSource',
    'Env/Env',
-   'Browser/Transport'
-], function(dataSource, Env, Transport) {
+   'Browser/Transport',
+   'Types/entity'
+], function(
+   dataSource,
+   Env,
+   Transport,
+   { PromiseCanceledError }
+) {
    describe('Controls/dataSource:error.Controller', function() {
       const Controller = dataSource.error.Controller;
       let controller;
@@ -94,10 +100,6 @@ define([
          const addFailHandler =
             () => controller.addHandler(() => assert.fail('handler should not be called'));
 
-         it('returns Promise', function() {
-            assert.instanceOf(controller.process(error), Promise);
-         });
-
          it('calls registered handler', function() {
             const handlerPromise = addHandlerPromise();
             return controller.process(error).then(() => handlerPromise);
@@ -182,6 +184,99 @@ define([
                   theme,
                   message: error.message
                }, 'openConfirmation called with theme and message');
+            });
+         });
+
+         it('executes async handlers', () => {
+            const viewConfig = {
+               template: 'test',
+               options: {},
+               mode: dataSource.error.Mode.include
+            };
+
+            const handlerPromises = [
+
+               // Обработчик #1 возвращает undefined.
+               new Promise(resolve => controller.addHandler(() => {
+                  resolve();
+                  return Promise.resolve();
+               })),
+
+               // Обработчик #2 бросает исключение, оно должно игнорироваться.
+               new Promise(resolve => controller.addHandler(() => {
+                  resolve();
+                  throw new Error('Throw test error');
+               })),
+
+               // Обработчик #3 возвращает промис с ошибкой, она должна игнорироваться.
+               new Promise(resolve => controller.addHandler(() => {
+                  resolve();
+                  return Promise.reject(new Error('Test rejected promise'));
+               }))
+            ];
+
+            // Обработчик #4 возвращает конфиг, он должен стать результатом всей цепочки.
+            controller.addHandler(() => Promise.resolve(viewConfig));
+
+            // Обработчик #5 не должен выполняться.
+            addFailHandler();
+
+            return controller.process(error).then((result) => {
+               assert.deepEqual(viewConfig, {
+                  mode: result.mode,
+                  template: result.template,
+                  options: result.options
+               });
+
+               return Promise.all(handlerPromises);
+            });
+         });
+
+         it('stops processing when handler throws PromiseCanceledError', () => {
+            const handlerPromises = [
+
+               // Обработчик #1 возвращает undefined.
+               addHandlerPromise(),
+
+               // Обработчик #2 бросает исключение отмены.
+               new Promise(resolve => controller.addHandler(() => {
+                  resolve();
+                  throw new PromiseCanceledError();
+               }))
+            ];
+
+            // Обработчик #3 не должен выполняться.
+            addFailHandler();
+
+            return controller.process(error).then((viewConfig) => {
+               assert.isUndefined(viewConfig, 'returns undefined');
+               assert.isNotOk(popupHelper.openConfirmation.called, 'openConfirmation not called');
+
+               return Promise.all(handlerPromises);
+            });
+         });
+
+         it('stops processing when handler rejects promise with PromiseCanceledError', () => {
+            const handlerPromises = [
+
+               // Обработчик #1 возвращает undefined.
+               addHandlerPromise(),
+
+               // Обработчик #2 возвращает промис с исключением отмены.
+               new Promise(resolve => controller.addHandler(() => {
+                  resolve();
+                  return Promise.reject(new PromiseCanceledError());
+               }))
+            ];
+
+            // Обработчик #3 не должен выполняться.
+            addFailHandler();
+
+            return controller.process(error).then((viewConfig) => {
+               assert.isUndefined(viewConfig, 'returns undefined');
+               assert.isNotOk(popupHelper.openConfirmation.called, 'openConfirmation not called');
+
+               return Promise.all(handlerPromises);
             });
          });
 

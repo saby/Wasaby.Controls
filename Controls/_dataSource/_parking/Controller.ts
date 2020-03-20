@@ -3,6 +3,7 @@ import { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
 import { constants } from 'Env/Env';
 import { load } from 'Core/library';
 import { Logger } from 'UI/Utils';
+import { PromiseCanceledError } from 'Types/entity';
 
 interface IParkingControllerPotions {
     handlers: Handler[];
@@ -59,34 +60,55 @@ const getHandler = (handler: Handler | string): Promise<Handler> => {
 };
 
 /**
+ * Выполнить функцию и вернуть промис со значением, которое вернула функция.
+ * @param fn
+ * @param arg
+ */
+export function callHandler<TArg, TResult>(
+    fn: (arg: TArg) => TResult,
+    arg: TArg
+): Promise<TResult> {
+    return new Promise((resolve, reject) => {
+        try {
+            resolve(fn(arg));
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+/**
  * Выполнять по очереди обработчики ошибок, пока какой-нибудь из них не вернёт результат.
  * @param handlers Обработчики ошибок
  * @param config
  */
-const findTemplate = (
-    handlers: Array<Handler | string>,
-    config: any
-): Promise<ViewConfig | void> => {
-    if (!handlers.length) {
+export function findTemplate<TConfig>(
+    [handler, ...otherHandlers]: Array<Handler | string>,
+    config: TConfig
+): Promise<ViewConfig | void> {
+    if (!handler) {
         return Promise.resolve();
     }
-    let position: number = 0;
-    const fire = () => {
-        return getHandler(handlers[position]).then((handler: Handler) => {
-            const result = handler(config);
-            if (result) {
-                return result;
+
+    return getHandler(handler)
+        .catch((error: Error) => {
+            // Не удалось получить функицю-обработчик.
+            // Логируем ошибку и продолжаем выполнение обработчиков.
+            Logger.error('Invalid error handler', null, error);
+        })
+        .then((handlerFn: Handler) => handlerFn && callHandler(handlerFn, config))
+        .catch((error: PromiseCanceledError) => {
+            if (error.isCanceled) {
+                // Выкидываем ошибку отмены наверх, чтоб прервать всю цепочку обработчиков.
+                throw error;
             }
-            position++;
-            if (position < handlers.length) {
-                return fire();
-            }
-        }, (error: Error) => {
-            log(error);
-        });
-    };
-    return fire();
-};
+
+            // Если это не отмена, то логируем ошибку и продолжаем выполнение обработчиков.
+            Logger.error('Handler error', null, error);
+        })
+        .then((viewConfig) => viewConfig || findTemplate(otherHandlers, config));
+}
+
 /// endregion helpers
 
 /**
@@ -123,7 +145,7 @@ const findTemplate = (
  *     });
  * </pre>
  */
-export default class ParkingController /** @lends Controls/_dataSource/_parking/Controller.prototype */{
+export default class ParkingController /** @lends Controls/_dataSource/_parking/Controller.prototype */ {
     private _handlers: Handler[];
     private readonly _configField: string;
 
@@ -156,9 +178,7 @@ export default class ParkingController /** @lends Controls/_dataSource/_parking/
      * @void
      */
     removeHandler(handler: Handler): void {
-        this._handlers = this._handlers.filter((_handler) => {
-            return handler !== _handler;
-        });
+        this._handlers = this._handlers.filter((_handler) => handler !== _handler);
     }
 
     /**
@@ -167,13 +187,13 @@ export default class ParkingController /** @lends Controls/_dataSource/_parking/
      * @public
      * @returns {Promise.<void | Controls/_dataSource/_parking/ViewConfig>}
      */
-    process(config: any): Promise<ViewConfig | void> {
+    process<TConfig>(config: TConfig): Promise<ViewConfig | void> {
         // find in own handlers
         return findTemplate(this._handlers, config).then((result: ViewConfig | void) => {
             if (result) {
                 return result;
             }
-            // find in Application  handlers
+            // find in Application handlers
             return findTemplate(getApplicationHandlers(this._configField), config);
         });
     }
