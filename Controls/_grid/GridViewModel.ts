@@ -1624,7 +1624,7 @@ var
                 // пытаемся установить значение по длине массива заголовков, а если и он пуст,
                 // то необходимо установить columnsCount в 1, иначе весь дальнейший расчёт
                 // производится некорректно
-                const columnsCount = this._columns.length || this._header.length || 1;
+                const columnsCount = this._columns?.length || this._header?.length || 1;
                 const result = {
                     columnStart: 0,
                     columnSpan: columnsCount + offsetForActionCell + offsetForStickyColumn

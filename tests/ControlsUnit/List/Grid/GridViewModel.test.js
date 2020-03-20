@@ -2293,6 +2293,18 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model.getEmptyTemplateStyles()
             assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 5;');
          });
+
+         it('should calculate empty template when this._columns.length === 0 and this._header is undefined', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columns: [],
+               header: undefined,
+               columnScroll: false
+            });
+            model.getEmptyTemplateStyles();
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 3;');
+         });
       });
    });
 });
