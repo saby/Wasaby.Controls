@@ -16,10 +16,18 @@ import {constants} from 'Env/Env';
  * @extends Core/Control
  * @author Шипин А.А.
  * @public
- */ 
+ */
 class HotKeysContainer extends Control<IControlOptions> {
     protected _template: Function = template;
-    protected _defaultActions = [{keyCode: constants.key.up}, {keyCode: constants.key.down}, {keyCode: constants.key.enter}];
+    protected _defaultActions = [
+                                 {keyCode: constants.key.up},
+                                 {keyCode: constants.key.down},
+                                 {keyCode: constants.key.enter},
+                                 {keyCode: constants.key.pageUp},
+                                 {keyCode: constants.key.pageDown},
+                                 {keyCode: constants.key.home},
+                                 {keyCode: constants.key.end}
+                                ];
     // Этого кода не будет, когда добавится еще один хук жизненного цикла - "заморозка".
     // https://online.sbis.ru/opendoc.html?guid=ba32a992-5f5b-4f00-9b6a-73f62871a193
     protected _afterMount(): void {
