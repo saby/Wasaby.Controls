@@ -335,8 +335,10 @@ import dataSource = require('Controls/dataSource');
             validate(): boolean {
                return self._record && self._record.isChanged();
             },
-            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-               self._showConfirmDialog(deferred, forceFinishValue);
+            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>, isInside: boolean): void {
+               if (!isInside) {
+                  self._showConfirmDialog(deferred, forceFinishValue);
+               }
             }
          }], { bubbling: true });
       },
