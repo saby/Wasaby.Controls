@@ -55,13 +55,13 @@
                                  style="font-weight: bold">Record is:
                             </div>
                             <div class="ws-flexbox ws-flex-column ws-justify-content-between">
-                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}">
+                                <div class="formControllerDemo__list__item formControllerDemo__record__id controls-text-readonly_theme-{{_options.theme}}">
                                     ID: {{ _recordAsText.id }}
                                 </div>
-                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}">
+                                <div class="formControllerDemo__list__item formControllerDemo__record__title controls-text-readonly_theme-{{_options.theme}}">
                                     Title: {{ _recordAsText.title }}
                                 </div>
-                                <div class="formControllerDemo__list__item controls-text-readonly_theme-{{_options.theme}}">
+                                <div class="formControllerDemo__list__item formControllerDemo__record__desc controls-text-readonly_theme-{{_options.theme}}">
                                     Description: {{ _recordAsText.description }}
                                 </div>
                             </div>
