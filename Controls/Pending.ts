@@ -242,13 +242,13 @@ import ParallelDeferred = require('Core/ParallelDeferred');
             var pending = self._pendings[key];
             var isValid = true;
             if (pending.validate) {
-               isValid = pending.validate();
+               isValid = pending.validate(isInside);
             } else if (pending.validateCompatible) { //todo compatible
                isValid = pending.validateCompatible();
             }
             if (isValid) {
                if (pending.onPendingFail) {
-                  pending.onPendingFail(forceFinishValue, pending.def, isInside);
+                  pending.onPendingFail(forceFinishValue, pending.def);
                }
 
                // pending is waiting its def finish

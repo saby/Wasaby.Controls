@@ -332,13 +332,11 @@ import dataSource = require('Controls/dataSource');
          self._pendingPromise = new Deferred();
          self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
-            validate(): boolean {
-               return self._record && self._record.isChanged();
+            validate(isInside: boolean): boolean {
+               return self._record && self._record.isChanged() && !isInside;
             },
-            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>, isInside: boolean): void {
-               if (!isInside) {
-                  self._showConfirmDialog(deferred, forceFinishValue);
-               }
+            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
+                self._showConfirmDialog(deferred, forceFinishValue);
             }
          }], { bubbling: true });
       },
