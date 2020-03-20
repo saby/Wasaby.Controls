@@ -152,6 +152,7 @@ const
       auto: false
    };
 
+const SCROLL_BY_ARROWS = 40;
 var
    _private = {
       SHADOW_HEIGHT: 8,
@@ -712,35 +713,39 @@ var
       },
 
       _keydownHandler: function(ev) {
-         // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
-         if (!ev.nativeEvent.isTrusted) {
-            let offset: number;
-            const scrollTop: number = _private.getScrollTop(this, this._children.content);
-            if (ev.nativeEvent.which === Env.constants.key.pageDown) {
-               offset = scrollTop + this._children.content.clientHeight;
-            }
-            if (ev.nativeEvent.which === Env.constants.key.down) {
-               offset = scrollTop + 40;
-            }
-            if (ev.nativeEvent.which === Env.constants.key.pageUp) {
-               offset = scrollTop - this._children.content.clientHeight;
-            }
-            if (ev.nativeEvent.which === Env.constants.key.up) {
-               offset = scrollTop - 40;
-            }
-            if (offset !== undefined) {
-               this.scrollTo(offset);
-               ev.preventDefault();
-            }
+         // при обработке горячих клавиш останавливаем событие и скроллим сами
+         // таким образом, при прохождении события через scroll container:
+         // 1) скролл будет вызван
+         // 2) событие не вернется через KeyHook и не будет обработано второй раз
 
-            if (ev.nativeEvent.which === Env.constants.key.home) {
-               this.scrollToTop();
-               ev.preventDefault();
-            }
-            if (ev.nativeEvent.which === Env.constants.key.end) {
-               this.scrollToBottom();
-               ev.preventDefault();
-            }
+         let offset: number;
+         const scrollTop: number = _private.getScrollTop(this, this._children.content);
+         if (ev.nativeEvent.which === Env.constants.key.pageDown) {
+            offset = scrollTop + this._children.content.clientHeight;
+         }
+         if (ev.nativeEvent.which === Env.constants.key.down) {
+            offset = scrollTop + SCROLL_BY_ARROWS;
+         }
+         if (ev.nativeEvent.which === Env.constants.key.pageUp) {
+            offset = scrollTop - this._children.content.clientHeight;
+         }
+         if (ev.nativeEvent.which === Env.constants.key.up) {
+            offset = scrollTop - SCROLL_BY_ARROWS;
+         }
+         if (offset !== undefined) {
+            this.scrollTo(offset);
+            ev.stopImmediatePropagation();
+            ev.preventDefault();
+         }
+         if (ev.nativeEvent.which === Env.constants.key.home) {
+            this.scrollToTop();
+            ev.stopImmediatePropagation();
+            ev.preventDefault();
+         }
+         if (ev.nativeEvent.which === Env.constants.key.end) {
+            this.scrollToBottom();
+            ev.stopImmediatePropagation();
+            ev.preventDefault();
          }
       },
 
