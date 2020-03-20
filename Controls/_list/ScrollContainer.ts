@@ -48,6 +48,7 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
         itemHeightProperty?: string;
         viewportHeight?: number;
     };
+    needScrollCalculation: boolean;
     collection: Collection<Record>;
     activeElement: string | number;
 }
@@ -60,6 +61,8 @@ export default class ScrollContainer extends Control<IOptions> {
         topLoadTrigger: HTMLElement;
         bottomLoadTrigger: HTMLElement;
     };
+    private _observerRegistered: boolean = false;
+
     private _virtualScroll: VirtualScroll;
     private _itemsContainer: HTMLElement;
 
@@ -114,12 +117,21 @@ export default class ScrollContainer extends Control<IOptions> {
         this._initVirtualScroll(options);
     }
 
+    protected _registerObserver(): void {
+        if (!this._observerRegistered) {
+            // @ts-ignore
+            this._children.scrollObserver.startRegister(this._children);
+            this._observerRegistered = true;
+        }
+    }
+
     protected _afterMount(): void {
-        this._viewResize(this._container.offsetHeight, false);
-        // @ts-ignore
-        this._children.scrollObserver.startRegister(this._children);
-        this._afterRenderHandler();
         this.__mounted = true;
+        this._viewResize(this._container.offsetHeight, false);
+        if (this._options.needScrollCalculation) {
+            this._registerObserver();
+        }
+        this._afterRenderHandler();
     }
 
     protected _beforeUpdate(options: IOptions): void {
@@ -132,6 +144,12 @@ export default class ScrollContainer extends Control<IOptions> {
             this._indicatorTimeout = setTimeout(() => {
                 this._notify('changeIndicatorState', [true, this._indicatorState]);
             }, LOADING_INDICATOR_SHOW_TIMEOUT);
+        }
+    }
+
+    protected _afterUpdate(oldOptions: IOptions): void {
+        if (this._options.needScrollCalculation) {
+            this._registerObserver();
         }
     }
 
