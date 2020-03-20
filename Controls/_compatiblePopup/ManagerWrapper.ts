@@ -138,6 +138,12 @@ var ManagerWrapper = Control.extend({
       return this._children.PopupContainer._popupItems;
    },
 
+   _managerPopupCreatedHandler: function() {
+      setTimeout(() => {
+         this._children.PopupContainer && this._children.PopupContainer._forceUpdate();
+      }, 0);
+   },
+
    _beforeUnmount: function() {
       if (window) {
          this._toggleWindowHandlers(false);
