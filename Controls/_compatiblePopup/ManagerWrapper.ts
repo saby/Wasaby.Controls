@@ -139,6 +139,12 @@ var ManagerWrapper = Control.extend({
    },
 
    _managerPopupCreatedHandler: function() {
+      // костыль, исправляющий ошибку отображения попапа.
+      // когда открывается попап, в котором есть асинхронный контрол, пока этот контрол в _beforeMount ждет ответа БЛ,
+      // открывается нотификационное окно из длительных операций. отображение этого окна ломает процесс отображения
+      // текущего окна. внутри попапа у контрола срабатывает только _beforeMount, дальше процесс не идет.
+      // но если позвать _forceUpdate, актуальные попапы отрисовываются.
+      // todo разобраться как решить https://online.sbis.ru/opendoc.html?guid=a2f217b9-0af2-486a-80d8-eecbf0949f42
       setTimeout(() => {
          this._children.PopupContainer && this._children.PopupContainer._forceUpdate();
       }, 0);
