@@ -46,11 +46,10 @@ define(
          };
 
          it('Opener: getConfig', () => {
-            let getStackConfig = popupMod.Stack.prototype._getStackConfig;
-            let config = getStackConfig();
+            let config = popupMod.Stack.prototype._getStackConfig();
             assert.equal(config.isDefaultOpener, true);
 
-            config = getStackConfig({ isDefaultOpener: false });
+            config = popupMod.Stack.prototype._getStackConfig({ isDefaultOpener: false });
             assert.equal(config.isDefaultOpener, false);
          });
 
