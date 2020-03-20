@@ -44,7 +44,8 @@ class HotKeysContainer extends Control<IControlOptions> {
         this._children.KeyHook.unregister();
     }
     protected _keyDown(event: SyntheticEvent<KeyboardEvent>): void {
-        if (event.nativeEvent.keyCode in this._defaultActions.map((e) => e.keyCode )) {
+        const hotKeys = this._defaultActions.map((e) => e.keyCode );
+        if (hotKeys.includes(event.nativeEvent.keyCode)) {
             event.preventDefault();
         }
     }
