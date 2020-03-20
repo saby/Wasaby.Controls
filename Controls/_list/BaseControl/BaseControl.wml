@@ -96,6 +96,7 @@
             on:activeElementChanged="_notifyHandler('activeElementChanged')"
             on:changeIndicatorState="changeIndicatorStateHandler()"
             collection="{{_listViewModel}}"
+            needScrollCalculation="{{_needScrollCalculation}}"
             scope="{{_options}}">
         <Controls._list.EditInPlace
                 name="editInPlace"
