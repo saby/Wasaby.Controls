@@ -248,7 +248,7 @@ export function prepareActionsMenuConfig(
             dropdownClassName: 'controls-itemActionsV__popup',
             showClose: true,
             ...contextMenuConfig,
-            rootKey: parentAction,
+            rootKey: parentAction && parentAction.id,
             showHeader: hasParentAction,
             headConfig
         };
