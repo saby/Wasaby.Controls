@@ -93,7 +93,7 @@ define([
 
       it('registerPending', async () => {
          let updatePromise;
-        let FC = new form.Controller();
+         let FC = new form.Controller();
          FC._createChangeRecordPending();
          assert.isTrue(FC._pendingPromise !== undefined);
          FC.update = () => new Promise((res) => updatePromise = res);
