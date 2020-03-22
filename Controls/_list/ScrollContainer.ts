@@ -17,7 +17,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
-import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 const SCROLLMOVE_DELAY = 150;
 const TRIGGER_VISIBILITY_DELAY = 101;
@@ -49,6 +48,7 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
         itemHeightProperty?: string;
         viewportHeight?: number;
     };
+    needScrollCalculation: boolean;
     collection: Collection<Record>;
     activeElement: string | number;
 }
@@ -61,6 +61,8 @@ export default class ScrollContainer extends Control<IOptions> {
         topLoadTrigger: HTMLElement;
         bottomLoadTrigger: HTMLElement;
     };
+    private _observerRegistered: boolean = false;
+
     private _virtualScroll: VirtualScroll;
     private _itemsContainer: HTMLElement;
 
@@ -71,6 +73,18 @@ export default class ScrollContainer extends Control<IOptions> {
     private _placeholders: IPlaceholders;
 
     private _triggerVisibility: ITriggerState = {up: false, down: false};
+
+    // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
+    // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
+    // лишние пересчеты, например: https://online.sbis.ru/opendoc.html?guid=ea354034-fd77-4461-a368-1a8019fcb0d4
+    // TODO: этот код должен быть убран после
+    // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
+    private get _calculatedTriggerVisibility(): ITriggerState {
+        return {
+            up: this._triggerOffset >= this._lastScrollTop,
+            down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
+        };
+    }
 
     private _restoreScrollResolve: Function;
     private _applyScrollTopCallback: Function;
@@ -103,12 +117,21 @@ export default class ScrollContainer extends Control<IOptions> {
         this._initVirtualScroll(options);
     }
 
+    protected _registerObserver(): void {
+        if (!this._observerRegistered) {
+            // @ts-ignore
+            this._children.scrollObserver.startRegister(this._children);
+            this._observerRegistered = true;
+        }
+    }
+
     protected _afterMount(): void {
-        this._viewResize(this._container.offsetHeight, false);
-        // @ts-ignore
-        this._children.scrollObserver.startRegister(this._children);
-        this._afterRenderHandler();
         this.__mounted = true;
+        this._viewResize(this._container.offsetHeight, false);
+        if (this._options.needScrollCalculation) {
+            this._registerObserver();
+        }
+        this._afterRenderHandler();
     }
 
     protected _beforeUpdate(options: IOptions): void {
@@ -124,6 +147,12 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
+    protected _afterUpdate(oldOptions: IOptions): void {
+        if (this._options.needScrollCalculation) {
+            this._registerObserver();
+        }
+    }
+
     protected _beforeRender(): void {
         if (this._virtualScroll.isNeedToRestorePosition) {
             this._notify('saveScrollPosition', [], {bubbling: true});
@@ -136,8 +165,11 @@ export default class ScrollContainer extends Control<IOptions> {
 
     protected _beforeUnmount(): void {
         clearTimeout(this._checkTriggerVisibilityTimeout);
-        this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
-        this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
+        // TODO убрать проверку в https://online.sbis.ru/opendoc.html?guid=fb8a3901-bddf-4552-ae9a-ed0299d3e46f
+        if (!this._options.collection.destroyed) {
+            this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
+            this._options.collection.unsubscribe('onCollectionChange', this._collectionChangedHandler);
+        }
     }
 
     protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
@@ -179,7 +211,7 @@ export default class ScrollContainer extends Control<IOptions> {
                 this._scrollPositionChanged(params);
                 break;
             case 'viewportResize':
-                this._viewportResize(params);
+                this._viewportResize(params.clientHeight);
                 this._notify('viewportResize', [params.clientHeight, params.rect]);
                 break;
             case 'virtualScrollMove':
@@ -229,7 +261,9 @@ export default class ScrollContainer extends Control<IOptions> {
 
                     if (itemContainer) {
                         this._fakeScroll = true;
-                        scrollToElement(itemContainer, toBottom, force);
+                        this._notify('scrollToElement', [{
+                            itemContainer, toBottom, force
+                        }], {bubbling: true});
                     }
 
                     resolve();
@@ -264,10 +298,8 @@ export default class ScrollContainer extends Control<IOptions> {
 
     checkTriggerVisibilityWithTimeout(): void {
         this._checkTriggerVisibilityTimeout = setTimeout(() => {
-            if (!this._virtualScroll.rangeChanged) {
-                this._checkTriggerVisibility();
-                clearTimeout(this._checkTriggerVisibilityTimeout);
-            }
+            this._checkTriggerVisibility();
+            clearTimeout(this._checkTriggerVisibilityTimeout);
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
@@ -278,11 +310,11 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private _checkTriggerVisibility(): void {
         if (!this._applyScrollTopCallback) {
-            if (this._triggerVisibility.down) {
+            if (this._calculatedTriggerVisibility.down) {
                 this._recalcToDirection('down');
             }
 
-            if (this._triggerVisibility.up) {
+            if (this._calculatedTriggerVisibility.up) {
                 this._recalcToDirection('up');
             }
         }
@@ -390,7 +422,6 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private _triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean, params: IScrollParams): void {
         if (!this._applyScrollTopCallback) {
-            this._viewResize(params.scrollHeight, false);
             this._viewportResize(params.clientHeight, false);
 
             if (triggerVisible) {
@@ -417,6 +448,8 @@ export default class ScrollContainer extends Control<IOptions> {
 
         if (this._fakeScroll) {
             this._fakeScroll = false;
+        } else if (this._viewHeight !== this._container.offsetHeight) {
+            this._viewResize(this._container.offsetHeight);
         } else if (!this._restoreScrollResolve && !this._virtualScroll.rangeChanged) {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
 
@@ -468,7 +501,7 @@ export default class ScrollContainer extends Control<IOptions> {
      * @private
      */
     private _recalcToDirection(direction: IDirection): void {
-        if (this._virtualScroll.isRangeOnEdge(direction)) {
+        if (!this._virtualScroll.rangeChanged && this._virtualScroll.isRangeOnEdge(direction)) {
             this._notifyLoadMore(direction);
         } else {
             this._inertialScrolling.callAfterScrollStopped(() => {
@@ -484,6 +517,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _afterRenderHandler(): void {
         if (this._virtualScroll.rangeChanged) {
+            this._viewResize(this._container.offsetHeight, false);
             this._virtualScroll.updateItemsHeights(this._itemsContainer);
         }
 
@@ -504,6 +538,7 @@ export default class ScrollContainer extends Control<IOptions> {
         if (this._virtualScroll.isNeedToRestorePosition) {
             this._restoreScrollPosition();
             this.checkTriggerVisibilityWithTimeout();
+            this._restoreScrollResolve = null;
         } else if (this._restoreScrollResolve) {
             // В результате _restoreScrollResolve он может сам себя перезаписать
             // (такое происходит, когда вызвали scrolLToItem)

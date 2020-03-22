@@ -211,7 +211,12 @@ var _private = {
                         const curKey = listModel.getMarkedKey();
                         listModel.setItems(list);
                         const nextKey = listModel.getMarkedKey();
-                        if (nextKey && nextKey !== curKey
+                        // При загрузке вверх и нахождении снизу списка могут сделать релоад и нужно сделать подскролл вниз списка
+                        // Сделать сами по drawItems они не могут, т.к. это слишком поздно, уже произошла отрисовка и уже стрельнет
+                        // триггер загрузки следующей страницы (при загрузке вверх - предыдущей).
+                        // мы должны предоставить функционал автоматического подскрола вниз
+                        // TODO remove self._options.task1178907511 after https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+                        if (nextKey !== null && (nextKey !== curKey || self._options.task1178907511)
                             && self._listViewModel.getCount()
                             && !self._options.task46390860 && !self._options.task1177182277 && !cfg.task1178786918
                         ) {
@@ -223,6 +228,15 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
+
+                    if (self._loadedItems) {
+                        self._shouldRestoreScrollPosition = true;
+                    }
+                    // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
+                    if (self._itemsChanged) {
+                        self._shouldNotifyOnDrawItems = true;
+                    }
+
                 }
                 if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                     cfg.afterSetItemsOnReloadCallback();
@@ -1861,10 +1875,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     return _private.showError(self, receivedError);
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
-                    if (newOptions.useNewModel && !self._listViewModel && result.data) {
-                        self._items = result.data;
+
+                    // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
+                    const data = result.data || (new RecordSet<Model>({
+                        keyProperty: self._options.keyProperty,
+                        rawData: []
+                    }));
+
+                    if (newOptions.useNewModel && !self._listViewModel) {
+                        self._items = data;
                         self._listViewModel = self._createNewModel(
-                            result.data,
+                            data,
                             viewModelConfig,
                             newOptions.viewModelConstructor
                         );
@@ -1876,7 +1897,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         }
                         _private.calculateActionsTemplateConfig(self, newOptions);
                     }
-                    self._needBottomPadding = _private.needBottomPadding(newOptions, result.data, self._listViewModel);
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy

@@ -17,6 +17,7 @@ import 'css!theme?Controls/scroll';
 import * as newEnv from 'Core/helpers/isNewEnvironment';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from "UI/Utils";
+import * as scrollToElement from 'Controls/Utils/scrollToElement';
 
 /**
  * Контейнер с тонким скроллом.
@@ -601,9 +602,11 @@ var
       },
 
       _shadowVisible: function(position: POSITION) {
-
+         const stickyController = this._children.stickyController;
+         const fixed: boolean = stickyController?.hasFixed(position);
+         const shadowVisible: boolean = stickyController?.hasShadowVisible(position);
          // Do not show shadows on the scroll container if there are fixed headers. They display their own shadows.
-         if (this._children.stickyController && this._children.stickyController.hasFixed(position)) {
+         if (fixed && shadowVisible) {
             return false;
          }
 
@@ -950,6 +953,11 @@ var
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
          }
+      },
+
+      _scrollToElement(event: SyntheticEvent<Event>, { itemContainer, toBottom, force }): void {
+         event.stopPropagation();
+         scrollToElement(itemContainer, toBottom, force);
       },
 
       _saveScrollPosition(event: SyntheticEvent<Event>): void {

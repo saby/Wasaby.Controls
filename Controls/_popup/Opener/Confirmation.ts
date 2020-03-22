@@ -10,7 +10,7 @@ import {IConfirmationOpener, IConfirmationOptions} from 'Controls/_popup/interfa
  * @remark
  * Подробнее о работе с контролом читайте
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ здесь}.
- * См. <a href="/materials/demo-ws4-confirmation">демо-пример</a>.
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FConfirmation%2FConfirmation">демо-пример</a>.
  * @class Controls/_popup/Opener/Confirmation
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IConfirmation

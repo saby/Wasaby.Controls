@@ -93,7 +93,7 @@ define([
 
       it('registerPending', async () => {
          let updatePromise;
-        let FC = new form.Controller();
+         let FC = new form.Controller();
          FC._createChangeRecordPending();
          assert.isTrue(FC._pendingPromise !== undefined);
          FC.update = () => new Promise((res) => updatePromise = res);
@@ -327,19 +327,16 @@ define([
 
          FC._isNewRecord = true;
          FC._beforeUnmount();
-         assert.equal(isDestroyCall, false);
+         assert.equal(isDestroyCall, true);
          FC.destroy();
       });
 
       it('delete new record', () => {
          let FC = new form.Controller();
          let isDestroyCalled = false;
-         FC._children = {
-            crud: {
-               delete: () => {
-                  isDestroyCalled = true;
-                  return (new Deferred()).callback();
-               }
+         FC._source = {
+            destroy: () => {
+               isDestroyCalled = true;
             }
          };
          FC._tryDeleteNewRecord();
