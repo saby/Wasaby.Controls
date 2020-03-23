@@ -309,7 +309,10 @@ export default class ScrollContainer extends Control<IOptions> {
      * данных
      */
     private _checkTriggerVisibility(): void {
-        if (!this._applyScrollTopCallback) {
+        // TODO будет решено после https://online.sbis.ru/opendoc.html?guid=a88a5697-5ba7-4ee0-a93a-221cce572430
+        // Не нужно запускать проверку на видимость триггеров, если контрол лежит в display: none контейнере
+        // например в switchableArea
+        if (!this._applyScrollTopCallback && !this._container.closest('.ws-hidden')) {
             if (this._calculatedTriggerVisibility.down) {
                 this._recalcToDirection('down');
             }
@@ -318,7 +321,6 @@ export default class ScrollContainer extends Control<IOptions> {
                 this._recalcToDirection('up');
             }
         }
-
     }
 
     private _initModelObserving(options: IOptions): void {
