@@ -104,7 +104,6 @@
                                       {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                       js-controls-SwipeControl__actionsContainer"
-                          shadowVisibility="hidden"
                           ignoreHeight="{{true}}"
                           attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
       <ws:partial template="columnContentWrapper"/>

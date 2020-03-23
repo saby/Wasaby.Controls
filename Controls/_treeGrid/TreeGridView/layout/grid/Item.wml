@@ -155,7 +155,6 @@
                                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                    {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                                    controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-                                 shadowVisibility="hidden"
                                  ignoreHeight="{{true}}"
                                  attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode)}}">
       <ws:partial template="columnContentWrapper"/>
