@@ -117,9 +117,11 @@ export default class Group extends Control<IControlOptions> {
         this._setOffset(value, POSITION.bottom);
     }
 
-    private _setOffset(value: number, position: string): void {
+    private _setOffset(value: number, position: POSITION): void {
         for (let id in this._headers) {
-            this._headers[id].inst[position] = this._headers[id][position] + value;
+            const positionValue: number = this._headers[id][position] + value;
+            this._headers[id].inst[position] = positionValue;
+            this._updateContext(position, positionValue);
         }
         this._offset[position] = value;
     }
