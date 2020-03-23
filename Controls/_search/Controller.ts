@@ -117,7 +117,7 @@ var _private = {
    },
 
    recreateSearchController(self, newOptions) {
-      self._searchController.cancel(true);
+      self._searchController.cancel();
       self._searchController = null;
       _private.getSearchController(self, newOptions);
    },
