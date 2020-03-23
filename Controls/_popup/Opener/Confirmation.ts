@@ -67,7 +67,6 @@ class Confirmation extends Control<IControlOptions> implements IConfirmationOpen
             topPopup: true,
             modal: true,
             autofocus: true,
-            topPopup: true,
             className: 'controls-Confirmation_popup',
             isCentered: true,
             opener,
