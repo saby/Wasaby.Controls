@@ -3,7 +3,7 @@
       <Controls.popupTemplate:Sticky
               attr:class="controls-DropdownList__popup
                           controls-Popup__isolatedFocusingContext
-                          controls-Menu__popup
+                          controls-Menu__popup-template
                           controls-Menu__popup_theme-{{_options.theme}}
                           controls-Menu__popup-direction-vertical-{{_verticalDirection}}
                           {{!_options.headerTemplate && _verticalDirection === 'top' ? 'controls-Menu__popup-reverse'}}
