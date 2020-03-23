@@ -60,6 +60,8 @@ define(
             };
          }
 
+         StickyStrategy._private.isPortrait = () => false;
+
          it('Sticky initializing state', () => {
             let itemConfig = {
                popupState: StickyController.POPUP_STATE_INITIALIZING
