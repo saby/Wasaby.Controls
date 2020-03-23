@@ -1,4 +1,4 @@
-<ws:template name="menuPopup" >
+<ws:template class="controls-Menu__popup-template" name="menuPopup" >
    <Controls.popupTemplate:Sticky
            attr:class="controls-DropdownList__popup
                        controls-Popup__isolatedFocusingContext
@@ -47,13 +47,13 @@
 </ws:template>
 
 <ws:if data="{{_options.searchParam}}">
-<ws:partial template="{{'Controls/list:DataContainer'}}"
-            scope="{{_options}}">
-   <ws:partial template="{{'Controls/search:Controller'}}">
-      <ws:partial template="menuPopup" />
+   <ws:partial template="{{'Controls/list:DataContainer'}}"
+               scope="{{_options}}">
+      <ws:partial template="{{'Controls/search:Controller'}}">
+         <ws:partial template="menuPopup" />
+      </ws:partial>
    </ws:partial>
-</ws:partial>
 </ws:if>
 <ws:else>
-<ws:partial template="menuPopup" />
+   <ws:partial template="menuPopup" />
 </ws:else>
