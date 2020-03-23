@@ -199,7 +199,9 @@ export function processActionClick(
 
             // How to calculate itemContainer?
             // this._notify('actionClick', [action, contents, itemContainer]);
-            actionClickCallback(clickEvent, action, contents);
+            if (actionClickCallback) {
+                actionClickCallback(clickEvent, action, contents);
+            }
 
             if (action.handler) {
                 action.handler(contents);
@@ -248,7 +250,7 @@ export function prepareActionsMenuConfig(
             dropdownClassName: 'controls-itemActionsV__popup',
             showClose: true,
             ...contextMenuConfig,
-            rootKey: parentAction,
+            rootKey: parentAction && parentAction.id,
             showHeader: hasParentAction,
             headConfig
         };

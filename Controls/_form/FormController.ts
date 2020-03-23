@@ -2,6 +2,7 @@ import rk = require('i18n!Controls');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as cInstance from 'Core/core-instance';
 import tmpl = require('wml!Controls/_form/FormController/FormController');
+import {readWithAdditionalFields} from './crudProgression';
 import * as Deferred from 'Core/Deferred';
 import {Logger} from 'UI/Utils';
 import {error as dataSourceError} from 'Controls/dataSource';
@@ -314,10 +315,10 @@ class FormController extends Control<IFormController, IReceivedState> {
         });
     }
 
-    private _readRecordBeforeMount = (cfg: IFormController) => {
+    private _readRecordBeforeMount(cfg: IFormController): Promise<{data: Model}> {
         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-        return this._source.read(cfg.key, cfg.readMetaData).then((record: Model) => {
+        return readWithAdditionalFields(this._source, cfg.key, cfg.readMetaData).then((record: Model) => {
             this._setRecord(record);
             this._readInMounting = {isError: false, result: record};
 
@@ -331,7 +332,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         }, (e: Error) => {
             this._readInMounting = {isError: true, result: e};
             return this._processError(e).then(this._getState);
-        });
+        }) as Promise<{data: Model}>;
     }
 
     private _checkRecordType(record: Model): boolean {
@@ -411,8 +412,8 @@ class FormController extends Control<IFormController, IReceivedState> {
         self._pendingPromise = new Deferred();
         self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
-            validate(): boolean {
-                return self._record && self._record.isChanged();
+            validate(isInside: boolean): boolean {
+                return self._record && self._record.isChanged() && !isInside;
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
                 self._showConfirmDialog(deferred, forceFinishValue);

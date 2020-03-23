@@ -338,6 +338,28 @@ define(
             });
             assert.instanceOf(listModel, display.Search);
          });
+
+         it('_itemActionClick', function() {
+            let isHandlerCalled = false;
+            let menuControl = getMenu();
+            menuControl._listModel = getListModel();
+            let action = {
+               id: 1,
+               icon: 'icon-Edit',
+               iconStyle: 'secondary',
+               title: 'edit',
+               showType: 2,
+               handler: function() {
+                  isHandlerCalled = true;
+               }
+            };
+            let clickEvent = {
+               stopPropagation: () => {}
+            };
+
+            menuControl._itemActionClick('itemActionClick', menuControl._listModel.at(1), action, clickEvent);
+            assert.isTrue(isHandlerCalled);
+         });
       });
    }
 );
