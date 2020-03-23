@@ -403,6 +403,68 @@ define([
             FC.destroy();
          });
       });
+      it('requestCustomUpdate', () => {
+         let FC = new form.Controller();
+         let update = false;
+         FC._notify = (event) => {
+            if( event === 'requestCustomUpdate') {
+               return false;
+            }
+            return true;
+         };
+         FC._notifyToOpener = (eventName) => {
+            if ( eventName === 'updateStarted') {
+               update = true;
+               FC.destroy();
+            }
+         };
+         let validation = {
+            submit: () => Promise.resolve(true)
+         };
+         FC._isNewRecord = true;
+         FC._requestCustomUpdate = function() {
+            return false;
+         };
+         FC._record = {
+            getId: () => 'id1',
+            isChanged: () => true
+         };
+         let crud = {
+            update: () => Promise.resolve()
+         };
+         FC._children = { crud, validation };
+         FC._processError = () => {};
+         FC.update();
+         assert.equal(update, true);
+         FC.destroy();
+      });
+
+       it('update with error', (done) => {
+         let error = false;
+         let FC = new form.Controller();
+         let validation = {
+            submit: () => Promise.reject('error')
+         };
+         let crud = {
+            update: () => Promise.reject()
+         };
+         FC._record = {
+            getId: () => 'id1',
+            isChanged: () => true
+         };
+         FC._notify = (event) => {
+            return false;
+         };
+         FC._children = { crud, validation };
+         FC._processError = () => {};
+         FC.update().catch( () => {
+            error = true;
+            assert.isTrue(error);
+            FC.destroy();
+            done();
+         });
+      });
+
       it('createHandler and readHandler ', () => {
          let FC = new form.Controller();
          FC._createHandler();

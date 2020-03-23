@@ -574,9 +574,8 @@ class FormController extends Control<IFormController, IReceivedState> {
                     }
                 });
             }
-        });
-        validationDef.then((e) => {
-            updateDef.catch(e);
+        }, (e) => {
+            updateDef.errback(e);
             return e;
         });
         return updateDef;
