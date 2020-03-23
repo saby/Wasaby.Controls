@@ -18,7 +18,6 @@
                   </div>
                </ws:for>
             </div>
-
          </ws:footerTemplate>
       </ws:detailPanelTemplateOptions>
    </Controls.filter:View>
