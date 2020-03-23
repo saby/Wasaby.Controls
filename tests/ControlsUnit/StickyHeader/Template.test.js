@@ -115,7 +115,6 @@ define(
             });
 
             it('Move the header', function() {
-                                             '</div>');
                inst._options.theme = 'default';
                inst._options.content = function() {return ''};
 
