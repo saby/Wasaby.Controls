@@ -268,30 +268,6 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.deepEqual(controllerFilter, {});
       });
 
-      it('_private.searchCallback with loading _SearchController', () => {
-         var controller = getSearchController();
-         var notified = false;
-
-         controller._notify = () => {
-            notified = true;
-         };
-         controller._isSearchControllerLoading = function() {
-            return true;
-         };
-         controller._searchValue = '';
-         searchMod.Controller._private.searchCallback(controller, {}, {test: 'testFilterValue'});
-         assert.equal(controller._searchValue, '');
-         assert.isFalse(notified);
-
-         controller._isSearchControllerLoading = function() {
-            return false;
-         };
-         searchMod.Controller._private.searchCallback(controller, {}, {test: 'testFilterValue'});
-         assert.equal(controller._searchValue, 'testFilterValue');
-         assert.isTrue(notified);
-
-      });
-
       it('_private.abortCallback', function() {
          var controller = getSearchController();
          var filter = { 'Разворот': 'С разворотом', 'usePages': 'full', test: 'test' };
@@ -539,16 +515,22 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          it('searchParam is changed', function() {
             var options = getDefaultOptions();
             var searchStarted = false;
+            var canceled = false;
             searchMod.Controller._private.getSearchController(searchController);
             searchMod.Controller._private.startSearch = () => {searchStarted = true;};
             options.searchParam = 'test1';
             searchController._inputSearchValue = 'test';
             searchController._searchValue = '';
             options.searchValue = 'test';
+
+            searchController._searchController.cancel = function() {
+               canceled = true;
+            };
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
 
             assert.equal(searchController._inputSearchValue, 'test');
             assert.isTrue(searchStarted);
+            assert.isTrue(canceled);
          });
 
          it('filter is changed', function() {

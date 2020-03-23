@@ -43,23 +43,20 @@ var _private = {
 
    searchCallback: function (self, result, filter) {
       self._loading = false;
-      var needStartSearchCallback = !self._isSearchControllerLoading();
-      if (needStartSearchCallback) {
-         if (self._viewMode !== 'search') {
-            _private.updateViewMode(self, 'search');
+      if (self._viewMode !== 'search') {
+         _private.updateViewMode(self, 'search');
 
-            if (self._options.parentProperty) {
-               _private.deleteRootFromFilterAfterSearch(self, filter);
-               _private.updateRootAfterSearch(self);
-            }
+         if (self._options.parentProperty) {
+            _private.deleteRootFromFilterAfterSearch(self, filter);
+            _private.updateRootAfterSearch(self);
          }
-
-         self._searchValue = filter[self._options.searchParam] || '';
-         self._notify('filterChanged', [filter]);
-         self._notify('itemsChanged', [result.data]);
-         self._notify('searchValueChanged', [self._searchValue]);
-         self._misspellValue = getSwitcherStrFromData(result.data);
       }
+
+      self._searchValue = filter[self._options.searchParam] || '';
+      self._notify('filterChanged', [filter]);
+      self._notify('itemsChanged', [result.data]);
+      self._notify('searchValueChanged', [self._searchValue]);
+      self._misspellValue = getSwitcherStrFromData(result.data);
    },
 
    updateRootAfterSearch(self): void {
@@ -120,6 +117,7 @@ var _private = {
    },
 
    recreateSearchController(self, newOptions) {
+      self._searchController.cancel(true);
       self._searchController = null;
       _private.getSearchController(self, newOptions);
    },
