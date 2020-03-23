@@ -329,7 +329,7 @@ define(
             var self = getDataWithConfig(config);
             lists.DataContainer._private.resolveOptions(self, {source:source});
 
-            var promise = lists.DataContainer._private.createPrefetchSource(self, error, dataLoadErrback);
+            var promise = lists.DataContainer._private.createPrefetchSource(self, error, dataLoadErrback, 'gid');
             assert.instanceOf(promise, Promise);
             promise.then(function(result) {
                assert.equal(result.error, error);
@@ -473,7 +473,7 @@ define(
 
             lists.DataContainer._private.resolveOptions(self, {source:source});
 
-            var promise = lists.DataContainer._private.createPrefetchSource(self, data, dataLoadErrback);
+            var promise = lists.DataContainer._private.createPrefetchSource(self, data, dataLoadErrback, 'gid');
 
             assert.instanceOf(promise, Promise);
             promise.then(function(result) {
@@ -551,6 +551,29 @@ define(
             assert.equal(lists.DataContainer._private.isEqualItems(source1, source3), false);
 
          });
+         it('_private.getGroupHistoryId', function() {
+            assert.equal(lists.DataContainer._private.getGroupHistoryId({
+               groupingKeyCallback: () => {},
+               historyIdCollapsedGroups: 'grId'
+            }), 'grId');
 
+            assert.equal(lists.DataContainer._private.getGroupHistoryId({
+               groupProperty: 'any',
+               historyIdCollapsedGroups: 'grId'
+            }), 'grId');
+
+            assert.equal(lists.DataContainer._private.getGroupHistoryId({
+               groupingKeyCallback: () => {},
+               groupHistoryId: 'grId',
+            }), 'grId');
+
+            assert.isUndefined(lists.DataContainer._private.getGroupHistoryId({
+               groupHistoryId: 'grId',
+            }));
+
+            assert.isUndefined(lists.DataContainer._private.getGroupHistoryId({
+               groupProperty: 'any',
+            }));
+         });
       });
    });
