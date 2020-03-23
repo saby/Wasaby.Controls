@@ -273,6 +273,8 @@ var
             if (current.isSelected) {
                 classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
+                // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
+                // нужно его принудительно установить как фон таблицы
                 if (!GridLayoutUtil.isFullGridSupport()) {
                     classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
@@ -428,8 +430,8 @@ var
 
         /**
          * Возвращает CSS класс для установки background
-         * @param options
-         * @param addSpace
+         * @param options Опции IList | объект, содержащий theme, style, backgroundStyle
+         * @param addSpace Добавлять ли пробел перед выводимой строкой
          */
         getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string}, addSpace?: boolean): string {
             return `${addSpace ? ' ' : ''}controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
