@@ -11,7 +11,7 @@ import {getOptionTypes} from 'Controls/_suggest/Utils';
  * @class Controls/_suggest/Input
  * @extends Core/Control
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISearch
  * @mixes Controls/interface/IBorderStyle
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
@@ -39,7 +39,7 @@ import {getOptionTypes} from 'Controls/_suggest/Utils';
  * @class Controls/_suggest/Input
  * @extends Core/Control
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_interface/INavigation
