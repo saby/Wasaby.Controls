@@ -152,6 +152,7 @@ const
       auto: false
    };
 
+const SCROLL_BY_ARROWS = 40;
 var
    _private = {
       SHADOW_HEIGHT: 8,
@@ -720,13 +721,13 @@ var
                offset = scrollTop + this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.down) {
-               offset = scrollTop + 40;
+               offset = scrollTop + SCROLL_BY_ARROWS;
             }
             if (ev.nativeEvent.which === Env.constants.key.pageUp) {
                offset = scrollTop - this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.up) {
-               offset = scrollTop - 40;
+               offset = scrollTop - SCROLL_BY_ARROWS;
             }
             if (offset !== undefined) {
                this.scrollTo(offset);
