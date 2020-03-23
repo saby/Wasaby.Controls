@@ -44,6 +44,9 @@ class BreadCrumbsView extends Control<IControlOptions> {
             }
         }
     }
+    private _dotsClickStop(e: SyntheticEvent<MouseEvent>): void {
+        e.stopPropagation();
+    }
 
     private _dotsClick(e: SyntheticEvent<MouseEvent>): void {
             const rs = new RecordSet({
@@ -80,7 +83,6 @@ class BreadCrumbsView extends Control<IControlOptions> {
             } else {
                 this._children.menuOpener.close();
             }
-            e.stopPropagation();
     }
 
     protected _onOpen(): void {
