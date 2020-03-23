@@ -440,7 +440,7 @@ function _processActionsMenuClose(
 
         setActiveItem(collection, null);
         collection.setActionsMenuConfig(null);
-
+        deactivateSwipe(collection);
         collection.nextVersion();
     }
 }
