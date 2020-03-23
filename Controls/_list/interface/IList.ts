@@ -51,6 +51,32 @@ type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
 
+/**
+ * @typedef TListBackgroundStyle
+ * @cfg {string} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
+ * @remark
+ * Предопределённые в теме варианты:
+ * * "transparent" (прозрачный фон)
+ * * "default" (фон цвета темы)
+ * * "master" (цвет для MasterDetail)
+ * * "infoBox" (цвет для InfoBox)
+ * Возможно также определение собственных префиксов.
+ * @default default
+ */
+/*
+ * @typedef TListBackgroundStyle
+ * @cfg {string} Style prefix to configure background for inner list control components with static or absolute positioning.
+ * @remark
+ * Variants specified in theme:
+ * * "transparent" (transparent background)
+ * * "default" (theme background)
+ * * "master" (background specified for MasterDetail)
+ * * "infoBox" (background specified for InfoBox)
+ * Also custom prefixes definition is supported.
+ * @default default
+ */
+type TListBackgroundStyle = 'default'|'transparent'|'master'|'infoBox'|string|undefined;
+
 export interface IContextMenuConfig {
     items?: RecordSet;
     groupTemplate?: TemplateFunction|string;
@@ -101,6 +127,7 @@ export interface IList {
     dataLoadCallback?: (items) => void;
     dataLoadErrback?: () => void;
     style?: TListStyle;
+    backgroundStyle?: TListBackgroundStyle;
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
 }
@@ -924,4 +951,32 @@ export interface IList {
 /*
  * @cfg {ItemPadding} Configuration inner paddings in the item.
  * @name Controls/_list/interface/IList#itemPadding
+ */
+
+/**
+ * @name Controls/_list/interface/IList#backgroundStyle
+ * @cfg {string} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
+ * @remark
+ * Пердопределённые в теме варианты:
+ * * "transparent" (прозрачный фон)
+ * * "default" (фон цвета темы)
+ * * "master" (цвет для MasterDetail)
+ * * "infoBox" (цвет для InfoBox)
+ * Вы можете не указывать эту опцию при использовании опции {@link Controls/_list/interface/IList#style style} для MasterDetail
+ * Возможно также определение собственных префиксов.
+ * @default default
+ */
+
+/*
+ * @name Controls/_list/interface/IList#backgroundStyle
+ * @cfg {string} Style prefix to configure background for inner list control components with static or absolute positioning.
+ * @remark
+ * Variants specified in theme:
+ * * "transparent" (transparent background)
+ * * "default" (theme background)
+ * * "master" (background specified for MasterDetail)
+ * * "infoBox" (background specified for InfoBox)
+ * You can skip this option while using {@link Controls/_list/interface/IList#style style} option for MasterDetail.
+ * Also custom prefixes definition is supported.
+ * @default default
  */
