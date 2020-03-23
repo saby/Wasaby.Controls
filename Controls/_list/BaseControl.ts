@@ -155,6 +155,7 @@ var _private = {
         if (self._sourceController) {
             _private.showIndicator(self);
             _private.hideError(self);
+            _private.getPortionedSearch(self).reset();
 
             if (cfg.groupProperty) {
                 const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
@@ -2113,7 +2114,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
-            _private.getPortionedSearch(self).reset();
             if (this._menuIsShown) {
                 this._children.itemActionsOpener.close();
                 this._closeActionsMenu();
