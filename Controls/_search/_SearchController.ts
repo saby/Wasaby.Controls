@@ -132,8 +132,8 @@ var SearchController = extend({
       _private.abort(this, force, _private.resetFilters);
    },
 
-   cancel: function(force) {
-      _private.abort(this, force);
+   cancel: function() {
+      _private.abort(this, true);
    },
 
    isLoading: function() {
