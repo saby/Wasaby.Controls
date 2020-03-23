@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controller');
 import {TRegisterEventData} from './Utils';
 import StickyHeader from 'Controls/_scroll/StickyHeader/_StickyHeader';
+import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import {POSITION} from 'Controls/_scroll/StickyHeader/Utils';
 
 // @ts-ignore
@@ -48,7 +49,12 @@ class Component extends Control {
 
     _afterMount(options) {
         this._stickyControllerMounted = true;
+        RegisterUtil(this, 'controlResize', this._resizeHandler.bind(this));
         this._registerDelayed();
+    }
+
+    _beforeUnmount(): void {
+        UnregisterUtil(this, 'controlResize');
     }
 
     /**
