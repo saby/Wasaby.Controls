@@ -195,7 +195,9 @@ define([
             navigation: {
                view: 'infinity'
             },
-            virtualScrolling: true,
+            virtualScrollConfig: {
+               pageSize: 100
+            },
             viewModelConstructor: lists.ListViewModel,
             source: source
          };
@@ -374,7 +376,9 @@ define([
             navigation: {
                view: 'infinity'
             },
-            virtualScrolling: true,
+            virtualScrollConfig: {
+               pageSize: 100
+            },
             viewModelConstructor: grid.GridViewModel,
          };
          var ctrl = new lists.BaseControl(cfg);
@@ -5327,7 +5331,9 @@ define([
                viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
                source: source,
-               virtualScrolling: true
+               virtualScrollConfig: {
+                  pageSize: 100
+               }
             },
             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);

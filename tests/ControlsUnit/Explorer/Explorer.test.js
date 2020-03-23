@@ -279,22 +279,30 @@ define([
             cfg = {
                root: 'rootNode',
                viewMode: 'tree',
-               virtualScrolling: true
+               virtualScrollConfig: {
+                  pageSize: 100
+               }
             };
          var newCfg = {
             viewMode: 'search',
             root: 'rootNode',
-            virtualScrolling: true
+            virtualScrollConfig: {
+               pageSize: 100
+            }
          };
          var newCfg2 = {
             viewMode: 'tile',
             root: 'rootNode',
-            virtualScrolling: true
+            virtualScrollConfig: {
+               pageSize: 100
+            }
          };
          var newCfg3 = {
             viewMode: 'search',
             root: 'rootNode',
-            virtualScrolling: true,
+            virtualScrollConfig: {
+               pageSize: 100
+            },
             searchStartingWith: 'root'
          };
          var instance = new explorerMod.View(cfg);
