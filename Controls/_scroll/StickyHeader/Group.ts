@@ -41,12 +41,17 @@ interface IHeadersIds {
     bottom: number[];
 }
 
+interface IOffsetCache {
+    [key: string]: number;
+}
+
 export default class Group extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     private _index: number = null;
     protected _isStickySupport: boolean = false;
 
     protected _fixed: boolean = false;
+    protected _cachedOffset: IOffsetCache = {};
 
     protected _stickyHeadersIds: IHeadersIds = {
         top: [],
@@ -66,11 +71,23 @@ export default class Group extends Control<IControlOptions> {
         this._stickyHeaderContext.updateConsumers();
     }
 
-    private _getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION): number {
+    private _getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION, key: string): number {
+        const resetCacheDelay: number = 0;
         // Сценарий: проскролить список, вызвать перестроение заголовков. В этом случе offset будет отрицательным.
         // Физически заголовок не должен иметь такое смещение относительно группы. Это ошибка.
         // Разобраться по https://online.sbis.ru/opendoc.html?guid=243c78ec-7f27-4625-b347-d92523702e50
-        return Math.max(0, getOffset(parentElement, element, position));
+
+        // После регистрации каждого(!) нового заголовка в группе, вызыввается циклический обход уже всех(!)
+        // зареганых заголовков и получение их размера через getBoundingClientRect, что заметно сказывается
+        // на производительности. Для синхронных вызовов кэширую значение, на моем кейсе дает уменьшение вызовов на 66%.
+        if (this._cachedOffset[key] !== undefined) {
+            return this._cachedOffset[key];
+        }
+        this._cachedOffset[key] = Math.max(0, getOffset(parentElement, element, position));
+        setTimeout(() => {
+            this._cachedOffset[key] = undefined;
+        }, resetCacheDelay);
+        return this._cachedOffset[key];
     }
     protected _getChildContext() {
         return {
@@ -117,9 +134,11 @@ export default class Group extends Control<IControlOptions> {
         this._setOffset(value, POSITION.bottom);
     }
 
-    private _setOffset(value: number, position: string): void {
+    private _setOffset(value: number, position: POSITION): void {
         for (let id in this._headers) {
-            this._headers[id].inst[position] = this._headers[id][position] + value;
+            const positionValue: number = this._headers[id][position] + value;
+            this._headers[id].inst[position] = positionValue;
+            this._updateContext(position, positionValue);
         }
         this._offset[position] = value;
     }
@@ -161,7 +180,7 @@ export default class Group extends Control<IControlOptions> {
         let offset: number = 0;
         for (const header of Object.keys(this._headers)) {
             for (const position of [POSITION.top, POSITION.bottom]) {
-                offset = this._getOffset(this._container, this._headers[header].container, position);
+                offset = this._getOffset(this._container, this._headers[header].container, position, header);
                 this._headers[header][position] = offset;
                 const positionValue: number = this._offset[position] + offset;
                 this._headers[header].inst[position] = positionValue;
@@ -182,7 +201,7 @@ export default class Group extends Control<IControlOptions> {
             };
 
             for (const position of [POSITION.top, POSITION.bottom]) {
-                offset = this._getOffset(this._container, data.inst._container, position);
+                offset = this._getOffset(this._container, data.inst._container, position, data.id);
                 this._headers[data.id][position] = offset;
                 const positionValue: number = this._offset[position] + offset;
                 data.inst[position] = positionValue;
