@@ -53,6 +53,12 @@ interface IStickyHeaderContext {
     stickyHeader: Function;
 }
 
+interface IResizeObserver {
+    observe: (el: HTMLElement) => void;
+    unobserve: (el: HTMLElement) => void;
+    disconnect: () => void;
+}
+
 export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     /**
@@ -66,6 +72,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
      * @private
      */
     private _observer: IntersectionObserver;
+    private _resizeObserver: IResizeObserver;
 
     private _model: Model;
 
@@ -136,6 +143,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._observer.observe(children.observationTargetBottom);
 
         this._updateBottomShadowStyle();
+        this._initResizeObserver();
     }
 
     protected _beforeUnmount(): void {
@@ -147,10 +155,15 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._observer.disconnect();
         }
 
+        if (this._resizeObserver) {
+            this._resizeObserver.disconnect();
+        }
+
         //Let the listeners know that the element is no longer fixed before the unmount.
         this._fixationStateChangeHandler('', this._model.fixedPosition);
         this._observeHandler = undefined;
         this._observer = undefined;
+        this._resizeObserver = undefined;
         this._notify('stickyRegister', [{id: this._index}, false], {bubbling: true});
     }
 
@@ -190,6 +203,15 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     protected _resizeHandler(): void {
         this._notify('stickyHeaderResize', [], {bubbling: true});
+    }
+
+    private _initResizeObserver(): void {
+        if (ResizeObserver) {
+            this._resizeObserver = new ResizeObserver(() => {
+                this._resizeHandler();
+            });
+            this._resizeObserver.observe(this._container);
+        }
     }
 
     /**
