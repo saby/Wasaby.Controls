@@ -5,6 +5,7 @@
                            scope="{{_options}}"
                            name="baseControl"
                            on:keyDown="_onTreeViewKeyDown()"
+                           on:itemMouseDown="_onItemMouseDown()"
                            on:itemClick="_onItemClick()"
                            beforeReloadCallback="{{_options.parentProperty !== undefined ? _beforeReloadCallback}}"
                            beforeLoadToDirectionCallback="{{_beforeLoadToDirectionCallback}}"
@@ -14,7 +15,7 @@
                            nodesSourceControllers="{{_nodesSourceControllers}}">
    <ws:expanderTemplate>
       <div on:click="_onExpanderClick(expanderTemplate.itemData.dispItem)"
-           class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize, _options.theme)}}"></div>
+           class="js-controls-TreeControl__expander {{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize, _options.theme)}}"></div>
    </ws:expanderTemplate>
    <ws:content>
       <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()"

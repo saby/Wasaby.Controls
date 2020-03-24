@@ -10,6 +10,7 @@ import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {saveConfig} from 'Controls/Application/SettingsController';
 import {Map} from 'Types/shim';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 var
     HOT_KEYS = {
@@ -553,9 +554,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _onExpanderClick: function(e, dispItem) {
         _private.toggleExpanded(this, dispItem);
-        if (this._options.markItemByExpanderClick) {
-            this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());
-        }
         e.stopImmediatePropagation();
     },
     _onLoadMoreClick: function(e, dispItem) {
@@ -710,6 +708,14 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
 
     _onTreeViewKeyDown: function(event) {
         keysHandler(event, HOT_KEYS, _private, this);
+    },
+
+    _onItemMouseDown(e: SyntheticEvent<MouseEvent>, model, nativeEvent: MouseEvent) {
+        let eventResult = {};
+        if (nativeEvent.target.closest('.js-controls-TreeControl__expander')) {
+            eventResult.markItemByExpanderClick = this._options.markItemByExpanderClick;
+        }
+        return eventResult;
     },
 
     _beforeUnmount: function() {

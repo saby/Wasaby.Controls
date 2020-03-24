@@ -2945,12 +2945,33 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._onItemClick(event, ctrl._listViewModel.getItems()
-            .at(2), originalEvent);
+         ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
          assert.isTrue(stopPropagationCalled);
-         assert.equal(ctrl._listViewModel.getItems()
-            .at(2), ctrl._listViewModel.getMarkedItem()
-            .getContents());
+      });
+
+      it('_itemMouseDown', async function() {
+         var cfg = {
+            keyProperty: 'id',
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewModelConstructor: lists.ListViewModel
+         };
+         var originalEvent = {
+            target: {
+            }
+         };
+         var event = {
+            stopPropagation: function() {
+            }
+         };
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         ctrl._itemMouseDown(event, {key: 3}, originalEvent);
+         assert.equal(
+            ctrl._listViewModel.getItems().at(2),
+            ctrl._listViewModel.getMarkedItem().getContents()
+         );
       });
 
       it('_onItemClick: should not mark single item', async function() {

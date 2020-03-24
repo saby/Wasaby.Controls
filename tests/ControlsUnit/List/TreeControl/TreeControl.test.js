@@ -1613,57 +1613,6 @@ define([
             }, 10);
          }, 10);
       });
-      it('markItemByExpanderClick true', function() {
-         var
-            savedMethod = treeGrid.TreeControl._private.toggleExpanded,
-            baseControlFocused = false,
-            rawData = [
-               { id: 1, type: true, parent: null },
-               { id: 2, type: true, parent: null },
-               { id: 11, type: null, parent: 1 }
-            ],
-            source = new sourceLib.Memory({
-               rawData: rawData,
-               keyProperty: 'id'
-            }),
-            cfg = {
-               source: source,
-               markerVisibility: 'visible',
-               columns: [],
-               keyProperty: 'id',
-               parentProperty: 'parent',
-               nodeProperty: 'type',
-               markItemByExpanderClick: true
-            },
-            e = {
-               stopImmediatePropagation: function(){}
-            },
-            treeControl = new treeGrid.TreeControl(cfg),
-            treeGridViewModel = new treeGrid.ViewModel(cfg);
-         treeControl.saveOptions(cfg);
-         treeGridViewModel.setItems(new collection.RecordSet({
-            rawData: rawData,
-            keyProperty: 'id'
-         }));
-
-         treeControl._children = {
-            baseControl: {
-               getViewModel: function() {
-                  return treeGridViewModel;
-               }
-            }
-         };
-
-         treeGrid.TreeControl._private.toggleExpanded = function(){};
-
-         treeControl._onExpanderClick(e, treeGridViewModel.at(0));
-         assert.deepEqual(1, treeGridViewModel._model._markedKey);
-
-         treeControl._onExpanderClick(e, treeGridViewModel.at(1));
-         assert.deepEqual(2, treeGridViewModel._model._markedKey);
-
-         treeGrid.TreeControl._private.toggleExpanded = savedMethod;
-      });
 
       it('markItemByExpanderClick false', function() {
 
@@ -1709,10 +1658,20 @@ define([
 
          treeGrid.TreeControl._private.toggleExpanded = function(){};
 
-         treeControl._onExpanderClick(e, treeGridViewModel.at(0));
+         const nativeEventWithExpanderTarget = {
+            target: {
+               closest(selector) {
+                  if (selector === '.js-controls-TreeControl__expander') {
+                     return treeControl._options.markItemByExpanderClick;
+                  }
+               }
+            }
+         };
+
+         treeControl._onItemMouseDown(e, treeGridViewModel.at(0), nativeEventWithExpanderTarget);
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
-         treeControl._onExpanderClick(e, treeGridViewModel.at(1));
+         treeControl._onItemMouseDown(e, treeGridViewModel.at(1), nativeEventWithExpanderTarget);
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
