@@ -222,9 +222,10 @@ interface IPosition {
 
       _fixBottomPositionForIos: function(position, targetCoords) {
          if (position.bottom) {
-            let keyboardHeight = _private.getKeyboardHeight();
-            position.bottom += keyboardHeight;
-
+            const keyboardHeight = _private.getKeyboardHeight();
+            if (!_private.isPortrait()) {
+               position.bottom += keyboardHeight;
+            }
             // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
             // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
             // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
@@ -242,6 +243,10 @@ interface IPosition {
                }
             }
          }
+      },
+
+      isPortrait: function() {
+         return TouchKeyboardHelper.isPortrait();
       },
 
       getKeyboardHeight: function() {
