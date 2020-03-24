@@ -306,6 +306,16 @@ define(
             assert.isFalse(isVisible);
          });
 
+         it('_changeIndicatorOverlay', function() {
+            let menuControl = getMenu();
+            let indicatorConfig = {
+               delay: 100,
+               overlay: 'default'
+            };
+            menuControl._changeIndicatorOverlay(indicatorConfig);
+            assert.equal(indicatorConfig.overlay, 'none');
+         });
+
       });
    }
 );
