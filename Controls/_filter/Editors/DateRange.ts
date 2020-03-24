@@ -82,3 +82,14 @@ class DateRangeEditor extends Control<IControlOptions> {
  * @default Lite
  */
 export default DateRangeEditor;
+
+/**
+ * @name Controls/_filter/Editors/DateRange#value
+ * @cfg {String} Массив из двух значений - дата "от" и дата "до". 
+ */
+
+/**
+ * @name Controls/_filter/Editors/DateRange#resetValue
+ * @cfg {String}  Массив из двух значений - дата "от" и дата "до", которые применятся при сбросе.
+ */
+
