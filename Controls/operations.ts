@@ -24,7 +24,6 @@
  */
 
 import Panel = require('Controls/_operations/Panel');
-import PanelContainer = require('Controls/_operations/Panel/Container');
 import Controller from 'Controls/_operations/Controller';
 import Container = require('Controls/_operations/Container');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
@@ -34,12 +33,12 @@ import FilterController from 'Controls/_operations/FilterController';
 
 export {default as HierarchySelection} from 'Controls/_operations/MultiSelector/HierarchySelection';
 export {default as Selection} from 'Controls/_operations/MultiSelector/Selection';
+export {default as PanelContainer} from 'Controls/_operations/Panel/Container';
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
 
 export {
    Panel,
-   PanelContainer,
    Button,
    Controller,
    Container,
