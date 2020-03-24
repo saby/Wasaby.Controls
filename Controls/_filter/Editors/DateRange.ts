@@ -85,13 +85,13 @@ export default DateRangeEditor;
 
 /**
  * @name Controls/_filter/Editors/DateRange#value
- * @cfg {Array} Массив из двух значений - дата "от" и дата "до". 
+ * @cfg {Array<Date>} Массив из двух значений - дата "от" и дата "до". 
  * @see resetValue
  */
 
 /**
  * @name Controls/_filter/Editors/DateRange#resetValue
- * @cfg {Array} Массив из двух значений - дата "от" и дата "до", которые применятся при сбросе.
+ * @cfg {Array<Date>} Массив из двух значений - дата "от" и дата "до", которые применятся при сбросе.
  * @see value
  */
 
