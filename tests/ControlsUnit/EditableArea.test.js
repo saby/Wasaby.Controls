@@ -251,22 +251,22 @@ define([
             instance._notify = mockNotify();
             // начинаем редактирование, делаем клон записи с подтверждением изменений.
             instance.beginEdit();
-            // меняем рекорд слова
+            // меняем рекорд
             instance._editObject.set('text', 'asdf');
             // завершаем редактирование с сохранением
             await instance.commitEdit();
-            // проверили, что опции поменялись
+            // проверили, что опция поменялась
             assert.equal(cfg.editObject.get('text'), 'asdf');
 
             // вновь начинаем редактирование, делаем клон записи с подтверждением изменений.
             instance.beginEdit();
-            // меняем рекорд слова
+            // меняем рекорд
             instance._editObject.set('text', 'changed');
             // проверяем предыдущее состояние, к которому будем откатывать.
             assert.equal(instance._editObject._changedFields.text, 'asdf');
             // завершаем редактирование с отменой. Не сохраняем.
             await instance.cancelEdit();
-            // проверили, что опции не поменялись
+            // проверили, что опция не поменялась
             assert.equal(cfg.editObject.get('text'), 'asdf');
 
          });
