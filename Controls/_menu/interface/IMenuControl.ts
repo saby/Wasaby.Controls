@@ -1,38 +1,16 @@
-import {IControlOptions, TemplateFunction} from 'UI/Base';
-import {ISourceOptions, INavigation, IFilterOptions, IHierarchy, IIconSizeOptions} from 'Controls/interface';
-import {IGroupedOptions} from 'Controls/dropdown';
+import {TemplateFunction} from 'UI/Base';
+import {IMenuBaseOptions} from './IMenuBase';
+import {ISourceOptions, INavigationOptions, IFilterOptions, ISelectorDialogOptions, TSelectedKey} from 'Controls/interface';
+import {IItemAction} from 'Controls/list';
 
-export type TKeys = string[]|number[];
+export type TKey = string|number|null;
 
-interface IItemPadding {
-    left: string;
-    right: string;
-}
-
-export interface IMenuControlOptions extends IControlOptions, ISourceOptions, INavigation, IFilterOptions, IHierarchy, IIconSizeOptions, IGroupedOptions {
-    displayProperty: string;
-    itemTemplate?: TemplateFunction;
-    emptyText?: string;
-    emptyKey?: string|number;
-    historyConfig: IHistoryConfig;
-    itemPadding: IItemPadding;
-    multiSelect?: boolean;
-    nodeFooterTemplate: TemplateFunction;
-    root?: string|number|null;
-    selectedKeys?: TKeys;
-    selectorTemplate?: object;
+export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, INavigationOptions,
+        IFilterOptions, ISelectorDialogOptions {
+    nodeFooterTemplate?: TemplateFunction;
+    root?: TKey;
     selectorOpener?: object;
-    selectorDialogResult?: Function;
-    isCompoundTemplate?: boolean;
-    groupingKeyCallback?: Function;
-    itemActions: any[];
-}
-
-export interface IHistoryConfig {
-    historyId: string;
-    pinned: TKeys|boolean;
-    recent: boolean;
-    frequent: boolean;
+    itemActions?: IItemAction[];
 }
 
 /**
@@ -178,7 +156,7 @@ export default interface IMenuControl {
 
 /**
  * @name Controls/_menu/interface/IMenuControl#parentProperty
- * @cfg {Ыекштп} Имя свойства, содержащего информацию о родительском элементе.
+ * @cfg {String} Имя свойства, содержащего информацию о родительском элементе.
  * @demo Controls-demo/Menu/Control/ParentProperty/Index
  */
 
