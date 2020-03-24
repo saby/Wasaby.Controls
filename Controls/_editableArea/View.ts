@@ -149,6 +149,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
 
    beginEdit: function (event, res) {
       this._editObject = this._options.editObject.clone();
+      // Если опция editObject изменилась, то она ждет подтверждения изменения, делаем подтверждение у клона.
       this._editObject.acceptChanges();
       // TODO: res - это результат события со старым названием. Снести вместе со старым контролом 3.19.110, как только появится веха
       var result = res || this._notify('beforeBeginEdit', [this._editObject], {
