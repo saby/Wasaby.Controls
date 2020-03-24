@@ -146,7 +146,7 @@ var
          setVirtualScrolling(self, viewMode, cfg): void {
             // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
             // For viewMode === 'tile' disable virtualScrolling.
-            self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
+            self._virtualScrollConfig = viewMode === 'tile' ? false : cfg.virtualScrollConfig;
          },
 
          setViewConfig: function (self, viewMode) {
@@ -356,7 +356,7 @@ var
       _viewModelConstructor: null,
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
-      _virtualScrolling: false,
+      _virtualScrolling: undefined,
       _dragControlId: null,
       _firstLoad: true,
       _itemsPromise: null,
@@ -410,7 +410,7 @@ var
             _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
          }
 
-         if (cfg.virtualScrolling !== this._options.virtualScrolling) {
+         if (cfg.virtualScrollConfig !== this._options.virtualScrollConfig) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);
          }
       },
