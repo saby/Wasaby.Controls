@@ -53,6 +53,9 @@
    .controls-MonthViewVDOM__border-currentMonthDay-unselected {
       &:hover {
          outline: @border-thickness__MonthView-item solid @border-color__MonthView-item-hover;
+         //В EDGE и IE слипаются пиксели просле наведения на блок с днём, блок сверху станет на 1px визуально больше.
+         // Обновляем margin-top по хаверу.
+         margin-top: 0;
       }
    }
 }
