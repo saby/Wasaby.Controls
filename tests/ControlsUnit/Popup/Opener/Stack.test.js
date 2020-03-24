@@ -34,6 +34,10 @@ define(
             return items ? items.templateWidth : 0;
          };
 
+         popupTemplate.StackController._getSideBarWidth = function() {
+            return 200;
+         };
+
          let item = {
             popupOptions: {
                minWidth: 600,
@@ -42,11 +46,10 @@ define(
          };
 
          it('Opener: getConfig', () => {
-            let getStackConfig = popupMod.Stack.prototype._getStackConfig;
-            let config = getStackConfig();
+            let config = popupMod.Stack.prototype._getStackConfig();
             assert.equal(config.isDefaultOpener, true);
 
-            config = getStackConfig({ isDefaultOpener: false });
+            config = popupMod.Stack.prototype._getStackConfig({ isDefaultOpener: false });
             assert.equal(config.isDefaultOpener, false);
          });
 

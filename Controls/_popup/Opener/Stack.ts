@@ -39,7 +39,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
 
 interface IStackOpenerOptions extends IStackPopupOptions, IBaseOpenerOptions {}
 
-const getStackConfig = (config: IStackOpenerOptions = {}) => {
+const getStackConfig = (config: IStackOpenerOptions = {}, popupId?: string) => {
     // The stack is isDefaultOpener by default.
     // For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
@@ -58,7 +58,7 @@ const getStackConfig = (config: IStackOpenerOptions = {}) => {
             managerWrapperMaxZIndex = requirejs(compatibleManagerWrapperName).default.getMaxZIndex();
         }
         const zIndexStep = 9;
-        const item = ManagerController.find(config.id);
+        const item = ManagerController.find(config.id || popupId);
         // zindex окон, особенно на старой странице, никогда не обновлялся внутренними механизмами
         // Если окно уже открыто, zindex не меняем
         if (item) {
@@ -86,7 +86,7 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
     }
 
     private _getStackConfig(popupOptions: IStackOpenerOptions): IStackOpenerOptions {
-        return getStackConfig(popupOptions);
+        return getStackConfig(popupOptions, this._getCurrentPopupId());
     }
 
     static openPopup(config: IStackPopupOptions): Promise<string> {

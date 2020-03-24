@@ -18,6 +18,10 @@ export {default as Control} from 'Controls/_menu/Control';
 export {default as Render} from 'Controls/_menu/Render';
 export {default as Popup} from 'Controls/_menu/Popup';
 export {default as HeaderTemplate} from 'Controls/_menu/Popup/headerTemplate';
+
+export {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
+export {default as IMenuPopup} from 'Controls/_menu/interface/IMenuPopup';
+
 export {
     ItemTemplate,
     GroupTemplate,

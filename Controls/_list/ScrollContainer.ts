@@ -48,6 +48,7 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
         itemHeightProperty?: string;
         viewportHeight?: number;
     };
+    needScrollCalculation: boolean;
     collection: Collection<Record>;
     activeElement: string | number;
 }
@@ -60,6 +61,8 @@ export default class ScrollContainer extends Control<IOptions> {
         topLoadTrigger: HTMLElement;
         bottomLoadTrigger: HTMLElement;
     };
+    private _observerRegistered: boolean = false;
+
     private _virtualScroll: VirtualScroll;
     private _itemsContainer: HTMLElement;
 
@@ -71,12 +74,12 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _triggerVisibility: ITriggerState = {up: false, down: false};
 
-    // В IE иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
+    // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
     // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
     // лишние пересчеты, например: https://online.sbis.ru/opendoc.html?guid=ea354034-fd77-4461-a368-1a8019fcb0d4
     // TODO: этот код должен быть убран после
     // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
-    private get _IEtriggerVisibility(): ITriggerState {
+    private get _calculatedTriggerVisibility(): ITriggerState {
         return {
             up: this._triggerOffset >= this._lastScrollTop,
             down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
@@ -114,12 +117,21 @@ export default class ScrollContainer extends Control<IOptions> {
         this._initVirtualScroll(options);
     }
 
+    protected _registerObserver(): void {
+        if (!this._observerRegistered) {
+            // @ts-ignore
+            this._children.scrollObserver.startRegister(this._children);
+            this._observerRegistered = true;
+        }
+    }
+
     protected _afterMount(): void {
-        this._viewResize(this._container.offsetHeight, false);
-        // @ts-ignore
-        this._children.scrollObserver.startRegister(this._children);
-        this._afterRenderHandler();
         this.__mounted = true;
+        this._viewResize(this._container.offsetHeight, false);
+        if (this._options.needScrollCalculation) {
+            this._registerObserver();
+        }
+        this._afterRenderHandler();
     }
 
     protected _beforeUpdate(options: IOptions): void {
@@ -132,6 +144,12 @@ export default class ScrollContainer extends Control<IOptions> {
             this._indicatorTimeout = setTimeout(() => {
                 this._notify('changeIndicatorState', [true, this._indicatorState]);
             }, LOADING_INDICATOR_SHOW_TIMEOUT);
+        }
+    }
+
+    protected _afterUpdate(oldOptions: IOptions): void {
+        if (this._options.needScrollCalculation) {
+            this._registerObserver();
         }
     }
 
@@ -291,16 +309,18 @@ export default class ScrollContainer extends Control<IOptions> {
      * данных
      */
     private _checkTriggerVisibility(): void {
-        if (!this._applyScrollTopCallback) {
-            if (detection.isIE ? this._IEtriggerVisibility.down : this._triggerVisibility.down) {
+        // TODO будет решено после https://online.sbis.ru/opendoc.html?guid=a88a5697-5ba7-4ee0-a93a-221cce572430
+        // Не нужно запускать проверку на видимость триггеров, если контрол лежит в display: none контейнере
+        // например в switchableArea
+        if (!this._applyScrollTopCallback && !this._container.closest('.ws-hidden')) {
+            if (this._calculatedTriggerVisibility.down) {
                 this._recalcToDirection('down');
             }
 
-            if (detection.isIE ? this._IEtriggerVisibility.up : this._triggerVisibility.up) {
+            if (this._calculatedTriggerVisibility.up) {
                 this._recalcToDirection('up');
             }
         }
-
     }
 
     private _initModelObserving(options: IOptions): void {
@@ -499,6 +519,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _afterRenderHandler(): void {
         if (this._virtualScroll.rangeChanged) {
+            this._viewResize(this._container.offsetHeight, false);
             this._virtualScroll.updateItemsHeights(this._itemsContainer);
         }
 

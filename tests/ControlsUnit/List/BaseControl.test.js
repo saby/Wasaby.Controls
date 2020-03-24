@@ -5450,12 +5450,16 @@ define([
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
 
-         assert.isFalse(portionSearchReseted);
-
+         assert.isTrue(portionSearchReseted);
+         portionSearchReseted = false;
 
          cfgClone.searchValue = 'test';
          instance._beforeUpdate(cfgClone);
 
+         assert.isTrue(portionSearchReseted);
+         portionSearchReseted = false;
+
+         await instance.reload();
          assert.isTrue(portionSearchReseted);
       });
 

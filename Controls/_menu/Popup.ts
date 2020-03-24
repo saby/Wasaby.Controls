@@ -1,4 +1,5 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {IMenuPopup, IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import PopupTemplate = require('wml!Controls/_menu/Popup/template');
 import {default as searchHeaderTemplate} from 'Controls/_menu/Popup/searchHeaderTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -9,13 +10,12 @@ import {Controller as ManagerController} from 'Controls/popup';
 /**
  * Базовый шаблон для {@link Controls/menu:Control}, отображаемого в прилипающем блоке.
  * @class Controls/menu:Popup
- * @extends Controls/_popupTemplate/Sticky
+ * @mixes Controls/_menu/interface/IMenuPopup
+ * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IIconSize
- * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @control
  * @public
  * @category Popup
@@ -23,18 +23,18 @@ import {Controller as ManagerController} from 'Controls/popup';
  */
 const SEARCH_DEPS = ['Controls/list:DataContainer', 'Controls/search:Controller', 'Controls/search:Input', 'Controls/search:InputContainer'];
 
-class Popup extends Control<IControlOptions> {
+class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _template: TemplateFunction = PopupTemplate;
     protected _headerTemplate: TemplateFunction;
     protected _headerTheme: string;
     protected _headingCaption: string;
     protected _headingIcon: string;
     protected _itemPadding: object;
-    protected _closeButtonVisibility: string;
+    protected _closeButtonVisibility: boolean;
     protected _verticalDirection: string = 'bottom';
     protected _horizontalDirection: string = 'right';
 
-    protected _beforeMount(options: IControlOptions): Promise<void>|void {
+    protected _beforeMount(options: IMenuPopupOptions): Promise<void>|void {
         this._headerTheme = this._getTheme();
 
         this._setCloseButtonVisibility(options);
@@ -46,7 +46,7 @@ class Popup extends Control<IControlOptions> {
         }
     }
 
-    protected _beforeUpdate(newOptions: IControlOptions): void {
+    protected _beforeUpdate(newOptions: IMenuPopupOptions): void {
         this._headerTheme = this._getTheme();
 
         if (newOptions.stickyPosition.direction && this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
@@ -59,7 +59,7 @@ class Popup extends Control<IControlOptions> {
         this._notify('sendResult', [action, data], {bubbling: true});
     }
 
-    protected _afterMount(options?: IControlOptions): void {
+    protected _afterMount(options?: IMenuPopupOptions): void {
         this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
     }
 
