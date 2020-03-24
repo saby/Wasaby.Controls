@@ -156,6 +156,10 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         // }
     }
 
+    protected _changeIndicatorOverlay(event: SyntheticEvent<MouseEvent>, config: object): void {
+        config.overlay = 'none';
+    }
+
     protected _isEmptyItem(itemData) {
         return this._options.emptyText && itemData.getContents().getId() === this._options.emptyKey;
     }
