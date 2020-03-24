@@ -245,7 +245,7 @@ define(
             });
          });
 
-         it('itemsChanged', () => {
+         it('itemsChanged', (done) => {
             const config = {
                source: source,
                keyProperty: 'id'
@@ -260,9 +260,10 @@ define(
             let propagationStopped = false;
 
             data._beforeMount(config).addCallback(function() {
-               data._itemsChanged(event, []);
+               const newList = new collection.RecordSet();
+               data._itemsChanged(event, newList);
                assert.isTrue(propagationStopped);
-               assert.deepEqual(data._items, []);
+               assert.equal(data._items, newList);
                done();
             });
          });
