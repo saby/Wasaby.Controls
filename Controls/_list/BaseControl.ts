@@ -711,7 +711,7 @@ var _private = {
             hasMoreData &&
             !sourceController.isLoading();
         const allowLoadBySearch =
-            !self._options.searchValue ||
+            !_private.isPortionedLoad(self) ||
             _private.getPortionedSearch(self).shouldSearch();
 
         if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
