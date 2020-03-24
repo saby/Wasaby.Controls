@@ -2,10 +2,10 @@ define('Controls-demo/Async/AsyncDemo', [
    'Core/Control',
    'Env/Env',
    'wml!Controls-demo/Async/AsyncDemo'
-], function(Control, Env, template) {
+], function(Control, Env, template3) {
 
    var AsyncDemo = Control.extend({
-      _template: template,
+      _template: template3,
       templateName1: 'Controls-demo/Async/testLib:testModule',
       templateName2: 'Controls-demo/Async/testModuleNoLib',
       isOK: 'false',
