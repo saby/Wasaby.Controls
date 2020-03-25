@@ -206,6 +206,7 @@ define(
             expectedOptions.additionalProperty = null;
             expectedOptions.itemPadding = null;
             expectedOptions.searchParam = null;
+            expectedOptions.iWantBeWS3 = false;
 
             let resultOptions = menuControl.getTemplateOptions(item);
             assert.deepEqual(resultOptions, expectedOptions);

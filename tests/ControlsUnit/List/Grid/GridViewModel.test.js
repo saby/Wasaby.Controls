@@ -1833,18 +1833,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(secondRow);
          });
          it('getColumnScrollCellClasses', function() {
-            const fixedCell = ` controls-Grid__cell_fixed controls-background-default_theme-default controls-Grid__cell_fixed_theme-${theme}`;
+            const backgroundStyle = 'controls-background-default_theme-default';
+            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
             const transformCell = ' controls-Grid__cell_transform';
             const params = {
                multiSelectVisibility: 'hidden',
                stickyColumnsCount: 1,
                columnIndex: 0,
                rowIndex: 0,
-               isMultiHeader: false,
+               isMultiHeader: false
             };
             assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
             assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
-
+            assert.equal(backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}));
+            assert.equal(' ' + backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}, true));
          });
 
          it('getBottomPaddingStyles', function() {
