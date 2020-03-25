@@ -18,6 +18,18 @@
    position: absolute;
 }
 
+// safari 13 (iPad, iOS) и chrome (iPad) случае max-width: 1px считают, что scrollWidth элемента 1px, тогда как его offsetWidth 0px.
+// в результате начинает рассчёты StickyHeader тогда, когда это не нужно
+.ws-is-desktop-safari,
+.ws-is-mobile-safari,
+.ws-is-mobile-chrome-ios {
+   .controls-StickyHeader__observationTargetTop,
+   .controls-StickyHeader__observationTargetBottom {
+      max-width: 0;
+      width: 0;
+   }
+}
+
 .controls-StickyHeader__observationTargetTop {
    top: -2px;
 }
