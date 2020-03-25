@@ -58,8 +58,6 @@ type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
  * Предопределённые в теме варианты:
  * * "transparent" (прозрачный фон)
  * * "default" (фон цвета темы)
- * * "master" (цвет для MasterDetail)
- * * "infoBox" (цвет для InfoBox)
  * Возможно также определение собственных префиксов.
  * @default default
  */
@@ -958,27 +956,11 @@ export interface IList {
 /**
  * @name Controls/_list/interface/IList#backgroundStyle
  * @cfg {string} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
- * @remark
- * Пердопределённые в теме варианты:
- * * "transparent" (прозрачный фон)
- * * "default" (фон цвета темы)
- * * "master" (цвет для MasterDetail)
- * * "infoBox" (цвет для InfoBox)
- * Вы можете не указывать эту опцию при использовании опции {@link Controls/_list/interface/IList#style style} для MasterDetail
- * Возможно также определение собственных префиксов.
- * @default default
+ * @default default (фон цвета темы)
  */
 
 /*
  * @name Controls/_list/interface/IList#backgroundStyle
  * @cfg {string} Style prefix to configure background for inner list control components with static or absolute positioning.
- * @remark
- * Variants specified in theme:
- * * "transparent" (transparent background)
- * * "default" (theme background)
- * * "master" (background specified for MasterDetail)
- * * "infoBox" (background specified for InfoBox)
- * You can skip this option while using {@link Controls/_list/interface/IList#style style} option for MasterDetail.
- * Also custom prefixes definition is supported.
- * @default default
+ * @default default (theme background)
  */

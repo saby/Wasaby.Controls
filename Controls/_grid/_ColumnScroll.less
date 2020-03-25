@@ -23,6 +23,13 @@
    box-sizing: border-box;
 }
 
+// Набор классов для установки градиента горизонтального скролла через backgroundStyle (default, transparent)
+.controls-horizontal-gradient-default_theme-@{themeName},
+.controls-horizontal-gradient-transparent_theme-@{themeName} {
+   background: linear-gradient(to right, @start-color-gradient_ColumnScroll-shadow, @end-color-gradient_ColumnScroll-shadow);
+   border-left: 1px solid @border-color_ColumnScroll-shadow;
+}
+
 .controls-ColumnScroll__shadow_invisible {
    visibility: hidden;
 }

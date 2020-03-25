@@ -73,27 +73,13 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
       /**
        * @name Controls/_scroll/StickyHeader#backgroundStyle
        * @cfg {string} Префикс стиля для настройки фона
-       * @remark
-       * Предопределённые в теме варианты:
-       * * "transparent" (прозрачный фон)
-       * * "default" (фон цвета темы)
-       * * "master" (цвет для MasterDetail)
-       * * "infoBox" (цвет для InfoBox)
-       * Возможно также определение собственных префиксов.
-       * @default default
+       * @default default (theme background)
        */
 
       /*
        * @name Controls/_scroll/StickyHeader#backgroundStyle
        * @cfg {string} Style prefix to configure background
-       * @remark
-       * Variants specified in theme:
-       * * "transparent" (transparent background)
-       * * "default" (theme background)
-       * * "master" (background specified for MasterDetail)
-       * * "infoBox" (background specified for InfoBox)
-       * Also custom prefixes definition is supported.
-       * @default default
+       * @default default (theme background)
        */
 
       /**
