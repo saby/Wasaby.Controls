@@ -122,7 +122,7 @@ export default class Popup {
      * Загрузить темизированные стили.
      * @param cssNames Названия модулей, стили которых надо загрузить.
      */
-    private static importThemes(cssNames: string[]): Promise<void> {
+    private static importThemes(cssNames: string[] = []): Promise<void> {
         return import('UI/theme/controller').then(({ getThemeController }) => {
             const tc = getThemeController();
             cssNames.forEach((name) => { tc.get(name); });
