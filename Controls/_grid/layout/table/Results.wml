@@ -1,5 +1,5 @@
 <ws:template name="cell">
-    <td class="{{currentResultsColumn.cellClasses}}">
+    <td class="{{currentResultsColumn.cellClasses}}" style="{{ currentResultsColumn.tableCellStyles }}">
         <ws:if data="{{ !hasMultiSelect || currentResultsColumn.index !== 0 }}">
             <ws:if data="{{!!currentResultsColumn.column.resultTemplate}}">
                 <ws:partial template="{{currentResultsColumn.column.resultTemplate}}"
