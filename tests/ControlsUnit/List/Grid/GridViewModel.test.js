@@ -1608,7 +1608,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(0, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" after "resetResultsColumns()".');
          });
 
-          it('first header cell with breadcrumbs should renders from first column', function () {
+         it('first header cell with breadcrumbs should renders from first column', function () {
               const originBreadcrumbsCell = gridViewModel._headerRows[0][1];
               gridViewModel._headerRows[0][1] = {
                   isBreadCrumbs: true,
@@ -2135,6 +2135,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(current.getCurrentColumn().tableCellStyles, 'min-width: 102px; max-width: 102px;');
             current.goToNextColumn();
             assert.equal(current.getCurrentColumn().tableCellStyles, '');
+         });
+
+         it('tableCellStyles for results', function() {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'hidden',
+               columns: [
+                  { title: 'first', width: '101px' },
+                  { title: 'second', compatibleWidth: '102px', width: '1fr' },
+                  { title: 'third' }
+               ],
+               columnScroll: true
+            });
+
+            const current = model.getCurrentResultsColumn();
+            assert.equal(current.tableCellStyles, 'min-width: 101px; max-width: 101px;');
          });
 
          it('should rowspan checkbox th if multiheader', function () {
