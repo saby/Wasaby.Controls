@@ -126,14 +126,15 @@ export default class extends Control{
       var
           items = this._itemsCustomPlaceholder,
           countItems = items && items.getCount(),
-          parent = countItems ? items.at(countItems - 1).get('id') : null;
+          parent = countItems ? items.at(countItems - 1).get('id') : null,
+          templateOptions = {
+             parent: parent,
+             type: type,
+             multiSelect: false
+          };
 
       this._children.lookupCustomPlaceholder.showSelector({
-         templateOptions: {
-            parent: parent,
-            type: type,
-            multiSelect: false
-         }
+         templateOptions: templateOptions
       });
    }
 
