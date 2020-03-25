@@ -20,7 +20,6 @@ import {throttle} from 'Types/function';
 
 const SCROLLMOVE_DELAY = 150;
 const TRIGGER_VISIBILITY_DELAY = 101;
-const DEFAULT_VIRTUAL_PAGESIZE = 100;
 const LOADING_INDICATOR_SHOW_TIMEOUT = 2000;
 
 let displayLib: typeof import('Controls/display');
@@ -34,9 +33,6 @@ interface IScrollParams {
 }
 
 interface ICompatibilityOptions {
-    virtualPageSize: number;
-    virtualSegmentSize: number;
-    virtualScrolling: boolean;
     useNewModel: boolean;
 }
 
