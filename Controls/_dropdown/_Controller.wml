@@ -55,8 +55,6 @@
               theme="{{_options.theme}}"/>
    </Controls.popup:Sticky>
    <ws:if data="{{_options.selectorTemplate}}">
-      <Controls.Container.Async templateName="Controls/lookup:Opener">
-         <ws:partial template="{{ content.resolvedTemplate }}" name="selectorOpener" on:result="_onSelectorTemplateResult()"/>
-      </Controls.Container.Async>
+      <Controls.popup:Stack name="selectorOpener" on:result="_onSelectorTemplateResult()" />
    </ws:if>
 </div>

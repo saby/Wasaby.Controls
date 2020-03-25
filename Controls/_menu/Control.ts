@@ -1,6 +1,7 @@
 import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
-import {default as IMenuControl, IMenuControlOptions, TKeys} from 'Controls/_menu/interface/IMenuControl';
+import {TSelectedKeys} from 'Controls/interface';
+import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {Controller as SourceController} from 'Controls/source';
 import {RecordSet, List} from 'Types/collection';
 import {ICrud, PrefetchProxy} from 'Types/source';
@@ -23,12 +24,11 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
  * Контрол меню.
  * @class Controls/menu:Control
  * @public
- * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
- * @implements Controls/_menu/IMenuControl
+ * @mixes Controls/_menu/IMenuControl
  * @demo Controls-demo/Menu/Control/Source/Index
  * @control
  * @category Popup
@@ -39,7 +39,7 @@ const SUB_DROPDOWN_OPEN_DELAY = 100;
 
 class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     protected _template: TemplateFunction = ViewTemplate;
-    protected _listModel: Tree;
+    protected _listModel: Tree<Model>;
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _applyButtonVisible: boolean = false;
@@ -133,7 +133,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
-    protected _itemActionClick(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, action: object, clickEvent): void {
+    protected _itemActionClick(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, action: object, clickEvent: MouseEvent): void {
         ItemActionsController.processActionClick(
             this._listModel,
             item.getContents().getKey(),
@@ -231,7 +231,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         this._closeSubMenu();
     }
 
-    private _closeSubMenu(needOpenDropDown = false): void {
+    private _closeSubMenu(needOpenDropDown: boolean = false): void {
         if (this._children.Sticky) {
             this._children.Sticky.close();
         }
@@ -321,7 +321,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             (secondSegmentPointX - firstSegmentPointX) * (firstSegmentPointY - curPointY);
     }
 
-    private getSelectorDialogOptions(options: IMenuControlOptions, selectedItems: object[]): object {
+    private getSelectorDialogOptions(options: IMenuControlOptions, selectedItems: List<Model>): object {
         const self = this;
         const selectorTemplate = options.selectorTemplate;
         const selectorDialogResult = options.selectorDialogResult;
@@ -345,14 +345,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }, selectorTemplate.popupOptions || {});
     }
 
-    private _changeSelection(key: string|number|null, treeItem): void {
+    private _changeSelection(key: string|number|null, treeItem: TreeItem<Model>): void {
         SelectionController.selectItem(this._listModel, key, !treeItem.isSelected());
 
         const isEmptySelected = this._options.emptyText && !this._listModel.getSelectedItems().length;
         SelectionController.selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
     }
 
-    private getSelectedKeys(): TKeys {
+    private getSelectedKeys(): TSelectedKeys {
         let selectedKeys = [];
         factory(this._listModel.getSelectedItems()).each((treeItem) => {
             selectedKeys.push(treeItem.getContents().get(this._options.keyProperty));
@@ -364,7 +364,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         return factory(this._listModel.getSelectedItems()).map((item) => item.getContents()).reverse().value();
     }
 
-    private getSelectedItemsByKeys(listModel: Tree, selectedKeys: TKeys): Model[] {
+    private getSelectedItemsByKeys(listModel: Tree<Model>, selectedKeys: TSelectedKeys): Model[] {
         let items = [];
         factory(selectedKeys).each((key) => {
             if (listModel.getItemBySourceKey(key)) {
@@ -378,7 +378,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         return index <= this._itemsCount;
     }
 
-    private isSelectedKeysChanged(newKeys: TKeys, oldKeys: TKeys): boolean {
+    private isSelectedKeysChanged(newKeys: TSelectedKeys, oldKeys: TSelectedKeys): boolean {
         const diffKeys = factory(newKeys).filter((key) => !oldKeys.includes(key)).value();
         return newKeys.length !== oldKeys.length || !!diffKeys.length;
     }
@@ -462,7 +462,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         return item.get(options.groupProperty) || ControlsConstants.view.hiddenGroup;
     }
 
-    private setSelectedItems(listModel: Tree, keys: TKeys): void {
+    private setSelectedItems(listModel: Tree, keys: TSelectedKeys): void {
         listModel.setSelectedItems(this.getSelectedItemsByKeys(listModel, keys), true);
     }
 
@@ -587,7 +587,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         );
     }
 
-    private _assignItemActions(options): void {
+    private _assignItemActions(options: IMenuControlOptions): void {
         const itemActions = options.itemActions;
 
         if (!itemActions) {
