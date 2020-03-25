@@ -104,6 +104,7 @@ export interface IList {
     backgroundStyle?: string;
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
+    checkboxReadOnly?: boolean;
 }
 
 /*
@@ -938,5 +939,17 @@ export interface IList {
 /*
  * @name Controls/_list/interface/IList#backgroundStyle
  * @cfg {string} Style prefix to configure background for inner list control components with static or absolute positioning.
+ * @default default (theme background)
+ */
+
+/**
+ * @name Controls/_list/interface/IList#checkboxReadOnly
+ * @cfg {boolean} Флаг, позволяющий установить всем checkbox в колонке multiSelect режим "только для чтения".
+ * @default false ()
+ */
+
+/*
+ * @name Controls/_list/interface/IList#checkboxReadOnly
+ * @cfg {boolean} Flag, allowing to set "readonly" state for every checkbox within multiSelect column.
  * @default default (theme background)
  */
