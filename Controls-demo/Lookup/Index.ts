@@ -154,7 +154,7 @@ export default class extends Control{
          template: selectorTemplate,
          templateOptions: templatesOptions[type]
       });
-   },
+   }
 
    protected _itemsChanged(event, items) {
       let
