@@ -13,11 +13,13 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  *
  * @class Controls/_dropdown/Button
  * @extends Core/Control
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/ITooltip
+ * @mixes Controls/_menu/interface/IMenuPopup
+ * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/interface/IDropdown
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
@@ -26,6 +28,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/_interface/ISearch
  * @control
  * @public
  * @author Герасимов А.М.

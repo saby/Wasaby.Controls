@@ -1,8 +1,8 @@
-import {IControlOptions, TemplateFunction} from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 import {ISearch} from 'Controls/interface';
 import {IMenuControlOptions} from 'Controls/menu';
 
-export interface IMenuPopupOptions extends IControlOptions, IMenuControlOptions, ISearch {
+export interface IMenuPopupOptions extends IMenuControlOptions, ISearch {
     headerContentTemplate: TemplateFunction;
     footerContentTemplate: TemplateFunction;
     closeButtonVisibility: boolean;
@@ -113,6 +113,7 @@ export default interface IMenuPopup {
  * @name Controls/_menu/interface/IMenuPopup#searchParam
  * @cfg {String} Имя поля фильтра, в значение которого будет записываться текст для поиска.
  * Фильтр с этим значением будет отправлен в поисковой запрос в источнику данных.
+ * @demo Controls-demo/Menu/Popup/SearchParam/Index
  * @example
  * <pre>
  * <Controls.menu:Popup
@@ -133,4 +134,10 @@ export default interface IMenuPopup {
  *    ]
  * });
  * </pre>
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuPopup#emptyTemplate
+ * @cfg {Function} Шаблон, который будет отображаться в выпадающем списке, если поисковой запрос не вернул результатов.
+ * @demo Controls-demo/Menu/Popup/SearchParam/EmptyTemplate/Index
  */
