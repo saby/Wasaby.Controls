@@ -89,28 +89,4 @@ define('Controls/interface/IItemTemplate', [
     * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
     * @demo Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/Index
     */
-
-   /**
-    * @name Controls/interface/IItemTemplate#checkboxReadOnly
-    * @cfg {boolean} Флаг, позволяющий установить всем checkbox в колонке multiSelect режим "только для чтения".
-    * @default false
-    */
-
-   /*
-    * @name Controls/interface/IItemTemplate#checkboxReadOnly
-    * @cfg {boolean} Flag, allowing to set "readonly" state for every checkbox within multiSelect column.
-    * @default false
-    */
-
-   /**
-    * @name Controls/interface/IItemTemplate#cursor
-    * @cfg {string} префикс CSS класса, задающего стиль курсора (стрелка/рука)
-    * @default default (рука)
-    */
-
-   /*
-    * @name Controls/interface/IItemTemplate#cursor
-    * @cfg {string} prefix for css class, that sets the cursor style (default/pointer)
-    * @default (pointer)
-    */
 });
