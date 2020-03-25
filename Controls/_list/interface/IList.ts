@@ -104,7 +104,6 @@ export interface IList {
     backgroundStyle?: string;
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
-    checkboxReadOnly?: boolean;
 }
 
 /*
