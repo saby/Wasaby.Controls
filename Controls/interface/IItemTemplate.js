@@ -25,17 +25,17 @@ define('Controls/interface/IItemTemplate', [
     * @demo Controls-demo/list_new/ItemTemplate/CustomContent/Index
     * @remark
     * Позволяет установить прикладной шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке прикладного шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/list:ItemTemplate}.
-    * 
+    *
     * По умолчанию Controls/list:ItemTemplate отображает значение поля, имя которого задано в опции {@link Controls/list:ItemTemplate#displayProperty displayProperty}. Об этом следует помнить при настройке источника данных контрола. Также шаблон Controls/list:ItemTemplate поддерживает {@link Controls/list:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
-    * 
+    *
     * В разделе "Примеры" показано как с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать прикладной шаблон Controls/list:ItemTemplate. Также в опцию itemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/list:ItemTemplate.
-    * 
+    *
     * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ руководстве разработчика}.
     * @example
     * <pre class="brush: html">
     * <Controls.list:View>
     *    <ws:itemTemplate>
-    *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}"> 
+    *       <ws:partial template="Controls/list:ItemTemplate" marker="{{false}}" scope="{{itemTemplate}}">
     *          <ws:contentTemplate>
     *             {{contentTemplate.itemData.item.title}}
     *          </ws:contentTemplate>
@@ -65,7 +65,7 @@ define('Controls/interface/IItemTemplate', [
     * <pre>
     *    <Controls.list:View>
     *       <ws:itemTemplate>
-    *          <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}"> 
+    *          <ws:partial template="Controls/list:ItemTemplate" scope="{{itemTemplate}}">
     *             <ws:contentTemplate>
     *                <span>{{contentTemplate.itemData.item.description}}</span>
     *             </ws:contentTemplate>
@@ -88,5 +88,29 @@ define('Controls/interface/IItemTemplate', [
     * @name Controls/interface/IItemTemplate#itemTemplateProperty
     * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
     * @demo Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/Index
+    */
+
+   /**
+    * @name Controls/interface/IItemTemplate#checkboxReadOnly
+    * @cfg {boolean} Флаг, позволяющий установить всем checkbox в колонке multiSelect режим "только для чтения".
+    * @default false
+    */
+
+   /*
+    * @name Controls/interface/IItemTemplate#checkboxReadOnly
+    * @cfg {boolean} Flag, allowing to set "readonly" state for every checkbox within multiSelect column.
+    * @default false
+    */
+
+   /**
+    * @name Controls/interface/IItemTemplate#cursor
+    * @cfg {string} префикс CSS класса, задающего стиль курсора (стрелка/рука)
+    * @default default (рука)
+    */
+
+   /*
+    * @name Controls/interface/IItemTemplate#cursor
+    * @cfg {string} prefix for css class, that sets the cursor style (default/pointer)
+    * @default (pointer)
     */
 });
