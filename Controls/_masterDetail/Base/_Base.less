@@ -54,6 +54,12 @@
 }
 
 
+// Набор классов для установки градиента горизонтального скролла через backgroundStyle (master, detail)
+.controls-horizontal-gradient-master_theme-@{themeName} {
+   background: linear-gradient(to right, @start-color-gradient_ColumnScroll-shadow, @end-color-gradient_ColumnScroll-shadow);
+   border-left: 1px solid @border-color_ColumnScroll-shadow;
+}
+
 .ws-is-ie,
 .ws-is-mobile-safari,
 .ws-is-desktop-safari {

@@ -226,7 +226,7 @@ var
         },
 
         getColumnScrollCellClasses: function(params, theme) {
-           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed ${_private.getBackgroundStyle({style: params.style, theme})} controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
+           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
         },
 
         getClassesLadderHeading(itemData, theme): String {
@@ -240,6 +240,7 @@ var
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll');
             const style = current.style || 'default';
+            const backgroundStyle = current.backgroundStyle || current.style || 'default';
 
             // Стиль колонки
             const rowSeparatorSize = ` controls-Grid__row-cell_rowSeparatorSize-${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? 'l' : 's'}_theme-${theme} `;
@@ -248,6 +249,7 @@ var
 
             if (current.columnScroll) {
                 classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
+                classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             } else if (!checkBoxCell) {
                 classLists.base += ' controls-Grid__cell_fit';
             }
@@ -255,7 +257,7 @@ var
             if (current.isEditing) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
-                classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`
+                classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -263,13 +265,19 @@ var
                 classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
                 classLists.padding = createClassListCollection('top', 'bottom');
                 classLists.padding.top = `controls-Grid__row-cell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
-                classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`
+                classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
             } else {
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
             if (current.isSelected) {
-                classLists.base += ` controls-Grid__row-cell_selected ${_private.getBackgroundStyle({theme, style})} controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+
+                // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
+                // нужно его принудительно установить как фон таблицы
+                if (!GridLayoutUtil.isFullGridSupport()) {
+                    classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
+                }
 
                 if (current.columnIndex === 0) {
                     classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
@@ -422,10 +430,11 @@ var
 
         /**
          * Возвращает CSS класс для установки background
-         * @param options
+         * @param options Опции IList | объект, содержащий theme, style, backgroundStyle
+         * @param addSpace Добавлять ли пробел перед выводимой строкой
          */
-        getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string}): string {
-            return `controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
+        getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string}, addSpace?: boolean): string {
+            return `${addSpace ? ' ' : ''}controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
         },
 
         /**
@@ -752,6 +761,7 @@ var
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 }, this._options.theme);
+                cellClasses += _private.getBackgroundStyle(this._options, true);
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
