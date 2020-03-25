@@ -25,16 +25,14 @@ var _private = {
       return POPUP_CLASS_NAME + '_' + verAlign;
    },
 
-   setPopupOptions: function(self) {
+   setPopupOptions: function(self, options) {
+      const direction = options.suggestPopupOptions && options.suggestPopupOptions.direction || {vertical: 'bottom'};
+      const targetPoint = options.suggestPopupOptions && options.suggestPopupOptions.targetPoint || {vertical: 'bottom'};
       self._popupOptions = {
          autofocus: false,
-         className: _private.getPopupClassName('bottom'),
-         direction: {
-            vertical: 'bottom'
-         },
-         targetPoint: {
-            vertical: 'bottom'
-         },
+         className: _private.getPopupClassName(direction.vertical),
+         direction: direction,
+         targetPoint: targetPoint,
          eventHandlers: {
             onResult: self._onResult
          },
@@ -47,10 +45,10 @@ var __PopupLayer = Control.extend({
 
    _template: template,
 
-   _beforeMount: function() {
+   _beforeMount: function(options) {
       this._onResult = this._onResult.bind(this);
       this._resizeCallback = this._resizeCallback.bind(this);
-      _private.setPopupOptions(this);
+      _private.setPopupOptions(this, options);
    },
 
    _afterMount: function(options) {
