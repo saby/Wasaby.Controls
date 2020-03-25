@@ -674,7 +674,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         /*
         * Стандартное поведение. При нажатии "Галки" в операциях над записью, возможно два варианта дальнейшего поведения:
         * 1) если сохраняется уже существующая запись, то она просто сохраняется, курсор остается на строке, редактирование закрывается.
-        * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и начинается добавление новой.
+        * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и (при editingConfig.autoAddByApplyButton=true) начинается добавление новой.
         * */
         if (this._isAdd) {
             _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
