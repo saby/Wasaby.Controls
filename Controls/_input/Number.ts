@@ -125,6 +125,62 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  *
  */
 
+/*
+ * @name Controls/_input/Number#valueChanged
+ * @event Происходит при изменении отображаемого значения контрола ввода.
+ * @param {String | Number} value Значение контрола ввода.
+ * @param {String} displayValue Отображаемое значение контрола ввода.
+ * @remark
+ * Событие используется в качестве реакции на изменения, вносимые пользователем.
+ * @example
+ * Контрол ввода числа с информационной подсказкой. Подсказка содержит информацию об унивкальности цифр в числе.
+ * <pre>
+ *     <Controls.input:Number name="number" on:valueChanged="_validateNumber()"/>
+ *
+ *     export class InfoNumber extends Control<IControlOptions, void> {
+ *         private _validateNumber(event, value) {
+ *             let cfg = {
+ *                 target: this._children.number,
+ *                 targetSide: 'top',
+ *                 alignment: 'end',
+ *                 message: null
+ *             }
+ *
+ *             ...
+ *
+ *             this._notify('openInfoBox', [cfg], {
+ *                 bubbling: true
+ *             });
+ *         }
+ *     }
+ * </pre>
+ *
+ * @see value
+ */
+
+/*
+ * @name Controls/_input/Number#inputCompleted
+ * @event Происходит при завершении ввода. Завершение ввода — это контрол потерял фокус, или пользователь нажал клавишу "Enter".
+ * @param {String | Number} value Значение контрола ввода.
+ * @param {String} displayValue Отображаемое значение контрола ввода.
+ * @remark
+ * Событие используется в качестве реакции на завершение ввода пользователем. Например, проверка на валидность введенных данных или отправка данных в другой контрол.
+ * @example
+ * Подписываемся на событие inputCompleted и сохраняем значение поля в базе данных.
+ * <pre>
+ *    <Controls.input:Number on:inputCompleted="_inputCompletedHandler()"/>
+ *
+ *    export class Form extends Control<IControlOptions, void> {
+ *        ...
+ *        private _inputCompletedHandler(event, value) {
+ *            this._saveEnteredValueToDatabase(value);
+ *        }
+ *        ...
+ *    }
+ * </pre>
+ * @see value
+ */
+
 var _private = {
     validateOptions: function (options) {
         if (options.integersLength <= 0) {
