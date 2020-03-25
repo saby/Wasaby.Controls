@@ -88,7 +88,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
        * @variant true Показать фон.
        * @variant false Не показывать.
        * @default true
-       * @deprecated необходимо использовать backgroundStyle="transparent"
+       * @deprecated необходимо определить пользовательский префикс стиля или использовать backgroundStyle="transparent".
        */
 
       /*
@@ -97,7 +97,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
        * @variant true Show.
        * @variant false Do not show.
        * @default true
-       * @deprecated prefer using backgroundStyle="transparent"
+       * @deprecated you have to define custom style prefix or to use backgroundStyle="transparent"
        */
 
       /**
