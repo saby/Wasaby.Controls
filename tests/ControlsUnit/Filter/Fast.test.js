@@ -7,11 +7,9 @@ define(
       'Controls/history',
       'Types/entity',
       'Core/Deferred',
-      'Application/Env',
-      'Controls/_history/DataStorage',
-      'Controls/_history/LoadPromisesStorage'
+      'Application/Env'
    ],
-   function(filterMod, sourceLib, Clone, collection, history, entity, Deferred, Env, DataStorage, LoadPromisesStorage) {
+   function(filterMod, sourceLib, Clone, collection, history, entity, Deferred, Env) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
