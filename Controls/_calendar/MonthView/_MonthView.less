@@ -34,8 +34,8 @@
    display: flex;
    align-items: center;
    justify-content: center;
-   margin-top: @border-thickness__MonthView-item;
-   margin-left: @border-thickness__MonthView-item;
+   border-top: @border-thickness__MonthView-item solid @border-color_MonthView-item;
+   border-left: @border-thickness__MonthView-item solid @border-color_MonthView-item;
    box-sizing: content-box;
 }
 
@@ -52,6 +52,12 @@
 
    .controls-MonthViewVDOM__border-currentMonthDay-unselected {
       &:hover {
+         //В браузерах EDGE и IE слипаются пкисели у дней (верхний блок дня становится выше на 1px). Проблема решается,
+         //если при хавере мы поменяем border на margin.
+         border: none;
+         z-index: 1;
+         margin-left: @border-thickness__MonthView-item;
+         margin-top: @border-thickness__MonthView-item;
          outline: @border-thickness__MonthView-item solid @border-color__MonthView-item-hover;
       }
    }
@@ -64,6 +70,12 @@
 .controls-MonthViewVDOM__item-selectedEnd-unfinished {
    outline-style: solid;
    outline-width: @border-thickness__MonthView-item;
+   //В браузерах EDGE и IE слипаются пкисели у дней (верхний блок дня становится выше на 1px). Проблема решается,
+   //если при хавере мы поменяем border на margin. Делаем тоже самое для выбранного периода, только на слой выше.
+   z-index: 2;
+   border: none;
+   margin-top: @border-thickness__MonthView-item;
+   margin-left: @border-thickness__MonthView-item;
 }
 
 .controls-MonthViewVDOM__item-selectedStart,
@@ -92,7 +104,10 @@
 .controls-MonthViewVDOM__item-selectedStartEnd {
    outline: @border-color_RangeSelection-selected-startEnd-edgeBorder solid @border-thickness_RangeSelection-selected-startEnd;
    outline-offset: @border-thickness_RangeSelection - @border-thickness_RangeSelection-selected-startEnd;
-   z-index: 1; //При масштабе 150% соседние блоки наезжают на outline
+   z-index: 2; //При масштабе 150% соседние блоки наезжают на outline. Делаем на слой выше чем блок с невыбранным днём при наведении.
+   border: none;
+   margin-top: @border-thickness__MonthView-item;
+   margin-left: @border-thickness__MonthView-item;
 }
 
 .controls-MonthViewVDOM__item-today-background {
