@@ -730,8 +730,7 @@ define([
             assert.isFalse(isEventResultReturns);
             assert.deepEqual({
                ...explorer._restoredMarkedKeys,
-               itemId: {
-                  parent: null,
+               null: {
                   markedKey: null
                }
             }, explorer._restoredMarkedKeys);
