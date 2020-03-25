@@ -190,6 +190,7 @@ define(
             expectedOptions.headerContentTemplate = null;
             expectedOptions.additionalProperty = null;
             expectedOptions.itemPadding = null;
+            expectedOptions.iWantBeWS3 = false;
 
             let menuControl = getMenu();
             menuControl._listModel = getListModel();
@@ -304,6 +305,16 @@ define(
             item.set('parent', '1');
             isVisible = menuControl.displayFilter(hierarchyOptions, item);
             assert.isFalse(isVisible);
+         });
+
+         it('_changeIndicatorOverlay', function() {
+            let menuControl = getMenu();
+            let indicatorConfig = {
+               delay: 100,
+               overlay: 'default'
+            };
+            menuControl._changeIndicatorOverlay('showIndicator', indicatorConfig);
+            assert.equal(indicatorConfig.overlay, 'none');
          });
 
       });
