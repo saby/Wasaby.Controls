@@ -25,6 +25,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_buttons/interface/IButton
+ * @mixes Controls/_dropdown/interface/IGrouped
  * @control
  * @public
  * @author Герасимов А.М.
@@ -53,6 +54,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
+ * @mixes Controls/_dropdown/interface/IGrouped
  * @control
  * @public
  * @author Герасимов А.М.
