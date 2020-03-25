@@ -1,8 +1,17 @@
-import {BindingMixin, CrudEntityKey, ICrud, IDecorator} from 'Types/source';
-import {ObservableMixin, Record} from 'Types/entity';
+import {CrudEntityKey, ICrud, IDecorator} from 'Types/source';
+import {Record} from 'Types/entity';
+
+interface IAddFieldsOptions {
+   passAddFieldsFromMeta?: boolean;
+}
+
+interface IOptions {
+   getOptions(): object;
+   setOptions(options: object): void;
+}
 
 export function readWithAdditionalFields(
-    source: ICrud | IDecorator | ObservableMixin | BindingMixin,
+    source: ICrud | IDecorator | IOptions,
     key: CrudEntityKey,
     metaData?: unknown
 ): Promise<Record> {
@@ -10,25 +19,11 @@ export function readWithAdditionalFields(
         (source as IDecorator).getOriginal() :
         source;
 
-    const needAdditionalFiedls = metaData && (targetSource as ObservableMixin).subscribe &&
-        (targetSource as BindingMixin).getBinding;
-
-    let handler;
-    if (needAdditionalFiedls) {
-        const sourceBinding = (targetSource as BindingMixin).getBinding() || {};
-        handler = (event, name, args) => {
-            if (name === sourceBinding.read) {
-                args.ДопПоля = metaData;
-            }
-        };
-        (targetSource as ObservableMixin).subscribe('onBeforeProviderCall', handler);
+    if ((targetSource as IOptions).getOptions) {
+        const options: IAddFieldsOptions = (targetSource as IOptions).getOptions();
+        options.passAddFieldsFromMeta = true;
+        (targetSource as IOptions).setOptions(options);
     }
 
-    const result = (targetSource as ICrud).read(key);
-
-    if (needAdditionalFiedls) {
-        (targetSource as ObservableMixin).unsubscribe('onBeforeProviderCall', handler);
-    }
-
-    return result;
+    return (targetSource as ICrud).read(key, metaData as object);
 }
