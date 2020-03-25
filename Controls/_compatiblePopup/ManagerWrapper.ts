@@ -6,10 +6,15 @@ import Control = require('Core/Control');
 import Controller from 'Controls/Popup/Compatible/ManagerWrapper/Controller';
 import template = require('wml!Controls/_compatiblePopup/ManagerWrapper/ManagerWrapper');
 import {Controller as ControllerPopup} from 'Controls/popup';
+import {setController} from 'Controls/Application/SettingsController';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
 var ManagerWrapper = Control.extend({
    _template: template,
+
+   _beforeMount: function() {
+      return this._loadViewSettingsController();
+   },
 
    _afterMount: function() {
       Controller.registerManager(this);
@@ -24,6 +29,18 @@ var ManagerWrapper = Control.extend({
       this._mouseupPage = this._eventRegistratorHandler.bind(this, 'mouseupDetect');
 
       this._toggleWindowHandlers(true);
+   },
+
+   _loadViewSettingsController: function() {
+      const isBilling = document.body.classList.contains('billing-page');
+      // Совместимость есть на онлайне и в биллинге. В биллинге нет ViewSettings и движения границ
+      if (!isBilling) {
+         // Только для онлайна напрямую гружу контроллер Лобастова для получения конфига
+         return import('ViewSettings/controller').then((ViewController) => {
+            setController(ViewController.Settings);
+         });
+      }
+      return Promise.resolve();
    },
 
    _beforePopupDestroyedHandler: function() {
