@@ -57,7 +57,7 @@ export interface IHeaderCell extends IControlOptions {
      * <Controls.grid:View>
      *    <ws:header>
      *       <ws:Array>
-     *          <ws:Object>
+     *          <ws:Object title="City">
      *             <ws:template>
      *                <ws:partial template="Controls/grid:HeaderContent">
      *                   <ws:contentTemplate>
@@ -77,7 +77,7 @@ export interface IHeaderCell extends IControlOptions {
      * <Controls.grid:View>
      *    <ws:header>
      *       <ws:Array>
-     *          <ws:Object>
+     *          <ws:Object title="City">
      *             <ws:template>
      *                <ws:partial template="wml!file2" scope="{{template}}"/>
      *             </ws:template>
@@ -103,7 +103,7 @@ export interface IHeaderCell extends IControlOptions {
      * <Controls.grid:View>
      *    <ws:header>
      *       <ws:Array>
-     *          <ws:Object>
+     *          <ws:Object title="City">
      *             <ws:template>
      *                <ws:partial template="Controls/grid:HeaderContent">
      *                   <ws:contentTemplate>
