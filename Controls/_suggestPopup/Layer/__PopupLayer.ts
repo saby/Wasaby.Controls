@@ -26,18 +26,21 @@ var _private = {
    },
 
    setPopupOptions: function(self, options) {
-      const direction = options.suggestPopupOptions && options.suggestPopupOptions.direction || {vertical: 'bottom'};
-      const targetPoint = options.suggestPopupOptions && options.suggestPopupOptions.targetPoint || {vertical: 'bottom'};
-      self._popupOptions = {
+      const config =  {
          autofocus: false,
-         className: _private.getPopupClassName(direction.vertical),
-         direction: direction,
-         targetPoint: targetPoint,
+         className: _private.getPopupClassName('bottom'),
+         direction: {
+            vertical: 'bottom'
+         },
+         targetPoint: {
+            vertical: 'bottom'
+         },
          eventHandlers: {
             onResult: self._onResult
          },
          resizeCallback: self._resizeCallback
       };
+      self._popupOptions = {...config, ...options.suggestPopupOptions || {}};
    }
 };
 
