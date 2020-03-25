@@ -170,7 +170,7 @@ export default class extends Control{
             if (parentId) {
                correctKeys.push(parentId);
             }
-         }
+         });
       }
       this._selectedKeyCustomPlaceholder = correctKeys;
    }
