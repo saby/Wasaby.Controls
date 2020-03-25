@@ -38,9 +38,10 @@ define(
 
             it('The browser does not support sticky', function() {
                inst._isStickySupport = false;
+               inst._options.theme = 'default';
                inst._options.content = TemplateUtil.content;
 
-               assert.equal(template(inst), '<div><div>testing the template</div></div>');
+               assert.equal(template(inst), '<div class="controls-background-default_theme-default"><div>testing the template</div></div>');
             });
 
             it('The browser does support sticky', function() {

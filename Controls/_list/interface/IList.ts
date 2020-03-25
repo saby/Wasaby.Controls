@@ -101,6 +101,7 @@ export interface IList {
     dataLoadCallback?: (items) => void;
     dataLoadErrback?: () => void;
     style?: TListStyle;
+    backgroundStyle?: string;
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
 }
@@ -926,4 +927,16 @@ export interface IList {
 /*
  * @cfg {ItemPadding} Configuration inner paddings in the item.
  * @name Controls/_list/interface/IList#itemPadding
+ */
+
+/**
+ * @name Controls/_list/interface/IList#backgroundStyle
+ * @cfg {string} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
+ * @default default (фон цвета темы)
+ */
+
+/*
+ * @name Controls/_list/interface/IList#backgroundStyle
+ * @cfg {string} Style prefix to configure background for inner list control components with static or absolute positioning.
+ * @default default (theme background)
  */
