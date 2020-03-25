@@ -61,11 +61,10 @@ var _private = {
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_dropdown/interface/IDropdownSource
+ * @mixes Controls/interface/IDropdown
  * @mixes Controls/_interface/IFilter
  * @mixes Controls/Input/interface/IValidation
- * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/interface/IDropdown
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/IFontSize
@@ -262,11 +261,6 @@ var _private = {
  *       }
  *    }
  * </pre>
- */
-
-/**
- * @name Controls/_dropdown/Input#emptyTemplate
- * @cfg {Function} Шаблон, который будет отображаться в выпадающем списке, если поисковой запрос не вернул результатов.
  */
 
 var Input = Control.extend({
