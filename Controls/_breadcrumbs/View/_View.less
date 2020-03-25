@@ -25,7 +25,7 @@
 
 .controls-BreadCrumbsView__items__middle {
    overflow: hidden;
-   display: inline-block;
+   display: inline-flex;
    white-space: nowrap;
    flex-shrink: 1;
    font-size: 0;
@@ -41,10 +41,11 @@
 .controls-BreadCrumbsView__crumb_theme-@{themeName} {
    height: @height_BreadCrumbs-items;
    color: @color_BreadCrumbs-title;
-   &:before {
+   padding-right: @spacing_default_xxs;
+
+   &::before {
       font-size: @font-size_BreadCrumbs-baseline;
    }
-   padding-right: @spacing_default_xxs;
 }
 .controls-BreadCrumbsView__crumb__left_edge {
    padding: 0 @spacing_default_xxs;
@@ -75,7 +76,8 @@
    box-shadow: @box-shadow_BreadCrumbs-menu;
    color: @color_BreadCrumbs-title;
    height: @height_BreadCrumbs-items;
-   &:before {
+
+   &::before {
       font-size: @font-size_BreadCrumbs-baseline;
    }
 }
