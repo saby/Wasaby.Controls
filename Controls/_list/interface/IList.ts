@@ -868,39 +868,39 @@ export interface IList {
 /**
  * @typedef {Object} VerticalItemPaddingEnum
  * @variant null Без отступа.
- * @variant S Маленький отступ.
- * @default S
+ * @variant s Маленький отступ.
+ * @default s
  */
 
 /*
  * @typedef {Object} VerticalItemPaddingEnum
  * @variant null Without padding.
- * @variant S Small padding.
- * @default S
+ * @variant s Small padding.
+ * @default s
  */
 
 /**
  * @typedef {Object} HorizontalItemPaddingEnum
  * @variant null Без отступа.
- * @variant XS Минимальный отступ.
- * @variant S Маленький отступ.
- * @variant M Средний отступ.
- * @variant L Большой отступ.
- * @variant XL Очень большой оступ.
- * @variant XXL Максимальный отступ.
+ * @variant xs Минимальный отступ.
+ * @variant s Маленький отступ.
+ * @variant m Средний отступ.
+ * @variant l Большой отступ.
+ * @variant xl Очень большой оступ.
+ * @variant xxl Максимальный отступ.
  * @default M
  */
 
 /*
  * @typedef {Object} HorizontalItemPaddingEnum
  * @variant null without padding.
- * @variant XS Extra small padding.
- * @variant S Small padding.
- * @variant M Medium padding.
- * @variant L Large padding.
- * @variant XL Extra large padding.
- * @variant XXL Extra extra large padding.
- * @default M
+ * @variant xs Extra small padding.
+ * @variant s Small padding.
+ * @variant m Medium padding.
+ * @variant l Large padding.
+ * @variant xl Extra large padding.
+ * @variant xxl Extra extra large padding.
+ * @default m
  */
 
 /**
