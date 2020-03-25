@@ -4,7 +4,8 @@
  * @library Controls/menu
  * @includes Control Controls/menu:Control
  * @includes Popup Controls/menu:Popup
- * @includes IMenuControl Controls/_menu/interface/IMenuControl
+ * @includes IMenuControlOptions Controls/_menu/interface/IMenuControl
+ * @includes IMenuPopupOptions Controls/_menu/interface/IMenuPopup
  * @includes ItemTemplate Controls/menu:ItemTemplate
  * @public
  * @author Крайнов Д.О.
