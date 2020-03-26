@@ -201,6 +201,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
+    get shadowVisibility(): SHADOW_VISIBILITY {
+        return this._options.shadowVisibility;
+    }
+
     protected _resizeHandler(): void {
         this._notify('stickyHeaderResize', [], {bubbling: true});
     }
