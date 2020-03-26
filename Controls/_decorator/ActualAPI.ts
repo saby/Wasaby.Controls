@@ -174,5 +174,9 @@ export function highlightOptions(options: IHighlightOptions, useLogging: boolean
         highlightMode = options.searchMode;
     }
 
-    return <IHighlightOptions>{value, highlightedValue, className, highlightMode};
+    if (!className) {
+        className = `controls-Highlight_highlight_theme-${options.theme}`;
+    }
+
+    return {value, highlightedValue, className, highlightMode} as IHighlightOptions;
 }
