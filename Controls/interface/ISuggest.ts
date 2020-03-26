@@ -363,7 +363,7 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#suggestPopupOptions
-       * @cfg {Controls/popup:IStickyPopupOptions} Объект, содержащий информацию о фиксированном положении автодополнения при открытии.
+       * @cfg {Controls/popup:IStickyPopupOptions} Конфигурация всплывающего блока автодополнения.
        * @example
        * В этом примере автодополнение будет открыто вверх.
        * myModule.js
@@ -398,7 +398,7 @@ interface ISuggest {
 
       /*
        * @name Controls/interface/ISuggest#suggestPopupOptions
-       * @cfg {Controls/popup:IStickyPopupOptions} An object containing information about a fixed position of popup when suggest is opened.
+       * @cfg {Controls/popup:IStickyPopupOptions} Suggest popup configuration.
        * @example
        * In this example, suggest will open up.
        * myModule.js
