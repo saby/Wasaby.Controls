@@ -12,10 +12,10 @@ import { TemplateFunction } from 'UI/Base';
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 /**
  * @typedef {String} TIconStyle
- * @variant default
- * @variant attention
- * @variant error
- * @variant done
+ * @variant secondary
+ * @variant warning
+ * @variant success
+ * @variant danger
  */
 type TIconStyle = 'secondary'|'warning'|'success'|'danger';
 /**
