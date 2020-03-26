@@ -1,4 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
 import {descriptor} from 'Types/entity';
 import Context = require('Controls/_scroll/StickyHeader/Context');
@@ -126,6 +127,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _afterMount(): void {
         const children = this._children;
 
+        // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
+        // отказаться от closest.
+        this._scroll = this._container.closest('.controls-Scroll');
+        if (!this._scroll) {
+            Logger.warn('Controls.scroll:StickyHeader: Используются фиксация заголовков вне Controls.scroll:Container. Либо используйте Controls.scroll:Container, либо уберите, либо отключите фиксацию заголовков в контролах в которых она включена.', this);
+            return;
+        }
+
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
@@ -134,9 +143,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             mode: this._options.mode
         }, true], {bubbling: true});
 
-        // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
-        // отказаться от closest.
-        this._scroll = this._container.closest('.controls-Scroll');
         this._observer = new IntersectionObserver(
                 this._observeHandler,
                 { root: this._scroll }
