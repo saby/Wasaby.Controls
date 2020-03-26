@@ -41,7 +41,6 @@ export interface IEmptyTemplateProp {
  * @property {String} templateName Name of template, which will showing in bottom of suggest.
  * @property {Object} templateOptions Options for template, which is specified in the templateName field.
  */
-
 export interface ISuggestFooterTemplate {
    templateName: string;
    templateOptions: object;
