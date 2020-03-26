@@ -247,8 +247,9 @@ define(
             menuControl.isMouseInOpenedItemArea = function() {
                return true;
             };
-            menuControl._footerMouseEnter(event);
             isClosed = false;
+            menuControl._footerMouseEnter(event);
+            assert.isFalse(isClosed);
          });
 
          it('getSelectedItemsByKeys', function() {
