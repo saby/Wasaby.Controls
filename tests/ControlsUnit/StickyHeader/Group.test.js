@@ -306,7 +306,6 @@ define([
                };
             component._stickyRegisterHandler(event, data, true);
             sinon.stub(component, '_notify');
-            component._container = {childElementCount: 0};
             component._stickyRegisterHandler(event, { id: 3, inst: data.inst }, true);
 
             sinon.assert.notCalled(component._notify);
@@ -332,7 +331,6 @@ define([
                   stopImmediatePropagation: sinon.fake()
                };
             component._stickyRegisterHandler(event, data, true);
-            component._container = {childElementCount: 0};
             component._stickyRegisterHandler(event, { id: 3, inst: data.inst }, true);
             sinon.stub(component, '_notify');
             component._stickyRegisterHandler(event, { id: 3, inst: data.inst }, false);
