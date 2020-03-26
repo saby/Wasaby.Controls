@@ -228,10 +228,18 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _footerMouseEnter(event): void {
-        this.setSubMenuPosition();
-        this._isMouseInOpenedItemArea = this.isMouseInOpenedItemArea(event.nativeEvent);
+        this._checkIsMouseInOpenedItemArea(this.subMenu, event.nativeEvent);
         if (!this._isMouseInOpenedItemArea && this._subDropdownItem) {
             this._closeSubMenu();
+        }
+    }
+
+    private _checkIsMouseInOpenedItemArea(needCloseDropDown, nativeEvent) {
+        if (needCloseDropDown) {
+            this.setSubMenuPosition();
+            this._isMouseInOpenedItemArea = this.isMouseInOpenedItemArea(nativeEvent);
+        } else {
+            this._isMouseInOpenedItemArea = false;
         }
     }
 
@@ -262,12 +270,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
         this.setItemParamsOnHandle(item, target, nativeEvent);
 
-        if (needCloseDropDown) {
-            this.setSubMenuPosition();
-            this._isMouseInOpenedItemArea = this.isMouseInOpenedItemArea(nativeEvent);
-        } else {
-            this._isMouseInOpenedItemArea = false;
-        }
+        this._checkIsMouseInOpenedItemArea(needCloseDropDown, nativeEvent);
 
         // Close the already opened sub menu. Installation of new data sets new size of the container.
         // If you change the size of the update, you will see the container twitch.
