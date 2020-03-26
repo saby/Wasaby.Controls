@@ -4,6 +4,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
 import {delay as runDelayed} from 'Types/function';
+import {SHADOW_VISIBILITY} from './_StickyHeader';
 
 /**
  * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
@@ -132,6 +133,15 @@ export default class Group extends Control<IControlOptions> {
 
     set bottom(value: number) {
         this._setOffset(value, POSITION.bottom);
+    }
+
+    get shadowVisibility(): SHADOW_VISIBILITY {
+        for (let id in this._headers) {
+            if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
+                return SHADOW_VISIBILITY.visible;
+            }
+        }
+        return SHADOW_VISIBILITY.hidden;
     }
 
     private _setOffset(value: number, position: POSITION): void {
