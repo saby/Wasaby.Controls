@@ -12,12 +12,12 @@ import { TemplateFunction } from 'UI/Base';
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 /**
  * @typedef {String} TIconStyle
- * @variant default
- * @variant attention
- * @variant error
- * @variant done
+ * @variant secondary
+ * @variant warning
+ * @variant danger
+ * @variant success
  */
-type TIconStyle = 'default'|'attention'|'error'|'done';
+type TIconStyle = 'secondary'|'warning'|'danger'|'success';
 /**
  * @typedef {String} TItemActionsPosition
  * @variant inside Внутри элемента.
@@ -241,7 +241,7 @@ export interface IList {
  * * 2 — в строке.
  * @property {String} style Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
  * Он будет установлен для html-контейнера самой опции записи, и свойства класса будут применены как к тексту (см. title), так и к иконке (см. icon).
- * @property {TIconStyle} [iconStyle=default] Стиль иконки.
+ * @property {TIconStyle} [iconStyle=secondary] Стиль иконки.
  * Каждому значению свойства соответствует стиль, который определяется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
  * @property {Function} handler Обработчик опции записи.
  * См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler-click/ пример обработчика}.
