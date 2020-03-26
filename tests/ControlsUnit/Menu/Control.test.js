@@ -371,6 +371,47 @@ define(
             menuControl._itemActionClick('itemActionClick', menuControl._listModel.at(1), action, clickEvent);
             assert.isTrue(isHandlerCalled);
          });
+
+         describe('_subMenuResult', function() {
+            let menuControl, stubClose, eventResult, sandbox;
+            beforeEach(() => {
+               menuControl = getMenu();
+               menuControl._notify = (event, data) => {
+                  eventResult = data[0];
+               };
+               sandbox = sinon.createSandbox();
+               stubClose = sandbox.stub(menuControl, '_closeSubMenu');
+            });
+            afterEach(() => {
+               sandbox.restore();
+            });
+
+            it('menuOpened event', function() {
+               const data = { container: 'subMenu' };
+               menuControl._subMenuResult('click', 'menuOpened', data);
+               assert.deepEqual(menuControl.subMenu, data);
+            });
+            it('pinClick event', function() {
+               menuControl._subMenuResult('click', 'pinClick', { item: 'item1' });
+               assert.deepEqual(eventResult, { item: 'item1' });
+               assert.isTrue(stubClose.calledOnce);
+            });
+            it('itemClick event', function() {
+               menuControl._subMenuResult('click', 'itemClick', { item: 'item2' });
+               assert.deepEqual(eventResult, { item: 'item2' });
+               assert.isTrue(stubClose.calledOnce);
+            });
+            it('itemClick event return false', function() {
+               menuControl._notify = (event, data) => {
+                  eventResult = data[0];
+                  return false;
+               };
+               menuControl._subMenuResult('click', 'itemClick', { item: 'item2' });
+               assert.deepEqual(eventResult, { item: 'item2' });
+               assert.isTrue(stubClose.notCalled);
+            });
+         });
+
       });
    }
 );
