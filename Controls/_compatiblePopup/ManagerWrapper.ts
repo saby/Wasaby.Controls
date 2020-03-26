@@ -36,8 +36,11 @@ var ManagerWrapper = Control.extend({
       // Совместимость есть на онлайне и в биллинге. В биллинге нет ViewSettings и движения границ
       if (!isBilling) {
          // Только для онлайна напрямую гружу контроллер Лобастова для получения конфига
-         return import('ViewSettings/controller').then((ViewController) => {
-            setController(ViewController.Settings);
+         return new Promise((resolve) => {
+            import('ViewSettings/controller').then((ViewController) => {
+               setController(ViewController.Settings);
+               resolve();
+            }, resolve);
          });
       }
       return Promise.resolve();
