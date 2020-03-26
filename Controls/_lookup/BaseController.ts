@@ -46,7 +46,7 @@ var _private = {
           selectedKeys: unknown[]
       ): void {
          loadedItems.each((item) => {
-            if (selectedKeys.indexOf(item.get(keyProperty) === -1)) {
+            if (selectedKeys.indexOf(item.get(keyProperty)) === -1) {
                Logger.error(`Controls/lookup: ошибка при загрузке записи с ключём ${item.get(keyProperty)}`);
             }
          });
