@@ -173,7 +173,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _beforeUnmount(): void {
-        this._model.destroy();
+        if (this._model) {
+            //Let the listeners know that the element is no longer fixed before the unmount.
+            this._fixationStateChangeHandler('', this._model.fixedPosition);
+            this._model.destroy();
+        }
         this._stickyDestroy = true;
 
         // его может и не быть, если контрол рушится не успев замаунтиться
@@ -185,8 +189,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._resizeObserver.disconnect();
         }
 
-        //Let the listeners know that the element is no longer fixed before the unmount.
-        this._fixationStateChangeHandler('', this._model.fixedPosition);
         this._observeHandler = undefined;
         this._observer = undefined;
         this._resizeObserver = undefined;
