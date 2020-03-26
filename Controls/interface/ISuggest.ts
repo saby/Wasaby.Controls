@@ -41,6 +41,57 @@ export interface IEmptyTemplateProp {
  * @property {String} templateName Name of template, which will showing in bottom of suggest.
  * @property {Object} templateOptions Options for template, which is specified in the templateName field.
  */
+
+/**
+ * @typedef {Object} PopupOptions
+ * @description Позиционирование автодоплнения при открытии.
+ * @property {TargetPoint} targetPoint Точка позиционирования всплывающего окна относительно вызывающего элемента.
+ * @property {Direction} direction Выравнивание всплывающего окна относительно точки позиционирования.
+ */
+
+/*
+ * @typedef {Object} PopupOptions
+ * @description Position of popup when suggest is opened.
+ * @property {TargetPoint} targetPoint Popup position relative to caller.
+ * @property {Direction} direction Alignment of the popup with the positioning point.
+ */
+
+/**
+ * @typedef {Object} TargetPoint
+ * @description Точка позиционирования автодоплнения относительно вызывающего элемента.
+ * @property {String} vertical Выравнивание по вертикали.
+ * Доступные значения: top, bottom.
+ * @property {String} horizontal Выравнивание по горизонтали.
+ * Доступные значения: right, left.
+ */
+
+/*
+ * @typedef {Object} TargetPoint
+ * @description Popup position relative to caller.
+ * @property {String} vertical Vertical alignment.
+ * Available values: top, bottom.
+ * @property {String} horizontal Horizontal alignment.
+ * Available values: right, left.
+ */
+
+/**
+ * @typedef {Object} Direction
+ * @description Выравнивание автодоплнения относительно точки позиционирования.
+ * @property {String} vertical Выравнивание по вертикали.
+ * Доступные значения: top, bottom.
+ * @property {String} horizontal Выравнивание по горизонтали.
+ * Доступные значения: right, left.
+ */
+
+/*
+ * @typedef {Object} Direction
+ * @description Alignment of the popup with the positioning point.
+ * @property {String} vertical Vertical alignment.
+ * Available values: top, bottom.
+ * @property {String} horizontal Horizontal alignment.
+ * Available values: right, left.
+ */
+
 export interface ISuggestFooterTemplate {
    templateName: string;
    templateOptions: object;
@@ -65,7 +116,7 @@ interface ISuggest {
    readonly _options: {
       /**
        * @name Controls/interface/ISuggest#suggestTemplate
-       * @cfg {ISuggestTemplateProp|null} Шаблон автодополнения, который отображает результаты поиска.
+       * @cfg {ISuggestTemplateProp|null} Шаблон автодополнения, который отображает результаты поиска.Available Values
        * @remark Корневым контролом автодополнения должен быть Controls/Container/Suggest/List, этому контролу можно передать в контентной опции контрол ({@link Controls/list:View} или {@link Controls/grid:View}), который отобразит список.
        * @remark Вы можете установить ширину окна с автодополнением, добавив собственный класс в suggestTemplate и установив минимальную ширину. По умолчанию ширина автодополнения равна ширине поля ввода.
        * @demo Controls-demo/Suggest_new/SearchInput/SuggestTemplate/SuggestTemplate
@@ -363,7 +414,7 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#suggestPopupOptions
-       * @cfg {Boolean} Объект, содержащий информацию о фиксированном положении автодополнения при открытии.
+       * @cfg {PopupOptions | null} Объект, содержащий информацию о фиксированном положении автодополнения при открытии.
        * @example
        * В этом примере автодополнение будет открыто вверх.
        * myModule.js
@@ -398,7 +449,7 @@ interface ISuggest {
 
       /*
        * @name Controls/interface/ISuggest#suggestPopupOptions
-       * @cfg {Boolean} An object containing information about a fixed position of popup when suggest is opened.
+       * @cfg {PopupOptions | null} An object containing information about a fixed position of popup when suggest is opened.
        * @example
        * In this example, suggest will open up.
        * myModule.js
