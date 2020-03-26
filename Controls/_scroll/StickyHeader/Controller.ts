@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controller');
 import {TRegisterEventData} from './Utils';
-import StickyHeader from 'Controls/_scroll/StickyHeader/_StickyHeader';
+import StickyHeader, {SHADOW_VISIBILITY} from 'Controls/_scroll/StickyHeader/_StickyHeader';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import {POSITION} from 'Controls/_scroll/StickyHeader/Utils';
 
@@ -66,9 +66,9 @@ class Component extends Control {
     }
 
     hasShadowVisible(position: string): boolean {
-        const arrShadowVisible = this._shadowVisibleStack[position];
-        for (const id in arrShadowVisible) {
-            if (arrShadowVisible[id]) {
+        const fixedHeaders = this._fixedHeadersStack[position];
+        for (const id of fixedHeaders) {
+            if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
                 return true;
             }
         }
