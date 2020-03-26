@@ -116,7 +116,7 @@ interface ISuggest {
    readonly _options: {
       /**
        * @name Controls/interface/ISuggest#suggestTemplate
-       * @cfg {ISuggestTemplateProp|null} Шаблон автодополнения, который отображает результаты поиска.Available Values
+       * @cfg {ISuggestTemplateProp|null} Шаблон автодополнения, который отображает результаты поиска.
        * @remark Корневым контролом автодополнения должен быть Controls/Container/Suggest/List, этому контролу можно передать в контентной опции контрол ({@link Controls/list:View} или {@link Controls/grid:View}), который отобразит список.
        * @remark Вы можете установить ширину окна с автодополнением, добавив собственный класс в suggestTemplate и установив минимальную ширину. По умолчанию ширина автодополнения равна ширине поля ввода.
        * @demo Controls-demo/Suggest_new/SearchInput/SuggestTemplate/SuggestTemplate
