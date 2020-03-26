@@ -46,6 +46,16 @@ var
             }
             self._forceUpdate();
          },
+         setRestoredKeyObject: function(self, root) {
+            const curRoot = _private.getRoot(self, self._options.root);
+            self._restoredMarkedKeys[root] = {
+               parent: curRoot,
+               markedKey: null
+            };
+            if (self._restoredMarkedKeys[curRoot]) {
+               self._restoredMarkedKeys[curRoot].markedKey = root;
+            }
+         },
           cleanRestoredKeyObject: function(self, root) {
               _private.pathCleaner(self, root);
           },
@@ -465,6 +475,8 @@ var
          event.stopPropagation();
 
          const changeRoot = () => {
+             // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся
+            _private.setRestoredKeyObject(this, item.getId());
             _private.setRoot(this, item.getId());
             this._isGoingFront = true;
          };
