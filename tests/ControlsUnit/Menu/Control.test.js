@@ -226,16 +226,6 @@ define(
             assert.isFalse(result);
          });
 
-         it('_footerMouseEnter', function() {
-            let isClosed = false;
-            let menuControl = getMenu();
-            menuControl._children = {
-               Sticky: { close: () => { isClosed = true; } }
-            };
-            menuControl._footerMouseEnter();
-            assert.isTrue(isClosed);
-         });
-
          it('getSelectedItemsByKeys', function() {
             let listModel = getListModel();
             let menuControl = getMenu();

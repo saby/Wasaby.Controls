@@ -227,10 +227,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
-    protected _footerMouseEnter(): void {
-        this._closeSubMenu();
-    }
-
     private _closeSubMenu(needOpenDropDown: boolean = false): void {
         if (this._children.Sticky) {
             this._children.Sticky.close();
