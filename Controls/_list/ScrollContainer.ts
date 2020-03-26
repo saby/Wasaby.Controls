@@ -20,7 +20,6 @@ import {throttle} from 'Types/function';
 
 const SCROLLMOVE_DELAY = 150;
 const TRIGGER_VISIBILITY_DELAY = 101;
-const DEFAULT_VIRTUAL_PAGESIZE = 100;
 const LOADING_INDICATOR_SHOW_TIMEOUT = 2000;
 
 let displayLib: typeof import('Controls/display');
@@ -34,9 +33,6 @@ interface IScrollParams {
 }
 
 interface ICompatibilityOptions {
-    virtualPageSize: number;
-    virtualSegmentSize: number;
-    virtualScrolling: boolean;
     useNewModel: boolean;
 }
 
@@ -81,7 +77,7 @@ export default class ScrollContainer extends Control<IOptions> {
     // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
     private get _calculatedTriggerVisibility(): ITriggerState {
         return {
-            up: this._triggerOffset >= this._lastScrollTop,
+            up: this._triggerOffset >= this._lastScrollTop - this._container.offsetTop,
             down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
         };
     }
@@ -309,7 +305,10 @@ export default class ScrollContainer extends Control<IOptions> {
      * данных
      */
     private _checkTriggerVisibility(): void {
-        if (!this._applyScrollTopCallback) {
+        // TODO будет решено после https://online.sbis.ru/opendoc.html?guid=a88a5697-5ba7-4ee0-a93a-221cce572430
+        // Не нужно запускать проверку на видимость триггеров, если контрол лежит в display: none контейнере
+        // например в switchableArea
+        if (!this._applyScrollTopCallback && !this._container.closest('.ws-hidden')) {
             if (this._calculatedTriggerVisibility.down) {
                 this._recalcToDirection('down');
             }
@@ -318,7 +317,6 @@ export default class ScrollContainer extends Control<IOptions> {
                 this._recalcToDirection('up');
             }
         }
-
     }
 
     private _initModelObserving(options: IOptions): void {
@@ -330,9 +328,8 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     private _initVirtualScroll(options: IOptions): void {
-        const virtualScrollOptions = ScrollContainer._getVirtualScrollOptions(options);
         this._virtualScroll = new VirtualScroll(
-            virtualScrollOptions,
+            options.virtualScrollConfig,
             {
                 viewport: this._viewportHeight,
                 scroll: this._viewHeight,
@@ -689,24 +686,6 @@ export default class ScrollContainer extends Control<IOptions> {
                 displayLib.VirtualScrollController.setup(collection);
                 break;
         }
-    }
-
-    private static _getVirtualScrollOptions(options: IOptions): Partial<IVirtualScrollOptions> {
-        let virtualScrollConfig: Partial<IVirtualScrollOptions> = {};
-
-        if (options.virtualScrolling && !options.virtualPageSize) {
-            Logger.warn('Controls.list: Specify virtual page size in virtualScrollConfig option');
-            virtualScrollConfig.pageSize = DEFAULT_VIRTUAL_PAGESIZE;
-        }
-        if (options.virtualScrolling && (options.virtualPageSize || options.virtualSegmentSize)) {
-            virtualScrollConfig.segmentSize = options.virtualSegmentSize;
-            virtualScrollConfig.pageSize = options.virtualPageSize;
-            Logger.warn('Controls.list: Use virtualScrollConfig instead of old virtual scroll config options');
-        } else {
-            virtualScrollConfig = {...virtualScrollConfig, ...options.virtualScrollConfig};
-        }
-
-        return virtualScrollConfig;
     }
 
     static getDefaultOptions(): Partial<IOptions> {

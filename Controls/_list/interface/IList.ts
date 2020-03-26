@@ -101,6 +101,7 @@ export interface IList {
     dataLoadCallback?: (items) => void;
     dataLoadErrback?: () => void;
     style?: TListStyle;
+    backgroundStyle?: string;
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
 }
@@ -135,7 +136,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#contextMenuConfig
- * @cfg {Control/menu:IMenuControl} Устанавливает конфигурацию для меню операций над записью.
+ * @cfg {Controls/menu:IMenuControlOptions} Устанавливает конфигурацию для меню операций над записью.
  * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
  * В качестве ключей можно использовать следующие свойства:
  * - items - для смены набора элементов.
@@ -605,12 +606,14 @@ export interface IList {
 /**
  * @name Controls/_list/interface/IList#markedKey
  * @cfg {Number} Идентификатор выделенной маркером строки.
- * <a href=/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @remark
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  */
 
 /*
  * @name Controls/_list/interface/IList#markedKey
  * @cfg {Number} Identifier of the marked collection item.
+ * @remark
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  */
 
@@ -865,39 +868,39 @@ export interface IList {
 /**
  * @typedef {Object} VerticalItemPaddingEnum
  * @variant null Без отступа.
- * @variant S Маленький отступ.
- * @default S
+ * @variant s Маленький отступ.
+ * @default s
  */
 
 /*
  * @typedef {Object} VerticalItemPaddingEnum
  * @variant null Without padding.
- * @variant S Small padding.
- * @default S
+ * @variant s Small padding.
+ * @default s
  */
 
 /**
  * @typedef {Object} HorizontalItemPaddingEnum
  * @variant null Без отступа.
- * @variant XS Минимальный отступ.
- * @variant S Маленький отступ.
- * @variant M Средний отступ.
- * @variant L Большой отступ.
- * @variant XL Очень большой оступ.
- * @variant XXL Максимальный отступ.
+ * @variant xs Минимальный отступ.
+ * @variant s Маленький отступ.
+ * @variant m Средний отступ.
+ * @variant l Большой отступ.
+ * @variant xl Очень большой оступ.
+ * @variant xxl Максимальный отступ.
  * @default M
  */
 
 /*
  * @typedef {Object} HorizontalItemPaddingEnum
  * @variant null without padding.
- * @variant XS Extra small padding.
- * @variant S Small padding.
- * @variant M Medium padding.
- * @variant L Large padding.
- * @variant XL Extra large padding.
- * @variant XXL Extra extra large padding.
- * @default M
+ * @variant xs Extra small padding.
+ * @variant s Small padding.
+ * @variant m Medium padding.
+ * @variant l Large padding.
+ * @variant xl Extra large padding.
+ * @variant xxl Extra extra large padding.
+ * @default m
  */
 
 /**
@@ -924,4 +927,16 @@ export interface IList {
 /*
  * @cfg {ItemPadding} Configuration inner paddings in the item.
  * @name Controls/_list/interface/IList#itemPadding
+ */
+
+/**
+ * @name Controls/_list/interface/IList#backgroundStyle
+ * @cfg {string} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
+ * @default default (фон цвета темы)
+ */
+
+/*
+ * @name Controls/_list/interface/IList#backgroundStyle
+ * @cfg {string} Style prefix to configure background for inner list control components with static or absolute positioning.
+ * @default default (theme background)
  */

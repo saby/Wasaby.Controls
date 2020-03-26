@@ -3,8 +3,8 @@ import {Memory} from 'Types/source';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import {_departmentsDataLong} from 'Controls-demo/Lookup/DemoHelpers/DataCatalog';
-import controlTemplate = require('wml!Controls-demo/Lookup/Lookup');
-import suggestTemplate = require('wml!Controls-demo/Lookup/resources/SuggestTemplate');
+import controlTemplate = require('wml!Controls-demo/Lookup/SuggestTemplate/Lookup');
+import suggestTemplate = require('wml!Controls-demo/Lookup/SuggestTemplate/resources/SuggestTemplate');
 import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control{

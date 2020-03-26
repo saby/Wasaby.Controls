@@ -1539,7 +1539,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(0, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" after "resetResultsColumns()".');
          });
 
-          it('first header cell with breadcrumbs should renders from first column', function () {
+         it('first header cell with breadcrumbs should renders from first column', function () {
               const originBreadcrumbsCell = gridViewModel._headerRows[0][1];
               gridViewModel._headerRows[0][1] = {
                   isBreadCrumbs: true,
@@ -1833,18 +1833,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(secondRow);
          });
          it('getColumnScrollCellClasses', function() {
-            const fixedCell = ` controls-Grid__cell_fixed controls-background-default_theme-default controls-Grid__cell_fixed_theme-${theme}`;
+            const backgroundStyle = 'controls-background-default_theme-default';
+            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
             const transformCell = ' controls-Grid__cell_transform';
             const params = {
                multiSelectVisibility: 'hidden',
                stickyColumnsCount: 1,
                columnIndex: 0,
                rowIndex: 0,
-               isMultiHeader: false,
+               isMultiHeader: false
             };
             assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
             assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
-
+            assert.equal(backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}));
+            assert.equal(' ' + backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}, true));
          });
 
          it('getBottomPaddingStyles', function() {
@@ -2066,6 +2068,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(current.getCurrentColumn().tableCellStyles, 'min-width: 102px; max-width: 102px;');
             current.goToNextColumn();
             assert.equal(current.getCurrentColumn().tableCellStyles, '');
+         });
+
+         it('tableCellStyles for results', function() {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'hidden',
+               columns: [
+                  { title: 'first', width: '101px' },
+                  { title: 'second', compatibleWidth: '102px', width: '1fr' },
+                  { title: 'third' }
+               ],
+               columnScroll: true
+            });
+
+            const current = model.getCurrentResultsColumn();
+            assert.equal(current.tableCellStyles, 'min-width: 101px; max-width: 101px;');
          });
 
          it('should rowspan checkbox th if multiheader', function () {

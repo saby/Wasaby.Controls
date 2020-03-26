@@ -195,7 +195,9 @@ define([
             navigation: {
                view: 'infinity'
             },
-            virtualScrolling: true,
+            virtualScrollConfig: {
+               pageSize: 100
+            },
             viewModelConstructor: lists.ListViewModel,
             source: source
          };
@@ -303,30 +305,71 @@ define([
          sandbox.restore();
       });
 
-      it('_private::loadToDirectionIfNeed', () => {
-         const self = {
-            _sourceController: {
-               hasMoreData: () => true,
-               isLoading: () => false
-            },
-            _loadedItems: new collection.RecordSet(),
-            _options: {
-               navigation: {}
-            }
+      describe('_private::loadToDirectionIfNeed', () => {
+         const getInstanceMock = function() {
+            return {
+               _sourceController: {
+                  hasMoreData: () => true,
+                  isLoading: () => false
+               },
+               _loadedItems: new collection.RecordSet(),
+               _options: {
+                  navigation: {}
+               }
+            };
          };
-         const sandbox = sinon.createSandbox();
-         let isLoadStarted;
 
-         // navigation.view !== 'infinity'
-         sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
-         sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
-         sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
-            isLoadStarted = true;
+         it('hasMoreData:true', () => {
+            const self = getInstanceMock();
+            const sandbox = sinon.createSandbox();
+            let isLoadStarted;
+
+            // navigation.view !== 'infinity'
+            sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+            sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+            sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+               isLoadStarted = true;
+            });
+
+            lists.BaseControl._private.loadToDirectionIfNeed(self);
+            assert.isTrue(isLoadStarted);
+            sandbox.restore();
          });
 
-         lists.BaseControl._private.loadToDirectionIfNeed(self);
-         assert.isTrue(isLoadStarted);
-         sandbox.restore();
+         it('iterative search', () => {
+            const self = getInstanceMock();
+            const sandbox = sinon.createSandbox();
+            let isLoadStarted;
+            let shouldSearch;
+
+            self._items = new collection.RecordSet();
+            self._items.setMetaData({
+               iterative: true
+            });
+            self._portionedSearch = {
+               shouldSearch: () => {
+                  return shouldSearch;
+               }
+            };
+
+            // navigation.view !== 'infinity'
+            sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+            sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+            sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+               isLoadStarted = true;
+            });
+
+            shouldSearch = true;
+            lists.BaseControl._private.loadToDirectionIfNeed(self);
+            assert.isTrue(isLoadStarted);
+
+            shouldSearch = false;
+            isLoadStarted = false;
+            lists.BaseControl._private.loadToDirectionIfNeed(self);
+            assert.isFalse(isLoadStarted);
+
+            sandbox.restore();
+         });
       });
 
       it('setHasMoreData', async function() {
@@ -374,7 +417,9 @@ define([
             navigation: {
                view: 'infinity'
             },
-            virtualScrolling: true,
+            virtualScrollConfig: {
+               pageSize: 100
+            },
             viewModelConstructor: grid.GridViewModel,
          };
          var ctrl = new lists.BaseControl(cfg);
@@ -5327,7 +5372,9 @@ define([
                viewModelConstructor: lists.ListViewModel,
                keyProperty: 'id',
                source: source,
-               virtualScrolling: true
+               virtualScrollConfig: {
+                  pageSize: 100
+               }
             },
             instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
@@ -5450,12 +5497,16 @@ define([
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
 
-         assert.isFalse(portionSearchReseted);
-
+         assert.isTrue(portionSearchReseted);
+         portionSearchReseted = false;
 
          cfgClone.searchValue = 'test';
          instance._beforeUpdate(cfgClone);
 
+         assert.isTrue(portionSearchReseted);
+         portionSearchReseted = false;
+
+         await instance.reload();
          assert.isTrue(portionSearchReseted);
       });
 

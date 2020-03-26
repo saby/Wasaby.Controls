@@ -138,9 +138,6 @@
                <ws:selectorTemplate templateName="Controls-demo/Dropdown/StackTemplate">
                   <ws:templateOptions multiSelect="{{true}}" items="{{_multiSelectStackItems}}"/>
                </ws:selectorTemplate>
-               <ws:footerTemplate>
-                  <invisible-node />
-               </ws:footerTemplate>
             </Controls.dropdown:Input>
          </div>
       </div>
