@@ -226,6 +226,31 @@ define(
             assert.isFalse(result);
          });
 
+         it('_footerMouseEnter', function() {
+            let isClosed = false;
+            let menuControl = getMenu();
+            let event = {
+               nativeEvent: {}
+            };
+
+            menuControl._children = {
+               Sticky: { close: () => { isClosed = true; } }
+            };
+            menuControl.isMouseInOpenedItemArea = function() {
+               return false;
+            };
+            menuControl.setSubMenuPosition = function() {};
+            menuControl._subDropdownItem = true;
+            menuControl._footerMouseEnter(event);
+            assert.isTrue(isClosed);
+
+            menuControl.isMouseInOpenedItemArea = function() {
+               return true;
+            };
+            menuControl._footerMouseEnter(event);
+            isClosed = false;
+         });
+
          it('getSelectedItemsByKeys', function() {
             let listModel = getListModel();
             let menuControl = getMenu();

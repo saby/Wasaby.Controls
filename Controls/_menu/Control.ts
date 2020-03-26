@@ -227,6 +227,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
+    protected _footerMouseEnter(event): void {
+        this.setSubMenuPosition();
+        this._isMouseInOpenedItemArea = this.isMouseInOpenedItemArea(event.nativeEvent);
+        if (!this._isMouseInOpenedItemArea && this._subDropdownItem) {
+            this._closeSubMenu();
+        }
+    }
+
     private _closeSubMenu(needOpenDropDown: boolean = false): void {
         if (this._children.Sticky) {
             this._children.Sticky.close();
