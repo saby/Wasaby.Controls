@@ -12,9 +12,11 @@ define('Controls-demo/CompatibleDemo/WasabyEnv/WS3/WS3WithHandlers',
          _template: template,
          _compatibleReady: false,
          _text: null,
+         _textNew: null,
 
          _beforeMount: function() {
             this._text = 'Wait...';
+            this._textNew = this._text;
          },
 
          _afterMount: function() {
@@ -23,11 +25,17 @@ define('Controls-demo/CompatibleDemo/WasabyEnv/WS3/WS3WithHandlers',
                .addCallback(function() {
                   self._compatibleReady = true;
                   self._text = 'Init success!';
+                  self._setText(null, self._text);
                   self._forceUpdate();
                });
          },
-         _setText: function(e, value) {
+
+         _setTextNew: function(e, value) {
             this._text = value;
+         },
+
+         _setText: function(e, value) {
+            this._textNew = value;
          },
 
          _setTextOld: function(e, value) {
