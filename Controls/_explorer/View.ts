@@ -46,6 +46,16 @@ var
             }
             self._forceUpdate();
          },
+         setRestoredKeyObject: function(self, root) {
+            const curRoot = _private.getRoot(self, self._options.root);
+            self._restoredMarkedKeys[root] = {
+               parent: curRoot,
+               markedKey: null
+            };
+            if (self._restoredMarkedKeys[curRoot]) {
+               self._restoredMarkedKeys[curRoot].markedKey = root;
+            }
+         },
           cleanRestoredKeyObject: function(self, root) {
               _private.pathCleaner(self, root);
           },
@@ -267,6 +277,10 @@ var
     * Отображает данные иерархического списка, узел которого можно развернуть и перейти в него.
     * Позволяет переключать отображение элементов в режимы "таблица", "список" и "плитка".
     * Инструкции по настройке контрола доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
+    *
+    * Примечание:
+    * Сортировка применяется к запросу к источнику данных. Полученные от источника записи дополнительно не сортируются.
+    *
     * Демо-примеры:
     * <ul>
     *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
@@ -465,6 +479,8 @@ var
          event.stopPropagation();
 
          const changeRoot = () => {
+             // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся
+            _private.setRestoredKeyObject(this, item.getId());
             _private.setRoot(this, item.getId());
             this._isGoingFront = true;
          };
