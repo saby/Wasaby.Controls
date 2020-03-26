@@ -47,7 +47,7 @@ var _private = {
       ): void {
          loadedItems.each((item) => {
             if (selectedKeys.indexOf(item.get(keyProperty)) === -1) {
-               Logger.error(`Controls/lookup: ошибка при загрузке записи с ключём ${item.get(keyProperty)}`);
+               Logger.error(`Controls/lookup: ошибка при загрузке записи с ключом ${item.get(keyProperty)}`);
             }
          });
       },
