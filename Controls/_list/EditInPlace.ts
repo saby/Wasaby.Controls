@@ -4,7 +4,7 @@ import Deferred = require('Core/Deferred');
 import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
-import Constants = require('Controls/Constants');
+import {editing as constEditing} from 'Controls/Constants';
 import { error as dataSourceError } from 'Controls/dataSource';
 import 'css!theme?Controls/list';
 
@@ -40,7 +40,7 @@ var
         processBeforeBeginEditResult: function (self, options, eventResult, isAdd) {
             var result;
 
-            if (eventResult === Constants.editing.CANCEL) {
+            if (eventResult === constEditing.CANCEL) {
                 result = Deferred.success({cancelled: true});
             } else {
                 _private.registerPending(self);
@@ -81,7 +81,7 @@ var
                 return eventResult.addBoth(function(resultOfDeferred) {
                     self._notify('hideIndicator', [id], { bubbling: true });
 
-                    if (resultOfDeferred === Constants.editing.CANCEL) {
+                    if (resultOfDeferred === constEditing.CANCEL) {
                         self._endEditDeferred = null;
                         return Deferred.success({ cancelled: true });
                     }
@@ -93,7 +93,7 @@ var
                     });
                 });
             } else {
-                if (eventResult === Constants.editing.CANCEL) {
+                if (eventResult === constEditing.CANCEL) {
                     return Deferred.success({ cancelled: true });
                 }
                 return _private.updateModel(self, commit).addCallback(function() {

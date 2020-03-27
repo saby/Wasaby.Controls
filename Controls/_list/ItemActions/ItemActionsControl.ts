@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_list/ItemActions/ItemActionsControl');
 import {showType} from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
-import ControlsConstants = require('Controls/Constants');
+import {view as constView} from 'Controls/Constants';
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
@@ -122,7 +122,7 @@ var _private = {
                 while (options.listModel.isEnd()) {
                     let itemData = options.listModel.getCurrent();
                     let item = itemData.actionsItem;
-                    if (item !== ControlsConstants.view.hiddenGroup && item.get) {
+                    if (item !== constView.hiddenGroup && item.get) {
                         updateItemActionsResult = _private.updateItemActions(self, item, options);
                         if (hasChanges !== 'all') {
                             if (hasChanges !== 'partial') {
