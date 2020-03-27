@@ -213,7 +213,7 @@ var _private = {
          _private.close(self);
       }
    },
-   loadDependencies: function(self) {
+   loadDependencies: function(self, needUpdateDependencies) {
       var getTemplatesToLoad = function(options) {
          var templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
          var templatesToLoad = [];
@@ -225,8 +225,9 @@ var _private = {
          return templatesToLoad;
       };
 
-      if (!self._dependenciesDeferred) {
+      if (!self._dependenciesDeferred || needUpdateDependencies) {
          self._dependenciesDeferred = mStubs.require(DEPS.concat(getTemplatesToLoad(self._options).concat([self._options.layerName])));
+         this._isDependenciesUpdating = false;
       }
       return self._dependenciesDeferred;
    },
@@ -331,6 +332,7 @@ var SuggestLayout = Control.extend({
    _showContent: false,
    _inputActive: false,
    _suggestMarkedKey: null,
+   _isDependenciesUpdating: null,
 
    /**
     * three state flag
@@ -361,6 +363,8 @@ var SuggestLayout = Control.extend({
       const valueChanged = this._options.value !== newOptions.value;
       const valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
       const needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, _private.prepareValue(this, newOptions.value));
+      const isNewEmptyTemplate = !isEqual(this._options.emptyTemplate, newOptions.emptyTemplate);
+      const isNewFooterTemplate = !isEqual(this._options.footerTemplate, newOptions.footerTemplate);
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
@@ -383,13 +387,14 @@ var SuggestLayout = Control.extend({
          _private.setFilter(this, newOptions.filter, newOptions);
       }
 
-      if (!isEqual(this._options.emptyTemplate, newOptions.emptyTemplate)) {
+      if (isNewEmptyTemplate) {
          this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
-         this._dependenciesDeferred = null;
       }
 
-      if (!isEqual(this._options.footerTemplate, newOptions.footerTemplate)) {
+      if (isNewFooterTemplate || isNewEmptyTemplate) {
          this._dependenciesDeferred = null;
+         this._isDependenciesUpdating = newOptions.suggestState;
+         _private.loadDependencies(this, newOptions.suggestState);
       }
 
       if (this._options.searchDelay !== newOptions.searchDelay) {
