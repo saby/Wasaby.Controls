@@ -1,6 +1,8 @@
 <div class="controlsDemo__wrapper">
-    <Controls.list:View
-            keyProperty="id"
-            source="{{_viewSource}}"
-            groupingKeyCallback="{{_groupingKeyCallback}}"/>
+    <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo__height500">
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                groupProperty="longBrandName"/>
+    </Controls.scroll:Container>
 </div>
