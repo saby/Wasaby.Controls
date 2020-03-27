@@ -20,7 +20,7 @@ export interface IColumnsInnerViewOptions extends IList {
     listModel: Collection<Model>;
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
-    width: number;
+    initialWidth: number;
     source: ICrudPlus;
 }
 
@@ -44,8 +44,8 @@ export default class ColumnsInnerView extends Control {
         this._subscribeToModelChanges(options.listModel);
         this._resizeHandler = this._resizeHandler.bind(this);
         this._model = options.listModel;
-        if (options.columnsMode === 'auto' && options.width) {
-            this._recalculateColumnsCountByWidth(options.width);
+        if (options.columnsMode === 'auto' && options.initialWidth) {
+            this._recalculateColumnsCountByWidth(options.initialWidth);
         } else {
             if (options.columnsCount) {
                 this._columnsCount = options.columnsCount;
