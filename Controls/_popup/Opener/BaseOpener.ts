@@ -140,7 +140,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 if (!this._openerUnmounted || this._options.closePopupBeforeUnmount === false) {
                     return results;
                 }
-                return new Error('Opener was destroyed');
+                Logger.warn(`Controls/popup: Во время открытия окна с шаблоном ${cfg.template} задестроился opener`);
+                throw new Error('Opener was destroyed');
             }).catch((error) => {
                 this._loadModulesPromise = null;
                 throw error;
@@ -244,7 +245,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         this.close();
     }
 
-    private _getCurrentPopupId(): string {
+    protected _getCurrentPopupId(): string {
         return this._popupId;
     }
 
@@ -270,9 +271,15 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         const def = new Deferred();
         // Если задали опцию, берем с опции, иначе с контрола, который открывает
         const popupOpener = cfg?.opener || opener;
-        const openOptions: IControlOptions = popupOpener?._options;
+
+        // protect against wrong config. Opener must be specified only on popupOptions.
+        if (cfg?.templateOptions?.opener) {
+            delete cfg.templateOptions.opener;
+            Logger.error('Controls/popup: Опция opener не должна задаваться на templateOptions');
+        }
+
         if (!BaseOpener.isNewEnvironment()) {
-            BaseOpener.getManager(openOptions).then(() => {
+            BaseOpener.getManager().then(() => {
                 BaseOpener.getZIndexUtil().addCallback((getZIndex) => {
                     if (popupOpener) {
                         // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
@@ -292,8 +299,9 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                     }
                 });
             });
-        } else if (BaseOpener.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-            BaseOpener.getManager(openOptions).then(() => {
+        } else if (BaseOpener.isVDOMTemplate(rootTpl) &&
+            !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
+            BaseOpener.getManager().then(() => {
                 BaseOpener._openPopup(cfg, controller, def);
             });
         } else {
@@ -437,11 +445,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         CoreMerge(templateOptions, popupOptions.templateOptions || {}, {rec: false});
 
         const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
-
-        // protect against wrong config. Opener must be specified only on popupOptions.
-        if (baseCfg.templateOptions) {
-            delete baseCfg.templateOptions.opener;
-        }
 
         if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
             Logger.warn('Controls/popup:Sticky : Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');

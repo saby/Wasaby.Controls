@@ -60,6 +60,8 @@ define(
             };
          }
 
+         StickyStrategy._private.isPortrait = () => false;
+
          it('Sticky initializing state', () => {
             let itemConfig = {
                popupState: StickyController.POPUP_STATE_INITIALIZING
@@ -730,6 +732,44 @@ define(
             assert.strictEqual(result, 20);
 
             StickyStrategy._private._isMobileIOS = isMobileIOS;
+         });
+
+         it('revertPosition outsideOfWindow', () => {
+            let popupCfg = {
+               direction: {
+                  horizontal: 'right'
+               },
+               sizes: {
+                  width: 100
+               },
+               fittingMode: {
+                  horizontal: 'adaptive'
+               }
+            };
+
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
+            let isMobileIOS = StickyStrategy._private._isMobileIOS;
+            StickyStrategy._private._isMobileIOS = () => true;
+
+            let getMargins = StickyStrategy._private.getMargins;
+            StickyStrategy._private.getMargins = () => 0;
+
+            //правый край таргета за пределами области видимости экрана
+            let getTargetCoords = StickyStrategy._private.getTargetCoords;
+            StickyStrategy._private.getTargetCoords = (a, b, coord) => { return coord === 'right' ?  1930 :  1850};
+
+            let invertPosition = StickyStrategy._private.invertPosition;
+            StickyStrategy._private.invertPosition = () => { popupCfg.direction.horizontal = 'left' };
+
+
+            let result = StickyStrategy._private.calculatePosition(popupCfg, {leftScroll: 0},'horizontal');
+            //проверяем, что окно позиционируется с правого края и его ширина не обрезается
+            assert.deepEqual(result, {right: 0});
+
+            StickyStrategy._private._isMobileIOS = isMobileIOS;
+            StickyStrategy._private.getMargins = getMargins;
+            StickyStrategy._private.getTargetCoords = getTargetCoords;
+            StickyStrategy._private.invertPosition = invertPosition;
          });
       });
    }

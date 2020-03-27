@@ -155,6 +155,7 @@ var _private = {
         if (self._sourceController) {
             _private.showIndicator(self);
             _private.hideError(self);
+            _private.getPortionedSearch(self).reset();
 
             if (cfg.groupProperty) {
                 const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
@@ -211,7 +212,12 @@ var _private = {
                         const curKey = listModel.getMarkedKey();
                         listModel.setItems(list);
                         const nextKey = listModel.getMarkedKey();
-                        if (nextKey && nextKey !== curKey
+                        // При загрузке вверх и нахождении снизу списка могут сделать релоад и нужно сделать подскролл вниз списка
+                        // Сделать сами по drawItems они не могут, т.к. это слишком поздно, уже произошла отрисовка и уже стрельнет
+                        // триггер загрузки следующей страницы (при загрузке вверх - предыдущей).
+                        // мы должны предоставить функционал автоматического подскрола вниз
+                        // TODO remove self._options.task1178907511 after https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+                        if (nextKey !== null && (nextKey !== curKey || self._options.task1178907511)
                             && self._listViewModel.getCount()
                             && !self._options.task46390860 && !self._options.task1177182277 && !cfg.task1178786918
                         ) {
@@ -223,6 +229,15 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
+
+                    if (self._loadedItems) {
+                        self._shouldRestoreScrollPosition = true;
+                    }
+                    // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
+                    if (self._itemsChanged) {
+                        self._shouldNotifyOnDrawItems = true;
+                    }
+
                 }
                 if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                     cfg.afterSetItemsOnReloadCallback();
@@ -673,12 +688,17 @@ var _private = {
         return navigation && navigation.view === 'demand';
     },
 
+    isPagesNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
+        return navigation && navigation.view === 'pages';
+    },
+
     needShowShadowByNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>, itemsCount: number): boolean {
         const isDemand = _private.isDemandNavigation(navigation);
         const isMaxCount = _private.isMaxCountNavigation(navigation);
+        const isPages = _private.isPagesNavigation(navigation);
         let result = true;
 
-        if (isDemand) {
+        if (isDemand || isPages) {
             result = false;
         } else if (isMaxCount) {
             result = _private.isItemsCountLessThenMaxCount(itemsCount, _private.getMaxCountFromNavigation(navigation));
@@ -698,7 +718,7 @@ var _private = {
             hasMoreData &&
             !sourceController.isLoading();
         const allowLoadBySearch =
-            !self._options.searchValue ||
+            !_private.isPortionedLoad(self) ||
             _private.getPortionedSearch(self).shouldSearch();
 
         if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
@@ -1135,7 +1155,7 @@ var _private = {
         // virtual scrolling is disabled.
         if (
             changesType === 'collectionChanged' ||
-            changesType === 'indexesChanged' && (self._options.virtualScrolling !== false || Boolean(self._options.virtualScrollConfig)) ||
+            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
             newModelChanged
         ) {
             self._itemsChanged = true;
@@ -1754,6 +1774,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _draggingEntity: null,
     _draggingTargetItem: null,
 
+    _isMobileIOS: detection.isMobileIOS,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -2062,7 +2084,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.markedKey !== this._options.markedKey) {
-            this._listViewModel.setMarkedKey(newOptions.markedKey, true);
+            if (newOptions.useNewModel) {
+                const markCommand = new displayLib.MarkerCommands.Mark(newOptions.markedKey);
+                markCommand.execute(this._listViewModel);
+            } else {
+                this._listViewModel.setMarkedKey(newOptions.markedKey, true);
+            }
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
@@ -2099,7 +2126,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
-            _private.getPortionedSearch(self).reset();
             if (this._menuIsShown) {
                 this._children.itemActionsOpener.close();
                 this._closeActionsMenu();

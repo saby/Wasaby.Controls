@@ -1,7 +1,10 @@
+import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
 import {SyntheticEvent} from "Vdom/Vdom";
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
+import {delay as runDelayed} from 'Types/function';
+import {SHADOW_VISIBILITY} from './_StickyHeader';
 
 /**
  * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
@@ -39,12 +42,17 @@ interface IHeadersIds {
     bottom: number[];
 }
 
+interface IOffsetCache {
+    [key: string]: number;
+}
+
 export default class Group extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     private _index: number = null;
     protected _isStickySupport: boolean = false;
 
     protected _fixed: boolean = false;
+    protected _cachedOffset: IOffsetCache = {};
 
     protected _stickyHeadersIds: IHeadersIds = {
         top: [],
@@ -59,9 +67,46 @@ export default class Group extends Control<IControlOptions> {
     protected _headers: IHeadersMap = {};
     protected _isRegistry: boolean = false;
 
-    protected _beforeMount(options: IControlOptions): void {
+    private _updateContext(position: POSITION, value: number) {
+        this._stickyHeaderContext[position] = value;
+        this._stickyHeaderContext.updateConsumers();
+    }
+
+    private _getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION, key: string): number {
+        const resetCacheDelay: number = 0;
+        // Сценарий: проскролить список, вызвать перестроение заголовков. В этом случе offset будет отрицательным.
+        // Физически заголовок не должен иметь такое смещение относительно группы. Это ошибка.
+        // Разобраться по https://online.sbis.ru/opendoc.html?guid=243c78ec-7f27-4625-b347-d92523702e50
+
+        // После регистрации каждого(!) нового заголовка в группе, вызыввается циклический обход уже всех(!)
+        // зареганых заголовков и получение их размера через getBoundingClientRect, что заметно сказывается
+        // на производительности. Для синхронных вызовов кэширую значение, на моем кейсе дает уменьшение вызовов на 66%.
+        if (this._cachedOffset[key] !== undefined) {
+            return this._cachedOffset[key];
+        }
+        this._cachedOffset[key] = Math.max(0, getOffset(parentElement, element, position));
+        setTimeout(() => {
+            this._cachedOffset[key] = undefined;
+        }, resetCacheDelay);
+        return this._cachedOffset[key];
+    }
+    protected _getChildContext() {
+        return {
+            stickyHeader: this._stickyHeaderContext
+        };
+    }
+
+    protected _beforeMount(options: IControlOptions, context): void {
         this._isStickySupport = isStickySupport();
         this._index = getNextId();
+        this._stickyHeaderContext = new StickyHeaderContext({
+            shadowPosition: context?.stickyHeader?.shadowPosition
+        });
+    }
+
+    protected _beforeUpdate(options: IControlOptions, context): void {
+        this._stickyHeaderContext.shadowPosition = context?.stickyHeader?.shadowPosition;
+        this._stickyHeaderContext.updateConsumers();
     }
 
     protected _afterMount(): void {
@@ -90,9 +135,20 @@ export default class Group extends Control<IControlOptions> {
         this._setOffset(value, POSITION.bottom);
     }
 
-    private _setOffset(value: number, position: string): void {
+    get shadowVisibility(): SHADOW_VISIBILITY {
         for (let id in this._headers) {
-            this._headers[id].inst[position] = this._headers[id][position] + value;
+            if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
+                return SHADOW_VISIBILITY.visible;
+            }
+        }
+        return SHADOW_VISIBILITY.hidden;
+    }
+
+    private _setOffset(value: number, position: POSITION): void {
+        for (let id in this._headers) {
+            const positionValue: number = this._headers[id][position] + value;
+            this._headers[id].inst[position] = positionValue;
+            this._updateContext(position, positionValue);
         }
         this._offset[position] = value;
     }
@@ -142,9 +198,11 @@ export default class Group extends Control<IControlOptions> {
             };
 
             for (const position of [POSITION.top, POSITION.bottom]) {
-                offset = getOffset(this._container, data.inst._container, position);
+                offset = this._getOffset(this._container, data.inst._container, position, data.id);
                 this._headers[data.id][position] = offset;
-                data.inst[position] = this._offset[position] + offset;
+                const positionValue: number = this._offset[position] + offset;
+                data.inst[position] = positionValue;
+                this._updateContext(position, positionValue);
             }
 
             // Register group after first header is registered
@@ -172,13 +230,16 @@ export default class Group extends Control<IControlOptions> {
         this._notify(
             'fixed',
             [{
-                id: this._index,
-                offsetHeight: fixedHeaderData.offsetHeight,
-                fixedPosition: fixedHeaderData.fixedPosition,
-                prevPosition: fixedHeaderData.prevPosition,
-                mode: fixedHeaderData.mode
+                ...fixedHeaderData,
+                id: this._index
             }],
             {bubbling: true}
         );
+    }
+
+    static contextTypes(): {} {
+        return {
+            stickyHeader: StickyHeaderContext
+        };
     }
 }

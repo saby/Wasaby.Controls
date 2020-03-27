@@ -193,12 +193,12 @@ define(
 
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
-            delete expectedOptions.footerTemplate;
+            expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
+            expectedOptions.footerContentTemplate = defaultOptions.nodeFooterTemplate;
             expectedOptions.footerItemData = {
                item,
                key: expectedOptions.root
             };
-            expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;
@@ -206,6 +206,7 @@ define(
             expectedOptions.additionalProperty = null;
             expectedOptions.itemPadding = null;
             expectedOptions.searchParam = null;
+            expectedOptions.iWantBeWS3 = false;
 
             let resultOptions = menuControl.getTemplateOptions(item);
             assert.deepEqual(resultOptions, expectedOptions);
@@ -226,12 +227,13 @@ define(
          });
 
          it('_footerMouseEnter', function() {
+            let isClosed = false;
             let menuControl = getMenu();
-            menuControl._hoveredItemIndex = 1;
-            menuControl._listModel = getListModel();
+            menuControl._children = {
+               Sticky: { close: () => { isClosed = true; } }
+            };
             menuControl._footerMouseEnter();
-            assert.isNull(menuControl._hoveredItemIndex);
-            assert.isNull(menuControl._listModel._hoveredItem);
+            assert.isTrue(isClosed);
          });
 
          it('getSelectedItemsByKeys', function() {
@@ -311,6 +313,16 @@ define(
             assert.isFalse(isVisible);
          });
 
+         it('_changeIndicatorOverlay', function() {
+            let menuControl = getMenu();
+            let indicatorConfig = {
+               delay: 100,
+               overlay: 'default'
+            };
+            menuControl._changeIndicatorOverlay('showIndicator', indicatorConfig);
+            assert.equal(indicatorConfig.overlay, 'none');
+         });
+
          it('_calculateActionsConfig', function() {
             let menuControl = getMenu();
             let listModel = getListModel();
@@ -336,6 +348,28 @@ define(
                searchValue: 'searchText'
             });
             assert.instanceOf(listModel, display.Search);
+         });
+
+         it('_itemActionClick', function() {
+            let isHandlerCalled = false;
+            let menuControl = getMenu();
+            menuControl._listModel = getListModel();
+            let action = {
+               id: 1,
+               icon: 'icon-Edit',
+               iconStyle: 'secondary',
+               title: 'edit',
+               showType: 2,
+               handler: function() {
+                  isHandlerCalled = true;
+               }
+            };
+            let clickEvent = {
+               stopPropagation: () => {}
+            };
+
+            menuControl._itemActionClick('itemActionClick', menuControl._listModel.at(1), action, clickEvent);
+            assert.isTrue(isHandlerCalled);
          });
       });
    }

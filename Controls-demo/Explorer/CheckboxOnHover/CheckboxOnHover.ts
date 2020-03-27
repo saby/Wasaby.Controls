@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls-demo/Explorer/CheckboxOnHover/CheckboxOnHover');
-import CONSTANTS = require('Controls/Constants');
+import {view as constView} from 'Controls/Constants';
 import ExplorerImages = require('Controls-demo/Explorer/ExplorerImages');
 import {HierarchicalMemory} from 'Types/source';
 import 'css!Controls-demo/Explorer/Demo/Demo';
@@ -237,7 +237,7 @@ class Demo extends Control {
     _groupingKeyCallback(item) {
         let group;
         if (item.get('hiddenGroup')) {
-            group = CONSTANTS.view.hiddenGroup;
+            group = constView.hiddenGroup;
         } else {
             group = item.get('isDocument') ? 'document' : 'image';
         }

@@ -180,7 +180,12 @@ interface IPosition {
                      _private.restrictContainer(position, property, popupCfg, positionOverflow);
                      resultPosition = position;
                   } else {
-                     _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
+                     //Fix position and overflow, if the revert position is outside of the window, but it can be position in the visible area
+                     _private.fixPosition(revertPosition, targetCoords);
+                     revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+                     if (revertPositionOverflow > 0 ) {
+                        _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
+                     }
                      resultPosition = revertPosition;
                   }
                } else {
@@ -216,25 +221,32 @@ interface IPosition {
       },
 
       _fixBottomPositionForIos: function(position, targetCoords) {
-         if (position.bottom && _private.isIOS12()) {
-            let keyboardHeight = _private.getKeyboardHeight();
-            position.bottom += keyboardHeight;
-
+         if (position.bottom) {
+            const keyboardHeight = _private.getKeyboardHeight();
+            if (!_private.isPortrait()) {
+               position.bottom += keyboardHeight;
+            }
             // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
             // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
             // additional offsets do not need to be considered. In other cases, it is necessary to take into account the height of the keyboard.
             // only for this case consider a scrollTop
-            let win = _private.getWindow();
-            if ((win.innerHeight + win.scrollY) > win.innerWidth) {
-               // fix for positioning with keyboard on vertical ios orientation
-               let dif = win.innerHeight - targetCoords.boundingClientRect.top;
-               if (position.bottom > dif) {
-                  position.bottom = dif;
+            if (_private.isIOS12()) {
+               let win = _private.getWindow();
+               if ((win.innerHeight + win.scrollY) > win.innerWidth) {
+                  // fix for positioning with keyboard on vertical ios orientation
+                  let dif = win.innerHeight - targetCoords.boundingClientRect.top;
+                  if (position.bottom > dif) {
+                     position.bottom = dif;
+                  }
+               } else if (keyboardHeight === 0) {
+                  position.bottom += _private.getTopScroll(targetCoords);
                }
-            } else if (keyboardHeight === 0) {
-               position.bottom += _private.getTopScroll(targetCoords);
             }
          }
+      },
+
+      isPortrait: function() {
+         return TouchKeyboardHelper.isPortrait();
       },
 
       getKeyboardHeight: function() {
