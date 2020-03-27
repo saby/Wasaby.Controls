@@ -18,7 +18,6 @@ import {
     IBaseGridRowIndexOptions
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 import cClone = require('Core/core-clone');
-import ControlsConstants = require('Controls/Constants');
 import collection = require('Types/collection');
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';

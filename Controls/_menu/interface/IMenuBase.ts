@@ -1,4 +1,4 @@
-import {IControlOptions} from 'UI/Base';
+import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IItemTemplateOptions, IHierarchyOptions, IIconSizeOptions, IMultiSelectableOptions} from 'Controls/interface';
 import {IGroupedOptions} from 'Controls/dropdown';
 
@@ -15,6 +15,7 @@ export interface IMenuBaseOptions extends IControlOptions, IHierarchyOptions, II
     emptyKey?: string|number;
     itemPadding: IItemPadding;
     multiSelect?: boolean;
+    emptyTemplate: TemplateFunction;
 }
 
 /**
