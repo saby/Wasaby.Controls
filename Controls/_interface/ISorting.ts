@@ -16,6 +16,8 @@ export default interface ISorting {
 /**
  * @name Controls/_interface/ISorting#sorting
  * @cfg {Array.<Object>} Определяет сортировку контрола. Допустимы значения ASC/DESC.
+ * @remark
+ * Примечание: Одновременно можно сортировать только по одному столбцу
  * @example
  * В шапке столбца необходимо задать свойство sortingProperty:
  * <pre class="brush: js; highlight: [19, 23]">
@@ -23,11 +25,9 @@ export default interface ISorting {
  * _header: null,
  * _columns: null,
  * _beforeMount: function(options) {
- *    this._sorting = [
- *        {
- *           price: 'DESC'
- *        }
- *    ];
+ *    this._sorting = [{
+ *        price: 'DESC'
+ *    }];
  *    this._header = [
  *       {
  *          caption: ''

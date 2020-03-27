@@ -70,10 +70,10 @@ export interface IHeaderCell extends IControlOptions {
      *    </ws:header>
      * </Controls.grid:View>
      * </pre>
-     * 
+     *
      * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
      * <pre class="brush: html">
-     * <!-- file1.wml --> 
+     * <!-- file1.wml -->
      * <Controls.grid:View>
      *    <ws:header>
      *       <ws:Array>
@@ -86,7 +86,7 @@ export interface IHeaderCell extends IControlOptions {
      *    </ws:header>
      * </Controls.grid:View>
      * </pre>
-     * 
+     *
      * <pre class="brush: html">
      * <!-- file2.wml -->
      * <ws:partial template="Controls/grid:HeaderContent">
@@ -95,11 +95,11 @@ export interface IHeaderCell extends IControlOptions {
      *    </ws:contentTemplate>
      * </ws:partial>
      * </pre>
-     * 
+     *
      * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
-     * 
+     *
      * <pre class="brush: html">
-     * <!-- file1.wml --> 
+     * <!-- file1.wml -->
      * <Controls.grid:View>
      *    <ws:header>
      *       <ws:Array>
@@ -116,7 +116,7 @@ export interface IHeaderCell extends IControlOptions {
      *    </ws:header>
      * </Controls.grid:View>
      * </pre>
-     * 
+     *
      * <pre class="brush: html">
      * <!-- file2.wml -->
      * {{contentTemplate.colData.column.title}}
@@ -136,14 +136,9 @@ export interface IHeaderCell extends IControlOptions {
      * _sorting: null,
      * _header: null,
      * _beforeMount: function(){
-     *    this._sorting = [
-     *       {
-     *          price: 'desc'
-     *       },
-     *       {
-     *          balance: 'asc'
-     *       }
-     *    ],
+     *    this._sorting = [{
+     *          price: 'DESC'
+     *    }],
      *    this._header = [
      *       {
      *          title: 'Цена',
