@@ -38,19 +38,19 @@ export interface IOffset {
  * The position property with sticky value is not supported in ie and edge lower version 16.
  * https://developer.mozilla.org/ru/docs/Web/CSS/position
  */
-export function isStickySupport() {
+export function isStickySupport(): boolean {
    return !Env.detection.isIE || Env.detection.IEVersion > 15;
 }
 
-export function getNextId() {
+export function getNextId(): number {
    return lastId++;
 }
 
-export function _lastId() {
+export function _lastId(): number {
    return lastId - 1;
 }
 
-export function getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION) {
+export function getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION): number {
    //TODO redo after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
    parentElement = (parentElement && parentElement.get) ? parentElement.get(0) : parentElement;
    element = (element && element.get) ? element.get(0) : element;
