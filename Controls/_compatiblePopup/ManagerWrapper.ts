@@ -13,7 +13,8 @@ var ManagerWrapper = Control.extend({
    _template: template,
 
    _beforeMount: function() {
-      return this._loadViewSettingsController();
+      // TODO: https://online.sbis.ru/opendoc.html?guid=3f08c72a-8ee2-4068-9f9e-74b34331e595
+      // return this._loadViewSettingsController();
    },
 
    _afterMount: function() {
