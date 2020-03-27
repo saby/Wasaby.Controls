@@ -16,6 +16,10 @@ export default class ModuleClass extends Control<IControlOptions> {
       this._forceUpdate();
    }
 
+   /**
+    * Переход к относительному URL из строки в верхней части разводящей, чтобы не рисовать всякий раз "%2F" вместо "/"
+    * @private
+    */
    protected _openRelativePath(): void {
       const url = MaskResolver.calculateHref('Controls-demo/app/:app', {app: this._urlToGo});
       Controller.navigate({ state: url });
