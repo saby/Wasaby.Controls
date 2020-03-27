@@ -1,3 +1,4 @@
+<div class="controlsDemo__wrapper controlDemo_Tile_dnd">
 <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" attr:class="demo-DragNDrop__list">
     <div>
         <Controls.list:Mover name="listMover"/>
