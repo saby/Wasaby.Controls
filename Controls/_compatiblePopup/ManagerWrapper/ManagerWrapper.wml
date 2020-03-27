@@ -12,6 +12,11 @@
                               <Controls.dragnDrop:Controller name="dragNDropContainer">
                                  <div>
                                     <Controls.popup:Container name="PopupContainer" attr:id="popup"/>
+                                    <ws:if data="{{ content.draggingTemplate }}">
+                                       <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
+                                                   draggingTemplateOptions="{{content.draggingTemplateOptions}}"
+                                                   draggingTemplate="{{content.draggingTemplate}}"/>
+                                    </ws:if>
                                  </div>
                               </Controls.dragnDrop:Controller>
                            </Controls.Application.TouchDetector>

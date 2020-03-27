@@ -2,11 +2,10 @@ import {ListControl as viewTemplate, View as List} from 'Controls/list';
 import GridViewModel = require('Controls/_grid/GridViewModel');
 import viewName = require('Controls/_grid/GridView');
 
-
 /**
     * Контрол «Таблица». Может загружать данные из источника данных.
     * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
-    * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">Демо-пример</a>.
     *
     * @class Controls/_grid/Grid
     * @extends Controls/list:View
@@ -22,16 +21,6 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IItemClick
     *
-    * @mixes Controls/_list/BaseControlStyles
-    * @mixes Controls/_list/ListStyles
-    * @mixes Controls/_grid/GridStyles
-    * @mixes Controls/_list/ItemActions/ItemActionsStyles
-    * @mixes Controls/_list/Swipe/SwipeStyles
-    *
-    * @mixes Controls/MoveDialog/Styles
-    * @mixes Controls/_paging/PagingStyles
-    * @mixes Controls/_paging/DigitButtonsStyles
-    * @mixes Controls/_grid/SortButtonStyles
     *
     * @control
     * @public
@@ -45,7 +34,7 @@ import viewName = require('Controls/_grid/GridView');
     * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
     * List of examples:
     * <ul>
-    *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">How to configure editing in your list</a>.</li>
     * </ul>
     *
     * @class Controls/_grid/Grid
@@ -61,18 +50,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
     * @mixes Controls/interface/IDraggable
-    * @mixes Controls/interface/IGroupedGrid
     *
-    * @mixes Controls/_list/BaseControlStyles
-    * @mixes Controls/_list/ListStyles
-    * @mixes Controls/_grid/GridStyles
-    * @mixes Controls/_list/ItemActions/ItemActionsStyles
-    * @mixes Controls/_list/Swipe/SwipeStyles
-    *
-    * @mixes Controls/MoveDialog/Styles
-    * @mixes Controls/_paging/PagingStyles
-    * @mixes Controls/_paging/DigitButtonsStyles
-    * @mixes Controls/_grid/SortButtonStyles
     *
     * @control
     * @public
@@ -81,22 +59,19 @@ import viewName = require('Controls/_grid/GridView');
     * @demo Controls-demo/List/Grid/BasePG
     */
 
-   var
-      Grid = List.extend(/** @lends Controls/grid:View */{
-         _viewName: viewName,
-         _viewTemplate: viewTemplate,
+export default class Grid extends List /** @lends Controls/grid:View */ {
+    _viewName = viewName;
+    _viewTemplate = viewTemplate;
 
-         _getModelConstructor: function() {
-            return GridViewModel;
-         }
-      });
+    _getModelConstructor() {
+        return GridViewModel;
+    }
+}
 
-   Grid.getDefaultOptions = function() {
-      return {
-         stickyHeader: true,
-         stickyColumnsCount: 1,
-         rowSeparatorSize: 's',
-      };
+Grid.getDefaultOptions = function() {
+   return {
+       stickyHeader: true,
+       stickyColumnsCount: 1,
+       rowSeparatorSize: 's'
    };
-
-   export = Grid;
+};

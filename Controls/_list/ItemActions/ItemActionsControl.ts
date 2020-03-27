@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_list/ItemActions/ItemActionsControl');
 import {showType} from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
-import ControlsConstants = require('Controls/Constants');
+import {view as constView} from 'Controls/Constants';
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
@@ -118,11 +118,11 @@ var _private = {
                 if (options.editingConfig && options.editingConfig.item) {
                     hasChanges = _private.updateItemActions(self, options.editingConfig.item, options);
                 }
-                for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
-                    var
-                        itemData = options.listModel.getCurrent(),
-                        item = itemData.actionsItem;
-                    if (item !== ControlsConstants.view.hiddenGroup && item.get) {
+                options.listModel.reset();
+                while (options.listModel.isEnd()) {
+                    let itemData = options.listModel.getCurrent();
+                    let item = itemData.actionsItem;
+                    if (item !== constView.hiddenGroup && item.get) {
                         updateItemActionsResult = _private.updateItemActions(self, item, options);
                         if (hasChanges !== 'all') {
                             if (hasChanges !== 'partial') {
@@ -130,6 +130,7 @@ var _private = {
                             }
                         }
                     }
+                    options.listModel.goToNext();
                 }
                 if (hasChanges !== 'none') {
                     options.listModel.nextModelVersion(hasChanges !== 'all', ACTION_TYPE);
@@ -202,11 +203,8 @@ var ItemActionsControl = Control.extend({
     },
 
     _beforeMount: function(newOptions) {
-        if (typeof window === 'undefined') {
-            this.serverSide = true;
-            return;
-        }
         this._getContainerPaddingClass = _private.getContainerPaddingClass.bind(this);
+
         if (newOptions.useNewModel) {
             displayLib = require('Controls/display');
             return import('Controls/listRender').then((listRender) => {

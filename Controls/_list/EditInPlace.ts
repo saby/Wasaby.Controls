@@ -4,7 +4,7 @@ import Deferred = require('Core/Deferred');
 import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
-import Constants = require('Controls/Constants');
+import {editing as constEditing} from 'Controls/Constants';
 import { error as dataSourceError } from 'Controls/dataSource';
 import 'css!theme?Controls/list';
 
@@ -40,7 +40,7 @@ var
         processBeforeBeginEditResult: function (self, options, eventResult, isAdd) {
             var result;
 
-            if (eventResult === Constants.editing.CANCEL) {
+            if (eventResult === constEditing.CANCEL) {
                 result = Deferred.success({cancelled: true});
             } else {
                 _private.registerPending(self);
@@ -81,7 +81,7 @@ var
                 return eventResult.addBoth(function(resultOfDeferred) {
                     self._notify('hideIndicator', [id], { bubbling: true });
 
-                    if (resultOfDeferred === Constants.editing.CANCEL) {
+                    if (resultOfDeferred === constEditing.CANCEL) {
                         self._endEditDeferred = null;
                         return Deferred.success({ cancelled: true });
                     }
@@ -93,7 +93,7 @@ var
                     });
                 });
             } else {
-                if (eventResult === Constants.editing.CANCEL) {
+                if (eventResult === constEditing.CANCEL) {
                     return Deferred.success({ cancelled: true });
                 }
                 return _private.updateModel(self, commit).addCallback(function() {
@@ -202,14 +202,15 @@ var
         },
 
         editNextRow: function (self, editNextRow: boolean, addAnyway: boolean = false) {
-            var index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+            const index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+            const editingConfig = self._options.editingConfig || {};
 
             if (editNextRow) {
-                if (_private.getNext(self._editingItem, index, self._options.listModel)) {
+                if (!self._isAdd && _private.getNext(self._editingItem, index, self._options.listModel)) {
                     self.beginEdit({
                         item: _private.getNext(self._editingItem, index, self._options.listModel)
                     });
-                } else if (addAnyway || self._options.editingConfig && self._options.editingConfig.autoAdd) {
+                } else if (addAnyway || editingConfig.autoAdd) {
                     self.beginAdd();
                 } else {
                     self.commitEdit();
@@ -673,7 +674,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         /*
         * Стандартное поведение. При нажатии "Галки" в операциях над записью, возможно два варианта дальнейшего поведения:
         * 1) если сохраняется уже существующая запись, то она просто сохраняется, курсор остается на строке, редактирование закрывается.
-        * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и начинается добавление новой.
+        * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и (при editingConfig.autoAddByApplyButton=true) начинается добавление новой.
         * */
         if (this._isAdd) {
             _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);

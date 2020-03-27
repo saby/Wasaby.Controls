@@ -75,14 +75,28 @@ define(
                title: "shouldn't display shadow if there are fixed headers",
                shadowPosition: 'top',
                hasFixed: true,
+               hasShadowVisible: true,
                result: false
+            }, {
+               title: "should display shadow if there are fixed headers",
+               shadowPosition: 'top',
+               hasFixed: true,
+               hasShadowVisible: false,
+               result: true
             }].forEach(function(test) {
                it(test.title, function () {
                   scroll._displayState.shadowPosition = test.shadowPosition || '';
+                  scroll._displayState.shadowVisible = {
+                     top: true,
+                     bottom: true
+                  };
                   scroll._shadowVisibilityByInnerComponents.top = test.shadowVisibilityByInnerComponents;
                   scroll._children.stickyController = {
                      hasFixed: function () {
                         return Boolean(test.hasFixed);
+                     },
+                     hasShadowVisible: function() {
+                        return Boolean(test.hasShadowVisible);
                      }
                   };
 
@@ -111,6 +125,9 @@ define(
                   scroll._children.stickyController = {
                      hasFixed: function () {
                         return false;
+                     },
+                     hasShadowVisible: function() {
+                        return false;
                      }
                   };
 
@@ -123,6 +140,9 @@ define(
                   scroll._children.stickyController = {
                      hasFixed: function () {
                         return false;
+                     },
+                     hasShadowVisible: function() {
+                        return false;
                      }
                   };
 
@@ -133,6 +153,36 @@ define(
                   scroll._children = {};
 
                   assert.isFalse(scroll._shadowVisible('top'));
+               });
+            });
+         });
+
+         describe('canScrollTo', function() {
+            [{
+               offset: 0,
+               scrollHeight: 100,
+               clientHeight: 100,
+               result: true
+            }, {
+               offset: 50,
+               scrollHeight: 200,
+               clientHeight: 100,
+               result: true
+            }, {
+               offset: 50,
+               scrollHeight: 100,
+               clientHeight: 100,
+               result: false
+            }].forEach(function (test) {
+               it(`should return ${test.result} if offset = ${test.offset},  scrollHeight = ${test.scrollHeight},  clientHeight = ${test.clientHeight}`, function () {
+                  scroll._children.content.scrollHeight = test.scrollHeight;
+                  scroll._children.content.clientHeight = test.clientHeight;
+
+                  if (test.result) {
+                     assert.isTrue(scroll.canScrollTo(test.offset));
+                  } else {
+                     assert.isFalse(scroll.canScrollTo(test.offset));
+                  }
                });
             });
          });

@@ -15,7 +15,6 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes Paging Controls/_paging/Paging
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -47,7 +46,6 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes Paging Controls/_paging/Paging
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -66,8 +64,8 @@ import Container = require('Controls/_list/Container');
 import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
-import View = require('Controls/_list/List');
-import ColumnsView = require('Controls/_list/Columns');
+import {default as View} from 'Controls/_list/List';
+import {default as ColumnsView} from 'Controls/_list/Columns';
 import BaseAction from 'Controls/_list/BaseAction';
 import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
 import Mover = require('Controls/_list/Mover');
@@ -86,7 +84,7 @@ import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ItemActionsControl = require('Controls/_list/ItemActions/ItemActionsControl');
 import ListViewModel = require('Controls/_list/ListViewModel');
-import ListControl = require('Controls/_list/ListControl');
+import {default as ListControl} from 'Controls/_list/ListControl';
 import ListView = require('Controls/_list/ListView');
 import SwipeTemplate = require('wml!Controls/_list/Swipe/resources/SwipeTemplate');
 import SwipeHorizontalMeasurer = require('Controls/_list/Swipe/HorizontalMeasurer');
@@ -109,8 +107,6 @@ import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {IList} from './_list/interface/IList';
 import {IItemAction} from './_list/interface/IList';
 
-import {Paging} from 'Controls/paging';
-
 export {
     AddButton,
     Container,
@@ -122,7 +118,6 @@ export {
     BaseAction,
     Mover,
     Remover,
-    Paging,
     DataContainer,
     _forTemplate,
     _swipeActionTemplate,

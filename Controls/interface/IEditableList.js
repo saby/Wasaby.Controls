@@ -49,7 +49,8 @@ define('Controls/interface/IEditableList', [
    /**
     * @typedef {Object} EditingConfig
     * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
-    * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+    * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже сущестсвующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+    * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
     * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * @property {AddPositionOption} [addPosition] Позиция редактирования по месту.
@@ -147,8 +148,10 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {String|Core/Deferred} EndEditResult
-    * @variant Cancel Отмена окончания редактирования\добавления.
-    * @variant Deferred Используется для сохранения с пользовательской логикой.
+    * @variant Cancel Отмена окончания редактирования или добавления записи.
+    * @variant Deferred Применяется для реализации собственной логики сохранения изменений.
+    * В этом случае базовая логика сохранения не используется, и поэтому вся ответственность за сохранение изменений перекладывается на прикладного разработчика.
+    * Событие {@link afterEndEdit} произойдет после завершения deferred, который возвращен из обработчика события {@link beforeEndEdit}.
     */
 
    /*
@@ -346,31 +349,32 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением редактирования\добавления.
+    * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением редактирования или добавления записи.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} item Редактируемая запись.
     * @param {Boolean} willSave Определяет, будут ли сохранены изменения в редактируемом элементе.
-    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
+    * @param {Boolean} isAdd Аргумент принимает значение true, если событие произошло перед добавлением записи, и false — в случае редактирования.
     * @returns {EndEditResult}
+    * @demo Controls-demo/list_new/EditInPlace/EndEdit/Index
     * @remark
     * Используйте событие, если необходимо проверить данные и отменить изменения. По умолчанию для сохранения изменений вызывается метод обновления списка.
     * Не обновляйте пользовательский интерфейс в обработчике этого события, потому что если во время подготовки данных произойдет ошибка, вам придется откатить изменения.
     * @example
-    * В следующем примере показано, как запретить завершение редактирования элемента, если оно соответствует условию:
-    * WML:
-    * <pre>
+    * В следующем примере показано завершение редактирования элемента, если выполнено условие.
+    * <pre class="brush:html;">
+    * <!-- WML -->
     *    <Controls.list:View on:beforeEndEdit="beforeEndEditHandler()" />
     * </pre>
-    * JS:
-    * <pre>
-    *    define('ModuleName', ['Controls/Constants'], function(constants) {
-    *       ...
-    *       beforeEndEditHandler: function(e, item, commit, isAdd) {
-    *          if (!item.get('text').length) {
-    *             return constants.editing.CANCEL;
-    *          }
+    * <pre class="brush: js; highlight: [4,5,6,7,8]">
+    * // JavaScript
+    * define('ModuleName', ['Controls/Constants'], function(constants) {
+    *    ...
+    *    beforeEndEditHandler: function(e, item, commit, isAdd) {
+    *       if (!item.get('text').length) {
+    *          return constants.editing.CANCEL;
     *       }
-    *    });
+    *    }
+    * });
     * </pre>
     * @see beforeBeginEdit
     * @see afterBeginEdit
@@ -467,7 +471,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @cfg {EditingConfig} Конфигурация редактирования по месту.
-    * <a href="/materials/demo-ws4-editable-list">Example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FEditableListPG">Example</a>.
     * @name Controls/interface/IEditableList#editingConfig
     * @example
     * WML:
@@ -480,7 +484,7 @@ define('Controls/interface/IEditableList', [
 
    /*
     * @cfg {EditingConfig} Configuration for editing in place.
-    * <a href="/materials/demo-ws4-editable-list">Example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FEditableListPG">Example</a>.
     * @name Controls/interface/IEditableList#editingConfig
     * @example
     * WML:

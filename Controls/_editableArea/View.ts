@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
-import Constants = require('Controls/Constants');
+import {editing as constEditing} from 'Controls/Constants';
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
 import {delay} from 'Types/function';
@@ -30,7 +30,7 @@ var
             bubbling: true
          });
 
-         if (result === Constants.editing.CANCEL) {
+         if (result === constEditing.CANCEL) {
             return Deferred.success();
          }
 
@@ -77,7 +77,7 @@ var
 
 /**
  * Контроллер для редактирования полей ввода.
- * <a href="/materials/demo-ws4-editable-area">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FEditableArea%2FEditableArea">Демо-пример</a>.
  *
  * @class Controls/_editableArea/View
  * @extends Core/Control
@@ -94,7 +94,7 @@ var
 
 /*
  * Controller for editing of input fields.
- * <a href="/materials/demo-ws4-editable-area">Demo</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FEditableArea%2FEditableArea">Demo</a>.
  *
  * @class Controls/_editableArea/View
  * @extends Core/Control
@@ -112,12 +112,6 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _beforeMount: function (newOptions) {
       this._isEditing = newOptions.editWhenFirstRendered;
       this._editObject = newOptions.editObject.clone();
-   },
-
-   _beforeUpdate: function (newOptions) {
-      if (this._options.editObject !== newOptions.editObject) {
-         this._editObject = newOptions.editObject.clone();
-      }
    },
 
    _afterUpdate: function () {
@@ -154,11 +148,14 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    },
 
    beginEdit: function (event, res) {
+      this._editObject = this._options.editObject.clone();
+      // Если опция editObject изменилась, то она ждет подтверждения изменения, делаем подтверждение у клона.
+      this._editObject.acceptChanges();
       // TODO: res - это результат события со старым названием. Снести вместе со старым контролом 3.19.110, как только появится веха
       var result = res || this._notify('beforeBeginEdit', [this._editObject], {
          bubbling: true
       });
-      if (result !== Constants.editing.CANCEL) {
+      if (result !== constEditing.CANCEL) {
          this._isEditing = true;
          this._beginEditTarget = event ? event.target.closest('.controls-EditableArea__editorWrapper') : null;
       }

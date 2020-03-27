@@ -7,10 +7,12 @@ import getPrefetchSource from './getPrefetchSource';
 import {ContextOptions} from 'Controls/context';
 import {isEqual} from "Types/object";
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
+import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 
 
 import {ICrud, PrefetchProxy} from 'Types/source';
 import {RecordSet} from 'Types/collection';
+import {TArrayGroupId, prepareFilterCollapsedGroups} from 'Controls/_list/Controllers/Grouping';
 
 type GetSourceResult = {
    data?: RecordSet;
@@ -21,7 +23,7 @@ type GetSourceResult = {
       /**
        * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
        * @remark
-       * См. <a href="/materials/demo-ws4-filter-search-new">демо-пример</a>.
+       * См. <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>.
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
@@ -37,7 +39,7 @@ type GetSourceResult = {
       /*
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
+       * Here you can see a <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">demo</a>.
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
@@ -97,19 +99,32 @@ type GetSourceResult = {
          createPrefetchSource(
             self,
             data: RecordSet | void,
-            dataLoadErrback: Function | void
+            dataLoadErrback: Function | void,
+            groupHistoryId: string
          ): Promise<GetSourceResult> {
-            return getPrefetchSource({
-               source: self._source,
-               navigation: self._navigation,
-               sorting: self._sorting,
-               filter: self._filter,
-               keyProperty: self._keyProperty
-            }, data).then((result: GetSourceResult) => {
-               if (result.error && dataLoadErrback instanceof Function) {
-                  dataLoadErrback(result.error);
+
+            return new Promise((resolve) => {
+               if (typeof groupHistoryId !== 'string') {
+                  resolve(self._filter);
+               } else {
+                  // restoreCollapsedGroups всегда завершается через Promise.resolve()
+                  GroupUtil.restoreCollapsedGroups(groupHistoryId).then((collapsedGroups?: TArrayGroupId) => {
+                     resolve(prepareFilterCollapsedGroups(collapsedGroups, self._filter || {}));
+                  });
                }
-               return result;
+            }).then((filter) => {
+               return getPrefetchSource({
+                  source: self._source,
+                  navigation: self._navigation,
+                  sorting: self._sorting,
+                  filter,
+                  keyProperty: self._keyProperty
+               }, data).then((result: GetSourceResult) => {
+                  if (result.error && dataLoadErrback instanceof Function) {
+                     dataLoadErrback(result.error);
+                  }
+                  return result;
+               });
             });
          },
 
@@ -162,6 +177,16 @@ type GetSourceResult = {
 
          getDataContext: function(self) {
             return new ContextOptions(_private.updateDataOptions(self, {}));
+         },
+
+         /**
+          * Returns groupHistoryId if list control has grouping
+          * @param options control options
+          * @return groupHistoryId
+          */
+         getGroupHistoryId(options): string {
+            const hasGrouping = !!options.groupProperty || !!options.groupingKeyCallback;
+            return hasGrouping ? (options.groupHistoryId || options.historyIdCollapsedGroups) : undefined;
          }
       };
 
@@ -196,7 +221,7 @@ type GetSourceResult = {
                   })
                });
             } else if (self._source) {
-               return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {
+               return _private.createPrefetchSource(this, null, options.dataLoadErrback, _private.getGroupHistoryId(options)).addCallback(function(result) {
                   _private.createDataContextBySourceResult(self, result);
                   return result.data;
                });
@@ -210,7 +235,7 @@ type GetSourceResult = {
 
             if (this._options.source !== newOptions.source) {
                this._loading = true;
-               return _private.createPrefetchSource(this).addCallback((result) => {
+               return _private.createPrefetchSource(this, null, null, _private.getGroupHistoryId(newOptions)).addCallback((result) => {
                   _private.resolvePrefetchSourceResult(this, result);
                   _private.updateDataOptions(this, this._dataOptionsContext);
                   this._dataOptionsContext.updateConsumers();
