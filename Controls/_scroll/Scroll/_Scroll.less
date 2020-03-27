@@ -31,9 +31,17 @@
    -webkit-overflow-scrolling: touch;
 }
 
-.controls-Scroll__scrollbar {
+.controls-VScrollbar_vertical {
    position: absolute;
    top: 0;
+   right: 0;
+   bottom: 0;
+   z-index: @z-index_Scroll-contentEnvironment;
+}
+
+.controls-ScrollContainer__scrollbar_horizontal {
+   position: absolute;
+   left: 0;
    right: 0;
    bottom: 0;
    z-index: @z-index_Scroll-contentEnvironment;
@@ -70,12 +78,21 @@
 }
 
 .controls-Scroll__shadow {
-   left: 0;
-   right: 0;
    z-index: @z-index_Scroll-contentEnvironment;
    position: absolute;
    pointer-events: none;
-   height: @shadow_height_scroll;
+}
+
+.controls-Scroll__shadow_horizontal {
+   left: 0;
+   right: 0;
+   height: @shadow_thickness_scroll;
+}
+
+.controls-Scroll__shadow_vertical {
+   top: 0;
+   bottom: 0;
+   width: @shadow_thickness_scroll;
 }
 
 .controls-Scroll__shadow-safari13 {
@@ -83,7 +100,7 @@
    z-index: @z-index_Scroll-contentEnvironment;
    position: absolute;
    pointer-events: none;
-   height: @shadow_height_scroll;
+   height: @shadow_thickness_scroll;
 }
 .controls-Scroll__shadow_top {
    top: 0;
@@ -101,6 +118,22 @@
    );
 }
 
+.controls-Scroll__shadow_left {
+   left: 0;
+   background: linear-gradient(
+           to right,
+           @shadow_start-color_scroll, @shadow_end-color_scroll
+   );
+}
+
+.controls-Scroll__shadow_right {
+   right: 0;
+   background: linear-gradient(
+           to left,
+           @shadow_start-color_scroll, @shadow_end-color_scroll
+   );
+}
+
 .controls-Scroll__content_hideNativeScrollbar::-webkit-scrollbar {
    width: 0px;
    // It's Magic. Only these two styles together allows to hide the scroll on the iPad.
@@ -108,9 +141,14 @@
    display: none;
 }
 
-.controls-Scroll__content_scroll {
+.controls-Scroll__scroll_vertical {
    overflow-y: scroll;
    overflow-x: hidden;
+}
+
+.controls-Scroll__scroll_verticalHorizontal {
+   overflow-y: scroll;
+   overflow-x: scroll;
 }
 
 .controls-Scroll__content_auto {
