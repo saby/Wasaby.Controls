@@ -37,6 +37,7 @@ import {CollectionItem, ItemActionsController} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
+import {IHashMap} from 'Types/declarations';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -141,12 +142,12 @@ var _private = {
         }
     },
 
-    reload: function(self, cfg) {
-        var
-            filter = cClone(cfg.filter),
-            sorting = cClone(cfg.sorting),
-            navigation = cClone(cfg.navigation),
-            resDeferred = new Deferred();
+    reload(self, cfg): Promise<any> | Deferred<any> {
+        const filter: IHashMap<unknown> = cClone(cfg.filter);
+        const sorting = cClone(cfg.sorting);
+        const navigation = cClone(cfg.navigation);
+        const resDeferred = new Deferred();
+
         self._noDataBeforeReload = self._isMounted && (!self._listViewModel || !self._listViewModel.getCount());
         if (cfg.beforeReloadCallback) {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
@@ -560,7 +561,7 @@ var _private = {
         _private.showIndicator(self, direction);
 
         if (self._sourceController) {
-            const filter = cClone(receivedFilter || self._options.filter);
+            const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }

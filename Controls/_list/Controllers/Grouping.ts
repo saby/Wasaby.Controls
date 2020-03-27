@@ -4,8 +4,8 @@
  * @private
  */
 
-import {QueryWhere} from 'Types/source';
 import {RecordSet} from 'Types/collection';
+import {IHashMap} from 'Types/declarations';
 
 export type TGroupId = string|number;
 export type TArrayGroupId = TGroupId[];
@@ -36,8 +36,9 @@ export function isAllGroupsCollapsed(collection: IGroupingModel): boolean {
     return collection.isAllGroupsCollapsed();
 }
 
-export function prepareFilterCollapsedGroups(collapsedGroups: TArrayGroupId, filter: QueryWhere): QueryWhere {
-    if (collapsedGroups) {
+export function prepareFilterCollapsedGroups(collapsedGroups: TArrayGroupId, filter: IHashMap<unknown> | undefined): IHashMap<unknown> {
+    // По умолчанию фильтр может оказаться undefined
+    if (filter && collapsedGroups && collapsedGroups.length) {
         filter.collapsedGroups = collapsedGroups;
     }
     return filter;
