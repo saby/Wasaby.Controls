@@ -2874,7 +2874,8 @@ BaseControl.getDefaultOptions = function() {
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
         markedKey: null,
         stickyHeader: true,
-        virtualScrollMode: 'remove'
+        virtualScrollMode: 'remove',
+        filter: {}
     };
 };
 export = BaseControl;
