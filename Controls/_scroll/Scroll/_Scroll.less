@@ -64,6 +64,7 @@
  * В противном случае это вызовет тормоза вместо оптимизации.
  * Подробнее https://developer.mozilla.org/ru/docs/Web/CSS/will-change.
  */
+
 .controls-Scroll__content_possibleScroll:hover {
    will-change: scroll-position;
 }
@@ -129,7 +130,7 @@
    bottom: 0;
    right: 0;
    z-index: @z-index_Scroll-contentEnvironment;
-   border-top: @border-width_BaseControl-scrollPaging-top solid @border-color_BaseControl-scrollPaging;
+   border-top: @scrollpaging_separator-thickness_list solid @scrollpaging_separator-color_list;
 }
 
 .controls-Scroll__content_paging::after {
