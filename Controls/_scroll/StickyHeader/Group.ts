@@ -3,7 +3,6 @@ import {SyntheticEvent} from "Vdom/Vdom";
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
-import {delay as runDelayed} from 'Types/function';
 import {SHADOW_VISIBILITY} from './_StickyHeader';
 
 /**
@@ -67,29 +66,13 @@ export default class Group extends Control<IControlOptions> {
     protected _headers: IHeadersMap = {};
     protected _isRegistry: boolean = false;
 
+    private _delayedHeaders: number[] = [];
+
     private _updateContext(position: POSITION, value: number) {
         this._stickyHeaderContext[position] = value;
         this._stickyHeaderContext.updateConsumers();
     }
 
-    private _getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION, key: string): number {
-        const resetCacheDelay: number = 0;
-        // Сценарий: проскролить список, вызвать перестроение заголовков. В этом случе offset будет отрицательным.
-        // Физически заголовок не должен иметь такое смещение относительно группы. Это ошибка.
-        // Разобраться по https://online.sbis.ru/opendoc.html?guid=243c78ec-7f27-4625-b347-d92523702e50
-
-        // После регистрации каждого(!) нового заголовка в группе, вызыввается циклический обход уже всех(!)
-        // зареганых заголовков и получение их размера через getBoundingClientRect, что заметно сказывается
-        // на производительности. Для синхронных вызовов кэширую значение, на моем кейсе дает уменьшение вызовов на 66%.
-        if (this._cachedOffset[key] !== undefined) {
-            return this._cachedOffset[key];
-        }
-        this._cachedOffset[key] = Math.max(0, getOffset(parentElement, element, position));
-        setTimeout(() => {
-            this._cachedOffset[key] = undefined;
-        }, resetCacheDelay);
-        return this._cachedOffset[key];
-    }
     protected _getChildContext() {
         return {
             stickyHeader: this._stickyHeaderContext
@@ -119,6 +102,18 @@ export default class Group extends Control<IControlOptions> {
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
         return getOffset(parentElement, this._container, position);
+    }
+
+    resetSticky(): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.resetSticky();
+        }
+    }
+
+    restoreSticky(): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.restoreSticky();
+        }
     }
 
     get height(): number {
@@ -189,21 +184,13 @@ export default class Group extends Control<IControlOptions> {
     protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
         event.stopImmediatePropagation();
         if (register) {
-            let offset: number = 0;
-
             this._headers[data.id] = {
                 ...data,
                 top: 0,
                 bottom: 0
             };
 
-            for (const position of [POSITION.top, POSITION.bottom]) {
-                offset = this._getOffset(this._container, data.inst._container, position, data.id);
-                this._headers[data.id][position] = offset;
-                const positionValue: number = this._offset[position] + offset;
-                data.inst[position] = positionValue;
-                this._updateContext(position, positionValue);
-            }
+            this._updateTopBottom(data);
 
             // Register group after first header is registered
             if (!this._isRegistry) {
@@ -224,6 +211,46 @@ export default class Group extends Control<IControlOptions> {
                 this._isRegistry = false;
             }
         }
+    }
+
+    private _updateTopBottom(data: TRegisterEventData): void {
+        // Проблема в том, что чтобы узнать положение заголовка относительно группы нам надо снять position: sticky.
+        // Это приводит к layout. И так для каждой ячейки для заголвков в таблице. Создадим список всех заголовков
+        // которые надо обсчитать в этом синхронном участке кода и обсчитаем их за раз в микротаске,
+        // один раз сняв со всех загоовков position: sticky.
+        if (!this._updateTopBottomDelayed.length) {
+            Promise.resolve().then(this._updateTopBottomDelayed.bind(this));
+        }
+        this._delayedHeaders.push(data.id);
+    }
+
+    private _updateTopBottomDelayed(): void {
+        let
+            data: TRegisterEventData,
+            offset: number;
+
+        // Сбрасываем position: sticky у всех заголовков. Мы могли бы сбрасывать его только у this._delayedHeaders
+        // заголовков. Но в таблицах заголовки лежат в контенере с display: contents и нельзя узнать его положение.
+        // По этому положение такой группы определяется по самому верхниму и самому нижнему ребенку.
+        // По этому приходится сбрасывать position: sticky у всех заголовков.
+        this.resetSticky();
+
+        for (const id of this._delayedHeaders) {
+            data = this._headers[id];
+            for (const position of [POSITION.top, POSITION.bottom]) {
+                if (data.inst._options.position.indexOf(position) !== -1) {
+                    offset = data.inst.getOffset(this._container, position);
+                    this._headers[data.id][position] = offset;
+                    const positionValue: number = this._offset[position] + offset;
+                    data.inst[position] = positionValue;
+                    this._updateContext(position, positionValue);
+                }
+            }
+        }
+
+        this.restoreSticky();
+
+        this._delayedHeaders = [];
     }
 
     private _notifyFixed(fixedHeaderData: IFixedEventData): void {
