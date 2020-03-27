@@ -134,7 +134,8 @@ function getGroupedCatalogWithHiddenGroup(): Array<{
     return [
         {
             id: 1,
-            title: 'WebCam X541SA-XO056D'
+            title: 'WebCam X541SA-XO056D',
+            brand: 'CONTROLS_HIDDEN_GROUP'
         },
         {
             id: 2,
@@ -163,7 +164,8 @@ function getGroupedCatalogWithHiddenGroup(): Array<{
         },
         {
             id: 7,
-            title: 'MagicMouse 2'
+            title: 'MagicMouse 2',
+            brand: 'CONTROLS_HIDDEN_GROUP'
         },
         {
             id: 8,
