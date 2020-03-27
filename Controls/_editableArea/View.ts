@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
-import Constants = require('Controls/Constants');
+import {editing as constEditing} from 'Controls/Constants';
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
 import {delay} from 'Types/function';
@@ -30,7 +30,7 @@ var
             bubbling: true
          });
 
-         if (result === Constants.editing.CANCEL) {
+         if (result === constEditing.CANCEL) {
             return Deferred.success();
          }
 
@@ -155,7 +155,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       var result = res || this._notify('beforeBeginEdit', [this._editObject], {
          bubbling: true
       });
-      if (result !== Constants.editing.CANCEL) {
+      if (result !== constEditing.CANCEL) {
          this._isEditing = true;
          this._beginEditTarget = event ? event.target.closest('.controls-EditableArea__editorWrapper') : null;
       }
