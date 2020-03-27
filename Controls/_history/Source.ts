@@ -482,7 +482,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
    _parents: null,
    _serialize: false,
 
-   constructor: function Memory(cfg) {
+   constructor: function HistorySource(cfg) {
       this.originSource = cfg.originSource;
       this.historySource = cfg.historySource;
       this._parentProperty = cfg.parentProperty;
