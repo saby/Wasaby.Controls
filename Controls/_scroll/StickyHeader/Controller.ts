@@ -29,7 +29,7 @@ class Component extends Control {
     // Если созданный заголвок невидим, то мы не можем посчитать его позицию.
     // Учтем эти заголовки после ближайшего события ресайза.
     private _delayedHeaders: TRegisterEventData[] = [];
-    private _stickyControllerMounted = false;
+    private _stickyControllerMounted: boolean = false;
 
     _beforeMount(options) {
         this._headersStack = {
@@ -101,9 +101,10 @@ class Component extends Control {
     }
 
     _stickyRegisterHandler(event, data: TRegisterEventData, register: boolean): void {
-        this._register(data, register, true);
+        const promise = this._register(data, register, true);
         this._clearOffsetCache();
         event.stopImmediatePropagation();
+        return promise;
     }
 
     _register(data: TRegisterEventData, register: boolean, update: boolean): void {
@@ -113,27 +114,24 @@ class Component extends Control {
                 fixedInitially: false,
                 offset: {}
             };
-            // Если контрол невидимый или еще не замонтирован, то отложим регистрацию заголовков.
-            // Невидимые заголовки мы не можем обсчитать, нельзя узнать их размеры. Обсчитаем их по событию ресайза.
-            // Дети монтируются раньше родителей, и в скролируемой области может быть несколько заголовков.
-            // Запускать рассчет положения заголвоков при каждой регистрации заголовка дорого.
-            // Обсчитаем все зафиксированные заголовки за один проход после того как контроллер замонтировался
-            // (все внутрение заголовки зарегистрировались).
+
+            // Проблема в том, что чтобы узнать положение заголовка нам надо снять position: sticky.
+            // Это приводит к layout. И так для каждого заголовка. Создадим список всех заголовков
+            // которые надо обсчитать в этом синхронном участке кода и обсчитаем их за раз в микротаске,
+            // один раз сняв со всех загоовков position: sticky. Если контроллер не видим, или еще не замонтирован,
+            // то положение заголовков рассчитается по событию ресайза или в хуке _afterMount.
+            // Невидимые заголовки нельзя обсчитать, потому что нельзя узнать их размеры и положение.
+            this._delayedHeaders.push(data);
+
             if (Component._isVisible(data.container) && this._stickyControllerMounted) {
-                this._addToHeadersStack(data.id, data.position);
-                if (update) {
-                    this._updateFixedInitially('top');
-                    this._updateFixedInitially('bottom');
-                    this._updateTopBottom();
-                }
-            } else {
-                this._delayedHeaders.push(data);
+                return Promise.resolve().then(this._registerDelayed.bind(this));
             }
 
         } else {
             delete this._headers[data.id];
             this._removeFromHeadersStack(data.id, data.position);
         }
+        return Promise.resolve();
     }
 
     /**
@@ -180,18 +178,30 @@ class Component extends Control {
         }
     }
 
-    _registerDelayed() {
+    private _resetSticky(): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.resetSticky();
+        }
+    }
+
+    private _restoreSticky(): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.restoreSticky();
+        }
+    }
+
+    private _registerDelayed(): void {
         const delayedHeadersCount = this._delayedHeaders.length;
 
         if (!delayedHeadersCount) {
             return;
         }
 
+        this._resetSticky();
+
         this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
             if (Component._isVisible(header.container)) {
-                // Регистрируем заголовок, но не обновляем его положение,
-                // сделаем это после того как зарегистрируем все заголовки.
-                this._register(header, true, false);
+                this._addToHeadersStack(header.id, header.position);
                 return false;
             }
             return true;
@@ -203,6 +213,8 @@ class Component extends Control {
             this._updateTopBottom();
             this._clearOffsetCache();
         }
+
+        this._restoreSticky();
     }
 
     /**
