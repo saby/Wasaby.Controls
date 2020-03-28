@@ -224,7 +224,12 @@ interface IPosition {
          if (position.bottom) {
             const keyboardHeight = _private.getKeyboardHeight();
             if (!_private.isPortrait()) {
-               position.bottom += keyboardHeight;
+               let bottomSpace = keyboardHeight;
+               if (!_private.isIOS12()) {
+                  const viewPort = _private.getVisualViewport();
+                  bottomSpace = document.body.clientHeight - (viewPort.height + viewPort.offsetTop);
+               }
+               position.bottom += bottomSpace;
             }
             // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
             // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and
