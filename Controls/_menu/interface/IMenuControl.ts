@@ -1,6 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 import {IMenuBaseOptions} from './IMenuBase';
-import {ISourceOptions, INavigationOptions, IFilterOptions, ISelectorDialogOptions, TSelectedKey} from 'Controls/interface';
+import {ISourceOptions, INavigationOptions, IFilterOptions, ISelectorDialogOptions} from 'Controls/interface';
+import {Stack} from 'Controls/popup/Stack';
 import {IItemAction} from 'Controls/list';
 
 export type TKey = string|number|null;
@@ -9,7 +10,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
         IFilterOptions, ISelectorDialogOptions {
     nodeFooterTemplate?: TemplateFunction;
     root?: TKey;
-    selectorOpener?: object;
+    selectorOpener?: Stack;
     itemActions?: IItemAction[];
 }
 

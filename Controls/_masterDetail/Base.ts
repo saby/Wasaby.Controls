@@ -280,6 +280,7 @@ class Base extends Control<IMasterDetail> {
             this._startResizeRegister();
         }
     }
+
     static _theme: string[] = ['Controls/masterDetail'];
 }
 

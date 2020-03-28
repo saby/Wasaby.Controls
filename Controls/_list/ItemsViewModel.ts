@@ -4,7 +4,7 @@
 import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
-import ControlsConstants = require('Controls/Constants');
+import {view as constView} from 'Controls/Constants';
 import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
@@ -60,7 +60,7 @@ var _private = {
             (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
     },
     displayFilterGroups: function(item, index, displayItem) {
-        return item === ControlsConstants.view.hiddenGroup || !item.get || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
+        return item === constView.hiddenGroup || !item.get || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
     },
     prepareCollapsedGroupsByArray: function(collapsedGroups) {
         var
@@ -276,7 +276,7 @@ var ItemsViewModel = BaseViewModel.extend({
         if (this._options.groupingKeyCallback || this._options.groupProperty) {
             if (this._isGroup(itemData.item)) {
                 itemData.isGroup = true;
-                itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;
+                itemData.isHiddenGroup = itemData.item === constView.hiddenGroup;
                 itemData.isGroupExpanded = !this._collapsedGroups[itemData.item];
                 itemData.metaData = this._items.getMetaData();
             }
@@ -493,7 +493,7 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     _isGroup: function(item) {
-        return item === ControlsConstants.view.hiddenGroup || !item.get;
+        return item === constView.hiddenGroup || !item.get;
     },
 
     isAllGroupsCollapsed(): boolean {
