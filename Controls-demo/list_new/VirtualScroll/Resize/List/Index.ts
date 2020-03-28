@@ -7,7 +7,6 @@ import 'css!Controls-demo/Controls-demo';
 interface IItem {
     id: number;
     title: string;
-    template?: string;
 }
 
 function getMemory(): Memory {
