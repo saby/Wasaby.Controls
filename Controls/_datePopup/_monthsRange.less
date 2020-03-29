@@ -137,6 +137,10 @@
    .controls-PeriodDialog-MonthsRange__halfYearsPanel-button {
       z-index: 3;
       border-bottom-color: transparent;
+
+      /* В IE на сайте слой обводки controls-PeriodDialog-MonthsRange__halfYear-hovered (before) перекрывает кнопку, несмотря на одинаковые
+     -index-ы. position: relative у кнопки решает проблему */
+      position: relative;
    }
 }
 .controls-PeriodDialog-MonthsRange__quarter-hovered {
@@ -153,6 +157,10 @@
    .controls-PeriodDialog-MonthsRange__quarterButton {
       z-index: 3;
       border-bottom-color: transparent;
+
+      /* В IE на сайте слой обводки controls-PeriodDialog-MonthsRange__quarter-hovered (before) перекрывает кнопку, несмотря на одинаковые
+      -index-ы. position: relative у кнопки решает проблему */
+      position: relative;
    }
 }
 
