@@ -213,7 +213,7 @@ var _private = {
          _private.close(self);
       }
    },
-   loadDependencies: function(self, needUpdateDependencies) {
+   loadDependencies: function(self, template) {
       var getTemplatesToLoad = function(options) {
          var templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
          var templatesToLoad = [];
@@ -224,8 +224,8 @@ var _private = {
          });
          return templatesToLoad;
       };
-
-      if (!self._dependenciesDeferred || needUpdateDependencies) {
+      const isTemplateLoaded = template ? require.defined(self._options[template].templateName) : false;
+      if (!self._dependenciesDeferred && !isTemplateLoaded) {
          self._dependenciesDeferred = mStubs.require(DEPS.concat(getTemplatesToLoad(self._options).concat([self._options.layerName])));
          this._isDependenciesUpdating = false;
       }
@@ -363,8 +363,6 @@ var SuggestLayout = Control.extend({
       const valueChanged = this._options.value !== newOptions.value;
       const valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
       const needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, _private.prepareValue(this, newOptions.value));
-      const isNewEmptyTemplate = !isEqual(this._options.emptyTemplate, newOptions.emptyTemplate);
-      const isNewFooterTemplate = !isEqual(this._options.footerTemplate, newOptions.footerTemplate);
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
@@ -387,14 +385,17 @@ var SuggestLayout = Control.extend({
          _private.setFilter(this, newOptions.filter, newOptions);
       }
 
-      if (isNewEmptyTemplate) {
+      if (!isEqual(this._options.emptyTemplate, newOptions.emptyTemplate)) {
          this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
+         if (newOptions.suggestState) {
+            _private.loadDependencies(this, 'emptyTemplate');
+         }
       }
 
-      if (isNewFooterTemplate || isNewEmptyTemplate) {
-         this._dependenciesDeferred = null;
-         this._isDependenciesUpdating = newOptions.suggestState;
-         _private.loadDependencies(this, newOptions.suggestState);
+      if (!isEqual(this._options.footerTemplate, newOptions.footerTemplate)) {
+         if (newOptions.suggestState) {
+            _private.loadDependencies(this, 'footerTemplate');
+         }
       }
 
       if (this._options.searchDelay !== newOptions.searchDelay) {
