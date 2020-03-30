@@ -23,7 +23,7 @@
   }
 
   .controls-Grid__colgroup-columnMultiSelect_theme-@{themeName} {
-    width: @width_Grid-cell-checkbox;
+    width: @click-area_width_checkbox;
   }
 
   .controls-Grid__header {
@@ -57,12 +57,12 @@
 
   .controls-Grid__multi-header-cell_min-height_theme-@{themeName} {
     // В таблицах функцию min-height выполняет height
-    height: @min-height_Grid-multi-header;
+    height: @header_multiline_cell_min-height_grid;
   }
 
   .controls-Grid__header-cell_min-height_theme-@{themeName} {
     // В таблицах функцию min-height выполняет height
-    height: @min-height_Grid-header;
+    height: @header_cell_min-height_grid;
   }
 
    // Этот стиль задаётся для tr и при display: table-row-group ломает вёрстку в IE/Edge
@@ -119,13 +119,13 @@
   }
 
   .controls-Grid__row-cell-checkbox_theme-@{themeName} {
-    width: @width_Grid-cell-checkbox;
+    width: @click-area_width_checkbox;
   }
 
   .controls-Grid__row-cell_selected__first_theme-@{themeName} {
     // Не понятно для чего этот стиль, если понядобится, то нужен коментарий
     // Отключил, потому что во всех браузерах появляется рыжая обводка у строки
-    //box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
+    //box-shadow: inset @marker_thickness_list 0 0 @marker_color_list;
   }
 
   .controls-Grid__header-cell__content__innerWrapper {
