@@ -22,7 +22,7 @@ export default interface IBaseItemTemplateOptions {
    highlightOnHover?: boolean;
    /**
     * @name Controls/list:BaseItemTemplate#cursor
-    * @cfg {TCursor} Устанавливает тип {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора}, когда он находится в пределах элемента списка.
+    * @cfg {TCursor} Тип {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора}, когда он находится в пределах элемента списка.
     * @default pointer
     */
    cursor?: TCursor;

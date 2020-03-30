@@ -93,7 +93,7 @@ export interface IColumn {
     compatibleWidth?: string;
     /**
      * @name Controls/grid:IColumn#template
-     * @cfg {String|Function} Устанавливает шаблон отображения ячейки.
+     * @cfg {String|Function} Шаблон отображения ячейки.
      * @default Controls/grid:ColumnTemplate
      * @remark
      * Подробнее о параметрах шаблона Controls/grid:ColumnTemplate читайте {@link Controls/grid:ColumnTemplate здесь}.
