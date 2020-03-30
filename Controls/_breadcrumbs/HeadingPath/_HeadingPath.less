@@ -40,9 +40,6 @@
    max-width: 50%;
    flex-shrink: 0;
 }
-.controls-BreadCrumbsPath__backButton__wrapper_theme-@{themeName} {
-   padding-right: @spacing_Path-between-home-and-backButton;
-}
 
 .controls-BreadCrumbsPath__backButton__wrapper__only {
    max-width: 100%;
@@ -67,7 +64,7 @@
    position: absolute;
    align-self: baseline;
    align-items: baseline;
-   right: 0;
+   right: -@spacing_Path-between-home-and-backButton;
    bottom: 0;
 }
 .controls-BreadCrumbsPath__backButtonArrow-container_theme-@{themeName} {
@@ -119,6 +116,7 @@
    &:before {
       font-size: @font-size_BreadCrumbs-baseline;
    }
+   margin-left: @spacing_Path-between-home-and-backButton;
 }
 
 .controls-BreadCrumbsPath__backButton_short,
@@ -129,6 +127,10 @@
 
 .controls-BreadCrumbsPath__backButton_short {
    min-width: @min-width_BackButton_short;
+}
+
+.controls-BreadCrumbsPath__homeContainer__withoutBackButton_theme-@{themeName} {
+   margin-left: 0;
 }
 
 .controls-BreadCrumbsPath__backButton_half,
