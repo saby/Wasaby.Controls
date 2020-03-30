@@ -124,6 +124,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _stickyDestroy: boolean = false;
     private _scroll: HTMLElement;
 
+    private _needUpdateObserver: boolean = false;
+
     protected _beforeMount(options: IStickyHeaderOptions): void {
         this._options = options;
         this._observeHandler = this._observeHandler.bind(this);
@@ -154,19 +156,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             mode: this._options.mode
         }, true], {bubbling: true});
 
-        this._observer = new IntersectionObserver(
-                this._observeHandler,
-                { root: this._scroll }
-            );
-
         this._model = new Model({
             topTarget: children.observationTargetTop,
             bottomTarget: children.observationTargetBottom,
             position: this._options.position,
         });
 
-        this._observer.observe(children.observationTargetTop);
-        this._observer.observe(children.observationTargetBottom);
+        this._initObserver();
 
         this._updateBottomShadowStyle();
         this._initResizeObserver();
@@ -242,13 +238,51 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _resizeHandler(): void {
+        if (this._needUpdateObserver) {
+            this._initObserver();
+        }
+        if (this._isSafari13) {
+            this._updateBottomShadowStyle();
+        }
+    }
+
+    protected _selfResizeHandler(): void {
         this._notify('stickyHeaderResize', [], {bubbling: true});
+    }
+
+    private _initObserver(): void {
+        // Если заголовок невидим(display: none), то мы не сможем рассчитать его положение. Вернее обсервер вернет нам
+        // что тригеры невидимы, но рассчеты мы сделать не сможем. Когда заголовк станет видим, и если он находится
+        // в самом верху скролируемой области, то верхний тригер останется невидимым, т.е. сбытия не будет.
+        // Что бы самостоятельно не рассчитывать положение тригеров, мы просто пересоздадим обсервер когда заголовок
+        // станет видимым.
+        if (this._container.offsetParent === null) {
+            this._needUpdateObserver = true;
+            return;
+        }
+
+        if (this._observer) {
+            this._observer.disconnect();
+        }
+
+        this._createObserver();
+        this._needUpdateObserver = false;
+    }
+
+    private _createObserver(): void {
+        const children = this._children;
+        this._observer = new IntersectionObserver(
+            this._observeHandler,
+            { root: this._scroll }
+        );
+        this._observer.observe(children.observationTargetTop);
+        this._observer.observe(children.observationTargetBottom);
     }
 
     private _initResizeObserver(): void {
         if (typeof window !== 'undefined' && window.ResizeObserver) {
             this._resizeObserver = new ResizeObserver(() => {
-                this._resizeHandler();
+                this._selfResizeHandler();
             });
             this._resizeObserver.observe(this._container);
         }
