@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper ws-flexbox ws-flex-column ws-align-items-center">
     <div class="controls-text-label_theme-{{_options.theme}} controls-fontsize-l_theme-{{_options.theme}} controlsDemo__mb1">
-        Корректная загрузка при изменении размеров списка
+        Перезагрузка по курсору, загрузка данных в обе стороны
     </div>
     <Controls.scroll:Container
             attr:class="controlsDemo_fixedWidth500 controlsDemo__maxWidth500 controlsDemo__height500 controlsDemo__mb1">

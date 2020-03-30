@@ -6,6 +6,8 @@ export default class ExpandingElement extends Control {
     protected _isBig: boolean = false;
 
     protected _afterMount(): void {
-        this._isBig = true;
+        setTimeout(() => {
+            this._isBig = true;
+        }, 3000);
     }
 }
