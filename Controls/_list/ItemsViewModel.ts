@@ -130,7 +130,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     reset: function() {
         this._startIndex = (this._options.virtualScrolling || Boolean(this._options.virtualScrollConfig)) && !!this._startIndex ? this._startIndex : 0;
-        this._curIndex = this._startIndex;
+        this._curIndex = 0;
     },
 
     isEnd: function() {
@@ -141,6 +141,10 @@ var ItemsViewModel = BaseViewModel.extend({
             endIndex = (this._display ? this._display.getCount() : 0);
         }
         return this._curIndex < endIndex;
+    },
+
+    isShouldBeDrawnItem: function() {
+        return this._startIndex <= this._curIndex && this._curIndex <= this._stopIndex;
     },
 
     setUpdateIndexesCallback(updateIndexesCallback: Function): void {

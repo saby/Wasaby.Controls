@@ -193,7 +193,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master' && !(this._options.virtualScrolling  || Boolean(this._options.virtualScrollConfig));
+        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -257,6 +257,11 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
         }
         return itemsModelCurrent;
+    },
+
+    isShouldBeDrawnItem: function(item) {
+        var isInRange = ListViewModel.superclass.isShouldBeDrawnItem.apply(this, arguments);
+        return isInRange || item.isGroup || item.isSticky;
     },
 
     _calcCursorClasses: function(clickable, cursor) {

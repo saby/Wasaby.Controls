@@ -26,6 +26,16 @@
            actionsType="{{itemActionsPosition}}"
            tagTemplate="{{tagTemplate}}"/>
 </ws:template>
+<!-- <ws:template name="itemsList">
+   <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup;">
+      <ws:if data="{{listModel.isShouldBeDrawnItem(listModel.getCurrent())}}">
+         <ws:partial template="itemOutputLocalTemplate" attr:key="{{listModel.getCurrent().key}}"/>
+      </ws:if>
+      <ws:else>
+         {{listModel.goToNext()}}
+      </ws:else>
+   </ws:for>
+</ws:template> -->
 <ws:template name="groupOutputLocalTemplate">
    <ws:partial
       template="{{groupTemplate}}"
@@ -34,7 +44,12 @@
    {{listModel.goToNext();}}
    <ws:if data="{{currentGroup.isGroupExpanded}}">
       <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup;">
-         <ws:partial template="itemOutputLocalTemplate" attr:key="{{listModel.getCurrent().key}}"/>
+         <ws:if data="{{listModel.isShouldBeDrawnItem(listModel.getCurrent())}}">
+            <ws:partial template="itemOutputLocalTemplate" attr:key="{{listModel.getCurrent().key}}"/>
+         </ws:if>
+         <ws:else>
+            {{listModel.goToNext()}}
+         </ws:else>
       </ws:for>
    </ws:if>
 </ws:template>
@@ -62,8 +77,22 @@
                   listModel="{{listModel}}"/>
    </ws:if>
 </ws:template>
-<ws:for data="listModel.reset(); listModel.isEnd();">
+<!-- <ws:for data="listModel.reset(); listModel.isEnd();">
    <ws:partial template="itemTemplate" currentItem="{{listModel.getCurrent()}}"/>
+</ws:for>
+<ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
+   <ws:partial template="addItem" currentItem="{{currentItem}}"/>
+</ws:if> -->
+<ws:template name="drawItem">
+<ws:if data="{{listModel.isShouldBeDrawnItem(currentItem)}}">
+   <ws:partial template="itemTemplate" currentItem="{{currentItem}}" />
+</ws:if>
+<ws:else>
+   {{listModel.goToNext()}}
+</ws:else>
+</ws:template>
+<ws:for data="listModel.reset(); listModel.isEnd();">
+   <ws:partial template="drawItem" currentItem="{{listModel.getCurrent()}}"/>
 </ws:for>
 <ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
    <ws:partial template="addItem" currentItem="{{currentItem}}"/>
