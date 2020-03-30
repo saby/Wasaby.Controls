@@ -512,11 +512,9 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.isTrue(searchStarted);
          });
 
-         it('searchValue is short', function() {s
+         it('searchValue is short', function() {
             var options = getDefaultOptions();
             var searchStarted = false;
-            options.source = new sourceLib.Memory();
-            searchMod.Controller._private.getSearchController(searchController);
             searchMod.Controller._private.startSearch = () => {searchStarted = true;};
             searchController._inputSearchValue = 'te';
             options.searchValue = '';
