@@ -49,7 +49,7 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
 
     this._caption = options.caption;
     this._stringCaption = typeof options.caption === 'string';
-    this._captionPosition = options.captionPosition;
+    this._captionPosition = options.captionPosition || 'right';
 
     this._icon = options.icon;
     this._iconSize = options.icon ? ActualApi.iconSize(options.iconSize, this._icon) : '';

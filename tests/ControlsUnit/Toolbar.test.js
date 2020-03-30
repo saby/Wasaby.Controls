@@ -337,7 +337,7 @@ define(
                let modifyItem = {
                   _buttonStyle: 'readonly',
                   _caption: undefined,
-                  _captionPosition: undefined,
+                  _captionPosition: 'right',
                   _contrastBackground: true,
                   _fontColorStyle: 'secondary',
                   _fontSize: 'm',
