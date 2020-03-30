@@ -1596,13 +1596,13 @@ var _private = {
         let top;
         let bottom;
         if (self._isScrollShown || (self._needScrollCalculation && viewRect && viewPortRect)) {
-            top = Math.max(viewRect.y, viewPortRect.y);
-            bottom = Math.min(viewRect.y + viewRect.height, viewPortRect.y + viewPortRect.height);
+            top = Math.max(viewRect.top, viewPortRect.top);
+            bottom = Math.min(viewRect.top + viewRect.height, viewPortRect.top + viewPortRect.height);
         } else {
             top = viewRect.top;
             bottom = viewRect.bottom;
         }
-        let newHeight = bottom - top - _private.getListTopOffset(self);
+        const newHeight = bottom - top - _private.getListTopOffset(self);
 
         if (self._loadingIndicatorContainerHeight !== newHeight) {
             self._loadingIndicatorContainerHeight = newHeight;
@@ -1616,7 +1616,7 @@ var _private = {
         if (self._isMounted) {
             const viewRect = (self._container[0] || self._container).getBoundingClientRect();
             if (self._isScrollShown || (self._needScrollCalculation && viewRect && self._viewPortRect)) {
-                height = viewRect.y + self._scrollTop - self._viewPortRect.top;
+                height = viewRect.top + self._scrollTop - self._viewPortRect.top;
             }
         }
         if (view && view.getHeaderHeight) {
