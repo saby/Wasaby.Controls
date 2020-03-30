@@ -542,7 +542,7 @@
 //MasterList styles
 
 .controls-Grid_master_theme-@{themeName} {
-   padding-right: @border-width_List-masterList-right;
+   padding-right: @master_separator_thickness_list;
    box-sizing: border-box;
 }
 
@@ -563,16 +563,16 @@
       content: '';
       z-index: 2;
       box-sizing: border-box;
-      border-width: @border-width_List-masterList-item-top @border-width_List-masterList-item-right @border-width_List-masterList-item-bottom @border-width_List-masterList-item-left;
+      border-width: @master_item_selected_border-thickness_list 0 @master_item_selected_border-thickness_list 0;
       border-style: solid;
-      border-color: @border-color_List-masterList-item_selected-top @border-color_List-masterList-item_selected-right @border-color_List-masterList-item_selected-bottom @border-color_List-masterList-item_selected-left;
-      box-shadow: @box-shadow_Grid-masterList-item_selected;
-      width: ~'calc(100% + @{border-width_List-masterList-right})';
+      border-color: @master_item_selected_border-top-color_list transparent @master_item_selected_border-bottom-color_list transparent;
+      box-shadow: @master_item_selected_box-shadow_list;
+      width: ~'calc(100% + @{master_separator_thickness_list})';
       position: absolute;
       left: 0;
       pointer-events: none;
-      top: -@border-width_List-masterList-item-top;
-      bottom: -@border-width_List-masterList-item-bottom;
+      top: -@master_item_selected_border-thickness_list;
+      bottom: -@master_item_selected_border-thickness_list;
    }
 }
 
@@ -582,10 +582,10 @@
       z-index: 1;
       height: 100%;
       top: 0;
-      width: @border-width_List-masterList-right;
+      width: @master_separator_thickness_list;
       position: absolute;
-      right: -@border-width_List-masterList-right;
-      background-color: @background-color_List-masterList-item_selected;
+      right: -@master_separator_thickness_list;
+      background-color: @master_item_selected_background-color_list;
    }
 }
 
@@ -601,13 +601,13 @@
 
 .ws-is-hover {
    .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
-      background-color: @background-color_List-masterList-item_hover;
+      background-color: @master_item_hover_background-color_list;
    }
 
    //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
    .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
-      background-color: @background-color_List-masterList-item_hover;
-      box-shadow: -15px 2px 4px -6px @background-color_List-masterList-item_hover;
+      background-color: @master_item_hover_background-color_list;
+      box-shadow: -15px 2px 4px -6px @master_item_hover_background-color_list;
    }
 }
 
@@ -693,7 +693,7 @@
 }
 
 .controls-Grid__editArrow-blur_style-master_background {
-   background: linear-gradient(90deg, @background-color_Grid-row_hover-transparent, @background-color_List-masterList-item_hover);
+   background: linear-gradient(90deg, @background-color_Grid-row_hover-transparent, @master_item_hover_background-color_list);
 }
 
 
@@ -709,7 +709,7 @@
 }
 
 .controls-Grid__editArrow_style-master_background {
-   background-color: @background-color_List-masterList-item_hover;
+   background-color: @master_item_hover_background-color_list;
 }
 
 .controls-Grid__editArrow-overflow-ellipsis_theme-@{themeName} {
