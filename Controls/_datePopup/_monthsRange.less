@@ -185,7 +185,7 @@
       justify-content: center;
    }
 
-   .controls-MonthViewVDOM__item-today-background {
+   .controls-MonthViewVDOM__item-today-background_theme-@{themeName} {
       top: 0;
       bottom: 0;
       left: 0;
@@ -200,25 +200,25 @@
       margin: 0;
    }
 
-   .controls-MonthViewVDOM__item-selectedStartEnd {
+   .controls-MonthViewVDOM__item-selectedStartEnd_theme-@{themeName} {
       outline: @border-color_RangeSelection-selected-startEnd-edgeBorder solid @outline_PeriodDialog-dateRange;
    }
 
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected,
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected-readOnly {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName},
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected-readOnly_theme-@{themeName} {
       background-color: transparent;
    }
-   .controls-MonthViewVDOM__item-selectedStart,
-   .controls-MonthViewVDOM__item-selectedEnd,
-   .controls-MonthViewVDOM__item-selectedInner {
+   .controls-MonthViewVDOM__item-selectedStart_theme-@{themeName},
+   .controls-MonthViewVDOM__item-selectedEnd_theme-@{themeName},
+   .controls-MonthViewVDOM__item-selectedInner_theme-@{themeName} {
       outline: none;
       font-weight: normal;
    }
-   .controls-MonthViewVDOM__item-selectedStart:before,
-   .controls-MonthViewVDOM__item-selectedEnd:after {
+   .controls-MonthViewVDOM__item-selectedStart_theme-@{themeName}:before,
+   .controls-MonthViewVDOM__item-selectedEnd_theme-@{themeName}:after {
       width: @width_PeriodDialog-monthRange-month-selectionEdge;
    }
-   .controls-MonthViewVDOM__item-selectedStart:before {
+   .controls-MonthViewVDOM__item-selectedStart_theme-@{themeName}:before {
       left: 0;
    }
 }
@@ -226,12 +226,12 @@
 .controls-PeriodDialog-MonthsRange__halfYear-hovered,
 .controls-PeriodDialog-MonthsRange__quarter-hovered,
 .controls-PeriodDialog-MonthsRange__hovered {
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected,
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected_theme-@{themeName},
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected_theme-@{themeName} {
       background-color: transparent;
    }
-   .controls-MonthView__item-selectedStart:before,
-   .controls-MonthView__item-selectedEnd:after {
+   .controls-MonthView__item-selectedStart_theme-@{themeName}:before,
+   .controls-MonthView__item-selectedEnd_theme-@{themeName}:after {
       height: 0;
    }
 }
