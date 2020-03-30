@@ -669,6 +669,10 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             }
          };
 
+         require.defined = function(){
+            return true;
+         };
+
          suggestComponent.saveOptions(options);
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
