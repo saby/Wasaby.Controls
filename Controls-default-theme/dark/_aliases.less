@@ -9,7 +9,10 @@
 @secondary_hover_text-color:                          #FF7033;
 @readonly_color:                                      #6B6B6B;
 @text-color:                                          #CCCCCC;
+@border-color:                                        #4d535e;
 @icon-color:                                          #CCCCCC;
+@secondary_icon-color:                                @secondary_color;
+@secondary_hover_icon-color:                          @link_hover_text-color;
 @contrast_icon-color:                                 #383D44;
 @label_text-color:                                    #CCCCCC;
 @link_text-color:                                     #6ED4D0;
@@ -48,7 +51,7 @@
 @invalid_background-color_inputText:                  transparent;
 
 //dialog
-@background-color_dialog:                             #4a515d;
+@background-color_dialog:                             #383D44;
 @header_background-color_dialog:                      #383D44;
 @border-color_dialog:                                 #535C68;
 @footer_background-color_dialog:                      transparent;
@@ -149,7 +152,23 @@
 // Suggest
 @popup_border-color_suggest:                                                  #4d535e;
 
+//MonthView
+@monthview_background-color_monthSlider:                                      #383d44;
+@rangeSelection_item_background-color_datePicker:                             #737c8b;
+@rangeSelection_border_color_datePicker:                                      #ff7033;
+@monthview_item_background-color_monthSlider:                                 #424851;
+@monthview_item_text-color_monthSlider:                                       #b8b8b8;
+@monthview_item_hover_border-color_monthSlider:                               #b8b8b8;
 
+// Controls/DatePopup
+@background-color_datePicker:                                              #383d44;
+@header_background-color_datePicker:                                       #383d44;
+@border-color_datePicker:                                                  #30343b;
+
+// Controls/DateRange
+@monthnav_item_text-color_datePicker:                                      #b8b8b8;
+@monthnav_item_border-color_datePicker:                                    #535c68;
+@monthlist_heading_text-color_datePicker:                                  #cccccc;
 
 //TODO OLD NOT SPECIFIED VARIABLES
 
@@ -160,6 +179,10 @@
 
 @marker-bg-image:                                                             url("img/rowSelect.png");
 @readonly_marker-color:                                                       @readonly_color;
+
+@background-color_List-masterList:                                            #30343b;
+@background-color_List-masterList-item_selected:                              #424851;
+@border-color_List-masterList:                                                #18212b;
 
 // Controls.Explorer
 @background-color_TileView-item: #464d57;
@@ -172,8 +195,6 @@
 @font-size_TreeGridView-row-cell-node:                                        14px;
 
 @background-color_ListView-item_hover:                                        #464d57;
-@background-image_SortButton-trendUp:                                         url("img/sortButtonTrendUp.svg");
-@background-image_SortButton-trendDown:                                       url("img/sortButtonTrendDown.svg");
 
 @font-size_TreeGridView-row-cell-hiddenNode:                                  @font-size_m;
 
@@ -189,42 +210,14 @@
 @border-color_HorizontalScroll-shadow:                                        rgba(107, 107, 107, .44);
 @color_Grid-header:                                                           #999;
 @background-color_StickyHeader:                                               transparent;
-
-
-// ItemActions
-@default-bg-color-hovered-item: #464d57;
-@background-color_ItemActions: #464d57;
-@icon-color-primary-hover: #ff7033;
-
-// Controls/DatePopup
-@background-color_PeriodDialog:                                               #383d44;
-@background-color__PeriodDialog-header:                                       #383d44;
-@border-color_PeriodDialog:                                                   #30343b;
+@start-color-gradient_ColumnScroll-shadow:                                    rgba(0,0,0,.15);
+@end-color-gradient_ColumnScroll-shadow:                                      rgba(0,0,0,0);
+@border-color_ColumnScroll-shadow:                                            #393E46;
 
 // Controls/DateRangeBigChoose
 @border-color_DateRangeBigChoose:                                             #535c68;
 
-// Controls/DateRange
-@color_PeriodDialog-dateRange-months-button:                                  #b8b8b8;
-@border-color_PeriodDialog-dateRange-months:                                  #535c68;
-@color_PeriodDialog-dateRange-monthsWithDates-title:                          #cccccc;
-
-//MonthView
-@background_MonthView:                                                        #383d44;
-@background_MonthView-item-selected:                                          #737c8b;
-@border-color__MonthView-item-selected-startEnd-hover:                        #ff7033;
-@background_MonthView-item:                                                   #424851;
-@color_MonthView-item:                                                        #b8b8b8;
-@border-color__MonthView-item-selected:                                       #b8b8b8;
-
 // Highlight
 @highlight-text-bg: #535c68;
-
-// Paging
-@background-color_Paging:                                                     #424851;
-@background-color_Paging-button:                                              #424851;
-@background-color_Paging-button_hover:                                        #464d57;
-
-@color_Paging_arrow-icon:                                                     @secondary_color;
 
 //last line

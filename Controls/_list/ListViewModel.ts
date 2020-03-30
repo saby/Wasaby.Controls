@@ -189,16 +189,17 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master' && !(this._options.virtualScrolling  || Boolean(this._options.virtualScrollConfig));
+        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master' && !(Boolean(this._options.virtualScrollConfig));
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
+        itemsModelCurrent.backgroundStyle = this._options.backgroundStyle;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
-            itemsModelCurrent.virtualScrolling = this._options.virtualScrolling || Boolean(this._options.virtualScrollConfig);
+            itemsModelCurrent.virtualScrollConfig = Boolean(this._options.virtualScrollConfig);
         }
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {

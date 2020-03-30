@@ -65,9 +65,10 @@
     height: @min-height_Grid-header;
   }
 
-  .controls-Grid__results {
-    display: table-row-group;
-  }
+   // Этот стиль задаётся для tr и при display: table-row-group ломает вёрстку в IE/Edge
+   .controls-Grid__results {
+      display: table-row;
+   }
 
   .controls-Grid__results-cell {
     display: table-cell;
@@ -101,6 +102,10 @@
 
   .controls-Grid__cell_fixed {
     position: relative;
+  }
+
+  .controls-Grid__row-cell_colspaned {
+    width: 100%;
   }
 
   .controls-Grid__row-cell__contentWrapper {
@@ -142,7 +147,7 @@
     //for the same reason as the problem described above, if in itemActions spacing between content and border-right will
     //realized by padding, itemActions will overlaps right shadow, with margin work fine
     padding-right: 0;
-    margin-right: @spacing_ItemActions-between-content-border-right_position_inside;
-    height: @height_ItemActions_inside - @border-width_List-masterList-item-bottom;
+    margin-right: @offset-right_itemActions;
+    height: @height_itemActions - @border-width_List-masterList-item-bottom;
   }
 }

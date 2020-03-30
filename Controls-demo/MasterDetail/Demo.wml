@@ -1,6 +1,6 @@
 <div>
    <h1>Двухколоночный браузер</h1>
-   <div class="controlsDemo__flexRow">
+   <div class="controlsDemo__flexRow controls-demo_MasterDetail__first-row">
       <h3>Ширина мастера может меняться от 200px до 50% контейнера. Начальная ширина 27%. </h3>
       <div class="ws-link controlsDemo__ml1" on:click="_firstHandler()">Set width = 1000</div>
    </div>
@@ -115,7 +115,7 @@
          </div>
       </ws:detail>
    </Controls.masterDetail:Base>
-   <div class="controlsDemo__flexRow">
+   <div class="controlsDemo__flexRow controls-demo_MasterDetail__third-row">
       <h3>Ширина мастера может меняться от 10% до 50% контейнера. Начальная ширина 10%. </h3>
       <div class="ws-link controlsDemo__ml1" on:click="_secondHandlerIncrease()">Set width = 1920</div>
       <div class="ws-link controlsDemo__ml1" on:click="_secondHandlerDecrease()">Set width = 1000</div>

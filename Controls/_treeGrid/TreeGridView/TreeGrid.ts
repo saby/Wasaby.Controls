@@ -7,7 +7,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
 
 /**
     * Иерархический список с пользовательским шаблоном элемента. Может загружать данные из источника данных.
-    * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">Демо-пример</a>.
     *
     * @class Controls/TreeGrid
     * @extends Controls/Grid
@@ -24,18 +24,6 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IDraggable
     *
-    * @mixes Controls/_list/BaseControlStyles
-    * @mixes Controls/_list/ListStyles
-    * @mixes Controls/_list/Grid/GridStyles
-    * @mixes Controls/_treeGrid/TreeGrid/Styles
-    * @mixes Controls/_list/ItemActions/ItemActionsStyles
-    * @mixes Controls/_list/Swipe/SwipeStyles
-    *
-    * @mixes Controls/MoveDialog/Styles
-    * @mixes Controls/_paging/PagingStyles
-    * @mixes Controls/_paging/DigitButtonsStyles
-    * @mixes Controls/_list/Grid/SortButtonStyles
-    *
     * @control
     * @private
     * @author Авраменко А.С.
@@ -47,7 +35,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * Hierarchical list with custom item template. Can load data from data source.
     * List of examples:
     * <ul>
-    *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">How to configure editing in your list</a>.</li>
     * </ul>
     *
     * @class Controls/TreeGrid
@@ -65,18 +53,6 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IDraggable
-    *
-    * @mixes Controls/_list/BaseControlStyles
-    * @mixes Controls/_list/ListStyles
-    * @mixes Controls/_list/Grid/GridStyles
-    * @mixes Controls/_treeGrid/TreeGrid/Styles
-    * @mixes Controls/_list/ItemActions/ItemActionsStyles
-    * @mixes Controls/_list/Swipe/SwipeStyles
-    *
-    * @mixes Controls/MoveDialog/Styles
-    * @mixes Controls/_paging/PagingStyles
-    * @mixes Controls/_paging/DigitButtonsStyles
-    * @mixes Controls/_list/Grid/SortButtonStyles
     *
     * @control
     * @private

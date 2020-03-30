@@ -46,16 +46,16 @@ var
             }
             self._forceUpdate();
          },
-          setRestoredKeyObject: function(self, root) {
-              const curRoot = _private.getRoot(self, self._options.root);
-              self._restoredMarkedKeys[root] = {
-                  parent: curRoot,
-                  markedKey: null
-              };
-              if (self._restoredMarkedKeys[curRoot]) {
-                  self._restoredMarkedKeys[curRoot].markedKey = root;
-              }
-          },
+         setRestoredKeyObject: function(self, root) {
+            const curRoot = _private.getRoot(self, self._options.root);
+            self._restoredMarkedKeys[root] = {
+               parent: curRoot,
+               markedKey: null
+            };
+            if (self._restoredMarkedKeys[curRoot]) {
+               self._restoredMarkedKeys[curRoot].markedKey = root;
+            }
+         },
           cleanRestoredKeyObject: function(self, root) {
               _private.pathCleaner(self, root);
           },
@@ -107,6 +107,10 @@ var
             if (self._firstLoad) {
                resolver(result);
                self._firstLoad = false;
+               _private.fillRestoredMarkedKeysByBreadCrumbs(_private.getDataRoot(self),
+                   self._breadCrumbsItems,
+                   self._restoredMarkedKeys,
+                   self._options.parentProperty);
             }
          },
          dataLoadErrback: function(self, cfg, error) {
@@ -119,6 +123,24 @@ var
             self._breadCrumbsItems = _private.getPath(newData);
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
+         },
+         fillRestoredMarkedKeysByBreadCrumbs: function(root, breadCrumbs, restoredMarkedKeys, parentProperty) {
+            restoredMarkedKeys[root] = {
+               markedKey: null
+            };
+            if (breadCrumbs && breadCrumbs.forEach) {
+               breadCrumbs.forEach((crumb) => {
+                  const parentKey = crumb.get(parentProperty);
+                  const crumbKey = crumb.getKey();
+                  restoredMarkedKeys[crumbKey] = {
+                     parent: parentKey,
+                     markedKey: null
+                  };
+                  if (restoredMarkedKeys[parentKey]) {
+                     restoredMarkedKeys[parentKey].markedKey = crumbKey;
+                  }
+               });
+            }
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
@@ -146,7 +168,7 @@ var
          setVirtualScrolling(self, viewMode, cfg): void {
             // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
             // For viewMode === 'tile' disable virtualScrolling.
-            self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
+            self._virtualScrollConfig = viewMode === 'tile' ? false : cfg.virtualScrollConfig;
          },
 
          setViewConfig: function (self, viewMode) {
@@ -255,6 +277,10 @@ var
     * Отображает данные иерархического списка, узел которого можно развернуть и перейти в него.
     * Позволяет переключать отображение элементов в режимы "таблица", "список" и "плитка".
     * Инструкции по настройке контрола доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
+    *
+    * Примечание:
+    * Сортировка применяется к запросу к источнику данных. Полученные от источника записи дополнительно не сортируются.
+    *
     * Демо-примеры:
     * <ul>
     *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
@@ -356,7 +382,7 @@ var
       _viewModelConstructor: null,
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
-      _virtualScrolling: false,
+      _virtualScrolling: undefined,
       _dragControlId: null,
       _firstLoad: true,
       _itemsPromise: null,
@@ -396,8 +422,9 @@ var
          }
 
          if (
-            cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
-            this._pendingViewMode && cfg.viewMode !== this._pendingViewMode
+             cfg.viewMode !== 'search' &&
+             (cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
+             this._pendingViewMode && cfg.viewMode !== this._pendingViewMode)
          ) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
@@ -409,7 +436,7 @@ var
             _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
          }
 
-         if (cfg.virtualScrolling !== this._options.virtualScrolling) {
+         if (cfg.virtualScrollConfig !== this._options.virtualScrollConfig) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);
          }
       },
@@ -452,6 +479,7 @@ var
          event.stopPropagation();
 
          const changeRoot = () => {
+             // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся
             _private.setRestoredKeyObject(this, item.getId());
             _private.setRoot(this, item.getId());
             this._isGoingFront = true;

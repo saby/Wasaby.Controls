@@ -1,38 +1,17 @@
-import {IControlOptions, TemplateFunction} from 'UI/Base';
-import {ISourceOptions, INavigation, IFilterOptions, IHierarchy, IIconSizeOptions} from 'Controls/interface';
-import {IGroupedOptions} from 'Controls/dropdown';
+import {TemplateFunction} from 'UI/Base';
+import {IMenuBaseOptions} from './IMenuBase';
+import {ISourceOptions, INavigationOptions, IFilterOptions, ISelectorDialogOptions} from 'Controls/interface';
+import {Stack} from 'Controls/popup/Stack';
+import {IItemAction} from 'Controls/list';
 
-export type TKeys = string[]|number[];
+export type TKey = string|number|null;
 
-interface IItemPadding {
-    left: string;
-    right: string;
-}
-
-export interface IMenuOptions extends IControlOptions, ISourceOptions, INavigation, IFilterOptions, IHierarchy, IIconSizeOptions, IGroupedOptions {
-    displayProperty: string;
-    itemTemplate?: TemplateFunction;
-    emptyText?: string;
-    emptyKey?: string|number;
-    historyConfig: IHistoryConfig;
-    itemPadding: IItemPadding;
-    multiSelect?: boolean;
-    nodeFooterTemplate: TemplateFunction;
-    root?: string|number|null;
-    selectedKeys?: TKeys;
-    selectorTemplate?: object;
-    selectorOpener?: object;
-    selectorDialogResult?: Function;
-    isCompoundTemplate?: boolean;
-    groupingKeyCallback?: Function;
-    itemActions: any[];
-}
-
-export interface IHistoryConfig {
-    historyId: string;
-    pinned: TKeys|boolean;
-    recent: boolean;
-    frequent: boolean;
+export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, INavigationOptions,
+        IFilterOptions, ISelectorDialogOptions {
+    nodeFooterTemplate?: TemplateFunction;
+    root?: TKey;
+    selectorOpener?: Stack;
+    itemActions?: IItemAction[];
 }
 
 /**
@@ -48,7 +27,7 @@ export interface IHistoryConfig {
  * @author Золотова Э.Е.
  */
 export default interface IMenuControl {
-    readonly '[Controls/_menu/interface/IMenu]': boolean;
+    readonly '[Controls/_menu/interface/IMenuControl]': boolean;
 }
 
 /**
@@ -60,11 +39,13 @@ export default interface IMenuControl {
  * @name Controls/_menu/interface/IMenuControl#emptyText
  * @cfg {String} Добавляет пустой элемент в список с заданным текстом.
  * Ключ пустого элемента по умолчанию null, для изменения значения ключа используйте {@link emptyKey}.
+ * @demo Controls-demo/Menu/Control/EmptyText/Index
  */
 
 /**
  * @name Controls/_menu/interface/IMenuControl#emptyKey
  * @cfg {String} Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
+ * @demo Controls-demo/Menu/Control/EmptyText/EmptyKey/Index
  */
 
 /**
@@ -128,23 +109,27 @@ export default interface IMenuControl {
  *       });
  *    }
  * </pre>
+ * @demo Controls-demo/Menu/Control/NodeFooterTemplate/Index
  */
 
 /**
  * @name Controls/_menu/interface/IMenuControl#groupProperty
  * @cfg {String} Имя свойства, содержащего идентификатор группы элемента списка.
+ * @demo Controls-demo/Menu/Control/GroupProperty/Index
  * @see groupTemplate
  */
 
 /**
  * @name Controls/_menu/interface/IMenuControl#groupTemplate
  * @cfg {String|Function} Устанавливает шаблон отображения заголовка группы.
+ * @demo Controls-demo/Menu/Control/GroupProperty/GroupTemplate/Index
  * @see groupProperty
  */
 
 /**
  * @name Controls/_menu/interface/IMenuControl#root
  * @cfg {Number|String|null} Идентификатор корневого узла.
+ * @demo Controls-demo/Menu/Control/Root/Index
  */
 
 /**
@@ -168,4 +153,28 @@ export default interface IMenuControl {
  * @name Controls/_menu/interface/IMenuControl#itemActions
  * @cfg {Array.<ItemAction>} Конфигурация опций записи.
  * @demo Controls-demo/Menu/Control/ItemActions/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#parentProperty
+ * @cfg {String} Имя свойства, содержащего информацию о родительском элементе.
+ * @demo Controls-demo/Menu/Control/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#nodeProperty
+ * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
+ * @demo Controls-demo/Menu/Control/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#navigation
+ * @cfg {Controls/_interface/INavigation} Конфигурация навигации по списку.
+ * @demo Controls-demo/Menu/Control/Navigation/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#selectedKeys
+ * @cfg {Array.<Number|String>} Массив ключей выбранных элементов.
+ * @demo Controls-demo/Menu/Control/SelectedKeys/Index
  */

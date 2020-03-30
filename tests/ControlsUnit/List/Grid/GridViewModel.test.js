@@ -1539,7 +1539,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(0, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" after "resetResultsColumns()".');
          });
 
-          it('first header cell with breadcrumbs should renders from first column', function () {
+         it('first header cell with breadcrumbs should renders from first column', function () {
               const originBreadcrumbsCell = gridViewModel._headerRows[0][1];
               gridViewModel._headerRows[0][1] = {
                   isBreadCrumbs: true,
@@ -1833,18 +1833,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(secondRow);
          });
          it('getColumnScrollCellClasses', function() {
-            const fixedCell = ` controls-Grid__cell_fixed controls-background-default_theme-default controls-Grid__cell_fixed_theme-${theme}`;
+            const backgroundStyle = 'controls-background-default_theme-default';
+            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
             const transformCell = ' controls-Grid__cell_transform';
             const params = {
                multiSelectVisibility: 'hidden',
                stickyColumnsCount: 1,
                columnIndex: 0,
                rowIndex: 0,
-               isMultiHeader: false,
+               isMultiHeader: false
             };
             assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
             assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
-
+            assert.equal(backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}));
+            assert.equal(' ' + backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}, true));
          });
 
          it('getBottomPaddingStyles', function() {
@@ -2068,6 +2070,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(current.getCurrentColumn().tableCellStyles, '');
          });
 
+         it('tableCellStyles for results', function() {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'hidden',
+               columns: [
+                  { title: 'first', width: '101px' },
+                  { title: 'second', compatibleWidth: '102px', width: '1fr' },
+                  { title: 'third' }
+               ],
+               columnScroll: true
+            });
+
+            const current = model.getCurrentResultsColumn();
+            assert.equal(current.tableCellStyles, 'min-width: 101px; max-width: 101px;');
+         });
+
          it('should rowspan checkbox th if multiheader', function () {
             model._headerRows = [
                 [ /* Первая строка шапки */
@@ -2146,6 +2164,95 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             event.result = undefined;
             model._onCollectionChangeFn(event, collection.IObservable.ACTION_REMOVE);
             assert.strictEqual(event.result, 'updatePrefix', 'Remove action should update prefix version with ladder');
+         });
+      });
+
+      describe('Calculation of empty template columns', () => {
+         let model;
+
+         it('should calculate empty template with this.getMultiSelectVisibility() === "hidden"', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'hidden',
+               columnScroll: false
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 1; grid-column-end: 4;');
+         });
+
+         it('should calculate empty template with this.getMultiSelectVisibility() === "visible"', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columnScroll: false
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 5;');
+         });
+
+         it('should calculate empty template with _options.columnScroll', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               columns: [],
+               multiSelectVisibility: 'visible',
+               columnScroll: true
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 1; grid-column-end: 5;');
+         });
+
+         it('should calculate empty template with ActionsCell', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columnScroll: true
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 1; grid-column-end: 6;');
+         });
+
+         it('should calculate empty template with sticky column', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columnScroll: false,
+               stickyColumn: {
+                  index: 0,
+                  property: ''
+               }
+            });
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 6;');
+         });
+
+         it('should calculate empty template when this._columns.length === 0', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columns: [],
+               header: [],
+               columnScroll: false
+            });
+            model.getEmptyTemplateStyles();
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 3;');
+         });
+
+         it('should calculate empty template when this._columns.length === 0 and this._header.length > 0', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columns: [],
+               columnScroll: false
+            });
+            model.getEmptyTemplateStyles()
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 5;');
+         });
+
+         it('should calculate empty template when this._columns.length === 0 and this._header is undefined', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'visible',
+               columns: [],
+               header: undefined,
+               columnScroll: false
+            });
+            model.getEmptyTemplateStyles();
+            assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 3;');
          });
       });
    });

@@ -8,9 +8,10 @@ define(
       'Core/Deferred',
       'Types/chain',
       'Controls/_dropdown/dropdownHistoryUtils',
+      'Application/Env',
       'Core/nativeExtensions'
    ],
-   function(filter, Clone, sourceLib, collection, history, Deferred, chain, historyUtils) {
+   function(filter, Clone, sourceLib, collection, history, Deferred, chain, historyUtils, Env) {
       describe('Filter:View', function() {
 
          let defaultItems = [
@@ -260,6 +261,10 @@ define(
             newItems[2].viewMode = 'frequent';
             result = filter.View._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
+
+            oldItems = [];
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
          });
 
          it('openDetailPanel', function() {
@@ -276,7 +281,10 @@ define(
 
             assert.strictEqual(popupOptions.template, 'detailPanelTemplateName.wml');
             assert.strictEqual(popupOptions.templateOptions.items.length, 5);
-            assert.equal(popupOptions.fittingMode, 'overflow');
+            assert.deepEqual(popupOptions.fittingMode, {
+               horizontal: 'overflow',
+               vertical: 'adaptive'
+            });
 
             view._options.detailPanelTemplateName = null;
             view.openDetailPanel();
@@ -1167,8 +1175,17 @@ define(
          });
 
          describe('View history', function() {
-            let view, hSource;
+            let view, hSource, stores;
+            const originalGetStore = Env.getStore;
+            const originalSetStore = Env.setStore;
             beforeEach(function() {
+               Env.getStore = (key) => {
+                  return stores[key];
+               };
+               Env.setStore = (key, value) => {
+                  stores[key] = value;
+               };
+               stores = {};
                view = getView(defaultConfig);
                view._source = Clone(defaultConfig.source);
                view._displayText = {};
@@ -1245,6 +1262,10 @@ define(
                filter.View._private.getPopupConfig(view, view._configs, view._source);
                sinon.assert.calledOnce(filter.View._private.loadItemsFromSource);
                sandBox.restore();
+            });
+            afterEach(function() {
+               Env.getStore = originalGetStore;
+               Env.setStore = originalSetStore;
             });
          });
       });

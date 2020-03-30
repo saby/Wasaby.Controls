@@ -563,11 +563,9 @@ var _private = {
                 const oldItem = _private.getItemByName(oldItems, newItem.name);
                 const isFrequent = _private.isFrequentItem(newItem);
                 if (isFrequent && (!oldItem || !_private.isFrequentItem(oldItem) ||
-                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false))
+                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) ||
+                    !isEqual(newItem.value, oldItem.value) && !configs[newItem.name])
                 ) {
-                    result = true;
-                }
-                if (isFrequent && !isEqual(newItem.value, oldItem.value) && !configs[newItem.name]) {
                     result = true;
                 }
             });
@@ -689,7 +687,10 @@ var Filter = Control.extend({
         if (this._options.detailPanelTemplateName) {
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
             let popupOptions =  {
-                fittingMode: 'overflow'
+                fittingMode: {
+                    horizontal: 'overflow',
+                    vertical: 'adaptive'
+                }
             };
             if (this._options.alignment === 'right') {
                 popupOptions.targetPoint = {

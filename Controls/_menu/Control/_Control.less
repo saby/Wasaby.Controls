@@ -255,7 +255,7 @@
 }
 
 .controls-Menu__itemActions_position_rightCenter_theme-@{themeName} {
-   top: (@item_height_menu - @height_ItemActions_inside) / 2;
+   top: (@item_height_menu - @height_itemActions) / 2;
    right: 0;
 }
 
@@ -272,7 +272,7 @@
 }
 
 .ws-is-hover {
-   .controls-Menu__row_hovered_theme-@{themeName} {
+   .controls-Menu__row_state_default_theme-@{themeName}:hover {
       background: @item_hover_background-color_menu;
 
       .controls-Menu__row-checkbox_default_theme-@{themeName} {

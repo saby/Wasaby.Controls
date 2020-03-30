@@ -37,6 +37,7 @@ import {CollectionItem, ItemActionsController} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
+import {IHashMap} from 'Types/declarations';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -141,12 +142,12 @@ var _private = {
         }
     },
 
-    reload: function(self, cfg) {
-        var
-            filter = cClone(cfg.filter),
-            sorting = cClone(cfg.sorting),
-            navigation = cClone(cfg.navigation),
-            resDeferred = new Deferred();
+    reload(self, cfg): Promise<any> | Deferred<any> {
+        const filter: IHashMap<unknown> = cClone(cfg.filter);
+        const sorting = cClone(cfg.sorting);
+        const navigation = cClone(cfg.navigation);
+        const resDeferred = new Deferred();
+
         self._noDataBeforeReload = self._isMounted && (!self._listViewModel || !self._listViewModel.getCount());
         if (cfg.beforeReloadCallback) {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
@@ -155,6 +156,7 @@ var _private = {
         if (self._sourceController) {
             _private.showIndicator(self);
             _private.hideError(self);
+            _private.getPortionedSearch(self).reset();
 
             if (cfg.groupProperty) {
                 const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
@@ -232,6 +234,11 @@ var _private = {
                     if (self._loadedItems) {
                         self._shouldRestoreScrollPosition = true;
                     }
+                    // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
+                    if (self._itemsChanged) {
+                        self._shouldNotifyOnDrawItems = true;
+                    }
+
                 }
                 if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                     cfg.afterSetItemsOnReloadCallback();
@@ -554,7 +561,7 @@ var _private = {
         _private.showIndicator(self, direction);
 
         if (self._sourceController) {
-            const filter = cClone(receivedFilter || self._options.filter);
+            const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
@@ -682,12 +689,17 @@ var _private = {
         return navigation && navigation.view === 'demand';
     },
 
+    isPagesNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
+        return navigation && navigation.view === 'pages';
+    },
+
     needShowShadowByNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>, itemsCount: number): boolean {
         const isDemand = _private.isDemandNavigation(navigation);
         const isMaxCount = _private.isMaxCountNavigation(navigation);
+        const isPages = _private.isPagesNavigation(navigation);
         let result = true;
 
-        if (isDemand) {
+        if (isDemand || isPages) {
             result = false;
         } else if (isMaxCount) {
             result = _private.isItemsCountLessThenMaxCount(itemsCount, _private.getMaxCountFromNavigation(navigation));
@@ -707,7 +719,7 @@ var _private = {
             hasMoreData &&
             !sourceController.isLoading();
         const allowLoadBySearch =
-            !self._options.searchValue ||
+            !_private.isPortionedLoad(self) ||
             _private.getPortionedSearch(self).shouldSearch();
 
         if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
@@ -1144,7 +1156,7 @@ var _private = {
         // virtual scrolling is disabled.
         if (
             changesType === 'collectionChanged' ||
-            changesType === 'indexesChanged' && (self._options.virtualScrolling !== false || Boolean(self._options.virtualScrollConfig)) ||
+            changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
             newModelChanged
         ) {
             self._itemsChanged = true;
@@ -1763,6 +1775,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _draggingEntity: null,
     _draggingTargetItem: null,
 
+    _isMobileIOS: detection.isMobileIOS,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -2071,7 +2085,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.markedKey !== this._options.markedKey) {
-            this._listViewModel.setMarkedKey(newOptions.markedKey, true);
+            if (newOptions.useNewModel) {
+                const markCommand = new displayLib.MarkerCommands.Mark(newOptions.markedKey);
+                markCommand.execute(this._listViewModel);
+            } else {
+                this._listViewModel.setMarkedKey(newOptions.markedKey, true);
+            }
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
@@ -2108,7 +2127,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
-            _private.getPortionedSearch(self).reset();
             if (this._menuIsShown) {
                 this._children.itemActionsOpener.close();
                 this._closeActionsMenu();
@@ -2856,7 +2874,8 @@ BaseControl.getDefaultOptions = function() {
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
         markedKey: null,
         stickyHeader: true,
-        virtualScrollMode: 'remove'
+        virtualScrollMode: 'remove',
+        filter: {}
     };
 };
 export = BaseControl;

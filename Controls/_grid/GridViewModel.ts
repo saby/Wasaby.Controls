@@ -18,12 +18,12 @@ import {
     IBaseGridRowIndexOptions
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 import cClone = require('Core/core-clone');
-import ControlsConstants = require('Controls/Constants');
 import collection = require('Types/collection');
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
+import {IHeaderCell} from './interface/IHeaderCell';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -225,7 +225,7 @@ var
         },
 
         getColumnScrollCellClasses: function(params, theme) {
-           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed ${_private.getBackgroundStyle({style: params.style, theme})} controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
+           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
         },
 
         getClassesLadderHeading(itemData, theme): String {
@@ -239,6 +239,7 @@ var
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll');
             const style = current.style || 'default';
+            const backgroundStyle = current.backgroundStyle || current.style || 'default';
 
             // Стиль колонки
             const rowSeparatorSize = ` controls-Grid__row-cell_rowSeparatorSize-${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? 'l' : 's'}_theme-${theme} `;
@@ -247,6 +248,7 @@ var
 
             if (current.columnScroll) {
                 classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
+                classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             } else if (!checkBoxCell) {
                 classLists.base += ' controls-Grid__cell_fit';
             }
@@ -254,7 +256,7 @@ var
             if (current.isEditing) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
-                classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`
+                classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -262,13 +264,19 @@ var
                 classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
                 classLists.padding = createClassListCollection('top', 'bottom');
                 classLists.padding.top = `controls-Grid__row-cell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
-                classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`
+                classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
             } else {
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
             if (current.isSelected) {
-                classLists.base += ` controls-Grid__row-cell_selected ${_private.getBackgroundStyle({theme, style})} controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+
+                // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
+                // нужно его принудительно установить как фон таблицы
+                if (!GridLayoutUtil.isFullGridSupport()) {
+                    classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
+                }
 
                 if (current.columnIndex === 0) {
                     classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
@@ -421,10 +429,22 @@ var
 
         /**
          * Возвращает CSS класс для установки background
-         * @param options
+         * @param options Опции IList | объект, содержащий theme, style, backgroundStyle
+         * @param addSpace Добавлять ли пробел перед выводимой строкой
          */
-        getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string}): string {
-            return `controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
+        getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string}, addSpace?: boolean): string {
+            return `${addSpace ? ' ' : ''}controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
+        },
+
+        /**
+         * Проверяет, присутствует ли "прилипающая" колонка
+         * @param self
+         */
+        hasStickyColumn(self): boolean {
+            return !!getStickyColumn({
+                stickyColumn: self._options.stickyColumn,
+                columns: self._options.columns
+            });
         }
     },
 
@@ -629,10 +649,12 @@ var
         getMultiHeaderOffset: function() {
           return this._multiHeaderOffset;
         },
-        _shouldAddActionsCell() {
+
+        _shouldAddActionsCell(): boolean {
             return shouldAddActionsCell({
-                hasColumnScroll: this._options.columnScroll,
-                shouldUseTableLayout: !GridLayoutUtil.isFullGridSupport()
+                hasColumnScroll: !!this._options.columnScroll,
+                isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
+                hasColumns: !!this._columns.length
             });
         },
         /**
@@ -659,18 +681,17 @@ var
             return this._maxEndColumn;
         },
 
-        isDrawHeaderWithEmptyList: function() {
-            if (!this.headerInEmptyListVisible && !this.isGridListNotEmpty()) {
-                return false;
-            }
-            return true;
+        /**
+         * Метод проверяет, рисовать ли header при отсутствии записей.
+         */
+        isDrawHeaderWithEmptyList(): boolean {
+            return this.headerInEmptyListVisible || this.isGridListNotEmpty();
         },
 
         isGridListNotEmpty(): boolean {
             const items = this.getItems();
             return !!items && items.getCount() > 0;
         },
-
 
         getCurrentHeaderRow: function() {
             const self = this;
@@ -709,6 +730,7 @@ var
         getCurrentHeaderColumn: function(rowIndex, columnIndex) {
             const cell = this._headerRows[rowIndex][columnIndex];
             const theme = this._options.theme;
+            const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
             let
                 cellClasses = 'controls-Grid__header-cell controls-Grid__header-cell' + `_theme-${theme}` + (this._isMultiHeader ? ' controls-Grid__multi-header-cell_min-height' : ' controls-Grid__header-cell_min-height') + `_theme-${theme}`,
                 headerColumn = {
@@ -739,10 +761,11 @@ var
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 }, this._options.theme);
+                cellClasses += _private.getBackgroundStyle(this._options, true);
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
+            if (hasMultiSelect && columnIndex === 0 && !cell.title) {
                 cellClasses += ' controls-Grid__header-cell-checkbox' + `_theme-${theme}` + ` controls-Grid__header-cell-checkbox_min-width_theme-${theme}`;
 
                 // В grid-layout хлебные крошки нельзя расположить в первой ячейке, если в таблице включен множественный выбор,
@@ -757,7 +780,7 @@ var
                     style: this._options.style,
                     columns: this._headerRows[rowIndex],
                     columnIndex: columnIndex,
-                    multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
+                    multiSelectVisibility: hasMultiSelect,
                     itemPadding: this._model.getItemPadding(),
                     isMultiHeader: this._isMultiHeader,
                     isHeader: true,
@@ -782,6 +805,14 @@ var
                    }
                );
                headerColumn.colSpan = this.getColspanFor('headerBreadcrumbs');
+            }
+
+            if (this._options.columnScroll && !this._isMultiHeader && !GridLayoutUtil.isFullGridSupport()) {
+                headerColumn.style += ' ' + _private.getTableCellStyles({
+                    hasMultiSelect,
+                    columnIndex,
+                    column: this._columns[columnIndex - (hasMultiSelect ? 1 : 0)]
+                });
             }
 
             if (headerColumn.column.sortingProperty) {
@@ -907,21 +938,21 @@ var
             this._curResultsColumnIndex = 0;
         },
 
-        getCurrentResultsColumn: function() {
+        getCurrentResultsColumn(): {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} {
             const columnIndex = this._curResultsColumnIndex;
-            const resultsColumn = {
-                    column: this._resultsColumns[columnIndex],
-                    index: columnIndex
-                };
+            const resultsColumn: {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} = {
+                   column: this._resultsColumns[columnIndex],
+                   index: columnIndex
+            };
             let cellClasses = `controls-Grid__results-cell ${_private.getBackgroundStyle(this._options)} controls-Grid__cell_${this._options.style} controls-Grid__results-cell_theme-${this._options.theme}`;
 
-            if (resultsColumn.column.align) {
+            if (resultsColumn.column?.align) {
                 cellClasses += ` controls-Grid__row-cell__content_halign_${resultsColumn.column.align}`;
             }
 
             if (this.isStickyHeader()) {
                 resultsColumn.zIndex = _private.getHeaderZIndex({
-                    columnIndex: columnIndex,
+                    columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount,
                     columnScroll: this._options.columnScroll
@@ -930,20 +961,29 @@ var
 
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
-                    columnIndex: columnIndex,
+                    columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 }, this._options.theme);
+
+                if (!GridLayoutUtil.isFullGridSupport()) {
+                    const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
+                    resultsColumn.tableCellStyles = _private.getTableCellStyles({
+                        hasMultiSelect,
+                        columnIndex,
+                        column: this._columns[columnIndex - (hasMultiSelect ? 1 : 0)]
+                    });
+                }
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if ((this._options.multiSelectVisibility !== 'hidden') && columnIndex === 0) {
                 cellClasses += ' controls-Grid__results-cell-checkbox' + `_theme-${this._options.theme}`;
-            } else {
+            } else if (resultsColumn.column) {
                 cellClasses += ' ' + _private.getPaddingCellClasses({
                     style: this._options.style,
                     columns: this._resultsColumns,
-                    columnIndex: columnIndex,
+                    columnIndex,
                     hasMultiSelect: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
                     isResult: true,
@@ -1544,7 +1584,7 @@ var
 
         setDragItemData: function(itemData) {
             this._model.setDragItemData(itemData);
-            if (getStickyColumn({ stickyColumn: this._options.stickyColumn, columns: this._options.columns })) {
+            if (_private.hasStickyColumn(this)) {
                 this._setHeader(this._options.header);
                 this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             }
@@ -1596,11 +1636,8 @@ var
 
         getFooterStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
-                const offsetForMultiSelect: number = this.getMultiSelectVisibility() !== 'hidden' ? 1 : 0;
-                const offsetForStickyColumn: number = +!!getStickyColumn({
-                    stickyColumn: this._options.stickyColumn,
-                    columns: this._options.columns
-                });
+                const offsetForMultiSelect: number = +(this.getMultiSelectVisibility() !== 'hidden');
+                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
 
                 return GridLayoutUtil.getColumnStyles({
                     columnStart: 0,
@@ -1612,16 +1649,28 @@ var
 
         getEmptyTemplateStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
-                const hasColumnScroll = !!this._options.columnScroll;
-                const hasMultiSelect = this.getMultiSelectVisibility() !== 'hidden';
-                const columnsCount = this._columns.length;
-                const columnStart = (!hasColumnScroll && hasMultiSelect) ? 1 : 0;
-                const columnSpan = hasColumnScroll ? (columnsCount + (hasMultiSelect ? 1 : 0)) : columnsCount;
-
-                return GridLayoutUtil.getColumnStyles({
-                    columnStart,
-                    columnSpan
-                });
+                const hasColumnScroll: boolean = !!this._options.columnScroll;
+                // активирована колонка для множественного выбора?
+                const offsetForMultiSelect: number = +(this.getMultiSelectVisibility() !== 'hidden');
+                // к колонкам была добавлена "прилипающая" колонка?
+                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                // к колонкам была добавлена колонка "Действий"?
+                const offsetForActionCell: number = +(this._shouldAddActionsCell());
+                // В случае, если у нас приходит после поиска пустой массив колонок,
+                // пытаемся установить значение по длине массива заголовков, а если и он пуст,
+                // то необходимо установить columnsCount в 1, иначе весь дальнейший расчёт
+                // производится некорректно
+                const columnsCount = this._columns?.length || this._header?.length || 1;
+                const result = {
+                    columnStart: 0,
+                    columnSpan: columnsCount + offsetForActionCell + offsetForStickyColumn
+                };
+                if (!hasColumnScroll) {
+                    result.columnStart += offsetForMultiSelect;
+                } else {
+                    result.columnSpan += offsetForMultiSelect;
+            }
+                return GridLayoutUtil.getColumnStyles(result);
             }
             return '';
         },

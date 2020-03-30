@@ -12,7 +12,7 @@ import Deferred = require('Core/Deferred');
  * * 'stack' — используйте опции {@link Controls/popup:Stack}
  * * 'dialog' — используйте опции {@link Controls/popup:Dialog}
  * * 'sticky' — используйте опции {@link Controls/popup:Sticky}
- * <a href="/materials/demo-ws4-popup-edit">Демо-пример</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FEdit%2FOpener">Демо-пример</a>
  * @class Controls/_popup/Opener/Edit
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IEdit

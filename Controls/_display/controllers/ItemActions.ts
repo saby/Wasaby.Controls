@@ -199,7 +199,9 @@ export function processActionClick(
 
             // How to calculate itemContainer?
             // this._notify('actionClick', [action, contents, itemContainer]);
-            actionClickCallback(clickEvent, action, contents);
+            if (actionClickCallback) {
+                actionClickCallback(clickEvent, action, contents);
+            }
 
             if (action.handler) {
                 action.handler(contents);
@@ -238,7 +240,10 @@ export function prepareActionsMenuConfig(
             rawData: menuActions,
             keyProperty: 'id'
         });
-        const headConfig = hasParentAction ? { caption: parentAction.title } : null;
+        const headConfig = hasParentAction ? {
+            caption: parentAction.title,
+            icon: parentAction.icon
+        } : null;
         const contextMenuConfig = collection.getContextMenuConfig();
         const menuConfig = {
             items: menuRecordSet,
@@ -248,7 +253,7 @@ export function prepareActionsMenuConfig(
             dropdownClassName: 'controls-itemActionsV__popup',
             showClose: true,
             ...contextMenuConfig,
-            rootKey: parentAction,
+            rootKey: parentAction && parentAction.id,
             showHeader: hasParentAction,
             headConfig
         };
@@ -438,7 +443,7 @@ function _processActionsMenuClose(
 
         setActiveItem(collection, null);
         collection.setActionsMenuConfig(null);
-
+        deactivateSwipe(collection);
         collection.nextVersion();
     }
 }
