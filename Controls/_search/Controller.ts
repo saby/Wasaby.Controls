@@ -216,7 +216,8 @@ var _private = {
    },
 
    isSearchValueChanged(self, searchValue: string): boolean {
-      return self._options.searchValue !== searchValue && _private.isInputSearchValueChanged(self, searchValue);
+      return self._options.searchValue !== searchValue &&
+          !_private.isInputSearchValueShort(self._options.minSearchLength, searchValue) && _private.isInputSearchValueChanged(self, searchValue);
    },
 
    isInputSearchValueShort(minSearchLength, searchValue: string): boolean {

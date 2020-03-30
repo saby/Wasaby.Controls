@@ -512,6 +512,20 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.isTrue(searchStarted);
          });
 
+         it('searchValue is short', function() {s
+            var options = getDefaultOptions();
+            var searchStarted = false;
+            options.source = new sourceLib.Memory();
+            searchMod.Controller._private.getSearchController(searchController);
+            searchMod.Controller._private.startSearch = () => {searchStarted = true;};
+            searchController._inputSearchValue = 'te';
+            options.searchValue = '';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+
+            assert.equal(searchController._inputSearchValue, 'te');
+            assert.isFalse(searchStarted);
+         });
+
          it('searchParam is changed', function() {
             var options = getDefaultOptions();
             var searchStarted = false;
