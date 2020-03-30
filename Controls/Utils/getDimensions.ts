@@ -27,7 +27,7 @@ function getBoundingClientRect(element: HTMLElement, clear?: boolean): ClientRec
         element.style.position = 'static';
     }
     const clientRect: ClientRect = element.getBoundingClientRect();
-    if (clear) {
+    if (clear && position !== undefined) {
         element.style.position = position;
     }
     return clientRect;

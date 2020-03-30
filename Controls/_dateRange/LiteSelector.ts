@@ -22,7 +22,7 @@ import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelecto
  * @demo Controls-demo/dateRange/LiteSelector/Index
  * @demo Controls-demo/dateRange/LiteSelector/ArrowVisibility/Index
  * @demo Controls-demo/dateRange/LiteSelector/Disabled/Index
- * @demo Controls-demo/dateRange/LiteSelector/NotSpecified/Index
+ * @demo Controls-demo/dateRange/LiteSelector/ValueNotSpecified/Index
  *
  */
 

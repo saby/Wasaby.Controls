@@ -123,34 +123,7 @@
 // Mask
 @paddings_Mask-stretcher:                                         0 2px 0 1px;
 
-// ListView
-@opacity_ListView-item_dragging_val:                              0.6;
-@spacing_ListView-item-between-checkbox-borderTop_val:            3px;
-@spacing_ListView-empty-between-content-borderTop_xxl_val:        44px;
-@spacing_ListView-empty-between-content-borderBottom_xxl_val:     44px;
-@spacing_ListView-empty-between-content-borderTop_xs_val:         0;
-@spacing_ListView-empty-between-content-borderBottom_xs_val:      0;
-@spacing_ListView-item-between-content-borderRight_xs_val:        0;
-@spacing_ListView-item-between-content-borderLeft_xs_val:         0;
-@spacing_ListView-between-content-checkbox_val:                   0;
-@spacing_ListView-empty-between-content-borderTop_xs_val:         0;
-
-@box-shadow_List-masterList-item_selected_val:                    6px 0 6px rgba(0, 0, 0, .15);
-@border-color_List-masterList-item_selected_val:                  #C2D0DE transparent #9CB3CA transparent;
-@background-color_ListView-item_active_val:                       #F0F5FB;
-@background-color_ListView-item_hover_val:                        #F0F5FB;
-@border-color_List-masterList_val:                                #EAEAEA;
-@background-color_List-masterList-details_val:                    transparent;
-@border-width_List-masterList-item-right_val:                     0;
-@border-width_List-masterList-item-left_val:                      0;
-@border-color_List-masterList-item_selected-right_val:            transparent;
-@border-color_List-masterList-item_selected-left_val:             transparent;
-@border-color_List-masterList-item_selected-top_val:              #C2D0DE;
-@border-color_List-masterList-item_selected-bottom_val:           #9CB3CA;
 @padding_List-editAtPlace:                                        4px;
-@background-image_AddButton_enable_val:         url('../Controls-default-theme/img/AddButtonEnable.svg');
-@background-image_AddButton_disable_val:        url('../Controls-default-theme/img/AddButtonDisable.svg');
-@spacing_ListAddButton-between-icon-and-text_val:                 4px;
 
 // EmptyTemplate
 @font-size_ListView-empty-template_val: 15px;
@@ -220,8 +193,7 @@
 @border-color_Grid-row-separator_val:                                     #F5F5F5;
 @border-color_Grid-row-separator-l_val:                                   #F3F3F3;
 @spacing_Grid-editArrow_left_val:                                         8px;
-// размер svg-иконки для сортировки
-@height_SortingArrow-icon_val:                                            12px;
+
 
 // Back
 @height_ItemActions_outside_val:                                          31px;
@@ -245,11 +217,6 @@
 @color_FilterView-editor-DateRange_readOnly:                              @label_text-color;
 //FilterDetailPanel
 @color_FilterPanel-DateRange:                                             @color_link-hover;
-
-// DigitButton
-@min-width_Paging-digitButton_val:                                        28px;
-@background-color_Paging-digitButton_hover_val:                           #F0F5FB;
-@background-color_Paging-button_hover_val:                                #F0F5FB;
 
 // Misspell
 @text-decoration_Misspell-caption_hover_val:    underline;
@@ -360,4 +327,7 @@
 @font-weight_StackTemplate-caption_info:                      @font-weight_StackTemplate-caption_info_val; // вообще не нужно, удаляем
 
 @height_Tabs:                                                   @item_height_tabs;//TODO: сначала удалить в engine
+@background-color_dialogTemplate-content:      @background-color_dialog; //presto, retail
+@size_DialogTemplate-shadow:                   @size_shadow_default; //  PrintingTemplates
+
 //last line
