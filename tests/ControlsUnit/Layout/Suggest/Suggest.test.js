@@ -669,10 +669,6 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             }
          };
 
-         require.defined = function(){
-            return true;
-         };
-
          suggestComponent.saveOptions(options);
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
@@ -702,7 +698,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._options.value = 'test';
          suggestComponent._beforeUpdate({suggestState: true, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: ''});
          assert.equal(suggestComponent._searchValue, '');
-         assert.notDeepEqual(suggestComponent._dependenciesDeferred, dependenciesDeferred);
+         assert.deepEqual(suggestComponent._dependenciesDeferred, dependenciesDeferred);
          sinon.assert.calledWith(suggestComponent._notify, 'suggestStateChanged', [false]);
 
          suggestComponent._searchValue = 'test';
