@@ -128,7 +128,8 @@ define([
             assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [7, true], { bubbling: true }).calledOnce);
 
             instance._options.selectedKeys = [null];
-            instance._options.selectedKeys = [null];
+            instance._options.excludedKeys = [null];
+            stubNotify.reset();
             instance._multiselection._listModel.getItems().clear();
             assert.isTrue(stubNotify.withArgs('selectedKeysChanged', [[], [], [null]]).calledOnce);
             assert.isTrue(stubNotify.withArgs('excludedKeysChanged', [[], [], [null]]).calledOnce);
