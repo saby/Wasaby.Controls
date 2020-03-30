@@ -94,7 +94,7 @@ define([
          selection.excluded = [null];
          assert.isTrue(treeStrategy.isAllSelected(selection, null, model));
 
-         assert.isFalse(treeStrategy.isAllSelected(selection, 1, model));
+         assert.isTrue(treeStrategy.isAllSelected(selection, 1, model));
 
          selection.selected = [1];
          selection.excluded = [1];
