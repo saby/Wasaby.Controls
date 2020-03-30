@@ -175,7 +175,7 @@ var _private = {
 
    searchErrback: function (self, error: Error):void {
       if (self._options.dataLoadErrback) {
-         self._options.dataLoadErrback(error);
+         self._errbackResult = self._options.dataLoadErrback(error);
       }
       self._loading = false;
    },
@@ -200,7 +200,16 @@ var _private = {
              _private.needStartSearch(self, self._inputSearchValue, searchValue);
 
          if (shouldSearch) {
-            _private.getSearchController(self).search(searchValue, force);
+            const searchResult = _private.getSearchController(self).search(searchValue, force);
+            self._errbackResult = undefined;
+
+            if (searchResult instanceof Promise) {
+               searchResult.then((result) => {
+                   if (self._errbackResult !== false && result instanceof Error) {
+                      self._notify('dataError', [{ error: result }]);
+                   }
+                });
+            }
          }
       } else {
          Logger.error('search:Controller source is required for search', self);
