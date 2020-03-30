@@ -213,7 +213,7 @@ var _private = {
          _private.close(self);
       }
    },
-   loadDependencies: function(self) {
+   loadDependencies: function(self, template) {
       var getTemplatesToLoad = function(options) {
          var templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
          var templatesToLoad = [];
@@ -225,7 +225,8 @@ var _private = {
          return templatesToLoad;
       };
 
-      if (!self._dependenciesDeferred) {
+      const isTemplateLoaded = template ? require.defined(self._options[template].templateName) : false;
+      if (!self._dependenciesDeferred && !isTemplateLoaded) {
          self._dependenciesDeferred = mStubs.require(DEPS.concat(getTemplatesToLoad(self._options).concat([self._options.layerName])));
       }
       return self._dependenciesDeferred;
@@ -385,11 +386,15 @@ var SuggestLayout = Control.extend({
 
       if (!isEqual(this._options.emptyTemplate, newOptions.emptyTemplate)) {
          this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
-         this._dependenciesDeferred = null;
+         if (newOptions.suggestState) {
+            _private.loadDependencies(this, 'emptyTemplate');
+         }
       }
 
       if (!isEqual(this._options.footerTemplate, newOptions.footerTemplate)) {
-         this._dependenciesDeferred = null;
+         if (newOptions.suggestState) {
+            _private.loadDependencies(this, 'footerTemplate');
+         }
       }
 
       if (this._options.searchDelay !== newOptions.searchDelay) {

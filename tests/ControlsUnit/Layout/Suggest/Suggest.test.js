@@ -674,7 +674,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: 'te'});
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
-         assert.equal(suggestComponent._dependenciesDeferred, null);
+         assert.isTrue(suggestComponent._dependenciesDeferred);
          assert.equal(suggestComponent._searchValue, '');
          assert.equal(suggestComponent._filter, null);
          assert.equal(suggestComponent._suggestMarkedKey, null);
