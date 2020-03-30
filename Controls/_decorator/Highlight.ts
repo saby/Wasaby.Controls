@@ -27,7 +27,7 @@ export interface IHighlightOptions extends IControlOptions {
     searchMode?: HighlightMode;
     /**
      * Класс обеспечивающий внешнее отображение подсветки.
-     * @default controls-Highlight_highlight
+     * @default controls-Highlight_highlight_theme-{{_options.theme}}
      * @demo Controls-demo/Decorator/Highlight/ClassName/Index
      */
     className: string;
@@ -211,6 +211,8 @@ class Highlight extends Control<IHighlightOptions> {
     private static WORD_SEPARATOR: RegExp = /\s+/g;
     private static MINIMUM_WORD_LENGTH: number = 2;
 
+    static _theme: string[] = ['Controls/decorator'];
+
     private static _isNotEmpty(value: string): boolean {
         return value !== '';
     }
@@ -280,10 +282,9 @@ class Highlight extends Control<IHighlightOptions> {
         return result;
     }
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): Partial<IHighlightOptions> {
         return {
-            highlightMode: 'substring',
-            className: 'controls-Highlight_highlight'
+            highlightMode: 'substring'
         };
     }
 
@@ -300,8 +301,6 @@ class Highlight extends Control<IHighlightOptions> {
             */
         };
     }
-
-    static _theme = ['Controls/decorator']
 }
 
 export default Highlight;
