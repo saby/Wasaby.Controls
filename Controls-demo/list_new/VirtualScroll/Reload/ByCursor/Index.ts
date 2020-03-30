@@ -2,7 +2,6 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/VirtualScroll/Reload/ByCursor/ByCursor';
 import {DataSet, Memory, Query} from 'Types/source';
 import 'css!Controls-demo/Controls-demo';
-import {delay} from 'Types/function';
 
 interface IItem {
     id: number;
@@ -18,12 +17,10 @@ class PositionSourceMock extends Memory {
         const isAppend = typeof filter['id>='] !== 'undefined';
         const isPosition = typeof filter['id~'] !== 'undefined';
         const items: IItem[] = [];
-        let position = filter['id<='] || filter['id>='] || filter['id~'];
+        let position = filter['id<='] || filter['id>='] || filter['id~'] || 0;
 
         if (isPrepend) {
             position -= limit;
-        } else if (isAppend) {
-            position += limit;
         }
 
         for (let i = 0; i < limit; i++, position++) {
@@ -45,14 +42,14 @@ class PositionSourceMock extends Memory {
 export default class extends Control {
     protected _template: TemplateFunction = template;
     protected _source: PositionSourceMock;
-    protected _position: number = 300;
+    protected _position: number = 0;
 
     protected _beforeMount(): void {
         this._source = new PositionSourceMock({keyProperty: 'id'});
     }
 
     protected _changePosition(): void {
-        this._position = 400;
+        this._position = 60;
         // @ts-ignore
         this._children.list.reload();
     }

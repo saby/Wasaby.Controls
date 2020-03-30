@@ -1,7 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/VirtualScroll/Tree/Tree';
 import {DataSet, Memory, Query} from 'Types/source';
-import {generateData} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
 import 'css!Controls-demo/Controls-demo';
 
 interface IItem {
@@ -21,11 +20,11 @@ class PositionSourceMock extends Memory {
         const isPosition = typeof filter['id~'] !== 'undefined';
         const items: IItem[] = [];
         let position = filter['id<='] || filter['id>='] || filter['id~'] || 0;
+        const originPosition = position;
+        position += filter.parent || 0;
 
         if (isPrepend) {
             position -= limit;
-        } else if (isAppend) {
-            position += limit;
         }
 
         for (let i = 0; i < limit; i++, position++) {
@@ -40,7 +39,7 @@ class PositionSourceMock extends Memory {
         return Promise.resolve(this._prepareQueryResult({
             items,
             meta: {
-                total: isPosition ? { before: true, after: true } : true
+                total: isPosition ? { before: true, after: true } : originPosition <= 20
             }
         }, null));
     }
