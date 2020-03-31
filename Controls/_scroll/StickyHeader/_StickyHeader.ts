@@ -43,7 +43,6 @@ export interface IStickyHeaderOptions extends IControlOptions {
  * @private
  * @extends Core/Control
  * @class Controls/_scroll/StickyHeader
- * @css @background-color_StickyHeader Background color of StickyHeader.
  */
 
 /**
