@@ -115,7 +115,6 @@
    &:before {
      font-size: @line-height_breadcrumbsView;
    }
-   margin-left: @back_offset_breadcrumbsHeadingPath;
 }
 
 .controls-BreadCrumbsPath__backButton_short,
@@ -130,6 +129,9 @@
 
 .controls-BreadCrumbsPath__homeContainer__withoutBackButton_theme-@{themeName} {
    margin-left: 0;
+}
+.controls-BreadCrumbsPath__homeContainer__withBackButton_theme-@{themeName} {
+   margin-left: @back_offset_breadcrumbsHeadingPath;
 }
 
 .controls-BreadCrumbsPath__backButton_half,
