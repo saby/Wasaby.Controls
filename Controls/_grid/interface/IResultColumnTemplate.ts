@@ -29,7 +29,7 @@ export default interface IResultColumnTemplateOptions {
 
     /**
      * @name Controls/_grid/interface/IResultColumnTemplate#contentTemplate
-     * @cfg {String|Function} Устанавливает пользовательский шаблон для отображения содержимого ячейки итогов.
+     * @cfg {String|Function} Пользовательский шаблон для отображения содержимого ячейки итогов.
      * @remark
      * В области видимости шаблона доступен объект **results** - итогов, которые были пеерданы в метаданных RecordSet.
      * Результаты должны быть переданы в виде {@link Types/entity/Model Types/entity:Model}.
