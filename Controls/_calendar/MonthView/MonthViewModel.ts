@@ -186,17 +186,21 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
                css.push('controls-MonthViewVDOM__item-selectedStartEnd_theme-' + theme);
             } else if (scope.selectedStart && !scope.selectedUnfinishedStart) {
                css.push('controls-MonthViewVDOM__item-selectedStart_theme-' + theme);
+               css.push('controls-MonthViewVDOM__item-selectedStart');
             } else if (scope.selectedEnd && (!scope.selectionProcessing ||
                 (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
                css.push('controls-MonthViewVDOM__item-selectedEnd_theme-' + theme);
+               css.push('controls-MonthViewVDOM__item-selectedEnd');
             }
          }
          if (scope.selectedInner) {
             css.push('controls-MonthViewVDOM__item-selectedInner_theme-' + theme);
+            css.push('controls-MonthViewVDOM__item-selectedInner');
          }
 
          if (scope.today) {
             css.push('controls-MonthViewVDOM__today_theme-' + theme);
+            css.push('controls-MonthViewVDOM__today');
          }
       }
       css.push(scope.isCalendar ? 'controls-MonthViewVDOM__currentMonthDay_theme-' + theme : 'controls-MonthViewVDOM__' + scope.month + '_theme-' + theme);
