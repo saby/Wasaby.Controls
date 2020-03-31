@@ -116,7 +116,6 @@
    &:before {
       font-size: @font-size_BreadCrumbs-baseline;
    }
-   margin-left: @spacing_Path-between-home-and-backButton;
 }
 
 .controls-BreadCrumbsPath__backButton_short,
@@ -131,6 +130,9 @@
 
 .controls-BreadCrumbsPath__homeContainer__withoutBackButton_theme-@{themeName} {
    margin-left: 0;
+}
+.controls-BreadCrumbsPath__homeContainer__withBackButton_theme-@{themeName} {
+   margin-left: @spacing_Path-between-home-and-backButton;
 }
 
 .controls-BreadCrumbsPath__backButton_half,
